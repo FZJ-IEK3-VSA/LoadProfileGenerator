@@ -1,0 +1,12 @@
+﻿<Window x:Class="LoadProfileGenerator.SplashWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Loading..."
+        Width="318"
+        Height="121"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
+        WindowStyle="ToolWindow">
+    <Grid>
+        <ListBox Name="ListBox1" Margin="5" />
+    </Grid>
+</Window>

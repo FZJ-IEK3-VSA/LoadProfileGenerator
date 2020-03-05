@@ -1,0 +1,123 @@
+﻿<UserControl x:Class="LoadProfileGenerator.Views.Houses.GeneratorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="900" d:DesignWidth="900">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="35" />
+        </Grid.RowDefinitions>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <Expander IsExpanded="true" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="General" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="5*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.ColumnSpan="2" Style="{StaticResource TextBlockStyle}">
+                            A generator is any device that generates energy and is externally controlled. For example photovoltaic, wind energy and waste heat are all controlled by an external influence.
+                            They are modeled in the Load Profile Generator with a date based profile and a generator device.
+                            If you want to model a CHP device or a gas heater, this is probably not the right function, unless your CHP device is controlled externally, for example by a virtual power plant. For an ordinary gas heater, a transformation device would be better suited.
+                        </TextBlock>
+                        <Label Style="{StaticResource LabelStyle}" Content="_Name"
+                               Target="{Binding ElementName=TxtEnergyStorageName}"
+                               Grid.Column="0" Grid.Row="1" />
+                        <TextBox Style="{StaticResource TextBoxStyle}" x:Name="TxtEnergyStorageName"
+                                 Text="{Binding ThisGenerator.Name}" Grid.Row="1" Grid.Column="1" />
+                        <Label Style="{StaticResource LabelStyle}" Content="Description"
+                               Target="{Binding ElementName=TxtDescription}"
+                               Grid.Row="2" Grid.Column="0" />
+                        <TextBox Style="{StaticResource TextBoxStyle}" x:Name="TxtDescription" Grid.Row="2"
+                                 Text="{Binding ThisGenerator.Description}" Grid.Column="1" />
+
+                    </Grid>
+                </Expander>
+
+
+                <Expander IsExpanded="true" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Parameters" />
+                        </Border>
+                    </Expander.Header>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="5*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.ColumnSpan="2" Style="{StaticResource TextBlockStyle}">
+                            These parameters determine what date based profile to use, which load type
+                            the generator should generate and if the profile should be scaled up or down
+                            (multiplied by a certain value).
+                        </TextBlock>
+                        <Label Style="{StaticResource LabelStyle}" Content="Loadtype"
+                               Target="{Binding ElementName=CmbLoadtype}" Grid.Row="1"
+                               Grid.Column="0" />
+                        <ComboBox Style="{StaticResource ComboBoxStyle}" Grid.Row="1"
+                                  Name="CmbLoadtype"
+                                  VerticalAlignment="Top" ItemsSource="{Binding VLoadTypes}" Grid.Column="1"
+                                  SelectedItem="{Binding LoadType}" />
+                        <Label Style="{StaticResource LabelStyle}" Content="Selected Units"
+                               Target="{Binding ElementName=TxtFactor}" Grid.Row="2"
+                               Grid.Column="0" />
+                        <Label Style="{StaticResource LabelStyle}" Content="{Binding SelectedUnitsString}" Grid.Row="2"
+                               Grid.Column="1" HorizontalAlignment="Left" />
+                        <Label Style="{StaticResource LabelStyle}" Content="Date Based Profile"
+                               Target="{Binding ElementName=CmbProfile}" Grid.Row="3"
+                               Grid.Column="0" />
+                        <ComboBox Style="{StaticResource ComboBoxStyle}" Grid.Row="3" Name="CmbProfile"
+                                  VerticalAlignment="Top" ItemsSource="{Binding DateBasedProfiles}" Grid.Column="1"
+                                  SelectedItem="{Binding ThisGenerator.DateBasedProfile}" />
+
+                        <Label Style="{StaticResource LabelStyle}" Content="Factor"
+                               Target="{Binding ElementName=TxtFactor}" Grid.Row="4" Grid.Column="0" />
+                        <TextBox Style="{StaticResource TextBoxStyle}" Grid.Column="1" Grid.Row="4" Name="TxtFactor"
+                                 Text="{Binding ThisGenerator.ScalingFactor}" />
+
+                    </Grid>
+                </Expander>
+            </StackPanel>
+        </ScrollViewer>
+
+        <DockPanel Grid.Row="1" >
+            <Border  Style="{StaticResource ObjectLabelBox}" HorizontalAlignment="Left" >
+                <TextBlock Text="{Binding ItemName}"  />
+            </Border>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Right">
+                <Button Content="delete"  Width="75" HorizontalAlignment="Right"
+                    Click="Delete_Click" Style="{StaticResource ButtonStyle}" />
+                <Button Content="Close"  Width="75" HorizontalAlignment="Right"
+                    Click="CloseClick"  Style="{StaticResource ButtonStyle}" />
+            </StackPanel>
+        </DockPanel>
+    </Grid>
+</UserControl>

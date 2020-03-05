@@ -1,0 +1,331 @@
+﻿<UserControl x:Class="LoadProfileGenerator.Views.Transportation.TravelRouteSetView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:transportation="clr-namespace:LoadProfileGenerator.Views.Transportation"
+             d:DesignHeight="1500"
+             d:DesignWidth="900"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <transportation:ValueToBrushConverter x:Key="ValueToBrushConverter"/>
+        <Style  TargetType="DataGridCell">
+            <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource Self}, 
+                Converter={StaticResource ValueToBrushConverter}}" />
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="35" />
+        </Grid.RowDefinitions>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+
+            <StackPanel>
+
+                <Expander IsExpanded="true" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border DockPanel.Dock="Left" Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="General" />
+                        </Border>
+
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="5*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.ColumnSpan="3" Style="{StaticResource TextBlockStyle}">
+                            A site is a combination of one or more locations. For example the supermarket, the apartment or the school can all be sites.
+                            Sites are used in the travel simulation.
+                        </TextBlock>
+                        <Label Grid.Row="1"
+                               Grid.Column="0"
+                               Content="_Name"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=TxtName}" />
+                        <TextBox x:Name="TxtName"
+                                 Grid.Row="1"
+                                 Grid.Column="1"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding ThisRouteSet.Name}" />
+                        <Label Grid.Row="2"
+                               Grid.Column="0"
+                               Content="Description"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=TxtDescription}" />
+                        <TextBox x:Name="TxtDescription"
+                                 Grid.Row="2"
+                                 Grid.Column="1"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding ThisRouteSet.Description}" />
+
+
+
+                    </Grid>
+
+
+                </Expander>
+                <Expander IsExpanded="True" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Routes" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="5*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.ColumnSpan="2" Style="{StaticResource TextBlockStyle}">
+                            In this section you can add all the routes belonging to this set.
+                        </TextBlock>
+                        <!--  vLoad type  -->
+                        <Label Grid.Row="1"
+                               Grid.Column="0"
+                               Content="Travel Route"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=CmbTravelRoutes}" />
+                        <ComboBox Name="CmbTravelRoutes"
+                                  Grid.Row="1"
+                                  Grid.Column="1"
+                                  ItemsSource="{Binding AvailableTravelRoutes}"
+                                  SelectedItem="{Binding ElementName=LstSteps,
+                                                         Path=SelectedItem,
+                                                         Mode=OneWay}"
+                                  Style="{StaticResource ComboBoxStyle}" />
+
+                        <StackPanel Grid.Row="10"
+                                    Grid.Column="1"
+                                    Orientation="Horizontal">
+                            <Button HorizontalAlignment="Right"
+                                    Click="BtnAddDeviceClick"
+                                    Style="{StaticResource ButtonStyle}">
+                                Add route
+                            </Button>
+                            <Button HorizontalAlignment="Left"
+                                    Click="BtnRemoveRoutesClick"
+                                    Style="{StaticResource ButtonStyle}">
+                                Remove route
+                            </Button>
+                            <Button HorizontalAlignment="Left"
+                                    Click="BtnRefreshRoutes"
+                                    Style="{StaticResource ButtonStyle}">
+                                Refresh available routes
+                            </Button>
+
+                        </StackPanel>
+                        <Label Grid.Row="11"
+                               Grid.Column="0"
+                               Margin="5,5,5,5"
+                               Content="Travel Routes"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=LstSteps}" />
+                        <ListView x:Name="LstSteps"
+                                  Grid.Row="11"
+                                  Grid.Column="1"
+                                  MinHeight="150"
+                                  ItemsSource="{Binding UsedTravelRoutes}"
+                                  Style="{StaticResource ListViewStyle}"
+                                  
+                                  MouseDoubleClick="LstSteps_OnMouseDoubleClick"
+                                  >
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding PrettyName}"
+                                                    Header="Name" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+
+                    </Grid>
+                </Expander>
+                <Expander IsExpanded="True" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Connected Sites" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="5*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Label Grid.Row="0"
+                               Grid.Column="0"
+                               Content="Travel Route"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=CmbExampleHousehold}" />
+                        <ComboBox Name="CmbExampleHousehold"
+                                  Grid.Row="0"
+                                  Grid.Column="1"
+                                  ItemsSource="{Binding AllHouseholds}"
+                                  SelectedItem="{Binding ModularHousehold}"
+                                  Style="{StaticResource ComboBoxStyle}" />
+                        <StackPanel Grid.Row="1"
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="2"
+                                    Orientation="Horizontal">
+                            <Button HorizontalAlignment="Right"
+                                    Click="BtnRefreshSitesClick"
+                                    Style="{StaticResource ButtonStyle}">
+                                Refresh
+                            </Button>
+                            <Button HorizontalAlignment="Right"
+                                    Click="BtnFindMissingSitesClick"
+                                    Style="{StaticResource ButtonStyle}">
+                                Show and add missing travel routes
+                            </Button>
+                            <Button HorizontalAlignment="Right"
+                                    Click="BtnFindMissingSitesForAllHouseholdsClick"
+                                    Style="{StaticResource ButtonStyle}">
+                                Show missing travel routes for all households
+                            </Button>
+
+
+                        </StackPanel>
+                        <Label Grid.Row="2"
+                               Grid.Column="0"
+                               Content="Connections between Sites"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=MyGrid}" />
+                        <DataGrid Name="MyGrid" Grid.Row="2" Grid.Column="1" ItemsSource="{Binding ConnectionCountTable}"
+                                   SelectionUnit="Cell" IsReadOnly="True"   >
+                            
+
+                        </DataGrid>
+
+                        <Label Grid.Row="3"
+                               Grid.Column="0"
+                               Content="Distances between Sites"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=MyDistanceGrid}" />
+                        <DataGrid Name="MyDistanceGrid" Grid.Row="3" Grid.Column="1" ItemsSource="{Binding DistanceTable}"
+                                   SelectionUnit="Cell" IsReadOnly="True"   >
+                        </DataGrid>
+
+                    </Grid>
+                </Expander>
+
+
+                <Expander Margin="5"
+                          BorderBrush="Gray"
+                          BorderThickness="3 3 3 3"
+                          IsExpanded="true"
+                          Padding="2">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Uses" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.ColumnSpan="2" Style="{StaticResource TextBlockStyle}">
+                            Here you can get a list where this device action
+                            is used, if anywhere.
+                        </TextBlock>
+
+                        <Button Grid.Row="0"
+                                Grid.Column="1"
+                                Width="75"
+                                HorizontalAlignment="Right"
+                                Click="BtnRefreshUsedIn_Click"
+                                Content="refresh"
+                                Style="{StaticResource ButtonStyle}" />
+                        <ListView x:Name="LstPersonDesires"
+                                  Grid.Row="2"
+                                  Grid.Column="0"
+                                  Grid.ColumnSpan="2"
+                                  MinHeight="150"
+                                  ItemsSource="{Binding UsedIns}"
+                                  MouseDoubleClick="LstPersonDesiresMouseDoubleClick"
+                                  Style="{StaticResource ListViewStyle}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding Item}"
+                                                    Header="Name" />
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding TypeDescription}"
+                                                    Header="Type" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+
+                    </Grid>
+
+
+                </Expander>
+            </StackPanel>
+        </ScrollViewer>
+
+        <DockPanel Grid.Row="1">
+            <Border HorizontalAlignment="Left" Style="{StaticResource ObjectLabelBox}">
+                <TextBlock Text="{Binding ItemName}" />
+            </Border>
+            <StackPanel HorizontalAlignment="Right"
+                        DockPanel.Dock="Right"
+                        Orientation="Horizontal">
+                <Button Width="75"
+                        HorizontalAlignment="Right"
+                        Click="DeleteClick"
+                        Content="delete"
+                        Style="{StaticResource ButtonStyle}" />
+                <Button Width="75"
+                        HorizontalAlignment="Right"
+                        Click="CloseClick"
+                        Content="Close"
+                        Style="{StaticResource ButtonStyle}" />
+            </StackPanel>
+        </DockPanel>
+    </Grid>
+</UserControl>

@@ -1,0 +1,274 @@
+﻿<UserControl x:Class="LoadProfileGenerator.Views.Households.SubAffordanceView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:basicHouseholds="clr-namespace:Database.Tables.BasicHouseholds;assembly=Database"
+             mc:Ignorable="d" d:DesignHeight="1400" d:DesignWidth="600">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="35" />
+        </Grid.RowDefinitions>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <Expander IsExpanded="True" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="General" />
+                        </Border>
+                    </Expander.Header>
+
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="5*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Style="{StaticResource TextBlockStyle}" Grid.ColumnSpan="2">
+                            A subaffordance is an affordance that only appears when another affordance
+                            is executed. For example if someone else has finished cooking, then there
+                            might be a sub-affordance for all the other people in the household to eat the cooked food.
+                        </TextBlock>
+                        <Label Style="{StaticResource LabelStyle}" Content="Name"
+                               Target="{Binding ElementName=SubAffName}"
+                               Grid.Row="1" Grid.Column="0" />
+                        <TextBox Style="{StaticResource TextBoxStyle}" x:Name="SubAffName" Grid.Column="1"
+                                 Text="{Binding ThisSubAffordance.Name}" Grid.Row="1" />
+
+                        <TextBox Style="{StaticResource TextBoxStyle}" x:Name="MinimumAge" Grid.Column="1"
+                                 Text="{Binding ThisSubAffordance.MinimumAge}" Grid.Row="2" />
+                        <Label Style="{StaticResource LabelStyle}" Content="Minimum age"
+                               Target="{Binding ElementName=MinimumAge}" Grid.Column="0" Grid.Row="2" />
+                        <Label Style="{StaticResource LabelStyle}" Content="Maximum age"
+                               Target="{Binding ElementName=MaxiumAge}"  Grid.Column="0" Grid.Row="5" />
+                        <TextBox Style="{StaticResource TextBoxStyle}" x:Name="MaxiumAge" Grid.Column="1"
+                                 Text="{Binding ThisSubAffordance.MaximumAge}" Grid.Row="5" />
+                        <CheckBox Style="{StaticResource CheckBoxStyle}"
+                                  Content="Can this subaffordance interrupt other affordances?"
+                                  Grid.Column="1" Grid.Row="6"
+                                  IsChecked="{Binding ThisSubAffordance.IsInterrupting}" />
+                        <CheckBox Style="{StaticResource CheckBoxStyle}"
+                                  Content="Can this subaffordance be interrupted by other affordances?"
+                                  Grid.Column="1" Grid.Row="7" IsChecked="{Binding ThisSubAffordance.IsInterruptable}" />
+
+                    </Grid>
+                </Expander>
+                <Expander IsExpanded="True" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Desire fullfillment" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="5*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <ComboBox Style="{StaticResource ComboBoxStyle}" Grid.Column="1" Grid.Row="0" Name="CmbDesires"
+                                  ItemsSource="{Binding Desires}"
+                                  SelectedItem="{Binding ElementName=LstAffordanceDesires, Path=SelectedItem.(basicHouseholds:SubAffordanceDesire.Desire), Mode=OneWay}" />
+                        <Label Style="{StaticResource LabelStyle}" Content="Desires"
+                               Target="{Binding ElementName=CmbDesires}"
+                               Grid.Row="0" Grid.Column="0" />
+                        <TextBox Style="{StaticResource TextBoxStyle}" x:Name="TxtSatisfactionValue" Grid.Column="1"
+                                 Text="{Binding ElementName=LstAffordanceDesires, Path=SelectedItem.(basicHouseholds:SubAffordanceDesire.SatisfactionValuePercent), Mode=OneWay}"
+                                 Grid.Row="1" />
+                        <Label Style="{StaticResource LabelStyle}" Content="Satisfaction value [%]"
+                               Target="{Binding ElementName=TxtSatisfactionValue}" Grid.Column="0" Grid.Row="1" />
+                        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1">
+                            <Button Style="{StaticResource ButtonStyle}" HorizontalAlignment="Right"
+                                    Click="BtnAddDesireClick">
+                                Add desire
+                            </Button>
+                            <Button Style="{StaticResource ButtonStyle}" HorizontalAlignment="Left"
+                                    Click="BtnRemoveDesireClick">
+                                Remove desire
+                            </Button>
+                        </StackPanel>
+                        <Label Style="{StaticResource LabelStyle}" Target="{Binding ElementName=LstAffordanceDesires}"
+                               Content="Satisfaction values " Grid.Row="3"
+                               Grid.Column="0" />
+                        <ListView Style="{StaticResource ListViewStyle}" Grid.Row="3" Grid.Column="1" MinHeight="150"
+                                  x:Name="LstAffordanceDesires"
+                                  ItemsSource="{Binding ThisSubAffordance.SubAffordanceDesires}"
+                                  MouseDoubleClick="LstAffordanceDesires_OnMouseDoubleClick">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="Auto" Header="Desire" />
+                                    <GridViewColumn Width="Auto" Header="Satisfaction value [%]"
+                                                    DisplayMemberBinding="{Binding SatisfactionValuePercent}" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+
+                    </Grid>
+                </Expander>
+                <Expander IsExpanded="True" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Variable Operations" />
+                        </Border>
+                    </Expander.Header>
+
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Style="{StaticResource TextBlockStyle}">
+                            Variables are used to control
+                            autonomous devices and other affordances. One use of a variable operation in a subaffordance would be to count up the
+                            dirty dishes by 1 for every person joining the meal.
+                        </TextBlock>
+                        <Label Style="{StaticResource LabelStyle}" Content="Variable"
+                               Target="{Binding ElementName=CmbOpVariable}"
+                               Grid.Column="0" Grid.Row="1" />
+                        <ComboBox Style="{StaticResource ComboBoxStyle}" Grid.Column="1" Grid.Row="1" Name="CmbOpVariable"
+                                  ItemsSource="{Binding AllVariables}"
+                                  SelectedItem="{Binding ElementName=LstOpVariables, Path=SelectedItem.Variable, Mode=OneWay}" />
+
+                        <Label Style="{StaticResource LabelStyle}" Content="Variable Value"
+                               Target="{Binding ElementName=TxtOpVariableValue}" Grid.Column="0" Grid.Row="3" />
+                        <TextBox Style="{StaticResource TextBoxStyle}" x:Name="TxtOpVariableValue" Grid.Column="1" Grid.Row="3"
+                                 Text="{Binding ElementName=LstOpVariables, Path=SelectedItem.Value, Mode=OneWay}" />
+                        <Label Style="{StaticResource LabelStyle}" Content="Variable Location Mode"
+                               Target="{Binding ElementName=CmbOpLocationMode}"
+                               Grid.Column="0" Grid.Row="4" />
+                        <ComboBox Style="{StaticResource ComboBoxStyle}" Grid.Column="1" Grid.Row="4" Name="CmbOpLocationMode"
+                                  ItemsSource="{Binding LocationModes}"
+                                  SelectedItem="{Binding ElementName=LstOpVariables, Path=SelectedItem.LocationModeStr, Mode=OneWay}" />
+                        <Label Style="{StaticResource LabelStyle}" Content="Location"
+                               Target="{Binding ElementName=CmbOpLocation}" Grid.Column="0" Grid.Row="5" />
+                        <ComboBox Style="{StaticResource ComboBoxStyle}" Grid.Column="1" Grid.Row="5" Name="CmbOpLocation"
+                                  ItemsSource="{Binding AllLocations}"
+                                  SelectedItem="{Binding ElementName=LstOpVariables, Path=SelectedItem.Location, Mode=OneWay}" />
+                        <Label Style="{StaticResource LabelStyle}" Content="Action"
+                               Target="{Binding ElementName=CmbOpAction}" Grid.Column="0" Grid.Row="6" />
+                        <ComboBox Style="{StaticResource ComboBoxStyle}" Grid.Column="1" Grid.Row="6" Name="CmbOpAction"
+                                  ItemsSource="{Binding AllActions}"
+                                  SelectedItem="{Binding ElementName=LstOpVariables, Path=SelectedItem.VariableActionStr, Mode=OneWay}" />
+                        <Label Style="{StaticResource LabelStyle}" Content="Execution Time"
+                               Target="{Binding ElementName=CmbOpAction}" Grid.Column="0" Grid.Row="7" />
+                        <ComboBox Style="{StaticResource ComboBoxStyle}" Grid.Column="1" Grid.Row="7"
+                                  Name="CmbOpExecutionTime"
+                                  ItemsSource="{Binding ExecutionTimes}"
+                                  SelectedItem="{Binding ElementName=LstOpVariables,
+                            Path=SelectedItem.ExecutionTimeStr, Mode=OneWay}" />
+                        <StackPanel Orientation="Horizontal" Grid.Row="8" Grid.Column="1">
+                            <Button Style="{StaticResource ButtonStyle}" HorizontalAlignment="Right"
+                                    Click="BtnAddVariableOpClick" >
+                                Add Variable Operation
+                            </Button>
+                            <Button Style="{StaticResource ButtonStyle}" HorizontalAlignment="Left"
+                                    Click="BtnRemoveVariableOpClick">
+                                Remove Variable Operation
+                            </Button>
+                        </StackPanel>
+                        <Label Style="{StaticResource LabelStyle}" Target="{Binding ElementName=LstOpVariables}"
+                               Content="Variable Operations" Grid.Row="9" Grid.Column="0" />
+                        <ListView Style="{StaticResource ListViewStyle}" Grid.Row="9" Grid.Column="1" MinHeight="150"
+                                  x:Name="LstOpVariables"
+                                  ItemsSource="{Binding ThisSubAffordance.SubAffordanceVariableOps}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="Auto" Header="Variable Name"
+                                                    DisplayMemberBinding="{Binding Variable.Name}" />
+                                    <GridViewColumn Width="Auto" Header="Variable Value"
+                                                    DisplayMemberBinding="{Binding Value}" />
+                                    <GridViewColumn Width="Auto" Header="Location Mode"
+                                                    DisplayMemberBinding="{Binding LocationModeStr}" />
+                                    <GridViewColumn Width="Auto" Header="Location"
+                                                    DisplayMemberBinding="{Binding Location}" />
+                                    <GridViewColumn Width="Auto" Header="Action"
+                                                    DisplayMemberBinding="{Binding VariableActionStr}" />
+                                    <GridViewColumn Width="Auto" Header="Execution Time"
+                                                    DisplayMemberBinding="{Binding ExecutionTimeStr}" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+
+                    </Grid>
+                </Expander>
+                <Expander IsExpanded="true" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Used by" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Style="{StaticResource TextBlockStyle}" Grid.ColumnSpan="2">Here you can get a list where this sub-affordance is used.</TextBlock>
+                        <Button Style="{StaticResource ButtonStyle}" Content="refresh" Width="75" Grid.Row="0"
+                                HorizontalAlignment="Right"
+                                Click="BtnRefreshHouseholds_Click" Grid.Column="1" />
+                        <ListView Style="{StaticResource ListViewStyle}" Grid.Row="2" MinHeight="150" Name="LstUsedIn"
+                                  ItemsSource="{Binding UsedIns}"
+                                  MouseDoubleClick="LstUsedByMouseDoubleClick" x:FieldModifier="private"
+                                  Grid.ColumnSpan="2" Grid.Column="0">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="500" Header="Name"
+                                                    DisplayMemberBinding="{Binding Item.Name}" />
+                                    <GridViewColumn Width="auto" Header="Type"
+                                                    DisplayMemberBinding="{Binding TypeDescription}" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                </Expander>
+            </StackPanel>
+        </ScrollViewer>
+
+        <DockPanel Grid.Row="1" >
+            <Border  Style="{StaticResource ObjectLabelBox}" HorizontalAlignment="Left" >
+                <TextBlock Text="{Binding ItemName}"  />
+            </Border>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Right">
+                <Button Content="delete"  Width="75" HorizontalAlignment="Right"
+                    Click="Delete_Click" Style="{StaticResource ButtonStyle}" />
+                <Button Content="Close"  Width="75" HorizontalAlignment="Right"
+                    Click="CloseClick"  Style="{StaticResource ButtonStyle}" />
+            </StackPanel>
+        </DockPanel>
+
+    </Grid>
+</UserControl>

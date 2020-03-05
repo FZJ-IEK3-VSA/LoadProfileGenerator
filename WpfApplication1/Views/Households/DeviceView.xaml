@@ -1,0 +1,303 @@
+﻿<UserControl x:Class="LoadProfileGenerator.Views.Households.DeviceView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d" d:DesignHeight="2000"
+             d:DesignWidth="800"
+             xmlns:usercontrols="clr-namespace:LoadProfileGenerator.Controls.Usercontrols"
+             Loaded="UserControl_Loaded">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="35" />
+        </Grid.RowDefinitions>
+
+        <ScrollViewer MinWidth="400" VerticalScrollBarVisibility="Auto">
+            <StackPanel >
+                <Expander IsExpanded="true" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border  Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="General" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="5*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Style="{StaticResource TextBlockStyle}" Grid.ColumnSpan="2">
+                            A device is for modelling any kind of real device or object that a person might interact with. Mostly it's an electric device like a stove, a washing machine or a telephone.
+
+                        </TextBlock>
+                        <Label Content="Name" Target="{Binding ElementName=DeviceName}" Style="{StaticResource LabelStyle}"
+                               Grid.Row="1" Grid.Column="0" />
+                        <TextBox x:Name="DeviceName" Style="{StaticResource TextBoxStyle}" Grid.Row="1" Grid.Column="1"
+                                 Text="{Binding ThisDevice.Name}" />
+
+                        <Label Content="Description" Target="{Binding ElementName=TxtDescription}" Style="{StaticResource LabelStyle}"
+                               Grid.Row="2" Grid.Column="0"  />
+                        <TextBox x:Name="TxtDescription" Style="{StaticResource TextBoxStyle}" Grid.Row="2" Grid.Column="1"
+                                 Text="{Binding ThisDevice.Description}" />
+                        <Label Content="Production Year" Target="{Binding ElementName=TxtProductionYear}" Style="{StaticResource LabelStyle}"
+                               Grid.Row="3" Grid.Column="0" />
+                        <TextBox x:Name="TxtProductionYear" Style="{StaticResource TextBoxStyle}" Grid.Row="3" Grid.Column="1"
+                                 Text="{Binding ThisDevice.Year}" />
+
+                        <Label Content="Weighted Energy Intensity" Style="{StaticResource LabelStyle}"
+                               Grid.Row="4" Grid.Column="0"  />
+                        <Label Content="{Binding ThisDevice.WeightedEnergyIntensity}"  Style="{StaticResource LabelStyle}" HorizontalAlignment="Left"
+                               Grid.Row="4" Grid.Column="1"  />
+
+                        <TextBlock Style="{StaticResource TextBlockStyle}" Grid.Column="1" Grid.Row="5" >
+                            The energy intensity is used for picking out a device from a device category. It is calculated by multiplying the loads with load type weights.
+
+                        </TextBlock>
+                        <CheckBox Style="{StaticResource CheckBoxStyle}" IsChecked="{Binding ThisDevice.ForceAllLoadTypesToBeSet}"  Grid.Row="6" Grid.Column="1" >Force all the loadtypes for this device to be set.</CheckBox>
+                        <TextBlock TextWrapping="WrapWithOverflow" Grid.Column="1" Grid.Row="7" Style="{StaticResource TextBlockStyle}" >
+                            This should be checked nearly always. It's to make sure no load type of the device is forgotten. One example where it should not be checked is the sink.
+                            The sink can be used with either cold or warm water.
+                        </TextBlock>
+                        <CheckBox Style="{StaticResource CheckBoxStyle}" IsChecked="{Binding ThisDevice.IsStandbyDevice}"  Grid.Row="8" Grid.Column="1" >This device should have a standby energy use.</CheckBox>
+                        <TextBlock Style="{StaticResource TextBlockStyle}" Grid.Column="1" Grid.Row="9" >
+                            This setting enables a check that verifies if the device is in a household if the standby energy use is set properly.
+                        </TextBlock>
+                        <Button Grid.Row="11" Grid.Column="1" Style="{StaticResource ButtonStyle}" Click="ButtonBase_OnClick"  >Create new Device Action for this Device</Button>
+                        <Button Grid.Row="12" Grid.Column="1" Style="{StaticResource ButtonStyle}" Click="CreateCopy_OnClick"  >Create an exact copy of this device</Button>
+                    </Grid>
+                </Expander>
+                <Expander IsExpanded="True"  Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border  Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Import from other device" />
+                        </Border>
+                    </Expander.Header>
+
+                    <Grid >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Label Content="Device" Grid.Column="0" Style="{StaticResource LabelStyle}" />
+                        <ComboBox Grid.Row="0" Grid.Column="1"  Style="{StaticResource ComboBoxStyle}"
+                                  ItemsSource="{Binding Devices}" SelectedItem="{Binding SelectedImportDevice}" />
+                        <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" Style="{StaticResource ButtonStyle}"
+                                Click="BtnImportDeviceClick">
+                            Import everything from this device
+                        </Button>
+
+                    </Grid>
+                </Expander>
+                <Expander IsExpanded="true"  Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border  Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Device Category" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="5*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <usercontrols:DeviceCategoryPicker Grid.Column="1" Grid.Row="4"  x:Name="DeviceCategoryPicker1"
+                                                 MinHeight="100" MaxHeight="300" />
+                    </Grid>
+                </Expander>
+
+                <Expander IsExpanded="true"  Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Media" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBox Grid.Row="1" Grid.Column="1"  Style="{StaticResource TextBoxStyle}" x:Name="PicturePath"
+                                 Text="{Binding ThisDevice.Picture}" />
+                        <Label Grid.Row="1" Grid.Column="0" Content="Picture filename" Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=PicturePath}"  />
+                        <Label Grid.Row="2" Grid.Column="0" Content="Picture" Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=Image1}" />
+                        <Image Grid.Column="1" Grid.Row="2" Height="150"  Grid.ColumnSpan="2"
+                               Name="Image1"
+                               Stretch="Uniform" VerticalAlignment="Top" Width="300"
+                               Source="{Binding ImageUri}" />
+                        <Button Content="browse for file" Grid.Row="1" Grid.Column="2" Style="{StaticResource ButtonStyle}"
+                                Width="auto" Click="BtnBrowseForFile" />
+                    </Grid>
+                </Expander>
+
+                <Expander IsExpanded="True"  Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border  Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Power" />
+                        </Border>
+                    </Expander.Header>
+
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="5*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource TextBlockStyle}" Grid.ColumnSpan="2">
+                            Here you can define what load this device has at maximum power, for example a hair dryer would have 1000 W. A sink might have 10L/minute of water maxiumum flow speed.
+                        </TextBlock>
+                        <Label Content="Load type" Target="{Binding ElementName=CmbLoadTypes}" Style="{StaticResource LabelStyle}"
+                               Grid.Column="0" Grid.Row="1" />
+                        <ComboBox Grid.Column="1" Grid.Row="1"  Style="{StaticResource ComboBoxStyle}" Name="CmbLoadTypes"
+                                  ItemsSource="{Binding LoadTypes}"
+                                  SelectedItem="{Binding ElementName=LstLoads, Path=SelectedItem.LoadType, Mode=OneWay}" />
+                        <Label Content="Unit" Style="{StaticResource LabelStyle}" Grid.Row="2" Grid.Column="0" />
+                        <Label Content="{Binding ElementName=CmbLoadTypes, Path=SelectedItem.UnitOfPower}"
+                            Style="{StaticResource LabelStyle}"  Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left" />
+                        <Label Content="Maximum Power" Target="{Binding ElementName=TxtMaximumPower}" Style="{StaticResource LabelStyle}" Grid.Column="0" Grid.Row="3" />
+                        <TextBox x:Name="TxtMaximumPower"  Style="{StaticResource TextBoxStyle}" Grid.Column="1" Grid.Row="3"
+                                 Text="{Binding ElementName=LstLoads, Path=SelectedItem.MaxPower, Mode=OneWay}" />
+                        <Label Content="Standard deviation for power stability (0 = stable)"
+                               Target="{Binding ElementName=TxtStandardDeviation}" Style="{StaticResource LabelStyle}"
+                               Grid.Column="0" Grid.Row="4" />
+                        <TextBox x:Name="TxtStandardDeviation"  Style="{StaticResource TextBoxStyle}" Grid.Column="1" Grid.Row="4"
+                                 Text="{Binding ElementName=LstLoads, Path=SelectedItem.StandardDeviation, Mode=OneWay}" />
+                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Grid.Row="5" Grid.Column="0">
+                            <Label Content="Average yearly consumption for this device ["
+                                   Target="{Binding ElementName=TxtAverageYearlyConsumption}" Style="{StaticResource LabelStyle}" />
+                            <Label
+                                Content="{Binding ElementName=CmbLoadTypes, Path=SelectedItem.UnitOfSum}"
+                                Style="{StaticResource LabelStyle}" HorizontalAlignment="Left" />
+                            <Label Content="]" Target="{Binding ElementName=TxtAverageYearlyConsumption}" Style="{StaticResource LabelStyle}" />
+                        </StackPanel>
+                        <TextBox x:Name="TxtAverageYearlyConsumption"  Style="{StaticResource TextBoxStyle}" Grid.Column="1"
+                                 Grid.Row="5"
+                                 Text="{Binding ElementName=LstLoads, Path=SelectedItem.AverageYearlyConsumption, Mode=OneWay}" />
+                        <StackPanel Orientation="Horizontal" Grid.Row="6" Grid.Column="1">
+                            <Button HorizontalAlignment="Right" Click="BtnAddLoad_Click" Style="{StaticResource ButtonStyle}" >
+                                Add Load
+                            </Button>
+                            <Button HorizontalAlignment="Left" Style="{StaticResource ButtonStyle}" Click="BtnRemoveLoad_Click">
+                                Remove Load
+                            </Button>
+                            <Button HorizontalAlignment="Left" Style="{StaticResource ButtonStyle}" Click="BtnFixToCosPhi095_Click">
+                                If electrical then set with cos-phi = 0.95
+                            </Button>
+                        </StackPanel>
+                        <Label Target="{Binding ElementName=LstLoads}" Content="Loads for this device" Grid.Row="7"
+                               Style="{StaticResource LabelStyle}"  Grid.Column="0"
+                                />
+                        <ListView Grid.Row="7" Grid.Column="1" MinHeight="150" x:Name="LstLoads"
+                                  ItemsSource="{Binding ThisDevice.Loads}" Style="{StaticResource ListViewStyle}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="Auto" Header="Load type"
+                                                    DisplayMemberBinding="{Binding LoadType}" />
+                                    <GridViewColumn Width="Auto" Header="Unit"
+                                                    DisplayMemberBinding="{Binding Path=LoadType.UnitOfPower}" />
+                                    <GridViewColumn Width="Auto" Header="Maximum Power"
+                                                    DisplayMemberBinding="{Binding Path=MaxPower,Converter={StaticResource NumberConverter}}" />
+                                    <GridViewColumn Width="Auto" Header="Standard deviation"
+                                                    DisplayMemberBinding="{Binding Path=StandardDeviation,Converter={StaticResource NumberConverter}}" />
+                                    <GridViewColumn Width="Auto" Header="Average Yearly Consumption"
+                                                    DisplayMemberBinding="{Binding Path=AverageYearlyConsumption,Converter={StaticResource NumberConverter}}" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+
+                    </Grid>
+                </Expander>
+                <Expander IsExpanded="true"  Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border  Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Uses" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Style="{StaticResource TextBlockStyle}">Here you can get a list where this device is used.</TextBlock>
+                        <Button Content="refresh"  Width="75" Grid.Row="0" HorizontalAlignment="Right"
+                                Click="BtnRefreshUses_Click" Grid.Column="1" Style="{StaticResource ButtonStyle}" />
+                        <ListView Grid.Row="2" MinHeight="150" Name="LstUses"
+                                  ItemsSource="{Binding UsedIns}" Style="{StaticResource ListViewStyle}"
+                                  MouseDoubleClick="LstUsedIns_MouseDoubleClick" x:FieldModifier="private" MaxHeight="1000" Grid.ColumnSpan="2"
+                                  Grid.Column="0">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="500" Header="Name" DisplayMemberBinding="{Binding Item.Name}" />
+                                    <GridViewColumn Width="auto" Header="Function" DisplayMemberBinding="{Binding TypeDescription}" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                </Expander>
+            </StackPanel>
+        </ScrollViewer>
+
+        <DockPanel Grid.Row="1" >
+            <Border  Style="{StaticResource ObjectLabelBox}" HorizontalAlignment="Left" >
+                <TextBlock Text="{Binding ItemName}"  />
+            </Border>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Right">
+                <Button Content="delete"  Width="75" HorizontalAlignment="Right"
+                    Click="Delete_Click" Style="{StaticResource ButtonStyle}" />
+                <Button Content="Close"  Width="75" HorizontalAlignment="Right"
+                    Click="CloseClick"  Style="{StaticResource ButtonStyle}" />
+            </StackPanel>
+        </DockPanel>
+    </Grid>
+</UserControl>

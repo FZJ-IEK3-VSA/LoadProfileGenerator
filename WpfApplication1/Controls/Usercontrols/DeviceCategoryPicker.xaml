@@ -1,0 +1,36 @@
+﻿<UserControl x:Class="LoadProfileGenerator.Controls.Usercontrols.DeviceCategoryPicker"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:basicHouseholds="clr-namespace:Database.Tables.BasicHouseholds;assembly=Database"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300" >
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Label Grid.Row="0" Content="{Binding SelectedItem.FullPath}"  HorizontalAlignment="Left" Grid.ColumnSpan="2" Style="{StaticResource LabelStyle}" />
+        <Label Grid.Row="1" Grid.Column="0" Content="Search"  HorizontalAlignment="Left" Style="{StaticResource LabelStyle}" />
+        <TextBox Grid.Row="1" TextChanged="TextBoxBase_OnTextChanged" Name="SearchBox" Grid.Column="1" Style="{StaticResource TextBoxStyle}" />
+        <TreeView Grid.Row="2" Name="CategoryView" Background="White"  Grid.ColumnSpan="2" Grid.Column="0" Style="{StaticResource TreeViewStyle}"
+                   ItemsSource="{Binding Path=DeviceCategoriesRoot}"
+            MouseDoubleClick="MyTreeViewMouseDoubleClick" MaxHeight="400">
+            <TreeView.Resources>
+                <HierarchicalDataTemplate DataType="{x:Type basicHouseholds:DeviceCategory}" ItemsSource="{Binding Children}">
+                    <Border>
+                        <TextBlock Text="{Binding Path=ShortName}" />
+                    </Border>
+                </HierarchicalDataTemplate>
+            </TreeView.Resources>
+        </TreeView>
+
+    </Grid>
+</UserControl>

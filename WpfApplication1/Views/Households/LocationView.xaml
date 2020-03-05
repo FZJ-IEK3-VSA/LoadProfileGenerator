@@ -1,0 +1,269 @@
+﻿<UserControl x:Class="LoadProfileGenerator.Views.Households.LocationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             d:DesignHeight="1000"
+             d:DesignWidth="700"
+             mc:Ignorable="d">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="35" />
+        </Grid.RowDefinitions>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <Expander IsExpanded="true" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="General" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="5*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0"
+                                   Grid.Column="0"
+                                   Grid.ColumnSpan="2"
+                                   Style="{StaticResource TextBlockStyle}">
+                            A location is a part of a household where devices can be put. It can have a light device.
+                            An example would be a kitchen or a supermarket. Both are locations that people can go to.
+                        </TextBlock>
+                        <Label Grid.Row="1"
+                               Grid.Column="0"
+                               Content="_Name"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=LocationName}" />
+                        <TextBox x:Name="LocationName"
+                                 Grid.Row="1"
+                                 Grid.Column="1"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding ThisLocation.Name}" />
+
+                        <!--   <Label Content="_Light Device" Target="{Binding ElementName=Lightdevice}" Grid.Row="3"
+                               Grid.Column="0" />
+                        <ComboBox Grid.Row="3" Name="Lightdevice" VerticalAlignment="Top"
+                                  ItemsSource="{Binding Devices}" SelectedItem="{Binding ThisLocation.LightDevice}"
+                                  Grid.Column="1" />-->
+
+                    </Grid>
+                </Expander>
+
+                <Expander IsExpanded="true" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Light Devices" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="*" />
+
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.ColumnSpan="2" Style="{StaticResource TextBlockStyle}">
+                            Here you can add light devices to a location. The light device is turned on every time someone is
+                            in the room after dark if they are executing an activity marked with &quot;requires light&quot;. The darkness is determined by
+                            the geographic location. In the geographic location you can set a time limit that determines when program should consider it to be &quot;dark&quot;.
+                        </TextBlock>
+                        <Label Grid.Row="1"
+                               Grid.Column="0"
+                               Content="_Category or Device"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=CmbDeviceOrCategory}" />
+                        <ComboBox Name="CmbDeviceOrCategory"
+                                  Grid.Row="1"
+                                  Grid.Column="1"
+                                  ItemsSource="{Binding CategoryOrDevice}"
+                                  SelectedItem="{Binding ElementName=LstDevs,
+                                                         Path=SelectedItem.DeviceOrCategory,
+                                                         Mode=OneWay}"
+                                  SelectionChanged="CmbDeviceOrCategory_OnSelectionChanged"
+                                  Style="{StaticResource ComboBoxStyle}" />
+                        <!--  Device to add  -->
+                        <Label Grid.Row="2"
+                               Grid.Column="0"
+                               Content="Device"
+                               Style="{StaticResource LabelStyle}"
+                               Visibility="{Binding ShowDeviceDropDown}" />
+                        <ComboBox Name="CmbDevices"
+                                  Grid.Row="2"
+                                  Grid.Column="1"
+                                  x:FieldModifier="private"
+                                  ItemsSource="{Binding Devices}"
+                                  SelectedItem="{Binding ElementName=LstDevs,
+                                                         Path=SelectedItem.RealDevice,
+                                                         Mode=OneWay}"
+                                  Style="{StaticResource ComboBoxStyle}"
+                                  Visibility="{Binding ShowDeviceDropDown}" />
+
+                        <!--  Category to add  -->
+                        <Label Grid.Row="3"
+                               Grid.Column="0"
+                               Content="_Category to add"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=CmbDeviceCategories}"
+                               Visibility="{Binding ShowCategoryDropDown}" />
+                        <ComboBox Name="CmbDeviceCategories"
+                                  Grid.Row="3"
+                                  Grid.Column="1"
+                                  ItemsSource="{Binding DeviceCategories}"
+                                  SelectedItem="{Binding ElementName=LstDevs,
+                                                         Path=SelectedItem.DeviceCategory,
+                                                         Mode=OneWay}"
+                                  Style="{StaticResource ComboBoxStyle}"
+                                  Visibility="{Binding ShowCategoryDropDown}" />
+                        <!--  Category to add  -->
+
+
+                        <StackPanel Grid.Row="9"
+                                    Grid.Column="1"
+                                    Orientation="Horizontal">
+                            <Button HorizontalAlignment="Right"
+                                    Click="BtnAddDeviceClick"
+                                    Style="{StaticResource ButtonStyle}">
+                                Add Device
+                            </Button>
+                            <Button HorizontalAlignment="Left"
+                                    Click="BtnRemoveDeviceClick"
+                                    Style="{StaticResource ButtonStyle}">
+                                Remove Device
+                            </Button>
+                        </StackPanel>
+                        <Label Grid.Row="10"
+                               Grid.Column="0"
+                               HorizontalAlignment="Left"
+                               Content="Device Count"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=LblDeviceCount}" />
+                        <Label Name="LblDeviceCount"
+                               Grid.Row="10"
+                               Grid.Column="1"
+                               HorizontalAlignment="Left"
+                               Content="{Binding ThisLocation.LocationDevices.Count}"
+                               Style="{StaticResource LabelStyle}" />
+                        <ListView Name="LstDevs"
+                                  Grid.Row="11"
+                                  Grid.Column="0"
+                                  Grid.ColumnSpan="2"
+                                  MinHeight="100"
+                                  ItemsSource="{Binding ThisLocation.LocationDevices}"
+                                  MouseDoubleClick="LstDevs_OnMouseDoubleClick"
+                                  Style="{StaticResource ListViewStyle}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding DeviceName}"
+                                                    Header="Device" />
+
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+
+
+                </Expander>
+
+
+                <Expander IsExpanded="true" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Used by" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Style="{StaticResource TextBlockStyle}">
+                            Here you can get a list which households use this location, if any.
+                        </TextBlock>
+                        <Button Grid.Row="0"
+                                Grid.Column="1"
+                                Width="75"
+                                HorizontalAlignment="Right"
+                                Click="BtnRefreshHouseholds_Click"
+                                Content="refresh"
+                                Style="{StaticResource ButtonStyle}" />
+                        <ListView Name="LstLocationHouseholds"
+                                  Grid.Row="2"
+                                  Grid.Column="0"
+                                  Grid.ColumnSpan="2"
+                                  MinHeight="150"
+                                  x:FieldModifier="private"
+                                  ItemsSource="{Binding Households}"
+                                  MouseDoubleClick="LstLocationHouseholds_MouseDoubleClick"
+                                  ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                                  Style="{StaticResource ListViewStyle}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="500"
+                                                    DisplayMemberBinding="{Binding Item.Name}"
+                                                    Header="Name" />
+                                    <GridViewColumn Width="auto"
+                                                    DisplayMemberBinding="{Binding TypeDescription}"
+                                                    Header="Name" />
+                                    <GridViewColumn Width="auto"
+                                                    DisplayMemberBinding="{Binding Information}"
+                                                    Header="Affordances" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                </Expander>
+            </StackPanel>
+        </ScrollViewer>
+
+        <DockPanel Grid.Row="1">
+            <Border HorizontalAlignment="Left" Style="{StaticResource ObjectLabelBox}">
+                <TextBlock Text="{Binding ItemName}" />
+            </Border>
+            <StackPanel HorizontalAlignment="Right"
+                        DockPanel.Dock="Right"
+                        Orientation="Horizontal">
+                <Button Width="75"
+                        HorizontalAlignment="Right"
+                        Click="Delete_Click"
+                        Content="delete"
+                        Style="{StaticResource ButtonStyle}" />
+                <Button Width="75"
+                        HorizontalAlignment="Right"
+                        Click="CloseClick"
+                        Content="Close"
+                        Style="{StaticResource ButtonStyle}" />
+            </StackPanel>
+        </DockPanel>
+    </Grid>
+</UserControl>

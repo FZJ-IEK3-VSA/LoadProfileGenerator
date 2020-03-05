@@ -1,0 +1,63 @@
+﻿<UserControl x:Class="LoadProfileGenerator.Model.GlobalTree"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:model="clr-namespace:LoadProfileGenerator.Model"
+             xmlns:helpers="clr-namespace:Database.Helpers;assembly=Database"
+             xmlns:tables="clr-namespace:Database.Tables;assembly=Database"
+             mc:Ignorable="d" d:DesignHeight="300"
+             d:DesignWidth="300">
+    <UserControl.Resources>
+
+        <model:TextInputToVisibilityConverter x:Key="TextInputToVisibilityConverter" />
+
+        <Style x:Key="EntryFieldStyle" TargetType="Grid">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="5,2" />
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+
+        <TreeView Name="GlobalTreeA" Margin="0,0,0,0" Background="White"
+                  SelectedItemChanged="TreeView1SelectedItemChanged" ItemsSource="{Binding Path=CurrentCategories}"
+                  MouseDoubleClick="MyTreeViewMouseDoubleClick" Grid.Row="0">
+            <TreeView.Resources>
+                <HierarchicalDataTemplate DataType="{x:Type helpers:BasicCategory}"
+                                          ItemsSource="{Binding FilteredItems}">
+                    <Border>
+                        <TextBlock Text="{Binding Path=Name}" />
+                    </Border>
+                </HierarchicalDataTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type helpers:OtherCategory}">
+                    <Border>
+                        <TextBlock Text="{Binding Path=Name}" />
+                    </Border>
+                </HierarchicalDataTemplate>
+                <DataTemplate DataType="{x:Type tables:DBBase}">
+                    <Border>
+                        <TextBlock Text="{Binding Path=PrettyName}" />
+                    </Border>
+                </DataTemplate>
+            </TreeView.Resources>
+        </TreeView>
+        <Grid Grid.Row="1" Style="{StaticResource EntryFieldStyle}">
+            <TextBlock Margin="5,2" Text="Search...">
+                <TextBlock.Visibility>
+                    <MultiBinding Converter="{StaticResource TextInputToVisibilityConverter}">
+                        <Binding ElementName="TxtSearchBox" Path="Text.IsEmpty" />
+                        <Binding ElementName="TxtSearchBox" Path="IsFocused" />
+                    </MultiBinding>
+                </TextBlock.Visibility>
+            </TextBlock>
+            <TextBox Name="TxtSearchBox" Background="Transparent" TextChanged="TxtSearchBox_OnTextChanged" />
+
+        </Grid>
+    </Grid>
+</UserControl>

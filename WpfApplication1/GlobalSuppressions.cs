@@ -1,0 +1,12 @@
+﻿// This file is used by Code Analysis to maintain SuppressMessage
+// attributes that are applied to this project.
+// Project-level suppressions either have no target or are given
+// a specific target and scoped to a namespace, type, member, etc.
+
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Potential Code Quality Issues", "RECS0029:Warns about property or indexer setters and event adders or removers that do not use the value parameter", Justification = "<Pending>", Scope = "member", Target = "~P:LPGControls.Usercontrols.ScrollableTabPanel.CanVerticallyScroll")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Scope = "member", Target = "LoadProfileGenerator.ScreenshotHelper.#SnapShotPng(System.Windows.UIElement,System.String)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Scope = "member", Target = "LoadProfileGenerator.Views.SpecialViews.ImportView.#BtnGetPreview(System.Object,System.Windows.RoutedEventArgs)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1111:Closing parenthesis must be on line of last parameter", Justification = "<Pending>")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Sonar Code Smell", "S3897:Classes that provide \"Equals(<T>)\" or override \"Equals(Object)\" should implement \"IEquatable<T>\"", Justification = "<Pending>", Scope = "type", Target = "~T:LoadProfileGenerator.Presenters.SpecialViews.ImportPresenter")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Sonar Code Smell", "S3897:Classes that provide \"Equals(<T>)\" or override \"Equals(Object)\" should implement \"IEquatable<T>\"", Justification = "<Pending>", Scope = "type", Target = "~T:LoadProfileGenerator.Presenters.SpecialViews.ResultPresenter")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Sonar Code Smell", "S3897:Classes that provide \"Equals(<T>)\" or override \"Equals(Object)\" should implement \"IEquatable<T>\"", Justification = "<Pending>", Scope = "type", Target = "~T:LoadProfileGenerator.Presenters.SpecialViews.SettingPresenter")]

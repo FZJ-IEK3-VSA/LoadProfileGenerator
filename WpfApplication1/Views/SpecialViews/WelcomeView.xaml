@@ -1,0 +1,78 @@
+﻿<!--  ReSharper disable UnusedMember.Global  -->
+<UserControl x:Class="LoadProfileGenerator.Views.SpecialViews.WelcomeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             d:DesignHeight="800"
+             d:DesignWidth="548"
+             mc:Ignorable="d">
+
+    <ScrollViewer Name="ScrollViewer1" VerticalScrollBarVisibility="Auto">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0"
+                       FontSize="24"
+                       FontWeight="ExtraBold"
+                       Style="{StaticResource TextBlockStyle}">
+                Welcome to the Load Profile Generator!
+                <LineBreak />
+            </TextBlock>
+            <TextBlock Grid.Row="1"
+                       FontSize="18"
+                       FontWeight="Bold"
+                       Style="{StaticResource TextBlockStyle}"
+                       Text="{Binding WarningString}"
+                       TextWrapping="WrapWithOverflow"
+                       Visibility="{Binding WarningVisibility}" />
+            <!--TextBlock Style="{StaticResource TextBlockStyle}" FontSize="14" FontWeight="Bold">
+                Request for help:<LineBreak />
+                Please help improve the LPG by increasing the data basis. <LineBreak />
+
+                Two things would help a lot: <LineBreak />
+                First, if you have measured device profiles (doesn't really matter which devices), please consider donating some to the LPG.
+                <LineBreak />
+                Second, it would be helpful to have behaviour data about more households. So if you have time, please consider if it would be possible to keep track of all the actions in your household for a few days in
+                a 15 min resolution.
+                <LineBreak />
+                Also, if you send me such data, I'll model your household for you. All behaviour data will be anonymized of course and all donated device profiles will be properly attributed.
+
+                </>
+            -->
+            <TextBlock Grid.Row="2"
+                       FontSize="14"
+                       Style="{StaticResource TextBlockStyle}">
+                The Load Profile Generator enables you to generate load profiles for households.
+                You can either use one of the predefined households, define your own by using the
+                predefined building blocks for the household or start by defining your own. More and
+                detailed information is available in the manual that you can request from the author.
+                The reason for not delivering the manual with the LPG is
+                that I'm curious who is using the LPG and what people are doing with it.
+                <LineBreak />
+                <LineBreak />
+                If you are looking for the quickest way to a load profile, select &quot;Calculation&quot; on the left,
+                fill in a target path and click on the button &quot;calculate!&quot;.
+                <LineBreak />
+                <LineBreak />
+                Else you can either edit the existing elements by selecting them in the tree on the right or add new
+                ones by selecting &quot;Add&quot; in the menu above.
+                <LineBreak />
+                <LineBreak />
+                If you want to make changes, the way the program works is roughly like this: Persons will select based
+                on their Desires from the Affordances in a Household what to do. Which affordances are available
+                depends on the devices in the Household. Each Device use causes a certain energy use based on the
+                Load Type and the Time Profile. So to start with a new Household, add some Persons, set the Desires
+                for the Persons and then add a Household. Add as many Devices to the Household as you want so that
+                the Persons have enough to do. Then run the simulation. Additionally you can add new Devices and
+                put them together into new Affordances.
+            </TextBlock>
+        </Grid>
+    </ScrollViewer>
+
+</UserControl>
+<!--  ReSharper restore UnusedMember.Global  -->

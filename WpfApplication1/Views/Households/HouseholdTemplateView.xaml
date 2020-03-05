@@ -1,0 +1,696 @@
+﻿<!--  ReSharper disable UnusedMember.Global  -->
+<UserControl x:Class="LoadProfileGenerator.Views.Households.HouseholdTemplateView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             d:DesignHeight="2500"
+             d:DesignWidth="1000"
+             mc:Ignorable="d">
+    <Grid Name="BaseGrid">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="35" />
+        </Grid.RowDefinitions>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <Expander IsExpanded="True" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="General" />
+                        </Border>
+                    </Expander.Header>
+
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0"
+                                   Grid.Column="0"
+                                   Grid.ColumnSpan="2"
+                                   Style="{StaticResource TextBlockStyle}">
+                            <Run Text="A household is the central element in the load profile generator. Here is where everything is put together. The people get united with the devices which are located in rooms and offer affordances to the people. Additionally there are autonomous devices which run independently of the people, for example a fridge. The energy intensity is for randomly selecting devices from device categories." />
+                        </TextBlock>
+
+                        <Label Grid.Row="1"
+                               Grid.Column="0"
+                               Content="_Name"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=HouseholdName}" />
+                        <TextBox x:Name="HouseholdName"
+                                 Grid.Row="1"
+                                 Grid.Column="1"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding ThisTemplate.Name}" />
+
+
+                        <Label Grid.Row="3"
+                               Grid.Column="0"
+                               Content="_Description"
+                               Style="{StaticResource LabelStyle}" />
+                        <TextBox Grid.Row="3"
+                                 Grid.Column="1"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding ThisTemplate.Description}" />
+                        <Label Grid.Row="4"
+                               Grid.Column="0"
+                               Content="Name for the new households"
+                               Style="{StaticResource LabelStyle}" />
+                        <TextBox Grid.Row="4"
+                                 Grid.Column="1"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding ThisTemplate.NewHHName}" />
+                        <Label Grid.Row="5"
+                               Grid.Column="0"
+                               Content="Amount to generate"
+                               Style="{StaticResource LabelStyle}" />
+                        <TextBox Grid.Row="5"
+                                 Grid.Column="1"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding ThisTemplate.Count}" />
+
+
+                    </Grid>
+
+
+                </Expander>
+                <Expander IsExpanded="True" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Import" />
+                        </Border>
+                    </Expander.Header>
+
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0"
+                                   Grid.Column="0"
+                                   Grid.ColumnSpan="2"
+                                   Style="{StaticResource TextBlockStyle}">
+                            <Run Text="You can import a template from an existing modular household. But since every trait can have multiple tags, no clear assignment can be determined. So the result can only be a first approach which will definitely need a lot of additional work.                                  " />
+                        </TextBlock>
+
+
+                        <Label Grid.Row="1"
+                               Grid.Column="0"
+                               Content="Household"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=CmbChh}" />
+                        <ComboBox x:Name="CmbChh"
+                                  Grid.Row="1"
+                                  Grid.Column="1"
+                                  ItemsSource="{Binding AllModularHouseholds}"
+                                  SelectedItem="{Binding SelectedCHH}"
+                                  Style="{StaticResource ComboBoxStyle}" />
+                        <Button Grid.Row="3"
+                                Grid.Column="1"
+                                Click="ImportClick"
+                                Content="Import"
+                                Style="{StaticResource ButtonStyle}" />
+                    </Grid>
+
+
+                </Expander>
+
+                <Expander IsExpanded="True" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Template Tags" />
+                        </Border>
+                    </Expander.Header>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+
+                        <Label Grid.Row="1"
+                               Grid.Column="0"
+                               Content="Template Tag"
+                               Style="{StaticResource LabelStyle}" />
+                        <ComboBox Grid.Row="1"
+                                  Grid.Column="1"
+                                  DisplayMemberPath="PrettyName"
+                                  ItemsSource="{Binding AllTemplateTags}"
+                                  SelectedItem="{Binding SelectedHouseholdTag}"
+                                  Style="{StaticResource ComboBoxStyle}" />
+                        <StackPanel Grid.Row="4"
+                                    Grid.Column="1"
+                                    Orientation="Horizontal">
+                            <Button HorizontalAlignment="Right"
+                                    Click="BtnAddTemplateTag_Click"
+                                    Style="{StaticResource ButtonStyle}">
+                                Add Tag
+                            </Button>
+                            <Button HorizontalAlignment="Left"
+                                    Click="BtnRemoveTag_Click"
+                                    Style="{StaticResource ButtonStyle}">
+                                Remove Tag
+                            </Button>
+                            <Button HorizontalAlignment="Left"
+                                    Click="BtnCreateNewTag_Click"
+                                    Style="{StaticResource ButtonStyle}">
+                                Create new tag and add it
+                            </Button>
+                        </StackPanel>
+
+                        <ListView x:Name="LstTemplateTags"
+                                  Grid.Row="5"
+                                  Grid.Column="1"
+                                  MinHeight="150"
+                                  ItemsSource="{Binding ThisTemplate.TemplateTags}"
+                                  MouseDoubleClick="LstTemplateTags_OnMouseDoubleClick"
+                                  SelectionChanged="LstTemplate_OnSelectionChanged"
+                                  Style="{StaticResource ListViewStyle}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding Tag.PrettyName}"
+                                                    Header="Name" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                </Expander>
+
+
+                <Expander IsExpanded="True" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Persons" />
+                        </Border>
+                    </Expander.Header>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+
+                        <Label Grid.Row="1"
+                               Grid.Column="0"
+                               Content="Person"
+                               Style="{StaticResource LabelStyle}" />
+                        <ComboBox Grid.Row="1"
+                                  Grid.Column="1"
+                                  DisplayMemberPath="PrettyName"
+                                  ItemsSource="{Binding AllPersons}"
+                                  SelectedItem="{Binding SelectedPerson}"
+                                  Style="{StaticResource ComboBoxStyle}" />
+                        <Label Grid.Row="2"
+                               Grid.Column="0"
+                               Content="Living Pattern Tag"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=CmbLivingPatterns}" />
+                        <ComboBox x:Name="CmbLivingPatterns"
+                                  Grid.Row="2"
+                                  Grid.Column="1"
+                                  DisplayMemberPath="PrettyName"
+                                  ItemsSource="{Binding LivingPatternTags}"
+                                  SelectedItem="{Binding SelectedItem.LivingPattern,
+                                                         ElementName=LstPersons,
+                                                         Mode=OneWay}"
+                                  Style="{StaticResource ComboBoxStyle}" />
+                        <StackPanel Grid.Row="4"
+                                    Grid.Column="1"
+                                    Orientation="Horizontal">
+                            <Button HorizontalAlignment="Right"
+                                    Click="BtnAddPerson_Click"
+                                    Style="{StaticResource ButtonStyle}">
+                                Add Entry
+                            </Button>
+                            <Button HorizontalAlignment="Left"
+                                    Click="BtnRemovePerson_Click"
+                                    Style="{StaticResource ButtonStyle}">
+                                Remove Entry
+                            </Button>
+                        </StackPanel>
+
+                        <ListView x:Name="LstPersons"
+                                  Grid.Row="5"
+                                  Grid.Column="1"
+                                  MinHeight="150"
+                                  ItemsSource="{Binding ThisTemplate.Persons}"
+                                  SelectionChanged="Selector_OnSelectionChanged"
+                                  Style="{StaticResource ListViewStyle}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding Person.PrettyName}"
+                                                    Header="Person" />
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding LivingPattern.PrettyName}"
+                                                    Header="Living Pattern" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                </Expander>
+                <Expander IsExpanded="True" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Vacations" />
+                        </Border>
+                    </Expander.Header>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+
+                        <RadioButton Grid.ColumnSpan="3"
+                                     GroupName="VacationType"
+                                     IsChecked="{Binding VacationFromList}"
+                                     Style="{StaticResource RadioButtonStyle}">
+                            Choose the vacation for the newly generated households from the list below
+                        </RadioButton>
+                        <Label Grid.Row="1"
+                               Grid.Column="0"
+                               Content="Vacation"
+                               Style="{StaticResource LabelStyle}" />
+                        <ComboBox Grid.Row="1"
+                                  Grid.Column="1"
+                                  DisplayMemberPath="PrettyName"
+                                  ItemsSource="{Binding AllVacations}"
+                                  SelectedItem="{Binding SelectedVacation}"
+                                  Style="{StaticResource ComboBoxStyle}" />
+                        <StackPanel Grid.Row="4"
+                                    Grid.Column="1"
+                                    Orientation="Horizontal">
+                            <Button HorizontalAlignment="Right"
+                                    Click="BtnAddVacation_Click"
+                                    Style="{StaticResource ButtonStyle}">
+                                Add Entry
+                            </Button>
+                            <Button HorizontalAlignment="Left"
+                                    Click="BtnRemoveVacation_Click"
+                                    Style="{StaticResource ButtonStyle}">
+                                Remove Entry
+                            </Button>
+                            <Button HorizontalAlignment="Right"
+                                    Click="BtnAddAllVacation_Click"
+                                    Style="{StaticResource ButtonStyle}">
+                                Add all Entries
+                            </Button>
+                            <Button HorizontalAlignment="Right"
+                                    Click="BtnRemoveWrongAge_Click"
+                                    Style="{StaticResource ButtonStyle}">
+                                Remove all entries violating the age limits
+                            </Button>
+                        </StackPanel>
+
+                        <ListView x:Name="LstVacations"
+                                  Grid.Row="5"
+                                  Grid.Column="1"
+                                  MinHeight="150"
+                                  ItemsSource="{Binding ThisTemplate.Vacations}"
+                                  SelectionChanged="LstVacationsOnSelectionChanged"
+                                  Style="{StaticResource ListViewStyle}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding Vacation.PrettyName}"
+                                                    Header="Name" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                        <RadioButton Grid.Row="6"
+                                     Grid.Column="0"
+                                     Grid.ColumnSpan="2"
+                                     GroupName="VacationType"
+                                     IsChecked="{Binding VacationRandomlyGenerated}"
+                                     Style="{StaticResource RadioButtonStyle}">
+                            Randomly generate a new vacation according to the parameters below
+                        </RadioButton>
+                        <Label Grid.Row="7"
+                               Grid.Column="0"
+                               Content="Minimum number of vacations to take per year"
+                               Style="{StaticResource LabelStyle}" />
+                        <TextBox Grid.Row="7"
+                                 Grid.Column="1"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding ThisTemplate.MinNumberOfVacations}" />
+
+                        <Label Grid.Row="8"
+                               Grid.Column="0"
+                               Content="Maximums number of vacations to take per year"
+                               Style="{StaticResource LabelStyle}" />
+                        <TextBox Grid.Row="8"
+                                 Grid.Column="1"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding ThisTemplate.MaxNumberOfVacations}" />
+
+                        <Label Grid.Row="9"
+                               Grid.Column="0"
+                               Content="Average Vacation Duration"
+                               Style="{StaticResource LabelStyle}" />
+                        <TextBox Grid.Row="9"
+                                 Grid.Column="1"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding ThisTemplate.AverageVacationDuration}" />
+
+                        <Label Grid.Row="10"
+                               Grid.Column="0"
+                               Content="Minimum total vacation days per year"
+                               Style="{StaticResource LabelStyle}" />
+                        <TextBox Grid.Row="10"
+                                 Grid.Column="1"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding ThisTemplate.MinTotalVacationDays}" />
+
+                        <Label Grid.Row="11"
+                               Grid.Column="0"
+                               Content="Maximum total vacation days per year"
+                               Style="{StaticResource LabelStyle}" />
+                        <TextBox Grid.Row="11"
+                                 Grid.Column="1"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding ThisTemplate.MaxTotalVacationDays}" />
+
+                        <Label Grid.Row="12"
+                               Grid.Column="0"
+                               Content="Date based probability profile to use to allocate the vacations"
+                               Style="{StaticResource LabelStyle}" />
+                        <ComboBox Grid.Row="12"
+                                  Grid.Column="1"
+                                  DisplayMemberPath="PrettyName"
+                                  ItemsSource="{Binding AllDateBasedProfiles}"
+                                  SelectedItem="{Binding ThisTemplate.TimeProfileForVacations}"
+                                  Style="{StaticResource ComboBoxStyle}" />
+                    </Grid>
+                </Expander>
+
+
+                <Expander IsExpanded="True" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Entries" />
+                        </Border>
+                    </Expander.Header>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Label Grid.Row="0"
+                               Grid.Column="0"
+                               Content="Randomly add to the persons "
+                               Style="{StaticResource LabelStyle}" />
+                        <ListView x:Name="HHPersons"
+                                  Grid.Row="0"
+                                  Grid.Column="1"
+                                  MinHeight="150"
+                                  ItemsSource="{Binding Persons}"
+                                  Style="{StaticResource ListViewStyle}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="Auto" Header="">
+
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <WrapPanel>
+                                                    <CheckBox IsChecked="{Binding IsChecked}" />
+                                                </WrapPanel>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+
+                                    </GridViewColumn>
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding Person.PrettyName}"
+                                                    Header="Name" />
+
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                        <Label Grid.Row="1"
+                               Grid.Column="0"
+                               Content="between"
+                               Style="{StaticResource LabelStyle}" />
+                        <TextBox Grid.Row="1"
+                                 Grid.Column="1"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding MinCount}" />
+                        <StackPanel Grid.Row="2"
+                                    Grid.Column="0"
+                                    Orientation="Horizontal">
+                            <Label Content="and (max. " Style="{StaticResource LabelStyle}" />
+                            <Label Content="{Binding MaximumTraits}" Style="{StaticResource LabelStyle}" />
+                            <Label Content=")" Style="{StaticResource LabelStyle}" />
+                        </StackPanel>
+                        <TextBox Grid.Row="2"
+                                 Grid.Column="1"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding MaxCount}" />
+                        <Label Grid.Row="3"
+                               Grid.Column="0"
+                               Content=" of the traits with the tag"
+                               Style="{StaticResource LabelStyle}" />
+                        <ComboBox Grid.Row="3"
+                                  Grid.Column="1"
+                                  ItemsSource="{Binding AllTags}"
+                                  SelectedItem="{Binding SelectedTag}"
+                                  Style="{StaticResource ComboBoxStyle}" />
+
+                        <StackPanel Grid.Row="4"
+                                    Grid.Column="1"
+                                    Orientation="Horizontal">
+                            <Button HorizontalAlignment="Right"
+                                    Click="BtnAddEntry_Click"
+                                    Style="{StaticResource ButtonStyle}">
+                                Add Entry
+                            </Button>
+                            <Button HorizontalAlignment="Left"
+                                    Click="BtnRemoveEntry_Click"
+                                    Style="{StaticResource ButtonStyle}">
+                                Remove Entry
+                            </Button>
+                            <Button HorizontalAlignment="Left"
+                                    Click="BtnRemoveAllEntry_Click"
+                                    Style="{StaticResource ButtonStyle}">
+                                Remove all Entries
+                            </Button>
+                        </StackPanel>
+                        <Label Grid.Row="5"
+                               Grid.Column="0"
+                               Content="Filter"
+                               Style="{StaticResource LabelStyle}" />
+                        <TextBox Name="TxtFilter"
+                                 Grid.Row="5"
+                                 Grid.Column="1"
+                                 KeyUp="UIElement_OnKeyUp"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding FilterText}" />
+
+
+                        <ListView x:Name="LstEntries"
+                                  Grid.Row="6"
+                                  Grid.Column="1"
+                                  MinHeight="150"
+                                  ItemsSource="{Binding FilteredEntries}"
+                                  MouseDoubleClick="LstEntries_OnMouseDoubleClick"
+                                  SelectedItem="{Binding SelectedEntry}"
+                                  Style="{StaticResource ListViewStyle}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding PrettyString}"
+                                                    Header="Name" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                </Expander>
+                <Expander IsExpanded="True" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Generate" />
+                        </Border>
+                    </Expander.Header>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+
+                            <ColumnDefinition Width="*" />
+
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <CheckBox Name="ChkSettlementCreation"
+                                  Grid.Row="0"
+                                  IsChecked="False"
+                                  Style="{StaticResource CheckBoxStyle}">
+                            Generate settlement for testing all the new households
+                        </CheckBox>
+                        <Button Grid.Row="1"
+                                Click="Generate_Click"
+                                Content="Generate households!"
+                                Style="{StaticResource ButtonStyle}" />
+                    </Grid>
+                </Expander>
+
+                <Expander IsExpanded="True" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Generated Households" />
+                        </Border>
+                    </Expander.Header>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0"
+                                   Grid.Column="0"
+                                   Style="{StaticResource TextBlockStyle}"
+                                   Text="This lists the households generated. If you find a problem, you can delete them all at once." />
+                        <Button Grid.Row="0"
+                                Grid.Column="1"
+                                Click="RefreshHouseholdsClick"
+                                Content="Refresh"
+                                Style="{StaticResource ButtonStyle}" />
+                        <Button Grid.Row="1"
+                                Grid.Column="1"
+                                Click="DeleteAllClick"
+                                Content="Delete All"
+                                Style="{StaticResource ButtonStyle}" />
+
+                        <ListView x:Name="LstGeneratedHouseholds"
+                                  Grid.Row="3"
+                                  Grid.Column="0"
+                                  Grid.ColumnSpan="2"
+                                  MinHeight="150"
+                                  ItemsSource="{Binding GeneratedHouseholds}"
+                                  MouseDoubleClick="LstGeneratedHouseholds_OnMouseDoubleClick"
+                                  Style="{StaticResource ListViewStyle}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding PrettyName}"
+                                                    Header="Name" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+
+
+                    </Grid>
+                </Expander>
+
+            </StackPanel>
+
+
+        </ScrollViewer>
+
+        <DockPanel Grid.Row="1">
+            <Border HorizontalAlignment="Left" Style="{StaticResource ObjectLabelBox}">
+                <TextBlock Text="{Binding ItemName}" />
+            </Border>
+            <StackPanel HorizontalAlignment="Right"
+                        DockPanel.Dock="Right"
+                        Orientation="Horizontal">
+                <Button Width="75"
+                        HorizontalAlignment="Right"
+                        Click="Delete_Click"
+                        Content="delete"
+                        Style="{StaticResource ButtonStyle}" />
+                <Button Width="75"
+                        HorizontalAlignment="Right"
+                        Click="CloseClick"
+                        Content="Close"
+                        Style="{StaticResource ButtonStyle}" />
+            </StackPanel>
+        </DockPanel>
+    </Grid>
+</UserControl>

@@ -1,0 +1,149 @@
+﻿<UserControl
+    x:Class="LoadProfileGenerator.Views.Households.DeviceCategoryView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:usercontrols="clr-namespace:LoadProfileGenerator.Controls.Usercontrols"
+             mc:Ignorable="d" d:DesignHeight="1100"
+             d:DesignWidth="800"
+             Loaded="UserControl_Loaded">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="35" />
+        </Grid.RowDefinitions>
+
+        <ScrollViewer MinWidth="400" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <Expander IsExpanded="true"  Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border  Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="General" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="5*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Style="{StaticResource TextBlockStyle}" Grid.ColumnSpan="2">
+                            A device category contains one or more devices. At calculation time the program picks from the
+                            devices based on the desired energy intensity and uses the device for calculation.
+                        </TextBlock>
+                        <Label Content="Name" Target="{Binding ElementName=DeviceName}"
+                               Grid.Row="1" Grid.Column="0" Style="{StaticResource LabelStyle}" />
+                        <TextBox x:Name="DeviceName"  Style="{StaticResource TextBoxStyle}" Grid.Column="1" Grid.Row="1"
+                                 Text="{Binding ThisDeviceCategory.ShortName}" />
+
+                        <Label Content="Parent category" Target="{Binding ElementName=CmbParentDeviceCategory}" Style="{StaticResource LabelStyle}"
+                                Grid.Row="2" Grid.Column="0" />
+                        <ComboBox Grid.Row="2" Grid.Column="1" Style="{StaticResource ComboBoxStyle}" Name="CmbParentDeviceCategory"
+                                  ItemsSource="{Binding AllDeviceCategories}" SelectedItem="{Binding SelectedParentCategory}" />
+                        <Label Content="Full path" Style="{StaticResource LabelStyle}" Grid.Row="3" Grid.Column="0" />
+                        <Label Content="{Binding ThisDeviceCategory.FullPath}" Style="{StaticResource LabelStyle}" Grid.Row="3"
+                               Grid.Column="1" HorizontalAlignment="Left" />
+                        <CheckBox Content="Don't show devices from this device category in the real device views" Grid.Row="4" Grid.Column="1"
+                                  IsChecked="{Binding ThisDeviceCategory.IgnoreInRealDeviceViews}"
+                                  Style="{StaticResource CheckBoxStyle}" />
+                    </Grid>
+                </Expander>
+                <Expander IsExpanded="true" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border  Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Overview" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+
+                        <usercontrols:DeviceCategoryPicker x:Name="DeviceCategoryPicker1" MinHeight="200"
+                                                 MaxHeight="300" Loaded="DeviceCategoryPicker1_Loaded" />
+                    </Grid>
+                </Expander>
+                <Expander IsExpanded="true" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border  Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Devices" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <TextBlock  Style="{StaticResource TextBlockStyle}" >This list shows the devices that are in this category.</TextBlock>
+                        <Button Content="refresh"  Width="75" Grid.Row="0" HorizontalAlignment="Right"
+                                Click="BtnRefreshDevices_Click" Style="{StaticResource ButtonStyle}" Grid.Column="1"  />
+                        <ListView Grid.Row="1" Grid.Column="0" MinHeight="150" Style="{StaticResource ListViewStyle}"
+                                  x:Name="LstDevicesInCategory" ItemsSource="{Binding ThisDeviceCategory.SubDevices}"
+                                   MouseDoubleClick="LstPersonDesiresMouseDoubleClick" Grid.ColumnSpan="2">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="Auto" Header="Name" />
+                                    <GridViewColumn Width="Auto" Header="Weighted Energy Intensity" DisplayMemberBinding="{Binding WeightedEnergyIntensity}" />
+
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+
+                    </Grid>
+                </Expander>
+                <Expander IsExpanded="true" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border  Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Used by" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock  Style="{StaticResource TextBlockStyle}" >Here you can get a list where this  device category is used.</TextBlock>
+                        <Button Content="refresh" Style="{StaticResource ButtonStyle}" Width="75" Grid.Row="0" HorizontalAlignment="Right"
+                                Click="BtnRefreshHouseholds_Click" Grid.Column="1"  />
+                        <ListView Grid.Row="2" MinHeight="150" Name="LstUsedIn"
+                                  ItemsSource="{Binding UsedIns}"  Style="{StaticResource ListViewStyle}"
+                                  MouseDoubleClick="LstHouseholds_MouseDoubleClick" x:FieldModifier="private" Grid.ColumnSpan="2"
+                                  Grid.Column="0">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="500" Header="Name" DisplayMemberBinding="{Binding Item.Name}" />
+                                    <GridViewColumn Width="auto" Header="Type" DisplayMemberBinding="{Binding TypeDescription}" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                </Expander>
+            </StackPanel>
+        </ScrollViewer>
+
+        <DockPanel Grid.Row="1" >
+            <Border  Style="{StaticResource ObjectLabelBox}" HorizontalAlignment="Left" >
+                <TextBlock Text="{Binding ItemName}"  />
+            </Border>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Right">
+                <Button Content="delete"  Width="75" HorizontalAlignment="Right"
+                    Click="Delete_Click" Style="{StaticResource ButtonStyle}" />
+                <Button Content="Close"  Width="75" HorizontalAlignment="Right"
+                    Click="CloseClick"  Style="{StaticResource ButtonStyle}" />
+            </StackPanel>
+        </DockPanel>
+    </Grid>
+</UserControl>

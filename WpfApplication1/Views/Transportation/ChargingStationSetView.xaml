@@ -1,0 +1,312 @@
+﻿<UserControl
+    x:Class="LoadProfileGenerator.Views.Transportation.ChargingStationSetView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:transportation="clr-namespace:LoadProfileGenerator.Views.Transportation"
+    d:DesignHeight="1200"
+    d:DesignWidth="900"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <transportation:ValueToBrushConverter x:Key="ValueToBrushConverter" />
+        <Style TargetType="DataGridCell">
+            <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource Self}, Converter={StaticResource ValueToBrushConverter}}" />
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="35" />
+        </Grid.RowDefinitions>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+
+            <StackPanel>
+
+                <Expander IsExpanded="true" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border DockPanel.Dock="Left" Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="General" />
+                        </Border>
+
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="5*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.ColumnSpan="3" Style="{StaticResource TextBlockStyle}">
+                            A charging station set defines for the charging stations for one or more sites. The idea is that any charging station set
+                            can be combined with any household and any travel route set to quickly and easily test what happens to the load profile
+                            if charging station is at work, at home, at the supermarket or any combination of these factors.
+                        </TextBlock>
+                        <Label
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Content="_Name"
+                            Style="{StaticResource LabelStyle}"
+                            Target="{Binding ElementName=TxtName}" />
+                        <TextBox
+                            x:Name="TxtName"
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Style="{StaticResource TextBoxStyle}"
+                            Text="{Binding ThisChargingStationSet.Name}" />
+                        <Label
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            Content="Description"
+                            Style="{StaticResource LabelStyle}"
+                            Target="{Binding ElementName=TxtDescription}" />
+                        <TextBox
+                            x:Name="TxtDescription"
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            Style="{StaticResource TextBoxStyle}"
+                            Text="{Binding ThisChargingStationSet.Description}" />
+
+                        <Button Grid.Row="3" Grid.Column="1"
+                                Click="BtnCopyChargingStationClick"
+                                Style="{StaticResource ButtonStyle}">
+                            Make a copy of this charging station set
+                        </Button>
+
+                    </Grid>
+
+
+                </Expander>
+                <Expander IsExpanded="True" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Charging Stations" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="5*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.ColumnSpan="2" Style="{StaticResource TextBlockStyle}">
+                            In this section you can define the charging stations. To make it easier to select the right sites, you first have to select a
+                            household and a travel route set. Then the appropriate sites will be shown.
+                        </TextBlock>
+                        <!--  selected household  -->
+                        <Label
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Content="Selected Household"
+                            Style="{StaticResource LabelStyle}"
+                            Target="{Binding ElementName=CmbHouseholds}" />
+                        <ComboBox
+                            Name="CmbHouseholds"
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            ItemsSource="{Binding AllHouseholds}"
+                            SelectedItem="{Binding SelectedModularHousehold}"
+                            Style="{StaticResource ComboBoxStyle}" />
+                        <!--  selected household  -->
+                        <Label
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            Content="Selected Travel Route Set"
+                            Style="{StaticResource LabelStyle}"
+                            Target="{Binding ElementName=CmbTravelRoutes}" />
+                        <ComboBox
+                            Name="CmbTravelRoutes"
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            ItemsSource="{Binding AllTravelRouteSets}"
+                            SelectedItem="{Binding SelectedTravelRouteSet}"
+                            Style="{StaticResource ComboBoxStyle}" />
+                        <TextBlock
+                            Grid.Row="3"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2"
+                            Style="{StaticResource TextBlockStyle}">
+                            These are the sites for the selected combination of household and travel route set.
+                            You can add charging stations as needed to those sites.
+                        </TextBlock>
+                        <!--  selected site  -->
+                        <Label
+                            Grid.Row="4"
+                            Grid.Column="0"
+                            Content="Site"
+                            Style="{StaticResource LabelStyle}"
+                            Target="{Binding ElementName=CmbTravelRoutes}" />
+                        <ComboBox
+                            Name="CmbSites"
+                            Grid.Row="4"
+                            Grid.Column="1"
+                            ItemsSource="{Binding RelevantSites}"
+                            SelectedItem="{Binding SelectedSite}"
+                            Style="{StaticResource ComboBoxStyle}" />
+                        <!--  vLoad type  -->
+                        <Label
+                            Grid.Row="5"
+                            Grid.Column="0"
+                            Content="Transportation Device Category"
+                            Style="{StaticResource LabelStyle}"
+                            Target="{Binding ElementName=CmbDeviceCategories}" />
+                        <ComboBox
+                            Name="CmbDeviceCategories"
+                            Grid.Row="5"
+                            Grid.Column="1"
+                            ItemsSource="{Binding TransportationDeviceCategories}"
+                            SelectedItem="{Binding ElementName=LstChargingStations, Path=SelectedItem.TransportationDeviceCategory, Mode=OneWay}"
+                            Style="{StaticResource ComboBoxStyle}" />
+                        <Label
+                            Grid.Row="6"
+                            Grid.Column="0"
+                            Content="Grid Load Type"
+                            Style="{StaticResource LabelStyle}"
+                            Target="{Binding ElementName=CmbGridLoadtype}" />
+                        <ComboBox
+                            Name="CmbGridLoadtype"
+                            Grid.Row="6"
+                            Grid.Column="1"
+                            ItemsSource="{Binding LoadTypes}"
+                            SelectedItem="{Binding ElementName=LstChargingStations, Path=SelectedItem.GridChargingLoadType, Mode=OneWay}"
+                            Style="{StaticResource ComboBoxStyle}" />
+                        <Label
+                            Grid.Row="7"
+                            Grid.Column="0"
+                            Content="Car Charging Load Type"
+                            Style="{StaticResource LabelStyle}"
+                            Target="{Binding ElementName=CmbCarLoadTypes}" />
+                        <ComboBox
+                            Name="CmbCarLoadTypes"
+                            Grid.Row="7"
+                            Grid.Column="1"
+                            ItemsSource="{Binding LoadTypes}"
+                            SelectedItem="{Binding ElementName=LstChargingStations, Path=SelectedItem.CarChargingLoadType, Mode=OneWay}"
+                            Style="{StaticResource ComboBoxStyle}" />
+                        <Label
+                            Grid.Row="8"
+                            Grid.Column="0"
+                            Content="Maximum Charging Power"
+                            Style="{StaticResource LabelStyle}"
+                            Target="{Binding ElementName=TxtMaxChargingPower}" />
+                        <TextBox
+                            Name="TxtMaxChargingPower"
+                            Grid.Row="8"
+                            Grid.Column="1"
+                            Style="{StaticResource TextBoxStyle}"
+                            Text="{Binding ElementName=LstChargingStations, Path=SelectedItem.MaxChargingPower, Mode=OneWay}" />
+
+                        <StackPanel
+                            Grid.Row="12"
+                            Grid.Column="1"
+                            Orientation="Horizontal">
+                            <Button
+                                HorizontalAlignment="Right"
+                                Click="AddChargingStation"
+                                Style="{StaticResource ButtonStyle}">
+                                Add Charging Station
+                            </Button>
+                            <Button
+                                HorizontalAlignment="Left"
+                                Click="BtnRemoveChargingStationClick"
+                                Style="{StaticResource ButtonStyle}">
+                                Remove Charging Station
+                            </Button>
+
+                        </StackPanel>
+                        <Label
+                            Grid.Row="13"
+                            Grid.Column="0"
+                            Margin="5,5,5,5"
+                            Content="Charging Stations"
+                            Style="{StaticResource LabelStyle}"
+                            Target="{Binding ElementName=LstChargingStations}" />
+                        <ListView
+                            x:Name="LstChargingStations"
+                            Grid.Row="13"
+                            Grid.Column="1"
+                            MinHeight="150"
+                            ItemsSource="{Binding ThisChargingStationSet.ChargingStations}"
+                            Style="{StaticResource ListViewStyle}">
+                            <ListView.View>
+                                <GridView>
+
+                                    <GridViewColumn
+                                        Width="Auto"
+                                        DisplayMemberBinding="{Binding Site.Name}"
+                                        Header="Site" />
+
+                                    <GridViewColumn
+                                        Width="Auto"
+                                        DisplayMemberBinding="{Binding TransportationDeviceCategory.Name}"
+                                        Header="Transportation Device Category" />
+                                    <GridViewColumn
+                                        Width="Auto"
+                                        DisplayMemberBinding="{Binding CarChargingLoadType.Name}"
+                                        Header="Car Load type" />
+                                    <GridViewColumn
+                                        Width="Auto"
+                                        DisplayMemberBinding="{Binding GridChargingLoadType.Name}"
+                                        Header="Grid Load type" />
+                                    <GridViewColumn
+                                        Width="Auto"
+                                        DisplayMemberBinding="{Binding MaxChargingPower}"
+                                        Header="Maximum Charging Power" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+
+                    </Grid>
+                </Expander>
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <DockPanel Grid.Row="1">
+            <Border HorizontalAlignment="Left" Style="{StaticResource ObjectLabelBox}">
+                <TextBlock Text="{Binding ItemName}" />
+            </Border>
+            <StackPanel
+                HorizontalAlignment="Right"
+                DockPanel.Dock="Right"
+                Orientation="Horizontal">
+                <Button
+                    Width="75"
+                    HorizontalAlignment="Right"
+                    Click="DeleteClick"
+                    Content="delete"
+                    Style="{StaticResource ButtonStyle}" />
+                <Button
+                    Width="75"
+                    HorizontalAlignment="Right"
+                    Click="CloseClick"
+                    Content="Close"
+                    Style="{StaticResource ButtonStyle}" />
+            </StackPanel>
+        </DockPanel>
+    </Grid>
+</UserControl>

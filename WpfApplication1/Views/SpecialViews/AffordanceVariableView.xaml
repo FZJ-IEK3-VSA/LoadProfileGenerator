@@ -1,0 +1,70 @@
+﻿<UserControl x:Class="LoadProfileGenerator.Views.SpecialViews.AffordanceVariableView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="600" d:DesignWidth="600">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="35" />
+        </Grid.RowDefinitions>
+        <ScrollViewer  VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <Expander IsExpanded="true" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Variables across all Affordances" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Style="{StaticResource TextBlockStyle}" Grid.ColumnSpan="3" >
+                            This list shows all the Variables in all the affordances.
+                        </TextBlock>
+                        <Label Style="{StaticResource LabelStyle}" Grid.Row="1" Grid.Column="0"> Sort By</Label>
+                        <ComboBox Style="{StaticResource ComboBoxStyle}" ItemsSource="{Binding SortBy}"
+                                  SelectionChanged="Selector_OnSelectionChanged"
+                                  SelectedItem="{Binding SelectedFilterType}" Grid.Row="1" Grid.Column="1" />
+                        <Button Content="refresh" Style="{StaticResource ButtonStyle}" HorizontalAlignment="Right"
+                                Click="RefreshClick" Grid.Row="1" Grid.Column="2" />
+                        <ListView Grid.Column="0" MinHeight="150" Style="{StaticResource ListViewStyle}"
+                                  ItemsSource="{Binding VariableEntries}"  Grid.Row="2"
+                                  MouseDoubleClick="Control_OnMouseDoubleClick" x:Name="LstAffordances" Grid.ColumnSpan="3"  >
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="Auto" Header="Variable" DisplayMemberBinding="{Binding Variable.Name}" />
+                                    <GridViewColumn Width="Auto" Header="Name" DisplayMemberBinding="{Binding Name}" />
+
+                                    <GridViewColumn Width="Auto" Header="Type" DisplayMemberBinding="{Binding VariableType}" />
+                                    <GridViewColumn Width="Auto" Header="Action/Requirement" DisplayMemberBinding="{Binding Desc}" />
+                                    <GridViewColumn Width="Auto" Header="Value" DisplayMemberBinding="{Binding Value}" />
+                                    <GridViewColumn Width="Auto" Header="Value" DisplayMemberBinding="{Binding Value}" />
+                                    <GridViewColumn Width="Auto" Header="Location Name" DisplayMemberBinding="{Binding LocationName}" />
+                                    <GridViewColumn Width="Auto" Header="Location Mode" DisplayMemberBinding="{Binding LocationMode}" />
+                                    <GridViewColumn Width="Auto" Header="Execution Time" DisplayMemberBinding="{Binding ExecutionTime}" />
+
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                </Expander>
+            </StackPanel>
+        </ScrollViewer>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
+            <Button Content="Close" Style="{StaticResource BottomButtonStyle}" HorizontalAlignment="Right"
+                    Click="CloseClick" />
+        </StackPanel>
+    </Grid>
+</UserControl>

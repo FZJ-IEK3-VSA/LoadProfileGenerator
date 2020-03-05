@@ -1,0 +1,70 @@
+﻿<UserControl x:Class="LoadProfileGenerator.Views.SpecialViews.DeviceOverviewView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="35" />
+        </Grid.RowDefinitions>
+        <ScrollViewer  VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+
+                <Expander IsExpanded="true" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border  Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Overview of the devices" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Style="{StaticResource TextBlockStyle}" Grid.Row="0" Grid.ColumnSpan="2">
+    This is an overview of all the devices in the system.
+                        </TextBlock>
+                        <Label Style="{StaticResource LabelStyle}" Content="Sort by" Target="{Binding ElementName=CmbSortBy}" Grid.Row="1"
+                               Grid.Column="0" />
+                        <ComboBox Grid.Row="1" Style="{StaticResource ComboBoxStyle}" Name="CmbSortBy" VerticalAlignment="Top"
+                                  ItemsSource="{Binding SortByOptions}" SelectedItem="{Binding SortBy}"
+                                  Grid.Column="1" />
+                        <ListView Grid.Row="2" Grid.Column="0" MinHeight="150" Grid.ColumnSpan="2" Style="{StaticResource ListViewStyle}"
+                                  ItemsSource="{Binding Devices}" Name="LstAffordances" MouseDoubleClick="LstDevices_OnMouseDoubleClick" >
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="Auto" Header="Name" DisplayMemberBinding="{Binding Device.Name}" />
+                                    <GridViewColumn Width="Auto" Header="Device Category" DisplayMemberBinding="{Binding Device.DeviceCategory}" />
+                                    <GridViewColumn Width="Auto" Header="Year" DisplayMemberBinding="{Binding Device.Year}" />
+                                    <GridViewColumn Width="Auto" Header="Energy Intensity" DisplayMemberBinding="{Binding Device.WeightedEnergyIntensity}" />
+                                    <GridViewColumn Width="Auto" Header="Picture">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Image  MinHeight="10" MaxWidth="100" MinWidth="10"  Name="Image1"
+                               Stretch="Uniform" VerticalAlignment="Top" Source="{Binding ImageUri}" />
+
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                </Expander>
+            </StackPanel>
+        </ScrollViewer>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
+
+            <Button Content="Close" Style="{StaticResource ButtonStyle}" MinWidth="75" HorizontalAlignment="Right"
+                    Click="CloseClick" />
+        </StackPanel>
+    </Grid>
+</UserControl>

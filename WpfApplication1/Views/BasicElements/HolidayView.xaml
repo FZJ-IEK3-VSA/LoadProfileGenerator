@@ -1,0 +1,240 @@
+﻿<!-- ReSharper disable UnusedMember.Global --><UserControl x:Class="LoadProfileGenerator.Views.BasicElements.HolidayView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+
+             mc:Ignorable="d"
+             d:DesignHeight="900" d:DesignWidth="900">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="35" />
+        </Grid.RowDefinitions>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Name="ScrollViewer1">
+            <StackPanel>
+                <Expander IsExpanded="true" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="General" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="5*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.ColumnSpan="2" TextWrapping="WrapWithOverflow"
+                                   Style="{StaticResource TextBlockStyle}">
+                            Holidays are days where people don't work. Here you can enter the different holidays in your country and
+                            the dates when they occur. Since a lot of holidays are on a different day each year,
+                            you have to enter the date for each year.
+                        </TextBlock>
+                        <Label Content="_Name" Target="{Binding ElementName=TxtName}"
+                               Style="{StaticResource LabelStyle}"
+                               Grid.Column="0" Grid.Row="1" />
+                        <TextBox x:Name="TxtName" Text="{Binding ThisHoliday.Name}"
+                                 Grid.Row="1" Style="{StaticResource TextBoxStyle}"
+                                 Grid.Column="1" />
+                        <Label Content="Description" Target="{Binding ElementName=TxtDescription}"
+                               Style="{StaticResource LabelStyle}"
+                               Grid.Row="2" Grid.Column="0" />
+                        <TextBox x:Name="TxtDescription" Grid.Row="2" Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding ThisHoliday.Description}" Grid.Column="1" />
+
+                    </Grid>
+                </Expander>
+
+                <Expander IsExpanded="true" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Dates" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="5*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.ColumnSpan="2" TextWrapping="WrapWithOverflow"
+                                   Style="{StaticResource TextBlockStyle}">
+                            Here you can enter the dates for this holiday.
+                        </TextBlock>
+                        <Label Content="Date" Target="{Binding ElementName=TxtDate}" Grid.Row="1"
+                               Style="{StaticResource LabelStyle}"
+                               Grid.Column="0" />
+                        <TextBox Grid.Column="1" Grid.Row="1" Name="TxtDate" Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding Path=SelectedItem.DateAndTime, StringFormat=d, ElementName=LstHolidayDates, Mode=OneWay}"
+                                 KeyUp="TxtDate_OnKeyUp" />
+                        <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1">
+                            <Button HorizontalAlignment="Right" Style="{StaticResource ButtonStyle}"
+                                    Click="BtnAddDate_Click">
+                                Add Date
+                            </Button>
+                            <Button HorizontalAlignment="Left" Style="{StaticResource ButtonStyle}"
+                                    Click="BtnRemoveDate_Click">
+                                Remove Date
+                            </Button>
+                        </StackPanel>
+                        <Label Target="{Binding ElementName=LstHolidayDates}" Content="Dates"
+                               Style="{StaticResource LabelStyle}" Grid.Row="4" Grid.Column="0" />
+                        <ListView Grid.Row="4" Grid.Column="1" MinHeight="150" x:Name="LstHolidayDates"
+                                  Style="{StaticResource ListViewStyle}"
+                                  ItemsSource="{Binding ThisHoliday.HolidayDates}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="Auto" Header="Date" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+
+
+                    </Grid>
+                </Expander>
+
+                <Expander IsExpanded="true" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Additional Vacation Days" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.ColumnSpan="6" TextWrapping="WrapWithOverflow"
+                                   Style="{StaticResource TextBlockStyle}">
+                            If a holiday is on, for example, a Thursday, there is a high chance that a lot of people will take a vacation day on Friday.
+                            Here you can set the probabilities for how likely people are to take a day off, if this holiday falls on a particular weekday.
+                            Enter the probability as a number between 0 and 100.
+                        </TextBlock>
+                        <Label Content="Probability to take the these days off" Grid.Row="1" Grid.ColumnSpan="5"
+                               Grid.Column="1" HorizontalAlignment="Center" Style="{StaticResource LabelStyle}" />
+                        <Label Content="Monday" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center"
+                               Style="{StaticResource LabelStyle}" />
+                        <Label Content="Tuesday" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center"
+                               Style="{StaticResource LabelStyle}" />
+                        <Label Content="Wednesday" Grid.Row="2" Grid.Column="3" HorizontalAlignment="Center"
+                               Style="{StaticResource LabelStyle}" />
+                        <Label Content="Thursday" Grid.Row="2" Grid.Column="4" HorizontalAlignment="Center"
+                               Style="{StaticResource LabelStyle}" />
+                        <Label Content="Friday" Grid.Row="2" Grid.Column="5" HorizontalAlignment="Center"
+                               Style="{StaticResource LabelStyle}" />
+                        <Label Content="Weekday of holiday " Grid.Row="2" Style="{StaticResource LabelStyle}"
+                               Grid.Column="0" />
+
+                        <Label Content="Monday" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Center"
+                               Style="{StaticResource LabelStyle}" />
+                        <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding ThisHoliday.ProbMonday.Monday}"
+                                 IsEnabled="False" Style="{StaticResource TextBoxStyle}" />
+                        <TextBox Grid.Column="2" Grid.Row="3" Text="{Binding ThisHoliday.ProbMonday.Tuesday}"
+                                 Style="{StaticResource TextBoxStyle}" />
+                        <TextBox Grid.Column="3" Grid.Row="3" Text="{Binding ThisHoliday.ProbMonday.Wednesday}"
+                                 Style="{StaticResource TextBoxStyle}" />
+                        <TextBox Grid.Column="4" Grid.Row="3" Text="{Binding ThisHoliday.ProbMonday.Thursday}"
+                                 Style="{StaticResource TextBoxStyle}" />
+                        <TextBox Grid.Column="5" Grid.Row="3" Text="{Binding ThisHoliday.ProbMonday.Friday}"
+                                 Style="{StaticResource TextBoxStyle}" />
+
+                        <Label Content="Tuesday" Grid.Row="4" Grid.Column="0" HorizontalAlignment="Center"
+                               Style="{StaticResource LabelStyle}" />
+                        <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding ThisHoliday.ProbTuesday.Monday}"
+                                 Style="{StaticResource TextBoxStyle}" />
+                        <TextBox Grid.Column="2" Grid.Row="4" Text="{Binding ThisHoliday.ProbTuesday.Tuesday}"
+                                 IsEnabled="False" Style="{StaticResource TextBoxStyle}" />
+                        <TextBox Grid.Column="3" Grid.Row="4" Text="{Binding ThisHoliday.ProbTuesday.Wednesday}"
+                                 Style="{StaticResource TextBoxStyle}" />
+                        <TextBox Grid.Column="4" Grid.Row="4" Text="{Binding ThisHoliday.ProbTuesday.Thursday}"
+                                 Style="{StaticResource TextBoxStyle}" />
+                        <TextBox Grid.Column="5" Grid.Row="4" Text="{Binding ThisHoliday.ProbTuesday.Friday}"
+                                 Style="{StaticResource TextBoxStyle}" />
+
+                        <Label Content="Wednesday" Grid.Row="5" Grid.Column="0" HorizontalAlignment="Center"
+                               Style="{StaticResource LabelStyle}" />
+                        <TextBox Grid.Column="1" Grid.Row="5" Text="{Binding ThisHoliday.ProbWednesday.Monday}"
+                                 Style="{StaticResource TextBoxStyle}" />
+                        <TextBox Grid.Column="2" Grid.Row="5" Text="{Binding ThisHoliday.ProbWednesday.Tuesday}"
+                                 Style="{StaticResource TextBoxStyle}" />
+                        <TextBox Grid.Column="3" Grid.Row="5" Text="{Binding ThisHoliday.ProbWednesday.Wednesday}"
+                                 IsEnabled="False" Style="{StaticResource TextBoxStyle}" />
+                        <TextBox Grid.Column="4" Grid.Row="5" Text="{Binding ThisHoliday.ProbWednesday.Thursday}"
+                                 Style="{StaticResource TextBoxStyle}" />
+                        <TextBox Grid.Column="5" Grid.Row="5" Text="{Binding ThisHoliday.ProbWednesday.Friday}"
+                                 Style="{StaticResource TextBoxStyle}" />
+
+                        <Label Content="Thursday" Grid.Row="6" Grid.Column="0" HorizontalAlignment="Center"
+                               Style="{StaticResource LabelStyle}" />
+                        <TextBox Grid.Column="1" Grid.Row="6"
+                                 Text="{Binding ThisHoliday.ProbThursday.Monday}" Style="{StaticResource TextBoxStyle}" />
+                        <TextBox Grid.Column="2" Grid.Row="6"
+                                 Text="{Binding ThisHoliday.ProbThursday.Tuesday}"
+                                 Style="{StaticResource TextBoxStyle}" />
+                        <TextBox Grid.Column="3" Grid.Row="6"
+                                 Text="{Binding ThisHoliday.ProbThursday.Wednesday}"
+                                 Style="{StaticResource TextBoxStyle}" />
+                        <TextBox Grid.Column="4" Grid.Row="6" Text="{Binding ThisHoliday.ProbThursday.Thursday}" IsEnabled="False"
+                                 Style="{StaticResource TextBoxStyle}" />
+                        <TextBox Grid.Column="5" Grid.Row="6" Text="{Binding ThisHoliday.ProbThursday.Friday}" Style="{StaticResource TextBoxStyle}" />
+
+                        <Label Content="Friday" Grid.Row="7" Grid.Column="0" HorizontalAlignment="Center"
+                               Style="{StaticResource LabelStyle}" />
+                        <TextBox Grid.Column="1" Grid.Row="7" Text="{Binding ThisHoliday.ProbFriday.Monday}"
+                                 Style="{StaticResource TextBoxStyle}" />
+                        <TextBox Grid.Column="2" Grid.Row="7" Text="{Binding ThisHoliday.ProbFriday.Tuesday}"
+                                 Style="{StaticResource TextBoxStyle}" />
+                        <TextBox Grid.Column="3" Grid.Row="7" Text="{Binding ThisHoliday.ProbFriday.Wednesday}"
+                                 Style="{StaticResource TextBoxStyle}" />
+                        <TextBox Grid.Column="4" Grid.Row="7" Text="{Binding ThisHoliday.ProbFriday.Thursday}"
+                                 Style="{StaticResource TextBoxStyle}" />
+                        <TextBox Grid.Column="5" Grid.Row="7" Text="{Binding ThisHoliday.ProbFriday.Friday}"
+                                 IsEnabled="False" Style="{StaticResource TextBoxStyle}" />
+
+
+                    </Grid>
+                </Expander>
+            </StackPanel>
+        </ScrollViewer>
+        <DockPanel Grid.Row="1" >
+            <Border  Style="{StaticResource ObjectLabelBox}" HorizontalAlignment="Left" >
+                <TextBlock Text="{Binding ItemName}"  />
+            </Border>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Right">
+                <Button Content="delete"  Width="75" HorizontalAlignment="Right"
+                    Click="Delete_Click" Style="{StaticResource ButtonStyle}" />
+                <Button Content="Close"  Width="75" HorizontalAlignment="Right"
+                    Click="CloseClick"  Style="{StaticResource ButtonStyle}" />
+            </StackPanel>
+        </DockPanel>
+
+    </Grid>
+</UserControl>

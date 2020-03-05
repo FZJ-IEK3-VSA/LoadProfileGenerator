@@ -1,0 +1,244 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using Automation.ResultFiles;
+using Common;
+using Common.Tests;
+using Database.Helpers;
+using Database.Tables.Houses;
+using Database.Tables.ModularHouseholds;
+using FluentAssertions;
+using NUnit.Framework;
+
+namespace Database.Tests.Tables.ModularHouseholds {
+    [TestFixture]
+    public class HouseholdTemplateTests : UnitTestBaseClass
+    {
+
+        [Test]
+        [Category("BasicTest")]
+        public void HouseholdTemplateJsonTestWithFluentAssertion()
+        {
+          //  WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
+            var db1 = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var sim1 = new Simulator(db1.ConnectionString);
+            var db2 = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var sim2 = new Simulator(db2.ConnectionString);
+            //check if the basic thing is identical
+            sim1.HouseholdTemplates[0].Should().BeEquivalentTo(sim2.HouseholdTemplates[0], o => o.Excluding(
+                x=> x.SelectedMemberPath.EndsWith("ConnectionString")));
+
+
+            //check import
+            List<HouseholdTemplate.JsonDto> dto1 = new List<HouseholdTemplate.JsonDto>();
+            foreach (var template in sim1.HouseholdTemplates.It) {
+                dto1.Add(template.GetJson());
+            }
+
+            sim2.HouseholdTemplates.DeleteItem(sim2.HouseholdTemplates[0]);
+            HouseholdTemplate.ImportObjectFromJson(sim2,dto1);
+            sim2.HouseholdTemplates.It.Sort();
+sim1.HouseholdTemplates[0].Should().BeEquivalentTo(sim2.HouseholdTemplates[0], o => o
+    .Using<IRelevantGuidProvider>(x => x.Subject.RelevantGuid.Should().BeEquivalentTo(x.Expectation.RelevantGuid)).WhenTypeIs<IRelevantGuidProvider>()
+            .Excluding(x => x.SelectedMemberPath.EndsWith("ConnectionString")
+    || x.SelectedMemberPath.EndsWith("ID") ));
+            //              ||regex2.IsMatch(x.SelectedMemberPath))
+
+        }
+        /*
+        [Test]
+        [Category("BasicTest")]
+        public void HouseholdTemplateJsonTest()
+        {
+            WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var sim = new Simulator(db.ConnectionString);
+            //make the first
+            var tt = sim.HouseholdTemplates[0];
+            var j1= tt.GetJson();
+            var s1 = JsonConvert.SerializeObject(j1,Formatting.Indented);
+            //make a new one, import the first one and compare
+            sim.HouseholdTemplates.DeleteItem(tt);
+            var newhht = sim.HouseholdTemplates.CreateNewItem(sim.ConnectionString);
+            newhht.ImportFromJsonTemplate(j1,sim);
+            var newJson = newhht.GetJson();
+            var s2 = JsonConvert.SerializeObject(newJson, Formatting.Indented);
+           // Logger.Info(s1);
+            //Logger.Info(s2);
+            Assert.AreEqual(s1,s2);
+
+            //
+            //modify the trait entry and make sure it is different
+            int prevcount = tt.Entries.Count;
+            int idx = 0;
+            while (newhht.Entries.Count == prevcount) {
+                List<Person> persons = new List<Person> {sim.Persons[0]};
+                newhht.AddEntry( sim.TraitTags[idx],1,100,persons);
+                prevcount++;
+            }
+
+            Assert.AreEqual(j1.TraitEntries.Count + 1, newhht.Entries.Count);
+            var newJson2 = newhht.GetJson();
+            var s3 = JsonConvert.SerializeObject(newJson2, Formatting.Indented);
+            Assert.AreNotEqual(s1, s3);
+
+            //import again
+            newhht.ImportFromJsonTemplate(j1, sim);
+            var newJson3 = newhht.GetJson();
+            var s4 = JsonConvert.SerializeObject(newJson3, Formatting.Indented);
+            Assert.AreEqual(s1, s4);
+
+
+            //modify the persons and make sure it is different
+            newhht.AddPerson(sim.Persons[5],sim.TraitTags[0]);
+            Assert.AreEqual(j1.TemplatePersons.Count + 1, newhht.Persons.Count);
+            var newJson5 = newhht.GetJson();
+            var s5 = JsonConvert.SerializeObject(newJson5, Formatting.Indented);
+            Assert.AreNotEqual(s1, s5);
+
+            //import again
+            newhht.ImportFromJsonTemplate(j1, sim);
+            var newJson6 = newhht.GetJson();
+            var s6 = JsonConvert.SerializeObject(newJson6, Formatting.Indented);
+            Assert.AreEqual(s1, s6);
+
+
+            db.Cleanup();
+            wd.CleanUp();
+        }*/
+
+
+
+        [Test]
+        [Category("BasicTest")]
+        public void HouseholdTemplateGenerationTest() {
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+
+            var sim = new Simulator(db.ConnectionString);
+            var gen = sim.HouseholdTemplates.CreateNewItem(db.ConnectionString);
+            gen.NewHHName = "hh";
+            var entry = gen.AddEntry(sim.TraitTags[0], 5, 10);
+            TraitTag tt = sim.TraitTags[0];
+            gen.AddPerson(sim.Persons[0],tt);
+            entry.AddPerson(sim.Persons[0]);
+
+            gen.SaveToDB();
+            gen.GenerateHouseholds(sim, true, new List<STTraitLimit>());
+            foreach (var household in gen.GeneratedHouseholds) {
+                Logger.Info(household.Name);
+                foreach (var trait in household.Traits) {
+                    Logger.Info("\t" + trait.HouseholdTrait.Name);
+                }
+            }
+            db.Cleanup();
+        }
+
+        [Test]
+        [Category("BasicTest")]
+        public void HouseholdTemplateTest() {
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+
+            db.ClearTable(HouseholdTemplate.TableName);
+            db.ClearTable(HHTemplateEntry.TableName);
+            db.ClearTable(HHTemplateVacation.TableName);
+            db.ClearTable(HHTemplateEntryPerson.TableName);
+            db.ClearTable(HHTemplateTag.TableName);
+            var sim = new Simulator(db.ConnectionString);
+            var hhtemplate = sim.HouseholdTemplates.CreateNewItem(db.ConnectionString);
+            hhtemplate.SaveToDB();
+            hhtemplate.AddEntry(sim.TraitTags[0], 1, 100);
+            hhtemplate.AddPerson(sim.Persons[0],sim.TraitTags[0]);
+            sim.HouseholdTags.CreateNewItem(sim.ConnectionString);
+            hhtemplate.AddTemplateTag(sim.HouseholdTags[0]);
+            Assert.AreEqual(1, sim.HouseholdTemplates.It.Count);
+            Assert.AreEqual(1, hhtemplate.Entries.Count);
+            var sim2 = new Simulator(db.ConnectionString);
+            Assert.AreEqual(1, sim2.HouseholdTemplates.It.Count);
+            Assert.AreEqual(1, sim2.HouseholdTemplates[0].Entries.Count);
+            Assert.AreEqual(1, sim2.HouseholdTemplates[0].Persons.Count);
+            Assert.AreEqual(1, sim2.HouseholdTemplates[0].TemplateTags.Count);
+            db.Cleanup();
+        }
+
+        [Test]
+        [Category("BasicTest")]
+        public void HouseholdTemplateTest2() {
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+
+            db.ClearTable(HouseholdTemplate.TableName);
+            db.ClearTable(HHTemplateEntry.TableName);
+            db.ClearTable(HHTemplateEntryPerson.TableName);
+            var cat = new CategoryDBBase<HouseholdTemplate>("Household Generator");
+
+            var timeBasedProfiles = db.LoadTimeBasedProfiles();
+            var desires = db.LoadDesires();
+            var persons = db.LoadPersons();
+
+            var realDevices =
+                db.LoadRealDevices(out var deviceCategories, out _, out var loadTypes, timeBasedProfiles);
+            var dateBasedProfiles = db.LoadDateBasedProfiles();
+            var timeLimits = db.LoadTimeLimits(dateBasedProfiles);
+            var deviceActionGroups = db.LoadDeviceActionGroups();
+            var deviceActions =
+                db.LoadDeviceActions(timeBasedProfiles, realDevices, loadTypes, deviceActionGroups);
+            var locations = db.LoadLocations(realDevices, deviceCategories, loadTypes);
+            var variables = db.LoadVariables();
+            var affordances = db.LoadAffordances(timeBasedProfiles, out _,
+                deviceCategories, realDevices, desires, loadTypes, timeLimits, deviceActions, deviceActionGroups,
+                locations, variables);
+
+            var traittags = db.LoadTraitTags();
+            var traits = db.LoadHouseholdTraits(locations, affordances, realDevices,
+                deviceCategories, timeBasedProfiles, loadTypes, timeLimits, desires, deviceActions, deviceActionGroups,
+                traittags, variables);
+            var vacations = db.LoadVacations();
+            var templateTags = db.LoadHouseholdTags();
+            var datebasedProfiles = db.LoadDateBasedProfiles();
+            HouseholdTemplate.LoadFromDatabase(cat.It, db.ConnectionString, traits, false, persons, traittags,
+                vacations,
+                templateTags, datebasedProfiles);
+            Assert.AreEqual(0, cat.MyItems.Count);
+
+            var gen = cat.CreateNewItem(db.ConnectionString);
+            var entry = gen.AddEntry(traittags[0], 0, 10);
+            entry.AddPerson(persons[0]);
+            cat.SaveToDB();
+            var generators = new ObservableCollection<HouseholdTemplate>();
+            HouseholdTemplate.LoadFromDatabase(generators, db.ConnectionString, traits, false, persons, traittags,
+                vacations, templateTags, datebasedProfiles);
+            Assert.AreEqual(1, generators.Count);
+            Assert.AreEqual(1, generators[0].Entries.Count);
+            Assert.AreEqual(1, generators[0].Entries[0].Persons.Count);
+
+            db.Cleanup();
+        }
+
+        [Test]
+        [Category("BasicTest")]
+        public void ImportExistingModularTest() {
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+
+            var sim = new Simulator(db.ConnectionString);
+            var gen = sim.HouseholdTemplates.CreateNewItem(db.ConnectionString);
+            gen.NewHHName = "hh";
+            var chh =
+                sim.ModularHouseholds.It.FirstOrDefault(x => x.Name.StartsWith("CHS01", StringComparison.Ordinal));
+            if (chh == null) {
+                throw new LPGException("Could not find chs01");
+            }
+            gen.ImportExistingModularHouseholds(chh);
+
+            gen.SaveToDB();
+            gen.GenerateHouseholds(sim, true, new List<STTraitLimit>());
+            var total = 0;
+            foreach (var entry in gen.Entries) {
+                Logger.Info(entry.PrettyString);
+                total += entry.TraitCountMax;
+            }
+
+            Assert.That(total, Is.GreaterThanOrEqualTo(chh.Traits.Count));
+            db.Cleanup();
+        }
+    }
+}

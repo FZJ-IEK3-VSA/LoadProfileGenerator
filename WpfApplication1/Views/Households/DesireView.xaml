@@ -1,0 +1,250 @@
+﻿<!--  ReSharper disable UnusedMember.Global  -->
+<UserControl x:Class="LoadProfileGenerator.Views.Households.DesireView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             d:DesignHeight="700"
+             d:DesignWidth="600"
+             mc:Ignorable="d">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="35" />
+        </Grid.RowDefinitions>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <Expander IsExpanded="true" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="General" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="5*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.ColumnSpan="2" Style="{StaticResource TextBlockStyle}">
+                            A desire is the basis for the decision process of the persons.
+                            The default values here get used whenever you add a new desire to a person.
+                        </TextBlock>
+                        <Label Grid.Row="1"
+                               Grid.Column="0"
+                               Content="_Name"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=DesireName}" />
+                        <TextBox x:Name="DesireName"
+                                 Grid.Row="1"
+                                 Grid.Column="1"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding ThisDesire.Name}" />
+                        <Label Grid.Row="2"
+                               Grid.Column="0"
+                               Content="Default desire threshold [%]"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=DesireThreshold}" />
+                        <TextBox x:Name="DesireThreshold"
+                                 Grid.Row="2"
+                                 Grid.Column="1"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding ThisDesire.DefaultThreshold,
+                                                Converter={StaticResource PercentConverter}}" />
+                        <Label Grid.Row="3"
+                               Grid.Column="0"
+                               Content="Default _decay rate [h]"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=DesireDecayRate}" />
+                        <TextBox x:Name="DesireDecayRate"
+                                 Grid.Row="3"
+                                 Grid.Column="1"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding ThisDesire.DefaultDecayRate,
+                                                Converter={StaticResource NumberConverter}}" />
+                        <Label Grid.Row="4"
+                               Grid.Column="0"
+                               Content="Default weight"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=TxtDefaultWeight}" />
+                        <TextBox x:Name="TxtDefaultWeight"
+                                 Grid.Row="4"
+                                 Grid.Column="1"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding ThisDesire.DefaultWeight,
+                                                Converter={StaticResource NumberConverter}}" />
+                        <Label Grid.Row="5"
+                               Grid.Column="0"
+                               Content="Critical Threshold"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=TxtCritical}" />
+                        <TextBox x:Name="TxtCritical"
+                                 Grid.Row="5"
+                                 Grid.Column="1"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding CriticalThreshold,
+                                                Converter={StaticResource PreciseNumberConverter}}" />
+                        <Label Grid.Row="6"
+                               Grid.Column="0"
+                               Content="Time to critical"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=TxtCriticalTime}" />
+                        <TextBox x:Name="TxtCriticalTime"
+                                 Grid.Row="6"
+                                 Grid.Column="1"
+                                 IsEnabled="false"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding CriticalTime,
+                                                Mode=OneWay}" />
+                        <CheckBox Name="IsSharedDesire"
+                                  Grid.Row="7"
+                                  Grid.Column="1"
+                                  IsChecked="{Binding ThisDesire.IsSharedDesire}"
+                                  Style="{StaticResource CheckBoxStyle}">
+                            Is this desire shared between all the persons?
+                        </CheckBox>
+                        <Button Name="MakeDesireCopy"
+                                Grid.Row="8"
+                                Grid.Column="1"
+                                Click="MakeDesireCopy_OnClick"
+                                Style="{StaticResource ButtonStyle}">
+                            Make an exact copy of this desire
+                        </Button>
+                        <Label Grid.Row="9"
+                               Grid.Column="0"
+                               Content="Category"
+                               Style="{StaticResource LabelStyle}" />
+                        <ComboBox Grid.Row="9"
+                                  Grid.Column="1"
+                                  IsEditable="True"
+                                  ItemsSource="{Binding AllDesireCategories}"
+                                  Style="{StaticResource ComboBoxStyle}"
+                                  Text="{Binding ThisDesire.DesireCategory}" />
+                    </Grid>
+
+
+                </Expander>
+                <Expander IsExpanded="true" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Uses" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.ColumnSpan="2" Style="{StaticResource TextBlockStyle}"><Run Text="Here you can get a list where this desire is used, if anywhere." /></TextBlock>
+                        <Button Grid.Row="0"
+                                Grid.Column="1"
+                                HorizontalAlignment="Right"
+                                Click="BtnRefreshUsedIn_Click"
+                                Content="refresh"
+                                Style="{StaticResource ButtonStyle}" />
+                        <ListView x:Name="LstPersonDesires"
+                                  Grid.Row="2"
+                                  Grid.Column="0"
+                                  Grid.ColumnSpan="2"
+                                  MinHeight="150"
+                                  ItemsSource="{Binding UsedIn}"
+                                  MouseDoubleClick="LstPersonDesires_MouseDoubleClick"
+                                  Style="{StaticResource ListViewStyle}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding Item}"
+                                                    Header="Name" />
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding TypeDescription}"
+                                                    Header="Type" />
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding Information}"
+                                                    Header="Information" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+
+                    </Grid>
+
+
+                </Expander>
+                <!--
+                <Expander IsExpanded="true" BorderThickness="3 3 3 3" BorderBrush="Gray" >
+                    <Expander.Header>
+                        <Border Background="{StaticResource lightBlueBrush}" Style="{StaticResource groupBoxHeader}">
+                            <TextBlock Text="Affordances" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.ColumnSpan="2" TextWrapping="Wrap">Here you can get a list which affordances use this desire, if any.</TextBlock>
+                        <Button Content="refresh"  Width="75" Grid.Row="1" HorizontalAlignment="Right"
+                                Click="BtnRefreshAffordances_Click" />
+                        <ListView Grid.Row="2" MinHeight="150" x:Name="LstAffordanceDesires"
+                                  ItemsSource="{Binding Affordances}"
+                                  MouseDoubleClick="LstAffordanceDesires_MouseDoubleClick">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="Auto" Header="Description"
+                                                    DisplayMemberBinding="{Binding Description}" />
+                                    <GridViewColumn Width="Auto" Header="Name" DisplayMemberBinding="{Binding Name}" />
+                                    <GridViewColumn Width="Auto" Header="Satisfaction value"
+                                                    DisplayMemberBinding="{Binding SatisfactionValuePercent}" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                </Expander>
+                -->
+            </StackPanel>
+        </ScrollViewer>
+
+        <DockPanel Grid.Row="1">
+            <Border HorizontalAlignment="Left" Style="{StaticResource ObjectLabelBox}">
+                <TextBlock Text="{Binding ItemName}" />
+            </Border>
+            <StackPanel HorizontalAlignment="Right"
+                        DockPanel.Dock="Right"
+                        Orientation="Horizontal">
+                <Button Width="75"
+                        HorizontalAlignment="Right"
+                        Click="Delete_Click"
+                        Content="delete"
+                        Style="{StaticResource ButtonStyle}" />
+                <Button Width="75"
+                        HorizontalAlignment="Right"
+                        Click="CloseClick"
+                        Content="Close"
+                        Style="{StaticResource ButtonStyle}" />
+            </StackPanel>
+        </DockPanel>
+    </Grid>
+</UserControl>

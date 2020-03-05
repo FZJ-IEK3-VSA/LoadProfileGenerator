@@ -1,0 +1,312 @@
+﻿<!--  ReSharper disable UnusedMember.Global  -->
+<UserControl x:Class="LoadProfileGenerator.Views.BasicElements.TimeLimitView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             d:DesignHeight="1500"
+             d:DesignWidth="900"
+             mc:Ignorable="d">
+    <UserControl.Resources />
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="35" />
+        </Grid.RowDefinitions>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <Expander IsExpanded="true" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="General" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="5*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.ColumnSpan="2" Style="{StaticResource TextBlockStyle}">
+                            Here you can definine conditions which are used to control when a device or
+                            affordance runs.
+                        </TextBlock>
+                        <Label Grid.Row="1"
+                               Grid.Column="0"
+                               Content="_Name"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=DeviceName}" />
+                        <TextBox x:Name="DeviceName"
+                                 Grid.Row="1"
+                                 Grid.Column="1"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding ThisTimeLimit.Name}" />
+                        <Button Grid.Row="2"
+                                Grid.Column="1"
+                                HorizontalAlignment="Right"
+                                Click="BtnCreateCopy"
+                                Style="{StaticResource ButtonStyle}">
+                            Create an exact copy of this time limit
+                        </Button>
+                    </Grid>
+
+
+                </Expander>
+
+                <Expander IsExpanded="True" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Import from other time limit" />
+                        </Border>
+                    </Expander.Header>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Label Grid.Column="0"
+                               Content="Time Limit"
+                               Style="{StaticResource LabelStyle}" />
+                        <ComboBox Grid.Row="0"
+                                  Grid.Column="1"
+                                  ItemsSource="{Binding TimeLimits}"
+                                  SelectedItem="{Binding SelectedTimeLimit}"
+                                  Style="{StaticResource ComboBoxStyle}" />
+                        <Button Grid.Row="1"
+                                Grid.Column="1"
+                                HorizontalAlignment="Right"
+                                Click="BtnImportTimeLimitClick"
+                                Style="{StaticResource ButtonStyle}">
+                            Import everything from this time limit
+                        </Button>
+
+                    </Grid>
+                </Expander>
+                <Expander x:Name="NewPermissionExpander"
+                          IsExpanded="true"
+                          SizeChanged="Expander_SizeChanged"
+                          Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Times when a certain device is permitted to run" />
+                        </Border>
+                    </Expander.Header>
+
+
+                    <Grid Name="BoolGrid">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="5*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                    </Grid>
+                </Expander>
+
+
+
+                <Expander x:Name="NewPermissionPreviewExpander"
+                          IsExpanded="true"
+                          Style="{StaticResource ExpanderStyle}">
+                    <!--  ReSharper restore UnusedMember.Global  -->
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Preview" />
+                        </Border>
+                    </Expander.Header>
+
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+
+                        <TextBlock Grid.Row="0"
+                                   Grid.Column="0"
+                                   Grid.ColumnSpan="2"
+                                   Style="{StaticResource TextBlockStyle}">
+                            <Run Text="The carpet plots provide a preview of the selected settings. Downwards the time is from 0 to 24h, from left to right it's from day 1 of the year to day 365." />
+                        </TextBlock>
+                        <Label Grid.Row="1"
+                               Grid.Column="0"
+                               Content="Carpet plot of selected entry"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=ImageShort}" />
+                        <Border Grid.Row="1"
+                                Grid.Column="1"
+                                Margin="5"
+                                BorderBrush="Silver"
+                                BorderThickness="5">
+                            <Image x:Name="ImageShort"
+                                   Height="{Binding ImageHeight}"
+                                   Source="{Binding BitmapSinglePermittedTime}"
+                                   Stretch="UniformToFill" />
+                        </Border>
+                        <Label Grid.Row="2"
+                               Grid.Column="0"
+                               Content="Carpet plot of all entries"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=ImageLong}" />
+                        <Border Grid.Row="2"
+                                Grid.Column="1"
+                                Margin="5"
+                                BorderBrush="Silver"
+                                BorderThickness="5">
+                            <Image x:Name="ImageLong"
+                                   Height="{Binding ImageHeight}"
+                                   Source="{Binding BitmapAllPermittedTime}"
+                                   Stretch="UniformToFill" />
+                        </Border>
+                        <Label Grid.Row="3"
+                               Grid.Column="0"
+                               Content="Temperature Profile for preview"
+                               Style="{StaticResource LabelStyle}" />
+                        <ComboBox x:Name="CmbPreviewTemperatureProfiles"
+                                  Grid.Row="3"
+                                  Grid.Column="1"
+                                  x:FieldModifier="private"
+                                  ItemsSource="{Binding TemperaturProfiles}"
+                                  SelectedItem="{Binding PreviewTemperatureProfile}"
+                                  SelectionChanged="CmbTemperatureProfilesSelectionChanged1"
+                                  Style="{StaticResource ComboBoxStyle}" />
+                        <Label Grid.Row="4"
+                               Grid.Column="0"
+                               Content="Geographic Location / City for preview"
+                               Style="{StaticResource LabelStyle}" />
+                        <ComboBox x:Name="CmbPreviewGeographicLocation"
+                                  Grid.Row="4"
+                                  Grid.Column="1"
+                                  x:FieldModifier="private"
+                                  ItemsSource="{Binding GeographicLocations}"
+                                  SelectedItem="{Binding PreviewGeographicLocation}"
+                                  SelectionChanged="CmbGeographicLocationSelectionChanged"
+                                  Style="{StaticResource ComboBoxStyle}" />
+                        <Label Grid.Row="5"
+                               Grid.Column="0"
+                               Content="Household for vacations for preview"
+                               Style="{StaticResource LabelStyle}" />
+                        <ComboBox x:Name="CmbPreviewHousehold"
+                                  Grid.Row="5"
+                                  Grid.Column="1"
+                                  x:FieldModifier="private"
+                                  ItemsSource="{Binding ModularHouseholds}"
+                                  SelectedItem="{Binding PreviewHousehold}"
+                                  SelectionChanged="CmbPreviewHouseholdSelectionChanged"
+                                  Style="{StaticResource ComboBoxStyle}" />
+                    </Grid>
+                </Expander>
+                <Expander IsExpanded="true" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Uses" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.ColumnSpan="2" Style="{StaticResource TextBlockStyle}">Here you can get a list where this time limit is used, if anywhere.</TextBlock>
+                        <Button Grid.Row="0"
+                                Grid.Column="1"
+                                HorizontalAlignment="Right"
+                                Click="BtnRefreshPersons_Click"
+                                Content="refresh"
+                                Style="{StaticResource ButtonStyle}" />
+                        <ListView x:Name="LstUsedIn"
+                                  Grid.Row="2"
+                                  Grid.Column="0"
+                                  Grid.ColumnSpan="2"
+                                  MinHeight="150"
+                                  ItemsSource="{Binding UsedIn}"
+                                  MouseDoubleClick="LstUsedIn_MouseDoubleClick"
+                                  Style="{StaticResource ListViewStyle}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding Item}"
+                                                    Header="Name" />
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding TypeDescription}"
+                                                    Header="Type" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+
+                    </Grid>
+
+
+                </Expander>
+            </StackPanel>
+        </ScrollViewer>
+        <DockPanel Grid.Row="1">
+            <Border HorizontalAlignment="Left" Style="{StaticResource ObjectLabelBox}">
+                <TextBlock Text="{Binding ItemName}" />
+            </Border>
+            <StackPanel HorizontalAlignment="Right"
+                        DockPanel.Dock="Right"
+                        Orientation="Horizontal">
+                <Button Width="75"
+                        HorizontalAlignment="Right"
+                        Click="Delete_Click"
+                        Content="delete"
+                        Style="{StaticResource ButtonStyle}" />
+                <Button Width="75"
+                        HorizontalAlignment="Right"
+                        Click="CloseClick"
+                        Content="Close"
+                        Style="{StaticResource ButtonStyle}" />
+            </StackPanel>
+        </DockPanel>
+
+    </Grid>
+</UserControl>

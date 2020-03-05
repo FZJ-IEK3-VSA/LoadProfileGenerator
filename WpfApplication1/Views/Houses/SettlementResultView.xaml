@@ -1,0 +1,151 @@
+﻿<UserControl x:Class="LoadProfileGenerator.Views.Houses.SettlementResultView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="900" d:DesignWidth="636">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="35" />
+        </Grid.RowDefinitions>
+<!--        <ScrollViewer Margin="0,0,0,0" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <GroupBox BorderBrush="Silver" BorderThickness="5">
+                    <GroupBox.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="General" />
+                        </Border>
+                    </GroupBox.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="5*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Label Content="Name" Target="{Binding ElementName=TxtHouseholdName}" Grid.Column="0" />
+                        <TextBox Height="23" x:Name="TxtHouseholdName"
+                                 Text="{Binding Path=SettlementName, Mode=OneWay}"
+                                 Grid.Row="0" Grid.Column="1" Margin="5,5,5,5" IsReadOnly="True" />
+
+                        <Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Label Content="Calculation time" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" />
+                            <TextBox Height="23" Text="{Binding CalcStartTime, Mode=OneWay}"
+                                     Grid.Column="0" Margin="5,5,5,5" IsReadOnly="True" Grid.Row="1" />
+
+                            <TextBox Height="23" Text="{Binding CalcEndTime, Mode=OneWay}"
+                                     Grid.Column="0"
+                                     Margin="5,5,5,5" IsReadOnly="True" Grid.Row="2" />
+                            <Label Content="Simulation time" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" />
+                            <TextBox Height="23" Text="{Binding SimStartTime, Mode=OneWay}"
+                                     Grid.Column="1" Margin="5,5,5,5" IsReadOnly="True" Grid.Row="1" />
+
+                            <TextBox Height="23" Text="{Binding SimEndTime, Mode=OneWay}"
+                                     Grid.Column="1"
+                                     Margin="5,5,5,5" IsReadOnly="True" Grid.Row="2" />
+                        </Grid>
+
+                    </Grid>
+                </GroupBox>
+                <GroupBox BorderBrush="Silver" BorderThickness="5">
+                    <GroupBox.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Calculated Households" />
+                        </Border>
+                    </GroupBox.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock TextWrapping="WrapWithOverflow" Grid.ColumnSpan="2">
+                            Double clicking on a household will open the view of the result files for the household.
+                        </TextBlock>
+                        <ListView MinHeight="150" x:Name="LstHouseholds" ItemsSource="{Binding Results}" Margin="5"
+                                  MouseDoubleClick="LstHouseholdsMouseDoubleClick" Grid.Row="1">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="Auto" Header="Name"
+                                                    DisplayMemberBinding="{Binding CalcObjectName}" />
+                                    <GridViewColumn Width="Auto" Header="Calculation Start time"
+                                                    DisplayMemberBinding="{Binding CalcStartTime}" />
+                                    <GridViewColumn Width="Auto" Header="Calculation End time"
+                                                    DisplayMemberBinding="{Binding CalcEndTime}" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+
+
+                    </Grid>
+                </GroupBox>
+                <GroupBox BorderBrush="Silver" BorderThickness="5">
+                    <GroupBox.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Files" />
+                        </Border>
+                    </GroupBox.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Style="{StaticResource TextBlockStyle}"  Grid.ColumnSpan="2">
+                            Double clicking on a file will try to open it with the programm associated with the file in windows.
+                        </TextBlock>
+                        <ListView MinHeight="150" x:Name="LstFiles" ItemsSource="{Binding ResultFiles}" Margin="5"
+                                  MouseDoubleClick="LstFilesMouseDoubleClick" Grid.Row="1">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="Auto" Header="Name" DisplayMemberBinding="{Binding Name}" />
+                                    <GridViewColumn Width="Auto" Header="Filename"
+                                                    DisplayMemberBinding="{Binding FileName}" />
+                                    <GridViewColumn Width="Auto" Header="Size"
+                                                    DisplayMemberBinding="{Binding PrettySize}" />
+                                    <GridViewColumn Width="Auto" Header="Full Filename"
+                                                    DisplayMemberBinding="{Binding FullFileName}" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+
+
+                    </Grid>
+                </GroupBox>
+            </StackPanel>
+        </ScrollViewer>
+-->
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="1" >
+                <Button Content="Close"  Width="75" HorizontalAlignment="Right"
+                    
+                        Style="{StaticResource ButtonStyle}" />
+                <!--Click=""-->
+        </StackPanel>
+
+    </Grid>
+</UserControl>

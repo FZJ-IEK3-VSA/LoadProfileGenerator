@@ -1,0 +1,291 @@
+﻿<!-- ReSharper disable UnusedMember.Global -->
+    <UserControl x:Class="LoadProfileGenerator.Views.BasicElements.TimeProfileView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d" d:DesignHeight="1600"
+             d:DesignWidth="800"
+             Loaded="UserControl_Loaded">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="35" />
+        </Grid.RowDefinitions>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <Expander IsExpanded="true" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="General" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="5*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.ColumnSpan="2" Style="{StaticResource TextBlockStyle}">
+                            A time profile describes how much energy a device is using at what time. It's always expressed in percent of the maximum
+                            power of the device. The time is always counted from the beginning of the device activation.
+                            Time profiles are also used for persons. Each executing an affordance will make a person busy for a while. The person profile determins for how long. Any value other than 0 counts as busy.
+                        </TextBlock>
+                        <TextBox x:Name="ProfileName" Style="{StaticResource TextBoxStyle}" Grid.Column="1"
+                                 Text="{Binding ThisProfile.Name}" Grid.Row="1" />
+                        <Label Content="Name" Target="{Binding ElementName=ProfileName}"
+                               Style="{StaticResource LabelStyle}"
+                               Grid.Row="1"
+                               Grid.Column="0" />
+                        <Label Content="Time Profile Type" Target="{Binding ElementName=ProfileName}"
+                               Style="{StaticResource LabelStyle}"
+                               Grid.Row="2" Grid.Column="0" />
+                        
+                        <ComboBox Name="CmbTimeProfileType" ItemsSource="{Binding TimeProfileTypes}"
+                                  SelectedItem="{Binding ThisProfile.TimeProfileType}" Grid.Row="2" Grid.Column="1"
+                                  Style="{StaticResource ComboBoxStyle}" />
+                        
+                        <Label Content="Data Source" Target="{Binding ElementName=TxtDataSource}"
+                               Style="{StaticResource LabelStyle}"
+                               Grid.Row="3" Grid.Column="0" />
+                        <TextBox x:Name="TxtDataSource" Style="{StaticResource TextBoxStyle}" Grid.Column="1"
+                                 Text="{Binding ThisProfile.DataSource}" Grid.Row="3" />
+                        <Label Content="Duration" Target="{Binding ElementName=TxtDuration}"
+                               Style="{StaticResource LabelStyle}"
+                               Grid.Row="4" Grid.Column="0" />
+                        <TextBox x:Name="TxtDuration" Style="{StaticResource TextBoxStyle}" Grid.Column="1"
+                                 Text="{Binding ThisProfile.Duration, Mode=OneWay}" IsEnabled="False" Grid.Row="4" />
+
+                    </Grid>
+                </Expander>
+                <Expander IsExpanded="true" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Import data" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Label Target="{Binding ElementName=TxtFilePath}" Content="Path for the CSV file for import"
+                               Grid.Row="0" Style="{StaticResource LabelStyle}" Grid.Column="0" />
+                        <TextBox Style="{StaticResource TextBoxStyle}" Name="TxtFilePath"
+                                 Text="{Binding CsvImporter.FileName}" Grid.Row="0"
+                                 Grid.Column="1" />
+                        <Button Content="browse" Grid.Row="0" Grid.Column="2" Style="{StaticResource ButtonStyle}"
+                                Click="Browse_Click" />
+                        <Label Target="{Binding ElementName=TxtSeparator}" Content="Separator" Grid.Row="1"
+                               Style="{StaticResource LabelStyle}" Grid.Column="0" />
+                        <TextBox Style="{StaticResource TextBoxStyle}" Grid.Row="1" Name="TxtSeparator"
+                                 Text="{Binding CsvImporter.Separator}" Grid.Column="1" />
+                        <Label Target="{Binding ElementName=TxtColumn}" Content="Column" Grid.Row="2"
+                               Style="{StaticResource LabelStyle}" Grid.Column="0" />
+                        <TextBox Style="{StaticResource TextBoxStyle}" Grid.Row="2" Name="TxtColumn"
+                                 Text="{Binding CsvImporter.Column}" Grid.Column="1" />
+
+                        <Label Target="{Binding ElementName=TxtHeaderLines}" Content="Header line count" Grid.Row="3"
+                               Style="{StaticResource LabelStyle}" Grid.Column="0" />
+                        <TextBox Style="{StaticResource TextBoxStyle}" Grid.Row="3"  Name="TxtHeaderLines"
+                                 Text="{Binding CsvImporter.HeaderLineCount}" Grid.Column="1" />
+                        <Label Target="{Binding ElementName=TxtTimeSpan}" Content="Time Span between Entries"
+                               Grid.Row="4"
+                               Style="{StaticResource LabelStyle}" Grid.Column="0" />
+                        <TextBox Style="{StaticResource TextBoxStyle}" Grid.Row="4" Name="TxtTimeSpan"
+                                 Text="{Binding CsvImporter.TimeSpan}" Grid.Column="1" />
+                        <StackPanel Orientation="Horizontal" Grid.Row="5" Grid.Column="1">
+                            <Button Content="Refresh Preview" Style="{StaticResource ButtonStyle}"
+                                    Click="RefreshPreview_Click" />
+                            <Button Content="Import Data" Style="{StaticResource ButtonStyle}"
+                                    Click="ImportData_Click" />
+                        </StackPanel>
+                        <Label Target="{Binding ElementName=TxtPreviewText}" Content="Preview" Grid.Row="6"
+                               Style="{StaticResource LabelStyle}" Grid.Column="0" />
+                        <ScrollViewer Grid.Row="6" Grid.Column="1" MaxHeight="200">
+                            <TextBlock MinHeight="50"  Name="TxtPreviewText" Style="{StaticResource TextBlockStyle}"
+                                       Text="{Binding CsvImporter.PreviewText}" />
+                        </ScrollViewer>
+
+                        <Label Target="{Binding ElementName=LstImportTimePoints}" Content="Results of the import"
+                               Grid.Row="7" Style="{StaticResource LabelStyle}" Grid.Column="0" />
+                        <ListView Grid.Row="7" Grid.Column="1" MinHeight="50" MaxHeight="400"
+                                  x:Name="LstImportTimePoints"
+                                  ItemsSource="{Binding CsvImporter.Entries}" Style="{StaticResource ListViewStyle}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="auto" Header="Time"
+                                                    DisplayMemberBinding="{Binding TimeSpanString}" />
+                                    <GridViewColumn Width="auto" Header="{Binding ThisProfile.ValueTypeLabel}"
+                                                    DisplayMemberBinding="{Binding Value,Converter={StaticResource NumberConverter}}" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                </Expander>
+                <!--
+
+
+
+
+                        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1">
+                            <Button Content="Add data point" Grid.Column="0" Name="Adddatapoint"
+                      Click="Adddatapoint_Click" />
+                            <Button Content="Remove data point" Grid.Column="1"
+                      Name="Removedatapoint" Click="Removedatapoint_Click" />
+                        </StackPanel>
+                        <Label Target="{Binding ElementName=lstTimePoints}" Content="Value [%]" Grid.Row="3"
+                    Name="label7" Grid.Column="0" />
+                        <ListView Grid.Row="3" Grid.Column="1" MinHeight="150" x:Name="lstTimePoints"
+                      ItemsSource="{Binding ThisProfile.ObservableDatapoints}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="200" Header="Time" DisplayMemberBinding="{Binding Time}" />
+                                    <GridViewColumn Width="200" Header="Value [%]"
+                                  DisplayMemberBinding="{Binding Value,Converter={StaticResource NumberConverter}}" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                </GroupBox>-->
+                <Expander IsExpanded="true" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Time points" />
+                        </Border>
+                    </Expander.Header>
+
+                    <Grid >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <TextBox Style="{StaticResource TextBoxStyle}" Name="TxtTime"
+                                 Text="{Binding ElementName=LstTimePoints, Path=SelectedItem.Time, Mode=OneWay}"
+                                 Grid.Row="0" Grid.Column="1" />
+                        <Label Target="{Binding ElementName=TxtTime}" Content="Time" Grid.Row="0"
+                               Style="{StaticResource LabelStyle}" Grid.Column="0" />
+                        <TextBox Grid.Row="1" Name="TxtValue" Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding ElementName=LstTimePoints, Path=SelectedItem.Value, Mode=OneWay}"
+                                 Grid.Column="1" />
+                        <Label Target="{Binding ElementName=TxtValue}" Content="{Binding ThisProfile.ValueTypeLabel}"
+                               Grid.Row="1" Grid.Column="0" Style="{StaticResource LabelStyle}" />
+                        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1">
+                            <Button Content="Add data point" Style="{StaticResource ButtonStyle}"
+                                    Click="Adddatapoint_Click" />
+                            <Button Content="Remove data point" Style="{StaticResource ButtonStyle}"
+                                    Click="Removedatapoint_Click" />
+                            <Button Content="Remove all data points" Style="{StaticResource ButtonStyle}"
+                                    Click="RemoveAlldatapoint_Click" />
+                            <Button Content="Set last data point to the previous one if zero" Style="{StaticResource ButtonStyle}"
+                                    Click="Fixlastdatapoint_Click" />
+                        </StackPanel>
+                        <Label Style="{StaticResource LabelStyle}" Target="{Binding ElementName=LstTimePoints}" Content="Values" Grid.Row="3" Grid.Column="0" />
+                        <ListView Grid.Row="3" Grid.Column="1" MinHeight="150" x:Name="LstTimePoints"
+                                  ItemsSource="{Binding ThisProfile.ObservableDatapoints}"
+                                  Style="{StaticResource ListViewStyle}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="200" Header="Time"
+                                                    DisplayMemberBinding="{Binding Time}" />
+                                    <GridViewColumn Width="200" Header="{Binding ThisProfile.ValueTypeLabel}"
+
+                                                    DisplayMemberBinding="{Binding Value,Converter={StaticResource NumberConverter}}" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                </Expander>
+                <Expander IsExpanded="True" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Graph" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid Height="200"  Name="ChartGrid">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="150" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Button Grid.Row="1" Name="RefreshChart" Click="RefreshChartClick"
+                                Style="{StaticResource ButtonStyle}">
+                            Refresh
+                        </Button>
+                    </Grid>
+                </Expander>
+                <Expander IsExpanded="true" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Used by" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Style="{StaticResource TextBlockStyle}" >Here you can get a list where this affordance is used.</TextBlock>
+                        <Button Content="refresh" Style="{StaticResource ButtonStyle}" Width="75" Grid.Row="0"
+                                HorizontalAlignment="Right"
+                                Click="BtnRefresUsedIns_Click" Grid.Column="1" />
+                        <ListView Grid.Row="2" MinHeight="150" Name="LstUsedIn" Style="{StaticResource ListViewStyle}"
+                                  ItemsSource="{Binding UsedIns}"
+                                  MouseDoubleClick="LstUsedByMouseDoubleClick" x:FieldModifier="private"
+                                  Grid.ColumnSpan="2" Grid.Column="0">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="500" Header="Name"
+                                                    DisplayMemberBinding="{Binding Item.Name}" />
+                                    <GridViewColumn Width="auto" Header="Type"
+                                                    DisplayMemberBinding="{Binding TypeDescription}" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                </Expander>
+
+            </StackPanel>
+        </ScrollViewer>
+        <DockPanel Grid.Row="1" >
+            <Border  Style="{StaticResource ObjectLabelBox}" HorizontalAlignment="Left" >
+                <TextBlock Text="{Binding ItemName}"  />
+            </Border>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Right">
+                <Button Content="delete"  Width="75" HorizontalAlignment="Right"
+                    Click="Delete_Click" Style="{StaticResource ButtonStyle}" />
+                <Button Content="Close"  Width="75" HorizontalAlignment="Right"
+                    Click="CloseClick"  Style="{StaticResource ButtonStyle}" />
+            </StackPanel>
+        </DockPanel>
+    </Grid>
+</UserControl>
+<!-- ReSharper restore UnusedMember.Global -->

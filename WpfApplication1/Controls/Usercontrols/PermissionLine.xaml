@@ -1,0 +1,422 @@
+﻿<!--  ReSharper disable UnusedMember.Global  -->
+<UserControl x:Class="LoadProfileGenerator.Controls.Usercontrols.PermissionLine"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             MaxWidth="{Binding ExpanderSize}"
+             Margin="{Binding Margin}"
+             d:DesignHeight="1500"
+             d:DesignWidth="1500"
+             mc:Ignorable="d">
+    <Grid Name="OverGrid" x:FieldModifier="private">
+
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <WrapPanel Grid.Row="0">
+                <Label Style="{StaticResource LabelStyleMinimal}" Visibility="{Binding ShowAndOrCombo}">Match</Label>
+                <ComboBox ItemsSource="{Binding AndOrList}"
+                          SelectedItem="{Binding Entry.AnyAll}"
+                          Style="{StaticResource ComboBoxStyle}"
+                          Visibility="{Binding ShowAndOrCombo}" />
+                <Label Style="{StaticResource LabelStyleMinimal}" Visibility="{Binding ShowAndOrCombo}">of the following:</Label>
+            </WrapPanel>
+
+            <WrapPanel Grid.Row="1" Grid.Column="0">
+                <Label Style="{StaticResource LabelStyleMinimal}" Visibility="{Binding ShowConditionCombo}">Control by</Label>
+                <ComboBox Width="200"
+                          ItemsSource="{Binding PermissionModes}"
+                          SelectedItem="{Binding SelectedPermissionTuple}"
+                          SelectionChanged="ComboBox_SelectionChanged"
+                          Style="{StaticResource ComboBoxStyle}"
+                          Visibility="{Binding ShowConditionCombo}" />
+            </WrapPanel>
+        </Grid>
+        <Grid Name="MainGrid"
+              Grid.RowSpan="2"
+              Grid.Column="1"
+              x:FieldModifier="private">
+            <Grid.Background>
+                <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                    <GradientStop Offset="0" Color="#FFC8C8FF" />
+                    <GradientStop Offset="1" Color="White" />
+                </LinearGradientBrush>
+            </Grid.Background>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <!--  EveryXDays  -->
+            <WrapPanel Grid.Row="0">
+                <Label Style="{StaticResource LabelStyleMinimal}" Visibility="{Binding ShowEveryXDays}">Every</Label>
+                <TextBox Width="50"
+                         Style="{StaticResource TextBoxStyleMinimal}"
+                         Text="{Binding Entry.DailyDayCount}"
+                         Visibility="{Binding ShowEveryXDays}" />
+                <Label Style="{StaticResource LabelStyleMinimal}" Visibility="{Binding ShowEveryXDays}">days between the start time (hh:mm:ss)</Label>
+                <TextBox Width="80"
+                         Style="{StaticResource TextBoxStyleMinimal}"
+                         Text="{Binding Entry.StartTimeTimeSpan}"
+                         Visibility="{Binding ShowEveryXDays}" />
+                <Label Style="{StaticResource LabelStyleMinimal}" Visibility="{Binding ShowEveryXDays}">and the end time (hh:mm:ss)</Label>
+                <TextBox Width="80"
+                         Style="{StaticResource TextBoxStyleMinimal}"
+                         Text="{Binding Entry.EndTimeTimeSpan}"
+                         Visibility="{Binding ShowEveryXDays}" />
+                <Label Style="{StaticResource LabelStyleMinimal}" Visibility="{Binding ShowEveryXDays}">vary by</Label>
+                <TextBox Width="80"
+                         Style="{StaticResource TextBoxStyleMinimal}"
+                         Text="{Binding Entry.RandomizeTimeAmount}"
+                         Visibility="{Binding ShowEveryXDays}" />
+                <Label Style="{StaticResource LabelStyleMinimal}" Visibility="{Binding ShowEveryXDays}">minutes</Label>
+            </WrapPanel>
+            <!--  Every Work Day  -->
+            <WrapPanel Grid.Row="1">
+                <Label Style="{StaticResource LabelStyleMinimal}" Visibility="{Binding ShowEveryWorkday}">Every workday between the start time</Label>
+                <TextBox Width="80"
+                         Style="{StaticResource TextBoxStyleMinimal}"
+                         Text="{Binding Entry.StartTimeTimeSpan}"
+                         Visibility="{Binding ShowEveryWorkday}" />
+                <Label Style="{StaticResource LabelStyleMinimal}" Visibility="{Binding ShowEveryWorkday}">and the end time</Label>
+                <TextBox Width="80"
+                         Style="{StaticResource TextBoxStyleMinimal}"
+                         Text="{Binding Entry.EndTimeTimeSpan}"
+                         Visibility="{Binding ShowEveryWorkday}" />
+                <Label Style="{StaticResource LabelStyleMinimal}" Visibility="{Binding ShowEveryWorkday}">vary by</Label>
+                <TextBox Width="80"
+                         Style="{StaticResource TextBoxStyleMinimal}"
+                         Text="{Binding Entry.RandomizeTimeAmount}"
+                         Visibility="{Binding ShowEveryWorkday}" />
+                <Label Style="{StaticResource LabelStyleMinimal}" Visibility="{Binding ShowEveryWorkday}">minutes</Label>
+            </WrapPanel>
+            <!--  Every x Weeks  -->
+            <WrapPanel Grid.Row="2">
+                <Label Content="Every"
+                       Style="{StaticResource LabelStyleMinimal}"
+                       Visibility="{Binding ShowEveryXWeeks}" />
+                <TextBox Width="50"
+                         Style="{StaticResource TextBoxStyleMinimal}"
+                         Text="{Binding Entry.WeeklyWeekCount}"
+                         Visibility="{Binding ShowEveryXWeeks}" />
+                <Label Content="week(s), starting in week "
+                       Style="{StaticResource LabelStyleMinimal}"
+                       Visibility="{Binding ShowEveryXWeeks}" />
+                <TextBox Width="50"
+                         Style="{StaticResource TextBoxStyleMinimal}"
+                         Text="{Binding Entry.StartWeek}"
+                         Visibility="{Binding ShowEveryXWeeks}" />
+                <Label Style="{StaticResource LabelStyleMinimal}" Visibility="{Binding ShowEveryXWeeks}">from the beginning of the simulation</Label>
+                <Label Style="{StaticResource LabelStyleMinimal}" Visibility="{Binding ShowEveryXWeeks}">between the start time</Label>
+                <TextBox Width="80"
+                         Style="{StaticResource TextBoxStyleMinimal}"
+                         Text="{Binding Entry.StartTimeTimeSpan}"
+                         Visibility="{Binding ShowEveryXWeeks}" />
+                <Label Style="{StaticResource LabelStyleMinimal}" Visibility="{Binding ShowEveryXWeeks}">and the end time</Label>
+                <TextBox Width="80"
+                         Style="{StaticResource TextBoxStyleMinimal}"
+                         Text="{Binding Entry.EndTimeTimeSpan}"
+                         Visibility="{Binding ShowEveryXWeeks}" />
+                <Label Style="{StaticResource LabelStyleMinimal}" Visibility="{Binding ShowEveryXWeeks}">on the following days</Label>
+                <CheckBox Content="Monday"
+                          IsChecked="{Binding Entry.WeeklyMonday}"
+                          Style="{StaticResource CheckBoxStyle}"
+                          Visibility="{Binding ShowEveryXWeeks}" />
+                <CheckBox Content="Tuesday"
+                          IsChecked="{Binding Entry.WeeklyTuesday}"
+                          Style="{StaticResource CheckBoxStyle}"
+                          Visibility="{Binding ShowEveryXWeeks}" />
+                <CheckBox Content="Wednesday"
+                          IsChecked="{Binding Entry.WeeklyWednesday}"
+                          Style="{StaticResource CheckBoxStyle}"
+                          Visibility="{Binding ShowEveryXWeeks}" />
+                <CheckBox Content="Thursday"
+                          IsChecked="{Binding Entry.WeeklyThursday}"
+                          Style="{StaticResource CheckBoxStyle}"
+                          Visibility="{Binding ShowEveryXWeeks}" />
+                <CheckBox Content="Friday"
+                          IsChecked="{Binding Entry.WeeklyFriday}"
+                          Style="{StaticResource CheckBoxStyle}"
+                          Visibility="{Binding ShowEveryXWeeks}" />
+                <CheckBox Content="Saturday"
+                          IsChecked="{Binding Entry.WeeklySaturday}"
+                          Style="{StaticResource CheckBoxStyle}"
+                          Visibility="{Binding ShowEveryXWeeks}" />
+                <CheckBox Content="Sunday"
+                          IsChecked="{Binding Entry.WeeklySunday}"
+                          Style="{StaticResource CheckBoxStyle}"
+                          Visibility="{Binding ShowEveryXWeeks}" />
+                <Label Style="{StaticResource LabelStyleMinimal}" Visibility="{Binding ShowEveryXWeeks}">vary by</Label>
+                <TextBox Width="80"
+                         Style="{StaticResource TextBoxStyleMinimal}"
+                         Text="{Binding Entry.RandomizeTimeAmount}"
+                         Visibility="{Binding ShowEveryXWeeks}" />
+                <Label Style="{StaticResource LabelStyleMinimal}" Visibility="{Binding ShowEveryXWeeks}">minutes</Label>
+            </WrapPanel>
+            <!--  Every x motnhs  -->
+            <WrapPanel Grid.Row="3">
+
+                <Label Content="Every"
+                       Style="{StaticResource LabelStyleMinimal}"
+                       Visibility="{Binding ShowEveryXMonths}" />
+                <TextBox Width="50"
+                         Style="{StaticResource TextBoxStyleMinimal}"
+                         Text="{Binding Entry.MonthlyMonthCount}"
+                         Visibility="{Binding ShowEveryXMonths}" />
+                <Label Content="month(s), on the "
+                       Style="{StaticResource LabelStyleMinimal}"
+                       Visibility="{Binding ShowEveryXMonths}" />
+                <TextBox Width="50"
+                         Style="{StaticResource TextBoxStyleMinimal}"
+                         Text="{Binding Entry.MonthlyDay}"
+                         Visibility="{Binding ShowEveryXMonths}" />
+                <Label Style="{StaticResource LabelStyleMinimal}" Visibility="{Binding ShowEveryXMonths}">th day, between the start time</Label>
+                <TextBox Width="80"
+                         Style="{StaticResource TextBoxStyleMinimal}"
+                         Text="{Binding Entry.StartTimeTimeSpan}"
+                         Visibility="{Binding ShowEveryXMonths}" />
+                <Label Style="{StaticResource LabelStyleMinimal}" Visibility="{Binding ShowEveryXMonths}">and the end time</Label>
+                <TextBox Width="80"
+                         Style="{StaticResource TextBoxStyleMinimal}"
+                         Text="{Binding Entry.EndTimeTimeSpan}"
+                         Visibility="{Binding ShowEveryXMonths}" />
+                <Label Style="{StaticResource LabelStyleMinimal}" Visibility="{Binding ShowEveryXMonths}">vary by</Label>
+                <TextBox Width="80"
+                         Style="{StaticResource TextBoxStyleMinimal}"
+                         Text="{Binding Entry.RandomizeTimeAmount}"
+                         Visibility="{Binding ShowEveryXMonths}" />
+                <Label Style="{StaticResource LabelStyleMinimal}" Visibility="{Binding ShowEveryXMonths}">minutes</Label>
+            </WrapPanel>
+            <!--  yearly  -->
+            <WrapPanel Grid.Row="4">
+                <Label Content="On the"
+                       Style="{StaticResource LabelStyleMinimal}"
+                       Visibility="{Binding ShowYearly}" />
+                <TextBox Width="50"
+                         Style="{StaticResource TextBoxStyleMinimal}"
+                         Text="{Binding Entry.YearlyDay}"
+                         Visibility="{Binding ShowYearly}" />
+                <Label Content=" day of the month "
+                       Style="{StaticResource LabelStyleMinimal}"
+                       Visibility="{Binding ShowYearly}" />
+                <TextBox Width="50"
+                         Style="{StaticResource TextBoxStyleMinimal}"
+                         Text="{Binding Entry.YearlyMonth}"
+                         Visibility="{Binding ShowYearly}" />
+                <Label Style="{StaticResource LabelStyleMinimal}" Visibility="{Binding ShowYearly}">between the start time</Label>
+                <TextBox Width="80"
+                         Style="{StaticResource TextBoxStyleMinimal}"
+                         Text="{Binding Entry.StartTimeTimeSpan}"
+                         Visibility="{Binding ShowYearly}" />
+                <Label Style="{StaticResource LabelStyleMinimal}" Visibility="{Binding ShowYearly}">and the end time</Label>
+                <TextBox Width="80"
+                         Style="{StaticResource TextBoxStyleMinimal}"
+                         Text="{Binding Entry.EndTimeTimeSpan}"
+                         Visibility="{Binding ShowYearly}" />
+                <Label Style="{StaticResource LabelStyleMinimal}" Visibility="{Binding ShowYearly}">vary by</Label>
+                <TextBox Width="80"
+                         Style="{StaticResource TextBoxStyleMinimal}"
+                         Text="{Binding Entry.RandomizeTimeAmount}"
+                         Visibility="{Binding ShowYearly}" />
+                <Label Style="{StaticResource LabelStyleMinimal}" Visibility="{Binding ShowYearly}">minutes</Label>
+            </WrapPanel>
+
+            <!--  date range  -->
+            <WrapPanel Grid.Row="5">
+
+                <Label Content="Between the start date"
+                       Style="{StaticResource LabelStyleMinimal}"
+                       Visibility="{Binding ShowDateRange}" />
+                <TextBox Width="100"
+                         Style="{StaticResource TextBoxStyleMinimal}"
+                         Text="{Binding Entry.DateRangeStart,
+                                        StringFormat=d}"
+                         Visibility="{Binding ShowDateRange}" />
+                <Label Content=" and the end date "
+                       Style="{StaticResource LabelStyleMinimal}"
+                       Visibility="{Binding ShowDateRange}" />
+                <TextBox Width="100"
+                         Style="{StaticResource TextBoxStyleMinimal}"
+                         Text="{Binding Entry.DateRangeEnd,
+                                        StringFormat=d}"
+                         Visibility="{Binding ShowDateRange}" />
+                <Label Style="{StaticResource LabelStyleMinimal}" Visibility="{Binding ShowDateRange}">between the start time</Label>
+                <TextBox Width="80"
+                         Style="{StaticResource TextBoxStyleMinimal}"
+                         Text="{Binding Entry.StartTimeTimeSpan}"
+                         Visibility="{Binding ShowDateRange}" />
+                <Label Style="{StaticResource LabelStyleMinimal}" Visibility="{Binding ShowDateRange}">and the end time</Label>
+                <TextBox Width="80"
+                         Style="{StaticResource TextBoxStyleMinimal}"
+                         Text="{Binding Entry.EndTimeTimeSpan}"
+                         Visibility="{Binding ShowDateRange}" />
+                <Label Style="{StaticResource LabelStyleMinimal}" Visibility="{Binding ShowDateRange}">vary by</Label>
+                <TextBox Width="80"
+                         Style="{StaticResource TextBoxStyleMinimal}"
+                         Text="{Binding Entry.RandomizeTimeAmount}"
+                         Visibility="{Binding ShowDateRange}" />
+                <Label Style="{StaticResource LabelStyleMinimal}" Visibility="{Binding ShowDateRange}">minutes</Label>
+            </WrapPanel>
+            <!--  Temperature controlled  -->
+            <WrapPanel Grid.Row="6">
+
+                <Label Content="Between"
+                       Style="{StaticResource LabelStyleMinimal}"
+                       Visibility="{Binding ShowTemperature}" />
+                <TextBox Width="50"
+                         Style="{StaticResource TextBoxStyleMinimal}"
+                         Text="{Binding Entry.MinTemperature}"
+                         Visibility="{Binding ShowTemperature}" />
+                <Label Content="°C and  "
+                       Style="{StaticResource LabelStyleMinimal}"
+                       Visibility="{Binding ShowTemperature}" />
+                <TextBox Width="50"
+                         Style="{StaticResource TextBoxStyleMinimal}"
+                         Text="{Binding Entry.MaxTemperature}"
+                         Visibility="{Binding ShowTemperature}" />
+                <Label Style="{StaticResource LabelStyleMinimal}" Visibility="{Binding ShowTemperature}">°C</Label>
+            </WrapPanel>
+            <WrapPanel Grid.Row="7">
+                <!--  Light controlled  -->
+                <CheckBox Name="RdoLight"
+                          Content="Needs Light"
+                          IsChecked="{Binding Entry.NeedsLight}"
+                          Style="{StaticResource CheckBoxStyle}"
+                          Visibility="{Binding ShowLightcontrolled}" />
+                <CheckBox Content="Needs Darkness"
+                          IsChecked="{Binding Entry.NeedsDarkness}"
+                          Style="{StaticResource CheckBoxStyle}"
+                          Visibility="{Binding ShowLightcontrolled}" />
+            </WrapPanel>
+            <WrapPanel Grid.Row="8">
+                <!--  date Profile controlled controlled  -->
+                <Label Style="{StaticResource LabelStyleMinimal}" Visibility="{Binding ShowDateProfile}">Date based profile</Label>
+                <ComboBox ItemsSource="{Binding DateBasedProfiles}"
+                          SelectedItem="{Binding Entry.DateBasedProfile}"
+                          Style="{StaticResource ComboBoxStyle}"
+                          Visibility="{Binding ShowDateProfile}" />
+                <Label Content=" and the value has to be between "
+                       Style="{StaticResource LabelStyleMinimal}"
+                       Visibility="{Binding ShowDateProfile}" />
+                <TextBox Width="50"
+                         Style="{StaticResource TextBoxStyleMinimal}"
+                         Text="{Binding Entry.MinDateProfileValue}"
+                         Visibility="{Binding ShowDateProfile}" />
+                <Label Content=" varying by +- "
+                       Style="{StaticResource LabelStyleMinimal}"
+                       Visibility="{Binding ShowDateProfile}" />
+                <TextBox Width="50"
+                         Style="{StaticResource TextBoxStyleMinimal}"
+                         Text="{Binding Entry.DateProfileMinVariation}"
+                         Visibility="{Binding ShowDateProfile}" />
+                <Label Content=" and "
+                       Style="{StaticResource LabelStyleMinimal}"
+                       Visibility="{Binding ShowDateProfile}" />
+                <TextBox Width="50"
+                         Style="{StaticResource TextBoxStyleMinimal}"
+                         Text="{Binding Entry.MaxDateProfileValue}"
+                         Visibility="{Binding ShowDateProfile}" />
+                <Label Content=" varying by +- "
+                       Style="{StaticResource LabelStyleMinimal}"
+                       Visibility="{Binding ShowDateProfile}" />
+                <TextBox Width="50"
+                         Style="{StaticResource TextBoxStyleMinimal}"
+                         Text="{Binding Entry.DateProfileMaxVariation}"
+                         Visibility="{Binding ShowDateProfile}" />
+
+
+            </WrapPanel>
+            <WrapPanel Grid.Row="9">
+                <!--  vacation controlled  -->
+                <CheckBox Name="RdoVacation"
+                          Content="During vacations"
+                          IsChecked="{Binding Entry.DuringVacation}"
+                          Style="{StaticResource CheckBoxStyle}"
+                          Visibility="{Binding ShowVacationControlled}" />
+                <CheckBox Content="During all not-vacation time"
+                          IsChecked="{Binding Entry.DuringNotVacation}"
+                          Style="{StaticResource CheckBoxStyle}"
+                          Visibility="{Binding ShowVacationControlled}" />
+                <CheckBox Content="During vacations longer than / "
+                          IsChecked="{Binding Entry.DuringVacationLongerThan}"
+                          Style="{StaticResource CheckBoxStyle}"
+                          Visibility="{Binding ShowVacationControlled}" />
+                <CheckBox Content="During vacations shorter than"
+                          IsChecked="{Binding Entry.DuringVacationShorterThan}"
+                          Style="{StaticResource CheckBoxStyle}"
+                          Visibility="{Binding ShowVacationControlled}" />
+                <TextBox Width="50"
+                         Style="{StaticResource TextBoxStyleMinimal}"
+                         Text="{Binding Entry.VacationDurationLimit}"
+                         Visibility="{Binding ShowVacationControlled}" />
+            </WrapPanel>
+            <WrapPanel Grid.Row="10">
+                <!--  Holiday controlled  -->
+                <CheckBox Name="RdoHoliday"
+                          Content="During holidays"
+                          IsChecked="{Binding Entry.DuringHoliday}"
+                          Style="{StaticResource CheckBoxStyle}"
+                          Visibility="{Binding ShowHolidayControlled}" />
+
+            </WrapPanel>
+        </Grid>
+        <Button Grid.Row="0"
+                Grid.Column="2"
+                Width="25"
+                VerticalAlignment="Top"
+                Click="HandleAddClicked"
+                FontSize="12"
+                FontWeight="ExtraBold"
+                Style="{StaticResource ButtonStyle}">
+            +
+        </Button>
+        <Button Grid.Row="0"
+                Grid.Column="3"
+                Width="25"
+                VerticalAlignment="Top"
+                Click="HandleRemoveClick"
+                FontSize="12"
+                FontWeight="ExtraBold"
+                Style="{StaticResource ButtonStyle}"
+                Visibility="{Binding IsMinusVisible}">
+            -
+        </Button>
+        <Button Grid.Row="0"
+                Grid.Column="4"
+                VerticalAlignment="Top"
+                Click="HandleShowPreviewClick"
+                FontSize="12"
+                FontWeight="ExtraBold"
+                Style="{StaticResource ButtonStyle}">
+            Show Preview
+        </Button>
+    </Grid>
+</UserControl>
+<!--  ReSharper restore UnusedMember.Global  -->

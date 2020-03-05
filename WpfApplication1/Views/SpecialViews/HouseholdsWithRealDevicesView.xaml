@@ -1,0 +1,68 @@
+﻿<UserControl x:Class="LoadProfileGenerator.Views.SpecialViews.HouseholdsWithRealDevicesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="600" d:DesignWidth="600">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="35" />
+        </Grid.RowDefinitions>
+        <ScrollViewer Margin="0,0,0,0" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+
+                <Expander IsExpanded="true" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="All households with real devices" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Style="{StaticResource TextBlockStyle}">
+                            Here is a list of all household devices which have real devices instead of device categories. If there is a real
+                            device instead of a device category, then the energy intensity setting won't work because the devices can't
+                            be swapped out for others with more or less energy consumption. The purpose of this view is just to provide an
+                            overview for quickly checking if everything is set correctly.
+                        </TextBlock>
+                        <Button Content="refresh" Style="{StaticResource ButtonStyle}" HorizontalAlignment="Right"
+                                Click="RefreshClick" Grid.Row="1" />
+                        <ListView Grid.Row="2" Grid.Column="0" MinHeight="150"
+                                  ItemsSource="{Binding SelectedHouseholds}"
+                                  Style="{StaticResource ListViewStyle}" MouseDoubleClick="Control_OnMouseDoubleClick"
+                                  Name="LstHouseholds">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="Auto" Header="Household Name"
+                                                    DisplayMemberBinding="{Binding Household.Name}" />
+                                    <GridViewColumn Width="Auto" Header="Location"
+                                                    DisplayMemberBinding="{Binding Location.Name}" />
+                                    <GridViewColumn Width="Auto" Header="Device Name"
+                                                    DisplayMemberBinding="{Binding Device.Name}" />
+                                    <GridViewColumn Width="Auto" Header="Device Name"
+                                                    DisplayMemberBinding="{Binding Type}" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                </Expander>
+            </StackPanel>
+        </ScrollViewer>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
+
+            <Button Content="Close" Style="{StaticResource ButtonStyle}" MinWidth="75" HorizontalAlignment="Right"
+                    Click="CloseClick" />
+        </StackPanel>
+    </Grid>
+</UserControl>

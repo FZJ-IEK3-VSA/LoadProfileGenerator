@@ -1,0 +1,325 @@
+﻿<!-- ReSharper disable UnusedMember.Global --><UserControl x:Class="LoadProfileGenerator.Views.SpecialViews.CalculationOutcomesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             d:DesignHeight="1500"
+             d:DesignWidth="500"
+             mc:Ignorable="d">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="35" />
+        </Grid.RowDefinitions>
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <Expander IsExpanded="true" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Calculation" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.ColumnSpan="2" Style="{StaticResource TextBlockStyle}">
+                            This is for doing calculations to have an overview of the results. This is not for creating the load curves. For that use the &quot;Calculation&quot; option in the tree on the left.
+                        </TextBlock>
+                        <Label Grid.Row="1"
+                               Grid.Column="0"
+                               Style="{StaticResource LabelStyle}">
+                            Path to operate in
+                        </Label>
+                        <TextBox Grid.Row="1"
+                                 Grid.Column="1"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding OperatingPath}" />
+                        <StackPanel Grid.Row="3"
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="2"
+                                    HorizontalAlignment="Right"
+                                    Orientation="Horizontal">
+                            <Button HorizontalAlignment="Right"
+                                    Click="StartCountCalculationsClick"
+                                    Content="Count calculations"
+                                    IsEnabled="{Binding NotInCalculation}"
+                                    Style="{StaticResource ButtonStyle}" />
+                            <Button HorizontalAlignment="Right"
+                                    Click="StopCalculationsClick"
+                                    Content="Stop the calculations"
+                                    IsEnabled="{Binding InCalculation}"
+                                    Style="{StaticResource ButtonStyle}" />
+                            <Button HorizontalAlignment="Right"
+                                    Click="StartCalculationsClick"
+                                    Content="Start the calculations"
+                                    IsEnabled="{Binding NotInCalculation}"
+                                    Style="{StaticResource ButtonStyle}" />
+                        </StackPanel>
+                    </Grid>
+                </Expander>
+                <Expander IsExpanded="true" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Export" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.ColumnSpan="2" Style="{StaticResource TextBlockStyle}">
+                            You can export the results as CSV file for further processing in for example Excel.
+                        </TextBlock>
+                        <Label Grid.Row="1"
+                               Grid.Column="0"
+                               Style="{StaticResource LabelStyle}">
+                            Destination filename
+                        </Label>
+                        <TextBox Grid.Row="1"
+                                 Grid.Column="1"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding CSVPath}" />
+                        <StackPanel Grid.Row="3"
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="2"
+                                    HorizontalAlignment="Right"
+                                    Orientation="Horizontal">
+                            <Button HorizontalAlignment="Right"
+                                    Click="ExportClickClick"
+                                    Content="Start Export"
+                                    Style="{StaticResource ButtonStyle}" />
+                        </StackPanel>
+                        <Button Grid.Row="4"
+                                Grid.Column="1"
+                                Margin="0,5,10,5"
+                                HorizontalAlignment="Right"
+                                Click="MakeVersionComparisonChart"
+                                Content="Make Version Comparison Chart"
+                                Style="{StaticResource ButtonStyle}" />
+                    </Grid>
+                </Expander>
+                <Expander IsExpanded="true" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Calculation Outcomes" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.ColumnSpan="2" Style="{StaticResource TextBlockStyle}">
+                            This view shows the outcomes of previous calculations. This should give a first idea of the performance of the households.
+                        </TextBlock>
+                        <Label Grid.Row="1"
+                               Grid.Column="0"
+                               Style="{StaticResource LabelStyle}">
+                            Filter
+                        </Label>
+                        <TextBox Name="TxtFilter"
+                                 Grid.Row="1"
+                                 Grid.Column="1"
+                                 KeyUp="TxtFilter_OnKeyUp"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="" />
+                        <StackPanel Grid.Row="2"
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="2"
+                                    HorizontalAlignment="Right"
+                                    Orientation="Horizontal">
+                            <Button HorizontalAlignment="Right"
+                                    Click="DeleteEmptyClick"
+                                    Content="Delete empty results"
+                                    Style="{StaticResource ButtonStyle}" />
+                            <Button HorizontalAlignment="Right"
+                                    Click="DuplicateCheckClick"
+                                    Content="Delete duplicate results"
+                                    Style="{StaticResource ButtonStyle}" />
+                            <Button HorizontalAlignment="Right"
+                                    Click="DeleteSelectedResultClick"
+                                    Content="Delete selected result"
+                                    Style="{StaticResource ButtonStyle}" />
+                        </StackPanel>
+                        <CheckBox Grid.Row="3"
+                                  Grid.Column="0"
+                                  Grid.ColumnSpan="2"
+                                  Content="Show only failed calculations"
+                                  IsChecked="{Binding ShowOnlyErrors}"
+                                  Style="{StaticResource CheckBoxStyle}" />
+                        <ListView x:Name="LstOutcomes"
+                                  Grid.Row="4"
+                                  Grid.Column="0"
+                                  Grid.ColumnSpan="2"
+                                  MinHeight="150"
+                                  MaxHeight="500"
+                                  ItemsSource="{Binding FilteredEntries}"
+                                  SelectedItem="{Binding SelectedOutcome}"
+                                  Style="{StaticResource ListViewStyle}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding HouseholdName}"
+                                                    Header="Name" />
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding LPGVersion}"
+                                                    Header="LPGVersion" />
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding EnergyIntensity}"
+                                                    Header="EnergyIntensity" />
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding TemperatureProfile}"
+                                                    Header="Temperature Profile" />
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding GeographicLocationName}"
+                                                    Header="Geographic Location" />
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding ErrorMessage}"
+                                                    Header="ErrorMessage" />
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding CalculationDuration}"
+                                                    Header="Calculation Duration" />
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding SimulationStartTime}"
+                                                    Header="SimulationStartTime" />
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding SimulationEndTime}"
+                                                    Header="SimulationEndTime" />
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding NumberOfPersons}"
+                                                    Header="NumberOfPersons" />
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding RandomSeed}"
+                                                    Header="RandomSeed" />
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding Electricity}"
+                                                    Header="Electricity" />
+
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                </Expander>
+                <Expander IsExpanded="true" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Selected Outcome" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.ColumnSpan="2" Style="{StaticResource TextBlockStyle}">
+                            This shows the details of your selection.
+                        </TextBlock>
+                        <Label Grid.Row="1"
+                               Grid.Column="0"
+                               Style="{StaticResource LabelStyle}">
+                            Name
+                        </Label>
+                        <Label Grid.Row="1"
+                               Grid.Column="1"
+                               Content="{Binding SelectedOutcome.HouseholdName}"
+                               Style="{StaticResource LabelStyle}" />
+                        <ListView x:Name="LstEnergy"
+                                  Grid.Row="4"
+                                  Grid.Column="0"
+                                  Grid.ColumnSpan="2"
+                                  MinHeight="150"
+                                  MaxHeight="500"
+                                  ItemsSource="{Binding SelectedOutcome.Entries}"
+                                  Style="{StaticResource ListViewStyle}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding LoadTypeName}"
+                                                    Header="Name" />
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding Value}"
+                                                    Header="Value" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                        <ListView x:Name="LstAffs"
+                                  Grid.Row="5"
+                                  Grid.Column="0"
+                                  Grid.ColumnSpan="2"
+                                  MinHeight="150"
+                                  MaxHeight="500"
+                                  ItemsSource="{Binding SelectedOutcome.AffordanceTimeUses}"
+                                  Style="{StaticResource ListViewStyle}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding PersonName}"
+                                                    Header="Person Name" />
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding AffordanceName}"
+                                                    Header="Affordance Name" />
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding TimeInMinutes}"
+                                                    Header="Minutes / Year" />
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding TimePerExecution}"
+                                                    Header="Time per Execution" />
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding Executions}"
+                                                    Header="Executions" />
+
+
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                </Expander>
+            </StackPanel>
+        </ScrollViewer>
+        <StackPanel Grid.Row="1"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal">
+            <Button Width="75"
+                    HorizontalAlignment="Right"
+                    Click="CloseClick"
+                    Content="Close"
+                    Style="{StaticResource ButtonStyle}" />
+        </StackPanel>
+    </Grid>
+</UserControl>

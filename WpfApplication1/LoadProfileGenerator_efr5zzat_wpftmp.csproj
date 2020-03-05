@@ -1,0 +1,169 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <UseWpf>True</UseWpf>
+    <OutputType>winexe</OutputType>
+    <ApplicationIcon />
+    <OutputTypeEx>winexe</OutputTypeEx>
+    <StartupObject />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx" Generator="ResXFileCodeGenerator" LastGenOutput="Resources.Designer.cs" />
+    <Compile Update="Properties\Resources.Designer.cs" DesignTime="True" AutoGen="True" DependentUpon="Resources.resx" />
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Update="Settings.Designer.cs" AutoGen="True" DependentUpon="Settings.settings" />
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Settings.settings" LastGenOutput="Settings.Designer.cs" Generator="SettingsSingleFileGenerator" />
+    <Compile Update="**\*.xaml.cs" SubType="Designer" DependentUpon="%(Filename)" />
+    <None Remove="Images\lpgicon4b.ico" />
+    <None Remove="ScrollingErrorWindow.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\lpgicon4b.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" Version="2019.1.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="OxyPlot.Wpf" Version="2.0.0-unstable1035" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CalculationController\CalculationController.csproj" />
+    <ProjectReference Include="..\ChartCreator2\ChartCreator2.csproj" />
+    <ProjectReference Include="..\Database\Database.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="ScrollingErrorWindow.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ReferencePath Include="C:\Users\pan2\.nuget\packages\autofac\4.9.2\lib\net45\Autofac.dll" />
+    <ReferencePath Include="V:\Dropbox\LPG\Automation\bin\Debug\netstandard2.0\Automation.dll" />
+    <ReferencePath Include="V:\Dropbox\LPG\CalcPostProcessor\bin\Debug\net472\CalcPostProcessor.dll" />
+    <ReferencePath Include="V:\Dropbox\LPG\CalculationController\bin\Debug\net472\CalculationController.dll" />
+    <ReferencePath Include="V:\Dropbox\LPG\CalculationEngine\bin\Debug\net472\CalculationEngine.dll" />
+    <ReferencePath Include="V:\Dropbox\LPG\ChartCreator2\bin\Debug\net472\ChartCreator2.dll" />
+    <ReferencePath Include="V:\Dropbox\LPG\ChartPDFCreator\bin\Debug\net472\ChartPDFCreator.dll" />
+    <ReferencePath Include="V:\Dropbox\LPG\Common\bin\Debug\net472\Common.dll" />
+    <ReferencePath Include="V:\Dropbox\LPG\Database\bin\Debug\net472\Database.dll" />
+    <ReferencePath Include="C:\Users\pan2\.nuget\packages\jetbrains.annotations\2019.1.3\lib\net20\JetBrains.Annotations.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\Microsoft.CSharp.dll" />
+    <ReferencePath Include="C:\Users\pan2\.nuget\packages\pdfsharp-migradoc-gdi\1.32.4334\lib\net20\MigraDoc.DocumentObjectModel.dll" />
+    <ReferencePath Include="C:\Users\pan2\.nuget\packages\pdfsharp-migradoc-gdi\1.32.4334\lib\net20\MigraDoc.Rendering.dll" />
+    <ReferencePath Include="C:\Users\pan2\.nuget\packages\pdfsharp-migradoc-gdi\1.32.4334\lib\net20\MigraDoc.RtfRendering.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\mscorlib.dll" />
+    <ReferencePath Include="C:\Users\pan2\.nuget\packages\newtonsoft.json\12.0.2\lib\net45\Newtonsoft.Json.dll" />
+    <ReferencePath Include="C:\Users\pan2\.nuget\packages\oxyplot.core\2.0.0-unstable1035\lib\net45\OxyPlot.dll" />
+    <ReferencePath Include="C:\Users\pan2\.nuget\packages\oxyplot.pdf\2.0.0-unstable1035\lib\net452\OxyPlot.Pdf.dll" />
+    <ReferencePath Include="C:\Users\pan2\.nuget\packages\oxyplot.wpf\2.0.0-unstable1035\lib\net452\OxyPlot.Wpf.dll" />
+    <ReferencePath Include="C:\Users\pan2\.nuget\packages\pdfsharp-migradoc-gdi\1.32.4334\lib\net20\PdfSharp.Charting.dll" />
+    <ReferencePath Include="C:\Users\pan2\.nuget\packages\pdfsharp-migradoc-gdi\1.32.4334\lib\net20\PdfSharp.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\PresentationCore.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\PresentationFramework.Aero.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\PresentationFramework.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.Core.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.Data.DataSetExtensions.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.Data.dll" />
+    <ReferencePath Include="C:\Users\pan2\.nuget\packages\system.data.sqlite.core\1.0.111\lib\net46\System.Data.SQLite.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.Deployment.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.Drawing.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.IO.Compression.FileSystem.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.Net.Http.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.Numerics.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.Runtime.Serialization.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.Windows.Forms.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.Xaml.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.Xml.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.Xml.Linq.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\WindowsBase.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\WindowsFormsIntegration.dll" />
+    <ReferencePath Include="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\Facades\netstandard.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\AboutWindow.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\CompleteAffordanceAdd.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Controls\Usercontrols\DeviceCategoryPicker.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Controls\Usercontrols\DeviceSelectorControl.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Controls\Usercontrols\PermissionLine.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\InputBox.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Model\GlobalTree.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\ProgressbarWindow.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\ScrollingErrorWindow.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Shell.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\SplashWindow.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\BasicElements\DateBasedProfileView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\BasicElements\HolidayView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\BasicElements\LoadTypeView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\BasicElements\TemperatureProfileView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\BasicElements\TimeLimitView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\BasicElements\TimeProfileView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\BasicElements\VacationView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\BasicElements\VariableView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\Households\AffordanceTaggingSetView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\Households\AffordanceView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\Households\DesireView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\Households\DeviceActionGroupView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\Households\DeviceActionView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\Households\DeviceCategoryView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\Households\DeviceSelectionView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\Households\DeviceTaggingSetView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\Households\DeviceView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\Households\GeographicLocationView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\Households\HouseholdTemplateView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\Households\HouseholdTraitView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\Households\LocationView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\Households\ModularHouseholdView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\Households\PersonView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\Households\SubAffordanceView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\Households\TemplatePersonView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\Households\TemplateTagView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\Households\TraitTagView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\Houses\EnergyStorageView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\Houses\GeneratorView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\Houses\HouseTypeView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\Houses\HouseView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\Houses\SettlementResultView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\Houses\SettlementTemplateView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\Houses\SettlementView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\Houses\TransformationDeviceView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\SpecialViews\AffordanceColorView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\SpecialViews\AffordancesTimeLimitView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\SpecialViews\AffordancesUnusedView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\SpecialViews\AffordancesWithRealDevicesView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\SpecialViews\AffordanceVariableView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\SpecialViews\CalculateView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\SpecialViews\CalculationOutcomesView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\SpecialViews\DeviceOverviewView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\SpecialViews\HouseholdPlanView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\SpecialViews\HouseholdsWithRealDevicesView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\SpecialViews\ImportView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\SpecialViews\ResultView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\SpecialViews\SettingsView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\SpecialViews\TimeLimitUnusedView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\SpecialViews\WelcomeView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\Transportation\ChargingStationSetView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\Transportation\SiteView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\Transportation\TransportationDeviceCategoryView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\Transportation\TransportationDeviceSetView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\Transportation\TransportationDeviceView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\Transportation\TravelRouteSetView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\Views\Transportation\TravelRouteView.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\App.g.cs" />
+    <Compile Include="V:\Dropbox\LPG\WpfApplication1\obj\Debug\net472\GeneratedInternalTypeHelper.g.cs" />
+  </ItemGroup>
+</Project>

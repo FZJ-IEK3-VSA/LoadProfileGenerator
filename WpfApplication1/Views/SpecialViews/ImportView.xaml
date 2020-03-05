@@ -1,0 +1,111 @@
+﻿<UserControl x:Class="LoadProfileGenerator.Views.SpecialViews.ImportView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:databaseMerger="clr-namespace:Database.DatabaseMerger;assembly=Database"
+             mc:Ignorable="d"
+             d:DesignHeight="800" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="35" />
+        </Grid.RowDefinitions>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <Expander IsExpanded="true" BorderThickness="3 3 3 3" BorderBrush="Gray" Margin="5" Padding="2">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="General" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.ColumnSpan="2" TextWrapping="WrapWithOverflow" Margin="5">
+                            This function is for importing data from another database (db3-File). For example this might be needed if you were working with a
+                            previous version and want to import the work you did into this version.
+                            This import will check of each element in the old database if in the current one there exists an element with the same name.
+                            All elements that can't be found will be displayed. Then you can pick which ones to import.
+                        </TextBlock>
+                        <Label Content="Path to the other database" Target="{Binding ElementName=TxtDb3Path}"
+                               Grid.Column="0" Grid.Row="1" />
+                        <TextBox Height="23" x:Name="TxtDb3Path" Text="{Binding FileName}"
+                                 Grid.Row="1"
+                                 Grid.Column="1"
+                                 Margin="5" />
+                        <Button Content="Browse for file" Grid.Row="1" Grid.Column="2" Height="23" Margin="5"
+                                Width="auto" Click="BtnBrowseForFile" />
+                        <Button Content="Generate preview" Grid.Row="2" Grid.Column="2" Height="23" Margin="5"
+                                Width="auto" Click="BtnGetPreview" />
+                    </Grid>
+                </Expander>
+
+
+                <Expander IsExpanded="true" BorderThickness="3 3 3 3" BorderBrush="Gray" Margin="5" Padding="2">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Items to Import" />
+                        </Border>
+                    </Expander.Header>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.ColumnSpan="2" TextWrapping="WrapWithOverflow" Margin="5">
+                            These are the items where no same name equivalent could be found. Please be aware that items will not
+                            show up here if you just made a change in one of them. For example if you changed a TV to simply use
+                            more power but didn't change the name, these changes will not be imported.
+                            The import might take a while to complete. Please be patient. At the end you'll get a notification that it's done.
+                        </TextBlock>
+                        <StackPanel Orientation="Horizontal" Grid.Row="1">
+                            <Button Content="Select all" Height="23" Margin="5" Width="auto" Click="BtnSelectAll" />
+                            <Button Content="Select none" Height="23" Margin="5" Width="auto" Click="BtnSelectNone" />
+                        </StackPanel>
+                        <ListView Grid.Row="2" MinHeight="150" Name="LstItemsToImport"
+                                  ItemsSource="{Binding ThisMerger.(databaseMerger:DatabaseMerger.ItemsToImport)}" Margin="5"
+                                    MaxHeight="800" >
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="Import" Width="Auto">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <CheckBox IsChecked="{Binding Import}" Name="ToImport" IsThreeState="False"  />
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+
+                                    <GridViewColumn Width="auto" Header="Name of the item" DisplayMemberBinding="{Binding Entry.Name}" />
+                                    <GridViewColumn Width="auto" Header="Type" DisplayMemberBinding="{Binding TypeDescription}" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                        <Button Content="Import now!" Grid.Row="3"  Height="50" Margin="5"
+                                Width="auto" Click="BtnImportNow" />
+                    </Grid>
+                </Expander>
+            </StackPanel>
+        </ScrollViewer>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
+            <Button Content="Close" Height="23" Width="75" HorizontalAlignment="Right"
+                    Click="CloseClick" />
+        </StackPanel>
+    </Grid>
+</UserControl>

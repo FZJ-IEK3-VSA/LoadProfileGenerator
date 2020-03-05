@@ -1,0 +1,367 @@
+﻿<UserControl x:Class=" LoadProfileGenerator.Controls.Usercontrols.DeviceSelectorControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converters1="clr-namespace:LoadProfileGenerator.Controls.Converters"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:usercontrols1="clr-namespace:LoadProfileGenerator.Controls.Usercontrols"
+             d:DesignHeight="900"
+             d:DesignWidth="500"
+             Loaded="DeviceSelectorControl_OnLoaded"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converters1:NumberConverter x:Key="NumberConverter" />
+            <converters1:PercentConverter x:Key="PercentConverter" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid x:Name="LayoutRoot">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="5*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!--  device or category  -->
+            <Label Grid.Row="0"
+                   Content="Type to Add"
+                   Style="{StaticResource LabelStyle}"
+                   Target="{Binding ElementName=CmbDeviceType}" />
+            <ComboBox Name="CmbDeviceType"
+                      Grid.Row="0"
+                      Grid.Column="1"
+                      Grid.ColumnSpan="2"
+                      ItemsSource="{Binding DeviceTypes}"
+                      SelectedItem="{Binding SelectedAddCategory}"
+                      Style="{StaticResource ComboBoxStyle}" />
+            <!--  device category  -->
+            <Label Grid.Row="1"
+                   Grid.Column="0"
+                   Content="Device Category"
+                   Style="{StaticResource LabelStyle}"
+                   Target="{Binding ElementName=CmbDeviceCategories}"
+                   Visibility="{Binding ShowDeviceCategoryDropDown}" />
+            <ComboBox Name="CmbDeviceCategories"
+                      Grid.Row="1"
+                      Grid.Column="1"
+                      Grid.ColumnSpan="2"
+                      x:FieldModifier="private"
+                      ItemsSource="{Binding DeviceCategories}"
+                      SelectedItem="{Binding ElementName=SelectedDevices,
+                                             Path=SelectedItem.Device,
+                                             Mode=OneWay}"
+                      SelectionChanged="CmbDevice_OnSelectionChanged"
+                      Style="{StaticResource ComboBoxStyle}"
+                      Visibility="{Binding ShowDeviceCategoryDropDown}" />
+            <!--  devices  -->
+            <Label Grid.Row="2"
+                   Grid.Column="0"
+                   Content="Device"
+                   Style="{StaticResource LabelStyle}"
+                   Target="{Binding ElementName=CmbDevices}"
+                   Visibility="{Binding ShowDeviceDropDown}" />
+            <ComboBox Name="CmbDevices"
+                      Grid.Row="2"
+                      Grid.Column="1"
+                      Grid.ColumnSpan="2"
+                      ItemsSource="{Binding Devices}"
+                      SelectedItem="{Binding ElementName=SelectedDevices,
+                                             Path=SelectedItem.Device,
+                                             Mode=OneWay}"
+                      SelectionChanged="CmbDevice_OnSelectionChanged"
+                      Style="{StaticResource ComboBoxStyle}"
+                      Visibility="{Binding ShowDeviceDropDown}" />
+            <!--  Device actions  -->
+            <Label Grid.Row="3"
+                   Grid.Column="0"
+                   Content="Device Action"
+                   Style="{StaticResource LabelStyle}"
+                   Target="{Binding ElementName=CmbDeviceActions}"
+                   Visibility="{Binding ShowDeviceActionDropDown}" />
+            <ComboBox Name="CmbDeviceActions"
+                      Grid.Row="3"
+                      Grid.Column="1"
+                      Grid.ColumnSpan="2"
+                      ItemsSource="{Binding DeviceActions}"
+                      SelectedItem="{Binding ElementName=SelectedDevices,
+                                             Path=SelectedItem.Device,
+                                             Mode=OneWay}"
+                      SelectionChanged="CmbDevice_OnSelectionChanged"
+                      Style="{StaticResource ComboBoxStyle}"
+                      Visibility="{Binding ShowDeviceActionDropDown}" />
+            <!--  Device actions  -->
+            <Label Grid.Row="4"
+                   Grid.Column="0"
+                   Content="Device Action Group"
+                   Style="{StaticResource LabelStyle}"
+                   Target="{Binding ElementName=CmbDeviceActionGroups}"
+                   Visibility="{Binding ShowDeviceActionGroupDropDown}" />
+            <ComboBox Name="CmbDeviceActionGroups"
+                      Grid.Row="4"
+                      Grid.Column="1"
+                      Grid.ColumnSpan="2"
+                      ItemsSource="{Binding DeviceActionGroups}"
+                      SelectedItem="{Binding ElementName=SelectedDevices,
+                                             Path=SelectedItem.Device,
+                                             Mode=OneWay}"
+                      SelectionChanged="CmbDevice_OnSelectionChanged"
+                      Style="{StaticResource ComboBoxStyle}"
+                      Visibility="{Binding ShowDeviceActionGroupDropDown}" />
+            <!--  vLoad type  -->
+            <Label Grid.Row="5"
+                   Grid.Column="0"
+                   Content="Load Type"
+                   Style="{StaticResource LabelStyle}"
+                   Target="{Binding ElementName=CmbVLoadtypes}"
+                   Visibility="{Binding ShowLoadTypes}" />
+            <ComboBox Name="CmbVLoadtypes"
+                      Grid.Row="5"
+                      Grid.Column="1"
+                      Grid.ColumnSpan="2"
+                      ItemsSource="{Binding LoadTypes}"
+                      SelectedItem="{Binding ElementName=SelectedDevices,
+                                             Path=SelectedItem.LoadType,
+                                             Mode=OneWay}"
+                      SelectionChanged="CmbLoadType_OnSelectionChanged"
+                      Style="{StaticResource ComboBoxStyle}"
+                      Visibility="{Binding ShowLoadTypes}" />
+            <!--  Timeprofiles  -->
+            <Label Grid.Row="6"
+                   Grid.Column="0"
+                   Content="Time Profile"
+                   Style="{StaticResource LabelStyle}"
+                   Target="{Binding ElementName=CmbTimeprofiles}"
+                   Visibility="{Binding ShowTimeProfiles}" />
+            <ComboBox Name="CmbTimeprofiles"
+                      Grid.Row="6"
+                      Grid.Column="1"
+                      Grid.ColumnSpan="2"
+                      DisplayMemberPath="Name"
+                      ItemsSource="{Binding Timeprofiles}"
+                      SelectedItem="{Binding ElementName=SelectedDevices,
+                                             Path=SelectedItem.TimeProfile,
+                                             Mode=OneWay}"
+                      SelectionChanged="CmbTimeprofiles_OnSelectionChanged"
+                      Style="{StaticResource ComboBoxStyle}"
+                      Visibility="{Binding ShowTimeProfiles}" />
+            <!--  Location  -->
+            <Label Grid.Row="7"
+                   Grid.Column="0"
+                   Content="Location"
+                   Style="{StaticResource LabelStyle}"
+                   Target="{Binding ElementName=CmbLocation}"
+                   Visibility="{Binding ShowLocation}" />
+            <ComboBox Name="CmbLocation"
+                      Grid.Row="7"
+                      Grid.Column="1"
+                      Grid.ColumnSpan="2"
+                      DisplayMemberPath="Name"
+                      ItemsSource="{Binding Locations}"
+                      SelectedItem="{Binding ElementName=SelectedDevices,
+                                             Path=SelectedItem.Location,
+                                             Mode=OneWay}"
+                      SelectionChanged="CmbLocation_OnSelectionChanged"
+                      Style="{StaticResource ComboBoxStyle}"
+                      Visibility="{Binding ShowLocation}" />
+            <!--  Time Limit  -->
+            <Label Grid.Row="8"
+                   Grid.Column="0"
+                   Content="Time Limit"
+                   Style="{StaticResource LabelStyle}"
+                   Target="{Binding ElementName=CmbTimeLimit}"
+                   Visibility="{Binding ShowTimeLimit}" />
+            <ComboBox Name="CmbTimeLimit"
+                      Grid.Row="8"
+                      Grid.Column="1"
+                      Grid.ColumnSpan="2"
+                      DisplayMemberPath="Name"
+                      ItemsSource="{Binding TimeLimits}"
+                      SelectedItem="{Binding ElementName=SelectedDevices,
+                                             Path=SelectedItem.TimeLimit,
+                                             Mode=OneWay}"
+                      SelectionChanged="CmbTimeLimit_OnSelectionChanged"
+                      Style="{StaticResource ComboBoxStyle}"
+                      Visibility="{Binding ShowTimeLimit}" />
+            <Label Grid.Row="9"
+                   Grid.Column="0"
+                   Content="Time offset [min]"
+                   Style="{StaticResource LabelStyle}"
+                   Target="{Binding ElementName=TxtTimeOffset}"
+                   Visibility="{Binding ShowTimeOffset}" />
+            <!--  txtTimeOffset  -->
+            <TextBox x:Name="TxtTimeOffset"
+                     Grid.Row="9"
+                     Grid.Column="1"
+                     Grid.ColumnSpan="2"
+                     Style="{StaticResource TextBoxStyle}"
+                     Text="{Binding ElementName=SelectedDevices,
+                                    Path=SelectedItem.TimeOffsetString,
+                                    Mode=OneWay,
+                                    Converter={StaticResource NumberConverter}}"
+                     TextChanged="TxtTimeOffset_OnTextChanged"
+                     Visibility="{Binding ShowTimeOffset}" />
+            <!--  txtTimeDeiviation  -->
+            <Label Grid.Row="10"
+                   Grid.Column="0"
+                   Content="Time standard deviation"
+                   Style="{StaticResource LabelStyle}"
+                   Target="{Binding ElementName=TxtTimeStandardDeviation}"
+                   Visibility="{Binding ShowTimeDeviation}" />
+            <TextBox x:Name="TxtTimeStandardDeviation"
+                     Grid.Row="10"
+                     Grid.Column="1"
+                     Grid.ColumnSpan="2"
+                     Style="{StaticResource TextBoxStyle}"
+                     Text="{Binding ElementName=SelectedDevices,
+                                    Path=SelectedItem.TimeStandardDeviation,
+                                    Mode=OneWay,
+                                    Converter={StaticResource NumberConverter}}"
+                     TextChanged="TxtTimeStandardDeviation_OnTextChanged"
+                     Visibility="{Binding ShowTimeDeviation}" />
+
+            <!--  txtProbability  -->
+            <Label Grid.Row="11"
+                   Grid.Column="0"
+                   Content="Probability [%]"
+                   Style="{StaticResource LabelStyle}"
+                   Target="{Binding ElementName=TxtProbability}"
+                   Visibility="{Binding ShowProbability}" />
+            <TextBox x:Name="TxtProbability"
+                     Grid.Row="11"
+                     Grid.Column="1"
+                     Grid.ColumnSpan="2"
+                     Style="{StaticResource TextBoxStyle}"
+                     Text="{Binding ElementName=SelectedDevices,
+                                    Path=SelectedItem.Probability,
+                                    Mode=OneWay,
+                                    Converter={StaticResource PercentConverter}}"
+                     TextChanged="TxtProbability_OnTextChanged"
+                     Visibility="{Binding ShowProbability}" />
+            <!--  cmbVariable  -->
+            <Label Grid.Row="12"
+                   Grid.Column="0"
+                   Content="Variable to require"
+                   Style="{StaticResource LabelStyle}"
+                   Target="{Binding ElementName=CmbVariable}"
+                   Visibility="{Binding ShowVariable}" />
+            <ComboBox x:Name="CmbVariable"
+                      Grid.Row="12"
+                      Grid.Column="1"
+                      ItemsSource="{Binding Variables}"
+                      SelectedItem="{Binding ElementName=SelectedDevices,
+                                             Path=SelectedItem.Variable,
+                                             Mode=OneWay}"
+                      SelectionChanged="CmbVariable_OnSelectionChanged"
+                      Style="{StaticResource ComboBoxStyle}"
+                      Visibility="{Binding ShowVariable}" />
+            <!--  ReSharper disable once UnusedMember.Global  -->
+            <Button Name="BtnClearVariable"
+                    Grid.Row="12"
+                    Grid.Column="2"
+                    Click="BtnClearVariable_OnClick"
+                    Content="clear variable"
+                    Style="{StaticResource ButtonStyle}"
+                    Visibility="{Binding ShowVariable}" />
+
+            <!--  txtVariableValue  -->
+            <Label Grid.Row="14"
+                   Grid.Column="0"
+                   Content="Variable Value"
+                   Style="{StaticResource LabelStyle}"
+                   Target="{Binding ElementName=TxtVariableValue}"
+                   Visibility="{Binding ShowVariable}" />
+            <TextBox x:Name="TxtVariableValue"
+                     Grid.Row="14"
+                     Grid.Column="1"
+                     Grid.ColumnSpan="2"
+                     Style="{StaticResource TextBoxStyle}"
+                     Text="{Binding ElementName=SelectedDevices,
+                                    Path=SelectedItem.VariableValue,
+                                    Mode=OneWay}"
+                     TextChanged="TxtVariableValue_OnTextChanged"
+                     Visibility="{Binding ShowVariable}" />
+
+            <Label Grid.Row="15"
+                   Grid.Column="0"
+                   Content="Variable Condition"
+                   Style="{StaticResource LabelStyle}"
+                   Target="{Binding ElementName=CmbVariableCondition}"
+                   Visibility="{Binding ShowVariable}" />
+            <ComboBox x:Name="CmbVariableCondition"
+                      Grid.Row="15"
+                      Grid.Column="1"
+                      Grid.ColumnSpan="2"
+                      ItemsSource="{Binding VariableConditions}"
+                      SelectedItem="{Binding VariableConditionStr}"
+                      SelectionChanged="CmbVariableCondition_OnSelectionChanged"
+                      Style="{StaticResource ComboBoxStyle}"
+                      Visibility="{Binding ShowVariable}" />
+
+
+            <StackPanel Grid.Row="16"
+                        Grid.Column="1"
+                        Orientation="Horizontal">
+                <Button HorizontalAlignment="Right"
+                        Click="BtnAddDeviceClick"
+                        Style="{StaticResource ButtonStyle}">
+                    Add Device
+                </Button>
+                <Button HorizontalAlignment="Left"
+                        Click="BtnRemoveDeviceClick"
+                        Style="{StaticResource ButtonStyle}">
+                    Remove Device
+                </Button>
+            </StackPanel>
+            <Label Grid.Row="17"
+                   Grid.Column="0"
+                   Content="Devices"
+                   Style="{StaticResource LabelStyle}"
+                   Target="{Binding ElementName=SelectedDevices}" />
+            <ListView Name="SelectedDevices"
+                      Grid.Row="17"
+                      Grid.Column="1"
+                      Grid.ColumnSpan="2"
+                      MinHeight="150"
+                      ItemsSource="{Binding RelativeSource={RelativeSource FindAncestor,
+                                                                           AncestorType=usercontrols1:DeviceSelectorControl,
+                                                                           AncestorLevel=1},
+                                            Path=ItemsSourceA}"
+                      MouseDoubleClick="AffordanceDevices_MouseDoubleClick"
+                      SelectionChanged="SelectedDevices_SelectionChanged"
+                      Style="{StaticResource ListViewStyle}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Width="Auto"
+                                        DisplayMemberBinding="{Binding Device.AssignableDeviceType}"
+                                        Header="Device Type" />
+                        <GridViewColumn Width="Auto"
+                                        DisplayMemberBinding="{Binding Device.Name}"
+                                        Header="Device" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+
+        </Grid>
+    </Grid>
+</UserControl>

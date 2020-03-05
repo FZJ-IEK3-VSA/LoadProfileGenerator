@@ -1,0 +1,249 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="LPG Rules" Description="Dieser Regelsatz enthält alle Regeln. Das Ausführen dieses Regelsatzes führt möglicherweise zu einer hohen Anzahl gemeldeter Warnungen. Verwenden Sie diesen Regelsatz, um einen Überblick über alle Probleme in Ihrem Code zu erhalten. Dies kann Ihnen bei der Entscheidung behilflich sein, welche der spezifischeren Regelsätze für Ihre Projekte am besten geeignet sind." ToolsVersion="15.0">
+  <IncludeAll Action="Warning" />
+  <Rules AnalyzerId="CSharpEssentials" RuleNamespace="CSharpEssentials">
+    <Rule Id="CSE0002" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="CodeContractNullability" RuleNamespace="CodeContractNullability">
+    <Rule Id="RINUL" Action="Error" />
+    <Rule Id="RNUL" Action="Error" />
+  </Rules>
+  <Rules AnalyzerId="CodeCracker.CSharp" RuleNamespace="CodeCracker.CSharp">
+    <Rule Id="CC0001" Action="None" />
+    <Rule Id="CC0006" Action="None" />
+    <Rule Id="CC0008" Action="None" />
+    <Rule Id="CC0009" Action="None" />
+    <Rule Id="CC0013" Action="None" />
+    <Rule Id="CC0014" Action="None" />
+    <Rule Id="CC0019" Action="None" />
+    <Rule Id="CC0021" Action="Hidden" />
+    <Rule Id="CC0030" Action="None" />
+    <Rule Id="CC0031" Action="None" />
+    <Rule Id="CC0049" Action="None" />
+    <Rule Id="CC0052" Action="None" />
+    <Rule Id="CC0057" Action="None" />
+    <Rule Id="CC0065" Action="None" />
+    <Rule Id="CC0091" Action="None" />
+    <Rule Id="CC0105" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="ErrorProne.Net.StructAnalyzers" RuleNamespace="ErrorProne.Net.StructAnalyzers">
+    <Rule Id="EPS05" Action="None" />
+    <Rule Id="EPS06" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
+    <Rule Id="CA1002" Action="None" />
+    <Rule Id="CA1006" Action="None" />
+    <Rule Id="CA1011" Action="None" />
+    <Rule Id="CA1014" Action="None" />
+    <Rule Id="CA1020" Action="None" />
+    <Rule Id="CA1021" Action="None" />
+    <Rule Id="CA1026" Action="None" />
+    <Rule Id="CA1034" Action="Warning" />
+    <Rule Id="CA1036" Action="None" />
+    <Rule Id="CA1045" Action="None" />
+    <Rule Id="CA1060" Action="None" />
+    <Rule Id="CA1062" Action="None" />
+    <Rule Id="CA1063" Action="Warning" />
+    <Rule Id="CA1303" Action="None" />
+    <Rule Id="CA1501" Action="None" />
+    <Rule Id="CA1505" Action="Warning" />
+    <Rule Id="CA1506" Action="Warning" />
+    <Rule Id="CA1702" Action="Warning" />
+    <Rule Id="CA1704" Action="None" />
+    <Rule Id="CA1709" Action="None" />
+    <Rule Id="CA1720" Action="None" />
+    <Rule Id="CA1809" Action="None" />
+    <Rule Id="CA1814" Action="None" />
+    <Rule Id="CA1816" Action="None" />
+    <Rule Id="CA1822" Action="None" />
+    <Rule Id="CA1824" Action="None" />
+    <Rule Id="CA2001" Action="Warning" />
+    <Rule Id="CA2202" Action="None" />
+    <Rule Id="CA2204" Action="None" />
+    <Rule Id="CA2210" Action="None" />
+    <Rule Id="CA2214" Action="None" />
+    <Rule Id="CA2227" Action="None" />
+    <Rule Id="CA2240" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp.Features" RuleNamespace="Microsoft.CodeAnalysis.CSharp.Features">
+    <Rule Id="IDE0001" Action="None" />
+    <Rule Id="IDE0002" Action="None" />
+    <Rule Id="IDE0003" Action="None" />
+    <Rule Id="IDE0017" Action="Warning" />
+    <Rule Id="IDE0018" Action="Error" />
+    <Rule Id="IDE0041" Action="Info" />
+  </Rules>
+  <Rules AnalyzerId="Microsoft.CodeQuality.Analyzers" RuleNamespace="Microsoft.CodeQuality.Analyzers">
+    <Rule Id="CA1502" Action="Warning" />
+    <Rule Id="CA1505" Action="Warning" />
+    <Rule Id="CA1506" Action="Warning" />
+    <Rule Id="CA1509" Action="Warning" />
+    <Rule Id="CA1708" Action="Warning" />
+    <Rule Id="CA1720" Action="None" />
+    <Rule Id="CA1725" Action="Warning" />
+    <Rule Id="CA1814" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="Microsoft.CodeQuality.CSharp.Analyzers" RuleNamespace="Microsoft.CodeQuality.CSharp.Analyzers">
+    <Rule Id="CA2001" Action="Warning" />
+  </Rules>
+  <Rules AnalyzerId="RefactoringEssentials" RuleNamespace="RefactoringEssentials">
+    <Rule Id="RECS0012" Action="None" />
+    <Rule Id="RECS0018" Action="None" />
+    <Rule Id="RECS0030" Action="None" />
+    <Rule Id="RECS0033" Action="None" />
+    <Rule Id="RECS0070" Action="None" />
+    <Rule Id="RECS0091" Action="None" />
+    <Rule Id="RECS0093" Action="None" />
+    <Rule Id="RECS0129" Action="None" />
+    <Rule Id="RECS0134" Action="None" />
+    <Rule Id="RECS0145" Action="None" />
+    <Rule Id="RECS0147" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="Roslynator.CSharp.Analyzers" RuleNamespace="Roslynator.CSharp.Analyzers">
+    <Rule Id="RCS1003" Action="Error" />
+    <Rule Id="RCS1018" Action="Error" />
+    <Rule Id="RCS1029" Action="None" />
+    <Rule Id="RCS1036" Action="Error" />
+    <Rule Id="RCS1057" Action="None" />
+    <Rule Id="RCS1058" Action="None" />
+    <Rule Id="RCS1058FadeOut" Action="None" />
+    <Rule Id="RCS1073" Action="None" />
+    <Rule Id="RCS1073FadeOut" Action="None" />
+    <Rule Id="RCS1077" Action="None" />
+    <Rule Id="RCS1079" Action="None" />
+    <Rule Id="RCS1085" Action="None" />
+    <Rule Id="RCS1103" Action="None" />
+    <Rule Id="RCS1119" Action="None" />
+    <Rule Id="RCS1123" Action="None" />
+    <Rule Id="RCS1128" Action="None" />
+    <Rule Id="RCS1146" Action="None" />
+    <Rule Id="RCS1155" Action="None" />
+    <Rule Id="RCS1159" Action="None" />
+    <Rule Id="RCS1170" Action="None" />
+    <Rule Id="RCS1171" Action="None" />
+    <Rule Id="RCS1173" Action="None" />
+    <Rule Id="RCS1220" Action="None" />
+    <Rule Id="RCS1225" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="SonarAnalyzer.CSharp" RuleNamespace="SonarAnalyzer.CSharp">
+    <Rule Id="S101" Action="None" />
+    <Rule Id="S1135" Action="None" />
+    <Rule Id="S1168" Action="None" />
+    <Rule Id="S121" Action="Error" />
+    <Rule Id="S1210" Action="None" />
+    <Rule Id="S1215" Action="None" />
+    <Rule Id="S125" Action="None" />
+    <Rule Id="S2372" Action="None" />
+    <Rule Id="S2696" Action="None" />
+    <Rule Id="S2930" Action="Error" />
+    <Rule Id="S3220" Action="None" />
+    <Rule Id="S3236" Action="None" />
+    <Rule Id="S3897" Action="None" />
+    <Rule Id="S3928" Action="None" />
+    <Rule Id="S4035" Action="None" />
+    <Rule Id="S4143" Action="None" />
+    <Rule Id="S4158" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="SonarLint.CSharp" RuleNamespace="SonarLint.CSharp">
+    <Rule Id="S1066" Action="None" />
+    <Rule Id="S1067" Action="None" />
+    <Rule Id="S107" Action="None" />
+    <Rule Id="S1116" Action="Info" />
+    <Rule Id="S1125" Action="Info" />
+    <Rule Id="S1172" Action="None" />
+    <Rule Id="S122" Action="None" />
+    <Rule Id="S1244" Action="None" />
+    <Rule Id="S127" Action="None" />
+    <Rule Id="S1449" Action="None" />
+    <Rule Id="S1479" Action="None" />
+    <Rule Id="S1541" Action="None" />
+    <Rule Id="S1643" Action="None" />
+    <Rule Id="S1871" Action="None" />
+    <Rule Id="S1905" Action="Info" />
+    <Rule Id="S1939" Action="Info" />
+    <Rule Id="S2292" Action="None" />
+    <Rule Id="S2360" Action="None" />
+    <Rule Id="S2952" Action="None" />
+    <Rule Id="S3052" Action="Info" />
+    <Rule Id="S3215" Action="None" />
+    <Rule Id="S3217" Action="None" />
+    <Rule Id="S3218" Action="None" />
+    <Rule Id="S3234" Action="Info" />
+    <Rule Id="S3235" Action="None" />
+    <Rule Id="S3240" Action="None" />
+    <Rule Id="S3249" Action="None" />
+    <Rule Id="S3253" Action="Info" />
+    <Rule Id="S3254" Action="None" />
+    <Rule Id="S818" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
+    <Rule Id="SA0001" Action="None" />
+    <Rule Id="SA1003" Action="None" />
+    <Rule Id="SA1005" Action="None" />
+    <Rule Id="SA1008" Action="None" />
+    <Rule Id="SA1009" Action="None" />
+    <Rule Id="SA1011" Action="None" />
+    <Rule Id="SA1012" Action="None" />
+    <Rule Id="SA1013" Action="None" />
+    <Rule Id="SA1021" Action="None" />
+    <Rule Id="SA1101" Action="None" />
+    <Rule Id="SA1108" Action="None" />
+    <Rule Id="SA1116" Action="None" />
+    <Rule Id="SA1117" Action="None" />
+    <Rule Id="SA1118" Action="None" />
+    <Rule Id="SA1124" Action="None" />
+    <Rule Id="SA1127" Action="None" />
+    <Rule Id="SA1128" Action="None" />
+    <Rule Id="SA1134" Action="None" />
+    <Rule Id="SA1200" Action="None" />
+    <Rule Id="SA1201" Action="None" />
+    <Rule Id="SA1202" Action="None" />
+    <Rule Id="SA1204" Action="None" />
+    <Rule Id="SA1309" Action="None" />
+    <Rule Id="SA1401" Action="None" />
+    <Rule Id="SA1402" Action="None" />
+    <Rule Id="SA1404" Action="None" />
+    <Rule Id="SA1407" Action="None" />
+    <Rule Id="SA1413" Action="None" />
+    <Rule Id="SA1500" Action="None" />
+    <Rule Id="SA1503" Action="None" />
+    <Rule Id="SA1504" Action="None" />
+    <Rule Id="SA1507" Action="None" />
+    <Rule Id="SA1512" Action="None" />
+    <Rule Id="SA1513" Action="None" />
+    <Rule Id="SA1515" Action="None" />
+    <Rule Id="SA1516" Action="None" />
+    <Rule Id="SA1519" Action="None" />
+    <Rule Id="SA1520" Action="None" />
+    <Rule Id="SA1600" Action="None" />
+    <Rule Id="SA1602" Action="None" />
+    <Rule Id="SA1633" Action="None" />
+    <Rule Id="SA1649" Action="None" />
+    <Rule Id="SX1101" Action="Warning" />
+  </Rules>
+  <Rules AnalyzerId="VSDiagnostics" RuleNamespace="VSDiagnostics">
+    <Rule Id="VSD0002" Action="None" />
+    <Rule Id="VSD0006" Action="None" />
+    <Rule Id="VSD0023" Action="None" />
+    <Rule Id="VSD0024" Action="None" />
+    <Rule Id="VSD0025" Action="None" />
+    <Rule Id="VSD0026" Action="None" />
+    <Rule Id="VSD0037" Action="None" />
+    <Rule Id="VSD0047" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="Wintellect.Analyzers" RuleNamespace="Wintellect.Analyzers">
+    <Rule Id="Wintellect003" Action="None" />
+    <Rule Id="Wintellect004" Action="None" />
+    <Rule Id="Wintellect005" Action="None" />
+    <Rule Id="Wintellect010" Action="None" />
+    <Rule Id="Wintellect011" Action="None" />
+    <Rule Id="Wintellect012" Action="None" />
+    <Rule Id="Wintellect013" Action="None" />
+    <Rule Id="Wintellect014" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="WpfAnalyzers.Analyzers" RuleNamespace="WpfAnalyzers.Analyzers">
+    <Rule Id="WPF0012" Action="None" />
+    <Rule Id="WPF0036" Action="None" />
+    <Rule Id="WPF0041" Action="None" />
+  </Rules>
+</RuleSet>

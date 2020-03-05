@@ -1,0 +1,954 @@
+﻿<!--  ReSharper disable UnusedMember.Global  -->
+<UserControl x:Class="LoadProfileGenerator.Views.Households.HouseholdTraitView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:usercontrols="clr-namespace:LoadProfileGenerator.Controls.Usercontrols"
+             xmlns:modularHouseholds="clr-namespace:Database.Tables.ModularHouseholds;assembly=Database"
+             d:DesignHeight="4000"
+             d:DesignWidth="900"
+             mc:Ignorable="d">
+    <Grid Name="MainGrid">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="35" />
+        </Grid.RowDefinitions>
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <Expander IsExpanded="True" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="General" />
+                        </Border>
+                    </Expander.Header>
+
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0"
+                                   Grid.Column="0"
+                                   Grid.ColumnSpan="2"
+                                   Style="{StaticResource TextBlockStyle}">
+                            A household trait is added to a modular household to represent some kind of trait.
+                            For example a normal household could get a home theater, a love for gardening or the hobby of fancy cooking.
+                            The idea is to have a lot of ready building blocks that make it very easy and quick to put together a new household.
+                            The tags and classification is needed for the household templates for the automatic generation of new households.
+                        </TextBlock>
+
+                        <Label Grid.Row="1"
+                               Grid.Column="0"
+                               Content="_Name"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=HouseholdName}" />
+                        <TextBox x:Name="HouseholdName"
+                                 Grid.Row="1"
+                                 Grid.Column="1"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding ThisHouseholdTrait.Name}" />
+
+                        <Label Grid.Row="3"
+                               Grid.Column="0"
+                               Content="_Description"
+                               Style="{StaticResource LabelStyle}" />
+                        <TextBox Grid.Row="3"
+                                 Grid.Column="1"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding ThisHouseholdTrait.Description}" />
+                        <Label Grid.Row="5"
+                               Grid.Column="0"
+                               Content="Classification"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=CmbClassification}" />
+                        <ComboBox Name="CmbClassification"
+                                  Grid.Row="5"
+                                  Grid.Column="1"
+                                  IsEditable="True"
+                                  ItemsSource="{Binding Classifications}"
+                                  LostFocus="CmbClassification_OnLostFocus"
+                                  Style="{StaticResource ComboBoxStyle}"
+                                  Text="{Binding Classification}" />
+
+                        <Label Grid.Row="6"
+                               Grid.Column="0"
+                               Content="Trait Tag"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=CmbTags}" />
+                        <ComboBox Name="CmbTags"
+                                  Grid.Row="6"
+                                  Grid.Column="1"
+                                  ItemsSource="{Binding Tags}"
+                                  KeyUp="CmbTags_OnKeyUp"
+                                  SelectedItem="{Binding ElementName=HHTTags,
+                                                         Path=SelectedItem.Tag,
+                                                         Mode=OneWay}"
+                                  Style="{StaticResource ComboBoxStyle}" />
+                        <Button Grid.Row="6"
+                                Grid.Column="2"
+                                Click="AddNewTagClick"
+                                Content="Add new Tag"
+                                Style="{StaticResource ButtonStyle}" />
+                        <StackPanel Grid.Row="7"
+                                    Grid.Column="1"
+                                    Orientation="Horizontal">
+                            <Button HorizontalAlignment="Right"
+                                    Click="BtnAddTagClick"
+                                    Style="{StaticResource ButtonStyle}">
+                                Add Tag
+                            </Button>
+                            <Button HorizontalAlignment="Left"
+                                    Click="BtnRemoveTagClick"
+                                    Style="{StaticResource ButtonStyle}">
+                                Remove Tag
+                            </Button>
+                        </StackPanel>
+                        <Label Grid.Row="8"
+                               Grid.Column="0"
+                               Content="Trait Tags of this trait"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=HHTLocations}" />
+                        <ListView x:Name="HHTTags"
+                                  Grid.Row="8"
+                                  Grid.Column="1"
+                                  MinHeight="150"
+                                  ItemsSource="{Binding ThisHouseholdTrait.Tags}"
+                                  MouseDoubleClick="HHTTags_OnMouseDoubleClick"
+                                  Style="{StaticResource ListViewStyle}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding Tag}"
+                                                    Header="Tag" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+
+                        <Button Grid.Row="9"
+                                Grid.Column="1"
+                                Click="MakeTraitCopyOnClick"
+                                Style="{StaticResource ButtonStyle}">
+                            Create a new Household Trait that is an exact copy.
+                        </Button>
+                        <Label Grid.Row="10"
+                               Grid.Column="0"
+                               Content="Minimum numbers of people in the household"
+                               Style="{StaticResource LabelStyle}" />
+                        <TextBox Grid.Row="10"
+                                 Grid.Column="1"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding ThisHouseholdTrait.MinimumPersonsInCHH}" />
+                        <Label Grid.Row="11"
+                               Grid.Column="0"
+                               Content="Maximum numbers of people in the household"
+                               Style="{StaticResource LabelStyle}" />
+                        <TextBox Grid.Row="11"
+                                 Grid.Column="1"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding ThisHouseholdTrait.MaximumPersonsInCHH}" />
+                        <Label Grid.Row="12"
+                               Grid.Column="0"
+                               Content="Maximum times this trait can be in a household"
+                               Style="{StaticResource LabelStyle}" />
+                        <TextBox Grid.Row="12"
+                                 Grid.Column="1"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding ThisHouseholdTrait.MaximumNumberInCHH}" />
+                        <StackPanel Grid.Row="13"
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="2"
+                                    Orientation="Horizontal">
+                            <Label Content="Theoretically estimated to execute" Style="{StaticResource LabelStyle}" />
+                            <TextBox MinWidth="20"
+                                     Style="{StaticResource TextBoxStyle}"
+                                     Text="{Binding ThisHouseholdTrait.EstimatedTimes}" />
+                            <Label Content="times per " Style="{StaticResource LabelStyle}" />
+                            <TextBox MinWidth="20"
+                                     Style="{StaticResource TextBoxStyle}"
+                                     Text="{Binding ThisHouseholdTrait.EstimatedTimeCount}" />
+                            <ComboBox ItemsSource="{Binding TimeTypes}"
+                                      SelectedItem="{Binding ThisHouseholdTrait.EstimatedTimeType}"
+                                      Style="{StaticResource ComboBoxStyle}" />
+
+                            <Button Name="EstimateButton"
+                                    Click="EstimateButton_OnClick"
+                                    Content="Estimate"
+                                    Style="{StaticResource ButtonStyle}" />
+                        </StackPanel>
+                        <StackPanel Grid.Row="14"
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="2"
+                                    Orientation="Horizontal">
+                            <Label Content="{Binding PracticalEstimate}" Style="{StaticResource LabelStyle}" />
+                        </StackPanel>
+                        <Label Grid.Row="15"
+                               Grid.Column="0"
+                               Content="_Short Description"
+                               Style="{StaticResource LabelStyle}" />
+                        <TextBox Grid.Row="15"
+                                 Grid.Column="1"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding ThisHouseholdTrait.ShortDescription}" />
+                    </Grid>
+
+
+                </Expander>
+                <Expander IsExpanded="True" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Import from other household trait" />
+                        </Border>
+                    </Expander.Header>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Label Grid.Column="0"
+                               Content="Household Traits"
+                               Style="{StaticResource LabelStyle}" />
+                        <ComboBox Grid.Row="0"
+                                  Grid.Column="1"
+                                  ItemsSource="{Binding HouseholdTraits}"
+                                  SelectedItem="{Binding SelectedImportHouseholdTrait}"
+                                  Style="{StaticResource ComboBoxStyle}" />
+                        <Button Grid.Row="1"
+                                Grid.Column="1"
+                                HorizontalAlignment="Right"
+                                Click="BtnImportHouseholdTraitClick"
+                                Style="{StaticResource ButtonStyle}">
+                            Import everything from this household trait
+                        </Button>
+
+                    </Grid>
+                </Expander>
+
+                <Expander IsExpanded="True" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Locations" />
+                        </Border>
+                    </Expander.Header>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Label Grid.Column="0"
+                               Content="_Locations:"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=CmbLocations}" />
+                        <ComboBox Name="CmbLocations"
+                                  Grid.Row="0"
+                                  Grid.Column="1"
+                                  x:FieldModifier="private"
+                                  ItemsSource="{Binding Locations}"
+                                  SelectedItem="{Binding ElementName=HHTLocations,
+                                                         Path=SelectedItem.Location,
+                                                         Mode=OneWay}"
+                                  Style="{StaticResource ComboBoxStyle}" />
+                        <StackPanel Grid.Row="1"
+                                    Grid.Column="1"
+                                    Orientation="Horizontal">
+                            <Button HorizontalAlignment="Right"
+                                    Click="BtnAddLocationClick"
+                                    Style="{StaticResource ButtonStyle}">
+                                Add location
+                            </Button>
+                            <Button HorizontalAlignment="Left"
+                                    Click="BtnRemoveLocationClick"
+                                    Style="{StaticResource ButtonStyle}">
+                                Remove location
+                            </Button>
+                            <Button HorizontalAlignment="Left"
+                                    Click="BtnSwapLocationClick"
+                                    Style="{StaticResource ButtonStyle}">
+                                Swap location
+                            </Button>
+                        </StackPanel>
+                        <Label Grid.Row="2"
+                               Grid.Column="0"
+                               Content="Locations"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=HHTLocations}" />
+                        <ListView x:Name="HHTLocations"
+                                  Grid.Row="2"
+                                  Grid.Column="1"
+                                  MinHeight="150"
+                                  ItemsSource="{Binding ThisHouseholdTrait.Locations}"
+                                  Style="{StaticResource ListViewStyle}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding Location}"
+                                                    Header="Name" />
+
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                </Expander>
+                <Expander IsExpanded="True" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Desires" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0"
+                                   Grid.Column="0"
+                                   Grid.ColumnSpan="2"
+                                   Style="{StaticResource TextBlockStyle}">
+                            The desires of a household trait will get merged with the other desires of the person
+                            that you assign the trait. If the person already has these desires,
+                            they will NOT be overwritten. So make sure to seperate the desires in the persons and
+                            the desires in the household traits to avoid problems.
+                            There are two assignment modes: By name or by age and gender. If you assign by age and gender,
+                            all the people in the household of the appropriate age and gender will get the desire.
+                        </TextBlock>
+                        <Label Grid.Row="1"
+                               Grid.Column="0"
+                               Content="Desire"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=CmbDesires}" />
+                        <ComboBox x:Name="CmbDesires"
+                                  Grid.Row="1"
+                                  Grid.Column="1"
+                                  ItemsSource="{Binding Desires}"
+                                  SelectedItem="{Binding SelectedDesire}"
+                                  Style="{StaticResource ComboBoxStyle}" />
+                        <Label Grid.Row="2"
+                               Grid.Column="0"
+                               Content="Applies when"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=CmbHealthStatus}" />
+                        <ComboBox x:Name="CmbHealthStatus"
+                                  Grid.Row="2"
+                                  Grid.Column="1"
+                                  ItemsSource="{Binding HealthStatusStrings}"
+                                  SelectedItem="{Binding SelectedHealthStatus}"
+                                  Style="{StaticResource ComboBoxStyle}" />
+
+                        <Label Grid.Row="3"
+                               Grid.Column="0"
+                               Content="Hours to reach 50% desire [h]"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=TxtDecayRate}" />
+                        <TextBox x:Name="TxtDecayRate"
+                                 Grid.Row="3"
+                                 Grid.Column="1"
+                                 HorizontalContentAlignment="Left"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding SelectedDecayRate}"
+                                 TextAlignment="Left" />
+                        <Label Grid.Row="4"
+                               Grid.Column="0"
+                               Content="Threshold for noticing the desire [%]"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=TxtThreshold}" />
+                        <TextBox x:Name="TxtThreshold"
+                                 Grid.Row="4"
+                                 Grid.Column="1"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding SelectedThreshold,
+                                                Converter={StaticResource PercentConverter}}" />
+                        <Label Grid.Row="5"
+                               Grid.Column="0"
+                               Content="Weight / Importance [no unit]"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=TxtWeight}" />
+                        <TextBox x:Name="TxtWeight"
+                                 Grid.Row="5"
+                                 Grid.Column="1"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding SelectedWeight,
+                                                Converter={StaticResource NumberConverter}}" />
+                        <Label Grid.Row="6"
+                               Grid.Column="0"
+                               Content="Minimum Age"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=TxtMinAge}" />
+                        <TextBox x:Name="TxtMinAge"
+                                 Grid.Row="6"
+                                 Grid.Column="1"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding SelectedMinAge}" />
+
+                        <Label Grid.Row="7"
+                               Grid.Column="0"
+                               Content="Maximum Age"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=TxtMaxAge}" />
+                        <TextBox x:Name="TxtMaxAge"
+                                 Grid.Row="7"
+                                 Grid.Column="1"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding SelectedMaxAge}" />
+
+
+                        <Label Grid.Row="8"
+                               Grid.Column="0"
+                               Content="Permitted Gender"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=CmbPermittedGender}" />
+                        <ComboBox Name="CmbPermittedGender"
+                                  Grid.Row="8"
+                                  Grid.Column="1"
+                                  ItemsSource="{Binding MyPermittedGenders}"
+                                  SelectedItem="{Binding SelectedGender}"
+                                  Style="{StaticResource ComboBoxStyle}" />
+
+
+                        <StackPanel Grid.Row="9"
+                                    Grid.Column="1"
+                                    Orientation="Horizontal">
+                            <Button HorizontalAlignment="Right"
+                                    Click="BtnAddNormalDesireClick"
+                                    Content="Add / update desire"
+                                    Style="{StaticResource ButtonStyle}" />
+                            <Button HorizontalAlignment="Left"
+                                    Click="BtnRemoveNormalDesireClick"
+                                    Content="Remove desire"
+                                    Style="{StaticResource ButtonStyle}" />
+                            <Button HorizontalAlignment="Left"
+                                    Click="BtnShowOtherPossibleDesireClick"
+                                    Content="Show other possible desires for the selected affordances"
+                                    Style="{StaticResource ButtonStyle}" />
+                            <Button HorizontalAlignment="Left"
+                                    Click="BtnLookForCorrectDesireClick"
+                                    Content="Look for Correct Desire"
+                                    Style="{StaticResource ButtonStyle}" />
+                        </StackPanel>
+                        <Label Grid.Row="10"
+                               Grid.Column="0"
+                               Content="Desires for this trait"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=LstHealthyDesires}" />
+                        <ListView x:Name="LstHealthyDesires"
+                                  Grid.Row="10"
+                                  Grid.Column="1"
+                                  MinHeight="150"
+                                  ItemsSource="{Binding ThisHouseholdTrait.Desires}"
+                                  MouseDoubleClick="LstHealthyDesires_OnMouseDoubleClick"
+                                  SelectionChanged="LstHealthyDesires_OnSelectionChanged"
+                                  Style="{StaticResource ListViewStyle}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="Auto" Header="Desire" />
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding DecayTime,
+                                                                                   Converter={StaticResource NumberConverter}}"
+                                                    Header="Decay time [h]" />
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding Threshold,
+                                                                                   Converter={StaticResource PercentConverter}}"
+                                                    Header="Threshold [%]" />
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding Weight,
+                                                                                   Converter={StaticResource NumberConverter}}"
+                                                    Header="Weight [no unit]" />
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding HealthStatus}"
+                                                    Header="Applies when" />
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding MinAge}"
+                                                    Header="Min. Age" />
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding MaxAge}"
+                                                    Header="Max. Age" />
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding Gender}"
+                                                    Header="Gender" />
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding Estimated25PercentTime}"
+                                                    Header="Estimated time to 25%" />
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding EstimatedExecutions}"
+                                                    Header="Estimated Executions" />
+
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                </Expander>
+
+
+                <Expander IsExpanded="True" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Affordances" />
+                        </Border>
+                    </Expander.Header>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+
+                        </Grid.RowDefinitions>
+                        <!--  Affordance to add  -->
+                        <Label Content="_Affordance to add"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=CmbNewAffAffordance}" />
+                        <ComboBox x:Name="CmbNewAffAffordance"
+                                  Grid.Row="0"
+                                  Grid.Column="1"
+                                  ItemsSource="{Binding RelevantAffordances}"
+                                  SelectedItem="{Binding SelectedAffordance}"
+                                  Style="{StaticResource ComboBoxStyle}" />
+
+                        <TextBlock Grid.Row="1"
+                                   Grid.Column="1"
+                                   Style="{StaticResource TextBlockStyle}">
+                            <Run Text="Warning: Here only affordances are shown that are useful to the people in the trait. So if there is something missing that you want to add, you need to add the appropriate desire first." />
+                        </TextBlock>
+
+                        <!--  Dst Loc to add  -->
+                        <Label Grid.Row="2"
+                               Grid.Column="0"
+                               Content="Destination location"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=CmbNewAffLocation}" />
+                        <ComboBox x:Name="CmbNewAffLocation"
+                                  Grid.Row="2"
+                                  Grid.Column="1"
+                                  ItemsSource="{Binding ThisHouseholdTrait.Locations}"
+                                  SelectedItem="{Binding SelectedAffLocation}"
+                                  Style="{StaticResource ComboBoxStyle}" />
+
+
+                        <RadioButton Grid.Row="4"
+                                     Grid.Column="1"
+                                     Content="Hide affordances on this location"
+                                     GroupName="AddAff"
+                                     IsChecked="{Binding HideAffordancesOnThisLocation}"
+                                     Style="{StaticResource RadioButtonStyle}" />
+                        <RadioButton Grid.Row="5"
+                                     Grid.Column="1"
+                                     Content="Hide affordances on all locations"
+                                     GroupName="AddAff"
+                                     IsChecked="{Binding HideAffordancesOnAllLocations}"
+                                     Style="{StaticResource RadioButtonStyle}" />
+                        <RadioButton Grid.Row="6"
+                                     Grid.Column="1"
+                                     Content="Show all affordances"
+                                     GroupName="AddAff"
+                                     IsChecked="{Binding ShowAllAffordances}"
+                                     Style="{StaticResource RadioButtonStyle}" />
+                        <CheckBox Grid.Row="7"
+                                  Grid.Column="1"
+                                  Content="Overwrite the time limit from the affordance"
+                                  IsChecked="{Binding OverwriteTimeLimitOnAffordance}"
+                                  Style="{StaticResource CheckBoxStyle}" />
+                        <!--  Affordance to add  -->
+                        <Label Grid.Row="8"
+                               Grid.Column="0"
+                               Content="_Time Limit to set"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=CmbAffTimeLimit}" />
+                        <ComboBox x:Name="CmbAffTimeLimit"
+                                  Grid.Row="8"
+                                  Grid.Column="1"
+                                  ItemsSource="{Binding TimeLimits}"
+                                  SelectedItem="{Binding SelectedTimeLimit}"
+                                  Style="{StaticResource ComboBoxStyle}" />
+                        <Label Grid.Row="9"
+                               Grid.Column="0"
+                               HorizontalAlignment="Left"
+                               Content="Start Time Variation"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=CmbAffTimeLimit}" />
+                        <StackPanel Grid.Row="9"
+                                    Grid.Column="1"
+                                    Orientation="Horizontal">
+                            <Label Content="Minus" Style="{StaticResource LabelStyle}" />
+                            <TextBox x:Name="TxtAffStartMinusTime"
+                                     MinWidth="100"
+                                     Style="{StaticResource TextBoxStyle}"
+                                     Text="{Binding StartMinusTime}" />
+                            <Label Content="Plus" Style="{StaticResource LabelStyle}" />
+                            <TextBox x:Name="TxtAffStartPlusTime"
+                                     MinWidth="100"
+                                     Style="{StaticResource TextBoxStyle}"
+                                     Text="{Binding StartPlusTime}" />
+                        </StackPanel>
+
+                        <Label Grid.Row="10"
+                               Grid.Column="0"
+                               HorizontalAlignment="Left"
+                               Content="End Time Variation"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=CmbAffTimeLimit}" />
+                        <StackPanel Grid.Row="10"
+                                    Grid.Column="1"
+                                    Orientation="Horizontal">
+                            <Label Content="Minus" Style="{StaticResource LabelStyle}" />
+                            <TextBox x:Name="TxtAffEndMinusTime"
+                                     MinWidth="100"
+                                     Style="{StaticResource TextBoxStyle}"
+                                     Text="{Binding EndMinusTime}" />
+                            <Label Content="Plus" Style="{StaticResource LabelStyle}" />
+                            <TextBox x:Name="TxtAffEndPlusTime"
+                                     MinWidth="100"
+                                     Style="{StaticResource TextBoxStyle}"
+                                     Text="{Binding EndPlusTime}" />
+                        </StackPanel>
+
+
+
+
+                        <TextBlock Grid.Row="13"
+                                   Grid.Column="1"
+                                   Style="{StaticResource TextBlockStyle}">
+                            The reduction and addition to the time limit only work if the Overwrite Time Limit is active. The idea is to be able to reduce the simultaneity factor of people in a settlement by making their breakfast times vary for example.
+                        </TextBlock>
+                        <TextBlock Grid.Row="14"
+                                   Grid.Column="1"
+                                   Style="{StaticResource TextBlockStyle}"
+                                   Text="{Binding CurrentAffordanceDesireString}" />
+                        <Label Grid.Row="15"
+                               Grid.Column="0"
+                               Content="Relative weight of the affordance"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=CmbAffTimeLimit}" />
+                        <TextBox x:Name="TxtAffWeight"
+                                 Grid.Row="15"
+                                 Grid.Column="1"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding AffordanceWeight}" />
+
+                        <!--  Buttons  -->
+                        <StackPanel Grid.Row="16"
+                                    Grid.Column="1"
+                                    Orientation="Horizontal">
+                            <Button HorizontalAlignment="Right"
+                                    Click="BtnAddNewAffordanceClick"
+                                    Content="Add Affordance"
+                                    Style="{StaticResource ButtonStyle}" />
+                            <Button HorizontalAlignment="Left"
+                                    Click="BtnRemoveNewAffordanceClick"
+                                    Content="Remove Affordance"
+                                    Style="{StaticResource ButtonStyle}" />
+                            <Button HorizontalAlignment="Left"
+                                    Click="BtnRefreshAffordanceForAddingClick"
+                                    Content="Refresh Affordances"
+                                    Style="{StaticResource ButtonStyle}" />
+                        </StackPanel>
+                        <TreeView Name="TreeNewAffordances"
+                                  Grid.Row="17"
+                                  Grid.Column="1"
+                                  MinHeight="100"
+                                  MaxHeight="500"
+                                  Background="White"
+                                  ItemsSource="{Binding ThisHouseholdTrait.Locations}"
+                                  MouseDoubleClick="TreeNewAffordances_OnMouseDoubleClick"
+                                  SelectedItemChanged="TreeNewAffordancesSelectedItemChanged"
+                                  Style="{StaticResource TreeViewStyle}">
+                            <TreeView.Resources>
+                                <HierarchicalDataTemplate DataType="{x:Type modularHouseholds:HHTLocation}" ItemsSource="{Binding AffordanceLocations}">
+                                    <Border>
+                                        <TextBlock Text="{Binding Name}" />
+                                    </Border>
+                                </HierarchicalDataTemplate>
+                                <DataTemplate DataType="{x:Type modularHouseholds:HHTAffordance}">
+                                    <Border>
+                                        <TextBlock Text="{Binding Name}" />
+                                    </Border>
+                                </DataTemplate>
+                            </TreeView.Resources>
+                        </TreeView>
+
+                    </Grid>
+                </Expander>
+                <Expander IsExpanded="True" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Autonomous Devices" />
+                        </Border>
+                    </Expander.Header>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+
+                            <ColumnDefinition Width="*" />
+
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+
+                        </Grid.RowDefinitions>
+
+                        <usercontrols:DeviceSelectorControl x:Name="AutoDevs"
+                                                            Grid.Row="0"
+                                                            VerticalAlignment="Top"
+                                                            ItemsSourceA="{Binding ThisHouseholdTrait.Autodevs}"
+                                                            Loaded="AutoDevs_Loaded"
+                                                            Locations="{Binding Locations}"
+                                                            OnAddedDevice="DeviceSelectorControl_OnOnAddedDevice"
+                                                            OnRemovedDevice="AutoDevs_OnOnRemovedDevice"
+                                                            Simulator="{Binding ApplicationPresenter.Simulator}"
+                                                            UseLoadType="True"
+                                                            UseLocation="True"
+                                                            UseProbability="False"
+                                                            UseTimeDeviation="True"
+                                                            UseTimeLimit="True"
+                                                            UseTimeOffset="False"
+                                                            UseTimeProfile="True"
+                                                            UseVariable="True" />
+                    </Grid>
+                </Expander>
+
+                <Expander IsExpanded="True" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Sub-Traits" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="*" />
+
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <!--  Trait  -->
+                        <TextBlock Grid.Row="0"
+                                   Grid.ColumnSpan="2"
+                                   Style="{StaticResource TextBlockStyle}">
+                            Subtraits
+                            lets you add other traits to this one. If you, for example, have a dozen different traits
+                            for cooking individual meal and want to make a gourmet trait that gives a person the
+                            ability and desire to make all these dishes, then you could add all of them as sub-traits and then only
+                            assign the gourmet trait to people instead of bothering with dozens of individual traits.
+                        </TextBlock>
+                        <Label Grid.Row="1"
+                               Grid.Column="0"
+                               Content="_Trait"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=CmbTraits}" />
+                        <ComboBox Name="CmbTraits"
+                                  Grid.Row="1"
+                                  Grid.Column="1"
+                                  ItemsSource="{Binding Traits}"
+                                  SelectedItem="{Binding SelectedHouseholdTrait}"
+                                  Style="{StaticResource ComboBoxStyle}" />
+
+                        <StackPanel Grid.Row="2"
+                                    Grid.Column="1"
+                                    Orientation="Horizontal">
+                            <Button HorizontalAlignment="Right"
+                                    Click="BtnAddTraitClick"
+                                    Style="{StaticResource ButtonStyle}">
+                                Add Trait
+                            </Button>
+                            <Button HorizontalAlignment="Left"
+                                    Click="BtnRemoveTraitClick"
+                                    Style="{StaticResource ButtonStyle}">
+                                Remove Trait
+                            </Button>
+                        </StackPanel>
+                        <Label Grid.Row="3"
+                               Grid.Column="0"
+                               Content="Traits"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=LstTraits}" />
+                        <ListView x:Name="LstTraits"
+                                  Grid.Row="3"
+                                  Grid.Column="1"
+                                  MinHeight="100"
+                                  MaxHeight="500"
+                                  ItemsSource="{Binding ThisHouseholdTrait.SubTraits}"
+                                  Style="{StaticResource ListViewStyle}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding ThisTrait.Name}"
+                                                    Header="Trait" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                </Expander>
+                <Expander IsExpanded="true" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Used by" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.ColumnSpan="3" Style="{StaticResource TextBlockStyle}">Here you can get a list which modular households use this trait, if any.</TextBlock>
+                        <Button Grid.Row="0"
+                                Grid.Column="2"
+                                Width="75"
+                                HorizontalAlignment="Right"
+                                Click="BtnRefreshHouseholds_Click"
+                                Content="refresh"
+                                Style="{StaticResource ButtonStyle}" />
+                        <ListView Name="LstTraitUsedBy"
+                                  Grid.Row="2"
+                                  Grid.Column="0"
+                                  Grid.ColumnSpan="3"
+                                  MinHeight="150"
+                                  x:FieldModifier="private"
+                                  ItemsSource="{Binding ModularHouseholds}"
+                                  MouseDoubleClick="LstTraitUsedBy_MouseDoubleClick"
+                                  Style="{StaticResource ListViewStyle}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="auto"
+                                                    DisplayMemberBinding="{Binding Item.Name}"
+                                                    Header="Name" />
+                                    <GridViewColumn Width="auto"
+                                                    DisplayMemberBinding="{Binding TypeDescription}"
+                                                    Header="Type" />
+                                    <GridViewColumn Width="auto"
+                                                    DisplayMemberBinding="{Binding Information}"
+                                                    Header="Information" />
+                                </GridView>
+                            </ListView.View>
+
+                        </ListView>
+                        <Label Grid.Row="3"
+                               Grid.Column="0"
+                               Style="{StaticResource LabelStyle}">
+                            Replacement Trait
+                        </Label>
+                        <ComboBox Name="CmbReplacementTrait"
+                                  Grid.Row="3"
+                                  Grid.Column="1"
+                                  ItemsSource="{Binding HouseholdTraits}"
+                                  Style="{StaticResource ComboBoxStyle}" />
+                        <Button Grid.Row="3"
+                                Grid.Column="2"
+                                Click="ButtonBase_OnClick"
+                                Style="{StaticResource ButtonStyle}">
+                            Replace all instances of this Trait with the selected one
+                        </Button>
+                    </Grid>
+                </Expander>
+            </StackPanel>
+
+        </ScrollViewer>
+
+        <DockPanel Grid.Row="1">
+            <Border HorizontalAlignment="Left" Style="{StaticResource ObjectLabelBox}">
+                <TextBlock Text="{Binding ItemName}" />
+            </Border>
+            <StackPanel HorizontalAlignment="Right"
+                        DockPanel.Dock="Right"
+                        Orientation="Horizontal">
+                <Button Width="75"
+                        HorizontalAlignment="Right"
+                        Click="Delete_Click"
+                        Content="delete"
+                        Style="{StaticResource ButtonStyle}" />
+                <Button Width="75"
+                        HorizontalAlignment="Right"
+                        Click="CloseClick"
+                        Content="Close"
+                        Style="{StaticResource ButtonStyle}" />
+            </StackPanel>
+        </DockPanel>
+    </Grid>
+</UserControl>
+<!--  ReSharper restore UnusedMember.Global  -->

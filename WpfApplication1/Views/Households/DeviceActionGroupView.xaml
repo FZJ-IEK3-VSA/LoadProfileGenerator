@@ -1,0 +1,115 @@
+﻿<UserControl x:Class="LoadProfileGenerator.Views.Households.DeviceActionGroupView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="900" d:DesignWidth="900">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="35" />
+        </Grid.RowDefinitions>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <Expander IsExpanded="true" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border  Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="General" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="5*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.ColumnSpan="2"   Style="{StaticResource TextBlockStyle}">
+                            A device action group is a list of device actions.
+                            The purpose of device actions is to make it easier to vary the energy use of a household by picking
+                            one device with the appropriate time profile at calculation time.
+                            You can use a device action group anywhere you can use a normal device and the LPG will automatically replace it with a
+                            device at the start of the simulation. Which device gets picked depends on your energy intensity setting.
+                        </TextBlock>
+                        <Label Content="_Name" Target="{Binding ElementName=DesireName}" Grid.Column="0" Grid.Row="1" Style="{StaticResource LabelStyle}" />
+                        <TextBox Height="23" x:Name="DesireName" Text="{Binding ThisDeviceActionGroup.Name}" Grid.Row="1"
+                                 Grid.Column="1" Style="{StaticResource TextBoxStyle}" />
+                        <Label Content="Description" Target="{Binding ElementName=TxtDescription}" Grid.Column="0" Style="{StaticResource LabelStyle}"
+                               Grid.Row="2" />
+                        <TextBox Height="23" x:Name="TxtDescription" Text="{Binding ThisDeviceActionGroup.Description}"
+                                 Grid.Row="2" Style="{StaticResource TextBoxStyle}"
+                                 Grid.Column="1"
+                                  />
+
+                    </Grid>
+
+
+                </Expander>
+
+
+                <Expander IsExpanded="true" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border  Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Uses" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto"/>
+
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock  Style="{StaticResource TextBlockStyle}" Margin="5,5,0,5">
+                            Here you can get a list where this device action group
+                            is used, if anywhere.
+                        </TextBlock>
+                        <Button Content="refresh"  Style="{StaticResource ButtonStyle}" Width="75" Grid.Row="0" HorizontalAlignment="Right"
+                                Click="BtnRefreshUsedIn_Click" Grid.Column="1" />
+                        <ListView Grid.Row="2" MinHeight="150" x:Name="LstPersonDesires"
+                                  ItemsSource="{Binding UsedIns}" Style="{StaticResource ListViewStyle}"
+                                  MouseDoubleClick="LstPersonDesires_MouseDoubleClick" Grid.ColumnSpan="2" Grid.Column="0">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="Auto" Header="Name" DisplayMemberBinding="{Binding Item}" />
+                                    <GridViewColumn Width="Auto" Header="Type"
+                                                    DisplayMemberBinding="{Binding TypeDescription}" />
+                                    <GridViewColumn Width="Auto" Header="Information"
+                                                    DisplayMemberBinding="{Binding Information}" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+
+                    </Grid>
+
+
+                </Expander>
+            </StackPanel>
+        </ScrollViewer>
+
+        <DockPanel Grid.Row="1" >
+            <Border  Style="{StaticResource ObjectLabelBox}" HorizontalAlignment="Left" >
+                <TextBlock Text="{Binding ItemName}"  />
+            </Border>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Right">
+                <Button Content="delete"  Width="75" HorizontalAlignment="Right"
+                    Click="Delete_Click" Style="{StaticResource ButtonStyle}" />
+                <Button Content="Close"  Width="75" HorizontalAlignment="Right"
+                    Click="CloseClick"  Style="{StaticResource ButtonStyle}" />
+            </StackPanel>
+        </DockPanel>
+    </Grid>
+</UserControl>

@@ -1,0 +1,222 @@
+﻿<!-- ReSharper disable UnusedMember.Global --><UserControl x:Class="LoadProfileGenerator.Views.BasicElements.VacationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             d:DesignHeight="900"
+             d:DesignWidth="600"
+             mc:Ignorable="d">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="35" />
+        </Grid.RowDefinitions>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <Expander IsExpanded="true" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="General" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.ColumnSpan="2" Style="{StaticResource TextBlockStyle}">
+                            Vacations are periods of time where people are absent. The difference between
+                            holidays and vacations is that holidays are the same for all households at a
+                            location, vacations are different (and usually longer).
+                            The minimum age and maximum age are used in the household templates to limit vacations
+                            based on people age. For example if there are school children in the household,
+                            then no vacations can be undertaken during school times.
+                        </TextBlock>
+                        <Label Grid.Row="1"
+                               Grid.Column="0"
+                               Content="_Name"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=TxtName}" />
+                        <TextBox x:Name="TxtName"
+                                 Grid.Row="1"
+                                 Grid.Column="1"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding ThisVacation.Name}" />
+                        <Label Grid.Row="2"
+                               Grid.Column="0"
+                               Content="Minimum Age"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=TxtMinimumAge}" />
+                        <TextBox x:Name="TxtMinimumAge"
+                                 Grid.Row="2"
+                                 Grid.Column="1"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding ThisVacation.MinimumAge}" />
+                        <Label Grid.Row="3"
+                               Grid.Column="0"
+                               Content="Maximum Age"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=TxtMaximumAge}" />
+                        <TextBox x:Name="TxtMaximumAge"
+                                 Grid.Row="3"
+                                 Grid.Column="1"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding ThisVacation.MaximumAge}" />
+
+                        <!--  Creation Type  -->
+                        <Label Grid.Row="4"
+                               Grid.Column="0"
+                               Content="Creation Type"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=CmbCreationType}" />
+                        <ComboBox Name="CmbCreationType"
+                                  Grid.Row="4"
+                                  Grid.Column="1"
+                                  DisplayMemberPath="Value"
+                                  ItemsSource="{Binding CreationTypes}"
+                                  SelectedValue="{Binding ThisVacation.CreationType}"
+                                  SelectedValuePath="Key"
+                                  Style="{StaticResource ComboBoxStyle}" />
+                    </Grid>
+                </Expander>
+
+                <Expander IsExpanded="true" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Dates" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="5*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.ColumnSpan="2" Style="{StaticResource TextBlockStyle}">
+                            Here you can enter the dates for this vacation.
+                        </TextBlock>
+                        <Label Grid.Row="1"
+                               Grid.Column="0"
+                               Content="Start"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=TxtStart}" />
+                        <TextBox Name="TxtStart"
+                                 Grid.Row="1"
+                                 Grid.Column="1"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding Path=SelectedItem.Start,
+                                                StringFormat=d,
+                                                ElementName=LstVacations,
+                                                Mode=OneWay}" />
+                        <Label Grid.Row="2"
+                               Grid.Column="0"
+                               Content="End"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=TxtEnd}" />
+                        <TextBox Name="TxtEnd"
+                                 Grid.Row="2"
+                                 Grid.Column="1"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding Path=SelectedItem.End,
+                                                StringFormat=d,
+                                                ElementName=LstVacations,
+                                                Mode=OneWay}" />
+                        <Label Grid.Row="3"
+                               Grid.Column="0"
+                               Content="Vacation Type"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=TxtEnd}" />
+                        <ComboBox Name="CmbCalcType"
+                                  Grid.Row="3"
+                                  Grid.Column="1"
+                                  DisplayMemberPath="Value"
+                                  ItemsSource="{Binding VacationTypes}"
+                                  SelectedValue="{Binding SelectedVacationType}"
+                                  SelectedValuePath="Key"
+                                  Style="{StaticResource ComboBoxStyle}" />
+                        <StackPanel Grid.Row="4"
+                                    Grid.Column="1"
+                                    Orientation="Horizontal">
+                            <Button HorizontalAlignment="Right"
+                                    Click="BtnAddDate_Click"
+                                    Style="{StaticResource ButtonStyle}">
+                                Add Date
+                            </Button>
+                            <Button HorizontalAlignment="Left"
+                                    Click="BtnRemoveDate_Click"
+                                    Style="{StaticResource ButtonStyle}">
+                                Remove Date
+                            </Button>
+                        </StackPanel>
+                        <Label Grid.Row="5"
+                               Grid.Column="0"
+                               Content="Dates"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=LstVacations}" />
+                        <ListView x:Name="LstVacations"
+                                  Grid.Row="5"
+                                  Grid.Column="1"
+                                  MinHeight="150"
+                                  ItemsSource="{Binding ThisVacation.VacationTimes}"
+                                  Style="{StaticResource ListViewStyle}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding Start}"
+                                                    Header="Start" />
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding End}"
+                                                    Header="End" />
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding Days}"
+                                                    Header="Days" />
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding VacationTypeName}"
+                                                    Header="Vacation Type" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+
+
+                    </Grid>
+                </Expander>
+
+            </StackPanel>
+        </ScrollViewer>
+        <DockPanel Grid.Row="1">
+            <Border HorizontalAlignment="Left" Style="{StaticResource ObjectLabelBox}">
+                <TextBlock Text="{Binding ItemName}" />
+            </Border>
+            <StackPanel HorizontalAlignment="Right"
+                        DockPanel.Dock="Right"
+                        Orientation="Horizontal">
+                <Button Width="75"
+                        HorizontalAlignment="Right"
+                        Click="Delete_Click"
+                        Content="delete"
+                        Style="{StaticResource ButtonStyle}" />
+                <Button Width="75"
+                        HorizontalAlignment="Right"
+                        Click="CloseClick"
+                        Content="Close"
+                        Style="{StaticResource ButtonStyle}" />
+            </StackPanel>
+        </DockPanel>
+    </Grid>
+</UserControl>
