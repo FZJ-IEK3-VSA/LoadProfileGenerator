@@ -40,8 +40,4 @@ Part of the Development was funded by the
 
 This happend in the project "SimZukunft" that also resulted in the FutureLoadAnalyzer
 
-Currently development is supported by the
-
-## Forschungszentrum Jülich - IEK 3
-
 I am very grateful for all the support over the years.
