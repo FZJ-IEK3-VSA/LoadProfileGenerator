@@ -35,7 +35,7 @@ namespace CalculationEngine.HouseholdElements {
         public CalcDeviceLoad([NotNull] string pName, double value, [NotNull] CalcLoadType loadType,
             double averageYearlyConsumption, double powerStandardDeviation, [NotNull] string guid) : base(pName, guid) {
             Value = value;
-            if (Math.Abs(value) < 0.000001) {
+            if (Math.Abs(value) < 0.000001 && loadType.Name.ToLower() != "none") {
                 throw new LPGException("Trying to initialize a calc device load with a max power of 0.");
             }
             LoadType = loadType;

@@ -110,7 +110,7 @@ namespace CalculationEngine.HouseholdElements {
             DeviceCategoryGuid = deviceCategoryGuid;
             _powerUsage = powerUsage;
             foreach (var load in powerUsage) {
-                if (Math.Abs(load.Value) < 0.0000001) {
+                if (Math.Abs(load.Value) < 0.0000001 && load.Name.ToLower() != "none") {
                     throw new LPGException("Trying to run the device " + pName + " with a power load factor for " + load.LoadType.Name + " of 0. This is not going to work.");
                 }
             }
@@ -289,9 +289,9 @@ namespace CalculationEngine.HouseholdElements {
                                        " even though that one is not set for the device " + Name);
             }
 
-            if (Math.Abs(cdl.Value) < 0.00000001) {
+            /*if (Math.Abs(cdl.Value) < 0.00000001 ) {
                 throw new LPGException("Trying to calculate with a power consumption factor of 0. This is wrong.");
-            }
+            }*/
             var powerUsageFactor = cdl.Value * multiplier;
             if (calcProfile.ProfileType == ProfileType.Absolute) {
                 powerUsageFactor = 1 * multiplier;

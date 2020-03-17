@@ -17,8 +17,8 @@ namespace Common.CalcDto {
             PowerStandardDeviation = powerStandardDeviation;
             Guid = guid;
             MaxPower = maxPower;
-            if (Math.Abs(MaxPower) < 0.000000001) {
-                throw new LPGException("Trying to initialize a Device load with a max power of 0");
+            if (Math.Abs(MaxPower) < 0.000000001 && loadTypeName.ToLower()!= "none") {
+                throw new LPGException("Trying to initialize a Device load with a max power of 0. Device Name was " + name + " and load type " + loadTypeName );
             }
         }
         public double AverageYearlyConsumption { get; }
