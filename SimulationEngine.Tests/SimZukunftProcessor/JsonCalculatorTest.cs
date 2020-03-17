@@ -10,6 +10,7 @@ using Common;
 using Common.JSON;
 using Database;
 using Database.Tests;
+using FluentAssertions;
 using JetBrains.Annotations;
 using NUnit.Framework;
 using SimulationEngine.SimZukunftProcessor;
@@ -379,7 +380,8 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
             db.CopyTo(fullDstPath);
             Directory.SetCurrentDirectory(wd.WorkingDirectory);
             Simulator sim = new Simulator("Data Source="+fullDstPath);
-            //wd.CleanUp();
+            sim.Should().NotBeNull();
+            wd.CleanUp();
         }
 
         [Test]

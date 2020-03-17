@@ -109,6 +109,11 @@ namespace CalculationEngine.HouseholdElements {
             _odap = odap;
             DeviceCategoryGuid = deviceCategoryGuid;
             _powerUsage = powerUsage;
+            foreach (var load in powerUsage) {
+                if (Math.Abs(load.Value) < 0.0000001) {
+                    throw new LPGException("Trying to run the device " + pName + " with a power load factor for " + load.LoadType.Name + " of 0. This is not going to work.");
+                }
+            }
             if (calcParameters.InternalTimesteps == 0) {
                 throw new LPGException("Can't run with 0 timesteps");
             }
@@ -270,6 +275,9 @@ namespace CalculationEngine.HouseholdElements {
         public TimeStep SetTimeprofile([NotNull] CalcProfile calcProfile, [NotNull] TimeStep startidx, [NotNull] CalcLoadType loadType,
             [NotNull] string affordanceName, [NotNull] string activatingPersonName, double multiplier, bool activateDespiteBeingBusy)
         {
+            if (calcProfile.StepValues.Count == 0) {
+                throw new LPGException("Trying to set empty device profile. This is a bug. Please report.");
+            }
             CalcDeviceLoad cdl = null;
             foreach (var calcDeviceLoad in _powerUsage) {
                 if (calcDeviceLoad.LoadType == loadType) {
@@ -279,6 +287,10 @@ namespace CalculationEngine.HouseholdElements {
             if (cdl == null) {
                 throw new LPGException("It was tried to activate the loadtype " + loadType.Name +
                                        " even though that one is not set for the device " + Name);
+            }
+
+            if (Math.Abs(cdl.Value) < 0.00000001) {
+                throw new LPGException("Trying to calculate with a power consumption factor of 0. This is wrong.");
             }
             var powerUsageFactor = cdl.Value * multiplier;
             if (calcProfile.ProfileType == ProfileType.Absolute) {

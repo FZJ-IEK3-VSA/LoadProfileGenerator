@@ -123,7 +123,9 @@ namespace CalculationController.CalcFactories {
                 householdIndex++;
             }
 
-            var spaceHeating = CreateSpaceHeatingObject(house, temperatureProfile, houseKey, out var heatingLocation); //, taggingSets);
+            var spaceHeating = CreateSpaceHeatingObject(house, temperatureProfile, 
+                houseKey, out var heatingLocation,_calcParameters.InternalStartTime,_calcParameters.InternalEndTime
+                ,_ltDict); //, taggingSets);
             if (heatingLocation != null) {
                 houseLocations.Add(heatingLocation);
             }
@@ -280,11 +282,13 @@ namespace CalculationController.CalcFactories {
         }
 
         [CanBeNull]
-        private CalcSpaceHeatingDto CreateSpaceHeatingObject([NotNull] House house,
+        public static CalcSpaceHeatingDto CreateSpaceHeatingObject([NotNull] House house,
                                                              [NotNull] TemperatureProfile temperatureProfile,
                                                              [NotNull] HouseholdKey householdKey,
                                                              [CanBeNull]
-                                                             out CalcLocationDto heatingLocation) //, List<CalcDeviceTaggingSet> deviceTaggingSets)
+                                                             out CalcLocationDto heatingLocation, DateTime
+                                                                 startTime, DateTime endTime,
+                                                             CalcLoadTypeDtoDictionary ltDict) //, List<CalcDeviceTaggingSet> deviceTaggingSets)
         {
             if (house.HouseType == null) {
                 throw new LPGException("Housetype was null");
@@ -293,8 +297,7 @@ namespace CalculationController.CalcFactories {
             if (house.HouseType.HeatingLoadType != null && Math.Abs(house.HouseType.HeatingYearlyTotal) > 0.0001 &&
                 !double.IsNaN(house.HouseType.HeatingYearlyTotal)) {
                 var degreeDays = MakeDegreeDaysClass.MakeDegreeDays(temperatureProfile,
-                    _calcParameters.InternalStartTime,
-                    _calcParameters.InternalEndTime,
+                    startTime, endTime,
                     house.HouseType.HeatingTemperature,
                     house.HouseType.RoomTemperature,
                     house.HouseType.HeatingYearlyTotal,
@@ -307,7 +310,7 @@ namespace CalculationController.CalcFactories {
                 }
 
                 var heatingParameter = new HeatingParameter(degreeDays, house.HouseType.HeatingLoadType, house.HouseType.HeatingYearlyTotal);
-                var spaceheating = MakeSpaceHeatingDto(heatingParameter, _ltDict, householdKey, out heatingLocation);
+                var spaceheating = MakeSpaceHeatingDto(heatingParameter, ltDict, householdKey, out heatingLocation);
                 return spaceheating; //,deviceTaggingSets
             }
 
@@ -362,7 +365,7 @@ namespace CalculationController.CalcFactories {
                 coolingParameter.YearlyConsumption,
                 0,
                 Guid.NewGuid().ToString(),
-                0);
+                1);
             var cdls = new List<CalcDeviceLoadDto> {
                 cdl
             };
@@ -779,7 +782,7 @@ namespace CalculationController.CalcFactories {
         }
 
         [CanBeNull]
-        private CalcSpaceHeatingDto MakeSpaceHeatingDto([NotNull] HeatingParameter heatingparameter,
+        private static CalcSpaceHeatingDto MakeSpaceHeatingDto([NotNull] HeatingParameter heatingparameter,
                                                         [NotNull] CalcLoadTypeDtoDictionary ltDict,
                                                         [NotNull] HouseholdKey householdKey,
                                                         [CanBeNull] out CalcLocationDto heatingLocation)
@@ -804,7 +807,7 @@ namespace CalculationController.CalcFactories {
                 heatingparameter.YearlyConsumption,
                 0,
                 Guid.NewGuid().ToString(),
-                0);
+                1);
             var cdls = new List<CalcDeviceLoadDto> {
                 cdl
             };

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Automation.ResultFiles;
 using JetBrains.Annotations;
@@ -30,6 +31,8 @@ namespace Common.CalcDto {
             if (powerUsage.Count != 1) {
                 throw new LPGException("there should be exactly one loadtype for space heating, not more or less.");
             }
+            if(Math.Abs(powerUsage[0].MaxPower) < 0.00000001) { throw new LPGException("Trying to initialize heating with a max power of 0.");
+}
 
             Name = name;
             ID = id;

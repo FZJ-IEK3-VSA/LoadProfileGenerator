@@ -456,6 +456,9 @@ namespace SimulationEngine.SimZukunftProcessor {
                     hcj.CalcSpec,
                     srcDbFile,
                     new List<string>());
+                if (hcj.CalcSpec.CalcObject == null) {
+                    throw new LPGException("Failed to create a house");
+                }
                 JsonCalculator jc = new JsonCalculator();
                 //hcj.CalcSpec.CalcObject = null;
                 jc.StartHousehold(sim, hcj.CalcSpec);
@@ -515,7 +518,7 @@ namespace SimulationEngine.SimZukunftProcessor {
             string calcJsonFilename = Path.Combine(dstDirectory, AutomationUtili.CleanFileName(name) + ".json");
             if (skipExisting) {
                 if (File.Exists(calcJsonFilename)) {
-                    Logger.Info("Skipping house " + name + " because the json file already exists.");
+                    Logger.Info("Ski   pping house " + name + " because the json file already exists.");
                     return;
                 }
             }
@@ -572,7 +575,10 @@ namespace SimulationEngine.SimZukunftProcessor {
 
             //saving matching calculation file
             Logger.Info("Creating calculation file.");
-
+            if(house == null)
+            {
+                throw new LPGException("House generation failed");
+            }
             calcSpecification.CalcObject = house.GetJsonReference();
             //string dstDbHouseFile = Path.Combine(dstDirectory, "ProfileGenerator." + house.Guid + ".db3");
             //filesToCreate.Add(dstDbHouseFile);
@@ -711,6 +717,8 @@ namespace SimulationEngine.SimZukunftProcessor {
             newHouseType.Name = newHouseType.Name + "(" + hd.Name + ")";
             newHouseType.HeatingYearlyTotal = hd.TargetHeatDemand;
             newHouseType.CoolingYearlyTotal = hd.TargetCoolingDemand;
+            newHouseType.AdjustYearlyEnergy = false;
+            newHouseType.AdjustYearlyCooling = false;
             newHouseType.SaveToDB();
             house.HouseType = newHouseType;
             return house;

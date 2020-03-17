@@ -65,6 +65,40 @@ namespace Database.Tests.Helpers {
 
         [Test]
         [Category("BasicTest")]
+        public void MakeDegreeDaysTestWithPrecalcPeriod()
+        {
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+
+            var temperaturProfiles = db.LoadTemperatureProfiles();
+
+            var startTime = new DateTime(2011, 12, 27);
+            var endTime = new DateTime(2012, 12, 31);
+            var ldd = MakeDegreeDaysClass.MakeDegreeDays(temperaturProfiles[0], startTime, endTime, 15, 20,
+                10000, false, 0);
+            double sumHeating = 0;
+            double sumPercentages = 0;
+            var temperatures = temperaturProfiles[0].GetTemperatureArray(startTime, endTime,
+                new TimeSpan(1, 0, 0, 0));
+            for (var i = 0; i < temperatures.Length; i++)
+            {
+                Assert.Less(Math.Abs(ldd[i].AverageTemperature - temperatures[i]), 0.001);
+            }
+            foreach (var day in ldd)
+            {
+                if(day.Date.Year != 2012)
+                {
+                     continue; //only count values from 2012
+                }
+                sumHeating += day.HeatingAmount;
+                sumPercentages += day.Percentage;
+            }
+            Assert.Less(Math.Abs(10000 - sumHeating), 0.001);
+            Assert.Less(Math.Abs(1 - sumPercentages), 0.001);
+            db.Cleanup();
+        }
+
+        [Test]
+        [Category("BasicTest")]
         public void MakeDegreeDaysTest3Days() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             var temperaturProfiles = db.LoadTemperatureProfiles();

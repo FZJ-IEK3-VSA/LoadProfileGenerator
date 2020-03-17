@@ -123,6 +123,9 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                 var min = double.MaxValue;
                 var max = double.MinValue;
                 foreach (var efr in energyFileRows) {
+                    if (!efr.Timestep.DisplayThisStep) {
+                        continue;
+                    }
                     var sum = efr.GetSumForCertainCols(columns);
                     if (sum < min) {
                         min = sum;
@@ -260,14 +263,18 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             RunIndividualHouseholds(p.LoadType,p.EnergyFileRows, efc, totalsPerLoadType);
             List<TotalsEntry> totals = new List<TotalsEntry>();
             foreach (HouseholdKeyEntry entry in Repository.HouseholdKeys) {
-                if(entry.KeyType != HouseholdKeyType.Household) {
+                if(entry.KeyType == HouseholdKeyType.General) {
                     continue;
                 }
 
                 HouseholdKey key = entry.HouseholdKey;
-                var persons = Repository.GetPersons(key);
+                int personscount = 0;
+                if (entry.KeyType == HouseholdKeyType.Household)
+                {
+                    personscount = Repository.GetPersons(key).Count;
+                }
                 foreach (KeyValuePair<CalcLoadTypeDto, double> pair in totalsPerLoadType) {
-                    totals.Add(new TotalsEntry(key, pair.Key, pair.Value, persons.Count, totaldays));
+                    totals.Add(new TotalsEntry(key, pair.Key, pair.Value, personscount, totaldays));
                 }
             }
             _inputDataLogger.SaveList(totals.ConvertAll(x=> (IHouseholdKey) x));

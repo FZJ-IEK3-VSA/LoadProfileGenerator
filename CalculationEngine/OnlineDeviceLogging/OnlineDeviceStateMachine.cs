@@ -56,11 +56,13 @@ namespace CalculationEngine.OnlineDeviceLogging {
             LoadType = loadType;
             _startTimeStep = startTimeStep;
             // time profile einladen, zeitlich variieren, normalverteilt variieren und dann als stepvalues speichern
-
+            if (Math.Abs(powerUsage) < 0.0000001) {
+                throw new LPGException("power usage factor was 0. this is a bug. Device " + deviceName + ", Loadtype " + loadType);
+            }
             StepValues = new List<double>(dstCalcProfile.StepValues);
             for (var i = 0; i < StepValues.Count; i++) {
                 double spread = 1;
-                if (Math.Abs(powerStandardDeviation - 0) > 0.00000001) {
+                if (Math.Abs(powerStandardDeviation) > 0.00000001) {
                     spread = nr.NextDouble(1, powerStandardDeviation);
                 }
                 StepValues[i] = StepValues[i] * powerUsage * spread;

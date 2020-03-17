@@ -78,16 +78,16 @@ namespace CalculationEngine.HouseElements {
             var numberOfValuesInOneDay = (int)(oneDay.TotalMilliseconds / _calcParameters.InternalStepsize.TotalMilliseconds);
             var heatingProfile = new List<double>(new double[numberOfValuesInOneDay]);
             var cdd = _calcDegreeDays[new Tuple<int, int, int>(dateTime.Year, dateTime.Month, dateTime.Day)];
-            var timeunitvalue = cdd.HeatingAmount / numberOfValuesInOneDay / PowerUsage[0].LoadType.ConversionFactor;
+            var timeUnitValue = cdd.HeatingAmount / numberOfValuesInOneDay / PowerUsage[0].LoadType.ConversionFactor;
             for (var i = 0; i < heatingProfile.Count; i++) {
-                heatingProfile[i] = timeunitvalue;
+                heatingProfile[i] = timeUnitValue;
             }
 
             var cp = new CalcProfile("Heating profile - " + time,
                 System.Guid.NewGuid().ToString(),
                 heatingProfile,
                 ProfileType.Relative,
-                "Calculated from Cooling Hours");
+                "Calculated from Heating Degree Days");
             SetAllLoadTypesToTimeprofile(cp, time, "Space Heating", "Space Heater", 1);
         }
     }

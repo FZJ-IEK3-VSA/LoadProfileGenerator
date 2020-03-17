@@ -81,7 +81,7 @@ namespace SimulationEngine.SimZukunftProcessor {
             sw.Close();
         }
 
-        private void ReadSourceData([NotNull] [ItemNotNull] List<StatisticsEntry> statisticsEntries, [NotNull] string jsonExportPath)
+        private static void ReadSourceData([NotNull] [ItemNotNull] List<StatisticsEntry> statisticsEntries, [NotNull] string jsonExportPath)
         {
             DirectoryInfo sourcejsonPath = new DirectoryInfo(jsonExportPath);
             var files = sourcejsonPath.GetFiles("*.json");

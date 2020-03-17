@@ -130,9 +130,7 @@ namespace SimulationEngine.SimZukunftProcessor {
             if (cop.CalcObject == null) {
                 throw new LPGException("No calculation object was selected.");
             }
-
             var calculationStartTime = DateTime.Now;
-
             var calcObject = GetCalcObject(sim, cop.CalcObject);
             if (calcObject == null) {
                 throw new LPGException("Could not find the Calc Object with the guid " + cop.CalcObject.Guid);

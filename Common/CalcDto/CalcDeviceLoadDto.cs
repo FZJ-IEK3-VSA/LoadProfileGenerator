@@ -1,4 +1,6 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using Automation.ResultFiles;
+using JetBrains.Annotations;
 
 namespace Common.CalcDto {
     public class CalcDeviceLoadDto
@@ -15,6 +17,9 @@ namespace Common.CalcDto {
             PowerStandardDeviation = powerStandardDeviation;
             Guid = guid;
             MaxPower = maxPower;
+            if (Math.Abs(MaxPower) < 0.000000001) {
+                throw new LPGException("Trying to initialize a Device load with a max power of 0");
+            }
         }
         public double AverageYearlyConsumption { get; }
 
