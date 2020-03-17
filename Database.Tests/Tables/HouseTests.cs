@@ -48,7 +48,7 @@ namespace Database.Tests.Tables {
     public class HouseTests : UnitTestBaseClass
     {
         [Test]
-        [Category("LongTest1")]
+        [Category(UnitTestCategories.LongTest1)]
         public void HouseLoadCreationAndSave2Test() {
             Config.ShowDeleteMessages = false;
             Logger.Threshold = Severity.Error;
@@ -99,7 +99,7 @@ namespace Database.Tests.Tables {
         }
 
         [Test]
-        [Category("LongTest1")]
+        [Category(UnitTestCategories.LongTest1)]
         public void HouseLoadCreationAndSaveTest()
         {
             Config.ShowDeleteMessages = false;

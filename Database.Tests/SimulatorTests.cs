@@ -30,6 +30,7 @@
 
 using System;
 using System.Globalization;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Common.Tests;
@@ -52,7 +53,7 @@ namespace Database.Tests {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void SimulatorAffordancesDeleteTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(),DatabaseSetup.TestPackage.DatabaseIo);
             var sim = new Simulator(db.ConnectionString);
@@ -64,7 +65,7 @@ namespace Database.Tests {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void SimulatorCreateTest() {
             var step = 1;
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(),DatabaseSetup.TestPackage.DatabaseIo);
@@ -106,7 +107,7 @@ namespace Database.Tests {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void SimulatorDateBasedProfilesDeleteTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(),DatabaseSetup.TestPackage.DatabaseIo);
             var sim = new Simulator(db.ConnectionString);
@@ -118,7 +119,7 @@ namespace Database.Tests {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void SimulatorDesiresDeleteTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(),DatabaseSetup.TestPackage.DatabaseIo);
             var sim = new Simulator(db.ConnectionString);
@@ -130,7 +131,7 @@ namespace Database.Tests {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void SimulatorDeviceCategoriesDeleteTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             // load to check if everything is ok
@@ -149,7 +150,7 @@ namespace Database.Tests {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void SimulatorEnergyStoragesDeleteTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             var sim = new Simulator(db.ConnectionString);
@@ -161,7 +162,7 @@ namespace Database.Tests {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void SimulatorGeneratorsDeleteTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             var sim = new Simulator(db.ConnectionString);
@@ -173,7 +174,7 @@ namespace Database.Tests {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void SimulatorGeographicLocationsDeleteTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             var sim = new Simulator(db.ConnectionString);
@@ -185,7 +186,7 @@ namespace Database.Tests {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void SimulatorHolidaysDeleteTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             var sim = new Simulator(db.ConnectionString);
@@ -197,7 +198,7 @@ namespace Database.Tests {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void SimulatorHouseholdsDeleteTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             var sim = new Simulator(db.ConnectionString);
@@ -209,7 +210,7 @@ namespace Database.Tests {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void SimulatorHouseholdTraitsDeleteTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             var sim = new Simulator(db.ConnectionString);
@@ -221,7 +222,7 @@ namespace Database.Tests {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void SimulatorHousesDeleteTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             var sim = new Simulator(db.ConnectionString);
@@ -233,7 +234,7 @@ namespace Database.Tests {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void SimulatorLoadTypesDeleteTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             var sim = new Simulator(db.ConnectionString);
@@ -247,7 +248,7 @@ namespace Database.Tests {
         }
 
         [Test]
-        [Category("LongTest5")]
+        [Category(UnitTestCategories.LongTest5)]
         public void SimulatorLoadWithoutNeedsUpdateTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             var sim = new Simulator(db.ConnectionString); // load once to clear problems
@@ -264,7 +265,7 @@ namespace Database.Tests {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void SimulatorLocationsDeleteTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             var sim = new Simulator(db.ConnectionString);
@@ -276,7 +277,7 @@ namespace Database.Tests {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void SimulatorPersonsDeleteTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             var sim = new Simulator(db.ConnectionString);
@@ -288,7 +289,7 @@ namespace Database.Tests {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void SimulatorRealDevicesDeleteTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             var sim = new Simulator(db.ConnectionString);
@@ -300,7 +301,7 @@ namespace Database.Tests {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void SimulatorSettlementsDeleteTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             var sim = new Simulator(db.ConnectionString);
@@ -312,7 +313,7 @@ namespace Database.Tests {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void SimulatorTemperaturProfilesDeleteTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             var sim = new Simulator(db.ConnectionString);
@@ -324,7 +325,7 @@ namespace Database.Tests {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void SimulatorTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             var sim = new Simulator(db.ConnectionString);
@@ -333,7 +334,7 @@ namespace Database.Tests {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void SimulatorTest2() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             var sim = new Simulator(db.ConnectionString);
@@ -354,7 +355,7 @@ namespace Database.Tests {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void SimulatorTimeLimitsDeleteTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             var sim = new Simulator(db.ConnectionString);
@@ -366,7 +367,7 @@ namespace Database.Tests {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void SimulatorTimeProfilesDeleteTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             var sim = new Simulator(db.ConnectionString);
@@ -378,7 +379,7 @@ namespace Database.Tests {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void SimulatorTransformationDevicesDeleteTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
 

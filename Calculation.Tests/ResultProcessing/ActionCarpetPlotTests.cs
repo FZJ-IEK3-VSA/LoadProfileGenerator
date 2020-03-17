@@ -51,7 +51,7 @@ namespace Calculation.Tests.ResultProcessing
     public class ActionCarpetPlotTests : TestBasis
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
         public void ActionCarpetPlotTest()
         {

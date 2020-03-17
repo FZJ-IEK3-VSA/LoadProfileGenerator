@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using Automation;
+using NUnit.Framework;
 using SimulationEngine.SimZukunftProcessor;
 
 namespace SimulationEngine.Tests.SimZukunftProcessor
@@ -6,7 +7,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
     public class HouseGenerationStatisticsTest
     {
         [Test]
-        [Category("QuickChart")]
+        [Category(UnitTestCategories.ManualOnly)]
         public void RunStatistics()
         {
             const string path = @"C:\work\GeneratedHouses";

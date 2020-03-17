@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Automation;
 using CalculationController.DtoFactories;
 using CalculationController.InputLoggers;
 using CalculationEngine.Helper;
@@ -12,7 +13,7 @@ namespace CalculationController.Tests.Helpers
     internal class DaylightSavingsLoggerTests
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunDaylightSavingsLoggerTests()
         {
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());

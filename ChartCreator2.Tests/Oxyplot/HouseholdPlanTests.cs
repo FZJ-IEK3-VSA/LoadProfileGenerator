@@ -12,7 +12,7 @@ namespace ChartCreator2.Tests.Oxyplot {
     public class HouseholdPlanTests : UnitTestBaseClass
     {
         [Test]
-        [Category("TestToFix")]
+        [Category(UnitTestCategories.BrokenTest)]
         public void MainHouseholdPlanTest() {
             CleanTestBase.RunAutomatically(false);
             var cs = new OxyCalculationSetup(Utili.GetCurrentMethodAndClass());

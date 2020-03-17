@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Automation;
 using Common;
 using Common.Tests;
 using Database.Tests;
@@ -12,7 +13,7 @@ namespace SimulationEngine.Tests.WebRun
     public class SqlLiteExporterTests : UnitTestBaseClass
     {
         [Test]
-        [Category("QuickChart")]
+        [Category(UnitTestCategories.ManualOnly)]
         public void Run()
         {
             Program.CatchErrors = false;

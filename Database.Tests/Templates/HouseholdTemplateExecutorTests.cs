@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables.BasicElements;
@@ -14,7 +15,7 @@ namespace Database.Tests.Templates {
     public class HouseholdTemplateExecutorTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunMakeProbabilityArrayTest() {
             //tests the make probability array function
             // the function finds the probabiltiies in a date profile, normalizes them and then generates a sorted 1000 member array to pick the proper
@@ -46,7 +47,7 @@ namespace Database.Tests.Templates {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunVacationGetProbabilityRangesTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             var sim = new Simulator(db.ConnectionString);
@@ -68,7 +69,7 @@ namespace Database.Tests.Templates {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunVacGenerationTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             var sim = new Simulator(db.ConnectionString);

@@ -93,7 +93,7 @@ namespace CalculationController.Tests {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void CalculationBenchmarksBasicTest()
         {
             Config.AdjustTimesForSettlement = false;

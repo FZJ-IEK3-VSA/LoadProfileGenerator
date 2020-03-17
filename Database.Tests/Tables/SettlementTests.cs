@@ -45,7 +45,7 @@ namespace Database.Tests.Tables {
     public class SettlementTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void LoadFromDatabaseTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
 
@@ -69,7 +69,7 @@ namespace Database.Tests.Tables {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void JsonCalcSpecTest()
         {
             SkipEndCleaning = true;
@@ -84,7 +84,7 @@ namespace Database.Tests.Tables {
 
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void SaveToDatabaseTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
 

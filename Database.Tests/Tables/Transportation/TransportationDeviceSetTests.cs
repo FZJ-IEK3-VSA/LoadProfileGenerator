@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables.BasicHouseholds;
@@ -11,7 +12,7 @@ namespace Database.Tests.Tables.Transportation
     public class TransportationDeviceSetTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void TransportationDeviceSetTest()
         {
             DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
@@ -48,7 +49,7 @@ namespace Database.Tests.Tables.Transportation
             Assert.AreEqual(1, result[0].TransportationDeviceSetEntries.Count);
         }
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void TransportationDeviceImportTest()
         {
             var db1 = new DatabaseSetup(Utili.GetCurrentMethodAndClass() + "1", DatabaseSetup.TestPackage.DatabaseIo);

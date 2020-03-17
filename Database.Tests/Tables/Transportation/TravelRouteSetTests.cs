@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables.Transportation;
@@ -10,7 +11,7 @@ namespace Database.Tests.Tables.Transportation
     public class TravelRouteSetTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void TravelRouteSetTest()
         {
             DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
@@ -38,7 +39,7 @@ namespace Database.Tests.Tables.Transportation
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void TravelRouteSetTestImportExport()
         {
             DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);

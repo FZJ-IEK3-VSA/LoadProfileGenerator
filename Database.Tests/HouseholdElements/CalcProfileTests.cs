@@ -1,4 +1,5 @@
 ﻿using System;
+using Automation;
 using CalculationEngine.HouseholdElements;
 using Common;
 using Common.CalcDto;
@@ -11,7 +12,7 @@ namespace Database.Tests.HouseholdElements
     public class CalcProfileTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void CalcProfileTest1MinPro1MinStep()
         {
             TimeSpan stepsize = new TimeSpan(0, 1, 0);
@@ -24,7 +25,7 @@ namespace Database.Tests.HouseholdElements
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void CalcProfileTest2MinPro1MinStep()
         {
             TimeSpan stepsize = new TimeSpan(0, 1, 0);
@@ -38,7 +39,7 @@ namespace Database.Tests.HouseholdElements
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void CalcProfileTest30SPro1MinStep()
         {
             Config.IsInUnitTesting = true;

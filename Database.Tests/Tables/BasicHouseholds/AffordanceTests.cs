@@ -19,7 +19,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
     public class AffordanceTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void AffordanceRequirementVariableTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             Config.IsInUnitTesting = true;
@@ -39,7 +39,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void AffordanceStandbyTests1() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             Config.IsInUnitTesting = true;
@@ -57,7 +57,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void AffordanceStandbyTests2() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             db.ClearTable(Affordance.TableName);
@@ -94,7 +94,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void AffordanceVariableTests1() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             Config.IsInUnitTesting = true;
@@ -115,7 +115,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void AffordanceVariableTests2() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             db.ClearTable(Affordance.TableName);
@@ -153,7 +153,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void CalculateAverageEnergyUseTestDeviceAction() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             Config.IsInUnitTesting = true;
@@ -200,7 +200,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void CalculateAverageEnergyUseTestRealDevice() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             Config.IsInUnitTesting = true;
@@ -239,7 +239,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void CalculateMaximumInternalTimeResolutionTestForDeviceAction() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             Config.IsInUnitTesting = true;
@@ -281,7 +281,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void CalculateMaximumInternalTimeResolutionTestForDeviceActionGroup() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             Config.IsInUnitTesting = true;
@@ -321,7 +321,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void CalculateMaximumInternalTimeResolutionTestForRealDevice() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             Config.IsInUnitTesting = true;
@@ -357,7 +357,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void IsAffordanceAvailableTestAffordanceHasNoDevice() {
             // Location: realdevice
             // affordance: nothing
@@ -378,7 +378,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void IsAffordanceAvailableTestCheckDeviceActionGroupInDeviceAction() {
             // Location: device action
             // affordance: device Action Group
@@ -423,7 +423,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void IsAffordanceAvailableTestCheckDeviceActionGroupInDeviceActionGroup() {
             // Location: device action group
             // affordance: device Action Group
@@ -468,7 +468,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void IsAffordanceAvailableTestCheckDeviceActionInDeviceAction() {
             // Location: device action
             // affordance: device Action
@@ -505,7 +505,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void IsAffordanceAvailableTestCheckDeviceActionInDeviceDeviceAction() {
             // Location: realDevice
             // affordance: device Action
@@ -542,7 +542,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void IsAffordanceAvailableTestCheckDeviceActionInDeviceDeviceAction2() {
             // Location: other realDevice
             // affordance: device Action
@@ -580,7 +580,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void IsAffordanceAvailableTestCheckDeviceCategoryInDeviceCategory() {
             // Location: device category
             // affordance: device category
@@ -616,7 +616,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void IsAffordanceAvailableTestCheckRealDeviceInDeviceCategory() {
             // Location: realdevice
             // affordance: device category
@@ -653,7 +653,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void IsAffordanceAvailableTestRealDeviceIsNotThere() {
             // Location: realdevice
             // affordance: other realdevice
@@ -682,7 +682,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void IsAffordanceAvailableTestRealDeviceIsThere() {
             // Location: realdevice
             // affordance: same realdevice

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables.BasicElements;
@@ -12,7 +13,7 @@ namespace Database.Tests.Tables.BasicHouseholds
     public class DeviceActionTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void DeviceActionTest()
         {
             DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);

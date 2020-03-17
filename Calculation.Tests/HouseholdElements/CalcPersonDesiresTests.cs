@@ -28,6 +28,7 @@
 
 using System;
 using System.Collections.Generic;
+using Automation;
 using CalculationController.DtoFactories;
 using CalculationEngine.HouseholdElements;
 using Common;
@@ -40,7 +41,7 @@ namespace Calculation.Tests.HouseholdElements {
     public class CalcPersonDesiresTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void CalcPersonDesiresTest() {
             CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();
             var cpd = new CalcPersonDesires(calcParameters);
@@ -72,7 +73,7 @@ namespace Calculation.Tests.HouseholdElements {
         ///     therefore the desires should be unequal
         /// </summary>
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void CalcPersonNonSharedDesiresTest() {
             CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();
             var cpd = new CalcPersonDesires(calcParameters);
@@ -108,7 +109,7 @@ namespace Calculation.Tests.HouseholdElements {
         ///     therefore the desires should be equal
         /// </summary>
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void CalcPersonSharedDesiresTest() {
             CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();
             var sdv = new SharedDesireValue(1,new TimeStep(0,0,true));

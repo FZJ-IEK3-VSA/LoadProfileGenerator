@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using Automation;
 using Automation.ResultFiles;
 using CalculationController.DtoFactories;
 using CalculationEngine.Helper;
@@ -21,7 +22,7 @@ namespace Calculation.Tests.HouseholdElements {
     public class CalcAutoDevTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void CheckConditionTest() {
             Assert.IsTrue(VariableConditionHelper.CheckCondition(1, VariableCondition.Equal, 1));
             Assert.IsFalse(VariableConditionHelper.CheckCondition(0, VariableCondition.Equal, 1));
@@ -44,7 +45,7 @@ namespace Calculation.Tests.HouseholdElements {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void CheckResultingProfile() {
             var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             wd.InputDataLogger.AddSaver(new ColumnEntryLogger(wd.SqlResultLoggingService));
@@ -104,4 +105,5 @@ namespace Calculation.Tests.HouseholdElements {
             wd.CleanUp();
         }
     }
+
 }

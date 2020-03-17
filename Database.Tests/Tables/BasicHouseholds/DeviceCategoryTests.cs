@@ -28,6 +28,7 @@
 
 using System;
 using System.Collections.ObjectModel;
+using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables.BasicHouseholds;
@@ -38,7 +39,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
     public class DeviceCategoryTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void GetAllNameTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
 

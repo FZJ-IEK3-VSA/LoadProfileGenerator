@@ -1,4 +1,5 @@
 ﻿using System.Threading;
+using Automation;
 using ChartCreator2.OxyCharts;
 using Common;
 using Common.Tests;
@@ -9,7 +10,7 @@ namespace ChartCreator2.Tests.OxyCharts {
     public class CalculationDurationFlameChartTests : UnitTestBaseClass
     {
         [Test][Apartment(ApartmentState.STA)]
-        [Category("QuickChart")]
+        [Category(UnitTestCategories.ManualOnly)]
         public void RunTest()
         {
             var cdfc = new CalculationDurationFlameChart();

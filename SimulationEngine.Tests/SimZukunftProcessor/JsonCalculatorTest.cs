@@ -112,7 +112,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
     public class JsonCalculatorTest
     {
         [Test]
-        [Category("ManualOnly")]
+        [Category(UnitTestCategories.ManualOnly)]
         public void SumChecker()
         {
             const string startpath = @"D:\LPGUnitTest\JsonCalculatorTest.EndToEndTest\results";
@@ -142,7 +142,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
 
         }
         [Test]
-        [Category("ManualOnly")]
+        [Category(UnitTestCategories.ManualOnly)]
         public void EndToEndTest()
         {
             Console.WriteLine(Assembly.GetCallingAssembly().FullName);
@@ -181,7 +181,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         }
 
         [Test]
-        [Category("ManualOnly")]
+        [Category(UnitTestCategories.ManualOnly)]
         public void OnlyExternalTest()
         {
             Logger.Get().StartCollectingAllMessages();
@@ -254,7 +254,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void TestDistrictDefinition()
         {
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
@@ -267,7 +267,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
 
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunJsonCalculatorTest()
         {
             Logger.Get().StartCollectingAllMessages();
@@ -305,7 +305,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
 
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunJsonCalculatorTestForExternalTimeResolutionJsonFile()
         {
             Logger.Get().StartCollectingAllMessages();
@@ -349,7 +349,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
             //wd.CleanUp();
         }
         [Test]
-        [Category("ManualOnly")]
+        [Category(UnitTestCategories.ManualOnly)]
         public void RunJsonCalculatorExportTest()
         {
             Config.IsInHeadless = true;
@@ -370,7 +370,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         }
 
         [Test]
-        [Category("ManualOnly")]
+        [Category(UnitTestCategories.ManualOnly)]
         public void RunBrokenHouseholdCalcTest()
         {
             Config.IsInHeadless = true;
@@ -385,7 +385,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         }
 
         [Test]
-        [Category("ManualOnly")]
+        [Category(UnitTestCategories.ManualOnly)]
         public void RunFailingStuffTest()
         {
             Config.IsInHeadless = true;

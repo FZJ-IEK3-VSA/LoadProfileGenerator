@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Automation;
 using CalculationController.CalcFactories;
 using CalculationController.DtoFactories;
 using CalculationController.Helpers;
@@ -19,7 +20,7 @@ namespace CalculationController.Tests.InputLoggers
     public class DeviceTaggingSetLoggerTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunTest()
         {
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());

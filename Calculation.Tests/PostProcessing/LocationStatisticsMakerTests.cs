@@ -19,7 +19,7 @@ namespace Calculation.Tests.PostProcessing
     public class LocationStatisticsMakerTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunTest()
         {
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());

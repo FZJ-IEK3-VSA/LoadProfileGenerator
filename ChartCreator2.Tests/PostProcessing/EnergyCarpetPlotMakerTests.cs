@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using Automation;
 using Common.Tests;
 using NUnit.Framework;
 
@@ -8,7 +9,7 @@ namespace ChartCreator2.Tests.PostProcessing {
     public class EnergyCarpetPlotMakerTests : UnitTestBaseClass
     {
         [Test]
-        [Category("QuickChart")]
+        [Category(UnitTestCategories.ManualOnly)]
         [SuppressMessage("ReSharper", "HeuristicUnreachableCode")]
         public void MakeCarpetTest()
         {

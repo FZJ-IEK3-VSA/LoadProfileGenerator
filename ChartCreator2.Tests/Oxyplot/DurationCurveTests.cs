@@ -12,7 +12,7 @@ namespace ChartCreator2.Tests.Oxyplot {
     public class DurationCurveTests : UnitTestBaseClass
     {
         [Test]
-        [Category("TestToFix")]
+        [Category(UnitTestCategories.BrokenTest)]
         public void MakePlotTest() {
             CleanTestBase.RunAutomatically(false);
             var cs = new OxyCalculationSetup(Utili.GetCurrentMethodAndClass());

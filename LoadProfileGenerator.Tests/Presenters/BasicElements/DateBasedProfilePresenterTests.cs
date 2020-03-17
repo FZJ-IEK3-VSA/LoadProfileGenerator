@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Common.Tests;
@@ -15,7 +16,7 @@ namespace LoadProfileGenerator.Tests.Presenters.BasicElements {
     public class DateBasedProfilePresenterTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
         public void DateBasedProfilePresenterTest()
         {

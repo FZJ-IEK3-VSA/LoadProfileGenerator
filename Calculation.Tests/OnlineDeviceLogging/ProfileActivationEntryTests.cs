@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Automation;
 using CalculationController.DtoFactories;
 using CalculationEngine.OnlineDeviceLogging;
 using Common.JSON;
@@ -11,7 +12,7 @@ namespace Calculation.Tests.OnlineDeviceLogging
     public class ProfileActivationEntryTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void ProfileActivationEntryTest()
         {
             CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();

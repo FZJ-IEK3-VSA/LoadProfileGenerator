@@ -1,4 +1,5 @@
-﻿using Common;
+﻿using Automation;
+using Common;
 using Common.Tests;
 using NUnit.Framework;
 
@@ -7,7 +8,7 @@ namespace LoadProfileGenerator.Tests {
     public class ErrorReporterTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunTest()
         {
             var er = new ErrorReporter();

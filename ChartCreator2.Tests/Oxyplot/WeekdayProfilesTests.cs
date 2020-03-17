@@ -13,7 +13,7 @@ namespace ChartCreator2.Tests.Oxyplot {
     public class WeekdayProfilesTests : UnitTestBaseClass
     {
         [Test]
-        [Category("LongTest5")]
+        [Category(UnitTestCategories.LongTest5)]
         public void MakePlotTest()
         {
             CleanTestBase.RunAutomatically(false);
@@ -41,7 +41,7 @@ namespace ChartCreator2.Tests.Oxyplot {
         }
         /*
         [Test]
-        [Category("QuickChart")]
+        [Category(UnitTestCategories.ManualOnly)]
         public void MakePlotTestMini()
         {
             var di = new DirectoryInfo(@"E:\unittest\WeekdayProfilesTests");

@@ -29,6 +29,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Automation;
 using Automation.ResultFiles;
 using CalculationController.DtoFactories;
 using CalculationEngine.HouseElements;
@@ -43,7 +44,7 @@ namespace Calculation.Tests {
     [TestFixture]
     public class CalcEnergyStorageTests : TestBasis {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void ProcessOneEnergyStorageTimestepTest()
         {
             var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());

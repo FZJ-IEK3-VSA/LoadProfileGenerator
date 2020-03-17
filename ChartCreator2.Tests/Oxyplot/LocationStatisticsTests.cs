@@ -12,7 +12,7 @@ namespace ChartCreator2.Tests.Oxyplot {
     public class LocationStatisticsTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
 
         public void MakePlotTest() {
             CleanTestBase.RunAutomatically(false);

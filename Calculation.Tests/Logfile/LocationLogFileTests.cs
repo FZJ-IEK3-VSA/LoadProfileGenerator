@@ -27,6 +27,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using Automation;
 using Automation.ResultFiles;
 using CalculationController.DtoFactories;
 using CalculationEngine.OnlineLogging;
@@ -43,7 +44,7 @@ namespace Calculation.Tests.Logfile
     public class LocationLogFileTests : TestBasis
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void TestLocationEntryBasics()
         {
             Config.IsInUnitTesting = true;
@@ -71,7 +72,7 @@ namespace Calculation.Tests.Logfile
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void TestLocationEntryBasicsWithFile()
         {
             Config.IsInUnitTesting = true;

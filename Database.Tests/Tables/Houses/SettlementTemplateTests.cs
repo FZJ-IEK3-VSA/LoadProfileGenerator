@@ -15,7 +15,7 @@ namespace Database.Tests.Tables.Houses {
     public class SettlementTemplateTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void SettlementTemplatePreviewTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
 
@@ -77,7 +77,7 @@ namespace Database.Tests.Tables.Houses {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void SettlementTemplateTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
 

@@ -30,6 +30,7 @@
 
 using System;
 using System.Collections.ObjectModel;
+using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables.BasicElements;
@@ -42,7 +43,7 @@ namespace Database.Tests.Tables {
     public class TimeDataPointTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void LoadFromDatabaseTest() {
             // tests loading
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
@@ -53,7 +54,7 @@ namespace Database.Tests.Tables {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void TimeDataPointTest() {
             // tests saving and loading
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
@@ -72,7 +73,7 @@ namespace Database.Tests.Tables {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void TimeDataPointTestTimespan() {
             // tests init with time span and saving and loading to db
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);

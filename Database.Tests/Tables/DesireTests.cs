@@ -29,6 +29,7 @@
 #region
 
 using System.Collections.ObjectModel;
+using Automation;
 using Common;
 using Common.Tests;
 using Database.Helpers;
@@ -42,7 +43,7 @@ namespace Database.Tests.Tables {
     public class DesireTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void DesireTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
 
@@ -59,7 +60,7 @@ namespace Database.Tests.Tables {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void MakeNewDesireTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
 

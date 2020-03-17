@@ -27,6 +27,7 @@
 //-----------------------------------------------------------------------
 
 using System.Collections.ObjectModel;
+using Automation;
 using CalculationController.DtoFactories;
 using Common;
 using Common.Tests;
@@ -39,7 +40,7 @@ namespace Database.Tests.Tables {
     public class GeographicLocationTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void TimeLimitLoadCreationAndSaveTest()
         {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
@@ -70,7 +71,7 @@ namespace Database.Tests.Tables {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void GeographicLocationTypoTest()
         {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);

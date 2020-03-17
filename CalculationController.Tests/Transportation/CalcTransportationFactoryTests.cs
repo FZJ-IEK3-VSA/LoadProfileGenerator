@@ -30,7 +30,7 @@ namespace CalculationController.Tests.Transportation
     {
         [Test]
         [SuppressMessage("ReSharper", "UnusedVariable")]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunMakeCalcTest()
         {
             //TODO: fix the container registering

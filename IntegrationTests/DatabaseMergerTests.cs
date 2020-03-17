@@ -30,6 +30,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Common.Tests;
@@ -83,7 +84,7 @@ namespace IntegrationTests {
         }
 
         [Test]
-        [Category("LongTest2")]
+        [Category(UnitTestCategories.LongTest2)]
         public void TestImportWithHouseholdTemplateDelete600() {
             const string srcFileName = "profilegenerator600.db3";
             string sourcepath =  DatabaseSetup.GetImportFileFullPath(srcFileName, DatabaseSetup.TestPackage.DatabaseIo);
@@ -107,7 +108,7 @@ namespace IntegrationTests {
         }
 
         [Test]
-        [Category("LongTest2")]
+        [Category(UnitTestCategories.LongTest2)]
         public void TestImportWithHouseholdTemplateDelete880()
         {
             const string srcFileName = "profilegenerator880.db3";
@@ -132,19 +133,19 @@ namespace IntegrationTests {
         }
 
         [Test]
-        [Category("LongTest2")]
+        [Category(UnitTestCategories.LongTest2)]
         public void RunTest124() => TestImport("profilegenerator124.db3");
 
         [Test]
-        [Category("LongTest2")]
+        [Category(UnitTestCategories.LongTest2)]
         public void RunTest160() => TestImport("profilegenerator160.db3");
 
         [Test]
-        [Category("LongTest2")]
+        [Category(UnitTestCategories.LongTest2)]
         public void RunTest170() => TestImport("profilegenerator170.db3");
 
         [Test]
-        [Category("LongTest2")]
+        [Category(UnitTestCategories.LongTest2)]
         public void RunTest171() {
             TestImport("profilegenerator171.db3", out var sim);
             var found = false;
@@ -157,27 +158,27 @@ namespace IntegrationTests {
         }
 
         [Test]
-        [Category("LongTest2")]
+        [Category(UnitTestCategories.LongTest2)]
         public void RunTest201() => TestImport("profilegenerator201.db3");
 
         [Test]
-        [Category("LongTest2")]
+        [Category(UnitTestCategories.LongTest2)]
         public void RunTest203() => TestImport("profilegenerator203.db3");
 
         [Test]
-        [Category("LongTest2")]
+        [Category(UnitTestCategories.LongTest2)]
         public void RunTest210() => TestImport("profilegenerator210.db3");
 
         [Test]
-        [Category("LongTest2")]
+        [Category(UnitTestCategories.LongTest2)]
         public void RunTest280Sarah() => TestImport("profilegenerator280SARAH.db3");
 
         [Test]
-        [Category("LongTest2")]
+        [Category(UnitTestCategories.LongTest2)]
         public void RunTest520() => TestImport("profilegenerator520.db3");
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunTestCurrentDeviceActions() {
             var dbOriginal = new DatabaseSetup("RunTestCurrentDeviceActionsOriginal", DatabaseSetup.TestPackage.DatabaseIo);
 
@@ -224,7 +225,7 @@ namespace IntegrationTests {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunTestCurrentDeviceCategory() {
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
 
@@ -273,7 +274,7 @@ namespace IntegrationTests {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunTestCurrentTimeLimits() {
             var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             var path = Path.Combine(wd.WorkingDirectory, "profilegeneratorcopy.db3");

@@ -1,4 +1,5 @@
-﻿using CalculationController.Integrity;
+﻿using Automation;
+using CalculationController.Integrity;
 using Common;
 using Common.Tests;
 using Database.Helpers;
@@ -10,7 +11,7 @@ namespace Database.Tests.Helpers
     public class RealisticTraitEstimatorTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunTest()
         {
             DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);

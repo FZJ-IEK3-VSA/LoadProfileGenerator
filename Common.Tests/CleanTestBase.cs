@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using Automation;
 using Automation.ResultFiles;
 using CommonDataWPF.Tests;
 using JetBrains.Annotations;
@@ -31,7 +32,7 @@ namespace Common.Tests {
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         [TestCase(true)]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public static void RunAutomatically(bool throwExceptionOnLeftover) {
             Console.WriteLine("1");
             Logger.Info("Starting to clean...");

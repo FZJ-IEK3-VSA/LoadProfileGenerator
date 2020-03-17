@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables.BasicElements;
@@ -10,7 +11,7 @@ namespace Database.Tests.Tables.BasicElements
     public class VariableTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void VariableTest()
         {
             DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
+using Automation;
 using Common;
 using Common.Enums;
 using Common.Tests;
@@ -14,7 +15,7 @@ namespace Database.Tests.Tables.BasicHouseholds
     {
         [Test]
         [SuppressMessage("ReSharper", "RedundantAssignment")]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void VacationTest()
         {
             DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);

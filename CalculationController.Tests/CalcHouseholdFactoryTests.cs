@@ -27,6 +27,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using Automation;
 using CalculationController.CalcFactories;
 using Common;
 using Common.Tests;
@@ -39,7 +40,7 @@ namespace CalculationController.Tests {
     public class CalcHouseholdFactoryTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void GetCalcProfileTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.CalcController);
 

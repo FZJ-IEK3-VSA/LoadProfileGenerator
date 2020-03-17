@@ -86,7 +86,7 @@ namespace CalculationController.Tests.CalcFactories {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void GetCalcManagerHouseholdTest() {
             var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.CalcController);
@@ -119,7 +119,7 @@ namespace CalculationController.Tests.CalcFactories {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void GetCalcManagerHouseTest() {
             var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
 
@@ -153,7 +153,7 @@ namespace CalculationController.Tests.CalcFactories {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void GetCalcManagerModularHousehold03Test() {
             var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.CalcController);
@@ -210,7 +210,7 @@ namespace CalculationController.Tests.CalcFactories {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void GetCalcManagerModularHouseholdTest() {
             var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.CalcController);
@@ -252,7 +252,7 @@ namespace CalculationController.Tests.CalcFactories {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void GetCalcManagerModularHouseholdTestForDevicePicking() {
             var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.CalcController);
@@ -315,7 +315,7 @@ namespace CalculationController.Tests.CalcFactories {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void GetDuplicateCalcManagerHouseholdTest() {
             var wd1 = new WorkingDir("GetDuplicateCalcManagerHouseholdTest1");
 

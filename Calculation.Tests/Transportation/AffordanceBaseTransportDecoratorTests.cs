@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Media;
+using Automation;
 using Automation.ResultFiles;
 using CalculationController.DtoFactories;
 using CalculationEngine.Helper;
@@ -25,7 +26,7 @@ namespace Calculation.Tests.Transportation
     public class AffordanceBaseTransportDecoratorTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunDoubleActivationTest()
         {
             var rnd = new Random(1);
@@ -56,7 +57,7 @@ namespace Calculation.Tests.Transportation
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunTransportDecoratorTest()
         {
             var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());

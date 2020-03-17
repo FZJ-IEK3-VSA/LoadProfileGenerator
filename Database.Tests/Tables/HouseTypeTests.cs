@@ -28,6 +28,7 @@
 
 using System;
 using System.Collections.ObjectModel;
+using Automation;
 using Common;
 using Common.Enums;
 using Common.Tests;
@@ -42,7 +43,7 @@ namespace Database.Tests.Tables {
     public class HouseTypeTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void HouseDeviceLoadCreationAndSaveTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
 
@@ -117,7 +118,7 @@ namespace Database.Tests.Tables {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void HouseDeviceOrphanCreatingTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
 
@@ -178,7 +179,7 @@ namespace Database.Tests.Tables {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void HouseEnergyStorageLoadCreationAndSaveTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             db.ClearTable(HouseType.TableName);
@@ -237,7 +238,7 @@ namespace Database.Tests.Tables {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void HouseLoadCreationAndSaveTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             Logger.Threshold = Severity.Warning;
@@ -293,7 +294,7 @@ namespace Database.Tests.Tables {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void HouseTransformationDeviceLoadCreationAndSaveTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             db.ClearTable(HouseType.TableName);
@@ -350,7 +351,7 @@ namespace Database.Tests.Tables {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void HouseTypeLoadCreationAndSave2Test() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
 

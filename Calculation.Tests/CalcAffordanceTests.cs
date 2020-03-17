@@ -30,6 +30,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Windows.Media;
+using Automation;
 using Automation.ResultFiles;
 using CalculationController.DtoFactories;
 using CalculationEngine.Helper;
@@ -124,7 +125,7 @@ namespace Calculation.Tests {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void CalcAffordanceActivateTest0Percent()
         {
             var calcParameters = CalcParameters.GetNew();
@@ -157,7 +158,7 @@ namespace Calculation.Tests {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void CalcAffordanceActivateTest100Percent()
         {
             var r = new Random(0);
@@ -190,7 +191,7 @@ namespace Calculation.Tests {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void CalcAffordanceActivateTest25Percent()
         {
             var r = new Random(0);
@@ -224,7 +225,7 @@ namespace Calculation.Tests {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void CalcAffordanceActivateTest50Percent()
         {
             var r = new Random(0);
@@ -258,7 +259,7 @@ namespace Calculation.Tests {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void CalcAffordanceActivateTest75Percent()
         {
             var r = new Random(0);
@@ -290,7 +291,7 @@ namespace Calculation.Tests {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void CalcAffordanceVariableTestAdd()
         {
             var r = new Random(0);
@@ -350,7 +351,7 @@ namespace Calculation.Tests {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void CalcAffordanceVariableTestSet()
         {
             string deviceCategoryGuid = Guid.NewGuid().ToString();
@@ -402,7 +403,7 @@ namespace Calculation.Tests {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void CalcAffordanceVariableTestSubtract()
         {
             var r = new Random(0);
@@ -462,7 +463,7 @@ namespace Calculation.Tests {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunDeviceOffsetTest()
         {
             var r = new Random(0);

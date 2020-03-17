@@ -1,4 +1,5 @@
 ﻿using System;
+using Automation;
 using Automation.ResultFiles;
 using CalculationController.DtoFactories;
 using CalculationEngine.HouseholdElements;
@@ -16,7 +17,7 @@ namespace Calculation.Tests.OnlineLogging {
     public class VariableLogfileTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void VariableLogfileTests1()
         {
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());

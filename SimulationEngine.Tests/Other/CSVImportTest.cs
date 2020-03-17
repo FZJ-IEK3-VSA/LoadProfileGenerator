@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Database.Tables.BasicElements;
@@ -11,7 +12,7 @@ namespace SimulationEngine.Tests.Other
     public class CSVImportTest
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunTest()
         {
             //make dummy csv file

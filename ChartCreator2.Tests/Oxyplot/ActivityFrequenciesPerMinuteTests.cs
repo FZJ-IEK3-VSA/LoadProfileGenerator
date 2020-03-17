@@ -14,7 +14,7 @@ namespace ChartCreator2.Tests.Oxyplot {
     [Apartment(ApartmentState.STA)]
     public class ActivityFrequenciesPerMinuteTests : UnitTestBaseClass {
         [Test]
-        [Category("LongTest3")]
+        [Category(UnitTestCategories.LongTest3)]
         public void MakePlotTest()
         {
             CleanTestBase.RunAutomatically(false);

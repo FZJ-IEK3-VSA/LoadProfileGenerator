@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables.BasicHouseholds;
@@ -11,7 +12,7 @@ namespace Database.Tests.Tables.BasicHouseholds
     public class DeviceActionGroupTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void DeviceActionGroupTestDeleteFromSim()
         {
             Config.IsInUnitTesting = true;
@@ -24,7 +25,7 @@ namespace Database.Tests.Tables.BasicHouseholds
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void DeviceActionGroupTestsAll()
         {
             DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);

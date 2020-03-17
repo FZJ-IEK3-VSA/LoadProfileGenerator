@@ -40,7 +40,7 @@ namespace CalculationController.Tests.CalcFactories
     public class CalcLoadTypeFactoryTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void MakeLoadTypesTest()
         {
             //_calcParameters.CSVCharacter = ";";

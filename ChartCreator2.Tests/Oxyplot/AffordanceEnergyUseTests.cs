@@ -13,7 +13,7 @@ namespace ChartCreator2.Tests.Oxyplot {
     public class AffordanceEnergyUseTests : UnitTestBaseClass
     {
         [Test]
-        [Category("TestToFix")]
+        [Category(UnitTestCategories.BrokenTest)]
         public void MakePlotTest()
         {
             SkipEndCleaning = true;
@@ -41,7 +41,7 @@ namespace ChartCreator2.Tests.Oxyplot {
         }
         /*
         [Test]
-        [Category("QuickChart")]
+        [Category(UnitTestCategories.ManualOnly)]
         public void MakePlotTestMini()
         {
             Config.MakePDFCharts = true;

@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Common.Tests;
@@ -12,7 +13,7 @@ namespace IntegrationTests {
     [TestFixture]
     public class IppischMergeTest {
         [Test]
-        [Category("ManualOnly")]
+        [Category(UnitTestCategories.ManualOnly)]
         public void TestImport() {
             const string importPath = @"e:\Haushalt3.db3";
 

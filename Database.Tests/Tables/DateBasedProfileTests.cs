@@ -28,6 +28,7 @@
 
 using System;
 using System.Collections.ObjectModel;
+using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables.BasicElements;
@@ -38,7 +39,7 @@ namespace Database.Tests.Tables {
     public class DateBasedProfileTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void DateBasedProfileSaveAndRestore() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             db.ClearTable(DateBasedProfile.TableName);

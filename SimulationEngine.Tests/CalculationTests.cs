@@ -186,7 +186,7 @@ namespace SimulationEngine.Tests
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTest()
         {
             Program.CatchErrors = false;
@@ -212,7 +212,7 @@ namespace SimulationEngine.Tests
         }
 
         [Test]
-        [Category("LongTest5")]
+        [Category(UnitTestCategories.LongTest5)]
         public void RunBasicTest2()
         {
             //_calculationProfiler.Clear();
@@ -251,7 +251,7 @@ namespace SimulationEngine.Tests
         //  - - -   0 -GeographicLocationIndex 6 -StartDate 01.01.2017 -EndDate 31.12.2017 -EnergyIntensityType Random
 
         [Test]
-        [Category("LongTest3")]
+        [Category(UnitTestCategories.LongTest3)]
         public void RunBasicTestAllOutput()
         {
             Program.CatchErrors = false;
@@ -282,7 +282,7 @@ namespace SimulationEngine.Tests
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestAllOutputWithDelete()
         {
             Program.CatchErrors = false;
@@ -311,55 +311,55 @@ namespace SimulationEngine.Tests
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestCriticalViolations() => RunBasicTestOutput(CalcOption.CriticalViolations,
             "criticalviolations");
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestDaylightTimesToCSV() => RunBasicTestOutput(CalcOption.DaylightTimesList, "daylight");
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestDesiresLogfile() => RunBasicTestOutput(CalcOption.DesiresLogfile, "desires");
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestDeviceProfile() => RunBasicTestOutput(CalcOption.DeviceProfiles, "deviceprofiles");
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestDeviceProfileExternal() => RunBasicTestOutput(CalcOption.DeviceProfileExternalEntireHouse,
             "device profile external", "-ExternalTimeResolution", "01:00:00");
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestDurationCurve() => RunBasicTestOutput(CalcOption.DurationCurve, "durationcurve");
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestEnergyCarpetPlot() => RunBasicTestOutput(CalcOption.EnergyCarpetPlot,
             "Energycarpetplot");
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestHouseholdContents() => RunBasicTestOutput(CalcOption.HouseholdContents,
             "householdcontents");
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestHouseholdPlan() => RunBasicTestOutput(CalcOption.HouseholdPlan, "householdplan");
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestImportFiles() => RunBasicTestOutput(CalcOption.PolysunImportFiles, "importfiles");
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestLocations() => RunBasicTestOutput(CalcOption.LocationsFile, "locations");
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestNoOutput()
         {
             Program.CatchErrors = false;
@@ -423,11 +423,11 @@ namespace SimulationEngine.Tests
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestSumProfile() => RunBasicTestOutput(CalcOption.OverallSum, "sumprofile");
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestSumProfileExternal()
         {
             RunBasicTestOutput(CalcOption.SumProfileExternalEntireHouse, "sumprofilexternal", "-ExternalTimeResolution",
@@ -435,36 +435,36 @@ namespace SimulationEngine.Tests
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestTemperatureFile() => RunBasicTestOutput(CalcOption.TemperatureFile, "temperaturefile");
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestThoughtsLogfile() => RunBasicTestOutput(CalcOption.ThoughtsLogfile, "thoughtsfile");
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestTimeOfUse() => RunBasicTestOutput(CalcOption.TimeOfUsePlot, "timeofuse");
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestTimeProfileFile() => RunBasicTestOutput(CalcOption.TimeProfileFile, "timeprofilefile");
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestTotalsPerDevice() => RunBasicTestOutput(CalcOption.TotalsPerDevice, "totalsperdevice");
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestTotalsPerLoadtype() => RunBasicTestOutput(CalcOption.TotalsPerLoadtype,
             "totalsperloadtype");
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestWeekday() => RunBasicTestOutput(CalcOption.WeekdayProfiles, "weekday");
 
         [Test]
-        [Category("LongTest5")]
+        [Category(UnitTestCategories.LongTest5)]
         public void RunHouseCheckFileRegistration()
         {
             Config.ReallyMakeAllFilesIncludingBothSums = true;
@@ -532,7 +532,7 @@ namespace SimulationEngine.Tests
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunHouseDesireOutput()
         {
             Program.CatchErrors = false;
@@ -582,7 +582,7 @@ namespace SimulationEngine.Tests
         }
 
         [Test]
-        [Category("LongTest3")]
+        [Category(UnitTestCategories.LongTest3)]
         public void RunHouseWithMultipleCheck()
         {
             Config.ReallyMakeAllFilesIncludingBothSums = true;
@@ -620,7 +620,7 @@ namespace SimulationEngine.Tests
         }
 
         [Test]
-        [Category("QuickChart")]
+        [Category(UnitTestCategories.ManualOnly)]
         public void RunRegistrationTest()
         {
             const string directoryname = @"E:\unittest\CalculationTests.RunHouseCheckFileRegistration\H25.Desires";
@@ -644,7 +644,7 @@ namespace SimulationEngine.Tests
 
         [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "RunTime")]
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunTimeAxisTest2NoSettling()
         {
             var wd = ProgramTests.SetupDB3(Utili.GetCurrentMethodAndClass());
@@ -676,7 +676,7 @@ namespace SimulationEngine.Tests
         }
 
         [Test]
-        [Category("LongTest3")]
+        [Category(UnitTestCategories.LongTest3)]
         public void TestCrashingHH()
         {
             Program.CatchErrors = false;
@@ -718,7 +718,7 @@ namespace SimulationEngine.Tests
         }
 
         [Test]
-        [Category("LongTest3")]
+        [Category(UnitTestCategories.LongTest3)]
         public void TestCrashingHH1()
         {
             Program.CatchErrors = false;

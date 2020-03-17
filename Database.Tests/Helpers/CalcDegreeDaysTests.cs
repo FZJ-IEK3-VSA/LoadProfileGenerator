@@ -27,6 +27,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using Automation;
 using Common;
 using Common.Tests;
 using Database.Helpers;
@@ -37,7 +38,7 @@ namespace Database.Tests.Helpers {
     public class CalcDegreeDaysTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void MakeDegreeDaysTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
 
@@ -64,7 +65,7 @@ namespace Database.Tests.Helpers {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void MakeDegreeDaysTestWithPrecalcPeriod()
         {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
@@ -98,7 +99,7 @@ namespace Database.Tests.Helpers {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void MakeDegreeDaysTest3Days() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             var temperaturProfiles = db.LoadTemperatureProfiles();
@@ -123,7 +124,7 @@ namespace Database.Tests.Helpers {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void MakeDegreeDaysTest3Years() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
 
@@ -149,7 +150,7 @@ namespace Database.Tests.Helpers {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void MakeDegreeDaysTestMinus3Days() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
 

@@ -13,7 +13,7 @@ namespace ChartCreator2.Tests.Oxyplot {
     public class DeviceTaggingSetTests : UnitTestBaseClass
     {
         [Test]
-        [Category("TestToFix")]
+        [Category(UnitTestCategories.BrokenTest)]
         public void MakePlotTest()
         {
             CleanTestBase.RunAutomatically(false);
@@ -45,7 +45,7 @@ namespace ChartCreator2.Tests.Oxyplot {
         }
         /*
         [Test]
-        [Category("QuickChart")]
+        [Category(UnitTestCategories.ManualOnly)]
         public void MakePlotTestMini()
         {
             ChartLocalizer.ShouldTranslate = true;

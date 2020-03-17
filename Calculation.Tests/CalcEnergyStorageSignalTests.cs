@@ -28,6 +28,7 @@
 
 using System;
 using System.Collections.Generic;
+using Automation;
 using CalculationEngine.HouseElements;
 using CalculationEngine.HouseholdElements;
 using Common;
@@ -49,7 +50,7 @@ namespace Calculation.Tests
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void EnergyStorageSignalTests()
         {
             CalcParameters cp = CalcParameters.GetNew();
@@ -75,7 +76,7 @@ namespace Calculation.Tests
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void EnergyStorageSignalTests2()
         {
             CalcParameters cp = CalcParameters.GetNew();

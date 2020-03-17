@@ -80,7 +80,7 @@ namespace CalculationController.Tests
         [SuppressMessage("Microsoft.Performance", "CA1809:AvoidExcessiveLocals")]
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void PostProcessingTestCompareAllResultFiles() {
             //base.SkipEndCleaning = true;
             CleanTestBase.RunAutomatically(false);
@@ -299,13 +299,13 @@ namespace CalculationController.Tests
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunOnlyDevice() {
             RunTest(x => x.Enable(CalcOption.DeviceProfiles), GetCurrentMethod());
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunOnlyDeviceProfileExternal() {
             RunTest(x => x.Enable(CalcOption.DeviceProfileExternalEntireHouse), GetCurrentMethod());
         }

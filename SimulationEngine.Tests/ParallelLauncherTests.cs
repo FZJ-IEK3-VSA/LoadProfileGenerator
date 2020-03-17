@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Automation;
 using Common.Tests;
 using NUnit.Framework;
 using SimulationEngine.SettlementCalculation;
@@ -11,11 +12,11 @@ namespace SimulationEngine.Tests
     public class ParallelLauncherTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void FindNumberOfCoresTest() => Console.WriteLine(ParallelLauncher.FindNumberOfCores());
 
         [Test]
-        [Category("QuickChart")]
+        [Category(UnitTestCategories.ManualOnly)]
         public void RunTest()
         {
             const string path = @"G:\2016.2.1..20.6";

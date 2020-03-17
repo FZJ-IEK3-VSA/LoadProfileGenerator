@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Automation;
 using Automation.ResultFiles;
 using Common.CalcDto;
 using Common.Enums;
@@ -15,7 +16,7 @@ namespace Common.Tests.SQLResultLogging.InputLoggers
     public class CalcAffordanceDtoLoggerTests : UnitTestBaseClass
     {
         [Test()]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void CalcAffordanceDtoLoggerTest()
         {
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());

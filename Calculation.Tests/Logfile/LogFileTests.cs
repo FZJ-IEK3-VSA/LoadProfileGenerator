@@ -26,6 +26,7 @@
 
 //-----------------------------------------------------------------------
 
+using Automation;
 using Automation.ResultFiles;
 using CalculationController.DtoFactories;
 using CalculationEngine.OnlineLogging;
@@ -42,7 +43,7 @@ namespace Calculation.Tests.Logfile
     public class LogFileTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void BasicTest()
         {
             WorkingDir wd = new WorkingDir("BasicLogfileTest");

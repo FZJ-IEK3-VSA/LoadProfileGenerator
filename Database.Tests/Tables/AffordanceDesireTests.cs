@@ -27,6 +27,7 @@
 //-----------------------------------------------------------------------
 
 using System.Collections.ObjectModel;
+using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables.BasicHouseholds;
@@ -37,7 +38,7 @@ namespace Database.Tests.Tables {
     public class AffordanceDesireTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void LoadFromDatabaseTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
 

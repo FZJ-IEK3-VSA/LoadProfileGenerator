@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Threading;
+using Automation;
 using Automation.ResultFiles;
 using ChartCreator2.OxyCharts;
 using Common;
@@ -16,7 +17,7 @@ namespace ChartCreator2.Tests.Oxyplot {
     public class MakeNRWChartTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void MakeNRWChartTest() {
             CleanTestBase.RunAutomatically(false);
             var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());

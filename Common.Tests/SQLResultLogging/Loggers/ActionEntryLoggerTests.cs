@@ -1,4 +1,5 @@
-﻿using Automation.ResultFiles;
+﻿using Automation;
+using Automation.ResultFiles;
 
 namespace Common.Tests.SQLResultLogging.Loggers
 {
@@ -13,7 +14,7 @@ namespace Common.Tests.SQLResultLogging.Loggers
     public class ActionEntryLoggerTests : UnitTestBaseClass
     {
         [Test()]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunTest()
         {
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());

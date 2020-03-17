@@ -29,6 +29,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Common.Enums;
@@ -46,7 +47,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
     public class HouseholdTraitTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void TraitImportExportTest()
         {
             //  WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
@@ -113,7 +114,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void HouseholdTraitImportTest()
         {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
@@ -128,7 +129,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void HouseholdTraitAffordanceTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
 
@@ -194,7 +195,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void HouseholdTraitTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Automation;
 using CalculationController.CalcFactories;
 using Common;
 using Common.Tests;
@@ -12,7 +13,7 @@ namespace CalculationController.Tests.CalcFactories {
     public class CalcTransportationFactoryTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void CheckReachabilityofLocationsTest()
         {
             List<Location> locations = new List<Location>();
@@ -41,7 +42,7 @@ namespace CalculationController.Tests.CalcFactories {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void CheckRouteCompletenessTest()
         {
             TravelRouteSet trs = new TravelRouteSet("trs", 1, "", "", Guid.NewGuid().ToString());

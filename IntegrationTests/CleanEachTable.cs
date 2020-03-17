@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using Automation;
 using Common;
 using Common.Tests;
 using Database;
@@ -15,7 +16,7 @@ namespace IntegrationTests
     public class CleanEachTable
     {
         [Test]
-        [Category("CleanEachTable")]
+        [Category(UnitTestCategories.CleanEachTable)]
         [SuppressMessage("ReSharper", "UnusedVariable")]
         public void TryCleaningEachTable()
         {

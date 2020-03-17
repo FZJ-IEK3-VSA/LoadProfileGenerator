@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Automation;
 using Automation.ResultFiles;
 using CalculationController.DtoFactories;
 using CalculationEngine.Helper;
@@ -19,7 +20,7 @@ namespace Calculation.Tests.Transportation
     public class CalcTransportationDeviceTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void CalcDistanceDurationTest()
         {
             //_calcParameters.InitializeTimeSteps(new DateTime(2015,1,1), new DateTime(2015, 5, 1),new TimeSpan(0, 1, 0),3,false);
@@ -36,7 +37,7 @@ namespace Calculation.Tests.Transportation
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void CalcTransportationDeviceDriveTest()
         {
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());

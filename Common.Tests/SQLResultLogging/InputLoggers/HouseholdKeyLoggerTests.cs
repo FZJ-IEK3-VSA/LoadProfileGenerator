@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Automation;
 using Automation.ResultFiles;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
@@ -11,7 +12,7 @@ namespace Common.Tests.SQLResultLogging.InputLoggers
     public class HouseholdKeyLoggerTests : UnitTestBaseClass
     {
         [Test()]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunTest()
         {
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());

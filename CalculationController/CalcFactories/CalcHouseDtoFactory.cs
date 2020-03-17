@@ -123,7 +123,7 @@ namespace CalculationController.CalcFactories {
                 householdIndex++;
             }
 
-            var spaceHeating = CreateSpaceHeatingObject(house, temperatureProfile, 
+            var spaceHeating = CreateSpaceHeatingObject(house, temperatureProfile,
                 houseKey, out var heatingLocation,_calcParameters.InternalStartTime,_calcParameters.InternalEndTime
                 ,_ltDict); //, taggingSets);
             if (heatingLocation != null) {

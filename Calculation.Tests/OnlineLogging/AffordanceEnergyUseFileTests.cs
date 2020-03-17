@@ -1,4 +1,5 @@
-﻿using Automation.ResultFiles;
+﻿using Automation;
+using Automation.ResultFiles;
 using CalculationController.DtoFactories;
 using CalculationEngine.OnlineLogging;
 using Common;
@@ -16,7 +17,7 @@ namespace Calculation.Tests.OnlineLogging
     public class AffordanceEnergyUseFileTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RegisterDeviceActivationTest()
         {
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());

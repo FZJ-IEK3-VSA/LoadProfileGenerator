@@ -1,4 +1,5 @@
 ﻿using System.Threading;
+using Automation;
 using ChartCreator2.SettlementMergePlots;
 using Common.Tests;
 using NUnit.Framework;
@@ -10,7 +11,7 @@ namespace ChartCreator2.Tests.SettlementCharts
     public class MergedDevicePlotTests : UnitTestBaseClass
     {
         [Test]
-        [Category("QuickChart")]
+        [Category(UnitTestCategories.ManualOnly)]
         public void RunTest()
         {
             MergedDevicePlot.Run(@"e:\MergedDeviceProfiles.csv", @"G:\masterbatch");

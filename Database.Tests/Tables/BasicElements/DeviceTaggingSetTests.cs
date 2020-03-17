@@ -27,6 +27,7 @@
 //-----------------------------------------------------------------------
 
 using System.Collections.ObjectModel;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Common.Tests;
@@ -38,7 +39,7 @@ namespace Database.Tests.Tables.BasicElements {
     public class DeviceTaggingSetTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void DeviceTaggingSetTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
 
@@ -80,7 +81,7 @@ namespace Database.Tests.Tables.BasicElements {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void DeviceTaggingSetTestNone() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
 

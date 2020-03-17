@@ -10,7 +10,7 @@ using NUnit.Framework;
 namespace ChartCreator2.Tests.Oxyplot {
     [TestFixture]
     [Apartment(ApartmentState.STA)]
-    [Category("BasicTest")]
+    [Category(UnitTestCategories.BasicTest)]
     public class ActivityPercentageTests : UnitTestBaseClass
     {
         [Test]

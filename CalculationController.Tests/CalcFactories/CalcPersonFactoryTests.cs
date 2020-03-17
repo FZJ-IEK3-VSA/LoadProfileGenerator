@@ -28,6 +28,7 @@
 
 using System;
 using System.Collections.Generic;
+using Automation;
 using Automation.ResultFiles;
 using CalculationController.DtoFactories;
 using CalculationEngine.Helper;
@@ -45,7 +46,7 @@ namespace CalculationController.Tests.CalcFactories {
     public class CalcPersonFactoryTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void AddMoreDesiresTest()
         {
             Config.IsInUnitTesting = true;

@@ -1,4 +1,5 @@
 ﻿using System.Threading;
+using Automation;
 using CalculationController.Integrity;
 using Common;
 using Common.Tests;
@@ -12,7 +13,7 @@ namespace LoadProfileGenerator.Tests {
     public class HouseholdTemplateCreatorTests : UnitTestBaseClass
     {
         [Test]
-        [Category("LongTest2")]
+        [Category(UnitTestCategories.LongTest2)]
         public void RunHouseholdTemplateCreatorTest()
         {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.LoadProfileGenerator);

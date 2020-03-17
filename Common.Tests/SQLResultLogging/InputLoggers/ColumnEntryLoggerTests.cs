@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Automation;
 using Automation.ResultFiles;
 using Common.CalcDto;
 using Common.JSON;
@@ -12,7 +13,7 @@ namespace Common.Tests.SQLResultLogging.InputLoggers {
     public class ColumnEntryLoggerTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunTest()
         {
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());

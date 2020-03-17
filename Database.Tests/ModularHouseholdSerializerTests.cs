@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Automation;
 using CalculationController.Integrity;
 using Common;
 using Common.Enums;
@@ -14,7 +15,7 @@ namespace Database.Tests {
         /// exportiert alle haushalte und reimportiert sie einmal
         /// </summary>
         [Test]
-        [Category("LongTest2")]
+        [Category(UnitTestCategories.LongTest2)]
         public void Run() {
             Logger.Info("Starting test");
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(),DatabaseSetup.TestPackage.DatabaseIo);
@@ -47,7 +48,7 @@ namespace Database.Tests {
         }
         /*
         [Test]
-        [Category("QuickChart")]
+        [Category(UnitTestCategories.ManualOnly)]
         public void RunJuelich() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(),DatabaseSetup.TestPackage.DatabaseIo);
             var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());

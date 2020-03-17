@@ -97,7 +97,7 @@ namespace LoadProfileGenerator.Tests {
         }*/
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
 #pragma warning restore S125 // Sections of code should not be "commented out"
         public void RunTemplatePersonCreation() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.LoadProfileGenerator);
@@ -108,7 +108,7 @@ namespace LoadProfileGenerator.Tests {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void TemplatePersonFullCalculationTest() {
             //TODO: fix this test
             var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());

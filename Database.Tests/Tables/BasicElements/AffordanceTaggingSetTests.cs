@@ -27,6 +27,7 @@
 //-----------------------------------------------------------------------
 
 using System.Collections.ObjectModel;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Common.Enums;
@@ -39,7 +40,7 @@ namespace Database.Tests.Tables.BasicElements {
     public class AffordanceTaggingSetTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void AffordanceTaggingSetTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             db.ClearTable(AffordanceTaggingSet.TableName);
@@ -87,7 +88,7 @@ namespace Database.Tests.Tables.BasicElements {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void AffordanceTaggingSetTestNone() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             var sim = new Simulator(db.ConnectionString);
@@ -107,7 +108,7 @@ namespace Database.Tests.Tables.BasicElements {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RemoveAllOldEntriesTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             var sim = new Simulator(db.ConnectionString);

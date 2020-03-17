@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.IO;
+using Automation;
 using Automation.ResultFiles;
 using CalculationController.DtoFactories;
 using CalculationEngine.HouseholdElements;
@@ -18,7 +19,7 @@ namespace Calculation.Tests.OnlineLogging {
     public class FileFactoryAndTrackerTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void FileFactoryAndTrackerTest()
         {
             Config.IsInUnitTesting = true;

@@ -94,7 +94,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
         ///     For example if a TV with standby use is turned on, then it is not running in standby simultanously.
         /// </summary>
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void OnlineDeviceActivationProcessorSetToZeroTest()
         {
             var rnd = new Random(1);
@@ -225,7 +225,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void OnlineDeviceActivationProcessorTest()
         {
             var rnd = new Random(1);
@@ -280,7 +280,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
 
         [Test]
         [SuppressMessage("ReSharper", "CollectionNeverUpdated.Local")]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void PostProcessingTestSingleActivation()
         {
             CalculationProfiler calculationProfiler = new CalculationProfiler();
@@ -447,7 +447,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
 
         [Test]
         [SuppressMessage("ReSharper", "CollectionNeverUpdated.Local")]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void PostProcessingTestTwoActivation()
         {
             var startdate = new DateTime(2018, 1, 1);
@@ -587,7 +587,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunCalcStarter()
         {
             var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());

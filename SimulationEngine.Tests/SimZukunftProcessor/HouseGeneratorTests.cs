@@ -22,7 +22,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
     public class HouseGeneratorTests
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunMatchingTest()
         {
             PersonCategory pc10Male = new PersonCategory(10, PermittedGender.Male);
@@ -76,7 +76,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void HouseGeneratorTest()
         {
             Logger.Get().StartCollectingAllMessages();
@@ -130,7 +130,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
             }
         }
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void HouseGeneratorTransportationTest()
         {
             DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.SimulationEngine);
@@ -238,7 +238,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
 
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void HouseGeneratorModifiedRouteTest()
         {
             DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.SimulationEngine);
@@ -325,7 +325,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void HouseGeneratorWithSkipExisitingTest()
         {
             Logger.Get().StartCollectingAllMessages();
@@ -387,7 +387,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         }
 
         [Test]
-        [Category("ManualOnly")]
+        [Category(UnitTestCategories.ManualOnly)]
         public void HouseGeneratorTestFullList()
         {
             DirectoryInfo di = new DirectoryInfo(@"V:\BurgdorfStatistics\Present\08-ValidationExporting # 005-LPGExporter");
@@ -399,7 +399,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void HouseGeneratorFullTest()
         {
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());

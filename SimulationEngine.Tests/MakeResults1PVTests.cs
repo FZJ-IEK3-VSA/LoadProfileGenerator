@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Automation;
 using NUnit.Framework;
 
 namespace SimulationEngine.Tests
@@ -7,7 +8,7 @@ namespace SimulationEngine.Tests
     public class MakeResults1PvTests
     {
         [Test]
-        [Category("QuickChart")]
+        [Category(UnitTestCategories.ManualOnly)]
         public void RunTest()
         {
             SimulationEngineTestPreparer se = new SimulationEngineTestPreparer("MakeResults1PV");

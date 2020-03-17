@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using Automation;
 using Common;
 using Common.JSON;
 using Common.Tests;
@@ -18,7 +19,7 @@ namespace SimulationEngine.Tests
     public class MasterBatchfileTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void TestSettlementInformation()
         {
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
@@ -35,7 +36,7 @@ namespace SimulationEngine.Tests
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         [Test]
-        [Category("QuickChart")]
+        [Category(UnitTestCategories.ManualOnly)]
         public void RunNaturalLightBatch()
         {
             Program.IsUnitTest = true;
@@ -51,7 +52,7 @@ namespace SimulationEngine.Tests
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         [Test]
-        [Category("QuickChart")]
+        [Category(UnitTestCategories.ManualOnly)]
         public void RunTest()
         {
             SimulationEngineTestPreparer se = new SimulationEngineTestPreparer("MasterBatch");
@@ -78,7 +79,7 @@ namespace SimulationEngine.Tests
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         [Test]
-        [Category("ManualOnly")]
+        [Category(UnitTestCategories.ManualOnly)]
         public void PdfReplacerTest()
         {
             SimulationEngineTestPreparer se = new SimulationEngineTestPreparer("MasterBatch");

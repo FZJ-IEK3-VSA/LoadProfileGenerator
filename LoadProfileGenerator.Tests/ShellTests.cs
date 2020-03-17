@@ -1,4 +1,5 @@
-﻿using Common;
+﻿using Automation;
+using Common;
 using Common.Tests;
 using Database;
 using Database.Tests;
@@ -10,7 +11,7 @@ namespace LoadProfileGenerator.Tests
     public class ShellTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void UpdateVacationsInHouseholdTemplates1Test()
         {
             DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.LoadProfileGenerator);

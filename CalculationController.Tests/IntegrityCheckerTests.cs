@@ -27,6 +27,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using Automation;
 using CalculationController.Integrity;
 using Common;
 using Common.Tests;
@@ -41,7 +42,7 @@ namespace CalculationController.Tests
     public class IntegrityCheckerTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void CheckSimIntegrityCheckerTest()
         {
             CleanTestBase.RunAutomatically(false);
@@ -57,7 +58,7 @@ namespace CalculationController.Tests
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void CheckSimIntegrityCheckerBenchmark()
         {
             CleanTestBase.RunAutomatically(false);
@@ -79,7 +80,7 @@ namespace CalculationController.Tests
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void SimHouseIntegiryChecker()
         {
             CleanTestBase.RunAutomatically(false);

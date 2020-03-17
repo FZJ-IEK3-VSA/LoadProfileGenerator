@@ -29,6 +29,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using Automation;
 using Automation.ResultFiles;
 using CalculationController.DtoFactories;
 using CalculationEngine.Helper;
@@ -45,7 +46,7 @@ namespace Calculation.Tests.OnlineDeviceLogging {
     public class OnlineDeviceStateMachineTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void OnlineDeviceStateMachineTest()
         {
             var startdate = new DateTime(2018, 1, 1);

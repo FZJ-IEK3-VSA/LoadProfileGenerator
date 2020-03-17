@@ -32,6 +32,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Automation;
 using Common;
 using Common.Tests;
 using Database.Helpers;
@@ -45,7 +46,7 @@ namespace Database.Tests.Tables {
     public class TimeLimitTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void TimeLimitArrayTestDateProfileTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             db.ClearTable(TimeLimit.TableName);
@@ -86,7 +87,7 @@ namespace Database.Tests.Tables {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void TimeLimitArrayTestlightControlledTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             db.ClearTable(TimeLimit.TableName);
@@ -122,7 +123,7 @@ namespace Database.Tests.Tables {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void TimeLimitArrayTestTemperatureControlledTest() {
             // test temperatures
             var temp = new TemperatureProfile("blub", 1, "bla", string.Empty, Guid.NewGuid().ToString());
@@ -154,7 +155,7 @@ namespace Database.Tests.Tables {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void TimeLimitBoolEntryLoadCreationAndSaveTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             db.ClearTable(TimeLimit.TableName);
@@ -191,7 +192,7 @@ namespace Database.Tests.Tables {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void TimeLimitLoadCreationAndSaveTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             db.ClearTable(TimeLimit.TableName);

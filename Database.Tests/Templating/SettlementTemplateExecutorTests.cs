@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Automation;
 using CalculationController.Integrity;
 using Common;
 using Common.Tests;
@@ -10,7 +11,7 @@ namespace Database.Tests.Templating {
     public class SettlementTemplateExecutorTests : UnitTestBaseClass
     {
         [Test]
-        [Category("LongTest5")]
+        [Category(UnitTestCategories.LongTest5)]
         public void GenerateSettlementPreviewTest()
         {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
@@ -24,7 +25,7 @@ namespace Database.Tests.Templating {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void InitializeHouseSizesTest()
         {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);

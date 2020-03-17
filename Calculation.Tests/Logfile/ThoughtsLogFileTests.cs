@@ -28,6 +28,7 @@
 
 using System;
 using System.Collections;
+using Automation;
 using Automation.ResultFiles;
 using CalculationController.DtoFactories;
 using CalculationEngine.HouseholdElements;
@@ -45,7 +46,7 @@ namespace Calculation.Tests.Logfile
     public class ThoughtsLogFileTests : TestBasis
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void BasicTest()
         {
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());

@@ -29,6 +29,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Windows.Media;
+using Automation;
 using Common;
 using Common.Enums;
 using Common.Tests;
@@ -41,7 +42,7 @@ namespace Database.Tests.Tables {
     public class AffordanceDeviceTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void LoadFromDatabaseTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             var affdev = new ObservableCollection<AffordanceDevice>();

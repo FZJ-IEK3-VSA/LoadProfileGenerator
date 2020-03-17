@@ -1,4 +1,5 @@
-﻿using Automation.ResultFiles;
+﻿using Automation;
+using Automation.ResultFiles;
 using Common;
 using Database.Helpers;
 using NUnit.Framework;
@@ -9,7 +10,7 @@ namespace Database.Tests.Helpers
     public class DatabaseVersionCheckerTest
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void Run()
         {
             DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Automation;
 using Automation.ResultFiles;
 using Common.CalcDto;
 using Common.SQLResultLogging;
@@ -12,7 +13,7 @@ namespace Common.Tests.SQLResultLogging.Loggers
     public class DeviceActivationEntryLoggerTests : UnitTestBaseClass
     {
         [Test()]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void ReadTest()
         {
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());

@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Common.Tests;
@@ -21,7 +22,7 @@ using NUnit.Framework;
 namespace IntegrationTests {
     public class ObligatoryEmptyTest {
         [Test]
-        [Category("CleanEachTable")]
+        [Category(UnitTestCategories.CleanEachTable)]
 
         public void CategoryLessConfirmationTest()
         {
@@ -442,7 +443,7 @@ namespace IntegrationTests {
         [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "oldSim")]
         [Test]
         [SuppressMessage("ReSharper", "UnusedVariable")]
-        [Category("LongTermMerge")]
+        [Category(UnitTestCategories.LongTermMerge)]
         public void LoadEmptyDatabase()
         {
             CleanTestBase.RunAutomatically(false);
@@ -461,20 +462,20 @@ namespace IntegrationTests {
         }
 
         [Test]
-        [Category("LongTermMerge")]
+        [Category(UnitTestCategories.LongTermMerge)]
         public void RunTest124WithClear() => TestImport("profilegenerator124.db3", true,ClearMode.NoClearing);
 
         [Test]
-        [Category("LongTermMerge")]
+        [Category(UnitTestCategories.LongTermMerge)]
         public void RunTest240SMAWithClear() => TestImport("profilegenerator240SMA.db3", true,ClearMode.NoClearing);
 
         [Test]
-        [Category("LongTermMerge")]
+        [Category(UnitTestCategories.LongTermMerge)]
         public void RunTest520SimonWithClear() => TestImport("profilegenerator520_simon.db3",
             true,ClearMode.NoClearing);
 
         [Test]
-        [Category("LongTermMerge")]
+        [Category(UnitTestCategories.LongTermMerge)]
         public void RunTestCurrentVersionIdentical()
         {
             // tests with the current database without any changes. this should find nothing to import
@@ -500,7 +501,7 @@ namespace IntegrationTests {
         }
 
         [Test]
-        [Category("LongTermMerge")]
+        [Category(UnitTestCategories.LongTermMerge)]
         public void RunTestCurrentVersionWithClear()
         {
             HouseholdPlan.FailOnIncorrectImport = true;
@@ -518,7 +519,7 @@ namespace IntegrationTests {
         }
         /*
         [Test]
-        [Category("LongTermMerge")]
+        [Category(UnitTestCategories.LongTermMerge)]
         public void RunTestCurrentVersionWithClearFast()
         {
             HouseholdPlan.FailOnIncorrectImport = true;
@@ -537,7 +538,7 @@ namespace IntegrationTests {
         }*/
 
         [Test]
-        [Category("LongTermMerge")]
+        [Category(UnitTestCategories.LongTermMerge)]
         public void RunTestSMA381()
         {
             DeviceCategory.ThrowExceptionOnImportWithMissingParent = true;
@@ -546,7 +547,7 @@ namespace IntegrationTests {
         }
 
         [Test]
-        [Category("LongTermMerge")]
+        [Category(UnitTestCategories.LongTermMerge)]
         public void Version520TimeLimitImport()
         {
             string sourcefilepath = DatabaseSetup.GetImportFileFullPath("profilegenerator520_simon.db3",DatabaseSetup.TestPackage.LongTermMerger);

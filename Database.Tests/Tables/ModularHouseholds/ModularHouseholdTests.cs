@@ -44,7 +44,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
     public class ModularHouseholdTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void ModularHouseholdJsonTest()
         {
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
@@ -105,7 +105,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
 
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void ModularHouseholdOldImportTest()
         {
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
@@ -137,7 +137,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void SwapPersonsTestWithOther()
         {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
@@ -155,7 +155,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void SwapTagTest()
         {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
@@ -174,7 +174,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
 
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void ModularHouseholdJsonImportExporTest()
         {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
@@ -195,7 +195,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void ModularHouseholdTest()
         {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);

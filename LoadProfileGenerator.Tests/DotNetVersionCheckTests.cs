@@ -1,4 +1,5 @@
-﻿using Common.Tests;
+﻿using Automation;
+using Common.Tests;
 using NUnit.Framework;
 using Logger = Common.Logger;
 
@@ -7,7 +8,7 @@ namespace LoadProfileGenerator.Tests {
     public class DotNetVersionCheckTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void GetReleaseKeyTest()
         {
             var version = DotNetVersionCheck.GetReleaseKey();

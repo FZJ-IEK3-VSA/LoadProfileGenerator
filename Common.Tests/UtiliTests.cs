@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using Automation;
+using NUnit.Framework;
 
 namespace Common.Tests
 {
@@ -6,7 +7,7 @@ namespace Common.Tests
     public class UtiliTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void GetCurrentMethodAndClassTest()
         {
             string s = Utili.GetCurrentMethodAndClass();

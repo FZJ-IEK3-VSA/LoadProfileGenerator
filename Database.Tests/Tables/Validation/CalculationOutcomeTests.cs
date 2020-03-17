@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables.Validation;
@@ -10,7 +11,7 @@ namespace Database.Tests.Tables.Validation {
     public class CalculationOutcomeTests : UnitTestBaseClass
     {
         [Test]
-        [Category("LongTest1")]
+        [Category(UnitTestCategories.LongTest1)]
         public void CalculationOutcomeTest() {
             Config.ShowDeleteMessages = false;
             Logger.Threshold = Severity.Error;
@@ -32,7 +33,7 @@ namespace Database.Tests.Tables.Validation {
         }
 
         [Test]
-        [Category("LongTest1")]
+        [Category(UnitTestCategories.LongTest1)]
         public void CalculationOutcomeTest2() {
             Config.ShowDeleteMessages = false;
             Logger.Threshold = Severity.Error;

@@ -23,7 +23,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
     {
 
         [Test]
-        [Category("ManualOnly")]
+        [Category(UnitTestCategories.ManualOnly)]
         public void HouseGeneratorTestForPrecreated()
         {
             //setup
@@ -38,7 +38,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
             MakeAndCalculateHouseJob(houseJob, sim, wd);
         }
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void HouseGeneratorTestWithPersonSpecAndTransport()
         {
             //setup
@@ -71,7 +71,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
             MakeAndCalculateHouseJob(houseJob, sim, wd);
         }
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void HouseGeneratorTestWithPersonSpec()
         {
             //setup
@@ -98,7 +98,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
 
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void HouseGeneratorTestWithTemplateSpec()
         {
             //setup
@@ -122,7 +122,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void HouseJobForHeatpump()
         {
             //setup
@@ -163,7 +163,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void HouseJobForHouseTypes()
         {
             //setup
@@ -171,9 +171,9 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
             DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.SimulationEngine);
             Simulator sim = new Simulator(db.ConnectionString);
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            int count = 0;
+            //int count = 0;
             foreach (var houseType in sim.HouseTypes.It) {
-                count++;
+                //count++;
                 if(!houseType.Name.StartsWith("HT21")) {
                     continue;
                 }
@@ -181,7 +181,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
                 Logger.Get().StartCollectingAllMessages();
                 string htcode = houseType.Name.Substring(0, 4);
                 //housedata
-                int targetheatdemand = 10000;
+                const int targetheatdemand = 10000;
                 HouseData houseData = new HouseData(Guid.NewGuid().ToString(),htcode, targetheatdemand, 1000, "HouseGeneratorJobHouse");
                 HouseCreationAndCalculationJob houseJob = new HouseCreationAndCalculationJob("present", "2019", "trafokreis");
                 houseJob.House = houseData;
@@ -227,7 +227,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void HouseGeneratorTestWithHouseholdSpec()
         {
             //setup

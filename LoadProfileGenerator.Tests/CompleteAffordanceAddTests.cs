@@ -1,4 +1,5 @@
-﻿using CalculationController.Integrity;
+﻿using Automation;
+using CalculationController.Integrity;
 using Common;
 using Common.Tests;
 using Database;
@@ -14,7 +15,7 @@ namespace LoadProfileGenerator.Tests
     public class CompleteAffordanceAddTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void CompleteAffordanceCreatorTest()
         {
             DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.LoadProfileGenerator);

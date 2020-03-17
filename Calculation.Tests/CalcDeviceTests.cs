@@ -28,6 +28,7 @@
 
 using System;
 using System.Collections.Generic;
+using Automation;
 using Automation.ResultFiles;
 using CalculationController.DtoFactories;
 using CalculationEngine.HouseholdElements;
@@ -43,7 +44,7 @@ namespace Calculation.Tests {
     [TestFixture]
     public class CalcDeviceTests : TestBasis {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void SetTimeprofileTest()
         {
             DateTime startdate = new DateTime(2018, 1, 1);

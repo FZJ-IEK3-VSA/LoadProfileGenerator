@@ -13,7 +13,7 @@ namespace CalculationController.Tests.InputLoggers {
     public class TemperatureLoggerTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunTest()
         {
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());

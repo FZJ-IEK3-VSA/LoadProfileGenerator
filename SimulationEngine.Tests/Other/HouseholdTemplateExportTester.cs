@@ -1,4 +1,5 @@
 ﻿using System;
+using Automation;
 using Common;
 using Database;
 using Database.Tables.ModularHouseholds;
@@ -12,7 +13,7 @@ namespace SimulationEngine.Tests.Other
     public class HouseholdTemplateExportTester
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunHouseholdTemplateTests()
         {
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
@@ -29,7 +30,7 @@ namespace SimulationEngine.Tests.Other
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunHouseholdTraits()
         {
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
@@ -46,7 +47,7 @@ namespace SimulationEngine.Tests.Other
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunHouseholdTraitsWithDeviceCategories()
         {
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
@@ -59,7 +60,7 @@ namespace SimulationEngine.Tests.Other
             hte.Export(hteo);
         }
         [Test]
-        [Category("LongTest5")]
+        [Category(UnitTestCategories.LongTest5)]
         public void RunModularHouseholdTests()
         {
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());

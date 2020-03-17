@@ -16,7 +16,7 @@ namespace CalcPostProcessorTests
     public class PostProcessingManagerTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void Run()
         {
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());

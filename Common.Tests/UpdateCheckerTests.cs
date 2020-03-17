@@ -1,4 +1,5 @@
 ﻿using System;
+using Automation;
 using NUnit.Framework;
 
 namespace Common.Tests
@@ -7,7 +8,7 @@ namespace Common.Tests
     public class UpdateCheckerTests : UnitTestBaseClass
     {
         [Test()]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void GetLatestVersionTest()
         {
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());

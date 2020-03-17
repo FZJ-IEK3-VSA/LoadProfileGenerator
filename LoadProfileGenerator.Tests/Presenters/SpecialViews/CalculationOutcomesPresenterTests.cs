@@ -15,7 +15,7 @@ namespace LoadProfileGenerator.Tests.Presenters.SpecialViews
     {
         [Test]
         [Apartment(ApartmentState.STA)]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
 
         public void StartCalcOutcomesChart()
         {
@@ -27,7 +27,7 @@ namespace LoadProfileGenerator.Tests.Presenters.SpecialViews
         }
 
         [Test]
-        [Category("LongTest3")]
+        [Category(UnitTestCategories.LongTest3)]
         public void StartOneCalculationTest()
         {
             DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.LoadProfileGenerator);

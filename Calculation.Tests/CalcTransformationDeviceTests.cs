@@ -30,6 +30,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Automation;
 using Automation.ResultFiles;
 using CalculationController.DtoFactories;
 using CalculationEngine.HouseElements;
@@ -44,7 +45,7 @@ namespace Calculation.Tests {
     [TestFixture]
     public class CalcTransformationDeviceTests : TestBasis {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void ProcessOneTransformationDeviceTimestepTest()
         {
             var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
@@ -102,7 +103,7 @@ namespace Calculation.Tests {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void ProcessOneTimestepTestVariableFactor()
         {
             var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());

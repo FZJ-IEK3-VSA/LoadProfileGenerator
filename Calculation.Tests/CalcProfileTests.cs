@@ -29,6 +29,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Automation;
 using CalculationEngine.HouseholdElements;
 using Common.CalcDto;
 using Common.Tests;
@@ -39,7 +40,7 @@ namespace Calculation.Tests {
     public class CalcProfileTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void CompressExpandDoubleArrayExpand1ShouldWork()
         {
             var tmparr = new List<double>();
@@ -59,7 +60,7 @@ namespace Calculation.Tests {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void CompressExpandDoubleArrayExpand2ShouldWork()
         {
             var tmparr = new List<double>();
@@ -76,7 +77,7 @@ namespace Calculation.Tests {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public static void CompressExpandDoubleArrayExpand3ShouldWork()
         {
             double[] tmparr = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
@@ -107,7 +108,7 @@ namespace Calculation.Tests {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void CompressExpandDoubleArrayShrink1ShouldWork()
         {
             double[] tmparr = {1, 2, 3, 4};
@@ -121,7 +122,7 @@ namespace Calculation.Tests {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void CompressExpandDoubleArrayShrink2ShouldWork()
         {
             double[] tmparr = {1, 2, 3, 4, 5};

@@ -15,7 +15,7 @@ namespace CalculationController.Tests
     public class DegreeDayFactoryTests
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void Run()
         {
             //WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());

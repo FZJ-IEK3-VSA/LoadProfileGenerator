@@ -14,7 +14,7 @@ namespace ChartCreator2.Tests.PDF {
     public class MigraPDFCreatorTests : UnitTestBaseClass
     {
         [Test]
-        [Category("LongTest4")]
+        [Category(UnitTestCategories.LongTest4)]
         public void MakeDocumentTest() {
             var cs = new OxyCalculationSetup(Utili.GetCurrentMethodAndClass());
             var name = cs.StartHousehold(1, GlobalConsts.CSVCharacter,
@@ -36,7 +36,7 @@ namespace ChartCreator2.Tests.PDF {
         }
 
         [Test]
-        [Category("QuickChart")]
+        [Category(UnitTestCategories.ManualOnly)]
         public void MakeDocumentTestFull() {
             var cs = new OxyCalculationSetup(Utili.GetCurrentMethodAndClass());
             var name = cs.StartHousehold(1,  GlobalConsts.CSVCharacter,
@@ -55,7 +55,7 @@ namespace ChartCreator2.Tests.PDF {
         }
         /*
         [Test]
-        [Category("QuickChart")]
+        [Category(UnitTestCategories.ManualOnly)]
         public void MakeDocumentTestFullPDF() {
             var path = @"E:\unittest\MigraPDFCreatorTests.MakeDocumentTestFull";
             var di = new DirectoryInfo(path);
@@ -74,7 +74,7 @@ namespace ChartCreator2.Tests.PDF {
 #pragma warning disable S2583 // Conditions should not unconditionally evaluate to "true" or to "false"
 
         [Test]
-        [Category("TestToFix")]
+        [Category(UnitTestCategories.BrokenTest)]
         public void MakeFullPDFDocumentTest() {
             //const bool blub = true;
             //// doesn't work on the testing server somehow

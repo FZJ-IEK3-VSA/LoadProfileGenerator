@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Automation;
 using Automation.ResultFiles;
 using CalculationController.DtoFactories;
 using CalculationEngine.HouseholdElements;
@@ -19,7 +20,7 @@ namespace Calculation.Tests.Transportation {
     public class CalcSiteTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void TestCalcSite()
         {
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());

@@ -31,6 +31,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Media;
+using Automation;
 using Automation.ResultFiles;
 using CalculationController.DtoFactories;
 using CalculationEngine.Helper;
@@ -54,7 +55,7 @@ namespace Calculation.HouseholdElements.Tests
     {
         [Test()]
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void PickRandomAffordanceFromEquallyAttractiveOnesTest()
         {
             CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();
@@ -120,7 +121,7 @@ namespace Calculation.Tests.HouseholdElements {
     [TestFixture]
     public class CalcPersonTests : TestBasis {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void NextStepTest() {
             DateTime startdate = new DateTime(2018, 1, 1);
             DateTime enddate = startdate.AddMinutes(100);
@@ -213,7 +214,7 @@ namespace Calculation.Tests.HouseholdElements {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void TestInterruptionTest() {
             DateTime startdate = new DateTime(2018, 1, 1);
             DateTime enddate = startdate.AddMinutes(100);

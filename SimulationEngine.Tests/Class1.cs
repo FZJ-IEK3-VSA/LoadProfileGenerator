@@ -1,4 +1,5 @@
 ﻿using System;
+using Automation;
 using Common;
 using Common.Tests;
 using NUnit.Framework;
@@ -9,7 +10,7 @@ namespace SimulationEngine.Tests
     public class CalculationOptionProcessorTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void DateTimeTests()
         {
             Program.CatchErrors = false;

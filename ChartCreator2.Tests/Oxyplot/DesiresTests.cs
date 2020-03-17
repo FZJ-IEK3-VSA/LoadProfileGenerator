@@ -13,7 +13,7 @@ namespace ChartCreator2.Tests.Oxyplot {
     public class DesiresTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void MakePlotTest() {
             CleanTestBase.RunAutomatically(false);
             var cs = new OxyCalculationSetup(Utili.GetCurrentMethodAndClass());

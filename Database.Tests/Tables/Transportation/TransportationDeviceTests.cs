@@ -11,7 +11,7 @@ namespace Database.Tests.Tables.Transportation {
     [TestFixture]
     public class TransportationDeviceTests : UnitTestBaseClass {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void TransportationDeviceTest()
         {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
@@ -45,7 +45,7 @@ namespace Database.Tests.Tables.Transportation {
 
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void TransportationDeviceImportTest()
         {
             var db1 = new DatabaseSetup(Utili.GetCurrentMethodAndClass() + "1", DatabaseSetup.TestPackage.DatabaseIo);

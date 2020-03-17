@@ -14,7 +14,7 @@ namespace ChartCreator2.Tests.Oxyplot {
     public class AffordanceTaggingSetTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void MakePlotTest()
         {
             CleanTestBase.RunAutomatically(false);
@@ -44,7 +44,7 @@ namespace ChartCreator2.Tests.Oxyplot {
         }
         /*
         [Test]
-        [Category("QuickChart")]
+        [Category(UnitTestCategories.ManualOnly)]
         public void MakePlotTestMini()
         {
             ChartLocalizer.ShouldTranslate = true;

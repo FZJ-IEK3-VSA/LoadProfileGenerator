@@ -16,7 +16,7 @@ namespace DatabaseIO.Tables.BasicHouseholds.Tests
     public class RealDeviceTests : UnitTestBaseClass
     {
         [Test()]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void ImportFromOtherDeviceTest()
         {
             DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
@@ -36,7 +36,7 @@ namespace DatabaseIO.Tests.Tables.BasicHouseholds {
     public class RealDeviceTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void CalculateAverageEnergyUseTestAbsoluteProfile() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
 
@@ -67,7 +67,7 @@ namespace DatabaseIO.Tests.Tables.BasicHouseholds {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void CalculateAverageEnergyUseTestRelativeProfile() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
 

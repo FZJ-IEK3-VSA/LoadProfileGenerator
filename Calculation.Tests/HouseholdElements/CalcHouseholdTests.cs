@@ -26,7 +26,7 @@ namespace Calculation.HouseholdElements.Tests {
     public class CalcHouseholdTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void DumpHouseholdContentsToTextTest()
         {
             var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass());
@@ -81,7 +81,7 @@ namespace Calculation.Tests.HouseholdElements {
     public class CalcHouseholdTests : UnitTestBaseClass
     {
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void MatchAutonomousDevicesWithNormalDevicesTest()
         {
             // make different devices at different locations

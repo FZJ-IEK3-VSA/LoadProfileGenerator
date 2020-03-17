@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
+using Automation;
 using Common;
 using Common.Tests;
 using JetBrains.Annotations;
@@ -24,7 +25,7 @@ namespace SimulationEngine.Tests {
         }
 
         [Test]
-        [Category("BasicTest")]
+        [Category(UnitTestCategories.BasicTest)]
         public void RunTest() {
             var se = new SimulationEngineTestPreparer(Utili.GetCurrentMethodAndClass());
             var srcPath = se.WorkingDirectory;
@@ -39,7 +40,7 @@ namespace SimulationEngine.Tests {
         }
 
         [Test]
-        [Category("QuickChart")]
+        [Category(UnitTestCategories.ManualOnly)]
         public void RunQuickTest()
         {
             if(Directory.Exists(@"Z:\IEEEv7\SettlementProcessing")) {
