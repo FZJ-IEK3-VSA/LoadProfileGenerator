@@ -174,9 +174,9 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
             //int count = 0;
             foreach (var houseType in sim.HouseTypes.It) {
                 //count++;
-                if(!houseType.Name.StartsWith("HT21")) {
-                    continue;
-                }
+             //   if(!houseType.Name.StartsWith("HT21")) {
+               //     continue;
+                //}
 
                 Logger.Get().StartCollectingAllMessages();
                 string htcode = houseType.Name.Substring(0, 4);
@@ -217,7 +217,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
                     foreach (var totalsEntry in res) {
                         Console.WriteLine(totalsEntry.Loadtype + ": " + totalsEntry.Value);
                         if (totalsEntry.Loadtype.Name == "Space Heating") {
-                            if (Math.Abs(totalsEntry.Value - targetheatdemand) > 0.1) {
+                            if (Math.Abs(totalsEntry.Value - targetheatdemand) > 10) {
                                 throw new LPGException("Target heat demand didn't match for " + houseType.Name);
                             }
                         }

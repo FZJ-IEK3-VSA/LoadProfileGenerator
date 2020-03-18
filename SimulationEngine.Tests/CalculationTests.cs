@@ -650,6 +650,8 @@ namespace SimulationEngine.Tests
             var wd = ProgramTests.SetupDB3(Utili.GetCurrentMethodAndClass());
             Program.CatchErrors = false;
             Program.IsUnitTest = true;
+            DateTime startdate = new DateTime(2015,1,1);
+            DateTime enddate = new DateTime(2015,1,5);
             var arguments = new List<string>
             {
                 "Calculate",
@@ -658,9 +660,9 @@ namespace SimulationEngine.Tests
                 "-CalcObjectNumber",
                 "2",
                 "-StartDate",
-                "01.01.2015",
+                startdate.ToShortDateString(),
                 "-EndDate",
-                "05.01.2015",
+                enddate.ToShortDateString(),
                 "-OutputFileDefault",
                 "Reasonable",
                 "-OutputDirectory",
