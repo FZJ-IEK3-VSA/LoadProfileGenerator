@@ -171,13 +171,19 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
             DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.SimulationEngine);
             Simulator sim = new Simulator(db.ConnectionString);
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            //int count = 0;
+            int count = 0;
             foreach (var houseType in sim.HouseTypes.It) {
-                //count++;
-             //   if(!houseType.Name.StartsWith("HT21")) {
-               //     continue;
-                //}
-
+                count++;
+                if(count < 22) {
+                    continue;
+                }
+                Console.WriteLine("================================================");
+                Console.WriteLine("================================================");
+                Console.WriteLine("================================================");
+                Console.WriteLine("Starting " + houseType.Name);
+                Console.WriteLine("================================================");
+                Console.WriteLine("================================================");
+                Console.WriteLine("================================================");
                 Logger.Get().StartCollectingAllMessages();
                 string htcode = houseType.Name.Substring(0, 4);
                 //housedata
