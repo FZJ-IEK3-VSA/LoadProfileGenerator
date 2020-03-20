@@ -89,6 +89,7 @@ namespace CalculationEngine.Helper
         /// ///     Returns a String representation of the receiver.
         /// </summary>
         /// <returns>the string</returns>
+        [NotNull]
         public override string ToString() => GetType().FullName + "(" + _mean + "," + _standardDeviation + ")";
 
         /// <summary>

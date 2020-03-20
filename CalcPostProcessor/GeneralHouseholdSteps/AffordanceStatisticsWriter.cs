@@ -6,17 +6,16 @@ using Common;
 using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.Loggers;
-using JetBrains.Annotations;
 
 namespace CalcPostProcessor.GeneralHouseholdSteps
 {
     public class AffordanceStatisticsWriter : HouseholdLoadTypeStepBase
     {
         //private int _maxTime;
-        [NotNull] private readonly IInputDataLogger _logger;
+        [JetBrains.Annotations.NotNull] private readonly IInputDataLogger _logger;
 
-        public AffordanceStatisticsWriter([NotNull] CalcDataRepository repository,
-                                             [NotNull] ICalculationProfiler profiler, [NotNull] IInputDataLogger logger)
+        public AffordanceStatisticsWriter([JetBrains.Annotations.NotNull] CalcDataRepository repository,
+                                             [JetBrains.Annotations.NotNull] ICalculationProfiler profiler, [JetBrains.Annotations.NotNull] IInputDataLogger logger)
             : base(repository, AutomationUtili.GetOptionList(CalcOption.AffordanceEnergyUse), profiler, "Affordance Energy Use")
         {
             _logger = logger;
@@ -31,21 +30,21 @@ namespace CalcPostProcessor.GeneralHouseholdSteps
         }
 
         /*
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private Dictionary<HouseholdKey, Dictionary<CalcLoadTypeDto, Dictionary<string, Dictionary<string, double>>>>
             _energyUseListByHouseholdAffordancePersonAndLoadtype;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly Dictionary<HouseholdKey, Dictionary<CalcLoadTypeDto, Dictionary<string, List<double>>>>
             _energyUseListByHouseholdAffordanceAndLoadtype;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Dictionary<HouseholdKey, Dictionary<CalcLoadTypeDto, Dictionary<string, double>>> EnergyUseByHouseholdAffordanceAndLoadtype { get; }
         */
         /*
-        public void RegisterDeviceActivation([NotNull] HouseholdKey householdKey, [NotNull] string affordanceName,
-                                             [NotNull] CalcLoadTypeDto loadType, double value,
-                                             [NotNull] double[] allvalues, [NotNull] string activatorName)
+        public void RegisterDeviceActivation([JetBrains.Annotations.NotNull] HouseholdKey householdKey, [JetBrains.Annotations.NotNull] string affordanceName,
+                                             [JetBrains.Annotations.NotNull] CalcLoadTypeDto loadType, double value,
+                                             [JetBrains.Annotations.NotNull] double[] allvalues, [JetBrains.Annotations.NotNull] string activatorName)
         {
 
             if (!EnergyUseByHouseholdAffordanceAndLoadtype.ContainsKey(householdKey)) {
@@ -95,7 +94,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps
             }
         }*/
         /*
-        public void WriteResults([NotNull] List<CalcAffordanceTaggingSetDto> affTaggingSets)
+        public void WriteResults([JetBrains.Annotations.NotNull] List<CalcAffordanceTaggingSetDto> affTaggingSets)
         {
             if (_wroteResultsAlready)
             {

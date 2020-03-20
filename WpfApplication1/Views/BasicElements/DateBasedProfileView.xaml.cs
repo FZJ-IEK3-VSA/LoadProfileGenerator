@@ -126,10 +126,10 @@ namespace LoadProfileGenerator.Views.BasicElements {
                 return;
             }
             var dr =
-                MessageWindows.ShowYesNoMessage(
+                MessageWindowHandler.Mw.ShowYesNoMessage(
                     "Add these " + Presenter.CsvImporter.Entries.Count + " entries as data points for this profile?",
                     "Add?");
-            if (dr == MessageBoxResult.No) {
+            if (dr == LPGMsgBoxResult.No) {
                 return;
             }
             Presenter.ImportData();
@@ -165,9 +165,9 @@ namespace LoadProfileGenerator.Views.BasicElements {
 
         private void RemoveAlldatapoint_Click([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e) {
             var dr =
-                MessageWindows.ShowYesNoMessage(
+                MessageWindowHandler.Mw.ShowYesNoMessage(
                     "Delete all " + Presenter.ThisProfile.Datapoints.Count + " data points?", "Delete?");
-            if (dr == MessageBoxResult.No) {
+            if (dr == LPGMsgBoxResult.No) {
                 return;
             }
             Presenter.DeleteAllDataPoints();

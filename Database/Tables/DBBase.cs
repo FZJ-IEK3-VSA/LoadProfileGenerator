@@ -53,6 +53,17 @@ using JetBrains.Annotations;
 
 namespace Database.Tables
 {
+    public static class HashSetUtility {
+        [NotNull]
+        public static HashSet<T> ToHashSet<T>([NotNull] this IEnumerable<T> list)
+        {
+            HashSet<T> mySet = new HashSet<T>();
+            foreach (var item in list) {
+                mySet.Add(item);
+            }
+            return mySet;
+        }
+    }
     [Serializable]
     public abstract class DBBase : BasicElement, INotifyPropertyChanged
     {

@@ -36,7 +36,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
 using System.Threading;
-using System.Windows.Controls;
 using Automation;
 using Automation.ResultFiles;
 using Common.Enums;
@@ -116,9 +115,9 @@ namespace Common {
             }
         }
 
-        [CanBeNull]
+        /*[CanBeNull]
         public ListView Lv { get; set; }
-
+        */
         [UsedImplicitly]
         public static Severity Threshold {
             get => _threshold;
@@ -435,6 +434,7 @@ namespace Common {
             [UsedImplicitly]
             public DateTime Time { get;  }
 
+            [NotNull]
             public override string ToString() => "[" + Severity + "] " + Message ;
         }
     }

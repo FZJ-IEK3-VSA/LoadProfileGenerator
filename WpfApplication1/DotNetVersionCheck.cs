@@ -7,7 +7,7 @@ namespace LoadProfileGenerator {
         {
             var key = GetReleaseKey();
             if (key < 461808 && key != 0) {
-                MessageWindows.ShowInfoMessage(
+                MessageWindowHandler.Mw.ShowInfoMessage(
                     "Your version of the .NET Framework seems to be older than 4.7.2. This will most likely cause all kinds of strange problems. " +
                     "Please install the current version to use the LPG. Your current release key is " + key + " which is less than 461808, which Microsoft defines as .NET Framework 4.7.2.",
                     "Version Error");

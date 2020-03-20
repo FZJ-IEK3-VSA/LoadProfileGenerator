@@ -265,8 +265,8 @@ namespace LoadProfileGenerator.Views.Households {
             var chp = (ModularHouseholdPerson) LstChhPersons.SelectedItem;
             var s = "Are you sure you want to delete the person" + Environment.NewLine + chp.Person.PrettyName +
                     Environment.NewLine + "from this household?";
-            var dr = MessageWindows.ShowYesNoMessage(s, "Delete?");
-            if (dr == MessageBoxResult.Yes) {
+            var dr = MessageWindowHandler.Mw.ShowYesNoMessage(s, "Delete?");
+            if (dr == LPGMsgBoxResult.Yes) {
                 Presenter.RemovePerson(chp);
             }
         }
@@ -338,11 +338,11 @@ namespace LoadProfileGenerator.Views.Households {
                         ModularHouseholdSerializer.ExportAsCSV(Presenter.ThisModularHousehold,
                             Presenter.Sim, sfd.FileName);
                         Logger.Info("Finished writing the file.");
-                        MessageWindows.ShowInfoMessage("Finished exporting to " + sfd.FileName, "Finished Export");
+                        MessageWindowHandler.Mw.ShowInfoMessage("Finished exporting to " + sfd.FileName, "Finished Export");
                     }
                     catch (Exception ex) {
                         Logger.Exception(ex);
-                        MessageWindows.ShowDebugMessage(ex);
+                        MessageWindowHandler.Mw.ShowDebugMessage(ex);
                     }
                 }
             }

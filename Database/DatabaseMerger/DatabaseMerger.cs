@@ -203,11 +203,11 @@ namespace Database.DatabaseMerger {
                 throw new LPGException("Something went very wrong in the import!");
             }
             if (DisplayMessageBox && changecount != 0) {
-                MessageWindows.ShowInfoMessage("The import encountered and error. Please check carefully.",
+                 MessageWindowHandler.Mw.ShowInfoMessage("The import encountered and error. Please check carefully.",
                     "Import error.");
             }
             else if (DisplayMessageBox) {
-                MessageWindows.ShowInfoMessage("Finished the import!", "Finished");
+                MessageWindowHandler.Mw.ShowInfoMessage("Finished the import!", "Finished");
             }
         }
 
@@ -259,6 +259,7 @@ namespace Database.DatabaseMerger {
                 handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
 
+            [NotNull]
             public override string ToString() => Entry.GetType() + " " + Entry.Name;
         }
     }

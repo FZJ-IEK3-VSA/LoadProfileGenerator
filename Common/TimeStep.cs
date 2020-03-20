@@ -219,6 +219,7 @@ namespace Common {
             return new TimeStep(k1.InternalStep - k2.InternalStep, k1.DummyCalcSteps, k1.ShowSettling);
         }
 
+        [NotNull]
         public override string ToString() => "Internal: " + InternalStep + " External:  " + ExternalStep + (DisplayThisStep ? "(D)" : "()");
     }
 }

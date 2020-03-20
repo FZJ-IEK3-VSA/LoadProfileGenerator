@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Media;
+using Automation;
 using CalculationEngine.Helper;
 using CalculationEngine.Transportation;
 using Common;
@@ -58,7 +58,7 @@ namespace CalculationEngine.HouseholdElements
         [CanBeNull]
         [ItemNotNull]
         List<CalcAffordance.DeviceEnergyProfileTuple> Energyprofiles { get; }
-         Color AffordanceColor { get; }
+         ColorRGB AffordanceColor { get; }
         [NotNull]
         string SourceTrait { get; }
         [CanBeNull]

@@ -169,6 +169,7 @@ namespace Common.JSON {
             bw.Write(SumFresh);
         }
 
+        [NotNull]
         public override string ToString() => "Timestep: " + Timestep + " Entries:" + _energyEntries.Count + " Sum:" +
                                              SumFresh + " LoadType:" + _loadType.Name;
     }

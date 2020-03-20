@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows;
 using Automation.ResultFiles;
 using Common;
 using Common.Enums;
@@ -62,11 +61,11 @@ namespace CalculationController.Integrity {
                         Logger.Error(s);
 
                         var res =
-                            MessageWindows.ShowYesNoMessage(
+                            MessageWindowHandler.Mw.ShowYesNoMessage(
                                 "The affordance " + affordance.Affordance?.Name +
                                 " is not executable by a single Person in the household trait " + trait.Name +
                                 ". Delete this affordance?", "Delete?");
-                        if (res == MessageBoxResult.Yes) {
+                        if (res == LPGMsgBoxResult.Yes) {
                             trait.DeleteAffordanceFromDB(affordance);
                             index = -1;
                         }
@@ -393,10 +392,10 @@ namespace CalculationController.Integrity {
                             throw new LPGException("found brackets in the name of a trait: " + householdTrait.Name);
                         }
                         var mbr =
-                            MessageWindows.ShowYesNoMessage(
+                            MessageWindowHandler.Mw.ShowYesNoMessage(
                                 "Remove from the household trait name " + householdTrait.Name + " the substring \"" +
                                 brackets + "\"", "Delete?");
-                        if (mbr == MessageBoxResult.Yes) {
+                        if (mbr == LPGMsgBoxResult.Yes) {
                             Logger.Get()
                                 .SafeExecuteWithWait(
                                     () =>

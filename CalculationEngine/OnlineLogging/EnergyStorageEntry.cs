@@ -58,6 +58,7 @@ namespace CalculationEngine.OnlineLogging {
             _storageValues[column] = value;
         }
 
+        [NotNull]
         public override string ToString() {
             var sb = new StringBuilder();
             _dsc.GenerateDateStampForTimestep(Timestep, sb);

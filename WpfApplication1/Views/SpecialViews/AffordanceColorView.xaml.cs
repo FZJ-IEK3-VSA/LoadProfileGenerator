@@ -32,6 +32,7 @@ using System.Drawing;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Database.Tables.BasicHouseholds;
@@ -59,7 +60,7 @@ namespace LoadProfileGenerator.Views.SpecialViews {
                 var aff2 = (Affordance) LstAffordances.Items[index + 1];
                 var diff = CalcDiff(aff, aff2);
                 if (aff != aff2 && diff > 1 && diff < 64) {
-                    MessageWindows.ShowInfoMessage(
+                    MessageWindowHandler.Mw.ShowInfoMessage(
                         "Color gap of " + diff + " between affordances:" + Environment.NewLine + aff.Name +
                         Environment.NewLine + aff2.Name,
                         "Color Gap");
@@ -74,7 +75,7 @@ namespace LoadProfileGenerator.Views.SpecialViews {
                 }
             }
 
-            MessageWindows.ShowInfoMessage("No color gap found.", "Color Gap Check");
+            MessageWindowHandler.Mw.ShowInfoMessage("No color gap found.", "Color Gap Check");
             Logger.Info("Color gap check finished.");
         }
 
@@ -84,7 +85,7 @@ namespace LoadProfileGenerator.Views.SpecialViews {
             foreach (var aff in Presenter.Affordances) {
                 foreach (var aff2 in Presenter.Affordances) {
                     if (aff != aff2 && aff.Red == aff2.Red && aff.Green == aff2.Green && aff.Blue == aff2.Blue) {
-                        MessageWindows.ShowInfoMessage(
+                        MessageWindowHandler.Mw.ShowInfoMessage(
                             "Duplicate colors found in these two affordances:" + Environment.NewLine + aff.Name +
                             Environment.NewLine + aff2.Name,
                             "Duplicate colors");
@@ -100,7 +101,7 @@ namespace LoadProfileGenerator.Views.SpecialViews {
                 }
             }
 
-            MessageWindows.ShowInfoMessage("No duplicate colors found.", "Duplicate colors");
+            MessageWindowHandler.Mw.ShowInfoMessage("No duplicate colors found.", "Duplicate colors");
             Logger.Info("Duplicate color check finished.");
         }
 
@@ -121,8 +122,7 @@ namespace LoadProfileGenerator.Views.SpecialViews {
                 c2 = cd.Color;
             }
 
-            var rescolor = System.Windows.Media.Color.FromArgb(c2.A, c2.R, c2.G, c2.B);
-            aff.CarpetPlotColor = rescolor;
+            aff.CarpetPlotColor = new ColorRGB(c2.A, c2.R, c2.G, c2.B);
             aff.SaveToDB();
         }
 

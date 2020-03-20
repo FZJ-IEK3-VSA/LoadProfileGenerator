@@ -89,7 +89,7 @@ namespace LoadProfileGenerator {
                 ScreenshotElement(_sim.TransformationDevices.It[0]);
                 ScreenshotElement(_sim.HouseholdTags.It[0]);
                 ScreenshotElement(_sim.HouseholdPlans.It[0]);
-                MessageWindows.ShowInfoMessage("Finished", "Success");
+                MessageWindowHandler.Mw.ShowInfoMessage("Finished", "Success");
             });
             t.Start();
         }
@@ -113,7 +113,7 @@ namespace LoadProfileGenerator {
 
                     return false;
                 }));
-                MessageWindows.ShowInfoMessage("Finished", "Finished");
+                MessageWindowHandler.Mw.ShowInfoMessage("Finished", "Finished");
             });
             t.Start();
         }
@@ -438,7 +438,7 @@ namespace LoadProfileGenerator {
                 }
             }
             catch (Exception e) {
-                MessageWindows.ShowDebugMessage(e);
+                MessageWindowHandler.Mw.ShowDebugMessage(e);
                 Logger.Exception(e);
             }
         }

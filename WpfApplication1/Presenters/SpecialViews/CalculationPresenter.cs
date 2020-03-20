@@ -36,7 +36,9 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 using Automation;
 using Automation.ResultFiles;
 using CalculationController.Queue;
@@ -55,6 +57,30 @@ using Newtonsoft.Json;
 #endregion
 
 namespace LoadProfileGenerator.Presenters.SpecialViews {
+
+    public class LPGDispatcher : ILPGDispatcher {
+        public Dispatcher Dispatcher { get; }
+
+        public LPGDispatcher(Dispatcher dispatcher)
+        {
+            Dispatcher = dispatcher;
+        }
+
+
+        public void BeginInvoke(Delegate method, object arg)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsCorrectThread()
+        {
+            if (Thread.CurrentThread != Dispatcher.Thread)
+            {
+                return true;
+            }
+            return false;
+        }
+    }
     public class CalculationPresenter : PresenterBaseWithAppPresenter<CalculateView> {
         [NotNull] private readonly ApplicationPresenter _applicationPresenter;
         [NotNull] private readonly EnergyIntensityConverter _eic = new EnergyIntensityConverter();
@@ -491,7 +517,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                 File.Delete(tmpfile);
             }
             catch (Exception ex) {
-                MessageWindows.ShowInfoMessage(
+                MessageWindowHandler.Mw.ShowInfoMessage(
                     "The destination path you entered for the simulation doesn't seem " + "to be writeable. The path is:" + Environment.NewLine + Environment.NewLine + resultpath +
                     Environment.NewLine + Environment.NewLine + "Are you sure this is actually the correct path? You can change the default path in the settings." + Environment.NewLine +
                     Environment.NewLine + "The Windows error message when trying to write to the path you specified was:" + Environment.NewLine + Environment.NewLine + ex.Message, "Error");
@@ -526,7 +552,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             CalculationProfiler calculationProfiler = new CalculationProfiler();
             var csps = new CalcStartParameterSet(ReportFinishHouse, ReportFinishHousehold,
                 // ReSharper disable once AssignNullToNotNullAttribute
-                _applicationPresenter.OpenItem, Logger.Get().Lv?.Dispatcher, GeographicLocation,
+                _applicationPresenter.OpenItem, new LPGDispatcher(  _applicationPresenter.MainDispatcher), GeographicLocation,
                 // ReSharper disable once AssignNullToNotNullAttribute
                 SelectedTemperatureProfile,
                 // ReSharper disable once AssignNullToNotNullAttribute
@@ -679,7 +705,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             if (everythingOk) {
                 var rp = new ResultPresenter(_applicationPresenter, new ResultView(), name, resultPath);
                 _applicationPresenter.OpenItem(rp);
-                MessageWindows.ShowInfoMessage("All done!", "Finished");
+                MessageWindowHandler.Mw.ShowInfoMessage("All done!", "Finished");
             }
 
             SetIsInCalc(false);

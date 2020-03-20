@@ -3,6 +3,11 @@ using JetBrains.Annotations;
 
 namespace Automation
 {
+    public class LPGColors {
+        public static ColorRGB AliceBlue { get; } = new ColorRGB(240, 248, 255);
+        public static ColorRGB Blue { get; } = new ColorRGB(0,0, 255);
+        public static ColorRGB Black { get; } = new ColorRGB(0, 0, 0);
+    }
     public struct ColorRGB
     {
         [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
@@ -22,6 +27,15 @@ namespace Automation
             R = r;
             G = g;
             B = b;
+            A = 0;
+        }
+
+        public ColorRGB(byte a, byte r, byte g, byte b)
+        {
+            R = r;
+            G = g;
+            B = b;
+            A = a;
         }
 
         #region Fields
@@ -33,6 +47,8 @@ namespace Automation
         /// </summary>
         /// <value> The R. </value>
         public byte R { get; set; }
+
+        public byte A { get; set; }
 
         /// <summary>
         ///     Gets or sets the Green value.
@@ -82,6 +98,10 @@ namespace Automation
                 return false;
             }
             if (B != other.B)
+            {
+                return false;
+            }
+            if (A != other.A)
             {
                 return false;
             }

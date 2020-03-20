@@ -6,16 +6,15 @@ using CalcPostProcessor.Steps;
 using Common;
 using Common.CalcDto;
 using Common.SQLResultLogging;
-using JetBrains.Annotations;
 
 namespace CalcPostProcessor.LoadTypeProcessingSteps
 {
     public class SumProfileProcessor: LoadTypeStepBase
     {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly FileFactoryAndTracker _fft;
 
-        public void ProcessSumFile([NotNull] CalcLoadTypeDto dstLoadType)
+        public void ProcessSumFile([JetBrains.Annotations.NotNull] CalcLoadTypeDto dstLoadType)
         {
             var dsc = new DateStampCreator(Repository.CalcParameters);
             if (!_fft.CheckForResultFileEntry(ResultFileID.OnlineSumActivationFiles, dstLoadType.Name,
@@ -48,8 +47,8 @@ namespace CalcPostProcessor.LoadTypeProcessingSteps
             }
         }
 
-        public SumProfileProcessor([NotNull] CalcDataRepository repository,
-                                   [NotNull] FileFactoryAndTracker fft, [NotNull] ICalculationProfiler calculationProfiler)
+        public SumProfileProcessor([JetBrains.Annotations.NotNull] CalcDataRepository repository,
+                                   [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft, [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler)
             : base(repository, AutomationUtili.GetOptionList(CalcOption.IndividualSumProfiles),calculationProfiler,"Sum Profile Creation")
         {
             _fft = fft;

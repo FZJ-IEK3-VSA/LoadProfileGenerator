@@ -59,6 +59,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
                    LocationGuid + "#" +
                    LoadtypeGuid;
         }
+        [NotNull]
         public override string ToString()
         {
             return   FullKey;

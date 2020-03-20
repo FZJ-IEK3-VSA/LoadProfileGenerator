@@ -286,6 +286,7 @@ namespace Database.Tables.BasicElements {
                 return Time.CompareTo(other.Time);
             }
 
+            [NotNull]
             public override string ToString() => Time.ToShortDateString() + " " + Time.ToShortTimeString() + ":" +
                                                  Value.ToString(CultureInfo.CurrentCulture);
         }

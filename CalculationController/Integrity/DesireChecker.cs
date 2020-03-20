@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Windows;
 using Common;
 using Database;
 using Database.Tables.BasicHouseholds;
@@ -53,9 +52,9 @@ namespace CalculationController.Integrity {
                 var desire = sim.Desires[i];
                 if (!useddesires.Contains(desire)) {
                     var mbr =
-                        MessageWindows.ShowYesNoMessage(
+                        MessageWindowHandler.Mw.ShowYesNoMessage(
                             "The desire " + desire.PrettyName + " is not used anywhere. Delete?", "Delete?");
-                    if (mbr == MessageBoxResult.Yes) {
+                    if (mbr == LPGMsgBoxResult.Yes) {
                         sim.Desires.DeleteItem(desire);
                         i = 0;
                     }

@@ -76,6 +76,7 @@ namespace Common.JSON {
             throw new LPGException("Forgotten Device Profile Header Mode");
         }
 
+        [NotNull]
         public override string ToString() => HouseholdKey + " - " + LocationName + " - " + Name;
     }
 }

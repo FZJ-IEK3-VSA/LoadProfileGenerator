@@ -2,20 +2,19 @@
 using Automation;
 using Common;
 using Common.SQLResultLogging;
-using JetBrains.Annotations;
 
 namespace CalcPostProcessor.Steps
 {
     public interface IGeneralStep
     {
-        void Run([NotNull] IStepParameters parameters);
+        void Run([JetBrains.Annotations.NotNull] IStepParameters parameters);
         bool IsEnabled();
     }
     public abstract class GeneralStepBase : BasicPostProcessingStep, IGeneralStep
     {
-        public GeneralStepBase([NotNull] CalcDataRepository repository,[NotNull] List< CalcOption> option,
-                                             [NotNull] ICalculationProfiler calculationProfiler,
-                                             [NotNull] string stepName) : base(repository, option, calculationProfiler,
+        public GeneralStepBase([JetBrains.Annotations.NotNull] CalcDataRepository repository,[JetBrains.Annotations.NotNull] List< CalcOption> option,
+                                             [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler,
+                                             [JetBrains.Annotations.NotNull] string stepName) : base(repository, option, calculationProfiler,
             stepName)
         {
         }

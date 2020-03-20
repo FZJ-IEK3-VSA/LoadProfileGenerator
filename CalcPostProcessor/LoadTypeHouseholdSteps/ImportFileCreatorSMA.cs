@@ -16,23 +16,23 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
     public class ImportFileCreatorSMA: LoadTypeStepBase
 #pragma warning restore S101 // Types should be named in PascalCase
     {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly CalcParameters _calcParameters;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly FileFactoryAndTracker _fft;
 
         public ImportFileCreatorSMA(
-                                 [NotNull] CalcDataRepository repository,
-                                 [NotNull] ICalculationProfiler profiler,
-                                    [NotNull] FileFactoryAndTracker fft):base(repository,CalcOption.SMAImportFiles,profiler,"SMA Import Files")
+                                 [JetBrains.Annotations.NotNull] CalcDataRepository repository,
+                                 [JetBrains.Annotations.NotNull] ICalculationProfiler profiler,
+                                    [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft):base(repository,CalcOption.SMAImportFiles,profiler,"SMA Import Files")
         {
             _calcParameters = Repository.CalcParameters;
             _fft = fft;
         }
 
-        public void RunIndividualHouseholdsSMA([NotNull] CalcLoadTypeDto dstLoadType,
-            [NotNull][ItemNotNull] List<OnlineEnergyFileRow> energyFileRows,
-            [NotNull] FileFactoryAndTracker fft, [NotNull] EnergyFileColumns efc)
+        public void RunIndividualHouseholdsSMA([JetBrains.Annotations.NotNull] CalcLoadTypeDto dstLoadType,
+            [JetBrains.Annotations.NotNull][ItemNotNull] List<OnlineEnergyFileRow> energyFileRows,
+            [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft, [JetBrains.Annotations.NotNull] EnergyFileColumns efc)
         {
             var fivemin = new TimeSpan(0, 5, 0);
             var externalfactor =
@@ -97,8 +97,8 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             }
         }
 
-        public void RunSMA([NotNull] CalcLoadTypeDto dstLoadType, [NotNull][ItemNotNull] List<OnlineEnergyFileRow> energyFileRows,
-            [NotNull] FileFactoryAndTracker fft)
+        public void RunSMA([JetBrains.Annotations.NotNull] CalcLoadTypeDto dstLoadType, [JetBrains.Annotations.NotNull][ItemNotNull] List<OnlineEnergyFileRow> energyFileRows,
+            [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft)
         {
             var fivemin = new TimeSpan(0, 5, 0);
             var externalfactor =
@@ -138,7 +138,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             sumfile.Flush();
         }
 
-        protected override void PerformActualStep([NotNull] IStepParameters parameters)
+        protected override void PerformActualStep([JetBrains.Annotations.NotNull] IStepParameters parameters)
         {
             LoadtypeStepParameters p = (LoadtypeStepParameters)parameters;
             var efc = Repository.ReadEnergyFileColumns(Constants.GeneralHouseholdKey);

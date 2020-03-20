@@ -35,6 +35,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Input;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Common.Enums;
@@ -54,6 +55,18 @@ using LinearAxis = OxyPlot.Axes.LinearAxis;
 #endregion
 
 namespace LoadProfileGenerator.Views.Households {
+
+    public static class LPGExtensions {
+        public static Color GetColor(this ColorRGB color)
+        {
+            return Color.FromArgb(color.A, color.R, color.G, color.B);
+        }
+
+        public static ColorRGB GetColorRGB(this System.Windows.Media.Color color)
+        {
+            return new ColorRGB(color.A,color.R,color.G,color.B);
+        }
+    }
     /// <summary>
     ///     Interaktionslogik f�r AffordanceView.xaml
     /// </summary>
@@ -222,7 +235,7 @@ namespace LoadProfileGenerator.Views.Households {
                 cd.ShowDialog();
                 var c2 = cd.Color;
                 var rescolor = System.Windows.Media.Color.FromArgb(c2.A, c2.R, c2.G, c2.B);
-                Presenter.ThisAffordance.CarpetPlotColor = rescolor;
+                Presenter.ThisAffordance.CarpetPlotColor = rescolor.GetColorRGB();
                 Presenter.ThisAffordance.SaveToDB();
             }
         }

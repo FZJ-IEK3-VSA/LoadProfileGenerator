@@ -86,6 +86,7 @@ namespace CalculationEngine.OnlineLogging {
             return desirestring;
         }
 
+        [NotNull]
         public override string ToString() {
             var sb = new StringBuilder();
             _dsc.GenerateDateStampForTimestep(_timestep, sb);

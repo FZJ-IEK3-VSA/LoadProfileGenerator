@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Windows.Media;
+using Automation;
 using Automation.ResultFiles;
 using CalculationEngine.Helper;
 using Common;
@@ -24,7 +24,7 @@ namespace CalculationEngine.HouseholdElements {
         {
         }
 
-        public override Color AffordanceColor { get; } = Colors.Green;
+        public override ColorRGB AffordanceColor { get; } = new ColorRGB(0,255,0);
 
         public override int DefaultPersonProfileLength => 0;
 

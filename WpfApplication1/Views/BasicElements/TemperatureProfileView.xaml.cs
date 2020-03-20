@@ -61,12 +61,12 @@ namespace LoadProfileGenerator.Views.BasicElements {
 
         private void Adddatapoint_Click([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e) {
             if (!DateTime.TryParse(TxtTime.Text, CultureInfo.CurrentCulture, DateTimeStyles.None, out var ts)) {
-                MessageWindows.ShowInfoMessage("Could not interpret the date/time. Try for example: 1.1.2012 00:00:01",
+                MessageWindowHandler.Mw.ShowInfoMessage("Could not interpret the date/time. Try for example: 1.1.2012 00:00:01",
                     "Fail!");
                 return;
             }
             if (!double.TryParse(TxtValue.Text, out var val)) {
-                MessageWindows.ShowInfoMessage("Could not interpret the value. Try for example: 1", "Error");
+                MessageWindowHandler.Mw.ShowInfoMessage("Could not interpret the value. Try for example: 1", "Error");
                 return;
             }
             Presenter.AddTemperaturePoint(ts, val);
@@ -92,10 +92,10 @@ namespace LoadProfileGenerator.Views.BasicElements {
                 return;
             }
             var dr =
-                MessageWindows.ShowYesNoMessage(
+                MessageWindowHandler.Mw.ShowYesNoMessage(
                     "Add these " + Presenter.CsvImporter.Entries.Count + " entries as data points for this profile?",
                     "Add?");
-            if (dr == MessageBoxResult.No) {
+            if (dr == LPGMsgBoxResult.No) {
                 return;
             }
             Presenter.ImportData();
@@ -136,10 +136,10 @@ namespace LoadProfileGenerator.Views.BasicElements {
 
         private void RemoveAlldatapoint_Click([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e) {
             var dr =
-                MessageWindows.ShowYesNoMessage(
+                MessageWindowHandler.Mw.ShowYesNoMessage(
                     "Delete all " + Presenter.ThisProfile.TemperatureValues.Count + " data points?",
                     "Delete?");
-            if (dr == MessageBoxResult.No) {
+            if (dr == LPGMsgBoxResult.No) {
                 return;
             }
             Presenter.DeleteAllDataPoints();

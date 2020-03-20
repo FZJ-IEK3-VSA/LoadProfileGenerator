@@ -14,17 +14,16 @@ using CalcPostProcessor.Steps;
 using Common;
 using Common.JSON;
 using Common.SQLResultLogging;
-using JetBrains.Annotations;
 
 namespace CalcPostProcessor.GeneralHouseholdSteps {
     public class LocationStatisticsMaker : HouseholdStepBase {
-        [NotNull] private readonly CalcParameters _calcParameters;
+        [JetBrains.Annotations.NotNull] private readonly CalcParameters _calcParameters;
 
-        [NotNull] private readonly FileFactoryAndTracker _fft;
+        [JetBrains.Annotations.NotNull] private readonly FileFactoryAndTracker _fft;
 
-        public LocationStatisticsMaker( [NotNull] FileFactoryAndTracker fft,
-                                       [NotNull] CalcDataRepository repository,
-                                       [NotNull] ICalculationProfiler profiler) : base(repository,
+        public LocationStatisticsMaker( [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft,
+                                       [JetBrains.Annotations.NotNull] CalcDataRepository repository,
+                                       [JetBrains.Annotations.NotNull] ICalculationProfiler profiler) : base(repository,
             AutomationUtili.GetOptionList(CalcOption.LocationsFile), profiler, "Location Statistics")
         {
             _calcParameters = repository.CalcParameters;
@@ -32,10 +31,10 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
             MakeStreamWriterFunc = GetWriter;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private Func<FileFactoryAndTracker, HouseholdKey, CalcParameters, StreamWriter> MakeStreamWriterFunc { get; }
 
-        protected override void PerformActualStep([NotNull] IStepParameters parameters)
+        protected override void PerformActualStep([JetBrains.Annotations.NotNull] IStepParameters parameters)
         {
             HouseholdStepParameters hhp = (HouseholdStepParameters)parameters;
             var entry = hhp.Key;
@@ -49,14 +48,14 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
         /// <summary>
         ///     This function gets a new streamwriter from the fft. It's this way to enable easier unit testing.
         /// </summary>
-        [NotNull]
-        private static StreamWriter GetWriter([NotNull] FileFactoryAndTracker fft, [NotNull] HouseholdKey householdKey,
-                                              [NotNull] CalcParameters calcParameters) => fft
+        [JetBrains.Annotations.NotNull]
+        private static StreamWriter GetWriter([JetBrains.Annotations.NotNull] FileFactoryAndTracker fft, [JetBrains.Annotations.NotNull] HouseholdKey householdKey,
+                                              [JetBrains.Annotations.NotNull] CalcParameters calcParameters) => fft
             .MakeFile<StreamWriter>("LocationStatistics." + householdKey + ".csv",
                 "How much time the people are spending at each Location", true, ResultFileID.LocationStatistic,
                 householdKey, TargetDirectory.Reports, calcParameters.InternalStepsize);
 
-        private void Run([NotNull] FileFactoryAndTracker fft, [NotNull] HouseholdKey householdKey)
+        private void Run([JetBrains.Annotations.NotNull] FileFactoryAndTracker fft, [JetBrains.Annotations.NotNull] HouseholdKey householdKey)
         {
             var locationEntries = Repository.LoadLocationEntries(householdKey);
             var maxTimeStep = _calcParameters.OfficalTimesteps;

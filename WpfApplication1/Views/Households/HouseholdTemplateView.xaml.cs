@@ -96,9 +96,9 @@ namespace LoadProfileGenerator.Views.Households {
         private void BtnRemoveAllEntry_Click([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
         {
             var count = Presenter.ThisTemplate.Entries.Count;
-            var mbr = MessageWindows.ShowYesNoMessage(
+            var mbr = MessageWindowHandler.Mw.ShowYesNoMessage(
                 "Are you really sure you want to delete these " + count + " entries?", "Delete?");
-            if (mbr == MessageBoxResult.Yes) {
+            if (mbr == LPGMsgBoxResult.Yes) {
                 Presenter.DeleteAllEntries();
             }
 
@@ -181,9 +181,9 @@ namespace LoadProfileGenerator.Views.Households {
         {
             var count = Presenter.GeneratedHouseholds.Count;
             var mbr =
-                MessageWindows.ShowYesNoMessage(
+                MessageWindowHandler.Mw.ShowYesNoMessage(
                     "Are you really sure you want to delete these " + count + " households?", "Delete?");
-            if (mbr == MessageBoxResult.Yes) {
+            if (mbr == LPGMsgBoxResult.Yes) {
                 Presenter.DeleteAllHouseholds();
             }
         }

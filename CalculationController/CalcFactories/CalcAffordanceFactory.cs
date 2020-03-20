@@ -29,7 +29,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Media;
+using Automation;
 using Automation.ResultFiles;
 using CalculationController.DtoFactories;
 using CalculationEngine.HouseholdElements;
@@ -83,7 +83,7 @@ namespace CalculationController.CalcFactories {
                 CalcProfile personProfile = CalcDeviceFactory.MakeCalcProfile(affordancedto.PersonProfile, _cp);
                 CalcLocation calcLocation = locations.GetCalcLocationByGuid(affordancedto.CalcLocationGuid);
                 var calcDesires = MakeCalcDesires(affordancedto.Satisfactionvalues);
-                Color color = Color.FromRgb(affordancedto.ColorR, affordancedto.ColorG, affordancedto.ColorB);
+                var color = new ColorRGB(affordancedto.ColorR, affordancedto.ColorG, affordancedto.ColorB);
                 var variableOps = MakeVariableOps(locations, affordancedto.VariableOps, variableRepository);
                 List<VariableRequirement> requirements = new List<VariableRequirement>();
                 foreach (VariableRequirementDto requirementDto in affordancedto.VariableRequirements) {

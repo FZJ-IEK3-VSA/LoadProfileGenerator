@@ -28,7 +28,6 @@
 
 using System;
 using System.Collections.ObjectModel;
-using System.Windows.Media;
 using Automation;
 using Common;
 using Common.Enums;
@@ -66,7 +65,7 @@ namespace Database.Tests.Tables {
                 "fake", Guid.NewGuid().ToString());
             tp.SaveToDB();
             timeBasedProfiles.Add(tp);
-            var aff = new Affordance("blub", tp, null, true, PermittedGender.All, 0, Color.FromRgb(255, 0, 0),
+            var aff = new Affordance("blub", tp, null, true, PermittedGender.All, 0, new ColorRGB(255, 0, 0),
                 "bla", timeLimits[0], string.Empty, db.ConnectionString, false, false, 0, 99, false,
                 ActionAfterInterruption.GoBackToOld,false, Guid.NewGuid().ToString());
             aff.SaveToDB();

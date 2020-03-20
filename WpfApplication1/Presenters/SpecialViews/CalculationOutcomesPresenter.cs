@@ -307,7 +307,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                 Logger.Info("Finished export.");
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
                 Logger.Exception(ex);
             }
         }
@@ -503,10 +503,10 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
 
                         InCalculation = false;
                         Logger.Error("Found " + count + " missing entries!");
-                        MessageWindows.ShowInfoMessage("All done!", "Success");
+                        MessageWindowHandler.Mw.ShowInfoMessage("All done!", "Success");
                     }
                     catch (Exception ex) {
-                        MessageWindows.ShowDebugMessage(ex);
+                        MessageWindowHandler.Mw.ShowDebugMessage(ex);
                         InCalculation = false;
                         Logger.Exception(ex);
                     }
@@ -514,7 +514,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                 t.Start();
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
                 InCalculation = false;
                 Logger.Exception(ex);
             }
@@ -538,7 +538,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             }
 
             if (operatingPath.Length < 4) {
-                MessageWindows.ShowInfoMessage("Please use a longer path. Don't use the root of a drive.", "Fail!");
+                MessageWindowHandler.Mw.ShowInfoMessage("Please use a longer path. Don't use the root of a drive.", "Fail!");
                 return;
             }
 

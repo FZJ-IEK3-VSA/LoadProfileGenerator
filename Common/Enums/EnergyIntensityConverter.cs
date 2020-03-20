@@ -117,6 +117,7 @@ namespace Common.Enums {
             [NotNull]
             public string Name { get; set; }
 
+            [NotNull]
             public override string ToString() => Name;
         }
     }

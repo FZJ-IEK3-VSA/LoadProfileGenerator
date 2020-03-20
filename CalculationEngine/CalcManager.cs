@@ -159,6 +159,8 @@ namespace CalculationEngine {
             Logfile.Close();
         }
 
+        public static bool MakeCharts { get; } = true;
+
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public bool Run([CanBeNull] Func<bool> reportCancelFunc)
         {
@@ -259,8 +261,8 @@ namespace CalculationEngine {
 
             _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Charting");
             Logger.Info("Starting to make the charts");
-            if (_calcParameters.IsSet(CalcOption.MakePDF) ||
-                _calcParameters.IsSet(CalcOption.MakeGraphics))
+            if (MakeCharts &&(_calcParameters.IsSet(CalcOption.MakePDF) ||
+                _calcParameters.IsSet(CalcOption.MakeGraphics )))
             {
                 MakeChartsAndPDF();
             }

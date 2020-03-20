@@ -33,7 +33,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Windows.Media;
+using Automation;
 using Automation.ResultFiles;
 using CalculationEngine.Helper;
 using Common;
@@ -75,7 +75,7 @@ namespace CalculationEngine.HouseholdElements {
                               PermittedGender permittedGender,
                               bool needsLight,
                               double timeStandardDeviation,
-                              Color affordanceColor,
+                              ColorRGB affordanceColor,
                               [NotNull] string pAffCategory,
                               bool isInterruptable,
                               bool isInterrupting,
@@ -128,7 +128,7 @@ namespace CalculationEngine.HouseholdElements {
             TimeLimitName = timeLimitName;
         }
 
-        public override Color AffordanceColor { get; }
+        public override ColorRGB AffordanceColor { get; }
 
         public override int DefaultPersonProfileLength => _personProfile.StepValues.Count;
         public static bool DoubleCheckBusyArray { get; set; }
@@ -348,6 +348,7 @@ namespace CalculationEngine.HouseholdElements {
             return false;
         }
 
+        [NotNull]
         public override string ToString() => "Affordance:" + Name;
 
         private int HasBeenActiveFor([NotNull] TimeStep currentTime)
@@ -433,6 +434,7 @@ namespace CalculationEngine.HouseholdElements {
             [NotNull]
             public CalcProfile TimeProfile { get; }
 
+            [NotNull]
             public override string ToString() => "Device:" + _calcDevice.Name + ", Profile " + TimeProfile.Name + ", Offset " + TimeOffset;
         }
 

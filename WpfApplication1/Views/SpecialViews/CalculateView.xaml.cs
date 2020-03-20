@@ -71,7 +71,7 @@ namespace LoadProfileGenerator.Views.SpecialViews {
                 catch (Exception f) {
                     Logger.Exception(f);
                     if (!Config.IsInUnitTesting) {
-                        MessageWindows.ShowDebugMessage(f);
+                        MessageWindowHandler.Mw.ShowDebugMessage(f);
                     }
                     else {
                         throw;
@@ -86,7 +86,7 @@ namespace LoadProfileGenerator.Views.SpecialViews {
         private void BtnCancelClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
         {
             CalcStarter.CancelRun();
-            MessageWindows.ShowInfoMessage(
+            MessageWindowHandler.Mw.ShowInfoMessage(
                 "Stopping calculation... please wait a moment for the current step to finish.", "Please wait.");
             Logger.Info("Canceled the Calculation...");
         }
@@ -107,7 +107,7 @@ namespace LoadProfileGenerator.Views.SpecialViews {
             if (result == true) {
                 var filename = ofd.FileName;
                 Presenter.WriteCalculationJsonSpecForCommandLine(filename);
-                MessageWindows.ShowInfoMessage("Finished writing " + filename, "Success!");
+                MessageWindowHandler.Mw.ShowInfoMessage("Finished writing " + filename, "Success!");
             }
         }
     }

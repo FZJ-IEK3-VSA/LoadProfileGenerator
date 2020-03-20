@@ -97,6 +97,7 @@ namespace CalculationEngine.HouseElements {
         public int Month { get; }
         public int Year { get; }
 
+        [NotNull]
         public override string ToString()
         {
             var dt = new DateTime(Year, Month, Day, Hour, 0, 0);

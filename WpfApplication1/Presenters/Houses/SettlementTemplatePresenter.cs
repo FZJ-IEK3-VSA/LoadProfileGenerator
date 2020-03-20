@@ -33,7 +33,6 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Windows;
 using Automation;
 using Common;
 using Common.Enums;
@@ -333,7 +332,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
             }
             catch (Exception ex) {
                 Logger.Error("Error:" + ex.Message);
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
                 Logger.Exception(ex);
             }
         }
@@ -351,8 +350,8 @@ namespace LoadProfileGenerator.Presenters.Houses {
             if (count == 0) {
                 return;
             }
-            var dr = MessageWindows.ShowYesNoMessage("Delete these " + count + " houses?", "Delete?");
-            if (dr != MessageBoxResult.Yes) {
+            var dr = MessageWindowHandler.Mw.ShowYesNoMessage("Delete these " + count + " houses?", "Delete?");
+            if (dr != LPGMsgBoxResult.Yes) {
                 return;
             }
             foreach (var house in GeneratedHouses) {
@@ -368,8 +367,8 @@ namespace LoadProfileGenerator.Presenters.Houses {
             if (count == 0) {
                 return;
             }
-            var dr = MessageWindows.ShowYesNoMessage("Delete these " + count + " settlements?", "Delete?");
-            if (dr != MessageBoxResult.Yes) {
+            var dr = MessageWindowHandler.Mw.ShowYesNoMessage("Delete these " + count + " settlements?", "Delete?");
+            if (dr != LPGMsgBoxResult.Yes) {
                 return;
             }
             foreach (var sett in GeneratedSettlements) {

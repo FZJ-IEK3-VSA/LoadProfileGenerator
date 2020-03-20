@@ -4,13 +4,12 @@ using Automation.ResultFiles;
 using CalcPostProcessor.Steps;
 using Common;
 using Common.SQLResultLogging;
-using JetBrains.Annotations;
 
 namespace CalcPostProcessor.GeneralSteps
 {
     public class AffordanceTagsWriter: GeneralStepBase
     {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly FileFactoryAndTracker _fft;
 
         private void WriteAffordanceTags()
@@ -35,14 +34,14 @@ namespace CalcPostProcessor.GeneralSteps
             }
         }
 
-        public AffordanceTagsWriter([NotNull] CalcDataRepository repository, [NotNull] ICalculationProfiler calculationProfiler,
-                                    [NotNull] FileFactoryAndTracker fft)
+        public AffordanceTagsWriter([JetBrains.Annotations.NotNull] CalcDataRepository repository, [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler,
+                                    [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft)
             : base(repository, AutomationUtili.GetOptionList(CalcOption.HouseholdContents), calculationProfiler, "Affordance Tags")
         {
             _fft = fft;
         }
 
-        protected override void PerformActualStep([NotNull] IStepParameters parameters)
+        protected override void PerformActualStep([JetBrains.Annotations.NotNull] IStepParameters parameters)
         {
             WriteAffordanceTags();
         }

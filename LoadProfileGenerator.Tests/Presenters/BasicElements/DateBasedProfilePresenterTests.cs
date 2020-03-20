@@ -27,7 +27,7 @@ namespace LoadProfileGenerator.Tests.Presenters.BasicElements {
             var t = new Thread(() => {
                 try {
                     var dbp = sim.DateBasedProfiles.It.First();
-                    var ap = new ApplicationPresenter(null, sim);
+                    var ap = new ApplicationPresenter(null, sim, null);
                     var dp = new DateBasedProfilePresenter(ap, null, dbp);
                     Assert.AreEqual(dbp, dp.ThisProfile);
                     dp.AddDataPoint(new DateTime(2010, 1, 1), 1);

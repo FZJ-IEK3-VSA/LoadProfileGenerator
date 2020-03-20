@@ -85,6 +85,7 @@ namespace Common {
             return false;
         }
 
+        [NotNull]
         public override string ToString() => Name;
     }
 }

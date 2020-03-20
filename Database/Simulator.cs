@@ -33,7 +33,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Threading;
-using System.Windows;
 using Automation.ResultFiles;
 using Common;
 using Common.Enums;
@@ -374,8 +373,8 @@ namespace Database {
         [SuppressMessage("Microsoft.Reliability", "CA2000:Objekte verwerfen, bevor Bereich verloren geht")]
         public void DeleteAllTemplatedItems(bool noConfirmation) {
             if (!noConfirmation) {
-                var mbr = MessageWindows.ShowYesNoMessage("Delete all templated items?", "Delete?");
-                if (mbr != MessageBoxResult.Yes) {
+                var mbr = MessageWindowHandler.Mw.ShowYesNoMessage("Delete all templated items?", "Delete?");
+                if (mbr != LPGMsgBoxResult.Yes) {
                     return;
                 }
             }

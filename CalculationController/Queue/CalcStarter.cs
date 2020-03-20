@@ -32,7 +32,6 @@ using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Windows;
 using CalculationEngine;
 using Common;
 using Common.Enums;
@@ -69,14 +68,14 @@ namespace CalculationController.Queue {
             if (di.Exists) {
                 try {
                     if (di.GetDirectories().Length > 0 || di.GetFiles().Length > 0) {
-                        var dr = MessageBoxResult.Yes;
+                        var dr = LPGMsgBoxResult.Yes;
                         if (!Config.IsInUnitTesting&& !Config.IsInHeadless) {
                             dr =
-                                MessageWindows.ShowYesNoMessage(
+                                MessageWindowHandler.Mw.ShowYesNoMessage(
                                     "There are already files in :" + Environment.NewLine + dstPath +
                                     Environment.NewLine+ "Delete those? If not, select \"no\" and enter a different path!", "Delete?");
                         }
-                        if (dr == MessageBoxResult.Yes) {
+                        if (dr == LPGMsgBoxResult.Yes) {
                             var dis = di.GetDirectories();
                             foreach (var directoryInfo in dis) {
                                 try {
@@ -109,7 +108,7 @@ namespace CalculationController.Queue {
                 }
                 catch (Exception e) {
                     Logger.Exception(e);
-                    MessageWindows.ShowInfoMessage("An error occured while deleting the existing files:" + e.Message,
+                    MessageWindowHandler.Mw.ShowInfoMessage("An error occured while deleting the existing files:" + e.Message,
                         "Error");
                     return false;
                 }
@@ -138,11 +137,11 @@ namespace CalculationController.Queue {
                     csps.ReportCancelFunc?.Invoke();
                     if (e is DataIntegrityException exception)
                     {
-                        MessageWindows.ShowDataIntegrityMessage(exception);
+                        MessageWindowHandler.Mw.ShowDataIntegrityMessage(exception);
                     }
                     else
                     {
-                        MessageWindows.ShowDebugMessage(e);
+                        MessageWindowHandler.Mw.ShowDebugMessage(e);
                     }
                 }
                 else {

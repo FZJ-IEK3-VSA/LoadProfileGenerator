@@ -31,7 +31,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -910,51 +909,6 @@ namespace Database.Tables.BasicElements {
             }
             SetTree(result);
         }
-
-        [NotNull]
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Objekte verwerfen, bevor Bereich verloren geht")]
-        public static Bitmap MakeBitmapFromBitArray([ItemNotNull] [NotNull] BitArray br)
-        {
-            var rightnow = DateTime.Now;
-            Calendar c = new GregorianCalendar(GregorianCalendarTypes.USEnglish);
-            var year = rightnow.Year;
-            var daysinyear = c.GetDaysInYear(year);
-
-            var mybm = new Bitmap(daysinyear, 25);
-            {
-                var g = Graphics.FromImage(mybm);
-
-                using (var b = new SolidBrush(Color.DarkBlue)) {
-                    g.FillRectangle(b, 0, 0, daysinyear, 24);
-                    var dts = new DateTime[daysinyear * 24];
-                    dts[0] = new DateTime(year, 1, 1);
-                    for (var i = 1; i < daysinyear * 24; i++) {
-                        dts[i] = dts[i - 1] + new TimeSpan(1, 0, 0);
-                    }
-                    for (var day = 0; day < daysinyear; day++) {
-                        for (var hour = 0; hour < 24; hour++) {
-                            var starthour = new DateTime(year, 1, 1, hour, 0, 0);
-                            starthour = starthour.AddDays(day);
-                            var endhour = starthour.AddHours(1);
-                            var foundanyactive = false;
-                            for (var i = 0; i < dts.Length; i++) {
-                                if (dts[i] >= starthour && dts[i] < endhour && br[i]) {
-                                    foundanyactive = true;
-                                    i = dts.Length;
-                                }
-                            }
-                            if (foundanyactive) {
-                                var x = day;
-                                var y = hour;
-                                mybm.SetPixel(x, y, Color.White);
-                            }
-                        }
-                    }
-                    return mybm;
-                }
-            }
-        }
-
         private void RandomizeTime(TimeSpan start, TimeSpan end, out TimeSpan startout, out TimeSpan endout, [NotNull] Random r)
         {
             if (_randomizeTimeAmount == 0) {

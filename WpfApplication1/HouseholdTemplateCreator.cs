@@ -98,7 +98,7 @@ namespace LoadProfileGenerator {
                     SimIntegrityChecker.Run(_sim);
                     if (!Config.IsInUnitTesting)
                     {
-                        MessageWindows.ShowInfoMessage(
+                        MessageWindowHandler.Mw.ShowInfoMessage(
                             "Finished creating household templates. Created " + j + " templates.", "LPG");
                     }
 
@@ -106,7 +106,7 @@ namespace LoadProfileGenerator {
                 }
                 catch (Exception ex)
                 {
-                    MessageWindows.ShowDebugMessage(ex);
+                    MessageWindowHandler.Mw.ShowDebugMessage(ex);
                     Logger.Exception(ex);
                 }
             }

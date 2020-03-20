@@ -33,7 +33,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Windows.Media;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Common.Enums;
@@ -63,7 +63,7 @@ namespace Database.Tables.BasicHouseholds {
 
         [CanBeNull] private string _affCategory;
 
-        private Color _carpetPlotColor;
+        private ColorRGB _carpetPlotColor;
 
         [CanBeNull] private string _description;
 
@@ -85,7 +85,7 @@ namespace Database.Tables.BasicHouseholds {
 
         public Affordance([NotNull] string pName, [CanBeNull] TimeBasedProfile pPersonProfile, [CanBeNull] int? id,
             bool needsLight,
-            PermittedGender permittedGender, decimal timeStandardDeviation, Color carpetPlotColor,
+            PermittedGender permittedGender, decimal timeStandardDeviation, ColorRGB carpetPlotColor,
             [NotNull] string affCategory,
             [CanBeNull] TimeLimit timeLimitLimit, [CanBeNull] string description, [NotNull] string connectionString,
             bool isInterruptable,
@@ -168,23 +168,25 @@ namespace Database.Tables.BasicHouseholds {
                     return;
                 }
 
-                _carpetPlotColor = Color.FromRgb(_carpetPlotColor.R, _carpetPlotColor.G, (byte) value);
+                _carpetPlotColor = new ColorRGB(_carpetPlotColor.R, _carpetPlotColor.G, (byte) value);
                 ColorChanged(true);
             }
         }
 
-        [UsedImplicitly]
+       /*
+        //todo: reimplment somehow
+            [UsedImplicitly]
         [NotNull]
-        public Brush CarpetPlotBrush => new SolidColorBrush(_carpetPlotColor);
+        public Brush CarpetPlotBrush => new SolidColorBrush(_carpetPlotColor);*/
 
-        public Color CarpetPlotColor {
+        public ColorRGB CarpetPlotColor {
             get => _carpetPlotColor;
             set {
                 if (_carpetPlotColor == value) {
                     return;
                 }
 
-                if (_carpetPlotColor.A == value.A && _carpetPlotColor.R == value.R &&
+                if ( _carpetPlotColor.R == value.R &&
                     _carpetPlotColor.G == value.G && _carpetPlotColor.B == value.B) {
                     return;
                 }
@@ -213,7 +215,7 @@ namespace Database.Tables.BasicHouseholds {
                     return;
                 }
 
-                _carpetPlotColor = Color.FromRgb(_carpetPlotColor.R, (byte) value, _carpetPlotColor.B);
+                _carpetPlotColor = new ColorRGB(_carpetPlotColor.R, (byte) value, _carpetPlotColor.B);
                 ColorChanged(true);
             }
         }
@@ -273,7 +275,7 @@ namespace Database.Tables.BasicHouseholds {
                     return;
                 }
 
-                _carpetPlotColor = Color.FromRgb((byte) value, _carpetPlotColor.G, _carpetPlotColor.B);
+                _carpetPlotColor = new ColorRGB((byte) value, _carpetPlotColor.G, _carpetPlotColor.B);
                 ColorChanged(true);
             }
         }
@@ -424,7 +426,7 @@ namespace Database.Tables.BasicHouseholds {
             var colorint2 = dr.GetInt("CarpetPlotColor2", false, 0, ignoreMissingFields);
             var colorint3 = dr.GetInt("CarpetPlotColor3", false, 0, ignoreMissingFields);
             var colorint4 = dr.GetInt("CarpetPlotColor4", false, 0, ignoreMissingFields);
-            var carpetPlotColor = Color.FromArgb((byte) colorint1, (byte) colorint2, (byte) colorint3,
+            var carpetPlotColor = new ColorRGB((byte) colorint1, (byte) colorint2, (byte) colorint3,
                 (byte) colorint4);
             var timeLimitID = dr.GetNullableIntFromLong("TimeLimitID", false, ignoreMissingFields);
             if (timeLimitID == null && ignoreMissingFields) {
@@ -562,7 +564,7 @@ namespace Database.Tables.BasicHouseholds {
         public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString)
         {
             var aff = new Affordance(FindNewName(isNameTaken, "New Affordance "), null, null, false,
-                PermittedGender.All, 0.1m, Color.FromRgb(255, 255, 255), string.Empty, null, string.Empty,
+                PermittedGender.All, 0.1m, new ColorRGB(255, 255, 255), string.Empty, null, string.Empty,
                 connectionString, false, false, 0, 99, false, ActionAfterInterruption.GoBackToOld,
                 false, System.Guid.NewGuid().ToString());
             return aff;
@@ -1095,7 +1097,7 @@ namespace Database.Tables.BasicHouseholds {
         private void ColorChanged(bool save)
         {
             OnPropertyChanged(nameof(CarpetPlotColor));
-            OnPropertyChanged(nameof(CarpetPlotBrush));
+            //OnPropertyChanged(nameof(CarpetPlotBrush));
             OnPropertyChanged(nameof(Red));
             OnPropertyChanged(nameof(Green));
             OnPropertyChanged(nameof(Blue));

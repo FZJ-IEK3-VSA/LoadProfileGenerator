@@ -51,6 +51,7 @@ namespace Common.CalcDto {
 
             public double Value { get; }
 
+            [NotNull]
             public override string ToString() => "[" + _time + "] " + Value.ToString(Config.CultureInfo);
         }
     }

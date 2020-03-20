@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
-using System.Windows;
 using Automation.ResultFiles;
 using Common;
 using Database;
@@ -28,10 +27,10 @@ namespace CalculationController.Integrity {
                 throw new DataIntegrityException(
                     "The device " + device.Name + " has no device category. This is not allowed!", device);
             }
-            if (device.Year < 1980 || device.Year > 2020) {
+            if (device.Year < 1980 || device.Year > 2030) {
                 throw new DataIntegrityException(
                     "The device " + device.PrettyName +
-                    " has a year that is smaller than 1980 or larger than 2020. Please fix.", device);
+                    " has a year that is smaller than 1980 or larger than 2030. Please fix.", device);
             }
         }
 
@@ -57,7 +56,7 @@ namespace CalculationController.Integrity {
                                         " from the device action " + action.Name + ". Please fix.", device)*/
                                         var roundedmax = Math.Ceiling(newMax * 10) / 10.0;
                                         var mbr =
-                                            MessageWindows.ShowYesNoMessage(
+                                            MessageWindowHandler.Mw.ShowYesNoMessage(
                                                 "The device " + device.Name + " has a maximum power of " +
                                                 load.MaxPower +
                                                 " " + load.LoadType?.UnitOfPower + "  for " + load.LoadType +
@@ -66,7 +65,7 @@ namespace CalculationController.Integrity {
                                                 load.LoadType?.UnitOfPower + " in the profile " +
                                                 profile.Timeprofile.Name + " from the device action \"" + action.Name +
                                                 "\". Set to " + roundedmax + "?", "Change?");
-                                        if (mbr == MessageBoxResult.Yes) {
+                                        if (mbr == LPGMsgBoxResult.Yes) {
                                             device.AddLoad(profile.VLoadType, roundedmax, load.StandardDeviation,
                                                 load.AverageYearlyConsumption);
                                             i = 0;

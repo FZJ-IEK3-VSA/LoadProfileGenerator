@@ -29,7 +29,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Windows.Media;
 using Automation;
 using Automation.ResultFiles;
 using CalculationController.DtoFactories;
@@ -65,7 +64,7 @@ namespace Calculation.Tests {
             CalcVariableRepository cvr = new CalcVariableRepository();
             BitArray isBusy = new BitArray(100, false);
             aff = new CalcAffordance("bla", cp, loc, false, new List<CalcDesire>(), 0, 99, PermittedGender.All,
-                false, 0.1, Color.FromRgb(0, 0, 0), "bla", false, false, new List<CalcAffordanceVariableOp>(),
+                false, 0.1,  new ColorRGB(0, 0, 0), "bla", false, false, new List<CalcAffordanceVariableOp>(),
                 new List<VariableRequirement>(), ActionAfterInterruption.GoBackToOld, "bla", 100, false, "",
                 calcParameters,
                 Guid.NewGuid().ToString(), cvr, new List<CalcAffordance.DeviceEnergyProfileTuple>(), isBusy);
@@ -320,7 +319,7 @@ namespace Calculation.Tests {
                 VariableExecutionTime.Beginning, cv.Guid));
             BitArray isBusy = new BitArray(100, false);
             var aff = new CalcAffordance("bla", cp, loc, false, new List<CalcDesire>(), 0, 99,
-                PermittedGender.All, false, 0.1, Color.FromRgb(0, 0, 0), "bla", false, false, variables, variableReqs,
+                PermittedGender.All, false, 0.1, new ColorRGB(0, 0, 0), "bla", false, false, variables, variableReqs,
                 ActionAfterInterruption.GoBackToOld, "bla", 100, false, "", calcParameters, Guid.NewGuid().ToString(),
                 variableRepository,
                 new List<CalcAffordance.DeviceEnergyProfileTuple>(), isBusy);
@@ -381,7 +380,7 @@ namespace Calculation.Tests {
                 VariableExecutionTime.Beginning, variableGuid));
             BitArray isBusy = new BitArray(100, false);
             var aff = new CalcAffordance("bla", cp, loc, false, new List<CalcDesire>(), 0, 99,
-                PermittedGender.All, false, 0.1, Color.FromRgb(0, 0, 0), "bla", false, false, variables, variableReqs,
+                PermittedGender.All, false, 0.1, new ColorRGB(0, 0, 0), "bla", false, false, variables, variableReqs,
                 ActionAfterInterruption.GoBackToOld, "bla", 100, false, "", calcParameters, Guid.NewGuid().ToString(),
                 calcVariableRepository,
                 new List<CalcAffordance.DeviceEnergyProfileTuple>(), isBusy);
@@ -432,7 +431,7 @@ namespace Calculation.Tests {
                 key));
             BitArray isBusy = new BitArray(calcParameters.InternalTimesteps, false);
             var aff = new CalcAffordance("bla", cp, loc, false, new List<CalcDesire>(), 0, 99,
-                PermittedGender.All, false, 0.1, Color.FromRgb(0, 0, 0), "bla", false, false, variables, variableReqs,
+                PermittedGender.All, false, 0.1, new ColorRGB(0, 0, 0), "bla", false, false, variables, variableReqs,
                 ActionAfterInterruption.GoBackToOld, "bla", 100, false, "", calcParameters, Guid.NewGuid().ToString(),
                 crv,
                 new List<CalcAffordance.DeviceEnergyProfileTuple>(), isBusy);
@@ -484,7 +483,7 @@ namespace Calculation.Tests {
             CalcVariableRepository crv = new CalcVariableRepository();
             BitArray isBusy = new BitArray(calcParameters.InternalTimesteps, false);
             var aff = new CalcAffordance("bla", cp, loc, false, new List<CalcDesire>(), 0, 99, PermittedGender.All,
-                false, 0, Color.FromRgb(0, 0, 0), "bla", false, false, new List<CalcAffordanceVariableOp>(),
+                false, 0, new ColorRGB(0, 0, 0), "bla", false, false, new List<CalcAffordanceVariableOp>(),
                 new List<VariableRequirement>(), ActionAfterInterruption.GoBackToOld, "bla", 100, false, "",
                 calcParameters,
                 Guid.NewGuid().ToString(), crv,

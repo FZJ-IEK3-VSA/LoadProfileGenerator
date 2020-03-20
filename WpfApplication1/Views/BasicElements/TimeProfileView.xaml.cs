@@ -69,12 +69,12 @@ namespace LoadProfileGenerator.Views.BasicElements {
         private void Adddatapoint_Click([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
         {
             if (!TimeSpan.TryParse(TxtTime.Text, out var ts)) {
-                MessageWindows.ShowInfoMessage("Could not interpret the time. Try for example: 00:00:01", "Error");
+                MessageWindowHandler.Mw.ShowInfoMessage("Could not interpret the time. Try for example: 00:00:01", "Error");
                 return;
             }
 
             if (!double.TryParse(TxtValue.Text, out double val)) {
-                MessageWindows.ShowInfoMessage("Could not interpret the value. Try for example: 1", "Error");
+                MessageWindowHandler.Mw.ShowInfoMessage("Could not interpret the value. Try for example: 1", "Error");
                 return;
             }
 
@@ -117,10 +117,10 @@ namespace LoadProfileGenerator.Views.BasicElements {
         private void ImportData_Click([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
         {
             var dr =
-                MessageWindows.ShowYesNoMessage(
+                MessageWindowHandler.Mw.ShowYesNoMessage(
                     "Add these " + Presenter.CsvImporter.Entries.Count + " entries as time points for this profile?",
                     "Add?");
-            if (dr == MessageBoxResult.No) {
+            if (dr == LPGMsgBoxResult.No) {
                 return;
             }
 
@@ -201,10 +201,10 @@ namespace LoadProfileGenerator.Views.BasicElements {
         private void RemoveAlldatapoint_Click([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
         {
             var dr =
-                MessageWindows.ShowYesNoMessage(
+                MessageWindowHandler.Mw.ShowYesNoMessage(
                     "Delete all " + Presenter.ThisProfile.ObservableDatapoints.Count + " data points?",
                     "Delete?");
-            if (dr == MessageBoxResult.No) {
+            if (dr == LPGMsgBoxResult.No) {
                 return;
             }
 

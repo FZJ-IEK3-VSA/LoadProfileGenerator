@@ -30,7 +30,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Windows.Media;
+using Automation;
 using CalculationEngine.Helper;
 using CalculationEngine.Transportation;
 using Common;
@@ -98,7 +98,7 @@ namespace CalculationEngine.HouseholdElements {
         [NotNull]
         public string AffCategory { get; }
 
-        public abstract Color AffordanceColor { get; }
+        public abstract ColorRGB AffordanceColor { get; }
 
         public ActionAfterInterruption AfterInterruption => _actionAfterInterruption;
 

@@ -29,7 +29,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Windows.Threading;
 using Automation;
 using Automation.ResultFiles;
 using Common;
@@ -41,6 +40,14 @@ using Database.Tables.Transportation;
 using JetBrains.Annotations;
 
 namespace CalculationController.Queue {
+    public interface ILPGDispatcher {
+        //(System.Windows.Threading.DispatcherPriority priority, Delegate method, object arg)
+        void BeginInvoke(Delegate method, object arg);
+
+        bool IsCorrectThread();
+    }
+
+
     public class CalcStartParameterSet {
         //public const string TableName = "CalcStartParameterSet";
 
@@ -99,7 +106,7 @@ namespace CalculationController.Queue {
             [NotNull] Func<bool, string, ObservableCollection<ResultFileEntry>, bool>
                 reportFinishFuncForHouseAndSettlement,
             [NotNull] Func<bool, string, string, bool> reportFinishFuncForHousehold,
-            [NotNull] Func<object, bool> openTabFunc, [CanBeNull] Dispatcher dispatcher,
+            [NotNull] Func<object, bool> openTabFunc, [CanBeNull] ILPGDispatcher dispatcher,
             [NotNull] GeographicLocation geographicLocation,
             [NotNull] TemperatureProfile temperatureProfile,
             [NotNull] ICalcObject calcTarget,
@@ -175,7 +182,7 @@ namespace CalculationController.Queue {
         public DeviceSelection DeviceSelection { get; }
 
         [CanBeNull]
-        public Dispatcher Dispatcher { get; }
+        public ILPGDispatcher Dispatcher { get; }
 
         public EnergyIntensityType EnergyIntensity { get; }
         public TimeSpan ExternalTimeResolution { get; }

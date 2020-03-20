@@ -29,7 +29,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Windows;
 using System.Windows.Controls;
 using Automation.ResultFiles;
 using Common;
@@ -86,8 +85,8 @@ namespace LoadProfileGenerator.Presenters {
         public void AskDeleteQuestion([NotNull] string headerstring, [NotNull] Action delete)
         {
             var s = "Are you sure you want to delete the element:" + Environment.NewLine + headerstring + "?";
-            var dr = MessageWindows.ShowYesNoMessage(s, "Delete?");
-            if (dr == MessageBoxResult.Yes) {
+            var dr = MessageWindowHandler.Mw.ShowYesNoMessage(s, "Delete?");
+            if (dr == LPGMsgBoxResult.Yes) {
                 delete();
             }
         }

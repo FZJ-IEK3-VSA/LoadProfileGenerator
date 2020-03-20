@@ -89,6 +89,7 @@ namespace CalculationController.Queue
         protected virtual void OnPropertyChanged([NotNull] string propertyName)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
+        [NotNull]
         public override string ToString()
             => _calcObject.Name + " #" + (CalcEntryNumber + 1).ToString(CultureInfo.InvariantCulture);
     }

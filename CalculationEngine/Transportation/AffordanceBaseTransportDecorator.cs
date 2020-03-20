@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Windows.Media;
+using Automation;
 using Automation.ResultFiles;
 using CalculationEngine.Helper;
 using CalculationEngine.HouseholdElements;
@@ -116,7 +116,7 @@ namespace CalculationEngine.Transportation {
         [NotNull]
         public string AffCategory => _sourceAffordance.AffCategory;
 
-        public Color AffordanceColor => _sourceAffordance.AffordanceColor;
+        public ColorRGB AffordanceColor => _sourceAffordance.AffordanceColor;
 
         public ActionAfterInterruption AfterInterruption => _sourceAffordance.AfterInterruption;
 

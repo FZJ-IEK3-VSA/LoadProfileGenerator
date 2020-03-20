@@ -51,6 +51,7 @@ namespace Common.CalcDto {
         [JsonProperty]
         public string CalcLoadTypeGuid { get; private set; }
 
+        [NotNull]
         public override string ToString() => "Device:" + CalcDeviceName + ", Profile " + TimeProfile.Name +
                                              ", Offset " + TimeOffset;
     }

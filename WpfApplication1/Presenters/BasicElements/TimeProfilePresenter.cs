@@ -33,7 +33,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
-using System.Windows;
 using Common;
 using Database.Helpers;
 using Database.Tables.BasicElements;
@@ -102,8 +101,8 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
                     s = s + affordance + Environment.NewLine;
                 }
             }
-            var dr = MessageWindows.ShowYesNoMessage(s, "Delete?");
-            if (dr == MessageBoxResult.Yes) {
+            var dr = MessageWindowHandler.Mw.ShowYesNoMessage(s, "Delete?");
+            if (dr == LPGMsgBoxResult.Yes) {
                 delete();
             }
         }

@@ -128,16 +128,15 @@ namespace LoadProfileGenerator {
             }
             catch (Exception e) {
                 Logger.Error(e.Message);
-                MessageWindows.ShowDebugMessage(e);
+                MessageWindowHandler.Mw.ShowDebugMessage(e);
                 Logger.Exception(e);
             }
 
             Language = XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag);
             InitializeComponent();
-            DataContext = new ApplicationPresenter(this, Sim);
+            DataContext = new ApplicationPresenter(this, Sim, this.Dispatcher);
             _version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            MessageWindows.SetMainWindow(this);
-            Logger.Get().Lv = LstProgress;
+            MessageWindowHandler.SetMainWindow(new WpfMsgWindows(this));
             FindDefaultDB3File();
 
             if (!string.IsNullOrEmpty(DB3Path) && (DB3Path.ToUpperInvariant().Contains("APPDATA") ||
@@ -173,7 +172,7 @@ namespace LoadProfileGenerator {
             var uc = new UpdateChecker();
             uc.GetLatestVersion(out var question);
             if (question != null) {
-                MessageWindows.ShowInfoMessage(question, "Update recommended!");
+                MessageWindowHandler.Mw.ShowInfoMessage(question, "Update recommended!");
             }
         }
 
@@ -186,7 +185,7 @@ namespace LoadProfileGenerator {
         [CanBeNull]
         private static Simulator Sim { get; set; }
 
-        //helper function for the Messagewindows class to get around the dispatcher issue
+        //helper function for the MessageWindowHandler.Mw class to get around the dispatcher issue
         public MessageBoxResult ShowMessageWindow([NotNull] string txt, [NotNull] string caption,
             MessageBoxButton button,
             MessageBoxImage image, MessageBoxResult defaultresult)
@@ -279,8 +278,7 @@ namespace LoadProfileGenerator {
             }
 
             var t = new Thread(() => {
-                Logger.Get().Lv?.Dispatcher?.Invoke(DispatcherPriority.Normal,
-                    new Action(() => Presenter.IsMenuEnabled = false));
+                Logger.Get().SafeExecuteWithWait(() => Presenter.IsMenuEnabled = false);
                 _connectionString = "Data Source=" + fileName;
                 try {
                     Sim = new Simulator(_connectionString);
@@ -292,7 +290,7 @@ namespace LoadProfileGenerator {
                     MessageBox.Show("Could not load the selected file. The error was this:" + Environment.NewLine +
                                     Environment.NewLine + e.Message);
                     DB3Path = string.Empty;
-                    Logger.Get().Lv?.Dispatcher?.Invoke(DispatcherPriority.Normal, new Action(UpdateTitle));
+                    Logger.Get().SafeExecute(UpdateTitle);
                     try {
                         if (File.Exists(LastFileFileName)) {
                             File.Delete(LastFileFileName);
@@ -305,10 +303,8 @@ namespace LoadProfileGenerator {
                     return;
                 }
 
-                Logger.Get().Lv?.Dispatcher?.Invoke(DispatcherPriority.Normal,
-                    new Action(() => Presenter.Simulator = Sim));
-                Logger.Get().Lv?.Dispatcher?.Invoke(DispatcherPriority.Normal,
-                    new Action(() => Presenter.IsMenuEnabled = true));
+                Logger.Get().SafeExecute(() => Presenter.Simulator = Sim);
+                Logger.Get().SafeExecute(() => Presenter.IsMenuEnabled = true);
             });
             t.Start();
         }
@@ -365,7 +361,7 @@ namespace LoadProfileGenerator {
                 aw.ShowDialog();
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
                 Logger.Exception(ex);
             }
         }
@@ -378,7 +374,7 @@ namespace LoadProfileGenerator {
                 MyGlobalTree.SelectItem(d, false);
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
                 Logger.Exception(ex);
             }
         }
@@ -391,7 +387,7 @@ namespace LoadProfileGenerator {
                 MyGlobalTree.SelectItem(d, false);
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
                 Logger.Exception(ex);
             }
         }
@@ -404,7 +400,7 @@ namespace LoadProfileGenerator {
                 MyGlobalTree.SelectItem(dbp, false);
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
                 Logger.Exception(ex);
             }
         }
@@ -417,7 +413,7 @@ namespace LoadProfileGenerator {
                 MyGlobalTree.SelectItem(d, false);
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
                 Logger.Exception(ex);
             }
         }
@@ -430,7 +426,7 @@ namespace LoadProfileGenerator {
                 MyGlobalTree.SelectItem(d, false);
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
                 Logger.Exception(ex);
             }
         }
@@ -443,7 +439,7 @@ namespace LoadProfileGenerator {
                 MyGlobalTree.SelectItem(a, false);
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
                 Logger.Exception(ex);
             }
         }
@@ -456,7 +452,7 @@ namespace LoadProfileGenerator {
                 MyGlobalTree.SelectItem(g, false);
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
                 Logger.Exception(ex);
             }
         }
@@ -469,7 +465,7 @@ namespace LoadProfileGenerator {
                 MyGlobalTree.SelectItem(dc, false);
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
                 Logger.Exception(ex);
             }
         }
@@ -482,7 +478,7 @@ namespace LoadProfileGenerator {
                 MyGlobalTree.SelectItem(ds, false);
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
                 Logger.Exception(ex);
             }
         }
@@ -495,7 +491,7 @@ namespace LoadProfileGenerator {
                 MyGlobalTree.SelectItem(d, false);
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
                 Logger.Exception(ex);
             }
         }
@@ -508,7 +504,7 @@ namespace LoadProfileGenerator {
                 MyGlobalTree.SelectItem(es, false);
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
                 Logger.Exception(ex);
             }
         }
@@ -521,7 +517,7 @@ namespace LoadProfileGenerator {
                 MyGlobalTree.SelectItem(gen, false);
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
                 Logger.Exception(ex);
             }
         }
@@ -534,7 +530,7 @@ namespace LoadProfileGenerator {
                 MyGlobalTree.SelectItem(gl, false);
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
                 Logger.Exception(ex);
             }
         }
@@ -547,7 +543,7 @@ namespace LoadProfileGenerator {
                 MyGlobalTree.SelectItem(holiday, false);
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
                 Logger.Exception(ex);
             }
         }
@@ -560,7 +556,7 @@ namespace LoadProfileGenerator {
                 MyGlobalTree.SelectItem(h, false);
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
                 Logger.Exception(ex);
             }
         }
@@ -573,7 +569,7 @@ namespace LoadProfileGenerator {
                 MyGlobalTree.SelectItem(d, false);
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
                 Logger.Exception(ex);
             }
         }
@@ -586,7 +582,7 @@ namespace LoadProfileGenerator {
                 MyGlobalTree.SelectItem(g, false);
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
                 Logger.Exception(ex);
             }
         }
@@ -599,7 +595,7 @@ namespace LoadProfileGenerator {
                 MyGlobalTree.SelectItem(ht, false);
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
                 Logger.Exception(ex);
             }
         }
@@ -612,7 +608,7 @@ namespace LoadProfileGenerator {
                 MyGlobalTree.SelectItem(g, false);
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
                 Logger.Exception(ex);
             }
         }
@@ -625,7 +621,7 @@ namespace LoadProfileGenerator {
                 MyGlobalTree.SelectItem(ht, false);
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
                 Logger.Exception(ex);
             }
         }
@@ -638,7 +634,7 @@ namespace LoadProfileGenerator {
                 MyGlobalTree.SelectItem(dt, false);
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
                 Logger.Exception(ex);
             }
         }
@@ -651,7 +647,7 @@ namespace LoadProfileGenerator {
                 MyGlobalTree.SelectItem(d, false);
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
                 Logger.Exception(ex);
             }
         }
@@ -664,7 +660,7 @@ namespace LoadProfileGenerator {
                 MyGlobalTree.SelectItem(ch, false);
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
                 Logger.Exception(ex);
             }
         }
@@ -677,7 +673,7 @@ namespace LoadProfileGenerator {
                 MyGlobalTree.SelectItem(d, false);
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
                 Logger.Exception(ex);
             }
         }
@@ -690,7 +686,7 @@ namespace LoadProfileGenerator {
                 MyGlobalTree.SelectItem(p, false);
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
                 Logger.Exception(ex);
             }
         }
@@ -703,7 +699,7 @@ namespace LoadProfileGenerator {
                 MyGlobalTree.SelectItem(sett, false);
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
             }
         }
 
@@ -715,7 +711,7 @@ namespace LoadProfileGenerator {
                 MyGlobalTree.SelectItem(v, false);
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
             }
         }
 
@@ -727,7 +723,7 @@ namespace LoadProfileGenerator {
                 MyGlobalTree.SelectItem(d, false);
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
             }
         }
 
@@ -739,7 +735,7 @@ namespace LoadProfileGenerator {
                 MyGlobalTree.SelectItem(s, false);
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
             }
         }
 
@@ -751,7 +747,7 @@ namespace LoadProfileGenerator {
                 MyGlobalTree.SelectItem(tp, false);
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
             }
         }
 
@@ -763,7 +759,7 @@ namespace LoadProfileGenerator {
                 MyGlobalTree.SelectItem(v, false);
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
             }
         }
 
@@ -775,7 +771,7 @@ namespace LoadProfileGenerator {
                 MyGlobalTree.SelectItem(d, false);
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
             }
         }
 
@@ -783,15 +779,15 @@ namespace LoadProfileGenerator {
         private void AddTestSettlement_Click([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
         {
             var mbr =
-                MessageWindows.ShowYesNoMessage(
+                MessageWindowHandler.Mw.ShowYesNoMessage(
                     "Are you sure that you want to create a test settlement with all households?", "Create?");
-            if (mbr == MessageBoxResult.Yes) {
+            if (mbr == LPGMsgBoxResult.Yes) {
                 try {
                     var sett = Presenter.AddTestSettlement();
                     MyGlobalTree.SelectItem(sett, false);
                 }
                 catch (Exception ex) {
-                    MessageWindows.ShowDebugMessage(ex);
+                    MessageWindowHandler.Mw.ShowDebugMessage(ex);
                 }
             }
             else {
@@ -807,7 +803,7 @@ namespace LoadProfileGenerator {
                 MyGlobalTree.SelectItem(dt, false);
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
                 Logger.Exception(ex);
             }
         }
@@ -820,7 +816,7 @@ namespace LoadProfileGenerator {
                 MyGlobalTree.SelectItem(td, false);
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
             }
         }
 
@@ -832,7 +828,7 @@ namespace LoadProfileGenerator {
                 MyGlobalTree.SelectItem(d, false);
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
             }
         }
 
@@ -844,7 +840,7 @@ namespace LoadProfileGenerator {
                 MyGlobalTree.SelectItem(d, false);
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
             }
         }
 
@@ -856,7 +852,7 @@ namespace LoadProfileGenerator {
                 MyGlobalTree.SelectItem(d, false);
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
             }
         }
 
@@ -868,7 +864,7 @@ namespace LoadProfileGenerator {
                 MyGlobalTree.SelectItem(v, false);
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
             }
         }
 
@@ -880,7 +876,7 @@ namespace LoadProfileGenerator {
                 MyGlobalTree.SelectItem(v, false);
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
             }
         }
 
@@ -891,7 +887,7 @@ namespace LoadProfileGenerator {
                 Presenter.OpenItem("Affordance Color View");
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
             }
         }
 
@@ -902,7 +898,7 @@ namespace LoadProfileGenerator {
                 Presenter.OpenItem("Affordances with real devices");
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
             }
         }
 
@@ -913,7 +909,7 @@ namespace LoadProfileGenerator {
                 Presenter.OpenItem("Affordances Variable Overview");
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
             }
         }
 
@@ -924,9 +920,9 @@ namespace LoadProfileGenerator {
             }
 
             var mbr =
-                MessageWindows.ShowYesNoMessage("Are you sure that you want to take a full set of screenshots?",
+                MessageWindowHandler.Mw.ShowYesNoMessage("Are you sure that you want to take a full set of screenshots?",
                     "Create?");
-            if (mbr == MessageBoxResult.Yes) {
+            if (mbr == LPGMsgBoxResult.Yes) {
                 Width = 1500;
                 WindowGrid.ColumnDefinitions[2].Width = new GridLength(1000);
                 var ssh = new ScreenshotHelper(Sim, Presenter, Tabs);
@@ -941,11 +937,11 @@ namespace LoadProfileGenerator {
         private void CalcRealisticTraitTimeEstimates_OnClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
         {
             var mbr =
-                MessageWindows.ShowYesNoMessage(
+                MessageWindowHandler.Mw.ShowYesNoMessage(
                     "Are you sure that you want to update the time estimates for all traits?", "Update?");
             var sim = Presenter.Simulator;
 
-            if (mbr == MessageBoxResult.Yes&&sim!=null) {
+            if (mbr == LPGMsgBoxResult.Yes&&sim!=null) {
                 var t = new Thread(() => RealisticTraitEstimator.Run(sim));
                 t.Start();
             }
@@ -1019,7 +1015,7 @@ namespace LoadProfileGenerator {
             }
 
             try {
-                MessageWindows.ShowInfoMessage(
+                MessageWindowHandler.Mw.ShowInfoMessage(
                     "This will close the database, perform cleanup work and open it again. This might take a minute.",
                     "Please wait.");
                 var oldpath = DB3Path;
@@ -1034,7 +1030,7 @@ namespace LoadProfileGenerator {
                 OpenDatabase(oldpath);
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
             }
         }
 
@@ -1052,9 +1048,9 @@ namespace LoadProfileGenerator {
 
             try {
                 var result =
-                    MessageWindows.ShowYesNoMessage("Delete all household templates now?",
+                    MessageWindowHandler.Mw.ShowYesNoMessage("Delete all household templates now?",
                         "Delete Household Templates?");
-                if (result == MessageBoxResult.Yes) {
+                if (result == LPGMsgBoxResult.Yes) {
                     var i = 1;
                     while (Sim.HouseholdTemplates.It.Count > 0) {
                         Logger.Warning("Deleting template " + i + ": " + Sim.HouseholdTemplates.It[0]);
@@ -1075,7 +1071,7 @@ namespace LoadProfileGenerator {
                 Presenter.OpenItem("Device Overview");
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
             }
         }
 
@@ -1127,9 +1123,9 @@ namespace LoadProfileGenerator {
             }
 
             var mbr =
-                MessageWindows.ShowYesNoMessage("Are you sure that you want to create the household templates?",
+                MessageWindowHandler.Mw.ShowYesNoMessage("Are you sure that you want to create the household templates?",
                     "Create?");
-            if (mbr == MessageBoxResult.Yes) {
+            if (mbr == LPGMsgBoxResult.Yes) {
                 var hhtc = new HouseholdTemplateCreator(Sim);
                 hhtc.Run(true, Sim);
             }
@@ -1145,7 +1141,7 @@ namespace LoadProfileGenerator {
                 Presenter.OpenItem("Households with real devices");
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
             }
         }
 
@@ -1156,7 +1152,7 @@ namespace LoadProfileGenerator {
             }
 
             UpdateVacationsInHouseholdTemplates1(Sim);
-            MessageWindows.ShowInfoMessage("Finished updating...", "LPG");
+            MessageWindowHandler.Mw.ShowInfoMessage("Finished updating...", "LPG");
         }
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
@@ -1166,7 +1162,7 @@ namespace LoadProfileGenerator {
                 Presenter.OpenItem("Import");
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
             }
         }
 
@@ -1186,7 +1182,7 @@ namespace LoadProfileGenerator {
                 catch (Exception ex) {
                     if (!Config.IsInUnitTesting) {
                         if (ex is DataIntegrityException exception) {
-                            MessageWindows.ShowDataIntegrityMessage(exception);
+                            MessageWindowHandler.Mw.ShowDataIntegrityMessage(exception);
                             if (exception.Element != null) {
                                 Logger.Get().SafeExecute(() => presenter.OpenItem(exception.Element));
                             }
@@ -1198,7 +1194,7 @@ namespace LoadProfileGenerator {
                             }
                         }
                         else {
-                            MessageWindows.ShowDebugMessage(ex);
+                            MessageWindowHandler.Mw.ShowDebugMessage(ex);
                         }
                     }
                     else {
@@ -1304,9 +1300,9 @@ namespace LoadProfileGenerator {
             }
 
             var mbr =
-                MessageWindows.ShowYesNoMessage(
+                MessageWindowHandler.Mw.ShowYesNoMessage(
                     "Are you sure that you want to create the test households for the templated persons?", "Create?");
-            if (mbr == MessageBoxResult.Yes) {
+            if (mbr == LPGMsgBoxResult.Yes) {
                 TemplatePersonCreator.RunCalculationTests(Sim);
             }
             else {
@@ -1333,7 +1329,7 @@ namespace LoadProfileGenerator {
                 Presenter.OpenItem("Affordance Time Limit Overview");
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
             }
         }
 
@@ -1344,7 +1340,7 @@ namespace LoadProfileGenerator {
                 Presenter.OpenItem("Unused Affordances");
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
             }
         }
 
@@ -1355,7 +1351,7 @@ namespace LoadProfileGenerator {
                 Presenter.OpenItem("Unused Time Limits");
             }
             catch (Exception ex) {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
             }
         }
 
@@ -1366,9 +1362,9 @@ namespace LoadProfileGenerator {
             }
 
             var mbr =
-                MessageWindows.ShowYesNoMessage("Are you sure that you want to create or update the templated persons?",
+                MessageWindowHandler.Mw.ShowYesNoMessage("Are you sure that you want to create or update the templated persons?",
                     "Create?");
-            if (mbr == MessageBoxResult.Yes) {
+            if (mbr == LPGMsgBoxResult.Yes) {
                 var t = new Thread(() => {
                     PersonDescriptionFixer.FillPersonDescriptions(Sim);
                     TemplatePersonCreator.CreateTemplatePersons(Sim);
@@ -1412,7 +1408,7 @@ namespace LoadProfileGenerator {
             }
             catch (Exception ex)
             {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
                 Logger.Exception(ex);
             }
         }
@@ -1426,7 +1422,7 @@ namespace LoadProfileGenerator {
             }
             catch (Exception ex)
             {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
                 Logger.Exception(ex);
             }
         }
@@ -1440,7 +1436,7 @@ namespace LoadProfileGenerator {
             }
             catch (Exception ex)
             {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
                 Logger.Exception(ex);
             }
         }

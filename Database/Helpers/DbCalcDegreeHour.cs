@@ -124,6 +124,7 @@ namespace Database.Helpers {
             return degreeHourvalue;
         }
 
+        [NotNull]
         public override string ToString() => _date.ToShortDateString() + " " + _date.ToShortTimeString() + ": " +
                                              _averageTemperature;
     }

@@ -29,9 +29,12 @@
 #region
 
 using System;
+using System.Collections;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.Drawing.Imaging;
+using System.Globalization;
 using System.IO;
 using System.Threading;
 using System.Windows;
@@ -46,12 +49,65 @@ using Database.Tables.ModularHouseholds;
 using JetBrains.Annotations;
 using LoadProfileGenerator.Controls.Usercontrols;
 using LoadProfileGenerator.Presenters.BasicElements;
+using Image = System.Windows.Controls.Image;
 
 #endregion
 
 namespace LoadProfileGenerator.Views.BasicElements {
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public partial class TimeLimitView {
+
+        [NotNull]
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Objekte verwerfen, bevor Bereich verloren geht")]
+        public static Bitmap MakeBitmapFromBitArray([ItemNotNull] [NotNull] BitArray br)
+        {
+            var rightnow = DateTime.Now;
+            var c = new GregorianCalendar(GregorianCalendarTypes.USEnglish);
+            var year = rightnow.Year;
+            var daysinyear = c.GetDaysInYear(year);
+
+            var mybm = new Bitmap(daysinyear, 25);
+            {
+                var g = Graphics.FromImage(mybm);
+
+                using (var b = new SolidBrush(Color.DarkBlue))
+                {
+                    g.FillRectangle(b, 0, 0, daysinyear, 24);
+                    var dts = new DateTime[daysinyear * 24];
+                    dts[0] = new DateTime(year, 1, 1);
+                    for (var i = 1; i < daysinyear * 24; i++)
+                    {
+                        dts[i] = dts[i - 1] + new TimeSpan(1, 0, 0);
+                    }
+                    for (var day = 0; day < daysinyear; day++)
+                    {
+                        for (var hour = 0; hour < 24; hour++)
+                        {
+                            var starthour = new DateTime(year, 1, 1, hour, 0, 0);
+                            starthour = starthour.AddDays(day);
+                            var endhour = starthour.AddHours(1);
+                            var foundanyactive = false;
+                            for (var i = 0; i < dts.Length; i++)
+                            {
+                                if (dts[i] >= starthour && dts[i] < endhour && br[i])
+                                {
+                                    foundanyactive = true;
+                                    i = dts.Length;
+                                }
+                            }
+                            if (foundanyactive)
+                            {
+                                var x = day;
+                                var y = hour;
+                                mybm.SetPixel(x, y, Color.White);
+                            }
+                        }
+                    }
+                    return mybm;
+                }
+            }
+        }
+
         [NotNull] private readonly object _pictureLock = new object();
 
         [CanBeNull] private BitmapImage _calcImage;
@@ -194,7 +250,7 @@ namespace LoadProfileGenerator.Views.BasicElements {
             }
 
             LimitPresenter.ImportTimeLimit();
-            MessageWindows.ShowInfoMessage("Import finished.", "Success");
+            MessageWindowHandler.Mw.ShowInfoMessage("Import finished.", "Success");
             LimitPresenter.Close(true);
             LimitPresenter.ApplicationPresenter.OpenItem(LimitPresenter.ThisTimeLimit);
         }
@@ -338,7 +394,7 @@ namespace LoadProfileGenerator.Views.BasicElements {
                 var previewKey = "TimeLimitView" + DateTime.Now.ToLongTimeString();
                 var br = _timeLimitEntry.GetOneYearHourArray(_selectedTemperatureProfile, _geographicLocation, r,
                     vacationTimeframes, previewKey, out _);
-                var bmp = TimeLimitEntry.MakeBitmapFromBitArray(br);
+                var bmp = MakeBitmapFromBitArray(br);
                 BitmapImage totalImage;
 #pragma warning disable S2930 // "IDisposables" should be disposed
                 var ms = new MemoryStream();
@@ -362,7 +418,7 @@ namespace LoadProfileGenerator.Views.BasicElements {
                 {
                     var br3 = _rootEntry.GetOneYearHourArray(_selectedTemperatureProfile, _geographicLocation, r,
                         vacationTimeframes, previewKey, out _);
-                    var bmp2 = TimeLimitEntry.MakeBitmapFromBitArray(br3);
+                    var bmp2 = MakeBitmapFromBitArray(br3);
                     bmp2.Save(ms, ImageFormat.Png);
                     ms.Position = 0;
                     totalImage = new BitmapImage();

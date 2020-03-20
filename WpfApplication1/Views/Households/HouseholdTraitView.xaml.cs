@@ -163,17 +163,17 @@ namespace LoadProfileGenerator.Views.Households {
             }
 
             if (
-                MessageWindows.ShowYesNoMessage(
+                MessageWindowHandler.Mw.ShowYesNoMessage(
                     "This will import everything from the household trait " +
                     Presenter.SelectedImportHouseholdTrait.Name +
                     ". If this household trait isn't empty, this will most likely result in quite a mess. Are you sure?",
                     "Sure?") ==
-                MessageBoxResult.No) {
+                LPGMsgBoxResult.No) {
                 return;
             }
 
             Presenter.ImportHousehold();
-            MessageWindows.ShowInfoMessage("Import is finished!", "Load Profile Generator");
+            MessageWindowHandler.Mw.ShowInfoMessage("Import is finished!", "Load Profile Generator");
         }
 
         private void BtnLookForCorrectDesireClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)

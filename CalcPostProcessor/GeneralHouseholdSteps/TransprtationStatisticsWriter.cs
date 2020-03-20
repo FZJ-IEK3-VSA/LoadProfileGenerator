@@ -7,15 +7,14 @@ using Common;
 using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.Loggers;
-using JetBrains.Annotations;
 
 namespace CalcPostProcessor.GeneralHouseholdSteps {
     public class TransportationStatisticsWriter : HouseholdStepBase {
         //private int _maxTime;
-        [NotNull] private readonly IInputDataLogger _logger;
+        [JetBrains.Annotations.NotNull] private readonly IInputDataLogger _logger;
 
-        public TransportationStatisticsWriter([NotNull] CalcDataRepository repository,
-                                              [NotNull] ICalculationProfiler profiler, [NotNull] IInputDataLogger logger)
+        public TransportationStatisticsWriter([JetBrains.Annotations.NotNull] CalcDataRepository repository,
+                                              [JetBrains.Annotations.NotNull] ICalculationProfiler profiler, [JetBrains.Annotations.NotNull] IInputDataLogger logger)
             : base(repository, AutomationUtili.GetOptionList(CalcOption.TransportationStatistics), profiler, "Transportation Statistics Use") =>
             _logger = logger;
 

@@ -7,6 +7,7 @@ namespace Common.CalcDto {
 #pragma warning disable S1210 // "Equals" and the comparison operators should be overridden when implementing "IComparable"
     public class CalcLoadTypeDto :IEquatable<CalcLoadTypeDto>, IComparable<CalcLoadTypeDto> {
 #pragma warning restore S1210 // "Equals" and the comparison operators should be overridden when implementing "IComparable"
+        [NotNull]
         public override string ToString() => Name + " (" +Guid+")";
 
         public bool Equals(CalcLoadTypeDto other) => string.Equals(Guid, other?.Guid);

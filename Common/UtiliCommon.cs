@@ -4,20 +4,10 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
-using System.Windows.Controls;
 using Automation.ResultFiles;
 
 namespace Common {
     public static class Utili {
-
-        public static bool CheckTextBox([NotNull] this TextBox txtBox, [NotNull] string errorMessage) {
-            var allGood = !string.IsNullOrWhiteSpace(txtBox.Text);
-            if (!allGood) {
-                Logger.Error(errorMessage);
-            }
-            return allGood;
-        }
-
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [NotNull]
         public static string GetCurrentMethodAndClass() {
@@ -108,15 +98,6 @@ namespace Common {
             return value;
         }
 
-        public static bool CheckCombobox([NotNull] this ComboBox comboBox, [NotNull] string errorMessage)
-        {
-            var allGood = comboBox.SelectedItem != null;
-            if (!allGood)
-            {
-                Logger.Error(errorMessage);
-            }
-            return allGood;
-        }
         public static decimal ConvertToDecimalWithMessage([NotNull] string s)
         {
             var success = decimal.TryParse(s, out decimal value);

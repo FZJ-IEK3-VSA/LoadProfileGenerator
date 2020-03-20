@@ -169,6 +169,7 @@ namespace CalculationEngine.HouseholdElements {
             return factor;
         }
 
+        [NotNull]
         public override string ToString() => "desire:" + _name;
     }
 }

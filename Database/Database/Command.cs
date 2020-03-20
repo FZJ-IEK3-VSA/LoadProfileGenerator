@@ -348,6 +348,7 @@ namespace Database.Database {
             Logger.Debug("sqlconnection status finished");
         }
 
+        [NotNull]
         public override string ToString() => Cmdstring;
     }
 }

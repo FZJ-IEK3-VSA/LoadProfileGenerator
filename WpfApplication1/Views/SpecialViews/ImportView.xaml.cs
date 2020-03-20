@@ -76,7 +76,7 @@ namespace LoadProfileGenerator.Views.SpecialViews {
                 }
                 catch (Exception ex) {
                     Logger.Exception(ex);
-                    MessageWindows.ShowDebugMessage(ex);
+                    MessageWindowHandler.Mw.ShowDebugMessage(ex);
                 }
             });
             t.Start();

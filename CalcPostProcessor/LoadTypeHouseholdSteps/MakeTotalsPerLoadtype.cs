@@ -51,7 +51,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
 
         [NotNull]
         private readonly CalcParameters _calcParameters;
-        //[NotNull]private readonly Dictionary<HouseholdKey, StreamWriter> _files;
+        //[JetBrains.Annotations.NotNull]private readonly Dictionary<HouseholdKey, StreamWriter> _files;
 
         public MakeTotalsPerLoadtype(
                                      [NotNull] CalcDataRepository repository,
@@ -65,8 +65,8 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
          //   _files = new Dictionary<HouseholdKey, StreamWriter>();
         }
         /*
-        public double CalculateTotal([NotNull][ItemNotNull] List<OnlineEnergyFileRow> energyFileRows, [NotNull] CalcLoadTypeDto dstLoadType,
-            [NotNull] Dictionary<CalcLoadTypeDto, double> allSums, int numberOfPersons)
+        public double CalculateTotal([JetBrains.Annotations.NotNull][ItemNotNull] List<OnlineEnergyFileRow> energyFileRows, [JetBrains.Annotations.NotNull] CalcLoadTypeDto dstLoadType,
+            [JetBrains.Annotations.NotNull] Dictionary<CalcLoadTypeDto, double> allSums, int numberOfPersons)
         {
             throw new LPGNotImplementedException("calculate house totals");
          /*   //if (!_files.ContainsKey(Constants.TotalsKey)) {
@@ -193,7 +193,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             }
         }
         /*
-        private void WriteHeader([NotNull] FileFactoryAndTracker fft, [NotNull] HouseholdKey householdKey)
+        private void WriteHeader([JetBrains.Annotations.NotNull] FileFactoryAndTracker fft, [JetBrains.Annotations.NotNull] HouseholdKey householdKey)
         {
             StreamWriter sw;
             if (householdKey == Constants.TotalsKey) {
@@ -223,7 +223,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                          _calcParameters.CSVCharacter + "Unit");
         }*/
     /*
-        private void WriteToGeneralFile(double sum, [NotNull] CalcLoadTypeDto dstLoadType, double min, double max, int numberOfPersons)
+        private void WriteToGeneralFile(double sum, [JetBrains.Annotations.NotNull] CalcLoadTypeDto dstLoadType, double min, double max, int numberOfPersons)
         {
             var s = dstLoadType.Name + _calcParameters.CSVCharacter;
             s += sum + _calcParameters.CSVCharacter;

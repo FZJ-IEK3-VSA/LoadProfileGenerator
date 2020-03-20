@@ -61,6 +61,7 @@ namespace CalculationEngine.Transportation
             public int DurationInSteps { get; }
             public double TotalDistance { get;  }
 
+            [NotNull]
             public override string ToString()
             {
                 return Device.Name + " (" + DurationInSteps + " steps)";

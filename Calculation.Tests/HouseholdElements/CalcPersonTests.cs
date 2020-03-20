@@ -30,7 +30,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Windows.Media;
 using Automation;
 using Automation.ResultFiles;
 using CalculationController.DtoFactories;
@@ -75,12 +74,12 @@ namespace Calculation.HouseholdElements.Tests
                 CalcVariableRepository crv = new CalcVariableRepository();
                 BitArray isBusy = new BitArray(calcParameters.InternalTimesteps, false);
                 CalcAffordance aff1 = new CalcAffordance("aff1", cp, null, false, new List<CalcDesire>(), 10, 20,
-                    PermittedGender.All, true, 1, Colors.AliceBlue,
+                    PermittedGender.All, true, 1, LPGColors.AliceBlue,
                     null, false, false, null, null, ActionAfterInterruption.GoBackToOld, "", 900, false, "",
                     calcParameters,
                     Guid.NewGuid().ToString(), crv, new List<CalcAffordance.DeviceEnergyProfileTuple>(), isBusy);
                 CalcAffordance aff2 = new CalcAffordance("aff2", cp, null, false, new List<CalcDesire>(), 10, 20,
-                    PermittedGender.All, true, 1, Colors.AliceBlue,
+                    PermittedGender.All, true, 1, LPGColors.AliceBlue,
                     null, false, false, null, null, ActionAfterInterruption.GoBackToOld, "", 100, false, "",
                     calcParameters,
                     Guid.NewGuid().ToString(), crv, new List<CalcAffordance.DeviceEnergyProfileTuple>(), isBusy);
@@ -179,7 +178,7 @@ namespace Calculation.Tests.HouseholdElements {
                 {
                     desire1
                 };
-                var color = Color.FromRgb(255, 0, 0);
+                var color = new ColorRGB(255, 0, 0);
                 CalcVariableRepository crv = new CalcVariableRepository();
                 BitArray isBusy1 = new BitArray(calcParameters.InternalTimesteps, false);
                 var aff1 = new CalcAffordance("aff1",  cprof, cloc, false, desires, 1, 100,
@@ -272,7 +271,7 @@ namespace Calculation.Tests.HouseholdElements {
                 {
                     desire1
                 };
-                var color = Color.FromRgb(255, 0, 0);
+                var color = new ColorRGB(255, 0, 0);
                 CalcVariableRepository crv = new CalcVariableRepository();
                 BitArray isBusy = new BitArray(calcParameters.InternalTimesteps, false);
                 var aff1 = new CalcAffordance("aff1",  cprof, cloc, false, desires, 1, 100,

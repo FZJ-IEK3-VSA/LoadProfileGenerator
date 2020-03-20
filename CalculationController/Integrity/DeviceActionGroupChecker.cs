@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows;
 using Automation.ResultFiles;
 using Common;
 using Database;
@@ -44,11 +43,11 @@ namespace CalculationController.Integrity {
                 else {
                     if (!Config.IsInUnitTesting ) {
                         var mgr =
-                            MessageWindows.ShowYesNoMessage(
+                            MessageWindowHandler.Mw.ShowYesNoMessage(
                                 "The device action group " + actionGroup.Name +
                                 " has not a single device action. Delete?",
                                 "Delete?");
-                        if (mgr == MessageBoxResult.Yes) {
+                        if (mgr == LPGMsgBoxResult.Yes) {
                             var index1 = index;
                             Logger.Get()
                                 .SafeExecuteWithWait(

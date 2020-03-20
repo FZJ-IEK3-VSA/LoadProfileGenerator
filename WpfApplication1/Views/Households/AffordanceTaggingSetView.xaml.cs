@@ -61,10 +61,10 @@ namespace LoadProfileGenerator.Views.Households {
 
         private void BtnAddAllAffordancesClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e) {
             var mbr =
-                MessageWindows.ShowYesNoMessage(
+                MessageWindowHandler.Mw.ShowYesNoMessage(
                     "This will create one tag for every affordance. This is only useful as basis for a household plan. Are you sure?",
                     "Sure?");
-            if (mbr == MessageBoxResult.Yes) {
+            if (mbr == LPGMsgBoxResult.Yes) {
                 Presenter.AddAllAffordances();
             }
         }
@@ -137,10 +137,10 @@ namespace LoadProfileGenerator.Views.Households {
 
         private void BtnRemoveOldAffordances([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e) {
             var mbr =
-                MessageWindows.ShowYesNoMessage(
+                MessageWindowHandler.Mw.ShowYesNoMessage(
                     "This will remove all tags that don't match an affordance. This is only useful as basis for a household plan. Are you sure?",
                     "Sure?");
-            if (mbr == MessageBoxResult.Yes) {
+            if (mbr == LPGMsgBoxResult.Yes) {
                 Presenter.RemoveOldAffordanceTags();
             }
         }

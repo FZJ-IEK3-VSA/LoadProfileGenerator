@@ -33,8 +33,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
-using System.Threading;
-using System.Windows.Threading;
 using Automation.ResultFiles;
 using Common;
 using Database.Database;
@@ -370,16 +368,7 @@ namespace Database.Tables.BasicHouseholds {
                 _subDevices.Sort();
                 hasFinished = true;
             };
-            var lv = Logger.Get().Lv;
-            if (lv != null && lv.Dispatcher!= null && Thread.CurrentThread != lv.Dispatcher?.Thread) {
-                lv.Dispatcher.BeginInvoke(DispatcherPriority.Normal, a);
-                while (!hasFinished) {
-                    Thread.Sleep(5);
-                }
-            }
-            else {
-                a();
-            }
+            Logger.Get().SafeExecuteWithWait(a);
         }
 
         protected override void SetSqlParameters([NotNull] Command cmd)

@@ -9,24 +9,23 @@ using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
 using Common.SQLResultLogging.Loggers;
-using JetBrains.Annotations;
 
 namespace CalcPostProcessor
 {
     public class PostProcessingManager
     {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly ICalculationProfiler _calculationProfiler;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly FileFactoryAndTracker _fft;
 
-        public PostProcessingManager([NotNull] ICalculationProfiler calculationProfiler, [NotNull] FileFactoryAndTracker fft)
+        public PostProcessingManager([JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler, [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft)
         {
             _calculationProfiler = calculationProfiler;
             _fft = fft;
         }
 
-        public void Run([NotNull] string resultPath)
+        public void Run([JetBrains.Annotations.NotNull] string resultPath)
         {
             _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Post Processing");
             var builder = new ContainerBuilder();
@@ -44,12 +43,12 @@ namespace CalcPostProcessor
             builder.RegisterType<MakeActivationsPerFrequencies>().As<IGeneralHouseholdStep>().SingleInstance();
             builder.RegisterType<MakeActivationsPerHour>().As<IGeneralHouseholdStep>().SingleInstance();
             builder.RegisterType<MakeHouseholdPlanResult>().As<IGeneralHouseholdStep>().SingleInstance();
-            builder.RegisterType<ActionCarpetPlot>().As<IGeneralHouseholdStep>().SingleInstance();
+            //builder.RegisterType<ActionCarpetPlot>().As<IGeneralHouseholdStep>().SingleInstance();
             builder.RegisterType<MakeActionsEachTimestep>().As<IGeneralHouseholdStep>().SingleInstance();
             builder.RegisterType<LocationStatisticsMaker>().As<IGeneralHouseholdStep>().SingleInstance();
             builder.RegisterType<AffordanceStatisticsWriter>().As<IHouseholdLoadTypeStep>().SingleInstance();
-            builder.RegisterType<LocationCarpetPlot>().As<IGeneralHouseholdStep>().SingleInstance();
-            builder.RegisterType<TransportationDeviceCarpetPlot>().As<IGeneralHouseholdStep>().SingleInstance();
+            //builder.RegisterType<LocationCarpetPlot>().As<IGeneralHouseholdStep>().SingleInstance();
+            //builder.RegisterType<TransportationDeviceCarpetPlot>().As<IGeneralHouseholdStep>().SingleInstance();
             builder.RegisterType<TransportationStatisticsWriter>().As<IGeneralHouseholdStep>().SingleInstance();
             //builder.RegisterType<AffordanceStatisticsWriter>().As<IGeneralPostProcessingStep>().SingleInstance();
 
@@ -57,7 +56,7 @@ namespace CalcPostProcessor
             builder.RegisterType<SumProfileProcessor>().As<ILoadTypeStep>().SingleInstance();
             builder.RegisterType<IndividualHouseholdSumProfileProcessor>().As<IHouseholdLoadTypeStep>().SingleInstance();
             builder.RegisterType<DeviceProfileFileProcessor>().As<ILoadTypeStep>().SingleInstance();
-            builder.RegisterType<EnergyCarpetPlotMaker>().As<ILoadTypeStep>().SingleInstance();
+            //builder.RegisterType<EnergyCarpetPlotMaker>().As<ILoadTypeStep>().SingleInstance();
             builder.RegisterType<ExternalTimeResolutionMaker>().As<ILoadTypeStep>().SingleInstance();
             //builder.RegisterType<ImportFileCreatorSMA>().As<ILoadTypeStep>().SingleInstance();
             builder.RegisterType<ImportFileCreatorPolysun>().As<ILoadTypeStep>().SingleInstance();

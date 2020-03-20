@@ -144,6 +144,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
             return false;
         }
 
+        [NotNull]
         public override string ToString() => _deviceName;
     }
 }

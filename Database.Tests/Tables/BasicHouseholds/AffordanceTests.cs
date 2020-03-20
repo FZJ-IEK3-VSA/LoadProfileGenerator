@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows.Media;
 using Automation;
 using Automation.ResultFiles;
 using Common;
@@ -23,7 +22,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
         public void AffordanceRequirementVariableTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             Config.IsInUnitTesting = true;
-            var col = Color.FromRgb(255, 0, 0);
+            var col = new ColorRGB(255, 0, 0);
 
             var aff = new Affordance("bla", null, null, true, PermittedGender.Female, 0.1m, col,
                 "affordanceCategory", null, "desc", db.ConnectionString, true, true, 0, 99, false,
@@ -43,7 +42,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
         public void AffordanceStandbyTests1() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             Config.IsInUnitTesting = true;
-            var col = Color.FromRgb(255, 0, 0);
+            var col = new ColorRGB(255, 0, 0);
             var aff = new Affordance("bla", null, null, true, PermittedGender.Female, 0.1m, col,
                 "AffordanceCategory", null, "desc", db.ConnectionString, true, true, 0, 99, false,
                 ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToString());
@@ -70,7 +69,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             db.ClearTable(AffVariableRequirement.TableName);
 
             Config.IsInUnitTesting = true;
-            var col = Color.FromRgb(255, 0, 0);
+            var col = new ColorRGB(255, 0, 0);
             var aff = new Affordance("bla", null, null, true, PermittedGender.Female, 0.1m, col,
                 "AffordanceCategory", null, "desc", db.ConnectionString, true, true, 0, 99, false,
                 ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToString());
@@ -98,7 +97,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
         public void AffordanceVariableTests1() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             Config.IsInUnitTesting = true;
-            var col = Color.FromRgb(255, 0, 0);
+            var col = new ColorRGB(255, 0, 0);
             var aff = new Affordance("bla", null, null, true, PermittedGender.Female, 0.1m, col,
                 "AffordanceCategory", null, "desc", db.ConnectionString, true, true, 0, 99, false,
                 ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToString());
@@ -129,7 +128,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             var v = new Variable("var1", "desc", "unit", db.ConnectionString, Guid.NewGuid().ToString());
             v.SaveToDB();
             Config.IsInUnitTesting = true;
-            var col = Color.FromRgb(255, 0, 0);
+            var col = new ColorRGB(255, 0, 0);
             var aff = new Affordance("bla", null, null, true, PermittedGender.Female, 0.1m, col,
                 "affordanceCategory", null, "desc", db.ConnectionString, true, true, 0, 99, false,
                 ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToString());
@@ -157,7 +156,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
         public void CalculateAverageEnergyUseTestDeviceAction() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             Config.IsInUnitTesting = true;
-            var col = Color.FromRgb(255, 0, 0);
+            var col = new ColorRGB(255, 0, 0);
             var devices = new ObservableCollection<RealDevice>();
             var rd2 = new RealDevice("rd2", 1, string.Empty, null, string.Empty, false, false, db.ConnectionString, Guid.NewGuid().ToString());
             var lt = new VLoadType("lt", string.Empty, "bla", "blub", 1, 1, new TimeSpan(0, 1, 0), 1,
@@ -204,7 +203,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
         public void CalculateAverageEnergyUseTestRealDevice() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             Config.IsInUnitTesting = true;
-            var col = Color.FromRgb(255, 0, 0);
+            var col = new ColorRGB(255, 0, 0);
             var devices = new ObservableCollection<RealDevice>();
             var rd2 = new RealDevice("rd2", 1, string.Empty, null, string.Empty, false, false, db.ConnectionString, Guid.NewGuid().ToString());
             var lt = new VLoadType("lt", string.Empty, "bla", "blub", 1, 1, new TimeSpan(0, 1, 0), 1,
@@ -243,7 +242,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
         public void CalculateMaximumInternalTimeResolutionTestForDeviceAction() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             Config.IsInUnitTesting = true;
-            var col = Color.FromRgb(255, 0, 0);
+            var col = new ColorRGB(255, 0, 0);
             var devices = new ObservableCollection<RealDevice>();
             var rd2 = new RealDevice("rd2", 1, string.Empty, null, string.Empty, false, false, db.ConnectionString, Guid.NewGuid().ToString());
             rd2.SaveToDB();
@@ -285,7 +284,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
         public void CalculateMaximumInternalTimeResolutionTestForDeviceActionGroup() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             Config.IsInUnitTesting = true;
-            var col = Color.FromRgb(255, 0, 0);
+            var col = new ColorRGB(255, 0, 0);
             var devices = new ObservableCollection<RealDevice>();
             var rd2 = new RealDevice("rd2", 1, string.Empty, null, string.Empty, false, false, db.ConnectionString, Guid.NewGuid().ToString());
             rd2.SaveToDB();
@@ -325,7 +324,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
         public void CalculateMaximumInternalTimeResolutionTestForRealDevice() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
             Config.IsInUnitTesting = true;
-            var col = Color.FromRgb(255, 0, 0);
+            var col = new ColorRGB(255, 0, 0);
             var devices = new ObservableCollection<RealDevice>();
             var rd2 = new RealDevice("rd2", 1, string.Empty, null, string.Empty, false, false, db.ConnectionString, Guid.NewGuid().ToString());
             rd2.SaveToDB();
@@ -362,7 +361,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             // Location: realdevice
             // affordance: nothing
             Config.IsInUnitTesting = true;
-            var col = Color.FromRgb(255, 0, 0);
+            var col = new ColorRGB(255, 0, 0);
             var deviceActions = new ObservableCollection<DeviceAction>();
             var aff = new Affordance("bla", null, null, false, PermittedGender.All, 1, col, string.Empty, null,
                 string.Empty, string.Empty,
@@ -383,7 +382,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             // Location: device action
             // affordance: device Action Group
             Config.IsInUnitTesting = true;
-            var col = Color.FromRgb(255, 0, 0);
+            var col =  new ColorRGB(255, 0, 0);
             var connectionString = string.Empty;
             var deviceActions = new ObservableCollection<DeviceAction>();
             var aff = new Affordance("bla", null, null, false, PermittedGender.All, 1, col, string.Empty, null,
@@ -428,7 +427,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             // Location: device action group
             // affordance: device Action Group
             Config.IsInUnitTesting = true;
-            var col = Color.FromRgb(255, 0, 0);
+            var col = new ColorRGB(255, 0, 0);
             var deviceActions = new ObservableCollection<DeviceAction>();
             var aff = new Affordance("bla", null, null, false, PermittedGender.All, 1, col, string.Empty, null,
                 string.Empty, string.Empty,
@@ -473,7 +472,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             // Location: device action
             // affordance: device Action
             Config.IsInUnitTesting = true;
-            var col = Color.FromRgb(255, 0, 0);
+            var col = new ColorRGB(255, 0, 0);
             var deviceActions = new ObservableCollection<DeviceAction>();
             var aff = new Affordance("bla", null, null, false, PermittedGender.All, 1, col, string.Empty, null,
                 string.Empty, string.Empty,
@@ -510,7 +509,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             // Location: realDevice
             // affordance: device Action
             Config.IsInUnitTesting = true;
-            var col = Color.FromRgb(255, 0, 0);
+            var col =  new ColorRGB(255, 0, 0);
             var deviceActions = new ObservableCollection<DeviceAction>();
             var aff = new Affordance("bla", null, null, false, PermittedGender.All, 1, col, string.Empty, null,
                 string.Empty, string.Empty,
@@ -547,7 +546,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             // Location: other realDevice
             // affordance: device Action
             Config.IsInUnitTesting = true;
-            var col = Color.FromRgb(255, 0, 0);
+            var col = new ColorRGB(255, 0, 0);
             var deviceActions = new ObservableCollection<DeviceAction>();
             var aff = new Affordance("bla", null, null, false, PermittedGender.All, 1, col, string.Empty, null,
                 string.Empty, string.Empty,
@@ -585,7 +584,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             // Location: device category
             // affordance: device category
             Config.IsInUnitTesting = true;
-            var col = Color.FromRgb(255, 0, 0);
+            var col = new ColorRGB(255, 0, 0);
             var deviceActions = new ObservableCollection<DeviceAction>();
             var aff = new Affordance("bla", null, null, false, PermittedGender.All, 1, col, string.Empty, null,
                 string.Empty, string.Empty,
@@ -621,7 +620,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             // Location: realdevice
             // affordance: device category
             Config.IsInUnitTesting = true;
-            var col = Color.FromRgb(255, 0, 0);
+            var col = new ColorRGB(255, 0, 0);
             var deviceActions = new ObservableCollection<DeviceAction>();
             var aff = new Affordance("bla", null, null, false, PermittedGender.All, 1, col, string.Empty, null,
                 string.Empty, string.Empty,
@@ -658,7 +657,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             // Location: realdevice
             // affordance: other realdevice
             Config.IsInUnitTesting = true;
-            var col = Color.FromRgb(255, 0, 0);
+            var col = new ColorRGB(255, 0, 0);
             var deviceActions = new ObservableCollection<DeviceAction>();
             var aff = new Affordance("bla", null, null, false, PermittedGender.All, 1, col, string.Empty, null,
                 string.Empty, string.Empty,
@@ -687,7 +686,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             // Location: realdevice
             // affordance: same realdevice
             Config.IsInUnitTesting = true;
-            var col = Color.FromRgb(255, 0, 0);
+            var col = new ColorRGB(255, 0, 0);
             var deviceActions = new ObservableCollection<DeviceAction>();
             var aff = new Affordance("bla", null, null, false, PermittedGender.All, 1, col, string.Empty, null,
                 string.Empty, string.Empty,

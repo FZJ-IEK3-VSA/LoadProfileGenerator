@@ -29,7 +29,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Windows.Media;
+using Automation;
 using Automation.ResultFiles;
 using CalculationEngine.Helper;
 using Common;
@@ -63,7 +63,7 @@ namespace CalculationEngine.HouseholdElements {
             _repository = repository;
             SubAffordances = new List<CalcSubAffordance>();
             Energyprofiles = new List<CalcAffordance.DeviceEnergyProfileTuple>();
-            AffordanceColor = Colors.Black;
+            AffordanceColor = LPGColors.Black;
             SourceTrait = sourceTrait;
             TimeLimitName = null;
             ParentAffordance = parentAffordance;
@@ -123,7 +123,7 @@ namespace CalculationEngine.HouseholdElements {
         [CanBeNull]
         [ItemNotNull]
         public override List<CalcAffordance.DeviceEnergyProfileTuple> Energyprofiles { get; }
-        public override Color AffordanceColor { get; }
+        public override ColorRGB AffordanceColor { get; }
         [NotNull]
         public override string SourceTrait { get; }
         [CanBeNull]

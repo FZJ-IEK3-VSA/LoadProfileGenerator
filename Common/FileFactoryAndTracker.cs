@@ -32,7 +32,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Windows;
 using Automation;
 using Automation.ResultFiles;
 using Common.SQLResultLogging;
@@ -316,8 +315,8 @@ namespace Common {
                                            " could not be opened. The exact error message was:" + Environment.NewLine + ioe.Message +
                                            Environment.NewLine+ Environment.NewLine;
                         errormessage += " Maybe you forgot to close Excel? Press YES to try again!";
-                        var dr = MessageWindows.ShowYesNoMessage(errormessage, "Error opening file!");
-                        if (dr == MessageBoxResult.Yes) {
+                        var dr = MessageWindowHandler.Mw.ShowYesNoMessage(errormessage, "Error opening file!");
+                        if (dr == LPGMsgBoxResult.Yes) {
                             tryagain = true;
                         }
                         else {

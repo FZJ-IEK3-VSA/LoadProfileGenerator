@@ -112,11 +112,11 @@ namespace LoadProfileGenerator.Views.Houses
             }
             catch (DataIntegrityException dix)
             {
-                MessageWindows.ShowDataIntegrityMessage(dix);
+                MessageWindowHandler.Mw.ShowDataIntegrityMessage(dix);
             }
             catch (Exception ex)
             {
-                MessageWindows.ShowDebugMessage(ex);
+                MessageWindowHandler.Mw.ShowDebugMessage(ex);
                 Logger.Exception(ex);
             }
         }
@@ -145,11 +145,11 @@ namespace LoadProfileGenerator.Views.Houses
                 }
                 catch (DataIntegrityException dix) {
                     Logger.Error(dix.Message);
-                    MessageWindows.ShowDataIntegrityMessage(dix);
+                    MessageWindowHandler.Mw.ShowDataIntegrityMessage(dix);
                 }
                 catch (Exception ex) {
                     Logger.Exception(ex);
-                    MessageWindows.ShowDebugMessage(ex);
+                    MessageWindowHandler.Mw.ShowDebugMessage(ex);
                 }
             }
 

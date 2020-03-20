@@ -30,6 +30,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Windows.Threading;
 using Automation.ResultFiles;
 using Common;
 using Database;
@@ -60,9 +61,10 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
         private bool _isMenuEnabled;
         [CanBeNull] private Simulator _simulator;
 
-        public ApplicationPresenter([NotNull] Shell view, [CanBeNull] Simulator simulator) : base(view, "ApplicationPresenter")
+        public ApplicationPresenter([NotNull] Shell view, [CanBeNull] Simulator simulator, Dispatcher mainDispatcher) : base(view, "ApplicationPresenter")
         {
             Shell = view;
+            MainDispatcher = mainDispatcher;
             _simulator = simulator;
             if (_simulator != null) {
                 CurrentCategories = _simulator.Categories;
@@ -113,6 +115,8 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
         [NotNull]
         [UsedImplicitly]
         public Shell Shell { get; }
+
+        public Dispatcher MainDispatcher { get; }
 
         [CanBeNull]
         public Simulator Simulator {

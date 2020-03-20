@@ -28,8 +28,8 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             _fft = fft;
         }
         /*
-        public void RunIndividualHouseholdsPolysun([NotNull] CalcLoadTypeDto dstLoadType,
-            [NotNull][ItemNotNull] List<OnlineEnergyFileRow> energyFileRows, [NotNull] FileFactoryAndTracker fft, [NotNull] EnergyFileColumns efc)
+        public void RunIndividualHouseholdsPolysun([JetBrains.Annotations.NotNull] CalcLoadTypeDto dstLoadType,
+            [JetBrains.Annotations.NotNull][ItemNotNull] List<OnlineEnergyFileRow> energyFileRows, [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft, [JetBrains.Annotations.NotNull] EnergyFileColumns efc)
         {
             var fifteenmin = new TimeSpan(0, 15, 0);
             var externalfactor =

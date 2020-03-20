@@ -528,6 +528,7 @@ namespace Common.SQLResultLogging {
             [NotNull]
             public HouseholdKey Key { get; }
 
+            [NotNull]
             public override string ToString() => Filename;
         }
         /*
@@ -671,6 +672,7 @@ namespace Common.SQLResultLogging {
             [JetBrains.Annotations.NotNull]
             public string Filename { get; }
 
+            [NotNull]
             public override string ToString() => Filename;
         }
     }

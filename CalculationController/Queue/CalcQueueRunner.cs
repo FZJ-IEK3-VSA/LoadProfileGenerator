@@ -31,8 +31,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Threading;
-using System.Windows.Threading;
 using Automation.ResultFiles;
 using CalculationController.CalcFactories;
 using CalculationController.DtoFactories;
@@ -106,8 +104,8 @@ namespace CalculationController.Queue {
                     {
                         throw new LPGException("OpenTabFunc was null");
                     }
-                    if (csps.Dispatcher != null && Thread.CurrentThread != csps.Dispatcher.Thread) {
-                        csps.Dispatcher.BeginInvoke(DispatcherPriority.Normal,csps.OpenTabFunc, die.Element);
+                    if (csps.Dispatcher != null && !csps.Dispatcher.IsCorrectThread()) {
+                        csps.Dispatcher.BeginInvoke(csps.OpenTabFunc, die.Element);
                     }
                     else {
                         csps.OpenTabFunc(die.Element);
@@ -238,7 +236,7 @@ namespace CalculationController.Queue {
                 Logger.Error("DataIntegrityException:"+ Environment.NewLine + e.Message);
                 CloseLogfilesAfterError();
                 if (!Config.IsInUnitTesting && !Config.IsInHeadless) {
-                    MessageWindows.ShowDataIntegrityMessage(e);
+                    MessageWindowHandler.Mw.ShowDataIntegrityMessage(e);
                     csps.ReportCancelFunc?.Invoke();
                 }
                 else {

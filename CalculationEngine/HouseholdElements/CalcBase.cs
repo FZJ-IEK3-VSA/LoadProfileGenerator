@@ -44,6 +44,7 @@ namespace CalculationEngine.HouseholdElements {
         [NotNull]
         public string Name => _name;
 
+        [NotNull]
         public override string ToString() => GetType() + " " + _name + " (" + Guid +")";
     }
 }

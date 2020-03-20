@@ -362,7 +362,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
                 _householdPlan.SaveToDB();
             }
             catch (Exception e) {
-                MessageWindows.ShowInfoMessage("Error while refreshing:" + e.Message, "Error");
+                MessageWindowHandler.Mw.ShowInfoMessage("Error while refreshing:" + e.Message, "Error");
                 Logger.Exception(e);
             }
         }

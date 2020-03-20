@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Media;
 using Automation;
 using Automation.ResultFiles;
 using CalculationController.DtoFactories;
@@ -113,7 +112,7 @@ namespace Calculation.Tests.Transportation
             CalcVariableRepository crv =new CalcVariableRepository();
             BitArray isBusy = new BitArray(calcParameters.InternalTimesteps,false);
             var ca = new CalcAffordance("calcaffordance",  cp, dstloc, false, calcdesires,
-                18, 50, PermittedGender.All, false, 0.1, Colors.Blue, "affordance category", false,
+                18, 50, PermittedGender.All, false, 0.1, LPGColors.Blue, "affordance category", false,
                 false, new List<CalcAffordanceVariableOp>(), new List<VariableRequirement>(),
                 ActionAfterInterruption.GoBackToOld, "timelimitname", 1, false, "srctrait", calcParameters,
                 Guid.NewGuid().ToString(),crv, new List<CalcAffordance.DeviceEnergyProfileTuple>(), isBusy);

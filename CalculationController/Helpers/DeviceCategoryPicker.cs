@@ -607,6 +607,7 @@ namespace CalculationController.Helpers {
             [UsedImplicitly]
             public int LocationID { get; }
 
+            [NotNull]
             public override string ToString() => "LocID:" + LocationID + ", " + Category;
         }
 

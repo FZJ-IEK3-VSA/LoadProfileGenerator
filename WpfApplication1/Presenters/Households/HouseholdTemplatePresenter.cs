@@ -410,13 +410,13 @@ namespace LoadProfileGenerator.Presenters.Households {
             }
             catch (DataIntegrityException ex) {
                 if (!Config.IsInHeadless) {
-                    MessageWindows.ShowDataIntegrityMessage(ex);
+                    MessageWindowHandler.Mw.ShowDataIntegrityMessage(ex);
                 }
 
                 return;
             }
             catch (LPGException lex) {
-                MessageWindows.ShowDebugMessage(lex);
+                MessageWindowHandler.Mw.ShowDebugMessage(lex);
                 return;
             }
 
@@ -427,10 +427,10 @@ namespace LoadProfileGenerator.Presenters.Households {
                     Logger.Get().SafeExecuteWithWait(RefreshHouseholds);
                     var newCount = _generatedHouseholds.Count;
                     var created = newCount - previouscount;
-                    MessageWindows.ShowInfoMessage("Created " + created + " households!", "Success");
+                    MessageWindowHandler.Mw.ShowInfoMessage("Created " + created + " households!", "Success");
                 }
                 catch (Exception ex) {
-                    MessageWindows.ShowDebugMessage(ex);
+                    MessageWindowHandler.Mw.ShowDebugMessage(ex);
                     Logger.Exception(ex);
                 }
             });

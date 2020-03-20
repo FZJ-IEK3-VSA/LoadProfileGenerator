@@ -376,6 +376,7 @@ namespace Database.Tables.BasicElements {
 
             public override int GetHashCode() => Time.GetHashCode() * 17 + Value.GetHashCode();
 
+            [NotNull]
             public override string ToString() => Time.ToShortDateString() + " " + Time.ToShortTimeString() + ":" + Value.ToString(CultureInfo.CurrentCulture);
         }
     }

@@ -180,6 +180,7 @@ namespace Common {
             [UsedImplicitly]
             public DateTime Stop { get; set; }
 
+            [NotNull]
             public override string ToString() => Key + " - " + Duration;
         }
     }

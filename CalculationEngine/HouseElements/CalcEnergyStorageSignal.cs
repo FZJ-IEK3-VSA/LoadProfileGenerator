@@ -97,6 +97,7 @@ namespace CalculationEngine.HouseElements {
             return 0;
         }
 
+        [NotNull]
         public override string ToString() {
             var s = "Signal for " + DstLoadType.Name + " for levels between " + _triggerOnPercent * 100 + "% and " +
                     _triggerOffPercent * 100 + "%";

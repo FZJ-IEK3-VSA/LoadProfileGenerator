@@ -27,108 +27,27 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Threading;
-using System.Windows;
-using Automation.ResultFiles;
 using JetBrains.Annotations;
 
 namespace Common
 {
-    public static class MessageWindows
-    {
-        [CanBeNull] private static IWindowWithDialog _mainwindow;
+    public enum LPGMsgBoxResult {
+        Yes,
+        No
+    }
+    public interface IMessageWindow {
+        LPGMsgBoxResult ShowYesNoMessage([NotNull] string message, [NotNull] string caption);
+        void ShowDataIntegrityMessage([NotNull] DataIntegrityException exception);
+        void ShowInfoMessage([NotNull] string message, [NotNull] string caption);
+        void ShowDebugMessage([NotNull] Exception exception);
+    }
 
-        public static void SetMainWindow([NotNull] IWindowWithDialog mainwindow)
+    public static class MessageWindowHandler {
+        public static IMessageWindow Mw { get; set; }
+
+        public static void SetMainWindow([NotNull] IMessageWindow mainwindow)
         {
-            _mainwindow = mainwindow;
-        }
-
-        public static void ShowDataIntegrityMessage([NotNull] DataIntegrityException exception)
-        {
-            if (exception == null)
-            {
-                throw new LPGException("ShowDataIntegrityMessage Exception == null");
-            }
-            var errormessage = "The calculation could not be completed because the following error was found:";
-            errormessage += Environment.NewLine + Environment.NewLine + exception.Message;
-            ShowMessageBox(errormessage, "Data integrity error!", MessageBoxButton.OK, MessageBoxImage.Error,
-                MessageBoxResult.OK);
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        public static void ShowDebugMessage([NotNull] Exception exception)
-        {
-            Thread t = new Thread(() =>
-            {
-                try
-                {
-                    ErrorReporter er = new ErrorReporter();
-                    er.Run(exception.Message, exception.StackTrace);
-                }
-                catch (Exception ex2)
-                {
-                    Logger.Exception(ex2);
-                }
-            });
-            t.Start();
-            Logger.Exception(exception);
-            if (exception == null)
-            {
-                throw new LPGException("ShowDebugMessage Exception == null");
-            }
-            var errormessage = "An error occured. The error message is: " + Environment.NewLine + Environment.NewLine;
-            errormessage = errormessage + Environment.NewLine + exception.Message + Environment.NewLine + Environment.NewLine;
-            if (exception.InnerException != null)
-            {
-                errormessage = errormessage + exception.InnerException.Message + Environment.NewLine + Environment.NewLine;
-            }
-            errormessage = errormessage + exception.StackTrace + Environment.NewLine + Environment.NewLine;
-            errormessage = errormessage + "The error was logged to the file errorlog.txt. " +
-                           "Please send that file to the author of the program to support further development." + Environment.NewLine + Environment.NewLine;
-            try
-            {
-                using (var sw = new StreamWriter("errorlog.txt", true))
-                {
-                    sw.WriteLine(errormessage);
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex.Message);
-                Logger.Exception(ex);
-            }
-            ShowMessageBox(errormessage, "Fatal Error!", MessageBoxButton.OK, MessageBoxImage.Error,
-                MessageBoxResult.OK);
-        }
-
-        public static void ShowInfoMessage([NotNull] string message, [NotNull] string caption)
-        {
-            Logger.Info(message);
-            ShowMessageBox(message, caption, MessageBoxButton.OK, MessageBoxImage.Information,
-                MessageBoxResult.OK);
-        }
-
-        private static MessageBoxResult ShowMessageBox([NotNull] string message, [NotNull] string caption, MessageBoxButton button,
-            MessageBoxImage image, MessageBoxResult result)
-        {
-            Logger.Warning(message);
-            if (_mainwindow != null)
-            {
-                return _mainwindow.ShowMessageWindow(message, caption, button, image, result);
-            }
-            return MessageBox.Show(message, caption, button, image, result);
-        }
-
-        public static MessageBoxResult ShowYesNoMessage([NotNull] string message, [NotNull] string caption)
-        {
-            Logger.Warning(message);
-            var result = ShowMessageBox(message, caption, MessageBoxButton.YesNo, MessageBoxImage.Question,
-                MessageBoxResult.Yes);
-            Logger.Info("Answer: " + result);
-
-            return result;
+            Mw = mainwindow;
         }
     }
 }

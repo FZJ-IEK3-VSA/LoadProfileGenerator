@@ -64,8 +64,8 @@ namespace LoadProfileGenerator.Views.SpecialViews {
 
             if (rfe.Size > 10000000) {
                 if (
-                    MessageWindows.ShowYesNoMessage("This file seems rather large. Open anyway?", "Sure?") ==
-                    MessageBoxResult.Yes) {
+                    MessageWindowHandler.Mw.ShowYesNoMessage("This file seems rather large. Open anyway?", "Sure?") ==
+                    LPGMsgBoxResult.Yes) {
                     ResultPresenter.StartExcel(rfe);
                 }
             }
