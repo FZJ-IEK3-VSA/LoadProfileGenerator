@@ -116,7 +116,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
                     continue;
                 }
                 var newName = holiday.Name + " (no bridge days)";
-                var hhd = Sim.Holidays.FindByName(newName);
+                var hhd = Sim.Holidays.FindFirstByName(newName);
                 if (hhd != null) {
                     _selectedGeoLoc.AddHoliday(hhd);
                     continue;

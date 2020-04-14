@@ -12,10 +12,19 @@
     <PackageReference Include="JetBrains.Annotations" Version="2019.1.3" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="NullCheckAnalyzer" Version="1.0.0.3" />
+    <PackageReference Include="sqlite" Version="3.13.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Automation\Automation.csproj" />
+    <ProjectReference Include="..\CalcPostProcessor\CalcPostProcessor.csproj" />
+    <ProjectReference Include="..\CalculationController\CalculationController.csproj" />
+    <ProjectReference Include="..\ChartCreator2\ChartCreator2.csproj" />
+    <ProjectReference Include="..\ChartPDFCreator\ChartPDFCreator.csproj" />
+    <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\Database.Tests\Database.Tests.csproj" />
+    <ProjectReference Include="..\SimulationEngineLib\SimulationEngineLib.csproj" />
+    <ProjectReference Include="..\SimulationEngine\SimulationEngine.csproj" />
     <ProjectReference Include="..\WpfApplication1\LoadProfileGenerator.csproj" />
   </ItemGroup>
 

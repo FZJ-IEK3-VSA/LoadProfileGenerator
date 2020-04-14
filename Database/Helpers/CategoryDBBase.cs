@@ -346,7 +346,7 @@ namespace Database.Helpers {
 
         [UsedImplicitly]
         [CanBeNull]
-        public T FindByName([CanBeNull] string nameRaw, FindMode findMode = FindMode.Exact)
+        public T FindFirstByName([CanBeNull] string nameRaw, FindMode findMode = FindMode.Exact)
         {
             if (nameRaw == null) {
                 return null;

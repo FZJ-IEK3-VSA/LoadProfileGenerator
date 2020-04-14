@@ -43,7 +43,7 @@ namespace Database.Tests.Tables {
         [Category(UnitTestCategories.BasicTest)]
         public void TimeLimitLoadCreationAndSaveTest()
         {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             db.ClearTable(GeographicLocation.TableName);
             db.ClearTable(GeographicLocHoliday.TableName);
@@ -74,7 +74,7 @@ namespace Database.Tests.Tables {
         [Category(UnitTestCategories.BasicTest)]
         public void GeographicLocationTypoTest()
         {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Simulator sim = new Simulator(db.ConnectionString);
             var pars = CalcParametersFactory.MakeGoodDefaults();
             foreach (GeographicLocation location in sim.GeographicLocations.It) {

@@ -14,7 +14,7 @@ namespace Database.Tests.Tables.Transportation {
         [Category(UnitTestCategories.BasicTest)]
         public void TransportationDeviceTest()
         {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             db.ClearTable(TransportationDeviceCategory.TableName);
             db.ClearTable(TransportationDevice.TableName);
             var tdc = new TransportationDeviceCategory("tdc1", null, db.ConnectionString, "desc", true, Guid.NewGuid().ToString());
@@ -48,8 +48,8 @@ namespace Database.Tests.Tables.Transportation {
         [Category(UnitTestCategories.BasicTest)]
         public void TransportationDeviceImportTest()
         {
-            var db1 = new DatabaseSetup(Utili.GetCurrentMethodAndClass() + "1", DatabaseSetup.TestPackage.DatabaseIo);
-            var db2 = new DatabaseSetup(Utili.GetCurrentMethodAndClass() + "2", DatabaseSetup.TestPackage.DatabaseIo);
+            var db1 = new DatabaseSetup(Utili.GetCurrentMethodAndClass() + "1");
+            var db2 = new DatabaseSetup(Utili.GetCurrentMethodAndClass() + "2");
             db1.ClearTable(TransportationDeviceCategory.TableName);
             db1.ClearTable(TransportationDevice.TableName);
             var srcSim = new Simulator(db2.ConnectionString);

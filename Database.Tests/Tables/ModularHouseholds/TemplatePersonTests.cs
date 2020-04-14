@@ -14,7 +14,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void TemplatePersonTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             db.ClearTable(TemplatePerson.TableName);
             db.ClearTable(TemplatePersonTrait.TableName);

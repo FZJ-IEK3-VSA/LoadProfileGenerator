@@ -152,7 +152,7 @@ namespace CalculationController.CalcFactories {
             // energy Storage
             var calcEnergyStorages = MakeEnergyStorages(house, houseKey); //, taggingSets);
             // transformation devices
-            var transformationDevices = MakeAllTransformationDevices(house.HouseType, calcEnergyStorages, houseKey); //taggingSets,
+            var transformationDevices = MakeAllTransformationDevices(house.HouseType,  houseKey); //taggingSets,
 
             // generators
             var generators = MakeGenerators(house.HouseType.HouseGenerators.Select(x => x.Generator).ToList(), houseKey); //taggingSets,
@@ -171,55 +171,20 @@ namespace CalculationController.CalcFactories {
             return calchouse;
         }
 
-        private void CreateCalcConditions([NotNull] [ItemNotNull] List<CalcEnergyStorageDto> storages,
-                                          [NotNull] HouseType houseType,
-                                          [NotNull] TransformationDevice trafo,
+        private void CreateCalcConditions([NotNull] TransformationDevice trafo,
                                           [NotNull] [ItemNotNull] List<CalcTransformationConditionDto> calcconditions)
         {
             foreach (var condition in trafo.Conditions) {
-                var type = DetermineTransformationConditionType(condition);
-
-                CalcEnergyStorageDto storage = null;
-                if (type == CalcTransformationConditionType.StorageBetweenValues && condition.Storage == null) {
-                    throw new DataIntegrityException("The storage of the condition on the transformation device " + trafo.Name +
-                                                     " is empty, but that's not allowed",
-                        trafo);
-                }
-
-                if (condition.Storage != null) {
-                    foreach (var energyStorage in storages) {
-                        if (condition.Storage.ID == energyStorage.ID) {
-                            storage = energyStorage;
-                        }
-                    }
-
-                    if (storage == null) {
-                        throw new DataIntegrityException("The storage device " + condition.Storage.Name +
-                                                         " in the condition of the transformation device " + trafo + " is not in the housetype " +
-                                                         houseType.Name + ". Please fix.",
-                            trafo);
-                    }
-                }
-
-                CalcLoadTypeDto conditionLoadType = null;
-                if (condition.ConditionLoadType != null) {
-                    conditionLoadType = _ltDict.GetLoadtypeDtoByLoadType(condition.ConditionLoadType);
-                }
-
-                double divider = 1;
-                if (type == CalcTransformationConditionType.StorageBetweenValues) {
-                    divider = 100;
-                }
+                CalcVariableDto variableDto = _calcVariableDtoFactory.RegisterVariableIfNotRegistered(
+                    condition.Variable,
+                    "House", Constants.HouseLocationGuid, Constants.HouseKey);
 
                 CalcTransformationConditionDto trafocondition = new CalcTransformationConditionDto(condition.Name,
                     condition.IntID,
-                    type,
-                    conditionLoadType,
-                    condition.MinValue / divider,
-                    condition.MaxValue / divider,
-                    Guid.NewGuid().ToString(),
-                    storage?.Name,
-                    storage?.Guid);
+                    variableDto,
+                    condition.MinValue,
+                    condition.MaxValue,
+                    Guid.NewGuid().ToString());
                 calcconditions.Add(trafocondition);
             }
         }
@@ -228,7 +193,7 @@ namespace CalculationController.CalcFactories {
         [ItemNotNull]
         private static List<CalcEnergyStorageDto> CreateEnergyStorageDtos([NotNull] [ItemNotNull] List<EnergyStorage> energyStorages,
                                                                           [NotNull] CalcLoadTypeDtoDictionary ltdict,
-                                                                          [NotNull] HouseholdKey householdKey)
+                                                                          [NotNull] HouseholdKey householdKey, CalcVariableDtoFactory calcVariableDtoFactory)
         {
             var calcEnergyStorages = new List<CalcEnergyStorageDto>();
             foreach (var es in energyStorages) {
@@ -239,16 +204,18 @@ namespace CalculationController.CalcFactories {
                 if (ltdict.SimulateLoadtype(es.LoadType)) {
                     List<CalcEnergyStorageSignalDto> signals = new List<CalcEnergyStorageSignalDto>();
                     foreach (var signal in es.Signals) {
-                        if (signal.LoadType == null) {
-                            throw new DataIntegrityException("Signal loadtype was null");
+                        if (signal.Variable == null) {
+                            throw new DataIntegrityException("Signal variable was null");
                         }
 
+                        var cvdto = calcVariableDtoFactory.RegisterVariableIfNotRegistered(signal.Variable, "House",
+                            Constants.HouseLocationGuid, Constants.HouseKey);
                         var cessig = new CalcEnergyStorageSignalDto(signal.Name,
                             signal.IntID,
                             signal.TriggerLevelOff,
                             signal.TriggerLevelOn,
                             signal.Value,
-                            ltdict.GetLoadtypeDtoByLoadType(signal.LoadType),
+                            cvdto,
                             Guid.NewGuid().ToString());
                         signals.Add(cessig);
                     }
@@ -318,23 +285,6 @@ namespace CalculationController.CalcFactories {
             return null;
         }
 
-        private static CalcTransformationConditionType DetermineTransformationConditionType([NotNull] TransformationDeviceCondition condition)
-        {
-            CalcTransformationConditionType type;
-            switch (condition.ConditionType) {
-                case TransformationConditionType.MinMaxValue:
-                    type = CalcTransformationConditionType.LoadtypeBalanceBetweenValues;
-                    break;
-                case TransformationConditionType.StorageContent:
-                    type = CalcTransformationConditionType.StorageBetweenValues;
-                    break;
-                default:
-                    throw new LPGException("unknown Type");
-            }
-
-            return type;
-        }
-
         [CanBeNull]
         private CalcAirConditioningDto MakeAirConditioning([NotNull] TemperatureProfile temperatureProfile,
                                                            [NotNull] HouseType houseType,
@@ -384,7 +334,6 @@ namespace CalculationController.CalcFactories {
         [NotNull]
         [ItemNotNull]
         private List<CalcTransformationDeviceDto> MakeAllTransformationDevices([NotNull] HouseType houseType,
-                                                                               [NotNull] [ItemNotNull] List<CalcEnergyStorageDto> calcEnergyStorages,
                                                                                [NotNull]
                                                                                HouseholdKey householdKey) //List<CalcDeviceTaggingSet> taggingSets,
         {
@@ -397,7 +346,7 @@ namespace CalculationController.CalcFactories {
                 transformationDevices.Add(housetransformationDevice.TransformationDevice);
             }
 
-            return MakeTransformationDeviceDtos(transformationDevices, calcEnergyStorages, householdKey, houseType); //taggingSets,
+            return MakeTransformationDeviceDtos(transformationDevices, householdKey);
         }
 
         private void MakeAutoDevFromDevice(EnergyIntensityType energyIntensity,
@@ -714,7 +663,7 @@ namespace CalculationController.CalcFactories {
                 energyStorages.Add(houseEnergyStorage.EnergyStorage);
             }
 
-            var calcEnergyStorages = CreateEnergyStorageDtos(energyStorages, _ltDict, householdKey); //,deviceTaggingSets);
+            var calcEnergyStorages = CreateEnergyStorageDtos(energyStorages, _ltDict, householdKey, _calcVariableDtoFactory); //,deviceTaggingSets);
             return calcEnergyStorages;
         }
 
@@ -830,10 +779,7 @@ namespace CalculationController.CalcFactories {
         [ItemNotNull]
         private List<CalcTransformationDeviceDto> MakeTransformationDeviceDtos(
             [NotNull] [ItemNotNull] List<TransformationDevice> transformationDevices,
-            [NotNull] [ItemNotNull] List<CalcEnergyStorageDto> storages,
-            //List<CalcDeviceTaggingSet> taggingSets,
-            [NotNull] HouseholdKey householdKey,
-            [NotNull] HouseType houseType)
+            [NotNull] HouseholdKey householdKey)
         {
             var ctds = new List<CalcTransformationDeviceDto>();
             foreach (var trafo in transformationDevices) {
@@ -860,7 +806,7 @@ namespace CalculationController.CalcFactories {
                         datapoints.Add(new DataPointDto(datapoint.ReferenceValue, datapoint.Factor));
                     }
 
-                    CreateCalcConditions(storages, houseType, trafo, calcconditions);
+                    CreateCalcConditions( trafo, calcconditions);
                 }
 
                 var ctd = new CalcTransformationDeviceDto(trafo.Name,

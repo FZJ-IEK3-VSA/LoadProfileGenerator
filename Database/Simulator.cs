@@ -482,11 +482,11 @@ namespace Database {
                 () => Generator.LoadFromDatabase(Generators.MyItems, ConnectionString, LoadTypes.MyItems,
                     DateBasedProfiles.MyItems, ignoreMissingTables), Generators),
                 new LoadingEntry("Energy Storages",
-                () => EnergyStorage.LoadFromDatabase(EnergyStorages.MyItems, ConnectionString, LoadTypes.MyItems,
+                () => EnergyStorage.LoadFromDatabase(EnergyStorages.MyItems, ConnectionString, LoadTypes.MyItems,Variables.MyItems,
                     ignoreMissingTables), EnergyStorages),
                 new LoadingEntry("Transformation Devices",
                 () => TransformationDevice.LoadFromDatabase(TransformationDevices.MyItems, ConnectionString,
-                    LoadTypes.MyItems, EnergyStorages.MyItems, ignoreMissingTables), TransformationDevices),
+                    LoadTypes.MyItems, Variables.MyItems, ignoreMissingTables), TransformationDevices),
                 new LoadingEntry("Device Categories", () =>
                 {
                     DeviceCategory.LoadFromDatabase(DeviceCategories.MyItems, out _dcnone, ConnectionString,

@@ -41,7 +41,7 @@ namespace Database.Tests.Tables {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void HolidayProbabilitesCalculateTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             // test the normal loading
             var holidays = new ObservableCollection<Holiday>();
             Holiday.LoadFromDatabase(holidays, db.ConnectionString, false);
@@ -71,7 +71,7 @@ namespace Database.Tests.Tables {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void HolidayProbabilitesSaveTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             // test the normal loading
             var holidays = new ObservableCollection<Holiday>();
             Holiday.LoadFromDatabase(holidays, db.ConnectionString, false);
@@ -101,7 +101,7 @@ namespace Database.Tests.Tables {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void LoadFromDatabaseTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             // test the normal loading
             var holidays = new ObservableCollection<Holiday>();
@@ -129,7 +129,7 @@ namespace Database.Tests.Tables {
         [Category(UnitTestCategories.BasicTest)]
         public void CreateNewHolidays()
         {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Simulator sim = new Simulator(db.ConnectionString);
             sim.Holidays.CreateNewItem(sim.ConnectionString);
 

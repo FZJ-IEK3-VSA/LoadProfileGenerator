@@ -41,7 +41,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void DeviceSelectionTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             db.ClearTable(DeviceSelection.TableName);
             db.ClearTable(DeviceSelectionItem.TableName);

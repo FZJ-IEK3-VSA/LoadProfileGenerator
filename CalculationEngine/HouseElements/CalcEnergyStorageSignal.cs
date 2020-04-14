@@ -38,6 +38,7 @@ namespace CalculationEngine.HouseElements {
         private readonly double _triggerOffPercent;
         private readonly double _triggerOnPercent;
         private readonly double _value;
+        private readonly CalcVariable _calcVariable;
         [CanBeNull] private TimeStep _currtimestep;
         private bool _isTurnedOn;
         private bool _lastTurnedOn;
@@ -46,17 +47,16 @@ namespace CalculationEngine.HouseElements {
         private double _tankLastValue;
 
         public CalcEnergyStorageSignal([NotNull] string pName, double triggerOff, double triggerOn, double value,
-            [NotNull] CalcLoadType dstLoadType, [NotNull] string guid) : base(pName,guid) {
+            CalcVariable calcVariable, [NotNull] string guid) : base(pName,guid) {
             _triggerOffPercent = triggerOff / 100;
             _triggerOnPercent = triggerOn / 100;
             _value = value;
-            DstLoadType = dstLoadType;
+            _calcVariable = calcVariable;
         }
 
-        [NotNull]
-        public CalcLoadType DstLoadType { get; }
-
         public OefcKey ProcessorKey { get; set; }
+
+        public CalcVariable CalcVariable => _calcVariable;
 
         public double GetValue([NotNull] TimeStep timestep, double tankCapacity, double currentFill) {
             var currentFillPercent = currentFill / tankCapacity;
@@ -99,7 +99,7 @@ namespace CalculationEngine.HouseElements {
 
         [NotNull]
         public override string ToString() {
-            var s = "Signal for " + DstLoadType.Name + " for levels between " + _triggerOnPercent * 100 + "% and " +
+            var s = "Signal for " + _calcVariable.Name + " for levels between " + _triggerOnPercent * 100 + "% and " +
                     _triggerOffPercent * 100 + "%";
             return s;
         }

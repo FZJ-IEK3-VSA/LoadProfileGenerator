@@ -113,9 +113,9 @@ namespace CalculationController.CalcFactories {
             var autodevs2 = MakeCalcAutoDevsFromHouse(calcHouseDto, houseKey, houseLocations);
             calchouse.SetAutoDevs(autodevs2);
             // energy Storage
-            var calcEnergyStorages = SetEnergyStoragesOnHouse(calcHouseDto.EnergyStorages, houseKey, calchouse); //, taggingSets);
+            SetEnergyStoragesOnHouse(calcHouseDto.EnergyStorages, houseKey, calchouse, _variableRepository); //, taggingSets);
             // transformation devices
-            MakeAllTransformationDevices(calcHouseDto, calcEnergyStorages, calchouse, houseKey); //taggingSets,
+            MakeAllTransformationDevices(calcHouseDto,  calchouse, houseKey); //taggingSets,
 
             // generators
             calchouse.SetGenerators(MakeGenerators(calcHouseDto.Generators, houseKey)); //taggingSets,
@@ -124,7 +124,6 @@ namespace CalculationController.CalcFactories {
         }
 
         private void MakeAllTransformationDevices([NotNull] CalcHouseDto house,
-                                                  [NotNull] [ItemNotNull] List<CalcEnergyStorage> calcEnergyStorages,
                                                   [NotNull] CalcHouse calchouse,
                                                   [NotNull] HouseholdKey householdKey) //List<CalcDeviceTaggingSet> taggingSets,
         {
@@ -155,18 +154,8 @@ namespace CalculationController.CalcFactories {
                     }
 
                     foreach (var condition in trafo.Conditions) {
-                        CalcEnergyStorage storage = null;
-                        if (condition.EnergyStorageGuid != null) {
-                            storage = calcEnergyStorages.Single(x => x.Guid == condition.EnergyStorageGuid);
-                        }
-
-                        CalcLoadType clt = null;
-                        var dstlt = condition.DstLoadType;
-                        if (dstlt != null) {
-                            clt = _ltDict.GetLoadtypeByGuid(dstlt.Guid);
-                        }
-
-                        ctd.AddCondition(condition.Name, condition.Type, storage, clt, condition.MinValue, condition.MaxValue, condition.Guid);
+                        var variable = _variableRepository.GetVariableByGuid(condition.CalcVariableDto.Guid);
+                        ctd.AddCondition(condition.Name, variable, condition.MinValue, condition.MaxValue, condition.Guid);
                     }
 
                     ctds.Add(ctd);
@@ -355,11 +344,9 @@ namespace CalculationController.CalcFactories {
             calcHouse.SetAirConditioning(csh);
         }
 
-        [NotNull]
-        [ItemNotNull]
-        private List<CalcEnergyStorage> SetEnergyStoragesOnHouse([NotNull] [ItemNotNull] List<CalcEnergyStorageDto> energyStorages,
+        private void SetEnergyStoragesOnHouse([NotNull] [ItemNotNull] List<CalcEnergyStorageDto> energyStorages,
                                                                  [NotNull] HouseholdKey householdKey,
-                                                                 [NotNull] CalcHouse calchouse) //, List<CalcDeviceTaggingSet> deviceTaggingSets)
+                                                                 [NotNull] CalcHouse calchouse, CalcVariableRepository calcVariableRepository) //, List<CalcDeviceTaggingSet> deviceTaggingSets)
         {
             var cess = new List<CalcEnergyStorage>();
             foreach (var es in energyStorages) {
@@ -380,12 +367,12 @@ namespace CalculationController.CalcFactories {
                     householdKey,
                     es.Guid);
                 foreach (var signal in es.Signals) {
-                    CalcLoadType signallt = _ltDict.GetLoadtypeByGuid(signal.DstLoadType.Guid);
+                    CalcVariable cv = calcVariableRepository.GetVariableByGuid(signal.CalcVariableDto.Guid);
                     var cessig = new CalcEnergyStorageSignal(signal.Name,
                         signal.TriggerOffPercent,
                         signal.TriggerOnPercent,
                         signal.Value,
-                        signallt,
+                        cv,
                         signal.Guid);
                     ces.AddSignal(cessig);
                 }
@@ -395,7 +382,7 @@ namespace CalculationController.CalcFactories {
 
             var calcEnergyStorages = cess; //,deviceTaggingSets);
             calchouse.SetStorages(calcEnergyStorages);
-            return calcEnergyStorages;
+            //return calcEnergyStorages;
         }
     }
 }

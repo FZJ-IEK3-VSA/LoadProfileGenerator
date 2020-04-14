@@ -131,7 +131,7 @@ namespace CalculationController.Integrity {
         }
 
         protected override void Run([NotNull] Simulator sim) {
-            var placeholder = sim.Timeprofiles.FindByName("placeholder", FindMode.Partial);
+            var placeholder = sim.Timeprofiles.FindFirstByName("placeholder", FindMode.Partial);
             _placeholder = placeholder ?? throw new LPGException("Placeholder was null");
             foreach (var action in sim.DeviceActions.It) {
                 CheckForUsage(action, sim);

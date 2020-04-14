@@ -70,7 +70,7 @@ namespace Database {
                             : PermittedGender.Female;
                         p.SickDays = sp.AverageSickDays;
                         personCount++;
-                        TraitTag tag = sim.TraitTags.FindByName(sp.TraitTag);
+                        TraitTag tag = sim.TraitTags.FindFirstByName(sp.TraitTag);
                         if(tag == null) {
                             throw new LPGException("Tag not found");
                         }
@@ -331,11 +331,11 @@ namespace Database {
         private static House MakeHouse([NotNull] Simulator sim, [NotNull] GlobalOptions globalOptions, [NotNull] SimpleModularHousehold smhh,
             [NotNull] ModularHousehold mhh) {
             var housename = "House for " + mhh.Name;
-            var myHouse = sim.Houses.FindByName(housename);
+            var myHouse = sim.Houses.FindFirstByName(housename);
             if (myHouse != null) {
                 sim.Houses.DeleteItem(myHouse);
             }
-            var ht = sim.HouseTypes.FindByName(smhh.HouseType, FindMode.IgnoreCase);
+            var ht = sim.HouseTypes.FindFirstByName(smhh.HouseType, FindMode.IgnoreCase);
             if (ht == null) {
 #pragma warning disable IDE0016 // Use 'throw' expression
                 throw new LPGException("Housetype " + smhh.HouseType + " was not found in the database. Maybe a typo?");
@@ -347,11 +347,11 @@ namespace Database {
             house.CreationType = CreationType.TemplateCreated;
             house.EnergyIntensityType = globalOptions.EnergyIntensityType;
             house.HouseType = ht;
-            var geoLoc = sim.GeographicLocations.FindByName(globalOptions.GeoLocName, FindMode.IgnoreCase);
+            var geoLoc = sim.GeographicLocations.FindFirstByName(globalOptions.GeoLocName, FindMode.IgnoreCase);
             house.GeographicLocation = geoLoc;
 
             var temperatureProfile =
-                sim.TemperatureProfiles.FindByName(globalOptions.TemperatureProfileName, FindMode.IgnoreCase);
+                sim.TemperatureProfiles.FindFirstByName(globalOptions.TemperatureProfileName, FindMode.IgnoreCase);
             house.TemperatureProfile = temperatureProfile;
             house.SaveToDB();
             house.AddHousehold(mhh,false,null,null,null);

@@ -51,7 +51,7 @@ namespace Database.Tests.Tables {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void VLoadTypeTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             db.ClearTable(VLoadType.TableName);
             var loadts = new ObservableCollection<VLoadType>();

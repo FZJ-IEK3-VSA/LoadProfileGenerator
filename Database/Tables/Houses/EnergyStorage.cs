@@ -132,10 +132,10 @@ namespace Database.Tables.Houses {
             set => SetValueWithNotify(value, ref _storageCapacity, nameof(StorageCapacity));
         }
 
-        public void AddSignal([NotNull] VLoadType lt, double triggerOn, double triggerOff, double value)
+        public void AddSignal([NotNull] Variable variable, double triggerOn, double triggerOff, double value)
         {
-            var ess = new EnergyStorageSignal(null, IntID, lt, triggerOn, triggerOff, value,
-                ConnectionString, lt.Name, System.Guid.NewGuid().ToString());
+            var ess = new EnergyStorageSignal(null, IntID, variable, triggerOn, triggerOff, value,
+                ConnectionString, variable.Name, System.Guid.NewGuid().ToString());
             _signals.Add(ess);
             ess.SaveToDB();
         }
@@ -214,10 +214,10 @@ namespace Database.Tables.Houses {
                 dstSim.ConnectionString, toImport.Guid);
             es.SaveToDB();
             foreach (var signal in toImport.Signals) {
-                if(signal.LoadType ==null) {
+                if(signal.Variable ==null) {
                     continue;
                 }
-                var vlt2 = GetItemFromListByName(dstSim.LoadTypes.MyItems, signal.LoadType.Name);
+                var vlt2 = GetItemFromListByName(dstSim.Variables.MyItems, signal.Variable.Name);
                 if (vlt2 != null) {
                     es.AddSignal(vlt2, signal.TriggerLevelOn, signal.TriggerLevelOff, signal.Value);
                 }
@@ -243,12 +243,13 @@ namespace Database.Tables.Houses {
         }
 
         public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<EnergyStorage> result, [NotNull] string connectionString,
-            [ItemNotNull] [NotNull] ObservableCollection<VLoadType> loadTypes, bool ignoreMissingTables)
+            [ItemNotNull] [NotNull] ObservableCollection<VLoadType> loadTypes,ObservableCollection<Variable> variables, bool ignoreMissingTables)
         {
             var aic = new AllItemCollections(loadTypes: loadTypes);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);
             var esss = new ObservableCollection<EnergyStorageSignal>();
-            EnergyStorageSignal.LoadFromDatabase(esss, connectionString, loadTypes, ignoreMissingTables);
+            EnergyStorageSignal.LoadFromDatabase(esss, connectionString, loadTypes,
+                ignoreMissingTables, variables);
             SetSubitems(new List<DBBase>(result), new List<DBBase>(esss), IsCorrectParent, ignoreMissingTables);
         }
 

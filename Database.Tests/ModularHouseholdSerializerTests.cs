@@ -18,7 +18,7 @@ namespace Database.Tests {
         [Category(UnitTestCategories.LongTest2)]
         public void Run() {
             Logger.Info("Starting test");
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(),DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             Directory.SetCurrentDirectory(wd.WorkingDirectory);
 

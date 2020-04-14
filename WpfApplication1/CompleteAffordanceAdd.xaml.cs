@@ -247,7 +247,7 @@ namespace LoadProfileGenerator
             aff.SaveToDB();
             var trait = sim.HouseholdTraits.CreateNewItem(sim.ConnectionString);
             trait.AddTag(traitTag);
-            var webtag = sim.TraitTags.FindByName("web", FindMode.Partial);
+            var webtag = sim.TraitTags.FindFirstByName("web", FindMode.Partial);
             if (webtag != null)
             {
                 trait.AddTag(webtag);

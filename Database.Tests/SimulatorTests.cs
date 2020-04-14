@@ -55,7 +55,7 @@ namespace Database.Tests {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorAffordancesDeleteTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(),DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             var count = sim.Affordances.MyItems.Count;
             sim.Affordances.DeleteItem(sim.Affordances.MyItems[0]);
@@ -68,7 +68,7 @@ namespace Database.Tests {
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorCreateTest() {
             var step = 1;
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(),DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             var dt = DateTime.Now;
             sim.Affordances.CreateNewItem(db.ConnectionString);
@@ -109,7 +109,7 @@ namespace Database.Tests {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorDateBasedProfilesDeleteTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(),DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             var count = sim.DateBasedProfiles.MyItems.Count;
             sim.DateBasedProfiles.DeleteItem(sim.DateBasedProfiles.MyItems[0]);
@@ -121,7 +121,7 @@ namespace Database.Tests {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorDesiresDeleteTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(),DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             var count = sim.Desires.MyItems.Count;
             sim.Desires.DeleteItem(sim.Desires.MyItems[0]);
@@ -133,7 +133,7 @@ namespace Database.Tests {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorDeviceCategoriesDeleteTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             // load to check if everything is ok
             var sim0 = new Simulator(db.ConnectionString);
             if (sim0.Persons.It.Count == 0) {
@@ -152,7 +152,7 @@ namespace Database.Tests {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorEnergyStoragesDeleteTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             var count = sim.EnergyStorages.MyItems.Count;
             sim.EnergyStorages.DeleteItem(sim.EnergyStorages.MyItems[0]);
@@ -164,7 +164,7 @@ namespace Database.Tests {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorGeneratorsDeleteTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             var count = sim.Generators.MyItems.Count;
             sim.Generators.DeleteItem(sim.Generators.MyItems[0]);
@@ -176,7 +176,7 @@ namespace Database.Tests {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorGeographicLocationsDeleteTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             var count = sim.GeographicLocations.MyItems.Count;
             sim.GeographicLocations.DeleteItem(sim.GeographicLocations.MyItems[0]);
@@ -188,7 +188,7 @@ namespace Database.Tests {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorHolidaysDeleteTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             var count = sim.Holidays.MyItems.Count;
             sim.Holidays.DeleteItem(sim.Holidays.MyItems[0]);
@@ -200,7 +200,7 @@ namespace Database.Tests {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorHouseholdsDeleteTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             var count = sim.ModularHouseholds.MyItems.Count;
             sim.ModularHouseholds.DeleteItem(sim.ModularHouseholds.MyItems[0]);
@@ -212,7 +212,7 @@ namespace Database.Tests {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorHouseholdTraitsDeleteTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             var count = sim.HouseholdTraits.MyItems.Count;
             sim.HouseholdTraits.DeleteItem(sim.HouseholdTraits.MyItems[0]);
@@ -224,7 +224,7 @@ namespace Database.Tests {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorHousesDeleteTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             var count = sim.Houses.MyItems.Count;
             sim.Houses.DeleteItem(sim.Houses.MyItems[0]);
@@ -236,7 +236,7 @@ namespace Database.Tests {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorLoadTypesDeleteTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             var count = sim.LoadTypes.MyItems.Count;
             sim.LoadTypes.DeleteItem(sim.LoadTypes.MyItems[0]);
@@ -250,7 +250,7 @@ namespace Database.Tests {
         [Test]
         [Category(UnitTestCategories.LongTest5)]
         public void SimulatorLoadWithoutNeedsUpdateTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString); // load once to clear problems
             foreach (var plan in sim.HouseholdPlans.It) {
                 plan.Refresh(null);
@@ -267,7 +267,7 @@ namespace Database.Tests {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorLocationsDeleteTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             var locationscount = sim.Locations.MyItems.Count;
             sim.Locations.DeleteItem(sim.Locations.MyItems[0]);
@@ -279,7 +279,7 @@ namespace Database.Tests {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorPersonsDeleteTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             var personcount = sim.Persons.MyItems.Count;
             sim.Persons.DeleteItem(sim.Persons.MyItems[0]);
@@ -291,7 +291,7 @@ namespace Database.Tests {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorRealDevicesDeleteTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             var count = sim.RealDevices.MyItems.Count;
             sim.RealDevices.DeleteItem(sim.RealDevices.MyItems[0]);
@@ -303,7 +303,7 @@ namespace Database.Tests {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorSettlementsDeleteTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             var count = sim.Settlements.MyItems.Count;
             sim.Settlements.DeleteItem(sim.Settlements.MyItems[0]);
@@ -315,7 +315,7 @@ namespace Database.Tests {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorTemperaturProfilesDeleteTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             var count = sim.TemperatureProfiles.MyItems.Count;
             sim.TemperatureProfiles.DeleteItem(sim.TemperatureProfiles.MyItems[0]);
@@ -327,7 +327,7 @@ namespace Database.Tests {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             Assert.AreNotEqual(null, sim);
             db.Cleanup();
@@ -336,7 +336,7 @@ namespace Database.Tests {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorTest2() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             Assert.AreNotEqual(null, sim);
             var emptycount = 0;
@@ -357,7 +357,7 @@ namespace Database.Tests {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorTimeLimitsDeleteTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             var count = sim.TimeLimits.MyItems.Count;
             sim.TimeLimits.DeleteItem(sim.TimeLimits.MyItems[0]);
@@ -369,7 +369,7 @@ namespace Database.Tests {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorTimeProfilesDeleteTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             var count = sim.Timeprofiles.MyItems.Count;
             sim.Timeprofiles.DeleteItem(sim.Timeprofiles.MyItems[0]);
@@ -381,7 +381,7 @@ namespace Database.Tests {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorTransformationDevicesDeleteTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             var sim = new Simulator(db.ConnectionString);
             var count = sim.TransformationDevices.MyItems.Count;

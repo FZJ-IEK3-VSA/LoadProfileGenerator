@@ -21,7 +21,7 @@ namespace IntegrationTests {
             if (!File.Exists(importPath)) {
                 throw new LPGException("Missing file: " + fi.FullName);
             }
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.LongTermMerger);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             var mainSim = new Simulator(db.ConnectionString);
             var hhNames = mainSim.ModularHouseholds.It.Select(x => x.Name).ToList();

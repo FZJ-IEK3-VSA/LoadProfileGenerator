@@ -85,7 +85,7 @@ namespace ReleaseBuilder {
             var datebased = sim.DateBasedProfiles.It.Where(x =>
                 x.Name.StartsWith("Chemnitz, Germany, Total Solar Radition 2013 15 min resolution", StringComparison.Ordinal)).ToList();
             Logger.Info("date based to delete:" + datebased.Count);
-            var radiation = sim.DateBasedProfiles.FindByName("Chemnitz, Germany, Total Solar Radiation");
+            var radiation = sim.DateBasedProfiles.FindFirstByName("Chemnitz, Germany, Total Solar Radiation");
             if (datebased.Count > 0) {
                 var dbp = datebased[0];
                 foreach (var vaca in datebased) {
@@ -97,7 +97,7 @@ namespace ReleaseBuilder {
                 }
 
                 var limitsToFix = new List<TimeLimit> {
-                    sim.TimeLimits.FindByName("Below 50W solar radation")
+                    sim.TimeLimits.FindFirstByName("Below 50W solar radation")
                 };
                 foreach (var timeLimit in limitsToFix) {
                     foreach (var boolEntry in timeLimit.TimeLimitEntries) {
@@ -112,7 +112,7 @@ namespace ReleaseBuilder {
                 }
             }
 
-            var gen = sim.Generators.FindByName("Photovoltaic System 50m2");
+            var gen = sim.Generators.FindFirstByName("Photovoltaic System 50m2");
             if (gen == null) {
                 throw new LPGException("generator was null");
             }

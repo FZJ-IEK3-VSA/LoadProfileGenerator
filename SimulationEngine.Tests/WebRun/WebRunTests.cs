@@ -5,6 +5,7 @@ using Common;
 using Common.Tests;
 using Database.Tests;
 using NUnit.Framework;
+using SimulationEngineLib;
 
 namespace SimulationEngine.Tests.WebRun
 {
@@ -15,17 +16,17 @@ namespace SimulationEngine.Tests.WebRun
         [Category(UnitTestCategories.ManualOnly)]
         public void RunTest()
         {
-            Program.CatchErrors = false;
+            SimulationEngineConfig.CatchErrors = false;
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.SimulationEngine);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             File.Copy(@"c:\work\webrun\calcjob.txt", Path.Combine(wd.WorkingDirectory, "calcjob.txt"), true);
             File.Copy(db.FileName, Path.Combine(wd.WorkingDirectory, "profilegenerator.db3"), true);
             Environment.CurrentDirectory = wd.WorkingDirectory;
-            WebRunner.WebRun.WebRunOptions wo = new WebRunner.WebRun.WebRunOptions
+            SimulationEngineLib.WebRunner.WebRun.WebRunOptions wo = new SimulationEngineLib.WebRunner.WebRun.WebRunOptions
             {
                 Directory = wd.WorkingDirectory
             };
-            WebRunner.WebRun.Run(wo);
+            SimulationEngineLib.WebRunner.WebRun.Run(wo);
         }
     }
 }

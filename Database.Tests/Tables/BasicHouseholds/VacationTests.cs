@@ -18,7 +18,7 @@ namespace Database.Tests.Tables.BasicHouseholds
         [Category(UnitTestCategories.BasicTest)]
         public void VacationTest()
         {
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             db.ClearTable(Vacation.TableName);
             db.ClearTable(VacationTime.TableName);

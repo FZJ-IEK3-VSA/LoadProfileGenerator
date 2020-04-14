@@ -92,6 +92,10 @@ namespace CalculationController.Queue {
                                 if(preserveLogfile && fileInfo.Name.StartsWith("Log.")) {
                                     continue;
                                 }
+                                if (preserveLogfile && fileInfo.Name.EndsWith(".db3"))
+                                {
+                                    continue;
+                                }
                                 try {
                                     fileInfo.Delete();
                                 }
@@ -118,9 +122,11 @@ namespace CalculationController.Queue {
 
         public void Start([NotNull] CalcStartParameterSet csps, [NotNull] string resultPath) {
             if (!csps.ResumeSettlement || csps.CalcTarget.CalcObjectType != CalcObjectType.Settlement) {
-                if (!CheckAndClearDirectory(resultPath, csps.PreserveLogfileWhileClearingFolder)) {
-                    csps.ReportFinishFuncForHousehold?.Invoke(false, string.Empty,resultPath);
-                    return;
+                if (!Config.IsInHeadless) {
+                    if (!CheckAndClearDirectory(resultPath, csps.PreserveLogfileWhileClearingFolder)) {
+                        csps.ReportFinishFuncForHousehold?.Invoke(false, string.Empty, resultPath);
+                        return;
+                    }
                 }
             }
             _calculationEntries.Clear();

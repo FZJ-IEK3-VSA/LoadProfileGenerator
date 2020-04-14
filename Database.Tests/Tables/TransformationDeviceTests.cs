@@ -41,30 +41,29 @@ namespace Database.Tests.Tables {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void TransformationDeviceLoadCreationAndSaveTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             var tdlts = new ObservableCollection<TransformationDevice>();
             var loadTypes = db.LoadLoadTypes();
-            var energyStorages = db.LoadEnergyStorages(loadTypes);
-            TransformationDevice.LoadFromDatabase(tdlts, db.ConnectionString, loadTypes, energyStorages, false);
+            var variables = db.LoadVariables();
+            TransformationDevice.LoadFromDatabase(tdlts, db.ConnectionString, loadTypes, variables, false);
             // delete everything and check
             tdlts.Clear();
             db.ClearTable(TransformationDevice.TableName);
             db.ClearTable(TransformationDeviceLoadType.TableName);
             db.ClearTable(TransformationDeviceCondition.TableName);
             db.ClearTable(TransformationFactorDatapoint.TableName);
-            TransformationDevice.LoadFromDatabase(tdlts, db.ConnectionString, loadTypes, energyStorages, false);
+            TransformationDevice.LoadFromDatabase(tdlts, db.ConnectionString, loadTypes, variables, false);
             Assert.AreEqual(0, tdlts.Count);
             // add one and load again
             var tdlt = new TransformationDevice("tdlt", "desc", loadTypes[0], -1000000, 1000000,
                 db.ConnectionString, -100000, 100000, Guid.NewGuid().ToString());
             tdlt.SaveToDB();
             tdlt.AddOutTransformationDeviceLoadType(loadTypes[1], 2, TransformationFactorType.Fixed);
-            tdlt.AddTransformationDeviceCondition(TransformationConditionType.MinMaxValue, loadTypes[0], 0, 100, null,
-                null);
+            tdlt.AddTransformationDeviceCondition(variables[0],  0, 100);
             tdlt.AddDataPoint(2, 1);
 
-            TransformationDevice.LoadFromDatabase(tdlts, db.ConnectionString, loadTypes, energyStorages, false);
+            TransformationDevice.LoadFromDatabase(tdlts, db.ConnectionString, loadTypes, variables, false);
             Assert.AreEqual(1, tdlts.Count);
             Assert.AreEqual(1, tdlts[0].LoadTypesOut.Count);
             Assert.AreEqual(1, tdlts[0].Conditions.Count);
@@ -79,7 +78,7 @@ namespace Database.Tests.Tables {
             tdlts[0].DeleteFromDB();
 
             tdlts.Clear();
-            TransformationDevice.LoadFromDatabase(tdlts, db.ConnectionString, loadTypes, energyStorages, false);
+            TransformationDevice.LoadFromDatabase(tdlts, db.ConnectionString, loadTypes, variables, false);
             Assert.AreEqual(0, tdlts.Count);
             var tdlt2 =
                 new ObservableCollection<TransformationDeviceLoadType>();

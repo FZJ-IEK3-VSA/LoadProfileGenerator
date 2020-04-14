@@ -45,7 +45,7 @@ namespace Database.Tests.Tables {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void LocationTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             db.ClearTable(Location.TableName);
             var cat = new CategoryDBBase<Location>("Locations");

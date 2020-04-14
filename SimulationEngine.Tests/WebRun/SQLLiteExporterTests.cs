@@ -5,6 +5,8 @@ using Common;
 using Common.Tests;
 using Database.Tests;
 using NUnit.Framework;
+using SimulationEngineLib;
+
 //using SimulationEngine.WebRunner;
 
 namespace SimulationEngine.Tests.WebRun
@@ -16,8 +18,8 @@ namespace SimulationEngine.Tests.WebRun
         [Category(UnitTestCategories.ManualOnly)]
         public void Run()
         {
-            Program.CatchErrors = false;
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(),DatabaseSetup.TestPackage.SimulationEngine);
+            SimulationEngineConfig.CatchErrors = false;
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             File.Copy(db.FileName, Path.Combine(wd.WorkingDirectory, "profilegenerator.db3"));
 

@@ -160,21 +160,12 @@ namespace Database.Tables.Houses {
             tdlt.SaveToDB();
         }
 
-        public void AddTransformationDeviceCondition(TransformationConditionType type, [CanBeNull] VLoadType lt,
+        public void AddTransformationDeviceCondition([NotNull] Variable variable,
             double minValue,
-            double maxValue, [CanBeNull] EnergyStorage storage,
-            [CanBeNull] Dictionary<TransformationConditionType, string> conditionNames)
+            double maxValue)
         {
-            var name = "(no name)";
-            if (type == TransformationConditionType.MinMaxValue && lt != null) {
-                name = lt.Name;
-            }
-            if (type == TransformationConditionType.StorageContent && storage != null) {
-                name = storage.Name;
-            }
-            var tdlt = new TransformationDeviceCondition(null, type, lt, minValue, maxValue,
-                storage, IntID, ConnectionString, name, System.Guid.NewGuid().ToString());
-            tdlt.SetNameDictionary(conditionNames);
+            var tdlt = new TransformationDeviceCondition(null, minValue, maxValue,
+                 IntID, ConnectionString, variable.Name, System.Guid.NewGuid().ToString(),variable);
             _conditions.Add(tdlt);
             tdlt.SaveToDB();
         }
@@ -269,16 +260,11 @@ namespace Database.Tables.Houses {
                 td.AddOutTransformationDeviceLoadType(vlt2, deviceLoadType.Factor, deviceLoadType.FactorType);
             }
             foreach (var srccondition in toImport.Conditions) {
-                VLoadType dstLoadType = null;
-                if (srccondition.ConditionLoadType != null) {
-                    dstLoadType = GetItemFromListByName(dstSim.LoadTypes.MyItems, srccondition.ConditionLoadType.Name);
-                }
-                EnergyStorage dststorage = null;
-                if (srccondition.Storage != null) {
-                    dststorage = GetItemFromListByName(dstSim.EnergyStorages.MyItems, srccondition.Storage.Name);
-                }
-                td.AddTransformationDeviceCondition(srccondition.ConditionType, dstLoadType, srccondition.MinValue,
-                    srccondition.MaxValue, dststorage, new Dictionary<TransformationConditionType, string>());
+                    var variable = GetItemFromListByName(dstSim.Variables.MyItems, srccondition.Variable.Name);
+                    if(variable!= null)
+                    {td.AddTransformationDeviceCondition(variable, srccondition.MinValue,
+                    srccondition.MaxValue);}
+
             }
 
             foreach (var datapoint in toImport._factorDatapoints) {
@@ -328,7 +314,7 @@ namespace Database.Tables.Houses {
         }
 
         public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<TransformationDevice> result, [NotNull] string connectionString,
-            [ItemNotNull] [NotNull] ObservableCollection<VLoadType> loadTypes, [ItemNotNull] [NotNull] ObservableCollection<EnergyStorage> energyStorages,
+            [ItemNotNull] [NotNull] ObservableCollection<VLoadType> loadTypes, [ItemNotNull] [NotNull] ObservableCollection<Variable> variables,
             bool ignoreMissingTables)
         {
             var aic = new AllItemCollections(loadTypes: loadTypes);
@@ -340,8 +326,8 @@ namespace Database.Tables.Houses {
 
             var conditions =
                 new ObservableCollection<TransformationDeviceCondition>();
-            TransformationDeviceCondition.LoadFromDatabase(conditions, connectionString, loadTypes, energyStorages,
-                ignoreMissingTables);
+            TransformationDeviceCondition.LoadFromDatabase(conditions, connectionString, loadTypes,
+                ignoreMissingTables, variables);
             SetSubitems(new List<DBBase>(result), new List<DBBase>(conditions), IsCorrectConditionParent,
                 ignoreMissingTables);
 

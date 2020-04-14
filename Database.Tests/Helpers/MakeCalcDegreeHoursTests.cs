@@ -40,7 +40,7 @@ namespace Database.Tests.Helpers {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void MakeDegreeDaysTest3Days() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(),DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             var temperaturProfiles = db.LoadTemperatureProfiles();
             var startTime = new DateTime(2012, 1, 1);
@@ -65,7 +65,7 @@ namespace Database.Tests.Helpers {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void MakeDegreeDaysTest3Years() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var temperaturProfiles = db.LoadTemperatureProfiles();
             var startTime = new DateTime(2012, 1, 1);
             var endTime = new DateTime(2014, 12, 31);
@@ -89,7 +89,7 @@ namespace Database.Tests.Helpers {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void MakeDegreeDaysTestMinus3Days() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var temperaturProfiles = db.LoadTemperatureProfiles();
 
             var startTime = new DateTime(2011, 12, 29);
@@ -115,7 +115,7 @@ namespace Database.Tests.Helpers {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void MakeDegreeHoursTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             var temperaturProfiles = db.LoadTemperatureProfiles();
 

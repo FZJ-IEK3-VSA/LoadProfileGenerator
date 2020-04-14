@@ -49,7 +49,7 @@ namespace Database.Tests.Templates {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void RunVacationGetProbabilityRangesTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             var dbp = sim.DateBasedProfiles.CreateNewItem(sim.ConnectionString);
             var year = DateTime.Now.Year;
@@ -71,7 +71,7 @@ namespace Database.Tests.Templates {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void RunVacGenerationTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             var dbp = sim.DateBasedProfiles.CreateNewItem(sim.ConnectionString);
 

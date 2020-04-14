@@ -275,7 +275,7 @@ namespace IntegrationTests {
             }
 
             var fi = FindImportFile(srcfilename);
-            db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.LongTermMerger);
+            db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             var oldSim = new Simulator(db.ConnectionString);
             Dictionary<string, int> srctablerowcounts = null;
@@ -447,7 +447,7 @@ namespace IntegrationTests {
         public void LoadEmptyDatabase()
         {
             CleanTestBase.RunAutomatically(false);
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.LongTermMerger);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             ClearAllTables(db);
 #pragma warning disable S1854 // Dead stores should be removed
 
@@ -487,8 +487,8 @@ namespace IntegrationTests {
                 File.Delete(path);
                 Thread.Sleep(3000);
             }
-            File.Copy(DatabaseSetup.GetSourcepath(null,DatabaseSetup.TestPackage.LongTermMerger), path);
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.LongTermMerger);
+            File.Copy(DatabaseSetup.GetSourcepath(null), path);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var mainSim = new Simulator(db.ConnectionString);
             var dbm = new DatabaseMerger(mainSim);
             dbm.RunFindItems(path, null);
@@ -513,7 +513,7 @@ namespace IntegrationTests {
                 Thread.Sleep(3000);
             }
             Thread.Sleep(3000);
-            File.Copy(DatabaseSetup.GetSourcepath(null,DatabaseSetup.TestPackage.LongTermMerger), path);
+            File.Copy(DatabaseSetup.GetSourcepath(null), path);
             TestImport(path, false, ClearMode.ClearTable, true);
             wd.CleanUp(1);
         }
@@ -542,22 +542,21 @@ namespace IntegrationTests {
         public void RunTestSMA381()
         {
             DeviceCategory.ThrowExceptionOnImportWithMissingParent = true;
-            TestImport(DatabaseSetup.GetImportFileFullPath("Profilegenerator381SMA.db3",
-                DatabaseSetup.TestPackage.LongTermMerger), true,ClearMode.NoClearing);
+            TestImport(DatabaseSetup.GetImportFileFullPath("Profilegenerator381SMA.db3"), true,ClearMode.NoClearing);
         }
 
         [Test]
         [Category(UnitTestCategories.LongTermMerge)]
         public void Version520TimeLimitImport()
         {
-            string sourcefilepath = DatabaseSetup.GetImportFileFullPath("profilegenerator520_simon.db3",DatabaseSetup.TestPackage.LongTermMerger);
+            string sourcefilepath = DatabaseSetup.GetImportFileFullPath("profilegenerator520_simon.db3");
             CleanTestBase.RunAutomatically(false);
             var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             var fi = new FileInfo(sourcefilepath);
             if (!File.Exists(sourcefilepath)) {
                 throw new LPGException("Missing file: " + fi.FullName);
             }
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.LongTermMerger);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             var mainSim = new Simulator(db.ConnectionString);
             var dbm = new DatabaseMerger(mainSim);

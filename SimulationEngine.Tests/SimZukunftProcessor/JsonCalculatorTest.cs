@@ -7,13 +7,12 @@ using System.Reflection;
 using Automation;
 using Automation.ResultFiles;
 using Common;
-using Common.JSON;
 using Database;
 using Database.Tests;
 using FluentAssertions;
 using JetBrains.Annotations;
 using NUnit.Framework;
-using SimulationEngine.SimZukunftProcessor;
+using SimulationEngineLib.SimZukunftProcessor;
 
 namespace SimulationEngine.Tests.SimZukunftProcessor
 {
@@ -141,44 +140,6 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
             }
 
         }
-        [Test]
-        [Category(UnitTestCategories.ManualOnly)]
-        public void EndToEndTest()
-        {
-            Console.WriteLine(Assembly.GetCallingAssembly().FullName);
-            Config.SkipFreeSpaceCheckForCalculation = true;
-            WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            DirectoryInfo simengine = new DirectoryInfo(@"V:\Dropbox\LPG\SimulationEngine\bin\x64\Debug");
-            foreach (FileInfo srcFile in simengine.GetFiles("*.*",SearchOption.AllDirectories)) {
-                string relative = srcFile.FullName.Substring(simengine.FullName.Length);
-                while (relative.StartsWith("\\")) {
-                    relative = relative.Substring(1);
-                }
-
-                string dstPath = Path.Combine(wd.WorkingDirectory, relative);
-                FileInfo dstFile = new FileInfo(dstPath);
-                if (dstFile.Directory != null && !(dstFile.Directory.Exists)) {
-                    dstFile.Directory.Create();
-                }
-                srcFile.CopyTo(dstPath);
-            }
-            Directory.SetCurrentDirectory(wd.WorkingDirectory);
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(),
-                DatabaseSetup.TestPackage.SimulationEngine);
-            HouseGenerator.CreateDistrictDefinition(db.ConnectionString);
-            DistrictDefinitionProcessingOptions ddpo = new DistrictDefinitionProcessingOptions
-            {
-                DstPath = wd.Combine("Results"),
-                JsonPath = wd.Combine("Example")
-            };
-            HouseGenerator.ProcessDistrictDefinitionFiles(ddpo,db.ConnectionString);
-            var lo = new ParallelJsonLauncher.ParallelJsonLauncherOptions
-            {
-                JsonDirectory = ddpo.DstPath
-            };
-            ParallelJsonLauncher.LaunchParallel(lo);
-           // db.Cleanup();
-        }
 
         [Test]
         [Category(UnitTestCategories.ManualOnly)]
@@ -206,17 +167,15 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
                 srcFile.CopyTo(dstPath);
             }
             Directory.SetCurrentDirectory(wd.WorkingDirectory);
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(),DatabaseSetup.TestPackage.SimulationEngine);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Simulator sim = new Simulator(db.ConnectionString);
-            var house =sim.Houses.FindByName("CHR07 in HT04 with Car, 05 km to work, 3.7 kW Charging at home");
+            var house =sim.Houses.FindFirstByName("CHR07 in HT04 with Car, 05 km to work, 3.7 kW Charging at home");
             if (house == null) {
                 throw new LPGException("house not found");
             }
 
             JsonCalcSpecification jcs = JsonCalcSpecification.MakeDefaultsForTesting();
-            jcs.CalcObject = house.GetJsonReference();
             jcs.OutputDirectory = Path.Combine(wd.WorkingDirectory, "Results");
-            jcs.PathToDatabase = db.FileName;
             jcs.DeleteSqlite = true;
             jcs.StartDate = new DateTime(2019,1,1);
             jcs.EndDate = new DateTime(2019,1,7);
@@ -230,13 +189,9 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
                 jcs.CalcOptions = new List<CalcOption>();
             }
             jcs.CalcOptions.Add(CalcOption.SumProfileExternalEntireHouse);
-            JsonCalcSpecSerializer jg = new JsonCalcSpecSerializer();
-            string jsonfileName = wd.Combine("calcspec.json");
-            jg.WriteJsonToFile(jsonfileName, jcs);
 
             JsonCalculator jc = new JsonCalculator();
-            var options = new JsonDirectoryOptions(jsonfileName);
-            jc.Calculate(options);
+            jc.StartHousehold(sim,jcs, house.GetJsonReference());
             const string sqliteanalyizer = @"v:\dropbox\lpg\sqlite3_analyzer.exe";
             if (File.Exists(sqliteanalyizer)) {
                 StreamWriter sw = new StreamWriter(Path.Combine(jcs.OutputDirectory, "analyzesqlite.cmd"));
@@ -259,9 +214,8 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         {
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             Directory.SetCurrentDirectory(wd.WorkingDirectory);
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(),
-                DatabaseSetup.TestPackage.SimulationEngine);
-            HouseGenerator.CreateDistrictDefinition(db.ConnectionString);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
+            HouseGenerator.CreateExampleHouseJob(db.ConnectionString);
             // db.Cleanup();
         }
 
@@ -273,8 +227,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
             Logger.Get().StartCollectingAllMessages();
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             Directory.SetCurrentDirectory(wd.WorkingDirectory);
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(),
-                DatabaseSetup.TestPackage.SimulationEngine);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             string dbPath = wd.Combine("my.db3");
             File.Copy(db.FileName,dbPath );
             Console.WriteLine("DB File Path: " + dbPath);
@@ -284,23 +237,14 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
             }
             jcs.CalcOptions.Add(CalcOption.DeviceProfiles);
             jcs.CalcOptions.Add(CalcOption.DeviceProfiles);
-            jcs.PathToDatabase = dbPath;
             jcs.StartDate = new DateTime(2019,1,1);
             jcs.EndDate = new DateTime(2019, 1, 3);
             jcs.DefaultForOutputFiles = OutputFileDefault.OnlySums;
             Simulator sim = new Simulator(db.ConnectionString);
-            jcs.CalcObject = sim.Houses[0].GetJsonReference();
-            JsonCalcSpecSerializer jg = new JsonCalcSpecSerializer();
-            string jsonfilename = wd.Combine("Example.json");
-            jg.WriteJsonToFile(jsonfilename, jcs);
             JsonCalculator jc = new JsonCalculator();
-            JsonDirectoryOptions jo = new JsonDirectoryOptions
-            {
-                Input = jsonfilename
-            };
-            jc.Calculate(jo);
+            jc.StartHousehold(sim,jcs, sim.Houses[0].GetJsonReference());
             Directory.SetCurrentDirectory(wd.PreviousCurrentDir);
-            //wd.CleanUp();
+            wd.CleanUp();
         }
 
 
@@ -311,8 +255,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
             Logger.Get().StartCollectingAllMessages();
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             Directory.SetCurrentDirectory(wd.WorkingDirectory);
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(),
-                DatabaseSetup.TestPackage.SimulationEngine);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             string dbPath = wd.Combine("my.db3");
             File.Copy(db.FileName, dbPath);
             Console.WriteLine("DB File Path: " + dbPath);
@@ -323,51 +266,36 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
             }
             jcs.DefaultForOutputFiles = OutputFileDefault.None;
             jcs.CalcOptions.Add(CalcOption.SumProfileExternalIndividualHouseholdsAsJson);
-            jcs.PathToDatabase = dbPath;
             jcs.StartDate = new DateTime(2019, 1, 1);
             jcs.EndDate = new DateTime(2019, 1, 3);
             jcs.ExternalTimeResolution = "00:15:00";
             jcs.LoadTypePriority = LoadTypePriority.RecommendedForHouses;
             Simulator sim = new Simulator(db.ConnectionString);
-            jcs.CalcObject = sim.Houses[0].GetJsonReference();
-            JsonCalcSpecSerializer jg = new JsonCalcSpecSerializer();
-            string jsonfilename = wd.Combine("Example.json");
-            jg.WriteJsonToFile(jsonfilename, jcs);
             JsonCalculator jc = new JsonCalculator();
-            JsonDirectoryOptions jo = new JsonDirectoryOptions
-            {
-                Input = jsonfilename
-            };
-            jc.Calculate(jo);
-            DirectoryInfo dstDir = new DirectoryInfo(wd.WorkingDirectory);
-            var files = dstDir.GetFiles("*.json", SearchOption.AllDirectories);
-            foreach (FileInfo info in files) {
-                Logger.Info(info.Name);
-            }
-            Assert.That(files.Length,Is.GreaterThan(1));
+            jc.StartHousehold(sim,jcs, sim.Houses[0].GetJsonReference());
             Directory.SetCurrentDirectory(wd.PreviousCurrentDir);
-            //wd.CleanUp();
+            wd.CleanUp();
         }
-        [Test]
-        [Category(UnitTestCategories.ManualOnly)]
-        public void RunJsonCalculatorExportTest()
-        {
-            Config.IsInHeadless = true;
-            WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            Directory.SetCurrentDirectory(wd.WorkingDirectory);
-            //DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.SimulationEngine);
-            JsonCalculator jc = new JsonCalculator();
-            const string jsonfilename = @"C:\work\LPGUnitTest\SettlementTests.JsonCalcSpecTest\CHR07 in HT04 with Car, 30 km to work, 22kW Charging at work 4.json";
-            JsonDirectoryOptions jo = new JsonDirectoryOptions
-            {
-                Input = jsonfilename
+        //[Test]
+        //[Category(UnitTestCategories.ManualOnly)]
+        //public void RunJsonCalculatorExportTest()
+        //{
+        //    Config.IsInHeadless = true;
+        //    WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
+        //    Directory.SetCurrentDirectory(wd.WorkingDirectory);
+        //    //DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.SimulationEngine);
+        //    JsonCalculator jc = new JsonCalculator();
+        //    const string jsonfilename = @"C:\work\LPGUnitTest\SettlementTests.JsonCalcSpecTest\CHR07 in HT04 with Car, 30 km to work, 22kW Charging at work 4.json";
+        //    JsonDirectoryOptions jo = new JsonDirectoryOptions
+        //    {
+        //        Input = jsonfilename
 
-            };
-            Logger.Get().StartCollectingAllMessages();
-            jc.Calculate(jo);
-            Directory.SetCurrentDirectory(wd.PreviousCurrentDir);
-            //wd.CleanUp();
-        }
+        //    };
+        //    Logger.Get().StartCollectingAllMessages();
+        //    jc.Calculate(jo);
+        //    Directory.SetCurrentDirectory(wd.PreviousCurrentDir);
+        //    //wd.CleanUp();
+        //}
 
         [Test]
         [Category(UnitTestCategories.ManualOnly)]
@@ -384,27 +312,27 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
             wd.CleanUp();
         }
 
-        [Test]
-        [Category(UnitTestCategories.ManualOnly)]
-        public void RunFailingStuffTest()
-        {
-            Config.IsInHeadless = true;
-            Config.IsInUnitTesting = true;
-            WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            Directory.SetCurrentDirectory(wd.WorkingDirectory);
-            //DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.SimulationEngine);
-            JsonCalculator jc = new JsonCalculator();
-            const string jsonfilename = @"V:\Dropbox\LPG\failingTest.json";
-            JsonDirectoryOptions jo = new JsonDirectoryOptions
-            {
-                Input = jsonfilename
+        //[Test]
+        //[Category(UnitTestCategories.ManualOnly)]
+        //public void RunFailingStuffTest()
+        //{
+        //    Config.IsInHeadless = true;
+        //    Config.IsInUnitTesting = true;
+        //    WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
+        //    Directory.SetCurrentDirectory(wd.WorkingDirectory);
+        //    //DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.SimulationEngine);
+        //    JsonCalculator jc = new JsonCalculator();
+        //    const string jsonfilename = @"V:\Dropbox\LPG\failingTest.json";
+        //    JsonDirectoryOptions jo = new JsonDirectoryOptions
+        //    {
+        //        Input = jsonfilename
 
-            };
-            Logger.Get().StartCollectingAllMessages();
-            jc.Calculate(jo);
-            Directory.SetCurrentDirectory(wd.PreviousCurrentDir);
-            //wd.CleanUp();
-        }
+        //    };
+        //    Logger.Get().StartCollectingAllMessages();
+        //    jc.Calculate(jo);
+        //    Directory.SetCurrentDirectory(wd.PreviousCurrentDir);
+        //    //wd.CleanUp();
+        //}
 
     }
 }

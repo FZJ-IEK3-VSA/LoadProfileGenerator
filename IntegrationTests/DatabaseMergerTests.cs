@@ -72,7 +72,7 @@ namespace IntegrationTests {
             var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             var newpath = Path.Combine(wd.WorkingDirectory, "mergertest.db3");
             File.Copy(fi.FullName, newpath);
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var mainSim = new Simulator(db.ConnectionString);
             dbm = new Database.DatabaseMerger.DatabaseMerger(mainSim);
 
@@ -87,7 +87,7 @@ namespace IntegrationTests {
         [Category(UnitTestCategories.LongTest2)]
         public void TestImportWithHouseholdTemplateDelete600() {
             const string srcFileName = "profilegenerator600.db3";
-            string sourcepath =  DatabaseSetup.GetImportFileFullPath(srcFileName, DatabaseSetup.TestPackage.DatabaseIo);
+            string sourcepath =  DatabaseSetup.GetImportFileFullPath(srcFileName);
             if (!File.Exists(sourcepath))
             {
                 throw new LPGException("Missing file!");
@@ -96,7 +96,7 @@ namespace IntegrationTests {
             var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             var newpath = Path.Combine(wd.WorkingDirectory, "mergertest.db3");
             File.Copy(sourcepath, newpath);
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var mainSim = new Simulator(db.ConnectionString);
             db.ClearTable(HouseholdTemplate.TableName);
             Database.DatabaseMerger.DatabaseMerger dbm = new Database.DatabaseMerger.DatabaseMerger(mainSim);
@@ -112,7 +112,7 @@ namespace IntegrationTests {
         public void TestImportWithHouseholdTemplateDelete880()
         {
             const string srcFileName = "profilegenerator880.db3";
-            string sourcepath = DatabaseSetup.GetImportFileFullPath(srcFileName, DatabaseSetup.TestPackage.DatabaseIo);
+            string sourcepath = DatabaseSetup.GetImportFileFullPath(srcFileName);
             if (!File.Exists(sourcepath))
             {
                 throw new LPGException("Missing file!");
@@ -121,7 +121,7 @@ namespace IntegrationTests {
             var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             var newpath = Path.Combine(wd.WorkingDirectory, "mergertest.db3");
             File.Copy(sourcepath, newpath);
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var mainSim = new Simulator(db.ConnectionString);
             db.ClearTable(HouseholdTemplate.TableName);
             Database.DatabaseMerger.DatabaseMerger dbm = new Database.DatabaseMerger.DatabaseMerger(mainSim);
@@ -180,7 +180,7 @@ namespace IntegrationTests {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void RunTestCurrentDeviceActions() {
-            var dbOriginal = new DatabaseSetup("RunTestCurrentDeviceActionsOriginal", DatabaseSetup.TestPackage.DatabaseIo);
+            var dbOriginal = new DatabaseSetup("RunTestCurrentDeviceActionsOriginal");
 
             var originalSim = new Simulator(dbOriginal.ConnectionString);
 
@@ -188,11 +188,11 @@ namespace IntegrationTests {
             if (File.Exists(path)) {
                 File.Delete(path);
             }
-            File.Copy(DatabaseSetup.GetSourcepath(null,DatabaseSetup.TestPackage.DatabaseIo), path);
+            File.Copy(DatabaseSetup.GetSourcepath(null), path);
             if (!File.Exists(path)) {
                 throw new LPGException("Missing file!");
             }
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             db.ClearTable(DeviceAction.TableName);
             db.ClearTable(DeviceActionGroup.TableName);
@@ -235,12 +235,12 @@ namespace IntegrationTests {
                 File.Delete(path);
             }
 
-            string sourcefile = DatabaseSetup.GetSourcepath(null, DatabaseSetup.TestPackage.DatabaseIo);
+            string sourcefile = DatabaseSetup.GetSourcepath(null);
             File.Copy(sourcefile, path);
             if (!File.Exists(path)) {
                 throw new LPGException("Missing file!");
             }
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             db.ClearTable(DeviceCategory.TableName);
             db.ClearTable(AffordanceDevice.TableName);
             var mainSim = new Simulator(db.ConnectionString);
@@ -278,13 +278,13 @@ namespace IntegrationTests {
         public void RunTestCurrentTimeLimits() {
             var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             var path = Path.Combine(wd.WorkingDirectory, "profilegeneratorcopy.db3");
-            var sourcepath = DatabaseSetup.GetSourcepath(null, DatabaseSetup.TestPackage.DatabaseIo);
+            var sourcepath = DatabaseSetup.GetSourcepath(null);
 
             File.Copy(sourcepath, path);
             if (!File.Exists(path)) {
                 throw new LPGException("Missing file!");
             }
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var mainSim = new Simulator(db.ConnectionString);
             mainSim.TimeLimits.DeleteItem(mainSim.TimeLimits[0]);
             mainSim.TimeLimits.DeleteItem(mainSim.TimeLimits[1]);

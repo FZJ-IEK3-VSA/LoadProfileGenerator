@@ -118,7 +118,7 @@ namespace LoadProfileGenerator.Views.Households {
                     }
                 }
                 else {
-                    var apparent = Presenter.Simulator.LoadTypes.FindByName("apparent", FindMode.Partial);
+                    var apparent = Presenter.Simulator.LoadTypes.FindFirstByName("apparent", FindMode.Partial);
                     if (apparent == null) {
                         Logger.Error("Could not find the apparent load type. Please fix.");
                         return;
@@ -140,7 +140,7 @@ namespace LoadProfileGenerator.Views.Households {
                     }
                 }
                 else {
-                    var reactive = Presenter.Simulator.LoadTypes.FindByName("reactive", FindMode.Partial);
+                    var reactive = Presenter.Simulator.LoadTypes.FindFirstByName("reactive", FindMode.Partial);
                     if (reactive == null) {
                         Logger.Error("Could not find the apparent load type. Please fix.");
                         return;

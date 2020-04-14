@@ -15,7 +15,7 @@ namespace ReleaseBuilder
         [Category("BasicTest")]
         public void MakeStatistic()
         {
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(),DatabaseSetup.TestPackage.ReleaseBuilder);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             Simulator sim = new Simulator(db.ConnectionString);
             Print("Desires", sim.Desires.It.Count);

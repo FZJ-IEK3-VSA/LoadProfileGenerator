@@ -28,6 +28,7 @@ namespace Automation.ResultFiles {
                    callStack.GetFileLineNumber();
         }
     }
+
     public class LPGCommandlineException : Exception
     {
         [UsedImplicitly]

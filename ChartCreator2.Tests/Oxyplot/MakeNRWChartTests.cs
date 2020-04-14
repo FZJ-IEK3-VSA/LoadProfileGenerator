@@ -21,7 +21,7 @@ namespace ChartCreator2.Tests.Oxyplot {
         public void MakeNRWChartTest() {
             CleanTestBase.RunAutomatically(false);
             var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.ChartCreator);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             var versions = sim.CalculationOutcomes.It.Select(x => x.LPGVersion).Distinct().ToList();
             versions.Sort();

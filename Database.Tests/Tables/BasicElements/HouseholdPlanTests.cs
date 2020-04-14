@@ -13,7 +13,7 @@ namespace Database.Tests.Tables.BasicElements {
         [Test]
         [Category(UnitTestCategories.LongTest5)]
         public void HouseholdPlanEntryAverageTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             var sim = new Simulator(db.ConnectionString);
             foreach (var dc in sim.DeviceCategories.MyItems) {
@@ -36,7 +36,7 @@ namespace Database.Tests.Tables.BasicElements {
         [Test]
         [Category(UnitTestCategories.LongTest5)]
         public void HouseholdPlanEntryRefreshTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             db.ClearTable(HouseholdPlan.TableName);
             db.ClearTable(DeviceTag.TableName);
@@ -90,7 +90,7 @@ namespace Database.Tests.Tables.BasicElements {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void HouseholdPlanEntryTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             db.ClearTable(HouseholdPlan.TableName);
             db.ClearTable(HouseholdPlanEntry.TableName);
             var timeBasedProfiles = db.LoadTimeBasedProfiles();

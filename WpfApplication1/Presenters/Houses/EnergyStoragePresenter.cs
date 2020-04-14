@@ -84,6 +84,11 @@ namespace LoadProfileGenerator.Presenters.Houses {
         [UsedImplicitly]
         public ObservableCollection<VLoadType> VLoadTypes => Sim.LoadTypes.MyItems;
 
+        [ItemNotNull]
+        [NotNull]
+        [UsedImplicitly]
+        public ObservableCollection<Variable> Variables => Sim.Variables.MyItems;
+
         public void Delete()
         {
             Sim.EnergyStorages.DeleteItem(_thisStorage);

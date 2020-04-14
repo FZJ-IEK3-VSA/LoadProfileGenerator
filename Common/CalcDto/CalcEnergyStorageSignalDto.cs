@@ -10,19 +10,19 @@ namespace Common.CalcDto {
         public int ID { get; }
         public double Value { get; }
         [NotNull]
-        public CalcLoadTypeDto DstLoadType { get; }
+        public CalcVariableDto CalcVariableDto { get; }
         [NotNull]
         public string Guid { get; }
 
         public CalcEnergyStorageSignalDto([NotNull]string name, int id, double triggerOff, double triggerOn, double value,
-                                          [NotNull]CalcLoadTypeDto dstLoadType, [NotNull]string guid)
+                                          [NotNull] CalcVariableDto calcVariableDto, [NotNull]string guid)
         {
             TriggerOffPercent = triggerOff / 100;
             TriggerOnPercent = triggerOn / 100;
             Name = name;
             ID = id;
             Value = value;
-            DstLoadType = dstLoadType;
+            CalcVariableDto = calcVariableDto;
             Guid = guid;
         }
     }

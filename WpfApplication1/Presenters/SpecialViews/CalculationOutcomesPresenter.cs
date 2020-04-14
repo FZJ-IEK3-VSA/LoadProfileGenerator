@@ -163,7 +163,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         public static int CountMissingEntries([NotNull] Simulator sim)
         {
             var count = 0;
-            var geographicLocation = sim.GeographicLocations.FindByName("berlin", FindMode.Partial);
+            var geographicLocation = sim.GeographicLocations.FindFirstByName("berlin", FindMode.Partial);
             if (geographicLocation == null) {
                 Logger.Error("Location Berlin not found. Can't count missing entries.");
                 return 0;
@@ -443,7 +443,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         {
             try {
                 InCalculation = true;
-                var geographicLocation = Sim.GeographicLocations.FindByName("berlin", FindMode.Partial);
+                var geographicLocation = Sim.GeographicLocations.FindFirstByName("berlin", FindMode.Partial);
                 if (geographicLocation == null) {
                     Logger.Error("Could not find Berlin. Can't calculate.");
                     return;

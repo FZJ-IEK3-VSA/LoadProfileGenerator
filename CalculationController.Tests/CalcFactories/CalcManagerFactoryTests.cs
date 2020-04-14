@@ -54,7 +54,7 @@ namespace CalculationController.Tests.CalcFactories {
                 Directory.Delete(path, true);
             }
             Directory.CreateDirectory(path);
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.CalcController);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             Config.IsInUnitTesting = true;
             sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.OnlyOverallSum);
@@ -89,7 +89,7 @@ namespace CalculationController.Tests.CalcFactories {
         [Category(UnitTestCategories.BasicTest)]
         public void GetCalcManagerHouseholdTest() {
             var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.CalcController);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             var sim = new Simulator(db.ConnectionString);
             sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.OnlyOverallSum);
@@ -123,7 +123,7 @@ namespace CalculationController.Tests.CalcFactories {
         public void GetCalcManagerHouseTest() {
             var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
 
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.CalcController);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.OnlyOverallSum);
 
@@ -156,7 +156,7 @@ namespace CalculationController.Tests.CalcFactories {
         [Category(UnitTestCategories.BasicTest)]
         public void GetCalcManagerModularHousehold03Test() {
             var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.CalcController);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Config.IsInUnitTesting = true;
             var sim = new Simulator(db.ConnectionString);
             sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.ReasonableWithChartsAndPDF);
@@ -213,7 +213,7 @@ namespace CalculationController.Tests.CalcFactories {
         [Category(UnitTestCategories.BasicTest)]
         public void GetCalcManagerModularHouseholdTest() {
             var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.CalcController);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             DeviceCategory light = null;
             foreach (var deviceCategory in sim.DeviceCategories.MyItems) {
@@ -255,7 +255,7 @@ namespace CalculationController.Tests.CalcFactories {
         [Category(UnitTestCategories.BasicTest)]
         public void GetCalcManagerModularHouseholdTestForDevicePicking() {
             var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.CalcController);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             var sim = new Simulator(db.ConnectionString);
             DeviceCategory light = null;

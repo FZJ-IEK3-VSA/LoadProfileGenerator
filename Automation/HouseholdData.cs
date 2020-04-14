@@ -77,15 +77,14 @@ namespace Automation {
         public string HouseholdName { get; set; }
     }
     public class HouseholdData {
-        public HouseholdData([NotNull] string householdGuid, double targetEnergyUse,
-                             ElectricCarUse useElectricCar, [NotNull] string name, [CanBeNull] JsonReference chargingStationSet,
+        public HouseholdData([NotNull] string uniqueHouseholdId,
+                             bool enableTransportationModelling, [NotNull] string name, [CanBeNull] JsonReference chargingStationSet,
                              [CanBeNull] JsonReference transportationDeviceSet, [CanBeNull] JsonReference travelRouteSet,
                              [ItemNotNull][CanBeNull] List<TransportationDistanceModifier> transportationDistanceModifiers,
                              HouseholdDataSpecifictionType householdDataSpecifictionType)
         {
-            HouseholdGuid = householdGuid;
-            TargetEnergyUse = targetEnergyUse;
-            UseElectricCar = useElectricCar;
+            UniqueHouseholdId = uniqueHouseholdId;
+            EnableTransportationModelling = enableTransportationModelling;
             Name = name;
             ChargingStationSet = chargingStationSet;
             TransportationDeviceSet = transportationDeviceSet;
@@ -108,14 +107,13 @@ namespace Automation {
         public HouseholdNameSpecification HouseholdNameSpecification { get; set; }
 
                 [NotNull]
-        public string HouseholdGuid { get; set; }
+        public string UniqueHouseholdId { get; set; }
 
         [NotNull]
         public string Name { get; set; }
 
 
-        public double TargetEnergyUse { get; set; }
-        public ElectricCarUse UseElectricCar { get; set; }
+        public bool EnableTransportationModelling { get; set; }
         [CanBeNull]
         public JsonReference ChargingStationSet { get; set; }
         [CanBeNull]
@@ -128,8 +126,5 @@ namespace Automation {
         public List<TransportationDistanceModifier> TransportationDistanceModifiers { get; set; }
         [JsonConverter(typeof(StringEnumConverter))]
         public HouseholdDataSpecifictionType HouseholdDataSpecifictionType { get; set; }
-
-        public bool IsHouseholdProfileCalculated { get; set; }
-        public bool IsCarProfileCalculated { get; set; }
     }
 }

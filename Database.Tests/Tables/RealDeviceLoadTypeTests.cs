@@ -41,7 +41,7 @@ namespace Database.Tests.Tables {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void LoadFromDatabaseTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             var loadTypes = db.LoadLoadTypes();
             var rdlt = new ObservableCollection<RealDeviceLoadType>();

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -10,14 +9,14 @@ namespace Automation {
         public JsonCalcSpecification()
         {
         }
-
-        public JsonCalcSpecification([CanBeNull] JsonReference calcObject, [CanBeNull] JsonReference chargingStationSet, bool deleteAllButPDF, [CanBeNull] JsonReference deviceSelection, bool enableTransportation,
+        //[CanBeNull] JsonReference calcObject,
+        public JsonCalcSpecification( [CanBeNull] JsonReference chargingStationSet, bool deleteAllButPDF, [CanBeNull] JsonReference deviceSelection, bool enableTransportation,
                                      [CanBeNull]DateTime? endDate, [CanBeNull] string externalTimeResolution, [CanBeNull] string internalTimeResolution,
                                      [CanBeNull] JsonReference geographicLocation, LoadTypePriority loadTypePriorityEnum, [CanBeNull] string outputDirectory, bool showSettlingPeriod,
                                      [CanBeNull] DateTime? startDate, [CanBeNull] JsonReference temperatureProfile, [CanBeNull] JsonReference transportationDeviceSet,
                                      [CanBeNull] JsonReference travelRouteSet)
         {
-            CalcObject = calcObject;
+            //CalcObject = calcObject;
             ChargingStationSet = chargingStationSet;
             DeleteAllButPDF = deleteAllButPDF;
             DeviceSelection = deviceSelection;
@@ -37,7 +36,7 @@ namespace Automation {
 
         public JsonCalcSpecification([NotNull] JsonCalcSpecification o)
         {
-            CalcObject = o.CalcObject;
+            //CalcObject = o.CalcObject;
             DefaultForOutputFiles = o.DefaultForOutputFiles;
             if (CalcOptions == null) {
                 CalcOptions = new List<CalcOption>();
@@ -47,7 +46,6 @@ namespace Automation {
                 CalcOptions.AddRange(o.CalcOptions);
             }
 
-            PathToDatabase = o.PathToDatabase;
             DeleteAllButPDF = o.DeleteAllButPDF;
             DeleteDAT = o.DeleteDAT;
             DeviceSelection = o.DeviceSelection;
@@ -88,8 +86,6 @@ namespace Automation {
             "Name for the calculation. This is not used in the calculation and is intended for the user to store comments or something like that.")]
         [CanBeNull]
         public string CalculationName { get; set; } = null;
-        [CanBeNull]
-        public JsonReference CalcObject { get; set; }
 
         [Comment(
             "List of all calculation output options to enable. This is ADDITIONALLY to the output files enabled by the DefaultForOutputFiles option!",
@@ -161,11 +157,6 @@ namespace Automation {
         public string OutputDirectory { get; set; }
 
         [Comment(
-            "Path to the database file to use. Defaults to profilegenerator.db3 in the current directry if not set.")]
-        [CanBeNull]
-        public string PathToDatabase { get; set; } = "profilegenerator.db3";
-
-        [Comment(
             "Sets the random seed. If two calculations with the same random seed are run, then the results will be identical. Defaults to -1, which means that it will be randomly selected.")]
         public int RandomSeed { get; set; } = -1;
 
@@ -201,25 +192,18 @@ namespace Automation {
         [Comment("When using household templates, sometimes random households are generated that don't work. With this option you can make the LPG force to simulate at least some of the cases anyway. Default=false")]
         public bool IgnorePreviousActivitiesWhenNeeded { get; [UsedImplicitly] set; }
 
-        [NotNull]
-        public static JsonCalcSpecification LoadFromFile([NotNull] string inputFile)
-        {
-            string s = File.ReadAllText(inputFile);
-            var jcs = JsonConvert.DeserializeObject<JsonCalcSpecification>(s);
-            return jcs;
-        }
 
         [NotNull]
         public static JsonCalcSpecification MakeDefaultsForTesting()
         {
-            return new JsonCalcSpecification(null,null,false,null,false,new DateTime(2019,1,1),
+            return new JsonCalcSpecification(null,false,null,false,new DateTime(2019,1,1),
                 "00:15:00",null,null,LoadTypePriority.All,null,false,new DateTime(2019,1,1),null,null,null );
         }
 
         [NotNull]
         public static JsonCalcSpecification MakeDefaultsForProduction()
         {
-            return new JsonCalcSpecification(null, null, false, null, false, new DateTime(2019, 12, 31),
+            return new JsonCalcSpecification( null, false, null, false, new DateTime(2019, 12, 31),
                 null, null, null, LoadTypePriority.All, null, false, new DateTime(2019, 1, 1), null, null, null);
         }
     }

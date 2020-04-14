@@ -22,9 +22,9 @@ namespace Database.Tests.Tables.ModularHouseholds {
         public void HouseholdTemplateJsonTestWithFluentAssertion()
         {
           //  WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            var db1 = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db1 = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim1 = new Simulator(db1.ConnectionString);
-            var db2 = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db2 = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim2 = new Simulator(db2.ConnectionString);
             //check if the basic thing is identical
             sim1.HouseholdTemplates[0].Should().BeEquivalentTo(sim2.HouseholdTemplates[0], o => o.Excluding(
@@ -114,7 +114,7 @@ sim1.HouseholdTemplates[0].Should().BeEquivalentTo(sim2.HouseholdTemplates[0], o
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void HouseholdTemplateGenerationTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             var sim = new Simulator(db.ConnectionString);
             var gen = sim.HouseholdTemplates.CreateNewItem(db.ConnectionString);
@@ -138,7 +138,7 @@ sim1.HouseholdTemplates[0].Should().BeEquivalentTo(sim2.HouseholdTemplates[0], o
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void HouseholdTemplateTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             db.ClearTable(HouseholdTemplate.TableName);
             db.ClearTable(HHTemplateEntry.TableName);
@@ -165,7 +165,7 @@ sim1.HouseholdTemplates[0].Should().BeEquivalentTo(sim2.HouseholdTemplates[0], o
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void HouseholdTemplateTest2() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             db.ClearTable(HouseholdTemplate.TableName);
             db.ClearTable(HHTemplateEntry.TableName);
@@ -218,7 +218,7 @@ sim1.HouseholdTemplates[0].Should().BeEquivalentTo(sim2.HouseholdTemplates[0], o
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void ImportExistingModularTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             var sim = new Simulator(db.ConnectionString);
             var gen = sim.HouseholdTemplates.CreateNewItem(db.ConnectionString);

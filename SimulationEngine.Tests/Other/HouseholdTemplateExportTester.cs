@@ -5,7 +5,7 @@ using Database;
 using Database.Tables.ModularHouseholds;
 using Database.Tests;
 using NUnit.Framework;
-using SimulationEngine.Other;
+using SimulationEngineLib.Other;
 
 namespace SimulationEngine.Tests.Other
 {
@@ -17,7 +17,7 @@ namespace SimulationEngine.Tests.Other
         public void RunHouseholdTemplateTests()
         {
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(),DatabaseSetup.TestPackage.SimulationEngine);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             JsonDatabaseExporter hte = new JsonDatabaseExporter(db.ConnectionString);
             JsonDatabaseExportOptions hteo = new JsonDatabaseExportOptions();
             string jsonPath = wd.Combine("hhexport.json");
@@ -34,7 +34,7 @@ namespace SimulationEngine.Tests.Other
         public void RunHouseholdTraits()
         {
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.SimulationEngine);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             JsonDatabaseExporter hte = new JsonDatabaseExporter(db.ConnectionString);
             JsonDatabaseExportOptions hteo = new JsonDatabaseExportOptions();
             string jsonPath = wd.Combine("hhtraitexport.json");
@@ -51,7 +51,7 @@ namespace SimulationEngine.Tests.Other
         public void RunHouseholdTraitsWithDeviceCategories()
         {
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.SimulationEngine);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             JsonDatabaseExporter hte = new JsonDatabaseExporter(db.ConnectionString);
             JsonDatabaseExportOptions hteo = new JsonDatabaseExportOptions();
             string jsonPath = wd.Combine("hhtraitexport.json");
@@ -64,7 +64,7 @@ namespace SimulationEngine.Tests.Other
         public void RunModularHouseholdTests()
         {
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.SimulationEngine);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             JsonDatabaseExporter hte = new JsonDatabaseExporter(db.ConnectionString);
             JsonDatabaseExportOptions hteo = new JsonDatabaseExportOptions();
             string jsonPath = wd.Combine("hhexport.json");

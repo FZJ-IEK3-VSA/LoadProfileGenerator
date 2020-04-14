@@ -65,6 +65,7 @@ namespace Common {
         [NotNull]
         public static HouseholdKey HouseKey { get; } = new HouseholdKey( "House");
 
+        public const string HouseLocationGuid = "5A8A1AC5-0EAC-462B-BB14-3ED3A789EBC2";
         public const string UnknownTag = "Unknown Tag";
 
         public const string TableDescriptionTableName = "TableDescription";

@@ -128,8 +128,8 @@ namespace LoadProfileGenerator.Views.Transportation {
                         Logger.Warning("Route between " + arr[row, 0] + " and " + arr[0, col] + " is missing.");
                         count++;
                         var route = Sim.TravelRoutes.CreateNewItem(Sim.ConnectionString);
-                        var a = Sim.Sites.FindByName(arr[row, 0]);
-                        var b = Sim.Sites.FindByName(arr[0, col]);
+                        var a = Sim.Sites.FindFirstByName(arr[row, 0]);
+                        var b = Sim.Sites.FindFirstByName(arr[0, col]);
                         route.SiteA = a;
                         route.SiteB = b;
                         route.Name = "Route from " + a?.PrettyName + " to " + b?.PrettyName + " via ";

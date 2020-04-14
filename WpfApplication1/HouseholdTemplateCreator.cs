@@ -64,7 +64,7 @@ namespace LoadProfileGenerator {
                             continue;
                         }
 
-                        var template = _sim.HouseholdTemplates.FindByName(modularHousehold.Name);
+                        var template = _sim.HouseholdTemplates.FindFirstByName(modularHousehold.Name);
                         if (template == null)
                         {
                             Logger.ImportantInfo("Creating household template for " + modularHousehold.PrettyName);

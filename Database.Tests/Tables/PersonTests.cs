@@ -46,7 +46,7 @@ namespace Database.Tests.Tables {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void LoadFromDatabaseTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             var persons = new ObservableCollection<Person>();
             Person.LoadFromDatabase(persons, db.ConnectionString, false);
@@ -56,7 +56,7 @@ namespace Database.Tests.Tables {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void SaveToDatabaseTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             var persons = new ObservableCollection<Person>();
             Person.LoadFromDatabase(persons, db.ConnectionString, false);

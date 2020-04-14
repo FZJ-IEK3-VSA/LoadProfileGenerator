@@ -98,6 +98,24 @@ namespace Database.Tables.Houses {
             get => _adjustYearlyCooling;
             set => SetValueWithNotify(value, ref _adjustYearlyCooling, nameof(AdjustYearlyCooling));
         }
+        [NotNull]
+        public string HouseTypeCode
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(Name))
+                {
+                    return "";
+                }
+
+                if (!Name.Contains(" "))
+                {
+                    return Name;
+                }
+
+                return Name.Substring(0, Name.IndexOf(" ",StringComparison.InvariantCulture));
+            }
+        }
 
         [UsedImplicitly]
         public bool AdjustYearlyEnergy {

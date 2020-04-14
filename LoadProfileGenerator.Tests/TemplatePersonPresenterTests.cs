@@ -23,7 +23,7 @@ namespace LoadProfileGenerator.Tests
         [Category(UnitTestCategories.BasicTest)]
         public void Run()
         {
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.LoadProfileGenerator);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             Simulator sim = new Simulator(db.ConnectionString);
             ObservableCollection<TemplatePersonPresenter.TraitPrio> traitPrios =

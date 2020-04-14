@@ -16,7 +16,7 @@ namespace Database.Tests.Tables.Transportation
         [Category(UnitTestCategories.BasicTest)]
         public void TravelRouteTest()
         {
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             db.ClearTable(TravelRoute.TableName);
             db.ClearTable(TravelRouteStep.TableName);

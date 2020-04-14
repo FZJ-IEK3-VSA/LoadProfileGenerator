@@ -43,7 +43,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void LoadFromDatabaseTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             var persons = db.LoadPersons();
 

@@ -20,7 +20,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void AffordanceRequirementVariableTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Config.IsInUnitTesting = true;
             var col = new ColorRGB(255, 0, 0);
 
@@ -40,7 +40,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void AffordanceStandbyTests1() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Config.IsInUnitTesting = true;
             var col = new ColorRGB(255, 0, 0);
             var aff = new Affordance("bla", null, null, true, PermittedGender.Female, 0.1m, col,
@@ -58,7 +58,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void AffordanceStandbyTests2() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             db.ClearTable(Affordance.TableName);
             db.ClearTable(AffordanceStandby.TableName);
             db.ClearTable(AffordanceDevice.TableName);
@@ -95,7 +95,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void AffordanceVariableTests1() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Config.IsInUnitTesting = true;
             var col = new ColorRGB(255, 0, 0);
             var aff = new Affordance("bla", null, null, true, PermittedGender.Female, 0.1m, col,
@@ -116,7 +116,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void AffordanceVariableTests2() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             db.ClearTable(Affordance.TableName);
             db.ClearTable(AffordanceStandby.TableName);
             db.ClearTable(AffordanceDevice.TableName);
@@ -154,7 +154,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void CalculateAverageEnergyUseTestDeviceAction() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Config.IsInUnitTesting = true;
             var col = new ColorRGB(255, 0, 0);
             var devices = new ObservableCollection<RealDevice>();
@@ -201,7 +201,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void CalculateAverageEnergyUseTestRealDevice() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Config.IsInUnitTesting = true;
             var col = new ColorRGB(255, 0, 0);
             var devices = new ObservableCollection<RealDevice>();
@@ -240,7 +240,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void CalculateMaximumInternalTimeResolutionTestForDeviceAction() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Config.IsInUnitTesting = true;
             var col = new ColorRGB(255, 0, 0);
             var devices = new ObservableCollection<RealDevice>();
@@ -282,7 +282,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void CalculateMaximumInternalTimeResolutionTestForDeviceActionGroup() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Config.IsInUnitTesting = true;
             var col = new ColorRGB(255, 0, 0);
             var devices = new ObservableCollection<RealDevice>();
@@ -322,7 +322,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void CalculateMaximumInternalTimeResolutionTestForRealDevice() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Config.IsInUnitTesting = true;
             var col = new ColorRGB(255, 0, 0);
             var devices = new ObservableCollection<RealDevice>();

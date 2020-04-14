@@ -40,7 +40,6 @@ using Common;
 using Common.Enums;
 using Database.Helpers;
 using Database.Tables.BasicElements;
-using Database.Tables.Houses;
 using Database.Tables.ModularHouseholds;
 using Database.Tables.Transportation;
 using JetBrains.Annotations;
@@ -278,9 +277,6 @@ namespace Database.Database {
                 return DbType.Int32;
             }
             if (typename == typeof(TimeType).FullName) {
-                return DbType.Int32;
-            }
-            if (typename == typeof(TransformationConditionType).FullName) {
                 return DbType.Int32;
             }
             if (typename == typeof(TimeProfileType).FullName) {

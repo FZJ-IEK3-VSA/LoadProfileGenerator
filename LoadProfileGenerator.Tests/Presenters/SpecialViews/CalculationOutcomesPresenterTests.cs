@@ -19,7 +19,7 @@ namespace LoadProfileGenerator.Tests.Presenters.SpecialViews
 
         public void StartCalcOutcomesChart()
         {
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.LoadProfileGenerator);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             Simulator sim = new Simulator(db.ConnectionString);
             CalculationOutcomesPresenter.MakeVersionComparisonChart(sim);
@@ -30,7 +30,7 @@ namespace LoadProfileGenerator.Tests.Presenters.SpecialViews
         [Category(UnitTestCategories.LongTest3)]
         public void StartOneCalculationTest()
         {
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.LoadProfileGenerator);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             Simulator sim = new Simulator(db.ConnectionString);
             ModularHousehold hh = sim.ModularHouseholds.It[0];

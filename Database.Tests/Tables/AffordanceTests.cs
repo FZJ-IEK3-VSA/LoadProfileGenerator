@@ -44,7 +44,7 @@ namespace Database.Tests.Tables {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void LoadFromDatabaseTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             var profiles = db.LoadTimeBasedProfiles();
             var realDevices = db.LoadRealDevices(out var deviceCategories, out var loadTypes,
@@ -75,7 +75,7 @@ namespace Database.Tests.Tables {
         [Category(UnitTestCategories.BasicTest)]
         public void CalcAverageEnergyTest()
         {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Simulator sim  = new Simulator(db.ConnectionString);
             foreach (var aff in sim.Affordances.It) {
                 aff.CalculateAverageEnergyUse(sim.DeviceActions.It);

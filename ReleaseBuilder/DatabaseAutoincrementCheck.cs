@@ -13,7 +13,7 @@ namespace ReleaseBuilder {
         [Test]
         [Category("BasicTest")]
         public void RunDatabaseTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.ReleaseBuilder);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             using (var con = new Connection(db.ConnectionString)) {
                 con.Open();
@@ -73,7 +73,7 @@ namespace ReleaseBuilder {
         [Category("BasicTest")]
         public void RunDatabaseGuidTest()
         {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.ReleaseBuilder);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             using (var con = new Connection(db.ConnectionString))
             {

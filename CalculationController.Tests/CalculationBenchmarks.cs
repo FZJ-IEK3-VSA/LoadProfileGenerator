@@ -45,7 +45,7 @@ namespace CalculationController.Tests {
                 Directory.Delete(path, true);
             }
             Directory.CreateDirectory(path);
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.CalcController);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             cp.StartPart("SimLoading");
             var sim = new Simulator(db.ConnectionString);
             cp.StopPart("SimLoading");
@@ -110,7 +110,7 @@ namespace CalculationController.Tests {
                 Directory.Delete(path, true);
             }
             Directory.CreateDirectory(path);
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.CalcController);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             cp.StartPart("SimLoading");
             var sim = new Simulator(db.ConnectionString);
             cp.StopPart("SimLoading");
@@ -159,7 +159,7 @@ namespace CalculationController.Tests {
         public void AllHouseholdFactoryTest()
         {
             var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.CalcController);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.None);
             //sim.MyGeneralConfig.Enable(CalcOption.LogAllMessages);
@@ -210,7 +210,7 @@ namespace CalculationController.Tests {
         [Category(UnitTestCategories.LongTest3)]
         public void AllHousesFactoryTest()
         {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.CalcController);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString) {MyGeneralConfig = {ExternalTimeResolution = "00:15:00"}};
             sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.None);
             sim.MyGeneralConfig.Enable(CalcOption.TotalsPerDevice);
@@ -253,7 +253,7 @@ namespace CalculationController.Tests {
         [Category(UnitTestCategories.BasicTest)]
         public void OverallSumFileTest()
         {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.CalcController);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString) {MyGeneralConfig = {ExternalTimeResolution = "00:15:00"}};
             sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.None);
             sim.MyGeneralConfig.Enable(CalcOption.OverallSum);
@@ -321,7 +321,7 @@ namespace CalculationController.Tests {
                 Directory.Delete(path, true);
             }
             Directory.CreateDirectory(path);
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.CalcController);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString) {MyGeneralConfig = {RandomSeed = 5}};
 
             bool ReportCancelFunc()
@@ -339,7 +339,7 @@ namespace CalculationController.Tests {
                 var cmf = new CalcManagerFactory();
                 var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
                 //CalcDevice.UseRanges = true;
-                var geoloc = sim.GeographicLocations.FindByName("Chemnitz", FindMode.Partial);
+                var geoloc = sim.GeographicLocations.FindFirstByName("Chemnitz", FindMode.Partial);
                 if (geoloc == null) {
                     throw new LPGException("geoloc not found");
                 }
@@ -375,7 +375,7 @@ namespace CalculationController.Tests {
                 Directory.Delete(path, true);
             }
             Directory.CreateDirectory(path);
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.CalcController);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             var calcstart = DateTime.Now;
             sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.All);
@@ -388,7 +388,7 @@ namespace CalculationController.Tests {
             var cmf = new CalcManagerFactory();
             var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             //CalcDevice.UseRanges = true;
-            var geoloc = sim.GeographicLocations.FindByName("Chemnitz", FindMode.Partial);
+            var geoloc = sim.GeographicLocations.FindFirstByName("Chemnitz", FindMode.Partial);
             if (geoloc == null) {
                 throw new LPGException("Geoloc was null");
             }
@@ -421,7 +421,7 @@ namespace CalculationController.Tests {
         [Category(UnitTestCategories.BasicTest)]
         public void SimpleLoading()
         {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.CalcController);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             Assert.IsNotNull(sim);
             Console.WriteLine("Guids created: " + DBBase._GuidCreationCount);
@@ -450,7 +450,7 @@ namespace CalculationController.Tests {
                 Directory.Delete(path, true);
             }
             Directory.CreateDirectory(path);
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.CalcController);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             //const string connstr = "Data Source=d:\\profilegenerator-r8.db3";
             var sim = new Simulator(db.ConnectionString);
             var calcstart = DateTime.Now;
@@ -505,7 +505,7 @@ namespace CalculationController.Tests {
                 Directory.Delete(path, true);
             }
             Directory.CreateDirectory(path);
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.CalcController);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             var calcstart = DateTime.Now;
 
@@ -516,7 +516,7 @@ namespace CalculationController.Tests {
             var cmf = new CalcManagerFactory();
             var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             //CalcDevice.UseRanges = true;
-            var geoloc = sim.GeographicLocations.FindByName("Chemnitz", FindMode.Partial);
+            var geoloc = sim.GeographicLocations.FindFirstByName("Chemnitz", FindMode.Partial);
             if (geoloc == null) {
                 throw new LPGException("Geoloc not found.");
             }
@@ -558,7 +558,7 @@ namespace CalculationController.Tests {
                 Directory.Delete(path, true);
             }
             Directory.CreateDirectory(path);
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.CalcController);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             var calcstart = DateTime.Now;
 
@@ -570,7 +570,7 @@ namespace CalculationController.Tests {
             var cmf = new CalcManagerFactory();
             var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             //CalcDevice.UseRanges = true;
-            var house = sim.Houses.FindByName("01, 02", FindMode.Partial);
+            var house = sim.Houses.FindFirstByName("01, 02", FindMode.Partial);
             if (house == null) {
                 throw new LPGException("House was null");
             }
@@ -657,7 +657,7 @@ namespace CalculationController.Tests {
                 Directory.Delete(path, true);
             }
             Directory.CreateDirectory(path);
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.CalcController);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.None);
             sim.MyGeneralConfig.Enable(CalcOption.AffordanceEnergyUse);
@@ -699,7 +699,7 @@ namespace CalculationController.Tests {
         public void InvalidPersonActivitiesCheck()
         {
             var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.CalcController);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString) {
                 MyGeneralConfig = {
                     StartDateUIString = "01.01.2015",
@@ -716,7 +716,7 @@ namespace CalculationController.Tests {
             var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             SimIntegrityChecker.Run(sim);
             CalcManagerFactory.DoIntegrityRun = false;
-            var mhh = sim.ModularHouseholds.FindByName("x CHR08 Single woman, 2 children, with work 47");
+            var mhh = sim.ModularHouseholds.FindFirstByName("x CHR08 Single woman, 2 children, with work 47");
             if (mhh == null) {
                 throw new LPGException("Household not found");
             }
@@ -757,7 +757,7 @@ namespace CalculationController.Tests {
         {
             //_calcParameters.IsInTransportMode = false;
             var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.CalcController);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString) {
                 MyGeneralConfig = {
                     StartDateUIString = "01.01.2015",
@@ -828,7 +828,7 @@ namespace CalculationController.Tests {
                 Directory.Delete(path, true);
             }
             Directory.CreateDirectory(path);
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.CalcController);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             var calcstart = DateTime.Now;
             sim.MyGeneralConfig.StartDateUIString = "1.1.2015";
@@ -847,7 +847,7 @@ namespace CalculationController.Tests {
             var cmf = new CalcManagerFactory();
             var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             //CalcDevice.UseRanges = true;
-            var house = sim.Houses.FindByName("01, 02", FindMode.Partial);
+            var house = sim.Houses.FindFirstByName("01, 02", FindMode.Partial);
             if (house == null) {
                 throw new LPGException("House was null");
             }
@@ -914,7 +914,7 @@ namespace CalculationController.Tests {
             CleanTestBase.RunAutomatically(false);
             var start = DateTime.Now;
             Config.MakePDFCharts = false;
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.CalcController);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             var calcstart = DateTime.Now;
             sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.None);
@@ -945,7 +945,7 @@ namespace CalculationController.Tests {
                 var cmf = new CalcManagerFactory();
                 var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
                 //CalcDevice.UseRanges = true;
-                var geoloc = sim.GeographicLocations.FindByName("Chemnitz", FindMode.Partial);
+                var geoloc = sim.GeographicLocations.FindFirstByName("Chemnitz", FindMode.Partial);
                 if (geoloc == null) {
                     throw new LPGException("Geoloc was null");
                 }

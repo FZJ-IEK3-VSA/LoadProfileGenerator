@@ -40,7 +40,7 @@ namespace ReleaseBuilder
         [Test]
         public void RunDirectHouseholds()
         {
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(),DatabaseSetup.TestPackage.ReleaseBuilder);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             Simulator sim = new Simulator(db.ConnectionString);
             string dir = wd.Combine("DirectHouseJobs");
@@ -50,8 +50,8 @@ namespace ReleaseBuilder
             foreach (var mhh in sim.ModularHouseholds.It) {
                 HouseCreationAndCalculationJob hj = new HouseCreationAndCalculationJob("Households","2019","TK");
                 hj.House = new HouseData(Guid.NewGuid().ToString(),"HT01",10000,10000,"House for " + mhh.Name);
-                hj.House.Households.Add( new HouseholdData(Guid.NewGuid().ToString(),10000,
-                    ElectricCarUse.NoElectricCar,mhh.Name ,null,null,null,null,HouseholdDataSpecifictionType.ByHouseholdName));
+                hj.House.Households.Add( new HouseholdData(Guid.NewGuid().ToString(),
+                    false,mhh.Name ,null,null,null,null,HouseholdDataSpecifictionType.ByHouseholdName));
                 hj.House.Households[0].HouseholdNameSpecification = new HouseholdNameSpecification(mhh.Name);
                 SetCalcSpec(hj, sim);
                 string fn =Path.Combine(dir, AutomationUtili.CleanFileName(mhh.Name)  + ".json");
@@ -59,10 +59,11 @@ namespace ReleaseBuilder
             }
             CopyAll(new DirectoryInfo(dir),new DirectoryInfo(@"X:\HouseJobs\Blockstrom\DirectHouseholds") );
         }
+
         [Test]
         public void RunHouseholdTemplate()
         {
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.ReleaseBuilder);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             Simulator sim = new Simulator(db.ConnectionString);
             string dir = wd.Combine("DirectHouseJobs");
@@ -80,8 +81,9 @@ namespace ReleaseBuilder
                     string ht = houseTypes[rnd.Next(houseTypes.Count)];
                     Console.WriteLine(ht);
                     hj.House = new HouseData(Guid.NewGuid().ToString(), ht, 10000, 10000, "House for " + mhh.Name + " " + i);
-                    hj.House.Households.Add(new HouseholdData(Guid.NewGuid().ToString(), 10000,
-                        ElectricCarUse.NoElectricCar, mhh.Name, null, null, null, null, HouseholdDataSpecifictionType.ByTemplateName));
+                    hj.House.Households.Add(new HouseholdData(Guid.NewGuid().ToString(), false,
+                        mhh.Name, null, null, null,
+                        null, HouseholdDataSpecifictionType.ByTemplateName));
                     hj.House.Households[0].HouseholdTemplateSpecification = new HouseholdTemplateSpecification(mhh.Name);
                     SetCalcSpec(hj, sim);
                     if(hj.CalcSpec.CalcOptions == null)
@@ -108,7 +110,7 @@ namespace ReleaseBuilder
             hj.CalcSpec.StartDate = new DateTime(2019, 1, 1);
             hj.CalcSpec.EndDate = new DateTime(2019, 12, 31);
             hj.CalcSpec.TemperatureProfile = sim.TemperatureProfiles[0].GetJsonReference();
-            var geoloc = sim.GeographicLocations.FindByName("Chemnitz", FindMode.Partial)??throw new LPGException("Chemnitz not found");
+            var geoloc = sim.GeographicLocations.FindFirstByName("Chemnitz", FindMode.Partial)??throw new LPGException("Chemnitz not found");
             hj.CalcSpec.GeographicLocation =geoloc .GetJsonReference();
         }
     }

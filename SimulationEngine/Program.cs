@@ -5,20 +5,12 @@ using Automation.ResultFiles;
 using Common;
 using JetBrains.Annotations;
 using PowerArgs;
+using SimulationEngineLib;
 
 [assembly: InternalsVisibleTo("SimulationEngine.Tests")]
 
 namespace SimulationEngine {
     internal static class Program {
-        private static bool _isUnitTest;
-
-        [UsedImplicitly]
-        public static bool CatchErrors { get; set; } = true;
-
-        public static bool IsUnitTest {
-            get => _isUnitTest;
-            set => _isUnitTest = value;
-        }
 
         public static void Main([NotNull] [ItemNotNull] string[] args)
         {
@@ -31,7 +23,7 @@ namespace SimulationEngine {
                 RunOptionProcessing(GetConnectionString(), args);
             }
 
-            if (!CatchErrors) {
+            if (!SimulationEngineConfig.CatchErrors) {
                 RunThisOptionProcessing();
                 return;
             }
@@ -68,7 +60,7 @@ namespace SimulationEngine {
                     Logger.Exception(ex1);
                 }
 
-                if (IsUnitTest) {
+                if (SimulationEngineConfig.IsUnitTest) {
                     throw;
                 }
             }
@@ -82,7 +74,7 @@ namespace SimulationEngine {
             {
                 ExeName = "SimulationEngine.exe"
             };
-            if (!CatchErrors) {
+            if (!SimulationEngineConfig.CatchErrors) {
                 try {
                     var parsed = Args.ParseAction(definition, args);
                     if (parsed.ActionArgs == null) {

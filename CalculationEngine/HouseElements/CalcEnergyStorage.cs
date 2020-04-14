@@ -98,13 +98,10 @@ namespace CalculationEngine.HouseElements {
 
         public double StorageCapacity => _storageCapacity;
 
+
         public void AddSignal([NotNull] CalcEnergyStorageSignal signal)
         {
             _signals.Add(signal);
-            signal.ProcessorKey =
-                new OefcKey(_householdKey, OefcDeviceType.Signal, signal.Guid, Guid, signal.DstLoadType.Guid, "Energy Storage Signal");
-            _odap.RegisterDevice(Name + signal, signal.ProcessorKey, string.Empty,
-                signal.DstLoadType.ConvertToDto());
             _headerEntry.AddSignal(signal.ToString());
         }
 
@@ -178,17 +175,10 @@ namespace CalculationEngine.HouseElements {
 
             foreach (var signal in _signals) {
                 var value = signal.GetValue(timeStep, _storageCapacity, _currentFillLevel);
-                var row = GetRowForLoadType(signal.DstLoadType.ConvertToDto(), fileRows);
-                if (row == null) {
-                    throw new LPGException("Row could not be found");
-                }
-
-                var signalcolumn = _odap.Oefc.GetColumnNumber(signal.DstLoadType.ConvertToDto(),
-                    signal.ProcessorKey);
-                if (Math.Abs(row.EnergyEntries[signalcolumn] - value) > 0.0000001) {
+                if (Math.Abs(signal.CalcVariable.Value - value) > 0.0000000001) {
                     madeChanges = true;
-                    log?.Add(Name + " set signal " + signal.DstLoadType.Name + " to " + value);
-                    row.EnergyEntries[signalcolumn] = value;
+                    log?.Add(Name + " set signal " + signal.CalcVariable.Name + " to " + value);
+                    signal.CalcVariable.Value = value;
                 }
             }
 

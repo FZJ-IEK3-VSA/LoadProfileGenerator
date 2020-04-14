@@ -55,9 +55,9 @@ namespace LoadProfileGenerator {
         public void Run()
         {
             var t = new Thread(() => {
-                ScreenshotElement(_sim.LoadTypes.FindByName("Electricity"));
-                ScreenshotElement(_sim.Holidays.FindByName("Christmas", FindMode.Partial));
-                ScreenshotElement(_sim.GeographicLocations.FindByName("Chemnitz", FindMode.Partial));
+                ScreenshotElement(_sim.LoadTypes.FindFirstByName("Electricity"));
+                ScreenshotElement(_sim.Holidays.FindFirstByName("Christmas", FindMode.Partial));
+                ScreenshotElement(_sim.GeographicLocations.FindFirstByName("Chemnitz", FindMode.Partial));
                 ScreenshotElement(_sim.TemperatureProfiles.It[0]);
                 ScreenshotElement(_sim.DateBasedProfiles.It[0]);
                 ScreenshotElement(_sim.Vacations.It[0]);
@@ -70,7 +70,7 @@ namespace LoadProfileGenerator {
                 ScreenshotElement(_sim.DeviceActionGroups.It[0]);
                 ScreenshotElement(_sim.DeviceTaggingSets.It[0]);
                 ScreenshotElement(_sim.Timeprofiles.It[0]);
-                ScreenshotElement(_sim.TimeLimits.FindByName("Time Limit Demo", FindMode.Partial));
+                ScreenshotElement(_sim.TimeLimits.FindFirstByName("Time Limit Demo", FindMode.Partial));
                 ScreenshotElement(_sim.Variables.It[0]);
                 ScreenshotElement(_sim.Affordances.It[0]);
                 ScreenshotElement(_sim.SubAffordances.It[0]);

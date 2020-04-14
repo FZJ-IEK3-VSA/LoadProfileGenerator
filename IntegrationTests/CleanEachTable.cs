@@ -21,7 +21,7 @@ namespace IntegrationTests
         public void TryCleaningEachTable()
         {
             CleanTestBase.RunAutomatically(false);
-            var db1 = new DatabaseSetup("TryCleaningEach", DatabaseSetup.TestPackage.LongTermMerger);
+            var db1 = new DatabaseSetup("TryCleaningEach");
             var alltables = LongtermTests.GetTableList(db1);
             db1.Cleanup();
             for (var index = 0; index < alltables.Count; index++)
@@ -31,7 +31,7 @@ namespace IntegrationTests
                 if (table == "tblLPGVersion") {
                     continue;
                 }
-                var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.LongTermMerger);
+                var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
                 DBBase.HideDeleteMessages();
                 Command.HideDeleteMessages();
 

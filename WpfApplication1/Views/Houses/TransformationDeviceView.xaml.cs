@@ -55,23 +55,11 @@ namespace LoadProfileGenerator.Views.Houses {
 
         private void BtnAddCondition_Click([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
         {
-            if (CmbConditionType.SelectedItem == null) {
+            if (CmbVariable.SelectedItem == null) {
+                Logger.Warning("Please select a variable first.");
                 return;
             }
-
-            var conditionStr = (string) CmbConditionType.SelectedItem;
-            var conditionType = Presenter.StringToConditionType[conditionStr];
-            if (CmbConditionLoadtype.SelectedItem == null &&
-                conditionType == TransformationConditionType.MinMaxValue) {
-                return;
-            }
-
-            if (CmbConditionStorage.SelectedItem == null &&
-                conditionType == TransformationConditionType.StorageContent) {
-                return;
-            }
-
-            var lt = CmbConditionLoadtype.SelectedItem as VLoadType;
+            var variable = (Variable)CmbVariable.SelectedItem;
             var success = double.TryParse(TxtCondMinValue.Text, out var minValue);
             if (!success) {
                 Logger.Info("Could not convert " + TxtCondMinValue.Text + " to double");
@@ -82,9 +70,7 @@ namespace LoadProfileGenerator.Views.Houses {
                 Logger.Info("Could not convert " + TxtCondMaxValue.Text + " to double");
             }
 
-            var storage = CmbConditionStorage.SelectedItem as EnergyStorage;
-            Presenter.ThisTrafo.AddTransformationDeviceCondition(conditionType, lt, minValue, maxValue, storage,
-                Presenter.ConditionTypeToString);
+            Presenter.ThisTrafo.AddTransformationDeviceCondition(variable,  minValue, maxValue);
         }
 
         private void BtnAddFactor_Click([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)

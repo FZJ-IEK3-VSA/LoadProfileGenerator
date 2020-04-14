@@ -10,8 +10,9 @@ using Database;
 using Database.Tables.Houses;
 using Database.Tests;
 using NUnit.Framework;
-using SimulationEngine.Calculation;
-using SimulationEngine.SettlementCalculation;
+using SimulationEngineLib;
+using SimulationEngineLib.Calculation;
+using SimulationEngineLib.SettlementCalculation;
 
 namespace SimulationEngine.Tests
 {
@@ -23,7 +24,7 @@ namespace SimulationEngine.Tests
         public void TestSettlementInformation()
         {
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(),DatabaseSetup.TestPackage.SimulationEngine);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Simulator sim = new Simulator(db.ConnectionString);
             Settlement set = sim.Settlements[0];
             BatchOptions bo = new BatchOptions();
@@ -39,8 +40,8 @@ namespace SimulationEngine.Tests
         [Category(UnitTestCategories.ManualOnly)]
         public void RunNaturalLightBatch()
         {
-            Program.IsUnitTest = true;
-            Program.CatchErrors = false;
+            SimulationEngineConfig.IsUnitTest = true;
+            SimulationEngineConfig.CatchErrors = false;
             SimulationEngineTestPreparer se = new SimulationEngineTestPreparer("RunNaturalLight");
             List<string> arguments = new List<string>
             {
@@ -87,7 +88,7 @@ namespace SimulationEngine.Tests
             {
                 "--Batch-ModularHouseholds"
             };
-            Program.IsUnitTest = true;
+            SimulationEngineConfig.IsUnitTest = true;
             Program.Main(arguments.ToArray());
             DateTime d = DateTime.Now;
             string dstDir = @"x:\Calc\" + d.Year + "." + d.Month + "." + d.Day + ".." + d.Hour + "." + d.Minute;

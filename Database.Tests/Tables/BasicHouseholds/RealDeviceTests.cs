@@ -19,7 +19,7 @@ namespace DatabaseIO.Tables.BasicHouseholds.Tests
         [Category(UnitTestCategories.BasicTest)]
         public void ImportFromOtherDeviceTest()
         {
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Simulator sim = new Simulator(db.ConnectionString);
             var newDevice = sim.RealDevices.CreateNewItem(sim.ConnectionString);
             newDevice.ImportFromOtherDevice(sim.RealDevices.It[0]);
@@ -38,7 +38,7 @@ namespace DatabaseIO.Tests.Tables.BasicHouseholds {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void CalculateAverageEnergyUseTestAbsoluteProfile() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             Config.IsInUnitTesting = true;
             var rd2 = new RealDevice("rd2", 1, string.Empty, null, string.Empty, false, false,
@@ -69,7 +69,7 @@ namespace DatabaseIO.Tests.Tables.BasicHouseholds {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void CalculateAverageEnergyUseTestRelativeProfile() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             Config.IsInUnitTesting = true;
             var rd2 = new RealDevice("rd2", 1, string.Empty, null, string.Empty, false, false,

@@ -44,15 +44,15 @@ using Automation.ResultFiles;
 using CalculationController.Queue;
 using Common;
 using Common.Enums;
+using Common.JSON;
 using Database;
 using Database.Tables;
 using Database.Tables.BasicElements;
+using Database.Tables.Houses;
 using Database.Tables.Transportation;
 using JetBrains.Annotations;
 using LoadProfileGenerator.Presenters.BasicElements;
 using LoadProfileGenerator.Views.SpecialViews;
-using Newtonsoft.Json;
-//using LoadProfileGenerator.Presenters.Houses;
 
 #endregion
 
@@ -120,15 +120,15 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             }
 
             if (!string.IsNullOrWhiteSpace(cfg.LastSelectedRouteSet)) {
-                _selectedTravelRouteSet = Sim.TravelRouteSets.FindByName(cfg.LastSelectedRouteSet) ?? Sim.TravelRouteSets[0];
+                _selectedTravelRouteSet = Sim.TravelRouteSets.FindFirstByName(cfg.LastSelectedRouteSet) ?? Sim.TravelRouteSets[0];
             }
 
             if (!string.IsNullOrWhiteSpace(cfg.LastSelectedChargingStationSet)) {
-                _selectedChargingStationSet = Sim.ChargingStationSets.FindByName(cfg.LastSelectedChargingStationSet) ?? Sim.ChargingStationSets[0];
+                _selectedChargingStationSet = Sim.ChargingStationSets.FindFirstByName(cfg.LastSelectedChargingStationSet) ?? Sim.ChargingStationSets[0];
             }
 
             if (!string.IsNullOrWhiteSpace(cfg.LastSelectedTransportationDeviceSet)) {
-                _selectedTransportationDeviceSet = Sim.TransportationDeviceSets.FindByName(cfg.LastSelectedTransportationDeviceSet) ?? Sim.TransportationDeviceSets[0];
+                _selectedTransportationDeviceSet = Sim.TransportationDeviceSets.FindFirstByName(cfg.LastSelectedTransportationDeviceSet) ?? Sim.TransportationDeviceSets[0];
             }
             else {
                 _selectedTransportationDeviceSet = Sim.TransportationDeviceSets.It[0];
@@ -579,12 +579,20 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                 return;
             }
 
+            if (SelectedCalcObject.CalcObjectType != CalcObjectType.House) {
+                Logger.Error("Only the json calculation only works for houses");
+                return;
+            }
+
             if (SelectedCalcObject.CalcObjectType == CalcObjectType.House && Sim.MyGeneralConfig.SelectedLoadTypePriority < LoadTypePriority.RecommendedForHouses) {
                 Logger.Error("Load type priority not suitable for houses ");
                 return;
             }
-
-            JsonCalcSpecification jcs = new JsonCalcSpecification {CalcObject = SelectedCalcObject.GetJsonReference(), DeleteAllButPDF = false, CalcOptions = new List<CalcOption>()};
+            var houseJob = new HouseCreationAndCalculationJob("scenario","year","district");
+            House house = (House)SelectedCalcObject;
+            HouseData hd = house.MakeHouseData();
+            houseJob.House = hd;
+            JsonCalcSpecification jcs = new JsonCalcSpecification { DeleteAllButPDF = false, CalcOptions = new List<CalcOption>()};
             foreach (CalcOption enabledOption in Sim.MyGeneralConfig.AllEnabledOptions()) {
                 jcs.CalcOptions.Add(enabledOption);
             }
@@ -599,15 +607,14 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             jcs.SkipExisting = false;
             jcs.OutputDirectory = NameForJsonExportOutputDirectory;
             string databasepath = Sim.ConnectionString.Replace("Data Source=", "");
-            jcs.PathToDatabase = databasepath;
+            houseJob.PathToDatabase = databasepath;
             jcs.EnableTransportation = EnableTransport;
             if (EnableTransport) {
                 jcs.ChargingStationSet = SelectedChargingStationSet?.GetJsonReference();
                 jcs.TransportationDeviceSet = SelectedTransportationDeviceSet?.GetJsonReference();
                 jcs.TravelRouteSet = SelectedTravelRouteSet?.GetJsonReference();
             }
-
-            File.WriteAllText(resultpath, JsonConvert.SerializeObject(jcs, Formatting.Indented));
+            HouseJobSerializer.WriteJsonToFile(resultpath,houseJob);
         }
 
         private void AddSingleTimespan(int min, int second)

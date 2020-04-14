@@ -29,6 +29,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using Database.Database;
+using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
 using JetBrains.Annotations;
 
@@ -36,11 +37,11 @@ namespace Database.Tables.Houses {
     public class EnergyStorageSignal : DBBase {
         public const string TableName = "tblEnergyStorageSignals";
 
-        public EnergyStorageSignal([CanBeNull]int? pID, int energyStorageID, [CanBeNull] VLoadType loadType, double triggerLevelOn,
+        public EnergyStorageSignal([CanBeNull]int? pID, int energyStorageID, Variable variable, double triggerLevelOn,
             double triggerLevelOff, double value, [NotNull] string connectionString, [NotNull] string name, [NotNull] string guid)
             : base(name, TableName, connectionString, guid)
         {
-            LoadType = loadType;
+            Variable = variable;
             TriggerLevelOn = triggerLevelOn;
             TriggerLevelOff = triggerLevelOff;
             Value = value;
@@ -51,7 +52,7 @@ namespace Database.Tables.Houses {
 
         public int EnergyStorageID { get; }
         [CanBeNull]
-        public VLoadType LoadType { get; }
+        public Variable Variable { get; }
 
         public double TriggerLevelOff { get; }
 
@@ -67,7 +68,7 @@ namespace Database.Tables.Houses {
             var id = dr.GetIntFromLong("ID");
             var energyStorageID = dr.GetIntFromLong("EnergyStorageID");
             var loadTypeID = dr.GetIntFromLong("LoadTypeID");
-            var vlt = aic.LoadTypes.FirstOrDefault(mylt => mylt.ID == loadTypeID);
+            var vlt = aic.Variables.FirstOrDefault(mylt => mylt.ID == loadTypeID);
             var triggerLevelOn = dr.GetDouble("TriggerLevelOn");
             var triggerLevelOff = dr.GetDouble("TriggerLevelOff");
             var value = dr.GetDouble("Value");
@@ -83,8 +84,8 @@ namespace Database.Tables.Houses {
 
         protected override bool IsItemLoadedCorrectly([NotNull] out string message)
         {
-            if (LoadType == null) {
-                message = "Load type not found";
+            if (Variable == null) {
+                message = "Variable not found";
                 return false;
             }
             message = "";
@@ -92,17 +93,17 @@ namespace Database.Tables.Houses {
         }
 
         public static void LoadFromDatabase([NotNull][ItemNotNull] ObservableCollection<EnergyStorageSignal> result, [NotNull] string connectionString,
-            [ItemNotNull] [NotNull] ObservableCollection<VLoadType> loadTypes, bool ignoreMissingTables)
+            [ItemNotNull] [NotNull] ObservableCollection<VLoadType> loadTypes, bool ignoreMissingTables, ObservableCollection<Variable> variables)
         {
-            var aic = new AllItemCollections(loadTypes: loadTypes);
+            var aic = new AllItemCollections(loadTypes: loadTypes, variables:variables);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }
 
         protected override void SetSqlParameters([NotNull] Command cmd)
         {
             cmd.AddParameter("EnergyStorageID", EnergyStorageID);
-            if (LoadType != null) {
-                cmd.AddParameter("LoadTypeID", LoadType.IntID);
+            if (Variable != null) {
+                cmd.AddParameter("LoadTypeID", Variable.IntID);
             }
             cmd.AddParameter("TriggerLevelOn", TriggerLevelOn);
             cmd.AddParameter("TriggerLevelOff", TriggerLevelOff);

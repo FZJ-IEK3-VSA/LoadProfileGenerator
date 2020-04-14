@@ -14,7 +14,7 @@ namespace Database.Tests.Templating {
         [Category(UnitTestCategories.LongTest5)]
         public void GenerateSettlementPreviewTest()
         {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             var template = sim.SettlementTemplates.It.First(x => x.Name.StartsWith("H0"));
             var ste = new SettlementTemplateExecutor();
@@ -28,7 +28,7 @@ namespace Database.Tests.Templating {
         [Category(UnitTestCategories.BasicTest)]
         public void InitializeHouseSizesTest()
         {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             var template = sim.SettlementTemplates.CreateNewItem(sim.ConnectionString);
             //SettlementTemplateExecutor ste = new SettlementTemplateExecutor();

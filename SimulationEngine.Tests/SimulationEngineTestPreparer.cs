@@ -4,6 +4,7 @@ using Common;
 using Database.Tests;
 using JetBrains.Annotations;
 using NUnit.Framework;
+using SimulationEngineLib;
 
 namespace SimulationEngine.Tests {
     internal class SimulationEngineTestPreparer {
@@ -13,10 +14,10 @@ namespace SimulationEngine.Tests {
 
         public SimulationEngineTestPreparer([NotNull] string name) {
             Logger.Info(TestContext.CurrentContext.TestDirectory);
-            Program.CatchErrors = false;
+            SimulationEngineConfig.CatchErrors = false;
             var di = new DirectoryInfo(TestContext.CurrentContext.TestDirectory);
             var fis = di.GetFiles("*.*");
-            var db3Path = DatabaseSetup.GetSourcepath(null,DatabaseSetup.TestPackage.SimulationEngine);
+            var db3Path = DatabaseSetup.GetSourcepath(null);
             _wd = new WorkingDir(name);
             Thread.Sleep(1000);
             _lastDirectory = Directory.GetCurrentDirectory();

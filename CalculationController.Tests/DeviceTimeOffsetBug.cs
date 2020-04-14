@@ -106,7 +106,7 @@ namespace CalculationController.Tests {
                 Directory.Delete(path, true);
             }
             Directory.CreateDirectory(path);
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.CalcController);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             var calcstart = DateTime.Now;
             sim.MyGeneralConfig.StartDateUIString = "1.1.2015";
@@ -124,7 +124,7 @@ namespace CalculationController.Tests {
             var cmf = new CalcManagerFactory();
             var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             //CalcDevice.UseRanges = true;
-            var geoloc = sim.GeographicLocations.FindByName("Chemnitz", FindMode.Partial);
+            var geoloc = sim.GeographicLocations.FindFirstByName("Chemnitz", FindMode.Partial);
             if (geoloc == null) {
                 throw new LPGException("Geoloc was null");
             }

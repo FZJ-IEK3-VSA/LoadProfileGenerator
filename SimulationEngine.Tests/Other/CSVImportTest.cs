@@ -5,7 +5,7 @@ using Common;
 using Database.Tables.BasicElements;
 using Database.Tests;
 using NUnit.Framework;
-using SimulationEngine.Other;
+using SimulationEngineLib.Other;
 
 namespace SimulationEngine.Tests.Other
 {
@@ -24,7 +24,7 @@ namespace SimulationEngine.Tests.Other
             sw.WriteLine("01.01.2019 00:01;2");
             sw.Close();
             CsvImportOptions cio = new CsvImportOptions();
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(),DatabaseSetup.TestPackage.SimulationEngine);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             cio.Input = csvfn;
             cio.Delimiter = ";";
             CsvTimeProfileImporter ctpi = new CsvTimeProfileImporter(db.ConnectionString);

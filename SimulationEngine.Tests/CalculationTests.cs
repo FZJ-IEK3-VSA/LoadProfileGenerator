@@ -15,6 +15,7 @@ using Database.Helpers;
 //using iTextSharp.text.pdf;
 using JetBrains.Annotations;
 using NUnit.Framework;
+using SimulationEngineLib;
 
 namespace SimulationEngine.Tests
 {
@@ -31,8 +32,8 @@ namespace SimulationEngine.Tests
         private static void RunBasicTestOutput(CalcOption option, [NotNull] string name, [ItemNotNull][NotNull] params string[] addedOptions)
         {
             //_calculationProfiler.Clear();
-            Program.CatchErrors = false;
-            Program.IsUnitTest = true;
+            SimulationEngineConfig.CatchErrors = false;
+            SimulationEngineConfig.IsUnitTest = true;
             Logger.Info("Current directory before setup:" + Directory.GetCurrentDirectory());
             var wd = ProgramTests.SetupDB3("RunBasicTestOutput." + name);
             Logger.Info("Current directory after setup:" + Directory.GetCurrentDirectory());
@@ -80,8 +81,8 @@ namespace SimulationEngine.Tests
 
         private static void RunDateTimeOnAllFiles([NotNull] string firstTimestep, [NotNull] string firstTimestamp, int targetLineCount)
         {
-            Program.CatchErrors = false;
-            Program.IsUnitTest = true;
+            SimulationEngineConfig.CatchErrors = false;
+            SimulationEngineConfig.IsUnitTest = true;
             var di = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory, "CHH3.RunTimeAxisTest"));
             var reportsDir = new DirectoryInfo(Path.Combine(di.FullName, "Reports"));
             var fis1 = reportsDir.GetFiles("*.csv");
@@ -189,8 +190,8 @@ namespace SimulationEngine.Tests
         [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTest()
         {
-            Program.CatchErrors = false;
-            Program.IsUnitTest = true;
+            SimulationEngineConfig.CatchErrors = false;
+            SimulationEngineConfig.IsUnitTest = true;
             var startdir = Directory.GetCurrentDirectory();
             var wd = ProgramTests.SetupDB3(Utili.GetCurrentMethodAndClass());
             var arguments = new List<string>
@@ -216,8 +217,8 @@ namespace SimulationEngine.Tests
         public void RunBasicTest2()
         {
             //_calculationProfiler.Clear();
-            Program.CatchErrors = false;
-            Program.IsUnitTest = true;
+            SimulationEngineConfig.CatchErrors = false;
+            SimulationEngineConfig.IsUnitTest = true;
             var startdir = Directory.GetCurrentDirectory();
             var wd = ProgramTests.SetupDB3(Utili.GetCurrentMethodAndClass());
             var arguments = new List<string>
@@ -254,8 +255,8 @@ namespace SimulationEngine.Tests
         [Category(UnitTestCategories.LongTest3)]
         public void RunBasicTestAllOutput()
         {
-            Program.CatchErrors = false;
-            Program.IsUnitTest = true;
+            SimulationEngineConfig.CatchErrors = false;
+            SimulationEngineConfig.IsUnitTest = true;
 
             var wd = ProgramTests.SetupDB3(Utili.GetCurrentMethodAndClass());
             var arguments = new List<string>
@@ -285,8 +286,8 @@ namespace SimulationEngine.Tests
         [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestAllOutputWithDelete()
         {
-            Program.CatchErrors = false;
-            Program.IsUnitTest = true;
+            SimulationEngineConfig.CatchErrors = false;
+            SimulationEngineConfig.IsUnitTest = true;
             var wd = ProgramTests.SetupDB3(Utili.GetCurrentMethodAndClass());
             var arguments = new List<string>
             {
@@ -362,8 +363,8 @@ namespace SimulationEngine.Tests
         [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestNoOutput()
         {
-            Program.CatchErrors = false;
-            Program.IsUnitTest = true;
+            SimulationEngineConfig.CatchErrors = false;
+            SimulationEngineConfig.IsUnitTest = true;
             var wd = ProgramTests.SetupDB3(Utili.GetCurrentMethodAndClass());
             var arguments = new List<string>
             {
@@ -468,8 +469,8 @@ namespace SimulationEngine.Tests
         public void RunHouseCheckFileRegistration()
         {
             Config.ReallyMakeAllFilesIncludingBothSums = true;
-            Program.CatchErrors = false;
-            Program.IsUnitTest = true;
+            SimulationEngineConfig.CatchErrors = false;
+            SimulationEngineConfig.IsUnitTest = true;
             var wd = ProgramTests.SetupDB3(Utili.GetCurrentMethodAndClass(), true);
             var arguments = new List<string>
             {
@@ -535,8 +536,8 @@ namespace SimulationEngine.Tests
         [Category(UnitTestCategories.BasicTest)]
         public void RunHouseDesireOutput()
         {
-            Program.CatchErrors = false;
-            Program.IsUnitTest = true;
+            SimulationEngineConfig.CatchErrors = false;
+            SimulationEngineConfig.IsUnitTest = true;
             var wd = ProgramTests.SetupDB3(Utili.GetCurrentMethodAndClass());
             var arguments = new List<string>
             {
@@ -586,13 +587,13 @@ namespace SimulationEngine.Tests
         public void RunHouseWithMultipleCheck()
         {
             Config.ReallyMakeAllFilesIncludingBothSums = true;
-            Program.CatchErrors = false;
-            Program.IsUnitTest = true;
+            SimulationEngineConfig.CatchErrors = false;
+            SimulationEngineConfig.IsUnitTest = true;
             var wd = ProgramTests.SetupDB3(Utili.GetCurrentMethodAndClass());
             var db3File = Path.Combine(wd.WorkingDirectory, "profilegenerator.db3");
             var connectionString = "Data Source=" + db3File;
             var sim = new Simulator(connectionString);
-            var house = sim.Houses.FindByName("01, 02 and 03", FindMode.Partial);
+            var house = sim.Houses.FindFirstByName("01, 02 and 03", FindMode.Partial);
             var idx = sim.Houses.It.IndexOf(house);
 
             var arguments = new List<string>
@@ -648,8 +649,8 @@ namespace SimulationEngine.Tests
         public void RunTimeAxisTest2NoSettling()
         {
             var wd = ProgramTests.SetupDB3(Utili.GetCurrentMethodAndClass());
-            Program.CatchErrors = false;
-            Program.IsUnitTest = true;
+            SimulationEngineConfig.CatchErrors = false;
+            SimulationEngineConfig.IsUnitTest = true;
             DateTime startdate = new DateTime(2015,1,1);
             DateTime enddate = new DateTime(2015,1,5);
             var arguments = new List<string>
@@ -681,8 +682,8 @@ namespace SimulationEngine.Tests
         [Category(UnitTestCategories.LongTest3)]
         public void TestCrashingHH()
         {
-            Program.CatchErrors = false;
-            Program.IsUnitTest = true;
+            SimulationEngineConfig.CatchErrors = false;
+            SimulationEngineConfig.IsUnitTest = true;
             var oldDir = Directory.GetCurrentDirectory();
             var wd = ProgramTests.SetupDB3(Utili.GetCurrentMethodAndClass());
             Directory.SetCurrentDirectory(wd.WorkingDirectory);
@@ -723,8 +724,8 @@ namespace SimulationEngine.Tests
         [Category(UnitTestCategories.LongTest3)]
         public void TestCrashingHH1()
         {
-            Program.CatchErrors = false;
-            Program.IsUnitTest = true;
+            SimulationEngineConfig.CatchErrors = false;
+            SimulationEngineConfig.IsUnitTest = true;
             var oldDir = Directory.GetCurrentDirectory();
             var wd = ProgramTests.SetupDB3(Utili.GetCurrentMethodAndClass());
             Directory.SetCurrentDirectory(wd.WorkingDirectory);

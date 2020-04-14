@@ -12,18 +12,10 @@ namespace CalculationController.Integrity {
         protected override void Run([NotNull] Simulator sim) {
             foreach (var device in sim.TransformationDevices.It) {
                 foreach (var condition in device.Conditions) {
-                    if (condition.ConditionType == TransformationConditionType.StorageContent && condition.Storage == null)
-                    {
+                    if (condition.Variable == null) {
                         throw new DataIntegrityException("One condition on the transformation device " +
                                                          device.Name +
-                                                         " is not set correctly. The storage is missing.");
-                    }
-                    if (condition.ConditionType == TransformationConditionType.MinMaxValue) {
-                        if (condition.ConditionLoadType == null) {
-                            throw new DataIntegrityException("One condition on the transformation device " +
-                                                             device.Name +
-                                                             " is not set correctly. The load type is missing.");
-                        }
+                                                         " is not set correctly. The variable is missing.");
                     }
                 }
                 foreach (var loadType in device.LoadTypesOut) {

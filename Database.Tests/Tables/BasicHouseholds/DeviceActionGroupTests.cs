@@ -16,7 +16,7 @@ namespace Database.Tests.Tables.BasicHouseholds
         public void DeviceActionGroupTestDeleteFromSim()
         {
             Config.IsInUnitTesting = true;
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             Logger.Threshold = Severity.Error;
             Simulator sim = new Simulator(db.ConnectionString);
@@ -28,7 +28,7 @@ namespace Database.Tests.Tables.BasicHouseholds
         [Category(UnitTestCategories.BasicTest)]
         public void DeviceActionGroupTestsAll()
         {
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             ObservableCollection<DeviceActionGroup> dags = new ObservableCollection<DeviceActionGroup>();
 

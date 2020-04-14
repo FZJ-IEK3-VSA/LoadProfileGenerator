@@ -326,7 +326,7 @@ namespace LoadProfileGenerator.Presenters.Households {
                     18, 99, PermittedGender.All);
             }
 
-            var loc = Sim.Locations.FindByName("Kitchen");
+            var loc = Sim.Locations.FindFirstByName("Kitchen");
             if (loc == null) {
                 Logger.Error("Could not find the kitchen, which is needed for the trait creation. Please fix.");
                 return;
@@ -334,7 +334,7 @@ namespace LoadProfileGenerator.Presenters.Households {
 
             var hhtloc = trait.AddLocation(loc);
             trait.AddAffordanceToLocation(hhtloc, _aff, null, 100, 0, 0, 0, 0);
-            var dt = Sim.TimeLimits.FindByName("Standby", FindMode.Partial);
+            var dt = Sim.TimeLimits.FindFirstByName("Standby", FindMode.Partial);
             foreach (var standby in _aff.AffordanceStandbys) {
                 if (standby.Device == null) {
                     continue;

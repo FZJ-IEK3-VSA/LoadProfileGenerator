@@ -66,7 +66,7 @@ namespace LoadProfileGenerator.Views.Households {
             ib.ShowDialog();
             if (ib.IsOk) {
                 var sim = Presenter.Sim;
-                var tag = sim.TraitTags.FindByName(ib.Result);
+                var tag = sim.TraitTags.FindFirstByName(ib.Result);
                 if (tag != null) {
                     Logger.Error("This tag already existed");
                 }

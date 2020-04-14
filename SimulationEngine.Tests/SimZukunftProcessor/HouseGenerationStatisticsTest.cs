@@ -1,6 +1,7 @@
 ﻿using Automation;
+using Automation.ResultFiles;
 using NUnit.Framework;
-using SimulationEngine.SimZukunftProcessor;
+using SimulationEngineLib.SimZukunftProcessor;
 
 namespace SimulationEngine.Tests.SimZukunftProcessor
 {
@@ -14,6 +15,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
             const string districtDataJsonPath = @"V:\BurgdorfStatistics\Present\08-ValidationExporting # 005-LPGExporter";
             HouseGenerationStatistics hgs = new HouseGenerationStatistics();
             hgs.Run(path, districtDataJsonPath);
+            throw new LPGException("Fix this");
         }
     }
 }

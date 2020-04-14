@@ -23,7 +23,7 @@ namespace Calculation.Tests.PostProcessing
         public void RunTest()
         {
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.Calculation);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Simulator sim = new Simulator(db.ConnectionString) {MyGeneralConfig = {StartDateUIString = "15.1.2015", EndDateUIString = "18.1.2015", InternalTimeResolution = "00:01:00"}};
             sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.None);
             sim.MyGeneralConfig.Enable(CalcOption.LocationsFile);

@@ -41,7 +41,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void GetAllNameTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             var deviceCategories = new ObservableCollection<DeviceCategory>();
 

@@ -236,12 +236,12 @@
                                Content="Loadtype"
                                Style="{StaticResource LabelStyle}"
                                Target="{Binding ElementName=CmbSignalLoadtype}" />
-                        <ComboBox Name="CmbSignalLoadtype"
+                        <ComboBox Name="CmbSignalVariable"
                                   Grid.Row="1"
                                   Grid.Column="1"
-                                  ItemsSource="{Binding VLoadTypes}"
+                                  ItemsSource="{Binding Variables}"
                                   SelectedItem="{Binding ElementName=LstSignals,
-                                                         Path=SelectedItem.(houses:EnergyStorageSignal.LoadType),
+                                                         Path=SelectedItem.(houses:EnergyStorageSignal.Variable),
                                                          Mode=OneWay}"
                                   Style="{StaticResource ComboBoxStyle}" />
                         <Label Grid.Row="2"

@@ -16,7 +16,7 @@ namespace LoadProfileGenerator.Tests {
         [Category(UnitTestCategories.LongTest2)]
         public void RunHouseholdTemplateCreatorTest()
         {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.LoadProfileGenerator);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             var hhtc = new HouseholdTemplateCreator(sim);
             while (sim.HouseholdTemplates.It.Count > 0) {

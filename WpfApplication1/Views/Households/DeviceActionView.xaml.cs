@@ -111,10 +111,10 @@ namespace LoadProfileGenerator.Views.Households {
             var reac =
                 da.Profiles.FirstOrDefault(x => x.VLoadType?.Name.ToUpperInvariant().Contains("REACTIVE") == true);
 
-            var placeholder = Presenter.Sim.Timeprofiles.FindByName("placeholder", FindMode.Partial);
+            var placeholder = Presenter.Sim.Timeprofiles.FindFirstByName("placeholder", FindMode.Partial);
 
             // apparent
-            var appLoad = Presenter.Sim.LoadTypes.FindByName("apparent", FindMode.Partial);
+            var appLoad = Presenter.Sim.LoadTypes.FindFirstByName("apparent", FindMode.Partial);
             if (appLoad == null) {
                 Logger.Error("Could not find the apparent load type. Please fix.");
                 return;
@@ -130,7 +130,7 @@ namespace LoadProfileGenerator.Views.Households {
             }
 
             // reactive
-            var reacLoad = Presenter.Sim.LoadTypes.FindByName("reactive", FindMode.Partial);
+            var reacLoad = Presenter.Sim.LoadTypes.FindFirstByName("reactive", FindMode.Partial);
             if (reacLoad == null) {
                 Logger.Error("Could not find the reactive load type. Please fix.");
                 return;

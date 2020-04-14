@@ -24,6 +24,7 @@
     <ProjectReference Include="..\CalculationController\CalculationController.csproj" />
     <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\Database\Database.csproj" />
+    <ProjectReference Include="..\SimulationEngineLib\SimulationEngineLib.csproj" />
   </ItemGroup>
 
 </Project>

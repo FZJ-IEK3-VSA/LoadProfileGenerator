@@ -74,10 +74,10 @@ namespace CalculationEngine.HouseElements {
         [ItemNotNull]
         public List<OutputLoadType> OutputLoadTypes => _outputLoadTypes;
 
-        public void AddCondition([NotNull] string name,  CalcTransformationConditionType conditiontype,
-            [CanBeNull] CalcEnergyStorage storage, [CanBeNull] CalcLoadType lt, double minValue, double maxValue, [NotNull] string guid) {
+        public void AddCondition([NotNull] string name,
+             [NotNull] CalcVariable variable, double minValue, double maxValue, [NotNull] string guid) {
             var cond =
-                new CalcTransformationCondition(name, conditiontype, storage, lt, minValue, maxValue, guid);
+                new CalcTransformationCondition(name, variable, minValue, maxValue, guid);
             _conditions.Add(cond);
         }
 
@@ -121,7 +121,7 @@ namespace CalculationEngine.HouseElements {
             var madeChanges = false;
             var conditionsValid = true;
             foreach (var condition in _conditions) {
-                if (!condition.GetResult(fileRows)) {
+                if (!condition.GetResult()) {
                     conditionsValid = false;
                 }
             }

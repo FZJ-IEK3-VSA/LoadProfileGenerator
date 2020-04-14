@@ -45,7 +45,7 @@ namespace Database.Tests.Tables {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void GetOneYearArrayTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             db.ClearTable(TimeLimit.TableName);
             db.ClearTable(TimeLimitEntry.TableName);
@@ -89,7 +89,7 @@ namespace Database.Tests.Tables {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void TimeLimitEntryTests1() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             db.ClearTable(TimeLimit.TableName);
             db.ClearTable(TimeLimitEntry.TableName);
             var temperaturProfiles = db.LoadTemperatureProfiles();

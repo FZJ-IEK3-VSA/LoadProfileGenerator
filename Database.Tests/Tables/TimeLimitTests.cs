@@ -48,7 +48,7 @@ namespace Database.Tests.Tables {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void TimeLimitArrayTestDateProfileTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             db.ClearTable(TimeLimit.TableName);
             db.ClearTable(TimeLimitEntry.TableName);
             // test if night + day is always
@@ -89,7 +89,7 @@ namespace Database.Tests.Tables {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void TimeLimitArrayTestlightControlledTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             db.ClearTable(TimeLimit.TableName);
             db.ClearTable(TimeLimitEntry.TableName);
             // test if night + day is always
@@ -157,7 +157,7 @@ namespace Database.Tests.Tables {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void TimeLimitBoolEntryLoadCreationAndSaveTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             db.ClearTable(TimeLimit.TableName);
             db.ClearTable(TimeLimitEntry.TableName);
             var timeLimits = new ObservableCollection<TimeLimit>();
@@ -194,7 +194,7 @@ namespace Database.Tests.Tables {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void TimeLimitLoadCreationAndSaveTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             db.ClearTable(TimeLimit.TableName);
             db.ClearTable(TimeLimitEntry.TableName);
             var timeLimits = new ObservableCollection<TimeLimit>();

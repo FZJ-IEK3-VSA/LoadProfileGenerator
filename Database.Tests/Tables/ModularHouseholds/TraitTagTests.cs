@@ -13,7 +13,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void TraitTagTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             db.ClearTable(TraitTag.TableName);
             var cat = new CategoryDBBase<TraitTag>("Household Trait Tags");

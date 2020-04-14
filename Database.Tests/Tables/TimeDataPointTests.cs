@@ -46,7 +46,7 @@ namespace Database.Tests.Tables {
         [Category(UnitTestCategories.BasicTest)]
         public void LoadFromDatabaseTest() {
             // tests loading
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             var datapoints = new ObservableCollection<TimeDataPoint>();
             TimeDataPoint.LoadFromDatabase(datapoints, db.ConnectionString, false);
@@ -57,7 +57,7 @@ namespace Database.Tests.Tables {
         [Category(UnitTestCategories.BasicTest)]
         public void TimeDataPointTest() {
             // tests saving and loading
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             db.ClearTable(TimeDataPoint.TableName);
             var tp = new TimeDataPoint(new DateTime(2010, 1, 1), 1, null, 1, db.ConnectionString,
@@ -76,7 +76,7 @@ namespace Database.Tests.Tables {
         [Category(UnitTestCategories.BasicTest)]
         public void TimeDataPointTestTimespan() {
             // tests init with time span and saving and loading to db
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             db.ClearTable(TimeDataPoint.TableName);
             var tp = new TimeDataPoint(new TimeSpan(0, 1, 0),
                 1, null, 1, db.ConnectionString, Guid.NewGuid().ToString());

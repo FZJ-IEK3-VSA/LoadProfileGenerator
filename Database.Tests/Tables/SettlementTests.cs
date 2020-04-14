@@ -47,7 +47,7 @@ namespace Database.Tests.Tables {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void LoadFromDatabaseTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             ObservableCollection<TraitTag> traitTags = db.LoadTraitTags();
             var timeprofiles = db.LoadTimeBasedProfiles();
@@ -73,7 +73,7 @@ namespace Database.Tests.Tables {
         public void JsonCalcSpecTest()
         {
             SkipEndCleaning = true;
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             Simulator sim = new Simulator(db.ConnectionString);
             Settlement sett = sim.Settlements[1];
@@ -86,7 +86,7 @@ namespace Database.Tests.Tables {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void SaveToDatabaseTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             ObservableCollection<TraitTag> traitTags = db.LoadTraitTags();
             var timeprofiles = db.LoadTimeBasedProfiles();

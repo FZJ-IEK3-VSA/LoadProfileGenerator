@@ -16,6 +16,7 @@ using Database.Helpers;
 using Database.Tests;
 using JetBrains.Annotations;
 using NUnit.Framework;
+using SimulationEngineLib;
 
 namespace SimulationEngine.Tests {
     [TestFixture]
@@ -23,11 +24,11 @@ namespace SimulationEngine.Tests {
     {
         [NotNull]
         public static WorkingDir SetupDB3([NotNull] string name, bool clearTemplatedFirst = false) {
-            var srcPath = DatabaseSetup.GetSourcepath(null, DatabaseSetup.TestPackage.SimulationEngine);
-            Program.CatchErrors = false;
+            var srcPath = DatabaseSetup.GetSourcepath(null);
+            SimulationEngineConfig.CatchErrors = false;
             var wd = new WorkingDir(name);
             var dstfullName = Path.Combine(wd.WorkingDirectory, "profilegenerator.db3");
-            Program.IsUnitTest = true;
+            SimulationEngineConfig.IsUnitTest = true;
             if (File.Exists("profilegenerator.db3")) {
                 File.Delete("profilegenerator.db3");
             }
@@ -50,7 +51,7 @@ namespace SimulationEngine.Tests {
         [Test]
         [Category(UnitTestCategories.ManualOnly)]
         public void CSVImportTest() {
-            var db1 = new DatabaseSetup(Utili.GetCurrentMethodAndClass() + "_export", DatabaseSetup.TestPackage.SimulationEngine);
+            var db1 = new DatabaseSetup(Utili.GetCurrentMethodAndClass() + "_export");
             //export
             var wd = SetupDB3(Utili.GetCurrentMethodAndClass());
 
@@ -72,7 +73,7 @@ namespace SimulationEngine.Tests {
         [Test]
         [Category(UnitTestCategories.ManualOnly)]
         public void CSVImportTest2() {
-            var db1 = new DatabaseSetup(Utili.GetCurrentMethodAndClass() + "_export", DatabaseSetup.TestPackage.SimulationEngine);
+            var db1 = new DatabaseSetup(Utili.GetCurrentMethodAndClass() + "_export");
             //export
             var wd = SetupDB3(Utili.GetCurrentMethodAndClass());
             const string srcfile = @"v:\work\CHR15a_Sc1.csv";
@@ -100,7 +101,7 @@ namespace SimulationEngine.Tests {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void ListEnviromentalVariables() {
-            Program.CatchErrors = false;
+            SimulationEngineConfig.CatchErrors = false;
             var dict = Environment.GetEnvironmentVariables();
             foreach (DictionaryEntry env in dict) {
                 var name = (string) env.Key;
@@ -205,7 +206,7 @@ namespace SimulationEngine.Tests {
         [Test]
         [Category(UnitTestCategories.ManualOnly)]
         public void MainTestLaunchParallelModularHouseholds() {
-            Program.CatchErrors = false;
+            SimulationEngineConfig.CatchErrors = false;
             var di = new DirectoryInfo(".");
             var fis = di.GetFiles("*.*");
             var oldDir = Directory.GetCurrentDirectory();
@@ -324,7 +325,7 @@ namespace SimulationEngine.Tests {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void MainTestListSettlements() {
-            Program.CatchErrors = false;
+            SimulationEngineConfig.CatchErrors = false;
             var wd = SetupDB3(Utili.GetCurrentMethodAndClass());
             var arguments = new List<string>
             {
@@ -351,11 +352,11 @@ namespace SimulationEngine.Tests {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void MainTestNoDB3() {
-            Program.CatchErrors = false;
+            SimulationEngineConfig.CatchErrors = false;
             if (File.Exists("profilegenerator.db3")) {
                 File.Delete("profilegenerator.db3");
             }
-            Program.IsUnitTest = true;
+            SimulationEngineConfig.IsUnitTest = true;
             var args = Array.Empty<string>();
             Assert.Throws<LPGException>(() => Program.Main(args));
         }
@@ -364,12 +365,12 @@ namespace SimulationEngine.Tests {
         [Category(UnitTestCategories.LongTest5)]
         public void SettlementToBatchTest()
         {
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.SimulationEngine);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Simulator sim = new Simulator(db.ConnectionString);
             var settlementname = sim.Settlements.It[0].Name.Substring(0,20);
             db.Cleanup();
-            Program.CatchErrors = false;
-            Program.IsUnitTest = true;
+            SimulationEngineConfig.CatchErrors = false;
+            SimulationEngineConfig.IsUnitTest = true;
             var setp = new SimulationEngineTestPreparer(nameof(SettlementToBatchTest));
             var arguments = new List<string>
             {

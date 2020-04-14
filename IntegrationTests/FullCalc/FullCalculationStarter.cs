@@ -23,7 +23,7 @@ namespace IntegrationTests.FullCalc
             var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass());
             var path = wd1.WorkingDirectory;
             Config.MakePDFCharts = false;
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.CalcController);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             var calcstart = DateTime.Now;
             sim.MyGeneralConfig.StartDateUIString = "1.1.2015";
@@ -43,7 +43,7 @@ namespace IntegrationTests.FullCalc
             var cmf = new CalcManagerFactory();
             var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             //CalcDevice.UseRanges = true;
-            var geoloc = sim.GeographicLocations.FindByName("Chemnitz", FindMode.Partial);
+            var geoloc = sim.GeographicLocations.FindFirstByName("Chemnitz", FindMode.Partial);
             if (geoloc == null)
             {
                 throw new LPGException("Geoloc was null");

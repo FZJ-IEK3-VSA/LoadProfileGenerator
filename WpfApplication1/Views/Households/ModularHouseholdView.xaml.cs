@@ -66,7 +66,7 @@ namespace LoadProfileGenerator.Views.Households {
 
         private void ApplyTag([NotNull] string s, [CanBeNull] Person p = null)
         {
-            var tag = Presenter.Sim.TraitTags.FindByName(s, FindMode.Partial);
+            var tag = Presenter.Sim.TraitTags.FindFirstByName(s, FindMode.Partial);
             Presenter.UseTags = true;
             if (tag != null) {
                 Presenter.SelectedFilterTag = tag;

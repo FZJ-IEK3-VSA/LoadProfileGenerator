@@ -40,7 +40,7 @@ namespace Database.Tests.Helpers {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void MakeDegreeDaysTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             var temperaturProfiles = db.LoadTemperatureProfiles();
 
@@ -68,7 +68,7 @@ namespace Database.Tests.Helpers {
         [Category(UnitTestCategories.BasicTest)]
         public void MakeDegreeDaysTestWithPrecalcPeriod()
         {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             var temperaturProfiles = db.LoadTemperatureProfiles();
 
@@ -101,7 +101,7 @@ namespace Database.Tests.Helpers {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void MakeDegreeDaysTest3Days() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var temperaturProfiles = db.LoadTemperatureProfiles();
             var startTime = new DateTime(2012, 1, 1);
             var endTime = new DateTime(2012, 1, 3);
@@ -126,7 +126,7 @@ namespace Database.Tests.Helpers {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void MakeDegreeDaysTest3Years() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             var temperaturProfiles = db.LoadTemperatureProfiles();
             var startTime = new DateTime(2012, 1, 1);
@@ -152,7 +152,7 @@ namespace Database.Tests.Helpers {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void MakeDegreeDaysTestMinus3Days() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             var temperaturProfiles = db.LoadTemperatureProfiles();
 

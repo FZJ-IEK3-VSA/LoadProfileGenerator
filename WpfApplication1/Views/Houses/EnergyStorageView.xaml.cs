@@ -31,7 +31,6 @@ using System.Windows;
 using System.Windows.Input;
 using Common;
 using Database.Tables.BasicElements;
-using Database.Tables.BasicHouseholds;
 using Database.Tables.Houses;
 using JetBrains.Annotations;
 using LoadProfileGenerator.Presenters.Houses;
@@ -52,7 +51,7 @@ namespace LoadProfileGenerator.Views.Houses {
 
         private void BtnAddSignal_Click([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
         {
-            var isOk = CmbSignalLoadtype.SelectedItem != null;
+            var isOk = CmbSignalVariable.SelectedItem != null;
             if (string.IsNullOrEmpty(TxtTriggerLevelOff.Text)) {
                 isOk = false;
             }
@@ -70,7 +69,7 @@ namespace LoadProfileGenerator.Views.Houses {
                 return;
             }
 
-            var lt = (VLoadType) CmbSignalLoadtype.SelectedItem;
+            var lt = (Variable) CmbSignalVariable.SelectedItem;
             var off = Utili.ConvertToDoubleWithMessage(TxtTriggerLevelOff.Text);
             var on = Utili.ConvertToDoubleWithMessage(TxtTriggerLevelOn.Text);
             var value = Utili.ConvertToDoubleWithMessage(TxtSignalValue.Text);

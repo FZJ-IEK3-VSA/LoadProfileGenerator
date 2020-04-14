@@ -14,7 +14,7 @@ namespace Database.Tests.Tables.BasicElements
         [Category(UnitTestCategories.BasicTest)]
         public void VariableTest()
         {
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             db.ClearTable(Variable.TableName);
             Variable t = new Variable("blub", "desc", "unit", db.ConnectionString, System.Guid.NewGuid().ToString());
             t.SaveToDB();

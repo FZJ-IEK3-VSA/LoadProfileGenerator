@@ -14,7 +14,7 @@ namespace Database.Tests.Tables.Transportation
         [Category(UnitTestCategories.BasicTest)]
         public void TravelRouteSetTest()
         {
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             db.ClearTable(TravelRouteSet.TableName);
             db.ClearTable(TravelRouteSetEntry.TableName);
 
@@ -42,7 +42,7 @@ namespace Database.Tests.Tables.Transportation
         [Category(UnitTestCategories.BasicTest)]
         public void TravelRouteSetTestImportExport()
         {
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Simulator sim =new Simulator(db.ConnectionString);
             var travelrouteset = sim.TravelRouteSets[0];
             //var copy =

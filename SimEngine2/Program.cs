@@ -4,10 +4,11 @@ using Automation.ResultFiles;
 using Common;
 using JetBrains.Annotations;
 using PowerArgs;
+using SimulationEngineLib;
 
 namespace SimEngine2
 {
-    class Program
+    public class Program
     {
         private static bool _isUnitTest;
 
@@ -20,7 +21,7 @@ namespace SimEngine2
             set => _isUnitTest = value;
         }
 
-        public static void Main([JetBrains.Annotations.NotNull] [ItemNotNull] string[] args)
+        public static void Main([NotNull] [ItemNotNull] string[] args)
         {
             Logger.Get().StartCollectingAllMessages();
             void RunThisOptionProcessing()
@@ -83,7 +84,7 @@ namespace SimEngine2
             }
         }
 
-        public static void RunOptionProcessing([NotNull] string connectionString, [ItemNotNull][JetBrains.Annotations.NotNull] string[] args)
+        public static void RunOptionProcessing([NotNull] string connectionString, [ItemNotNull][NotNull] string[] args)
         {
             CommandProcessor.ConnectionString = connectionString;
             Config.IsInHeadless = true;
@@ -110,7 +111,7 @@ namespace SimEngine2
             Args.InvokeAction(definition, args);
         }
 
-       [JetBrains.Annotations.NotNull]
+       [NotNull]
         private static string GetConnectionString()
         {
             if (!File.Exists("profilegenerator.db3"))

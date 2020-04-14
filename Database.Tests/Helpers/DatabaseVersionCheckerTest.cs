@@ -13,7 +13,7 @@ namespace Database.Tests.Helpers
         [Category(UnitTestCategories.BasicTest)]
         public void Run()
         {
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             DatabaseVersionChecker.CheckVersion(db.ConnectionString);
             string previousVersion = DatabaseVersionChecker.DstVersion;

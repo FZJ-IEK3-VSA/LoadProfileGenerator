@@ -42,7 +42,7 @@ namespace Database.Tests.Tables.BasicElements {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void AffordanceTaggingSetTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             db.ClearTable(AffordanceTaggingSet.TableName);
             db.ClearTable(AffordanceTaggingEntry.TableName);
             db.ClearTable(AffordanceTag.TableName);
@@ -90,7 +90,7 @@ namespace Database.Tests.Tables.BasicElements {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void AffordanceTaggingSetTestNone() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             foreach (var affordanceTaggingSet in sim.AffordanceTaggingSets.MyItems) {
                 foreach (var affordanceTaggingEntry in affordanceTaggingSet.Entries) {
@@ -110,7 +110,7 @@ namespace Database.Tests.Tables.BasicElements {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void RemoveAllOldEntriesTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             foreach (var affordanceTaggingSet in sim.AffordanceTaggingSets.MyItems) {
                 Logger.Info(affordanceTaggingSet.Name);

@@ -357,7 +357,7 @@ namespace Database.Tables.BasicHouseholds {
 
         public void RefreshSubDevices()
         {
-            var hasFinished = false;
+            //var hasFinished = false;
             Action a = () => {
                 _subDevices.Clear();
                 foreach (var observableDevice in _allDevices) {
@@ -366,7 +366,7 @@ namespace Database.Tables.BasicHouseholds {
                     }
                 }
                 _subDevices.Sort();
-                hasFinished = true;
+                //hasFinished = true;
             };
             Logger.Get().SafeExecuteWithWait(a);
         }

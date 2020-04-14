@@ -1,11 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using JetBrains.Annotations;
 
 namespace Automation {
     public class HouseData {
-        public HouseData([NotNull] string houseGuid, [NotNull] string houseTypeCode, double targetHeatDemand,
-                         double targetCoolingDemand, [NotNull] string name)
+
+        public HouseData([NotNull] string houseGuid, [CanBeNull] string houseTypeCode, double? targetHeatDemand,
+                         double? targetCoolingDemand, [NotNull] string name)
         {
             HouseGuid = houseGuid;
             HouseTypeCode = houseTypeCode;
@@ -15,6 +17,7 @@ namespace Automation {
         }
 
         [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
+        [Obsolete("Only for json")]
         public HouseData()
         {
         }
@@ -27,13 +30,10 @@ namespace Automation {
         [ItemNotNull]
         public List<HouseholdData> Households { get; set; } = new List<HouseholdData>();
 
-        [NotNull]
+        [CanBeNull]
         public string HouseTypeCode { get; set; }
 
-        public double TargetCoolingDemand { get; set; }
-        public double TargetHeatDemand { get; set; }
-
-        public bool IsHeatingProfileCalculated { get; set; }
-        public bool IsAirConditioningProfileCalculated { get; set; }
+        public double? TargetCoolingDemand { get; set; }
+        public double? TargetHeatDemand { get; set; }
     }
 }

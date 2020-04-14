@@ -19,7 +19,7 @@ namespace CalculationController.Tests
         public void Run()
         {
             //WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(),DatabaseSetup.TestPackage.CalcController);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Simulator sim = new Simulator(db.ConnectionString);
             var tempProfile = sim.TemperatureProfiles[0];
             var geoloc = sim.GeographicLocations[0];
@@ -40,7 +40,7 @@ namespace CalculationController.Tests
             if (spaceheating == null) {
                 throw new LPGException("Spaceheating was null");
             }
-            double sum = 0;
+            //double sum = 0;
             Dictionary<int, double> sumByYear = new Dictionary<int, double>();
             foreach (var cdd in spaceheating.CalcDegreeDays) {
                 if (!sumByYear.ContainsKey(cdd.Year)) {

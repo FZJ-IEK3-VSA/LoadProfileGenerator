@@ -4,7 +4,7 @@ using System.IO;
 using Automation;
 using Common.Tests;
 using NUnit.Framework;
-using SimulationEngine.SettlementCalculation;
+using SimulationEngineLib.SettlementCalculation;
 
 namespace SimulationEngine.Tests
 {

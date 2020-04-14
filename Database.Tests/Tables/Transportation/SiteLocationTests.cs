@@ -16,7 +16,7 @@ namespace Database.Tests.Tables.Transportation
         [Category(UnitTestCategories.BasicTest)]
         public void SiteLocationTest()
         {
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             Location loc = new Location("loc1",null,db.ConnectionString, Guid.NewGuid().ToString());
             loc.SaveToDB();
@@ -34,7 +34,7 @@ namespace Database.Tests.Tables.Transportation
         [Category(UnitTestCategories.BasicTest)]
         public void SiteWithLocationTest()
         {
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             db.ClearTable(Site.TableName);
             db.ClearTable(SiteLocation.TableName);

@@ -118,7 +118,7 @@ namespace ChartCreator2.Tests.Oxyplot
             //}
             //if (directoryName != null) {
 
-            _db = new DatabaseSetup("CalcStarterTests." + _directoryName, DatabaseSetup.TestPackage.ChartCreator);
+            _db = new DatabaseSetup("CalcStarterTests." + _directoryName);
             var sim = new Simulator(_db.ConnectionString) {MyGeneralConfig = {StartDateDateTime = new DateTime(2012, 1, 1), EndDateDateTime = new DateTime(2012, 1, 31)}};
             if (enddate != null)
             {

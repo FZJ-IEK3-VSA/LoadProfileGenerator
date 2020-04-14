@@ -12,7 +12,7 @@ namespace Database.Helpers {
         private void AddAffordanceEntry([NotNull] Simulator sim, [ItemNotNull] [NotNull] List<AffordanceEntry> affordances, [NotNull] string affname,
             [NotNull] string newName, double duration)
         {
-            var aff = sim.Affordances.FindByName(affname);
+            var aff = sim.Affordances.FindFirstByName(affname);
             if (aff == null) {
                 throw new LPGException("Affordance not found: " + affname);
             }
@@ -23,7 +23,7 @@ namespace Database.Helpers {
                                        [NotNull] string timelimitName,
             [NotNull] string newName, [CanBeNull] string tagName, TimeSpan beginSpan )
         {
-            var aff = sim.TimeLimits.FindByName(timelimitName);
+            var aff = sim.TimeLimits.FindFirstByName(timelimitName);
             if (aff == null)
             {
                 throw new LPGException("Time Limit not found: " + timelimitName);
@@ -39,7 +39,7 @@ namespace Database.Helpers {
             TraitTag tag = null;
             if (tagName != null)
             {
-                tag = sim.TraitTags.FindByName(tagName);
+                tag = sim.TraitTags.FindFirstByName(tagName);
                 if (tag == null)
                 {
                     throw new LPGException("Tagname " + tagName + " not found.");
@@ -53,7 +53,7 @@ namespace Database.Helpers {
         {
             //office 1
             //find the base thread
-            var basetrait = sim.HouseholdTraits.FindByName("Work - Office 1, 08h, from 06:00");
+            var basetrait = sim.HouseholdTraits.FindFirstByName("Work - Office 1, 08h, from 06:00");
             const string baseName = "Work - Office 1";
 
             // get all the affordances
@@ -89,7 +89,7 @@ namespace Database.Helpers {
 
             //office 2
             //find the base thread
-            var basetrait2 = sim.HouseholdTraits.FindByName("Work - Office 2, 09h");
+            var basetrait2 = sim.HouseholdTraits.FindFirstByName("Work - Office 2, 09h");
             const string baseName2 = "Work - Office 2";
 
             GenerateNewTraits(sim, basetrait2, baseName2, affordances, timeLimits, TaggingType.OfficeJob);
@@ -99,7 +99,7 @@ namespace Database.Helpers {
         {
             //office 1
             //find the base thread
-            var basetrait = sim.HouseholdTraits.FindByName("Sleep Bed 01 06h");
+            var basetrait = sim.HouseholdTraits.FindFirstByName("Sleep Bed 01 06h");
             const string baseName = "Sleep Bed 01";
 
             // get all the affordances
@@ -125,7 +125,7 @@ namespace Database.Helpers {
 
             GenerateNewTraits(sim, basetrait, baseName, affordances, timeLimits,TaggingType.AdultSleep);
 
-            var basetrait2 = sim.HouseholdTraits.FindByName("Sleep Bed 02 06h");
+            var basetrait2 = sim.HouseholdTraits.FindFirstByName("Sleep Bed 02 06h");
             const string baseName2 = "Sleep Bed 02";
 
             // get all the affordances
@@ -143,7 +143,7 @@ namespace Database.Helpers {
         {
             //office 1
             //find the base thread
-            var basetrait = sim.HouseholdTraits.FindByName("Alarm clock A at 05:00");
+            var basetrait = sim.HouseholdTraits.FindFirstByName("Alarm clock A at 05:00");
             const string baseName = "Alarm clock ";
 
             // get all the affordances
@@ -167,7 +167,7 @@ namespace Database.Helpers {
 
             GenerateNewTraits(sim, basetrait, baseName, affordances, timeLimits, TaggingType.AlarmClock);
 
-            var basetrait2 = sim.HouseholdTraits.FindByName("Alarm clock B at 06:30");
+            var basetrait2 = sim.HouseholdTraits.FindFirstByName("Alarm clock B at 06:30");
             var affordances2 = new List<AffordanceEntry>();
             AddAffordanceEntry(sim, affordances2, "wake up by alarm clock B", "Alarm B", -1);
 
@@ -212,7 +212,7 @@ namespace Database.Helpers {
                 foreach (var timeLimitEntry in timeLimits)
                 {
                     var newName = baseName + ", " + affordanceEntry.Name + ", from " + timeLimitEntry.Name;
-                    if (sim.HouseholdTraits.FindByName(newName) != null)
+                    if (sim.HouseholdTraits.FindFirstByName(newName) != null)
                     {
                         continue;
                     }

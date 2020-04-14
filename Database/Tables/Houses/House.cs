@@ -122,6 +122,7 @@ namespace Database.Tables.Houses {
             set => SetValueWithNotify(value, ref _houseType, false, nameof(HouseType));
         }
 
+
         [CanBeNull]
         [UsedImplicitly]
         public string Source {
@@ -220,6 +221,32 @@ namespace Database.Tables.Houses {
             _houseHouseholds.Add(hd);
             _houseHouseholds.Sort();
             hd.SaveToDB();
+        }
+
+        [NotNull]
+        public HouseData MakeHouseData()
+        {
+            HouseData hd = new HouseData(System.Guid.NewGuid().ToString(), HouseType?.HouseTypeCode,
+                HouseType?.HeatingYearlyTotal, HouseType?.CoolingYearlyTotal, Name);
+            int householdIdx = 1;
+            foreach (var houseHousehold in Households)
+            {
+                string householdName = "House " + Name + " - Household " + householdIdx + " - " + houseHousehold.CalcObject?.Name;
+                ModularHousehold household = (ModularHousehold)houseHousehold.CalcObject;
+                if (household == null)
+                {
+                    throw new LPGException("Household was null");
+                }
+                var hhd = new HouseholdData(householdName, household.IsTransportationEnabled,
+                    houseHousehold.Name, houseHousehold.ChargingStationSet?.GetJsonReference(),
+                    houseHousehold.TransportationDeviceSet?.GetJsonReference(),
+                    houseHousehold.TravelRouteSet?.GetJsonReference(), null, HouseholdDataSpecifictionType.ByHouseholdName);
+                hhd.HouseholdNameSpecification = new HouseholdNameSpecification(household.Name);
+                hd.Households.Add(hhd);
+                householdIdx++;
+            }
+
+            return hd;
         }
 
         public override List<UsedIn> CalculateUsedIns(Simulator sim) => throw new NotImplementedException();

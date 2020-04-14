@@ -16,7 +16,7 @@ namespace Database.Tests.Tables.Transportation
         [Category(UnitTestCategories.BasicTest)]
         public void RunChargingStationSetTests()
         {
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             db.ClearTable(ChargingStationSet.TableName);
             Location loc = new Location("loc1",null,db.ConnectionString,Guid.NewGuid().ToString());
             loc.SaveToDB();

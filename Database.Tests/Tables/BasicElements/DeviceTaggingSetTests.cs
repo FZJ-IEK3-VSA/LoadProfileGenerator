@@ -41,7 +41,7 @@ namespace Database.Tests.Tables.BasicElements {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void DeviceTaggingSetTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             db.ClearTable(DeviceTaggingSet.TableName);
             db.ClearTable(DeviceTaggingEntry.TableName);
@@ -83,7 +83,7 @@ namespace Database.Tests.Tables.BasicElements {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void DeviceTaggingSetTestNone() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             var sim = new Simulator(db.ConnectionString);
             db.Cleanup();

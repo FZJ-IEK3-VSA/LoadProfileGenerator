@@ -41,7 +41,7 @@ namespace CalculationController.Tests
                 Directory.Delete(path, true);
             }
             Directory.CreateDirectory(path);
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.CalcController);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             Config.IsInUnitTesting = true;
             Config.ExtraUnitTestChecking = false;
@@ -94,7 +94,7 @@ namespace CalculationController.Tests
                 Directory.Delete(path, true);
             }
             Directory.CreateDirectory(path);
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.CalcController);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             Config.IsInUnitTesting = true;
             Config.ExtraUnitTestChecking = true;

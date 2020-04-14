@@ -65,6 +65,15 @@ namespace CalculationEngine.HouseholdElements
             return _variablesByGuid[variableGuid].Value;
         }
 
+        public CalcVariable GetVariableByGuid([NotNull] string variableGuid)
+        {
+            if (!_variablesByGuid.ContainsKey(variableGuid))
+            {
+                throw new LPGException("Could not find the variable with the guid:" + variableGuid);
+            }
+            return _variablesByGuid[variableGuid];
+        }
+
         public void SetValueByGuid([NotNull] string variableGuid, double value)
         {
             _variablesByGuid[variableGuid].Value = value;

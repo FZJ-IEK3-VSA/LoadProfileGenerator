@@ -30,7 +30,7 @@ namespace Calculation.HouseholdElements.Tests {
         public void DumpHouseholdContentsToTextTest()
         {
             var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.Calculation);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString) {
                 MyGeneralConfig = {
                     StartDateUIString = "01.01.2015",

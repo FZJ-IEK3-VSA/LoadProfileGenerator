@@ -123,25 +123,42 @@ namespace ReleaseBuilder
             Copy(src, dst, "ChartPDFCreator.dll");
             Copy(src, dst, "Common.dll");
             Copy(src, dst, "Database.dll");
+            Copy(src, dst, "SimulationEngineLib.dll");
+            Copy(src, dst, "System.Buffers.dll");
+            Copy(src, dst, "System.Linq.Dynamic.Core.dll");
+            Copy(src, dst, "System.Memory.dll");
+            Copy(src, dst, "System.Numerics.Vectors.dll");
+            Copy(src, dst, "System.Resources.Extensions.dll");
+            Copy(src, dst, "System.Runtime.CompilerServices.Unsafe.dll");
             //Copy(src, dst, "MigraDoc.DocumentObjectModel-wpf.dll");
-            Copy(src, dst, "MigraDoc.DocumentObjectModel.dll");
+            //Copy(src, dst, "MigraDoc.DocumentObjectModel.dll");
             //Copy(src, dst, "MigraDoc.Rendering-wpf.dll");
-            Copy(src, dst, "MigraDoc.Rendering.dll");
-            Copy(src, dst, "MigraDoc.RtfRendering.dll");
+            //Copy(src, dst, "MigraDoc.Rendering.dll");
+            //Copy(src, dst, "MigraDoc.RtfRendering.dll");
+
+            //Copy(desrc, dst, "MigraDoc.DocumentObjectModel.resources.dll");
+            //
+            Copy(src, dst, "MigraDoc.DocumentObjectModel-gdi.dll");
             string desrc = Path.Combine(src, "de");
-            Copy(desrc, dst, "MigraDoc.DocumentObjectModel.resources.dll");
-            Copy(desrc, dst, "MigraDoc.Rendering.resources.dll");
-            Copy(desrc, dst, "MigraDoc.RtfRendering.resources.dll");
-            Copy(desrc, dst, "PdfSharp.Charting.resources.dll");
-            Copy(desrc, dst, "PdfSharp.resources.dll");
+            Copy(desrc, dst, "MigraDoc.DocumentObjectModel-gdi.resources.dll");
+            Copy(desrc, dst, "MigraDoc.Rendering-gdi.resources.dll");
+            Copy(desrc, dst, "MigraDoc.RtfRendering-gdi.resources.dll");
+            Copy(desrc, dst, "PdfSharp-gdi.resources.dll");
+            Copy(desrc, dst, "PdfSharp.Charting-gdi.resources.dll");
+            Copy(src, dst, "MigraDoc.Rendering-gdi.dll");
+            Copy(src, dst, "MigraDoc.RtfRendering-gdi.dll");
+            Copy(src, dst, "PdfSharp-gdi.dll");
+            Copy(src, dst, "PdfSharp.Charting-gdi.dll");
+            //Copy(desrc, dst, "PdfSharp.Charting.resources.dll");
+            //Copy(src, dst, "PdfSharp.Charting.dll");
+            //Copy(desrc, dst, "PdfSharp.resources.dll");
+            //Copy(src, dst, "PdfSharp.dll");
             Copy(src, dst, "Newtonsoft.Json.dll");
             Copy(src, dst, "OxyPlot.dll");
             Copy(src, dst, "OxyPlot.Pdf.dll");
             Copy(src, dst, "OxyPlot.Wpf.dll");
             //Copy(src, dst, "PdfSharp-wpf.dll");
             //Copy(src, dst, "PdfSharp.Charting-wpf.dll");
-            Copy(src, dst, "PdfSharp.Charting.dll");
-            Copy(src, dst, "PdfSharp.dll");
             //Copy(src, dst, "SettlementProcessing.dll");
             Copy(src, dst, "SQLite.Interop.dll");
             //Copy(src, dst, "sqlite3.dll");
@@ -154,8 +171,8 @@ namespace ReleaseBuilder
             Copy(src, dst, "JetBrains.Annotations.dll");
             Copy(src, dst, "System.Data.SQLite.EF6.dll");
             Copy(src, dst, "System.Data.SQLite.Linq.dll");
-            string src64 = Path.Combine(src, "x64");
-            Copy(src64, dst, "sqlite3.dll");
+            //string src64 = Path.Combine(src, "x64");
+            //Copy(src64, dst, "sqlite3.dll");
             DirectoryInfo di = new DirectoryInfo(src);
             var fis = di.GetFiles("*.dll", SearchOption.AllDirectories);
             List<string> filesToIgnore = new List<string> {"Common.Tests.dll", "Database.Tests.dll", "nunit.framework.dll", "ReleaseBuilder.dll", "FluentAssertions.dll" };
@@ -372,7 +389,7 @@ namespace ReleaseBuilder
 
         private void ReleaseCheck([NotNull] string filename)
         {
-            var db = new DatabaseSetup("CheckForNewLeftovers", DatabaseSetup.TestPackage.ReleaseBuilder, filename);
+            var db = new DatabaseSetup("CheckForNewLeftovers", filename);
             var sim = new Simulator(db.ConnectionString);
             CheckForNewItems(sim);
             CheckForDevicesWithoutCategory(sim);
@@ -390,7 +407,7 @@ namespace ReleaseBuilder
         [Category("BasicTest")]
         public void CheckForCalculationOutcomeCompleteness()
         {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(),DatabaseSetup.TestPackage.ReleaseBuilder);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             var count = CalculationOutcomesPresenter.CountMissingEntries(sim);
 #pragma warning disable S2583 // Conditionally executed blocks should be reachable
@@ -435,9 +452,9 @@ namespace ReleaseBuilder
             Thread.Sleep(100);
            // CopyFiles(src, dst);
             ReleaseCheck(filename);
-
+            CopyFiles(src, dst);
             //CopyFilesSimulationEngine(srcsim, dst);
-            var db = new DatabaseSetup("Release", DatabaseSetup.TestPackage.ReleaseBuilder, filename);
+            var db = new DatabaseSetup("Release", filename);
 
 #pragma warning disable S2583 // Conditionally executed blocks should be reachable
             if (cleanDatabase)
@@ -505,7 +522,7 @@ namespace ReleaseBuilder
 
             File.Copy(db.FileName, Path.Combine(dst, "profilegenerator.db3"));
             Thread.Sleep(1000);
-            CopyFiles(src, dst);
+
             //CopyFilesSimulationEngine(srcsim, dst);
             if (makeZipAndSetup) {
                 MakeZipFile(releasename, dst);

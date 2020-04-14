@@ -14,7 +14,7 @@ namespace Database.Tests.Helpers
         [Category(UnitTestCategories.BasicTest)]
         public void RunTest()
         {
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Simulator sim = new Simulator(db.ConnectionString);
             RealisticTraitEstimator.Run(sim);
             SimIntegrityChecker.Run(sim);

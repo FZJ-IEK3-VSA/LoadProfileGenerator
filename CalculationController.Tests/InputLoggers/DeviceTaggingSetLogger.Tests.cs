@@ -28,7 +28,7 @@ namespace CalculationController.Tests.InputLoggers
             var calcParameters = CalcParametersFactory.MakeGoodDefaults();
             CalcLoadTypeDtoDictionary cltd = new CalcLoadTypeDtoDictionary(new Dictionary<VLoadType, CalcLoadTypeDto>());
             CalcDeviceTaggingSetFactory cdtsf = new CalcDeviceTaggingSetFactory(calcParameters,cltd);
-            DatabaseSetup ds = new DatabaseSetup(Utili.GetCurrentMethodAndClass(),DatabaseSetup.TestPackage.CalcController);
+            DatabaseSetup ds = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Simulator sim = new Simulator(ds.ConnectionString);
             CalcDeviceTaggingSets devicetaggingset = cdtsf.GetDeviceTaggingSets(sim, 2);
             DeviceTaggingSetLogger dtsl = new DeviceTaggingSetLogger(srls);

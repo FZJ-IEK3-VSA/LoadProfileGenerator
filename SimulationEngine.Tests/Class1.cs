@@ -3,6 +3,7 @@ using Automation;
 using Common;
 using Common.Tests;
 using NUnit.Framework;
+using SimulationEngineLib;
 
 namespace SimulationEngine.Tests
 {
@@ -13,7 +14,7 @@ namespace SimulationEngine.Tests
         [Category(UnitTestCategories.BasicTest)]
         public void DateTimeTests()
         {
-            Program.CatchErrors = false;
+            SimulationEngineConfig.CatchErrors = false;
             DateTime dt = DateTime.Now;
             Logger.Info(dt.ToShortDateString());
         }

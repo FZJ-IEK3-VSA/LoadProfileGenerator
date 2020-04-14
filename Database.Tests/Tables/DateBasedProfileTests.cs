@@ -41,7 +41,7 @@ namespace Database.Tests.Tables {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void DateBasedProfileSaveAndRestore() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             db.ClearTable(DateBasedProfile.TableName);
             db.ClearTable(DateProfileDataPoint.TableName);
             var profiles = new ObservableCollection<DateBasedProfile>();

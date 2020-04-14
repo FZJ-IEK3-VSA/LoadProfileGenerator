@@ -18,7 +18,7 @@ namespace LoadProfileGenerator.Tests
         [Category(UnitTestCategories.BasicTest)]
         public void CompleteAffordanceCreatorTest()
         {
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.LoadProfileGenerator);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Simulator sim = new Simulator(db.ConnectionString);
             VLoadType lt = sim.LoadTypes[0];
             DeviceCategory dc = sim.DeviceCategories[1];

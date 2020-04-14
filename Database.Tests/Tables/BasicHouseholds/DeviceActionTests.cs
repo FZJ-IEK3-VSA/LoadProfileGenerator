@@ -16,7 +16,7 @@ namespace Database.Tests.Tables.BasicHouseholds
         [Category(UnitTestCategories.BasicTest)]
         public void DeviceActionTest()
         {
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             ObservableCollection<TimeBasedProfile> profiles = db.LoadTimeBasedProfiles();
             ObservableCollection<RealDevice> devices = db.LoadRealDevices(out _, out var loadTypes, profiles);
             ObservableCollection<DeviceAction> das = new ObservableCollection<DeviceAction>();

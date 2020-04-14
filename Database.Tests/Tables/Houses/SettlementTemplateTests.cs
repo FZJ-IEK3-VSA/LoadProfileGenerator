@@ -17,7 +17,7 @@ namespace Database.Tests.Tables.Houses {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void SettlementTemplatePreviewTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             var sim = new Simulator(db.ConnectionString);
             var st = sim.SettlementTemplates.CreateNewItem(sim.ConnectionString);
@@ -27,7 +27,7 @@ namespace Database.Tests.Tables.Houses {
             st.TemperatureProfile = sim.TemperatureProfiles[0];
             st.GeographicLocation = sim.GeographicLocations[0];
             st.DesiredHHCount = 100;
-            var limittrait = sim.HouseholdTraits.FindByName("Showering with electric Air Heater");
+            var limittrait = sim.HouseholdTraits.FindFirstByName("Showering with electric Air Heater");
             if (limittrait == null) {
                 throw new LPGException("Trait not found");
             }
@@ -79,20 +79,20 @@ namespace Database.Tests.Tables.Houses {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void SettlementTemplateTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             var sts = new ObservableCollection<SettlementTemplate>();
 
             var templates = db.LoadHouseholdTemplates(out var realDevices,
                 out var deviceCategories, out var timeBasedProfiles, out var timeLimits, out var loadTypes, out var deviceActions,
                 out var deviceActionGroups, out var traits);
-            var energyStorages = db.LoadEnergyStorages(loadTypes);
+            var variables = db.LoadVariables();
+            var energyStorages = db.LoadEnergyStorages(loadTypes,variables);
             var transformationDevices = db.LoadTransformationDevices(loadTypes,
-                energyStorages);
+                variables);
             var dateBasedProfiles = db.LoadDateBasedProfiles();
             var generators = db.LoadGenerators(loadTypes, dateBasedProfiles);
             var allLocations = db.LoadLocations(realDevices, deviceCategories, loadTypes);
-            var variables = db.LoadVariables();
             var houseTypes = db.LoadHouseTypes(realDevices, deviceCategories,
                 timeBasedProfiles, timeLimits, loadTypes, transformationDevices, energyStorages, generators,
                 allLocations, deviceActions, deviceActionGroups, variables);

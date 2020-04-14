@@ -29,12 +29,12 @@
 #region jenkins
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using Automation.ResultFiles;
 using Common;
@@ -54,44 +54,44 @@ namespace Database.Tests
 {
     public class DatabaseSetup
     {
-        public enum TestPackage
-        {
-            DatabaseIo,
-            LongTermMerger,
-            CalcController,
-            Calculation,
-            ChartCreator,
-            FullCalculation,
-            LoadProfileGenerator,
-            ReleaseBuilder,
-            SimulationEngine,
-            WebService,
-            CalcPostProcessorTests,
-        }
+        //public enum TestPackage
+        //{
+        //    DatabaseIo,
+        //    LongTermMerger,
+        //    CalcController,
+        //    Calculation,
+        //    ChartCreator,
+        //    FullCalculation,
+        //    LoadProfileGenerator,
+        //    ReleaseBuilder,
+        //    SimulationEngine,
+        //    WebService,
+        //    CalcPostProcessorTests,
+        //}
 
-        [NotNull]
-        private static readonly Dictionary<TestPackage, string> _packageNames =
-            new Dictionary<TestPackage, string> {
-                {TestPackage.DatabaseIo, "DatabaseIO.Tests"},
-                {TestPackage.LongTermMerger, "IntegrationTests - LongTermMerge"},
-                {TestPackage.CalcController, "CalcController.Tests"},
-                {TestPackage.Calculation, "Calculation.Tests"},
-                {TestPackage.ChartCreator, "ChartCreator.Tests"},
-                {TestPackage.FullCalculation, "FullCalculation.Tests"},
-                {TestPackage.LoadProfileGenerator, "LoadProfileGenerator.Tests"},
-                {TestPackage.ReleaseBuilder, "ReleaseBuilder.Tests"},
-                {TestPackage.SimulationEngine, "SimulationEngine.Tests"},
-                {TestPackage.WebService, "WebService.Tests"},
-                {TestPackage.CalcPostProcessorTests, "CalcPostProcessorTests"}
-            };
+        //[NotNull]
+        //private static readonly Dictionary<TestPackage, string> _packageNames =
+        //    new Dictionary<TestPackage, string> {
+        //        {TestPackage.DatabaseIo, "DatabaseIO.Tests"},
+        //        {TestPackage.LongTermMerger, "IntegrationTests - LongTermMerge"},
+        //        {TestPackage.CalcController, "CalcController.Tests"},
+        //        {TestPackage.Calculation, "Calculation.Tests"},
+        //        {TestPackage.ChartCreator, "ChartCreator.Tests"},
+        //        {TestPackage.FullCalculation, "FullCalculation.Tests"},
+        //        {TestPackage.LoadProfileGenerator, "LoadProfileGenerator.Tests"},
+        //        {TestPackage.ReleaseBuilder, "ReleaseBuilder.Tests"},
+        //        {TestPackage.SimulationEngine, "SimulationEngine.Tests"},
+        //        {TestPackage.WebService, "WebService.Tests"},
+        //        {TestPackage.CalcPostProcessorTests, "CalcPostProcessorTests"}
+        //    };
+
         /// <summary>
         /// Warning:using a full path as source file name will use that exact file, not make a copy.
         /// </summary>
         /// <param name="testname"></param>
-        /// <param name="testPackage"></param>
         /// <param name="sourceFileName"></param>
-        public DatabaseSetup([NotNull] string testname, TestPackage testPackage,
-            [CanBeNull] string sourceFileName = null)
+        public DatabaseSetup([NotNull] string testname,
+                             [CanBeNull] string sourceFileName = null)
         {
             DBBase.NeedsUpdateAllowed = true;
             var guid = string.Format(CultureInfo.InvariantCulture, "{0}", Guid.NewGuid());
@@ -117,7 +117,7 @@ namespace Database.Tests
                 File.Delete(FileName);
             }
 
-            var sourcePath = GetSourcepath(sourceFileName, testPackage);
+            var sourcePath = GetSourcepath(sourceFileName);
             File.Copy(sourcePath, FileName);
             Logger.Info("Working with " + FileName + " copied from " + sourcePath);
             Config.IsInUnitTesting = true;
@@ -185,7 +185,7 @@ namespace Database.Tests
         }
 
         [NotNull]
-        public static string GetImportFileFullPath([NotNull] string srcfilename, TestPackage mypackage)
+        public static string GetImportFileFullPath([NotNull] string srcfilename)
         {
             const string localPath = @"V:\Dropbox\LPG\ImportFiles\";
 
@@ -204,13 +204,13 @@ namespace Database.Tests
             }
 
             Logger.Info("file not found: " + fi.FullName + ", trying jenkins path next");
-            const string jenkinsabsolutePath = @"c:\jenkins\workspace";
+           /* const string jenkinsabsolutePath = @"c:\jenkins\workspace";
             fi = new FileInfo(Path.Combine(jenkinsabsolutePath, _packageNames[mypackage], "ImportFiles", srcfilename));
 
             if (fi.Exists)
             {
                 return fi.FullName;
-            }
+            }*/
 
             Logger.Info("file not found: " + fi.FullName + ", trying jenkins path next");
             throw new LPGException("Missing file: " + fi.FullName + "\n Current Directory:" +
@@ -218,7 +218,7 @@ namespace Database.Tests
         }
 
         [NotNull]
-        public static string GetSourcepath([CanBeNull] string pSourcefilename, TestPackage testPackage)
+        public static string GetSourcepath([CanBeNull] string pSourcefilename)
         {
             Logger.Info("Looking for DB3 file");
             //figure out the filename
@@ -229,12 +229,11 @@ namespace Database.Tests
             }
 
             //find the right path
-            FileInfo foundfile = FindDB3SourcePath(sourcefilename, testPackage);
+            FileInfo foundfile = FindDB3SourcePath(sourcefilename);
             if (foundfile == null)
             {
                 throw new LPGException("Could not find the db3 database. Current directory is " +
-                                       Directory.GetCurrentDirectory() + "\nPackage according to the program is " +
-                                       testPackage);
+                                       Directory.GetCurrentDirectory() + "\n");
             }
 
             if (foundfile.Length < 1000)
@@ -390,10 +389,10 @@ namespace Database.Tests
         [NotNull]
         [ItemNotNull]
         public ObservableCollection<EnergyStorage> LoadEnergyStorages(
-            [NotNull] [ItemNotNull] ObservableCollection<VLoadType> loadTypes)
+            [NotNull] [ItemNotNull] ObservableCollection<VLoadType> loadTypes, ObservableCollection<Variable> variables)
         {
             var energyStorages = new ObservableCollection<EnergyStorage>();
-            EnergyStorage.LoadFromDatabase(energyStorages, ConnectionString, loadTypes, false);
+            EnergyStorage.LoadFromDatabase(energyStorages, ConnectionString, loadTypes,variables, false);
             return energyStorages;
         }
 
@@ -471,9 +470,9 @@ namespace Database.Tests
 
             var geographicLocations = LoadGeographicLocations(out _,
                 timeLimits);
-            var energyStorages = LoadEnergyStorages(loadTypes);
+            var energyStorages = LoadEnergyStorages(loadTypes,variables);
             var transformationDevices = LoadTransformationDevices(loadTypes,
-                energyStorages);
+                variables);
 
             var generators = LoadGenerators(loadTypes, dateBasedProfiles);
             var houseTypes = LoadHouseTypes(realDevices, deviceCategories, timeBasedProfiles,
@@ -813,11 +812,11 @@ namespace Database.Tests
         [ItemNotNull]
         public ObservableCollection<TransformationDevice> LoadTransformationDevices(
             [NotNull] [ItemNotNull] ObservableCollection<VLoadType> loadTypes,
-            [NotNull] [ItemNotNull] ObservableCollection<EnergyStorage> energyStorages)
+            [NotNull] [ItemNotNull] ObservableCollection<Variable> variables)
         {
             var transformationDevices =
                 new ObservableCollection<TransformationDevice>();
-            TransformationDevice.LoadFromDatabase(transformationDevices, ConnectionString, loadTypes, energyStorages,
+            TransformationDevice.LoadFromDatabase(transformationDevices, ConnectionString, loadTypes, variables,
                 false);
             return transformationDevices;
         }
@@ -858,40 +857,40 @@ namespace Database.Tests
             return null;
         }
 
-        [CanBeNull]
-        private static FileInfo CheckJenkins([NotNull] string filename, TestPackage testPackage)
-        {
-            const string jenkinsdir = "c:\\jenkins\\workspace";
-            Logger.Info("trying jenkins: Checking for " + jenkinsdir);
+        //[CanBeNull]
+        //private static FileInfo CheckJenkins([NotNull] string filename, TestPackage testPackage)
+        //{
+        //    const string jenkinsdir = "c:\\jenkins\\workspace";
+        //    Logger.Info("trying jenkins: Checking for " + jenkinsdir);
 
-            if (!Directory.Exists(jenkinsdir))
-            {
-                Logger.Info("it seems to not be jenkins: Not found: " + jenkinsdir);
-                return null;
-            }
+        //    if (!Directory.Exists(jenkinsdir))
+        //    {
+        //        Logger.Info("it seems to not be jenkins: Not found: " + jenkinsdir);
+        //        return null;
+        //    }
 
-            Logger.Info("it seems to be jenkins");
-            if (!_packageNames.ContainsKey(testPackage)) {
-                throw new LPGException("forgotten package name: " + testPackage);
-            }
-            string packageName = _packageNames[testPackage];
-            FileInfo fileInfo = new FileInfo(Path.Combine(jenkinsdir, packageName, "WpfApplication1", filename));
-            if (fileInfo.Exists)
-            {
-                return fileInfo;
-            }
-            Logger.Info("found jenkins, but not the file. Package wrong? Tried: " + fileInfo.FullName);
+        //    Logger.Info("it seems to be jenkins");
+        //    if (!_packageNames.ContainsKey(testPackage)) {
+        //        throw new LPGException("forgotten package name: " + testPackage);
+        //    }
+        //    string packageName = _packageNames[testPackage];
+        //    FileInfo fileInfo = new FileInfo(Path.Combine(jenkinsdir, packageName, "WpfApplication1", filename));
+        //    if (fileInfo.Exists)
+        //    {
+        //        return fileInfo;
+        //    }
+        //    Logger.Info("found jenkins, but not the file. Package wrong? Tried: " + fileInfo.FullName);
 
-            string currentdir = Directory.GetCurrentDirectory();
-            fileInfo = new FileInfo(Path.Combine(currentdir,  "WpfApplication1", filename));
-            if (fileInfo.Exists)
-            {
-                Logger.Info("found jenkins, found db3 in the current dir: " + fileInfo.FullName);
-                return fileInfo;
-            }
-            Logger.Info("found jenkins, but no db3 in the current dir: " + fileInfo.FullName);
-            return null;
-        }
+        //    string currentdir = Directory.GetCurrentDirectory();
+        //    fileInfo = new FileInfo(Path.Combine(currentdir,  "WpfApplication1", filename));
+        //    if (fileInfo.Exists)
+        //    {
+        //        Logger.Info("found jenkins, found db3 in the current dir: " + fileInfo.FullName);
+        //        return fileInfo;
+        //    }
+        //    Logger.Info("found jenkins, but no db3 in the current dir: " + fileInfo.FullName);
+        //    return null;
+        //}
 
         [CanBeNull]
         private static FileInfo CheckTeamCityPath([NotNull] string filename)
@@ -969,13 +968,31 @@ namespace Database.Tests
 
             return null;
         }
-
-        [CanBeNull]
-        private static FileInfo FindDB3SourcePath([NotNull] string filename, TestPackage testPackage)
+        [NotNull]
+        public static string AssemblyDirectory
         {
+            get
+            {
+                string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+                UriBuilder uri = new UriBuilder(codeBase);
+                string path = Uri.UnescapeDataString(uri.Path);
+                return Path.GetDirectoryName(path) ?? throw new LPGException("No path found for assembly");
+            }
+        }
+        [CanBeNull]
+        private static FileInfo FindDB3SourcePath([NotNull] string filename)
+        {
+            var assemblyDir = AssemblyDirectory;
+            Console.WriteLine("Assembly directory: " +  assemblyDir);
+
             if (filename.Contains(":")&&File.Exists(filename))
             {
                 return new FileInfo(filename);
+            }
+            FileInfo fiCurr =new FileInfo(Path.Combine( assemblyDir, filename));
+            if (fiCurr.Exists) {
+                Logger.Info("Found the db in " + fiCurr.FullName);
+                return fiCurr;
             }
             FileInfo di = CheckAppDataLocal(filename);
             if (di != null)
@@ -995,11 +1012,11 @@ namespace Database.Tests
                 return di;
             }
 
-            di = CheckJenkins(filename, testPackage);
-            if (di != null)
-            {
-                return di;
-            }
+            //di = CheckJenkins(filename, testPackage);
+            //if (di != null)
+            //{
+            //    return di;
+            //}
 
             di = CheckDropBoxPath(filename);
             if (di != null)

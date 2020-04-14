@@ -527,19 +527,20 @@
                                    Style="{StaticResource TextBlockStyle}"
                                    TextWrapping="WrapWithOverflow">
                             Conditions determine when a transformation device can be active. This is used for example to model a fuel cell that can only be active if
-                            the storage tank has a certain minimum level. If there is no condition at all then the device is always active.
+                            the storage tank has a certain minimum level. If there is no condition at all then the device is always active. Select a variable
+                            as trigger condition here and set the same variable as signal on the energy storage device to make things work.
                         </TextBlock>
                         <!--  1  -->
                         <Label Grid.Row="1"
                                Grid.Column="0"
-                               Content="Condition Type"
+                               Content="Variable"
                                Style="{StaticResource LabelStyle}"
-                               Target="{Binding ElementName=CmbConditionType}" />
-                        <ComboBox Name="CmbConditionType"
+                               Target="{Binding ElementName=CmbVariable}" />
+                        <ComboBox Name="CmbVariable"
                                   Grid.Row="1"
                                   Grid.Column="1"
-                                  ItemsSource="{Binding ConditionTypes}"
-                                  SelectedItem="{Binding Path=SelectedItem.SelectedConditionTypeStr,
+                                  ItemsSource="{Binding Variables}"
+                                  SelectedItem="{Binding Path=SelectedItem.Variable,
                                                          ElementName=LstConditions,
                                                          Mode=OneWay}"
                                   Style="{StaticResource ComboBoxStyle}" />
@@ -549,42 +550,7 @@
                                Content="Condition Loadtype"
                                Style="{StaticResource LabelStyle}"
                                Target="{Binding ElementName=CmbConditionLoadtype}" />
-                        <ComboBox Name="CmbConditionLoadtype"
-                                  Grid.Row="2"
-                                  Grid.Column="1"
-                                  ItemsSource="{Binding VLoadTypes}"
-                                  SelectedItem="{Binding Path=SelectedItem.ConditionLoadType,
-                                                         ElementName=LstConditions,
-                                                         Mode=OneWay}"
-                                  SelectionChanged="CmbOutputLoadtype_OnSelectionChanged"
-                                  Style="{StaticResource ComboBoxStyle}" />
                         <!--  3  -->
-                        <Label Grid.Row="3"
-                               Grid.Column="0"
-                               Content="Unit"
-                               Style="{StaticResource LabelStyle}" />
-                        <Label Grid.Row="3"
-                               Grid.Column="1"
-                               HorizontalAlignment="Left"
-                               Content="{Binding SelectedItem.ConditionLoadType.UnitOfPower,
-                                                 ElementName=LstConditions,
-                                                 Mode=OneWay}"
-                               Style="{StaticResource LabelStyle}" />
-                        <!--  4  -->
-                        <Label Grid.Row="4"
-                               Grid.Column="0"
-                               Content="Storage Unit"
-                               Style="{StaticResource LabelStyle}"
-                               Target="{Binding ElementName=CmbConditionStorage}" />
-                        <ComboBox Name="CmbConditionStorage"
-                                  Grid.Row="4"
-                                  Grid.Column="1"
-                                  ItemsSource="{Binding EnergyStorages}"
-                                  SelectedItem="{Binding Path=SelectedItem.Storage,
-                                                         ElementName=LstConditions,
-                                                         Mode=OneWay}"
-                                  SelectionChanged="CmbOutputLoadtype_OnSelectionChanged"
-                                  Style="{StaticResource ComboBoxStyle}" />
                         <!--  5  -->
                         <Label Grid.Row="5"
                                Grid.Column="0"

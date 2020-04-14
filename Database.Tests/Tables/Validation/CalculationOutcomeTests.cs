@@ -15,7 +15,7 @@ namespace Database.Tests.Tables.Validation {
         public void CalculationOutcomeTest() {
             Config.ShowDeleteMessages = false;
             Logger.Threshold = Severity.Error;
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             db.ClearTable(CalculationOutcome.TableName);
             db.ClearTable(LoadtypeOutcome.TableName);
             var ca = new CalculationOutcome("1", "2", "3", "4", "5", "6", "7", "8", TimeSpan.FromHours(1),
@@ -38,7 +38,7 @@ namespace Database.Tests.Tables.Validation {
             Config.ShowDeleteMessages = false;
             Logger.Threshold = Severity.Error;
 
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Logger.Threshold = Severity.Warning;
             db.ClearTable(CalculationOutcome.TableName);
             db.ClearTable(LoadtypeOutcome.TableName);

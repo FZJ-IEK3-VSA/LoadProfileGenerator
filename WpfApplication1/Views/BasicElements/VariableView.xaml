@@ -80,7 +80,7 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <TextBlock Grid.ColumnSpan="2" Style="{StaticResource TextBlockStyle}">
-                            Here you can get a list where this desire is used, if anywhere.
+                            Here you can get a list where this variable is used, if anywhere.
                         </TextBlock>
                         <Button Content="refresh" Grid.Row="0" HorizontalAlignment="Right"
                                 Click="BtnRefreshUsedIn_Click" Grid.Column="1" Style="{StaticResource ButtonStyle}" />

@@ -20,7 +20,7 @@ namespace CalcPostProcessorTests
         public void Run()
         {
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(),DatabaseSetup.TestPackage.CalcPostProcessorTests);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Simulator sim = new Simulator(db.ConnectionString);
             CalculationProfiler calculationProfiler = new CalculationProfiler();
             CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],

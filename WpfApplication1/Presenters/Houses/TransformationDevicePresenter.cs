@@ -31,7 +31,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Automation.ResultFiles;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.Houses;
@@ -43,13 +42,7 @@ using LoadProfileGenerator.Views.Houses;
 
 namespace LoadProfileGenerator.Presenters.Houses {
     public class TransformationDevicePresenter : PresenterBaseDBBase<TransformationDeviceView> {
-        [NotNull] private readonly Dictionary<TransformationConditionType, string> _conditionTypeToString =
-            new Dictionary<TransformationConditionType, string>();
-
         [ItemNotNull] [NotNull] private readonly ObservableCollection<string> _factorTypes = new ObservableCollection<string>();
-
-        [NotNull] private readonly Dictionary<string, TransformationConditionType> _stringToConditionType =
-            new Dictionary<string, TransformationConditionType>();
 
         [NotNull] private readonly TransformationDevice _trafoDevice;
         [ItemNotNull] [NotNull] private readonly ObservableCollection<UsedIn> _usedIn = new ObservableCollection<UsedIn>();
@@ -63,29 +56,6 @@ namespace LoadProfileGenerator.Presenters.Houses {
         {
             _trafoDevice = trafoDevice;
 
-            foreach (TransformationConditionType type in Enum.GetValues(typeof(TransformationConditionType))) {
-                switch (type) {
-                    case TransformationConditionType.MinMaxValue:
-                        _conditionTypeToString.Add(TransformationConditionType.MinMaxValue,
-                            "Between a minimum and maximum value");
-                        break;
-                    case TransformationConditionType.StorageContent:
-                        _conditionTypeToString.Add(TransformationConditionType.StorageContent,
-                            "The storage content has to be between these values.");
-                        break;
-                    default:
-                        throw new LPGException("Unkown Transformation Condition Type");
-                }
-            }
-            foreach (var keyValuePair in _conditionTypeToString) {
-                StringToConditionType.Add(keyValuePair.Value, keyValuePair.Key);
-                ConditionTypes.Add(keyValuePair.Value);
-            }
-            SelectedConditionTypeStr = ConditionTypes[0];
-            foreach (var condition in _trafoDevice.Conditions) {
-                condition.SetNameDictionary(_conditionTypeToString);
-            }
-
             _factorTypes.Add("Fixed");
             _factorTypes.Add("Interpolated");
             ExampleConversionFactor = 1;
@@ -98,10 +68,6 @@ namespace LoadProfileGenerator.Presenters.Houses {
         [NotNull]
         [UsedImplicitly]
         public List<string> ConditionTypes { get; } = new List<string>();
-
-        [NotNull]
-        [UsedImplicitly]
-        public Dictionary<TransformationConditionType, string> ConditionTypeToString => _conditionTypeToString;
 
         [CanBeNull]
         [UsedImplicitly]
@@ -148,19 +114,6 @@ namespace LoadProfileGenerator.Presenters.Houses {
         [UsedImplicitly]
         public ObservableCollection<string> FactorTypes => _factorTypes;
 
-        [UsedImplicitly]
-        public TransformationConditionType SelectedConditionType { get; private set; }
-
-        [NotNull]
-        [UsedImplicitly]
-        public string SelectedConditionTypeStr {
-            get => _conditionTypeToString[SelectedConditionType];
-            set {
-                SelectedConditionType = _stringToConditionType[value];
-                OnPropertyChanged(nameof(SelectedConditionType));
-            }
-        }
-
         [CanBeNull]
         [UsedImplicitly]
         public VLoadType SelectedOutputLoadtype {
@@ -170,10 +123,6 @@ namespace LoadProfileGenerator.Presenters.Houses {
                 OnPropertyChanged(nameof(SelectedOutputLoadtype));
             }
         }
-
-        [NotNull]
-        [UsedImplicitly]
-        public Dictionary<string, TransformationConditionType> StringToConditionType => _stringToConditionType;
 
         [NotNull]
         [UsedImplicitly]

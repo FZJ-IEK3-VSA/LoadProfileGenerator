@@ -13,7 +13,7 @@ using Database.Tests;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using SimulationEngine.SimZukunftProcessor;
+using SimulationEngineLib.SimZukunftProcessor;
 using Formatting = Newtonsoft.Json.Formatting;
 
 namespace SimulationEngine.Tests.SimZukunftProcessor
@@ -28,14 +28,14 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         {
             //setup
             Logger.Get().StartCollectingAllMessages();
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.SimulationEngine);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Simulator sim = new Simulator(db.ConnectionString);
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
 
             const string fn = @"C:\work\LPGUnitTest\HouseJob.Felseggstrasse 29.json";
             string txt = File.ReadAllText(fn);
             HouseCreationAndCalculationJob houseJob = JsonConvert.DeserializeObject<HouseCreationAndCalculationJob>(txt);
-            MakeAndCalculateHouseJob(houseJob, sim, wd);
+            MakeAndCalculateHouseJob(houseJob, sim, wd,db);
         }
         [Test]
         [Category(UnitTestCategories.BasicTest)]
@@ -43,7 +43,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         {
             //setup
             Logger.Get().StartCollectingAllMessages();
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.SimulationEngine);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Simulator sim = new Simulator(db.ConnectionString);
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
 
@@ -57,7 +57,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
             var work = new TransportationDistanceModifier("Work", "Car",0);
             var entertainment = new TransportationDistanceModifier("Entertainment", "Car", 12000);
             List<TransportationDistanceModifier> tdm = new List<TransportationDistanceModifier>() {work, entertainment};
-            var householdData = new HouseholdData(Guid.NewGuid().ToString(), 3000, ElectricCarUse.NoElectricCar,
+            var householdData = new HouseholdData(Guid.NewGuid().ToString(),true,
                 "blub", chargingStationSet, transportationDeviceSet,
                 travelRouteSet,tdm, HouseholdDataSpecifictionType.ByPersons);
             houseData.Households.Add(householdData);
@@ -68,7 +68,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
             HouseCreationAndCalculationJob houseJob = new HouseCreationAndCalculationJob("present", "2019", "trafokreis");
             houseJob.House = houseData;
 
-            MakeAndCalculateHouseJob(houseJob, sim, wd);
+            MakeAndCalculateHouseJob(houseJob, sim, wd,db);
         }
         [Test]
         [Category(UnitTestCategories.BasicTest)]
@@ -76,14 +76,14 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         {
             //setup
             Logger.Get().StartCollectingAllMessages();
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.SimulationEngine);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Simulator sim = new Simulator(db.ConnectionString);
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
 
             //housedata
             HouseData houseData = new HouseData(Guid.NewGuid().ToString(),
                 "HT01", 10000, 1000, "HouseGeneratorJobHouse");
-            var householdData = new HouseholdData(Guid.NewGuid().ToString(), 3000, ElectricCarUse.NoElectricCar,
+            var householdData = new HouseholdData(Guid.NewGuid().ToString(), false,
                 "blub", null, null, null, null, HouseholdDataSpecifictionType.ByPersons);
             houseData.Households.Add(householdData);
             var persons = new List<PersonData>() {
@@ -93,7 +93,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
             HouseCreationAndCalculationJob houseJob = new HouseCreationAndCalculationJob("present", "2019", "trafokreis");
             houseJob.House = houseData;
 
-            MakeAndCalculateHouseJob(houseJob, sim, wd);
+            MakeAndCalculateHouseJob(houseJob, sim, wd,db);
         }
 
 
@@ -103,14 +103,14 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         {
             //setup
             Logger.Get().StartCollectingAllMessages();
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.SimulationEngine);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Simulator sim = new Simulator(db.ConnectionString);
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
 
             //housedata
             HouseData houseData = new HouseData(Guid.NewGuid().ToString(),
                 "HT01", 10000, 1000, "HouseGeneratorJobHouse");
-            var householdData = new HouseholdData(Guid.NewGuid().ToString(), 3000, ElectricCarUse.NoElectricCar,
+            var householdData = new HouseholdData(Guid.NewGuid().ToString(), false,
                 "blub", null, null, null, null,
                 HouseholdDataSpecifictionType.ByTemplateName);
             houseData.Households.Add(householdData);
@@ -118,7 +118,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
             HouseCreationAndCalculationJob houseJob = new HouseCreationAndCalculationJob("present", "2019", "trafokreis");
             houseJob.House = houseData;
 
-            MakeAndCalculateHouseJob(houseJob, sim, wd);
+            MakeAndCalculateHouseJob(houseJob, sim, wd,db);
         }
 
         [Test]
@@ -127,7 +127,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         {
             //setup
             Logger.Get().StartCollectingAllMessages();
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.SimulationEngine);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Simulator sim = new Simulator(db.ConnectionString);
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
 
@@ -137,7 +137,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
             HouseCreationAndCalculationJob houseJob = new HouseCreationAndCalculationJob(
                 "present", "2019", "trafokreis");
             houseJob.House = houseData;
-            var householdData = new HouseholdData(Guid.NewGuid().ToString(), 3000, ElectricCarUse.NoElectricCar,
+            var householdData = new HouseholdData(Guid.NewGuid().ToString(), false,
                 "blub", null, null, null, null, HouseholdDataSpecifictionType.ByPersons);
             houseData.Households.Add(householdData);
             var persons = new List<PersonData>() {
@@ -149,7 +149,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
                 DefaultForOutputFiles = OutputFileDefault.None,
                 StartDate = new DateTime(2017, 1, 1),
                 EndDate = new DateTime(2017, 1, 3),
-                GeographicLocation = sim.GeographicLocations.FindByName("Berlin", FindMode.Partial)?.GetJsonReference() ??
+                GeographicLocation = sim.GeographicLocations.FindFirstByName("Berlin", FindMode.Partial)?.GetJsonReference() ??
                                      throw new LPGException("No Berlin in the DB"),
                 TemperatureProfile = sim.TemperatureProfiles[0].GetJsonReference(),
                 OutputDirectory = wd.Combine("Results"),
@@ -159,7 +159,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
                     CalcOption.HouseholdContents
                 }
             };
-            StartHouseJob(houseJob, sim, wd, "xxx");
+            StartHouseJob(houseJob,  wd, "xxx");
         }
 
         [Test]
@@ -168,7 +168,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         {
             //setup
             Logger.Get().StartCollectingAllMessages();
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.SimulationEngine);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Simulator sim = new Simulator(db.ConnectionString);
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             int count = 0;
@@ -196,7 +196,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
                     DefaultForOutputFiles = OutputFileDefault.Reasonable,
                     StartDate = new DateTime(2017, 1, 1),
                     EndDate = new DateTime(2017, 12, 31),
-                    GeographicLocation = sim.GeographicLocations.FindByName("Berlin", FindMode.Partial)?.GetJsonReference() ??
+                    GeographicLocation = sim.GeographicLocations.FindFirstByName("Berlin", FindMode.Partial)?.GetJsonReference() ??
                                          throw new LPGException("No Berlin in the DB"),
                     TemperatureProfile = sim.TemperatureProfiles[0].GetJsonReference(),
                     OutputDirectory = wd.Combine("Results." + htcode),
@@ -209,7 +209,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
                     },
                     DeleteDAT = false
                 };
-                StartHouseJob(houseJob, sim, wd, htcode);
+                StartHouseJob(houseJob,  wd, htcode);
                 SqlResultLoggingService srls = new SqlResultLoggingService(houseJob.CalcSpec.OutputDirectory);
                 HouseholdKeyLogger hhkslogger = new HouseholdKeyLogger(srls);
                 var hhks = hhkslogger.Load();
@@ -238,14 +238,14 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         {
             //setup
             Logger.Get().StartCollectingAllMessages();
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.SimulationEngine);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Simulator sim = new Simulator(db.ConnectionString);
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
 
             //housedata
             HouseData houseData = new HouseData(Guid.NewGuid().ToString(),
                 "HT01", 10000, 1000, "HouseGeneratorJobHouse");
-            var householdData = new HouseholdData(Guid.NewGuid().ToString(), 3000, ElectricCarUse.NoElectricCar,
+            var householdData = new HouseholdData(Guid.NewGuid().ToString(), false,
                 "blub", null, null, null, null,
                 HouseholdDataSpecifictionType.ByHouseholdName);
             houseData.Households.Add(householdData);
@@ -253,29 +253,32 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
             HouseCreationAndCalculationJob houseJob = new HouseCreationAndCalculationJob("present", "2019", "trafokreis");
             houseJob.House = houseData;
 
-            MakeAndCalculateHouseJob(houseJob, sim, wd);
+            MakeAndCalculateHouseJob(houseJob, sim, wd,db);
         }
 
 
 
 
-        private static void MakeAndCalculateHouseJob([NotNull] HouseCreationAndCalculationJob houseJob, [NotNull] Simulator sim, [NotNull] WorkingDir wd)
+        private static void MakeAndCalculateHouseJob([NotNull] HouseCreationAndCalculationJob houseJob, [NotNull] Simulator sim, [NotNull] WorkingDir wd, [NotNull] DatabaseSetup db)
         {
 //calcSpec
             houseJob.CalcSpec = new JsonCalcSpecification {
                 DefaultForOutputFiles = OutputFileDefault.Reasonable,
                 StartDate = new DateTime(2017, 1, 1),
                 EndDate = new DateTime(2017, 1, 3),
-                GeographicLocation = sim.GeographicLocations.FindByName("Berlin", FindMode.Partial)?.GetJsonReference() ??
+                GeographicLocation = sim.GeographicLocations.FindFirstByName("Berlin", FindMode.Partial)?.GetJsonReference() ??
                                      throw new LPGException("No Berlin in the DB"),
                 TemperatureProfile = sim.TemperatureProfiles[0].GetJsonReference(),
                 OutputDirectory = wd.Combine("Results")
             };
+            var dstDir = wd.Combine("profilegenerator.db3");
+            File.Copy(db.FileName,dstDir,true);
+            houseJob.PathToDatabase = dstDir;
 
-            StartHouseJob(houseJob, sim, wd, "xxx");
+            StartHouseJob(houseJob,  wd, "xxx");
         }
 
-        private static void StartHouseJob([NotNull] HouseCreationAndCalculationJob houseJob, [NotNull] Simulator sim, [NotNull] WorkingDir wd,string fnSuffix)
+        private static void StartHouseJob([NotNull] HouseCreationAndCalculationJob houseJob, [NotNull] WorkingDir wd,string fnSuffix)
         {
             string houseJobFile = wd.Combine("houseJob." + fnSuffix+".json");
             using (StreamWriter sw = new StreamWriter(houseJobFile)) {
@@ -289,16 +292,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
             Logger.Info("starting house generation");
             Logger.Info("======================================================");
             HouseGenerator houseGenerator = new HouseGenerator();
-            houseGenerator.ProcessSingleHouseJob(houseJobFile, sim.ConnectionString);
-            DirectoryInfo di = new DirectoryInfo(houseJob.CalcSpec.OutputDirectory??throw new LPGException("output dir false"));
-            var jsons = di.GetFiles("*.json");
-            foreach (var info in jsons) {
-                JsonCalculator jc = new JsonCalculator();
-                JsonDirectoryOptions jo = new JsonDirectoryOptions {
-                    Input = info.FullName
-                };
-                jc.Calculate(jo);
-            }
+            houseGenerator.ProcessSingleHouseJob(houseJobFile);
         }
     }
 }

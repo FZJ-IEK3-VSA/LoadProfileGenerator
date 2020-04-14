@@ -51,9 +51,9 @@ namespace Database.Tests.Tables.ModularHouseholds {
         public void TraitImportExportTest()
         {
             //  WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            var db1 = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db1 = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim1 = new Simulator(db1.ConnectionString);
-            var db2 = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db2 = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim2 = new Simulator(db2.ConnectionString);
             //check if the basic thing is identical
             /*sim1.HouseholdTraits[0].Should().BeEquivalentTo(sim2.HouseholdTraits[0], o => o.Excluding(
@@ -117,7 +117,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
         [Category(UnitTestCategories.BasicTest)]
         public void HouseholdTraitImportTest()
         {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Simulator sim = new Simulator(db.ConnectionString);
             for (int i = 0; i < sim.HouseholdTraits.It.Count && i < 3; i++) {
                 Logger.Info("Importing trait from #" +i );
@@ -131,7 +131,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void HouseholdTraitAffordanceTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             db.ClearTable(HouseholdTrait.TableName);
             db.ClearTable(HHTAutonomousDevice.TableName);
@@ -197,7 +197,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void HouseholdTraitTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             db.ClearTable(HouseholdTrait.TableName);
             db.ClearTable(HHTAutonomousDevice.TableName);

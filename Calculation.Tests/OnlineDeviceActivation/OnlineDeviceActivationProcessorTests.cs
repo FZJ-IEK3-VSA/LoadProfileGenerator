@@ -591,7 +591,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
         public void RunCalcStarter()
         {
             var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.Calculation);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             sim.MyGeneralConfig.StartDateString = "01.01.2013";

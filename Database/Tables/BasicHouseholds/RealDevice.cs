@@ -410,7 +410,7 @@ namespace Database.Tables.BasicHouseholds {
             action.Description = Name;
             action.Name = "run " + Name;
             action.SaveToDB();
-            var tp = sim.Timeprofiles.FindByName("placeholder", FindMode.Partial);
+            var tp = sim.Timeprofiles.FindFirstByName("placeholder", FindMode.Partial);
             if (tp == null) {
                 Logger.Error(
                     "The placeholder time profile could not be found. The action could not be created correctly. Please fix.");

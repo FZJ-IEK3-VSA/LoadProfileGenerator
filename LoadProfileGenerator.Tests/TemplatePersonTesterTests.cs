@@ -100,7 +100,7 @@ namespace LoadProfileGenerator.Tests {
         [Category(UnitTestCategories.BasicTest)]
 #pragma warning restore S125 // Sections of code should not be "commented out"
         public void RunTemplatePersonCreation() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.LoadProfileGenerator);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString) {MyGeneralConfig = {PerformCleanUpChecks = "False"}};
             SimIntegrityChecker.Run(sim);
             TemplatePersonCreator.CreateTemplatePersons(sim);
@@ -112,7 +112,7 @@ namespace LoadProfileGenerator.Tests {
         public void TemplatePersonFullCalculationTest() {
             //TODO: fix this test
             var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.LoadProfileGenerator);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString) {MyGeneralConfig = {PerformCleanUpChecks = "False"}};
             SimIntegrityChecker.Run(sim);
             var newchh = TemplatePersonCreator.RunCalculationTests(sim);

@@ -42,7 +42,7 @@ namespace CalculationController.Tests {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void GetCalcProfileTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.CalcController);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             var tp = new TimeBasedProfile("blub", null, db.ConnectionString, TimeProfileType.Relative,
                 "fake", Guid.NewGuid().ToString());

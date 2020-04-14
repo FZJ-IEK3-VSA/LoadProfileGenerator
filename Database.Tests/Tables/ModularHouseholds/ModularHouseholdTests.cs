@@ -48,7 +48,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
         public void ModularHouseholdJsonTest()
         {
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             //make the first
             var tt = sim.ModularHouseholds[0];
@@ -109,21 +109,23 @@ namespace Database.Tests.Tables.ModularHouseholds {
         public void ModularHouseholdOldImportTest()
         {
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            var db1 = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db1 = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim1A = new Simulator(db1.ConnectionString);
             //make the first
             var tt = sim1A.ModularHouseholds[0];
             var jsonHH1 = tt.GetJson();
             //make a new one, import the first one and compare
             sim1A.ModularHouseholds.DeleteItem(tt);
+            // ReSharper disable once RedundantAssignment
             sim1A = null;
 
             var sim1B = new Simulator(db1.ConnectionString);
-            var db2 = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db2 = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             //var sim2 = new Simulator(db1.ConnectionString);
             DatabaseMerger.DatabaseMerger dbm = new DatabaseMerger.DatabaseMerger(sim1B);
             dbm.RunFindItems(db2.FileName,null);
             dbm.RunImport(null);
+            // ReSharper disable once RedundantAssignment
             sim1B = null;
 
             var sim1C = new Simulator(db1.ConnectionString);
@@ -140,7 +142,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
         [Category(UnitTestCategories.BasicTest)]
         public void SwapPersonsTestWithOther()
         {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Simulator sim = new Simulator(db.ConnectionString);
             ModularHousehold mhh = sim.ModularHouseholds.It[0];
             ModularHouseholdPerson mhhPerson = mhh.Persons[0];
@@ -158,7 +160,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
         [Category(UnitTestCategories.BasicTest)]
         public void SwapTagTest()
         {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Simulator sim = new Simulator(db.ConnectionString);
             ModularHousehold mhh = sim.ModularHouseholds.It[0];
             ModularHouseholdPerson mhhPerson = mhh.Persons[0];
@@ -177,7 +179,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
         [Category(UnitTestCategories.BasicTest)]
         public void ModularHouseholdJsonImportExporTest()
         {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Simulator sim = new Simulator(db.ConnectionString);
             ModularHousehold mhh = sim.ModularHouseholds.It[0];
             var modjson = mhh.GetJson();
@@ -198,7 +200,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
         [Category(UnitTestCategories.BasicTest)]
         public void ModularHouseholdTest()
         {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             db.ClearTable(ModularHousehold.TableName);
             db.ClearTable(ModularHouseholdTrait.TableName);

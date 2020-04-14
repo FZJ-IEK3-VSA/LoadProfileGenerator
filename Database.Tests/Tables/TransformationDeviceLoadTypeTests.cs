@@ -41,7 +41,7 @@ namespace Database.Tests.Tables {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void TransformationDeviceLoadCreationAndSaveTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var tdlts =
                 new ObservableCollection<TransformationDeviceLoadType>();
             var loadTypes = db.LoadLoadTypes();

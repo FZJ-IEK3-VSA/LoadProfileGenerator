@@ -52,7 +52,7 @@ namespace Database.Tests.Tables {
         public void HouseLoadCreationAndSave2Test() {
             Config.ShowDeleteMessages = false;
             Logger.Threshold = Severity.Error;
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             db.ClearTable(House.TableName);
             db.ClearTable(HouseTypeDevice.TableName);
             db.ClearTable(HouseHousehold.TableName);
@@ -66,10 +66,11 @@ namespace Database.Tests.Tables {
             var persons = new ObservableCollection<Person>();
             var temperaturProfiles = new ObservableCollection<TemperatureProfile>();
             var loadTypes = db.LoadLoadTypes();
+            var variables = db.LoadVariables();
             var geoLocs = db.LoadGeographicLocations(out _, timeLimits);
-            var energyStorages = db.LoadEnergyStorages(loadTypes);
+            var energyStorages = db.LoadEnergyStorages(loadTypes,variables);
             var trafoDevices = db.LoadTransformationDevices(loadTypes,
-                energyStorages);
+                variables);
 
             var dateprofiles = db.LoadDateBasedProfiles();
             var generators = db.LoadGenerators(loadTypes, dateprofiles);
@@ -77,7 +78,6 @@ namespace Database.Tests.Tables {
             var deviceActionGroups = db.LoadDeviceActionGroups();
             var deviceActions = db.LoadDeviceActions(timeBasedProfiles, devices,
                 loadTypes, deviceActionGroups);
-            var variables = db.LoadVariables();
             var houseTypes = db.LoadHouseTypes(devices, deviceCategories, timeBasedProfiles,
                 timeLimits, loadTypes, trafoDevices, energyStorages, generators, locations, deviceActions,
                 deviceActionGroups, variables);
@@ -104,7 +104,7 @@ namespace Database.Tests.Tables {
         {
             Config.ShowDeleteMessages = false;
             Logger.Threshold = Severity.Error;
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
             db.ClearTable(House.TableName);
             db.ClearTable(HouseTypeDevice.TableName);
@@ -118,9 +118,10 @@ namespace Database.Tests.Tables {
             var persons = new ObservableCollection<Person>();
             var temperaturProfiles = new ObservableCollection<TemperatureProfile>();
             var geoLocs = db.LoadGeographicLocations(out _, timeLimits);
-            var energyStorages = db.LoadEnergyStorages(loadTypes);
+            var variables = db.LoadVariables();
+            var energyStorages = db.LoadEnergyStorages(loadTypes,variables);
             var trafoDevices = db.LoadTransformationDevices(loadTypes,
-                energyStorages);
+                variables);
 
             var dateprofiles = db.LoadDateBasedProfiles();
             var locations = db.LoadLocations(devices, deviceCategories, loadTypes);
@@ -128,7 +129,6 @@ namespace Database.Tests.Tables {
             var deviceActionGroups = db.LoadDeviceActionGroups();
             var deviceActions = db.LoadDeviceActions(timeBasedProfiles, devices,
                 loadTypes, deviceActionGroups);
-            var variables = db.LoadVariables();
             var houseTypes = db.LoadHouseTypes(devices, deviceCategories, timeBasedProfiles,
                 timeLimits, loadTypes, trafoDevices, energyStorages, generators, locations, deviceActions,
                 deviceActionGroups, variables);

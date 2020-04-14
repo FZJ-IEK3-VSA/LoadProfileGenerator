@@ -589,7 +589,6 @@ namespace Database.Tables.Houses {
             var startDate = new DateTime(DateTime.Now.Year, 1, 1);
             var endDate = new DateTime(DateTime.Now.Year, 12, 31);
             JsonCalcSpecification jcs = new JsonCalcSpecification(null,
-                null,
                 false,
                 null,
                 false,
@@ -935,7 +934,6 @@ namespace Database.Tables.Houses {
 
         public void WriteJsonCalculationSpecs([NotNull] string dstDirectory, [NotNull] string simulationEnginePath)
         {
-            int householdIdx = 1;
             List<string> generatedPaths = new List<string>();
             List<string> outputFiles = new List<string>();
             if (!Directory.Exists(dstDirectory)) {
@@ -946,7 +944,22 @@ namespace Database.Tables.Houses {
             string db3Srcdir = ConnectionString.Replace("Data Source=", "");
             string db3DstDir = Path.Combine(dstDirectory, "profilegenerator.db3");
             File.Copy(db3Srcdir, db3DstDir, true);
-            foreach (SettlementHH household in Households) {
+            int houseidx = 1;
+            foreach (SettlementHH settlementHH in Households) {
+
+                if (settlementHH.CalcObjectType != CalcObjectType.House) {
+                    throw new LPGException("This feature can only be used on settlements that only contain houses. The element " + settlementHH.CalcObject?.Name + " is not a house, it is an " + settlementHH.CalcObjectType);
+                }
+
+                var house = (House)settlementHH.CalcObject;
+                if (house == null) {
+                    throw new LPGException("House was null");
+                }
+
+                if (StartDate == null) {
+                    throw new LPGException("No startdate was set.");
+                }
+                HouseCreationAndCalculationJob housejob = new HouseCreationAndCalculationJob(PrettyName,StartDate.Value.Year.ToString(),null);
                 var calcSettings = new JsonCalcSpecification(_calcSpecification) {
                     GeographicLocation = GeographicLocation?.GetJsonReference(),
                     TemperatureProfile = TemperatureProfile?.GetJsonReference(),
@@ -954,7 +967,7 @@ namespace Database.Tables.Houses {
                 };
 
 
-                string name = household.PrettyName + " " + householdIdx;
+                string name = house.PrettyName + " " + houseidx;
 
                 calcSettings.OutputDirectory = AutomationUtili.CleanFileName(name);
                 if (generatedPaths.Contains(calcSettings.OutputDirectory)) {
@@ -963,10 +976,10 @@ namespace Database.Tables.Houses {
                 }
 
                 generatedPaths.Add(calcSettings.OutputDirectory);
-                calcSettings.CalcObject = household.CalcObject?.GetJsonReference();
-                calcSettings.PathToDatabase = "profilegenerator.db3";
+
+                housejob.House = house.MakeHouseData();
+                housejob.PathToDatabase = "profilegenerator.db3";
                 calcSettings.CalculationName = name;
-                JsonCalcSpecSerializer jg = new JsonCalcSpecSerializer();
                 string calcJsonFilename = Path.Combine(dstDirectory, AutomationUtili.CleanFileName(name) + ".json");
                 if (outputFiles.Contains(calcJsonFilename)) {
                     throw new LPGException("There are two houses that are generating a file for " + calcJsonFilename +
@@ -974,8 +987,8 @@ namespace Database.Tables.Houses {
                 }
 
                 outputFiles.Add(calcJsonFilename);
-                jg.WriteJsonToFile(calcJsonFilename, calcSettings);
-                householdIdx++;
+                 HouseJobSerializer.WriteJsonToFile(calcJsonFilename, housejob);
+                 houseidx++;
             }
 
             string batchPath1 = Path.Combine(dstDirectory, "SimulateEverythingSequentially.cmd");

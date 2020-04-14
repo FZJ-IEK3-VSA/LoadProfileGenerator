@@ -50,7 +50,7 @@ namespace CalculationController.Tests.Transportation
             wd.InputDataLogger.AddSaver(new TransportationEventLogger(wd.SqlResultLoggingService));
             wd.InputDataLogger.AddSaver(new ResultFileEntryLogger(wd.SqlResultLoggingService));
 
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(),DatabaseSetup.TestPackage.CalcController);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Simulator sim = new Simulator(db.ConnectionString);
 
             ModularHousehold mhh = sim.ModularHouseholds[0];

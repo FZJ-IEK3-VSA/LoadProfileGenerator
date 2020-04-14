@@ -14,7 +14,7 @@ namespace Database.Tests.Tables.Transportation
         [Category(UnitTestCategories.BasicTest)]
         public void TransportationDeviceCategoryTest()
         {
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.DatabaseIo);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             db.ClearTable(TransportationDeviceCategory.TableName);
             TransportationDeviceCategory sl = new TransportationDeviceCategory("name", null, db.ConnectionString, "desc",true, System.Guid.NewGuid().ToString());
             ObservableCollection<TransportationDeviceCategory> slocs = new ObservableCollection<TransportationDeviceCategory>();

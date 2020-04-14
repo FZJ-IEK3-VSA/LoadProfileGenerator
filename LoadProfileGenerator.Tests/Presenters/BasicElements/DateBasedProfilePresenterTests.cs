@@ -20,7 +20,7 @@ namespace LoadProfileGenerator.Tests.Presenters.BasicElements {
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
         public void DateBasedProfilePresenterTest()
         {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.LoadProfileGenerator);
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
 
             Exception ex = null;

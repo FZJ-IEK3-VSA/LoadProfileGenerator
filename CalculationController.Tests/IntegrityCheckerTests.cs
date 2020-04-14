@@ -46,7 +46,7 @@ namespace CalculationController.Tests
         public void CheckSimIntegrityCheckerTest()
         {
             CleanTestBase.RunAutomatically(false);
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.CalcController);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Simulator sim = new Simulator(db.ConnectionString);
             Assert.AreNotEqual(null, sim);
             Vacation vac = sim.Vacations.CreateNewItem(sim.ConnectionString);
@@ -63,7 +63,7 @@ namespace CalculationController.Tests
         {
             CleanTestBase.RunAutomatically(false);
             const int runcount = 1;
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.CalcController);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Simulator sim = new Simulator(db.ConnectionString) {MyGeneralConfig = {PerformCleanUpChecks = "True"}};
             Assert.AreNotEqual(null, sim);
             DateTime start = DateTime.Now;
@@ -84,7 +84,7 @@ namespace CalculationController.Tests
         public void SimHouseIntegiryChecker()
         {
             CleanTestBase.RunAutomatically(false);
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.CalcController);
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Simulator sim = new Simulator(db.ConnectionString);
             Assert.AreNotEqual(null, sim);
             foreach (var house in sim.Houses.MyItems)
