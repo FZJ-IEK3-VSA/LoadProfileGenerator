@@ -75,7 +75,7 @@ namespace Calculation.Tests {
             };
             CalcDeviceDto cdd = new CalcDeviceDto("device","devcategoryguid", new HouseholdKey("HH1"),
                 OefcDeviceType.Device, "category", string.Empty, Guid.NewGuid().ToString(),
-                "locguid","locname");
+                loc.Guid,loc.Name);
             cd = new CalcDevice(devloads, null, loc,calcParameters, cdd);
             aff.AddDeviceTuple(cd, cp, lt, 0, timeStep, 10, probability);
         }

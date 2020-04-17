@@ -90,6 +90,11 @@ namespace CalculationEngine.Transportation {
                 _keysByLoadtype.Add(deviceLoad.LoadType,key);
             }
 
+            if (chargingCalcLoadType != null) {
+                var key2 = odap.RegisterDevice(chargingCalcLoadType.ConvertToDto(), calcDeviceDto);
+                _keysByLoadtype.Add(chargingCalcLoadType, key2);
+            }
+
             RegisterForAllCalcSites(allCalcSites);
         }
 

@@ -93,11 +93,11 @@ namespace Calculation.Tests {
                 var filerows = odap.ProcessOneTimestep(ts);
                 rawRows.Add(filerows[0]);
                 Assert.AreEqual(1, filerows.Count);
-                Assert.AreEqual(2, filerows[0].EnergyEntries.Count);
+                Assert.AreEqual(1, filerows[0].EnergyEntries.Count);
                 var sb = new StringBuilder("row0 before:");
                 sb.Append(filerows[0].EnergyEntries[0]);
                 sb.Append(" : ");
-                sb.Append(filerows[0].EnergyEntries[1]);
+                //sb.Append(filerows[0].EnergyEntries[1]);
                 Assert.AreEqual(resultValues[i], filerows[0].EnergyEntries[0]);
                 for (var j = 0; j < 5; j++) {
                     ces.ProcessOneTimestep(filerows, ts, null);
@@ -106,7 +106,7 @@ namespace Calculation.Tests {
                 sb.Append(" row0 after:");
                 sb.Append(filerows[0].EnergyEntries[0]);
                 sb.Append(" : ");
-                sb.Append(filerows[0].EnergyEntries[1]);
+                //sb.Append(filerows[0].EnergyEntries[1]);
                 sb.Append(" :StorageLevel ");
                 sb.Append(ces.PreviousFillLevel);
                 sb.Append(" :Expected ");

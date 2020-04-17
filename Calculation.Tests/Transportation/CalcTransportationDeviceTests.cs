@@ -48,10 +48,7 @@ namespace Calculation.Tests.Transportation
 
             CalcTransportationDeviceCategory category = new CalcTransportationDeviceCategory("category",true, Guid.NewGuid().ToString());
             CalcLoadType lt2 = new CalcLoadType("driving load",  "km/h", "km", 10000, false, Guid.NewGuid().ToString());
-            List<CalcDeviceLoad> loads = new List<CalcDeviceLoad>
-            {
-                new CalcDeviceLoad("load1", 10, lt2, 10000, 0,Guid.NewGuid().ToString())
-            };
+           
             Random rnd  =new Random(1);
             NormalRandom nr = new NormalRandom(0,0.1,rnd);
             var fft = new FileFactoryAndTracker(wd.WorkingDirectory, "blub", wd.InputDataLogger);
@@ -79,6 +76,10 @@ namespace Calculation.Tests.Transportation
                 category.Guid,key,OefcDeviceType.Transportation,
                 category.Name,string.Empty, Guid.NewGuid().ToString(),
                 string.Empty,string.Empty);
+            List<CalcDeviceLoad> loads = new List<CalcDeviceLoad>
+            {
+                new CalcDeviceLoad("load1", 10, lt2, 10000, 0,Guid.NewGuid().ToString())
+            };
             CalcTransportationDevice ctd = new CalcTransportationDevice(category,
                 10,loads,odap,
                 10000,1,1000,
