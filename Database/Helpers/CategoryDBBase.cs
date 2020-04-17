@@ -233,16 +233,16 @@ namespace Database.Helpers {
 
         // used dynnamically in the simintegrity checker
 
-        [NotNull]
+        [CanBeNull]
         [SuppressMessage("ReSharper", "UnusedMember.Global")]
-        public string CheckForNumbersInNames()
+        public object CheckForNumbersInNames()
         {
             if (MyItems.Count == 0) {
-                return string.Empty;
+                return null;
             }
 
             if (MyItems[0].AreNumbersOkInNameForIntegrityCheck) {
-                return string.Empty;
+                return null;
             }
             foreach (var item in MyItems) {
                 var name = item.Name;
@@ -253,15 +253,15 @@ namespace Database.Helpers {
                 if (lastspace > 0) {
                     var number = name.Substring(lastspace);
                     if (number.Length > 2) {
-                        return string.Empty;
+                        return null;
                     }
                     var success = int.TryParse(number, out _);
                     if (success) {
-                        return name;
+                        return item;
                     }
                 }
             }
-            return string.Empty;
+            return null;
         }
 
         [ItemNotNull]

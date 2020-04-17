@@ -27,10 +27,8 @@
 //-----------------------------------------------------------------------
 
 using System.Collections.ObjectModel;
-using System.IO;
 using Automation;
 using Automation.ResultFiles;
-using Database;
 using Database.Tables.Houses;
 using Database.Tables.ModularHouseholds;
 using JetBrains.Annotations;
@@ -39,63 +37,23 @@ namespace CalculationController.Queue {
     public static class CalcEntryFactory {
         // this class creates the calculation entries
         public static void MakeCalcEntries([NotNull] CalcStartParameterSet csps,
-            [NotNull][ItemNotNull] ObservableCollection<CalculationEntry> calculationEntries, [NotNull] string resultPath) {
+            [NotNull][ItemNotNull] ObservableCollection<CalculationEntry> calculationEntries, [NotNull] string resultPath)
+        {
             var co = csps.CalcTarget;
-            if (co.GetType() == typeof(Settlement)) {
-                MakeSettlementEntries((Settlement) co, resultPath, csps.EnergyIntensity, calculationEntries);
-            }
-            else if (co.GetType() == typeof(House) ||
-                     co.GetType() == typeof(ModularHousehold)) {
-                MakeOtherEntries(co, resultPath, csps.EnergyIntensity, calculationEntries);
-            }
-            else {
+            if (co.GetType() != typeof(House) && co.GetType() != typeof(ModularHousehold)) {
                 throw new LPGException("Unknown what to calc type!");
             }
+            MakeOtherEntries(resultPath, csps.EnergyIntensity, calculationEntries);
         }
 
-        private static void MakeOtherEntries([NotNull] ICalcObject hh, [NotNull] string path, EnergyIntensityType energyIntensity,
+        private static void MakeOtherEntries([NotNull] string path, EnergyIntensityType energyIntensity,
             [NotNull][ItemNotNull] ObservableCollection<CalculationEntry> calculationEntries) {
-            var ce = new CalculationEntry(hh, path, 0)
+            var ce = new CalculationEntry( path, 0)
             {
                 EnergyIntensity = energyIntensity
             };
             calculationEntries.Add(ce);
         }
 
-        private static void MakeSettlementEntries([NotNull] Settlement sett, [NotNull] string dstpath, EnergyIntensityType energyIntensity,
-            [NotNull][ItemNotNull] ObservableCollection<CalculationEntry> calculationEntries) {
-            if (!Directory.Exists(dstpath)) {
-                Directory.CreateDirectory(dstpath);
-            }
-
-            using (var sw = new StreamWriter(Path.Combine(dstpath, "Information.txt"))) {
-                sw.WriteLine(sett.Name);
-                sw.WriteLine(energyIntensity.ToString());
-                sw.WriteLine(sett.AllPersons.Count + " People");
-                sw.WriteLine(sett.HouseholdCount + " Households:");
-
-                foreach (var settlementHH in sett.Households) {
-                    sw.WriteLine(settlementHH.CalcObject?.Name);
-                }
-            }
-            foreach (var shh in sett.Households) {
-                string name = shh.CalcObject?.Name;
-                if (name == null) {
-                    name = "no name";
-                }
-                var cleanName = AutomationUtili.CleanFileName(name);
-                for (var i = 0; i < shh.Count; i++) {
-                    var path = Path.Combine(dstpath, cleanName + " - #" + (i + 1));
-                    if(shh.CalcObject == null) {
-                        throw new LPGException("Calcobject was null");
-                    }
-                    var ce = new CalculationEntry(shh.CalcObject, path, i)
-                    {
-                        EnergyIntensity = energyIntensity
-                    };
-                    calculationEntries.Add(ce);
-                }
-            }
-        }
     }
 }

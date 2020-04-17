@@ -213,7 +213,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
                 SqlResultLoggingService srls = new SqlResultLoggingService(houseJob.CalcSpec.OutputDirectory);
                 HouseholdKeyLogger hhkslogger = new HouseholdKeyLogger(srls);
                 var hhks = hhkslogger.Load();
-                TotalsEntryLogger tel = new TotalsEntryLogger(srls);
+                TotalsPerLoadtypeEntryLogger tel = new TotalsPerLoadtypeEntryLogger(srls);
                 foreach (var entry in hhks) {
                     if (entry.KeyType == HouseholdKeyType.General) {
                         continue;

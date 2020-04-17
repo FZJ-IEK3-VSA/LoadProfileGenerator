@@ -3,7 +3,8 @@ using JetBrains.Annotations;
 
 namespace Common.CalcDto {
     public interface ICalcDeviceDto {
-        //string Name { get; }
+
+        string Name { get; }
         //int ID { get; }
         //int DeviceCategoryID { get; }
         //HouseholdKey HouseholdKey { get; }

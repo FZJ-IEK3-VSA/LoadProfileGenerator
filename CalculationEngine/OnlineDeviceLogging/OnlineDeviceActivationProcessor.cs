@@ -60,12 +60,12 @@ namespace CalculationEngine.OnlineDeviceLogging {
 
     public interface IOnlineDeviceActivationProcessor
     {
-        void RegisterDevice([NotNull] string deviceName, OefcKey key, [NotNull] string locationName, [NotNull] CalcLoadTypeDto loadType);
+        OefcKey RegisterDevice([NotNull] CalcLoadTypeDto loadType, [NotNull] CalcDeviceDto device);
 
         void AddNewStateMachine([NotNull] CalcProfile calcProfile, [NotNull] TimeStep startTimeStep,
-            double powerStandardDeviation, double powerUsage, [NotNull] string deviceName,
+            double powerStandardDeviation, double powerUsage,
                                 [NotNull] CalcLoadTypeDto loadType, [NotNull] string affordanceName, [NotNull] string activatorName, [NotNull] string profileName,
-            [NotNull] string profileSource, OefcKey oefckey);
+            [NotNull] string profileSource, OefcKey oefckey, CalcDeviceDto calcDeviceDto);
 
         void AddZeroEntryForAutoDev([NotNull] HouseholdKey householdKey, OefcDeviceType deviceType, [NotNull] string deviceGuid,
                                     [NotNull] string locationGuid, [NotNull] TimeStep starttime, int totalDuration);
@@ -135,35 +135,36 @@ namespace CalculationEngine.OnlineDeviceLogging {
         [NotNull]
         public Dictionary<CalcLoadTypeDto, BinaryWriter> SumBinaryOutStreams => _sumBinaryOutStreams;
 
-        public void AddNewStateMachine([NotNull] CalcProfile calcProfile, TimeStep startTimeStep,
-                                       double powerStandardDeviation, double powerUsage, [NotNull] string deviceName,
+        public void AddNewStateMachine([NotNull] CalcProfile calcProfile, [NotNull] TimeStep startTimeStep,
+                                       double powerStandardDeviation, double powerUsage,
                                        [NotNull] CalcLoadTypeDto loadType, [NotNull] string affordanceName, [NotNull] string activatorName, [NotNull] string profileName,
-                                       [NotNull] string profileSource,  OefcKey oefckey)
+                                       [NotNull] string profileSource,  OefcKey oefckey, [NotNull] CalcDeviceDto calcDeviceDto)
         {
             Oefc.IsDeviceRegistered(loadType, oefckey);
             //OefcKey oefckey = new OefcKey(householdKey, deviceType, deviceID, locationID, loadType.ID);
             // this is for logging the used time profiles which gets dumped to the time profile log
             ProfileActivationEntry.ProfileActivationEntryKey key =
-                new ProfileActivationEntry.ProfileActivationEntryKey(deviceName, profileName, profileSource,
+                new ProfileActivationEntry.ProfileActivationEntryKey(calcDeviceDto.Name, profileName, profileSource,
                     loadType.Name);
             if (!_profileEntries.ContainsKey(key))
             {
-                ProfileActivationEntry entry = new ProfileActivationEntry(deviceName, profileName, profileSource,
+                ProfileActivationEntry entry = new ProfileActivationEntry(calcDeviceDto.Name, profileName, profileSource,
                     loadType.Name,_calcParameters);
                 _profileEntries.Add(entry.GenerateKey(), entry);
             }
             _profileEntries[key].ActivationCount++;
             // do the device activiation
             var dsm = new OnlineDeviceStateMachine(calcProfile, startTimeStep,
-                powerStandardDeviation, powerUsage, _nr, loadType, deviceName, oefckey, affordanceName, _calcParameters);
+                powerStandardDeviation, powerUsage, _nr, loadType, calcDeviceDto.Name, oefckey, affordanceName, _calcParameters);
             _statemachines.Add(dsm);
 
             // log the affordance energy use.
             if (_calcParameters.IsSet(CalcOption.AffordanceEnergyUse) || _calcParameters.IsSet(CalcOption.TotalsPerDevice)) {
                 double totalPowerSum = dsm.CalculateOfficialEnergyUse();
                 double totalEnergysum = loadType.ConversionFactor * totalPowerSum;
-                var entry = new DeviceActivationEntry(dsm.HouseholdKey, dsm.AffordanceName,
-                    dsm.LoadType,totalEnergysum , activatorName,deviceName,calcProfile.StepValues.Count); // dsm.StepValues.ToArray(),
+                var entry = new DeviceActivationEntry( dsm.AffordanceName,
+                    dsm.LoadType,totalEnergysum , activatorName,calcProfile.StepValues.Count,
+                    startTimeStep, calcDeviceDto); // dsm.StepValues.ToArray(),
                 _lf.OnlineLoggingData.RegisterDeviceActivation(entry);
             }
         }
@@ -233,13 +234,15 @@ namespace CalculationEngine.OnlineDeviceLogging {
             return fileRows;
         }
 
-        public void RegisterDevice([NotNull] string deviceName, OefcKey key, [NotNull] string locationName,
-                                   [NotNull] CalcLoadTypeDto loadType) {
+        public OefcKey RegisterDevice([NotNull] CalcLoadTypeDto loadType, [NotNull] CalcDeviceDto devicedto)
+        {
+            var key= new OefcKey(devicedto, loadType.Guid);
             if(key.LoadtypeGuid != loadType.Guid && key.LoadtypeGuid != "-1") {
                 throw new LPGException("bug: loadtype id was wrong while registering a device");
             }
 
-            Oefc.AddColumnEntry(deviceName, key, locationName, loadType, key.DeviceGuid, key.HouseholdKey, key.DeviceCategory);
+            Oefc.AddColumnEntry(devicedto.Name, key, devicedto.LocationName,
+                loadType, key.DeviceGuid, key.HouseholdKey, key.DeviceCategory,devicedto);
 
             if (!_loadTypeDict.ContainsKey(loadType)) {
                 _loadTypeDict.Add(loadType, 1);
@@ -260,6 +263,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
                     _sumBinaryOutStreams.Add(loadType, binaryWriter);
                 }
             }
+            return key;
         }
     }
 }

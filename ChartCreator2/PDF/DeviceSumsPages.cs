@@ -15,9 +15,8 @@ namespace ChartCreator2.PDF {
         [NotNull]
         protected override string GetGraphTitle([NotNull] string filename) {
             var str = filename.Split('.');
-            string name;
             if (str.Length >3) {
-                name = str[1] + " - ";
+                var name = str[1] + " - ";
                 for (int i = 2; i <str.Length-1; i++) {
                     name += str[i] + ".";
                 }

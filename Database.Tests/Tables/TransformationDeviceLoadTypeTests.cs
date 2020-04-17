@@ -53,7 +53,7 @@ namespace Database.Tests.Tables {
             Assert.AreEqual(0, tdlts.Count);
             // add one and load again
             var tdlt = new TransformationDeviceLoadType(null, loadTypes[0], 1, 1,
-                db.ConnectionString, loadTypes[0].Name, TransformationFactorType.Fixed, Guid.NewGuid().ToString());
+                db.ConnectionString, loadTypes[0].Name, TransformationFactorType.FixedFactor, Guid.NewGuid().ToString());
             tdlt.SaveToDB();
             TransformationDeviceLoadType.LoadFromDatabase(tdlts, db.ConnectionString, loadTypes, false);
             Assert.AreEqual(1, tdlts.Count);

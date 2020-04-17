@@ -700,7 +700,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             //ResultFileEntryLogger rfel = new ResultFileEntryLogger(srls);
             var keyLogger = new HouseholdKeyLogger(srls);
             var keys = keyLogger.Load();
-            TotalsEntryLogger tel = new TotalsEntryLogger(srls);
+            TotalsPerLoadtypeEntryLogger tel = new TotalsPerLoadtypeEntryLogger(srls);
             SingleTimestepActionEntryLogger stael = new SingleTimestepActionEntryLogger(srls);
             ActionEntryLogger ael = new ActionEntryLogger(srls);
             foreach (var householdKeyEntry in keys) {
@@ -710,7 +710,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                         throw new LPGException();
                     }
 
-                    foreach (TotalsEntry entry in totalsEntries) {
+                    foreach (TotalsPerLoadtypeEntry entry in totalsEntries) {
                         calculationOutcome.AddLoadType(entry.Loadtype.Name, entry.Value);
                         Logger.Info("Importing outcome for " + entry.Loadtype.Name + ": " + entry.Value);
                         if (double.IsNaN(entry.Value)) {

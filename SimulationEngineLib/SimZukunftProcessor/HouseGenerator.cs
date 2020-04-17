@@ -613,6 +613,7 @@ namespace SimulationEngineLib.SimZukunftProcessor {
                 throw new ArgumentNullException(nameof(sim));
             }
 
+            // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
             switch (householdData.HouseholdDataSpecifictionType) {
                 case HouseholdDataSpecifictionType.ByPersons when householdData.HouseholdDataPersonSpecification == null:
                     throw new LPGException("No person specification was set for the household " + householdData.Name);

@@ -242,9 +242,9 @@ namespace CalculationController.CalcFactories {
 
         [NotNull]
         [ItemNotNull]
-        private List<CalcTravelRouteDto> MakeTravelRoutes([NotNull] TravelRouteSet travelRouteSet, [NotNull][ItemNotNull] List<Site> householdSites,
-                                      [NotNull] Dictionary<TransportationDeviceCategory, CalcTransportationDeviceCategoryDto> categoriesDict,
-                                                          [NotNull][ItemNotNull] List<CalcSiteDto> calcSites, [NotNull] HouseholdKey key)
+        private static List<CalcTravelRouteDto> MakeTravelRoutes([NotNull] TravelRouteSet travelRouteSet, [NotNull][ItemNotNull] List<Site> householdSites,
+                                                                 [NotNull] Dictionary<TransportationDeviceCategory, CalcTransportationDeviceCategoryDto> categoriesDict,
+                                                                 [NotNull][ItemNotNull] List<CalcSiteDto> calcSites, [NotNull] HouseholdKey key)
         {
             List<CalcTravelRouteDto> routes = new List<CalcTravelRouteDto>();
             //make travel routes
@@ -464,10 +464,10 @@ namespace CalculationController.CalcFactories {
 
         [NotNull]
         [ItemNotNull]
-        private List<CalcSite> MakeCalcSites([NotNull] CalcHouseholdDto household, [NotNull]
-                                             DtoCalcLocationDict locDict, [NotNull] CalcLoadTypeDictionary ltDict,
-                                             [NotNull] TransportationHandler th,
-                                             [NotNull] IOnlineLoggingData onlineLoggingData)
+        private static List<CalcSite> MakeCalcSites([NotNull] CalcHouseholdDto household, [NotNull]
+                                                    DtoCalcLocationDict locDict, [NotNull] CalcLoadTypeDictionary ltDict,
+                                                    [NotNull] TransportationHandler th,
+                                                    [NotNull] IOnlineLoggingData onlineLoggingData)
         {
             List<CalcSite> sites = new List<CalcSite>();
             //Dictionary<string, CalcSite> siteDictByGuid = new Dictionary<string, CalcSite>();
@@ -545,15 +545,20 @@ namespace CalculationController.CalcFactories {
                 {
                     throw new LPGException("no transportation handler");
                 }
-
+                CalcDeviceDto cdd = new CalcDeviceDto(transportationDevice.Name,
+                    transportationDevice.Category.Guid,
+                    chh.HouseholdKey,
+                    OefcDeviceType.Transportation,transportationDevice.Category.Name,
+                    string.Empty,transportationDevice.Guid,
+                    string.Empty,string.Empty);
                 var category = chh.TransportationHandler.GetCategory(transportationDevice.Category);
-                CalcTransportationDevice cd = new CalcTransportationDevice(transportationDevice.Name,
+                CalcTransportationDevice cd = new CalcTransportationDevice(
                     category,
-                    transportationDevice.AverageSpeedInMPerS, loads, _odap, chh.HouseholdKey,
+                    transportationDevice.AverageSpeedInMPerS, loads, _odap,
                     transportationDevice.FullRangeInMeters,
                     distanceToEnergyFactor, transportationDevice.MaxChargingPower, chargingLoadType,
                     chh.TransportationHandler.CalcSites,
-                    _calcParameters, Guid.NewGuid().ToString(),old);
+                    _calcParameters, old, cdd);
                 if (category.IsLimitedToSingleLocation) {
                     chh.TransportationHandler.AddVehicleDepotDevice(cd);
                 }

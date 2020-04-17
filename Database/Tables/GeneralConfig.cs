@@ -365,6 +365,7 @@ namespace Database.Tables {
                 }
                 return false;
             }
+            set => UpdateValue(nameof(ShowSettlingPeriod), value.ToString());
         }
 
         [UsedImplicitly]

@@ -183,9 +183,9 @@ namespace ChartCreator2.OxyCharts {
             Save(plotModel1, plotName, "AffordanceEnergyUsePerPerson." + hhkey.HouseholdKey + "." + lti.FileName + ".png", _Parameters.BaseDirectory);
         }
 
-        private void PrepareData([ItemNotNull] [NotNull] List<AffordanceEnergyUseEntry> filteredEntries,
-                                 [NotNull] out Dictionary<string, List<double>> energyUsesPerPersonByAfforcance,
-                                 [NotNull] [ItemNotNull] List<string> personNames)
+        private static void PrepareData([ItemNotNull] [NotNull] List<AffordanceEnergyUseEntry> filteredEntries,
+                                        [NotNull] out Dictionary<string, List<double>> energyUsesPerPersonByAfforcance,
+                                        [NotNull] [ItemNotNull] List<string> personNames)
         {
             var affordances = filteredEntries.Select(x => x.AffordanceName).Distinct().ToList();
             energyUsesPerPersonByAfforcance = new Dictionary<string, List<double>>();

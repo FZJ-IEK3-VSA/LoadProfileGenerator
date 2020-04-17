@@ -68,7 +68,8 @@ namespace CalcPostProcessor
 
             //logger
             builder.RegisterType<InputDataLogger>().As<IInputDataLogger>().SingleInstance();
-            builder.RegisterType<TotalsEntryLogger>().As<IDataSaverBase>().SingleInstance();
+            builder.RegisterType<TotalsPerLoadtypeEntryLogger>().As<IDataSaverBase>().SingleInstance();
+            builder.RegisterType<TotalsPerDeviceLogger>().As<IDataSaverBase>().SingleInstance();
             builder.RegisterType<PersonAffordanceInformationLogger>().As<IDataSaverBase>().SingleInstance();
             builder.RegisterType<SingleTimestepActionEntryLogger>().As<IDataSaverBase>().SingleInstance();
             builder.RegisterType<AffordanceEnergyUseLogger>().As<IDataSaverBase>();

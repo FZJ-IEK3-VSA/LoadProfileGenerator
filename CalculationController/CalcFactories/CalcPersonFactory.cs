@@ -161,8 +161,8 @@ namespace CalculationController.CalcFactories {
         }
 
         [CanBeNull]
-        private SharedDesireValue GetSharedDesireValue([NotNull] PersonDesireDto desire,
-                                                       [NotNull] Dictionary<string, SharedDesireValue> sharedDesireValues)
+        private static SharedDesireValue GetSharedDesireValue([NotNull] PersonDesireDto desire,
+                                                              [NotNull] Dictionary<string, SharedDesireValue> sharedDesireValues)
         {
             if (desire.IsSharedDesire) {
                 /*

@@ -25,7 +25,8 @@ namespace Common.Tests.SQLResultLogging.InputLoggers {
             };
             InputDataLogger idl = new InputDataLogger(savers.ToArray());
             CalcLoadTypeDto cltd = new CalcLoadTypeDto("ltname", "kw", "kwh", 1, false, "guid");
-            ColumnEntry ce = new ColumnEntry("name", 1, "locname", "guid", key, cltd, "oefckey", "devicecategory");
+            CalcDeviceDto cdd = new CalcDeviceDto("device","guid",key,OefcDeviceType.Device,"devcatname","","guid","guid","loc");
+            ColumnEntry ce = new ColumnEntry("name", 1, "locname", "guid", key, cltd, "oefckey", "devicecategory",cdd);
             List<ColumnEntry> aes = new List<ColumnEntry>
             {
                 ce

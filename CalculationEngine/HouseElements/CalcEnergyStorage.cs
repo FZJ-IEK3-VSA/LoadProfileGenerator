@@ -28,7 +28,6 @@
 
 using System;
 using System.Collections.Generic;
-using Automation.ResultFiles;
 using CalculationEngine.HouseholdElements;
 using CalculationEngine.OnlineDeviceLogging;
 using CalculationEngine.OnlineLogging;
@@ -45,7 +44,7 @@ namespace CalculationEngine.HouseElements {
 
         [NotNull] private readonly EnergyStorageHeaderEntry _headerEntry;
 
-        [NotNull] private readonly HouseholdKey _householdKey;
+        private readonly CalcDeviceDto _deviceDto;
 
         [NotNull] private readonly CalcLoadTypeDto _inputLoadType;
 
@@ -64,30 +63,30 @@ namespace CalculationEngine.HouseElements {
         [CanBeNull] private TimeStep _currentTimeStep;
         private double _previousDelta;
 
-        public CalcEnergyStorage([NotNull] string pName,  [NotNull] IOnlineDeviceActivationProcessor odap,
+        public CalcEnergyStorage(  [NotNull] IOnlineDeviceActivationProcessor odap,
                                  [NotNull] CalcLoadTypeDto loadType,
                                  double maximumStorageRate, double maximumWithdrawRate, double minimumStorageRate,
                                  double minimumWithdrawRate,
                                  double initialFill, double storageCapacity, [CanBeNull] EnergyStorageLogfile elf,
-                                 [NotNull] HouseholdKey householdKey, [NotNull] string guid)
-            : base(pName,  guid)
+                                   [NotNull] CalcDeviceDto deviceDto)
+            : base(deviceDto.Name,deviceDto.Guid)
         {
-            _devProcessorKey = new OefcKey(householdKey, OefcDeviceType.Storage, guid, "-1", loadType.Guid,"Energy Storage");
+            //_devProcessorKey = new OefcKey(householdKey, OefcDeviceType.Storage, guid, "-1", loadType.Guid,"Energy Storage");
             _odap = odap;
             _inputLoadType = loadType;
-            _householdKey = householdKey;
-            _odap.RegisterDevice(Name, _devProcessorKey, "Energy Storage Device", _inputLoadType);
+            _deviceDto = deviceDto;
+            _devProcessorKey =  _odap.RegisterDevice( _inputLoadType, deviceDto);
 
             _maximumStorageRate = maximumStorageRate;
             _maximumWithdrawRate = maximumWithdrawRate;
             _minimumStorageRate = minimumStorageRate;
             _minimumWithdrawRate = minimumWithdrawRate;
-            var correctInitialFill = initialFill / loadType.ConversionFactor;
+            var correctInitialFill = initialFill / _inputLoadType.ConversionFactor ;
             PreviousFillLevel = correctInitialFill;
-            _storageCapacity = storageCapacity / loadType.ConversionFactor;
+            _storageCapacity = storageCapacity / _inputLoadType.ConversionFactor;
             _currentFillLevel = correctInitialFill;
             _elf = elf;
-            var capacity = storageCapacity + " " + loadType.UnitOfSum + "; initial fill " + initialFill + " " +
+            var capacity = storageCapacity + " " + loadType.UnitOfSum + " - initial fill " + initialFill + " " +
                            loadType.UnitOfSum;
             _headerEntry = new EnergyStorageHeaderEntry(Name, capacity, _inputLoadType.FileName);
 
@@ -96,12 +95,12 @@ namespace CalculationEngine.HouseElements {
 
         public double PreviousFillLevel { get; private set; }
 
-        public double StorageCapacity => _storageCapacity;
-
+        [NotNull]
+        public List<CalcEnergyStorageSignal> Signals => _signals;
 
         public void AddSignal([NotNull] CalcEnergyStorageSignal signal)
         {
-            _signals.Add(signal);
+            Signals.Add(signal);
             _headerEntry.AddSignal(signal.ToString());
         }
 
@@ -120,7 +119,7 @@ namespace CalculationEngine.HouseElements {
                 return false;
             }
 
-            var sumvalue = fileRow.SumFresh;
+            var sumvalue = fileRow.SumFresh();
             var column = _odap.Oefc.GetColumnNumber(_inputLoadType, _devProcessorKey);
             sumvalue -= fileRow.EnergyEntries[column];
             // store
@@ -170,13 +169,12 @@ namespace CalculationEngine.HouseElements {
                 _previousDelta = deltaAmount;
 
                 madeChanges = true;
-                _elf?.SetValue(Name, _currentFillLevel, timeStep, _householdKey, _inputLoadType);
+                _elf?.SetValue(Name, _currentFillLevel, timeStep, _deviceDto.HouseholdKey, _inputLoadType);
             }
 
-            foreach (var signal in _signals) {
+            foreach (var signal in Signals) {
                 var value = signal.GetValue(timeStep, _storageCapacity, _currentFillLevel);
                 if (Math.Abs(signal.CalcVariable.Value - value) > 0.0000000001) {
-                    madeChanges = true;
                     log?.Add(Name + " set signal " + signal.CalcVariable.Name + " to " + value);
                     signal.CalcVariable.Value = value;
                 }

@@ -13,7 +13,7 @@ namespace Database.Tables.Houses {
 
         private readonly double _maxValue;
         private readonly double _minValue;
-        private Variable _variable;
+        private readonly Variable _variable;
 
         public TransformationDeviceCondition([CanBeNull]int? pID,
              double minValue, double maxValue,
@@ -52,7 +52,7 @@ namespace Database.Tables.Houses {
             var variable = aic.Variables.FirstOrDefault(mylt => mylt.ID == variableID);
             var minValue = dr.GetDouble("MinValue", false, 0, ignoreMissingFields);
             var maxValue = dr.GetDouble("MaxValue", false, 10000, ignoreMissingFields);
-            var name = "no name";
+            const string name = "no name";
             var guid = GetGuid(dr, ignoreMissingFields);
 
             var tdlt = new TransformationDeviceCondition(id, minValue, maxValue,  transformationDeviceID,

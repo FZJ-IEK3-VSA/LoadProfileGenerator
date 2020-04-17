@@ -1,5 +1,6 @@
 ﻿using System;
 using Automation.ResultFiles;
+using Common.CalcDto;
 
 namespace CalculationEngine.OnlineDeviceLogging {
     using System.Diagnostics.CodeAnalysis;
@@ -15,6 +16,31 @@ namespace CalculationEngine.OnlineDeviceLogging {
 
         [NotNull]
         public string FullKey { get; }
+        public OefcKey([NotNull] CalcDeviceDto dto, [CanBeNull] string loadtypeGuid)
+        {
+            HouseholdKey = dto.HouseholdKey;
+            ThisDeviceType =dto.DeviceType;
+            DeviceGuid = dto.Guid;
+            LocationGuid = dto.LocationGuid;
+            LoadtypeGuid = loadtypeGuid;
+            DeviceCategory = dto.DeviceCategoryName;
+            unchecked
+            {
+                _hashCode = LocationGuid.GetHashCode();
+                if (loadtypeGuid != null)
+                {
+                    _hashCode = (_hashCode * 397) ^ loadtypeGuid.GetHashCode();
+                }
+
+                _hashCode = (_hashCode * 397) ^ DeviceGuid.GetHashCode();
+                _hashCode = (_hashCode * 397) ^ HouseholdKey.Key.GetHashCode();
+                _hashCode = (_hashCode * 397) ^ (int)ThisDeviceType;
+            }
+            //needed for the makekey due to compiler error
+            FullKey = "";
+            FullKey = MakeKey();
+        }
+        /*
         public OefcKey([NotNull] HouseholdKey householdKey,
                        OefcDeviceType deviceType,
                        [NotNull] string deviceGuid,
@@ -43,7 +69,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
             FullKey = "";
             FullKey= MakeKey();
         }
-
+        */
         public override bool Equals([CanBeNull] object obj) {
             if (obj is null) {
                 return false;

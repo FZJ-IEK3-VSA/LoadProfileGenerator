@@ -86,9 +86,11 @@ namespace Calculation.Tests.HouseholdElements {
                     vreq
                 };
                 string deviceCategoryGuid = Guid.NewGuid().ToString();
-                var cad = new CalcAutoDev("autodevnamename", profile, cloadtype, loads,
-                    0.8, deviceCategoryGuid, odap, key, 1, location,
-                     "device category",calculationParameters, Guid.NewGuid().ToString(),requirements);
+                CalcDeviceDto cdd = new CalcDeviceDto("autodevnamename", deviceCategoryGuid,key,
+                    OefcDeviceType.AutonomousDevice, "device category","", Guid.NewGuid().ToString(),
+                    location.Guid,location.Name);
+                var cad = new CalcAutoDev( profile, cloadtype, loads,
+                    0.8, odap,  1, location, calculationParameters, requirements, cdd);
                 for (var i = 0; i < 100; i++) {
                     TimeStep ts  =new TimeStep(i, calculationParameters);
                     if (!cad.IsBusyDuringTimespan(ts, 1, 0.7, cloadtype)) {

@@ -87,15 +87,15 @@ namespace ChartCreator2.Tests.Oxyplot
 
         private static bool ReportCancelFunc() => true;
 
-        private bool ReportFinishFuncForHouseAndSettlement( bool a2, [CanBeNull] string a3,
-            [CanBeNull][ItemCanBeNull] ObservableCollection<ResultFileEntry> a4) => true;
+        private static bool ReportFinishFuncForHouseAndSettlement( bool a2, [CanBeNull] string a3,
+                                                                   [CanBeNull][ItemCanBeNull] ObservableCollection<ResultFileEntry> a4) => true;
 
-        private bool ReportFinishFuncForHousehold( bool a2, [CanBeNull] string a3, [CanBeNull] string a4)
+        private static bool ReportFinishFuncForHousehold( bool a2, [CanBeNull] string a3, [CanBeNull] string a4)
         {
             return true;
         }
 
-        private bool SetCalculationEntries([NotNull][ItemNotNull] ObservableCollection<CalculationEntry> calculationEntries) => true;
+        private static bool SetCalculationEntries([NotNull][ItemNotNull] ObservableCollection<CalculationEntry> calculationEntries) => true;
 
         //private ObservableCollection<CalculationEntry> _calculationEntries;
 

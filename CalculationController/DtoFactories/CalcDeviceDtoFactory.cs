@@ -128,7 +128,8 @@ namespace CalculationController.DtoFactories
                                 ltdto.Name, ltdto.Guid, cdl,
                                 (double)hhautodev.TimeStandardDeviation,
                                 deviceCategoryDto.Guid,  householdKey, 1, calcLocation.Name, calcLocation.Guid,
-                                deviceCategoryDto.FullCategoryName,  Guid.NewGuid().ToString(), timeprofilereference, requirementDtos);
+                                deviceCategoryDto.FullCategoryName,  Guid.NewGuid().ToString(),
+                                timeprofilereference, requirementDtos, deviceCategoryDto.FullCategoryName);
                             autodevs.Add(cautodev);
                         }
 
@@ -177,7 +178,9 @@ namespace CalculationController.DtoFactories
                                     (double) hhautodev.TimeStandardDeviation,
                                     deviceCategoryDto.Guid,
                                     householdKey, actionProfile.Multiplier, calcLocation.Name,calcLocation.Guid,
-                                    deviceAction.Device.DeviceCategory.FullPath, Guid.NewGuid().ToString(), timeprofilereference, requirementDtos);
+                                    deviceAction.Device.DeviceCategory.FullPath, Guid.NewGuid().ToString(),
+                                    timeprofilereference, requirementDtos,
+                                    deviceCategoryDto.FullCategoryName);
                                 autodevs.Add(cautodev);
                             }
                         }

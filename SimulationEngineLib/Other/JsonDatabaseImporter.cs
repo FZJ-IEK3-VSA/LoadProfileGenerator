@@ -62,6 +62,8 @@ namespace SimulationEngineLib.Other {
                     Logger.Info("Finished loading " + hhts.Count + " traits");
                 }
                     break;
+                case TypesToProcess.HouseholdTraitsWithDeviceCategories:
+                    throw new LPGException("You need to set a type that you want to process");
                 default:
                     throw new ArgumentOutOfRangeException();
             }

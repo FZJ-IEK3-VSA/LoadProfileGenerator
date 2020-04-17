@@ -1,4 +1,6 @@
-﻿using Common;
+﻿using System.Linq;
+using System.Net.Sockets;
+using Common;
 using Database;
 using Database.Tables.Houses;
 using JetBrains.Annotations;
@@ -26,6 +28,34 @@ namespace CalculationController.Integrity {
                                 device.Name, device);
                         }
                     }
+                }
+
+                if (device.LoadTypeIn == null) {
+                    throw new DataIntegrityException("The transformation device " + device.Name + " has no load type selected.", device);
+                }
+                if (device.LoadTypesOut.Count==0)
+                {
+                    throw new DataIntegrityException("The transformation device " + device.Name + " has no output load types selected.", device);
+                }
+
+                foreach (var lt in device.LoadTypesOut) {
+                    if (lt.Factor == 0) {
+                        throw new DataIntegrityException("Output factor of 0 doesn't make sense in " + device.Name, device);
+                    }
+                }
+                var inputlt = device.LoadTypeIn;
+                var outload = device.LoadTypesOut.Where(x => x.VLoadType == inputlt).ToList();
+                foreach (var output in outload) {
+                    if (!(output.Factor < 0)) {
+                        throw new DataIntegrityException("Positive factor in feedback loadtype in device " + device.Name, device);
+                    }
+                }
+            }
+
+
+            foreach (var storage in sim.EnergyStorages.It) {
+                if (storage.LoadType == null) {
+                        throw new DataIntegrityException("Energy storage is missing a load type", storage);
                 }
             }
         }

@@ -41,5 +41,23 @@ namespace Common.SQLResultLogging.InputLoggers
             }
             return Srls.ReadFromJson<CalcDeviceDto>(ResultTableDefinition, key, ExpectedResultCount.OneOrMore);
         }
+
+
+        [ItemNotNull]
+        [NotNull]
+        public List<CalcDeviceDto> Load([NotNull] List<HouseholdKeyEntry> keys)
+        {
+            if (Srls == null)
+            {
+                throw new LPGException("Data Logger was null.");
+            }
+
+            var alldevices = new List<CalcDeviceDto>();
+            foreach (var key in keys) {
+                alldevices.AddRange(Srls.ReadFromJson<CalcDeviceDto>(ResultTableDefinition, key.HouseholdKey, ExpectedResultCount.OneOrMore));
+            }
+
+            return alldevices;
+        }
     }
 }

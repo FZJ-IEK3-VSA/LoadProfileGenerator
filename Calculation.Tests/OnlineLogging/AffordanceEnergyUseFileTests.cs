@@ -1,4 +1,5 @@
-﻿using Automation;
+﻿using System;
+using Automation;
 using Automation.ResultFiles;
 using CalculationController.DtoFactories;
 using CalculationEngine.OnlineLogging;
@@ -34,8 +35,10 @@ namespace Calculation.Tests.OnlineLogging
             using (LogFile lf = new LogFile(cp,fft, old, wd.SqlResultLoggingService)) {
                 fft.HouseholdRegistry.RegisterHousehold( key,"hh key",HouseholdKeyType.Household,wd.InputDataLogger,"desc", null, null);
                 CalcLoadTypeDto clt = new CalcLoadTypeDto("lt","unitofpower","unitofsum",1,true,"guid");
-                DeviceActivationEntry aeue = new DeviceActivationEntry(key, "affname", clt,
-                    1, "activatorname", "devname", 1);
+                TimeStep ts = new TimeStep(1,1,true);
+                CalcDeviceDto cdd = new CalcDeviceDto("devname","",key,
+                    OefcDeviceType.Device,"devcatname","", Guid.NewGuid().ToString(),"locguid","locname");
+                DeviceActivationEntry aeue = new DeviceActivationEntry( "affname", clt, 1, "activatorname", 1,ts, cdd);
                 lf.OnlineLoggingData.RegisterDeviceActivation(aeue);
                 lf.OnlineLoggingData.FinalSaveToDatabase();
             }

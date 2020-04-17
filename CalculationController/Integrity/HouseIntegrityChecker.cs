@@ -46,6 +46,7 @@ namespace CalculationController.Integrity {
             }
         }
 
+
         public static void Run([NotNull] House house, [NotNull] Simulator sim) {
             if (house.HouseType == null) {
                 throw new DataIntegrityException("The house " + house.Name +
@@ -58,6 +59,7 @@ namespace CalculationController.Integrity {
                 }
             }
             CheckEnergyStorages(sim.EnergyStorages.MyItems);
+
         }
     }
 }

@@ -30,6 +30,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using Autofac;
 using Automation;
 using Automation.ResultFiles;
@@ -70,7 +71,7 @@ namespace CalculationController.CalcFactories
         [SuppressMessage("ReSharper", "ThrowingSystemException")]
         [NotNull]
         public CalcManager GetCalcManager([NotNull] Simulator sim, [NotNull] string resultpath,
-                [NotNull] CalcStartParameterSet csps, [NotNull] ICalcObject hh, bool forceRandom)
+                [NotNull] CalcStartParameterSet csps,  bool forceRandom)
             //, ICalcObject hh,
             //bool forceRandom, TemperatureProfile temperatureProfile,
             //GeographicLocation geographicLocation, EnergyIntensityType energyIntensity,
@@ -88,30 +89,30 @@ namespace CalculationController.CalcFactories
             }
 
             CalcManager cm = null;
-            Logger.Info("Starting the calculation of " + hh.Name);
+            Logger.Info("Starting the calculation of " + csps.CalcTarget.Name);
             try
             {
                 if (DoIntegrityRun) {
                     SimIntegrityChecker.Run(sim);
                 }
 
-                if (hh.CalcObjectType == CalcObjectType.House &&
+                if (csps.CalcTarget.CalcObjectType == CalcObjectType.House &&
                     (csps.LoadTypePriority == LoadTypePriority.RecommendedForHouseholds ||
                      csps.LoadTypePriority == LoadTypePriority.Mandatory)) {
                     throw new DataIntegrityException(
                         "You are trying to calculate a house with only the load types for a household. This would mess up the warm water calculations. Please fix the load type selection.");
                 }
 
-                var chh =hh as ModularHousehold;
+                var chh = csps.CalcTarget as ModularHousehold;
 
-                var ds = GetDeviceSelection(csps, hh, chh);
+                var ds = GetDeviceSelection(csps, csps.CalcTarget, chh);
 
                 var cpf = new CalcParametersFactory(sim);
                 var calcParameters = cpf.MakeCalculationParametersFromConfig(csps,forceRandom);
 
                 var sqlFileName = Path.Combine(resultpath, "Results.sqlite");
                 var builder = new ContainerBuilder();
-                var rnd = RegisterEverything(sim, resultpath, csps, hh, builder, sqlFileName, calcParameters, ds);
+                var rnd = RegisterEverything(sim, resultpath, csps, csps.CalcTarget, builder, sqlFileName, calcParameters, ds);
                 csps.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " Initializing");
                 csps.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " Generating Model");
                 var container = builder.Build();
@@ -137,8 +138,8 @@ namespace CalculationController.CalcFactories
                     ICalcAbleObject ch;
                     CalcVariableDtoFactory cvrdto = scope.Resolve<CalcVariableDtoFactory>();
                     CalcDeviceTaggingSets devicetaggingSets = scope.Resolve<CalcDeviceTaggingSets>();
-                    if (hh.GetType() == typeof(House)) {
-                        ch = MakeCalcHouseObject(sim, csps, hh, lf, scope, inputDataLogger, cvrdto, variableRepository, out cot);
+                    if (csps.CalcTarget.GetType() == typeof(House)) {
+                        ch = MakeCalcHouseObject(sim, csps, csps.CalcTarget, lf, scope, inputDataLogger, cvrdto, variableRepository, out cot);
                         CalcHouse chd =(CalcHouse) ch;
                         if (chd.EnergyStorages != null) {
                             foreach (var calcEnergyStorage in chd.EnergyStorages) {
@@ -149,8 +150,8 @@ namespace CalculationController.CalcFactories
                         }
 
                     }
-                    else if (hh.GetType() == typeof(ModularHousehold)) {
-                        ch = MakeCalcHouseholdObject(sim, csps, hh, scope, inputDataLogger, cvrdto, variableRepository, out cot,calcParameters);
+                    else if (csps.CalcTarget.GetType() == typeof(ModularHousehold)) {
+                        ch = MakeCalcHouseholdObject(sim, csps, csps.CalcTarget, scope, inputDataLogger, cvrdto, variableRepository, out cot,calcParameters);
                     }
                     else
                     {
@@ -245,17 +246,19 @@ namespace CalculationController.CalcFactories
             lf.InitHousehold(Constants.HouseKey, "House Infrastructure",
                 HouseholdKeyType.House, "House Infrastructure",house.Name,house.Description);
             var housedtoFac = scope.Resolve<CalcHouseDtoFactory>();
-            var housedto = housedtoFac.MakeHouse(sim, house, csps.TemperatureProfile,
+            var housedto = housedtoFac.MakeHouseDto(sim, house, csps.TemperatureProfile,
                 csps.GeographicLocation,csps.EnergyIntensity);
             foreach (HouseholdKeyEntry entry in housedto.GetHouseholdKeyEntries()) {
                 inputDataLogger.Save(Constants.GeneralHouseholdKey, entry);
             }
 
+            var convertedAutoDevList = housedto.AutoDevs.ConvertAll(x => (IHouseholdKey)x).ToList();
+                inputDataLogger.SaveList(convertedAutoDevList);
             inputDataLogger.Save(Constants.GeneralHouseholdKey, housedto);
 
             var chf = scope.Resolve<CalcHouseFactory>();
             RegisterAllDtoVariables(cvrdto, variableRepository);
-            ICalcAbleObject ch = chf.MakeHouse(housedto);
+            ICalcAbleObject ch = chf.MakeCalcHouse(housedto);
             cot = CalcObjectType.House;
             return ch;
         }

@@ -32,7 +32,6 @@ using System;
 using System.ComponentModel;
 using System.Globalization;
 using Automation;
-using Database;
 using JetBrains.Annotations;
 
 #endregion
@@ -41,20 +40,14 @@ namespace CalculationController.Queue
 {
     public class CalculationEntry : INotifyPropertyChanged
     {
-        [NotNull]
-        private readonly ICalcObject _calcObject;
         private DateTime _endTime;
         private DateTime _startTime;
 
-        public CalculationEntry([NotNull] ICalcObject calcObject, [NotNull] string path, int calcEntryNumber)
+        public CalculationEntry( [NotNull] string path, int calcEntryNumber)
         {
-            _calcObject = calcObject;
             Path = path;
             CalcEntryNumber = calcEntryNumber;
         }
-
-        [NotNull]
-        public ICalcObject CalcObject => _calcObject;
 
         private int CalcEntryNumber { get; }
 
@@ -91,6 +84,6 @@ namespace CalculationController.Queue
 
         [NotNull]
         public override string ToString()
-            => _calcObject.Name + " #" + (CalcEntryNumber + 1).ToString(CultureInfo.InvariantCulture);
+            =>  (CalcEntryNumber + 1).ToString(CultureInfo.InvariantCulture);
     }
 }

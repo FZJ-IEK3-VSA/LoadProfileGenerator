@@ -45,8 +45,9 @@ namespace CalculationEngine.HouseElements {
         [ItemNotNull]
         [NotNull]
         private readonly List<DataPoint> _datapoints = new List<DataPoint>();
-        private readonly OefcKey _devProcessorKey;
+        private readonly Dictionary<CalcLoadType,  OefcKey> _devProcessorKeys = new Dictionary<CalcLoadType, OefcKey>();
         private readonly double _maxPower;
+        private readonly CalcDeviceDto _deviceDto;
         private readonly double _maxValue;
         private readonly double _minPower;
         private readonly double _minValue;
@@ -55,12 +56,12 @@ namespace CalculationEngine.HouseElements {
         [ItemNotNull]
         [NotNull]
         private readonly List<OutputLoadType> _outputLoadTypes;
-        [CanBeNull] private CalcLoadType _inputLoadType;
+        [NotNull] private readonly CalcLoadType _inputLoadType;
 
-        public CalcTransformationDevice([NotNull] string pName, [NotNull] IOnlineDeviceActivationProcessor odap, double minValue,
-            double maxValue, double minimumOutputPower, double maximumInputPower, [NotNull] HouseholdKey householdKey, [NotNull] string guid)
-            : base(pName,  guid) {
-            _devProcessorKey = new OefcKey(householdKey, OefcDeviceType.Transformation, Guid, "-1", "-1", "Transformation Device");
+        public CalcTransformationDevice([NotNull] IOnlineDeviceActivationProcessor odap, double minValue,
+            double maxValue, double minimumOutputPower, double maximumInputPower, [NotNull] CalcDeviceDto deviceDto,
+            [NotNull] CalcLoadType inputLoadType)
+            : base(deviceDto.Name,  deviceDto.Guid) {
             _odap = odap;
             _minValue = minValue;
             _maxValue = maxValue;
@@ -68,6 +69,8 @@ namespace CalculationEngine.HouseElements {
             _conditions = new List<CalcTransformationCondition>();
             _minPower = minimumOutputPower;
             _maxPower = maximumInputPower;
+            _inputLoadType = inputLoadType;
+            _deviceDto = deviceDto;
         }
 
         [NotNull]
@@ -88,13 +91,13 @@ namespace CalculationEngine.HouseElements {
 
         public void AddOutputLoadType([NotNull] CalcLoadType loadType, double factor, TransformationOutputFactorType factorType) {
             var olt = new OutputLoadType(loadType, factor, factorType);
-            _odap.RegisterDevice(Name, _devProcessorKey, "Transformation Device", loadType.ConvertToDto());
+            _devProcessorKeys.Add(loadType, _odap.RegisterDevice( loadType.ConvertToDto(), _deviceDto));
             _outputLoadTypes.Add(olt);
         }
 
-        private double GetFactor(double input, double factor, TransformationOutputFactorType factorType) {
+        private double GetValue(double input, double factor, TransformationOutputFactorType factorType, double demandValue) {
             switch (factorType) {
-                case TransformationOutputFactorType.Fixed: return factor;
+                case TransformationOutputFactorType.FixedFactor: return factor * demandValue ;
                 case TransformationOutputFactorType.Interpolated:
                     if (input <= _datapoints[0].Ref) {
                         return _datapoints[0].Val;
@@ -112,7 +115,9 @@ namespace CalculationEngine.HouseElements {
                     var y2 = _datapoints[i].Val;
                     var x2 = _datapoints[i].Ref;
                     var newfactor = (y2 - y1) / (x2 - x1) * (input - x1) + y1;
-                    return newfactor;
+                    return newfactor * demandValue;
+                case TransformationOutputFactorType.FixedValue:
+                    return factor;
                 default: throw new LPGException("Forgotten factortype");
             }
         }
@@ -125,46 +130,62 @@ namespace CalculationEngine.HouseElements {
                     conditionsValid = false;
                 }
             }
-            foreach (var fileRow in fileRows) {
-                if (fileRow.LoadType == _inputLoadType?.ConvertToDto()) {
-                    var sumvalue = fileRow.SumFresh;
-                    // for all the output loadtypes
-                    foreach (var outloadType in _outputLoadTypes) {
-                        // look for the destination row
-                        var dstrow = fileRows.First(ofr => ofr.LoadType == outloadType.LoadType.ConvertToDto());
-                        var column = _odap.Oefc.GetColumnNumber(outloadType.LoadType.ConvertToDto(), _devProcessorKey);
 
-                        if (sumvalue >= _minValue && sumvalue <= _maxValue && conditionsValid) {
-                            var desiredpower = sumvalue;
-                            if (desiredpower < _minPower) {
-                                desiredpower = _minPower;
-                            }
-                            if (desiredpower > _maxPower) {
-                                desiredpower = _maxPower;
-                            }
-                            var factor = GetFactor(sumvalue, outloadType.ValueScalingFactor, outloadType.FactorType);
-                            var newvalue = desiredpower * factor;
-                            if (Math.Abs(dstrow.EnergyEntries[column] - newvalue) > Constants.Ebsilon) {
-                                dstrow.EnergyEntries[column] = newvalue;
-                                log?.Add(Name + " set " + outloadType.LoadType.Name + " to " + newvalue);
-                                madeChanges = true;
-                            }
-                        }
-                        else {
-                            if (Math.Abs(dstrow.EnergyEntries[column]) > Constants.Ebsilon) {
-                                madeChanges = true;
-                                log?.Add(Name + " set " + outloadType.LoadType.Name + " to 0");
-                                dstrow.EnergyEntries[column] = 0;
-                            }
-                        }
+            var inputRow = fileRows.FirstOrDefault(x => x.LoadType == _inputLoadType.ConvertToDto());
+            var outputloadtypes = _outputLoadTypes.Select(x => x.LoadType.ConvertToDto()).ToList();
+            double inputSum=0;
+            if (inputRow != null) {
+                if (outputloadtypes.Contains(_inputLoadType.ConvertToDto())) {
+                    // input and output to the same load type
+                    var inputColumn = _odap.Oefc.GetColumnNumber(_inputLoadType.ConvertToDto(), _devProcessorKeys[_inputLoadType]);
+                    inputSum = inputRow.SumFresh(inputColumn);
+                }
+                else {
+                    inputSum = inputRow.SumFresh();
+                }
+            }
+
+            if (Name == "Continuous Flow Gas Heater for Space Heating") {
+                Logger.Info("hi");
+            }
+            // for all the output loadtypes
+            foreach (var outloadType in _outputLoadTypes)
+            {
+                // look for the destination row
+                var dstrow = fileRows.First(ofr => ofr.LoadType == outloadType.LoadType.ConvertToDto());
+                var oefckey = _devProcessorKeys[outloadType.LoadType];
+                var column = _odap.Oefc.GetColumnNumber(outloadType.LoadType.ConvertToDto(), oefckey);
+
+                if ((inputSum >= _minValue && inputSum <= _maxValue && conditionsValid))
+                {
+                    var desiredpower = inputSum;
+                    if (desiredpower < _minPower)
+                    {
+                        desiredpower = _minPower;
+                    }
+                    if (desiredpower > _maxPower)
+                    {
+                        desiredpower = _maxPower;
+                    }
+                    var newValue = GetValue(inputSum, outloadType.ValueScalingFactor, outloadType.FactorType, desiredpower);
+                    if (Math.Abs(dstrow.EnergyEntries[column] - newValue) > Constants.Ebsilon)
+                    {
+                        dstrow.EnergyEntries[column] = newValue;
+                        log?.Add(Name + " set " + outloadType.LoadType.Name + " to " + newValue);
+                        madeChanges = true;
+                    }
+                }
+                else
+                {
+                    if (Math.Abs(dstrow.EnergyEntries[column]) > Constants.Ebsilon)
+                    {
+                        madeChanges = true;
+                        log?.Add(Name + " set " + outloadType.LoadType.Name + " to 0");
+                        dstrow.EnergyEntries[column] = 0;
                     }
                 }
             }
             return madeChanges;
-        }
-
-        public void SetInputLoadtype([NotNull] CalcLoadType inputLoadType) {
-            _inputLoadType = inputLoadType;
         }
 
         private class DataPoint {

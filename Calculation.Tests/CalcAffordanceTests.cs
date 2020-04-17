@@ -73,10 +73,10 @@ namespace Calculation.Tests {
             var devloads = new List<CalcDeviceLoad> {
                 cdl
             };
-            string categoryGuid = Guid.NewGuid().ToString();
-            cd = new CalcDevice("device", devloads, categoryGuid, null, loc, new HouseholdKey("HH1"),
-                OefcDeviceType.Device, "category",
-                string.Empty, calcParameters, Guid.NewGuid().ToString());
+            CalcDeviceDto cdd = new CalcDeviceDto("device","devcategoryguid", new HouseholdKey("HH1"),
+                OefcDeviceType.Device, "category", string.Empty, Guid.NewGuid().ToString(),
+                "locguid","locname");
+            cd = new CalcDevice(devloads, null, loc,calcParameters, cdd);
             aff.AddDeviceTuple(cd, cp, lt, 0, timeStep, 10, probability);
         }
 
@@ -329,9 +329,10 @@ namespace Calculation.Tests {
                 cdl
             };
             string categoryGuid = Guid.NewGuid().ToString();
-            var cd = new CalcDevice("device", devloads, categoryGuid, null, loc, new HouseholdKey("HH1"),
-                OefcDeviceType.Device, "category",
-                string.Empty, calcParameters, Guid.NewGuid().ToString());
+            CalcDeviceDto dto = new CalcDeviceDto("device", categoryGuid, new HouseholdKey("HH1"),
+                OefcDeviceType.Device, "category", string.Empty, Guid.NewGuid().ToString(),
+                loc.Guid,loc.Name);
+            var cd = new CalcDevice( devloads,null, loc, calcParameters, dto );
 
             //loc.Variables.Add("Variable1", 0);
             aff.AddDeviceTuple(cd, cp, lt, 0, timeStep, 10, 1);
@@ -389,9 +390,11 @@ namespace Calculation.Tests {
             var devloads = new List<CalcDeviceLoad> {
                 cdl
             };
-            var cd = new CalcDevice("device", devloads, deviceCategoryGuid, null, loc, new HouseholdKey("HH1"),
-                OefcDeviceType.Device, "category",
-                string.Empty, calcParameters, Guid.NewGuid().ToString());
+            CalcDeviceDto cdd = new CalcDeviceDto("device", deviceCategoryGuid,key,
+                OefcDeviceType.Device,"category",string.Empty,
+                Guid.NewGuid().ToString(),loc.Guid,loc.Name);
+            var cd = new CalcDevice( devloads, null, loc,
+                 calcParameters,cdd);
             //loc.Variables.Add("Variable1", 0);
             aff.AddDeviceTuple(cd, cp, lt, 0, timeStep, 10, 1);
             TimeStep ts = new TimeStep(0, 0, false);
@@ -441,8 +444,15 @@ namespace Calculation.Tests {
                 cdl
             };
             string devCatGuid = Guid.NewGuid().ToString();
-            var cd = new CalcDevice("device", devloads, devCatGuid, null, loc, key, OefcDeviceType.Device, "category",
-                string.Empty, calcParameters, Guid.NewGuid().ToString());
+            CalcDeviceDto cdd = new CalcDeviceDto("device",
+                devCatGuid,
+                key,
+                OefcDeviceType.Device,
+                "category",
+                string.Empty, Guid.NewGuid().ToString(),loc.Guid,loc.Name);
+            var cd = new CalcDevice( devloads, null,
+                loc,
+                calcParameters,cdd );
 
             //loc.Variables.Add("Variable1", 0);
             aff.AddDeviceTuple(cd, cp, lt, 0, timeStep, 10, 1);
@@ -494,10 +504,17 @@ namespace Calculation.Tests {
             var devloads = new List<CalcDeviceLoad> {
                 cdl
             };
-
-            var cd = new CalcDevice("device", devloads, devCategoryGuid, null, loc, new HouseholdKey("HH1"),
-                OefcDeviceType.Device, "category",
-                string.Empty, calcParameters, Guid.NewGuid().ToString());
+            HouseholdKey key = new HouseholdKey("HH1");
+            CalcDeviceDto cdd = new CalcDeviceDto("device",
+                devCategoryGuid,
+                key,
+                OefcDeviceType.Device,
+                "category",
+                string.Empty,
+                Guid.NewGuid().ToString(),
+                loc.Guid,
+                loc.Name);
+            var cd = new CalcDevice( devloads, null, loc, calcParameters,cdd);
 
             aff.AddDeviceTuple(cd, cp, lt, 20, timeStep, 10, 1);
 

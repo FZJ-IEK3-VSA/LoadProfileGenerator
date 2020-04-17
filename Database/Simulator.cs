@@ -382,7 +382,6 @@ namespace Database {
         }
 
         public int FindAndDeleteAllTemplated() {
-            var totalCount = 0;
             var settlements2Delete = new List<Settlement>();
             //settlements
             foreach (var settlement in Settlements.It) {
@@ -390,7 +389,8 @@ namespace Database {
                     settlements2Delete.Add(settlement);
                 }
             }
-            totalCount += settlements2Delete.Count;
+            var totalCount = settlements2Delete.Count;
+
             foreach (var dbBase in settlements2Delete) {
                 Settlements.DeleteItemNoWait(dbBase);
             }

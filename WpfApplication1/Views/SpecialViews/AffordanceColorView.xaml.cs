@@ -131,8 +131,7 @@ namespace LoadProfileGenerator.Views.SpecialViews {
 
         private static int CalcDiff([NotNull] Affordance a1, [NotNull] Affordance a2)
         {
-            var count = 0;
-            count += Math.Abs(a1.Red - a2.Red);
+            var count = Math.Abs(a1.Red - a2.Red);
             count += Math.Abs(a1.Blue - a2.Blue);
             count += Math.Abs(a1.Green - a2.Green);
             return count;

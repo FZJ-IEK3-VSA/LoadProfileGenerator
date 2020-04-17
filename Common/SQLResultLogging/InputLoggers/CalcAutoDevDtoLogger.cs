@@ -30,5 +30,15 @@ namespace Common.SQLResultLogging.InputLoggers
             }
             Srls.SaveResultEntry(se);
         }
+        [ItemNotNull]
+        [NotNull]
+        public List<CalcAutoDevDto> Load([NotNull] HouseholdKey key)
+        {
+            if (Srls == null)
+            {
+                throw new LPGException("Data Logger was null.");
+            }
+            return Srls.ReadFromJson<CalcAutoDevDto>(ResultTableDefinition, key, ExpectedResultCount.OneOrMore);
+        }
     }
 }

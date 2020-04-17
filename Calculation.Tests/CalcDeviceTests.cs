@@ -35,6 +35,7 @@ using CalculationEngine.HouseholdElements;
 using CalculationEngine.OnlineDeviceLogging;
 using CalculationEngine.OnlineLogging;
 using Common;
+using Common.CalcDto;
 using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
@@ -72,8 +73,11 @@ namespace Calculation.Tests {
                 OnlineDeviceActivationProcessor odap =
                     new OnlineDeviceActivationProcessor(NormalRandom, lf, calcParameters);
                 string deviceCategoryGuid = Guid.NewGuid().ToString();
-                CalcDevice cd = new CalcDevice("bla", cdls, deviceCategoryGuid, odap, cloc, new HouseholdKey("HH-6"),
-                    OefcDeviceType.Device, "category", string.Empty, calcParameters, Guid.NewGuid().ToString());
+                CalcDeviceDto cdd = new CalcDeviceDto("bla", deviceCategoryGuid
+                    , new HouseholdKey("HH-6"), OefcDeviceType.Device, "category",
+                    string.Empty, Guid.NewGuid().ToString(),cloc.Guid,cloc.Name);
+                CalcDevice cd = new CalcDevice( cdls,  odap, cloc,
+                     calcParameters,cdd );
                 CalcProfile cp = MakeCalcProfile5Min100();
                 TimeStep ts1 = new TimeStep(1,calcParameters);
                 cd.SetAllLoadTypesToTimeprofile(cp, ts1, "test", "name1", 1);

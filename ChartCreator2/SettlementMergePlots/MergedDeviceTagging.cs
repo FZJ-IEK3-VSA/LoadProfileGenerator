@@ -13,7 +13,7 @@ namespace ChartCreator2.SettlementMergePlots {
     public class MergedDeviceTagging {
         private const int Fontsize = 30;
 
-        private void MakeBarCharts([NotNull] string setName, [ItemNotNull] [NotNull] List<TagEntry> entries, [NotNull] string dstDirectory) {
+        private static void MakeBarCharts([NotNull] string setName, [ItemNotNull] [NotNull] List<TagEntry> entries, [NotNull] string dstDirectory) {
             var householdNames = entries.Select(x => x.HouseholdName.Trim()).Distinct().ToList();
             // make absolute values
             var plotModel1 = MakePlotmodel(householdNames,
@@ -89,7 +89,7 @@ namespace ChartCreator2.SettlementMergePlots {
         }
 
         [NotNull]
-        private PlotModel MakePlotmodel([ItemNotNull] [NotNull] List<string> householdNames, [NotNull] string yaxislabel) {
+        private static PlotModel MakePlotmodel([ItemNotNull] [NotNull] List<string> householdNames, [NotNull] string yaxislabel) {
             var plotModel1 = new PlotModel
             {
                 DefaultFontSize = Fontsize,

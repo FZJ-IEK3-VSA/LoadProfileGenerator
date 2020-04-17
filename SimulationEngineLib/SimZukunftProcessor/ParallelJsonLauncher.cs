@@ -17,6 +17,13 @@ using PowerArgs;
 
 namespace SimulationEngineLib.SimZukunftProcessor {
     public class ParallelJsonLauncher {
+        private class CompletedCalc {
+            public string FileName { get; set; }
+            public TimeSpan Duration { get; set; }
+            public bool IsSuccess { get; set; }
+            public string  Status { get; set; }
+        }
+
         //[NotNull] private readonly CalculationProfiler _calculationProfiler;
         [ItemNotNull] [NotNull] private readonly ConcurrentQueue<CalcJobQueueEntry> _calculationsToProcess = new ConcurrentQueue<CalcJobQueueEntry>();
         [ItemNotNull] [NotNull] private readonly ConcurrentQueue<string> _foldersToArchive = new ConcurrentQueue<string>();
@@ -25,6 +32,8 @@ namespace SimulationEngineLib.SimZukunftProcessor {
         private bool _continueProcessing = true;
 
         private int _totalCalculations;
+
+        private readonly List<CompletedCalc> _completedCalcs  = new List<CompletedCalc>();
 
         public static bool ThrowOnInvalidFile { get; set; } = false;
         public static int FindNumberOfCores()
@@ -271,6 +280,11 @@ namespace SimulationEngineLib.SimZukunftProcessor {
             Logger.Info("Read " + _calculationsToProcess.Count + " entries to calculate.");
             LaunchWorkerThreads(options, startTime);
             Logger.Info("Cleanup finished");
+            foreach (var calc in _completedCalcs) {
+                Logger.Info("\""+ calc.FileName + "\": " + calc.Duration.ToString() + " Status: "   + calc.Status);
+            }
+            int successCount = _completedCalcs.Count(x => x.IsSuccess);
+            Logger.Info("Finished " + _completedCalcs.Count + " calculations, " + successCount+  " successfully");
         }
 
         private readonly List<Thread> _threads = new List<Thread>();
@@ -368,13 +382,14 @@ namespace SimulationEngineLib.SimZukunftProcessor {
                             if (!_continueProcessing) {
                                 return;
                             }
-
+                            DateTime startTime = DateTime.Now;
                             var processesleft = _calculationsToProcess.Count;
                             var processesdone = _totalCalculations - processesleft;
                             var progress = " (" + processesdone + "/" + _totalCalculations + ")";
                             Logger.Info("Thread " + index + ": Processing " + path.JsonFile.Name + progress);
                             var startinfo = new ProcessStartInfo();
                             string arguments = "processhousejob -j \"" + path.JsonFile.FullName + "\"";
+
                             Logger.Info("Launching simulationengine.exe " + arguments);
                             using (var process = new Process()) {
                                 startinfo.Arguments = arguments;
@@ -387,30 +402,47 @@ namespace SimulationEngineLib.SimZukunftProcessor {
                                 process.WaitForExit();
                             }
 
-                            Logger.Info("Thread " + index + ": Finished " + path.JsonFile.Name);
+                            Logger.Info("Thread " + index + ": Finished \"" + path.JsonFile.Name + "\"");
+                            CompletedCalc completedCalc = new CompletedCalc();
+                            _completedCalcs.Add(completedCalc);
+                            completedCalc.FileName = path.JsonFile.Name;
                             Thread.Sleep(1000);
                             string jsonStr = File.ReadAllText(path.JsonFile.FullName);
-                            JsonCalcSpecification jcs = JsonConvert.DeserializeObject<JsonCalcSpecification>(jsonStr);
-                            if (jcs.OutputDirectory != null) {
-                                DirectoryInfo outputFolder = new DirectoryInfo(jcs.OutputDirectory);
+                            HouseCreationAndCalculationJob jcs = JsonConvert.DeserializeObject<HouseCreationAndCalculationJob>(jsonStr);
+                            completedCalc.Status = "No finished.flag found";
+                            if (jcs.CalcSpec.OutputDirectory != null) {
+                                DirectoryInfo outputFolder = new DirectoryInfo(jcs.CalcSpec.OutputDirectory);
+                                Logger.Info("Checking output folder " + outputFolder.FullName);
                                 if (outputFolder.Exists) {
                                     string finishedFile = Path.Combine(outputFolder.FullName, "finished.flag");
+
                                     if (File.Exists(finishedFile)) {
+                                        completedCalc.Status = "finished.flag found";
+                                        completedCalc.IsSuccess = true;
                                         _foldersToArchive.Enqueue(outputFolder.FullName);
                                         Logger.Info("Thread " + index + ": Enqueued for moving: " + outputFolder.FullName + progress);
                                     }
                                     else {
+                                        completedCalc.Status = "No folder and no finished.flag found";
                                         Logger.Info("Thread " + index + ": Not enqueued for moving due to missing finished flag: " + outputFolder.FullName + progress);
                                     }
 
-                                    if (jcs.DeleteDAT) {
+                                    if (jcs.CalcSpec.DeleteDAT) {
                                         var dats = outputFolder.GetFiles("*.dat", SearchOption.AllDirectories);
                                         foreach (var info in dats) {
                                             info.Delete();
                                         }
                                     }
                                 }
+                                else {
+                                    completedCalc.Status = "No folder found";
+                                }
                             }
+                            else {
+                                Logger.Info("No output folder found for " + path.JsonFile.Name);
+                            }
+
+                            completedCalc.Duration = (DateTime.Now - startTime);
                         }
 
                     }

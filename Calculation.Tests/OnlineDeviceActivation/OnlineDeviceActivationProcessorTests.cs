@@ -154,31 +154,31 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                 var odap = new OnlineDeviceActivationProcessor(nr, lf, calcParameters);
                 List<VariableRequirement> requirements = new List<VariableRequirement>();
                 string devCatGuid = Guid.NewGuid().ToString();
-                var autodev = new CalcAutoDev("devicename",
+                var key = new HouseholdKey("HH1");
+                CalcDeviceDto cdd = new CalcDeviceDto("devicename",
+                    devCatGuid,
+                    key,
+                    OefcDeviceType.Device,
+                    "device category",
+                    "",
+                    Guid.NewGuid().ToString(),
+                    cloc.Guid,
+                    cloc.Name);
+               var autodev = new CalcAutoDev(
                     profileWith100,
                     clt,
                     loads,
                     0,
-                    devCatGuid,
                     odap,
-                    new HouseholdKey("HH1"),
                     1,
                     cloc,
-                    "device category",
                     calcParameters,
-                    Guid.NewGuid().ToString(),
-                    requirements);
-                var device = new CalcDevice("devicename",
-                    loads,
-                    devCatGuid,
+                    requirements,cdd);
+                var device = new CalcDevice(loads,
                     odap,
                     cloc,
-                    new HouseholdKey("HH1"),
-                    OefcDeviceType.Device,
-                    "category",
-                    string.Empty,
                     calcParameters,
-                    Guid.NewGuid().ToString());
+                     cdd);
                 var autoDevs = new List<CalcAutoDev> {
                     autodev
                 };
@@ -251,14 +251,20 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                 const string deviceGuid = "devguid";
                 const string locationGuid = "locationGuid";
                 const string loadtypeGuid = "ltguid";
-                var key = new OefcKey(hhkey, OefcDeviceType.Device, deviceGuid, locationGuid, loadtypeGuid, "myCategory");
+                CalcDeviceDto cdd = new CalcDeviceDto("devicename", "devcatguid", hhkey,
+                    OefcDeviceType.Device, "devcatname", "",
+                    deviceGuid, locationGuid, "loc");
+
+                var key = new OefcKey(cdd,loadtypeGuid);
                 var clt = new CalcLoadType("lt1", "W", "kWh", 1, true, loadtypeGuid);
-                odap.RegisterDevice("devicename", key, "home", clt.ConvertToDto());
+                odap.RegisterDevice( clt.ConvertToDto(),cdd);
                 double[] stepValues = {1.0, 0};
                 var valueList = new List<double>(stepValues);
                 var cp = new CalcProfile("myCalcProfile", Guid.NewGuid().ToString(), valueList, ProfileType.Absolute, "synthetic");
                 TimeStep ts1 = new TimeStep(1, 0, false);
-                odap.AddNewStateMachine(cp, ts1, 0, 10, "devicename", clt.ConvertToDto(), "blub", "name1", "p1", "syn", key);
+
+                odap.AddNewStateMachine(cp, ts1, 0, 10,
+                    clt.ConvertToDto(), "blub", "name1", "p1", "syn", key,cdd);
                 double[] resultValues = {0, 10.0, 0, 0, 0, 0, 0, 0, 0, 0};
 
                 for (var i = 0; i < 10; i++) {
@@ -362,19 +368,13 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                 dtsi.AddTag(calcDeviceDto.Name, "testTag ");
                 cdts.Add(dtsi);
                 wd.InputDataLogger.Save(cdts);
-
                 //device
-                var device = new CalcDevice("devicename",
+                var device = new CalcDevice(
                     deviceLoads,
-                    deviceCategoryGuid,
                     odap,
                     cloc,
-                    key,
-                    OefcDeviceType.Device,
-                    "category",
-                    string.Empty,
                     calcParameters,
-                    Guid.NewGuid().ToString());
+                    calcDeviceDto);
                 //var devices = new List<CalcDevice> {device};
                 double[] resultValues = {0, 100.0, 0, 0, 0, 0, 0, 0, 0, 0};
                 var cp = new CalcProfile("profile1", Guid.NewGuid().ToString(), new TimeSpan(0, 1, 0), ProfileType.Absolute, "custom");
@@ -511,17 +511,12 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                 };
                 wd.InputDataLogger.SaveList(devices);
 
-                var device = new CalcDevice("devicename",
+                var device = new CalcDevice(
                     deviceLoads,
-                    devcategoryguid,
                     odap,
                     cloc,
-                    key,
-                    OefcDeviceType.Device,
-                    "category",
-                    string.Empty,
                     calcParameters,
-                    devguid);
+                    cdto);
                 //var devices = new List<CalcDevice> {device};
                 var cp = new CalcProfile("profile1", Guid.NewGuid().ToString(), new TimeSpan(0, 1, 0), ProfileType.Absolute, "custom");
                 cp.AddNewTimepoint(new TimeSpan(0), 0);
@@ -577,7 +572,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                 CalculationProfiler cprof = new CalculationProfiler();
                 PostProcessingManager ppm = new PostProcessingManager(cprof, fft);
                 ppm.Run(wd.WorkingDirectory);
-                TotalsEntryLogger tel = new TotalsEntryLogger(wd.SqlResultLoggingService);
+                TotalsPerLoadtypeEntryLogger tel = new TotalsPerLoadtypeEntryLogger(wd.SqlResultLoggingService);
                 var results = tel.Read(key);
                 Assert.That(results[0].Value, Is.EqualTo(150));
             }

@@ -68,16 +68,16 @@ namespace Database.Tables.Houses {
             var id = dr.GetIntFromLong("ID");
             var energyStorageID = dr.GetIntFromLong("EnergyStorageID");
             var loadTypeID = dr.GetIntFromLong("LoadTypeID");
-            var vlt = aic.Variables.FirstOrDefault(mylt => mylt.ID == loadTypeID);
+            var variable = aic.Variables.FirstOrDefault(mylt => mylt.ID == loadTypeID);
             var triggerLevelOn = dr.GetDouble("TriggerLevelOn");
             var triggerLevelOff = dr.GetDouble("TriggerLevelOff");
             var value = dr.GetDouble("Value");
             var name = "(no name)";
-            if (vlt != null) {
-                name = vlt.Name;
+            if (variable != null) {
+                name = variable.Name;
             }
             var guid = GetGuid(dr, ignoreMissingFields);
-            var ess = new EnergyStorageSignal(id, energyStorageID, vlt, triggerLevelOn, triggerLevelOff,
+            var ess = new EnergyStorageSignal(id, energyStorageID, variable, triggerLevelOn, triggerLevelOff,
                 value, connectionString, name, guid);
             return ess;
         }

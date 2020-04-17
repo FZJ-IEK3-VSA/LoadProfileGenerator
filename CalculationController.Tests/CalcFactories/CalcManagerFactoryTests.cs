@@ -71,7 +71,7 @@ namespace CalculationController.Tests.CalcFactories {
                 new DateTime(2015,1,15),new DateTime(2015,1,18),new TimeSpan(0,1,0),";" ,5 , new TimeSpan(0,1,0) ,false,false,false,3,sim.MyGeneralConfig.RepetitionCount,
                 calculationProfiler);
 
-            var cm = cmf.GetCalcManager(sim, path,csps, sim.ModularHouseholds[0], false);
+            var cm = cmf.GetCalcManager(sim, path,csps,  false);
             bool ReportCancelFunc()
             {
                 Logger.Error("canceled");
@@ -106,7 +106,7 @@ namespace CalculationController.Tests.CalcFactories {
                 new DateTime(2018,1,18),new TimeSpan(0,1,0),";",-1, new TimeSpan(0, 1, 0),false,false,false,3,3,
                 calculationProfiler);
 
-            var cm = cmf.GetCalcManager(sim, wd.WorkingDirectory, csps, sim.ModularHouseholds[0], false);
+            var cm = cmf.GetCalcManager(sim, wd.WorkingDirectory, csps,  false);
 
             bool ReportCancelFunc()
             {
@@ -139,7 +139,7 @@ namespace CalculationController.Tests.CalcFactories {
                     new DateTime(2015,1,15),new DateTime(2015,1,18),new TimeSpan(0,1,0),";",-1, new TimeSpan(0, 1, 0),false,false,false,3,3,
                 calculationProfiler);
 
-            var cm = cmf.GetCalcManager(sim, wd.WorkingDirectory, csps, sim.Houses[sim.Houses.MyItems.Count - 1], false);
+            var cm = cmf.GetCalcManager(sim, wd.WorkingDirectory, csps,  false);
 
             bool ReportCancelFunc()
             {
@@ -195,7 +195,7 @@ namespace CalculationController.Tests.CalcFactories {
                 new DateTime(2015, 1, 15), new DateTime(2015, 1, 18), new TimeSpan(0, 1, 0), ";", -1, new TimeSpan(0, 1, 0),false,false,false,3,3,
                 calculationProfiler);
 
-            var cm = cmf.GetCalcManager(sim, wd.WorkingDirectory, csps, chs3, false);
+            var cm = cmf.GetCalcManager(sim, wd.WorkingDirectory, csps, false);
 
             bool ReportCancelFunc()
             {
@@ -238,7 +238,7 @@ namespace CalculationController.Tests.CalcFactories {
                 new DateTime(2015, 1, 15), new DateTime(2015, 1, 18), new TimeSpan(0, 1, 0), ";", -1, new TimeSpan(0, 1, 0),false,false,false,3,3,
                 calculationProfiler);
 
-            var cm = cmf.GetCalcManager(sim, wd.WorkingDirectory, csps, sim.ModularHouseholds[0], false);
+            var cm = cmf.GetCalcManager(sim, wd.WorkingDirectory, csps,  false);
 
             bool ReportCancelFunc()
             {
@@ -279,7 +279,7 @@ namespace CalculationController.Tests.CalcFactories {
                 new DateTime(2015, 1, 15), new DateTime(2015, 1, 18), new TimeSpan(0, 1, 0), ";", -1, new TimeSpan(0, 1, 0),false,false,false,3,3,
                 calculationProfiler);
 
-            var cm = cmf.GetCalcManager(sim, wd.WorkingDirectory, csps, sim.ModularHouseholds[0], false);
+            var cm = cmf.GetCalcManager(sim, wd.WorkingDirectory, csps,  false);
 
             var chh = (CalcHousehold) cm.CalcObject;
             var devicenameByCategoryAndLocationID = new Dictionary<string, string>();

@@ -406,7 +406,7 @@ namespace CalculationController.Integrity {
             }
         }
 
-        private void CheckTagPersonAssignments([NotNull] ModularHousehold chh)
+        private static void CheckTagPersonAssignments([NotNull] ModularHousehold chh)
         {
             foreach (ModularHouseholdTrait modularHouseholdTrait in chh.Traits) {
                 Person p = modularHouseholdTrait.DstPerson;

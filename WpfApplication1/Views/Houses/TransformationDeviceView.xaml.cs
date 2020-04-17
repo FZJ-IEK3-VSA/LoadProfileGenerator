@@ -118,13 +118,8 @@ namespace LoadProfileGenerator.Views.Houses {
                 Logger.Error("Could not convert " + TxtFactor.Text + " to double");
             }
 
-            TransformationFactorType ft;
-            if (CmbFactorType.SelectedItem.ToString() == "Fixed") {
-                ft = TransformationFactorType.Fixed;
-            }
-            else {
-                ft = TransformationFactorType.Interpolated;
-            }
+            var idx = Presenter.FactorTypes.IndexOf(CmbFactorType.SelectedItem.ToString());
+            var ft = (TransformationFactorType)idx;
 
             Presenter.AddOutputLoadType(selectedLoadType, factor, ft);
         }

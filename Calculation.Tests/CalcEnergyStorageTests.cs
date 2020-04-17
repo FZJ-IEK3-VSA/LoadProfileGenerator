@@ -56,21 +56,30 @@ namespace Calculation.Tests {
             string deviceGuid = Guid.NewGuid().ToString();
             HouseholdKey hhkey = new HouseholdKey("HH1");
             string locationGuid = Guid.NewGuid().ToString();
-            var key = new OefcKey(hhkey, OefcDeviceType.Device, deviceGuid, locationGuid, clt.Guid,"mycategory");
-            odap.RegisterDevice("dev1", key, "loc", clt.ConvertToDto());
+            CalcDeviceDto cdd = new CalcDeviceDto("dev1", "devcatguid",
+                hhkey, OefcDeviceType.Device, "devcatname", "", deviceGuid, locationGuid, "loc");
+            var key = new OefcKey( cdd,clt.Guid);
+            odap.RegisterDevice( clt.ConvertToDto(),cdd);
             double[] timestepValue = {1.0, 0};
             var timestepValues = new List<double>(timestepValue);
             var cp = new CalcProfile("myCalcProfile", Guid.NewGuid().ToString(), timestepValues,
                 ProfileType.Absolute, "synthetic");
-            odap.AddNewStateMachine(cp, new TimeStep(1,0,true), 0,  -10, "dev1", clt.ConvertToDto(), "blub",  "name1", "p1", "syn",
-                key);
-            odap.AddNewStateMachine(cp, new TimeStep(3, 0, true), 0, -100, "dev1", clt.ConvertToDto(), "blub",  "name2", "p1", "syn",key);
-            odap.AddNewStateMachine(cp, new TimeStep(5, 0, true), 0,  10, "dev1", clt.ConvertToDto(), "blub",  "name3", "p3", "syn",key);
-            odap.AddNewStateMachine(cp, new TimeStep(7, 0, true), 0, 100, "dev1", clt.ConvertToDto(), "blub", "name4", "p4", "syn",key);
+            odap.AddNewStateMachine(cp, new TimeStep(1,0,true),
+                0,  -10,  clt.ConvertToDto(), "blub",
+                "name1", "p1", "syn", key,cdd);
+            odap.AddNewStateMachine(cp, new TimeStep(3, 0, true)
+                , 0, -100,  clt.ConvertToDto(), "blub",
+                "name2", "p1", "syn",key,cdd);
+            odap.AddNewStateMachine(cp, new TimeStep(5, 0, true),
+                0,  10,
+                clt.ConvertToDto(), "blub",  "name3", "p3", "syn",key,cdd);
+            odap.AddNewStateMachine(cp, new TimeStep(7, 0, true),
+                0, 100,  clt.ConvertToDto(),
+                "blub", "name4", "p4", "syn",key,cdd);
             double[] resultValues = {0, -10.0, 0, -100, 0, 10, 0, 100, 0, 0};
-            var ces = new CalcEnergyStorage("ces",  odap, clt.ConvertToDto(), 100, 7, 0, 0, 5, 20, null,
-                                hhkey,
-                Guid.NewGuid().ToString());
+            var ces = new CalcEnergyStorage(  odap, clt.ConvertToDto(),
+                100, 7, 0, 0, 5, 20, null,
+                                cdd);
             List<OnlineEnergyFileRow> rawRows = new List<OnlineEnergyFileRow>();
             int keyidx = 0;
             foreach (var keys in odap.Oefc.ColumnEntriesByLoadTypeByDeviceKey.Values) {

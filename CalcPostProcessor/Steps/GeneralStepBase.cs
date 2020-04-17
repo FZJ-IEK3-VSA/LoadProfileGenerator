@@ -12,9 +12,9 @@ namespace CalcPostProcessor.Steps
     }
     public abstract class GeneralStepBase : BasicPostProcessingStep, IGeneralStep
     {
-        public GeneralStepBase([JetBrains.Annotations.NotNull] CalcDataRepository repository,[JetBrains.Annotations.NotNull] List< CalcOption> option,
-                                             [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler,
-                                             [JetBrains.Annotations.NotNull] string stepName) : base(repository, option, calculationProfiler,
+        protected GeneralStepBase([JetBrains.Annotations.NotNull] CalcDataRepository repository,[JetBrains.Annotations.NotNull] List< CalcOption> option,
+                                  [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler,
+                                  [JetBrains.Annotations.NotNull] string stepName) : base(repository, option, calculationProfiler,
             stepName)
         {
         }

@@ -42,24 +42,18 @@ namespace CalculationEngine.HouseElements {
 
         [NotNull] private readonly CalcParameters _calcParameters;
 
-        public CalcSpaceHeating([NotNull] string pName,
+        public CalcSpaceHeating(
                                 [NotNull] [ItemNotNull] List<CalcDeviceLoad> powerUsage,
                                 [NotNull] IOnlineDeviceActivationProcessor odap,
                                 [NotNull] Dictionary<Tuple<int, int, int>, CalcDegreeDay> calcDegreeDays,
-                                [NotNull] HouseholdKey householdKey,
                                 [NotNull] CalcLocation cloc,
                                 [NotNull] CalcParameters calcParameters,
-                                [NotNull] string guid) : base(pName,
+                                 [NotNull] CalcDeviceDto deviceDto) : base(
             powerUsage,
-            System.Guid.NewGuid().ToString(),
             odap,
             cloc,
-            householdKey,
-            OefcDeviceType.SpaceHeating,
-            "Space Heating",
-            string.Empty,
             calcParameters,
-            guid)
+            deviceDto)
         {
             if (powerUsage.Count != 1) {
                 throw new LPGException("there should be exactly one loadtype for space heating, not more or less.");

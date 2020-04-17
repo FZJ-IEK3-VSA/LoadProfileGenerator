@@ -14,7 +14,7 @@ namespace ChartCreator2.SettlementMergePlots {
     public class MergedAffordanceTaggingPlot {
         private const int Fontsize = 30;
 
-        private void MakeBarCharts([ItemNotNull] [NotNull] List<AffTagEntry> entries, [NotNull] string dstDirectory) {
+        private static void MakeBarCharts([ItemNotNull] [NotNull] List<AffTagEntry> entries, [NotNull] string dstDirectory) {
             var personNames = entries.Select(x => x.PersonName.Trim()).Distinct().ToList();
             // make absolute values
             var plotModel1 = MakePlotmodel(personNames, "Simulationszeit in Prozent");
@@ -103,7 +103,7 @@ namespace ChartCreator2.SettlementMergePlots {
         }
 
         [NotNull]
-        private PlotModel MakePlotmodel([ItemNotNull] [NotNull] List<string> personNames, [NotNull] string yaxislabel) {
+        private static PlotModel MakePlotmodel([ItemNotNull] [NotNull] List<string> personNames, [NotNull] string yaxislabel) {
             var plotModel1 = new PlotModel
             {
                 DefaultFontSize = Fontsize,

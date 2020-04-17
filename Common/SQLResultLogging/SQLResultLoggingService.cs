@@ -138,15 +138,22 @@ namespace Common.SQLResultLogging {
             }
         }
 
+
+
         [ItemNotNull]
         [NotNull]
-        public List<T> ReadFromJson<T>([NotNull] ResultTableDefinition rtd, [NotNull] HouseholdKey key, ExpectedResultCount expectedResult)
+        public List<T> ReadFromJson<T>([NotNull] ResultTableDefinition rtd, [NotNull] HouseholdKey key,
+                                       ExpectedResultCount expectedResult)
         {
             if (!_isFileNameDictLoaded) {
                 LoadFileNameDict();
             }
 
             string sql = "SELECT json FROM " + rtd.TableName;
+            if (!_filenameByHouseholdKey.ContainsKey(key)) {
+                throw new LPGException("Missing sql file for household key "+ key);
+            }
+
             string constr = "Data Source=" + _filenameByHouseholdKey[key].Filename + ";Version=3";
             using (System.Data.SQLite.SQLiteConnection conn = new System.Data.SQLite.SQLiteConnection(constr)) {
                 //;Synchronous=OFF;Journal Mode=WAL;
@@ -442,10 +449,10 @@ namespace Common.SQLResultLogging {
         private static string MakeconnectionString([NotNull] string filename) =>
             "Data Source=" + filename + ";Version=3;Synchronous=OFF;Journal Mode=WAL;";
 
-        private void MakeTableForListOfFields([JetBrains.Annotations.NotNull] [ItemNotNull]
-                                              List<FieldDefinition> fields,
-                                              [JetBrains.Annotations.NotNull] System.Data.SQLite.SQLiteConnection conn,
-                                              [JetBrains.Annotations.NotNull] string tableName)
+        private static void MakeTableForListOfFields([JetBrains.Annotations.NotNull] [ItemNotNull]
+                                                     List<FieldDefinition> fields,
+                                                     [JetBrains.Annotations.NotNull] System.Data.SQLite.SQLiteConnection conn,
+                                                     [JetBrains.Annotations.NotNull] string tableName)
         {
             if (fields.Count == 0) {
                 throw new LPGException("No fields defined for database");
@@ -471,9 +478,9 @@ namespace Common.SQLResultLogging {
         //[JetBrains.Annotations.NotNull]
         //public string ReturnMainSqlPath() => _filenameByHouseholdKey[Constants.GeneralHouseholdKey].Filename;
 
-        private void SaveDictionaryToDatabase([NotNull] [ItemNotNull] List<Dictionary<string, object>> values,
-                                              [NotNull] string tableName,
-                                              [NotNull] System.Data.SQLite.SQLiteConnection conn)
+        private static void SaveDictionaryToDatabase([NotNull] [ItemNotNull] List<Dictionary<string, object>> values,
+                                                     [NotNull] string tableName,
+                                                     [NotNull] System.Data.SQLite.SQLiteConnection conn)
         {
             if (values.Count == 0) {
                 return;

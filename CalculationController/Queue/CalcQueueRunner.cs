@@ -64,17 +64,17 @@ namespace CalculationController.Queue {
           //  TransportationDeviceSet transportationDeviceSet, TravelRouteSet travelRouteSet
 
         [SuppressMessage("ReSharper", "RedundantAssignment")]
-        private bool RunOneCalcEntry([NotNull] CalcStartParameterSet csps, [NotNull] CalculationEntry calcEntry, [NotNull] Simulator sim, bool forceRandom)
+        private static bool RunOneCalcEntry([NotNull] CalcStartParameterSet csps, [NotNull] CalculationEntry calcEntry, [NotNull] Simulator sim, bool forceRandom)
         {
             CalcManager.StartRunning();
-            Logger.Info("Running the simulation for " + calcEntry.CalcObject.Name + " from " +
+            Logger.Info("Running the simulation for " + csps.CalcTarget.Name + " from " +
                         sim.MyGeneralConfig.StartDateDateTime.ToShortDateString() + " to " +
                         sim.MyGeneralConfig.EndDateDateTime.ToShortDateString());
             CalcManager calcManager = null;
             calcEntry.StartTime = DateTime.Now;
             try {
                 var cmf = new CalcManagerFactory();
-                calcManager = cmf.GetCalcManager(sim, calcEntry.Path,csps, calcEntry.CalcObject, forceRandom);
+                calcManager = cmf.GetCalcManager(sim, calcEntry.Path,csps,  forceRandom);
                     //, forceRandom,
                     //temperatureProfile,  geographicLocation, calcEntry.EnergyIntensity,
                     //fileVersion, loadTypePriority, deviceSelection, transportationDeviceSet, travelRouteSet);
@@ -147,10 +147,10 @@ namespace CalculationController.Queue {
 
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         [SuppressMessage("ReSharper", "HeuristicUnreachableCode")]
-        private void SaveRun(bool forceRandom,
-                             [NotNull][ItemNotNull] ObservableCollection<CalculationEntry> calculationEntries,
-                             [NotNull] Simulator sim,
-            [NotNull] CalcStartParameterSet csps, [NotNull] string resultPath)
+        private static void SaveRun(bool forceRandom,
+                                    [NotNull][ItemNotNull] ObservableCollection<CalculationEntry> calculationEntries,
+                                    [NotNull] Simulator sim,
+                                    [NotNull] CalcStartParameterSet csps, [NotNull] string resultPath)
         {
             bool allgood = true;
             foreach (var entry in calculationEntries) {
@@ -199,7 +199,7 @@ namespace CalculationController.Queue {
             if (allgood) {
                 var cpf = new CalcParametersFactory(sim);
                 var calcParameters = cpf.MakeCalculationParametersFromConfig(csps, forceRandom);
-                var cpp = new DatFileDeletor( calcParameters,resultPath, calculationEntries[0].CalcObject.Name);
+                var cpp = new DatFileDeletor( calcParameters,resultPath, csps.CalcTarget.Name);
                 cpp.ProcessResults();
                 SaveCallFunction(csps.ReportFinishFuncForHousehold,csps,resultPath);
             }
@@ -208,9 +208,9 @@ namespace CalculationController.Queue {
             }
         }
 
-        private void SaveCallFunction([CanBeNull] Func<bool, string, string, bool> reportFinishFuncForHousehold,
-                                      [NotNull] CalcStartParameterSet csps,
-                                      [NotNull] string resultPath)
+        private static void SaveCallFunction([CanBeNull] Func<bool, string, string, bool> reportFinishFuncForHousehold,
+                                             [NotNull] CalcStartParameterSet csps,
+                                             [NotNull] string resultPath)
         {
             if (reportFinishFuncForHousehold == null) {
                 return;

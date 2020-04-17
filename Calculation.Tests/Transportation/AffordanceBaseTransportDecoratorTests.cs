@@ -147,9 +147,14 @@ namespace Calculation.Tests.Transportation
             CalcDeviceLoad cdl = new CalcDeviceLoad("bla",1,chargingloadtype,1,1, Guid.NewGuid().ToString());
             list.Add(cdl);
             Mock<IOnlineDeviceActivationProcessor> iodap = new Mock<IOnlineDeviceActivationProcessor>();
+            CalcDeviceDto cdd = new CalcDeviceDto("bus",myCategory.Guid,
+                new HouseholdKey("hh1"),OefcDeviceType.Transportation,myCategory.Name,string.Empty,
+                Guid.NewGuid().ToString(),string.Empty,string.Empty);
             var transportationDevice =
-                new CalcTransportationDevice("bus", myCategory, 1,list , iodap.Object, new HouseholdKey( "hh1"),100,
-                    10,1000,chargingloadtype,calcSites,calcParameters, Guid.NewGuid().ToString(),lf.OnlineLoggingData);
+                new CalcTransportationDevice( myCategory, 1,list , iodap.Object, 100,
+                    10,1000,chargingloadtype,calcSites,calcParameters,
+                    lf.OnlineLoggingData,
+                    cdd);
             transportationHandler.LocationUnlimitedDevices.Add(transportationDevice);
         }
 

@@ -58,7 +58,7 @@ namespace CalculationController.CalcFactories {
         [SuppressMessage("Microsoft.Reliability", "CA2000:Objekte verwerfen, bevor Bereich verloren geht")]
         [SuppressMessage("ReSharper", "SwitchStatementMissingSomeCases")]
         [NotNull]
-        public CalcHouseDto MakeHouse([NotNull] Simulator sim,
+        public CalcHouseDto MakeHouseDto([NotNull] Simulator sim,
                                       [NotNull] House house,
                                       [NotNull] TemperatureProfile temperatureProfile,
                                       [NotNull] GeographicLocation geographicLocation, //List<CalcDeviceTaggingSet> taggingSets,
@@ -237,6 +237,9 @@ namespace CalculationController.CalcFactories {
                         Guid.NewGuid().ToString(),
                         signals);
                     calcEnergyStorages.Add(ces);
+                    if (es.Signals.Count != ces.Signals.Count) {
+                        throw new LPGException("Signals for energy storage were not correctly initialized");
+                    }
                 }
                 else {
                     throw new DataIntegrityException("You are trying to run a calculation with a house type that uses an energy storage, " +
@@ -349,15 +352,16 @@ namespace CalculationController.CalcFactories {
             return MakeTransformationDeviceDtos(transformationDevices, householdKey);
         }
 
-        private void MakeAutoDevFromDevice(EnergyIntensityType energyIntensity,
-                                           [NotNull] HouseholdKey householdKey,
-                                           [ItemNotNull] [NotNull] ObservableCollection<DeviceAction> deviceActions,
-                                           [ItemNotNull] [NotNull] List<DeviceCategoryDto> deviceCategoryDtos,
-                                           [NotNull] HouseTypeDevice hhautodev,
-                                           [ItemNotNull] [NotNull] List<IAssignableDevice> allAutonomousDevices,
-                                           [NotNull] CalcLocationDto calcLocation,
-                                           [NotNull] AvailabilityDataReferenceDto timearray,
-                                           [ItemNotNull] [NotNull] List<CalcAutoDevDto> autodevs)
+        [CanBeNull]
+        private CalcAutoDevDto MakeAutoDevFromDevice(EnergyIntensityType energyIntensity,
+                                                     [NotNull] HouseholdKey householdKey,
+                                                     [ItemNotNull] [NotNull] ObservableCollection<DeviceAction> deviceActions,
+                                                     [ItemNotNull] [NotNull] List<DeviceCategoryDto> deviceCategoryDtos,
+                                                     [NotNull] HouseTypeDevice hhautodev,
+                                                     [ItemNotNull] [NotNull] List<IAssignableDevice> allAutonomousDevices,
+                                                     [NotNull] CalcLocationDto calcLocation,
+                                                     [NotNull] AvailabilityDataReferenceDto timearray
+                                                     )
         {
             if (hhautodev.LoadType == null) {
                 throw new LPGException("Loadtype was null");
@@ -417,10 +421,12 @@ namespace CalculationController.CalcFactories {
                     deviceCategoryDto.FullCategoryName,
                     Guid.NewGuid().ToString(),
                     timearray,
-                    reqDtos);
+                    reqDtos,deviceCategoryDto.FullCategoryName);
                 //cautodev.ApplyBitArry(busyarr, _ltDict.LtDict[hhautodev.LoadType]);
-                autodevs.Add(cautodev);
+                return cautodev;
             }
+
+            return null;
         }
 
         private void MakeAutoDevFromDeviceAction(EnergyIntensityType energyIntensity,
@@ -430,8 +436,8 @@ namespace CalculationController.CalcFactories {
                                                  [NotNull] HouseTypeDevice hhautodev,
                                                  [ItemNotNull] [NotNull] List<IAssignableDevice> allAutonomousDevices,
                                                  [NotNull] CalcLocationDto calcLocation,
-                                                 [NotNull] AvailabilityDataReferenceDto availref,
-                                                 [ItemNotNull] [NotNull] List<CalcAutoDevDto> autodevs)
+                                                 [NotNull] AvailabilityDataReferenceDto availref,List<CalcAutoDevDto> autodevs
+                                                 )
         {
             if (hhautodev.Location == null) {
                 throw new LPGException("Location was null");
@@ -499,7 +505,7 @@ namespace CalculationController.CalcFactories {
                         devcat.FullCategoryName,
                         Guid.NewGuid().ToString(),
                         availref,
-                        reqDtos);
+                        reqDtos, devcat.FullCategoryName);
                     autodevs.Add(cautodev);
                     //cautodev.ApplyBitArry(, _ltDict.LtDict[actionProfile.VLoadType]);
                 }
@@ -587,15 +593,15 @@ namespace CalculationController.CalcFactories {
                 switch (hhautodev.Device.AssignableDeviceType) {
                     case AssignableDeviceType.Device:
                     case AssignableDeviceType.DeviceCategory:
-                        MakeAutoDevFromDevice(energyIntensity,
+                        var adev1 = MakeAutoDevFromDevice(energyIntensity,
                             householdKey,
                             deviceActions,
                             deviceCategoryDtos,
                             hhautodev,
                             allAutonomousDevices,
                             calcLocation,
-                            timearray,
-                            autodevs);
+                            timearray);
+                        autodevs.Add(adev1);
                         break;
                     case AssignableDeviceType.DeviceAction:
                     case AssignableDeviceType.DeviceActionGroup:
@@ -606,14 +612,16 @@ namespace CalculationController.CalcFactories {
                             hhautodev,
                             allAutonomousDevices,
                             calcLocation,
-                            availref,
-                            autodevs);
+                            availref,autodevs);
                         break;
                     default:
                         throw new LPGException("Forgotten AssignableDeviceType. Please Report!");
                 }
             }
 
+           /* if (autodevs.Count > houseDevices.Count) {
+                throw new LPGException("Made too many autonomous devices in the house. This is a bug.");
+            }*/
             return autodevs;
         }
 
@@ -651,8 +659,7 @@ namespace CalculationController.CalcFactories {
 
         [NotNull]
         [ItemNotNull]
-        private List<CalcEnergyStorageDto>
-            MakeEnergyStorages([NotNull] House house, [NotNull] HouseholdKey householdKey) //, List<CalcDeviceTaggingSet> deviceTaggingSets)
+        private List<CalcEnergyStorageDto>  MakeEnergyStorages([NotNull] House house, [NotNull] HouseholdKey householdKey)
         {
             var energyStorages = new List<EnergyStorage>();
             if (house.HouseType == null) {
@@ -713,11 +720,14 @@ namespace CalculationController.CalcFactories {
                 if (_ltDict.SimulateLoadtype(outlt.VLoadType)) {
                     TransformationOutputFactorType factorType;
                     switch (outlt.FactorType) {
-                        case TransformationFactorType.Fixed:
-                            factorType = TransformationOutputFactorType.Fixed;
+                        case TransformationFactorType.FixedFactor:
+                            factorType = TransformationOutputFactorType.FixedFactor;
                             break;
                         case TransformationFactorType.Interpolated:
                             factorType = TransformationOutputFactorType.Interpolated;
+                            break;
+                        case TransformationFactorType.FixedValue:
+                            factorType = TransformationOutputFactorType.FixedValue;
                             break;
                         default:
                             throw new LPGException("Forgotten FactorType. Please report.");
@@ -760,7 +770,7 @@ namespace CalculationController.CalcFactories {
             var cdls = new List<CalcDeviceLoadDto> {
                 cdl
             };
-            heatingLocation = new CalcLocationDto("Air Conditioning", -101, Guid.NewGuid().ToString());
+            heatingLocation = new CalcLocationDto("Space Heating Location", -102, Guid.NewGuid().ToString());
             var csh = new CalcSpaceHeatingDto("Space Heating",
                 -1,
                 cdls,

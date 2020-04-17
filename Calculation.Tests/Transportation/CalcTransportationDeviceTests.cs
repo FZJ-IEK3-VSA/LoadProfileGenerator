@@ -9,6 +9,7 @@ using CalculationEngine.OnlineDeviceLogging;
 using CalculationEngine.OnlineLogging;
 using CalculationEngine.Transportation;
 using Common;
+using Common.CalcDto;
 using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
@@ -74,9 +75,15 @@ namespace Calculation.Tests.Transportation
                 srcSite,
                 dstSite
             };
-            CalcTransportationDevice ctd = new CalcTransportationDevice("transport device",category,
-                10,loads,odap,new HouseholdKey("hh1"),10000,1,1000,chargingCalcLoadType,calcSites,
-                calcParameters, Guid.NewGuid().ToString(),old);
+            CalcDeviceDto cdd = new CalcDeviceDto("transport device",
+                category.Guid,key,OefcDeviceType.Transportation,
+                category.Name,string.Empty, Guid.NewGuid().ToString(),
+                string.Empty,string.Empty);
+            CalcTransportationDevice ctd = new CalcTransportationDevice(category,
+                10,loads,odap,
+                10000,1,1000,
+                chargingCalcLoadType,calcSites,
+                calcParameters, old, cdd);
             TimeStep start = new TimeStep(1, 0, false);
             TimeStep end = new TimeStep(11, 0, false);
             ctd.Activate(start, 10,srcSite,dstSite,"myroute","myperson", start,

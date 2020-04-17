@@ -96,7 +96,7 @@ namespace Database.Helpers {
             var lon = myLon;
             lock (_mLock) // lock for thread safety
             {
-                double zone = -(int) Math.Round(TimeZone.CurrentTimeZone.GetUtcOffset(date).TotalSeconds / 3600);
+                double zone = -(int) Math.Round(TimeZoneInfo.Local.GetUtcOffset(date).TotalSeconds / 3600);
                 var jd = GetJulianDay(date) - 2451545; // Julian day relative to Jan 1.5, 2000
 
                 if (Sign(zone) == Sign(lon) && Math.Abs(zone) > 0.0000001) {

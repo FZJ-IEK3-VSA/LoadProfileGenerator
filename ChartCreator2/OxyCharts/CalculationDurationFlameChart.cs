@@ -145,7 +145,7 @@ namespace ChartCreator2.OxyCharts {
         }
 
         //convert all durations to double for later adding
-        private void InitializeDuration2([NotNull] CalculationProfiler.ProgramPart part)
+        private static void InitializeDuration2([NotNull] CalculationProfiler.ProgramPart part)
         {
             part.Duration2 = part.Duration.TotalSeconds;
             foreach (var child in part.Children) {
@@ -157,7 +157,7 @@ namespace ChartCreator2.OxyCharts {
         ///     Merges the children of a program part to make the plot slightly less confusing.
         /// </summary>
         /// <param name="part">the program part</param>
-        private void MergeAndCompress([NotNull] CalculationProfiler.ProgramPart part)
+        private static void MergeAndCompress([NotNull] CalculationProfiler.ProgramPart part)
         {
             //part.Children.Sort((x,y)=> String.Compare(x.Key, y.Key, StringComparison.Ordinal));
             for (var i = 0; i < part.Children.Count; i++) {

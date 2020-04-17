@@ -1,7 +1,8 @@
 namespace Common.CalcDto {
     public enum TransformationOutputFactorType
     {
-        Fixed,
-        Interpolated
+        FixedFactor,
+        Interpolated,
+        FixedValue
     }
 }

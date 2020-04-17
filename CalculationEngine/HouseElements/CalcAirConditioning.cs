@@ -42,15 +42,16 @@ namespace CalculationEngine.HouseElements {
 
         [NotNull] private readonly CalcParameters _calcParameters;
 
-        public CalcAirConditioning([NotNull] string pName,
+        public CalcAirConditioning(
                                    [NotNull] [ItemNotNull] List<CalcDeviceLoad> powerUsage,
                                    [NotNull] IOnlineDeviceActivationProcessor odap,
                                    [NotNull] Dictionary<Tuple<int, int, int, int>, CalcDegreeHour> calcDegreeHours,
-                                   [NotNull] HouseholdKey householdKey, [NotNull] CalcLocation cloc,
-                                   [NotNull] CalcParameters calcParameters, [NotNull] string guid)
+                                   [NotNull] CalcLocation cloc,
+                                   [NotNull] CalcParameters calcParameters,
+                                   [NotNull] CalcDeviceDto calcDeviceDto)
             : base(
-                pName, powerUsage, System.Guid.NewGuid().ToString(), odap, cloc, householdKey, OefcDeviceType.AirConditioning,
-                "Air Conditioning", string.Empty, calcParameters, guid)
+                 powerUsage, odap, cloc,
+                 calcParameters, calcDeviceDto)
         {
             if (powerUsage.Count != 1) {
                 throw new LPGException("there should be exactly one loadtype for air conditioning, not more or less.");

@@ -109,13 +109,14 @@ namespace CalculationEngine.OnlineDeviceLogging {
 
         public void AddColumnEntry([NotNull] string name, OefcKey key,
                                    [NotNull] string locationName, [NotNull] CalcLoadTypeDto lt, [NotNull] string deviceGuid,
-            [NotNull] HouseholdKey householdKey, [NotNull] string deviceCategory) {
+            [NotNull] HouseholdKey householdKey, [NotNull] string deviceCategory, [NotNull] CalcDeviceDto calcDeviceDto) {
             if (!ColumnCountByLoadType.ContainsKey(lt)) {
                 ColumnCountByLoadType.Add(lt, 0);
             }
             var dstcolum = ColumnCountByLoadType[lt];
 
-            var ce = new ColumnEntry(name, dstcolum, locationName, deviceGuid, householdKey, lt,key.ToString(), deviceCategory);
+            var ce = new ColumnEntry(name, dstcolum, locationName, deviceGuid,
+                householdKey, lt,key.ToString(), deviceCategory, calcDeviceDto);
             if (!_columnEntriesByLoadTypeByDeviceKey.ContainsKey(lt)) {
                 _columnEntriesByLoadTypeByDeviceKey.Add(lt, new Dictionary<OefcKey, ColumnEntry>());
                 _columnEntriesByColumn.Add(lt, new Dictionary<int, ColumnEntry>());
@@ -128,7 +129,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
             }
         }
 
-        public int GetColumnNumber([NotNull] CalcLoadTypeDto loadType, OefcKey deviceKey) =>
+        public int GetColumnNumber([NotNull] CalcLoadTypeDto loadType,  OefcKey deviceKey) =>
             _columnEntriesByLoadTypeByDeviceKey[loadType][deviceKey].Column;
     }
 }

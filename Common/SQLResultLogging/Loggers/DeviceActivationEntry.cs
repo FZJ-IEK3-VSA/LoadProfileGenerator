@@ -34,7 +34,7 @@ namespace Common.SQLResultLogging.Loggers {
     using CalcDto;
     using JetBrains.Annotations;
 
-    public class DeviceActivationEntry : IHouseholdKey {
+    public class  DeviceActivationEntry : IHouseholdKey {
         /// <summary>
         /// for json
         /// </summary>
@@ -43,42 +43,58 @@ namespace Common.SQLResultLogging.Loggers {
         public DeviceActivationEntry()
         {
         }
-        public DeviceActivationEntry([NotNull] HouseholdKey householdKey, [NotNull] string affordanceName,
-                                     [NotNull] CalcLoadTypeDto loadType, double value,
-                                      [NotNull] string activatorName, [NotNull] string deviceName, int durationInSteps)
+        public DeviceActivationEntry(
+                                     [NotNull] string affordanceName,
+                                     [NotNull] CalcLoadTypeDto loadType,
+                                     double value,
+                                     [NotNull] string activatorName,
+                                     int durationInSteps,
+                                     TimeStep timestep, [NotNull] CalcDeviceDto calcDeviceDto)
         {
-            HouseholdKey = householdKey;
+            if (calcDeviceDto == null) {
+                throw new LPGException("Calcdevicedto was null");
+            }
             AffordanceName = affordanceName;
             LoadTypeGuid = loadType.Guid;
             LoadTypeName = loadType.Name;
             TotalEnergySum = value;
             ActivatorName = activatorName;
-            DeviceName = deviceName;
+            Timestep = timestep;
+            CalcDeviceDto = calcDeviceDto;
             DurationInSteps = durationInSteps;
         }
 
         [UsedImplicitly]
+        [NotNull]
+        public string DeviceGuid => CalcDeviceDto.Guid;
+
+        [UsedImplicitly]
         [JsonProperty]
-        public HouseholdKey HouseholdKey { get;private  set; }
+        public TimeStep Timestep { get;  set; }
+
+        public CalcDeviceDto CalcDeviceDto { get;  set; }
+
+        [UsedImplicitly]
+        public HouseholdKey HouseholdKey => CalcDeviceDto.HouseholdKey;
 
         [NotNull]
         [UsedImplicitly]
         [JsonProperty]
-        public string AffordanceName { get; private set; }
+        public string AffordanceName { get;  set; }
 
         [NotNull]
         [UsedImplicitly]
         [JsonProperty]
-        public string LoadTypeGuid { get; private set; }
+        public string LoadTypeGuid { get;  set; }
 
         [NotNull]
         [UsedImplicitly]
         [JsonProperty]
-        public string LoadTypeName { get; private set; }
+        public string LoadTypeName { get;  set; }
 
         [UsedImplicitly]
         [JsonProperty]
-        public double TotalEnergySum { get; private set; }
+        public double TotalEnergySum { get;  set; }
         /*
         [NotNull]
         [UsedImplicitly]
@@ -88,15 +104,14 @@ namespace Common.SQLResultLogging.Loggers {
         [NotNull]
         [UsedImplicitly]
         [JsonProperty]
-        public string ActivatorName { get; private set; }
+        public string ActivatorName { get;  set; }
 
         [NotNull]
         [UsedImplicitly]
-        [JsonProperty]
-        public string DeviceName { get; private set; }
+        public string DeviceName => CalcDeviceDto.Name;
 
         [UsedImplicitly]
         [JsonProperty]
-        public int DurationInSteps { get; private set; }
+        public int DurationInSteps { get;  set; }
     }
 }

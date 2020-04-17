@@ -9,8 +9,8 @@ using JetBrains.Annotations;
 
 namespace Database.Helpers {
     public class LivingPatternVariationCreator {
-        private void AddAffordanceEntry([NotNull] Simulator sim, [ItemNotNull] [NotNull] List<AffordanceEntry> affordances, [NotNull] string affname,
-            [NotNull] string newName, double duration)
+        private static void AddAffordanceEntry([NotNull] Simulator sim, [ItemNotNull] [NotNull] List<AffordanceEntry> affordances, [NotNull] string affname,
+                                               [NotNull] string newName, double duration)
         {
             var aff = sim.Affordances.FindFirstByName(affname);
             if (aff == null) {
@@ -19,9 +19,9 @@ namespace Database.Helpers {
             affordances.Add(new AffordanceEntry(aff, newName,duration));
         }
 
-        private void AddTimeLimitEntry([NotNull] Simulator sim, [ItemNotNull] [NotNull] List<TimeLimitEntry> timeLimits,
-                                       [NotNull] string timelimitName,
-            [NotNull] string newName, [CanBeNull] string tagName, TimeSpan beginSpan )
+        private static void AddTimeLimitEntry([NotNull] Simulator sim, [ItemNotNull] [NotNull] List<TimeLimitEntry> timeLimits,
+                                              [NotNull] string timelimitName,
+                                              [NotNull] string newName, [CanBeNull] string tagName, TimeSpan beginSpan )
         {
             var aff = sim.TimeLimits.FindFirstByName(timelimitName);
             if (aff == null)

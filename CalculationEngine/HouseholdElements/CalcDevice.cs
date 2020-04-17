@@ -87,31 +87,29 @@ namespace CalculationEngine.HouseholdElements {
         [NotNull]
         private readonly CalcLocation _calcLocation;
         [NotNull]
-        private readonly string _deviceCategory;
-        private readonly OefcDeviceType _deviceType;
-        [NotNull]
-        private readonly HouseholdKey _householdKey;
-        [NotNull]
         private readonly Dictionary<CalcLoadType, BitArray> _isBusyForLoadType;
         [CanBeNull] private readonly IOnlineDeviceActivationProcessor _odap;
         [ItemNotNull]
         [NotNull]
         private readonly List<CalcDeviceLoad> _powerUsage;
 
-        public CalcDevice([NotNull] string pName,  [NotNull][ItemNotNull] List<CalcDeviceLoad> powerUsage, [NotNull] string deviceCategoryGuid,
-            [CanBeNull] IOnlineDeviceActivationProcessor odap, [NotNull] CalcLocation calcLocation, [NotNull] HouseholdKey householdKey,
-            OefcDeviceType deviceType, [NotNull] string deviceCategory, [NotNull] string additionalName, [NotNull] CalcParameters calcParameters,
-                          [NotNull] string guid) : base(pName,  guid)
+        private readonly CalcDeviceDto _calcDeviceDto;
+
+        public CalcDevice( [NotNull][ItemNotNull] List<CalcDeviceLoad> powerUsage,
+            [CanBeNull] IOnlineDeviceActivationProcessor odap, [NotNull] CalcLocation calcLocation,
+            [NotNull] CalcParameters calcParameters,
+                           [NotNull] CalcDeviceDto calcDeviceDto) : base(calcDeviceDto.Name,  calcDeviceDto.Guid)
         {
-            _deviceCategory = deviceCategory;
-            _deviceType = deviceType;
+            _calcDeviceDto = calcDeviceDto;
+            if (_calcDeviceDto.LocationGuid != calcLocation.Guid) {
+                throw new LPGException("Inconsistent locations. This is a bug.");
+            }
             _calcLocation = calcLocation;
             _odap = odap;
-            DeviceCategoryGuid = deviceCategoryGuid;
             _powerUsage = powerUsage;
             foreach (var load in powerUsage) {
                 if (Math.Abs(load.Value) < 0.0000001 && load.Name.ToLower() != "none") {
-                    throw new LPGException("Trying to run the device " + pName + " with a power load factor for " + load.LoadType.Name + " of 0. This is not going to work.");
+                    throw new LPGException("Trying to run the device " + calcDeviceDto.Name + " with a power load factor for " + load.LoadType.Name + " of 0. This is not going to work.");
                 }
             }
             if (calcParameters.InternalTimesteps == 0) {
@@ -125,25 +123,19 @@ namespace CalculationEngine.HouseholdElements {
                 if (odap == null && !Config.IsInUnitTesting) {
                     throw new LPGException("odap was null. Please report");
                 }
-                var key = new OefcKey(householdKey, _deviceType, Guid, _calcLocation.Guid,
-                    calcDeviceLoad.LoadType.Guid, deviceCategory);
-                odap?.RegisterDevice(Name, key, _calcLocation.Name + additionalName, calcDeviceLoad.LoadType.ConvertToDto());
+                //var key = new OefcKey(calcDeviceDto.HouseholdKey, calcDeviceDto.DeviceType,calcDeviceDto.Guid, calcDeviceDto.LocationGuid,calcDeviceLoad.LoadType.Guid, calcDeviceDto.DeviceCategoryName);
+                odap?.RegisterDevice( calcDeviceLoad.LoadType.ConvertToDto(), calcDeviceDto);
             }
-            _householdKey = householdKey;
         }
 
         [NotNull]
         public CalcLocation CalcLocation => _calcLocation;
 
         [NotNull]
-        public string DeviceCategory => _deviceCategory;
-
-        [NotNull]
-        public string DeviceCategoryGuid { get; }
-
-        [NotNull]
         public Dictionary<CalcLoadType, BitArray> IsBusyForLoadType => _isBusyForLoadType;
 
+        [NotNull]
+        public string DeviceCategoryGuid => _calcDeviceDto.DeviceCategoryGuid;
         [NotNull]
         [ItemNotNull]
         public List<CalcAutoDev> MatchingAutoDevs { get; } = new List<CalcAutoDev>();
@@ -301,17 +293,17 @@ namespace CalculationEngine.HouseholdElements {
             }
             var totalDuration = calcProfile.StepValues.Count; //.GetNewLengthAfterCompressExpand(timefactor);
             //calcProfile.CompressExpandDoubleArray(timefactor,allProfiles),
-            OefcKey key = new OefcKey(_householdKey,_deviceType,Guid,_calcLocation.Guid,cdl.LoadType.Guid, DeviceCategory);
+            OefcKey key = new OefcKey(_calcDeviceDto, cdl.LoadType.Guid);
             _odap?.AddNewStateMachine(calcProfile, startidx,  cdl.PowerStandardDeviation, powerUsageFactor,
-                 Name, cdl.LoadType.ConvertToDto(), affordanceName,  activatingPersonName,
-                calcProfile.Name, calcProfile.DataSource, key);
+                  cdl.LoadType.ConvertToDto(), affordanceName,  activatingPersonName,
+                calcProfile.Name, calcProfile.DataSource, key, _calcDeviceDto);
             if (MatchingAutoDevs.Count > 0) {
                 if (_odap == null) {
                     throw new LPGException("Odap was null");
                 }
 
                 foreach (CalcAutoDev matchingAutoDev in MatchingAutoDevs) {
-                    _odap.AddZeroEntryForAutoDev(_householdKey, OefcDeviceType.AutonomousDevice, matchingAutoDev.Guid, _calcLocation.Guid,
+                    _odap.AddZeroEntryForAutoDev(_calcDeviceDto.HouseholdKey, OefcDeviceType.AutonomousDevice, matchingAutoDev.Guid, _calcLocation.Guid,
                         startidx, totalDuration);
                 }
             }

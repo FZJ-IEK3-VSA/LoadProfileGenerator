@@ -49,11 +49,14 @@ namespace CalculationController.Integrity {
                 if (thisType.Name.Contains("CategoryDBBase") || thisType.Name.Contains("CategoryDeviceCategory") ||
                     thisType.Name.Contains("CategorySettlement")) {
                     dynamic d = category;
-                    string result = d.CheckForNumbersInNames();
-                    if (result.Length > 0) {
+                    object result = d.CheckForNumbersInNames();
+                    if (result != null) {
+                        BasicElement db = (BasicElement)result;
                         var bc = (BasicCategory) category;
-                        throw new DataIntegrityException("The category " + bc.Name + " has the item " + result +
-                                                         ", which has a number at the end. This is not pretty. Please fix.");
+                        List<BasicElement> bes = new List<BasicElement>();
+                        bes.Add(db);
+                        throw new DataIntegrityException("The category " + bc.Name + " has the item " + db.Name +
+                                                         ", which has a number at the end. This is not pretty. Please fix.", bes);
                     }
                 }
             }

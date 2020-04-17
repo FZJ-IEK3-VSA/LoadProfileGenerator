@@ -14,7 +14,7 @@ namespace ChartCreator2.SettlementMergePlots {
     public class MergedAffordanceEnergy {
         private const int Fontsize = 20;
 
-        private void MakeGeneralBarChart([ItemNotNull] [NotNull] List<AffordanceEntry> entries, [NotNull] string dstDir) {
+        private static void MakeGeneralBarChart([ItemNotNull] [NotNull] List<AffordanceEntry> entries, [NotNull] string dstDir) {
             var householdNames = entries.Select(x => x.HouseholdName.Trim()).Distinct().ToList();
             // make absolute values
             var plotModel1 = MakePlotmodel(householdNames,
@@ -105,7 +105,7 @@ namespace ChartCreator2.SettlementMergePlots {
         }
 
         [NotNull]
-        private PlotModel MakePlotmodel([ItemNotNull] [NotNull] List<string> householdNames, [NotNull] string yaxislabel) {
+        private static PlotModel MakePlotmodel([ItemNotNull] [NotNull] List<string> householdNames, [NotNull] string yaxislabel) {
             var plotModel1 = new PlotModel
             {
                 DefaultFontSize = Fontsize,

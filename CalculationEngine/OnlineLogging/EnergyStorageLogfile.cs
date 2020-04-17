@@ -116,7 +116,7 @@ namespace CalculationEngine.OnlineLogging {
         {
             var s = new StringBuilder();
             foreach (var esheader in _energyStorageHeaders.Values) {
-                s.Append(_calcParameters.CSVCharacter).Append(esheader.TotalHeader);
+                s.Append(esheader.TotalHeader).Append(_calcParameters.CSVCharacter);
             }
 
             return s.ToString();

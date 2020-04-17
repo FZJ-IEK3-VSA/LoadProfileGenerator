@@ -42,7 +42,8 @@ namespace Common.SQLResultLogging
         TransportationRouteStatistics,
         TransportationDeviceEventStatistics,
         PersonAffordanceInformation,
-        SingleTimeStepActionEntry
+        SingleTimeStepActionEntry,
+        TotalsPerDevice
     }
     public class ResultTableDefinition: IEquatable<ResultTableDefinition>
     {

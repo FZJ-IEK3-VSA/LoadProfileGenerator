@@ -970,6 +970,7 @@ namespace Database.Tables.Houses {
                 string name = house.PrettyName + " " + houseidx;
 
                 calcSettings.OutputDirectory = AutomationUtili.CleanFileName(name);
+                housejob.CalcSpec = calcSettings;
                 if (generatedPaths.Contains(calcSettings.OutputDirectory)) {
                     throw new LPGException("The directory " + calcSettings.OutputDirectory +
                                            " is in two houses. This is not very useful. Please fix. Aborting.");

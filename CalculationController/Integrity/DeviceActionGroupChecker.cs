@@ -14,7 +14,7 @@ namespace CalculationController.Integrity {
             base("Device Action Groups", performCleanupChecks) {
         }
 
-        private  void CheckAndDeleteEmptyDeviceActionGroups([NotNull] Simulator sim) {
+        private static void CheckAndDeleteEmptyDeviceActionGroups([NotNull] Simulator sim) {
             // do both checks here to avoid doing the getdeviceactions twice
             for (var index = 0; index < sim.DeviceActionGroups.It.Count; index++) {
                 var actionGroup = sim.DeviceActionGroups[index];

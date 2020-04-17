@@ -261,7 +261,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             //CalculateTotal(energyFileRows, loadType, totalsPerLoadType, Repository.GetPersons(householdKey).Count);
             var efc = Repository.ReadEnergyFileColumns(Constants.GeneralHouseholdKey);
             RunIndividualHouseholds(p.LoadType,p.EnergyFileRows, efc, totalsPerLoadType);
-            List<TotalsEntry> totals = new List<TotalsEntry>();
+            List<TotalsPerLoadtypeEntry> totals = new List<TotalsPerLoadtypeEntry>();
             foreach (HouseholdKeyEntry entry in Repository.HouseholdKeys) {
                 if(entry.KeyType == HouseholdKeyType.General) {
                     continue;
@@ -274,7 +274,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                     personscount = Repository.GetPersons(key).Count;
                 }
                 foreach (KeyValuePair<CalcLoadTypeDto, double> pair in totalsPerLoadType) {
-                    totals.Add(new TotalsEntry(key, pair.Key, pair.Value, personscount, totaldays));
+                    totals.Add(new TotalsPerLoadtypeEntry(key, pair.Key, pair.Value, personscount, totaldays));
                 }
             }
             _inputDataLogger.SaveList(totals.ConvertAll(x=> (IHouseholdKey) x));

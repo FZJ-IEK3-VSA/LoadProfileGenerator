@@ -9,8 +9,12 @@ namespace Common.JSON {
 
     public class ColumnEntry : IHouseholdKey
     {
+        [NotNull]
+        [JsonProperty]
+        public CalcDeviceDto CalcDeviceDto { get; set; }
         public ColumnEntry([NotNull] string name, int dstcolumn, [NotNull] string locationName, [NotNull] string deviceGuid, [NotNull] HouseholdKey householdKey,
-                           [NotNull] CalcLoadTypeDto loadType, [NotNull] string oefckey, [NotNull] string deviceCategory)
+                           [NotNull] CalcLoadTypeDto loadType, [NotNull] string oefckey, [NotNull] string deviceCategory,
+                           [NotNull] CalcDeviceDto calcDeviceDto)
         {
             Name = name;
             // Key = key,
@@ -21,6 +25,7 @@ namespace Common.JSON {
             LoadType = loadType;
             Oefckey = oefckey;
             DeviceCategory = deviceCategory;
+            CalcDeviceDto = calcDeviceDto;
         }
         [JsonProperty]
         public int Column { get; private set; }

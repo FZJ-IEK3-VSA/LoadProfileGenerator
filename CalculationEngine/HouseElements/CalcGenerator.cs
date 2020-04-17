@@ -32,6 +32,7 @@ using Automation.ResultFiles;
 using CalculationEngine.HouseholdElements;
 using CalculationEngine.OnlineDeviceLogging;
 using Common;
+using Common.CalcDto;
 using Common.JSON;
 using JetBrains.Annotations;
 
@@ -45,16 +46,16 @@ namespace CalculationEngine.HouseElements {
 
         [NotNull] private readonly List<double> _values;
 
-        public CalcGenerator([NotNull] string pName,  [NotNull] IOnlineDeviceActivationProcessor odap,
+        public CalcGenerator(  [NotNull] IOnlineDeviceActivationProcessor odap,
                              [NotNull] CalcLoadType loadType,
-                             [NotNull] List<double> values, [NotNull] HouseholdKey householdKey,
-                             [NotNull] CalcParameters calcParameters, [NotNull] string guid) : base(pName, guid)
+                             [NotNull] List<double> values,
+                             [NotNull] CalcParameters calcParameters,  [NotNull] CalcDeviceDto calcDeviceDto) : base(calcDeviceDto.Name, calcDeviceDto.Guid)
         {
-            _devProcessorKey = new OefcKey(householdKey, OefcDeviceType.Generator, guid, "-1", loadType.Guid, "Generator");
+            //_devProcessorKey = new OefcKey(householdKey, OefcDeviceType.Generator, guid, "-1", loadType.Guid, "Generator");
             _odap = odap;
             _loadType = loadType;
             _values = values;
-            _odap.RegisterDevice(Name, _devProcessorKey, "Generator", _loadType.ConvertToDto());
+            _devProcessorKey= _odap.RegisterDevice( _loadType.ConvertToDto(), calcDeviceDto);
             if (values.Count != calcParameters.InternalTimesteps) {
                 throw new LPGException("Not enough values in the generator to fill the entire period!");
             }

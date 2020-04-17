@@ -137,7 +137,7 @@ namespace Common {
             }
         }
 
-        private void LogOneProgramPartToConsole([NotNull] ProgramPart part, int level)
+        private static void LogOneProgramPartToConsole([NotNull] ProgramPart part, int level)
         {
             var padding = "";
             for (var i = 0; i < level; i++) {

@@ -82,15 +82,26 @@ namespace Common.JSON {
             }
         }
 
-        public double SumFresh {
-            get {
+        public double SumFresh() {
                 double d = 0;
                 for (var i = 0; i < _energyEntries.Count; i++) {
                     d += _energyEntries[i];
                 }
                 _sum = d;
                 return d;
+        }
+        public double SumFresh(int excludedIdx)
+        {
+            double d = 0;
+            for (var i = 0; i < _energyEntries.Count; i++)
+            {
+                if (i == excludedIdx) {
+                    continue;
+                }
+                d += _energyEntries[i];
             }
+            _sum = d;
+            return d;
         }
 
         [NotNull]
@@ -166,11 +177,11 @@ namespace Common.JSON {
         }
 
         public void SaveSum([NotNull] BinaryWriter bw) {
-            bw.Write(SumFresh);
+            bw.Write(SumFresh());
         }
 
         [NotNull]
         public override string ToString() => "Timestep: " + Timestep + " Entries:" + _energyEntries.Count + " Sum:" +
-                                             SumFresh + " LoadType:" + _loadType.Name;
+                                             SumFresh() + " LoadType:" + _loadType.Name;
     }
 }

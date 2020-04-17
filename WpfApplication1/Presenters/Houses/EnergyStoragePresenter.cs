@@ -67,7 +67,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
                     unitofpower = _thisStorage.LoadType.UnitOfPower;
                     unitofsum = _thisStorage.LoadType.UnitOfSum;
                 }
-                return "[" + unitofpower + "] [" + unitofsum + "]";
+                return "[" + unitofpower + "] / [" + unitofsum + "]";
             }
         }
 

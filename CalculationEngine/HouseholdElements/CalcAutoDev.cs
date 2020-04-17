@@ -27,10 +27,10 @@
 //-----------------------------------------------------------------------
 
 using System.Collections.Generic;
-using Automation.ResultFiles;
 using CalculationEngine.Helper;
 using CalculationEngine.OnlineDeviceLogging;
 using Common;
+using Common.CalcDto;
 using Common.JSON;
 using JetBrains.Annotations;
 
@@ -48,14 +48,15 @@ namespace CalculationEngine.HouseholdElements {
         private readonly List<VariableRequirement> _requirements = new List<VariableRequirement>();
         [NotNull] private TimeStep _earliestNextStart;
 
-        public CalcAutoDev([NotNull] string pName, [NotNull] CalcProfile pCalcProfile, [NotNull] CalcLoadType loadType,
-            [NotNull][ItemNotNull] List<CalcDeviceLoad> loads, double timeStandardDeviation, [NotNull] string deviceCategoryGuid,
-            [NotNull] IOnlineDeviceActivationProcessor odap, [NotNull] HouseholdKey householdKey, double multiplier,
+        public CalcAutoDev( [NotNull] CalcProfile pCalcProfile, [NotNull] CalcLoadType loadType,
+            [NotNull][ItemNotNull] List<CalcDeviceLoad> loads, double timeStandardDeviation,
+            [NotNull] IOnlineDeviceActivationProcessor odap,  double multiplier,
             [NotNull] CalcLocation calclocation,
-            [NotNull] string deviceCategory, [NotNull] CalcParameters calcParameters, [NotNull] string guid, [NotNull][ItemNotNull] List<VariableRequirement> requirements)
+             [NotNull] CalcParameters calcParameters,
+                           [NotNull][ItemNotNull] List<VariableRequirement> requirements, [NotNull] CalcDeviceDto autoDevDto)
             : base(
-                pName,  loads, deviceCategoryGuid, odap, calclocation, householdKey,
-                OefcDeviceType.AutonomousDevice, deviceCategory, " (autonomous)",calcParameters, guid)
+                  loads,  odap,
+                calclocation,  calcParameters,  autoDevDto)
         {
             _earliestNextStart = new TimeStep(-1,0,true);
             _calcProfile = pCalcProfile;

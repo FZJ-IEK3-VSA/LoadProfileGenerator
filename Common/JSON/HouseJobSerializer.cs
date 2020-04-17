@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Automation;
+using Automation.ResultFiles;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 
@@ -9,18 +10,24 @@ namespace Common.JSON {
     /// <summary>
     /// makes an example json  for the calculation and returns it as string
     /// </summary>
-    public class HouseJobSerializer {
+    public static class HouseJobSerializer {
         public static void WriteJsonToFile([NotNull] string fullPath, [NotNull] HouseCreationAndCalculationJob hj)
         {
             using (StreamWriter sw = new StreamWriter(fullPath)) {
-                HouseJobSerializer hjs = new HouseJobSerializer();
-                string json = hjs.TurnJsonCalcSpecIntoCommentedString(hj);
+                if (hj.CalcSpec == null) {
+                    throw new LPGException("Trying to write a house job without a calc spec");
+                }
+
+                if (hj.House == null) {
+                    throw new LPGException("Trying to write a house job without a house definition");
+                }
+                string json = TurnJsonCalcSpecIntoCommentedString(hj);
                 sw.Write(json);
                 sw.Close();
             }
         }
         [NotNull]
-        private string TurnJsonCalcSpecIntoCommentedString([NotNull] HouseCreationAndCalculationJob jcs)
+        private static string TurnJsonCalcSpecIntoCommentedString([NotNull] HouseCreationAndCalculationJob jcs)
         {
             var comments = GetCommentDictionary();
             string rawJson = JsonConvert.SerializeObject(jcs, Formatting.Indented);
@@ -41,7 +48,7 @@ namespace Common.JSON {
             return joined;
         }
 
-        private int CountSpacesAtBeginning([NotNull] string line)
+        private static int CountSpacesAtBeginning([NotNull] string line)
         {
             int idx = 0;
             while (idx < line.Length && line[idx] == ' ') {
@@ -51,7 +58,7 @@ namespace Common.JSON {
         }
 
         [NotNull]
-        private Dictionary<string, CommentAttribute>  GetCommentDictionary()
+        private static Dictionary<string, CommentAttribute>  GetCommentDictionary()
         {
             Type myType = typeof(JsonCalcSpecification);
             var properties = myType.GetProperties();

@@ -43,9 +43,8 @@ namespace Common.CalcDto {
             MinimumStorageRate = minimumStorageRate;
             MinimumWithdrawRate = minimumWithdrawRate;
             InitialFill = initialFill;
-            var correctInitialFill = initialFill / loadType.ConversionFactor;
-            StorageCapacity = storageCapacity / loadType.ConversionFactor;
-            CurrentFillLevel = correctInitialFill;
+            StorageCapacity = storageCapacity ;
+            CurrentFillLevel = initialFill;
             Capacity = storageCapacity + " " + loadType.UnitOfSum + "; initial fill " + initialFill + " " + loadType.UnitOfSum;
         }
     }

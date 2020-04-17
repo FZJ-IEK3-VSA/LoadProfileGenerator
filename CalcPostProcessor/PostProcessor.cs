@@ -81,7 +81,7 @@ namespace CalcPostProcessor {
             if (Config.IsInUnitTesting && Config.ExtraUnitTestChecking) {
                 double newtotal = 0;
                 foreach (var efr in energyFileRows) {
-                    newtotal += efr.SumFresh;
+                    newtotal += efr.SumFresh();
                 }
                 //Logger.Info("Check for " + loadtypeName + " Nr." + _totalcheck + ": total:" + newtotal);
                 //_totalcheck++;
@@ -92,7 +92,7 @@ namespace CalcPostProcessor {
                 double cacheTotal = 0;
                 foreach (var efr in energyFileRows) {
                     var cache = efr.SumCached;
-                    if (Math.Abs(efr.SumFresh - cache) > Constants.Ebsilon) {
+                    if (Math.Abs(efr.SumFresh() - cache) > Constants.Ebsilon) {
                         throw new LPGException("This should never happen");
                     }
                     cacheTotal += cache;
@@ -272,7 +272,7 @@ namespace CalcPostProcessor {
                     var efr = OnlineEnergyFileRow.Read(br, calcLoadType,_repository.CalcParameters);
                     energyFileRows.Add(efr);
                     if (Config.IsInUnitTesting && Config.ExtraUnitTestChecking) {
-                        total += efr.SumFresh;
+                        total += efr.SumFresh();
                     }
 
                     currentPosition += efr.EntryLengthInByte;

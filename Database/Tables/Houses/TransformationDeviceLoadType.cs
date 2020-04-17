@@ -34,8 +34,10 @@ using JetBrains.Annotations;
 
 namespace Database.Tables.Houses {
     public enum TransformationFactorType {
-        Fixed,
-        Interpolated
+        FixedFactor,
+        Interpolated,
+        FixedValue
+
     }
 
     public class TransformationDeviceLoadType : DBBase {

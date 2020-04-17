@@ -162,10 +162,17 @@ namespace Calculation.Tests.HouseholdElements {
                 };
                 var odap = new OnlineDeviceActivationProcessor(nr, lf, calcParameters);
                 string deviceCategoryGuid = Guid.NewGuid().ToString();
-                var cdev1 = new CalcDevice("cdevice1",  deviceLoads, deviceCategoryGuid, odap, cloc, new HouseholdKey("HH1"), OefcDeviceType.Device,
-                    "category", string.Empty,calcParameters, Guid.NewGuid().ToString());
-                var cdev2 = new CalcDevice("cdevice2", deviceLoads, deviceCategoryGuid, odap, cloc, new HouseholdKey("HH1"), OefcDeviceType.Device,
-                    "category", string.Empty,calcParameters, Guid.NewGuid().ToString());
+                CalcDeviceDto cdd1 = new CalcDeviceDto("cdevice1", deviceCategoryGuid, new HouseholdKey("HH1"),
+                    OefcDeviceType.Device, "category", "", Guid.NewGuid().ToString(),
+                    cloc.Guid, cloc.Name);
+
+                var cdev1 = new CalcDevice(  deviceLoads, odap, cloc, calcParameters,cdd1);
+
+                CalcDeviceDto cdd2 = new CalcDeviceDto("cdevice2", deviceCategoryGuid, new HouseholdKey("HH1"),
+                    OefcDeviceType.Device, "category", "", Guid.NewGuid().ToString(),
+                    cloc.Guid, cloc.Name);
+                var cdev2 = new CalcDevice(deviceLoads,  odap,
+                    cloc, calcParameters, cdd2);
                 cloc.Devices.Add(cdev1);
                 cloc.Devices.Add(cdev2);
                 var daylight = new BitArray(calcParameters.InternalTimesteps);
@@ -251,12 +258,18 @@ namespace Calculation.Tests.HouseholdElements {
                 };
                 var odap = new OnlineDeviceActivationProcessor(nr, lf, calcParameters);
                 string devCategoryGuid = Guid.NewGuid().ToString();
-                var cdev1 = new CalcDevice("cdevice1",  deviceLoads, devCategoryGuid, odap, cloc,key , OefcDeviceType.Device,
-                    "category", string.Empty,calcParameters, Guid.NewGuid().ToString());
-                var cdev2 = new CalcDevice("cdevice2",  deviceLoads, devCategoryGuid, odap, cloc, key, OefcDeviceType.Device,
-                    "category", string.Empty,calcParameters, Guid.NewGuid().ToString());
-                var cdev3 = new CalcDevice("cdevice3", deviceLoads, devCategoryGuid, odap, cloc,key, OefcDeviceType.Device,
-                    "category", string.Empty,calcParameters, Guid.NewGuid().ToString());
+                CalcDeviceDto cdd1 = new CalcDeviceDto("cdevice1", devCategoryGuid, key,
+                    OefcDeviceType.Device, "category","", Guid.NewGuid().ToString(),
+                    cloc.Guid,cloc.Name);
+                var cdev1 = new CalcDevice(  deviceLoads,  odap, cloc,calcParameters, cdd1);
+                CalcDeviceDto cdd2 = new CalcDeviceDto("cdevice2", devCategoryGuid, key,
+                    OefcDeviceType.Device, "category", "", Guid.NewGuid().ToString(),
+                    cloc.Guid, cloc.Name);
+                var cdev2 = new CalcDevice(  deviceLoads, odap, cloc,calcParameters,cdd2);
+                CalcDeviceDto cdd3 = new CalcDeviceDto("cdevice3", devCategoryGuid, key,
+                    OefcDeviceType.Device, "category", "", Guid.NewGuid().ToString(),
+                    cloc.Guid, cloc.Name);
+                var cdev3 = new CalcDevice( deviceLoads,  odap, cloc,calcParameters, cdd3);
                 cloc.Devices.Add(cdev1);
                 cloc.Devices.Add(cdev2);
                 cloc.Devices.Add(cdev3);

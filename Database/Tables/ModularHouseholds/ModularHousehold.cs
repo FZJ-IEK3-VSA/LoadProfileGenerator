@@ -41,6 +41,7 @@ using Database.Tables.BasicHouseholds;
 using JetBrains.Annotations;
 
 namespace Database.Tables.ModularHouseholds {
+    // ReSharper disable once TypeParameterCanBeVariant
     public interface IJsonSerializable<T> {
         [NotNull]
         T GetJson();

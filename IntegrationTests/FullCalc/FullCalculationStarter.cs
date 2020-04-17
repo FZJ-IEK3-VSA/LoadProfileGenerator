@@ -56,7 +56,7 @@ namespace IntegrationTests.FullCalc
                 version,null,LoadTypePriority.All,null,null,null, sim.MyGeneralConfig.AllEnabledOptions(),
                 new DateTime(2015,1,1),new DateTime(2015,1,31),  new TimeSpan(0,1,0),";",5, new TimeSpan(0,1,0),false,false,false,3,3,
                 calculationProfiler);
-            var cm = cmf.GetCalcManager(sim, path, csps, house1, false);
+            var cm = cmf.GetCalcManager(sim, path, csps,  false);
 
             bool ReportCancelFunc()
             {

@@ -8,6 +8,7 @@ using CalculationEngine.OnlineDeviceLogging;
 using CalculationEngine.OnlineLogging;
 using CalculationEngine.Transportation;
 using Common;
+using Common.CalcDto;
 using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
@@ -64,9 +65,14 @@ namespace Calculation.Tests.Transportation {
             CalcDeviceLoad cdl = new CalcDeviceLoad("name",1,chargingLoadType,1,1, Guid.NewGuid().ToString());
             cdls.Add(cdl);
             var iodap = new Mock<IOnlineDeviceActivationProcessor>();
-            CalcTransportationDevice ctd = new CalcTransportationDevice("car-device",transcategory,1,
-                cdls,iodap.Object,hhkey,100,distanceToEnergyFactor,1000,chargingLoadType,
-                calcSites,calcParameters, Guid.NewGuid().ToString(), lf.OnlineLoggingData);
+            CalcDeviceDto dto = new CalcDeviceDto("car-device",transcategory.Guid,
+                hhkey,OefcDeviceType.Transportation,transcategory.Name,string.Empty,
+                Guid.NewGuid().ToString(),string.Empty,string.Empty);
+            CalcTransportationDevice ctd = new CalcTransportationDevice(transcategory,1,
+                cdls,iodap.Object,100,distanceToEnergyFactor,
+                1000,chargingLoadType,
+                calcSites,calcParameters, lf.OnlineLoggingData,
+                dto);
             th.VehicleDepot.Add(ctd);
             //List<CalcTravelRoute> routes3 = src.GetViableTrafficRoutes(dst);
             //Assert.That(routes3.Count, Is.EqualTo(1));

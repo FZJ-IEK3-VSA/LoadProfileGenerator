@@ -56,8 +56,9 @@ namespace LoadProfileGenerator.Presenters.Houses {
         {
             _trafoDevice = trafoDevice;
 
-            _factorTypes.Add("Fixed");
+            _factorTypes.Add("FixedFactor");
             _factorTypes.Add("Interpolated");
+            _factorTypes.Add("FixedValue");
             ExampleConversionFactor = 1;
             ConversionExampleQuantity = 1;
             ConversionExampleTimespan = new TimeSpan(0, 1, 0);
@@ -137,6 +138,12 @@ namespace LoadProfileGenerator.Presenters.Houses {
         [NotNull]
         [UsedImplicitly]
         public ObservableCollection<VLoadType> VLoadTypes => Sim.LoadTypes.MyItems;
+
+        [ItemNotNull]
+        [NotNull]
+        [UsedImplicitly]
+        public ObservableCollection<Variable> Variables => Sim.Variables.MyItems;
+
 
         public void AddOutputLoadType([NotNull] VLoadType selectedLoadType, double factor, TransformationFactorType factorType)
         {

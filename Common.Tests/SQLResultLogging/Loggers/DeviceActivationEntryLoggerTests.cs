@@ -2,6 +2,7 @@
 using Automation;
 using Automation.ResultFiles;
 using Common.CalcDto;
+using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.Loggers;
 using Newtonsoft.Json;
@@ -25,7 +26,12 @@ namespace Common.Tests.SQLResultLogging.Loggers
             };
             InputDataLogger idl = new InputDataLogger(savers.ToArray());
             CalcLoadTypeDto cldto = new CalcLoadTypeDto("loadtype","kw","kwh",1,true,"guid");
-            DeviceActivationEntry ae1 = new DeviceActivationEntry(key,"blub",cldto,1,"activator","devicename",1);
+            TimeStep ts = new TimeStep(1,1,true);
+            CalcDeviceDto cdd = new CalcDeviceDto("devicename","device",
+                key,OefcDeviceType.Device,"devicecategoryname",
+                "additionalname","deviceguid","locationguid","locationname");
+            DeviceActivationEntry ae1 = new DeviceActivationEntry("affordancename",
+                cldto,1,"activator",1,  ts,cdd);
             List<IHouseholdKey> aes = new List<IHouseholdKey>
             {
                 ae1

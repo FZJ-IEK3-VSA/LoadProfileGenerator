@@ -121,7 +121,7 @@ namespace Common {
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         [NotNull]
-        private string InitializeWorkingDirectory([NotNull] string testname, bool useRamdisk) {
+        private static string InitializeWorkingDirectory([NotNull] string testname, bool useRamdisk) {
             var baseWorkingDir = DetermineBaseWorkingDir(useRamdisk);
             var resultdir = Path.Combine(baseWorkingDir, testname);
             try {

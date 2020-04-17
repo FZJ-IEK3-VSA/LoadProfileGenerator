@@ -126,7 +126,7 @@ namespace Common.SQLResultLogging {
 
         [NotNull]
         [ItemNotNull]
-        public List<CalcDeviceDto> GetDevices([NotNull] HouseholdKey key)
+        public List<CalcDeviceDto> LoadDevices([NotNull] HouseholdKey key)
         {
             CalcDeviceDtoLogger cpl = new CalcDeviceDtoLogger(_srls);
             return cpl.Load(key);
@@ -197,6 +197,7 @@ namespace Common.SQLResultLogging {
             return persons;
         }
 
+
         //  [NotNull]
         //public TotalsInformation TotalInformation { get; set; }
 
@@ -265,6 +266,13 @@ namespace Common.SQLResultLogging {
         {
             TransportationEventLogger aeul = new TransportationEventLogger(_srls);
             return aeul.Load(key);
+        }
+
+        [NotNull]
+        public List<CalcAutoDevDto> LoadAutoDevices([NotNull] HouseholdKey key)
+        {
+            CalcAutoDevDtoLogger cpl = new CalcAutoDevDtoLogger(_srls);
+            return cpl.Load(key);
         }
     }
 }

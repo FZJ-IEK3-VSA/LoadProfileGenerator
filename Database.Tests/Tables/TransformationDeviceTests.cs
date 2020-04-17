@@ -59,7 +59,7 @@ namespace Database.Tests.Tables {
             var tdlt = new TransformationDevice("tdlt", "desc", loadTypes[0], -1000000, 1000000,
                 db.ConnectionString, -100000, 100000, Guid.NewGuid().ToString());
             tdlt.SaveToDB();
-            tdlt.AddOutTransformationDeviceLoadType(loadTypes[1], 2, TransformationFactorType.Fixed);
+            tdlt.AddOutTransformationDeviceLoadType(loadTypes[1], 2, TransformationFactorType.FixedFactor);
             tdlt.AddTransformationDeviceCondition(variables[0],  0, 100);
             tdlt.AddDataPoint(2, 1);
 

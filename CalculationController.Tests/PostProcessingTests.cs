@@ -64,7 +64,7 @@ namespace CalculationController.Tests
                 sim.MyGeneralConfig.AllEnabledOptions(),new DateTime(2018,1,1),new DateTime(2018,1,2),new TimeSpan(0,1,0),
                 ";",5,new TimeSpan(0,10,0),false,false,false,3,3,
                 calculationProfiler);
-            var cm = cmf.GetCalcManager(sim, wd1.WorkingDirectory, csps, sim.ModularHouseholds[0], false);
+            var cm = cmf.GetCalcManager(sim, wd1.WorkingDirectory, csps,  false);
 
             bool ReportCancelFunc()
             {
@@ -118,7 +118,7 @@ namespace CalculationController.Tests
                 false, version, null, LoadTypePriority.All, null, null,null, sim.MyGeneralConfig.AllEnabledOptions(),
                 new DateTime(2013,1,1),new DateTime(2013,1,2),new TimeSpan(0,1,0),";",5,new TimeSpan(0,10,0),false,false,false,3,3  ,
                 calculationProfiler);
-            var cm = cmf.GetCalcManager(sim, wd1.WorkingDirectory, csps, sim.ModularHouseholds[0], false);
+            var cm = cmf.GetCalcManager(sim, wd1.WorkingDirectory, csps, false);
             cm.Run(ReportCancelFunc);
             Logger.ImportantInfo("Duration:" + (DateTime.Now - start).TotalSeconds + " seconds");
             var pathdp = Path.Combine(wd1.WorkingDirectory,
@@ -292,7 +292,7 @@ namespace CalculationController.Tests
             }
         }
 
-        private bool ReportCancelFunc()
+        private static bool ReportCancelFunc()
         {
             Logger.Info("canceled");
             return true;

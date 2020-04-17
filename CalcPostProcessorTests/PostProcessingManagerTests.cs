@@ -30,7 +30,7 @@ namespace CalcPostProcessorTests
                 new TimeSpan(0, 1, 0), ";", 1, new TimeSpan(0, 1, 0), false, false, false, 3, 3,
                 calculationProfiler);
             CalcManagerFactory cmf = new CalcManagerFactory();
-            var cm = cmf.GetCalcManager(sim, wd.WorkingDirectory, csps, sim.ModularHouseholds[0], false);
+            var cm = cmf.GetCalcManager(sim, wd.WorkingDirectory, csps,  false);
             cm.Run(null);
 
             var mq = new Moq.Mock<ICalculationProfiler>();

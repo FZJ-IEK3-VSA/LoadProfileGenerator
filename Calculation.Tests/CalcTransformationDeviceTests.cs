@@ -56,25 +56,32 @@ namespace Calculation.Tests {
             var clt = new CalcLoadType("clt1", "W", "kWh", 1, true, Guid.NewGuid().ToString());
             string deviceGuid = Guid.NewGuid().ToString();
             string locGuid = Guid.NewGuid().ToString();
-            var key = new OefcKey(new HouseholdKey("HH1"), OefcDeviceType.Device, deviceGuid, locGuid,clt.Guid, "mycategory");
-            odap.RegisterDevice("dev1", key, "loc", clt.ConvertToDto());
+            CalcDeviceDto cdd = new CalcDeviceDto("dev1", "devcatguid",
+                new HouseholdKey("HH1"), OefcDeviceType.Device, "devcatname",
+                string.Empty, deviceGuid, locGuid, "loc");
+            var key = new OefcKey(cdd, clt.Guid);
+            odap.RegisterDevice(clt.ConvertToDto(),cdd);
             double[] timestepValues = {1.0, 0};
             var tmplist = new List<double>(timestepValues);
             var cp = new CalcProfile("myCalcProfile", Guid.NewGuid().ToString(), tmplist,  ProfileType.Absolute,
                 "synthetic"
             );
             TimeStep ts1 = new TimeStep(1, 0, true);
-            odap.AddNewStateMachine(cp,  ts1,0, 10,  "dev1", clt.ConvertToDto(), "blub",  "name1", "p1", "syn",key);
+            odap.AddNewStateMachine(cp,  ts1,0, 10,
+                clt.ConvertToDto(), "blub",  "name1",
+                "p1", "syn",key,cdd);
             double[] resultValues = {0, 10.0, 0, 0, 0, 0, 0, 0, 0, 0};
             double[] resultValuesRow1 = {0, 20.0, 0, 0, 0, 0, 0, 0, 0, 0};
             double[] resultValuesRow2 = {0, 30.0, 0, 0, 0, 0, 0, 0, 0, 0};
-            var ctd = new CalcTransformationDevice("trafo1",  odap, -1, 080, -1000, 1000,
-                new HouseholdKey("housekey"), Guid.NewGuid().ToString());
-            ctd.SetInputLoadtype(clt);
+            CalcDeviceDto trafocdd = new CalcDeviceDto("trafo1", "devcatguid",
+                new HouseholdKey("housekey"), OefcDeviceType.Device, "devcatname",
+                string.Empty, Guid.NewGuid().ToString(), locGuid, "loc");
+            var ctd = new CalcTransformationDevice(  odap, -1, 080, -1000, 1000
+                 , trafocdd, clt);
             var clt2 = new CalcLoadType("clt2", "W2", "kWh2", 1, true, Guid.NewGuid().ToString());
-            ctd.AddOutputLoadType(clt2, 2, TransformationOutputFactorType.Fixed);
+            ctd.AddOutputLoadType(clt2, 2, TransformationOutputFactorType.FixedFactor);
             var clt3 = new CalcLoadType("clt3", "W2", "kWh2", 1, true, Guid.NewGuid().ToString());
-            ctd.AddOutputLoadType(clt3, 3, TransformationOutputFactorType.Fixed);
+            ctd.AddOutputLoadType(clt3, 3, TransformationOutputFactorType.FixedFactor);
             for (var i = 0; i < 10; i++) {
                 TimeStep ts = new TimeStep(i,0,true);
                 var filerows = odap.ProcessOneTimestep(ts);
@@ -113,17 +120,22 @@ namespace Calculation.Tests {
             var clt = new CalcLoadType("clt1",  "W", "kWh", 1, true, Guid.NewGuid().ToString());
             var devguid = Guid.NewGuid().ToString();
             var locguid = Guid.NewGuid().ToString();
-            var key = new OefcKey(new HouseholdKey("HH1"), OefcDeviceType.Device,devguid, locguid,clt.Guid, "mycategory");
-            odap.RegisterDevice("dev1", key, "loc", clt.ConvertToDto());
+            CalcDeviceDto cdd = new CalcDeviceDto("dev1", "devcatguid",
+                new HouseholdKey("HH1"), OefcDeviceType.Device, "devcatname", "",
+                devguid, locguid, "loc");
+            var key = new OefcKey(cdd,clt.Guid);
+            odap.RegisterDevice( clt.ConvertToDto(),cdd);
             double[] timestepValues = {0, 5, 10.0, 20, 30, 40, 0};
             var cp = new CalcProfile("myCalcProfile", Guid.NewGuid().ToString(), timestepValues.ToList(), ProfileType.Absolute,
                 "synthetic");
             TimeStep ts1 = new TimeStep(1,0,true);
-            odap.AddNewStateMachine(cp, ts1, 0, 1, "dev1", clt.ConvertToDto(), "blub", "name1", "p1", "syn",key);
+            odap.AddNewStateMachine(cp, ts1, 0, 1,
+                 clt.ConvertToDto(), "blub", "name1", "p1",
+                 "syn",key,cdd);
             double[] resultValues = {0, 0, 5, 10.0, 20, 30, 40, 0};
             double[] resultValuesRow1 = {0, 0, 5, 10, 200, 3000, 4000, 0};
-            var ctd = new CalcTransformationDevice("trafo1",  odap, -1, 080, -1000, 1000, new HouseholdKey(  "housekey"), Guid.NewGuid().ToString());
-            ctd.SetInputLoadtype(clt);
+            var ctd = new CalcTransformationDevice( odap, -1, 080, -1000,
+                1000, cdd,clt);
             var clt2 = new CalcLoadType("clt2",  "W2", "kWh2", 1, true, Guid.NewGuid().ToString());
             ctd.AddOutputLoadType(clt2,2, TransformationOutputFactorType.Interpolated);
 

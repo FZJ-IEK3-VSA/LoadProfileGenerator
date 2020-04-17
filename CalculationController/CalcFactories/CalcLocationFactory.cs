@@ -26,7 +26,6 @@
 
 //-----------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using CalculationEngine.HouseholdElements;
 using CalculationEngine.OnlineDeviceLogging;
@@ -63,9 +62,10 @@ namespace CalculationController.CalcFactories {
                 foreach (var locdev in t.LightDevices) {
                     var deviceLoads = CalcDeviceFactory.MakeCalcDeviceLoads(locdev,_calcLoadTypeDict);
                     var deviceName = CalcAffordanceFactory.FixAffordanceName(locdev.Name,_calcParameters.CSVCharacter);
-                    var clightdevice = new CalcDevice(deviceName,  deviceLoads, locdev.DeviceCategoryGuid,
-                        _odap, cloc, locdev.HouseholdKey, OefcDeviceType.Light, locdev.DeviceCategoryName,
-                        string.Empty, _calcParameters,Guid.NewGuid().ToString());
+                    locdev.Name = deviceName;
+                    var clightdevice = new CalcDevice(  deviceLoads,
+                        _odap, cloc,
+                        _calcParameters, locdev);
                     cloc.AddLightDevice(clightdevice);
                 }
                 //deviceLocationDict.Add(cloc, new List<IAssignableDevice>());

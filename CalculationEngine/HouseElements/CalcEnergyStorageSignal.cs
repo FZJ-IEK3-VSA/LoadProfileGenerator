@@ -48,8 +48,8 @@ namespace CalculationEngine.HouseElements {
 
         public CalcEnergyStorageSignal([NotNull] string pName, double triggerOff, double triggerOn, double value,
             CalcVariable calcVariable, [NotNull] string guid) : base(pName,guid) {
-            _triggerOffPercent = triggerOff / 100;
-            _triggerOnPercent = triggerOn / 100;
+            _triggerOffPercent = triggerOff ;
+            _triggerOnPercent = triggerOn;
             _value = value;
             _calcVariable = calcVariable;
         }
@@ -66,12 +66,12 @@ namespace CalculationEngine.HouseElements {
             if (currentFillPercent > 1) {
                 throw new LPGException("Energy Storage more than 100% full. This is a bug.");
             }
-            var isFirsttimeStep = false;
+            //var isFirsttimeStep = false;
             if (_currtimestep == null) {
                 _tankLastLastValue = currentFillPercent;
                 _tankLastValue = currentFillPercent;
                 _tankCurValue = currentFillPercent;
-                isFirsttimeStep = true;
+              //  isFirsttimeStep = true;
             }
             if (timestep != _currtimestep) {
                 _currtimestep = timestep;
@@ -81,16 +81,14 @@ namespace CalculationEngine.HouseElements {
                 _lastTurnedOn = _isTurnedOn;
             }
             if (_lastTurnedOn) {
-                if (_tankLastLastValue >= _triggerOffPercent && _tankLastValue <= _triggerOffPercent ||
-                    _tankLastLastValue <= _triggerOffPercent && _tankLastValue >= _triggerOffPercent) {
+                if (_tankLastLastValue >= _triggerOffPercent) {
                     _isTurnedOn = false;
                 }
             }
-            else if (_tankLastLastValue >= _triggerOnPercent && _tankLastValue <= _triggerOnPercent ||
-                     _tankLastLastValue <= _triggerOnPercent && _tankLastValue >= _triggerOnPercent ||
-                     isFirsttimeStep && _tankLastValue <= _triggerOnPercent) {
+            else
+            { if (_tankLastLastValue <= _triggerOnPercent) {
                 _isTurnedOn = true;
-            }
+            }}
             if (_isTurnedOn) {
                 return _value;
             }

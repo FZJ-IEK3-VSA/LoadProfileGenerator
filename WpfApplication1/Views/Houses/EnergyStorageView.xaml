@@ -233,9 +233,9 @@
                         </TextBlock>
                         <Label Grid.Row="1"
                                Grid.Column="0"
-                               Content="Loadtype"
+                               Content="Variable"
                                Style="{StaticResource LabelStyle}"
-                               Target="{Binding ElementName=CmbSignalLoadtype}" />
+                               Target="{Binding ElementName=CmbSignalVariable}" />
                         <ComboBox Name="CmbSignalVariable"
                                   Grid.Row="1"
                                   Grid.Column="1"
@@ -309,8 +309,8 @@
                             <ListView.View>
                                 <GridView>
                                     <GridViewColumn Width="Auto"
-                                                    DisplayMemberBinding="{Binding LoadType}"
-                                                    Header="LoadType" />
+                                                    DisplayMemberBinding="{Binding Variable}"
+                                                    Header="Variable" />
                                     <GridViewColumn Width="Auto"
                                                     DisplayMemberBinding="{Binding TriggerLevelOn}"
                                                     Header="Turn On Level [%]" />

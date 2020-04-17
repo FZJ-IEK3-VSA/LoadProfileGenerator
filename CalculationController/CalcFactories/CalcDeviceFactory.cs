@@ -85,10 +85,12 @@ namespace CalculationController.CalcFactories {
                             req.VariableCondition,_calcVariableRepository,req.VariableGuid);
                         requirements.Add(vreq);
                     }
-                    var cautodev = new CalcAutoDev(autoDevDto.Name, cp,loadtype,
-                        deviceLoads,autoDevDto.TimeStandardDeviation, autoDevDto.DeviceCategoryGuid
-                            , _odap, autoDevDto.HouseholdKey, 1, calcLocation,
-                        autoDevDto.DeviceCategoryFullPath, _calcParameters, autoDevDto.Guid,requirements);
+
+                    autoDevDto.AdditionalName = " (autonomous)";
+                    var cautodev = new CalcAutoDev( cp,loadtype,
+                        deviceLoads,autoDevDto.TimeStandardDeviation,
+                             _odap, 1,calcLocation,
+                         _calcParameters, requirements, autoDevDto);
                     var busyarr = _availabilityDtoRepository.GetByGuid(autoDevDto.BusyArr.Guid);
                     cautodev.ApplyBitArry(busyarr, loadtype);
                     autodevs.Add(cautodev);
@@ -172,9 +174,9 @@ namespace CalculationController.CalcFactories {
                 // ggf dev category in dev umwandeln
                 var deviceLoads = MakeCalcDeviceLoads(cdd, calcLoadTypeDictionary);
 
-                var cdev = new CalcDevice(cdd.Name, deviceLoads,cdd.DeviceCategoryGuid,
-                    _odap, cloc, householdKey, OefcDeviceType.Device, cdd.DeviceCategoryName,
-                    string.Empty, _calcParameters, cdd.Guid);
+                var cdev = new CalcDevice( deviceLoads,
+                    _odap, cloc,
+                    _calcParameters,  cdd);
 
                 cloc.Devices.Add(cdev);
                 calcDevices.Add(cdev);

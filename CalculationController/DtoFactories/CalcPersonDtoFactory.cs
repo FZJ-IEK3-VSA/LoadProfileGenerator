@@ -54,8 +54,8 @@ namespace CalculationController.DtoFactories
             return personDtOs;
         }
 
-        private void AddTraitDesiresToOnePerson([NotNull][ItemNotNull] List<ModularHousehold.PersonTraitDesireEntry> traitDesires,
-            [NotNull] CalcPersonDto calcPerson)
+        private static void AddTraitDesiresToOnePerson([NotNull][ItemNotNull] List<ModularHousehold.PersonTraitDesireEntry> traitDesires,
+                                                       [NotNull] CalcPersonDto calcPerson)
         {
             foreach (var personTraitDesireEntry in traitDesires)
             {
