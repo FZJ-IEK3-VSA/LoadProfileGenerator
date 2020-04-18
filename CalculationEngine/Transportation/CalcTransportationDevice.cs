@@ -41,7 +41,7 @@ namespace CalculationEngine.Transportation {
         [CanBeNull] private CalcChargingStation _lastChargingStation;
 
         [CanBeNull] private string _lastUsingPerson;
-        private readonly Dictionary<CalcLoadType, OefcKey> _keysByLoadtype = new Dictionary<CalcLoadType, OefcKey>();
+        private readonly Dictionary<string, Dictionary<CalcLoadType, OefcKey>> _keysByLocGuidAndLoadtype = new Dictionary<string, Dictionary<CalcLoadType, OefcKey>>();
 
         [NotNull] private readonly CalcDeviceDto _calcDeviceDto;
         public CalcTransportationDevice(
@@ -82,18 +82,25 @@ namespace CalculationEngine.Transportation {
             //throw new DataIntegrityException("The transportation device " + pName +
             //" seems to have no load types. That is not very useful. Please fix.");
             //}
-
+            if (string.IsNullOrEmpty(calcDeviceDto.LocationGuid)) {
+                throw new LPGException("Trying to initalize with empty location guid");
+            }
             foreach (CalcDeviceLoad deviceLoad in loads) {
                 //TODO: check if -1 is a good location guid
                 //OefcKey key = new OefcKey(_calcDeviceDto.HouseholdKey, OefcDeviceType.Transportation, Guid, "-1", deviceLoad.LoadType.Guid, "Transportation");
                 var key = odap.RegisterDevice(deviceLoad.LoadType.ConvertToDto(), calcDeviceDto);
-                _keysByLoadtype.Add(deviceLoad.LoadType,key);
+                _keysByLocGuidAndLoadtype.Add(calcDeviceDto.LocationGuid,new Dictionary<CalcLoadType, OefcKey>());
+                _keysByLocGuidAndLoadtype[calcDeviceDto.LocationGuid].Add(deviceLoad.LoadType, key);
             }
 
             if (chargingCalcLoadType != null) {
                 var key2 = odap.RegisterDevice(chargingCalcLoadType.ConvertToDto(), calcDeviceDto);
-                if (!_keysByLoadtype.ContainsKey(chargingCalcLoadType)) {
-                    _keysByLoadtype.Add(chargingCalcLoadType, key2);
+                if (!_keysByLocGuidAndLoadtype.ContainsKey(calcDeviceDto.LocationGuid)) {
+                    _keysByLocGuidAndLoadtype.Add(calcDeviceDto.LocationGuid, new Dictionary<CalcLoadType, OefcKey>());
+                }
+                var dict = _keysByLocGuidAndLoadtype[calcDeviceDto.LocationGuid];
+                if (dict.ContainsKey(chargingCalcLoadType)) {
+                    dict.Add(chargingCalcLoadType,key2);
                 }
             }
 
@@ -165,7 +172,7 @@ namespace CalculationEngine.Transportation {
                     ProfileType.Relative,
                     "Synthetic for " + Name);
                 SetTimeprofile(cp, startTimeStep, load.LoadType, "Transport via " + Name,
-                    personName + " - " + travelRouteName);
+                    personName + " - " + travelRouteName,_calcDeviceDto.LocationGuid);
             }
         }
 
@@ -280,7 +287,7 @@ namespace CalculationEngine.Transportation {
                         chargingProfile, ProfileType.Absolute,
                         "Synthetic Charging for " + Name + " @ " + _currentSite.Name);
                     var dstLoadType = chargingStation.GridChargingLoadType;
-                    var key = _keysByLoadtype[dstLoadType];
+                    var key = _keysByLocGuidAndLoadtype[_currentSite.Guid][dstLoadType];
                     //OefcKey key = new OefcKey(_householdKey, OefcDeviceType.Charging, Guid, _currentSite.Guid, dstLoadType.Guid, "Transportation");
                     //if (dstLoadType == null) {
                     //    throw new Exception("???");
@@ -371,18 +378,17 @@ namespace CalculationEngine.Transportation {
                     var  clone = _calcDeviceDto.Clone();
                     clone.Name = "Charging " + Name + " @ " + station.ChargingStationName;
                     clone.LocationGuid = site.Guid;
-                    //var key =
-                        _odap.RegisterDevice(station.GridChargingLoadType.ConvertToDto(),_calcDeviceDto);
-                    //_keysByChargingStation.Add(station,key);
-
-                        //, site.Name, station.GridChargingLoadType.ConvertToDto());
+                    var key = _odap.RegisterDevice(station.GridChargingLoadType.ConvertToDto(),_calcDeviceDto);
+                    _keysByLocGuidAndLoadtype.Add(clone.LocationGuid,new Dictionary<CalcLoadType, OefcKey>());
+                    var lt = station.GridChargingLoadType;
+                    _keysByLocGuidAndLoadtype[clone.LocationGuid].Add(lt, key);
                 }
             }
         }
 
         private void SetTimeprofile([NotNull] CalcProfile calcProfile, [NotNull] TimeStep startidx,
                                     [NotNull] CalcLoadType loadType,
-                                    [NotNull] string affordanceName, [NotNull] string activatingPersonName)
+                                    [NotNull] string affordanceName, [NotNull] string activatingPersonName, [NotNull] string locationGuid)
         {
             CalcDeviceLoad cdl = null;
             foreach (var calcDeviceLoad in _loads) {
@@ -407,7 +413,7 @@ namespace CalculationEngine.Transportation {
 
             //   var totalDuration = calcProfile.GetNewLengthAfterCompressExpand(timefactor);
             //OefcKey key = new OefcKey(_calcDeviceDto.HouseholdKey, OefcDeviceType.Transportation, Guid, "-1", cdl.LoadType.Guid, "Transportation");
-            var key = _keysByLoadtype[cdl.LoadType];
+            var key = _keysByLocGuidAndLoadtype[locationGuid][cdl.LoadType];
             _odap.AddNewStateMachine(calcProfile, startidx, cdl.PowerStandardDeviation, 1,
                  cdl.LoadType.ConvertToDto(), affordanceName, activatingPersonName,
                 calcProfile.Name, calcProfile.DataSource, key, _calcDeviceDto);

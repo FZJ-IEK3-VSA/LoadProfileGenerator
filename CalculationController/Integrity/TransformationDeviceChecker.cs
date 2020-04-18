@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Net.Sockets;
 using Common;
 using Database;
 using Database.Tables.Houses;
@@ -39,6 +38,7 @@ namespace CalculationController.Integrity {
                 }
 
                 foreach (var lt in device.LoadTypesOut) {
+                    // ReSharper disable once CompareOfFloatsByEqualityOperator
                     if (lt.Factor == 0) {
                         throw new DataIntegrityException("Output factor of 0 doesn't make sense in " + device.Name, device);
                     }

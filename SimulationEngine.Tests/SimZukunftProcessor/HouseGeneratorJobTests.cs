@@ -130,10 +130,11 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
             DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Simulator sim = new Simulator(db.ConnectionString);
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-
+            File.Copy(db.FileName,wd.Combine("profilegenerator.db3"));
+            Directory.SetCurrentDirectory(wd.WorkingDirectory);
             //housedata
             HouseData houseData = new HouseData(Guid.NewGuid().ToString(),
-                "HT21", 10000, 1000, "HouseGeneratorJobHouse");
+                "HT01", 10000, 1000, "HouseGeneratorJobHouse");
             HouseCreationAndCalculationJob houseJob = new HouseCreationAndCalculationJob(
                 "present", "2019", "trafokreis");
             houseJob.House = houseData;

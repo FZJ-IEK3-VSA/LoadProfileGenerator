@@ -59,7 +59,6 @@ namespace CalculationController.Integrity {
                 if (trafo.TransformationDevice.LoadTypesOut.Count == 0) {
                     throw new DataIntegrityException("Messed up ");
                 }
-                
             }
             var offeredVariables = new List<Variable>();
             foreach (var storage in ht.HouseEnergyStorages) {

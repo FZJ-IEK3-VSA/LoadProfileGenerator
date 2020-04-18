@@ -296,10 +296,21 @@ namespace CalculationEngine.HouseholdElements {
             }
             var totalDuration = calcProfile.StepValues.Count; //.GetNewLengthAfterCompressExpand(timefactor);
             //calcProfile.CompressExpandDoubleArray(timefactor,allProfiles),
-            var key = _KeyByLoad[cdl.LoadType];
-            _odap?.AddNewStateMachine(calcProfile, startidx,  cdl.PowerStandardDeviation, powerUsageFactor,
-                  cdl.LoadType.ConvertToDto(), affordanceName,  activatingPersonName,
-                calcProfile.Name, calcProfile.DataSource, key, _calcDeviceDto);
+            if (_odap != null) {
+                var key = _KeyByLoad[cdl.LoadType];
+                _odap.AddNewStateMachine(calcProfile,
+                    startidx,
+                    cdl.PowerStandardDeviation,
+                    powerUsageFactor,
+                    cdl.LoadType.ConvertToDto(),
+                    affordanceName,
+                    activatingPersonName,
+                    calcProfile.Name,
+                    calcProfile.DataSource,
+                    key,
+                    _calcDeviceDto);
+            }
+
             if (MatchingAutoDevs.Count > 0) {
                 if (_odap == null) {
                     throw new LPGException("Odap was null");

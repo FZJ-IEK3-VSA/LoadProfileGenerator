@@ -140,24 +140,7 @@ namespace SimulationEngine.Tests {
             wd.CleanUp(1);
         }
 
-        [Test]
-        [Category(UnitTestCategories.BasicTest)]
-        public void MainTestBatchHouses() {
-            const string filename = "Start-House.cmd";
-            if (File.Exists(filename)) {
-                File.Delete(filename);
-            }
-            var wd = SetupDB3(Utili.GetCurrentMethodAndClass());
-            var arguments = new List<string>
-            {
-                "TestBatch",
-                "-Houses"
-            };
-            Program.Main(arguments.ToArray());
-            Assert.IsTrue(File.Exists(filename));
-            wd.CleanUp(1);
-        }
-
+        /*
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void MainTestBatchModularHouseholds() {
@@ -174,8 +157,8 @@ namespace SimulationEngine.Tests {
             Program.Main(arguments.ToArray());
             Assert.IsTrue(File.Exists(filename));
             wd.CleanUp(1);
-        }
-
+        }*/
+        /*
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void MainTestBatchSettlements() {
@@ -192,7 +175,7 @@ namespace SimulationEngine.Tests {
             Program.Main(arguments.ToArray());
             Assert.IsTrue(File.Exists(filename));
             wd.CleanUp(1);
-        }
+        }*/
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]

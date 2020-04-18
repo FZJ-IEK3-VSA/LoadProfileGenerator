@@ -48,7 +48,6 @@ namespace Calculation.Tests.Transportation
 
             CalcTransportationDeviceCategory category = new CalcTransportationDeviceCategory("category",true, Guid.NewGuid().ToString());
             CalcLoadType lt2 = new CalcLoadType("driving load",  "km/h", "km", 10000, false, Guid.NewGuid().ToString());
-           
             Random rnd  =new Random(1);
             NormalRandom nr = new NormalRandom(0,0.1,rnd);
             var fft = new FileFactoryAndTracker(wd.WorkingDirectory, "blub", wd.InputDataLogger);

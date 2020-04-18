@@ -57,18 +57,7 @@ namespace IntegrationTests {
             [NotNull]out Database.DatabaseMerger.DatabaseMerger dbm) {
             var di = new DirectoryInfo(Path.Combine(Directory.GetCurrentDirectory(), path));
             Logger.Debug(di.FullName);
-            const string teamcityrelativePath = @"..\..\..\Importfiles\";
-            const string jenkinsrelativePath = "Importfiles\\";
-            FileInfo fi = new FileInfo(Path.Combine(teamcityrelativePath,path));
-            if (!fi.Exists) {
-                Logger.Info("file not found: " + fi.FullName + ", trying jenkins path next");
-                fi = new FileInfo(Path.Combine(jenkinsrelativePath, path));
-                if (!fi.Exists)
-                {
-                    Logger.Info("file not found: " + fi.FullName + ", trying jenkins path next");
-                    throw new LPGException("Missing file: " + fi.FullName + "\n Current Directory:" + Directory.GetCurrentDirectory());
-                }
-            }
+            var fi = FindImportFiles(path);
             var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             var newpath = Path.Combine(wd.WorkingDirectory, "mergertest.db3");
             File.Copy(fi.FullName, newpath);
@@ -81,6 +70,28 @@ namespace IntegrationTests {
             mainsim = mainSim;
             db.Cleanup();
             wd.CleanUp();
+        }
+
+        [NotNull]
+        private static FileInfo FindImportFiles([NotNull] string path)
+        {
+            const string teamcityrelativePath = @"..\..\..\Importfiles\";
+            FileInfo fi = new FileInfo(Path.Combine(teamcityrelativePath, path));
+            if (fi.Exists) {
+                return fi;
+            }
+            Logger.Info("file not found: " + fi.FullName + ", trying jenkins path next");
+            const string jenkinsrelativePath = "Importfiles\\";
+            fi = new FileInfo(Path.Combine(jenkinsrelativePath, path));
+            if (!fi.Exists) {
+            }
+            const string dropboxpath = @"v:\dropbox\lpg\importfiles\";
+            fi = new FileInfo(Path.Combine(dropboxpath, path));
+            if (!fi.Exists) {
+                return fi;
+            }
+            Logger.Info("file not found: " + fi.FullName + ", trying jenkins path next");
+            throw new LPGException("Missing file: " + fi.FullName + "\n Current Directory:" + Directory.GetCurrentDirectory());
         }
 
         [Test]

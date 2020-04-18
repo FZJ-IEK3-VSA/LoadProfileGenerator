@@ -397,6 +397,10 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps{
                                      [NotNull] HouseholdKey key)
         {
             DateStampCreator dsc = new DateStampCreator(_calcParameters);
+            if (!efc.ColumnEntriesByColumn.ContainsKey(dstLoadType)) {
+                return;
+            }
+
             var cols = efc.ColumnEntriesByColumn[dstLoadType];
             Dictionary<int, TotalsPerDeviceEntry> tdp = new Dictionary<int, TotalsPerDeviceEntry>();
             foreach (var pair in cols ) {
@@ -409,12 +413,12 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps{
                     continue;
                 }
                 int month = dsc.MakeDateFromTimeStep(row.Timestep).Month;
-                for (int colidx = 0; colidx < row.EnergyEntries.Count; colidx++) {
+                foreach (var pair in cols) {
                     // ReSharper disable once CompareOfFloatsByEqualityOperator
-                    if(row.EnergyEntries[colidx]==0) {
+                    if (row.EnergyEntries[pair.Key]==0) {
                         continue;
                     }
-                    tdp[colidx].AddConsumptionValue(month, row.EnergyEntries[colidx]);
+                    tdp[pair.Key].AddConsumptionValue(month, row.EnergyEntries[pair.Key]);
                 }
             }
 
