@@ -127,9 +127,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
 
             var cdl = new CalcDeviceLoad("lt1", 100, clt, 100, 0, Guid.NewGuid().ToString());
             var loads = new List<CalcDeviceLoad>();
-            var results = new List<string> {
-                "100;0;",
-                "100;0;",
+            var results = new List<string> {"100;0;", "100;0;",
                 "100;0;",
                 "100;0;",
                 "100;0;",
@@ -155,12 +153,12 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                 List<VariableRequirement> requirements = new List<VariableRequirement>();
                 string devCatGuid = Guid.NewGuid().ToString();
                 var key = new HouseholdKey("HH1");
-                CalcDeviceDto cdd = new CalcDeviceDto("devicename",
+                CalcDeviceDto cddauto = new CalcDeviceDto("devicename",
                     devCatGuid,
                     key,
                     OefcDeviceType.Device,
                     "device category",
-                    "",
+                    " (autonomous)",
                     Guid.NewGuid().ToString(),
                     cloc.Guid,
                     cloc.Name);
@@ -173,7 +171,16 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                     1,
                     cloc,
                     calcParameters,
-                    requirements,cdd);
+                    requirements,cddauto);
+               CalcDeviceDto cdd = new CalcDeviceDto("devicename",
+                   devCatGuid,
+                   key,
+                   OefcDeviceType.Device,
+                   "device category",
+                   "",
+                   Guid.NewGuid().ToString(),
+                   cloc.Guid,
+                   cloc.Name);
                 var device = new CalcDevice(loads,
                     odap,
                     cloc,
@@ -209,7 +216,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
 
                     var filerows = odap.ProcessOneTimestep(ts);
                     Assert.AreEqual(1, filerows.Count);
-                    Assert.AreEqual(1, filerows[0].EnergyEntries.Count);
+                    Assert.AreEqual(2, filerows[0].EnergyEntries.Count);
                     var entries = string.Empty;
 
                     foreach (var d in filerows[0].EnergyEntries) {
@@ -217,7 +224,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                     }
 
                     Logger.Info(entries);
-                    //Assert.AreEqual(results[i], entries);
+                    Assert.AreEqual(results[i], entries);
                 }
             }
 

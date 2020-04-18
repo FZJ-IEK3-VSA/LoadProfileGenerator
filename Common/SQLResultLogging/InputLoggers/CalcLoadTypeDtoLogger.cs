@@ -16,6 +16,9 @@ namespace Common.SQLResultLogging.InputLoggers
 
         public override void Run([NotNull] HouseholdKey key,[NotNull] object o)
         {
+            if (key != Constants.GeneralHouseholdKey) {
+                throw new LPGException("Trying to save load types not in the general file");
+            }
             List<CalcLoadTypeDto> calcLoadTypeDtoDictionary = (List<CalcLoadTypeDto>)o;
             SaveableEntry se = GetStandardSaveableEntry(key);
             foreach (CalcLoadTypeDto dto in calcLoadTypeDtoDictionary) {

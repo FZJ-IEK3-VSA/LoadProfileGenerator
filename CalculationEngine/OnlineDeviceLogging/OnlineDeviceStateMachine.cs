@@ -44,12 +44,12 @@ namespace CalculationEngine.OnlineDeviceLogging {
         [NotNull]
         private readonly CalcParameters _calcParameters;
         [NotNull] private readonly TimeStep _startTimeStep;
-        private readonly ZeroEntryKey _zek;
+        //private readonly OefcKey _zek;
 
         public OnlineDeviceStateMachine([NotNull] CalcProfile dstCalcProfile, [NotNull] TimeStep startTimeStep,
             double powerStandardDeviation, double powerUsage, [NotNull] NormalRandom nr, [NotNull] CalcLoadTypeDto loadType,
             [NotNull] string deviceName, OefcKey deviceKey, [NotNull] string affordanceName, [NotNull] CalcParameters calcParameters) {
-            _zek = new ZeroEntryKey(deviceKey.HouseholdKey, deviceKey.ThisDeviceType,deviceKey.DeviceGuid,deviceKey.LocationGuid);
+            //_zek = new ZeroEntryKey(deviceKey.HouseholdKey, deviceKey.ThisDeviceType,deviceKey.DeviceGuid,deviceKey.LocationGuid);
             _deviceName = deviceName;
             _calcParameters = calcParameters;
             DeviceKey = deviceKey;
@@ -121,7 +121,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
                 return 0;
             }
             foreach (var setToZeroEntry in zeroEntries) {
-                if (setToZeroEntry.Key == _zek) {
+                if (setToZeroEntry.Key == DeviceKey) {
                     if (timestep >= setToZeroEntry.StartTime && timestep < setToZeroEntry.EndTime) {
                         return 0;
                     }

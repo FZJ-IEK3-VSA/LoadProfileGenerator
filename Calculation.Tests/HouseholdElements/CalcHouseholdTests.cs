@@ -137,11 +137,11 @@ namespace Calculation.Tests.HouseholdElements {
                 cdLoc2
             };
             CalcHousehold.MatchAutonomousDevicesWithNormalDevices(autodevs, normalDevices);
-            var totalmatchcount = 0;
+            //var totalmatchcount = 0;
             foreach (var device in normalDevices) {
                 Logger.Info(device.Name);
                 foreach (var matchingAutoDev in device.MatchingAutoDevs) {
-                    totalmatchcount++;
+              //      totalmatchcount++;
                     Logger.Info("\t" + matchingAutoDev.Name);
                 }
             }

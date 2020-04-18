@@ -124,10 +124,13 @@ namespace CalculationEngine.HouseholdElements {
                     throw new LPGException("odap was null. Please report");
                 }
                 //var key = new OefcKey(calcDeviceDto.HouseholdKey, calcDeviceDto.DeviceType,calcDeviceDto.Guid, calcDeviceDto.LocationGuid,calcDeviceLoad.LoadType.Guid, calcDeviceDto.DeviceCategoryName);
-                odap?.RegisterDevice( calcDeviceLoad.LoadType.ConvertToDto(), calcDeviceDto);
+                var key = odap?.RegisterDevice( calcDeviceLoad.LoadType.ConvertToDto(), calcDeviceDto);
+                if (key != null) {
+                    _KeyByLoad.Add(calcDeviceLoad.LoadType, key.Value);
+                }
             }
         }
-
+        public readonly Dictionary<CalcLoadType, OefcKey> _KeyByLoad = new Dictionary<CalcLoadType, OefcKey>();
         [NotNull]
         public CalcLocation CalcLocation => _calcLocation;
 
@@ -293,7 +296,7 @@ namespace CalculationEngine.HouseholdElements {
             }
             var totalDuration = calcProfile.StepValues.Count; //.GetNewLengthAfterCompressExpand(timefactor);
             //calcProfile.CompressExpandDoubleArray(timefactor,allProfiles),
-            OefcKey key = new OefcKey(_calcDeviceDto, cdl.LoadType.Guid);
+            var key = _KeyByLoad[cdl.LoadType];
             _odap?.AddNewStateMachine(calcProfile, startidx,  cdl.PowerStandardDeviation, powerUsageFactor,
                   cdl.LoadType.ConvertToDto(), affordanceName,  activatingPersonName,
                 calcProfile.Name, calcProfile.DataSource, key, _calcDeviceDto);
@@ -303,8 +306,12 @@ namespace CalculationEngine.HouseholdElements {
                 }
 
                 foreach (CalcAutoDev matchingAutoDev in MatchingAutoDevs) {
-                    _odap.AddZeroEntryForAutoDev(_calcDeviceDto.HouseholdKey, OefcDeviceType.AutonomousDevice, matchingAutoDev.Guid, _calcLocation.Guid,
-                        startidx, totalDuration);
+                    if (matchingAutoDev._KeyByLoad.ContainsKey(cdl.LoadType)) {
+                        var zerokey = matchingAutoDev._KeyByLoad[cdl.LoadType];
+                        _odap.AddZeroEntryForAutoDev(zerokey,
+                            startidx,
+                            totalDuration);
+                    }
                 }
             }
             SetBusy(startidx, totalDuration, loadType, activateDespiteBeingBusy);

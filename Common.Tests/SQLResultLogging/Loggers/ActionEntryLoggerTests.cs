@@ -1,14 +1,29 @@
 ﻿using Automation;
 using Automation.ResultFiles;
+using System;
+using System.Collections.Generic;
+using Common.CalcDto;
+using Common.SQLResultLogging;
+using Common.SQLResultLogging.InputLoggers;
+using Common.SQLResultLogging.Loggers;
+using Newtonsoft.Json;
+using NUnit.Framework;
 
 namespace Common.Tests.SQLResultLogging.Loggers
 {
-    using System;
-    using System.Collections.Generic;
-    using Common.SQLResultLogging;
-    using Common.SQLResultLogging.Loggers;
-    using Newtonsoft.Json;
-    using NUnit.Framework;
+
+    public class CalcLoadtypeDtoLoggerTest {
+        [Test()]
+        [Category(UnitTestCategories.BasicTest)]
+        public void RunCalcLoadtypeDtoLoggerTest()
+        {
+            WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
+            CalcLoadTypeDtoLogger cldtl = new CalcLoadTypeDtoLogger(wd.SqlResultLoggingService);
+            CalcLoadTypeDto cdls = new CalcLoadTypeDto("name", "unit", "unit", 5, true, "guid");
+            cldtl.Run(Constants.GeneralHouseholdKey, cdls);
+            cldtl.Load();
+        }
+    }
 
     [TestFixture()]
     public class ActionEntryLoggerTests : UnitTestBaseClass

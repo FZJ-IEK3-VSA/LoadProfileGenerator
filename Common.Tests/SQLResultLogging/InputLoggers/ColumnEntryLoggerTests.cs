@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using Automation;
 using Automation.ResultFiles;
 using Common.CalcDto;
@@ -14,8 +15,9 @@ namespace Common.Tests.SQLResultLogging.InputLoggers {
     {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void RunTest()
+        public void RunColumnEntryLoggerTest()
         {
+            SkipEndCleaning = true;
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             ColumnEntryLogger ael = new ColumnEntryLogger(wd.SqlResultLoggingService);
             HouseholdKey key = new HouseholdKey("hhkey");
@@ -35,8 +37,10 @@ namespace Common.Tests.SQLResultLogging.InputLoggers {
             var res = ael.Read(key);
             var s1 = JsonConvert.SerializeObject(aes, Formatting.Indented);
             var s2 = JsonConvert.SerializeObject(res, Formatting.Indented);
+            File.WriteAllText(wd.Combine("original.json"),s1);
+            File.WriteAllText(wd.Combine("deserialized.json"), s2);
             Assert.AreEqual(s1, s2);
-            wd.CleanUp();
+            //wd.CleanUp();
         }
     }
 }

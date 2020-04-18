@@ -133,7 +133,7 @@ namespace Calculation.Tests {
                  clt.ConvertToDto(), "blub", "name1", "p1",
                  "syn",key,cdd);
             double[] resultValues = {0, 0, 5, 10.0, 20, 30, 40, 0};
-            double[] resultValuesRow1 = {0, 0, 5, 10, 200, 3000, 4000, 0};
+            //double[] resultValuesRow1 = {0, 0, 5, 10, 200, 3000, 4000, 0};
             var ctd = new CalcTransformationDevice( odap, -1, 080, -1000,
                 1000, cdd,clt);
             var clt2 = new CalcLoadType("clt2",  "W2", "kWh2", 1, true, Guid.NewGuid().ToString());

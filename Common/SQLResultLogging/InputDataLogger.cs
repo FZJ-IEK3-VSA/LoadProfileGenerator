@@ -23,8 +23,39 @@ namespace Common.SQLResultLogging {
                                 [CanBeNull] SqlResultLoggingService srls)
         {
             SavingType = savingType;
+            //check if no readonly properties
+            CheckType(savingType);
             ResultTableDefinition = resultTableDefinition;
             _srls = srls;
+        }
+        private static readonly HashSet<string> _checkedTypes = new HashSet<string>();
+        private static void CheckType([NotNull] Type savingType)
+        {
+            if (_checkedTypes.Contains(savingType.FullName)) {
+                return;
+            }
+
+            _checkedTypes.Add(savingType.FullName);
+            var properties = savingType.GetProperties();
+            //Logger.Info("Checking " + savingType.FullName);
+            foreach (var property in properties) {
+                //Logger.Info(" checking " + property.Name);
+                if (property.PropertyType.IsClass) {
+                    CheckType(property.PropertyType);
+                }
+                var accessors = property.GetAccessors();
+
+                //TODO: throw exceptions
+                foreach (var accessor in accessors) {
+                    if (accessor.ReturnType == typeof(void)) //setter found
+                    {
+                        //Logger.Info("    found setter");
+                        if (!accessor.IsPublic) {
+                            throw new LPGException("Private setter on a json serializer class");
+                        }
+                    }
+                }
+            }
         }
 
         public abstract void Run([NotNull] HouseholdKey key, [NotNull] object o);

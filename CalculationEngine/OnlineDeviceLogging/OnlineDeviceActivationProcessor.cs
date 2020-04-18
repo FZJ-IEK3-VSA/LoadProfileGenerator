@@ -44,7 +44,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
     using Common.SQLResultLogging.Loggers;
 
     public class SetToZeroEntry {
-        public SetToZeroEntry([NotNull] TimeStep startTime, [NotNull] TimeStep endTime, ZeroEntryKey key) {
+        public SetToZeroEntry([NotNull] TimeStep startTime, [NotNull] TimeStep endTime, OefcKey key) {
             StartTime = startTime;
             EndTime = endTime;
             Key = key;
@@ -53,7 +53,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
         [NotNull]
         public TimeStep EndTime { get; }
 
-        public ZeroEntryKey Key { get; }
+        public OefcKey Key { get; }
         [NotNull]
         public TimeStep StartTime { get; }
     }
@@ -67,8 +67,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
                                 [NotNull] CalcLoadTypeDto loadType, [NotNull] string affordanceName, [NotNull] string activatorName, [NotNull] string profileName,
             [NotNull] string profileSource, OefcKey oefckey, CalcDeviceDto calcDeviceDto);
 
-        void AddZeroEntryForAutoDev([NotNull] HouseholdKey householdKey, OefcDeviceType deviceType, [NotNull] string deviceGuid,
-                                    [NotNull] string locationGuid, [NotNull] TimeStep starttime, int totalDuration);
+        void AddZeroEntryForAutoDev(OefcKey zeKey,[NotNull] TimeStep starttime, int totalDuration);
 
         [NotNull]
         OnlineEnergyFileColumns Oefc { get; }
@@ -169,9 +168,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
             }
         }
 
-        public void AddZeroEntryForAutoDev([NotNull] HouseholdKey householdKey, OefcDeviceType deviceType, [NotNull] string deviceGuid, [NotNull] string locationGuid,
-            [NotNull] TimeStep starttime, int totalDuration) {
-            var zeKey = new ZeroEntryKey(householdKey, deviceType, deviceGuid, locationGuid);
+        public void AddZeroEntryForAutoDev(OefcKey zeKey, [NotNull] TimeStep starttime, int totalDuration) {
             var stze = new SetToZeroEntry(starttime, starttime.AddSteps( totalDuration), zeKey);
             _zeroEntries.Add(stze);
         }

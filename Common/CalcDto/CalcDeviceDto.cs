@@ -47,9 +47,9 @@ namespace Common.CalcDto {
             get;
             set;
         }
-        public OefcDeviceType DeviceType { get; }
+        public OefcDeviceType DeviceType { get; set; }
         [NotNull]
-        public string DeviceCategoryName { get; }
+        public string DeviceCategoryName { get; set; }
         [NotNull]
         public string AdditionalName { get; set; }
         [NotNull]
@@ -57,7 +57,7 @@ namespace Common.CalcDto {
         [NotNull]
         public string LocationGuid { get; set; }
         [NotNull]
-        public string LocationName { get; }
+        public string LocationName { get; set; }
         [ItemNotNull]
         [NotNull]
         public List<CalcDeviceLoadDto> Loads { get; set; } = new List<CalcDeviceLoadDto>();
