@@ -158,23 +158,28 @@ namespace CalculationController.Tests {
         }
 
         [Test]
-        [Category(UnitTestCategories.BasicTest)]
+        [Category(UnitTestCategories.LongTest4)]
         public void HouseTypeTest()
         {
             var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
+            Simulator sim = new Simulator(db.ConnectionString);
+            int housetypecount = sim.HouseTypes.It.Count;
             Logger.Threshold = Severity.Error;
-            const int startidx = 18;
-            for (int i = startidx; i < startidx+5 ; i++) {
+            for (int i = 0; i < housetypecount ; i++) {
                 string path = wd.Combine("HT" + (i+1).ToString());
                 var rc = CalculateOneHousetype(path, i);
-                List<RowCollection> rcs = new List<RowCollection>();
-                rcs.Add(rc);
-                XlsxDumper.WriteToXlsx(wd.Combine("results.HT"+ (i+1)+ ".xlsx"), rcs.ToArray());
-                CheckHouseResults(path);
+                if (rc != null) {
+                    List<RowCollection> rcs = new List<RowCollection>();
+                    rcs.Add(rc);
+                    XlsxDumper.WriteToXlsx(wd.Combine("results.HT" + (i + 1) + ".xlsx"), rcs.ToArray());
+                }
+
+                //CheckHouseResults(path);
             }
             //      wd1.CleanUp();
         }
-
+        /*
         private static void CheckHouseResults([NotNull] string path)
         {
             var srls = new SqlResultLoggingService(path);
@@ -199,10 +204,10 @@ namespace CalculationController.Tests {
                 {
                     loadtypeEntry.Value.Should().BeApproximately(0, 50, "space heating should be balanced");
                 }
-            }*/
-        }
+            }
+        }*/
 
-        [NotNull]
+        [CanBeNull]
         private static RowCollection CalculateOneHousetype([NotNull] string path, int housetype)
         {
             if (Directory.Exists(path)) {
@@ -282,6 +287,15 @@ namespace CalculationController.Tests {
                 throw new LPGException("households detected");
             }
 
+            string generalfile = Path.Combine(path, "Results." + Constants.GeneralHouseholdKey.Key + ".sqlite");
+            if (!File.Exists(generalfile))
+            {
+                throw new LPGException("Calculation failed");
+            }
+            string housefile = Path.Combine(path, "Results." + Constants.HouseKey.Key + ".sqlite");
+            if (!File.Exists(housefile)) {
+                return null;
+            }
             var srls = new SqlResultLoggingService(path);
             TotalsPerDeviceLogger tpdl = new TotalsPerDeviceLogger(srls);
             var devices = tpdl.Read(Constants.HouseKey);
