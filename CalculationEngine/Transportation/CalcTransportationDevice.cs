@@ -82,6 +82,9 @@ namespace CalculationEngine.Transportation {
             //throw new DataIntegrityException("The transportation device " + pName +
             //" seems to have no load types. That is not very useful. Please fix.");
             //}
+            const string vehiclePoolGuid = "8C426E95-B269-402E-9806-C3785D6C8433";
+            _calcDeviceDto.LocationGuid = vehiclePoolGuid;
+            _calcDeviceDto.LocationName = "Vehicle Pool";
             if (string.IsNullOrEmpty(calcDeviceDto.LocationGuid)) {
                 throw new LPGException("Trying to initalize with empty location guid");
             }

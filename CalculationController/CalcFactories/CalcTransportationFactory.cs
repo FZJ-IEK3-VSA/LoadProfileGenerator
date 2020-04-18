@@ -546,13 +546,11 @@ namespace CalculationController.CalcFactories {
                     throw new LPGException("no transportation handler");
                 }
 
-                var vehiclePoolGuid = "8C426E95-B269-402E-9806-C3785D6C8433";
                 CalcDeviceDto cdd = new CalcDeviceDto(transportationDevice.Name,
                     transportationDevice.Category.Guid,
                     chh.HouseholdKey,
                     OefcDeviceType.Transportation,transportationDevice.Category.Name,
-                    string.Empty,transportationDevice.Guid, vehiclePoolGuid
-                    , "Vehicle Pool");
+                    string.Empty,transportationDevice.Guid, string.Empty,string.Empty);
                 var category = chh.TransportationHandler.GetCategory(transportationDevice.Category);
                 CalcTransportationDevice cd = new CalcTransportationDevice(
                     category,
