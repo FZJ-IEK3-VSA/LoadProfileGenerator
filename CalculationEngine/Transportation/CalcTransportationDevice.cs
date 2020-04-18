@@ -102,7 +102,7 @@ namespace CalculationEngine.Transportation {
                     _keysByLocGuidAndLoadtype.Add(calcDeviceDto.LocationGuid, new Dictionary<CalcLoadType, OefcKey>());
                 }
                 var dict = _keysByLocGuidAndLoadtype[calcDeviceDto.LocationGuid];
-                if (dict.ContainsKey(chargingCalcLoadType)) {
+                if (!dict.ContainsKey(chargingCalcLoadType)) {
                     dict.Add(chargingCalcLoadType,key2);
                 }
             }

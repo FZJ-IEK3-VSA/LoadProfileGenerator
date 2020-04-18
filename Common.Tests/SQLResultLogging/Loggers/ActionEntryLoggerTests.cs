@@ -20,7 +20,9 @@ namespace Common.Tests.SQLResultLogging.Loggers
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             CalcLoadTypeDtoLogger cldtl = new CalcLoadTypeDtoLogger(wd.SqlResultLoggingService);
             CalcLoadTypeDto cdls = new CalcLoadTypeDto("name", "unit", "unit", 5, true, "guid");
-            cldtl.Run(Constants.GeneralHouseholdKey, cdls);
+            List<CalcLoadTypeDto> cdlsList = new List<CalcLoadTypeDto>();
+            cdlsList.Add(cdls);
+            cldtl.Run(Constants.GeneralHouseholdKey, cdlsList);
             cldtl.Load();
         }
     }

@@ -162,6 +162,7 @@ namespace SimulationEngineLib.SimZukunftProcessor {
             Logger.Info("Writing example file and additional data file that you might need.");
             HouseCreationAndCalculationJob hj = new HouseCreationAndCalculationJob("scenario","year","districtname");
             hj.House = houseData1;
+            hj.CalcSpec = calculationSettings;
             HouseJobSerializer.WriteJsonToFile("ExampleHouseJob-1.json",hj);
             hj.House = houseData2;
             HouseJobSerializer.WriteJsonToFile("ExampleHouseJob-2.json", hj);
