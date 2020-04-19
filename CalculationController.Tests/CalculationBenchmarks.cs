@@ -14,7 +14,6 @@ using CalculationEngine;
 using ChartCreator2.Tests;
 using Common;
 using Common.Enums;
-using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
 using Common.SQLResultLogging.Loggers;
@@ -25,7 +24,6 @@ using Database.Tables;
 using Database.Tables.Houses;
 using Database.Tables.Transportation;
 using Database.Tests;
-using FluentAssertions;
 using JetBrains.Annotations;
 using NUnit.Framework;
 
@@ -166,7 +164,7 @@ namespace CalculationController.Tests {
             Simulator sim = new Simulator(db.ConnectionString);
             int housetypecount = sim.HouseTypes.It.Count;
             Logger.Threshold = Severity.Error;
-            for (int i = 0; i < housetypecount ; i++) {
+            for (int i = 0; i < housetypecount && i <2 ; i++) {
                 string path = wd.Combine("HT" + (i+1).ToString());
                 var rc = CalculateOneHousetype(path, i);
                 if (rc != null) {
@@ -227,7 +225,7 @@ namespace CalculationController.Tests {
             sim.MyGeneralConfig.Enable(CalcOption.TotalsPerDevice);
             sim.MyGeneralConfig.Enable(CalcOption.TotalsPerLoadtype);
             sim.MyGeneralConfig.Enable(CalcOption.EnergyStorageFile);
-            sim.MyGeneralConfig.Enable(CalcOption.VariableLogFile);
+            //sim.MyGeneralConfig.Enable(CalcOption.VariableLogFile);
             sim.MyGeneralConfig.CSVCharacter = ";";
             sim.MyGeneralConfig.ShowSettlingPeriodBool = true;
             Assert.AreNotEqual(null, sim);
@@ -239,10 +237,12 @@ namespace CalculationController.Tests {
             house.TemperatureProfile = sim.TemperatureProfiles[0];
             house.HouseType = sim.HouseTypes[housetype];
             house.Name = "housetest for " + house.HouseType.Name;
+            house.AddHousehold(sim.ModularHouseholds[0],
+                true,
+                sim.ChargingStationSets[0],
+                sim.TravelRouteSets[0],
+                sim.TransportationDeviceSets[0]);
             house.SaveToDB();
-            while (house.Households.Count > 0) {
-                house.Households[0].DeleteFromDB();
-            }
 
             CalculationProfiler calculationProfiler = new CalculationProfiler();
             CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
@@ -277,15 +277,9 @@ namespace CalculationController.Tests {
                 return true;
             }
 
-            if (house.Households.Count > 0) {
-                throw new LPGException("households detected");
-            }
 
             cm.Run(ReportCancelFunc);
             db.Cleanup();
-            if (house.Households.Count > 0) {
-                throw new LPGException("households detected");
-            }
 
             string generalfile = Path.Combine(path, "Results." + Constants.GeneralHouseholdKey.Key + ".sqlite");
             if (!File.Exists(generalfile))
