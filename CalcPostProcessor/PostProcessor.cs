@@ -244,9 +244,9 @@ namespace CalcPostProcessor {
 
                     _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - " + calcLoadType.Name);
                 }
+                _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Calculation of the sums per load type");
             }
 
-            _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Calculation of the sums per load type");
             if (!_loadTypePostProcessingSteps.Any(x => x.IsEnabled())
                 && !_householdloadTypePostProcessingSteps.Any(x => x.IsEnabled())
             )
