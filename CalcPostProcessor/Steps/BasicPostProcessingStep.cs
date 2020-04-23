@@ -57,6 +57,16 @@ namespace CalcPostProcessor.Steps
         }
     }
 
+    public class LoadtypeSumStepParameters : IStepParameters
+    {
+        [NotNull]
+        public CalcLoadTypeDto LoadType { get; }
+        public LoadtypeSumStepParameters([NotNull] CalcLoadTypeDto loadType)
+        {
+            LoadType = loadType;
+        }
+    }
+
     public  abstract class BasicPostProcessingStep
     {
         [NotNull] private readonly List<CalcOption> _options;

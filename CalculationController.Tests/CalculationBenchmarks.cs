@@ -52,9 +52,7 @@ namespace CalculationController.Tests {
             cp.StopPart("SimLoading");
             cp.StartPart("Calculation");
             sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.OnlyOverallSum);
-            sim.MyGeneralConfig.Enable(CalcOption.ActionsLogfile);
-            sim.MyGeneralConfig.Enable(CalcOption.TotalsPerLoadtype);
-            sim.MyGeneralConfig.Enable(CalcOption.TotalsPerDevice);
+            sim.MyGeneralConfig.Enable(CalcOption.JsonSumFiles);
             //sim.MyGeneralConfig.Enable(CalcOption.ActionCarpetPlot);
             //sim.MyGeneralConfig.Enable(CalcOption.ActivationFrequencies);
             sim.MyGeneralConfig.CSVCharacter = ";";

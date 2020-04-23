@@ -248,7 +248,8 @@ namespace CalculationController.Tests.CalcFactories {
 
             cm.Run(ReportCancelFunc);
             db.Cleanup();
-            wd.CleanUp();
+            base.SkipEndCleaning = true;
+// wd.CleanUp();
         }
 
         [Test]

@@ -171,6 +171,7 @@ namespace ReleaseBuilder
             Copy(src, dst, "JetBrains.Annotations.dll");
             Copy(src, dst, "System.Data.SQLite.EF6.dll");
             Copy(src, dst, "System.Data.SQLite.Linq.dll");
+            Copy(src, dst, "EPPlus.dll");
             //string src64 = Path.Combine(src, "x64");
             //Copy(src64, dst, "sqlite3.dll");
             DirectoryInfo di = new DirectoryInfo(src);

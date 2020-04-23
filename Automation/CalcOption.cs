@@ -44,6 +44,7 @@
         TransportationStatistics,
         ActionsEachTimestep,
         CalculationFlameChart,
-        SumProfileExternalIndividualHouseholdsAsJson
+        SumProfileExternalIndividualHouseholdsAsJson,
+        JsonSumFiles
     }
 }

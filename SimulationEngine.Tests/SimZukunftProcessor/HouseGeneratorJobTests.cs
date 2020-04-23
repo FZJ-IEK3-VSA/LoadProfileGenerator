@@ -163,6 +163,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
             StartHouseJob(houseJob,  wd, "xxx");
         }
 
+
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void HouseJobForHouseTypes()
@@ -295,5 +296,24 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
             HouseGenerator houseGenerator = new HouseGenerator();
             houseGenerator.ProcessSingleHouseJob(houseJobFile);
         }
+
+        [Test]
+        [Category(UnitTestCategories.ManualOnly)]
+        public void RunSinglePredefinedJson()
+        {
+            Logger.Get().StartCollectingAllMessages();
+            string srcfile = @"C:\Work\fzj\trial\H01 in HT04 4.json";
+            WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
+            FileInfo srcfi = new FileInfo(srcfile);
+            string targetfile = wd.Combine(srcfi.Name);
+            string targetdb = wd.Combine("profilegenerator.db3");
+            File.Copy(db.FileName,targetdb,true);
+            srcfi.CopyTo(targetfile, true);
+            Directory.SetCurrentDirectory(wd.WorkingDirectory);
+            HouseGenerator houseGenerator = new HouseGenerator();
+            houseGenerator.ProcessSingleHouseJob(targetfile);
+        }
+
     }
 }

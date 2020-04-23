@@ -50,6 +50,9 @@ namespace CalcPostProcessor {
         private readonly ILoadTypeStep[] _loadTypePostProcessingSteps;
         [ItemNotNull]
         [NotNull]
+        private readonly ILoadTypeSumStep[] _loadTypeSumPostProcessingSteps;
+        [ItemNotNull]
+        [NotNull]
         private readonly IGeneralStep[] _generalPostProcessingSteps;
 
         [NotNull] [ItemNotNull] private readonly IGeneralHouseholdStep[] _generalHouseholdSteps;
@@ -65,9 +68,11 @@ namespace CalcPostProcessor {
                 [NotNull][ItemNotNull] IGeneralStep[] generalPostProcessingSteps,
             [NotNull][ItemNotNull] IGeneralHouseholdStep[] generalHouseholdSteps,
             [NotNull][ItemNotNull] IHouseholdLoadTypeStep[] householdloadTypePostProcessingSteps,
+            [NotNull][ItemNotNull] ILoadTypeSumStep[] loadtypeSumPostProcessingSteps,
             [NotNull] FileFactoryAndTracker fft
             )
         {
+            _loadTypeSumPostProcessingSteps = loadtypeSumPostProcessingSteps;
             _fft = fft;
             _calculationProfiler = calculationProfiler;
             _repository = repository;
@@ -211,11 +216,45 @@ namespace CalcPostProcessor {
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private void RunLoadTypeDependend([CanBeNull] [ItemNotNull] List<string> loadTypesForPostProcessing) {
-            if(!_loadTypePostProcessingSteps.Any(x=> x.IsEnabled())&& !_householdloadTypePostProcessingSteps.Any(x=> x.IsEnabled()))
+            if (_loadTypeSumPostProcessingSteps.Any(x => x.IsEnabled()) ) {
+                _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Calculation of the sums per load type");
+                foreach (var calcLoadType in _repository.LoadTypes) {
+                    if (!_fft.CheckForResultFileEntry(ResultFileID.OnlineSumActivationFiles,
+                        calcLoadType.Name,
+                        Constants.GeneralHouseholdKey,
+                        null,
+                        null)) {
+                        Logger.Info("Skipping post-processing of load type " + calcLoadType.Name +
+                                    " because there was no sum dat file generated for it.");
+                        continue;
+                    }
+
+                    if (loadTypesForPostProcessing != null && loadTypesForPostProcessing.Count > 0 &&
+                        !loadTypesForPostProcessing.Contains(calcLoadType.Name)) {
+                        Logger.Info("Skipping post-processing of load type " + calcLoadType.Name + " because it was not specified.");
+                        continue;
+                    }
+
+                    _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - " + calcLoadType.Name);
+
+                    foreach (ILoadTypeSumStep loadTypePostProcessingStep in _loadTypeSumPostProcessingSteps) {
+                        LoadtypeSumStepParameters ltsp = new LoadtypeSumStepParameters(calcLoadType);
+                        loadTypePostProcessingStep.Run(ltsp);
+                    }
+
+                    _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - " + calcLoadType.Name);
+                }
+            }
+
+            _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Calculation of the sums per load type");
+            if (!_loadTypePostProcessingSteps.Any(x => x.IsEnabled())
+                && !_householdloadTypePostProcessingSteps.Any(x => x.IsEnabled())
+            )
+
             {
                 return;
             }
-
+            _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Calculation of the individual profiles for devices and households");
             // needs to be persistent object to keep the dictionary for all load types
             foreach (var calcLoadType in _repository.LoadTypes) {
                 if (!_fft.CheckForResultFileEntry(ResultFileID.OnlineDeviceActivationFiles, calcLoadType.Name,
@@ -247,9 +286,10 @@ namespace CalcPostProcessor {
                 }
                 _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - " + calcLoadType.Name);
             }
+            _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Calculation of the individual profiles for devices and households");
             //if (_repository.DeviceSumInformationList.DeviceSums.Count > 0) {
-//                _repository.DeviceSumInformationList.WriteJson(_fft, _repository.CalcParameters.InternalStepsize);
-  //          }
+            //                _repository.DeviceSumInformationList.WriteJson(_fft, _repository.CalcParameters.InternalStepsize);
+            //          }
         }
 
         [NotNull]

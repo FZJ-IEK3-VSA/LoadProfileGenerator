@@ -744,7 +744,12 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             }
 
             if (_openItemDict.ContainsKey(key)) {
-                _openItemDict[key].Invoke(o);
+                if (Logger.Get().SaveExecutionFunction != null) {
+                    Logger.Get().SaveExecutionFunction(() => _openItemDict[key].Invoke(o));
+                }
+                else {
+                    _openItemDict[key].Invoke(o);
+                }
             }
             else {
                 if (!key.StartsWith("Database.Helpers.CategoryDBBase", StringComparison.Ordinal) &&

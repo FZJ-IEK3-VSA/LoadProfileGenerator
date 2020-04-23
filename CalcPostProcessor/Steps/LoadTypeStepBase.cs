@@ -10,6 +10,22 @@ namespace CalcPostProcessor.Steps
         void Run([JetBrains.Annotations.NotNull] IStepParameters parameters);
         bool IsEnabled();
     }
+
+    public interface ILoadTypeSumStep
+    {
+        void Run([JetBrains.Annotations.NotNull] IStepParameters parameters);
+        bool IsEnabled();
+    }
+
+    public abstract class LoadTypeSumStepBase : BasicPostProcessingStep, ILoadTypeSumStep
+    {
+        protected LoadTypeSumStepBase([JetBrains.Annotations.NotNull] CalcDataRepository repository, [JetBrains.Annotations.NotNull] List<CalcOption> options,
+                                      [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler,
+                                      [JetBrains.Annotations.NotNull] string stepName) : base(repository, options, calculationProfiler,
+            stepName)
+        {
+        }
+    }
     public abstract class LoadTypeStepBase : BasicPostProcessingStep, ILoadTypeStep
     {
         protected LoadTypeStepBase([JetBrains.Annotations.NotNull] CalcDataRepository repository, [JetBrains.Annotations.NotNull] List<CalcOption> options,

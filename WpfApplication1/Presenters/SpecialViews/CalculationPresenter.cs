@@ -614,6 +614,8 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                 jcs.TransportationDeviceSet = SelectedTransportationDeviceSet?.GetJsonReference();
                 jcs.TravelRouteSet = SelectedTravelRouteSet?.GetJsonReference();
             }
+
+            houseJob.CalcSpec = jcs;
             HouseJobSerializer.WriteJsonToFile(resultpath,houseJob);
         }
 

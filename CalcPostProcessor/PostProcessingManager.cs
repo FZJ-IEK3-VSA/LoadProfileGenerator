@@ -53,7 +53,8 @@ namespace CalcPostProcessor
             //builder.RegisterType<AffordanceStatisticsWriter>().As<IGeneralPostProcessingStep>().SingleInstance();
 
             //loadtypesteps
-            builder.RegisterType<SumProfileProcessor>().As<ILoadTypeStep>().SingleInstance();
+            builder.RegisterType<SumProfileProcessor>().As<ILoadTypeSumStep>().SingleInstance();
+            builder.RegisterType<JsonSumProfileProcessor>().As<ILoadTypeStep>().SingleInstance();
             builder.RegisterType<IndividualHouseholdSumProfileProcessor>().As<IHouseholdLoadTypeStep>().SingleInstance();
             builder.RegisterType<DeviceProfileFileProcessor>().As<ILoadTypeStep>().SingleInstance();
             //builder.RegisterType<EnergyCarpetPlotMaker>().As<ILoadTypeStep>().SingleInstance();

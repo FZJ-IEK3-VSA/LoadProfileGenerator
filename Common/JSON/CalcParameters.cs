@@ -97,6 +97,10 @@ namespace Common.JSON {
             if (IsSet(CalcOption.OverallSum)) {
                 Enable(CalcOption.OverallDats);
             }
+            if (IsSet(CalcOption.JsonSumFiles))
+            {
+                Enable(CalcOption.DetailedDatFiles);
+            }
 
             if (IsSet(CalcOption.IndividualSumProfiles)) {
                 Enable(CalcOption.DetailedDatFiles);

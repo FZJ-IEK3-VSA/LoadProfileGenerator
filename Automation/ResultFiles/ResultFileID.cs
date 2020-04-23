@@ -55,7 +55,6 @@ namespace Automation.ResultFiles {
         WeekdayLoadProfileID = 21,
         TimeOfUse =22,
         TimeOfUseEnergy = 23,
-
         DurationCurveSums = 24,
         DurationCurveDevices = 25,
         CarpetPlotLabeled = 26,
@@ -66,7 +65,6 @@ namespace Automation.ResultFiles {
         AffordancePersonEnergyUse = 31,
         DeviceSumsPerMonth = 32,
         FiveMinuteImportFile = 33,
-
         CriticalThresholdViolations = 34,
         ActivityPercentages = 35,
         SettlementTotal = 36,
@@ -115,6 +113,8 @@ namespace Automation.ResultFiles {
         Transportation = 79,
         TransportationStatistics = 80,
         Sqlite = 81,
-        ExternalSumsForHouseholdsJson
+        ExternalSumsForHouseholdsJson = 82,
+        JsonSums = 83,
+
     }
 }
