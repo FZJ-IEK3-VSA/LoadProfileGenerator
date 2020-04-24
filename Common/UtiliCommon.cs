@@ -52,11 +52,6 @@ namespace Common {
             return result;
         }
 
-        public static void WriteLine([NotNull] string message) {
-#pragma warning disable S2228 // Console logging should not be used
-            Console.WriteLine(message);
-#pragma warning restore S2228 // Console logging should not be used
-        }
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "int")]
         public static int ConvertToIntWithMessage([NotNull] string s)
         {

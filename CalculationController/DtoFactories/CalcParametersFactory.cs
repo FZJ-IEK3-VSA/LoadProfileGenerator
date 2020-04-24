@@ -2,7 +2,6 @@
 using Automation;
 using CalculationController.Queue;
 using Common.JSON;
-using Database;
 using Database.Tables.Houses;
 using JetBrains.Annotations;
 
@@ -10,14 +9,6 @@ namespace CalculationController.DtoFactories
 {
     public class CalcParametersFactory
     {
-        [NotNull]
-        private readonly Simulator _sim;
-
-        public CalcParametersFactory([NotNull] Simulator sim)
-        {
-            _sim = sim;
-        }
-
         [NotNull]
         public CalcParameters MakeCalculationParametersFromConfig([NotNull] CalcStartParameterSet csps, bool forceRandom)
         {

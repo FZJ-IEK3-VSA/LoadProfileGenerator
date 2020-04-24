@@ -31,7 +31,7 @@ namespace ReleaseBuilder {
                                                       "';");
                             var i = o as long?;
                             if (i == null) {
-                                Console.WriteLine(o.GetType());
+                                Logger.Info(o.GetType().FullName??"");
                             }
                             if (i != 1) {
                                 var max = cmd.ExecuteScalar("SELECT max(ID) FROM " +s);

@@ -275,7 +275,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
 
             var ts = aff.CalculateMaximumInternalTimeResolution();
             Assert.AreEqual(60, ts.TotalSeconds);
-            Console.WriteLine(ts);
+            Logger.Info(ts.ToString());
             db.Cleanup();
         }
 
@@ -315,7 +315,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
 
             var ts = aff.CalculateMaximumInternalTimeResolution();
             Assert.AreEqual(60, ts.TotalSeconds);
-            Console.WriteLine(ts);
+            Logger.Info(ts.ToString());
             db.Cleanup();
         }
 
@@ -351,7 +351,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
 
             var ts = aff.CalculateMaximumInternalTimeResolution();
             Assert.AreEqual(60, ts.TotalSeconds);
-            Console.WriteLine(ts);
+            Logger.Info(ts.ToString());
             db.Cleanup();
         }
 

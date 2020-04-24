@@ -33,15 +33,15 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
             var exports = JsonConvert.DeserializeObject<List<ExportEntry>>(jsonstr);
             var gebids = exports.Select(x => x.GebäudeObjektIDs).Distinct().ToList();
             DirectoryInfo di = new DirectoryInfo(@"O:\r8archive");
-            Console.WriteLine("Total count:" + gebids.Count);
+            Logger.Info("Total count:" + gebids.Count);
             var files = di.GetFiles("SumProfiles_900s.Electricity.csv", SearchOption.AllDirectories);
             List< YearlyProfile > profiles = new List<YearlyProfile>();
             for (var i = 0; i < gebids.Count; i++) {
                 var file = files[i];
                 var parentDir = file.Directory?.Parent ?? throw new NullReferenceException();
                 string des = gebids[i].Replace(",","");
-                Console.WriteLine(des);
-                Console.WriteLine(parentDir.FullName);
+                Logger.Info(des);
+                Logger.Info(parentDir.FullName);
                 YearlyProfile yp = new YearlyProfile(des, file.FullName);
                 profiles.Add(yp);
                 using (StreamReader sr = new StreamReader(file.FullName)) {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using Automation;
 using Automation.ResultFiles;
 using CalculationController.DtoFactories;
@@ -46,7 +47,7 @@ namespace Calculation.Tests.OnlineLogging {
             VariableEntryLogger vel = new VariableEntryLogger(wd.SqlResultLoggingService);
             var varEntries = vel.Read(key);
             foreach (CalcVariableEntry entry in varEntries) {
-                Console.WriteLine(entry.Value);
+                Logger.Info(entry.Value.ToString(CultureInfo.InvariantCulture));
             }
 
             Assert.That(varEntries[0].Value, Is.EqualTo(1));

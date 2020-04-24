@@ -45,7 +45,6 @@ using Database.Tables.BasicHouseholds;
 using Database.Tables.ModularHouseholds;
 using Database.Tests;
 using FluentAssertions;
-using FluentAssertions.Equivalency;
 using JetBrains.Annotations;
 using NUnit.Framework;
 
@@ -326,17 +325,6 @@ namespace CalculationController.Tests.CalcFactories {
             wd.CleanUp();
         }
 
-        private static bool IsInvalidMember([NotNull] IMemberInfo x)
-        {
-            if( x.SelectedMemberPath.EndsWith("Guid")) {
-                return true;
-            }
-            if (x.SelectedMemberPath.EndsWith("ToString"))
-            {
-                return true;
-            }
-            return false;
-        }
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void GetDuplicateCalcManagerHouseholdTest()

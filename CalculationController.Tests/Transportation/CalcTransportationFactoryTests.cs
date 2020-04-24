@@ -264,7 +264,7 @@ namespace CalculationController.Tests.Transportation
                     sim.TemperatureProfiles[0],
                     new HouseholdKey("hh1"),
                     sim.GeographicLocations[0],
-                    out var dtolocs,
+                    out var _,
                     tds,
                     trs,
                     EnergyIntensityType.Random,

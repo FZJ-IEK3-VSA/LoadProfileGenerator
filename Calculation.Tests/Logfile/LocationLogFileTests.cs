@@ -111,7 +111,7 @@ namespace Calculation.Tests.Logfile
             old.FinalSaveToDatabase();
             LocationEntryLogger lel = new LocationEntryLogger(wd.SqlResultLoggingService);
             var le = lel.Load(key1);
-            Console.WriteLine("count: " + le.Count);
+            Logger.Info("count: " + le.Count);
             string prev = JsonConvert.SerializeObject(le1, Formatting.Indented);
             string loaded = JsonConvert.SerializeObject(le[0],Formatting.Indented);
             Assert.That(loaded,Is.EqualTo(prev));

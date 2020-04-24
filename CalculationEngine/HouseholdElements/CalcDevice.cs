@@ -238,7 +238,7 @@ namespace CalculationEngine.HouseholdElements {
                 _busyEntries.Add(be);
                 _busyEntries.Sort(BusyEntryComparer);
             }*/
-            // if (Name == "Cell Phone Samsung Charging") {Console.WriteLine("Setting Busy at " + startIndex + " for a duration of " + duration + " until " +(startIndex + duration));}
+            // if (Name == "Cell Phone Samsung Charging") {Logger.Info("Setting Busy at " + startIndex + " for a duration of " + duration + " until " +(startIndex + duration));}
             var endidx = Math.Min(startIndex.InternalStep + duration, _isBusyForLoadType[loadType].Length);
             for (var i = startIndex.InternalStep; i < endidx; i++) {
                 // if (!UseRanges)
@@ -249,10 +249,6 @@ namespace CalculationEngine.HouseholdElements {
                                            " This points towards something being quite wrong. Timestep: " +
                                            i);
                 }
-                //      if (Name == "Cell Phone Samsung Charging" && i == 505 )
-                //    {
-                //      Console.WriteLine("samsung 505");
-                //}
                 _isBusyForLoadType[loadType].Set(i, true);
             }
         }

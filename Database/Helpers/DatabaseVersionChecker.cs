@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using Automation.ResultFiles;
+using Common;
 using Database.Database;
 using JetBrains.Annotations;
 
@@ -26,7 +27,7 @@ namespace Database.Helpers {
                         var subsub = dr.GetIntFromLong("SubSub");
                         var index = dr.GetString("Index");
                         fullVersion = main + "." + sub + "." + subsub + "." + index;
-                        Console.WriteLine("Successfully read version: " + fullVersion);
+                        Logger.Info("Successfully read version: " + fullVersion);
                     }
                 }
             }

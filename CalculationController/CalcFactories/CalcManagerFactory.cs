@@ -107,7 +107,7 @@ namespace CalculationController.CalcFactories
 
                 var ds = GetDeviceSelection(csps, csps.CalcTarget, chh);
 
-                var cpf = new CalcParametersFactory(sim);
+                var cpf = new CalcParametersFactory();
                 var calcParameters = cpf.MakeCalculationParametersFromConfig(csps,forceRandom);
 
                 var sqlFileName = Path.Combine(resultpath, "Results.sqlite");

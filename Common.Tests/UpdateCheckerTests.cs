@@ -1,5 +1,4 @@
-﻿using System;
-using Automation;
+﻿using Automation;
 using NUnit.Framework;
 
 namespace Common.Tests
@@ -14,7 +13,7 @@ namespace Common.Tests
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             UpdateChecker uc = new UpdateChecker();
             string s = uc.GetLatestVersion(out _);
-            Console.WriteLine(s);
+            Logger.Info(s);
             wd.CleanUp();
         }
     }

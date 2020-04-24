@@ -84,7 +84,7 @@ namespace Calculation.Tests {
             int keyidx = 0;
             foreach (var keys in odap.Oefc.ColumnEntriesByLoadTypeByDeviceKey.Values) {
                 foreach (KeyValuePair<OefcKey, ColumnEntry> pair in keys) {
-                    Console.WriteLine("Key " + keyidx + " "+ pair.Key.ToString() + " - " + pair.Value);
+                    Logger.Info("Key " + keyidx + " "+ pair.Key.ToString() + " - " + pair.Value);
                     keyidx++;
                 }
             }

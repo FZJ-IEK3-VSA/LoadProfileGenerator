@@ -337,36 +337,6 @@ namespace CalculationController.Integrity {
             }
         }*/
 
-        private void CheckWebTraitTags([NotNull][ItemNotNull] ObservableCollection<HouseholdTrait> traits)
-        {
-            if (!PerformCleanupChecks) {
-                return;
-            }
-            var traitsNoWebTag = new List<HouseholdTrait>();
-            foreach (var trait in traits) {
-                if (trait.Classification.StartsWith("Office", StringComparison.Ordinal)) {
-                    continue;
-                }
-                var webtags =
-                    trait.Tags.Where(x => x.Name.StartsWith("Web /", StringComparison.Ordinal)).Select(x => x.Tag);
-                if (webtags.Count() != 1) {
-                    traitsNoWebTag.Add(trait);
-                }
-                if (traitsNoWebTag.Count > 10) {
-                    break;
-                }
-            }
-            if (traitsNoWebTag.Count > 0) {
-                var bes = new List<BasicElement>();
-                var s = string.Empty;
-                foreach (var trait in traitsNoWebTag) {
-                    s += trait.PrettyName + Environment.NewLine;
-                    bes.Add(trait);
-                }
-                throw new DataIntegrityException("The following traits are missing a web tag:" + Environment.NewLine + s, bes);
-            }
-        }
-
         private void CleanTraitNames([NotNull][ItemNotNull] ObservableCollection<HouseholdTrait> traits)
         {
             if (!PerformCleanupChecks) {
@@ -494,7 +464,6 @@ namespace CalculationController.Integrity {
         {
             CheckForAffordancesWithoutTraits(sim.HouseholdTraits.It, sim.Affordances.It);
             CheckClassifications(sim.HouseholdTraits.It);
-            CheckWebTraitTags(sim.HouseholdTraits.It);
             CleanTraitNames(sim.HouseholdTraits.It);
             //var notusedCount = 0;
             foreach (var householdTrait in sim.HouseholdTraits.It) {

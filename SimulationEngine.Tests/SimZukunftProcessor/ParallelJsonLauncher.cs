@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using Automation;
 using Common;
@@ -21,7 +20,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             ParallelJsonLauncher.CopyAll( DatabaseSetup.AssemblyDirectory, wd.WorkingDirectory);
             DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            Console.WriteLine("Assembly directory: "  + DatabaseSetup.AssemblyDirectory);
+            Logger.Info("Assembly directory: "  + DatabaseSetup.AssemblyDirectory);
             Directory.SetCurrentDirectory(wd.WorkingDirectory);
             HouseCreationAndCalculationJob hcj = new HouseCreationAndCalculationJob();
             Simulator sim = new Simulator(db.ConnectionString);

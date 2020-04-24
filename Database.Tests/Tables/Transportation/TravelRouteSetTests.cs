@@ -59,8 +59,6 @@ namespace Database.Tests.Tables.Transportation
             //    });
             db.Cleanup();
             //Assert.AreEqual(jsonOriginal, jsonCopy);
-            //Console.WriteLine(jsonOriginal);
-            //Console.WriteLine(jsonCopy);
             }
     }
 }

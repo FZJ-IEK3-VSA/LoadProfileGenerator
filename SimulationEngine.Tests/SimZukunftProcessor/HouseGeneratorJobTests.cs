@@ -179,13 +179,13 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
                 if(count < 22) {
                     continue;
                 }
-                Console.WriteLine("================================================");
-                Console.WriteLine("================================================");
-                Console.WriteLine("================================================");
-                Console.WriteLine("Starting " + houseType.Name);
-                Console.WriteLine("================================================");
-                Console.WriteLine("================================================");
-                Console.WriteLine("================================================");
+                Logger.Info("================================================");
+                Logger.Info("================================================");
+                Logger.Info("================================================");
+                Logger.Info("Starting " + houseType.Name);
+                Logger.Info("================================================");
+                Logger.Info("================================================");
+                Logger.Info("================================================");
                 Logger.Get().StartCollectingAllMessages();
                 string htcode = houseType.Name.Substring(0, 4);
                 //housedata
@@ -220,10 +220,10 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
                     if (entry.KeyType == HouseholdKeyType.General) {
                         continue;
                     }
-                    Console.WriteLine(entry.HouseholdKey);
+                    Logger.Info(entry.HouseholdKey.ToString());
                     var res =  tel.Read(entry.HouseholdKey);
                     foreach (var totalsEntry in res) {
-                        Console.WriteLine(totalsEntry.Loadtype + ": " + totalsEntry.Value);
+                        Logger.Info(totalsEntry.Loadtype + ": " + totalsEntry.Value);
                         if (totalsEntry.Loadtype.Name == "Space Heating") {
                             if (Math.Abs(totalsEntry.Value - targetheatdemand) > 10) {
                                 throw new LPGException("Target heat demand didn't match for " + houseType.Name);
@@ -302,7 +302,8 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         public void RunSinglePredefinedJson()
         {
             Logger.Get().StartCollectingAllMessages();
-            const string srcfile = @"C:\Work\fzj\trial\H01 in HT04 4.json";
+            Logger.Threshold = Severity.Debug;
+            const string srcfile = @"V:\Dropbox\LPGReleases\releases9.4.0\ExampleHouseJob-1.json";
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             FileInfo srcfi = new FileInfo(srcfile);

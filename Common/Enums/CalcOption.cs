@@ -48,6 +48,7 @@ namespace Common.Enums {
                 {CalcOption.TransportationDeviceCarpetPlot,"Transportation device carpet plot"},
                 {CalcOption.PersonStatus,"Person Status"},
                 {CalcOption.LocationCarpetPlot,"Location carpet plots"},
+                {CalcOption.JsonSumFiles,"Json overall sum Profiles"},
             };
     }
 }

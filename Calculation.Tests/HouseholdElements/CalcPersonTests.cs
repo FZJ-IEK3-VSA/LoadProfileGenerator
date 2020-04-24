@@ -109,7 +109,7 @@ namespace Calculation.HouseholdElements.Tests
                 }
 
                 Assert.That(aff1C, Is.EqualTo(900).Within(10).Percent);
-                Console.WriteLine("Number of selections for 90%:" + aff1C + ", 10%:" + aff2C);
+                Logger.Info("Number of selections for 90%:" + aff1C + ", 10%:" + aff2C);
             }
             wd.CleanUp();
         }

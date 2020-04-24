@@ -198,9 +198,9 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                 }
 
                 foreach (var pair in odap.Oefc.ColumnEntriesByLoadTypeByDeviceKey) {
-                    Console.WriteLine(pair.Key.Name);
+                    Logger.Info(pair.Key.Name);
                     foreach (KeyValuePair<OefcKey, ColumnEntry> entry in pair.Value) {
-                        Console.WriteLine(entry.Key + " - " + entry.Value.Name);
+                        Logger.Info(entry.Key + " - " + entry.Value.Name);
                     }
                 }
 

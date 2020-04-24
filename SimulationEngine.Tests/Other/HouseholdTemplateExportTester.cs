@@ -1,5 +1,4 @@
-﻿using System;
-using Automation;
+﻿using Automation;
 using Common;
 using Database;
 using Database.Tables.ModularHouseholds;
@@ -76,9 +75,9 @@ namespace SimulationEngine.Tests.Other
             foreach (ModularHousehold household in sim1.ModularHouseholds.It) {
                 household.DeleteFromDB();
             }
-            Console.WriteLine("################################################");
-            Console.WriteLine("Finished deleting");
-            Console.WriteLine("################################################");
+            Logger.Info("################################################");
+            Logger.Info("Finished deleting");
+            Logger.Info("################################################");
             JsonDatabaseImportOptions htio = new JsonDatabaseImportOptions {Input = jsonPath, Type = TypesToProcess.ModularHouseholds};
             JsonDatabaseImporter hti = new JsonDatabaseImporter(db.ConnectionString);
             hti.Import(htio);

@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using Automation;
+using Common;
 using Common.Tests;
 using NUnit.Framework;
 using SimulationEngineLib.SettlementCalculation;
@@ -13,7 +13,7 @@ namespace SimulationEngine.Tests
     {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void FindNumberOfCoresTest() => Console.WriteLine(ParallelLauncher.FindNumberOfCores());
+        public void FindNumberOfCoresTest() => Logger.Info(ParallelLauncher.FindNumberOfCores().ToString());
 
         [Test]
         [Category(UnitTestCategories.ManualOnly)]

@@ -983,7 +983,7 @@ namespace Database.Tests
         private static FileInfo FindDB3SourcePath([NotNull] string filename)
         {
             var assemblyDir = AssemblyDirectory;
-            Console.WriteLine("Assembly directory: " +  assemblyDir);
+            Logger.Info("Assembly directory: " +  assemblyDir);
 
             if (filename.Contains(":")&&File.Exists(filename))
             {

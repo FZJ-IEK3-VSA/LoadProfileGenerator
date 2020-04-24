@@ -79,7 +79,7 @@ namespace ReleaseBuilder
                 for (int i = 0; i < 100; i++) {
                     HouseCreationAndCalculationJob hj = new HouseCreationAndCalculationJob("TemplatedRandomHouseType", "2019", "TK");
                     string ht = houseTypes[rnd.Next(houseTypes.Count)];
-                    Console.WriteLine(ht);
+                    Logger.Info(ht);
                     hj.House = new HouseData(Guid.NewGuid().ToString(), ht, 10000, 10000, "House for " + mhh.Name + " " + i);
                     hj.House.Households.Add(new HouseholdData(Guid.NewGuid().ToString(), false,
                         mhh.Name, null, null, null,

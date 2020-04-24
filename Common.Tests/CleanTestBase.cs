@@ -34,7 +34,6 @@ namespace Common.Tests {
         [TestCase(true)]
         [Category(UnitTestCategories.BasicTest)]
         public static void RunAutomatically(bool throwExceptionOnLeftover) {
-            Console.WriteLine("1");
             Logger.Info("Starting to clean...");
             var myDrives = DriveInfo.GetDrives();
             string path = null;
@@ -84,7 +83,7 @@ namespace Common.Tests {
                     di.Delete(true);
                 }
                 catch (Exception ex) {
-                    Console.WriteLine(ex.Message);
+                    Logger.Info(ex.Message);
                 }
                 throw new LPGException("Leftover from previous runs found:" + leftOvers + "\nTotalSize: " + GetPrettySize(totalSize));
             }

@@ -98,13 +98,18 @@ namespace SimulationEngineLib.SimZukunftProcessor {
 
         public static void CreateExampleHouseJob([NotNull] string connectionString)
         {
-            const string relativePath = "Example\\DistrictDefinition";
-            DirectoryInfo diDistrict = new DirectoryInfo(relativePath);
-            if (!diDistrict.Exists) {
-                diDistrict.Create();
+            const string relativePathHousejobs = "Example\\HouseJobs";
+            DirectoryInfo diHouseJobs = new DirectoryInfo(relativePathHousejobs);
+            if (!diHouseJobs.Exists) {
+                diHouseJobs.Create();
+            }
+            const string relativePathGuids = "Example\\GuidLists";
+            DirectoryInfo diGuids = new DirectoryInfo(relativePathGuids);
+            if (!diGuids.Exists)
+            {
+                diGuids.Create();
             }
 
-            DirectoryInfo di = diDistrict.Parent ?? throw new LPGException("Parent was null");
             Simulator sim = new Simulator(connectionString);
             HouseData houseData1 = new HouseData(Guid.NewGuid().ToString(), "HT01", 20000, 10000, "MyFirstHouse");
 
@@ -163,18 +168,20 @@ namespace SimulationEngineLib.SimZukunftProcessor {
             HouseCreationAndCalculationJob hj = new HouseCreationAndCalculationJob("scenario","year","districtname");
             hj.House = houseData1;
             hj.CalcSpec = calculationSettings;
-            HouseJobSerializer.WriteJsonToFile("ExampleHouseJob-1.json",hj);
+            hj.CalcSpec.OutputDirectory = "Example1-Results";
+            HouseJobSerializer.WriteJsonToFile(Path.Combine(diHouseJobs.FullName, "ExampleHouseJob-1.json"),hj);
             hj.House = houseData2;
-            HouseJobSerializer.WriteJsonToFile("ExampleHouseJob-2.json", hj);
+            hj.CalcSpec.OutputDirectory = "Example2-Results";
+            HouseJobSerializer.WriteJsonToFile(Path.Combine(diHouseJobs.FullName, "ExampleHouseJob-2.json"), hj);
             Logger.Info("Finished writing example house jobs...");
-            WriteGuidList("GuidsForAllHouseholds.csv", sim.ModularHouseholds.It.Select(x => (DBBase)x).ToList(), di);
-            WriteGuidList("GuidsForAllHouses.csv", sim.Houses.It.Select(x => (DBBase)x).ToList(), di);
-            WriteGuidList("GuidsForAllChargingStationSets.csv", sim.ChargingStationSets.It.Select(x => (DBBase)x).ToList(), di);
-            WriteGuidList("GuidsForAllDeviceSelections.csv", sim.DeviceSelections.It.Select(x => (DBBase)x).ToList(), di);
-            WriteGuidList("GuidsForAllGeographicLocations.csv", sim.GeographicLocations.It.Select(x => (DBBase)x).ToList(), di);
-            WriteGuidList("GuidsForAllTemperatureProfiles.csv", sim.TemperatureProfiles.It.Select(x => (DBBase)x).ToList(), di);
-            WriteGuidList("GuidsForAllTransportationDeviceSets.csv", sim.TransportationDeviceSets.It.Select(x => (DBBase)x).ToList(), di);
-            WriteGuidList("GuidsForAllTravelRouteSets.csv", sim.TravelRouteSets.It.Select(x => (DBBase)x).ToList(), di);
+            WriteGuidList("GuidsForAllHouseholds.csv", sim.ModularHouseholds.It.Select(x => (DBBase)x).ToList(), diGuids);
+            WriteGuidList("GuidsForAllHouses.csv", sim.Houses.It.Select(x => (DBBase)x).ToList(), diGuids);
+            WriteGuidList("GuidsForAllChargingStationSets.csv", sim.ChargingStationSets.It.Select(x => (DBBase)x).ToList(), diGuids);
+            WriteGuidList("GuidsForAllDeviceSelections.csv", sim.DeviceSelections.It.Select(x => (DBBase)x).ToList(), diGuids);
+            WriteGuidList("GuidsForAllGeographicLocations.csv", sim.GeographicLocations.It.Select(x => (DBBase)x).ToList(), diGuids);
+            WriteGuidList("GuidsForAllTemperatureProfiles.csv", sim.TemperatureProfiles.It.Select(x => (DBBase)x).ToList(), diGuids);
+            WriteGuidList("GuidsForAllTransportationDeviceSets.csv", sim.TransportationDeviceSets.It.Select(x => (DBBase)x).ToList(), diGuids);
+            WriteGuidList("GuidsForAllTravelRouteSets.csv", sim.TravelRouteSets.It.Select(x => (DBBase)x).ToList(), diGuids);
         }
 
         /*

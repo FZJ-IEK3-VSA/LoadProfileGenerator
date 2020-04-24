@@ -27,7 +27,7 @@ namespace Common {
                     webClient.QueryString.Add("stack", stack);
                     result = webClient.DownloadString(webAddr);
                 }
-                Console.WriteLine(result);
+                Logger.Info(result);
             }
             catch (Exception ex) {
                 if (Config.IsInUnitTesting) {

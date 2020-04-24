@@ -29,7 +29,6 @@ namespace Common {
 
         public void StartPart([NotNull] string key)
         {
-            //Console.WriteLine(key);
             //Logger.Info("Starting "+ key);
             if (Current == null) {
                 throw new LPGException("Current was null");
@@ -144,7 +143,7 @@ namespace Common {
                 padding += "  ";
             }
 
-            Console.WriteLine(padding + part.Key + "\t" + part.Duration.TotalSeconds);
+            Logger.Info(padding + part.Key + "\t" + part.Duration.TotalSeconds);
             foreach (var child in part.Children) {
                 LogOneProgramPartToConsole(child, level + 1);
             }

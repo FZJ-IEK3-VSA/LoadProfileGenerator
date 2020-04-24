@@ -197,7 +197,7 @@ namespace CalculationController.Queue {
 #pragma warning restore 162
             }
             if (allgood) {
-                var cpf = new CalcParametersFactory(sim);
+                var cpf = new CalcParametersFactory();
                 var calcParameters = cpf.MakeCalculationParametersFromConfig(csps, forceRandom);
                 var cpp = new DatFileDeletor( calcParameters,resultPath, csps.CalcTarget.Name);
                 cpp.ProcessResults();

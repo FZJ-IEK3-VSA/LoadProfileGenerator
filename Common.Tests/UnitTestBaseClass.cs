@@ -1,5 +1,4 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace Common.Tests
 {
@@ -8,10 +7,10 @@ namespace Common.Tests
         [SetUp]
         public void BaseSetUp()
         {
-            Console.WriteLine("Base Setup performed");
+            Logger.Info("Base Setup performed");
             string basePath = WorkingDir.DetermineBaseWorkingDir(true);
             CleanTestBase.CleanFolder(false,basePath,false);
-            Console.WriteLine("Base Test Path is " + basePath);
+            Logger.Info("Base Test Path is " + basePath);
         }
 
         public bool SkipEndCleaning { get; set; }
@@ -24,7 +23,7 @@ namespace Common.Tests
 
             string basePath = WorkingDir.DetermineBaseWorkingDir(true);
             CleanTestBase.CleanFolder(false, basePath,false);
-            Console.WriteLine("Base Teardown Performed");
+            Logger.Info("Base Teardown Performed");
         }
     }
 }

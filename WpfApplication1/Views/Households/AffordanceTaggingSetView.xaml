@@ -234,7 +234,6 @@
                                             <DataTemplate>
                                                 <Button Name="btnPickColor"
                                                         Margin="1"
-                                                        Background="{Binding CarpetPlotBrush}"
                                                         Click="BtnPickColorClick"
                                                         Content="Pick Color"
                                                         Padding="15,2" />

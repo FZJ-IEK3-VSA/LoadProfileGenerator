@@ -78,7 +78,7 @@ namespace Calculation.Tests.Transportation {
             //Assert.That(routes3.Count, Is.EqualTo(1));
             TimeStep ts = new TimeStep(1,0,false);
             int? duration = firstRoute.GetDuration(ts, "name",  r,new List<CalcTransportationDevice>());
-            Console.WriteLine("Duration: " + duration);
+            Logger.Info("Duration: " + duration);
             Assert.That(duration,Is.EqualTo(60)); // 3600 m bei 1 m/s
             int? duration2 = firstRoute.GetDuration(ts, "name", r, new List<CalcTransportationDevice>());
             Assert.That(duration, Is.EqualTo(duration2)); // 3600 m bei 1 m/s*/

@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Globalization;
 using Automation;
 using CalculationController.CalcFactories;
+using Common;
 using Common.Tests;
 using Database.Tables.BasicHouseholds;
 using NUnit.Framework;
@@ -21,7 +23,7 @@ namespace CalculationController.Tests.CalcFactories
             Assert.That(result,Is.EqualTo(0.00185).Within(0.001));
             double distanceGained = 15000 * result*3600;
             Assert.That(distanceGained, Is.EqualTo(100000).Within(0.001));
-            Console.WriteLine(result);
+            Logger.Info(result.ToString(CultureInfo.InvariantCulture));
         }
     }
 }

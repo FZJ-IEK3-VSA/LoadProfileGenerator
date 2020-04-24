@@ -185,17 +185,17 @@ namespace Common.SQLResultLogging {
             _dataLoggers = dataLoggers.ToList();
         }*/
 
-/*
-        public void Save([NotNull] CalcStartParameterSet csps, [NotNull] ICalcAbleObject calcObject, [NotNull] Simulator sim,
-            [NotNull] CalcLoadTypeDtoDictionary ltdict)
-        {
-            SaveCalculationStartParameters(csps);
+        /*
+                public void Save([NotNull] CalcStartParameterSet csps, [NotNull] ICalcAbleObject calcObject, [NotNull] Simulator sim,
+                    [NotNull] CalcLoadTypeDtoDictionary ltdict)
+                {
+                    SaveCalculationStartParameters(csps);
 
-            SaveLtDict(ltdict);
-            foreach (ISingleInputDataLogger logger in _dataLoggers) {
-                logger.Run(sim,calcObject, ltdict);
-            }
-        }*/
+                    SaveLtDict(ltdict);
+                    foreach (ISingleInputDataLogger logger in _dataLoggers) {
+                        logger.Run(sim,calcObject, ltdict);
+                    }
+                }*/
         /*
         private void SaveLtDict([NotNull] CalcLoadTypeDtoDictionary ltdict)
         {
@@ -239,7 +239,7 @@ namespace Common.SQLResultLogging {
             {
                 object o = propinfo.GetValue(household, null);
                 string json = JsonConvert.SerializeObject(o, Formatting.Indented);
-                Console.WriteLine(propinfo.Name + ": " + json.Length);
+                Logger.Info(propinfo.Name + ": " + json.Length);
             }
         }*/
         /*

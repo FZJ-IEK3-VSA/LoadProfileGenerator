@@ -138,7 +138,7 @@ namespace SimulationEngineLib.Calculation {
 
             di.Create();
             string lfpath = Path.Combine(di.FullName, "Logfile.CommandlineCalculation.txt");
-            Console.WriteLine("Setting logfile path: " + lfpath);
+            Logger.Info("Setting logfile path: " + lfpath);
             Logger.SetLogFilePath(lfpath);
             Logger.LogToFile = true;
             Logger.Info("Directory: " + di.FullName);

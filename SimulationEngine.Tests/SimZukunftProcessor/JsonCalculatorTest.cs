@@ -54,7 +54,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         public static CSVProfileReader ReadFile([NotNull] string filename)
         {
             FileInfo fi = new FileInfo(filename);
-            Console.WriteLine("Reading " + fi.Name);
+            Logger.Info("Reading " + fi.Name);
             var filearr = fi.Name.Split('.');
             CSVProfileReader cp = new CSVProfileReader(fi.Name,fi.FullName);
 
@@ -134,7 +134,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
                 foreach (string loadType in loadTypes) {
                     var filtered = csvs.Where(x => x.Loadtype == loadType).ToList();
                     foreach (var reader in filtered) {
-                        Console.WriteLine(reader.Filename);
+                        Logger.Info(reader.Filename);
                     }
                 }
             }
@@ -146,7 +146,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         public void OnlyExternalTest()
         {
             Logger.Get().StartCollectingAllMessages();
-            Console.WriteLine(Assembly.GetCallingAssembly().FullName);
+            Logger.Info(Assembly.GetCallingAssembly().FullName);
             Config.SkipFreeSpaceCheckForCalculation = true;
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             DirectoryInfo simengine = new DirectoryInfo(@"V:\Dropbox\LPG\SimulationEngine\bin\Debug\net472");
@@ -230,7 +230,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
             DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             string dbPath = wd.Combine("my.db3");
             File.Copy(db.FileName,dbPath );
-            Console.WriteLine("DB File Path: " + dbPath);
+            Logger.Info("DB File Path: " + dbPath);
             JsonCalcSpecification jcs = new JsonCalcSpecification();
             if (jcs.CalcOptions == null) {
                 throw new LPGException("Calcoptions was null");
@@ -258,7 +258,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
             DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             string dbPath = wd.Combine("my.db3");
             File.Copy(db.FileName, dbPath);
-            Console.WriteLine("DB File Path: " + dbPath);
+            Logger.Info("DB File Path: " + dbPath);
             JsonCalcSpecification jcs = new JsonCalcSpecification();
             if (jcs.CalcOptions == null)
             {

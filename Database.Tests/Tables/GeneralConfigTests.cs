@@ -26,7 +26,6 @@
 
 //-----------------------------------------------------------------------
 
-using System;
 using System.Linq;
 using Automation;
 using Common;
@@ -58,7 +57,7 @@ namespace Database.Tests.Tables {
             Assert.AreEqual(1, count2);
             var gc2 = GeneralConfig.LoadFromDatabase(db.ConnectionString, false);
             var count3 = gc2.Options.Count(x => x.Value.SettingValue);
-            Console.WriteLine(count3);
+            Logger.Info(count3.ToString());
             db.Cleanup();
         }
     }

@@ -444,7 +444,7 @@ namespace ReleaseBuilder
                     Directory.Delete(dst, true);
                 }
                 catch (Exception ex) {
-                    Console.WriteLine(ex.Message);
+                    Logger.Info(ex.Message);
                 }
             }
 
@@ -456,7 +456,7 @@ namespace ReleaseBuilder
             CopyFiles(src, dst);
             //CopyFilesSimulationEngine(srcsim, dst);
             var db = new DatabaseSetup("Release", filename);
-
+            Logger.Info("Using database " + filename);
 #pragma warning disable S2583 // Conditionally executed blocks should be reachable
             if (cleanDatabase)
             {
@@ -572,7 +572,7 @@ namespace ReleaseBuilder
                 }
             }
 
-            Console.WriteLine("Currently open connections:" + Connection.ConnectionCount);
+            Logger.Info("Currently open connections:" + Connection.ConnectionCount);
             //Thread.Sleep(3000);
             GC.WaitForPendingFinalizers();
             GC.Collect();

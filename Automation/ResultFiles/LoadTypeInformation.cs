@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using JetBrains.Annotations;
 
 namespace Automation.ResultFiles {
@@ -34,6 +35,7 @@ namespace Automation.ResultFiles {
             return Equals((LoadTypeInformation)obj);
         }
 
+        [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
         public override int GetHashCode()
         {
             unchecked {

@@ -295,7 +295,7 @@ namespace Common {
         private void ReportString([NotNull] string message, Severity severity, bool preserveLinebreaks = false)
         {
             // if(Config.isInUnitTesting)
-            Utili.WriteLine(message);
+            Console.WriteLine(message);
 
             if (LogToFile) {
                 try {
@@ -307,7 +307,7 @@ namespace Common {
                     }
                 }
                 catch (Exception ex) {
-                    Utili.WriteLine(ex.Message);
+                    Console.WriteLine(ex.Message);
                 }
             }
             if (severity > Threshold) {

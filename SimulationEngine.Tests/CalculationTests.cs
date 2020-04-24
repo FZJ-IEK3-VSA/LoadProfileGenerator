@@ -177,12 +177,12 @@ namespace SimulationEngine.Tests
                         }
                     }
                 }
-                Console.Write(fileInfo.Name + ": " + linecount);
+                Logger.Info(fileInfo.Name + ": " + linecount);
                 filesWithLineCounts.Add(new Tuple<FileInfo, int>(fileInfo, linecount));
             }
 
             foreach (Tuple<FileInfo, int> pair in filesWithLineCounts) {
-                Console.WriteLine(pair.Item1.Name, pair.Item2);
+                Logger.Info(pair.Item1.Name + " " + pair.Item2);
             }
         }
 

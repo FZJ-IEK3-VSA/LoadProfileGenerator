@@ -20,15 +20,6 @@ using JetBrains.Annotations;
 using NUnit.Framework;
 
 namespace IntegrationTests {
-    public class ObligatoryEmptyTest {
-        [Test]
-        [Category(UnitTestCategories.CleanEachTable)]
-
-        public void CategoryLessConfirmationTest()
-        {
-            Console.WriteLine("Success");
-        }
-    }
 
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public static class Comparer {
@@ -40,7 +31,7 @@ namespace IntegrationTests {
                 if (obj.Equals(another)) {
                     return true;
                 }
-                Console.WriteLine(path + ": The int values were different.");
+                Logger.Info(path + ": The int values were different.");
                 return false;
             }
 
@@ -73,15 +64,15 @@ namespace IntegrationTests {
                 return true;
             }
             if (obj == null || another == null) {
-                Console.WriteLine("Both objects were null");
+                Logger.Info("Both objects were null");
                 return false;
             }
             //Compare two object's class, return false if they are difference
             if (obj.GetType() != another.GetType()) {
-                Console.WriteLine("The objects were of different type");
+                Logger.Info("The objects were of different type");
                 return false;
             }
-            Console.WriteLine("Comparing " + path);
+            Logger.Info("Comparing " + path);
             bool doPropertyComparison;
             var isEqual = CompareObjects(obj, another, level, path, out doPropertyComparison);
             if (doPropertyComparison) {
@@ -91,7 +82,7 @@ namespace IntegrationTests {
                     var objValue = property.GetValue(obj);
                     var anotherValue = property.GetValue(another);
                     if (!objValue.DeepCompare(anotherValue, level + 1, path)) {
-                        Console.WriteLine("The objects did not match");
+                        Logger.Info("The objects did not match");
                         result = false;
                     }
                 }
@@ -181,9 +172,9 @@ namespace IntegrationTests {
                     dr.Dispose();
                     foreach (var table in tables)
                     {
-                        Console.WriteLine(table);
+                        Logger.Info(table);
                         string sql = "DELETE FROM " + table + " where ID in (select id from " + table + " limit 1)";
-                        Console.WriteLine(sql);
+                        Logger.Info(sql);
                         cmd.ExecuteNonQuery(sql);
                     }
                 }

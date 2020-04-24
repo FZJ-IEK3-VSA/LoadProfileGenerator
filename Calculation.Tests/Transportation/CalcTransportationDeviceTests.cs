@@ -98,13 +98,13 @@ namespace Calculation.Tests.Transportation
                 ctd.DriveAndCharge(ts);
                 odap.ProcessOneTimestep(ts);
                 double diffRange = prevrange - ctd.AvailableRangeInMeters;
-                Console.WriteLine("timestep: " + i +  " Range: " + ctd.AvailableRangeInMeters + " diff:" + diffRange);
+                Logger.Info("timestep: " + i +  " Range: " + ctd.AvailableRangeInMeters + " diff:" + diffRange);
                 prevrange = ctd.AvailableRangeInMeters;
                 Assert.That(ctd.Currentsite, Is.EqualTo(null));
             }
             //no charging
             Assert.That(ctd.AvailableRangeInMeters, Is.EqualTo(10000-10*60*10)); //10m/s = 600m/minute
-            Console.WriteLine("currentSite:" + ctd.Currentsite?.Name);
+            Logger.Info("currentSite:" + ctd.Currentsite?.Name);
 
             //station.IsAvailable = true;
             for (int i = 11; i < 50; i++)
@@ -112,7 +112,7 @@ namespace Calculation.Tests.Transportation
                 TimeStep ts = new TimeStep(i, 0,false);
                 ctd.DriveAndCharge(ts);
                 odap.ProcessOneTimestep(ts);
-                Console.WriteLine("timestep: " + i + " Range: " + ctd.AvailableRangeInMeters);
+                Logger.Info("timestep: " + i + " Range: " + ctd.AvailableRangeInMeters);
             }
             Assert.That(ctd.Currentsite, Is.EqualTo(dstSite));
             wd.CleanUp(1);

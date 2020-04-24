@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using Automation;
 using Common;
 using Common.Tests;
@@ -37,7 +36,7 @@ namespace IntegrationTests
 
                 db.ClearTable(table);
                 var oldSim = new Simulator(db.ConnectionString); // need to load it for testing
-                Console.WriteLine(oldSim.ModularHouseholds.It.Count);
+                Logger.Info(oldSim.ModularHouseholds.It.Count.ToString());
                 db.Cleanup();
             }
             CleanTestBase.RunAutomatically(true);

@@ -28,9 +28,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Automation;
 using CalculationEngine.HouseholdElements;
+using Common;
 using Common.CalcDto;
 using Common.Tests;
 using NUnit.Framework;
@@ -87,7 +89,7 @@ namespace Calculation.Tests {
                 "bla");
             var result = cp.CompressExpandDoubleArray(1.5);
             foreach (double resultStepValue in result.StepValues) {
-                Console.WriteLine(resultStepValue);
+                Logger.Info(resultStepValue.ToString(CultureInfo.InvariantCulture));
             }
             Assert.AreEqual(15, result.StepValues.Count);
             Assert.AreEqual(0, result.StepValues[0]);

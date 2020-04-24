@@ -679,7 +679,7 @@ namespace Database {
                     }
                 }
                 else {
-                    Console.WriteLine(category.ToString());
+                    Logger.Info(category.ToString());
                 }
             }
             DBBase.IsLoading = false;

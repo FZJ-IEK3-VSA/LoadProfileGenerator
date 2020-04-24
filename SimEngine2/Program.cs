@@ -44,11 +44,9 @@ namespace SimEngine2
             }
             catch (LPGCommandlineException cex)
             {
-                Console.WriteLine();
-                Console.WriteLine("CRITICAL ERROR. Calculation can not continue:");
-                Console.WriteLine();
-                Console.WriteLine(cex.Message);
-                Console.WriteLine();
+
+                Logger.Info("CRITICAL ERROR. Calculation can not continue:");
+                Logger.Info(cex.Message);
             }
             catch (Exception ex)
             {

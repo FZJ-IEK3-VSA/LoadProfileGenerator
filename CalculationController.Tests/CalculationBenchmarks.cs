@@ -211,7 +211,7 @@ namespace CalculationController.Tests {
                     Directory.Delete(path, true);
                 }
                 catch (Exception ex) {
-                    Console.WriteLine(ex.Message);
+                    Logger.Info(ex.Message);
                 }
             }
 
@@ -595,7 +595,7 @@ namespace CalculationController.Tests {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             Assert.IsNotNull(sim);
-            Console.WriteLine("Guids created: " + DBBase._GuidCreationCount);
+            Logger.Info("Guids created: " + DBBase._GuidCreationCount);
             if(DBBase._GuidCreationCount > 0) {
                 throw new LPGException("Guids were created, whatever the reason might be.");
             }
@@ -604,7 +604,7 @@ namespace CalculationController.Tests {
             DBBase.GuidsToSave.Clear();
             var sim2 = new Simulator(db.ConnectionString);
             Assert.IsNotNull(sim2);
-            Console.WriteLine("Guids created try 2: " + DBBase._GuidCreationCount);
+            Logger.Info("Guids created try 2: " + DBBase._GuidCreationCount);
         }
 
         [Test]

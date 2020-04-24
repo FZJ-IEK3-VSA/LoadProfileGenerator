@@ -87,7 +87,7 @@ namespace Database.Helpers {
             var info = type.GetMethod("ImportFromItem");
             if (!type.IsSubclassOf(typeof(DBBaseElement))) {
                 throw new LPGException("Type " + type + " is not a DBBaseElement. This is a bug!");
-                //Console.WriteLine("Type " + type + " is not a DBBaseElement.This is a bug!");
+                //Logger.Info("Type " + type + " is not a DBBaseElement.This is a bug!");
             }
 
             if (info == null) {

@@ -40,7 +40,6 @@ namespace Common.CalcDto {
             return Equals((CalcLoadTypeDto)obj);
         }
 
-        
 
         public static bool operator ==([CanBeNull]CalcLoadTypeDto obj1, [CanBeNull] CalcLoadTypeDto obj2)
         {

@@ -50,7 +50,7 @@ namespace CalculationController.Tests
             }
 
             foreach (var pair in sumByYear) {
-                Console.WriteLine(pair.Key + ": " +pair.Value);
+                Logger.Info(pair.Key + ": " +pair.Value);
             }
 
         }
