@@ -302,7 +302,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         public void RunSinglePredefinedJson()
         {
             Logger.Get().StartCollectingAllMessages();
-            string srcfile = @"C:\Work\fzj\trial\H01 in HT04 4.json";
+            const string srcfile = @"C:\Work\fzj\trial\H01 in HT04 4.json";
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             FileInfo srcfi = new FileInfo(srcfile);

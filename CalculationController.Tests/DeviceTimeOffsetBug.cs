@@ -94,7 +94,7 @@ namespace CalculationController.Tests {
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void CalculationBenchmarksBasicTest()
+        public void TimeOffsetBugTest()
         {
             Config.AdjustTimesForSettlement = false;
             CleanTestBase.RunAutomatically(false);

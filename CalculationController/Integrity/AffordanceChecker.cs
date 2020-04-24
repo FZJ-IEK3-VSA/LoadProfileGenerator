@@ -218,7 +218,7 @@ namespace CalculationController.Integrity {
         }
 
         private void CheckOverlappingDeviceProfiles([NotNull] Affordance affordance,
-            [NotNull][ItemNotNull] ObservableCollection<DeviceAction> allDeviceActions) {
+            [NotNull][ItemNotNull] ObservableCollection<DeviceAction> allDeviceActions, Random rnd) {
             //find overlapping device profiles
             var tpes = new List<TimeProfileEntry>();
 
@@ -229,16 +229,16 @@ namespace CalculationController.Integrity {
                 switch (affdev.Device.AssignableDeviceType) {
                     case AssignableDeviceType.Device:
                     case AssignableDeviceType.DeviceCategory:
-                        tpes.Add(MakeTimeProfileEntryFromDevice(affdev, affordance));
+                        tpes.Add(MakeTimeProfileEntryFromDevice(affdev, affordance, rnd));
                         break;
                     case AssignableDeviceType.DeviceAction:
                         var da = (DeviceAction) affdev.Device;
-                        tpes.AddRange(MakeTimeProfileEntryFromDeviceAction(da, affordance, affdev));
+                        tpes.AddRange(MakeTimeProfileEntryFromDeviceAction(da, affordance, affdev,rnd));
                         break;
                     case AssignableDeviceType.DeviceActionGroup:
                         var dag = (DeviceActionGroup) affdev.Device;
                         var das = dag.GetDeviceActions(allDeviceActions);
-                        tpes.AddRange(MakeTimeProfileEntryFromDeviceAction(das[0], affordance, affdev));
+                        tpes.AddRange(MakeTimeProfileEntryFromDeviceAction(das[0], affordance, affdev,rnd));
                         break;
                     default:
                         throw new LPGException("Forgotten AssignableDeviceType");
@@ -400,11 +400,10 @@ namespace CalculationController.Integrity {
             }
         }
 
-        private double GetMaxExpansionFactor(double standardeviation) {
+        private double GetMaxExpansionFactor(double standardeviation, Random rnd) {
             if (_expansionFactorsByDeviation.ContainsKey(standardeviation)) {
                 return _expansionFactorsByDeviation[standardeviation];
             }
-            var rnd = new Random();
             var nr = new NormalRandom(1, 0.1, rnd);
             double maxfactor = 1;
             for (var i = 0; i < 100; i++) {
@@ -418,7 +417,7 @@ namespace CalculationController.Integrity {
         }
 
         [NotNull]
-        private TimeProfileEntry MakeTimeProfileEntryFromDevice([NotNull] AffordanceDevice affdev, [NotNull] Affordance affordance) {
+        private TimeProfileEntry MakeTimeProfileEntryFromDevice([NotNull] AffordanceDevice affdev, [NotNull] Affordance affordance, Random rnd) {
             var lt = affdev.LoadType;
             if (lt == null)
             {
@@ -429,7 +428,7 @@ namespace CalculationController.Integrity {
                 throw new DataIntegrityException("Time profile was null");
             }
             var cp = CalcDeviceFactory.GetCalcProfile(tp, new TimeSpan(0, 1, 0));
-            var factor = GetMaxExpansionFactor((double) affordance.TimeStandardDeviation);
+            var factor = GetMaxExpansionFactor((double) affordance.TimeStandardDeviation, rnd);
             var newlength = cp.GetNewLengthAfterCompressExpand(factor);
             if (affdev.Device == null) {
                 throw new DataIntegrityException("Device was null");
@@ -443,7 +442,7 @@ namespace CalculationController.Integrity {
         [NotNull]
         [ItemNotNull]
         private List<TimeProfileEntry> MakeTimeProfileEntryFromDeviceAction([NotNull] DeviceAction da, [NotNull] Affordance affordance,
-            [NotNull] AffordanceDevice affdev) {
+            [NotNull] AffordanceDevice affdev, Random rnd) {
             var tpes = new List<TimeProfileEntry>();
             foreach (var actionProfile in da.Profiles) {
                 var lt = actionProfile.VLoadType;
@@ -455,7 +454,7 @@ namespace CalculationController.Integrity {
                     throw new LPGException("Time profile was null");
                 }
                 var cp = CalcDeviceFactory.GetCalcProfile(tp, new TimeSpan(0, 1, 0));
-                var factor = GetMaxExpansionFactor((double) affordance.TimeStandardDeviation);
+                var factor = GetMaxExpansionFactor((double) affordance.TimeStandardDeviation, rnd);
                 var newlength = cp.GetNewLengthAfterCompressExpand(factor);
                 if (da.Device== null)
                 {
@@ -541,6 +540,7 @@ namespace CalculationController.Integrity {
             RunFoodDesireCheck(sim);
             CheckAffordanceStandbysOnTraits(sim.HouseholdTraits.It);
             var affordanceNames = new List<string>();
+            Random rnd = new Random();
             foreach (var affordance in sim.Affordances.It) {
                 CheckGeneralAffordanceSettings(affordance);
                 CheckPersonTimeProfiles(affordance);
@@ -555,7 +555,7 @@ namespace CalculationController.Integrity {
                 }
                 affordanceNames.Add(affordance.Name.ToUpperInvariant());
                 CheckAffordanceDevices(affordance);
-                CheckOverlappingDeviceProfiles(affordance, sim.DeviceActions.It);
+                CheckOverlappingDeviceProfiles(affordance, sim.DeviceActions.It,rnd);
             }
         }
 

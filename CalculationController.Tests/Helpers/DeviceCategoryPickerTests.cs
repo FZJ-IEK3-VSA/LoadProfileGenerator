@@ -5,9 +5,11 @@ using Automation;
 using CalculationController.Helpers;
 using Common;
 using Common.Tests;
+using Database;
 using Database.Helpers;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.ModularHouseholds;
+using Database.Tests;
 using NUnit.Framework;
 
 namespace CalculationController.Tests.Helpers
@@ -76,6 +78,41 @@ namespace CalculationController.Tests.Helpers
             RealDevice result2 = dcp.GetOrPickDevice(dc, loc, EnergyIntensityType.EnergyIntensive, devices,
                 deviceActions);
             Assert.AreEqual(null, result2);
+        }
+
+
+        [Test]
+        [Category(UnitTestCategories.BasicTest)]
+        public void TestMultiplePickingShouldAlwaysGiveSameResult()
+        {
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
+            Simulator sim = new Simulator(db.ConnectionString);
+            for (int i = 0; i < 100; i++) {
+                Random r = new Random(5);
+                DeviceCategoryPicker dcp = new DeviceCategoryPicker(r, null);
+                Location loc = new Location("bla", -1, string.Empty, Guid.NewGuid().ToString());
+                List<IAssignableDevice> devices = new List<IAssignableDevice>();
+                devices.Add(sim.RealDevices[0]);
+                dcp.GetOrPickDevice(sim.DeviceActionGroups[1], loc, EnergyIntensityType.Random, devices, sim.DeviceActions.It);
+            }
+            //ObservableCollection<RealDevice> allDevices = new ObservableCollection<RealDevice>();
+            //DeviceCategory dc = new DeviceCategory("dc", -1, "bla", false, allDevices, Guid.NewGuid().ToString());
+            //RealDevice rd = new RealDevice("bla", 0, string.Empty, dc, "desc", false, true, string.Empty, Guid.NewGuid().ToString(), -1);
+            //allDevices.Add(rd);
+
+            //List<IAssignableDevice> devices = new List<IAssignableDevice>
+            //{
+            //    rd
+            //};
+            //ObservableCollection<DeviceAction> deviceActions = new ObservableCollection<DeviceAction>();
+            //Logger.Info("put in a rd, get back the same rd");
+            //RealDevice result = dcp.GetOrPickDevice(rd, loc, EnergyIntensityType.EnergyIntensive, devices, deviceActions);
+            //Assert.AreEqual(rd, result);
+            //// put in an dc with one rd, get the rd 1
+            //Logger.Info("put in a rd, get back null, since the rd is already there as hhdevloc");
+            //RealDevice result2 = dcp.GetOrPickDevice(dc, loc, EnergyIntensityType.EnergyIntensive, devices,
+            //    deviceActions);
+            //Assert.AreEqual(null, result2);
         }
 
         [Test]

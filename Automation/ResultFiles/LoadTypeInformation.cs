@@ -1,8 +1,57 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using JetBrains.Annotations;
 
 namespace Automation.ResultFiles {
-    public class LoadTypeInformation {
+    public class LoadTypeInformation : IEquatable<LoadTypeInformation> {
         // needed for xml deserialize
+        public bool Equals(LoadTypeInformation other)
+        {
+            if (ReferenceEquals(null, other)) {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other)) {
+                return true;
+            }
+
+            return ConversionFaktor.Equals(other.ConversionFaktor) && FileName == other.FileName && Guid == other.Guid && Name == other.Name && ShowInCharts == other.ShowInCharts && UnitOfPower == other.UnitOfPower && UnitOfSum == other.UnitOfSum;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj)) {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType()) {
+                return false;
+            }
+
+            return Equals((LoadTypeInformation)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked {
+                var hashCode = ConversionFaktor.GetHashCode();
+                hashCode = (hashCode * 397) ^ FileName.GetHashCode();
+                hashCode = (hashCode * 397) ^ Guid.GetHashCode();
+                hashCode = (hashCode * 397) ^ Name.GetHashCode();
+                hashCode = (hashCode * 397) ^ ShowInCharts.GetHashCode();
+                hashCode = (hashCode * 397) ^ UnitOfPower.GetHashCode();
+                hashCode = (hashCode * 397) ^ UnitOfSum.GetHashCode();
+                return hashCode;
+            }
+        }
+
+        public static bool operator ==([CanBeNull] LoadTypeInformation left, [CanBeNull] LoadTypeInformation right) => Equals(left, right);
+
+        public static bool operator !=([CanBeNull] LoadTypeInformation left, [CanBeNull] LoadTypeInformation right) => !Equals(left, right);
+
         [UsedImplicitly]
         // ReSharper disable once NotNullMemberIsNotInitialized
         public LoadTypeInformation() {

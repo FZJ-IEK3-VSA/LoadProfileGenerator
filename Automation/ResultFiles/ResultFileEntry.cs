@@ -49,6 +49,7 @@ namespace Automation.ResultFiles {
         [UsedImplicitly]
         [NotNull]
         public string CalcObjectName { get; set; }
+
         /*
         [UsedImplicitly]
         [NotNull]
@@ -60,8 +61,7 @@ namespace Automation.ResultFiles {
 
         [NotNull]
         [UsedImplicitly]
-        public Dictionary<string, ResultFileEntry> ResultFiles { get; set; } =
-            new Dictionary<string, ResultFileEntry>();
+        public Dictionary<string, ResultFileEntry> ResultFiles { get; set; } = new Dictionary<string, ResultFileEntry>();
 
         public void AddExistingEntries([NotNull] [ItemNotNull] List<ResultFileEntry> rfes)
         {
@@ -73,7 +73,7 @@ namespace Automation.ResultFiles {
         public void AdjustPath([NotNull] string helperoriginalPath, [NotNull] string newPath, bool tolerateMissingFiles)
         {
             //only temporary until the next run
-            string oldPath = helperoriginalPath;
+            var oldPath = helperoriginalPath;
             //if (!string.IsNullOrWhiteSpace(OriginalPath)) {
 //                oldPath = OriginalPath;
             //          }
@@ -88,6 +88,7 @@ namespace Automation.ResultFiles {
                 }
             }
         }
+
         /*
         [NotNull]
         public static ResultFileEntry LoadAndGetByFileName([NotNull] string directory, [NotNull] string fileName)
@@ -129,25 +130,30 @@ namespace Automation.ResultFiles {
             }
         }
         */
-      /*  [NotNull]
-        private ResultFileEntry GetByFilename([NotNull] string fileName) =>
-            ResultFiles.Values.First(x => x.FileName == fileName);*/
+        /*  [NotNull]
+          private ResultFileEntry GetByFilename([NotNull] string fileName) =>
+              ResultFiles.Values.First(x => x.FileName == fileName);*/
     }
 
     public class ResultFileEntry : IComparable {
-        public ResultFileEntry([NotNull] string name, [NotNull] string fileName, [NotNull] string fullFileName,
+        public ResultFileEntry([NotNull] string name,
+                               [NotNull] FileInfo fileInfo,
                                bool displayEntry,
-                               [CanBeNull] StreamWriter streamWriter, [CanBeNull] BinaryWriter binaryWriter,
-                               [NotNull] Stream stream, ResultFileID rfid,
-                               [NotNull] string householdName, [NotNull] string householdKey,
-                               [NotNull] LoadTypeInformation lti, [NotNull] PersonInformation pi,
+                               [CanBeNull] StreamWriter streamWriter,
+                               [CanBeNull] BinaryWriter binaryWriter,
+                               [NotNull] Stream stream,
+                               ResultFileID rfid,
+                               [NotNull] string householdName,
+                               [NotNull] string householdKey,
+                               [NotNull] LoadTypeInformation lti,
+                               [NotNull] PersonInformation pi,
                                [NotNull] string additionalFileIndex,
                                TimeSpan timeResolution)
         {
             TimeResolution = timeResolution;
             Name = name;
-            FileName = fileName;
-            FullFileName = fullFileName;
+            FileName = fileInfo.Name;
+            FullFileName = fileInfo.FullName;
             Stream = stream;
             DisplayEntry = displayEntry;
             StreamWriter = streamWriter;
@@ -158,31 +164,55 @@ namespace Automation.ResultFiles {
             HouseholdKey = householdKey;
             PersonInformation = pi;
             AdditionalFileIndex = additionalFileIndex;
+            if (FileName == FullFileName) {
+                throw new LPGException("Full filename was same as filename");
+            }
+
+            if (FileName.Contains(":")) {
+                throw new LPGException("Somehow the full path ended up in the Filename");
+            }
         }
 
-        public ResultFileEntry(
-            [NotNull] string name, [NotNull] string fileName, [NotNull] string fullFileName, bool displayEntry)
+        public ResultFileEntry([NotNull] string name, [NotNull] FileInfo fileInfo, bool displayEntry)
         {
             Name = name;
-            FileName = fileName;
-            FullFileName = fullFileName;
+            FileName = fileInfo.Name;
+            FullFileName = fileInfo.FullName;
             DisplayEntry = displayEntry;
+            if (FileName == FullFileName) {
+                throw new LPGException("Full filename was same as filename");
+            }
+
+            if (FileName.Contains(":")) {
+                throw new LPGException("Somehow the full path ended up in the Filename");
+            }
         }
 
-        public ResultFileEntry([NotNull] string name, [NotNull] string fileName, [NotNull] string fullFileName,
-                               bool displayEntry, ResultFileID rfid,
-                               [NotNull] string householdKey, [CanBeNull] string additionalFileIndex)
+        public ResultFileEntry([NotNull] string name,
+                               [NotNull] FileInfo fileinfo,
+                               bool displayEntry,
+                               ResultFileID rfid,
+                               [NotNull] string householdKey,
+                               [CanBeNull] string additionalFileIndex)
         {
             Name = name;
-            FileName = fileName;
-            FullFileName = fullFileName;
+            FileName = fileinfo.Name;
+            FullFileName = fileinfo.FullName;
             DisplayEntry = displayEntry;
             ResultFileID = rfid;
             HouseholdKey = householdKey;
             AdditionalFileIndex = additionalFileIndex;
+            if (FileName == FullFileName) {
+                throw new LPGException("Full filename was same as filename");
+            }
+
+            if (FileName.Contains(":")) {
+                throw new LPGException("Somehow the full path ended up in the Filename");
+            }
         }
 
         // ReSharper disable once NotNullMemberIsNotInitialized
+        [Obsolete("json only")]
         public ResultFileEntry()
         {
         }
@@ -207,8 +237,12 @@ namespace Automation.ResultFiles {
         public string FullFileName { get; set; }
 
         [NotNull]
-        public string HashKey => CalculateHashKey(ResultFileID, HouseholdName, LoadTypeInformation?.Name, HouseholdKey,
-            PersonInformation?.Name, AdditionalFileIndex);
+        public string HashKey => CalculateHashKey(ResultFileID,
+            HouseholdName,
+            LoadTypeInformation?.Name,
+            HouseholdKey,
+            PersonInformation?.Name,
+            AdditionalFileIndex);
 
         [UsedImplicitly]
         [CanBeNull]
@@ -268,8 +302,7 @@ namespace Automation.ResultFiles {
 
         public int CompareTo([CanBeNull] object obj)
         {
-            if (!(obj is ResultFileEntry rfe))
-            {
+            if (!(obj is ResultFileEntry rfe)) {
                 throw new LPGException("invalid object");
             }
 
@@ -277,10 +310,12 @@ namespace Automation.ResultFiles {
         }
 
         [NotNull]
-        public static string CalculateHashKey(ResultFileID resultFileID, [CanBeNull] string householdName,
-                                        [CanBeNull] string loadTypeName,
-                                        [CanBeNull] string householdKey, [CanBeNull] string personName,
-                                        [CanBeNull] string additionalFileIndex)
+        public static string CalculateHashKey(ResultFileID resultFileID,
+                                              [CanBeNull] string householdName,
+                                              [CanBeNull] string loadTypeName,
+                                              [CanBeNull] string householdKey,
+                                              [CanBeNull] string personName,
+                                              [CanBeNull] string additionalFileIndex)
         {
             var s = "";
             s += resultFileID + "#";

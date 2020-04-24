@@ -744,8 +744,9 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             }
 
             if (_openItemDict.ContainsKey(key)) {
-                if (Logger.Get().SaveExecutionFunction != null) {
-                    Logger.Get().SaveExecutionFunction(() => _openItemDict[key].Invoke(o));
+                var f = Logger.Get().SaveExecutionFunction;
+                if (f != null) {
+                    f(() => _openItemDict[key].Invoke(o));
                 }
                 else {
                     _openItemDict[key].Invoke(o);

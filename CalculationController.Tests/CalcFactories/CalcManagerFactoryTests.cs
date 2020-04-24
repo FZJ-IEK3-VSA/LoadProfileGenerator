@@ -30,6 +30,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Automation;
 using Automation.ResultFiles;
@@ -43,6 +44,8 @@ using Database;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.ModularHouseholds;
 using Database.Tests;
+using FluentAssertions;
+using FluentAssertions.Equivalency;
 using JetBrains.Annotations;
 using NUnit.Framework;
 
@@ -57,18 +60,27 @@ namespace CalculationController.Tests.CalcFactories {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             Config.IsInUnitTesting = true;
-            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.OnlyOverallSum);
-
+            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.None);
+            sim.MyGeneralConfig.Enable(CalcOption.DeviceProfiles);
+            sim.MyGeneralConfig.ShowSettlingPeriodBool = true;
             //ConfigSetter.SetGlobalTimeParameters(sim.MyGeneralConfig);
 
             Assert.AreNotEqual(null, sim);
             var cmf = new CalcManagerFactory();
             var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             CalculationProfiler calculationProfiler = new CalculationProfiler();
+            //todo: put in a full house with transportation
+            //var house = sim.Houses.CreateNewItem()
             CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
-                sim.TemperatureProfiles[0], sim.ModularHouseholds[0], EnergyIntensityType.Random, false,
+                sim.TemperatureProfiles[0], sim.ModularHouseholds[0],
+                EnergyIntensityType.Random, false,
                 version, null, LoadTypePriority.Mandatory, null,null, null,sim.MyGeneralConfig.AllEnabledOptions(),
-                new DateTime(2015,1,15),new DateTime(2015,1,18),new TimeSpan(0,1,0),";" ,5 , new TimeSpan(0,1,0) ,false,false,false,3,sim.MyGeneralConfig.RepetitionCount,
+                new DateTime(2015,1,15),
+                new DateTime(2015,1,18),
+                new TimeSpan(0,1,0),";" ,
+                5 , new TimeSpan(0,1,0) ,
+                false,false,false,3,
+                sim.MyGeneralConfig.RepetitionCount,
                 calculationProfiler);
 
             var cm = cmf.GetCalcManager(sim, path,csps,  false);
@@ -248,8 +260,7 @@ namespace CalculationController.Tests.CalcFactories {
 
             cm.Run(ReportCancelFunc);
             db.Cleanup();
-            base.SkipEndCleaning = true;
-// wd.CleanUp();
+            wd.CleanUp();
         }
 
         [Test]
@@ -315,23 +326,56 @@ namespace CalculationController.Tests.CalcFactories {
             wd.CleanUp();
         }
 
+        private static bool IsInvalidMember([NotNull] IMemberInfo x)
+        {
+            if( x.SelectedMemberPath.EndsWith("Guid")) {
+                return true;
+            }
+            if (x.SelectedMemberPath.EndsWith("ToString"))
+            {
+                return true;
+            }
+            return false;
+        }
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void GetDuplicateCalcManagerHouseholdTest() {
+        public void GetDuplicateCalcManagerHouseholdTest()
+        {
+            SkipEndCleaning = true;
             var wd1 = new WorkingDir("GetDuplicateCalcManagerHouseholdTest1");
 
             CalculateOneHousehold(wd1.WorkingDirectory);
             var wd2 = new WorkingDir("GetDuplicateCalcManagerHouseholdTest2");
             CalculateOneHousehold(wd2.WorkingDirectory);
+
+            var hhkeys =HouseholdKeyLogger.Load(wd1.SqlResultLoggingService);
+            var afts1 = new CalcDeviceDtoLogger(wd1.SqlResultLoggingService);
+            var aft1 = afts1.Load(hhkeys.Where(x=> x.KeyType == HouseholdKeyType.Household).ToList());
+            var afts2 = new CalcDeviceDtoLogger(wd2.SqlResultLoggingService);
+            var aft2 = afts2.Load(hhkeys.Where(x => x.KeyType == HouseholdKeyType.Household).ToList());
+            var devices1 = aft1.Select(x => x.Name).OrderBy(x=> x).ToList();
+            var devices2 = aft2.Select(x => x.Name).OrderBy(x => x).ToList();
+            devices1.Should().BeEquivalentTo(devices2);
+
             var rfel1 = new ResultFileEntryLogger(wd1.SqlResultLoggingService);
             var rfes1 = rfel1.Load();
             var rfel2 = new ResultFileEntryLogger(wd2.SqlResultLoggingService);
             var rfes2 = rfel2.Load();
+            rfes1.Should().BeEquivalentTo(rfes2,o => o.Excluding(
+                x => x.SelectedMemberPath.EndsWith("FullFileName")));
 
+            //CompareCsv(rfes1, rfes2);
+            wd1.CleanUp();
+            wd2.CleanUp();
+        }
+
+        private static void CompareCsv([NotNull] List<ResultFileEntry> rfes1, List<ResultFileEntry> rfes2)
+        {
             foreach (var fileEntry1 in rfes1) {
                 if (fileEntry1.FileName.ToUpperInvariant().EndsWith(".CSV", StringComparison.Ordinal)) {
                     foreach (var fileEntry2 in rfes2) {
                         if (fileEntry1.FileName == fileEntry2.FileName) {
+                            Logger.Info("comparing " + fileEntry1.Name + " with " + fileEntry2.Name);
                             using (var sr1 = new StreamReader(fileEntry1.FullFileName)) {
                                 using (var sr2 = new StreamReader(fileEntry2.FullFileName)) {
                                     while (!sr1.EndOfStream) {
@@ -339,6 +383,7 @@ namespace CalculationController.Tests.CalcFactories {
                                         var s2 = sr2.ReadLine();
                                         Assert.AreEqual(s1, s2);
                                     }
+
                                     sr1.Close();
                                     sr2.Close();
                                 }
@@ -347,8 +392,6 @@ namespace CalculationController.Tests.CalcFactories {
                     }
                 }
             }
-            wd1.CleanUp();
-            wd2.CleanUp();
         }
     }
 }

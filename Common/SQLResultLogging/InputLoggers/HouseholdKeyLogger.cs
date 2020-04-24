@@ -55,5 +55,13 @@ namespace Common.SQLResultLogging.InputLoggers
             return Srls.ReadFromJson<HouseholdKeyEntry>(ResultTableDefinition, Constants.GeneralHouseholdKey,
                 ExpectedResultCount.OneOrMore);
         }
+
+        [ItemNotNull]
+        [NotNull]
+        public static List<HouseholdKeyEntry>  Load([NotNull] SqlResultLoggingService srls)
+        {
+            HouseholdKeyLogger hhkl = new HouseholdKeyLogger(srls);
+            return hhkl.Load();
+        }
     }
 }

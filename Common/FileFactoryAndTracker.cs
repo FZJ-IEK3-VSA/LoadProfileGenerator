@@ -216,14 +216,16 @@ namespace Common {
         }
 
         public void RegisterFile([NotNull] string fileName, [NotNull] string description, bool displayResultFileEntry, ResultFileID rfid1,
-            [NotNull] HouseholdKey householdKey, TargetDirectory targetDirectory,
-            [CanBeNull] string additionalFileIndex = null)
+                                 [NotNull] HouseholdKey householdKey, TargetDirectory targetDirectory,
+                                 [CanBeNull] string additionalFileIndex = null)
         {
             if (!HouseholdRegistry.IsHouseholdRegistered(householdKey)) {
                 throw new LPGException("Forgotten Household Key: " + householdKey);
             }
+
             string fullFileName = Path.Combine(GetFullPathForTargetdirectry(targetDirectory), fileName);
-            ResultFileEntry rfe =new ResultFileEntry(description, fullFileName,fullFileName,displayResultFileEntry,rfid1,householdKey.Key,
+            FileInfo fi = new FileInfo(fullFileName);
+            ResultFileEntry rfe =new ResultFileEntry(description, fi,displayResultFileEntry,rfid1,householdKey.Key,
                 additionalFileIndex);
             _inputDataLogger.Save(rfe);
             ResultFileList.ResultFiles.Add(rfe.HashKey, rfe);
@@ -250,13 +252,13 @@ namespace Common {
             if (!Directory.Exists(targetDir)) {
                 Directory.CreateDirectory(targetDir);
             }
-            var fullfilename = Path.Combine(targetDir, cleanFileName);
-            if (fullfilename.Length > 250)
+            var fileInfo = new FileInfo( Path.Combine(targetDir, cleanFileName));
+            if (fileInfo.FullName.Length > 250)
             {
-                throw new LPGException("The result filename " + fullfilename + " was longer than 250 characters which is a problem for Windows. Maybe chose a shorter directory name or nest less deep and try again?");
+                throw new LPGException("The result filename " + fileInfo.FullName + " was longer than 250 characters which is a problem for Windows. Maybe chose a shorter directory name or nest less deep and try again?");
             }
-            if (File.Exists(fullfilename)) {
-                throw new LPGException("The file " + fullfilename + " already exists. Can't create it again!");
+            if (fileInfo.Exists) {
+                throw new LPGException("The file " + fileInfo.Name + " already exists. Can't create it again!");
             }
             bool tryagain;
             if (!_allValidIds.Contains((int) rfid)) {
@@ -265,42 +267,42 @@ namespace Common {
             do {
                 try {
                     if (typeof(T) == typeof(StreamWriter)) {
-                        var stream = _getStream.GetWriterStream(fullfilename);
+                        var stream = _getStream.GetWriterStream(fileInfo.FullName);
 #pragma warning disable S2930 // "IDisposables" should be disposed
                         var sw = new StreamWriter(stream);
 #pragma warning restore S2930 // "IDisposables" should be disposed
                         var ret = (T) (object) sw;
-                            var rfe = new ResultFileEntry(description, cleanFileName, fullfilename, displayResultFileEntry, sw,
+                        var rfe = new ResultFileEntry(description, fileInfo, displayResultFileEntry, sw,
                                 null, stream, rfid, _calcObjectName, householdKey.Key, lti, pi, additionalFileIndex,timeResolution);
                             ResultFileList.ResultFiles.Add(rfe.HashKey, rfe);
                         _inputDataLogger.Save(rfe);
                         return ret;
                     }
                     if (typeof(T) == typeof(BinaryWriter)) {
-                        var stream = _getStream.GetWriterStream(fullfilename);
+                        var stream = _getStream.GetWriterStream(fileInfo.FullName);
 #pragma warning disable S2930 // "IDisposables" should be disposed
                         var bw = new BinaryWriter(stream);
 #pragma warning restore S2930 // "IDisposables" should be disposed
                         var ret = (T) (object) bw;
-                        var rfe = new ResultFileEntry(description, cleanFileName, fullfilename, displayResultFileEntry, null, bw,
+                        var rfe = new ResultFileEntry(description, fileInfo, displayResultFileEntry, null, bw,
                             stream, rfid, _calcObjectName, householdKey.Key, lti, pi, additionalFileIndex, timeResolution);
                         ResultFileList.ResultFiles.Add(rfe.HashKey, rfe);
                         _inputDataLogger.Save(rfe);
                         return ret;
                     }
                     if (typeof(T) == typeof(Stream)) {
-                        var stream = _getStream.GetWriterStream(fullfilename);
+                        var stream = _getStream.GetWriterStream(fileInfo.FullName);
                         var ret = (T) (object) stream;
-                        var rfe = new ResultFileEntry(description, cleanFileName, fullfilename, displayResultFileEntry, null, null,
+                        var rfe = new ResultFileEntry(description, fileInfo, displayResultFileEntry, null, null,
                             stream, rfid, _calcObjectName, householdKey.Key, lti, pi, additionalFileIndex, timeResolution);
                         ResultFileList.ResultFiles.Add(rfe.HashKey, rfe);
                         _inputDataLogger.Save(rfe);
                         return ret;
                     }
                     if (typeof(T) == typeof(FileStream)) {
-                        var stream = _getStream.GetWriterStream(fullfilename);
+                        var stream = _getStream.GetWriterStream(fileInfo.FullName);
                         var ret = (T) (object) stream;
-                        var rfe = new ResultFileEntry(description, cleanFileName, fullfilename, displayResultFileEntry, null, null,
+                        var rfe = new ResultFileEntry(description,  fileInfo, displayResultFileEntry, null, null,
                             stream, rfid, _calcObjectName, householdKey.Key, lti, pi, additionalFileIndex, timeResolution);
                         ResultFileList.ResultFiles.Add(rfe.HashKey, rfe);
                         _inputDataLogger.Save(rfe);
@@ -311,7 +313,7 @@ namespace Common {
                 }
                 catch (IOException ioe) {
                     if (!Config.IsInUnitTesting) {
-                        var errormessage = "The file " + fullfilename +
+                        var errormessage = "The file " + fileInfo.FullName +
                                            " could not be opened. The exact error message was:" + Environment.NewLine + ioe.Message +
                                            Environment.NewLine+ Environment.NewLine;
                         errormessage += " Maybe you forgot to close Excel? Press YES to try again!";
@@ -328,7 +330,7 @@ namespace Common {
                     }
                 }
             } while (tryagain);
-            throw new DataIntegrityException("Couldn't open file \"" + fullfilename + "\". Aborting.");
+            throw new DataIntegrityException("Couldn't open file \"" + fileInfo.FullName + "\". Aborting.");
         }
 
         public void CheckIfAllAreRegistered([NotNull] string resultPath)

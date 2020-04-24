@@ -10,7 +10,6 @@ using JetBrains.Annotations;
 
 namespace Automation {
     public static class AutomationUtili {
-
         [NotNull]
         public static List<CalcOption> GetOptionList([NotNull] params CalcOption[] list)
         {
