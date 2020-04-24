@@ -60,7 +60,7 @@ namespace CalculationController.Tests.CalcFactories {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             Config.IsInUnitTesting = true;
-            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.None);
+            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.Reasonable);
             sim.MyGeneralConfig.Enable(CalcOption.DeviceProfiles);
             sim.MyGeneralConfig.ShowSettlingPeriodBool = true;
             //ConfigSetter.SetGlobalTimeParameters(sim.MyGeneralConfig);
@@ -364,14 +364,19 @@ namespace CalculationController.Tests.CalcFactories {
             rfes1.Should().BeEquivalentTo(rfes2,o => o.Excluding(
                 x => x.SelectedMemberPath.EndsWith("FullFileName")));
 
-            //CompareCsv(rfes1, rfes2);
+            CompareCsv(rfes1, rfes2);
             wd1.CleanUp();
             wd2.CleanUp();
         }
 
         private static void CompareCsv([NotNull] List<ResultFileEntry> rfes1, List<ResultFileEntry> rfes2)
         {
+            List<string> filesToIgnore = new List<string>();
+            filesToIgnore.Add("LocationStatistics.HH1.csv");
             foreach (var fileEntry1 in rfes1) {
+                if (filesToIgnore.Contains(fileEntry1.FileName)) {
+                    continue;
+                }
                 if (fileEntry1.FileName.ToUpperInvariant().EndsWith(".CSV", StringComparison.Ordinal)) {
                     foreach (var fileEntry2 in rfes2) {
                         if (fileEntry1.FileName == fileEntry2.FileName) {

@@ -27,7 +27,7 @@ namespace CalculationController.DtoFactories
             cp.SetWriteExcelColumn (csps.WriteExcelColumn);
             cp.SetManyOptionsWithClear(csps.CalcOptions);
             cp.SetShowSettlingPeriod(csps.ShowSettlingPeriod);
-            cp.SetRandomSeed(_sim.MyGeneralConfig.RandomSeed, forceRandom);
+            cp.SetRandomSeed(csps.SelectedRandomSeed, forceRandom);
             if (csps.CalcTarget.GetType() == typeof(Settlement))
             {
                 cp.Enable(CalcOption.OverallDats);

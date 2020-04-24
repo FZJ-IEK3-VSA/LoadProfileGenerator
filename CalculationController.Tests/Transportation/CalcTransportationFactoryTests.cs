@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Autofac;
 using Automation;
 using Automation.ResultFiles;
@@ -21,6 +22,8 @@ using Database;
 using Database.Tables.ModularHouseholds;
 using Database.Tables.Transportation;
 using Database.Tests;
+using FluentAssertions;
+using JetBrains.Annotations;
 using NUnit.Framework;
 
 namespace CalculationController.Tests.Transportation
@@ -165,6 +168,113 @@ namespace CalculationController.Tests.Transportation
 
             db.Cleanup();
             wd.CleanUp();
+        }
+
+        [Test]
+        [SuppressMessage("ReSharper", "UnusedVariable")]
+        [Category(UnitTestCategories.BasicTest)]
+        public void DuplicateDtoFactoryTest()
+        {
+            var dto1 = MakeSingleFactory();
+            var dto2 = MakeSingleFactory();
+            var devices1 = dto1.DeviceDtos.Select(x => x.Name).ToList();
+            var devices2 = dto2.DeviceDtos.Select(x => x.Name).ToList();
+            devices1.Should().BeEquivalentTo(devices2);
+
+        }
+        [NotNull]
+        public CalcHouseholdDto MakeSingleFactory()
+        {
+            var builder = new ContainerBuilder();
+            WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
+            wd.InputDataLogger.AddSaver(new CalcPersonDtoLogger(wd.SqlResultLoggingService));
+            wd.InputDataLogger.AddSaver(new CalcAffordanceDtoLogger(wd.SqlResultLoggingService));
+            wd.InputDataLogger.AddSaver(new CalcVariableDtoLogger(wd.SqlResultLoggingService));
+            wd.InputDataLogger.AddSaver(new BridgeDayEntryLogger(wd.SqlResultLoggingService));
+            wd.InputDataLogger.AddSaver(new HouseholdDtoLogger(wd.SqlResultLoggingService));
+            wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
+            wd.InputDataLogger.AddSaver(new CalcSiteDtoLogger(wd.SqlResultLoggingService));
+            wd.InputDataLogger.AddSaver(new CalcTransportationDeviceDtoLogger(wd.SqlResultLoggingService));
+            wd.InputDataLogger.AddSaver(new CalcTravelRouteDtoLogger(wd.SqlResultLoggingService));
+            wd.InputDataLogger.AddSaver(new ColumnEntryLogger(wd.SqlResultLoggingService));
+            wd.InputDataLogger.AddSaver(new TransportationStatusLogger(wd.SqlResultLoggingService));
+            wd.InputDataLogger.AddSaver(new TransportationEventLogger(wd.SqlResultLoggingService));
+            wd.InputDataLogger.AddSaver(new ResultFileEntryLogger(wd.SqlResultLoggingService));
+
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
+            Simulator sim = new Simulator(db.ConnectionString);
+
+            ModularHousehold mhh = sim.ModularHouseholds[0];
+            Random r = new Random(1);
+            var ltdtoDict = CalcLoadTypeDtoFactory.MakeLoadTypes(sim.LoadTypes.It, new TimeSpan(0, 1, 0), LoadTypePriority.RecommendedForHouseholds);
+            var ltdict = CalcLoadTypeFactory.MakeLoadTypes(ltdtoDict);
+            CalcParameters parameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(2018, 1, 1)
+                .SetEndDate(new DateTime(2018, 1, 1, 2, 0, 0)).SetSettlingDays(0).EnableShowSettlingPeriod();
+            builder.Register(x => parameters).As<CalcParameters>().SingleInstance();
+            builder.Register(x => new DateStampCreator(parameters)).As<DateStampCreator>().SingleInstance();
+            builder.Register(c => ltdict).As<CalcLoadTypeDictionary>().SingleInstance();
+            builder.Register(c => ltdtoDict).As<CalcLoadTypeDtoDictionary>().SingleInstance();
+            builder.Register(c => new NormalRandom(0, 1, r)).As<NormalRandom>().SingleInstance();
+            builder.Register(c => new FileFactoryAndTracker(wd.WorkingDirectory, mhh.Name, wd.InputDataLogger)).As<FileFactoryAndTracker>()
+                .SingleInstance();
+            builder.Register(c => new SqlResultLoggingService(wd.WorkingDirectory)).As<SqlResultLoggingService>().SingleInstance();
+            builder.Register(c => wd.InputDataLogger).As<IInputDataLogger>().SingleInstance();
+
+            builder.Register(c => new OnlineLoggingData(c.Resolve<DateStampCreator>(), c.Resolve<IInputDataLogger>(), c.Resolve<CalcParameters>()))
+                .As<OnlineLoggingData>().SingleInstance();
+
+            builder.Register(c => new LogFile(parameters,
+                c.Resolve<FileFactoryAndTracker>(),
+                c.Resolve<OnlineLoggingData>(),
+                c.Resolve<SqlResultLoggingService>())).As<ILogFile>().SingleInstance();
+            builder.RegisterType<OnlineDeviceActivationProcessor>().As<IOnlineDeviceActivationProcessor>().SingleInstance();
+            builder.RegisterType<CalcModularHouseholdFactory>().As<CalcModularHouseholdFactory>().SingleInstance();
+            builder.Register(x => new DeviceCategoryPicker(r, null)).As<IDeviceCategoryPicker>().SingleInstance();
+
+            builder.Register(x => r).As<Random>().SingleInstance();
+            builder.RegisterType<CalcDeviceFactory>().As<CalcDeviceFactory>().SingleInstance();
+            builder.RegisterType<CalcDeviceDtoFactory>().As<CalcDeviceDtoFactory>().SingleInstance();
+            builder.RegisterType<CalcLocationFactory>().As<CalcLocationFactory>().SingleInstance();
+            builder.RegisterType<CalcLocationDtoFactory>().As<CalcLocationDtoFactory>().SingleInstance();
+            builder.RegisterType<CalcPersonFactory>().As<CalcPersonFactory>().SingleInstance();
+            builder.RegisterType<CalcPersonDtoFactory>().As<CalcPersonDtoFactory>().SingleInstance();
+            builder.RegisterType<CalcAffordanceFactory>().As<CalcAffordanceFactory>().SingleInstance();
+            builder.RegisterType<CalcAffordanceDtoFactory>().As<CalcAffordanceDtoFactory>().SingleInstance();
+            builder.RegisterType<CalcTransportationFactory>().As<CalcTransportationFactory>().SingleInstance();
+            builder.RegisterType<CalcModularHouseholdDtoFactory>().As<CalcModularHouseholdDtoFactory>().SingleInstance();
+            builder.RegisterType<CalcVariableDtoFactory>().As<CalcVariableDtoFactory>().SingleInstance();
+            builder.RegisterType<CalcTransportationDtoFactory>().As<CalcTransportationDtoFactory>().SingleInstance();
+            builder.RegisterType<VacationDtoFactory>().As<VacationDtoFactory>().SingleInstance();
+            builder.RegisterType<AvailabilityDtoRepository>().As<AvailabilityDtoRepository>().SingleInstance();
+            builder.RegisterType<CalcVariableRepository>().As<CalcVariableRepository>().SingleInstance();
+            var container = builder.Build();
+            using (var scope = container.BeginLifetimeScope()) {
+                var hhdtofac = scope.Resolve<CalcModularHouseholdDtoFactory>();
+
+                TransportationDeviceSet tds = sim.TransportationDeviceSets[0];
+                tds.SaveToDB();
+                TravelRouteSet trs = sim.TravelRouteSets[0];
+                trs.SaveToDB();
+                ChargingStationSet css = sim.ChargingStationSets[0];
+                css.SaveToDB();
+                var lf = scope.Resolve<ILogFile>();
+                lf.InitHousehold(Constants.GeneralHouseholdKey, "General", HouseholdKeyType.General, "desc", null, null);
+                var dtohh = hhdtofac.MakeCalcModularHouseholdDto(sim,
+                    mhh,
+                    sim.TemperatureProfiles[0],
+                    new HouseholdKey("hh1"),
+                    sim.GeographicLocations[0],
+                    out var dtolocs,
+                    tds,
+                    trs,
+                    EnergyIntensityType.Random,
+                    css,
+                    parameters);
+                lf.Close();
+                db.Cleanup();
+                wd.CleanUp();
+                return dtohh;
+            }
         }
     }
 }
