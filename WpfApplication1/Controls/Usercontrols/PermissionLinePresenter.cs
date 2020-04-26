@@ -63,6 +63,7 @@ namespace LoadProfileGenerator.Controls.Usercontrols {
             _permissionLine = permissionLine;
             Entry = timeEntry;
             _leftMargin = leftMargin;
+            Logger.Info("Margin: " + _leftMargin);
             _isMinusVisible = isMinusVisible;
             PermissionModes = new ObservableCollection<PermissionTuple> {
                 new PermissionTuple(PermissionMode.EveryXDay, "Every x days"),
@@ -128,6 +129,7 @@ namespace LoadProfileGenerator.Controls.Usercontrols {
             set {
                 _leftMargin = value;
                 Margin = new Thickness(_leftMargin, 0, 0, 0);
+                Logger.Info("Margin: " + _leftMargin);
                 OnPropertyChanged(nameof(LeftMargin));
                 OnPropertyChanged(nameof(Margin));
             }

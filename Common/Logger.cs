@@ -71,6 +71,16 @@ namespace Common {
         [ItemNotNull]
         public List<LogMessage> CollectedCalculationMessages { get; set; }
 
+        [NotNull]
+        public string ReturnAllLoggedErrors()
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (var error in _errors) {
+                sb.Append(error.Message).Append("\n");
+            }
+            return sb.ToString();
+        }
+
         private Logger()
         {
             Console.WriteLine("Initializing the logger");

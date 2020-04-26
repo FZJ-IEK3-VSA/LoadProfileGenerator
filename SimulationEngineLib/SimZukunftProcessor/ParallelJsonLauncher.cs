@@ -159,7 +159,21 @@ namespace SimulationEngineLib.SimZukunftProcessor {
                 CopyAll(diSourceSubDir, nextTargetSubDir);
             }
         }
+        [CanBeNull]
+        public static HouseCreationAndCalculationJob LoadFromFile([NotNull] string inputFile)
+        {
+            string s = File.ReadAllText(inputFile);
+            Logger.Info("Reading " + inputFile);
+            try {
+                var jcs = JsonConvert.DeserializeObject<HouseCreationAndCalculationJob>(s);
+                return jcs;
+            }
+            catch (Exception) {
+                Logger.Error("Could not read file "+ inputFile + ". Skipping this file.");
+                return null;
+            }
 
+        }
         private void FillCalculationQueue([NotNull] ParallelJsonLauncherOptions options)
         {Logger.Info("Starting to look for all the json files to calculate...");
             if (options.JsonDirectory == null) {
@@ -187,7 +201,10 @@ namespace SimulationEngineLib.SimZukunftProcessor {
             }
 
             for (var calcidx = 0; calcidx < inputFiles.Count; calcidx++) {
-                HouseCreationAndCalculationJob jcs = HouseCreationAndCalculationJob.LoadFromFile(inputFiles[calcidx].FullName);
+                HouseCreationAndCalculationJob jcs = LoadFromFile(inputFiles[calcidx].FullName);
+                if(jcs == null) {
+                    continue;
+                }
 
                 //check if there even is an output directory
                 if (string.IsNullOrWhiteSpace(jcs.CalcSpec.OutputDirectory)) {
@@ -490,8 +507,7 @@ namespace SimulationEngineLib.SimZukunftProcessor {
             public int NumberOfCores { get; set; } = Environment.ProcessorCount / 2;
 
             [ArgDescription("If you enable this, then the direct subdirectories of the target directory will also be searched " +
-                            "for json files. This can be helpful if you are using multiple district definition files, since " +
-                            "those will be split into different directories to make things slightly less confusing.")]
+                            "for json files.")]
             [ArgShortcut("2nd")]
             [UsedImplicitly]
             [ArgDefaultValue(false)]

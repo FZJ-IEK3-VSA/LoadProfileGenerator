@@ -117,7 +117,7 @@
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
                             Style="{StaticResource TextBlockStyle}">
-                            When using the command line district definitions you can set travel distances. To connect the settings in the JSON calculation definition files and the travel routes,
+                            When using the command line house jobs you can set travel distances. To connect the settings in the JSON calculation definition files and the travel routes,
                             the travel route keys are used. If you define a route key &quot;WORK&quot; and a step key below &quot;DRIVING&quot; then you can set in the calculation definition files the setting &quot;WORK-DRIVING&quot; : x and
                             in the calculation the distance x will be used. This is useful for automatically varying routes in scripts if you are simulating large populations.
                             Note that the keys are not case sensitive and will be connected with a minus. Also note that there is not a lot of sanity checking. If you give 10 routes the same key, then the 10 routes will have the same distances set when calculating.

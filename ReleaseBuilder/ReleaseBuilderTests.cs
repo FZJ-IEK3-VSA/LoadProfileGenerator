@@ -409,6 +409,7 @@ namespace ReleaseBuilder
         public void CheckForCalculationOutcomeCompleteness()
         {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
+            Logger.Info("Using file " + db.FileName);
             var sim = new Simulator(db.ConnectionString);
             var count = CalculationOutcomesPresenter.CountMissingEntries(sim);
 #pragma warning disable S2583 // Conditionally executed blocks should be reachable
@@ -506,7 +507,7 @@ namespace ReleaseBuilder
             }
             if (forgottenUpdates)
             {
-                throw new LPGException("Forgotten updates!");
+                throw new LPGException("Forgotten updates!\n" + Logger.Get().ReturnAllLoggedErrors());
             }
 
             // get rid of all templated items

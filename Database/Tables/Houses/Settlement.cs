@@ -996,7 +996,7 @@ namespace Database.Tables.Houses {
             StreamWriter sw = new StreamWriter(batchPath1);
             foreach (var outputFile in outputFiles) {
                 FileInfo fi = new FileInfo(outputFile);
-                sw.WriteLine("\"" + simulationEnginePath + "\" CalculateJson -Input \"" + fi.Name + "\"");
+                sw.WriteLine("\"" + simulationEnginePath + "\" ProcessHouseJob -j \"" + fi.Name + "\"");
             }
 
             sw.WriteLine("pause");

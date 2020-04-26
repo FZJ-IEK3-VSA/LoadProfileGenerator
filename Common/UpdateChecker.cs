@@ -16,7 +16,6 @@ namespace Common {
                 string result;
                 using (var webClient = new WebClient()) {
                     version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-
                     webClient.QueryString.Add("clientversion", version);
                     result = webClient.DownloadString(webAddr);
                 }

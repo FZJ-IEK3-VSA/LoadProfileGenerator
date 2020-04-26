@@ -1,7 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using JetBrains.Annotations;
-using Newtonsoft.Json;
 
 namespace Automation {
     public class HouseCreationAndCalculationJob
@@ -33,13 +31,6 @@ namespace Automation {
             "Path to the database file to use. Defaults to profilegenerator.db3 in the current directry if not set.")]
         [CanBeNull]
         public string PathToDatabase { get; set; } = "profilegenerator.db3";
-        [NotNull]
-        public static HouseCreationAndCalculationJob LoadFromFile([NotNull] string inputFile)
-        {
-            string s = File.ReadAllText(inputFile);
-            var jcs = JsonConvert.DeserializeObject<HouseCreationAndCalculationJob>(s);
-            return jcs;
-        }
 
     }
 }

@@ -34,6 +34,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using Database.Tables.BasicElements;
 using Database.Tables.ModularHouseholds;
@@ -260,6 +261,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
 
         private void RefreshAllPermissionLines()
         {
+            int lineidx = 0;
             foreach (var boolEntry in ThisTimeLimit.TimeLimitEntries) {
                 var found = false;
                 foreach (var line in _dtv.PermissionLines) {
@@ -277,6 +279,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
                     permissionLine.ShowPreviewClicked += _dtv.PermissionLineOnShowPreviewClicked;
                     _dtv.PermissionLines.Add(permissionLine);
                     _dtv.BoolGrid.Children.Add(permissionLine);
+                    Grid.SetRow(permissionLine,lineidx++);
                     _plps.Add(plp);
                     plp.SetAllOnProperty();
                 }

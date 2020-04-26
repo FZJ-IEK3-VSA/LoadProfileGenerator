@@ -137,6 +137,32 @@ sim1.HouseholdTemplates[0].Should().BeEquivalentTo(sim2.HouseholdTemplates[0], o
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
+        public void HouseholdTemplateAddTests()
+        {
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
+
+            var sim = new Simulator(db.ConnectionString);
+            var gen = sim.HouseholdTemplates.CreateNewItem(db.ConnectionString);
+            gen.NewHHName = "hh";
+
+            gen.AddVacation(sim.Vacations[0]);
+            gen.AddVacationFromJson(sim.Vacations[0].GetJsonReference(),sim);
+
+            gen.SaveToDB();
+            gen.GenerateHouseholds(sim, true, new List<STTraitLimit>());
+            foreach (var household in gen.GeneratedHouseholds)
+            {
+                Logger.Info(household.Name);
+                foreach (var trait in household.Traits)
+                {
+                    Logger.Info("\t" + trait.HouseholdTrait.Name);
+                }
+            }
+            db.Cleanup();
+        }
+
+        [Test]
+        [Category(UnitTestCategories.BasicTest)]
         public void HouseholdTemplateTest() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
 
