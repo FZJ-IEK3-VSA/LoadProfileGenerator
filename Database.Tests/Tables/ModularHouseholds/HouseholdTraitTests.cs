@@ -73,6 +73,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
             if (sim1.HouseholdTraits.It.Count != sim2.HouseholdTraits.It.Count) {
                 throw new LPGException("count not equal");
             }
+            sim2.HouseholdTraits.It.Sort();
             sim1.HouseholdTraits[0].Should().BeEquivalentTo(result[0], o => o.IgnoringCyclicReferences()
                 .Using<IRelevantGuidProvider>(x => x.Subject.RelevantGuid.Should().BeEquivalentTo(x.Expectation.RelevantGuid)).WhenTypeIs<IRelevantGuidProvider>()
                 .Excluding(x => IsInvalidMember(x)
