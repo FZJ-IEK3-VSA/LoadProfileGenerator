@@ -30,37 +30,29 @@ using System;
 using System.Collections.Generic;
 using Automation.ResultFiles;
 using CalculationEngine.HouseholdElements;
-using CalculationEngine.OnlineDeviceLogging;
 using Common;
 using Common.CalcDto;
-using Common.JSON;
 using JetBrains.Annotations;
 
 namespace CalculationEngine.HouseElements {
     public class CalcSpaceHeating : CalcDevice {
         [NotNull] private readonly Dictionary<Tuple<int, int, int>, CalcDegreeDay> _calcDegreeDays;
 
-        [NotNull] private readonly CalcParameters _calcParameters;
 
         public CalcSpaceHeating(
                                 [NotNull] [ItemNotNull] List<CalcDeviceLoad> powerUsage,
-                                [NotNull] IOnlineDeviceActivationProcessor odap,
                                 [NotNull] Dictionary<Tuple<int, int, int>, CalcDegreeDay> calcDegreeDays,
                                 [NotNull] CalcLocation cloc,
-                                [NotNull] CalcParameters calcParameters,
-                                 [NotNull] CalcDeviceDto deviceDto) : base(
+                                 [NotNull] CalcDeviceDto deviceDto, [NotNull] CalcRepo calcRepo) : base(
             powerUsage,
-            odap,
             cloc,
-            calcParameters,
-            deviceDto)
+            deviceDto, calcRepo)
         {
             if (powerUsage.Count != 1) {
                 throw new LPGException("there should be exactly one loadtype for space heating, not more or less.");
             }
 
             _calcDegreeDays = calcDegreeDays;
-            _calcParameters = calcParameters;
         }
 
         [NotNull]
@@ -69,7 +61,7 @@ namespace CalculationEngine.HouseElements {
         public void Activate([NotNull] TimeStep time, DateTime dateTime)
         {
             var oneDay = new TimeSpan(24, 0, 0);
-            var numberOfValuesInOneDay = (int)(oneDay.TotalMilliseconds / _calcParameters.InternalStepsize.TotalMilliseconds);
+            var numberOfValuesInOneDay = (int)(oneDay.TotalMilliseconds / CalcRepo.CalcParameters.InternalStepsize.TotalMilliseconds);
             var heatingProfile = new List<double>(new double[numberOfValuesInOneDay]);
             var cdd = _calcDegreeDays[new Tuple<int, int, int>(dateTime.Year, dateTime.Month, dateTime.Day)];
             var timeUnitValue = cdd.HeatingAmount / numberOfValuesInOneDay / PowerUsage[0].LoadType.ConversionFactor;

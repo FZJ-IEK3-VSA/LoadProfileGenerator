@@ -840,6 +840,18 @@ namespace Database.Tables
         }
 
         [NotifyPropertyChangedInvocator]
+        protected void SetValueWithNotify(BodilyActivityLevel value, ref BodilyActivityLevel dstField,
+                                          [CanBeNull] [CallerMemberName] string propertyName = null)
+        {
+            if (value == dstField)
+            {
+                return;
+            }
+            dstField = value;
+            OnPropertyChanged(propertyName);
+        }
+
+        [NotifyPropertyChangedInvocator]
         protected void SetValueWithNotify<T>([CanBeNull] T value, [CanBeNull] ref T dstField,
             bool acceptNull = false,
             [CanBeNull] [CallerMemberName] string propertyName = null) where T : class

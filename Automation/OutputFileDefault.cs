@@ -8,7 +8,7 @@
         Reasonable = 4,
         ReasonableWithCharts = 5,
         ReasonableWithChartsAndPDF = 6,
-        None = 7,
+        NoFiles = 7,
         ForSettlementCalculations = 8,
     }
 }

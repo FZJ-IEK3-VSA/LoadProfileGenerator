@@ -38,7 +38,7 @@ namespace CalcPostProcessorTests
             //FileFactoryAndTracker fft = new FileFactoryAndTracker(wd.WorkingDirectory,"objname",cm.Logfile.FileFactoryAndTracker);
             //fft.RegisterHouseholdKey(Constants.GeneralHouseholdKey,"general");
             //fft.RegisterHouseholdKey(Constants.GeneralHouseholdKey,"general");
-            PostProcessingManager pcm  = new PostProcessingManager(mq.Object,cm.Logfile.FileFactoryAndTracker);
+            PostProcessingManager pcm  = new PostProcessingManager(mq.Object,cm.CalcRepo.Logfile.FileFactoryAndTracker);
             //Debug.Assert(calcResult != null, nameof(calcResult) + " != null");
             pcm.Run(wd.WorkingDirectory);
             wd.CleanUp();

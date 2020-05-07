@@ -25,7 +25,7 @@ namespace Calculation.Tests.PostProcessing
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Simulator sim = new Simulator(db.ConnectionString) {MyGeneralConfig = {StartDateUIString = "15.1.2015", EndDateUIString = "18.1.2015", InternalTimeResolution = "00:01:00"}};
-            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.None);
+            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
             sim.MyGeneralConfig.Enable(CalcOption.LocationsFile);
             //ConfigSetter.SetGlobalTimeParameters(sim.MyGeneralConfig);
             Assert.AreNotEqual(null, sim);

@@ -32,7 +32,6 @@ using System.Linq;
 using Automation.ResultFiles;
 using CalculationController.DtoFactories;
 using CalculationEngine.HouseholdElements;
-using CalculationEngine.OnlineDeviceLogging;
 using Common.CalcDto;
 using Common.JSON;
 using Database.Tables.BasicElements;
@@ -40,27 +39,23 @@ using JetBrains.Annotations;
 
 namespace CalculationController.CalcFactories {
     public class CalcDeviceFactory {
-        [NotNull] private readonly CalcParameters _calcParameters;
         [NotNull]
         private readonly AvailabilityDtoRepository _availabilityDtoRepository;
 
         [NotNull] private readonly CalcVariableRepository _calcVariableRepository;
+        private readonly CalcRepo _calcRepo;
 
         [NotNull]
         private readonly CalcLoadTypeDictionary _loadTypeDictionary;
-        [NotNull] private readonly IOnlineDeviceActivationProcessor _odap;
 
         public CalcDeviceFactory([NotNull] CalcLoadTypeDictionary loadTypeDictionary,
-                                  [NotNull] IOnlineDeviceActivationProcessor odap,
-                                 [NotNull] CalcParameters calcParameters,
                                  [NotNull] AvailabilityDtoRepository availabilityDtoRepository,
-            [NotNull] CalcVariableRepository calcVariableRepository)
+            [NotNull] CalcVariableRepository calcVariableRepository, CalcRepo calcRepo)
         {
             _loadTypeDictionary = loadTypeDictionary;
-            _odap = odap;
-            _calcParameters = calcParameters;
             _availabilityDtoRepository = availabilityDtoRepository;
             _calcVariableRepository = calcVariableRepository;
+            _calcRepo = calcRepo;
         }
 
         [NotNull]
@@ -73,7 +68,7 @@ namespace CalculationController.CalcFactories {
             foreach (var autoDevDto in autoDevices) {
                 if (_loadTypeDictionary.SimulateLoadtype(autoDevDto.LoadtypeGuid)) {
                     var deviceLoads = MakeCalcDeviceLoads(autoDevDto, _loadTypeDictionary);
-                    CalcProfile cp = MakeCalcProfile(autoDevDto.CalcProfile, _calcParameters);
+                    CalcProfile cp = MakeCalcProfile(autoDevDto.CalcProfile, _calcRepo.CalcParameters);
 
                     var loadtype= _loadTypeDictionary.GetLoadtypeByGuid(autoDevDto.LoadtypeGuid);
                     CalcLocation calcLocation = locationDict.GetCalcLocationByGuid(autoDevDto.CalcLocationGuid);
@@ -89,8 +84,8 @@ namespace CalculationController.CalcFactories {
                     autoDevDto.AdditionalName = " (autonomous)";
                     var cautodev = new CalcAutoDev( cp,loadtype,
                         deviceLoads,autoDevDto.TimeStandardDeviation,
-                             _odap, 1,calcLocation,
-                         _calcParameters, requirements, autoDevDto);
+                              1,calcLocation,
+                          requirements, autoDevDto,_calcRepo);
                     var busyarr = _availabilityDtoRepository.GetByGuid(autoDevDto.BusyArr.Guid);
                     cautodev.ApplyBitArry(busyarr, loadtype);
                     autodevs.Add(cautodev);
@@ -167,7 +162,7 @@ namespace CalculationController.CalcFactories {
 
         public void MakeCalcDevices([NotNull][ItemNotNull] List<CalcLocation> locs, [NotNull][ItemNotNull] List<CalcDeviceDto> calcDeviceDtos,
                                     [ItemNotNull] [NotNull] List<CalcDevice> calcDevices,
-                                    [NotNull] HouseholdKey householdKey, [NotNull] CalcLoadTypeDictionary calcLoadTypeDictionary)
+                                    [NotNull] HouseholdKey householdKey, [NotNull] CalcLoadTypeDictionary calcLoadTypeDictionary, CalcRepo calcRepo)
         {
             foreach (var cdd in calcDeviceDtos) {
                 var cloc = locs.First(x => x.Guid == cdd.LocationGuid);
@@ -175,8 +170,8 @@ namespace CalculationController.CalcFactories {
                 var deviceLoads = MakeCalcDeviceLoads(cdd, calcLoadTypeDictionary);
 
                 var cdev = new CalcDevice( deviceLoads,
-                    _odap, cloc,
-                    _calcParameters,  cdd);
+                     cloc,
+                      cdd,calcRepo);
 
                 cloc.Devices.Add(cdev);
                 calcDevices.Add(cdev);

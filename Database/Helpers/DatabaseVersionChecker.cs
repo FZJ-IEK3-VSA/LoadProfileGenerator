@@ -7,7 +7,7 @@ using JetBrains.Annotations;
 
 namespace Database.Helpers {
     public static class DatabaseVersionChecker {
-        [NotNull] private static string _dstVersion = "8.9.0.a";
+        [NotNull] private static string _dstVersion = "9.6.0.a";
 
         [NotNull]
         public static string DstVersion {

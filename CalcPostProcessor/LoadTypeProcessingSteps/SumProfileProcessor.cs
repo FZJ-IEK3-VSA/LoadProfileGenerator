@@ -46,7 +46,7 @@ namespace CalcPostProcessor.LoadTypeProcessingSteps {
                 jrf.Values.Add(efr.SumCached * dstLoadType.ConversionFactor);
             }
 
-            var sumfile = _fft.MakeFile<StreamWriter>("Sum." + dstLoadType.FileName + "."+ ".json",
+            var sumfile = _fft.MakeFile<StreamWriter>("Sum." + dstLoadType.FileName + ".json",
                 "Summed up energy profile for all devices for " + dstLoadType.Name, true,
                 ResultFileID.JsonSums, Constants.GeneralHouseholdKey, TargetDirectory.Results,
                 calcParameters.InternalStepsize,

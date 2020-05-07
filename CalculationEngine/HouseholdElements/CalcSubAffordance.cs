@@ -31,7 +31,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Automation;
 using Automation.ResultFiles;
-using CalculationEngine.Helper;
 using Common;
 using Common.Enums;
 using Common.JSON;
@@ -50,13 +49,13 @@ namespace CalculationEngine.HouseholdElements {
             int miniumAge, int maximumAge, int delaytimesteps, PermittedGender permittedGender,[NotNull] string pAffCategory,
             bool isInterruptable, bool isInterrupting,[NotNull] CalcAffordance parentAffordance,
             [NotNull][ItemNotNull] List<CalcAffordanceVariableOp> variableOps, int weight,
-                                 [NotNull] string sourceTrait, [NotNull] CalcParameters calcParameters,
+                                 [NotNull] string sourceTrait,
                                  [NotNull] string guid, [ItemNotNull] [NotNull] BitArray isBusy,
-            [NotNull] CalcVariableRepository repository)
+            [NotNull] CalcVariableRepository repository, BodilyActivityLevel bodilyActivityLevel, [NotNull] CalcRepo calcRepo)
             : base(
                 pName, loc, satisfactionvalues, miniumAge, maximumAge, permittedGender, false, false, pAffCategory,
                 isInterruptable, isInterrupting, ActionAfterInterruption.GoBackToOld, weight, false,
-                CalcAffordanceType.Subaffordance,calcParameters, guid,isBusy)
+                CalcAffordanceType.Subaffordance, guid,isBusy, bodilyActivityLevel,calcRepo )
         {
             Delaytimesteps = delaytimesteps;
             _variableOps = variableOps;
@@ -104,7 +103,7 @@ namespace CalculationEngine.HouseholdElements {
 
         public override int DefaultPersonProfileLength => PersonProfileDuration;
 
-        public override bool IsBusy([NotNull] TimeStep time, [NotNull] NormalRandom nr, [NotNull] Random r, [NotNull] CalcLocation srcLocation, [NotNull] string calcPersonName,
+        public override bool IsBusy([NotNull] TimeStep time, [NotNull] CalcLocation srcLocation, [NotNull] string calcPersonName,
             bool clearDictionaries = true)
         {
             if (IsBusyArray[time.InternalStep]) {
@@ -115,7 +114,9 @@ namespace CalculationEngine.HouseholdElements {
 
         [NotNull]
         [ItemNotNull]
-        public override List<CalcSubAffordance> CollectSubAffordances([NotNull] TimeStep time, [NotNull] NormalRandom nr, bool onlyInterrupting, [NotNull] Random r, [NotNull] CalcLocation srcLocation) => throw new NotImplementedException();
+        public override List<CalcSubAffordance> CollectSubAffordances([NotNull] TimeStep time,
+                                                                      bool onlyInterrupting,
+                                                                      [NotNull] CalcLocation srcLocation) => throw new NotImplementedException();
 
         [NotNull]
         [ItemNotNull]

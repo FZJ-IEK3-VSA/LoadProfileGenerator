@@ -1,6 +1,4 @@
 ﻿using CalculationEngine.HouseholdElements;
-using CalculationEngine.OnlineDeviceLogging;
-using CalculationEngine.OnlineLogging;
 using CalculationEngine.Transportation;
 using Common;
 using Common.JSON;
@@ -376,30 +374,20 @@ namespace CalculationController.CalcFactories {
 
     public class CalcTransportationFactory {
         [NotNull]
-        private readonly Random _rnd;
-        [NotNull]
         private readonly CalcLoadTypeDictionary _loadTypeDict;
-        [NotNull]
-        private readonly IOnlineDeviceActivationProcessor _odap;
-        [NotNull]
-        private readonly ILogFile _logfile;
-        [NotNull]
-        private readonly CalcParameters _calcParameters;
 
-        public CalcTransportationFactory([NotNull] Random rnd, [NotNull] CalcLoadTypeDictionary loadTypeDict,
-                                         [NotNull] IOnlineDeviceActivationProcessor odap, [NotNull] ILogFile logfile,
-                                         [NotNull] CalcParameters calcParameters)
+        private readonly CalcRepo _calcRepo;
+
+        public CalcTransportationFactory( [NotNull] CalcLoadTypeDictionary loadTypeDict,
+                                         CalcRepo calcRepo)
         {
-            _rnd = rnd;
             _loadTypeDict = loadTypeDict;
-            _odap = odap;
-            _logfile = logfile;
-            _calcParameters = calcParameters;
+            _calcRepo = calcRepo;
         }
 
         public void MakeTransportation([NotNull] CalcHouseholdDto household,
                                        [NotNull] DtoCalcLocationDict locDict,
-                                       [NotNull] CalcHousehold chh, [NotNull] IOnlineLoggingData old)
+                                       [NotNull] CalcHousehold chh)
         {
             if (household.CalcTravelRoutes == null || household.CalcSites == null ||
                 household.CalcTransportationDevices == null) {
@@ -419,17 +407,17 @@ namespace CalculationController.CalcFactories {
                 return;
             }
 
-            TransportationHandler th = new TransportationHandler(_rnd);
+            TransportationHandler th = new TransportationHandler();
             chh.TransportationHandler = th;
             Logger.Info("Making Calc Sites");
-            var sites = MakeCalcSites(household, locDict, _loadTypeDict, th,old);
+            var sites = MakeCalcSites(household, locDict, _loadTypeDict, th);
             foreach (var site in sites) {
                 th.AddSite(site);
             }
             Logger.Info("Making travel routes");
             MakeTravelRoutes(household.CalcTravelRoutes, chh, sites, th);
             Logger.Info("Making Transportation devices");
-            MakeTransportationDevice(chh, household.CalcTransportationDevices, old);
+            MakeTransportationDevice(chh, household.CalcTransportationDevices);
             Logger.Info("Setting affordances");
             SetAffordances(chh);
             Logger.Info("Finished initalizing the transportation");
@@ -445,8 +433,8 @@ namespace CalculationController.CalcFactories {
                 //if (siteA != null && siteB != null) {
                     //if either site is null, the travel route is not usable for this household
                     CalcTravelRoute travelRoute = new CalcTravelRoute(travelRouteDto.Name,
-                        siteA, siteB, th.VehicleDepot, th.LocationUnlimitedDevices, _logfile, chh.HouseholdKey,
-                        travelRouteDto.Guid);
+                        siteA, siteB, th.VehicleDepot, th.LocationUnlimitedDevices,  chh.HouseholdKey,
+                        travelRouteDto.Guid,_calcRepo);
                     foreach (var step in travelRouteDto.Steps) {
                         CalcTransportationDeviceCategory category = th.GetCategory(step.TransportationDeviceCategory);
                         travelRoute.AddTravelRouteStep(step.Name,  category, step.StepNumber, step.DistanceInM,
@@ -464,10 +452,10 @@ namespace CalculationController.CalcFactories {
 
         [NotNull]
         [ItemNotNull]
-        private static List<CalcSite> MakeCalcSites([NotNull] CalcHouseholdDto household, [NotNull]
+        private List<CalcSite> MakeCalcSites([NotNull] CalcHouseholdDto household, [NotNull]
                                                     DtoCalcLocationDict locDict, [NotNull] CalcLoadTypeDictionary ltDict,
-                                                    [NotNull] TransportationHandler th,
-                                                    [NotNull] IOnlineLoggingData onlineLoggingData)
+                                                    [NotNull] TransportationHandler th
+                                                    )
         {
             List<CalcSite> sites = new List<CalcSite>();
             //Dictionary<string, CalcSite> siteDictByGuid = new Dictionary<string, CalcSite>();
@@ -489,7 +477,8 @@ namespace CalculationController.CalcFactories {
                     var gridLt = ltDict.GetLoadtypeByGuid(chargingStation.GridChargingLoadType.Guid);
                     var carLt = ltDict.GetLoadtypeByGuid(chargingStation.CarChargingLoadType.Guid);
                     var cat = th.GetCategory(chargingStation.DeviceCategory);
-                    calcSite.AddChargingStation(gridLt,cat,chargingStation.MaxChargingPower,onlineLoggingData,carLt);
+                    calcSite.AddChargingStation(gridLt,cat,chargingStation.MaxChargingPower,
+                        carLt, _calcRepo);
                 }
             }
             return sites;
@@ -516,8 +505,8 @@ namespace CalculationController.CalcFactories {
                     }
 
                     AffordanceBaseTransportDecorator abtd = new AffordanceBaseTransportDecorator(
-                        aff, sites[0], chh.TransportationHandler, aff.Name,  _logfile, chh.HouseholdKey, _calcParameters,
-                        Guid.NewGuid().ToString());
+                        aff, sites[0], chh.TransportationHandler, aff.Name,
+                        chh.HouseholdKey, Guid.NewGuid().ToString(), _calcRepo);
                     location.AddTransportationAffordance(abtd);
                 }
             }
@@ -525,8 +514,7 @@ namespace CalculationController.CalcFactories {
 
         private void MakeTransportationDevice([NotNull] CalcHousehold chh,
                                               [NotNull][ItemNotNull]
-                                              List<CalcTransportationDeviceDto> transportationDevices,
-                                              [NotNull] IOnlineLoggingData old)
+                                              List<CalcTransportationDeviceDto> transportationDevices)
         {
             foreach (var transportationDevice in transportationDevices) {
                 var loads = new List<CalcDeviceLoad>();
@@ -554,11 +542,11 @@ namespace CalculationController.CalcFactories {
                 var category = chh.TransportationHandler.GetCategory(transportationDevice.Category);
                 CalcTransportationDevice cd = new CalcTransportationDevice(
                     category,
-                    transportationDevice.AverageSpeedInMPerS, loads, _odap,
+                    transportationDevice.AverageSpeedInMPerS, loads,
                     transportationDevice.FullRangeInMeters,
                     distanceToEnergyFactor, transportationDevice.MaxChargingPower, chargingLoadType,
                     chh.TransportationHandler.CalcSites,
-                    _calcParameters, old, cdd);
+                      cdd, _calcRepo);
                 if (category.IsLimitedToSingleLocation) {
                     chh.TransportationHandler.AddVehicleDepotDevice(cd);
                 }

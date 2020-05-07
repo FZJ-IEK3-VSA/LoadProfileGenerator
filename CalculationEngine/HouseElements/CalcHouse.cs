@@ -36,15 +36,12 @@ using Automation;
 using Automation.ResultFiles;
 using CalculationEngine.Helper;
 using CalculationEngine.HouseholdElements;
-using CalculationEngine.OnlineDeviceLogging;
-using CalculationEngine.OnlineLogging;
 using Common;
-using Common.JSON;
 using JetBrains.Annotations;
 
 namespace CalculationEngine.HouseElements {
     public sealed class CalcHouse : ICalcAbleObject {
-        [NotNull] private readonly CalcParameters _calcParameters;
+        private readonly CalcRepo _calcRepo;
 
         //[CanBeNull] private Dictionary<int, CalcProfile> _allProfiles;
 
@@ -60,29 +57,23 @@ namespace CalculationEngine.HouseElements {
 
         [ItemNotNull] [CanBeNull] private List<ICalcAbleObject> _households;
 
-        [CanBeNull] private ILogFile _lf;
-
-        [CanBeNull] private NormalRandom _normalDistributedRandom;
-
-        [CanBeNull] private IOnlineDeviceActivationProcessor _odap;
-
         [ItemNotNull] [CanBeNull] private List<CalcTransformationDevice> _transformationDevices;
 
         public CalcHouse([NotNull] string name, [NotNull] HouseholdKey houseKey,
-                         [NotNull] CalcParameters calcParameters)
+                         CalcRepo calcRepo)
         {
-            _calcParameters = calcParameters;
+            _calcRepo = calcRepo;
             Name = name;
             HouseholdKey = houseKey;
         }
 
         public void CloseLogfile()
         {
-            if (_lf == null) {
+            if (_calcRepo.Logfile == null) {
                 throw new LPGException("Logfile was null");
             }
 
-            _lf.Close();
+            _calcRepo.Logfile.Close();
         }
 
         /*
@@ -166,15 +157,12 @@ namespace CalculationEngine.HouseElements {
                 throw new LPGException("households should not be null.");
             }
 
-            if (_calcParameters.IsSet(CalcOption.HouseholdContents)) {
-                if (_lf == null) {
-                    throw new LPGException("No logfile");
-                }
+            if (_calcRepo.CalcParameters.IsSet(CalcOption.HouseholdContents)) {
 
                 using (var swHouse =
-                    _lf.FileFactoryAndTracker.MakeFile<StreamWriter>("HouseSpec." + Constants.HouseKey.Key + ".txt",
+                    _calcRepo.Logfile.FileFactoryAndTracker.MakeFile<StreamWriter>("HouseSpec." + Constants.HouseKey.Key + ".txt",
                         "Detailed house description", true, ResultFileID.PersonFile, Constants.HouseKey, TargetDirectory.Root,
-                        _calcParameters.InternalStepsize)) {
+                        _calcRepo.CalcParameters.InternalStepsize)) {
                     swHouse.WriteLine("Space Heating");
                     if (_calcSpaceHeating != null) {
                         swHouse.WriteLine(_calcSpaceHeating.Name);
@@ -222,15 +210,9 @@ namespace CalculationEngine.HouseElements {
         [NotNull]
         public HouseholdKey HouseholdKey { get; }
 
-        public void Init([NotNull] ILogFile lf, [NotNull] Random randomGenerator,
-                         [NotNull] DayLightStatus daylightArray,
-                         [NotNull] NormalRandom normalDistributedRandom,
-                         [NotNull] IOnlineDeviceActivationProcessor odap,
+        public void Init([NotNull] DayLightStatus daylightArray,
                          int simulationSeed)
         {
-            _normalDistributedRandom = normalDistributedRandom;
-            _lf = lf;
-            _odap = odap;
             //_allProfiles = new Dictionary<int, CalcProfile>();
             //var subhouseholdNumber = 1;
             if (_households == null) {
@@ -238,8 +220,7 @@ namespace CalculationEngine.HouseElements {
             }
 
             foreach (var chh in _households) {
-                chh.Init(lf, randomGenerator, daylightArray, normalDistributedRandom, odap,
-                    //"HH" + subhouseholdNumber,
+                chh.Init(daylightArray, //"HH" + subhouseholdNumber,
                     simulationSeed);
                 /*var profiles = chh.CollectAllProfiles();
                 foreach (var keyValuePair in profiles) {
@@ -266,20 +247,12 @@ namespace CalculationEngine.HouseElements {
                 throw new LPGException("all profiles was null");
             }*/
 
-            if (_normalDistributedRandom == null) {
-                throw new LPGException("_normalDistributedRandom  was null");
-            }
-
             if (_households == null) {
                 throw new LPGException("households was null");
             }
 
             if (_autoDevs == null) {
                 throw new LPGException("_autoDevs was null");
-            }
-
-            if (_odap == null) {
-                throw new LPGException("_odap was null");
             }
 
             if (_transformationDevices == null) {
@@ -311,12 +284,12 @@ namespace CalculationEngine.HouseElements {
 
             foreach (var calcAutoDev in _autoDevs) {
                 if (!calcAutoDev.IsBusyDuringTimespan(timestep, 1, 1, calcAutoDev.LoadType)) {
-                    calcAutoDev.Activate(timestep, _normalDistributedRandom);
+                    calcAutoDev.Activate(timestep);
                 }
             }
 
             var runAgain = true;
-            var energyFileRows = _odap.ProcessOneTimestep(timestep);
+            var energyFileRows = _calcRepo.Odap.ProcessOneTimestep(timestep);
 
             var repetitioncount = 0;
             List<string> log = null;
@@ -378,12 +351,12 @@ namespace CalculationEngine.HouseElements {
             }
 
             foreach (var fileRow in energyFileRows) {
-                if (_calcParameters.IsSet(CalcOption.DetailedDatFiles)) {
-                    fileRow.Save(_odap.BinaryOutStreams[fileRow.LoadType]);
+                if (_calcRepo.CalcParameters.IsSet(CalcOption.DetailedDatFiles)) {
+                    fileRow.Save(_calcRepo.Odap.BinaryOutStreams[fileRow.LoadType]);
                 }
 
-                if (_calcParameters.IsSet(CalcOption.OverallDats) || _calcParameters.IsSet(CalcOption.OverallSum)) {
-                    fileRow.SaveSum(_odap.SumBinaryOutStreams[fileRow.LoadType]);
+                if (_calcRepo.CalcParameters.IsSet(CalcOption.OverallDats) || _calcRepo.CalcParameters.IsSet(CalcOption.OverallSum)) {
+                    fileRow.SaveSum(_calcRepo.Odap.SumBinaryOutStreams[fileRow.LoadType]);
                 }
             }
         }

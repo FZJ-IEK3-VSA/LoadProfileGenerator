@@ -30,42 +30,35 @@ using System;
 using System.Collections.Generic;
 using Automation.ResultFiles;
 using CalculationEngine.HouseholdElements;
-using CalculationEngine.OnlineDeviceLogging;
 using Common;
 using Common.CalcDto;
-using Common.JSON;
 using JetBrains.Annotations;
 
 namespace CalculationEngine.HouseElements {
     public class CalcAirConditioning : CalcDevice {
         [NotNull] private readonly Dictionary<Tuple<int, int, int, int>, CalcDegreeHour> _calcDegreeHours;
 
-        [NotNull] private readonly CalcParameters _calcParameters;
-
         public CalcAirConditioning(
                                    [NotNull] [ItemNotNull] List<CalcDeviceLoad> powerUsage,
-                                   [NotNull] IOnlineDeviceActivationProcessor odap,
                                    [NotNull] Dictionary<Tuple<int, int, int, int>, CalcDegreeHour> calcDegreeHours,
                                    [NotNull] CalcLocation cloc,
-                                   [NotNull] CalcParameters calcParameters,
-                                   [NotNull] CalcDeviceDto calcDeviceDto)
+                                   [NotNull] CalcDeviceDto calcDeviceDto, [NotNull] CalcRepo calcRepo)
             : base(
-                 powerUsage, odap, cloc,
-                 calcParameters, calcDeviceDto)
+                 powerUsage,  cloc,
+                  calcDeviceDto, calcRepo)
         {
             if (powerUsage.Count != 1) {
                 throw new LPGException("there should be exactly one loadtype for air conditioning, not more or less.");
             }
 
             _calcDegreeHours = calcDegreeHours;
-            _calcParameters = calcParameters;
         }
 
         public void Activate([NotNull] TimeStep time, DateTime dateTime)
         {
             var oneHour = new TimeSpan(1, 0, 0);
             var numberOfValuesInOneHour =
-                (int)(oneHour.TotalMilliseconds / _calcParameters.InternalStepsize.TotalMilliseconds);
+                (int)(oneHour.TotalMilliseconds / CalcRepo.CalcParameters.InternalStepsize.TotalMilliseconds);
             var coolingProfile = new List<double>(new double[numberOfValuesInOneHour]);
             var cdd =
                 _calcDegreeHours[

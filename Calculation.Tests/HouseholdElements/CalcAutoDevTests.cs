@@ -73,7 +73,8 @@ namespace Calculation.Tests.HouseholdElements {
             DateStampCreator dsc = new DateStampCreator(calculationParameters);
             OnlineLoggingData old = new OnlineLoggingData(dsc,wd.InputDataLogger,calculationParameters);
             using (var lf = new LogFile(calculationParameters,fft,old,wd.SqlResultLoggingService, true)) {
-                var odap = new OnlineDeviceActivationProcessor(nr, lf,calculationParameters);
+                var odap = new OnlineDeviceActivationProcessor( lf,calculationParameters);
+                CalcRepo calcRepo = new CalcRepo(odap:odap, normalRandom:nr);
                 var location = new CalcLocation("calcloc", Guid.NewGuid().ToString());
                 CalcVariableRepository crv = new CalcVariableRepository();
                 string variableGuid = Guid.NewGuid().ToString();
@@ -90,11 +91,12 @@ namespace Calculation.Tests.HouseholdElements {
                     OefcDeviceType.AutonomousDevice, "device category","", Guid.NewGuid().ToString(),
                     location.Guid,location.Name);
                 var cad = new CalcAutoDev( profile, cloadtype, loads,
-                    0.8, odap,  1, location, calculationParameters, requirements, cdd);
+                    0.8,   1, location,
+                     requirements, cdd, calcRepo);
                 for (var i = 0; i < 100; i++) {
                     TimeStep ts  =new TimeStep(i, calculationParameters);
                     if (!cad.IsBusyDuringTimespan(ts, 1, 0.7, cloadtype)) {
-                        cad.Activate(ts, nr);
+                        cad.Activate(ts);
                     }
                     var rows = odap.ProcessOneTimestep(ts);
                     foreach (var energyFileRow in rows) {

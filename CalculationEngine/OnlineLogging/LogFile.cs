@@ -34,6 +34,7 @@ using Automation;
 using Automation.ResultFiles;
 using CalculationEngine.Transportation;
 using Common;
+using Common.Enums;
 using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
@@ -77,7 +78,7 @@ namespace CalculationEngine.OnlineLogging {
         void AddActionEntry([NotNull] TimeStep timeStep, [NotNull] string personGuid, [NotNull] string personName, bool isSick,
                             [NotNull] string affordanceName,
                             [NotNull] string affordanceGuid, [NotNull] HouseholdKey householdKey,
-                            [NotNull] string affordanceCategory);
+                            [NotNull] string affordanceCategory, BodilyActivityLevel bodilyActivityLevel);
 
         void AddColumnEntry([NotNull] ColumnEntry ce);
         void AddLocationEntry([NotNull] LocationEntry le);
@@ -162,14 +163,14 @@ namespace CalculationEngine.OnlineLogging {
         public void AddActionEntry([NotNull] TimeStep timeStep, [NotNull] string personGuid, [NotNull] string personName,
                                    bool isSick, [NotNull] string affordanceName, [NotNull] string affordanceGuid,
                                    [NotNull] HouseholdKey householdKey, [NotNull]
-                                   string affordanceCategory)
+                                   string affordanceCategory, BodilyActivityLevel bodilyActivityLevel)
         {
             if (!timeStep.DisplayThisStep) {
                 return;
             }
             ActionEntry ae = ActionEntry.MakeActionEntry(timeStep,
                 personGuid, personName, isSick, affordanceName, affordanceGuid,
-                householdKey, affordanceCategory, _dsc.MakeDateFromTimeStep(timeStep));
+                householdKey, affordanceCategory, _dsc.MakeDateFromTimeStep(timeStep), bodilyActivityLevel);
             _actionEntries.Add(ae);
         }
 

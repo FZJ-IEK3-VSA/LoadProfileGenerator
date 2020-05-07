@@ -33,8 +33,10 @@ namespace Calculation.Tests.OnlineLogging {
             var personDto = CalcPersonDto.MakeExamplePerson();
             Random r = new Random();
             Mock<ILogFile> lf = new Mock<ILogFile>();
+            CalcRepo calcRepo = new CalcRepo(rnd:r, lf:lf.Object);
             CalcLocation cloc = new CalcLocation("blub",Guid.NewGuid().ToString());
-            var cp = new CalcPerson(personDto, r, lf.Object, cloc, calcParameters, isSick, isOnVacation);
+            var cp = new CalcPerson(personDto,
+                cloc,  isSick, isOnVacation, calcRepo);
                 /*"personname", 1, 1, null, 1, PermittedGender.Female, lf: null,
                 householdKey: "hh1", startingLocation: null, traitTag: "traittag",
                 householdName: "hhname0",calcParameters:calcParameters,isSick:isSick, guid:Guid.NewGuid().ToString());

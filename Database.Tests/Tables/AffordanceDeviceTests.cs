@@ -67,7 +67,7 @@ namespace Database.Tests.Tables {
             timeBasedProfiles.Add(tp);
             var aff = new Affordance("blub", tp, null, true, PermittedGender.All, 0, new ColorRGB(255, 0, 0),
                 "bla", timeLimits[0], string.Empty, db.ConnectionString, false, false, 0, 99, false,
-                ActionAfterInterruption.GoBackToOld,false, Guid.NewGuid().ToString());
+                ActionAfterInterruption.GoBackToOld,false, Guid.NewGuid().ToString(), BodilyActivityLevel.Low);
             aff.SaveToDB();
             affordances.Add(aff);
             var newaffdev = new AffordanceDevice(rd, tp, null, 0, aff.ID, realDevices, deviceCategories,

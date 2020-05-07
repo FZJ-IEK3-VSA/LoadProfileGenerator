@@ -27,11 +27,8 @@
 //-----------------------------------------------------------------------
 
 using System.Collections.Generic;
-using CalculationEngine.Helper;
-using CalculationEngine.OnlineDeviceLogging;
 using Common;
 using Common.CalcDto;
-using Common.JSON;
 using JetBrains.Annotations;
 
 namespace CalculationEngine.HouseholdElements {
@@ -50,13 +47,11 @@ namespace CalculationEngine.HouseholdElements {
 
         public CalcAutoDev( [NotNull] CalcProfile pCalcProfile, [NotNull] CalcLoadType loadType,
             [NotNull][ItemNotNull] List<CalcDeviceLoad> loads, double timeStandardDeviation,
-            [NotNull] IOnlineDeviceActivationProcessor odap,  double multiplier,
+              double multiplier,
             [NotNull] CalcLocation calclocation,
-             [NotNull] CalcParameters calcParameters,
-                           [NotNull][ItemNotNull] List<VariableRequirement> requirements, [NotNull] CalcDeviceDto autoDevDto)
+                           [NotNull][ItemNotNull] List<VariableRequirement> requirements, [NotNull] CalcDeviceDto autoDevDto, [NotNull] CalcRepo calcRepo)
             : base(
-                  loads,  odap,
-                calclocation,  calcParameters,  autoDevDto)
+                  loads, calclocation,    autoDevDto, calcRepo)
         {
             _earliestNextStart = new TimeStep(-1,0,true);
             _calcProfile = pCalcProfile;
@@ -79,7 +74,7 @@ namespace CalculationEngine.HouseholdElements {
         [NotNull]
         public string Location => _calcLocation.Name;
 
-        public void Activate([NotNull] TimeStep time, [NotNull] NormalRandom nr)
+        public void Activate([NotNull] TimeStep time)
         {
             if (time < _earliestNextStart)
             {
@@ -89,10 +84,10 @@ namespace CalculationEngine.HouseholdElements {
             //double check because first check needs to be if a variable is even set.
             if (shouldExecute)
             {
-                var timefactor = nr.NextDouble(1, _timeStandardDeviation);
+                var timefactor = CalcRepo.NormalRandom.NextDouble(1, _timeStandardDeviation);
                 while (timefactor < 0 || timefactor > 5)
                 {
-                    timefactor = nr.NextDouble(1, _timeStandardDeviation);
+                    timefactor = CalcRepo.NormalRandom.NextDouble(1, _timeStandardDeviation);
                 }
 
                 CalcProfile adjustedProfile = _calcProfile.CompressExpandDoubleArray(timefactor);

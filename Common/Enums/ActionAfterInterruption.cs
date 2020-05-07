@@ -3,6 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Common.Enums {
+    public enum BodilyActivityLevel
+    {
+        Unknown,
+        Outside,
+        Low,
+        High
+    }
+
+    public static class BodilyActivityLevelHelper
+    {
+        [NotNull]
+        public static Dictionary<BodilyActivityLevel, string> BodilyActivityLevelEnumDictionary { get; } =
+            new Dictionary<BodilyActivityLevel, string> {
+                {BodilyActivityLevel.Outside, "No internal heat gain"},
+                {BodilyActivityLevel.Low, "Low activity level (100W-120W)"},
+                {BodilyActivityLevel.High, "High activity level (>120W)"},
+            };
+    }
+
     public enum ActionAfterInterruption {
         GoBackToOld,
         LookForNew

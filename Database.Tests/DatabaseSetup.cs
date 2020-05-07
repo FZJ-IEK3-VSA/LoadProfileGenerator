@@ -982,6 +982,11 @@ namespace Database.Tests
         [CanBeNull]
         private static FileInfo FindDB3SourcePath([NotNull] string filename)
         {
+            var di = CheckDropBoxPath(filename);
+            if (di != null)
+            {
+                return di;
+            }
             var assemblyDir = AssemblyDirectory;
             Logger.Info("Assembly directory: " +  assemblyDir);
 
@@ -994,7 +999,7 @@ namespace Database.Tests
                 Logger.Info("Found the db in " + fiCurr.FullName);
                 return fiCurr;
             }
-            FileInfo di = CheckAppDataLocal(filename);
+            di = CheckAppDataLocal(filename);
             if (di != null)
             {
                 return di;
@@ -1018,11 +1023,6 @@ namespace Database.Tests
             //    return di;
             //}
 
-            di = CheckDropBoxPath(filename);
-            if (di != null)
-            {
-                return di;
-            }
 
             return null;
         }

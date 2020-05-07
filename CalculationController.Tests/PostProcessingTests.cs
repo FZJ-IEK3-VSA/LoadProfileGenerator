@@ -45,7 +45,7 @@ namespace CalculationController.Tests
             var sim = new Simulator(db.ConnectionString);
             Config.IsInUnitTesting = true;
             Config.ExtraUnitTestChecking = false;
-            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.None);
+            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
             sim.MyGeneralConfig.WriteExcelColumn = "False";
             if (setOption == null) {
                 throw new LPGException("Action was null.");
@@ -98,7 +98,7 @@ namespace CalculationController.Tests
             var sim = new Simulator(db.ConnectionString);
             Config.IsInUnitTesting = true;
             Config.ExtraUnitTestChecking = true;
-            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.None);
+            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
             sim.MyGeneralConfig.WriteExcelColumn = "False";
             sim.MyGeneralConfig.Enable(CalcOption.DeviceProfiles);
             sim.MyGeneralConfig.Enable(CalcOption.IndividualSumProfiles);

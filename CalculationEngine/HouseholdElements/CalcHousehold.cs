@@ -35,19 +35,14 @@ using System.Linq;
 using Automation;
 using Automation.ResultFiles;
 using CalculationEngine.Helper;
-using CalculationEngine.OnlineDeviceLogging;
-using CalculationEngine.OnlineLogging;
 using CalculationEngine.Transportation;
 using Common;
-using Common.JSON;
-using Common.SQLResultLogging;
 using JetBrains.Annotations;
 
 #endregion
 
 namespace CalculationEngine.HouseholdElements {
     public sealed class CalcHousehold : CalcBase, ICalcAbleObject {
-        [NotNull] private readonly CalcParameters _calcParameters;
 
         [NotNull] private readonly CalcVariableRepository _calcVariableRepository;
 
@@ -76,35 +71,31 @@ namespace CalculationEngine.HouseholdElements {
         private DateTime _lastDisplay = DateTime.MinValue;
         private DateTime _startSimulation = DateTime.MinValue;
 
-        [CanBeNull] private ILogFile _lf;
-        [CanBeNull] private NormalRandom _normalDistributedRandom;
 
-        [CanBeNull] private IOnlineDeviceActivationProcessor _odap;
-        [CanBeNull] private Random _randomGenerator;
 
         private int _simulationSeed;
         [NotNull] private readonly string _description;
+        private readonly CalcRepo _calcRepo;
 
         //[CanBeNull] private VariableLogfile _variableLogfile;
 
         public CalcHousehold([NotNull] string pName, [NotNull] string locationname,
                              [NotNull] string temperatureprofileName, [NotNull] HouseholdKey householdkey,
-                             [NotNull] CalcParameters calcParameters, [NotNull] string guid,
+                              [NotNull] string guid,
                              [NotNull] CalcVariableRepository calcVariableRepository,
-                             [NotNull] SqlResultLoggingService srls,
                              [ItemNotNull] [NotNull] List<CalcLocation> locations,
-                             [ItemNotNull] [NotNull] List<CalcPerson> persons, [NotNull] string description) : base(pName,  guid)
+                             [ItemNotNull] [NotNull] List<CalcPerson> persons,
+                             [NotNull] string description, CalcRepo calcRepo) : base(pName,  guid)
         {
-            Srls = srls;
             _locations = locations;
             _persons = persons;
             _description = description;
+            _calcRepo = calcRepo;
             //_cleanName = AutomationUtili.CleanFileName(pName);
             _name = pName;
             _locationname = locationname;
             _temperatureprofileName = temperatureprofileName;
             _householdKey = householdkey;
-            _calcParameters = calcParameters;
             _calcVariableRepository = calcVariableRepository;
         }
 
@@ -124,16 +115,13 @@ namespace CalculationEngine.HouseholdElements {
         [ItemNotNull]
         public List<CalcPerson> Persons => _persons;
 
-#pragma warning restore CC0017 // Use auto property
-        [NotNull]
-        public SqlResultLoggingService Srls { get; }
 
         [CanBeNull]
         public TransportationHandler TransportationHandler { get; set; }
 
         public void CloseLogfile()
         {
-            _lf?.Close();
+            _calcRepo.Logfile.Close();
         }
 
         [NotNull]
@@ -183,7 +171,7 @@ namespace CalculationEngine.HouseholdElements {
         public void DumpHouseholdContentsToText()
         {
             //DumpAffordanceInformation(taggingSets);
-            if (_lf == null) {
+            if (_calcRepo.Logfile == null) {
                 throw new LPGException("lf was null");
             }
 
@@ -204,18 +192,18 @@ namespace CalculationEngine.HouseholdElements {
             }
 
             using (var swPerson =
-                _lf.FileFactoryAndTracker.MakeFile<StreamWriter>("Persons." + _householdKey + ".txt",
+                _calcRepo.Logfile.FileFactoryAndTracker.MakeFile<StreamWriter>("Persons." + _householdKey + ".txt",
                     "Overview of the persons", true, ResultFileID.PersonFile, _householdKey, TargetDirectory.Root,
-                    _calcParameters.InternalStepsize)) {
+                    _calcRepo.CalcParameters.InternalStepsize)) {
                 foreach (var calcPerson in _persons) {
                     swPerson.WriteLine(calcPerson.PrettyName);
                 }
             }
 
             using (var swAff =
-                _lf.FileFactoryAndTracker.MakeFile<StreamWriter>("AffordanceDefinition." + _householdKey + ".txt",
+                _calcRepo.Logfile.FileFactoryAndTracker.MakeFile<StreamWriter>("AffordanceDefinition." + _householdKey + ".txt",
                     "Definition of the Affordances", false, ResultFileID.AffordanceDefinition, _householdKey,
-                    TargetDirectory.Root, _calcParameters.InternalStepsize)) {
+                    TargetDirectory.Root, _calcRepo.CalcParameters.InternalStepsize)) {
                 foreach (var calcLocation in Locations) {
                     swAff.WriteLine(calcLocation.Name + ":");
                     foreach (var affordance in calcLocation.Affordances) {
@@ -233,10 +221,10 @@ namespace CalculationEngine.HouseholdElements {
                 }
             }
 
-            using (var sw = _lf.FileFactoryAndTracker.MakeFile<StreamWriter>(
+            using (var sw = _calcRepo.Logfile.FileFactoryAndTracker.MakeFile<StreamWriter>(
                 "HouseholdContents." + _householdKey + "."  + ".txt",
                 "List of persons, locations, devices and affordances in this household", true, ResultFileID.Dump,
-                _householdKey, TargetDirectory.Root, _calcParameters.InternalStepsize)) {
+                _householdKey, TargetDirectory.Root,  _calcRepo.CalcParameters.InternalStepsize)) {
                 sw.WriteLine("Name:" + _name);
                 sw.WriteLine("Location:" + _locationname);
                 sw.WriteLine("Temperatureprofile:" + _temperatureprofileName);
@@ -334,19 +322,12 @@ namespace CalculationEngine.HouseholdElements {
 
         //public Dictionary<int, CalcProfile> AllProfiles => _allProfiles;
 
-        public void Init([NotNull] ILogFile lf, [NotNull] Random randomGenerator,
-                         [NotNull] DayLightStatus daylightArray,
-                         [NotNull] NormalRandom normalDistributedRandom,
-                         [NotNull] IOnlineDeviceActivationProcessor odap,
+        public void Init([NotNull] DayLightStatus daylightArray,
                          int simulationSeed)
         {
             _simulationSeed = simulationSeed;
-            _lf = lf;
-            _randomGenerator = randomGenerator;
             _daylightArray = daylightArray;
-            _odap = odap;
-            _normalDistributedRandom = normalDistributedRandom;
-            if (_lf == null) {
+            if (_calcRepo.Logfile == null) {
                 throw new LPGException("logfile was null");
             }
 
@@ -354,21 +335,21 @@ namespace CalculationEngine.HouseholdElements {
                 throw new LPGException("_persons was null");
             }
 
-            _lf.InitHousehold(_householdKey, Name, HouseholdKeyType.Household,_description,null,null);
+            _calcRepo.Logfile.InitHousehold(_householdKey, Name, HouseholdKeyType.Household,_description,null,null);
             //_lf.TransportationLogFile.SetTransportationHandler(TransportationHandler);
-            if (_calcParameters.IsSet(CalcOption.DesiresLogfile)) {
-                if (_lf.DesiresLogfile == null) {
+            if (_calcRepo.CalcParameters.IsSet(CalcOption.DesiresLogfile)) {
+                if (_calcRepo.Logfile.DesiresLogfile == null) {
                     throw new LPGException("Desires logfile was null");
                 }
 
                 foreach (var p in _persons) {
-                    _lf.DesiresLogfile.RegisterDesires(p.PersonDesires.Desires.Values);
-                    _lf.DesiresLogfile.RegisterDesires(p.SicknessDesires.Desires.Values);
+                    _calcRepo.Logfile.DesiresLogfile.RegisterDesires(p.PersonDesires.Desires.Values);
+                    _calcRepo.Logfile.DesiresLogfile.RegisterDesires(p.SicknessDesires.Desires.Values);
                 }
             }
 
-            CalcConsistencyCheck.CheckConsistency(this, _calcParameters);
-            if (_calcParameters.IsSet(CalcOption.VariableLogFile)) {
+            CalcConsistencyCheck.CheckConsistency(this, _calcRepo.CalcParameters);
+            if (_calcRepo.CalcParameters.IsSet(CalcOption.VariableLogFile)) {
                 //_variableLogfile = new VariableLogfile(Srls,_calcVariableRepository);
                 //_variableLogfile = new VariableLogfile(_lf, _householdKey,_calcParameters);
             }
@@ -418,11 +399,11 @@ namespace CalculationEngine.HouseholdElements {
                 throw new LPGException("_daylightArray should not be null");
             }
 
-            if (_normalDistributedRandom == null) {
+            if (_calcRepo.NormalRandom == null) {
                 throw new LPGException("_normalDistributedRandom should not be null");
             }
 
-            if (_randomGenerator == null) {
+            if (_calcRepo.Rnd == null) {
                 throw new LPGException("_randomGenerator should not be null");
             }
 
@@ -435,7 +416,7 @@ namespace CalculationEngine.HouseholdElements {
             }
 
             foreach (var p in _persons) {
-                p.NextStep(timestep, _locations, _daylightArray, _normalDistributedRandom, _randomGenerator,
+                p.NextStep(timestep, _locations, _daylightArray,
                     _householdKey, _persons, _simulationSeed);
             }
 
@@ -451,7 +432,7 @@ namespace CalculationEngine.HouseholdElements {
                 var speed = timestep.InternalStep / timeelapesed.TotalSeconds;
                 string timeLeftStr = "";
                 if (speed > 20) {
-                    int stepsLeft = _calcParameters.InternalTimesteps - timestep.InternalStep;
+                    int stepsLeft =_calcRepo.CalcParameters.InternalTimesteps - timestep.InternalStep;
                     double timeLeftSeconds = stepsLeft / speed;
                     if (timeLeftSeconds > 0) {
                         TimeSpan timeLeft = TimeSpan.FromSeconds(timeLeftSeconds);
@@ -469,7 +450,7 @@ namespace CalculationEngine.HouseholdElements {
 
             foreach (var calcAutoDev in _autoDevs) {
                 if (!calcAutoDev.IsBusyDuringTimespan(timestep, 1, 1, calcAutoDev.LoadType)) {
-                    calcAutoDev.Activate(timestep, _normalDistributedRandom);
+                    calcAutoDev.Activate(timestep);
                 }
             }
             if (TransportationHandler != null)
@@ -492,31 +473,19 @@ namespace CalculationEngine.HouseholdElements {
             }
 
             if (runProcessing) {
-                if (_odap == null) {
-                    throw new LPGException("Odap was null");
-                }
-
-                var energyFileRows = _odap.ProcessOneTimestep(timestep);
+                var energyFileRows = _calcRepo.Odap.ProcessOneTimestep(timestep);
                 foreach (var fileRow in energyFileRows) {
-                    if (_calcParameters.IsSet(CalcOption.DetailedDatFiles)) {
-                        fileRow.Save(_odap.BinaryOutStreams[fileRow.LoadType]);
+                    if (_calcRepo.CalcParameters.IsSet(CalcOption.DetailedDatFiles)) {
+                        fileRow.Save(_calcRepo.Odap.BinaryOutStreams[fileRow.LoadType]);
                     }
 
-                    if (_calcParameters.IsSet(CalcOption.OverallDats) || _calcParameters.IsSet(CalcOption.OverallSum)) {
-                        fileRow.SaveSum(_odap.SumBinaryOutStreams[fileRow.LoadType]);
+                    if (_calcRepo.CalcParameters.IsSet(CalcOption.OverallDats) || _calcRepo.CalcParameters.IsSet(CalcOption.OverallSum)) {
+                        fileRow.SaveSum(_calcRepo.Odap.SumBinaryOutStreams[fileRow.LoadType]);
                     }
                 }
             }
 
             _calcVariableRepository.Execute(timestep);
-
-            if (_calcParameters.IsSet(CalcOption.ActionsLogfile)) {
-                if (_lf == null) {
-                    throw new LPGException("Logfile was null");
-                }
-
-                //_lf.OnlineLoggingData.AddActionEntry(timestep, _householdKey);
-            }
 
             foreach (CalcPerson person in _persons) {
                 person.LogPersonStatus(timestep);
@@ -663,25 +632,25 @@ namespace CalculationEngine.HouseholdElements {
         */
         private void DumpTimeProfiles()
         {
-            if (!_calcParameters.IsSet(CalcOption.TimeProfileFile)) {
+            if (!_calcRepo.CalcParameters.IsSet(CalcOption.TimeProfileFile)) {
                 return;
             }
 
-            if (_lf == null) {
+            if (_calcRepo.Logfile == null) {
                 throw new LPGException("Logfile was null");
             }
 
-            var swTime = _lf.FileFactoryAndTracker.MakeFile<StreamWriter>(
+            var swTime = _calcRepo.Logfile.FileFactoryAndTracker.MakeFile<StreamWriter>(
                 "TimeProfiles." + _householdKey + "."  + ".txt",
                 "List of time profiles used in this household", true, ResultFileID.DumpTime, _householdKey,
-                TargetDirectory.Debugging, _calcParameters.InternalStepsize);
-            var c = _calcParameters.CSVCharacter;
+                TargetDirectory.Debugging, _calcRepo.CalcParameters.InternalStepsize);
+            var c = _calcRepo.CalcParameters.CSVCharacter;
             swTime.WriteLine("Device" + c + "Load Type" + c + "Profile" + c + "Number of Activations");
-            if (_odap == null) {
+            if (_calcRepo.Odap == null) {
                 throw new LPGException("_odap was null");
             }
 
-            var entries = _odap.ProfileEntries.Values.ToList();
+            var entries = _calcRepo.Odap.ProfileEntries.Values.ToList();
             entries.Sort((x, y) => {
                 if (x.Device != y.Device) {
                     return string.Compare(x.Device, y.Device, StringComparison.Ordinal);

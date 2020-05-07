@@ -3,6 +3,7 @@ using Automation.ResultFiles;
 using System;
 using System.Collections.Generic;
 using Common.CalcDto;
+using Common.Enums;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
 using Common.SQLResultLogging.Loggers;
@@ -44,7 +45,7 @@ namespace Common.Tests.SQLResultLogging.Loggers
             InputDataLogger idl = new InputDataLogger(savers.ToArray());
             TimeStep ts = new TimeStep(1,0,true);
             ActionEntry ae1 = new ActionEntry("blub",key,ts,DateTime.Now, "123","name",false,
-                "affname","affguid",0);
+                "affname","affguid",0, BodilyActivityLevel.Low);
             List<IHouseholdKey> aes = new List<IHouseholdKey>
             {
                 ae1

@@ -37,11 +37,13 @@ namespace Calculation.Tests.Transportation
                 out var dstSite, out var transportationHandler, out var abt,calcParameters,key);
             //make sure there is a travel route
             const string personname = "activator";
+            CalcRepo calcRepo = new CalcRepo(normalRandom:nr);
             TimeStep ts = new TimeStep(0,0,false);
-            var travelroute = transportationHandler.GetTravelRouteFromSrcLoc(srcloc, dstSite, ts, personname);
+            var travelroute = transportationHandler.GetTravelRouteFromSrcLoc(srcloc, dstSite,
+                ts, personname,calcRepo);
             Assert.NotNull(travelroute);
             // find if busy
-            var isbusy = abt.IsBusy(ts, nr, rnd, srcloc,personname, false);
+            var isbusy = abt.IsBusy(ts,  srcloc,personname, false);
             Assert.IsFalse(isbusy);
             var affs = dstloc.Affordances.ToList();
 
@@ -70,15 +72,17 @@ namespace Calculation.Tests.Transportation
             //make sure there is a travel route
             const string personName = "activator";
             TimeStep ts = new TimeStep(0, 0, false);
-            var travelroute = transportationHandler.GetTravelRouteFromSrcLoc(srcloc, dstSite,ts, personName);
+            CalcRepo calcRepo = new CalcRepo(normalRandom:nr);
+            var travelroute = transportationHandler.GetTravelRouteFromSrcLoc(srcloc,
+                dstSite,ts, personName,calcRepo);
             Assert.NotNull(travelroute);
             // find if busy
-            var isbusy = abt.IsBusy(ts, nr, rnd, srcloc, "", false);
+            var isbusy = abt.IsBusy(ts,   srcloc, "", false);
             Assert.IsFalse(isbusy);
             var affs = dstloc.Affordances.ToList();
 
             Logger.Info("Activating affordance for time 0");
-            travelroute.GetDuration(ts, personName, rnd,new List<CalcTransportationDevice>());
+            travelroute.GetDuration(ts, personName, new List<CalcTransportationDevice>());
             affs[0].Activate(ts, "activator",  srcloc, out var _);
             //should throw exception the second time.
             Logger.Info("Activating affordance again for time 0");
@@ -110,12 +114,16 @@ namespace Calculation.Tests.Transportation
                 calcdesire
             };
             CalcVariableRepository crv =new CalcVariableRepository();
+            Mock<IOnlineDeviceActivationProcessor> iodap = new Mock<IOnlineDeviceActivationProcessor>();
+            CalcRepo calcRepo = new CalcRepo(odap:iodap.Object);
             BitArray isBusy = new BitArray(calcParameters.InternalTimesteps,false);
             var ca = new CalcAffordance("calcaffordance",  cp, dstloc, false, calcdesires,
                 18, 50, PermittedGender.All, false, 0.1, LPGColors.Blue, "affordance category", false,
                 false, new List<CalcAffordanceVariableOp>(), new List<VariableRequirement>(),
-                ActionAfterInterruption.GoBackToOld, "timelimitname", 1, false, "srctrait", calcParameters,
-                Guid.NewGuid().ToString(),crv, new List<CalcAffordance.DeviceEnergyProfileTuple>(), isBusy);
+                ActionAfterInterruption.GoBackToOld, "timelimitname", 1, false,
+                "srctrait",
+                Guid.NewGuid().ToString(),crv, new List<CalcAffordance.DeviceEnergyProfileTuple>(),
+                isBusy, BodilyActivityLevel.Low,calcRepo);
 
             var srcSite = new CalcSite("srcsite", Guid.NewGuid().ToString(),key);
             srcSite.Locations.Add(srcloc);
@@ -126,14 +134,15 @@ namespace Calculation.Tests.Transportation
             var lf = new LogFile(calcParameters,fft, mock.Object,wd.SqlResultLoggingService,  true);
             lf.InitHousehold(new HouseholdKey("hh0"),"hh0-prettyname",HouseholdKeyType.Household,
                 "Desc", null, null);
-            transportationHandler = new TransportationHandler(rnd);
+            transportationHandler = new TransportationHandler();
             transportationHandler.AddSite(srcSite);
             abt = new AffordanceBaseTransportDecorator(ca, dstSite, transportationHandler,
-                "travel to dstsite",   lf, new HouseholdKey( "hh0"),calcParameters, Guid.NewGuid().ToString());
+                "travel to dstsite",    new HouseholdKey( "hh0"), Guid.NewGuid().ToString(),calcRepo);
             dstloc.AddTransportationAffordance(abt);
 
             var ctr = new CalcTravelRoute("myRoute1",  srcSite, dstSite,
-                transportationHandler.VehicleDepot, transportationHandler.LocationUnlimitedDevices, lf, new HouseholdKey(  "hh0"), Guid.NewGuid().ToString());
+                transportationHandler.VehicleDepot, transportationHandler.LocationUnlimitedDevices,
+                 new HouseholdKey(  "hh0"), Guid.NewGuid().ToString(),calcRepo);
             var myCategory = new CalcTransportationDeviceCategory("mycategory",  false, Guid.NewGuid().ToString());
             ctr.AddTravelRouteStep("driving",  myCategory, 1, 36000, Guid.NewGuid().ToString());
             transportationHandler.TravelRoutes.Add(ctr);
@@ -146,15 +155,13 @@ namespace Calculation.Tests.Transportation
             var list = new List<CalcDeviceLoad>();
             CalcDeviceLoad cdl = new CalcDeviceLoad("bla",1,chargingloadtype,1,1, Guid.NewGuid().ToString());
             list.Add(cdl);
-            Mock<IOnlineDeviceActivationProcessor> iodap = new Mock<IOnlineDeviceActivationProcessor>();
             CalcDeviceDto cdd = new CalcDeviceDto("bus",myCategory.Guid,
                 new HouseholdKey("hh1"),OefcDeviceType.Transportation,myCategory.Name,string.Empty,
                 Guid.NewGuid().ToString(),string.Empty,string.Empty);
             var transportationDevice =
-                new CalcTransportationDevice( myCategory, 1,list , iodap.Object, 100,
-                    10,1000,chargingloadtype,calcSites,calcParameters,
-                    lf.OnlineLoggingData,
-                    cdd);
+                new CalcTransportationDevice( myCategory, 1,list ,  100,
+                    10,1000,chargingloadtype,calcSites,
+                    cdd, calcRepo);
             transportationHandler.LocationUnlimitedDevices.Add(transportationDevice);
         }
 

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Automation;
 using Automation.ResultFiles;
-using CalculationEngine.Helper;
 using Common;
 using Common.Enums;
 using Common.JSON;
@@ -14,13 +13,13 @@ namespace CalculationEngine.HouseholdElements {
     [SuppressMessage("ReSharper", "ConvertToAutoProperty")]
     public class VacationAffordance : CalcAffordanceBase {
         //TODO: figure out if this is still needed
-        public VacationAffordance([NotNull] CalcParameters calcParameters, [NotNull] string guid,
-                                  [ItemNotNull] [NotNull] BitArray isBusy)
+        public VacationAffordance( [NotNull] string guid,
+                                  [ItemNotNull] [NotNull] BitArray isBusy, [NotNull] CalcRepo calcRepo)
             : base(
                 Constants.TakingAVacationString, new CalcLocation("Vacation", System.Guid.NewGuid().ToString()),
                 new List<CalcDesire>(), 0, 99, PermittedGender.All, false,
                 false, "Vacation", false, false, ActionAfterInterruption.GoBackToOld, 0, false,
-                CalcAffordanceType.Vacation, calcParameters, guid, isBusy)
+                CalcAffordanceType.Vacation, guid, isBusy, BodilyActivityLevel.Outside, calcRepo)
         {
         }
 
@@ -64,14 +63,14 @@ namespace CalculationEngine.HouseholdElements {
 
         [NotNull]
         [ItemNotNull]
-        public override List<CalcSubAffordance> CollectSubAffordances([NotNull] TimeStep time, [NotNull] NormalRandom nr,
-                                                                      bool onlyInterrupting, [NotNull] Random r,
+        public override List<CalcSubAffordance> CollectSubAffordances([NotNull] TimeStep time,
+                                                                      bool onlyInterrupting,
                                                                       [NotNull] CalcLocation srcLocation) =>
             new List<CalcSubAffordance>();
 
         //public override ICalcProfile CollectPersonProfile() => throw new LPGException("This function should never be called");
 
-        public override bool IsBusy([NotNull] TimeStep time, [NotNull] NormalRandom nr, [NotNull] Random r,
+        public override bool IsBusy([NotNull] TimeStep time,
                                     [NotNull] CalcLocation srcLocation, [NotNull] string calcPersonName,
                                     bool clearDictionaries = true) =>
             throw new LPGException("This function should never be called");

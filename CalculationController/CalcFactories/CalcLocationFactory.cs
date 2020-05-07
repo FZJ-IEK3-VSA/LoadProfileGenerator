@@ -28,9 +28,7 @@
 
 using System.Collections.Generic;
 using CalculationEngine.HouseholdElements;
-using CalculationEngine.OnlineDeviceLogging;
 using Common.CalcDto;
-using Common.JSON;
 using JetBrains.Annotations;
 
 namespace CalculationController.CalcFactories {
@@ -38,34 +36,30 @@ namespace CalculationController.CalcFactories {
     {
         [NotNull]
         private readonly CalcLoadTypeDictionary _calcLoadTypeDict;
-        [NotNull]
-        private readonly IOnlineDeviceActivationProcessor _odap;
-        [NotNull]
-        private readonly CalcParameters _calcParameters;
 
-        public CalcLocationFactory([NotNull] CalcParameters calcParameters, [NotNull] CalcLoadTypeDictionary calcLoadTypeDict,
-            [NotNull] IOnlineDeviceActivationProcessor odap)
+        private readonly CalcRepo _calcRepo;
+
+        public CalcLocationFactory( [NotNull] CalcLoadTypeDictionary calcLoadTypeDict,CalcRepo calcRepo
+            )
         {
             _calcLoadTypeDict = calcLoadTypeDict;
-            _odap = odap;
-            _calcParameters = calcParameters;
+            _calcRepo = calcRepo;
         }
 
         [NotNull]
         [ItemNotNull]
         public List<CalcLocation> MakeCalcLocations([NotNull][ItemNotNull] List<CalcLocationDto> locations,
-                                                    [NotNull] DtoCalcLocationDict locdict) {
+                                                    [NotNull] DtoCalcLocationDict locdict, CalcRepo calcRepo) {
             var locs = new List<CalcLocation>();
             foreach (var t in locations) {
                 // loc anlegen
                 var cloc = new CalcLocation(t.Name, t.Guid);
                 foreach (var locdev in t.LightDevices) {
                     var deviceLoads = CalcDeviceFactory.MakeCalcDeviceLoads(locdev,_calcLoadTypeDict);
-                    var deviceName = CalcAffordanceFactory.FixAffordanceName(locdev.Name,_calcParameters.CSVCharacter);
+                    var deviceName = CalcAffordanceFactory.FixAffordanceName(locdev.Name, _calcRepo.CalcParameters.CSVCharacter);
                     locdev.Name = deviceName;
                     var clightdevice = new CalcDevice(  deviceLoads,
-                        _odap, cloc,
-                        _calcParameters, locdev);
+                         cloc, locdev,calcRepo);
                     cloc.AddLightDevice(clightdevice);
                 }
                 //deviceLocationDict.Add(cloc, new List<IAssignableDevice>());

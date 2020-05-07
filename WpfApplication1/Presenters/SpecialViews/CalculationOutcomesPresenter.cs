@@ -551,7 +551,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             Config.IsInUnitTesting = true;
             Logger.Threshold = Severity.Information;
 
-            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.None);
+            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
             var startDate = new DateTime(2019, 1, 1);
             sim.MyGeneralConfig.StartDateUIString = startDate.ToShortDateString();
             var endDate = new DateTime(2019, 12, 31);

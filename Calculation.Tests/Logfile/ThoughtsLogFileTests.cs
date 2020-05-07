@@ -69,7 +69,9 @@ namespace Calculation.Tests.Logfile
             BitArray isOnVacation = new BitArray(calcParameters.InternalTimesteps);
             CalcPersonDto dto = CalcPersonDto.MakeExamplePerson();
             Mock<ILogFile> lf = new Mock<ILogFile>();
-            CalcPerson cp = new CalcPerson(dto, rnd, lf.Object, cloc, calcParameters,isSick,isOnVacation);
+            CalcRepo calcRepo = new CalcRepo(rnd: rnd, lf:lf.Object );
+            CalcPerson cp = new CalcPerson(dto,
+                cloc, isSick,isOnVacation,calcRepo);
             //"personName", 0, 1, rnd, 1, PermittedGender.Male, null, "HH1" ,cloc,"traittag", "hhname0",calcParameters,isSick,Guid.NewGuid().ToString());
             TimeStep ts = new TimeStep(0, 0, false);
             ThoughtEntry te = new ThoughtEntry(cp, ts, "blua");

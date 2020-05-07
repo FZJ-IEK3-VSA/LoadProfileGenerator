@@ -21,7 +21,8 @@ namespace CalculationEngine.HouseholdElements {
         public void AddEntry([NotNull] string name, double value, [NotNull] CalcLocation location, VariableAction variableAction,
             [NotNull] TimeStep timeStep, [NotNull] string variableGuid)
         {
-            var ee = new ExecutionEntry(name, value, location, variableAction, timeStep,variableGuid);
+            var ee = new ExecutionEntry(name, value, location, variableAction,
+                timeStep,variableGuid);
             _entries.Add(ee);
         }
 
@@ -67,6 +68,7 @@ namespace CalculationEngine.HouseholdElements {
 
             [NotNull]
             public TimeStep TimeStep { get; }
+
             private double Value { get; }
             private VariableAction VariableAction { get; }
 

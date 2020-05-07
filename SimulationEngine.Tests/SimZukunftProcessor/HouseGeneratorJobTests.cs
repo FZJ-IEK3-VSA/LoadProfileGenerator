@@ -147,7 +147,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
             householdData.HouseholdDataPersonSpecification = new HouseholdDataPersonSpecification(persons);
             houseJob.CalcSpec = new JsonCalcSpecification
             {
-                DefaultForOutputFiles = OutputFileDefault.None,
+                DefaultForOutputFiles = OutputFileDefault.NoFiles,
                 StartDate = new DateTime(2017, 1, 1),
                 EndDate = new DateTime(2017, 1, 3),
                 GeographicLocation = sim.GeographicLocations.FindFirstByName("Berlin", FindMode.Partial)?.GetJsonReference() ??

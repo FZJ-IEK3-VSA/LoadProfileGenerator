@@ -105,7 +105,7 @@ namespace ReleaseBuilder
             hj.CalcSpec.OutputDirectory = "Results";
             hj.CalcSpec.CalcOptions = new List<CalcOption>();
             hj.CalcSpec.CalcOptions.Add(CalcOption.SumProfileExternalIndividualHouseholdsAsJson);
-            hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.None;
+            hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.NoFiles;
             hj.CalcSpec.ExternalTimeResolution = "00:15:00";
             hj.CalcSpec.StartDate = new DateTime(2019, 1, 1);
             hj.CalcSpec.EndDate = new DateTime(2019, 12, 31);

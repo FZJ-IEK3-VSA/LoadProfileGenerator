@@ -153,6 +153,10 @@ namespace LoadProfileGenerator.Presenters.Households {
             }
         }
 
+        [NotNull]
+        [UsedImplicitly]
+        public Dictionary<BodilyActivityLevel, string> BodilyActivityLevelDict => BodilyActivityLevelHelper.BodilyActivityLevelEnumDictionary;
+
         [UsedImplicitly]
         [ItemNotNull]
         [NotNull]

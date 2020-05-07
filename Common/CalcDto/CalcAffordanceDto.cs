@@ -63,7 +63,8 @@ namespace Common.CalcDto {
                                  [ItemNotNull] [NotNull]List<VariableRequirementDto> variableRequirements,
                                  ActionAfterInterruption actionAfterInterruption, [NotNull] string timeLimitName, int weight,
                                  bool requireAllDesires, [NotNull] string srcTrait,
-                                 [NotNull] string guid, [NotNull] AvailabilityDataReferenceDto isBusyArray, [NotNull] HouseholdKey householdKey)
+                                 [NotNull] string guid, [NotNull] AvailabilityDataReferenceDto isBusyArray,
+                                 [NotNull] HouseholdKey householdKey, BodilyActivityLevel bodilyActivityLevel)
         {
             Name = name;
             ID = id;
@@ -93,6 +94,7 @@ namespace Common.CalcDto {
             Guid = guid;
             IsBusyArray = isBusyArray;
             HouseholdKey = householdKey;
+            BodilyActivityLevel = bodilyActivityLevel;
         }
         [ItemNotNull]
         [NotNull]
@@ -107,5 +109,6 @@ namespace Common.CalcDto {
         }
 
         public HouseholdKey HouseholdKey { get; }
+        public BodilyActivityLevel BodilyActivityLevel { get; }
     }
 }

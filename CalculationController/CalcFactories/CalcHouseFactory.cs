@@ -35,8 +35,6 @@ using CalculationController.DtoFactories;
 using CalculationEngine;
 using CalculationEngine.HouseElements;
 using CalculationEngine.HouseholdElements;
-using CalculationEngine.OnlineDeviceLogging;
-using CalculationEngine.OnlineLogging;
 using Common;
 using Common.CalcDto;
 using Common.JSON;
@@ -48,45 +46,39 @@ namespace CalculationController.CalcFactories {
         [NotNull] private readonly AvailabilityDtoRepository _availabilityDtoRepository;
 
         [NotNull] private readonly CalcDeviceTaggingSets _calcDeviceTaggingSets;
+        private readonly CalcRepo _calcRepo;
 
-        [NotNull] private readonly CalcParameters _calcParameters;
 
         [NotNull] private readonly CalcModularHouseholdFactory _cmhf;
 
-        [NotNull] private readonly ILogFile _logFile;
 
         [NotNull] private readonly CalcLoadTypeDictionary _ltDict;
 
-        [NotNull] private readonly IOnlineDeviceActivationProcessor _odap;
 
         [NotNull] private readonly CalcVariableRepository _variableRepository;
 
         public CalcHouseFactory([NotNull] CalcLoadTypeDictionary ltDict,
-                                [NotNull] IOnlineDeviceActivationProcessor odap,
-                                [NotNull] ILogFile logFile,
                                 [NotNull] CalcModularHouseholdFactory cmhf,
-                                [NotNull] CalcParameters calcParameters,
                                 [NotNull] AvailabilityDtoRepository availabilityDtoRepository,
                                 [NotNull] CalcVariableRepository variableRepository,
-                                [NotNull] CalcDeviceTaggingSets calcDeviceTaggingSets)
+                                [NotNull] CalcDeviceTaggingSets calcDeviceTaggingSets,
+                                CalcRepo calcRepo)
         {
             _ltDict = ltDict;
-            _odap = odap;
-            _logFile = logFile;
             _cmhf = cmhf;
-            _calcParameters = calcParameters;
             _availabilityDtoRepository = availabilityDtoRepository;
             _variableRepository = variableRepository;
             _calcDeviceTaggingSets = calcDeviceTaggingSets;
+            _calcRepo = calcRepo;
         }
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Objekte verwerfen, bevor Bereich verloren geht")]
         [SuppressMessage("ReSharper", "SwitchStatementMissingSomeCases")]
         [NotNull]
-        public CalcHouse MakeCalcHouse([NotNull] CalcHouseDto calcHouseDto)
+        public CalcHouse MakeCalcHouse([NotNull] CalcHouseDto calcHouseDto, CalcRepo calcRepo)
         {
             HouseholdKey houseKey = Constants.HouseKey;
-            var calchouse = new CalcHouse(calcHouseDto.HouseName, calcHouseDto.HouseKey, _calcParameters);
+            var calchouse = new CalcHouse(calcHouseDto.HouseName, calcHouseDto.HouseKey, calcRepo);
             List<CalcLocation> houseLocations = new List<CalcLocation>();
             foreach (var houseLoc in calcHouseDto.HouseLocations) {
                 CalcLocation cl = new CalcLocation(houseLoc.Name, houseLoc.Guid);
@@ -96,7 +88,8 @@ namespace CalculationController.CalcFactories {
             var calcAbleObjects = new List<ICalcAbleObject>();
             //var globalLocationDict = new Dictionary<CalcLocationDto, CalcLocation>();
             foreach (var householddto in calcHouseDto.Households) {
-                var hh = _cmhf.MakeCalcModularHousehold(householddto, out var _, calcHouseDto.HouseName, calcHouseDto.Description);
+                var hh = _cmhf.MakeCalcModularHousehold(householddto, out var _,
+                    calcHouseDto.HouseName, calcHouseDto.Description,_calcRepo);
                 calcAbleObjects.Add(hh);
 
                 //    foreach (var pair in dtoCalcLocationDict.LocationDtoDict) {
@@ -113,7 +106,8 @@ namespace CalculationController.CalcFactories {
             var autodevs2 = MakeCalcAutoDevsFromHouse(calcHouseDto, houseLocations);
             calchouse.SetAutoDevs(autodevs2);
             // energy Storage
-            SetEnergyStoragesOnHouse(calcHouseDto.EnergyStorages, houseKey, calchouse, _variableRepository); //, taggingSets);
+            SetEnergyStoragesOnHouse(calcHouseDto.EnergyStorages, houseKey, calchouse,
+                _variableRepository); //, taggingSets);
             // transformation devices
             MakeAllTransformationDevices(calcHouseDto,  calchouse, houseKey); //taggingSets,
 
@@ -136,7 +130,7 @@ namespace CalculationController.CalcFactories {
                 }
                 CalcDeviceDto cdd = new CalcDeviceDto(trafo.Name,devcategoryGuid,householdKey,
                     OefcDeviceType.Transformation,"Transformation Devices","",trafo.Guid,trafolocGuid,"Transformation Devices");
-                var ctd = new CalcTransformationDevice(_odap,
+                var ctd = new CalcTransformationDevice(_calcRepo.Odap,
                     trafo.MinValue,
                     trafo.MaxValue,
                     trafo.MinPower,
@@ -174,7 +168,7 @@ namespace CalculationController.CalcFactories {
             var autodevs = new List<CalcAutoDev>(house.AutoDevs.Count);
             // zur kategorien zuordnung
             foreach (var hhautodev in house.AutoDevs) {
-                CalcProfile calcProfile = CalcDeviceFactory.MakeCalcProfile(hhautodev.CalcProfile, _calcParameters);
+                CalcProfile calcProfile = CalcDeviceFactory.MakeCalcProfile(hhautodev.CalcProfile,_calcRepo.CalcParameters);
                 CalcLoadType clt = _ltDict.GetLoadtypeByGuid(hhautodev.LoadtypeGuid);
                 List<CalcDeviceLoad> loads = new List<CalcDeviceLoad>();
                 foreach (CalcDeviceLoadDto loadDto in hhautodev.Loads) {
@@ -205,11 +199,9 @@ namespace CalculationController.CalcFactories {
                     clt,
                     loads,
                     hhautodev.TimeStandardDeviation,
-                    _odap,
                     hhautodev.Multiplier,
                     houseLocation,
-                    _calcParameters,
-                    requirements, hhautodev);
+                    requirements, hhautodev,_calcRepo);
                 var busyarr = _availabilityDtoRepository.GetByGuid(hhautodev.BusyArr.Guid);
                 cautodev.ApplyBitArry(busyarr, _ltDict.GetLoadtypeByGuid(hhautodev.LoadtypeGuid));
                 autodevs.Add(cautodev);
@@ -232,10 +224,10 @@ namespace CalculationController.CalcFactories {
                     gendevcategoryGuid,householdKey,OefcDeviceType.Generator,"Generators",
                     "",gen.Guid,genlocGuid,"Generators");
                 var cgen = new CalcGenerator(
-                    _odap,
+                    _calcRepo.Odap,
                     _ltDict.GetCalcLoadTypeByLoadtype(gen.LoadType),
                     gen.Values,
-                    _calcParameters,
+                    _calcRepo.CalcParameters,
                     deviceDto);
                 cgens.Add(cgen);
                 foreach (var set in _calcDeviceTaggingSets.AllCalcDeviceTaggingSets) {
@@ -288,11 +280,9 @@ namespace CalculationController.CalcFactories {
                 string.Empty,Guid.NewGuid().ToString(),
                 heatloc.Guid,heatloc.Name);
             var csh = new CalcSpaceHeating(cdls,
-                _odap,
                 degreeDayDict,
                 heatloc,
-                _calcParameters,
-                calcDeviceDto);
+                calcDeviceDto, _calcRepo);
             //foreach (var calcDeviceTaggingSet in taggingSets) {
             //calcDeviceTaggingSet.AddTag("Space Heating","House Device");
             //}
@@ -343,17 +333,16 @@ namespace CalculationController.CalcFactories {
                 acloc.Guid,acloc.Name);
             var csh = new CalcAirConditioning(
                 cdls,
-                _odap,
                 degreeHourDict,
                 acloc,
-                _calcParameters,
-                acDevdto);
+                acDevdto, _calcRepo);
             calcHouse.SetAirConditioning(csh);
         }
 
         private void SetEnergyStoragesOnHouse([NotNull] [ItemNotNull] List<CalcEnergyStorageDto> energyStorages,
                                                                  [NotNull] HouseholdKey householdKey,
-                                                                 [NotNull] CalcHouse calchouse, CalcVariableRepository calcVariableRepository) //, List<CalcDeviceTaggingSet> deviceTaggingSets)
+                                                                 [NotNull] CalcHouse calchouse, CalcVariableRepository calcVariableRepository
+                                              ) //, List<CalcDeviceTaggingSet> deviceTaggingSets)
         {
             var cess = new List<CalcEnergyStorage>();
             var esCategoryGuid = Guid.NewGuid().ToString();
@@ -365,8 +354,7 @@ namespace CalculationController.CalcFactories {
                 var lti = _ltDict.GetCalcLoadTypeByLoadtype(es.InputLoadType).ConvertToDto();
                 CalcDeviceDto deviceDto = new CalcDeviceDto(es.Name,esCategoryGuid,householdKey,OefcDeviceType.Storage,
                     "Energy Storage","",es.Guid,esLocGuid,"Energy Storages");
-                var ces = new CalcEnergyStorage(
-                    _odap,
+                var ces = new CalcEnergyStorage(_calcRepo.Odap,
                     lti,
                     es.MaximumStorageRate,
                     es.MaximumWithdrawRate,
@@ -374,7 +362,7 @@ namespace CalculationController.CalcFactories {
                     es.MinimumWithdrawRate,
                     es.InitialFill,
                     es.StorageCapacity,
-                    _logFile.EnergyStorageLogfile,
+                    _calcRepo.Logfile.EnergyStorageLogfile,
                     deviceDto
                     );
                 foreach (var signal in es.Signals) {

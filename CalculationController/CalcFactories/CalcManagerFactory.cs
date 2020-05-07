@@ -112,20 +112,20 @@ namespace CalculationController.CalcFactories
 
                 var sqlFileName = Path.Combine(resultpath, "Results.sqlite");
                 var builder = new ContainerBuilder();
-                var rnd = RegisterEverything(sim, resultpath, csps, csps.CalcTarget, builder, sqlFileName, calcParameters, ds);
+                RegisterEverything(sim, resultpath, csps, csps.CalcTarget, builder,
+                    sqlFileName, calcParameters, ds);
                 csps.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " Initializing");
                 csps.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " Generating Model");
                 var container = builder.Build();
                 using (var scope = container.BeginLifetimeScope())
                 {
-                    var inputDataLogger = PrepareCalculation(sim, csps, scope, calcParameters, out var dtoltdict, out var lf, out var iodap, out var normalDistributedRandom, out var dls, out var variableRepository);
-                    cm = new CalcManager( normalDistributedRandom, rnd, resultpath,
+                    var calcRepo = PrepareCalculation(sim, csps, scope,
+                         out var dtoltdict,  out var dls, out var variableRepository);
+                    cm = new CalcManager(  resultpath,
                         //hh.Name,
                         //householdPlans,
                         //csps.LPGVersion,
-                        calcParameters.ActualRandomSeed,lf,iodap,calcParameters
-                        ,dls, csps.CalculationProfiler,
-                        variableRepository
+                        calcParameters.ActualRandomSeed,dls, variableRepository,calcRepo
                         //scope.Resolve<SqlResultLoggingService>()
                         );
                     //_calcParameters.Logfile = cm.Logfile;
@@ -139,7 +139,8 @@ namespace CalculationController.CalcFactories
                     CalcVariableDtoFactory cvrdto = scope.Resolve<CalcVariableDtoFactory>();
                     CalcDeviceTaggingSets devicetaggingSets = scope.Resolve<CalcDeviceTaggingSets>();
                     if (csps.CalcTarget.GetType() == typeof(House)) {
-                        ch = MakeCalcHouseObject(sim, csps, csps.CalcTarget, lf, scope, inputDataLogger, cvrdto, variableRepository, out cot);
+                        ch = MakeCalcHouseObject(sim, csps, csps.CalcTarget,  scope,
+                            cvrdto, variableRepository, out cot, calcRepo);
                         CalcHouse chd =(CalcHouse) ch;
                         if (chd.EnergyStorages != null) {
                             foreach (var calcEnergyStorage in chd.EnergyStorages) {
@@ -151,18 +152,18 @@ namespace CalculationController.CalcFactories
 
                     }
                     else if (csps.CalcTarget.GetType() == typeof(ModularHousehold)) {
-                        ch = MakeCalcHouseholdObject(sim, csps, csps.CalcTarget, scope, inputDataLogger, cvrdto, variableRepository, out cot,calcParameters);
+                        ch = MakeCalcHouseholdObject(sim, csps, csps.CalcTarget, scope,  cvrdto, variableRepository, out cot,calcRepo);
                     }
                     else
                     {
                         throw new LPGException("The type " + csps.CalcTarget.GetType() + " is missing!");
                     }
-                    inputDataLogger.Save(Constants.GeneralHouseholdKey, devicetaggingSets.AllCalcDeviceTaggingSets);
+                    calcRepo.InputDataLogger.Save(Constants.GeneralHouseholdKey, devicetaggingSets.AllCalcDeviceTaggingSets);
                     CalcObjectInformation coi = new CalcObjectInformation(cot,ch.Name,resultpath);
-                    inputDataLogger.Save(Constants.GeneralHouseholdKey, coi);
+                    calcRepo.InputDataLogger.Save(Constants.GeneralHouseholdKey, coi);
                     //this logger doesnt save json, but strings!
-                    inputDataLogger.Save(Constants.GeneralHouseholdKey, csps);
-                    inputDataLogger.Save(Constants.GeneralHouseholdKey, dtoltdict.GetLoadTypeDtos());
+                    calcRepo.InputDataLogger.Save(Constants.GeneralHouseholdKey, csps);
+                    calcRepo.InputDataLogger.Save(Constants.GeneralHouseholdKey, dtoltdict.GetLoadTypeDtos());
                     cm.SetCalcObject(ch);
                     CalcManager.ExitCalcFunction = false;
 
@@ -179,15 +180,14 @@ namespace CalculationController.CalcFactories
         }
 
         [NotNull]
-        private static IInputDataLogger PrepareCalculation([NotNull] Simulator sim, [NotNull] CalcStartParameterSet csps, [NotNull] ILifetimeScope scope,
-                                                           [NotNull] CalcParameters calcParameters,
-                                                           [NotNull] out CalcLoadTypeDtoDictionary dtoltdict, [NotNull] out ILogFile lf,
-                                                           [NotNull] out IOnlineDeviceActivationProcessor iodap,
-                                                           [NotNull] out NormalRandom normalDistributedRandom, [NotNull] out DayLightStatus dls,
+        private static CalcRepo PrepareCalculation([NotNull] Simulator sim, [NotNull] CalcStartParameterSet csps, [NotNull] ILifetimeScope scope,
+                                                           [NotNull] out CalcLoadTypeDtoDictionary dtoltdict,
+                                                           [NotNull] out DayLightStatus dls,
                                                            [NotNull] out CalcVariableRepository variableRepository)
         {
+            CalcRepo calcRepo = scope.Resolve<CalcRepo>();
             var inputDataLogger = scope.Resolve<IInputDataLogger>();
-            inputDataLogger.Save(Constants.GeneralHouseholdKey, calcParameters);
+            inputDataLogger.Save(Constants.GeneralHouseholdKey, calcRepo.CalcParameters);
             inputDataLogger.Save(Constants.GeneralHouseholdKey, csps.TemperatureProfile);
 
             dtoltdict = scope.Resolve<CalcLoadTypeDtoDictionary>();
@@ -195,17 +195,14 @@ namespace CalculationController.CalcFactories
             var affordanceTaggingSetFactory = scope.Resolve<AffordanceTaggingSetFactory>();
             var affordanceTaggingSets = affordanceTaggingSetFactory.GetAffordanceTaggingSets(sim);
             inputDataLogger.Save(affordanceTaggingSets);
-            lf = scope.Resolve<ILogFile>();
-            lf.InitHousehold(Constants.GeneralHouseholdKey, "General Information",
+            calcRepo.Logfile.InitHousehold(Constants.GeneralHouseholdKey, "General Information",
                 HouseholdKeyType.General,"General",null,null);
-            iodap = scope.Resolve<IOnlineDeviceActivationProcessor>();
-            normalDistributedRandom = scope.Resolve<NormalRandom>();
             dls = scope.Resolve<DayLightStatus>();
-            if (calcParameters.Options.Contains(CalcOption.DaylightTimesList)) {
+            if (calcRepo.CalcParameters.Options.Contains(CalcOption.DaylightTimesList)) {
                 inputDataLogger.Save(Constants.GeneralHouseholdKey, dls);
             }
             variableRepository = scope.Resolve<CalcVariableRepository>();
-            return inputDataLogger;
+            return calcRepo;
         }
 
         [CanBeNull]
@@ -237,62 +234,64 @@ namespace CalculationController.CalcFactories
         }
 
         [NotNull]
-        private static ICalcAbleObject MakeCalcHouseObject([NotNull] Simulator sim, [NotNull] CalcStartParameterSet csps, [NotNull] ICalcObject hh, [NotNull] ILogFile lf,
-                                                      [NotNull] ILifetimeScope scope, [NotNull] IInputDataLogger inputDataLogger,
+        private static ICalcAbleObject MakeCalcHouseObject([NotNull] Simulator sim,
+                                                           [NotNull] CalcStartParameterSet csps, [NotNull] ICalcObject hh,
+                                                      [NotNull] ILifetimeScope scope,
                                                       [NotNull] CalcVariableDtoFactory cvrdto, [NotNull] CalcVariableRepository variableRepository,
-                                                      out CalcObjectType cot)
+                                                      out CalcObjectType cot, [NotNull] CalcRepo calcRepo)
         {
             var house =(House) hh;
-            lf.InitHousehold(Constants.HouseKey, "House Infrastructure",
+            calcRepo.Logfile.InitHousehold(Constants.HouseKey, "House Infrastructure",
                 HouseholdKeyType.House, "House Infrastructure",house.Name,house.Description);
             var housedtoFac = scope.Resolve<CalcHouseDtoFactory>();
             var housedto = housedtoFac.MakeHouseDto(sim, house, csps.TemperatureProfile,
                 csps.GeographicLocation,csps.EnergyIntensity);
             foreach (HouseholdKeyEntry entry in housedto.GetHouseholdKeyEntries()) {
-                inputDataLogger.Save(Constants.GeneralHouseholdKey, entry);
+                calcRepo.InputDataLogger.Save(Constants.GeneralHouseholdKey, entry);
             }
 
             var convertedAutoDevList = housedto.AutoDevs.ConvertAll(x => (IHouseholdKey)x).ToList();
-                inputDataLogger.SaveList(convertedAutoDevList);
-            inputDataLogger.Save(Constants.GeneralHouseholdKey, housedto);
+            calcRepo.InputDataLogger.SaveList(convertedAutoDevList);
+            calcRepo.InputDataLogger.Save(Constants.GeneralHouseholdKey, housedto);
 
             var chf = scope.Resolve<CalcHouseFactory>();
             RegisterAllDtoVariables(cvrdto, variableRepository);
-            ICalcAbleObject ch = chf.MakeCalcHouse(housedto);
+            ICalcAbleObject ch = chf.MakeCalcHouse(housedto,calcRepo);
             cot = CalcObjectType.House;
             return ch;
         }
 
         [NotNull]
         private static ICalcAbleObject MakeCalcHouseholdObject([NotNull] Simulator sim, [NotNull] CalcStartParameterSet csps, [NotNull] ICalcObject hh,
-                                                          [NotNull] ILifetimeScope scope, [NotNull] IInputDataLogger inputDataLogger,
+                                                          [NotNull] ILifetimeScope scope,
                                                           [NotNull] CalcVariableDtoFactory cvrdto,
-                                                          [NotNull] CalcVariableRepository variableRepository, out CalcObjectType cot, [NotNull] CalcParameters parameters)
+                                                          [NotNull] CalcVariableRepository variableRepository,
+                                                               out CalcObjectType cot,
+                                                               [NotNull] CalcRepo calcRepo)
         {
             var cmhdf = scope.Resolve<CalcModularHouseholdDtoFactory>();
             HouseholdKey householdKey = new HouseholdKey("HH1");
             CalcHouseholdDto dto = cmhdf.MakeCalcModularHouseholdDto(sim, (ModularHousehold)hh,
                 csps.TemperatureProfile, householdKey, csps.GeographicLocation,
                 out _, csps.TransportationDeviceSet, csps.TravelRouteSet,
-                csps.EnergyIntensity, csps.ChargingStationSet,parameters);
+                csps.EnergyIntensity, csps.ChargingStationSet);
             var cmhf = scope.Resolve<CalcModularHouseholdFactory>();
             /*foreach (var v in dto.CalcVariables)
                             {
                                 variableRepository.RegisterVariable(new CalcVariable(v.Name, v.Guid, v.Value, v.LocationName, v.LocationGuid, v.HouseholdKey));
                             }*/
             foreach (HouseholdKeyEntry entry in dto.GetHouseholdKeyEntries()) {
-                inputDataLogger.Save(Constants.GeneralHouseholdKey, entry);
+                calcRepo.InputDataLogger.Save(Constants.GeneralHouseholdKey, entry);
             }
 
-            inputDataLogger.Save(Constants.GeneralHouseholdKey, dto);
+            calcRepo.InputDataLogger.Save(Constants.GeneralHouseholdKey, dto);
             RegisterAllDtoVariables(cvrdto, variableRepository);
-            ICalcAbleObject ch = cmhf.MakeCalcModularHousehold(dto, out _,null,null);
+            ICalcAbleObject ch = cmhf.MakeCalcModularHousehold(dto, out _,null,null, calcRepo);
             cot = CalcObjectType.ModularHousehold;
             return ch;
         }
 
-        [NotNull]
-        private Random RegisterEverything([NotNull] Simulator sim, [NotNull] string resultpath, [NotNull] CalcStartParameterSet csps, [NotNull] ICalcObject hh,
+        private void RegisterEverything([NotNull] Simulator sim, [NotNull] string resultpath, [NotNull] CalcStartParameterSet csps, [NotNull] ICalcObject hh,
                                           [NotNull] ContainerBuilder builder, [NotNull] string sqlFileName, [NotNull] CalcParameters calcParameters,
                                           [CanBeNull] DeviceSelection ds)
         {
@@ -301,6 +300,7 @@ namespace CalculationController.CalcFactories
             builder.Register(c => calcParameters).As<CalcParameters>().SingleInstance();
             Random rnd = new Random(calcParameters.ActualRandomSeed);
             builder.Register(c => rnd).As<Random>().SingleInstance();
+            builder.Register(c => csps.CalculationProfiler).As<CalculationProfiler>().SingleInstance();
             builder.Register(c => new NormalRandom(0, 0.1, rnd)).As<NormalRandom>().SingleInstance();
             builder.RegisterType<OnlineDeviceActivationProcessor>().As<IOnlineDeviceActivationProcessor>()
                 .SingleInstance();
@@ -325,6 +325,7 @@ namespace CalculationController.CalcFactories
             builder.RegisterType<CalcLocationFactory>().As<CalcLocationFactory>().SingleInstance();
             builder.RegisterType<CalcPersonFactory>().As<CalcPersonFactory>().SingleInstance();
             builder.RegisterType<CalcDeviceFactory>().As<CalcDeviceFactory>().SingleInstance();
+            builder.RegisterType<CalcRepo>().As<CalcRepo>().SingleInstance();
             builder.RegisterType<CalcAffordanceFactory>().As<CalcAffordanceFactory>().SingleInstance();
             builder.RegisterType<CalcTransportationFactory>().As<CalcTransportationFactory>().SingleInstance();
 
@@ -339,7 +340,7 @@ namespace CalculationController.CalcFactories
             builder.Register(x => new DateStampCreator(x.Resolve<CalcParameters>())).As<DateStampCreator>().SingleInstance();
             builder.Register(c => new OnlineLoggingData(c.Resolve<DateStampCreator>(), c.Resolve<IInputDataLogger>(),
                     c.Resolve<CalcParameters>()))
-                .As<OnlineLoggingData>().SingleInstance();
+                .As<OnlineLoggingData>().As<IOnlineLoggingData>().SingleInstance();
             builder.Register(x => new LogFile(calcParameters, x.Resolve<FileFactoryAndTracker>(),
                 x.Resolve<OnlineLoggingData>(),
                 x.Resolve<SqlResultLoggingService>())).As<ILogFile>().SingleInstance();
@@ -392,7 +393,6 @@ namespace CalculationController.CalcFactories
             builder.Register(x => MakeLightNeededArray(csps.GeographicLocation, csps.TemperatureProfile,
                 rnd,
                 new List<VacationTimeframe>(), hh.Name, calcParameters)).As<DayLightStatus>().SingleInstance();
-            return rnd;
         }
 
         private static void RegisterAllDtoVariables([NotNull] CalcVariableDtoFactory cvrdto, [NotNull] CalcVariableRepository variableRepository)

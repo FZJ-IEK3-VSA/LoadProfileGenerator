@@ -1,23 +1,22 @@
 ﻿using Automation.ResultFiles;
 using CalculationEngine.HouseholdElements;
-using CalculationEngine.OnlineLogging;
 using Common;
 using Common.SQLResultLogging.InputLoggers;
 using JetBrains.Annotations;
 
 namespace CalculationEngine.Transportation {
     public class CalcChargingStation {
-        [NotNull] private readonly IOnlineLoggingData _onlineLoggingData;
         [NotNull] private readonly HouseholdKey _householdKey;
+        private readonly CalcRepo _calcRepo;
 
-        public CalcChargingStation([NotNull] CalcTransportationDeviceCategory deviceCategory, [NotNull] CalcLoadType gridChargingLoadType, double maxChargingPower,
-                                   [NotNull] IOnlineLoggingData onlineLoggingData,
+        public CalcChargingStation([NotNull] CalcTransportationDeviceCategory deviceCategory, [NotNull] CalcLoadType gridChargingLoadType,
+                                   double maxChargingPower,
                                    [NotNull] string chargingStationName, [NotNull] string chargingStationGuid,
                                    [NotNull] HouseholdKey householdKey,
-                                   [NotNull] CalcLoadType carChargingLoadType)
+                                   [NotNull] CalcLoadType carChargingLoadType, CalcRepo calcRepo)
         {
-            _onlineLoggingData = onlineLoggingData;
             _householdKey = householdKey;
+            _calcRepo = calcRepo;
             CarChargingLoadType = carChargingLoadType;
             DeviceCategory = deviceCategory;
             GridChargingLoadType = gridChargingLoadType;
@@ -61,7 +60,7 @@ namespace CalculationEngine.Transportation {
             ChargingStationState state  = new ChargingStationState(ChargingStationName,ChargingStationGuid,
                 IsAvailable,timestep,_householdKey,_connectedCar?.Name,_connectedCar?.Guid,
                 _connectedCar?.LastChargingPower??0);
-            _onlineLoggingData.AddChargingStationState(state);
+            _calcRepo.OnlineLoggingData.AddChargingStationState(state);
         }
     }
 }

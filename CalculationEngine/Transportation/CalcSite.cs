@@ -2,7 +2,6 @@
 using System.Linq;
 using Automation.ResultFiles;
 using CalculationEngine.HouseholdElements;
-using CalculationEngine.OnlineLogging;
 using JetBrains.Annotations;
 
 namespace CalculationEngine.Transportation {
@@ -94,14 +93,14 @@ namespace CalculationEngine.Transportation {
         public void AddChargingStation([NotNull] CalcLoadType gridchargingLoadType,
                                        [NotNull] CalcTransportationDeviceCategory cat,
                                        double chargingDeviceMaxChargingPower,
-                                       [NotNull] IOnlineLoggingData onlineLoggingData,
-                                       [NotNull] CalcLoadType carChargingLoadType)
+                                       [NotNull] CalcLoadType carChargingLoadType,
+                                       CalcRepo calcRepo)
         {
             string name = Name + " - Charging station " + (ChargingDevices.Count + 1);
 
             CalcChargingStation station = new CalcChargingStation(cat,
-                gridchargingLoadType, chargingDeviceMaxChargingPower,onlineLoggingData,name,
-                System.Guid.NewGuid().ToString(),_householdKey, carChargingLoadType);
+                gridchargingLoadType, chargingDeviceMaxChargingPower,name,
+                System.Guid.NewGuid().ToString(),_householdKey, carChargingLoadType, calcRepo);
             ChargingDevices.Add(station);
         }
     }

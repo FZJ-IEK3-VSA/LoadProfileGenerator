@@ -30,11 +30,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Automation.ResultFiles;
 using CalculationEngine.HouseholdElements;
-using CalculationEngine.OnlineLogging;
 using Common;
 using Common.CalcDto;
-using Common.JSON;
-using Common.SQLResultLogging;
 using Database.Helpers;
 using Database.Tables.BasicHouseholds;
 using JetBrains.Annotations;
@@ -85,9 +82,8 @@ namespace CalculationController.CalcFactories {
     public class CalcModularHouseholdFactory {
         [NotNull] private readonly CalcAffordanceFactory _caf;
 
-        [NotNull] private readonly CalcParameters _calcParameters;
-
         [NotNull] private readonly CalcVariableRepository _calcVariableRepository;
+        private readonly CalcRepo _calcRepo;
 
         [NotNull] private readonly CalcDeviceFactory _cdf;
 
@@ -97,48 +93,40 @@ namespace CalculationController.CalcFactories {
 
         [NotNull] private readonly CalcTransportationFactory _ctf;
 
-        [NotNull] private readonly ILogFile _lf;
 
         [NotNull] private readonly CalcLoadTypeDictionary _ltDict;
 
-        [NotNull] private readonly SqlResultLoggingService _srls;
 
         //private readonly CalcVariableDtoFactory _variableDtoFactory;
 
         public CalcModularHouseholdFactory([NotNull] CalcLoadTypeDictionary ltDict,
-                                           [NotNull] ILogFile lf,
                                            [NotNull] CalcLocationFactory clf,
                                            [NotNull] CalcPersonFactory cpf,
                                            [NotNull] CalcDeviceFactory cdf,
                                            [NotNull] CalcAffordanceFactory caf,
                                            [NotNull] CalcTransportationFactory ctf,
-                                           [NotNull] CalcParameters calcParameters,
-                                           [NotNull] SqlResultLoggingService srls,
-                                           [NotNull] CalcVariableRepository variableRepository
-            //CalcVariableDtoFactory variableDtoFactory
+                                           [NotNull] CalcVariableRepository variableRepository,
+                                           CalcRepo calcRepo
         )
         {
             _ltDict = ltDict;
-            _lf = lf;
             _clf = clf;
             _cpf = cpf;
             _cdf = cdf;
             _caf = caf;
             _ctf = ctf;
-            _calcParameters = calcParameters;
-            _srls = srls;
             _calcVariableRepository = variableRepository;
-            //_variableDtoFactory = variableDtoFactory;
+            _calcRepo = calcRepo;
         }
 
         [NotNull]
         public CalcHousehold MakeCalcModularHousehold([NotNull] CalcHouseholdDto householdDto,
                                                       [NotNull] out DtoCalcLocationDict dtoCalcLocationDict,
                                                       [CanBeNull] string houseName,
-                                                      [CanBeNull] string houseDescription)
+                                                      [CanBeNull] string houseDescription, CalcRepo calcRepo)
         {
             CalcHousehold chh = null;
-            _lf.InitHousehold(householdDto.HouseholdKey,
+            _calcRepo.Logfile.InitHousehold(householdDto.HouseholdKey,
                 householdDto.Name,
                 HouseholdKeyType.Household,
                 householdDto.Description,
@@ -147,14 +135,15 @@ namespace CalculationController.CalcFactories {
             string name = householdDto.Name + " " + householdDto.HouseholdKey;
             try {
                 dtoCalcLocationDict = new DtoCalcLocationDict();
-                var calcLocations = _clf.MakeCalcLocations(householdDto.LocationDtos, dtoCalcLocationDict);
+                var calcLocations = _clf.MakeCalcLocations(householdDto.LocationDtos, dtoCalcLocationDict, calcRepo);
                 if (calcLocations.Count == 0) {
                     throw new LPGException("Not a single location could be created. Something in this household is wrong. Please fix.");
                 }
 
                 // devices
                 var calcDevices = new List<CalcDevice>();
-                _cdf.MakeCalcDevices(calcLocations, householdDto.DeviceDtos, calcDevices, householdDto.HouseholdKey, _ltDict);
+                _cdf.MakeCalcDevices(calcLocations, householdDto.DeviceDtos, calcDevices,
+                    householdDto.HouseholdKey, _ltDict, calcRepo);
 
                 var autodevs = _cdf.MakeCalcAutoDevs(householdDto.AutoDevices, dtoCalcLocationDict);
 
@@ -170,13 +159,12 @@ namespace CalculationController.CalcFactories {
                     householdDto.GeographicLocationName,
                     householdDto.TemperatureprofileName,
                     householdDto.HouseholdKey,
-                    _calcParameters,
                     householdDto.Guid,
                     _calcVariableRepository,
-                    _srls,
                     calcLocations,
                     calcpersons,
-                    householdDto.Description);
+                    householdDto.Description,
+                    _calcRepo);
                 HashSet<string> deviceGuids = new HashSet<string>();
                 foreach (CalcDevice device in calcDevices) {
                     if (!deviceGuids.Add(device.Guid)) {
@@ -187,11 +175,12 @@ namespace CalculationController.CalcFactories {
                 chh.SetDevices(calcDevices);
                 chh.SetAutoDevs(autodevs);
                 //chh.BridgeDays = householdDto.BridgeDays;
-                _caf.SetAllAffordaces(householdDto.Affordances, dtoCalcLocationDict, _calcVariableRepository, calcDevices);
+                _caf.SetAllAffordaces(householdDto.Affordances, dtoCalcLocationDict,
+                    _calcVariableRepository, calcDevices);
                 CheckCalcAffordancesForExecutability(chh);
                 if (householdDto.CalcTravelRoutes != null) {
                     Logger.Info("Starting to initialize transportation for household " + householdDto.Name + "...");
-                    _ctf.MakeTransportation(householdDto, dtoCalcLocationDict, chh, _lf.OnlineLoggingData);
+                    _ctf.MakeTransportation(householdDto, dtoCalcLocationDict, chh);
                 }
                 else {
                     Logger.Info("No travel route was set for for household " + householdDto.Name + ", skipping transportation");

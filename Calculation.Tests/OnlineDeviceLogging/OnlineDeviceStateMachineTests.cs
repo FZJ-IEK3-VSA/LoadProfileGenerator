@@ -70,8 +70,9 @@ namespace Calculation.Tests.OnlineDeviceLogging {
             var key = new OefcKey(calcDeviceDto, locGuid);
             var cp = new CalcProfile("mycalcprofile", Guid.NewGuid().ToString(), valueList, ProfileType.Absolute, "bla");
             TimeStep ts = new TimeStep(5, 0, false);
-            var odsm = new OnlineDeviceStateMachine(cp, ts, 0, 1, nr, clt.ConvertToDto(), "device", key,"affordance",
-                calcParameters);
+            StepValues sv = StepValues.MakeStepValues(cp, 0, 1, nr);
+            var odsm = new OnlineDeviceStateMachine(ts,  clt.ConvertToDto(), "device", key,"affordance",
+                calcParameters, sv);
             calcParameters.SetDummyTimeSteps(0);
             Assert.That( odsm.CalculateOfficialEnergyUse(),Is.EqualTo(55)); // all
             calcParameters.SetDummyTimeSteps(6);

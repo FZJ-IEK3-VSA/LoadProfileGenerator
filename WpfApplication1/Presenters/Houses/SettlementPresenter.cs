@@ -328,7 +328,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
                 }
             }
 
-            ThisSettlement.OutputFileDefault = OutputFileDefault.None;
+            ThisSettlement.OutputFileDefault = OutputFileDefault.NoFiles;
             RefreshCalcOptions();
         }
 

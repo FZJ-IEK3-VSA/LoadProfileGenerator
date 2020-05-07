@@ -32,8 +32,6 @@ using System.IO;
 using System.Linq;
 using Automation;
 using Automation.ResultFiles;
-using CalculationEngine.Helper;
-using CalculationEngine.HouseholdElements;
 using CalculationEngine.OnlineLogging;
 using Common;
 using Common.CalcDto;
@@ -62,10 +60,9 @@ namespace CalculationEngine.OnlineDeviceLogging {
     {
         OefcKey RegisterDevice([NotNull] CalcLoadTypeDto loadType, [NotNull] CalcDeviceDto device);
 
-        void AddNewStateMachine([NotNull] CalcProfile calcProfile, [NotNull] TimeStep startTimeStep,
-            double powerStandardDeviation, double powerUsage,
+        void AddNewStateMachine( [NotNull] TimeStep startTimeStep,
                                 [NotNull] CalcLoadTypeDto loadType, [NotNull] string affordanceName, [NotNull] string activatorName, [NotNull] string profileName,
-            [NotNull] string profileSource, OefcKey oefckey, CalcDeviceDto calcDeviceDto);
+            [NotNull] string profileSource, OefcKey oefckey, CalcDeviceDto calcDeviceDto, StepValues sv);
 
         void AddZeroEntryForAutoDev(OefcKey zeKey,[NotNull] TimeStep starttime, int totalDuration);
 
@@ -84,18 +81,15 @@ namespace CalculationEngine.OnlineDeviceLogging {
         Dictionary<ProfileActivationEntry.ProfileActivationEntryKey, ProfileActivationEntry> ProfileEntries { get; }
     }
     public class OnlineDeviceActivationProcessor : IOnlineDeviceActivationProcessor {
+        [NotNull] private readonly ILogFile _lf;
+        [NotNull] private readonly CalcParameters _calcParameters;
+
         [NotNull]
         private readonly Dictionary<CalcLoadTypeDto, BinaryWriter> _binaryOutStreams;
         [NotNull]
         private readonly FileFactoryAndTracker _fft;
         [NotNull]
-        private readonly ILogFile _lf;
-        [NotNull]
-        private readonly CalcParameters _calcParameters;
-        [NotNull]
         private readonly Dictionary<CalcLoadTypeDto, int> _loadTypeDict;
-        [NotNull]
-        private readonly NormalRandom _nr;
         [NotNull]
         private readonly Dictionary<ProfileActivationEntry.ProfileActivationEntryKey, ProfileActivationEntry>
             _profileEntries =
@@ -109,15 +103,15 @@ namespace CalculationEngine.OnlineDeviceLogging {
         [NotNull]
         private List<OnlineDeviceStateMachine> _statemachines = new List<OnlineDeviceStateMachine>();
 
-        public OnlineDeviceActivationProcessor([NotNull] NormalRandom nr, [NotNull] ILogFile lf, [NotNull] CalcParameters calcParameters) {
-            Oefc = new OnlineEnergyFileColumns(lf);
-            _loadTypeDict = new Dictionary<CalcLoadTypeDto, int>();
-            _fft = lf.FileFactoryAndTracker;
-            _binaryOutStreams = new Dictionary<CalcLoadTypeDto, BinaryWriter>();
-            _sumBinaryOutStreams = new Dictionary<CalcLoadTypeDto, BinaryWriter>();
-            _nr = nr;
+        public OnlineDeviceActivationProcessor([NotNull] ILogFile lf, [NotNull] CalcParameters calcParameters)
+        {
             _lf = lf;
             _calcParameters = calcParameters;
+            Oefc = new OnlineEnergyFileColumns(_lf);
+            _loadTypeDict = new Dictionary<CalcLoadTypeDto, int>();
+            _fft = _lf.FileFactoryAndTracker;
+            _binaryOutStreams = new Dictionary<CalcLoadTypeDto, BinaryWriter>();
+            _sumBinaryOutStreams = new Dictionary<CalcLoadTypeDto, BinaryWriter>();
             Logger.Info("Initializing the online device activation processor...");
         }
 
@@ -134,10 +128,9 @@ namespace CalculationEngine.OnlineDeviceLogging {
         [NotNull]
         public Dictionary<CalcLoadTypeDto, BinaryWriter> SumBinaryOutStreams => _sumBinaryOutStreams;
 
-        public void AddNewStateMachine([NotNull] CalcProfile calcProfile, [NotNull] TimeStep startTimeStep,
-                                       double powerStandardDeviation, double powerUsage,
+        public void AddNewStateMachine( [NotNull] TimeStep startTimeStep,
                                        [NotNull] CalcLoadTypeDto loadType, [NotNull] string affordanceName, [NotNull] string activatorName, [NotNull] string profileName,
-                                       [NotNull] string profileSource,  OefcKey oefckey, [NotNull] CalcDeviceDto calcDeviceDto)
+                                       [NotNull] string profileSource,  OefcKey oefckey, [NotNull] CalcDeviceDto calcDeviceDto, [NotNull] StepValues sv)
         {
             Oefc.IsDeviceRegistered(loadType, oefckey);
             //OefcKey oefckey = new OefcKey(householdKey, deviceType, deviceID, locationID, loadType.ID);
@@ -153,8 +146,8 @@ namespace CalculationEngine.OnlineDeviceLogging {
             }
             _profileEntries[key].ActivationCount++;
             // do the device activiation
-            var dsm = new OnlineDeviceStateMachine(calcProfile, startTimeStep,
-                powerStandardDeviation, powerUsage, _nr, loadType, calcDeviceDto.Name, oefckey, affordanceName, _calcParameters);
+            var dsm = new OnlineDeviceStateMachine( startTimeStep,
+                 loadType, calcDeviceDto.Name, oefckey, affordanceName, _calcParameters, sv);
             _statemachines.Add(dsm);
 
             // log the affordance energy use.
@@ -162,7 +155,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
                 double totalPowerSum = dsm.CalculateOfficialEnergyUse();
                 double totalEnergysum = loadType.ConversionFactor * totalPowerSum;
                 var entry = new DeviceActivationEntry( dsm.AffordanceName,
-                    dsm.LoadType,totalEnergysum , activatorName,calcProfile.StepValues.Count,
+                    dsm.LoadType,totalEnergysum , activatorName,sv.Values.Count,
                     startTimeStep, calcDeviceDto); // dsm.StepValues.ToArray(),
                 _lf.OnlineLoggingData.RegisterDeviceActivation(entry);
             }

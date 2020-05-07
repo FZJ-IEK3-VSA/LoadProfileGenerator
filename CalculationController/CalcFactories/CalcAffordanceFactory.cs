@@ -34,27 +34,26 @@ using Automation.ResultFiles;
 using CalculationController.DtoFactories;
 using CalculationEngine.HouseholdElements;
 using Common.CalcDto;
-using Common.JSON;
 using JetBrains.Annotations;
 
 namespace CalculationController.CalcFactories {
     public class CalcAffordanceFactory {
         //private readonly CalcVariableDtoFactory _variableRepository;
         [NotNull] private readonly AvailabilityDtoRepository _availabilityDtoRepository;
+        private readonly CalcRepo _calcRepo;
 
-        [NotNull] private readonly CalcParameters _cp;
 
         [NotNull] private readonly CalcLoadTypeDictionary _loadTypeDictionary;
 
-        public CalcAffordanceFactory([NotNull] CalcParameters cp,
-                                     [NotNull] CalcLoadTypeDictionary loadTypeDictionary,
-                                     [NotNull] AvailabilityDtoRepository availabilityDtoRepository
+        public CalcAffordanceFactory([NotNull] CalcLoadTypeDictionary loadTypeDictionary,
+                                     [NotNull] AvailabilityDtoRepository availabilityDtoRepository,
+            CalcRepo calcRepo
             //[NotNull] CalcVariableDtoFactory variableRepository
         )
         {
-            _cp = cp;
             _loadTypeDictionary = loadTypeDictionary;
             _availabilityDtoRepository = availabilityDtoRepository;
+            _calcRepo = calcRepo;
             //_variableRepository = variableRepository;
         }
 
@@ -80,7 +79,7 @@ namespace CalculationController.CalcFactories {
             }
 
             foreach (CalcAffordanceDto affordancedto in affordances) {
-                CalcProfile personProfile = CalcDeviceFactory.MakeCalcProfile(affordancedto.PersonProfile, _cp);
+                CalcProfile personProfile = CalcDeviceFactory.MakeCalcProfile(affordancedto.PersonProfile, _calcRepo.CalcParameters);
                 CalcLocation calcLocation = locations.GetCalcLocationByGuid(affordancedto.CalcLocationGuid);
                 var calcDesires = MakeCalcDesires(affordancedto.Satisfactionvalues);
                 var color = new ColorRGB(affordancedto.ColorR, affordancedto.ColorG, affordancedto.ColorB);
@@ -117,9 +116,9 @@ namespace CalculationController.CalcFactories {
                     affordancedto.Weight,
                     affordancedto.RequireAllDesires,
                     affordancedto.SrcTrait,
-                    _cp,
                     affordancedto.Guid,
-                    variableRepository, deviceEnergyProfiles, busyarr);
+                    variableRepository, deviceEnergyProfiles,
+                    busyarr, affordancedto.BodilyActivityLevel,_calcRepo);
                 MakeSubAffordances(locations, variableRepository, affordancedto, caff);
 
                 calcLocation.AddAffordance(caff);
@@ -134,7 +133,7 @@ namespace CalculationController.CalcFactories {
                 List<CalcDesire> satisfactionValues = MakeCalcDesires(sdto.Satisfactionvalues);
                 var varOps = MakeVariableOps(locations, sdto.VariableOps, variableRepository);
                 //subaffordances have no time limits
-                BitArray isBusySub = new BitArray(_cp.InternalTimesteps, false);
+                BitArray isBusySub = new BitArray(_calcRepo.CalcParameters.InternalTimesteps, false);
                 CalcSubAffordance csuf = new CalcSubAffordance(sdto.Name,
                     subaffLocation,
                     satisfactionValues,
@@ -148,25 +147,25 @@ namespace CalculationController.CalcFactories {
                     varOps,
                     sdto.Weight,
                     sdto.SourceTrait,
-                    _cp,
-                    sdto.Guid, isBusySub, variableRepository);
+                    sdto.Guid, isBusySub, variableRepository, caff.BodilyActivityLevel,_calcRepo);
                 caff.SubAffordances.Add(csuf);
             }
         }
 
         [ItemNotNull]
         [NotNull]
-        private List<CalcAffordance.DeviceEnergyProfileTuple> MakeDeviceEnergyProfileTuples([ItemNotNull] [NotNull] List<CalcDevice> devices, [NotNull] CalcAffordanceDto affordancedto)
+        private List<CalcAffordance.DeviceEnergyProfileTuple> MakeDeviceEnergyProfileTuples([ItemNotNull] [NotNull] List<CalcDevice> devices,
+                                                                                            [NotNull] CalcAffordanceDto affordancedto)
         {
             List<CalcAffordance.DeviceEnergyProfileTuple> deviceEnergyProfiles =
                 new List<CalcAffordance.DeviceEnergyProfileTuple>();
             foreach (DeviceEnergyProfileTupleDto dto in affordancedto.Energyprofiles) {
                 string devguid = dto.CalcDeviceGuid;
                 CalcDevice device = devices.Single(x => x.Guid == devguid);
-                CalcProfile cp = CalcDeviceFactory.MakeCalcProfile(dto.TimeProfile, _cp);
+                CalcProfile cp = CalcDeviceFactory.MakeCalcProfile(dto.TimeProfile, _calcRepo.CalcParameters);
                 CalcLoadType clt = _loadTypeDictionary.GetLoadtypeByGuid(dto.CalcLoadTypeGuid);
                 CalcAffordance.DeviceEnergyProfileTuple dep = new CalcAffordance.DeviceEnergyProfileTuple(device,
-                    cp, clt, dto.TimeOffset, _cp.InternalStepsize, dto.Multiplier, dto.Probability);
+                    cp, clt, dto.TimeOffset, _calcRepo.CalcParameters.InternalStepsize, dto.Multiplier, dto.Probability);
                 deviceEnergyProfiles.Add(dep);
             }
 

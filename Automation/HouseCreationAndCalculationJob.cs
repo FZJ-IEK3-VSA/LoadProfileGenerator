@@ -28,7 +28,7 @@ namespace Automation {
 
 
         [Comment(
-            "Path to the database file to use. Defaults to profilegenerator.db3 in the current directry if not set.")]
+            "Path to the database file to use. Defaults to profilegenerator.db3 in the current directory if not set.")]
         [CanBeNull]
         public string PathToDatabase { get; set; } = "profilegenerator.db3";
 

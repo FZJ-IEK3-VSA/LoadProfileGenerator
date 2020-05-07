@@ -26,9 +26,79 @@
 
 //-----------------------------------------------------------------------
 
+using System;
+using Automation.ResultFiles;
+using CalculationEngine.Helper;
+using CalculationEngine.OnlineDeviceLogging;
+using CalculationEngine.OnlineLogging;
+using Common;
+using Common.JSON;
+using Common.SQLResultLogging;
 using JetBrains.Annotations;
 
 namespace CalculationEngine.HouseholdElements {
+
+    public class CalcRepo {
+
+        public CalcRepo([CanBeNull] IOnlineDeviceActivationProcessor odap = null,
+                        [CanBeNull] Random rnd = null,
+                        [CanBeNull]CalcParameters calcParameters= null,
+                        [CanBeNull] IOnlineLoggingData onlineLoggingData= null,
+                        [CanBeNull]NormalRandom normalRandom= null,
+                        [CanBeNull] ILogFile lf = null,
+                        [CanBeNull] SqlResultLoggingService srls= null,
+                        [CanBeNull] IInputDataLogger inputDataLogger=null,
+                        [CanBeNull] CalculationProfiler calculationProfiler=null)
+        {
+            _odap = odap;
+            _rnd = rnd;
+            _calcParameters = calcParameters;
+            _onlineLoggingData = onlineLoggingData;
+            _normalRandom = normalRandom;
+            _lf = lf;
+            _srls = srls;
+            _inputDataLogger = inputDataLogger;
+            _calculationProfiler = calculationProfiler;
+        }
+        [NotNull]
+        private readonly ILogFile _lf;
+
+        [NotNull] private readonly IOnlineDeviceActivationProcessor _odap;
+        [NotNull] private readonly Random _rnd;
+        private readonly CalcParameters _calcParameters;
+        [NotNull] private readonly IOnlineLoggingData _onlineLoggingData;
+        private readonly NormalRandom _normalRandom;
+        [NotNull] private readonly SqlResultLoggingService _srls;
+        private readonly IInputDataLogger _inputDataLogger;
+        [NotNull] private readonly CalculationProfiler _calculationProfiler;
+
+        [NotNull]
+        public IOnlineDeviceActivationProcessor Odap => _odap ?? throw new LPGException("no odap");
+
+        [NotNull]
+        public Random Rnd => _rnd ?? throw new LPGException("no rnd");
+
+        [NotNull]
+        public CalcParameters CalcParameters => _calcParameters ?? throw new LPGException("no calcparameters");
+
+        [NotNull]
+        public IOnlineLoggingData OnlineLoggingData => _onlineLoggingData ?? throw new LPGException("no old");
+
+        [NotNull]
+        public NormalRandom NormalRandom => _normalRandom ?? throw new LPGException("no nr");
+
+        [NotNull]
+        public ILogFile Logfile => _lf ?? throw new LPGException("no lf");
+
+        [NotNull]
+        public SqlResultLoggingService Srls => _srls ?? throw new LPGException("no srls");
+
+        [NotNull]
+        public IInputDataLogger InputDataLogger => _inputDataLogger ?? throw new LPGException("no inputdatalogger");
+
+        [NotNull]
+        public CalculationProfiler CalculationProfiler => _calculationProfiler ?? throw new LPGException("no calc profiler");
+    }
     public abstract class CalcBase {
         [NotNull]
         private readonly string _name;

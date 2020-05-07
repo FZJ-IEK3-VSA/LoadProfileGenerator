@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using CalculationEngine.HouseholdElements;
 using Common;
@@ -8,9 +7,6 @@ using JetBrains.Annotations;
 
 namespace CalculationEngine.Transportation {
     public class TransportationHandler {
-        [NotNull]
-        private readonly Random _rnd;
-
         [NotNull]
         [ItemNotNull]
         public List<CalcSite> CalcSites { get; }= new List<CalcSite>();
@@ -30,8 +26,6 @@ namespace CalculationEngine.Transportation {
         [ItemNotNull]
         public List<CalcTransportationDevice> AllMoveableDevices { get; } = new List<CalcTransportationDevice>();
 
-        public TransportationHandler([NotNull] Random rnd) => _rnd = rnd;
-
         [NotNull]
         public Dictionary<CalcSite, CalcTravelRoute> SameSiteRoutes { get; }= new Dictionary<CalcSite, CalcTravelRoute>();
         [NotNull]
@@ -41,7 +35,7 @@ namespace CalculationEngine.Transportation {
         [CanBeNull]
         public CalcTravelRoute GetTravelRouteFromSrcLoc([NotNull] CalcLocation srcLocation,
                                                         [NotNull] CalcSite dstSite, [NotNull] TimeStep startTimeStep,
-                                                        [NotNull] string personName)
+                                                        [NotNull] string personName, CalcRepo calcRepo)
         {
             CalcSite srcSite = LocationSiteLookup[srcLocation];
             if (srcSite == dstSite) {
@@ -58,9 +52,9 @@ namespace CalculationEngine.Transportation {
             int? dur = null;
             CalcTravelRoute ctr = null;
             while (dur== null && possibleRoutes.Count > 0) {
-                ctr = possibleRoutes[_rnd.Next(possibleRoutes.Count)];
+                ctr = possibleRoutes[calcRepo.Rnd.Next(possibleRoutes.Count)];
                 possibleRoutes.Remove(ctr);
-                dur = ctr.GetDuration(startTimeStep, personName, _rnd,AllMoveableDevices);
+                dur = ctr.GetDuration(startTimeStep, personName, AllMoveableDevices);
             }
 
             if (dur == null) {

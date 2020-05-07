@@ -29,6 +29,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using Automation.ResultFiles;
+using Common.Enums;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 
@@ -83,7 +84,7 @@ namespace Common.SQLResultLogging.Loggers {
 
         public ActionEntry([NotNull] string category, [NotNull] HouseholdKey householdKey, [NotNull] TimeStep timeStep,
                            DateTime dateTime, [NotNull] string personGuid, [NotNull] string personName, bool isSick,
-                           [NotNull] string affordanceName, [NotNull] string affordanceGuid, int id)
+                           [NotNull] string affordanceName, [NotNull] string affordanceGuid, int id, BodilyActivityLevel bodilyActivityLevel)
         {
             Category = category;
             HouseholdKey = householdKey;
@@ -95,6 +96,7 @@ namespace Common.SQLResultLogging.Loggers {
             AffordanceName = affordanceName;
             AffordanceGuid = affordanceGuid;
             ID = id;
+            BodilyActivityLevel = bodilyActivityLevel;
             ActionEntryGuid = Guid.NewGuid().ToString();
         }
 
@@ -120,6 +122,8 @@ namespace Common.SQLResultLogging.Loggers {
         [JsonProperty]
         public int ID { get; set; }
 
+        public BodilyActivityLevel BodilyActivityLevel { get; set; }
+
         [JsonProperty]
         public bool IsSick { get; set; }
 
@@ -144,12 +148,13 @@ namespace Common.SQLResultLogging.Loggers {
                                                   bool isSick, [NotNull] string affordanceName,
                                                   [NotNull] string affordanceGuid, [NotNull] HouseholdKey householdKey,
                                                   [NotNull] string category,
-                                                  DateTime timestamp)
+                                                  DateTime timestamp, BodilyActivityLevel bodilyActivityLevel)
         {
             ActionEntry ae = new ActionEntry(
-                category, householdKey, timeStep, timestamp, personGuid, personName, isSick, affordanceName,
+                category, householdKey, timeStep, timestamp,
+                personGuid, personName, isSick, affordanceName,
                 affordanceGuid,
-                0);
+                0, bodilyActivityLevel);
             return ae;
         }
     }

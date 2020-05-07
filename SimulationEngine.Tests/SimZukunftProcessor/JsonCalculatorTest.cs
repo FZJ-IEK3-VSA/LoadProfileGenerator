@@ -184,7 +184,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
             }
             jcs.LoadtypesForPostprocessing.Add("Electricity");
 
-            jcs.DefaultForOutputFiles = OutputFileDefault.None;
+            jcs.DefaultForOutputFiles = OutputFileDefault.NoFiles;
             if (jcs.CalcOptions == null) {
                 jcs.CalcOptions = new List<CalcOption>();
             }
@@ -264,7 +264,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
             {
                 throw new LPGException("Calcoptions was null");
             }
-            jcs.DefaultForOutputFiles = OutputFileDefault.None;
+            jcs.DefaultForOutputFiles = OutputFileDefault.NoFiles;
             jcs.CalcOptions.Add(CalcOption.SumProfileExternalIndividualHouseholdsAsJson);
             jcs.StartDate = new DateTime(2019, 1, 1);
             jcs.EndDate = new DateTime(2019, 1, 3);

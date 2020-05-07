@@ -66,14 +66,15 @@ namespace CalculationController.Tests.CalcFactories {
             var deviceActions = new ObservableCollection<DeviceAction>();
             //var locdict = new Dictionary<Location, CalcLocation>();
             CalcParameters cp = CalcParametersFactory.MakeGoodDefaults();
-            var mock = new Mock<IOnlineDeviceActivationProcessor>();
-            var iodap = mock.Object;
+            //var mock = new Mock<IOnlineDeviceActivationProcessor>();
+            //var iodap = mock.Object;
             var locationDtoDict = new CalcLoadTypeDtoDictionary(new Dictionary<VLoadType, CalcLoadTypeDto>());
             var ltDict = new CalcLoadTypeDictionary(new Dictionary<CalcLoadTypeDto, CalcLoadType>());
             CalcLocationDtoFactory cldt = new CalcLocationDtoFactory(cp, picker, locationDtoDict);
             Dictionary<CalcLocationDto, List<IAssignableDevice>> deviceLocationDict = new Dictionary<CalcLocationDto, List<IAssignableDevice>>();
             LocationDtoDict calclocdict = new LocationDtoDict();
             List<DeviceCategoryDto> devcat = new List<DeviceCategoryDto>();
+            CalcRepo calcRepo = new CalcRepo();
             //devcat.Add(new DeviceCategoryDto(dc.FullPath, Guid.NewGuid().ToString()));
             var locdtos = cldt.MakeCalcLocations(locations,
                 new HouseholdKey("hh1"),
@@ -84,10 +85,10 @@ namespace CalculationController.Tests.CalcFactories {
                 devcat);
             Assert.That(locdtos.Count, Is.EqualTo(1));
             Assert.That(locdtos[0].Name, Is.EqualTo(loc.Name));
-            CalcLocationFactory clf = new CalcLocationFactory(cp, ltDict, iodap);
+            CalcLocationFactory clf = new CalcLocationFactory (ltDict,calcRepo);
             //"HH1", EnergyIntensityType.EnergySaving, dict,deviceActions,
             DtoCalcLocationDict dcl = new DtoCalcLocationDict();
-            var calclocs = clf.MakeCalcLocations(locdtos, dcl);
+            var calclocs = clf.MakeCalcLocations(locdtos, dcl,calcRepo);
             Assert.That(calclocs.Count, Is.EqualTo(1));
             Assert.That(calclocs[0].Name, Is.EqualTo(loc.Name));
             Assert.That(calclocs[0].Guid, Is.EqualTo(locdtos[0].Guid));
@@ -129,6 +130,7 @@ namespace CalculationController.Tests.CalcFactories {
             builder.Register(x => r).As<Random>().SingleInstance();
             builder.RegisterType<CalcLocationDtoFactory>().As<CalcLocationDtoFactory>();
             builder.RegisterType<CalcDeviceFactory>().As<CalcDeviceFactory>().SingleInstance();
+            CalcRepo calcRepo = new CalcRepo();
             var container = builder.Build();
             using (var scope = container.BeginLifetimeScope()) {
                 var cldt = scope.Resolve<CalcLocationDtoFactory>();
@@ -143,7 +145,7 @@ namespace CalculationController.Tests.CalcFactories {
 
                 CalcLocationFactory clf = scope.Resolve<CalcLocationFactory>();
                 DtoCalcLocationDict dcl = new DtoCalcLocationDict();
-                var clocations = clf.MakeCalcLocations(locdtos, dcl);
+                var clocations = clf.MakeCalcLocations(locdtos, dcl, calcRepo);
                 Assert.AreEqual(1, clocations.Count);
                 Assert.AreEqual(2, clocations[0].LightDevices.Count);
             }
@@ -190,6 +192,7 @@ namespace CalculationController.Tests.CalcFactories {
             builder.RegisterType<CalcLocationDtoFactory>().As<CalcLocationDtoFactory>();
             var container = builder.Build();
             using (var scope = container.BeginLifetimeScope()) {
+                CalcRepo calcRepo = new CalcRepo();
                 var cldt = scope.Resolve<CalcLocationDtoFactory>();
                 LocationDtoDict calclocdict = new LocationDtoDict();
                 var locdtos = cldt.MakeCalcLocations(locations,
@@ -203,7 +206,7 @@ namespace CalculationController.Tests.CalcFactories {
                 //CalcDeviceFactory cdf = scope.Resolve<CalcDeviceFactory>();
                 CalcLocationFactory clf = scope.Resolve<CalcLocationFactory>();
                 DtoCalcLocationDict dtl = new DtoCalcLocationDict();
-                var clocations = clf.MakeCalcLocations(locdtos, dtl);
+                var clocations = clf.MakeCalcLocations(locdtos, dtl, calcRepo);
                 Assert.AreEqual(1, clocations.Count);
                 Assert.AreEqual(1, clocations[0].LightDevices.Count);
             }
@@ -269,7 +272,7 @@ namespace CalculationController.Tests.CalcFactories {
             builder.RegisterType<CalcLocationDtoFactory>().As<CalcLocationDtoFactory>();
             builder.RegisterType<InputDataLogger>().As<InputDataLogger>().SingleInstance();
             var container = builder.Build();
-
+            CalcRepo calcRepo = new CalcRepo();
             using (var scope = container.BeginLifetimeScope()) {
                 var cldt = scope.Resolve<CalcLocationDtoFactory>();
                 LocationDtoDict calclocdict = new LocationDtoDict();
@@ -283,7 +286,7 @@ namespace CalculationController.Tests.CalcFactories {
 
                 CalcLocationFactory clf = scope.Resolve<CalcLocationFactory>();
                 DtoCalcLocationDict dtl = new DtoCalcLocationDict();
-                var clocations = clf.MakeCalcLocations(locdtos, dtl);
+                var clocations = clf.MakeCalcLocations(locdtos, dtl,calcRepo);
 
                 Assert.AreEqual(1, clocations.Count);
                 Assert.AreEqual(2, clocations[0].LightDevices.Count);

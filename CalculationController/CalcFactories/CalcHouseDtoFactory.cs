@@ -107,8 +107,7 @@ namespace CalculationController.CalcFactories {
                         household.TransportationDeviceSet,
                         household.TravelRouteSet,
                         energyIntensity,
-                        household.ChargingStationSet,
-                        _calcParameters);
+                        household.ChargingStationSet);
                     calcAbleObjects.Add(hhdto);
                     foreach (var pair in locationDtoDict.LocationDict) {
                         if (!globalLocationDict.ContainsKey(pair.Key)) {

@@ -141,7 +141,7 @@ namespace CalculationController.Tests.Transportation
 
                     sim.TemperatureProfiles[0], new HouseholdKey("hh1"), sim.GeographicLocations[0],
                     out var dtolocs, tds,trs,
-                    EnergyIntensityType.Random,css,parameters);
+                    EnergyIntensityType.Random,css);
                 CalcVariableDtoFactory cvdto = scope.Resolve<CalcVariableDtoFactory>();
                 CalcVariableRepository cvr = scope.Resolve<CalcVariableRepository>();
                 foreach (CalcVariableDto v in cvdto.VariableDtos.Values) {
@@ -151,7 +151,8 @@ namespace CalculationController.Tests.Transportation
                 var cmhf = scope.Resolve<CalcModularHouseholdFactory>();
                 //CalcTransportationDtoFactory dtoFactory = new CalcTransportationDtoFactory(ltdtoDict);
                 //dtoFactory.MakeTransportationDtos(sim, sim.ModularHouseholds[0], tds, trs, out var sites,out var transportationDevices, out var routes, dtohh.LocationDtos, dtohh.HouseholdKey);
-                CalcHousehold chh = cmhf.MakeCalcModularHousehold(dtohh,out var dtoCalcLocationDict,null,null);
+                CalcRepo calcRepo = new CalcRepo();
+                CalcHousehold chh = cmhf.MakeCalcModularHousehold(dtohh,out var dtoCalcLocationDict,null,null, calcRepo);
                 //ctf.MakeTransportation(dtohh,dtoCalcLocationDict,chh);
                 if(chh.TransportationHandler == null) {
                     throw new LPGException("no transportation handler");
@@ -161,7 +162,7 @@ namespace CalculationController.Tests.Transportation
                 CalcLocation dst = chh.TransportationHandler.CalcSites[1].Locations[0];
                 const string personname = "personname";
                 TimeStep ts = new TimeStep(1,parameters);
-                dst.Affordances[0].IsBusy(ts, nr, r, src, personname, false);
+                dst.Affordances[0].IsBusy(ts, src, personname, false);
                 dst.Affordances[0].Activate(ts, personname,  src,  out var personTimeProfile);
                 lf.Close();
             }
@@ -268,8 +269,7 @@ namespace CalculationController.Tests.Transportation
                     tds,
                     trs,
                     EnergyIntensityType.Random,
-                    css,
-                    parameters);
+                    css);
                 lf.Close();
                 db.Cleanup();
                 wd.CleanUp();

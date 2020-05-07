@@ -37,7 +37,6 @@ using Automation.ResultFiles;
 using CalculationEngine.OnlineDeviceLogging;
 using Common;
 using Common.CalcDto;
-using Common.JSON;
 using JetBrains.Annotations;
 
 #endregion
@@ -88,43 +87,43 @@ namespace CalculationEngine.HouseholdElements {
         private readonly CalcLocation _calcLocation;
         [NotNull]
         private readonly Dictionary<CalcLoadType, BitArray> _isBusyForLoadType;
-        [CanBeNull] private readonly IOnlineDeviceActivationProcessor _odap;
         [ItemNotNull]
         [NotNull]
         private readonly List<CalcDeviceLoad> _powerUsage;
 
         private readonly CalcDeviceDto _calcDeviceDto;
+        private readonly CalcRepo _calcRepo;
 
         public CalcDevice( [NotNull][ItemNotNull] List<CalcDeviceLoad> powerUsage,
-            [CanBeNull] IOnlineDeviceActivationProcessor odap, [NotNull] CalcLocation calcLocation,
-            [NotNull] CalcParameters calcParameters,
-                           [NotNull] CalcDeviceDto calcDeviceDto) : base(calcDeviceDto.Name,  calcDeviceDto.Guid)
+                            [NotNull] CalcLocation calcLocation,
+                           [NotNull] CalcDeviceDto calcDeviceDto,
+                           [NotNull] CalcRepo calcRepo) : base(calcDeviceDto.Name,  calcDeviceDto.Guid)
         {
             _calcDeviceDto = calcDeviceDto;
+            _calcRepo = calcRepo;
             if (_calcDeviceDto.LocationGuid != calcLocation.Guid) {
                 throw new LPGException("Inconsistent locations. This is a bug.");
             }
             _calcLocation = calcLocation;
-            _odap = odap;
             _powerUsage = powerUsage;
             foreach (var load in powerUsage) {
                 if (Math.Abs(load.Value) < 0.0000001 && load.Name.ToLower() != "none") {
                     throw new LPGException("Trying to run the device " + calcDeviceDto.Name + " with a power load factor for " + load.LoadType.Name + " of 0. This is not going to work.");
                 }
             }
-            if (calcParameters.InternalTimesteps == 0) {
+            if (calcRepo.CalcParameters.InternalTimesteps == 0) {
                 throw new LPGException("Can't run with 0 timesteps");
             }
             _isBusyForLoadType = new Dictionary<CalcLoadType, BitArray>();
             foreach (var calcDeviceLoad in _powerUsage) {
                 _isBusyForLoadType.Add(calcDeviceLoad.LoadType,
-                    new BitArray(calcParameters.InternalTimesteps));
+                    new BitArray(calcRepo.CalcParameters.InternalTimesteps));
                 _isBusyForLoadType[calcDeviceLoad.LoadType].SetAll(false);
-                if (odap == null && !Config.IsInUnitTesting) {
+                if (calcRepo.Odap == null && !Config.IsInUnitTesting) {
                     throw new LPGException("odap was null. Please report");
                 }
                 //var key = new OefcKey(calcDeviceDto.HouseholdKey, calcDeviceDto.DeviceType,calcDeviceDto.Guid, calcDeviceDto.LocationGuid,calcDeviceLoad.LoadType.Guid, calcDeviceDto.DeviceCategoryName);
-                var key = odap?.RegisterDevice( calcDeviceLoad.LoadType.ConvertToDto(), calcDeviceDto);
+                var key = calcRepo.Odap?.RegisterDevice( calcDeviceLoad.LoadType.ConvertToDto(), calcDeviceDto);
                 if (key != null) {
                     _KeyByLoad.Add(calcDeviceLoad.LoadType, key.Value);
                 }
@@ -163,6 +162,8 @@ namespace CalculationEngine.HouseholdElements {
                 return s;
             }
         }
+
+        public CalcRepo CalcRepo => _calcRepo;
 
         //for the device factories
         public void ApplyBitArry([NotNull][ItemNotNull] BitArray br, [NotNull] CalcLoadType lt)
@@ -287,35 +288,34 @@ namespace CalculationEngine.HouseholdElements {
             if (calcProfile.ProfileType == ProfileType.Absolute) {
                 powerUsageFactor = 1 * multiplier;
             }
-            if (_odap == null && !Config.IsInUnitTesting) {
+            if (CalcRepo.Odap == null && !Config.IsInUnitTesting) {
                 throw new LPGException("ODAP was null. Please report");
             }
             var totalDuration = calcProfile.StepValues.Count; //.GetNewLengthAfterCompressExpand(timefactor);
             //calcProfile.CompressExpandDoubleArray(timefactor,allProfiles),
-            if (_odap != null) {
+            if (CalcRepo.Odap != null) {
                 var key = _KeyByLoad[cdl.LoadType];
-                _odap.AddNewStateMachine(calcProfile,
+                StepValues sv = StepValues.MakeStepValues(calcProfile,cdl.PowerStandardDeviation,powerUsageFactor, CalcRepo.NormalRandom);
+                CalcRepo.Odap.AddNewStateMachine(
                     startidx,
-                    cdl.PowerStandardDeviation,
-                    powerUsageFactor,
                     cdl.LoadType.ConvertToDto(),
                     affordanceName,
                     activatingPersonName,
                     calcProfile.Name,
                     calcProfile.DataSource,
                     key,
-                    _calcDeviceDto);
+                    _calcDeviceDto, sv);
             }
 
             if (MatchingAutoDevs.Count > 0) {
-                if (_odap == null) {
+                if (CalcRepo.Odap == null) {
                     throw new LPGException("Odap was null");
                 }
 
                 foreach (CalcAutoDev matchingAutoDev in MatchingAutoDevs) {
                     if (matchingAutoDev._KeyByLoad.ContainsKey(cdl.LoadType)) {
                         var zerokey = matchingAutoDev._KeyByLoad[cdl.LoadType];
-                        _odap.AddZeroEntryForAutoDev(zerokey,
+                        CalcRepo.Odap.AddZeroEntryForAutoDev(zerokey,
                             startidx,
                             totalDuration);
                     }

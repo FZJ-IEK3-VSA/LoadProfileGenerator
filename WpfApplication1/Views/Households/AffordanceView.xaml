@@ -46,6 +46,7 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <TextBlock Grid.ColumnSpan="2"
                                    Style="{StaticResource TextBlockStyle}"
@@ -150,7 +151,6 @@
                         <Button Name="BtnPickColor"
                                 Grid.Row="9"
                                 Grid.Column="1"
-                                Background="{Binding ThisAffordance.CarpetPlotBrush}"
                                 Click="BtnPickColorClick"
                                 Content="Pick Color"
                                 Style="{StaticResource ButtonStyle}" />
@@ -206,11 +206,25 @@
                         <ComboBox Name="CmbActionAfterInterruption"
                                   Grid.Row="15"
                                   Grid.Column="1"
-                                  ItemsSource="{Binding ActionsAfterInterruptions}"
+                                  ItemsSource="{Binding BodilyActivityLevelDict}"
                                   SelectedItem="{Binding ThisAffordance.ActionAfterInterruptionStr}"
                                   Style="{StaticResource ComboBoxStyle}" />
+                        <Label Grid.Row="16"
+                               Grid.Column="0"
+                               Height="28"
+                               Content="Bodily Activity Level"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=CmbBodilyActivityLevel}" />
+                        <ComboBox Name="CmbBodilyActivityLevel"
+                                  Grid.Row="16"
+                                  Grid.Column="1"
+                                  DisplayMemberPath="Value"
+                                  ItemsSource="{Binding BodilyActivityLevelDict}"
+                                  SelectedValue="{Binding ThisAffordance.BodilyActivityLevel}"
+                                  SelectedValuePath="Key"
+                                  Style="{StaticResource ComboBoxStyle}" />
                         <Button Name="CreateTrait"
-                                Grid.Row="16"
+                                Grid.Row="17"
                                 Grid.Column="1"
                                 Click="CreateTrait_OnClick"
                                 Style="{StaticResource ButtonStyle}">
@@ -218,7 +232,7 @@
                         </Button>
 
                         <Button Name="CreateNewAffordance"
-                                Grid.Row="17"
+                                Grid.Row="18"
                                 Grid.Column="1"
                                 Click="CreateAffordance_OnClick"
                                 Style="{StaticResource ButtonStyle}">

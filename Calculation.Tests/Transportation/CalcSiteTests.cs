@@ -42,12 +42,13 @@ namespace Calculation.Tests.Transportation {
             Random r = new Random(1);
             CalcSite src = new CalcSite("src",Guid.NewGuid().ToString(),hhkey);
             CalcSite dst = new CalcSite("dst", Guid.NewGuid().ToString(),hhkey);
-            TransportationHandler th = new TransportationHandler(r);
+            TransportationHandler th = new TransportationHandler();
             //List<CalcTravelRoute> routes = src.GetViableTrafficRoutes(dst);
             //Assert.That(routes.Count,Is.EqualTo( 0));
-
+            var iodap = new Mock<IOnlineDeviceActivationProcessor>();
+            CalcRepo calcRepo = new CalcRepo(odap: iodap.Object, lf: lf, rnd: r);
             CalcTravelRoute firstRoute = new CalcTravelRoute("route1",src,dst, th.VehicleDepot,
-                th.LocationUnlimitedDevices,lf,hhkey, Guid.NewGuid().ToString());
+                th.LocationUnlimitedDevices,hhkey, Guid.NewGuid().ToString(),calcRepo);
             CalcTransportationDeviceCategory transcategory =
                 new CalcTransportationDeviceCategory("car-category",true, Guid.NewGuid().ToString());
             firstRoute.AddTravelRouteStep("step1", transcategory,1,3600, Guid.NewGuid().ToString());
@@ -64,23 +65,21 @@ namespace Calculation.Tests.Transportation {
             var cdls = new List<CalcDeviceLoad>();
             CalcDeviceLoad cdl = new CalcDeviceLoad("name",1,chargingLoadType,1,1, Guid.NewGuid().ToString());
             cdls.Add(cdl);
-            var iodap = new Mock<IOnlineDeviceActivationProcessor>();
             CalcDeviceDto dto = new CalcDeviceDto("car-device",transcategory.Guid,
                 hhkey,OefcDeviceType.Transportation,transcategory.Name,string.Empty,
                 Guid.NewGuid().ToString(),string.Empty,string.Empty);
             CalcTransportationDevice ctd = new CalcTransportationDevice(transcategory,1,
-                cdls,iodap.Object,100,distanceToEnergyFactor,
+                cdls,100,distanceToEnergyFactor,
                 1000,chargingLoadType,
-                calcSites,calcParameters, lf.OnlineLoggingData,
-                dto);
+                calcSites, dto,calcRepo);
             th.VehicleDepot.Add(ctd);
             //List<CalcTravelRoute> routes3 = src.GetViableTrafficRoutes(dst);
             //Assert.That(routes3.Count, Is.EqualTo(1));
             TimeStep ts = new TimeStep(1,0,false);
-            int? duration = firstRoute.GetDuration(ts, "name",  r,new List<CalcTransportationDevice>());
+            int? duration = firstRoute.GetDuration(ts, "name",  new List<CalcTransportationDevice>());
             Logger.Info("Duration: " + duration);
             Assert.That(duration,Is.EqualTo(60)); // 3600 m bei 1 m/s
-            int? duration2 = firstRoute.GetDuration(ts, "name", r, new List<CalcTransportationDevice>());
+            int? duration2 = firstRoute.GetDuration(ts, "name", new List<CalcTransportationDevice>());
             Assert.That(duration, Is.EqualTo(duration2)); // 3600 m bei 1 m/s*/
             wd.CleanUp();
         }

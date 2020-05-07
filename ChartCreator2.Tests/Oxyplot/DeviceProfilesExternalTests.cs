@@ -20,7 +20,7 @@ namespace ChartCreator2.Tests.Oxyplot {
             cs.StartHousehold(2,  GlobalConsts.CSVCharacter, LoadTypePriority.Mandatory,
                 configSetter: x => {
                     x.CSVCharacter = ";";
-                    x.ApplyOptionDefault(OutputFileDefault.None);
+                    x.ApplyOptionDefault(OutputFileDefault.NoFiles);
                     x.Enable(CalcOption.DeviceProfileExternalEntireHouse);
                     x.Enable(CalcOption.HouseholdContents);
                     x.ExternalTimeResolution = "01:00:00";

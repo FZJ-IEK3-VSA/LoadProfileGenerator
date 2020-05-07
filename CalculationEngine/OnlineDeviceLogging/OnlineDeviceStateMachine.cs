@@ -38,6 +38,30 @@ using Common.JSON;
 using JetBrains.Annotations;
 
 namespace CalculationEngine.OnlineDeviceLogging {
+    public class StepValues {
+        private StepValues([NotNull] List<double> values)
+        {
+            Values = values;
+        }
+        [NotNull]
+        public  static StepValues MakeStepValues([NotNull] CalcProfile dstCalcProfile, double powerStandardDeviation, double powerUsage, [NotNull] NormalRandom nr)
+        {
+
+            var values = new List<double>(dstCalcProfile.StepValues);
+            for (var i = 0; i < values.Count; i++)
+            {
+                double spread = 1;
+                if (Math.Abs(powerStandardDeviation) > 0.00000001)
+                {
+                    spread = nr.NextDouble(1, powerStandardDeviation);
+                }
+                values[i] = values[i] * powerUsage * spread;
+            }
+            return new StepValues(values);
+        }
+        [NotNull]
+        public List<double> Values { get; }
+    }
     public class OnlineDeviceStateMachine {
         [NotNull]
         private readonly string _deviceName;
@@ -46,9 +70,10 @@ namespace CalculationEngine.OnlineDeviceLogging {
         [NotNull] private readonly TimeStep _startTimeStep;
         //private readonly OefcKey _zek;
 
-        public OnlineDeviceStateMachine([NotNull] CalcProfile dstCalcProfile, [NotNull] TimeStep startTimeStep,
-            double powerStandardDeviation, double powerUsage, [NotNull] NormalRandom nr, [NotNull] CalcLoadTypeDto loadType,
-            [NotNull] string deviceName, OefcKey deviceKey, [NotNull] string affordanceName, [NotNull] CalcParameters calcParameters) {
+        public OnlineDeviceStateMachine( [NotNull] TimeStep startTimeStep,
+              [NotNull] CalcLoadTypeDto loadType,
+            [NotNull] string deviceName, OefcKey deviceKey, [NotNull] string affordanceName, [NotNull] CalcParameters calcParameters,
+                                         [NotNull] StepValues stepValues) {
             //_zek = new ZeroEntryKey(deviceKey.HouseholdKey, deviceKey.ThisDeviceType,deviceKey.DeviceGuid,deviceKey.LocationGuid);
             _deviceName = deviceName;
             _calcParameters = calcParameters;
@@ -58,14 +83,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
             // time profile einladen, zeitlich variieren, normalverteilt variieren und dann als stepvalues speichern
           ////    throw new LPGException("power usage factor was 0. this is a bug. Device " + deviceName + ", Loadtype " + loadType);
             //}
-            StepValues = new List<double>(dstCalcProfile.StepValues);
-            for (var i = 0; i < StepValues.Count; i++) {
-                double spread = 1;
-                if (Math.Abs(powerStandardDeviation) > 0.00000001) {
-                    spread = nr.NextDouble(1, powerStandardDeviation);
-                }
-                StepValues[i] = StepValues[i] * powerUsage * spread;
-            }
+            StepValues = stepValues;
             AffordanceName = affordanceName;
             HouseholdKey = deviceKey.HouseholdKey;
         }
@@ -82,14 +100,14 @@ namespace CalculationEngine.OnlineDeviceLogging {
         public CalcLoadTypeDto LoadType { get; }
 
         [NotNull]
-        public List<double> StepValues { get; }
+        public StepValues StepValues { get; }
 
         public double CalculateOfficialEnergyUse() {
             var settlingsteps = _calcParameters.DummyCalcSteps;
             // take everything
             if (_startTimeStep.InternalStep >= settlingsteps &&
-                _startTimeStep.InternalStep + StepValues.Count < _calcParameters.InternalTimesteps) {
-                return StepValues.Sum();
+                _startTimeStep.InternalStep + StepValues.Values.Count < _calcParameters.InternalTimesteps) {
+                return StepValues.Values.Sum();
             }
             var firststep = 0;
             if (_startTimeStep.InternalStep < _calcParameters.DummyCalcSteps) {
@@ -98,17 +116,17 @@ namespace CalculationEngine.OnlineDeviceLogging {
             if (firststep < 0) {
                 throw new LPGException("below 0");
             }
-            var laststep = StepValues.Count;
-            if (_startTimeStep.InternalStep + StepValues.Count > _calcParameters.InternalTimesteps) {
-                var diff = _startTimeStep.InternalStep + StepValues.Count - _calcParameters.InternalTimesteps;
+            var laststep = StepValues.Values.Count;
+            if (_startTimeStep.InternalStep + StepValues.Values.Count > _calcParameters.InternalTimesteps) {
+                var diff = _startTimeStep.InternalStep + StepValues.Values.Count - _calcParameters.InternalTimesteps;
                 laststep -= diff;
             }
-            if (laststep > StepValues.Count) {
+            if (laststep > StepValues.Values.Count) {
                 throw new LPGException("above length");
             }
             double sum1 = 0;
             for (var i = firststep; i < laststep; i++) {
-                sum1 += StepValues[i];
+                sum1 += StepValues.Values[i];
             }
             return sum1;
         }
@@ -131,14 +149,14 @@ namespace CalculationEngine.OnlineDeviceLogging {
             if (time.InternalStep < 0) {
                 return 0;
             }
-            if (time.InternalStep >= StepValues.Count) {
+            if (time.InternalStep >= StepValues.Values.Count) {
                 return 0;
             }
-            return StepValues[time.InternalStep];
+            return StepValues.Values[time.InternalStep];
         }
 
         public bool IsExpired([NotNull] TimeStep timestep) {
-            if (timestep >= _startTimeStep.AddSteps( StepValues.Count)) {
+            if (timestep >= _startTimeStep.AddSteps( StepValues.Values.Count)) {
                 return true;
             }
             return false;

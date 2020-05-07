@@ -144,7 +144,7 @@ namespace CalculationController.DtoFactories
                     aff.Affordance.IsInterruptable, aff.Affordance.IsInterrupting, variableOps, variableRequirements,
                     aff.Affordance.ActionAfterInterruption, timeLimitName, aff.Weight,
                     aff.Affordance.RequireAllDesires, aff.SrcTraitName,
-                    Guid.NewGuid().ToString(), availabilityDataReference,householdKey);
+                    Guid.NewGuid().ToString(), availabilityDataReference,householdKey, aff.Affordance.BodilyActivityLevel);
                 foreach (var devtup in aff.Affordance.AffordanceDevices)
                 {
                     MakeAffordanceDevices(calcloc, internalStepSize, ltdict, allDeviceActions, aff, caff, devtup, deviceDtosAtLocation,

@@ -33,7 +33,7 @@ namespace Common.Tests.SQLResultLogging.InputLoggers
             CalcAffordanceDto cadto = new CalcAffordanceDto("blub",1,cpd,"locname","locguid",true,new List<CalcDesireDto>(),
                 1,100,PermittedGender.All,true,1,1,1,1,"affcat",false,false,new List<CalcAffordanceVariableOpDto>(),
                 new List<VariableRequirementDto>(),ActionAfterInterruption.GoBackToOld,
-                "timelimitname",100,true,"srctrait","guid", adrd,key);
+                "timelimitname",100,true,"srctrait","guid", adrd,key, BodilyActivityLevel.Low);
 
             cadto.AddDeviceTuple("devname","deviguid",cpd,"calcloadtypename","loadtypeguid",1,new TimeSpan(0,1,0),1,1 );
             List<IHouseholdKey> aes = new List<IHouseholdKey>

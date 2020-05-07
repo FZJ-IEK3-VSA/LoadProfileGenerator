@@ -62,13 +62,12 @@ namespace CalculationController.Tests {
 
             var cmf = new CalcManagerFactory();
             var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            CalculationProfiler calculationProfiler = new CalculationProfiler();
             CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
                 sim.TemperatureProfiles[0],sim.Houses[0],EnergyIntensityType.Random,
                 false,version,null,LoadTypePriority.RecommendedForHouses,null,null,null,
                 sim.MyGeneralConfig.AllEnabledOptions(),new DateTime(2015,1,1),new DateTime(2015,1,31),
                 new TimeSpan(0,1,0),";",5, new TimeSpan(0, 15, 0),false,false,false, 3,5,
-                calculationProfiler);
+                cp);
             var cm = cmf.GetCalcManager(sim, path,csps,  false);
 
             bool ReportCancelFunc()
@@ -332,7 +331,7 @@ namespace CalculationController.Tests {
             var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass());
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
-            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.None);
+            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
             //sim.MyGeneralConfig.Enable(CalcOption.LogAllMessages);
             Assert.AreNotEqual(null, sim);
             var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
@@ -383,7 +382,7 @@ namespace CalculationController.Tests {
         {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString) {MyGeneralConfig = {ExternalTimeResolution = "00:15:00"}};
-            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.None);
+            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
             sim.MyGeneralConfig.Enable(CalcOption.TotalsPerDevice);
             Assert.AreNotEqual(null, sim);
             var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
@@ -413,7 +412,7 @@ namespace CalculationController.Tests {
 
                 CalcManager.ExitCalcFunction = false;
                 cm.Run(ReportCancelFunc);
-                cm.Logfile.Close();
+                cm.CalcRepo.Logfile.Close();
                 Thread.Sleep(500);
                 wd1.CleanUp();
             }
@@ -426,7 +425,7 @@ namespace CalculationController.Tests {
         {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString) {MyGeneralConfig = {ExternalTimeResolution = "00:15:00"}};
-            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.None);
+            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
             sim.MyGeneralConfig.Enable(CalcOption.OverallSum);
             sim.MyGeneralConfig.Enable(CalcOption.IndividualSumProfiles);
             sim.MyGeneralConfig.Enable(CalcOption.SumProfileExternalEntireHouse);
@@ -456,7 +455,7 @@ namespace CalculationController.Tests {
 
             CalcManager.ExitCalcFunction = false;
             cm.Run(ReportCancelFunc);
-            cm.Logfile.Close();
+            cm.CalcRepo.Logfile.Close();
             DirectoryInfo di = new DirectoryInfo(wd1.Combine("Results"));
             var files = di.GetFiles("*.csv");
             foreach (var file in files) {
@@ -503,7 +502,7 @@ namespace CalculationController.Tests {
             foreach (CalcOption option in Enum.GetValues(typeof(CalcOption))) {
                 Logger.Info("Testing option " + option);
                 var calcstart = DateTime.Now;
-                sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.None);
+                sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
                 sim.MyGeneralConfig.Enable(option);
                 Assert.AreNotEqual(null, sim);
 
@@ -626,7 +625,7 @@ namespace CalculationController.Tests {
             var sim = new Simulator(db.ConnectionString);
             var calcstart = DateTime.Now;
 
-            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.None);
+            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
             sim.MyGeneralConfig.Disable(CalcOption.OverallSum);
             sim.MyGeneralConfig.Enable(CalcOption.IndividualSumProfiles);
             sim.MyGeneralConfig.Enable(CalcOption.MakeGraphics);
@@ -733,7 +732,7 @@ namespace CalculationController.Tests {
             var sim = new Simulator(db.ConnectionString);
             var calcstart = DateTime.Now;
 
-            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.None);
+            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
             sim.MyGeneralConfig.Enable(CalcOption.TotalsPerLoadtype);
             //sim.MyGeneralConfig.Enable(CalcOption.ActivationFrequencies);
             //ChartLocalizer.ShouldTranslate = true;
@@ -830,7 +829,7 @@ namespace CalculationController.Tests {
             Directory.CreateDirectory(path);
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
-            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.None);
+            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
             sim.MyGeneralConfig.Enable(CalcOption.AffordanceEnergyUse);
             sim.MyGeneralConfig.Enable(CalcOption.EnergyCarpetPlot);
             sim.MyGeneralConfig.Enable(CalcOption.ActivationFrequencies);
@@ -880,7 +879,7 @@ namespace CalculationController.Tests {
                     RandomSeed = 5
                 }
             };
-            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.None);
+            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
             sim.MyGeneralConfig.Enable(CalcOption.TotalsPerLoadtype);
             sim.MyGeneralConfig.CSVCharacter = ";";
             Assert.AreNotEqual(null, sim);
@@ -938,7 +937,7 @@ namespace CalculationController.Tests {
                     RandomSeed = 5
                 }
             };
-            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.None);
+            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
             sim.MyGeneralConfig.Enable(CalcOption.TotalsPerLoadtype);
             sim.MyGeneralConfig.CSVCharacter = ";";
 
@@ -1008,7 +1007,7 @@ namespace CalculationController.Tests {
             sim.MyGeneralConfig.RandomSeed = 5;
             sim.MyGeneralConfig.CSVCharacter = ";";
 
-            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.None);
+            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
             sim.MyGeneralConfig.Enable(CalcOption.TotalsPerLoadtype);
             sim.MyGeneralConfig.Enable(CalcOption.DeviceProfiles);
             //sim.MyGeneralConfig.Enable(CalcOption.ActivationFrequencies);
@@ -1088,7 +1087,7 @@ namespace CalculationController.Tests {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
             var calcstart = DateTime.Now;
-            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.None);
+            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
             sim.MyGeneralConfig.Enable(CalcOption.OverallSum);
             sim.MyGeneralConfig.Enable(CalcOption.HouseholdContents);
             //sim.MyGeneralConfig.Enable(CalcOption.LocationCarpetPlot);

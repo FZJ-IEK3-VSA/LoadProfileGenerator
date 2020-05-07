@@ -963,7 +963,7 @@ namespace Database.Tables.Houses {
                 var calcSettings = new JsonCalcSpecification(_calcSpecification) {
                     GeographicLocation = GeographicLocation?.GetJsonReference(),
                     TemperatureProfile = TemperatureProfile?.GetJsonReference(),
-                    DefaultForOutputFiles = OutputFileDefault.None
+                    DefaultForOutputFiles = OutputFileDefault.NoFiles
                 };
 
 

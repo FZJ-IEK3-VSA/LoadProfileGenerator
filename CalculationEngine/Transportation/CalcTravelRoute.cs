@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Automation.ResultFiles;
 using CalculationEngine.HouseholdElements;
-using CalculationEngine.OnlineLogging;
 using Common;
 using Common.SQLResultLogging.Loggers;
 using JetBrains.Annotations;
@@ -13,8 +11,9 @@ namespace CalculationEngine.Transportation
     public class CalcTravelRoute : CalcBase {
         [NotNull]
         private readonly HouseholdKey _householdkey;
-        [NotNull]
-        private readonly ILogFile _lf;
+
+        private readonly CalcRepo _calcRepo;
+
         [ItemNotNull]
         [NotNull]
         private readonly List<CalcTransportationDevice> _locationUnlimitedDevices;
@@ -27,10 +26,11 @@ namespace CalculationEngine.Transportation
         public CalcTravelRoute([NotNull] string pName, [NotNull] CalcSite siteA, [NotNull] CalcSite siteB,
             [NotNull][ItemNotNull] List<CalcTransportationDevice> vehiclePool,
             [NotNull][ItemNotNull] List<CalcTransportationDevice> locationUnlimitedDevices,
-            [NotNull] ILogFile lf, [NotNull] HouseholdKey householdkey, [NotNull] string guid) : base(pName, guid)
+            [NotNull] HouseholdKey householdkey, [NotNull] string guid,
+                               CalcRepo calcRepo) : base(pName, guid)
         {
             _householdkey = householdkey;
-            _lf = lf;
+            _calcRepo = calcRepo;
             SiteA = siteA;
             SiteB = siteB;
             siteA.AddRoute(this);
@@ -81,7 +81,7 @@ namespace CalculationEngine.Transportation
             //_mypicks = new PreviouslyPickedDevices(calcPersonName, currentTimeStep);
             int totalDuration = 0;
             //int slidingTimeStep = currentTimeStep;
-            _lf.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(
+            _calcRepo.Logfile.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(
                 currentTimeStep,
                 _householdkey, "\tActivating " + Name));
             usedDeviceEvents = new List<CalcTravelDeviceUseEvent>();
@@ -100,7 +100,7 @@ namespace CalculationEngine.Transportation
                 usedDeviceEvents.Add(new CalcTravelDeviceUseEvent(device, pickedDuration,step.DistanceOfStepInM));
                 //step.CalculateDurationInTimestepsAndPickDevice(slidingTimeStep, out CalcTransportationDevice pickedDevice,
                 //out int durationForPickedDeviceInTimesteps, SiteA, _vehiclePool, _locationUnlimitedDevices, rnd);
-                _lf.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(
+                _calcRepo.Logfile.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(
                     currentTimeStep,
                     _householdkey,
                     "\tActiviating step " + step.Name + " Device " + device.Name + " Distance: "
@@ -119,12 +119,14 @@ namespace CalculationEngine.Transportation
         public void AddTravelRouteStep([NotNull] string stepName, [NotNull] CalcTransportationDeviceCategory deviceCategory,
             int stepNumber, double distanceInM, [NotNull] string guid)
         {
-            CalcTravelRouteStep trs = new CalcTravelRouteStep(stepName, deviceCategory, stepNumber, distanceInM, guid,_vehiclePool);
+            CalcTravelRouteStep trs = new CalcTravelRouteStep(
+                stepName, deviceCategory, stepNumber,
+                distanceInM, guid,_vehiclePool, _calcRepo);
             Steps.Add(trs);
         }
 
         [CanBeNull]
-        public int? GetDuration([NotNull] TimeStep currentTimeStep, [NotNull] string calcPersonName, [NotNull] Random rnd,
+        public int? GetDuration([NotNull] TimeStep currentTimeStep, [NotNull] string calcPersonName,
                                 [ItemNotNull] [NotNull] List<CalcTransportationDevice> allTransportationDevices)
         {
             if (_mypicks.Timestep == currentTimeStep && _mypicks.CalcPersonName == calcPersonName) {
@@ -140,7 +142,7 @@ namespace CalculationEngine.Transportation
                     out CalcTransportationDevice pickedDevice,
                     out int? durationForPickedDeviceInTimesteps,
                     _vehiclePool,
-                    _locationUnlimitedDevices, rnd,deviceAtSrc);
+                    _locationUnlimitedDevices, deviceAtSrc);
                 if (!success) {
                     //this travel route step not now available, thus the entire route is invalid.
                     return null;
@@ -162,7 +164,7 @@ namespace CalculationEngine.Transportation
 
             picks.PreviouslyCalculatedTimeSteps = totalDuration;
             _mypicks = picks;
-            _lf.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(
+            _calcRepo.Logfile.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(
                 currentTimeStep,
                 _householdkey,
                 "\t\t\tCalculated a duration for the route of " + totalDuration));

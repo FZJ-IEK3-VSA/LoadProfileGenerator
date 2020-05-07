@@ -49,7 +49,8 @@ namespace CalculationEngine.HouseholdElements
         public void AddExecutionEntry([NotNull] string name, double value, [NotNull] CalcLocation location, VariableAction variableAction,
                                       [NotNull] TimeStep timeStep, [NotNull] string variableGuid)
         {
-            _variableOperator.AddEntry(name,value,location,variableAction,timeStep,variableGuid);
+            _variableOperator.AddEntry(name,value,location,variableAction,
+                timeStep,variableGuid);
         }
 
         public void RegisterVariable([NotNull] CalcVariable variable)

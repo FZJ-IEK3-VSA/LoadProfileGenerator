@@ -181,7 +181,7 @@ namespace CalculationController.Tests.CalcFactories {
             if (light != null) {
                 Logger.Info(light.SubDevices.Count.ToString(CultureInfo.CurrentCulture));
             }
-            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.None);
+            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
             sim.MyGeneralConfig.Enable(CalcOption.TotalsPerLoadtype);
             sim.MyGeneralConfig.Enable(CalcOption.TotalsPerDevice);
             sim.MyGeneralConfig.Enable(CalcOption.MakePDF);
@@ -236,7 +236,7 @@ namespace CalculationController.Tests.CalcFactories {
             if (light != null) {
                 Logger.Info("Light devices:" + light.SubDevices.Count);
             }
-            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.None);
+            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
             sim.MyGeneralConfig.Enable(CalcOption.OverallSum);
             Assert.AreNotEqual(null, sim);
 
@@ -320,7 +320,7 @@ namespace CalculationController.Tests.CalcFactories {
                     }
                 }
             }
-            cm.Logfile.Close();
+            cm.CalcRepo.Logfile.Close();
             db.Cleanup();
             wd.CleanUp();
         }

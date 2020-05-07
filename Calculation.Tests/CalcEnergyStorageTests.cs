@@ -51,7 +51,7 @@ namespace Calculation.Tests {
             CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();
             var lf = MakeLogfile(wd.WorkingDirectory,calcParameters, wd.InputDataLogger,wd.SqlResultLoggingService);
 
-            var odap = new OnlineDeviceActivationProcessor(NormalRandom, lf,calcParameters);
+            var odap = new OnlineDeviceActivationProcessor( lf,calcParameters);
             var clt = new CalcLoadType("clt1",  "W", "kWh", 1, true, Guid.NewGuid().ToString());
             string deviceGuid = Guid.NewGuid().ToString();
             HouseholdKey hhkey = new HouseholdKey("HH1");
@@ -64,18 +64,19 @@ namespace Calculation.Tests {
             var timestepValues = new List<double>(timestepValue);
             var cp = new CalcProfile("myCalcProfile", Guid.NewGuid().ToString(), timestepValues,
                 ProfileType.Absolute, "synthetic");
-            odap.AddNewStateMachine(cp, new TimeStep(1,0,true),
-                0,  -10,  clt.ConvertToDto(), "blub",
-                "name1", "p1", "syn", key,cdd);
-            odap.AddNewStateMachine(cp, new TimeStep(3, 0, true)
-                , 0, -100,  clt.ConvertToDto(), "blub",
-                "name2", "p1", "syn",key,cdd);
-            odap.AddNewStateMachine(cp, new TimeStep(5, 0, true),
-                0,  10,
-                clt.ConvertToDto(), "blub",  "name3", "p3", "syn",key,cdd);
-            odap.AddNewStateMachine(cp, new TimeStep(7, 0, true),
-                0, 100,  clt.ConvertToDto(),
-                "blub", "name4", "p4", "syn",key,cdd);
+            StepValues sv1 = StepValues.MakeStepValues(cp,0,-10, NormalRandom);
+            odap.AddNewStateMachine( new TimeStep(1,0,true),
+                clt.ConvertToDto(), "blub",
+                "name1", "p1", "syn", key,cdd, sv1);
+            StepValues sv2 = StepValues.MakeStepValues(cp, 0, -100, NormalRandom);
+            odap.AddNewStateMachine( new TimeStep(3, 0, true),
+                 clt.ConvertToDto(), "blub","name2", "p1", "syn",key,cdd, sv2);
+            StepValues sv3 = StepValues.MakeStepValues(cp, 0, 10, NormalRandom);
+            odap.AddNewStateMachine( new TimeStep(5, 0, true),
+                clt.ConvertToDto(), "blub",  "name3", "p3", "syn",key,cdd, sv3);
+            StepValues sv4 = StepValues.MakeStepValues(cp, 0, 100, NormalRandom);
+            odap.AddNewStateMachine( new TimeStep(7, 0, true),
+                clt.ConvertToDto(), "blub", "name4", "p4", "syn",key,cdd, sv4);
             double[] resultValues = {0, -10.0, 0, -100, 0, 10, 0, 100, 0, 0};
             var ces = new CalcEnergyStorage(  odap, clt.ConvertToDto(),
                 100, 7, 0, 0, 5, 20, null,

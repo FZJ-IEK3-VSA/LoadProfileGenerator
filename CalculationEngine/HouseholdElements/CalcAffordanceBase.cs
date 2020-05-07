@@ -26,12 +26,10 @@
 
 //-----------------------------------------------------------------------
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Automation;
-using CalculationEngine.Helper;
 using CalculationEngine.Transportation;
 using Common;
 using Common.Enums;
@@ -43,6 +41,9 @@ namespace CalculationEngine.HouseholdElements {
     public abstract class CalcAffordanceBase : CalcBase, ICalcAffordanceBase {
         private static int _calcAffordanceBaseSerialTracker;
 
+        public BodilyActivityLevel BodilyActivityLevel { get; }
+        public CalcRepo CalcRepo { get; }
+
         private readonly ActionAfterInterruption _actionAfterInterruption;
         [ItemNotNull] [NotNull] private readonly BitArray _isBusyArray;
 
@@ -53,16 +54,19 @@ namespace CalculationEngine.HouseholdElements {
                                      [NotNull] string pAffCategory, bool isInterruptable, bool isInterrupting,
                                      ActionAfterInterruption actionAfterInterruption, int weight,
                                      bool requireAllAffordances,
-                                     CalcAffordanceType calcAffordanceType, [NotNull] CalcParameters calcParameters,
+                                     CalcAffordanceType calcAffordanceType,
                                      [NotNull] string guid,
                                      [ItemNotNull] [NotNull] BitArray isBusyArray,
-                                         [CanBeNull] CalcSite site = null) : base(pName, guid)
+                                     BodilyActivityLevel bodilyActivityLevel,[NotNull] CalcRepo calcRepo,
+                                     [CanBeNull] CalcSite site = null) : base(pName, guid)
         {
             CalcAffordanceType = calcAffordanceType;
+            BodilyActivityLevel = bodilyActivityLevel;
+            CalcRepo = calcRepo;
             Site = site;
             ParentLocation = loc;
             Satisfactionvalues = satisfactionvalues;
-            _isBusyArray = new BitArray(calcParameters.InternalTimesteps);
+            _isBusyArray = new BitArray(calcRepo.CalcParameters.InternalTimesteps);
             //copy to make sure that it is a separate instance
             for (var i = 0; i < isBusyArray.Length; i++)
             {
@@ -113,9 +117,8 @@ namespace CalculationEngine.HouseholdElements {
 
         [NotNull]
         [ItemNotNull]
-        public abstract List<CalcSubAffordance> CollectSubAffordances([NotNull] TimeStep time, [NotNull] NormalRandom nr,
+        public abstract List<CalcSubAffordance> CollectSubAffordances([NotNull] TimeStep time,
                                                                       bool onlyInterrupting,
-                                                                      [NotNull] Random r,
                                                                       [NotNull] CalcLocation srcLocation);
 
         public abstract int DefaultPersonProfileLength { get; }
@@ -127,7 +130,7 @@ namespace CalculationEngine.HouseholdElements {
         //public abstract ICalcProfile CollectPersonProfile();
 
         [SuppressMessage("ReSharper", "UnusedParameter.Global")]
-        public abstract bool IsBusy([NotNull] TimeStep time, [NotNull] NormalRandom nr, [NotNull] Random r,
+        public abstract bool IsBusy([NotNull] TimeStep time,
                                     [NotNull] CalcLocation srcLocation, [NotNull] string calcPersonName,
                                     bool clearDictionaries = true);
 

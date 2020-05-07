@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using CalculationEngine.HouseholdElements;
 using Common;
@@ -9,15 +8,18 @@ namespace CalculationEngine.Transportation {
     public class CalcTravelRouteStep : CalcBase {
         private readonly double _distanceOfStepInM;
         [ItemNotNull] [NotNull] private readonly List<CalcTransportationDevice> _vehiclePool;
+        private readonly CalcRepo _calcRepo;
 
         public CalcTravelRouteStep([NotNull] string pName,
-            [NotNull] CalcTransportationDeviceCategory transportationDeviceCategory, int stepNumber, double distanceInM,
-                                   [NotNull] string guid, [NotNull] [ItemNotNull] List<CalcTransportationDevice> vehiclePool) : base(pName, guid)
+                                   [NotNull] CalcTransportationDeviceCategory transportationDeviceCategory, int stepNumber, double distanceInM,
+                                   [NotNull] string guid, [NotNull] [ItemNotNull] List<CalcTransportationDevice> vehiclePool,
+                                   CalcRepo calcRepo) : base(pName, guid)
         {
             TransportationDeviceCategory = transportationDeviceCategory;
             StepNumber = stepNumber;
             _distanceOfStepInM = distanceInM;
             _vehiclePool = vehiclePool;
+            _calcRepo = calcRepo;
         }
 
         [NotNull]
@@ -42,7 +44,7 @@ namespace CalculationEngine.Transportation {
                                                               [CanBeNull] out CalcTransportationDevice pickedDevice,
             [CanBeNull] out int? pickeddurationInTimesteps,
             [NotNull][ItemNotNull] List<CalcTransportationDevice> vehiclepool,
-            [NotNull][ItemNotNull] List<CalcTransportationDevice> locationUnlimitedDevices, [NotNull] Random rnd,
+            [NotNull][ItemNotNull] List<CalcTransportationDevice> locationUnlimitedDevices,
             [ItemNotNull] [NotNull] List<CalcTransportationDevice> devicesAtSrcLoc)
         {
             int durationInTimesteps;
@@ -58,7 +60,7 @@ namespace CalculationEngine.Transportation {
                 }
                 while (srcdevices.Count > 0) {
                     //pick a random one and try it out
-                    CalcTransportationDevice td = srcdevices[rnd.Next(srcdevices.Count)];
+                    CalcTransportationDevice td = srcdevices[_calcRepo.Rnd.Next(srcdevices.Count)];
                     durationInTimesteps = td.CalculateDurationOfTimestepsForDistance(_distanceOfStepInM);
                     if (td.IsBusy(timestepOfThisStep, durationInTimesteps)) {
                         srcdevices.Remove(td);
@@ -89,7 +91,7 @@ namespace CalculationEngine.Transportation {
             if (correctcategoryDevices.Count == 0) {
                 throw new DataIntegrityException("No transportation device for the category " + TransportationDeviceCategory.Name + " could be found.");
             }
-            pickedDevice = correctcategoryDevices[rnd.Next(correctcategoryDevices.Count)];
+            pickedDevice = correctcategoryDevices[_calcRepo.Rnd.Next(correctcategoryDevices.Count)];
             //maybe put in some kind of time limits for busses for example to not run on the weekend
             durationInTimesteps = pickedDevice.CalculateDurationOfTimestepsForDistance(_distanceOfStepInM);
             pickeddurationInTimesteps = durationInTimesteps;

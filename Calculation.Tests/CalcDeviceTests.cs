@@ -71,13 +71,14 @@ namespace Calculation.Tests {
                 cdls.Add(cdl);
 
                 OnlineDeviceActivationProcessor odap =
-                    new OnlineDeviceActivationProcessor(NormalRandom, lf, calcParameters);
+                    new OnlineDeviceActivationProcessor( lf, calcParameters);
                 string deviceCategoryGuid = Guid.NewGuid().ToString();
                 CalcDeviceDto cdd = new CalcDeviceDto("bla", deviceCategoryGuid
                     , new HouseholdKey("HH-6"), OefcDeviceType.Device, "category",
                     string.Empty, Guid.NewGuid().ToString(),cloc.Guid,cloc.Name);
-                CalcDevice cd = new CalcDevice( cdls,  odap, cloc,
-                     calcParameters,cdd );
+                CalcRepo calcRepo = new CalcRepo(odap:odap, calcParameters:calcParameters, normalRandom:NormalRandom);
+                CalcDevice cd = new CalcDevice( cdls,   cloc,
+                     cdd,calcRepo );
                 CalcProfile cp = MakeCalcProfile5Min100();
                 TimeStep ts1 = new TimeStep(1,calcParameters);
                 cd.SetAllLoadTypesToTimeprofile(cp, ts1, "test", "name1", 1);

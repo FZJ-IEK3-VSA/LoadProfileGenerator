@@ -34,7 +34,7 @@ namespace SimulationEngineLib.WebRunner
             DateTime now = DateTime.Now;
 
             sim.MyGeneralConfig.DestinationPath = di.FullName;
-            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.None);
+            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
             sim.MyGeneralConfig.Enable(CalcOption.OverallSum);
             sim.MyGeneralConfig.Enable(CalcOption.TotalsPerLoadtype);
             Logger.LogToFile = true;

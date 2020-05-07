@@ -59,12 +59,13 @@ namespace Calculation.Tests.Transportation
             HouseholdKey key = new HouseholdKey("hh1");
             lf.InitHousehold(key,"Household",HouseholdKeyType.Household,"Description", null, null);
             CalcLoadType chargingCalcLoadType = new CalcLoadType("charging load","W","kWh",0.50,false, Guid.NewGuid().ToString());
-            OnlineDeviceActivationProcessor odap = new OnlineDeviceActivationProcessor(nr,lf,calcParameters);
+            CalcRepo calcRepo = new CalcRepo(rnd:rnd, normalRandom:nr, lf:lf);
+            OnlineDeviceActivationProcessor odap = new OnlineDeviceActivationProcessor(lf,calcParameters);
             CalcSite srcSite = new CalcSite("srcsite",  Guid.NewGuid().ToString(),key);
             CalcSite dstSite = new CalcSite("dstSite", Guid.NewGuid().ToString(),key);
             CalcChargingStation station = new CalcChargingStation(category,
-                chargingCalcLoadType, 500,lf.OnlineLoggingData,
-                "stationname","stationguid",key,chargingCalcLoadType);
+                chargingCalcLoadType, 500,
+                "stationname","stationguid",key,chargingCalcLoadType,calcRepo);
             dstSite.ChargingDevices.Add(station);
             List<CalcSite> calcSites = new List<CalcSite>
             {
@@ -80,10 +81,10 @@ namespace Calculation.Tests.Transportation
                 new CalcDeviceLoad("load1", 10, lt2, 10000, 0,Guid.NewGuid().ToString())
             };
             CalcTransportationDevice ctd = new CalcTransportationDevice(category,
-                10,loads,odap,
+                10,loads,
                 10000,1,1000,
                 chargingCalcLoadType,calcSites,
-                calcParameters, old, cdd);
+                 cdd,calcRepo);
             TimeStep start = new TimeStep(1, 0, false);
             TimeStep end = new TimeStep(11, 0, false);
             ctd.Activate(start, 10,srcSite,dstSite,"myroute","myperson", start,

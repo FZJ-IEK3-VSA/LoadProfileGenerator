@@ -79,6 +79,8 @@ namespace Database.Tables.BasicHouseholds {
         private bool _randomDesireResults;
         private bool _requireAllDesires;
 
+        private BodilyActivityLevel _bodilyActivityLevel;
+
         [CanBeNull] private TimeLimit _timeLimit;
 
         private decimal _timeStandardDeviation;
@@ -90,7 +92,8 @@ namespace Database.Tables.BasicHouseholds {
             [CanBeNull] TimeLimit timeLimitLimit, [CanBeNull] string description, [NotNull] string connectionString,
             bool isInterruptable,
             bool isInterrupting, int minimumAge, int maximumAge, bool randomResults,
-            ActionAfterInterruption actionAfterInterruption, bool requireAllDesires, [NotNull] string guid) : base(pName, TableName,
+            ActionAfterInterruption actionAfterInterruption, bool requireAllDesires, [NotNull] string guid,
+            BodilyActivityLevel bodilyActivityLevel) : base(pName, TableName,
             connectionString, guid)
         {
             RandomDesireResults = false;
@@ -118,6 +121,7 @@ namespace Database.Tables.BasicHouseholds {
             TypeDescription = "Affordance";
             _affStandby = new ObservableCollection<AffordanceStandby>();
             _requireAllDesires = requireAllDesires;
+            _bodilyActivityLevel = bodilyActivityLevel;
         }
 
         [UsedImplicitly]
@@ -127,6 +131,13 @@ namespace Database.Tables.BasicHouseholds {
                 SetValueWithNotify(value, ref _actionAfterInterruption, nameof(ActionAfterInterruption));
                 OnPropertyChanged(nameof(ActionAfterInterruptionStr));
             }
+        }
+
+        [UsedImplicitly]
+        public BodilyActivityLevel BodilyActivityLevel
+        {
+            get => _bodilyActivityLevel;
+            set => SetValueWithNotify(value, ref _bodilyActivityLevel, nameof(BodilyActivityLevel));
         }
 
         [UsedImplicitly]
@@ -426,6 +437,7 @@ namespace Database.Tables.BasicHouseholds {
             var colorint2 = dr.GetInt("CarpetPlotColor2", false, 0, ignoreMissingFields);
             var colorint3 = dr.GetInt("CarpetPlotColor3", false, 0, ignoreMissingFields);
             var colorint4 = dr.GetInt("CarpetPlotColor4", false, 0, ignoreMissingFields);
+            var bodilyactivitylevel =(BodilyActivityLevel) dr.GetInt("BodilyActivityLevel", false, 0, ignoreMissingFields);
             var carpetPlotColor = new ColorRGB((byte) colorint1, (byte) colorint2, (byte) colorint3,
                 (byte) colorint4);
             var timeLimitID = dr.GetNullableIntFromLong("TimeLimitID", false, ignoreMissingFields);
@@ -446,7 +458,7 @@ namespace Database.Tables.BasicHouseholds {
             var guid = GetGuid(dr, ignoreMissingFields);
             var aff = new Affordance(name, tp, id, needsLight, permittedGender, timeStandardDeviation,
                 carpetPlotColor, affCategory, timeLimit, description, connectionString, isInterruptable, isInterrupting,
-                minimumage, maximumage, randomDesireResults, aai, requireAllDesires, guid);
+                minimumage, maximumage, randomDesireResults, aai, requireAllDesires, guid, bodilyactivitylevel);
 
             return aff;
         }
@@ -566,7 +578,7 @@ namespace Database.Tables.BasicHouseholds {
             var aff = new Affordance(FindNewName(isNameTaken, "New Affordance "), null, null, false,
                 PermittedGender.All, 0.1m, new ColorRGB(255, 255, 255), string.Empty, null, string.Empty,
                 connectionString, false, false, 0, 99, false, ActionAfterInterruption.GoBackToOld,
-                false, System.Guid.NewGuid().ToString());
+                false, System.Guid.NewGuid().ToString(), BodilyActivityLevel.Low);
             return aff;
         }
 
@@ -676,7 +688,8 @@ namespace Database.Tables.BasicHouseholds {
                 toImport.TimeStandardDeviation, toImport.CarpetPlotColor, toImport.AffCategory, timeLimit,
                 toImport.Description, dstSim.ConnectionString, toImport.IsInterruptable, toImport.IsInterrupting,
                 toImport.MinimumAge, toImport.MaximumAge, toImport.RandomDesireResults,
-                toImport._actionAfterInterruption, toImport.RequireAllDesires, toImport.Guid);
+                toImport._actionAfterInterruption, toImport.RequireAllDesires, toImport.Guid,
+                toImport.BodilyActivityLevel);
             aff.SaveToDB();
 
             foreach (var affordanceDesire in toImport.AffordanceDesires) {

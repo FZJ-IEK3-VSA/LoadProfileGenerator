@@ -4,9 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Automation;
 using Automation.ResultFiles;
-using CalculationEngine.Helper;
 using CalculationEngine.HouseholdElements;
-using CalculationEngine.OnlineLogging;
 using Common;
 using Common.CalcDto;
 using Common.Enums;
@@ -21,11 +19,9 @@ namespace CalculationEngine.Transportation {
         [NotNull]
         private readonly TransportationHandler _transportationHandler;
         [NotNull]
-        private readonly ILogFile _lf;
-        [NotNull]
         private readonly HouseholdKey _householdkey;
-        [NotNull]
-        private readonly CalcParameters _calcParameters;
+
+        private readonly CalcRepo _calcRepo;
 
         //TODO: fix the requirealldesires flag in the constructor
         [SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields")]
@@ -33,17 +29,16 @@ namespace CalculationEngine.Transportation {
         //private CalcAffordanceBase _MainAffordance;
         public AffordanceBaseTransportDecorator([NotNull] ICalcAffordanceBase sourceAffordance,
             [NotNull] CalcSite site, [NotNull] TransportationHandler transportationHandler,
-            [NotNull] string name,  [NotNull] ILogFile lf, [NotNull] HouseholdKey householdkey, [NotNull] CalcParameters calcParameters,
-                                                [NotNull] string guid)
+            [NotNull] string name,   [NotNull] HouseholdKey householdkey,
+                                                [NotNull] string guid, CalcRepo calcRepo)
             : base(name, guid)
         {
             if (!site.Locations.Contains(sourceAffordance.ParentLocation)) {
                 throw new LPGException("Wrong site. Bug. Please report.");
             }
             _householdkey= householdkey;
-            _calcParameters = calcParameters;
-            lf.OnlineLoggingData.AddTransportationStatus( new TransportationStatus(new TimeStep(0,0,false), householdkey, "Initializing affordance base transport decorator for " + name));
-            _lf = lf;
+            _calcRepo = calcRepo;
+            _calcRepo.OnlineLoggingData.AddTransportationStatus( new TransportationStatus(new TimeStep(0,0,false), householdkey, "Initializing affordance base transport decorator for " + name));
             Site = site;
             _transportationHandler = transportationHandler;
             _sourceAffordance = sourceAffordance;
@@ -68,19 +63,19 @@ namespace CalculationEngine.Transportation {
             int routeduration = route.Activate(startTime,activatorName, out var usedDevices);
 
             if (routeduration == 0) {
-                _lf.OnlineLoggingData.AddTransportationStatus(
+                _calcRepo.OnlineLoggingData.AddTransportationStatus(
                     new TransportationStatus(startTime, _householdkey,
                     "\tActivating " + Name + " at " + startTime + " with no transportation and moving from " + personSourceLocation + " to " + _sourceAffordance.ParentLocation.Name + " for affordance " + _sourceAffordance.Name));
             }
             else {
-                _lf.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(
+                _calcRepo.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(
                     startTime,
                     _householdkey,
                     "\tActivating " + Name + " at " + startTime + " with a transportation duration of " + routeduration + " for moving from " + personSourceLocation + " to " + _sourceAffordance.ParentLocation.Name));
             }
 
             TimeStep affordanceStartTime = startTime.AddSteps(routeduration);
-            if (affordanceStartTime.InternalStep < _calcParameters.InternalTimesteps) {
+            if (affordanceStartTime.InternalStep < _calcRepo.CalcParameters.InternalTimesteps) {
                 _sourceAffordance.Activate(affordanceStartTime, activatorName,  personSourceLocation,
                      out var sourcePersonProfile);
             CalcProfile newPersonProfile = new CalcProfile(
@@ -91,7 +86,7 @@ namespace CalculationEngine.Transportation {
                 newPersonProfile.AppendProfile(sourcePersonProfile);
                 personTimeProfile = newPersonProfile;
                 string usedDeviceNames = String.Join(", ", usedDevices.Select(x => x.Device.Name + "(" + x.DurationInSteps + ")"));
-                _lf.OnlineLoggingData.AddTransportationEvent(_householdkey, activatorName, startTime, personSourceLocation.CalcSite?.Name??"",
+                _calcRepo.OnlineLoggingData.AddTransportationEvent(_householdkey, activatorName, startTime, personSourceLocation.CalcSite?.Name??"",
                     Site.Name,
                     route.Name, usedDeviceNames, routeduration, sourcePersonProfile.StepValues.Count,
                     _sourceAffordance.Name, usedDevices);
@@ -105,7 +100,7 @@ namespace CalculationEngine.Transportation {
                     _sourceAffordance.Name);
                 personTimeProfile = newPersonProfile;
                 string usedDeviceNames = String.Join(", ", usedDevices.Select(x => x.Device.Name + "(" + x.DurationInSteps + ")"));
-                _lf.OnlineLoggingData.AddTransportationEvent(_householdkey, activatorName, startTime,
+                _calcRepo.OnlineLoggingData.AddTransportationEvent(_householdkey, activatorName, startTime,
                     personSourceLocation.CalcSite?.Name ?? "",
                     Site.Name,
                     route.Name, usedDeviceNames, routeduration, newPersonProfile.StepValues.Count,
@@ -128,9 +123,9 @@ namespace CalculationEngine.Transportation {
 
         [NotNull]
         [ItemNotNull]
-        public List<CalcSubAffordance> CollectSubAffordances(TimeStep time, [NotNull] NormalRandom nr, bool onlyInterrupting, [NotNull] Random r,
+        public List<CalcSubAffordance> CollectSubAffordances(TimeStep time, bool onlyInterrupting,
             [NotNull] CalcLocation srcLocation) =>
-            _sourceAffordance.CollectSubAffordances(time, nr, onlyInterrupting, r, srcLocation);
+            _sourceAffordance.CollectSubAffordances(time, onlyInterrupting, srcLocation);
 
         [CanBeNull]
         [ItemNotNull]
@@ -157,7 +152,7 @@ namespace CalculationEngine.Transportation {
 
         public int DefaultPersonProfileLength => _sourceAffordance.DefaultPersonProfileLength;
 
-        public bool IsBusy(TimeStep time, [NotNull] NormalRandom nr, [NotNull] Random r,
+        public bool IsBusy(TimeStep time,
                            [NotNull] CalcLocation srcLocation, [NotNull] string calcPersonName,
             bool clearDictionaries = true)
         {
@@ -170,7 +165,7 @@ namespace CalculationEngine.Transportation {
                 route = _myLastTimeEntry.PreviouslySelectedRoutes[srcLocation];
             }
             else {
-                route = _transportationHandler.GetTravelRouteFromSrcLoc(srcLocation, Site,time,calcPersonName);
+                route = _transportationHandler.GetTravelRouteFromSrcLoc(srcLocation, Site,time,calcPersonName, _calcRepo);
                 _myLastTimeEntry.PreviouslySelectedRoutes.Add(srcLocation, route);
             }
 
@@ -179,19 +174,19 @@ namespace CalculationEngine.Transportation {
             }
 
             // ReSharper disable once PossibleInvalidOperationException
-            int? travelDurationN =(int) route.GetDuration(time, calcPersonName,  r,_transportationHandler.AllMoveableDevices);
+            int? travelDurationN =(int) route.GetDuration(time, calcPersonName,  _transportationHandler.AllMoveableDevices);
             if (travelDurationN == null) {
                 throw new LPGException("Bug: couldn't calculate travel duration for route.");
             }
 
             TimeStep dstStartTime = time.AddSteps(travelDurationN.Value);
-            if (dstStartTime.InternalStep > _calcParameters.InternalTimesteps) {
+            if (dstStartTime.InternalStep > _calcRepo.CalcParameters.InternalTimesteps) {
                 //if the end of the activity is after the simulation, everything is ok.
                 return false;
             }
-            bool result = _sourceAffordance.IsBusy(dstStartTime, nr, r, srcLocation, calcPersonName,
+            bool result = _sourceAffordance.IsBusy(dstStartTime, srcLocation, calcPersonName,
                 clearDictionaries);
-            _lf.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(
+            _calcRepo.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(
                 time,
                 _householdkey, "\t\t" + time  + " @" + srcLocation + " by " + calcPersonName
                                              + "Checking " + Name + " for busyness: " + result + " @time " + dstStartTime
@@ -204,6 +199,8 @@ namespace CalculationEngine.Transportation {
         public bool IsInterruptable => _sourceAffordance.IsInterruptable;
 
         public bool IsInterrupting => _sourceAffordance.IsInterrupting;
+
+        public BodilyActivityLevel BodilyActivityLevel => BodilyActivityLevel.Outside;
 
         public int MaximumAge => _sourceAffordance.MaximumAge;
 

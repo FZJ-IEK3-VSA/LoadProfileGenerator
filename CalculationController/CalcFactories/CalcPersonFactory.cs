@@ -31,33 +31,26 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CalculationEngine.HouseholdElements;
-using CalculationEngine.OnlineLogging;
 using Common;
 using Common.CalcDto;
 using Common.Enums;
-using Common.JSON;
 using JetBrains.Annotations;
 
 namespace CalculationController.CalcFactories {
     public class CalcPersonFactory {
-        [NotNull] private readonly CalcParameters _calcParameters;
+        private readonly CalcRepo _calcRepo;
 
         [NotNull] private readonly List<DateTime> _internalDateTimeForSteps;
 
-        [NotNull] private readonly ILogFile _logFile;
 
-        [NotNull] private readonly Random _random;
-
-        public CalcPersonFactory([NotNull] Random random, [NotNull] ILogFile logFile, [NotNull] CalcParameters calcParameters)
+        public CalcPersonFactory(CalcRepo calcRepo)
         {
-            _random = random;
-            _logFile = logFile;
-            _calcParameters = calcParameters;
+            _calcRepo = calcRepo;
             _internalDateTimeForSteps = new List<DateTime> {
-                calcParameters.InternalStartTime
+                _calcRepo.CalcParameters.InternalStartTime
             };
-            for (var i = 1; i < _calcParameters.InternalTimesteps; i++) {
-                _internalDateTimeForSteps.Add(_internalDateTimeForSteps[i - 1] + _calcParameters.InternalStepsize);
+            for (var i = 1; i < _calcRepo.CalcParameters.InternalTimesteps; i++) {
+                _internalDateTimeForSteps.Add(_internalDateTimeForSteps[i - 1] + _calcRepo.CalcParameters.InternalStepsize);
             }
         }
 
@@ -73,7 +66,7 @@ namespace CalculationController.CalcFactories {
                 var isSick = SetBitArrayWithDateSpans(hhPerson.SicknessSpans);
                 var vacationTimes = SetBitArrayWithDateSpans(hhPerson.VacationSpans);
 
-                var cp = new CalcPerson(hhPerson, _random, _logFile, startLocation, _calcParameters, isSick, vacationTimes);
+                var cp = new CalcPerson(hhPerson, startLocation,  isSick, vacationTimes,_calcRepo);
                 /* repetitionCount, _random,hhPerson.Person.Age, hhPerson.Person.Gender, _logFile,
                  householdKey, startLocation, traitTagName, householdName, _calcParameters, isSick,
                  Guid.NewGuid().ToString());*/
@@ -92,8 +85,8 @@ namespace CalculationController.CalcFactories {
         [ItemNotNull]
         public BitArray SetBitArrayWithDateSpans([NotNull] [ItemNotNull] List<DateSpan> dates)
         {
-            BitArray myArray = new BitArray(_calcParameters.InternalTimesteps);
-            var internalTimeSteps = _calcParameters.InternalTimesteps;
+            BitArray myArray = new BitArray(_calcRepo.CalcParameters.InternalTimesteps);
+            var internalTimeSteps = _calcRepo.CalcParameters.InternalTimesteps;
             //var internalDateTimeForSteps = _calcParameters.InternalDateTimeForSteps;
             foreach (DateSpan span in dates) {
                 for (var i = 0; i < internalTimeSteps; i++) {
@@ -118,7 +111,7 @@ namespace CalculationController.CalcFactories {
                 desire.DecayTime,
                 1,
                 desire.Weight,
-                _calcParameters.TimeStepsPerHour,
+                _calcRepo.CalcParameters.TimeStepsPerHour,
                 desire.CriticalThreshold,
                 sdv,
                 desire.SourceTrait,

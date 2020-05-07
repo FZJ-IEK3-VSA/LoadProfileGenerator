@@ -8,7 +8,7 @@ namespace Automation {
     public class CommentAttribute : Attribute {
         [NotNull] private string _text;
 
-        public CommentAttribute([NotNull] string text, ListPossibleOptions list= ListPossibleOptions.None)
+        public CommentAttribute([NotNull] string text, ListPossibleOptions list= ListPossibleOptions.NoSelection)
         {
             _text = text;
             List = list;
@@ -35,7 +35,7 @@ namespace Automation {
 
                     break;
                 }
-                case ListPossibleOptions.None:
+                case ListPossibleOptions.NoSelection:
                     break;
                 case ListPossibleOptions.ListCalcOptions:
                     wrapped.Add("Possible Options:");

@@ -31,8 +31,6 @@ using System.Collections.Generic;
 using Automation.ResultFiles;
 using CalculationEngine.Helper;
 using CalculationEngine.HouseholdElements;
-using CalculationEngine.OnlineDeviceLogging;
-using CalculationEngine.OnlineLogging;
 using Common;
 using JetBrains.Annotations;
 
@@ -62,8 +60,7 @@ namespace CalculationEngine
         void DumpHouseholdContentsToText();
         void FinishCalculation();
 
-        void Init([NotNull] ILogFile lf, [NotNull] Random randomGenerator, [NotNull] DayLightStatus daylightArray, [NotNull] NormalRandom normalDistributedRandom,
-            [NotNull] IOnlineDeviceActivationProcessor odap, int simulationSeed);
+        void Init( [NotNull] DayLightStatus daylightArray, int simulationSeed);
 //void WriteInformation();
         void RunOneStep([NotNull] TimeStep timestep, DateTime now, bool runProcessing);
     }

@@ -35,7 +35,6 @@ using System.Text;
 using Automation;
 using Automation.ResultFiles;
 using Common;
-using Common.JSON;
 using Common.SQLResultLogging;
 using JetBrains.Annotations;
 
@@ -43,8 +42,8 @@ using JetBrains.Annotations;
 
 namespace CalculationEngine.HouseholdElements {
     public class CalcPersonDesires {
-        [NotNull]
-        private readonly CalcParameters _calcParameters;
+        private readonly CalcRepo _calcRepo;
+
         [NotNull]
         private static readonly Dictionary<Tuple<string, HouseholdKey>, int> _persons =
             new Dictionary<Tuple<string, HouseholdKey>, int>();
@@ -55,11 +54,11 @@ namespace CalculationEngine.HouseholdElements {
         private readonly DateStampCreator _dsc;
         [CanBeNull] private StreamWriter _sw;
 
-        public CalcPersonDesires([NotNull] CalcParameters calcParameters) {
-            _calcParameters = calcParameters;
+        public CalcPersonDesires(CalcRepo calcRepo) {
+            _calcRepo = calcRepo;
             Desires = new Dictionary<int, CalcDesire>();
             _persons.Clear();
-            _dsc = new DateStampCreator(_calcParameters);
+            _dsc = new DateStampCreator(_calcRepo.CalcParameters);
         }
 
         [NotNull]
@@ -72,7 +71,7 @@ namespace CalculationEngine.HouseholdElements {
         }
 
         public void ApplyAffordanceEffect([NotNull][ItemNotNull] List<CalcDesire> satisfactionvalues, bool randomEffect,
-            [NotNull] Random randomGenerator, [NotNull] string affordance) {
+            [NotNull] string affordance) {
             while (_lastAffordances.Count > 10) {
                 _lastAffordances.RemoveAt(0);
             }
@@ -92,12 +91,12 @@ namespace CalculationEngine.HouseholdElements {
                 }
                 var desiresArray = new CalcDesire[Desires.Count];
                 Desires.Values.CopyTo(desiresArray, 0);
-                var affectedCount = randomGenerator.Next(Desires.Count - usedDesires.Count + 1);
+                var affectedCount = _calcRepo.Rnd.Next(Desires.Count - usedDesires.Count + 1);
                 for (var i = 0; i < affectedCount; i++) {
                     CalcDesire d = null;
                     var loopcount = 0;
                     while (d == null) {
-                        var selectedkey = randomGenerator.Next(Desires.Count);
+                        var selectedkey = _calcRepo.Rnd.Next(Desires.Count);
                         d = desiresArray[selectedkey];
                         loopcount++;
                         if (usedDesires.ContainsKey(d)) {
@@ -107,7 +106,7 @@ namespace CalculationEngine.HouseholdElements {
                             throw new LPGException("Random result failed after 500 tries...");
                         }
                     }
-                    d.Value += (decimal) randomGenerator.NextDouble();
+                    d.Value += (decimal)_calcRepo.Rnd.NextDouble();
                     if (d.Value > 1) {
                         d.Value = 1;
                     }
@@ -153,9 +152,9 @@ namespace CalculationEngine.HouseholdElements {
         private decimal CalcTotalDeviation([CanBeNull] out string thoughtstring) {
             decimal totalDeviation = 0;
             StringBuilder sb = null;
-            var makeThoughts = _calcParameters.IsSet(CalcOption.ThoughtsLogfile);
+            var makeThoughts = _calcRepo.CalcParameters.IsSet(CalcOption.ThoughtsLogfile);
             if (makeThoughts) {
-                sb = new StringBuilder(_calcParameters.CSVCharacter);
+                sb = new StringBuilder(_calcRepo.CalcParameters.CSVCharacter);
             }
 
             foreach (var calcDesire in Desires.Values) {
@@ -165,15 +164,15 @@ namespace CalculationEngine.HouseholdElements {
                     totalDeviation += desirevalue;
                     if (makeThoughts) {
                         sb.Append(calcDesire.Name);
-                        sb.Append(_calcParameters.CSVCharacter).Append("'");
+                        sb.Append(_calcRepo.CalcParameters.CSVCharacter).Append("'");
                         sb.Append(deviation.ToString("0#.#", Config.CultureInfo));
                         sb.Append("*");
                         sb.Append(deviation.ToString("0#.#", Config.CultureInfo));
                         sb.Append("*");
                         sb.Append(calcDesire.Weight.ToString("0#.#", Config.CultureInfo));
-                        sb.Append(_calcParameters.CSVCharacter);
+                        sb.Append(_calcRepo.CalcParameters.CSVCharacter);
                         sb.Append(desirevalue.ToString("0#.#", Config.CultureInfo));
-                        sb.Append(_calcParameters.CSVCharacter).Append(" ");
+                        sb.Append(_calcRepo.CalcParameters.CSVCharacter).Append(" ");
                     }
                 }
             }
@@ -202,7 +201,7 @@ namespace CalculationEngine.HouseholdElements {
                     else {
                         builder.Append("0");
                     }
-                    builder.Append(_calcParameters.CSVCharacter);
+                    builder.Append(_calcRepo.CalcParameters.CSVCharacter);
                 }
             }
             if (builder.Length > 0) {
@@ -216,13 +215,13 @@ namespace CalculationEngine.HouseholdElements {
                         "CriticalThresholdViolations." + householdKey + "." + person + ".csv",
                         "Lists the critical threshold violations for " + person, true,
                         ResultFileID.CriticalThresholdViolations, householdKey,
-                        TargetDirectory.Debugging, _calcParameters.InternalStepsize,null,person.MakePersonInformation());
+                        TargetDirectory.Debugging, _calcRepo.CalcParameters.InternalStepsize,null,person.MakePersonInformation());
                     var header = _dsc.GenerateDateStampHeader();
                     foreach (var calcDesire in Desires) {
                         if (calcDesire.Value.CriticalThreshold > 0) {
 #pragma warning disable CC0039 // Don't concatenate strings in loops
                             header += calcDesire.Value.Name;
-                            header += _calcParameters.CSVCharacter;
+                            header += _calcRepo.CalcParameters.CSVCharacter;
 #pragma warning restore CC0039 // Don't concatenate strings in loops
                         }
                     }

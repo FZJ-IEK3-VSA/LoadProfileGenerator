@@ -16,7 +16,7 @@ namespace Common {
                 [OutputFileDefault.OnlySums] = "Only the sum files, both for the households and the house",
                 [OutputFileDefault.OnlyDeviceProfiles] = "Only the device profiles",
                 [OutputFileDefault.Reasonable] = "A reasonable subset",
-                [OutputFileDefault.None] = "No files at all",
+                [OutputFileDefault.NoFiles] = "No files at all",
                 [OutputFileDefault.ForSettlementCalculations] = "For Settlement calculations"
             };
 
@@ -39,7 +39,7 @@ namespace Common {
             switch (selectedOptionDefault) {
                 case OutputFileDefault.All:
                     return Enum.GetValues(typeof(CalcOption)).Cast<CalcOption>().ToList();
-                case OutputFileDefault.None:
+                case OutputFileDefault.NoFiles:
                     return l;
                 case OutputFileDefault.OnlyOverallSum:
                     l.Add(CalcOption.OverallSum);

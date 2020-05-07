@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Automation;
-using CalculationEngine.Helper;
 using CalculationEngine.Transportation;
 using Common;
 using Common.Enums;
@@ -44,11 +42,11 @@ namespace CalculationEngine.HouseholdElements
             [NotNull] out ICalcProfile personTimeProfile);
         //ICalcProfile CollectPersonProfile();
         int DefaultPersonProfileLength { get; }
-        bool IsBusy([NotNull] TimeStep time, [NotNull] NormalRandom nr, [NotNull] Random r, [NotNull] CalcLocation srcLocation, [NotNull] string calcPersonName, bool clearDictionaries = true);
+        bool IsBusy([NotNull] TimeStep time, [NotNull] CalcLocation srcLocation, [NotNull] string calcPersonName, bool clearDictionaries = true);
 
         [NotNull]
         [ItemNotNull]
-        List<CalcSubAffordance> CollectSubAffordances([NotNull] TimeStep time, [NotNull] NormalRandom nr, bool onlyInterrupting, [NotNull] Random r,
+        List<CalcSubAffordance> CollectSubAffordances([NotNull] TimeStep time,  bool onlyInterrupting,
             [NotNull] CalcLocation srcLocation);
 
         [NotNull]
@@ -69,5 +67,7 @@ namespace CalculationEngine.HouseholdElements
 
         [CanBeNull]
         CalcSite Site { get; }
+
+        BodilyActivityLevel BodilyActivityLevel { get; }
     }
 }

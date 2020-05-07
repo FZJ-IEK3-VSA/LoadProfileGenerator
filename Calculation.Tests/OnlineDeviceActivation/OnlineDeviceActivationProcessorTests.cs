@@ -97,8 +97,8 @@ namespace Calculation.Tests.OnlineDeviceActivation {
         [Category(UnitTestCategories.BasicTest)]
         public void OnlineDeviceActivationProcessorSetToZeroTest()
         {
-            var rnd = new Random(1);
-            var nr = new NormalRandom(0, 1, rnd);
+            //var rnd = new Random(1);
+            //var nr = new NormalRandom(0, 1, rnd);
             var startdate = new DateTime(2018, 1, 1);
             var enddate = startdate.AddMinutes(100);
             CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(startdate)
@@ -149,7 +149,8 @@ namespace Calculation.Tests.OnlineDeviceActivation {
             DateStampCreator dsc = new DateStampCreator(calcParameters);
             IOnlineLoggingData old = new OnlineLoggingData(dsc, wd.InputDataLogger, calcParameters);
             using (var lf = new LogFile(calcParameters, fft, old, wd.SqlResultLoggingService)) {
-                var odap = new OnlineDeviceActivationProcessor(nr, lf, calcParameters);
+                var odap = new OnlineDeviceActivationProcessor( lf, calcParameters);
+                CalcRepo calcRepo = new CalcRepo(calcParameters: calcParameters, odap:odap);
                 List<VariableRequirement> requirements = new List<VariableRequirement>();
                 string devCatGuid = Guid.NewGuid().ToString();
                 var key = new HouseholdKey("HH1");
@@ -167,11 +168,9 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                     clt,
                     loads,
                     0,
-                    odap,
                     1,
                     cloc,
-                    calcParameters,
-                    requirements,cddauto);
+                    requirements,cddauto,calcRepo);
                CalcDeviceDto cdd = new CalcDeviceDto("devicename",
                    devCatGuid,
                    key,
@@ -182,10 +181,8 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                    cloc.Guid,
                    cloc.Name);
                 var device = new CalcDevice(loads,
-                    odap,
                     cloc,
-                    calcParameters,
-                     cdd);
+                     cdd, calcRepo);
                 var autoDevs = new List<CalcAutoDev> {
                     autodev
                 };
@@ -207,7 +204,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                 for (var i = 0; i < 15; i++) {
                     TimeStep ts = new TimeStep(i, 0, true);
                     if (!autodev.IsBusyDuringTimespan(ts, 1, 1, clt)) {
-                        autodev.Activate(ts, nr);
+                        autodev.Activate(ts);
                     }
 
                     if (i == 6) {
@@ -254,7 +251,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                 var hhkey = new HouseholdKey("HH1");
                 lf.InitHousehold(Constants.GeneralHouseholdKey, "generalhousehold", HouseholdKeyType.General, "Description", null, null);
                 lf.InitHousehold(hhkey, "hh1", HouseholdKeyType.Household, "Description", null, null);
-                var odap = new OnlineDeviceActivationProcessor(nr, lf, calcParameters);
+                var odap = new OnlineDeviceActivationProcessor( lf, calcParameters);
                 const string deviceGuid = "devguid";
                 const string locationGuid = "locationGuid";
                 const string loadtypeGuid = "ltguid";
@@ -269,9 +266,10 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                 var valueList = new List<double>(stepValues);
                 var cp = new CalcProfile("myCalcProfile", Guid.NewGuid().ToString(), valueList, ProfileType.Absolute, "synthetic");
                 TimeStep ts1 = new TimeStep(1, 0, false);
-
-                odap.AddNewStateMachine(cp, ts1, 0, 10,
-                    clt.ConvertToDto(), "blub", "name1", "p1", "syn", key,cdd);
+                StepValues sv = StepValues.MakeStepValues(cp,0,10,nr);
+                odap.AddNewStateMachine( ts1,
+                    clt.ConvertToDto(), "blub", "name1",
+                    "p1", "syn", key,cdd, sv);
                 double[] resultValues = {0, 10.0, 0, 0, 0, 0, 0, 0, 0, 0};
 
                 for (var i = 0; i < 10; i++) {
@@ -302,8 +300,8 @@ namespace Calculation.Tests.OnlineDeviceActivation {
             CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(startdate)
                 .SetEndDate(enddate).EnableShowSettlingPeriod();
 
-            var rnd = new Random(1);
-            var nr = new NormalRandom(0, 1, rnd);
+            //var rnd = new Random(1);
+            //var nr = new NormalRandom(0, 1, rnd);
             var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             calcParameters.Enable(CalcOption.IndividualSumProfiles);
             calcParameters.Enable(CalcOption.DeviceProfiles);
@@ -343,7 +341,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
             using (var lf = new LogFile(calcParameters, fft, old, wd.SqlResultLoggingService)) {
                 lf.InitHousehold(key, "test hh", HouseholdKeyType.Household, "Description", null, null);
                 lf.InitHousehold(Constants.GeneralHouseholdKey, "General", HouseholdKeyType.General, "Description", null, null);
-                var odap = new OnlineDeviceActivationProcessor(nr, lf, calcParameters);
+                var odap = new OnlineDeviceActivationProcessor( lf, calcParameters);
                 var clt = new CalcLoadType("lt1", "W", "kWh", 3, true, Guid.NewGuid().ToString());
                 List<CalcLoadTypeDto> loadTypeDtos = new List<CalcLoadTypeDto> {
                     clt.ConvertToDto()
@@ -376,12 +374,11 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                 cdts.Add(dtsi);
                 wd.InputDataLogger.Save(cdts);
                 //device
+                CalcRepo calcRepo = new CalcRepo();
                 var device = new CalcDevice(
                     deviceLoads,
-                    odap,
                     cloc,
-                    calcParameters,
-                    calcDeviceDto);
+                    calcDeviceDto,calcRepo);
                 //var devices = new List<CalcDevice> {device};
                 double[] resultValues = {0, 100.0, 0, 0, 0, 0, 0, 0, 0, 0};
                 var cp = new CalcProfile("profile1", Guid.NewGuid().ToString(), new TimeSpan(0, 1, 0), ProfileType.Absolute, "custom");
@@ -463,8 +460,8 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                 .SetEndDate(enddate).EnableShowSettlingPeriod();
             //CalculationProfiler calculationProfiler = new CalculationProfiler();
 
-            var rnd = new Random(1);
-            var nr = new NormalRandom(0, 1, rnd);
+            //var rnd = new Random(1);
+            //var nr = new NormalRandom(0, 1, rnd);
             var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             calcParameters.Enable(CalcOption.IndividualSumProfiles);
             calcParameters.Enable(CalcOption.DeviceProfiles);
@@ -493,7 +490,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
             using (var lf = new LogFile(calcParameters, fft, old, wd.SqlResultLoggingService)) {
                 HouseholdKey key = new HouseholdKey("hh1");
                 lf.InitHousehold(key, "hh1 key", HouseholdKeyType.Household, "Description", null, null);
-                var odap = new OnlineDeviceActivationProcessor(nr, lf, calcParameters);
+                var odap = new OnlineDeviceActivationProcessor(lf, calcParameters);
                 var clt = new CalcLoadType("lt1", "W", "kWh", 3, true, Guid.NewGuid().ToString());
                 var loadTypes = new List<CalcLoadTypeDto> {clt.ConvertToDto()};
                 wd.InputDataLogger.Save(loadTypes);
@@ -517,13 +514,11 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                     cdto
                 };
                 wd.InputDataLogger.SaveList(devices);
-
+                CalcRepo calcRepo = new CalcRepo();
                 var device = new CalcDevice(
                     deviceLoads,
-                    odap,
                     cloc,
-                    calcParameters,
-                    cdto);
+                    cdto, calcRepo);
                 //var devices = new List<CalcDevice> {device};
                 var cp = new CalcProfile("profile1", Guid.NewGuid().ToString(), new TimeSpan(0, 1, 0), ProfileType.Absolute, "custom");
                 cp.AddNewTimepoint(new TimeSpan(0), 0);

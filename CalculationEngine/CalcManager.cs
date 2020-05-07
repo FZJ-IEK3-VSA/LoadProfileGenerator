@@ -36,12 +36,9 @@ using Automation.ResultFiles;
 using CalcPostProcessor;
 using CalculationEngine.Helper;
 using CalculationEngine.HouseholdElements;
-using CalculationEngine.OnlineDeviceLogging;
-using CalculationEngine.OnlineLogging;
 using ChartCreator2.OxyCharts;
 using ChartCreator2.PDF;
 using Common;
-using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.Loggers;
 //using Common.SQLResultLogging;
@@ -54,13 +51,9 @@ namespace CalculationEngine {
 
         //[ItemNotNull] [NotNull] private readonly List<CalcAffordanceTaggingSet> _affordanceTaggingSets;
 
-        [NotNull] private readonly CalcParameters _calcParameters;
 
         //[NotNull] private readonly string _name;
 
-        [NotNull] private readonly NormalRandom _normalDistributedRandom;
-
-        [NotNull] private readonly Random _randomGenerator;
 
         private readonly int _randomSeed;
 
@@ -68,27 +61,16 @@ namespace CalculationEngine {
 
         //[NotNull] private readonly SqlResultLoggingService _srls;
 
-        [NotNull] private readonly CalculationProfiler _calculationProfiler;
         [NotNull] private readonly CalcVariableRepository _variableRepository;
+        private readonly CalcRepo _calcRepo;
 
         [NotNull] private readonly DayLightStatus _lightNeededArray;
 
-        public CalcManager([NotNull] NormalRandom normalDistributedRandom,
-                           [NotNull] Random randomGenerator, [NotNull] string resultPath,
-                           //[NotNull] string pName, //List<CalcLoadType> loadTypes,
-
-                           //List<CalcAffordanceTaggingSet>affordanceTaggingSets, //CalcDeviceTaggingSets deviceTaggingSets,
-                           //List<CalcHouseholdPlan> calcHouseholdPlans,
-                           //string fileVersion,
+        public CalcManager([NotNull] string resultPath,
                            int randomSeed,
-                           //EnergyIntensityType energyIntensityType,
-                           [NotNull] ILogFile logFile, [NotNull] IOnlineDeviceActivationProcessor odap,
-                           [NotNull] CalcParameters calcParameters, //int carpetPlotColumnWidth,
                            [NotNull] DayLightStatus lightNeededArray,
-        //[NotNull] SqlResultLoggingService srls
-                           [NotNull] CalculationProfiler calculationProfiler,
-                           [NotNull] CalcVariableRepository variableRepository
-            )
+                           [NotNull] CalcVariableRepository variableRepository,
+                           CalcRepo calcRepo)
         {
             _lightNeededArray = lightNeededArray;
             //_srls = srls;
@@ -99,17 +81,8 @@ namespace CalculationEngine {
             //_deviceTaggingSets = deviceTaggingSets;
             _resultPath = resultPath;
             //_name = pName;
-            _normalDistributedRandom = normalDistributedRandom;
-            _randomGenerator = randomGenerator;
-            // if there is no directory, write to console only for unit testing
-            //_loadTypes = loadTypes;
-            Logfile = logFile;
-            //_energyIntensityType = energyIntensityType;
-            _calcParameters = calcParameters;
-            //_carpetPlotColumnWidth = carpetPlotColumnWidth;
-            Odap = odap;
-            _calculationProfiler = calculationProfiler;
             _variableRepository = variableRepository;
+            _calcRepo = calcRepo;
         }
 
        /* [NotNull]
@@ -131,35 +104,22 @@ namespace CalculationEngine {
             }
         }
 
-        [NotNull]
-        public ILogFile Logfile { get; }
-
-        //public List<double> TemperaturesForOfficialTimespan { get; }
-
-        [NotNull]
-        public NormalRandom NormalDistributedRandom => _normalDistributedRandom;
-
-        [NotNull]
-        public IOnlineDeviceActivationProcessor Odap { get; }
-
-        [NotNull]
-        public Random RandomGenerator => _randomGenerator;
-
         // ReSharper disable once UnusedParameter.Local
         [SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId =
             "<Logfile>k__BackingField")]
         [SuppressMessage("ReSharper", "UseNullPropagation")]
         public void Dispose()
         {
-            Logfile.Dispose();
+            _calcRepo.Logfile.Dispose();
         }
 
         public void CloseLogfile()
         {
-            Logfile.Close();
+            _calcRepo.Logfile.Close();
         }
 
         public static bool MakeCharts { get; } = true;
+        public CalcRepo CalcRepo => _calcRepo;
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public bool Run([CanBeNull] Func<bool> reportCancelFunc)
@@ -169,8 +129,8 @@ namespace CalculationEngine {
                 return false;
             }
 
-            _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
-            _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Preperation");
+            _calcRepo.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
+            _calcRepo.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Preperation");
             // init calculation result
             //var calculationResult = new CalculationResult(_name, DateTime.Now,                _calcParameters.OfficialStartTime, _calcParameters.OfficialEndTime,                calcObjectType, _srls.ReturnMainSqlPath());
 
@@ -181,7 +141,7 @@ namespace CalculationEngine {
                 throw new LPGException("CalcObject was null");
             }
 
-            CalcObject.Init(Logfile, _randomGenerator, _lightNeededArray, _normalDistributedRandom, Odap,
+            CalcObject.Init(_lightNeededArray,
                 //_householdKey,
                 _randomSeed);
 
@@ -190,12 +150,12 @@ namespace CalculationEngine {
 
             PreProcessingLogging();
 
-            var now = _calcParameters.InternalStartTime;
-            var timestep = new TimeStep(0,_calcParameters);
+            var now = _calcRepo.CalcParameters.InternalStartTime;
+            var timestep = new TimeStep(0,_calcRepo.CalcParameters);
             //CalcObject.WriteInformation();
 
-            _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Preperation");
-            _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Core Simulation");
+            _calcRepo.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Preperation");
+            _calcRepo.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Core Simulation");
             if (ExitCalcFunction) {
                 if (CalcObject == null)
                 {
@@ -208,32 +168,32 @@ namespace CalculationEngine {
             {
                 throw new LPGException("CalcObject was null");
             }
-            while (now < _calcParameters.InternalEndTime && _continueRunning) {
+            while (now < _calcRepo.CalcParameters.InternalEndTime && _continueRunning) {
                 // ReSharper disable once PossibleNullReferenceException
                 CalcObject.RunOneStep(timestep, now, true);
                 SaveVariableStatesIfNeeded(timestep);
-                Logfile.SaveIfNeeded(timestep);
-                now += _calcParameters.InternalStepsize;
+                _calcRepo.Logfile.SaveIfNeeded(timestep);
+                now += _calcRepo.CalcParameters.InternalStepsize;
                 timestep = timestep.AddSteps(1);
             }
             Logger.Info("Finished the simulation");
-            _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Core Simulation");
+            _calcRepo.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Core Simulation");
             // ReSharper disable once PossibleNullReferenceException
             CalcObject.FinishCalculation();
             Logger.Info("Generating the logfiles. This might take a while...");
 
             // post processing
-            Logfile.Close();
+            _calcRepo.Logfile.Close();
             CalcObject.Dispose();
             GC.Collect();
             if (!_continueRunning && reportCancelFunc!= null) {
                 reportCancelFunc();
                 throw new LPGException("Canceling");
             }
-            PostProcessingManager ppm = new PostProcessingManager(_calculationProfiler,Logfile.FileFactoryAndTracker);
+            PostProcessingManager ppm = new PostProcessingManager(_calcRepo.CalculationProfiler, _calcRepo.Logfile.FileFactoryAndTracker);
             ppm.Run(_resultPath);
             Logger.Info("Finished the logfiles.");
-            _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Post Post Processing");
+            _calcRepo.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Post Post Processing");
             /*
             try {
                 /var path = Path.Combine(_resultPath, Constants.ResultFileName);
@@ -257,35 +217,35 @@ namespace CalculationEngine {
             }*/
 
             CalcObject.CloseLogfile();
-            _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Post Post Processing");
+            _calcRepo.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Post Post Processing");
 
-            _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Charting");
+            _calcRepo.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Charting");
             Logger.Info("Starting to make the charts");
-            if (MakeCharts &&(_calcParameters.IsSet(CalcOption.MakePDF) ||
-                _calcParameters.IsSet(CalcOption.MakeGraphics )))
+            if (MakeCharts &&(_calcRepo.CalcParameters.IsSet(CalcOption.MakePDF) ||
+                              _calcRepo.CalcParameters.IsSet(CalcOption.MakeGraphics )))
             {
                 MakeChartsAndPDF();
             }
             Logger.Info("Finished making the charts");
-            _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Charting");
+            _calcRepo.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Charting");
 
-            _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Logging");
+            _calcRepo.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Logging");
 
             if (Config.IsInUnitTesting)
             {
-                Logfile.FileFactoryAndTracker.CheckIfAllAreRegistered(_resultPath);
+                _calcRepo.Logfile.FileFactoryAndTracker.CheckIfAllAreRegistered(_resultPath);
                 Logger.Info("Finished!");
             }
-            if (_calcParameters.IsSet(CalcOption.LogAllMessages) || _calcParameters.IsSet(CalcOption.LogErrorMessages))
+            if (_calcRepo.CalcParameters.IsSet(CalcOption.LogAllMessages) || _calcRepo.CalcParameters.IsSet(CalcOption.LogErrorMessages))
             {
-                InitializeFileLogging(Logfile.Srls);
+                InitializeFileLogging(_calcRepo.Logfile.Srls);
             }
             //_fft.FillCalculationResult(_repository.CalculationResult);
             //_repository.CalculationResult.ResultFileEntries.Sort();
             //_repository.CalculationResult.CalcEndTime = DateTime.Now;
 
-            _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Logging");
-            _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
+            _calcRepo.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Logging");
+            _calcRepo.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
             WriteCalcProfilingResults(_resultPath);
             //return calculationResult;
             return true;
@@ -293,19 +253,19 @@ namespace CalculationEngine {
 
         private void SaveVariableStatesIfNeeded([NotNull] TimeStep timestep)
         {
-            if (!_calcParameters.IsSet(CalcOption.VariableLogFile)) {
+            if (!_calcRepo.CalcParameters.IsSet(CalcOption.VariableLogFile)) {
                 return;
             }
 
             foreach (var variable in _variableRepository.GetAllVariables()) {
-                Logfile.OnlineLoggingData.AddVariableStatus(new CalcVariableEntry(variable.Name,
+                _calcRepo.Logfile.OnlineLoggingData.AddVariableStatus(new CalcVariableEntry(variable.Name,
                     variable.Guid,variable.Value,variable.LocationName,variable.LocationGuid,variable.HouseholdKey,timestep));
             }
         }
 
         private void InitializeFileLogging([CanBeNull] SqlResultLoggingService srls)
         {
-            if (_calcParameters.IsSet(CalcOption.LogAllMessages))
+            if (_calcRepo.CalcParameters.IsSet(CalcOption.LogAllMessages))
             {
                 var messages = Logger.Get().GetAndClearAllCollectedMessages();
                 DateTime start;
@@ -327,7 +287,7 @@ namespace CalculationEngine {
                 lml.Run(Constants.GeneralHouseholdKey,lmes);
             }
 
-            if (_calcParameters.IsSet(CalcOption.LogErrorMessages))
+            if (_calcRepo.CalcParameters.IsSet(CalcOption.LogErrorMessages))
             {
                 var messages = Logger.Get().Errors;
                 if (messages.Count == 0) {
@@ -353,22 +313,22 @@ namespace CalculationEngine {
             var t = new Thread(() => {
                 try
                 {
-                    _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Chart Generator RunAll");
+                    _calcRepo.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Chart Generator RunAll");
                     ChartCreationParameters ccp = new ChartCreationParameters(144,1600, 1000,
-                        false,_calcParameters.CSVCharacter, new DirectoryInfo(_resultPath));
-                    var cg = new ChartGeneratorManager(_calculationProfiler, Logfile.FileFactoryAndTracker, ccp);
+                        false, _calcRepo.CalcParameters.CSVCharacter, new DirectoryInfo(_resultPath));
+                    var cg = new ChartGeneratorManager(_calcRepo.CalculationProfiler, _calcRepo.Logfile.FileFactoryAndTracker, ccp);
                     cg.Run(_resultPath);
-                    _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Chart Generator RunAll");
-                    if (_calcParameters.IsSet(CalcOption.MakePDF))
+                    _calcRepo.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Chart Generator RunAll");
+                    if (_calcRepo.CalcParameters.IsSet(CalcOption.MakePDF))
                     {
-                        _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - PDF Creation");
+                        _calcRepo.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - PDF Creation");
                         Logger.ImportantInfo(
                             "Creating the PDF. This will take a really long time without any progress report...");
 
-                        MigraPDFCreator mpc = new MigraPDFCreator(_calculationProfiler);
+                        MigraPDFCreator mpc = new MigraPDFCreator(_calcRepo.CalculationProfiler);
                         mpc.MakeDocument(_resultPath, CalcObject?.Name ??"",  false, false,
-                            _calcParameters.CSVCharacter, Logfile.FileFactoryAndTracker);
-                        _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - PDF Creation");
+                            _calcRepo.CalcParameters.CSVCharacter, _calcRepo.Logfile.FileFactoryAndTracker);
+                        _calcRepo.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - PDF Creation");
                     }
                 }
                 catch (Exception ex)
@@ -390,16 +350,16 @@ namespace CalculationEngine {
 
         private void WriteCalcProfilingResults([NotNull] string dstPath)
         {
-            if (_calcParameters.Options.Contains(CalcOption.CalculationFlameChart))
+            if (_calcRepo.CalcParameters.Options.Contains(CalcOption.CalculationFlameChart))
             {
                 string dstfullFilename = Path.Combine(dstPath, Constants.CalculationProfilerJson);
             using (StreamWriter sw = new StreamWriter(dstfullFilename)) {
-                _calculationProfiler.WriteJson(sw);
+                _calcRepo.CalculationProfiler.WriteJson(sw);
             }
                 CalculationDurationFlameChart cdfc = new CalculationDurationFlameChart();
                 Thread t = new Thread(() => {
                     try {
-                        cdfc.Run(_calculationProfiler, dstPath, "CalcManager");
+                        cdfc.Run(_calcRepo.CalculationProfiler, dstPath, "CalcManager");
                     }
                     catch (Exception ex) {
                         Logger.Exception(ex);
@@ -437,7 +397,7 @@ namespace CalculationEngine {
 
         private void PreProcessingLogging()
         {
-            if (_calcParameters.IsSet(CalcOption.HouseholdContents)) {
+            if (_calcRepo.CalcParameters.IsSet(CalcOption.HouseholdContents)) {
                 if (CalcObject == null)
                 {
                     throw new LPGException("CalcObject was null");
@@ -445,7 +405,7 @@ namespace CalculationEngine {
                 CalcObject.DumpHouseholdContentsToText();
             }
 
-            if (_calcParameters.IsSet(CalcOption.DaylightTimesList)) {
+            if (_calcRepo.CalcParameters.IsSet(CalcOption.DaylightTimesList)) {
                 //WriteDaylightTimesToCSV();
             }
 

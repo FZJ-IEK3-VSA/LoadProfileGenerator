@@ -128,7 +128,7 @@ namespace ChartCreator2.Tests.Oxyplot
             sim.MyGeneralConfig.CSVCharacter = csvCharacter;
             sim.MyGeneralConfig.ExternalTimeResolution = "00:15:00";
             sim.MyGeneralConfig.InternalTimeResolution = "00:01:00";
-            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.None);
+            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
             configSetter?.Invoke(sim.MyGeneralConfig);
             Logger.Info("Enabled options are:");
             foreach (var option in sim.MyGeneralConfig.AllEnabledOptions())

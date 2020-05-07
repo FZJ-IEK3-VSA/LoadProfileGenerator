@@ -5,16 +5,13 @@ using System.Linq;
 using Automation.ResultFiles;
 using CalculationEngine.HouseholdElements;
 using CalculationEngine.OnlineDeviceLogging;
-using CalculationEngine.OnlineLogging;
 using Common;
 using Common.CalcDto;
-using Common.JSON;
 using Common.SQLResultLogging;
 using JetBrains.Annotations;
 
 namespace CalculationEngine.Transportation {
     public class CalcTransportationDevice : CalcBase {
-        [NotNull] private readonly CalcParameters _calcParameters;
 
         [CanBeNull] private readonly CalcLoadType _chargingCalcLoadType1;
         private readonly double _currentSOC;
@@ -30,7 +27,6 @@ namespace CalculationEngine.Transportation {
 
         private readonly double _maxChargingPower;
 
-        [NotNull] private readonly IOnlineDeviceActivationProcessor _odap;
         [NotNull] private readonly Dictionary<int, CalcSite> _targetSiteByTimeStep = new Dictionary<int, CalcSite>();
 
         [NotNull] private TimeStep _activationStartTimestep = new TimeStep(-1, 0, false);
@@ -44,39 +40,36 @@ namespace CalculationEngine.Transportation {
         private readonly Dictionary<string, Dictionary<CalcLoadType, OefcKey>> _keysByLocGuidAndLoadtype = new Dictionary<string, Dictionary<CalcLoadType, OefcKey>>();
 
         [NotNull] private readonly CalcDeviceDto _calcDeviceDto;
+        private readonly CalcRepo _calcRepo;
+
         public CalcTransportationDevice(
                                         [NotNull] CalcTransportationDeviceCategory category,
                                         double averageSpeedInMPerS, [NotNull] [ItemNotNull] List<CalcDeviceLoad> loads,
-                                        [NotNull] IOnlineDeviceActivationProcessor odap,
                                         double fullRangeInMeters,
                                         double energyToDistanceFactor,
                                         double maxChargingPower,
                                         [CanBeNull] CalcLoadType chargingCalcLoadType,
                                         [NotNull] [ItemNotNull] List<CalcSite> allCalcSites,
-                                        [NotNull] CalcParameters calcParameters,
-                                        [NotNull] IOnlineLoggingData onlineLoggingData,
-                                        [NotNull] CalcDeviceDto calcDeviceDto)
+                                        [NotNull] CalcDeviceDto calcDeviceDto, [NotNull] CalcRepo calcRepo)
             : base(calcDeviceDto.Name, calcDeviceDto.Guid)
         {
-            _dsc = new DateStampCreator(calcParameters);
-            _odap = odap;
+            _dsc = new DateStampCreator(calcRepo.CalcParameters);
             _loads = loads;
             _fullRangeInMeters = fullRangeInMeters;
             _energyToDistanceFactor = energyToDistanceFactor;
             _maxChargingPower = maxChargingPower;
             _chargingCalcLoadType1 = chargingCalcLoadType;
-            _calcParameters = calcParameters;
             _availableRangeInMeters = fullRangeInMeters;
             Category = category;
             AverageSpeedInMPerS = averageSpeedInMPerS;
-            OnlineLoggingData = onlineLoggingData;
             _currentSOC = 100;
             _calcDeviceDto = calcDeviceDto;
-            if (_calcParameters.InternalTimesteps == 0) {
+            _calcRepo = calcRepo;
+            if (_calcRepo.CalcParameters.InternalTimesteps == 0) {
                 throw new LPGException("Time steps were not initialized.");
             }
 
-            _isBusyArray = new BitArray(_calcParameters.InternalTimesteps);
+            _isBusyArray = new BitArray(_calcRepo.CalcParameters.InternalTimesteps);
             //not all devices need to have load types. busses for example have no load
             //if (loads.Count == 0) {
             //throw new DataIntegrityException("The transportation device " + pName +
@@ -91,13 +84,13 @@ namespace CalculationEngine.Transportation {
             foreach (CalcDeviceLoad deviceLoad in loads) {
                 //TODO: check if -1 is a good location guid
                 //OefcKey key = new OefcKey(_calcDeviceDto.HouseholdKey, OefcDeviceType.Transportation, Guid, "-1", deviceLoad.LoadType.Guid, "Transportation");
-                var key = odap.RegisterDevice(deviceLoad.LoadType.ConvertToDto(), calcDeviceDto);
+                var key = _calcRepo.Odap.RegisterDevice(deviceLoad.LoadType.ConvertToDto(), calcDeviceDto);
                 _keysByLocGuidAndLoadtype.Add(calcDeviceDto.LocationGuid,new Dictionary<CalcLoadType, OefcKey>());
                 _keysByLocGuidAndLoadtype[calcDeviceDto.LocationGuid].Add(deviceLoad.LoadType, key);
             }
 
             if (chargingCalcLoadType != null) {
-                var key2 = odap.RegisterDevice(chargingCalcLoadType.ConvertToDto(), calcDeviceDto);
+                var key2 = _calcRepo.Odap.RegisterDevice(chargingCalcLoadType.ConvertToDto(), calcDeviceDto);
                 if (!_keysByLocGuidAndLoadtype.ContainsKey(calcDeviceDto.LocationGuid)) {
                     _keysByLocGuidAndLoadtype.Add(calcDeviceDto.LocationGuid, new Dictionary<CalcLoadType, OefcKey>());
                 }
@@ -120,8 +113,6 @@ namespace CalculationEngine.Transportation {
 
         public double LastChargingPower { get; set; }
 
-        [NotNull]
-        public IOnlineLoggingData OnlineLoggingData { get; }
 
         private double AverageSpeedInMPerS { get; }
 
@@ -180,7 +171,7 @@ namespace CalculationEngine.Transportation {
         }
 
         public int CalculateDurationOfTimestepsForDistance(double distanceInM) =>
-            CalculateDurationOfTimestepsForDistance(distanceInM, AverageSpeedInMPerS, _calcParameters.InternalStepsize);
+            CalculateDurationOfTimestepsForDistance(distanceInM, AverageSpeedInMPerS, _calcRepo.CalcParameters.InternalStepsize);
 
         public static int CalculateDurationOfTimestepsForDistance(double distanceInM, double speed,
                                                                   TimeSpan internalStepSize)
@@ -201,7 +192,7 @@ namespace CalculationEngine.Transportation {
 
             if (_fullRangeInMeters < 0) {
                 DisconnectCar();
-                OnlineLoggingData.AddTransportationDeviceState(new TransportationDeviceStateEntry(
+                _calcRepo.OnlineLoggingData.AddTransportationDeviceState(new TransportationDeviceStateEntry(
                     Name, Guid, currentTimeStep, TransportationDeviceState.Undefined,
                     _currentSOC, _calcDeviceDto.HouseholdKey, _availableRangeInMeters, _currentSite?.Name,
                     _lastUsingPerson, _dsc.MakeDateStringFromTimeStep(currentTimeStep)));
@@ -217,13 +208,12 @@ namespace CalculationEngine.Transportation {
                 }
 
                 double distancePerTimestep = AverageSpeedInMPerS *
-                                             _calcParameters.InternalStepsize.TotalSeconds;
+                                             _calcRepo.CalcParameters.InternalStepsize.TotalSeconds;
                 _availableRangeInMeters -= distancePerTimestep;
                 if (_availableRangeInMeters <= 0) {
                     _availableRangeInMeters = 0;
                 }
-
-                OnlineLoggingData.AddTransportationDeviceState(new TransportationDeviceStateEntry(
+                _calcRepo.OnlineLoggingData.AddTransportationDeviceState(new TransportationDeviceStateEntry(
                     Name, Guid, currentTimeStep, TransportationDeviceState.Driving,
                     _currentSOC, _calcDeviceDto.HouseholdKey, _availableRangeInMeters,
                     _currentSite?.Name,
@@ -233,7 +223,7 @@ namespace CalculationEngine.Transportation {
 
             //car is fully charged
             if (_availableRangeInMeters >= _fullRangeInMeters) {
-                OnlineLoggingData.AddTransportationDeviceState(new TransportationDeviceStateEntry(
+                _calcRepo.OnlineLoggingData.AddTransportationDeviceState(new TransportationDeviceStateEntry(
                     Name, Guid, currentTimeStep, TransportationDeviceState.ParkingAndFullyCharged,
                     _currentSOC, _calcDeviceDto.HouseholdKey, _availableRangeInMeters, _currentSite?.Name,
                     null
@@ -251,7 +241,7 @@ namespace CalculationEngine.Transportation {
                         x.DeviceCategory == Category).ToList();
                 if (chargingStations.Count > 0) {
                     if (chargingStations.All(x => !x.IsAvailable) && _lastChargingStation == null) {
-                        OnlineLoggingData.AddTransportationDeviceState(new TransportationDeviceStateEntry(
+                        _calcRepo.OnlineLoggingData.AddTransportationDeviceState(new TransportationDeviceStateEntry(
                             Name, Guid, currentTimeStep, TransportationDeviceState.ParkingAndWaitingForCharging,
                             _currentSOC, _calcDeviceDto.HouseholdKey, _availableRangeInMeters, _currentSite.Name,
                             null, _dsc.MakeDateStringFromTimeStep(currentTimeStep)));
@@ -275,7 +265,7 @@ namespace CalculationEngine.Transportation {
                         throw new LPGException("Charging station for charging was null");
                     }
 
-                    OnlineLoggingData.AddTransportationDeviceState(new TransportationDeviceStateEntry(
+                    _calcRepo.OnlineLoggingData.AddTransportationDeviceState(new TransportationDeviceStateEntry(
                         Name, Guid, currentTimeStep, TransportationDeviceState.ParkingAndCharging,
                         _currentSOC, _calcDeviceDto.HouseholdKey, _availableRangeInMeters, _currentSite.Name,
                         null, _dsc.MakeDateStringFromTimeStep(currentTimeStep)));
@@ -295,13 +285,13 @@ namespace CalculationEngine.Transportation {
                     //if (dstLoadType == null) {
                     //    throw new Exception("???");
                     //}
-
-                    _odap.AddNewStateMachine(cp, currentTimeStep, 0, 1,
+                    var sv = StepValues.MakeStepValues(cp, 0, 1, _calcRepo.NormalRandom);
+                    _calcRepo.Odap.AddNewStateMachine( currentTimeStep,
                          dstLoadType.ConvertToDto(),
                         "Charging for " + Name + " @ " + _currentSite,
-                        "(autonomous)", cp.Name, "Synthetic", key, _calcDeviceDto);
+                        "(autonomous)", cp.Name, "Synthetic", key, _calcDeviceDto,sv);
                     double gainedDistance = maxChargingPower * _energyToDistanceFactor *
-                                            _calcParameters.InternalStepsize.TotalSeconds;
+                                            _calcRepo.CalcParameters.InternalStepsize.TotalSeconds;
                     _availableRangeInMeters += gainedDistance;
                     LastChargingPower = maxChargingPower;
                     if (_availableRangeInMeters > _fullRangeInMeters) {
@@ -314,7 +304,7 @@ namespace CalculationEngine.Transportation {
             }
 
             DisconnectCar();
-            OnlineLoggingData.AddTransportationDeviceState(new TransportationDeviceStateEntry(
+            _calcRepo.OnlineLoggingData.AddTransportationDeviceState(new TransportationDeviceStateEntry(
                 Name, Guid, currentTimeStep, TransportationDeviceState.ParkingAndNoChargingAvailableHere,
                 _currentSOC, _calcDeviceDto.HouseholdKey, _availableRangeInMeters, _currentSite?.Name, null
                 , _dsc.MakeDateStringFromTimeStep(currentTimeStep)));
@@ -323,7 +313,7 @@ namespace CalculationEngine.Transportation {
         public bool IsBusy([NotNull] TimeStep startTimeStep, int durationInTimesteps)
         {
             int endTimeStep = startTimeStep.InternalStep + durationInTimesteps;
-            for (int i = startTimeStep.InternalStep; i < endTimeStep && i < _calcParameters.InternalTimesteps; i++) {
+            for (int i = startTimeStep.InternalStep; i < endTimeStep && i < _calcRepo.CalcParameters.InternalTimesteps; i++) {
                 if (_isBusyArray[i]) {
                     return true;
                 }
@@ -381,7 +371,7 @@ namespace CalculationEngine.Transportation {
                     var  clone = _calcDeviceDto.Clone();
                     clone.Name = "Charging " + Name + " @ " + station.ChargingStationName;
                     clone.LocationGuid = site.Guid;
-                    var key = _odap.RegisterDevice(station.GridChargingLoadType.ConvertToDto(),_calcDeviceDto);
+                    var key = _calcRepo.Odap.RegisterDevice(station.GridChargingLoadType.ConvertToDto(),_calcDeviceDto);
                     _keysByLocGuidAndLoadtype.Add(clone.LocationGuid,new Dictionary<CalcLoadType, OefcKey>());
                     var lt = station.GridChargingLoadType;
                     _keysByLocGuidAndLoadtype[clone.LocationGuid].Add(lt, key);
@@ -410,16 +400,16 @@ namespace CalculationEngine.Transportation {
                {
                    factor = 1 * multiplier;
                }*/
-            if (_odap == null && !Config.IsInUnitTesting) {
+            if (_calcRepo.Odap == null && !Config.IsInUnitTesting) {
                 throw new LPGException("ODAP was null. Please report");
             }
 
             //   var totalDuration = calcProfile.GetNewLengthAfterCompressExpand(timefactor);
             //OefcKey key = new OefcKey(_calcDeviceDto.HouseholdKey, OefcDeviceType.Transportation, Guid, "-1", cdl.LoadType.Guid, "Transportation");
             var key = _keysByLocGuidAndLoadtype[locationGuid][cdl.LoadType];
-            _odap.AddNewStateMachine(calcProfile, startidx, cdl.PowerStandardDeviation, 1,
-                 cdl.LoadType.ConvertToDto(), affordanceName, activatingPersonName,
-                calcProfile.Name, calcProfile.DataSource, key, _calcDeviceDto);
+            var sv = StepValues.MakeStepValues(calcProfile, cdl.PowerStandardDeviation, 1, _calcRepo.NormalRandom);
+            _calcRepo.Odap.AddNewStateMachine(startidx,cdl.LoadType.ConvertToDto(), affordanceName, activatingPersonName,
+                calcProfile.Name, calcProfile.DataSource, key, _calcDeviceDto,sv);
             //SetBusy(startidx, totalDuration, loadType, activateDespiteBeingBusy);
             // return totalDuration + startidx;
         }

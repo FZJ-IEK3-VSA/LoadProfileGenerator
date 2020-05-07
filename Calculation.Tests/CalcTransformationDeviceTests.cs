@@ -52,7 +52,7 @@ namespace Calculation.Tests {
             CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();
             var lf = MakeLogfile(wd.WorkingDirectory,calcParameters,wd.InputDataLogger,wd.SqlResultLoggingService);
 
-            var odap = new OnlineDeviceActivationProcessor(NormalRandom, lf,calcParameters);
+            var odap = new OnlineDeviceActivationProcessor( lf,calcParameters);
             var clt = new CalcLoadType("clt1", "W", "kWh", 1, true, Guid.NewGuid().ToString());
             string deviceGuid = Guid.NewGuid().ToString();
             string locGuid = Guid.NewGuid().ToString();
@@ -67,9 +67,9 @@ namespace Calculation.Tests {
                 "synthetic"
             );
             TimeStep ts1 = new TimeStep(1, 0, true);
-            odap.AddNewStateMachine(cp,  ts1,0, 10,
-                clt.ConvertToDto(), "blub",  "name1",
-                "p1", "syn",key,cdd);
+            StepValues sv = StepValues.MakeStepValues(cp,0,10, NormalRandom);
+            odap.AddNewStateMachine(  ts1, clt.ConvertToDto(), "blub",  "name1",
+                "p1", "syn",key,cdd, sv);
             double[] resultValues = {0, 10.0, 0, 0, 0, 0, 0, 0, 0, 0};
             double[] resultValuesRow1 = {0, 20.0, 0, 0, 0, 0, 0, 0, 0, 0};
             double[] resultValuesRow2 = {0, 30.0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -116,7 +116,7 @@ namespace Calculation.Tests {
             var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();
             var lf = MakeLogfile(wd.WorkingDirectory,calcParameters, wd.InputDataLogger,wd.SqlResultLoggingService);
-            var odap = new OnlineDeviceActivationProcessor(NormalRandom, lf, calcParameters);
+            var odap = new OnlineDeviceActivationProcessor( lf, calcParameters);
             var clt = new CalcLoadType("clt1",  "W", "kWh", 1, true, Guid.NewGuid().ToString());
             var devguid = Guid.NewGuid().ToString();
             var locguid = Guid.NewGuid().ToString();
@@ -129,9 +129,9 @@ namespace Calculation.Tests {
             var cp = new CalcProfile("myCalcProfile", Guid.NewGuid().ToString(), timestepValues.ToList(), ProfileType.Absolute,
                 "synthetic");
             TimeStep ts1 = new TimeStep(1,0,true);
-            odap.AddNewStateMachine(cp, ts1, 0, 1,
-                 clt.ConvertToDto(), "blub", "name1", "p1",
-                 "syn",key,cdd);
+            StepValues sv = StepValues.MakeStepValues(cp,0,1,NormalRandom);
+            odap.AddNewStateMachine( ts1, clt.ConvertToDto(), "blub", "name1", "p1",
+                 "syn",key,cdd, sv);
             double[] resultValues = {0, 0, 5, 10.0, 20, 30, 40, 0};
             //double[] resultValuesRow1 = {0, 0, 5, 10, 200, 3000, 4000, 0};
             var ctd = new CalcTransformationDevice( odap, -1, 080, -1000,

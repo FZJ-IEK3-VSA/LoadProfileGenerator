@@ -30,7 +30,7 @@ namespace IntegrationTests.FullCalc
             sim.MyGeneralConfig.EndDateUIString = "31.1.2015";
             sim.MyGeneralConfig.InternalTimeResolution = "00:01:00";
             sim.MyGeneralConfig.RandomSeed = 5;
-            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.None);
+            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
             sim.MyGeneralConfig.Enable(CalcOption.IndividualSumProfiles);
             sim.MyGeneralConfig.CSVCharacter = ";";
             sim.MyGeneralConfig.SelectedLoadTypePriority = LoadTypePriority.All;

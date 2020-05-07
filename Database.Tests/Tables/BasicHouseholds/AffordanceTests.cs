@@ -26,7 +26,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
 
             var aff = new Affordance("bla", null, null, true, PermittedGender.Female, 0.1m, col,
                 "affordanceCategory", null, "desc", db.ConnectionString, true, true, 0, 99, false,
-                ActionAfterInterruption.GoBackToOld,false, Guid.NewGuid().ToString());
+                ActionAfterInterruption.GoBackToOld,false, Guid.NewGuid().ToString(), BodilyActivityLevel.Low);
             aff.SaveToDB();
             Assert.AreEqual(0, aff.ExecutedVariables.Count);
             var va = new Variable("var1", "desc", "unit", db.ConnectionString, Guid.NewGuid().ToString());
@@ -45,7 +45,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             var col = new ColorRGB(255, 0, 0);
             var aff = new Affordance("bla", null, null, true, PermittedGender.Female, 0.1m, col,
                 "AffordanceCategory", null, "desc", db.ConnectionString, true, true, 0, 99, false,
-                ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToString());
+                ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToString(), BodilyActivityLevel.Low);
             aff.SaveToDB();
             Assert.AreEqual(0, aff.AffordanceStandbys.Count);
             var rd2 = new RealDevice("rd2", 1, string.Empty, null, string.Empty, false, false, db.ConnectionString, Guid.NewGuid().ToString());
@@ -72,7 +72,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             var col = new ColorRGB(255, 0, 0);
             var aff = new Affordance("bla", null, null, true, PermittedGender.Female, 0.1m, col,
                 "AffordanceCategory", null, "desc", db.ConnectionString, true, true, 0, 99, false,
-                ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToString());
+                ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToString(), BodilyActivityLevel.Low);
             aff.SaveToDB();
             Assert.AreEqual(0, aff.AffordanceStandbys.Count);
             var rd2 = new RealDevice("rd2", 1, string.Empty, null, string.Empty, false, false, db.ConnectionString, Guid.NewGuid().ToString());
@@ -100,7 +100,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             var col = new ColorRGB(255, 0, 0);
             var aff = new Affordance("bla", null, null, true, PermittedGender.Female, 0.1m, col,
                 "AffordanceCategory", null, "desc", db.ConnectionString, true, true, 0, 99, false,
-                ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToString());
+                ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToString(), BodilyActivityLevel.Low);
             var v = new Variable("var1", "desc", "1", db.ConnectionString, Guid.NewGuid().ToString());
             v.SaveToDB();
             aff.SaveToDB();
@@ -131,7 +131,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             var col = new ColorRGB(255, 0, 0);
             var aff = new Affordance("bla", null, null, true, PermittedGender.Female, 0.1m, col,
                 "affordanceCategory", null, "desc", db.ConnectionString, true, true, 0, 99, false,
-                ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToString());
+                ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToString(), BodilyActivityLevel.Low);
             aff.SaveToDB();
             Assert.AreEqual(0, aff.ExecutedVariables.Count);
             aff.AddVariableOperation(0, VariableLocationMode.CurrentLocation, null, VariableAction.SetTo, v,
@@ -173,7 +173,8 @@ namespace Database.Tests.Tables.BasicHouseholds {
             var aff = new Affordance("bla", null, null, false, PermittedGender.All, 1, col, string.Empty, null,
                 string.Empty,
                 db.ConnectionString, true, true, 0,
-                100, false, ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToString());
+                100, false, ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToString(),
+                BodilyActivityLevel.Low);
             aff.SaveToDB();
 
             var tp = new TimeBasedProfile("tp", null, db.ConnectionString, TimeProfileType.Relative, "fake", Guid.NewGuid().ToString());
@@ -219,7 +220,8 @@ namespace Database.Tests.Tables.BasicHouseholds {
             var deviceActions = new ObservableCollection<DeviceAction>();
             var aff = new Affordance("bla", null, null, false, PermittedGender.All, 1, col, string.Empty, null,
                 string.Empty,
-                db.ConnectionString, true, true, 0, 100, false, ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToString());
+                db.ConnectionString, true, true, 0, 100, false, ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToString(),
+                BodilyActivityLevel.Low);
             aff.SaveToDB();
 
             var tp = new TimeBasedProfile("tp", null, db.ConnectionString, TimeProfileType.Relative, "fake", Guid.NewGuid().ToString());
@@ -252,7 +254,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             var aff = new Affordance("bla", null, null, false, PermittedGender.All, 1, col, string.Empty, null,
                 string.Empty,
                 db.ConnectionString, true, true, 0, 100,
-                false, ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToString());
+                false, ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToString(), BodilyActivityLevel.Low);
             aff.SaveToDB();
 
             var tp = new TimeBasedProfile("tp", null, db.ConnectionString, TimeProfileType.Relative, "fake", Guid.NewGuid().ToString());
@@ -293,7 +295,8 @@ namespace Database.Tests.Tables.BasicHouseholds {
             var deviceCategories = new ObservableCollection<DeviceCategory>();
             var aff = new Affordance("bla", null, null, false, PermittedGender.All, 1, col, string.Empty, null,
                 string.Empty,
-                db.ConnectionString, true, true, 0, 100, false, ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToString());
+                db.ConnectionString, true, true, 0, 100, false,
+                ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToString(), BodilyActivityLevel.Low);
             aff.SaveToDB();
 
             var tp = new TimeBasedProfile("tp", null, db.ConnectionString, TimeProfileType.Relative, "fake", Guid.NewGuid().ToString());
@@ -334,7 +337,8 @@ namespace Database.Tests.Tables.BasicHouseholds {
             //var deviceActions = new ObservableCollection<DeviceAction>();
             var aff = new Affordance("bla", null, null, false, PermittedGender.All, 1, col, string.Empty, null,
                 string.Empty,
-                db.ConnectionString, true, true, 0, 100, false, ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToString());
+                db.ConnectionString, true, true, 0, 100, false, ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToString(),
+                BodilyActivityLevel.Low);
             aff.SaveToDB();
 
             var tp = new TimeBasedProfile("tp", null, db.ConnectionString, TimeProfileType.Relative, "fake", Guid.NewGuid().ToString());
@@ -365,7 +369,8 @@ namespace Database.Tests.Tables.BasicHouseholds {
             var deviceActions = new ObservableCollection<DeviceAction>();
             var aff = new Affordance("bla", null, null, false, PermittedGender.All, 1, col, string.Empty, null,
                 string.Empty, string.Empty,
-                true, true, 0, 100, false, ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToString());
+                true, true, 0, 100, false, ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToString(),
+                BodilyActivityLevel.Low);
             var rd2 = new RealDevice("rd2", 1, string.Empty, null, string.Empty, false, false, string.Empty, Guid.NewGuid().ToString());
             // check if the device is not there
             var allDevices2 = new List<IAssignableDevice>
@@ -387,7 +392,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             var deviceActions = new ObservableCollection<DeviceAction>();
             var aff = new Affordance("bla", null, null, false, PermittedGender.All, 1, col, string.Empty, null,
                 string.Empty, string.Empty,
-                true, true, 0, 100, false, ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToString());
+                true, true, 0, 100, false, ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToString(), BodilyActivityLevel.Low);
             var rd1 = new RealDevice("rd1", 1, string.Empty, null, string.Empty, false, false, string.Empty, Guid.NewGuid().ToString());
 
             var dg = new DeviceActionGroup("group", string.Empty, string.Empty, Guid.NewGuid().ToString());
@@ -431,7 +436,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             var deviceActions = new ObservableCollection<DeviceAction>();
             var aff = new Affordance("bla", null, null, false, PermittedGender.All, 1, col, string.Empty, null,
                 string.Empty, string.Empty,
-                true, true, 0, 100, false, ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToString());
+                true, true, 0, 100, false, ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToString(), BodilyActivityLevel.Low);
             var rd1 = new RealDevice("rd1", 1, string.Empty, null, string.Empty, false, false, string.Empty, Guid.NewGuid().ToString());
 
             var dg = new DeviceActionGroup("group", string.Empty, string.Empty, Guid.NewGuid().ToString());
@@ -476,7 +481,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             var deviceActions = new ObservableCollection<DeviceAction>();
             var aff = new Affordance("bla", null, null, false, PermittedGender.All, 1, col, string.Empty, null,
                 string.Empty, string.Empty,
-                true, true, 0, 100, false, ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToString());
+                true, true, 0, 100, false, ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToString(), BodilyActivityLevel.Low);
             var rd1 = new RealDevice("rd1", 1, string.Empty, null, string.Empty, false, false, string.Empty, Guid.NewGuid().ToString());
             var dg = new DeviceActionGroup("group", string.Empty, string.Empty, Guid.NewGuid().ToString());
             var da = new DeviceAction(string.Empty, null, "blub", string.Empty, dg, rd1, Guid.NewGuid().ToString());
@@ -513,7 +518,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             var deviceActions = new ObservableCollection<DeviceAction>();
             var aff = new Affordance("bla", null, null, false, PermittedGender.All, 1, col, string.Empty, null,
                 string.Empty, string.Empty,
-                true, true, 0, 100, false, ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToString());
+                true, true, 0, 100, false, ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToString(), BodilyActivityLevel.Low);
             var rd1 = new RealDevice("rd1", 1, string.Empty, null, string.Empty, false, false, string.Empty, Guid.NewGuid().ToString());
             var dg = new DeviceActionGroup("group", string.Empty, string.Empty, Guid.NewGuid().ToString());
             var da = new DeviceAction(string.Empty, null, "blub", string.Empty, dg, rd1, Guid.NewGuid().ToString());
@@ -550,7 +555,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             var deviceActions = new ObservableCollection<DeviceAction>();
             var aff = new Affordance("bla", null, null, false, PermittedGender.All, 1, col, string.Empty, null,
                 string.Empty, string.Empty,
-                true, true, 0, 100, false, ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToString());
+                true, true, 0, 100, false, ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToString(), BodilyActivityLevel.Low);
             var rd1 = new RealDevice("rd1", 1, string.Empty, null, string.Empty, false, false, string.Empty, Guid.NewGuid().ToString());
             var rd2 = new RealDevice("rd2", 1, string.Empty, null, string.Empty, false, false, string.Empty, Guid.NewGuid().ToString());
             var dg = new DeviceActionGroup("group", string.Empty, string.Empty, Guid.NewGuid().ToString());
@@ -588,7 +593,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             var deviceActions = new ObservableCollection<DeviceAction>();
             var aff = new Affordance("bla", null, null, false, PermittedGender.All, 1, col, string.Empty, null,
                 string.Empty, string.Empty,
-                true, true, 0, 100, false, ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToString());
+                true, true, 0, 100, false, ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToString(), BodilyActivityLevel.Low);
             var rd1 = new RealDevice("rd1", 1, string.Empty, null, string.Empty, false, false, string.Empty, Guid.NewGuid().ToString());
 
             var devices = new ObservableCollection<RealDevice>
@@ -624,7 +629,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             var deviceActions = new ObservableCollection<DeviceAction>();
             var aff = new Affordance("bla", null, null, false, PermittedGender.All, 1, col, string.Empty, null,
                 string.Empty, string.Empty,
-                true, true, 0, 100, false, ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToString());
+                true, true, 0, 100, false, ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToString(), BodilyActivityLevel.Low);
             var rd1 = new RealDevice("rd1", 1, string.Empty, null, string.Empty, false, false, string.Empty, Guid.NewGuid().ToString());
 
             var devices = new ObservableCollection<RealDevice>
@@ -661,7 +666,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             var deviceActions = new ObservableCollection<DeviceAction>();
             var aff = new Affordance("bla", null, null, false, PermittedGender.All, 1, col, string.Empty, null,
                 string.Empty, string.Empty,
-                true, true, 0, 100, false, ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToString());
+                true, true, 0, 100, false, ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToString(), BodilyActivityLevel.Low);
             var rd1 = new RealDevice("rd1", 1, string.Empty, null, string.Empty, false, false, string.Empty, Guid.NewGuid().ToString());
             var rd2 = new RealDevice("rd2", 1, string.Empty, null, string.Empty, false, false, string.Empty, Guid.NewGuid().ToString());
             // check if the device is not there
@@ -690,7 +695,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             var deviceActions = new ObservableCollection<DeviceAction>();
             var aff = new Affordance("bla", null, null, false, PermittedGender.All, 1, col, string.Empty, null,
                 string.Empty, string.Empty,
-                true, true, 0, 100, false, ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToString());
+                true, true, 0, 100, false, ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToString(), BodilyActivityLevel.Low);
             var rd1 = new RealDevice("rd1", 1, string.Empty, null, string.Empty, false, false, string.Empty, Guid.NewGuid().ToString());
             var allDevices1 = new List<IAssignableDevice>
             {

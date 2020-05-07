@@ -40,7 +40,7 @@ namespace Calculation.HouseholdElements.Tests {
                     RandomSeed = 5
                 }
             };
-            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.None);
+            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
             sim.MyGeneralConfig.Enable(CalcOption.TotalsPerDevice);
             sim.MyGeneralConfig.CSVCharacter = ";";
             //ConfigSetter.SetGlobalTimeParameters(sim.MyGeneralConfig);
@@ -65,8 +65,7 @@ namespace Calculation.HouseholdElements.Tests {
                 throw new LPGException("xxx");
             }
 
-            cm.CalcObject.Init(cm.Logfile, cm.RandomGenerator, dls, cm.NormalDistributedRandom, cm.Odap,
-               1);
+            cm.CalcObject.Init(dls, 1);
             CalcManager.ExitCalcFunction = true;
             cm.CalcObject.DumpHouseholdContentsToText();
             cm.CloseLogfile();
@@ -99,33 +98,34 @@ namespace Calculation.Tests.HouseholdElements {
             var clt = new CalcLoadType("calcloadtype",  "power", "sum", 1, true, Guid.NewGuid().ToString());
             cdevload.Add(new CalcDeviceLoad("load",  100, clt, 0, 0, Guid.NewGuid().ToString()));
             string devCategoryGuid = Guid.NewGuid().ToString();
+            IMock<IOnlineDeviceActivationProcessor> iodap = new Mock<IOnlineDeviceActivationProcessor>();
+            CalcRepo calcRepo = new CalcRepo(odap:iodap.Object, calcParameters:calcParameters);
             CalcDeviceDto cdd1 = new CalcDeviceDto("cdevice1", devCategoryGuid, new HouseholdKey("HH1"),
                 OefcDeviceType.Device, "category", "", Guid.NewGuid().ToString(),
                 cloc1.Guid, cloc1.Name);
 
             var cdLoc1 = new CalcDevice(  new List<CalcDeviceLoad>(),
-                null, cloc1, calcParameters, cdd1);
+                 cloc1,  cdd1,calcRepo);
             CalcDeviceDto cdd2 = new CalcDeviceDto("cdevice1", devCategoryGuid, new HouseholdKey("HH1"),
                 OefcDeviceType.Device, "category", "", Guid.NewGuid().ToString(),
                 cloc1.Guid, cloc1.Name);
-            var cdLoc1B = new CalcDevice(new List<CalcDeviceLoad>(),  null, cloc1,
-                calcParameters, cdd2);
+            var cdLoc1B = new CalcDevice(new List<CalcDeviceLoad>(),   cloc1,
+                 cdd2,calcRepo);
             CalcDeviceDto cdd3 = new CalcDeviceDto("cdevice1", devCategoryGuid, new HouseholdKey("HH1"),
                 OefcDeviceType.Device, "category", "", Guid.NewGuid().ToString(),
                 cloc2.Guid, cloc2.Name);
-            var cdLoc2 = new CalcDevice(new List<CalcDeviceLoad>(), null, cloc2,
-                calcParameters, cdd3);
+            var cdLoc2 = new CalcDevice(new List<CalcDeviceLoad>(),  cloc2,
+                 cdd3,calcRepo);
             var cp = new CalcProfile("cp1", Guid.NewGuid().ToString(), TimeSpan.FromMilliseconds(1),
                 ProfileType.Absolute, "blub");
             //CalcVariableRepository crv = new CalcVariableRepository();
             //VariableRequirement vr = new VariableRequirement("");
             List<VariableRequirement> requirements = new List<VariableRequirement>();
-            IMock<IOnlineDeviceActivationProcessor> iodap = new Mock<IOnlineDeviceActivationProcessor>();
             CalcDeviceDto cdd4 = new CalcDeviceDto("cdevice1", devCategoryGuid, new HouseholdKey("HH1"),
                 OefcDeviceType.Device, "category", "", Guid.NewGuid().ToString(),
                 cloc1.Guid, cloc1.Name);
-            var cadLoc1 = new CalcAutoDev( cp, clt, cdevload, 0,  iodap.Object,
-                1, cloc1, calcParameters, requirements, cdd4);
+            var cadLoc1 = new CalcAutoDev( cp, clt, cdevload, 0,
+                1, cloc1,  requirements, cdd4, calcRepo);
             var autodevs = new List<CalcAutoDev>
             {
                 cadLoc1

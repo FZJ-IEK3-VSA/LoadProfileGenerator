@@ -35,7 +35,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Automation;
 using Automation.ResultFiles;
-using CalculationEngine.Helper;
 using Common;
 using Common.Enums;
 using Common.JSON;
@@ -46,7 +45,6 @@ using JetBrains.Annotations;
 namespace CalculationEngine.HouseholdElements {
     [SuppressMessage("ReSharper", "ConvertToAutoProperty")]
     public class CalcAffordance : CalcAffordanceBase {
-        [NotNull] private readonly CalcParameters _calcParameters;
 
         [NotNull] private readonly CalcProfile _personProfile;
 
@@ -86,11 +84,11 @@ namespace CalculationEngine.HouseholdElements {
                               int weight,
                               bool requireAllDesires,
                               [NotNull] string srcTrait,
-                              [NotNull] CalcParameters calcParameters,
                               [NotNull] string guid,
                               [NotNull] CalcVariableRepository variableRepository,
                               [NotNull] [ItemNotNull] List<DeviceEnergyProfileTuple> energyprofiles,
-                              [ItemNotNull] [NotNull] BitArray isBusy) : base(pName,
+                              [ItemNotNull] [NotNull] BitArray isBusy, BodilyActivityLevel bodilyActivityLevel,
+                              [NotNull] CalcRepo calcRepo) : base(pName,
             loc,
             satisfactionvalues,
             miniumAge,
@@ -105,13 +103,11 @@ namespace CalculationEngine.HouseholdElements {
             weight,
             requireAllDesires,
             CalcAffordanceType.Affordance,
-            calcParameters,
             guid,
-            isBusy)
+            isBusy, bodilyActivityLevel, calcRepo)
         {
             _variableOps = variableOps;
             _variableRequirements = variableRequirements;
-            _calcParameters = calcParameters;
             _variableRepository = variableRepository;
             Energyprofiles = energyprofiles;
             SourceTrait = srcTrait;
@@ -177,14 +173,14 @@ namespace CalculationEngine.HouseholdElements {
             _startTimeStep = startTime;
             _endTimeStep = startTime.AddSteps(personsteps);
             if (DoubleCheckBusyArray) {
-                for (var i = 0; i < personsteps && i + startTime.InternalStep < _calcParameters.InternalTimesteps; i++) {
+                for (var i = 0; i < personsteps && i + startTime.InternalStep < CalcRepo.CalcParameters.InternalTimesteps; i++) {
                     if (IsBusyArray[i + startTime.InternalStep]) {
                         throw new LPGException("Affordance was already busy");
                     }
                 }
             }
 
-            for (var i = 0; i < personsteps && i + startTime.InternalStep < _calcParameters.InternalTimesteps; i++) {
+            for (var i = 0; i < personsteps && i + startTime.InternalStep < CalcRepo.CalcParameters.InternalTimesteps; i++) {
                 IsBusyArray[i + startTime.InternalStep] = true;
             }
 
@@ -260,9 +256,7 @@ namespace CalculationEngine.HouseholdElements {
         [NotNull]
         [ItemNotNull]
         public override List<CalcSubAffordance> CollectSubAffordances([NotNull] TimeStep time,
-                                                                      [NotNull] NormalRandom nr,
                                                                       bool onlyInterrupting,
-                                                                      [NotNull] Random r,
                                                                       [NotNull] CalcLocation srcLocation)
         {
             if (SubAffordances.Count == 0) {
@@ -279,7 +273,7 @@ namespace CalculationEngine.HouseholdElements {
                 if (onlyInterrupting && calcSubAffordance.IsInterrupting || !onlyInterrupting) {
                     var delaytimesteps = calcSubAffordance.Delaytimesteps;
                     var hasbeenactivefor = HasBeenActiveFor(time);
-                    var issubaffbusy = calcSubAffordance.IsBusy(time, nr, r, srcLocation, "name");
+                    var issubaffbusy = calcSubAffordance.IsBusy(time, srcLocation, "name");
                     if (delaytimesteps < hasbeenactivefor && !issubaffbusy) {
                         calcSubAffordance.SetDurations(RemainingActiveTime(time));
                         result.Add(calcSubAffordance);
@@ -291,8 +285,6 @@ namespace CalculationEngine.HouseholdElements {
         }
 
         public override bool IsBusy([NotNull] TimeStep time,
-                                    [NotNull] NormalRandom nr,
-                                    [NotNull] Random r,
                                     [NotNull] CalcLocation srcLocation,
                                     [NotNull] string calcPersonName,
                                     bool clearDictionaries = true)
@@ -302,7 +294,7 @@ namespace CalculationEngine.HouseholdElements {
                     //        _timeFactorsForTimes.Clear();
                 }
 
-                _timeFactorsForTimes[time.InternalStep] = nr.NextDouble(1, _timeStandardDeviation);
+                _timeFactorsForTimes[time.InternalStep] =  CalcRepo.NormalRandom.NextDouble(1, _timeStandardDeviation);
                 if (_timeFactorsForTimes[time.InternalStep] < 0) {
                     throw new DataIntegrityException("The duration standard deviation on " + Name + " is too large: a negative value of " +
                                                      _timeFactorsForTimes[time.InternalStep] + " came up. The standard deviation is " +
@@ -315,7 +307,7 @@ namespace CalculationEngine.HouseholdElements {
                     //      _probabilitiesForTimes.Clear();
                 }
 
-                _probabilitiesForTimes[time.InternalStep] = r.NextDouble();
+                _probabilitiesForTimes[time.InternalStep] =CalcRepo.Rnd.NextDouble();
             }
 
             if (_variableRequirements.Count > 0) {

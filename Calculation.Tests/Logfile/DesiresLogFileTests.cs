@@ -74,7 +74,9 @@ namespace Calculation.Tests.Logfile
                 BitArray isSick = new BitArray(calcParameters.InternalTimesteps);
                 BitArray isOnVacation = new BitArray(calcParameters.InternalTimesteps);
                 CalcPersonDto calcPerson = CalcPersonDto.MakeExamplePerson();
-                CalcPerson cp = new CalcPerson(calcPerson, r, lf, cloc, calcParameters, isSick, isOnVacation);
+                CalcRepo calcRepo = new CalcRepo(rnd:r);
+                CalcPerson cp = new CalcPerson(calcPerson,  cloc,
+                     isSick, isOnVacation,calcRepo);
                     //"bla", 1, 5, r, 48, PermittedGender.Male, lf, "HH1", cloc, "traittag", "hhname0",calcParameters,isSick,Guid.NewGuid().ToString());
                 cp.PersonDesires.AddDesires(cd1);
                 dlf.RegisterDesires(cp.PersonDesires.Desires.Values);
