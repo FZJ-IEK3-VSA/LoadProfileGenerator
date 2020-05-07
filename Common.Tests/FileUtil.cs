@@ -42,10 +42,10 @@ namespace CommonDataWPF.Tests
         {
             public RM_UNIQUE_PROCESS Process;
 
-            [NotNull] [MarshalAs(UnmanagedType.ByValTStr, SizeConst = CCH_RM_MAX_APP_NAME + 1)]
+            [JetBrains.Annotations.NotNull] [MarshalAs(UnmanagedType.ByValTStr, SizeConst = CCH_RM_MAX_APP_NAME + 1)]
             public string strAppName;
 
-            [NotNull] [MarshalAs(UnmanagedType.ByValTStr, SizeConst = CCH_RM_MAX_SVC_NAME + 1)]
+            [JetBrains.Annotations.NotNull] [MarshalAs(UnmanagedType.ByValTStr, SizeConst = CCH_RM_MAX_SVC_NAME + 1)]
             public string strServiceShortName;
 
             public RM_APP_TYPE ApplicationType;
@@ -59,16 +59,16 @@ namespace CommonDataWPF.Tests
         [DllImport("rstrtmgr.dll", CharSet = CharSet.Unicode)]
         private  static extern int RmRegisterResources(uint pSessionHandle,
             UInt32 nFiles,[ItemNotNull]
-            [NotNull] string[] rgsFilenames,
+            [JetBrains.Annotations.NotNull] string[] rgsFilenames,
             UInt32 nApplications,
-            [NotNull] [In] RM_UNIQUE_PROCESS[] rgApplications,
+            [JetBrains.Annotations.NotNull] [In] RM_UNIQUE_PROCESS[] rgApplications,
             UInt32 nServices,
-            [ItemNotNull] [NotNull] string[] rgsServiceNames);
+            [ItemNotNull] [JetBrains.Annotations.NotNull] string[] rgsServiceNames);
 
         [SuppressMessage("Microsoft.Design", "CA1060:MovePInvokesToNativeMethodsClass")]
         [SuppressMessage("Microsoft.Globalization", "CA2101:SpecifyMarshalingForPInvokeStringArguments", MessageId = "2")]
         [DllImport("rstrtmgr.dll", CharSet = CharSet.Auto)]
-        private static extern int RmStartSession(out uint pSessionHandle, int dwSessionFlags, [NotNull] string strSessionKey);
+        private static extern int RmStartSession(out uint pSessionHandle, int dwSessionFlags, [JetBrains.Annotations.NotNull] string strSessionKey);
 
         [SuppressMessage("Microsoft.Design", "CA1060:MovePInvokesToNativeMethodsClass")]
         [DllImport("rstrtmgr.dll")]
@@ -79,7 +79,7 @@ namespace CommonDataWPF.Tests
         private static extern int RmGetList(uint dwSessionHandle,
             out uint pnProcInfoNeeded,
             ref uint pnProcInfo,
-            [NotNull] [In, Out] RM_PROCESS_INFO[] rgAffectedApps,
+            [JetBrains.Annotations.NotNull] [In, Out] RM_PROCESS_INFO[] rgAffectedApps,
             ref uint lpdwRebootReasons);
 
         /// <summary>
@@ -93,10 +93,10 @@ namespace CommonDataWPF.Tests
         /// 
         /// </remarks>
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", MessageId = "CommonDataWPF.Tests.FileUtil.RmEndSession(System.UInt32)")]
         [SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes")]
-        static public List<Process> WhoIsLocking([NotNull] string path)
+        static public List<Process> WhoIsLocking([JetBrains.Annotations.NotNull] string path)
         {
             string key = Guid.NewGuid().ToString();
             List<Process> processes = new List<Process>();

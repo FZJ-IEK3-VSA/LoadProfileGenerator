@@ -119,11 +119,6 @@ namespace CalculationEngine.HouseholdElements {
         [CanBeNull]
         public TransportationHandler TransportationHandler { get; set; }
 
-        public void CloseLogfile()
-        {
-            _calcRepo.Logfile.Close();
-        }
-
         [NotNull]
         [ItemNotNull]
         public List<CalcAutoDev> CollectAutoDevs()
@@ -192,7 +187,7 @@ namespace CalculationEngine.HouseholdElements {
             }
 
             using (var swPerson =
-                _calcRepo.Logfile.FileFactoryAndTracker.MakeFile<StreamWriter>("Persons." + _householdKey + ".txt",
+                _calcRepo.FileFactoryAndTracker.MakeFile<StreamWriter>("Persons." + _householdKey + ".txt",
                     "Overview of the persons", true, ResultFileID.PersonFile, _householdKey, TargetDirectory.Root,
                     _calcRepo.CalcParameters.InternalStepsize)) {
                 foreach (var calcPerson in _persons) {
@@ -201,7 +196,7 @@ namespace CalculationEngine.HouseholdElements {
             }
 
             using (var swAff =
-                _calcRepo.Logfile.FileFactoryAndTracker.MakeFile<StreamWriter>("AffordanceDefinition." + _householdKey + ".txt",
+                _calcRepo.FileFactoryAndTracker.MakeFile<StreamWriter>("AffordanceDefinition." + _householdKey + ".txt",
                     "Definition of the Affordances", false, ResultFileID.AffordanceDefinition, _householdKey,
                     TargetDirectory.Root, _calcRepo.CalcParameters.InternalStepsize)) {
                 foreach (var calcLocation in Locations) {
@@ -221,7 +216,7 @@ namespace CalculationEngine.HouseholdElements {
                 }
             }
 
-            using (var sw = _calcRepo.Logfile.FileFactoryAndTracker.MakeFile<StreamWriter>(
+            using (var sw = _calcRepo.FileFactoryAndTracker.MakeFile<StreamWriter>(
                 "HouseholdContents." + _householdKey + "."  + ".txt",
                 "List of persons, locations, devices and affordances in this household", true, ResultFileID.Dump,
                 _householdKey, TargetDirectory.Root,  _calcRepo.CalcParameters.InternalStepsize)) {
@@ -335,7 +330,7 @@ namespace CalculationEngine.HouseholdElements {
                 throw new LPGException("_persons was null");
             }
 
-            _calcRepo.Logfile.InitHousehold(_householdKey, Name, HouseholdKeyType.Household,_description,null,null);
+            _calcRepo.FileFactoryAndTracker.RegisterHousehold(_householdKey, Name, HouseholdKeyType.Household,_description,null,null);
             //_lf.TransportationLogFile.SetTransportationHandler(TransportationHandler);
             if (_calcRepo.CalcParameters.IsSet(CalcOption.DesiresLogfile)) {
                 if (_calcRepo.Logfile.DesiresLogfile == null) {
@@ -494,7 +489,7 @@ namespace CalculationEngine.HouseholdElements {
 
         public void Dispose()
         {
-            CloseLogfile();
+            _calcRepo.Dispose();
         }
 
         public static void MatchAutonomousDevicesWithNormalDevices([NotNull] [ItemNotNull] List<CalcAutoDev> autoDevs,
@@ -640,7 +635,7 @@ namespace CalculationEngine.HouseholdElements {
                 throw new LPGException("Logfile was null");
             }
 
-            var swTime = _calcRepo.Logfile.FileFactoryAndTracker.MakeFile<StreamWriter>(
+            var swTime = _calcRepo.FileFactoryAndTracker.MakeFile<StreamWriter>(
                 "TimeProfiles." + _householdKey + "."  + ".txt",
                 "List of time profiles used in this household", true, ResultFileID.DumpTime, _householdKey,
                 TargetDirectory.Debugging, _calcRepo.CalcParameters.InternalStepsize);

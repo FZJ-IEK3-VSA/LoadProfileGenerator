@@ -12,8 +12,8 @@ namespace ChartCreator2.PDF {
             MyTargetDirectory = TargetDirectory.Charts;
         }
 
-        [NotNull]
-        protected override string GetGraphTitle([NotNull] string filename) {
+        [JetBrains.Annotations.NotNull]
+        protected override string GetGraphTitle([JetBrains.Annotations.NotNull] string filename) {
             var arr = filename.Split('.');
 
             return "Curve for the  for " + arr[1] + " from " + filename;

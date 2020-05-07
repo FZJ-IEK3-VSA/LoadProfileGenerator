@@ -174,7 +174,7 @@ namespace CalculationController.CalcFactories
             }
             catch
             {
-                cm?.CloseLogfile();
+                cm?.Dispose();
                 throw;
             }
         }
@@ -195,7 +195,7 @@ namespace CalculationController.CalcFactories
             var affordanceTaggingSetFactory = scope.Resolve<AffordanceTaggingSetFactory>();
             var affordanceTaggingSets = affordanceTaggingSetFactory.GetAffordanceTaggingSets(sim);
             inputDataLogger.Save(affordanceTaggingSets);
-            calcRepo.Logfile.InitHousehold(Constants.GeneralHouseholdKey, "General Information",
+            calcRepo.FileFactoryAndTracker.RegisterHousehold(Constants.GeneralHouseholdKey, "General Information",
                 HouseholdKeyType.General,"General",null,null);
             dls = scope.Resolve<DayLightStatus>();
             if (calcRepo.CalcParameters.Options.Contains(CalcOption.DaylightTimesList)) {
@@ -241,7 +241,7 @@ namespace CalculationController.CalcFactories
                                                       out CalcObjectType cot, [NotNull] CalcRepo calcRepo)
         {
             var house =(House) hh;
-            calcRepo.Logfile.InitHousehold(Constants.HouseKey, "House Infrastructure",
+            calcRepo.FileFactoryAndTracker.RegisterHousehold(Constants.HouseKey, "House Infrastructure",
                 HouseholdKeyType.House, "House Infrastructure",house.Name,house.Description);
             var housedtoFac = scope.Resolve<CalcHouseDtoFactory>();
             var housedto = housedtoFac.MakeHouseDto(sim, house, csps.TemperatureProfile,
@@ -341,9 +341,7 @@ namespace CalculationController.CalcFactories
             builder.Register(c => new OnlineLoggingData(c.Resolve<DateStampCreator>(), c.Resolve<IInputDataLogger>(),
                     c.Resolve<CalcParameters>()))
                 .As<OnlineLoggingData>().As<IOnlineLoggingData>().SingleInstance();
-            builder.Register(x => new LogFile(calcParameters, x.Resolve<FileFactoryAndTracker>(),
-                x.Resolve<OnlineLoggingData>(),
-                x.Resolve<SqlResultLoggingService>())).As<ILogFile>().SingleInstance();
+            builder.Register(x => new LogFile(calcParameters, x.Resolve<FileFactoryAndTracker>())).As<ILogFile>().SingleInstance();
             builder.RegisterType<AffordanceTaggingSetFactory>().As<AffordanceTaggingSetFactory>();
             builder.RegisterType<CalcPersonDtoFactory>().As<CalcPersonDtoFactory>();
             builder.RegisterType<CalcDeviceDtoFactory>().As<CalcDeviceDtoFactory>();

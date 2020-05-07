@@ -13,7 +13,7 @@ namespace ChartCreator2.PDF {
             MyTargetDirectory = TargetDirectory.Charts;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         protected override string GetGraphTitle(string filename) => "Variables";
     }
 }

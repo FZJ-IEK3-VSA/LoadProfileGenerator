@@ -81,7 +81,7 @@ namespace CalculationEngine.Transportation
             //_mypicks = new PreviouslyPickedDevices(calcPersonName, currentTimeStep);
             int totalDuration = 0;
             //int slidingTimeStep = currentTimeStep;
-            _calcRepo.Logfile.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(
+            _calcRepo.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(
                 currentTimeStep,
                 _householdkey, "\tActivating " + Name));
             usedDeviceEvents = new List<CalcTravelDeviceUseEvent>();
@@ -100,7 +100,7 @@ namespace CalculationEngine.Transportation
                 usedDeviceEvents.Add(new CalcTravelDeviceUseEvent(device, pickedDuration,step.DistanceOfStepInM));
                 //step.CalculateDurationInTimestepsAndPickDevice(slidingTimeStep, out CalcTransportationDevice pickedDevice,
                 //out int durationForPickedDeviceInTimesteps, SiteA, _vehiclePool, _locationUnlimitedDevices, rnd);
-                _calcRepo.Logfile.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(
+                _calcRepo.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(
                     currentTimeStep,
                     _householdkey,
                     "\tActiviating step " + step.Name + " Device " + device.Name + " Distance: "
@@ -164,7 +164,7 @@ namespace CalculationEngine.Transportation
 
             picks.PreviouslyCalculatedTimeSteps = totalDuration;
             _mypicks = picks;
-            _calcRepo.Logfile.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(
+            _calcRepo.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(
                 currentTimeStep,
                 _householdkey,
                 "\t\t\tCalculated a duration for the route of " + totalDuration));

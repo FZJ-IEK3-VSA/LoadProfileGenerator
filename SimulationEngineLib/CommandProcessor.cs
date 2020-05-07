@@ -18,7 +18,9 @@ namespace SimulationEngineLib {
     public class CommandProcessor {
         [NotNull]
         [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
+#pragma warning disable CA1044 // Properties should not be write only
         public static string ConnectionString { private get; set; }
+#pragma warning restore CA1044 // Properties should not be write only
         [HelpHook]
         [ArgShortcut("-?")]
         [ArgDescription("Shows this help")]

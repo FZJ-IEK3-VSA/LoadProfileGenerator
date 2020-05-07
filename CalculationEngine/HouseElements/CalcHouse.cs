@@ -67,26 +67,6 @@ namespace CalculationEngine.HouseElements {
             HouseholdKey = houseKey;
         }
 
-        public void CloseLogfile()
-        {
-            if (_calcRepo.Logfile == null) {
-                throw new LPGException("Logfile was null");
-            }
-
-            _calcRepo.Logfile.Close();
-        }
-
-        /*
-        [NotNull]
-        Dictionary<int, CalcProfile> ICalcAbleObject.CollectAllProfiles()
-        {
-            if (_allProfiles == null) {
-                throw new LPGException("profiles should not be null.");
-            }
-
-            return _allProfiles;
-        }*/
-
         [NotNull]
         [ItemNotNull]
         public List<CalcAutoDev> CollectAutoDevs()
@@ -160,7 +140,7 @@ namespace CalculationEngine.HouseElements {
             if (_calcRepo.CalcParameters.IsSet(CalcOption.HouseholdContents)) {
 
                 using (var swHouse =
-                    _calcRepo.Logfile.FileFactoryAndTracker.MakeFile<StreamWriter>("HouseSpec." + Constants.HouseKey.Key + ".txt",
+                    _calcRepo.FileFactoryAndTracker.MakeFile<StreamWriter>("HouseSpec." + Constants.HouseKey.Key + ".txt",
                         "Detailed house description", true, ResultFileID.PersonFile, Constants.HouseKey, TargetDirectory.Root,
                         _calcRepo.CalcParameters.InternalStepsize)) {
                     swHouse.WriteLine("Space Heating");
@@ -370,7 +350,7 @@ namespace CalculationEngine.HouseElements {
                 throw new LPGException("_households was null");
 #pragma warning restore S3877 // Exceptions should not be thrown from unexpected methods
             }
-
+            _calcRepo.Dispose();
             foreach (var household in _households) {
                 household.Dispose();
             }

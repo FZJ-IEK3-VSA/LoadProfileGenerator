@@ -33,23 +33,19 @@ using System.Threading;
 using Automation.ResultFiles;
 using CalculationEngine.Helper;
 using CalculationEngine.HouseholdElements;
-using CalculationEngine.OnlineLogging;
 using Common;
 using Common.CalcDto;
-using Common.JSON;
-using Common.SQLResultLogging;
 using Common.Tests;
-using JetBrains.Annotations;
 using NUnit.Framework;
 
 namespace Calculation.Tests
 {
     public class TestBasis : UnitTestBaseClass
     {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         protected NormalRandom NormalRandom { get; private set; } = new NormalRandom(0, 0.1, new Random());
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         protected static CalcLoadType MakeCalcLoadType() => new CalcLoadType("loadtype1", "Watt", "kWh", 1 / 1000.0,
             true, Guid.NewGuid().ToString());
 
@@ -65,7 +61,7 @@ namespace Calculation.Tests
             return new CalcPerson(pdto,new Random(), lf,cloc,calcParameters,isSick,isOnVacation);
         }*/
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         protected static CalcProfile MakeCalcProfile5Min100()
         {
             var cp = new CalcProfile("5min100%", Guid.NewGuid().ToString(),  new TimeSpan(0, 1, 0), ProfileType.Relative, "foo");
@@ -75,16 +71,6 @@ namespace Calculation.Tests
             return cp;
         }
 
-        [NotNull]
-        protected static LogFile MakeLogfile([NotNull] string path, [NotNull] CalcParameters calcParameters, [NotNull] IInputDataLogger idl,
-                                             [NotNull] SqlResultLoggingService srls)
-        {
-            calcParameters.EnableShowSettlingPeriod();
-            var fft = new FileFactoryAndTracker(path, "hh1",idl);
-            DateStampCreator dsc = new DateStampCreator(calcParameters);
-            IOnlineLoggingData old = new OnlineLoggingData( dsc,idl,calcParameters);
-            return new LogFile(calcParameters,fft,old,srls);
-        }
 
         [SuppressMessage("Microsoft.Naming",
             "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "SetUp")]
@@ -126,7 +112,7 @@ namespace Calculation.Tests
 
         private static class MyLock
         {
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public static object Locker { get; } = new object();
         }
     }

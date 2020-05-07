@@ -212,7 +212,7 @@ namespace CalculationEngine.HouseholdElements {
             if (_calcRepo.CalcParameters.IsSet(CalcOption.CriticalViolations)) {
                 //if (_lf == null) {                    throw new LPGException("Logfile was null.");                }
 
-                PersonDesires.CheckForCriticalThreshold(this, time, _calcRepo.Logfile.FileFactoryAndTracker, householdKey);
+                PersonDesires.CheckForCriticalThreshold(this, time, _calcRepo.FileFactoryAndTracker, householdKey);
             }
 
             PersonDesires.ApplyDecay(time);
@@ -298,7 +298,7 @@ namespace CalculationEngine.HouseholdElements {
             }
 
             if (!_alreadyloggedvacation) {
-                _calcRepo.Logfile.OnlineLoggingData.AddActionEntry(time, _calcPerson.Guid, _calcPerson.Name,
+                _calcRepo.OnlineLoggingData.AddActionEntry(time, _calcPerson.Guid, _calcPerson.Name,
                     _isCurrentlySick, "taking a vacation", _vacationAffordanceGuid, _calcPerson.HouseholdKey,
                     "Vacation", BodilyActivityLevel.Outside);
                 _calcRepo.OnlineLoggingData.AddLocationEntry(new LocationEntry(_calcPerson.HouseholdKey,
@@ -513,7 +513,7 @@ namespace CalculationEngine.HouseholdElements {
                 }
             }
 
-            _calcRepo.Logfile.OnlineLoggingData.AddLocationEntry(
+            _calcRepo.OnlineLoggingData.AddLocationEntry(
                 new LocationEntry(_calcPerson.HouseholdKey,
                     _calcPerson.Name,
                     _calcPerson.Guid,
@@ -529,7 +529,7 @@ namespace CalculationEngine.HouseholdElements {
                     _calcPerson.HouseholdKey);
             }
 
-            _calcRepo.Logfile.OnlineLoggingData.AddActionEntry(currentTimeStep, Guid, Name, _isCurrentlySick, bestaff.Name,
+            _calcRepo.OnlineLoggingData.AddActionEntry(currentTimeStep, Guid, Name, _isCurrentlySick, bestaff.Name,
                 bestaff.Guid, _calcPerson.HouseholdKey, bestaff.AffCategory, bestaff.BodilyActivityLevel);
             PersonDesires.ApplyAffordanceEffect(bestaff.Satisfactionvalues, bestaff.RandomEffect,  bestaff.Name);
             bestaff.Activate(currentTimeStep, Name,  CurrentLocation,

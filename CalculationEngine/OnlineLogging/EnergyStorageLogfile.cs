@@ -26,6 +26,7 @@
 
 //-----------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -37,7 +38,7 @@ using Common.SQLResultLogging;
 using JetBrains.Annotations;
 
 namespace CalculationEngine.OnlineLogging {
-    public class EnergyStorageLogfile : LogfileBase {
+    public class EnergyStorageLogfile : LogfileBase, IDisposable {
         [NotNull] private readonly CalcParameters _calcParameters;
 
         [NotNull] private readonly Dictionary<string, int> _energyStorageColumns = new Dictionary<string, int>();
@@ -78,7 +79,7 @@ namespace CalculationEngine.OnlineLogging {
         [NotNull]
         public Dictionary<string, int> EnergyStorageColumnDict => _energyStorageColumns;
 
-        public void Close()
+        public void Dispose()
         {
             _energyStoragesSw?.Close();
         }

@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 
 namespace CalculationEngine.OnlineLogging {
     public class ConsoleThoughts : IThoughtsLogFile {
-        public void Close() {
+        public void Dispose() {
             // needs to be here for the interface
         }
 

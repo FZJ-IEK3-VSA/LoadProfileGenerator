@@ -1,6 +1,6 @@
 ﻿namespace Automation
 {
-    public class UnitTestCategories {
+    public static class UnitTestCategories {
         public const string BasicTest = "BasicTest";
         public const string ManualOnly = "ManualOnly";
         public const string LongTest5 = "LongTest5";

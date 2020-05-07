@@ -87,7 +87,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
 
         }
 
-        private static bool IsInvalidMember([NotNull] IMemberInfo x)
+        private static bool IsInvalidMember([JetBrains.Annotations.NotNull] IMemberInfo x)
         {
             if(x.SelectedMemberPath.EndsWith("ConnectionString")) {
                 return true;

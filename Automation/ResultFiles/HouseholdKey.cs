@@ -60,7 +60,7 @@ namespace Automation.ResultFiles {
                 return true;
             }
 
-            return string.Equals(Key, other.Key);
+            return string.Equals(Key, other.Key, StringComparison.Ordinal);
         }
 
         public override bool Equals(object obj)

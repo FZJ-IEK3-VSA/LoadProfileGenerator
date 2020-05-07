@@ -36,7 +36,6 @@ using CalculationEngine.OnlineLogging;
 using Common;
 using Common.CalcDto;
 using Common.JSON;
-using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
 using NUnit.Framework;
 
@@ -61,20 +60,16 @@ namespace Calculation.Tests.Logfile
             var fft = new FileFactoryAndTracker(wd.WorkingDirectory, "test1",wd.InputDataLogger);
             fft.RegisterHousehold(Constants.GeneralHouseholdKey,"general",HouseholdKeyType.General,"desc", null, null);
             //SqlResultLoggingService srls = new SqlResultLoggingService(wd.WorkingDirectory);
-            DateStampCreator dsc = new DateStampCreator(calcParameters);
-            OnlineLoggingData old = new OnlineLoggingData(dsc,wd.InputDataLogger,calcParameters);
-            using (LogFile lf = new LogFile(calcParameters,fft,old,wd.SqlResultLoggingService, true))
-            {
-                DesiresLogFile dlf = new DesiresLogFile(lf.FileFactoryAndTracker, true,calcParameters);
+            CalculationProfiler profiler = new CalculationProfiler();
+            CalcRepo calcRepo = CalcRepo.Make(calcParameters, wd.InputDataLogger, wd.WorkingDirectory, "name", profiler);
+                DesiresLogFile dlf = new DesiresLogFile(fft, calcParameters);
                 CalcDesire cd1 = new CalcDesire("desire1", 1, 0.5m, 12, 1, 1, 60, -1, null,"","");
 
-                Random r = new Random();
                 //NormalRandom nr = new NormalRandom(0, 0.1, r);
                 CalcLocation cloc = new CalcLocation("cloc",Guid.NewGuid().ToString());
                 BitArray isSick = new BitArray(calcParameters.InternalTimesteps);
                 BitArray isOnVacation = new BitArray(calcParameters.InternalTimesteps);
                 CalcPersonDto calcPerson = CalcPersonDto.MakeExamplePerson();
-                CalcRepo calcRepo = new CalcRepo(rnd:r);
                 CalcPerson cp = new CalcPerson(calcPerson,  cloc,
                      isSick, isOnVacation,calcRepo);
                     //"bla", 1, 5, r, 48, PermittedGender.Male, lf, "HH1", cloc, "traittag", "hhname0",calcParameters,isSick,Guid.NewGuid().ToString());
@@ -82,11 +77,10 @@ namespace Calculation.Tests.Logfile
                 dlf.RegisterDesires(cp.PersonDesires.Desires.Values);
                 TimeStep ts = new TimeStep(0,0,true);
                 DesireEntry de = new DesireEntry(cp, ts, cp.PersonDesires, dlf,calcParameters);
-                lf.InitHousehold(new HouseholdKey("hh1"), "bla", HouseholdKeyType.Household,"desc",null,null);
+                fft.RegisterHousehold(new HouseholdKey("hh1"), "bla", HouseholdKeyType.Household,"desc",null,null);
                 dlf.WriteEntry(de, new HouseholdKey("hh1"));
-                dlf.Close();
+                dlf.Dispose();
                 Assert.AreEqual(true, true);
-            }
             wd.CleanUp();
         }
     }

@@ -17,17 +17,17 @@ namespace ChartCreator2.OxyCharts {
     }
 
     public class ChartGeneratorManager {
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             private readonly ICalculationProfiler _calculationProfiler;
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             private readonly FileFactoryAndTracker _fft;
 
-        [NotNull] private readonly ChartCreationParameters _chartCreationParameters;
-        [NotNull] private readonly SqlResultLoggingService _srls;
+        [JetBrains.Annotations.NotNull] private readonly ChartCreationParameters _chartCreationParameters;
+        [JetBrains.Annotations.NotNull] private readonly SqlResultLoggingService _srls;
 
-        public ChartGeneratorManager([NotNull] ICalculationProfiler calculationProfiler, [
+        public ChartGeneratorManager([JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler, [
                                              NotNull] FileFactoryAndTracker fft,
-                                         [NotNull] ChartCreationParameters chartCreationParameters)
+                                         [JetBrains.Annotations.NotNull] ChartCreationParameters chartCreationParameters)
             {
                 _calculationProfiler = calculationProfiler;
                 _fft = fft;
@@ -35,7 +35,7 @@ namespace ChartCreator2.OxyCharts {
                 _srls = new SqlResultLoggingService(_chartCreationParameters.BaseDirectory.FullName);
             }
 
-            public void Run([NotNull] string resultPath)
+            public void Run([JetBrains.Annotations.NotNull] string resultPath)
             {
                 _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Post Processing");
             var builder = new ContainerBuilder();
@@ -92,7 +92,7 @@ namespace ChartCreator2.OxyCharts {
         public bool ShowTitle { get; }
 
         public ChartCreationParameters(int dpi, int imgWidth, int imgHeight, bool showTitle,
-                                               [NotNull] string csvCharacter, [NotNull] DirectoryInfo baseDirectory)
+                                               [JetBrains.Annotations.NotNull] string csvCharacter, [JetBrains.Annotations.NotNull] DirectoryInfo baseDirectory)
         {
             Dpi = dpi;
             CSVCharacter = csvCharacter;
@@ -103,37 +103,37 @@ namespace ChartCreator2.OxyCharts {
             _csvCharacterArr = new[] {csvCharacter};
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public DirectoryInfo BaseDirectory { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string CSVCharacter { get; }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string[] CSVCharacterArr => _csvCharacterArr;
 
         public int PDFFontSize { get; } = 30;
 
-        [NotNull] [ItemNotNull] private readonly string[] _csvCharacterArr;
+        [JetBrains.Annotations.NotNull] [ItemNotNull] private readonly string[] _csvCharacterArr;
     }
 
     public class ChartGenerator {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ChartCreationParameters GeneralParameters { get; }
 
-        [NotNull] private readonly ICalculationProfiler _calculationProfiler;
-        [NotNull] private readonly FileFactoryAndTracker _fft;
-        [ItemNotNull] [NotNull] private readonly IChartMakerStep[] _chartMakerSteps;
-        [ItemNotNull] [NotNull] private readonly ISqlChartMakerStep[] _sqlChartMakerSteps;
-        [NotNull] private readonly SqlResultLoggingService _srls;
-        [NotNull] private readonly CalcDataRepository _repository;
+        [JetBrains.Annotations.NotNull] private readonly ICalculationProfiler _calculationProfiler;
+        [JetBrains.Annotations.NotNull] private readonly FileFactoryAndTracker _fft;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly IChartMakerStep[] _chartMakerSteps;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ISqlChartMakerStep[] _sqlChartMakerSteps;
+        [JetBrains.Annotations.NotNull] private readonly SqlResultLoggingService _srls;
+        [JetBrains.Annotations.NotNull] private readonly CalcDataRepository _repository;
 
-        public ChartGenerator( [NotNull] ICalculationProfiler calculationProfiler, [NotNull] ChartCreationParameters generalParameters,
-                               [NotNull] FileFactoryAndTracker fft, [ItemNotNull] [NotNull] IChartMakerStep[] chartMakerSteps,
-                               [ItemNotNull] [NotNull] ISqlChartMakerStep[] sqlChartMakerSteps,
-                               [NotNull] SqlResultLoggingService srls,
-                               [NotNull] CalcDataRepository  repository)
+        public ChartGenerator( [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler, [JetBrains.Annotations.NotNull] ChartCreationParameters generalParameters,
+                               [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft, [ItemNotNull] [JetBrains.Annotations.NotNull] IChartMakerStep[] chartMakerSteps,
+                               [ItemNotNull] [JetBrains.Annotations.NotNull] ISqlChartMakerStep[] sqlChartMakerSteps,
+                               [JetBrains.Annotations.NotNull] SqlResultLoggingService srls,
+                               [JetBrains.Annotations.NotNull] CalcDataRepository  repository)
         {
             GeneralParameters = generalParameters;
             _fft = fft;
@@ -166,7 +166,7 @@ namespace ChartCreator2.OxyCharts {
         /*
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         [SuppressMessage("ReSharper", "ConvertIfStatementToSwitchStatement")]
-        private FileProcessingResult ProcessFile([NotNull] ResultFileEntry entry, DirectoryInfo basisPath, string csv,
+        private FileProcessingResult ProcessFile([JetBrains.Annotations.NotNull] ResultFileEntry entry, DirectoryInfo basisPath, string csv,
             FileFactoryAndTracker fft, )
         {
             if (entry.LoadTypeInformation != null) {
@@ -249,7 +249,7 @@ namespace ChartCreator2.OxyCharts {
             }
         }*/
 
-        public void RunAll([NotNull] string directoryName)
+        public void RunAll([JetBrains.Annotations.NotNull] string directoryName)
         {
             _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
 

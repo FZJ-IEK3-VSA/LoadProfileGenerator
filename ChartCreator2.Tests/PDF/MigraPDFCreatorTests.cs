@@ -15,42 +15,48 @@ namespace ChartCreator2.Tests.PDF {
     {
         [Test]
         [Category(UnitTestCategories.LongTest4)]
-        public void MakeDocumentTest() {
+        public void MakeDocumentTest()
+        {
             var cs = new OxyCalculationSetup(Utili.GetCurrentMethodAndClass());
             var name = cs.StartHousehold(1, GlobalConsts.CSVCharacter,
-                LoadTypePriority.Mandatory, null, x => {
+                LoadTypePriority.Mandatory, null, x =>
+                {
                     x.Enable(CalcOption.TotalsPerLoadtype);
                     x.Enable(CalcOption.HouseholdContents);
                 });
             CalculationProfiler cp = new CalculationProfiler();
-            ChartCreationParameters ccp = new ChartCreationParameters(144,1600,1000,
-                false,GlobalConsts.CSVCharacter,new DirectoryInfo(cs.DstDir));
-            var fft = cs.GetFileTracker();
-            var cg = new ChartGeneratorManager(cp,fft,ccp);
-            Logger.Info("Making picture");
-            cg.Run(cs.DstDir);
-            Logger.Info("finished picture");
-            MigraPDFCreator mpc = new MigraPDFCreator(cp);
-            mpc.MakeDocument(cs.DstDir, name + ".test", false, false, GlobalConsts.CSVCharacter,fft);
+            ChartCreationParameters ccp = new ChartCreationParameters(144, 1600, 1000,
+                false, GlobalConsts.CSVCharacter, new DirectoryInfo(cs.DstDir));
+            using (var fft = cs.GetFileTracker())
+            {
+                var cg = new ChartGeneratorManager(cp, fft, ccp);
+                Logger.Info("Making picture");
+                cg.Run(cs.DstDir);
+                Logger.Info("finished picture");
+                MigraPDFCreator mpc = new MigraPDFCreator(cp);
+                mpc.MakeDocument(cs.DstDir, name + ".test", false, false, GlobalConsts.CSVCharacter, fft);
+            }
             cs.CleanUp(1);
         }
 
         [Test]
         [Category(UnitTestCategories.ManualOnly)]
-        public void MakeDocumentTestFull() {
+        public void MakeDocumentTestFull()
+        {
             var cs = new OxyCalculationSetup(Utili.GetCurrentMethodAndClass());
-            var name = cs.StartHousehold(1,  GlobalConsts.CSVCharacter,
+            var name = cs.StartHousehold(1, GlobalConsts.CSVCharacter,
                 LoadTypePriority.All, null, x => x.ApplyOptionDefault(OutputFileDefault.All));
             CalculationProfiler cp = new CalculationProfiler();
-            ChartCreationParameters ccp = new ChartCreationParameters(144,1600,1000,false,GlobalConsts.CSVCharacter,new DirectoryInfo(cs.DstDir));
-            var cg = new ChartGeneratorManager(cp, cs.GetFileTracker(), ccp);
-            Logger.Info("Making picture");
-            FileFactoryAndTracker fft = cs.GetFileTracker();
-
-            cg.Run(cs.DstDir);
-            Logger.Info("finished picture");
-            MigraPDFCreator mpc = new MigraPDFCreator(cp);
-            mpc.MakeDocument(cs.DstDir, name + ".test", false, false, GlobalConsts.CSVCharacter,fft);
+            ChartCreationParameters ccp = new ChartCreationParameters(144, 1600, 1000, false, GlobalConsts.CSVCharacter, new DirectoryInfo(cs.DstDir));
+            using (FileFactoryAndTracker fft = cs.GetFileTracker())
+            {
+                var cg = new ChartGeneratorManager(cp, fft, ccp);
+                Logger.Info("Making picture");
+                cg.Run(cs.DstDir);
+                Logger.Info("finished picture");
+                MigraPDFCreator mpc = new MigraPDFCreator(cp);
+                mpc.MakeDocument(cs.DstDir, name + ".test", false, false, GlobalConsts.CSVCharacter, fft);
+            }
             //cs.CleanUp(1);
         }
         /*

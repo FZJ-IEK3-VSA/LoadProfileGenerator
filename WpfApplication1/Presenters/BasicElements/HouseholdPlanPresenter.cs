@@ -119,7 +119,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<Person> ALPersons { get; set; } = new ObservableCollection<Person>();
+        public ObservableCollection<Person> ALPersons { get;  } = new ObservableCollection<Person>();
 
         [CanBeNull]
         [UsedImplicitly]
@@ -138,7 +138,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<HouseholdTrait> ALTraits { get; set; } = new ObservableCollection<HouseholdTrait>();
+        public ObservableCollection<HouseholdTrait> ALTraits { get;  } = new ObservableCollection<HouseholdTrait>();
 
         [NotNull]
         [UsedImplicitly]
@@ -147,7 +147,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<string> ColorSchemes { get; set; } = new ObservableCollection<string>();
+        public ObservableCollection<string> ColorSchemes { get;  } = new ObservableCollection<string>();
 
         [CanBeNull]
         [UsedImplicitly]
@@ -576,14 +576,16 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             });
         }
 
-        public class StatisticsEntry {
-            [CanBeNull]
-            [UsedImplicitly]
-            public string Name { get; set; }
+        
+    }
+    public class StatisticsEntry
+    {
+        [CanBeNull]
+        [UsedImplicitly]
+        public string Name { get; set; }
 
-            [CanBeNull]
-            [UsedImplicitly]
-            public string Value { get; set; }
-        }
+        [CanBeNull]
+        [UsedImplicitly]
+        public string Value { get; set; }
     }
 }

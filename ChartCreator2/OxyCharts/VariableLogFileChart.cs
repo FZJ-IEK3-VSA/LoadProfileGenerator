@@ -12,9 +12,9 @@ using OxyPlot.Series;
 namespace ChartCreator2.OxyCharts {
     internal class VariableLogFileChart : ChartBaseFileStep
     {
-        public VariableLogFileChart([NotNull] ChartCreationParameters parameters,
-                                    [NotNull] FileFactoryAndTracker fft,
-                                    [NotNull] ICalculationProfiler calculationProfiler) : base(parameters, fft,
+        public VariableLogFileChart([JetBrains.Annotations.NotNull] ChartCreationParameters parameters,
+                                    [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft,
+                                    [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler) : base(parameters, fft,
             calculationProfiler, new List<ResultFileID>() { ResultFileID.VariableLogfile
             },
             "Variable Logfile", FileProcessingResult.ShouldCreateFiles
@@ -22,9 +22,9 @@ namespace ChartCreator2.OxyCharts {
         {
         }
 
-        [NotNull]
-        private PlotModel MakeChart([NotNull] string plotName, [NotNull] string yaxisLabel, TimeSpan timestep, [ItemNotNull] [NotNull] List<string> headers,
-            [ItemNotNull] [NotNull] List<double[]> values, [NotNull] List<DateTime> dates, int maxTimestep)
+        [JetBrains.Annotations.NotNull]
+        private PlotModel MakeChart([JetBrains.Annotations.NotNull] string plotName, [JetBrains.Annotations.NotNull] string yaxisLabel, TimeSpan timestep, [ItemNotNull] [JetBrains.Annotations.NotNull] List<string> headers,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] List<double[]> values, [JetBrains.Annotations.NotNull] List<DateTime> dates, int maxTimestep)
         {
             var plotModel1 = new PlotModel
             {

@@ -30,6 +30,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using Automation;
@@ -84,7 +85,7 @@ namespace Common {
         }
     }
 
-    public class FileFactoryAndTracker {
+    public class FileFactoryAndTracker: IDisposable {
         [NotNull]
         //public HashSet<HouseholdKey> HouseholdKeys => _householdKeys;
         public HouseholdRegistry HouseholdRegistry { get; } = new HouseholdRegistry();
@@ -170,19 +171,6 @@ namespace Common {
             return ResultFileList.ResultFiles.ContainsKey(key);
         }
 
-        public void Close()
-        {
-            foreach (var entry in ResultFileList.ResultFiles.Values) {
-                entry.BinaryWriter?.Close();
-                entry.StreamWriter?.Close();
-                entry.Stream?.Close();
-            }
-            if(ResultFileList.ResultFiles.All(x => x.Value.ResultFileID != ResultFileID.JsonResultFileList)) {
-                RegisterFile(Constants.ResultJsonFileName,"List of all result files with additional information",
-                    false,ResultFileID.JsonResultFileList,Constants.GeneralHouseholdKey,TargetDirectory.Root);
-            }
-            //ResultFileList.WriteResultEntries(_baseResultpath);
-        }
 
         [NotNull]
         private string GetFullPathForTargetdirectry(TargetDirectory targetDirectory)
@@ -340,21 +328,21 @@ namespace Common {
             var registeredFiles = ResultFileList.ResultFiles.Values.Select(x => x.FullFileName).ToList();
             foreach (var fileInfo in fileInfos)
             {
-                if (!registeredFiles.Any(x=> fileInfo.FullName.EndsWith(x)) && !fileInfo.Name.EndsWith("sqlite-wal")
-                                                                 && !fileInfo.Name.EndsWith("sqlite-shm")
-                                                                 && !fileInfo.Name.EndsWith(".sqlite")
-                                                                 && !fileInfo.Name.ToLower().EndsWith(".exe")
-                                                                 && !fileInfo.Name.ToLower().EndsWith(".dll")
-                                                                 && !fileInfo.Name.ToLower().EndsWith(".config")
-                                                                 && !fileInfo.Name.ToLower().EndsWith(".pdb")
-                                                                 && !fileInfo.Name.ToLower().EndsWith(".xml")
-                                                                 && !fileInfo.Name.ToLower().EndsWith(".manifest")
-                                                                 && !fileInfo.Name.ToLower().EndsWith(".cmd")
-                                                                 && !fileInfo.Name.ToLower().EndsWith(".json")
-                                                                 && !fileInfo.Name.ToLower().EndsWith(".db3")
-                    && !fileInfo.Name.ToLower().EndsWith("logfile.txt")
-                                                                 && !fileInfo.Name.ToLower().StartsWith("log.")
-                                                                 && !fileInfo.Name.ToLower().StartsWith("logfile."))
+                if (!registeredFiles.Any(x=> fileInfo.FullName.EndsWith(x, StringComparison.InvariantCultureIgnoreCase)) && !fileInfo.Name.EndsWith("sqlite-wal", StringComparison.InvariantCultureIgnoreCase)
+                                                                 && !fileInfo.Name.EndsWith("sqlite-shm", StringComparison.InvariantCultureIgnoreCase)
+                                                                 && !fileInfo.Name.EndsWith(".sqlite", StringComparison.InvariantCultureIgnoreCase)
+                                                                 && !fileInfo.Name.ToLower(CultureInfo.InvariantCulture).EndsWith(".exe", StringComparison.InvariantCultureIgnoreCase)
+                                                                 && !fileInfo.Name.ToLower(CultureInfo.InvariantCulture).EndsWith(".dll", StringComparison.InvariantCultureIgnoreCase)
+                                                                 && !fileInfo.Name.ToLower(CultureInfo.InvariantCulture).EndsWith(".config", StringComparison.InvariantCultureIgnoreCase)
+                                                                 && !fileInfo.Name.ToLower(CultureInfo.InvariantCulture).EndsWith(".pdb", StringComparison.InvariantCultureIgnoreCase)
+                                                                 && !fileInfo.Name.ToLower(CultureInfo.InvariantCulture).EndsWith(".xml", StringComparison.InvariantCultureIgnoreCase)
+                                                                 && !fileInfo.Name.ToLower(CultureInfo.InvariantCulture).EndsWith(".manifest", StringComparison.InvariantCultureIgnoreCase)
+                                                                 && !fileInfo.Name.ToLower(CultureInfo.InvariantCulture).EndsWith(".cmd", StringComparison.InvariantCultureIgnoreCase)
+                                                                 && !fileInfo.Name.ToLower(CultureInfo.InvariantCulture).EndsWith(".json", StringComparison.InvariantCultureIgnoreCase)
+                                                                 && !fileInfo.Name.ToLower(CultureInfo.InvariantCulture).EndsWith(".db3", StringComparison.InvariantCultureIgnoreCase)
+                    && !fileInfo.Name.ToLower(CultureInfo.InvariantCulture).EndsWith("logfile.txt", StringComparison.InvariantCultureIgnoreCase)
+                                                                 && !fileInfo.Name.ToLower(CultureInfo.InvariantCulture).StartsWith("log.", StringComparison.InvariantCultureIgnoreCase)
+                                                                 && !fileInfo.Name.ToLower(CultureInfo.InvariantCulture).StartsWith("logfile.", StringComparison.InvariantCultureIgnoreCase))
 
                 {
                     throw new LPGException("Unregistered file found: " + fileInfo.FullName);
@@ -365,6 +353,21 @@ namespace Common {
         public void RegisterHousehold([NotNull] HouseholdKey householdKey, [NotNull] string name, HouseholdKeyType type, [NotNull] string description, [CanBeNull] string houseName, [CanBeNull] string houseDescription)
         {
             HouseholdRegistry.RegisterHousehold(householdKey, name, type,_inputDataLogger, description, houseName,houseDescription);
+        }
+
+        public void Dispose()
+        {
+            foreach (var entry in ResultFileList.ResultFiles.Values)
+            {
+                entry.BinaryWriter?.Close();
+                entry.StreamWriter?.Close();
+                entry.Stream?.Close();
+            }
+            if (ResultFileList.ResultFiles.All(x => x.Value.ResultFileID != ResultFileID.JsonResultFileList))
+            {
+                RegisterFile(Constants.ResultJsonFileName, "List of all result files with additional information",
+                    false, ResultFileID.JsonResultFileList, Constants.GeneralHouseholdKey, TargetDirectory.Root);
+            }
         }
     }
 }

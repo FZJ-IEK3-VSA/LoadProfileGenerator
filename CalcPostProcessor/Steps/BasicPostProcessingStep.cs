@@ -10,7 +10,9 @@ using JetBrains.Annotations;
 
 namespace CalcPostProcessor.Steps
 {
+#pragma warning disable CA1040 // Avoid empty interfaces
     public interface IStepParameters {
+#pragma warning restore CA1040 // Avoid empty interfaces
     }
     public class GeneralStepParameters:IStepParameters {
     }

@@ -47,7 +47,7 @@ namespace Calculation.Tests.HouseholdElements {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void CheckResultingProfile() {
-            var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
+            using var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             wd.InputDataLogger.AddSaver(new ColumnEntryLogger(wd.SqlResultLoggingService));
             wd.InputDataLogger.AddSaver(new ResultFileEntryLogger(wd.SqlResultLoggingService));
             wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
@@ -65,16 +65,15 @@ namespace Calculation.Tests.HouseholdElements {
             var r = new Random(5);
             HouseholdKey key = new HouseholdKey("hh1");
             var nr = new NormalRandom(0, 1, r);
-            var fft = new FileFactoryAndTracker(wd.WorkingDirectory,"householdname",wd.InputDataLogger);
-            fft.RegisterHousehold(key,"hh1",HouseholdKeyType.Household, "desc",null,null);
+            using var fft = new FileFactoryAndTracker(wd.WorkingDirectory, "householdname", wd.InputDataLogger);
+                fft.RegisterHousehold(key, "hh1", HouseholdKeyType.Household, "desc", null, null);
             fft.RegisterHousehold(Constants.GeneralHouseholdKey, "general",HouseholdKeyType.General,"desc",null,null);
 
             //SqlResultLoggingService srls = new SqlResultLoggingService(wd.WorkingDirectory);
             DateStampCreator dsc = new DateStampCreator(calculationParameters);
-            OnlineLoggingData old = new OnlineLoggingData(dsc,wd.InputDataLogger,calculationParameters);
-            using (var lf = new LogFile(calculationParameters,fft,old,wd.SqlResultLoggingService, true)) {
-                var odap = new OnlineDeviceActivationProcessor( lf,calculationParameters);
-                CalcRepo calcRepo = new CalcRepo(odap:odap, normalRandom:nr);
+            using OnlineLoggingData old = new OnlineLoggingData(dsc,wd.InputDataLogger,calculationParameters);
+                var odap = new OnlineDeviceActivationProcessor( old,calculationParameters,fft);
+                using CalcRepo calcRepo = new CalcRepo(odap:odap, normalRandom:nr, calcParameters:calculationParameters);
                 var location = new CalcLocation("calcloc", Guid.NewGuid().ToString());
                 CalcVariableRepository crv = new CalcVariableRepository();
                 string variableGuid = Guid.NewGuid().ToString();
@@ -105,7 +104,6 @@ namespace Calculation.Tests.HouseholdElements {
                         }
                     }
                 }
-            }
             wd.CleanUp();
         }
     }

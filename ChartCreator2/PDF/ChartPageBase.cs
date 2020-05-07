@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Windows.Media.Imaging;
+//using System.Windows.Media.Imaging;
 using Automation.ResultFiles;
 using Common;
 using JetBrains.Annotations;
@@ -8,7 +8,7 @@ using MigraDoc.DocumentObjectModel;
 
 namespace ChartCreator2.PDF {
     internal abstract class ChartPageBase : IPageCreatorToc {
-        protected ChartPageBase([CanBeNull] string description, [CanBeNull] string fileName, [NotNull] string pattern, [NotNull] string sectionTitle)
+        protected ChartPageBase([CanBeNull] string description, [CanBeNull] string fileName, [JetBrains.Annotations.NotNull] string pattern, [JetBrains.Annotations.NotNull] string sectionTitle)
         {
             Description = description;
             FileName = fileName;
@@ -21,12 +21,12 @@ namespace ChartCreator2.PDF {
         [CanBeNull]
         protected string FileName { private get; set; }
         protected TargetDirectory MyTargetDirectory { get; set; } = TargetDirectory.Undefined;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         protected string Pattern { get; set; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         protected string SectionTitle { get; set; }
 
-        public void MakePage([NotNull] Document doc, [NotNull] string dstdir, bool requireAll, [ItemNotNull] [NotNull] List<string> pngFiles, [NotNull] Section tocSection) {
+        public void MakePage([JetBrains.Annotations.NotNull] Document doc, [JetBrains.Annotations.NotNull] string dstdir, bool requireAll, [ItemNotNull] [JetBrains.Annotations.NotNull] List<string> pngFiles, [JetBrains.Annotations.NotNull] Section tocSection) {
             if (MyTargetDirectory == TargetDirectory.Undefined) {
                 throw new LPGException("Undefined Target Directory in " + SectionTitle);
             }
@@ -48,7 +48,7 @@ namespace ChartCreator2.PDF {
             }
         }
 
-        protected void AddImageToSection([NotNull] Section sec, [NotNull] FileInfo file, [CanBeNull] string title = "") {
+        protected void AddImageToSection([JetBrains.Annotations.NotNull] Section sec, [JetBrains.Annotations.NotNull] FileInfo file, [CanBeNull] string title = "") {
             var mytitle = GetGraphTitle(file.Name);
             if (!string.IsNullOrEmpty(title)) {
                 mytitle = title;
@@ -71,21 +71,22 @@ namespace ChartCreator2.PDF {
             }
         }
 
-        [NotNull]
-        protected static Size GetDimensions([NotNull] string fileName) {
+        [JetBrains.Annotations.NotNull]
+        protected static Size GetDimensions([JetBrains.Annotations.NotNull] string fileName) {
             using (var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read)) {
-                var bitmapFrame = BitmapFrame.Create(stream, BitmapCreateOptions.DelayCreation, BitmapCacheOption.None);
-                var width = bitmapFrame.PixelWidth;
-                var height = bitmapFrame.PixelHeight;
-                return new Size(height, width);
+                //var bitmapFrame = BitmapFrame.Create(stream, BitmapCreateOptions.DelayCreation, BitmapCacheOption.None);
+                //var width = bitmapFrame.PixelWidth;
+                //var height = bitmapFrame.PixelHeight;
+                //todo: properly look at the file size
+                return new Size(500, 500);
             }
         }
 
-        [NotNull]
-        protected abstract string GetGraphTitle([NotNull] string filename);
+        [JetBrains.Annotations.NotNull]
+        protected abstract string GetGraphTitle([JetBrains.Annotations.NotNull] string filename);
 
-        [NotNull]
-        protected Section MakeDescriptionArea([NotNull] Document doc, [NotNull] Section tocSection) {
+        [JetBrains.Annotations.NotNull]
+        protected Section MakeDescriptionArea([JetBrains.Annotations.NotNull] Document doc, [JetBrains.Annotations.NotNull] Section tocSection) {
             var sec = doc.AddSection();
             // Add a single paragraph with some text and format information.
             var para = sec.AddParagraph();
@@ -118,7 +119,7 @@ namespace ChartCreator2.PDF {
             return sec;
         }
 
-        public static void MakeTocEntry([CanBeNull] Section section, [NotNull] string name) {
+        public static void MakeTocEntry([CanBeNull] Section section, [JetBrains.Annotations.NotNull] string name) {
             if (section == null) {
                 return;
             }

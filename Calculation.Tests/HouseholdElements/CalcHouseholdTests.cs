@@ -68,7 +68,7 @@ namespace Calculation.HouseholdElements.Tests {
             cm.CalcObject.Init(dls, 1);
             CalcManager.ExitCalcFunction = true;
             cm.CalcObject.DumpHouseholdContentsToText();
-            cm.CloseLogfile();
+            cm.Dispose();
             db.Cleanup();
             wd1.CleanUp();
         }

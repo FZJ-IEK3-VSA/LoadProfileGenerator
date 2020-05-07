@@ -34,12 +34,14 @@ using Automation.ResultFiles;
 using CalculationController.DtoFactories;
 using CalculationEngine.Helper;
 using CalculationEngine.HouseholdElements;
+using CalculationEngine.OnlineDeviceLogging;
 using Common;
 using Common.CalcDto;
 using Common.Enums;
 using Common.JSON;
 using Common.Tests;
 using JetBrains.Annotations;
+using Moq;
 using NUnit.Framework;
 
 namespace Calculation.Tests {
@@ -64,22 +66,52 @@ namespace Calculation.Tests {
             CalcVariableRepository cvr = new CalcVariableRepository();
             BitArray isBusy = new BitArray(100, false);
             var r = new Random(0);
+
             var nr = new NormalRandom(0, 0.1, r);
-            CalcRepo calcRepo = new CalcRepo(calcParameters:calcParameters, normalRandom:nr, rnd:r);
-            aff = new CalcAffordance("bla", cp, loc, false, new List<CalcDesire>(), 0, 99, PermittedGender.All,
-                false, 0.1,  new ColorRGB(0, 0, 0), "bla", false, false, new List<CalcAffordanceVariableOp>(),
-                new List<VariableRequirement>(), ActionAfterInterruption.GoBackToOld, "bla", 100, false, "",
-                Guid.NewGuid().ToString(), cvr, new List<CalcAffordance.DeviceEnergyProfileTuple>(),
-                isBusy, BodilyActivityLevel.Low,calcRepo);
+            IMock<IOnlineDeviceActivationProcessor> iodap = new Mock<IOnlineDeviceActivationProcessor>();
+            using CalcRepo calcRepo = new CalcRepo(calcParameters: calcParameters, normalRandom: nr, rnd: r, odap: iodap.Object);
+            aff = new CalcAffordance("bla",
+                cp,
+                loc,
+                false,
+                new List<CalcDesire>(),
+                0,
+                99,
+                PermittedGender.All,
+                false,
+                0.1,
+                new ColorRGB(0, 0, 0),
+                "bla",
+                false,
+                false,
+                new List<CalcAffordanceVariableOp>(),
+                new List<VariableRequirement>(),
+                ActionAfterInterruption.GoBackToOld,
+                "bla",
+                100,
+                false,
+                "",
+                Guid.NewGuid().ToString(),
+                cvr,
+                new List<CalcAffordance.DeviceEnergyProfileTuple>(),
+                isBusy,
+                BodilyActivityLevel.Low,
+                calcRepo);
             lt = new CalcLoadType("load", "unit1", "unit2", 1, true, Guid.NewGuid().ToString());
             var cdl = new CalcDeviceLoad("cdl", 1, lt, 1, 0.1, Guid.NewGuid().ToString());
             var devloads = new List<CalcDeviceLoad> {
                 cdl
             };
-            CalcDeviceDto cdd = new CalcDeviceDto("device","devcategoryguid", new HouseholdKey("HH1"),
-                OefcDeviceType.Device, "category", string.Empty, Guid.NewGuid().ToString(),
-                loc.Guid,loc.Name);
-            cd = new CalcDevice(devloads,  loc, cdd, calcRepo);
+            CalcDeviceDto cdd = new CalcDeviceDto("device",
+                "devcategoryguid",
+                new HouseholdKey("HH1"),
+                OefcDeviceType.Device,
+                "category",
+                string.Empty,
+                Guid.NewGuid().ToString(),
+                loc.Guid,
+                loc.Name);
+            cd = new CalcDevice(devloads, loc, cdd, calcRepo);
             aff.AddDeviceTuple(cd, cp, lt, 0, timeStep, 10, probability);
         }
 
@@ -311,7 +343,7 @@ namespace Calculation.Tests {
             variables.Add(new CalcAffordanceVariableOp(cv.Name, 1, loc, VariableAction.Add,
                 VariableExecutionTime.Beginning, cv.Guid));
             BitArray isBusy = new BitArray(100, false);
-            CalcRepo calcRepo = new CalcRepo(rnd: r,normalRandom:nr,calcParameters:calcParameters);
+            using CalcRepo calcRepo = new CalcRepo(rnd: r,normalRandom:nr,calcParameters:calcParameters, odap: new Mock<IOnlineDeviceActivationProcessor>().Object);
             var aff = new CalcAffordance("bla", cp, loc, false, new List<CalcDesire>(), 0, 99,
                 PermittedGender.All, false, 0.1, new ColorRGB(0, 0, 0), "bla", false, false, variables, variableReqs,
                 ActionAfterInterruption.GoBackToOld, "bla", 100, false, "",  Guid.NewGuid().ToString(),
@@ -374,7 +406,9 @@ namespace Calculation.Tests {
             variables.Add(new CalcAffordanceVariableOp(cv.Name, 1, loc, VariableAction.SetTo,
                 VariableExecutionTime.Beginning, variableGuid));
             BitArray isBusy = new BitArray(100, false);
-            CalcRepo calcRepo = new CalcRepo(calcParameters: calcParameters);
+            Random rnd = new Random();
+            NormalRandom nr = new NormalRandom(0,1,rnd);
+            using CalcRepo calcRepo = new CalcRepo(calcParameters: calcParameters, odap: new Mock<IOnlineDeviceActivationProcessor>().Object, normalRandom:nr, rnd:rnd);
             var aff = new CalcAffordance("bla", cp, loc, false, new List<CalcDesire>(), 0, 99,
                 PermittedGender.All, false, 0.1, new ColorRGB(0, 0, 0), "bla", false, false, variables, variableReqs,
                 ActionAfterInterruption.GoBackToOld, "bla", 100, false, "", Guid.NewGuid().ToString(),
@@ -428,7 +462,10 @@ namespace Calculation.Tests {
             crv.RegisterVariable(new CalcVariable("Variable1", variableGuid, 0, loc.Name, loc.Guid,
                 key));
             BitArray isBusy = new BitArray(calcParameters.InternalTimesteps, false);
-            CalcRepo calcRepo = new CalcRepo(calcParameters: calcParameters);
+            Random rnd = new Random();
+            NormalRandom nr = new NormalRandom(0, 1, rnd);
+            using  CalcRepo calcRepo = new CalcRepo(calcParameters: calcParameters, odap: new Mock<IOnlineDeviceActivationProcessor>().Object,
+                rnd:rnd, normalRandom:nr);
             var aff = new CalcAffordance("bla", cp, loc, false, new List<CalcDesire>(), 0, 99,
                 PermittedGender.All, false, 0.1, new ColorRGB(0, 0, 0), "bla", false, false, variables, variableReqs,
                 ActionAfterInterruption.GoBackToOld, "bla", 100, false, "", Guid.NewGuid().ToString(),
@@ -487,7 +524,10 @@ namespace Calculation.Tests {
             var loc = new CalcLocation(Utili.GetCurrentMethodAndClass(), Guid.NewGuid().ToString());
             CalcVariableRepository crv = new CalcVariableRepository();
             BitArray isBusy = new BitArray(calcParameters.InternalTimesteps, false);
-            CalcRepo calcRepo = new CalcRepo(calcParameters: calcParameters);
+            Random rnd = new Random();
+            NormalRandom nr = new NormalRandom(0, 1, rnd);
+            using CalcRepo calcRepo = new CalcRepo(calcParameters: calcParameters, odap:new Mock<IOnlineDeviceActivationProcessor>().Object,
+                rnd: rnd, normalRandom: nr);
             var aff = new CalcAffordance("bla", cp, loc, false, new List<CalcDesire>(), 0, 99, PermittedGender.All,
                 false, 0, new ColorRGB(0, 0, 0), "bla", false, false, new List<CalcAffordanceVariableOp>(),
                 new List<VariableRequirement>(), ActionAfterInterruption.GoBackToOld, "bla", 100, false, "",

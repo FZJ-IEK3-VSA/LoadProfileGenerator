@@ -9,7 +9,7 @@ using Common.SQLResultLogging.InputLoggers;
 using JetBrains.Annotations;
 
 namespace Common {
-    public class WorkingDir {
+    public class WorkingDir: IDisposable {
         private int _filecount;
         [NotNull]
         private readonly string _lastDirectory;
@@ -206,6 +206,11 @@ namespace Common {
                     _filecount++;
                 }
             }
+        }
+
+        public void Dispose()
+        {
+            CleanUp(1);
         }
     }
 }

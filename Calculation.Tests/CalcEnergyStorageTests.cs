@@ -35,9 +35,11 @@ using CalculationController.DtoFactories;
 using CalculationEngine.HouseElements;
 using CalculationEngine.HouseholdElements;
 using CalculationEngine.OnlineDeviceLogging;
+using CalculationEngine.OnlineLogging;
 using Common;
 using Common.CalcDto;
 using Common.JSON;
+using Common.SQLResultLogging;
 using NUnit.Framework;
 
 namespace Calculation.Tests {
@@ -47,75 +49,85 @@ namespace Calculation.Tests {
         [Category(UnitTestCategories.BasicTest)]
         public void ProcessOneEnergyStorageTimestepTest()
         {
-            var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();
-            var lf = MakeLogfile(wd.WorkingDirectory,calcParameters, wd.InputDataLogger,wd.SqlResultLoggingService);
+            using (var wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
+            {
+                CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();
+                using (OnlineLoggingData old = new OnlineLoggingData(new DateStampCreator(calcParameters), wd.InputDataLogger, calcParameters))
+                {
+                    using (FileFactoryAndTracker fft = new FileFactoryAndTracker(wd.WorkingDirectory, "name", wd.InputDataLogger))
+                    {
+                        var odap = new OnlineDeviceActivationProcessor(old, calcParameters, fft);
+                        var clt = new CalcLoadType("clt1", "W", "kWh", 1, true, Guid.NewGuid().ToString());
+                        string deviceGuid = Guid.NewGuid().ToString();
+                        HouseholdKey hhkey = new HouseholdKey("HH1");
+                        string locationGuid = Guid.NewGuid().ToString();
+                        CalcDeviceDto cdd = new CalcDeviceDto("dev1", "devcatguid",
+                            hhkey, OefcDeviceType.Device, "devcatname", "", deviceGuid, locationGuid, "loc");
+                        var key = new OefcKey(cdd, clt.Guid);
+                        odap.RegisterDevice(clt.ConvertToDto(), cdd);
+                        double[] timestepValue = { 1.0, 0 };
+                        var timestepValues = new List<double>(timestepValue);
+                        var cp = new CalcProfile("myCalcProfile", Guid.NewGuid().ToString(), timestepValues,
+                            ProfileType.Absolute, "synthetic");
+                        StepValues sv1 = StepValues.MakeStepValues(cp, 0, -10, NormalRandom);
+                        odap.AddNewStateMachine(new TimeStep(1, 0, true),
+                            clt.ConvertToDto(), "blub",
+                            "name1", "p1", "syn", key, cdd, sv1);
+                        StepValues sv2 = StepValues.MakeStepValues(cp, 0, -100, NormalRandom);
+                        odap.AddNewStateMachine(new TimeStep(3, 0, true),
+                             clt.ConvertToDto(), "blub", "name2", "p1", "syn", key, cdd, sv2);
+                        StepValues sv3 = StepValues.MakeStepValues(cp, 0, 10, NormalRandom);
+                        odap.AddNewStateMachine(new TimeStep(5, 0, true),
+                            clt.ConvertToDto(), "blub", "name3", "p3", "syn", key, cdd, sv3);
+                        StepValues sv4 = StepValues.MakeStepValues(cp, 0, 100, NormalRandom);
+                        odap.AddNewStateMachine(new TimeStep(7, 0, true),
+                            clt.ConvertToDto(), "blub", "name4", "p4", "syn", key, cdd, sv4);
+                        double[] resultValues = { 0, -10.0, 0, -100, 0, 10, 0, 100, 0, 0 };
+                        var ces = new CalcEnergyStorage(odap, clt.ConvertToDto(),
+                            100, 7, 0, 0, 5, 20, null,
+                                            cdd);
+                        List<OnlineEnergyFileRow> rawRows = new List<OnlineEnergyFileRow>();
+                        int keyidx = 0;
+                        foreach (var keys in odap.Oefc.ColumnEntriesByLoadTypeByDeviceKey.Values)
+                        {
+                            foreach (KeyValuePair<OefcKey, ColumnEntry> pair in keys)
+                            {
+                                Logger.Info("Key " + keyidx + " " + pair.Key.ToString() + " - " + pair.Value);
+                                keyidx++;
+                            }
+                        }
+                        for (var i = 0; i < 10; i++)
+                        {
+                            TimeStep ts = new TimeStep(i, 0, true);
+                            var filerows = odap.ProcessOneTimestep(ts);
+                            rawRows.Add(filerows[0]);
+                            Assert.AreEqual(1, filerows.Count);
+                            Assert.AreEqual(1, filerows[0].EnergyEntries.Count);
+                            var sb = new StringBuilder("row0 before:");
+                            sb.Append(filerows[0].EnergyEntries[0]);
+                            sb.Append(" : ");
+                            //sb.Append(filerows[0].EnergyEntries[1]);
+                            Assert.AreEqual(resultValues[i], filerows[0].EnergyEntries[0]);
+                            for (var j = 0; j < 5; j++)
+                            {
+                                ces.ProcessOneTimestep(filerows, ts, null);
+                            }
 
-            var odap = new OnlineDeviceActivationProcessor( lf,calcParameters);
-            var clt = new CalcLoadType("clt1",  "W", "kWh", 1, true, Guid.NewGuid().ToString());
-            string deviceGuid = Guid.NewGuid().ToString();
-            HouseholdKey hhkey = new HouseholdKey("HH1");
-            string locationGuid = Guid.NewGuid().ToString();
-            CalcDeviceDto cdd = new CalcDeviceDto("dev1", "devcatguid",
-                hhkey, OefcDeviceType.Device, "devcatname", "", deviceGuid, locationGuid, "loc");
-            var key = new OefcKey( cdd,clt.Guid);
-            odap.RegisterDevice( clt.ConvertToDto(),cdd);
-            double[] timestepValue = {1.0, 0};
-            var timestepValues = new List<double>(timestepValue);
-            var cp = new CalcProfile("myCalcProfile", Guid.NewGuid().ToString(), timestepValues,
-                ProfileType.Absolute, "synthetic");
-            StepValues sv1 = StepValues.MakeStepValues(cp,0,-10, NormalRandom);
-            odap.AddNewStateMachine( new TimeStep(1,0,true),
-                clt.ConvertToDto(), "blub",
-                "name1", "p1", "syn", key,cdd, sv1);
-            StepValues sv2 = StepValues.MakeStepValues(cp, 0, -100, NormalRandom);
-            odap.AddNewStateMachine( new TimeStep(3, 0, true),
-                 clt.ConvertToDto(), "blub","name2", "p1", "syn",key,cdd, sv2);
-            StepValues sv3 = StepValues.MakeStepValues(cp, 0, 10, NormalRandom);
-            odap.AddNewStateMachine( new TimeStep(5, 0, true),
-                clt.ConvertToDto(), "blub",  "name3", "p3", "syn",key,cdd, sv3);
-            StepValues sv4 = StepValues.MakeStepValues(cp, 0, 100, NormalRandom);
-            odap.AddNewStateMachine( new TimeStep(7, 0, true),
-                clt.ConvertToDto(), "blub", "name4", "p4", "syn",key,cdd, sv4);
-            double[] resultValues = {0, -10.0, 0, -100, 0, 10, 0, 100, 0, 0};
-            var ces = new CalcEnergyStorage(  odap, clt.ConvertToDto(),
-                100, 7, 0, 0, 5, 20, null,
-                                cdd);
-            List<OnlineEnergyFileRow> rawRows = new List<OnlineEnergyFileRow>();
-            int keyidx = 0;
-            foreach (var keys in odap.Oefc.ColumnEntriesByLoadTypeByDeviceKey.Values) {
-                foreach (KeyValuePair<OefcKey, ColumnEntry> pair in keys) {
-                    Logger.Info("Key " + keyidx + " "+ pair.Key.ToString() + " - " + pair.Value);
-                    keyidx++;
+                            sb.Append(" row0 after:");
+                            sb.Append(filerows[0].EnergyEntries[0]);
+                            sb.Append(" : ");
+                            //sb.Append(filerows[0].EnergyEntries[1]);
+                            sb.Append(" :StorageLevel ");
+                            sb.Append(ces.PreviousFillLevel);
+                            sb.Append(" :Expected ");
+                            sb.Append(resultValues[i]);
+                            Logger.Info(sb.ToString());
+                        }
+                        Assert.That(rawRows.Count, Is.EqualTo(10));
+                    }
                 }
+                wd.CleanUp();
             }
-            for (var i = 0; i < 10; i++) {
-                TimeStep ts = new TimeStep(i,0,true);
-                var filerows = odap.ProcessOneTimestep(ts);
-                rawRows.Add(filerows[0]);
-                Assert.AreEqual(1, filerows.Count);
-                Assert.AreEqual(1, filerows[0].EnergyEntries.Count);
-                var sb = new StringBuilder("row0 before:");
-                sb.Append(filerows[0].EnergyEntries[0]);
-                sb.Append(" : ");
-                //sb.Append(filerows[0].EnergyEntries[1]);
-                Assert.AreEqual(resultValues[i], filerows[0].EnergyEntries[0]);
-                for (var j = 0; j < 5; j++) {
-                    ces.ProcessOneTimestep(filerows, ts, null);
-                }
-
-                sb.Append(" row0 after:");
-                sb.Append(filerows[0].EnergyEntries[0]);
-                sb.Append(" : ");
-                //sb.Append(filerows[0].EnergyEntries[1]);
-                sb.Append(" :StorageLevel ");
-                sb.Append(ces.PreviousFillLevel);
-                sb.Append(" :Expected ");
-                sb.Append(resultValues[i]);
-                Logger.Info(sb.ToString());
-            }
-            Assert.That(rawRows.Count, Is.EqualTo(10));
-            wd.CleanUp();
         }
     }
 }

@@ -44,7 +44,7 @@ using JetBrains.Annotations;
 #endregion
 
 namespace CalculationEngine.OnlineLogging {
-    public interface ILogFile {
+    public interface ILogFile: IDisposable {
         [CanBeNull]
         DesiresLogFile DesiresLogfile { get; }
 
@@ -52,11 +52,7 @@ namespace CalculationEngine.OnlineLogging {
         [CanBeNull]
         EnergyStorageLogfile EnergyStorageLogfile { get; }
 
-        [NotNull]
-        FileFactoryAndTracker FileFactoryAndTracker { get; }
-
-        [NotNull]
-        IOnlineLoggingData OnlineLoggingData { get; }
+        //[NotNull] FileFactoryAndTracker FileFactoryAndTracker { get; }
 
         [CanBeNull]
         IThoughtsLogFile ThoughtsLogFile1 { get; }
@@ -65,16 +61,9 @@ namespace CalculationEngine.OnlineLogging {
         //[CanBeNull]LocationsLogFile LocationsLogFile { get; }
 
         //[CanBeNull]TransportationLogFile TransportationLogFile { get; }
-        void Close();
-        void Dispose();
-        void InitHousehold([NotNull] HouseholdKey householdKey, [NotNull] string name, HouseholdKeyType type, [NotNull] string description, [CanBeNull]
-                           string housename, [CanBeNull] string houseDescription);
-        void SaveIfNeeded([NotNull] TimeStep timestep);
-        [CanBeNull]
-        SqlResultLoggingService Srls { get; }
     }
 
-    public interface IOnlineLoggingData {
+    public interface IOnlineLoggingData: IDisposable {
         void AddActionEntry([NotNull] TimeStep timeStep, [NotNull] string personGuid, [NotNull] string personName, bool isSick,
                             [NotNull] string affordanceName,
                             [NotNull] string affordanceGuid, [NotNull] HouseholdKey householdKey,
@@ -330,41 +319,41 @@ namespace CalculationEngine.OnlineLogging {
         {
             _variableEntries.Add(calcVariableEntry);
         }
+
+        public void Dispose()
+        {
+            FinalSaveToDatabase();
+        }
     }
 
-    public sealed class LogFile : IDisposable, ILogFile {
+    public sealed class LogFile :  ILogFile {
         [CanBeNull] private readonly DesiresLogFile _desiresLogfile;
 
         [CanBeNull] private readonly EnergyStorageLogfile _energyStorageLogfile;
 
-        [NotNull] private readonly FileFactoryAndTracker _fft;
 
         [CanBeNull] private readonly IThoughtsLogFile _thoughtsLogFile;
 
-        public LogFile([NotNull] CalcParameters calcParameters, [NotNull] FileFactoryAndTracker fft,
-                       [NotNull] IOnlineLoggingData onlineLoggingData,
-                       [CanBeNull] SqlResultLoggingService srls,bool writeToConsole = false
+        public LogFile([NotNull] CalcParameters calcParameters,
+                       FileFactoryAndTracker fft,
+                       bool writeToConsole = false
                        )
         {
-            var displayNegativeTime = calcParameters.ShowSettlingPeriodTime;
-            _fft = fft;
-            OnlineLoggingData = onlineLoggingData;
-            Srls = srls;
             if (calcParameters.IsSet(CalcOption.ThoughtsLogfile)) {
                 if (writeToConsole) {
                     _thoughtsLogFile = new ConsoleThoughts();
                 }
                 else {
-                    _thoughtsLogFile = new ThoughtsLogFile(_fft, calcParameters);
+                    _thoughtsLogFile = new ThoughtsLogFile(fft, calcParameters);
                 }
             }
 
             if (calcParameters.IsSet(CalcOption.DesiresLogfile)) {
-                _desiresLogfile = new DesiresLogFile(FileFactoryAndTracker, displayNegativeTime, calcParameters);
+                _desiresLogfile = new DesiresLogFile(fft,  calcParameters);
             }
 
             if (calcParameters.IsSet(CalcOption.EnergyStorageFile)) {
-                _energyStorageLogfile = new EnergyStorageLogfile(calcParameters, _fft);
+                _energyStorageLogfile = new EnergyStorageLogfile(calcParameters, fft);
             }
 
             //_transportationLogFile = new TransportationLogFile(_fft,_calcParameters);
@@ -374,22 +363,15 @@ namespace CalculationEngine.OnlineLogging {
 
         //[CanBeNull]private readonly TransportationLogFile _transportationLogFile;
 
+
         public void Dispose()
         {
-            Close();
-        }
-
-        public void Close()
-        {
-            OnlineLoggingData.FinalSaveToDatabase();
-            _fft.Close();
-
             //ActionLogFile?.Close();
-            _thoughtsLogFile?.Close();
+            _thoughtsLogFile?.Dispose();
             //LocationsLogFile?.Close();
-            _desiresLogfile?.Close();
+            _desiresLogfile?.Dispose();
             //_transportationLogFile?.Close();
-            _energyStorageLogfile?.Close();
+            _energyStorageLogfile?.Dispose();
         }
 
         [CanBeNull]
@@ -398,33 +380,21 @@ namespace CalculationEngine.OnlineLogging {
         [CanBeNull]
         public EnergyStorageLogfile EnergyStorageLogfile => _energyStorageLogfile;
 
-        [NotNull]
-        public FileFactoryAndTracker FileFactoryAndTracker => _fft;
 
-        public void InitHousehold([NotNull] HouseholdKey householdKey, [NotNull] string name, HouseholdKeyType type, string description,
-                                  [CanBeNull] string housename, string houseDescription)
-        {
-            _fft.RegisterHousehold(householdKey, name, type,description, housename, houseDescription);
+        //public void InitHousehold([NotNull] HouseholdKey householdKey, [NotNull] string name, HouseholdKeyType type, string description,
+        //                          [CanBeNull] string housename, string houseDescription)
+        //{
 
-            /*if (ActionLogFile == null) {
-                ActionLogFile = new ActionLogFile(_fft, householdKey,_calcParameters);
-            }
-            else {
-                ActionLogFile.AddHousehold(householdKey);
-            }*/
-            //LocationsLogFile = new LocationsLogFile(_displayNegativeTime, _fft, _calcParameters);
-            //TransportationLogFile?.InitSw(householdKey);
-        }
+        //    /*if (ActionLogFile == null) {
+        //        ActionLogFile = new ActionLogFile(_fft, householdKey,_calcParameters);
+        //    }
+        //    else {
+        //        ActionLogFile.AddHousehold(householdKey);
+        //    }*/
+        //    //LocationsLogFile = new LocationsLogFile(_displayNegativeTime, _fft, _calcParameters);
+        //    //TransportationLogFile?.InitSw(householdKey);
+        //}
 
-        public void SaveIfNeeded(TimeStep timestep)
-        {
-            OnlineLoggingData.SaveIfNeeded(timestep);
-        }
-
-        [NotNull]
-        public IOnlineLoggingData OnlineLoggingData { get; }
-        [CanBeNull]
-        public SqlResultLoggingService Srls { get; }
 
         //public HashSet<string> HouseholdKeys => _householdKeys;
 

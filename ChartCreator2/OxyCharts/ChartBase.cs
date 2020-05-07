@@ -22,12 +22,12 @@ using TextAnnotation = OxyPlot.Annotations.TextAnnotation;
 namespace ChartCreator2.OxyCharts {
     public class IntervallBarMaker {
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        public void MakeIntervalBars([NotNull] ResultFileEntry srcResultFileEntry, [NotNull] string plotName, [NotNull] DirectoryInfo basisPath,
-            [ItemNotNull] [NotNull] List<Tuple<string, double>> consumption,
-                                     [NotNull] ChartTaggingSet taggingSet,
-                                     [NotNull] string newFileNameSuffix,
+        public void MakeIntervalBars([JetBrains.Annotations.NotNull] ResultFileEntry srcResultFileEntry, [JetBrains.Annotations.NotNull] string plotName, [JetBrains.Annotations.NotNull] DirectoryInfo basisPath,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] List<Tuple<string, double>> consumption,
+                                     [JetBrains.Annotations.NotNull] ChartTaggingSet taggingSet,
+                                     [JetBrains.Annotations.NotNull] string newFileNameSuffix,
                                      bool showTitle,
-                                     [NotNull] GenericChartBase gcb)
+                                     [JetBrains.Annotations.NotNull] GenericChartBase gcb)
         {
             var fontsize = 48;
             if (consumption.Count <= 20)
@@ -220,10 +220,10 @@ namespace ChartCreator2.OxyCharts {
     }
 
     public abstract class GenericChartBase  {
-        protected GenericChartBase([NotNull] ChartCreationParameters parameters,
-                                   [NotNull] string stepName,
+        protected GenericChartBase([JetBrains.Annotations.NotNull] ChartCreationParameters parameters,
+                                   [JetBrains.Annotations.NotNull] string stepName,
                                    FileProcessingResult shouldHaveProducedFiles,
-                                   [NotNull] FileFactoryAndTracker fft)
+                                   [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft)
         {
             _Parameters = parameters;
             StepName = stepName;
@@ -231,13 +231,13 @@ namespace ChartCreator2.OxyCharts {
             FFT = fft;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string StepName { get; }
         public FileProcessingResult ShouldHaveProducedFiles { get; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         protected FileFactoryAndTracker FFT { get; }
-        [NotNull] protected readonly ChartCreationParameters _Parameters;
-        public void Save([NotNull] PlotModel plotModel1, [NotNull] string plotName, [NotNull] string csvFullFileName, [NotNull] DirectoryInfo basisPath,
+        [JetBrains.Annotations.NotNull] protected readonly ChartCreationParameters _Parameters;
+        public void Save([JetBrains.Annotations.NotNull] PlotModel plotModel1, [JetBrains.Annotations.NotNull] string plotName, [JetBrains.Annotations.NotNull] string csvFullFileName, [JetBrains.Annotations.NotNull] DirectoryInfo basisPath,
            [CanBeNull] string newDstFileName = null, bool makePng = true)
         {
             if (plotName.Contains("\\") || plotName.Trim().Length == 0 || plotName.Contains("."))
@@ -281,10 +281,10 @@ namespace ChartCreator2.OxyCharts {
 
     public abstract class ChartBaseFileStep: GenericChartBase, IChartMakerStep
     {
-        [NotNull] protected readonly ICalculationProfiler _CalculationProfiler;
-        protected ChartBaseFileStep([NotNull] ChartCreationParameters parameters,
-                            [NotNull] FileFactoryAndTracker fft, [NotNull] ICalculationProfiler calculationProfiler,
-                            [NotNull] List<ResultFileID> validResultFileIds, [NotNull] string stepName,
+        [JetBrains.Annotations.NotNull] protected readonly ICalculationProfiler _CalculationProfiler;
+        protected ChartBaseFileStep([JetBrains.Annotations.NotNull] ChartCreationParameters parameters,
+                            [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft, [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler,
+                            [JetBrains.Annotations.NotNull] List<ResultFileID> validResultFileIds, [JetBrains.Annotations.NotNull] string stepName,
                             FileProcessingResult shouldHaveProducedFiles):base(parameters,stepName,shouldHaveProducedFiles,fft)
         {
             _CalculationProfiler = calculationProfiler;
@@ -292,9 +292,9 @@ namespace ChartCreator2.OxyCharts {
         }
 
         [SuppressMessage("ReSharper", "UnusedMemberInSuper.Global")]
-        protected abstract FileProcessingResult MakeOnePlot([NotNull] ResultFileEntry srcResultFileEntry);
+        protected abstract FileProcessingResult MakeOnePlot([JetBrains.Annotations.NotNull] ResultFileEntry srcResultFileEntry);
 
-        public FileProcessingResult MakePlot([NotNull] ResultFileEntry srcResultFileEntry)
+        public FileProcessingResult MakePlot([JetBrains.Annotations.NotNull] ResultFileEntry srcResultFileEntry)
         {
             _CalculationProfiler.StartPart(StepName);
             var result = MakeOnePlot(srcResultFileEntry);
@@ -302,10 +302,10 @@ namespace ChartCreator2.OxyCharts {
             return result;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public List<ResultFileID> ResultFileIDs { get; }
 
-        public bool IsEnabled([NotNull] ResultFileEntry resultFileEntry)
+        public bool IsEnabled([JetBrains.Annotations.NotNull] ResultFileEntry resultFileEntry)
         {
             if (ResultFileIDs.Contains(resultFileEntry.ResultFileID)) {
                 return true;
@@ -315,17 +315,17 @@ namespace ChartCreator2.OxyCharts {
     }
     public abstract class ChartBaseSqlStep : GenericChartBase, ISqlChartMakerStep
     {
-        [NotNull] protected readonly ICalculationProfiler _CalculationProfiler;
-        [NotNull]
+        [JetBrains.Annotations.NotNull] protected readonly ICalculationProfiler _CalculationProfiler;
+        [JetBrains.Annotations.NotNull]
         public List<ResultTableID> ValidResultTableIds { get; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CalcDataRepository CalcDataRepository { get; }
 
-        protected ChartBaseSqlStep([NotNull] ChartCreationParameters parameters,
-                                    [NotNull] FileFactoryAndTracker fft, [NotNull] ICalculationProfiler calculationProfiler,
-                                    [NotNull] List<ResultTableID> validResultTableIds, [NotNull] string stepName,
+        protected ChartBaseSqlStep([JetBrains.Annotations.NotNull] ChartCreationParameters parameters,
+                                    [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft, [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler,
+                                    [JetBrains.Annotations.NotNull] List<ResultTableID> validResultTableIds, [JetBrains.Annotations.NotNull] string stepName,
                                     FileProcessingResult shouldHaveProducedFiles,
-                                    [NotNull] CalcDataRepository calcDataRepository) : base(parameters, stepName, shouldHaveProducedFiles, fft)
+                                    [JetBrains.Annotations.NotNull] CalcDataRepository calcDataRepository) : base(parameters, stepName, shouldHaveProducedFiles, fft)
         {
             _CalculationProfiler = calculationProfiler;
             ValidResultTableIds = validResultTableIds;
@@ -333,9 +333,9 @@ namespace ChartCreator2.OxyCharts {
         }
 
         [SuppressMessage("ReSharper", "UnusedMemberInSuper.Global")]
-        protected abstract FileProcessingResult MakeOnePlot([NotNull] HouseholdKeyEntry hhkey);
+        protected abstract FileProcessingResult MakeOnePlot([JetBrains.Annotations.NotNull] HouseholdKeyEntry hhkey);
 
-        public FileProcessingResult MakePlot([NotNull] HouseholdKeyEntry hhkey)
+        public FileProcessingResult MakePlot([JetBrains.Annotations.NotNull] HouseholdKeyEntry hhkey)
         {
             _CalculationProfiler.StartPart(StepName);
             var result = MakeOnePlot(hhkey);
@@ -343,7 +343,7 @@ namespace ChartCreator2.OxyCharts {
             return result;
         }
 
-        public bool IsEnabled([NotNull] HouseholdKeyEntry householdKey, [NotNull] ResultTableDefinition resultTableDefinition)
+        public bool IsEnabled([JetBrains.Annotations.NotNull] HouseholdKeyEntry householdKey, [JetBrains.Annotations.NotNull] ResultTableDefinition resultTableDefinition)
         {
             if (ValidResultTableIds.Contains(resultTableDefinition.ResultTableID))
             {

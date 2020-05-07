@@ -37,19 +37,45 @@ using Common.SQLResultLogging;
 using JetBrains.Annotations;
 
 namespace CalculationEngine.HouseholdElements {
+    public class CalcRepo: IDisposable {
+        [NotNull]
+        public DateStampCreator DateStampCreator => _dateStampCreator ?? throw new LPGException("no dsc");
 
-    public class CalcRepo {
+        [NotNull]
+        public static CalcRepo Make([NotNull] CalcParameters calcParameters, [NotNull] IInputDataLogger idl,
+                                    [NotNull] string resultPath, [NotNull] string calcObjectName,
+                                    CalculationProfiler calculationProfiler)
+        {
 
-        public CalcRepo([CanBeNull] IOnlineDeviceActivationProcessor odap = null,
+            DateStampCreator dsc = new DateStampCreator(calcParameters);
+            OnlineLoggingData old = new OnlineLoggingData(dsc,idl,calcParameters);
+            FileFactoryAndTracker fft = new FileFactoryAndTracker(resultPath, calcObjectName, idl);
+            LogFile lf = new LogFile(calcParameters, fft);
+            OnlineDeviceActivationProcessor odap = new OnlineDeviceActivationProcessor(old,calcParameters,fft);
+                Random rnd = new Random(calcParameters.ActualRandomSeed);
+                NormalRandom nr = new NormalRandom(0,0.1,rnd);
+                SqlResultLoggingService srls = new SqlResultLoggingService(resultPath);
+            CalcRepo cr = new CalcRepo(odap,rnd,calcParameters,old,nr,lf,srls,
+                idl,calculationProfiler,fft,dsc);
+            return cr;
+        }
+        [NotNull] private readonly FileFactoryAndTracker _fft;
+
+        public CalcRepo(
+                        [CanBeNull] IOnlineDeviceActivationProcessor odap = null,
                         [CanBeNull] Random rnd = null,
                         [CanBeNull]CalcParameters calcParameters= null,
                         [CanBeNull] IOnlineLoggingData onlineLoggingData= null,
-                        [CanBeNull]NormalRandom normalRandom= null,
+                        [CanBeNull] NormalRandom normalRandom= null,
                         [CanBeNull] ILogFile lf = null,
                         [CanBeNull] SqlResultLoggingService srls= null,
                         [CanBeNull] IInputDataLogger inputDataLogger=null,
-                        [CanBeNull] CalculationProfiler calculationProfiler=null)
+                        [CanBeNull] CalculationProfiler calculationProfiler=null,
+            [CanBeNull] FileFactoryAndTracker fft =null,
+                        DateStampCreator dsc = null)
         {
+            _dateStampCreator = dsc;
+            _fft = fft;
             _odap = odap;
             _rnd = rnd;
             _calcParameters = calcParameters;
@@ -71,6 +97,7 @@ namespace CalculationEngine.HouseholdElements {
         [NotNull] private readonly SqlResultLoggingService _srls;
         private readonly IInputDataLogger _inputDataLogger;
         [NotNull] private readonly CalculationProfiler _calculationProfiler;
+        private readonly DateStampCreator _dateStampCreator;
 
         [NotNull]
         public IOnlineDeviceActivationProcessor Odap => _odap ?? throw new LPGException("no odap");
@@ -98,6 +125,17 @@ namespace CalculationEngine.HouseholdElements {
 
         [NotNull]
         public CalculationProfiler CalculationProfiler => _calculationProfiler ?? throw new LPGException("no calc profiler");
+
+        [NotNull]
+        public FileFactoryAndTracker FileFactoryAndTracker => _fft ?? throw new LPGException("no fft");
+
+
+        public void Dispose()
+        {
+            _fft.Dispose();
+            _lf.Dispose();
+            _onlineLoggingData.Dispose();
+        }
     }
     public abstract class CalcBase {
         [NotNull]

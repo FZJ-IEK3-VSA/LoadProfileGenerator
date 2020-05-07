@@ -14,9 +14,9 @@ using OxyPlot.Series;
 namespace ChartCreator2.OxyCharts {
     internal class AffordanceTaggingSet : ChartBaseFileStep
     {
-        public AffordanceTaggingSet([NotNull] ChartCreationParameters parameters,
-                                    [NotNull] FileFactoryAndTracker fft,
-                                    [NotNull] ICalculationProfiler calculationProfiler) : base(parameters, fft,
+        public AffordanceTaggingSet([JetBrains.Annotations.NotNull] ChartCreationParameters parameters,
+                                    [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft,
+                                    [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler) : base(parameters, fft,
             calculationProfiler, new List<ResultFileID>() { ResultFileID.AffordanceTaggingSetFiles
             },
             "Affordance Tagging Sets", FileProcessingResult.ShouldCreateFiles
@@ -24,7 +24,7 @@ namespace ChartCreator2.OxyCharts {
         {
         }
 
-        protected override FileProcessingResult MakeOnePlot([NotNull] ResultFileEntry rfe)
+        protected override FileProcessingResult MakeOnePlot([JetBrains.Annotations.NotNull] ResultFileEntry rfe)
         {
             string plotName = "Affordance Tagging Set " + rfe.HouseholdNumberString;
             _CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());

@@ -16,10 +16,10 @@ namespace ChartCreator2.PDF {
             MyTargetDirectory = TargetDirectory.Debugging;
         }
 
-        [NotNull]
-        protected override string GetGraphTitle([NotNull] string filename) => throw new LPGNotImplementedException();
+        [JetBrains.Annotations.NotNull]
+        protected override string GetGraphTitle([JetBrains.Annotations.NotNull] string filename) => throw new LPGNotImplementedException();
 
-        public void MakePage([NotNull] Document doc, [NotNull] string dstdir, bool requireAll, [NotNull] Section tocSection) {
+        public void MakePage([JetBrains.Annotations.NotNull] Document doc, [JetBrains.Annotations.NotNull] string dstdir, bool requireAll, [JetBrains.Annotations.NotNull] Section tocSection) {
             var di =
                 new DirectoryInfo(Path.Combine(dstdir, DirectoryNames.CalculateTargetdirectory(MyTargetDirectory)));
             var fi = di.GetFiles("SunriseTimes.csv");

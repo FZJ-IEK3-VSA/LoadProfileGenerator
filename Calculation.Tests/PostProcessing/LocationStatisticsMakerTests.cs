@@ -22,8 +22,8 @@ namespace Calculation.Tests.PostProcessing
         [Category(UnitTestCategories.BasicTest)]
         public void RunTest()
         {
-            WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
+            using WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
+            using DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Simulator sim = new Simulator(db.ConnectionString) {MyGeneralConfig = {StartDateUIString = "15.1.2015", EndDateUIString = "18.1.2015", InternalTimeResolution = "00:01:00"}};
             sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
             sim.MyGeneralConfig.Enable(CalcOption.LocationsFile);
@@ -44,7 +44,7 @@ namespace Calculation.Tests.PostProcessing
                 //sim.TemperatureProfiles[0], sim.GeographicLocations[0], EnergyIntensityType.Random, version,
                 //LoadTypePriority.All, null,null,null);
 
-            bool ReportCancelFunc()
+                static bool ReportCancelFunc()
             {
                 Logger.Info("canceled");
                 return true;

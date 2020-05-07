@@ -12,8 +12,8 @@ namespace ChartCreator2.PDF {
             MyTargetDirectory = TargetDirectory.Charts;
         }
 
-        [NotNull]
-        protected override string GetGraphTitle([NotNull] string filename) {
+        [JetBrains.Annotations.NotNull]
+        protected override string GetGraphTitle([JetBrains.Annotations.NotNull] string filename) {
             var arr = filename.Split('.');
             var arr2 = arr[0].Split('_');
             return "Summed up curve in the external time resolution of " + arr2[1] + " for " + arr[1] + " from " +

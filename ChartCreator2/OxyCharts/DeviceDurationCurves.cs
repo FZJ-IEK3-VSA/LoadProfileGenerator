@@ -14,9 +14,9 @@ using OxyPlot.Series;
 namespace ChartCreator2.OxyCharts {
     internal class DeviceDurationCurves : ChartBaseFileStep
     {
-        public DeviceDurationCurves([NotNull] ChartCreationParameters parameters,
-                                    [NotNull] FileFactoryAndTracker fft,
-                                    [NotNull] ICalculationProfiler calculationProfiler) : base(parameters, fft,
+        public DeviceDurationCurves([JetBrains.Annotations.NotNull] ChartCreationParameters parameters,
+                                    [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft,
+                                    [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler) : base(parameters, fft,
             calculationProfiler, new List<ResultFileID>() { ResultFileID.DurationCurveDevices
             },
             "Duration Curves per Device", FileProcessingResult.ShouldCreateFiles
@@ -93,7 +93,7 @@ namespace ChartCreator2.OxyCharts {
             return FileProcessingResult.ShouldCreateFiles;
         }
 
-        private void ReadFile([NotNull] string fileName, [NotNull] Dictionary<int, ValueEntry> entries) {
+        private void ReadFile([JetBrains.Annotations.NotNull] string fileName, [JetBrains.Annotations.NotNull] Dictionary<int, ValueEntry> entries) {
             using (var sr = new StreamReader(fileName)) {
                 var top = sr.ReadLine();
                 if (top == null) {
@@ -125,18 +125,18 @@ namespace ChartCreator2.OxyCharts {
         }
 
         private class ValueEntry {
-            public ValueEntry([NotNull] string name, int index) {
+            public ValueEntry([JetBrains.Annotations.NotNull] string name, int index) {
                 Name = name;
                 Index = index;
             }
 
             public int Index { get; }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string Name { get; }
 
             public double Sum => Values.Sum();
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public List<double> Values { get; } = new List<double>();
 
             public override string ToString() => Name + " Sum:" + Sum + " Max:" + Values.Max();

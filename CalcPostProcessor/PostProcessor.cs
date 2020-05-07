@@ -302,20 +302,25 @@ namespace CalcPostProcessor {
             var energyFileRows = new List<OnlineEnergyFileRow>();
 
             total = 0;
-            using (Stream fs = new FileStream(path, FileMode.Open)) {
+            using (Stream fs = new FileStream(path, FileMode.Open))
+            {
                 long currentPosition = 0;
 #pragma warning disable S2930 // "IDisposables" should be disposed
-                var br = new BinaryReader(fs);
+                using (var br = new BinaryReader(fs))
+                {
 #pragma warning restore S2930 // "IDisposables" should be disposed
 
-                while (currentPosition < fs.Length) {
-                    var efr = OnlineEnergyFileRow.Read(br, calcLoadType,_repository.CalcParameters);
-                    energyFileRows.Add(efr);
-                    if (Config.IsInUnitTesting && Config.ExtraUnitTestChecking) {
-                        total += efr.SumFresh();
-                    }
+                    while (currentPosition < fs.Length)
+                    {
+                        var efr = OnlineEnergyFileRow.Read(br, calcLoadType, _repository.CalcParameters);
+                        energyFileRows.Add(efr);
+                        if (Config.IsInUnitTesting && Config.ExtraUnitTestChecking)
+                        {
+                            total += efr.SumFresh();
+                        }
 
-                    currentPosition += efr.EntryLengthInByte;
+                        currentPosition += efr.EntryLengthInByte;
+                    }
                 }
             }
 

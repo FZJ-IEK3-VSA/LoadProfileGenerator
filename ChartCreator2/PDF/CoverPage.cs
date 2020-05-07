@@ -20,7 +20,7 @@ namespace ChartCreator2.PDF {
 
         [CanBeNull] private string _version;
 
-        public void MakePage([NotNull] Document doc, [NotNull] string dstdir, bool requireAll) {
+        public void MakePage([JetBrains.Annotations.NotNull] Document doc, [JetBrains.Annotations.NotNull] string dstdir, bool requireAll) {
             if (!ReadHouseholdName(dstdir)) {
                 if (requireAll) {
                     throw new LPGException("Missing Household Name File");
@@ -79,7 +79,7 @@ namespace ChartCreator2.PDF {
             paragraph.AddDateField();
         }
 
-        public static void DefineSettlementCover([NotNull] Document document, [NotNull] string dstDir) {
+        public static void DefineSettlementCover([JetBrains.Annotations.NotNull] Document document, [JetBrains.Annotations.NotNull] string dstDir) {
             var strings = GetSettlementStrings(dstDir);
             var section = document.AddSection();
             section.AddParagraph();
@@ -119,8 +119,8 @@ namespace ChartCreator2.PDF {
         }
 
         [ItemNotNull]
-        [NotNull]
-        private static List<string> GetSettlementStrings([NotNull] string destinationDirectory) {
+        [JetBrains.Annotations.NotNull]
+        private static List<string> GetSettlementStrings([JetBrains.Annotations.NotNull] string destinationDirectory) {
             var filename = Path.Combine(destinationDirectory,
                 DirectoryNames.CalculateTargetdirectory(TargetDirectory.Root), "Information.txt");
             var strings = new List<string>();
@@ -136,7 +136,7 @@ namespace ChartCreator2.PDF {
             return strings;
         }
 
-        private bool ReadHouseholdName([NotNull] string destinationDirectory) {
+        private bool ReadHouseholdName([JetBrains.Annotations.NotNull] string destinationDirectory) {
             var destinationFullName = Path.Combine(destinationDirectory, "HouseholdName.txt");
             if (File.Exists(destinationFullName)) {
                 using (var sr = new StreamReader(destinationFullName)) {

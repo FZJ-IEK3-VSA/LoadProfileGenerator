@@ -12,9 +12,9 @@ using OxyPlot.Series;
 namespace ChartCreator2.OxyCharts {
     internal class WeekdayProfiles : ChartBaseFileStep
     {
-        public WeekdayProfiles([NotNull] ChartCreationParameters parameters,
-                               [NotNull] FileFactoryAndTracker fft,
-                               [NotNull] ICalculationProfiler calculationProfiler) : base(parameters, fft,
+        public WeekdayProfiles([JetBrains.Annotations.NotNull] ChartCreationParameters parameters,
+                               [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft,
+                               [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler) : base(parameters, fft,
             calculationProfiler, new List<ResultFileID>() { ResultFileID.WeekdayLoadProfileID
             },
             "Weekday Profiles", FileProcessingResult.ShouldCreateFiles
@@ -22,9 +22,9 @@ namespace ChartCreator2.OxyCharts {
         {
         }
 
-        [NotNull]
-        private PlotModel MakeChart([NotNull] string plotName,
-                                    [ItemNotNull] [NotNull] List<Entry> entries,
+        [JetBrains.Annotations.NotNull]
+        private PlotModel MakeChart([JetBrains.Annotations.NotNull] string plotName,
+                                    [ItemNotNull] [JetBrains.Annotations.NotNull] List<Entry> entries,
                                     bool showTitle,
                                     [CanBeNull] LoadTypeInformation lti)
         {
@@ -200,7 +200,7 @@ namespace ChartCreator2.OxyCharts {
         }
 
         private class Entry {
-            public Entry([NotNull] string s) {
+            public Entry([JetBrains.Annotations.NotNull] string s) {
                 var substr = s.Split(' ');
                 Season = substr[0];
                 if (substr.Length > 1) {
@@ -211,13 +211,13 @@ namespace ChartCreator2.OxyCharts {
                 }
             }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string Day { get; }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string Season { get; }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public List<double> Values { get; } = new List<double>();
         }
     }

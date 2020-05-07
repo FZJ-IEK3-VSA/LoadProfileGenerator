@@ -67,11 +67,10 @@ namespace Calculation.Tests {
             DateStampCreator dsc = new DateStampCreator(calcParameters);
 
             IOnlineLoggingData old = new OnlineLoggingData(dsc, wd.InputDataLogger, calcParameters);
-            using (LogFile lf = new LogFile(calcParameters, fft, old, wd.SqlResultLoggingService)) {
                 cdls.Add(cdl);
 
                 OnlineDeviceActivationProcessor odap =
-                    new OnlineDeviceActivationProcessor( lf, calcParameters);
+                    new OnlineDeviceActivationProcessor( old, calcParameters, fft);
                 string deviceCategoryGuid = Guid.NewGuid().ToString();
                 CalcDeviceDto cdd = new CalcDeviceDto("bla", deviceCategoryGuid
                     , new HouseholdKey("HH-6"), OefcDeviceType.Device, "category",
@@ -90,7 +89,6 @@ namespace Calculation.Tests {
                 Assert.AreEqual(true, cd.IsBusyDuringTimespan(ts.AddSteps(4), 1, 1, clt));
                 Assert.AreEqual(true, cd.IsBusyDuringTimespan(ts.AddSteps(5), 1, 1, clt));
                 Assert.AreEqual(false, cd.IsBusyDuringTimespan(ts.AddSteps(6), 0, 1, clt));
-            }
 
             wd.CleanUp();
         }

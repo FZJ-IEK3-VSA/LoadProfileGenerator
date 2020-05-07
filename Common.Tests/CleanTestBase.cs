@@ -13,7 +13,7 @@ using NUnit.Framework;
 namespace Common.Tests {
     [TestFixture]
     public static class CleanTestBase {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private static string GetPrettySize(long size) {
             if (size > 1024 * 1024 * 1024) {
                 var gb = size / (1024.0 * 1024 * 1024);
@@ -49,7 +49,7 @@ namespace Common.Tests {
             CleanFolder(throwExceptionOnLeftover,  path,false);
         }
 
-        public static void CleanFolder(bool throwExceptionOnLeftover, [NotNull] string path, bool throwExceptionOnPreviousLeftovers)
+        public static void CleanFolder(bool throwExceptionOnLeftover, [JetBrains.Annotations.NotNull] string path, bool throwExceptionOnPreviousLeftovers)
         {
             GC.Collect();
             GC.WaitForPendingFinalizers();

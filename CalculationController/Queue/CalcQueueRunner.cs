@@ -50,7 +50,7 @@ namespace CalculationController.Queue {
 
         public static void CloseLogfilesAfterError() {
             while (_calcManagers.Count > 0) {
-                _calcManagers[0].CloseLogfile();
+                _calcManagers[0].Dispose();
                 _calcManagers.RemoveAt(0);
             }
         }
@@ -98,7 +98,7 @@ namespace CalculationController.Queue {
                 _calcManagers.Remove(calcManager);
             }
             catch (DataIntegrityException die) {
-                calcManager?.CloseLogfile();
+                calcManager?.Dispose();
                 if (die.Element != null) {
                     if (csps.OpenTabFunc == null)
                     {

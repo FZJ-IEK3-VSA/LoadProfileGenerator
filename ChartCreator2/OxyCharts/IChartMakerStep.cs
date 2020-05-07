@@ -7,17 +7,17 @@ using JetBrains.Annotations;
 
 namespace ChartCreator2.OxyCharts {
     public interface IChartMakerStep {
-        bool IsEnabled([NotNull] ResultFileEntry resultFileEntry);
-        FileProcessingResult MakePlot([NotNull] ResultFileEntry resultFileEntry);
-        [NotNull]
+        bool IsEnabled([JetBrains.Annotations.NotNull] ResultFileEntry resultFileEntry);
+        FileProcessingResult MakePlot([JetBrains.Annotations.NotNull] ResultFileEntry resultFileEntry);
+        [JetBrains.Annotations.NotNull]
         List<ResultFileID> ResultFileIDs { get; }
     }
 
     public interface ISqlChartMakerStep
     {
-        bool IsEnabled([NotNull] HouseholdKeyEntry hhkey, [NotNull] ResultTableDefinition resultTable);
-        FileProcessingResult MakePlot([NotNull] HouseholdKeyEntry hhkey);
-         [NotNull]
+        bool IsEnabled([JetBrains.Annotations.NotNull] HouseholdKeyEntry hhkey, [JetBrains.Annotations.NotNull] ResultTableDefinition resultTable);
+        FileProcessingResult MakePlot([JetBrains.Annotations.NotNull] HouseholdKeyEntry hhkey);
+         [JetBrains.Annotations.NotNull]
          List<ResultTableID> ValidResultTableIds { get; }
     }
 }

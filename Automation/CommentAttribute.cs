@@ -60,7 +60,9 @@ namespace Automation {
                     }
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+#pragma warning disable CA2208 // Instantiate argument exceptions correctly
+                    throw new ArgumentOutOfRangeException("unknown option");
+#pragma warning restore CA2208 // Instantiate argument exceptions correctly
             }
 
             string indentSpace = "";

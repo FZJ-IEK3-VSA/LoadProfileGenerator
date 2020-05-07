@@ -76,14 +76,13 @@ namespace CalculationController.Tests.Transportation
 
             builder.Register(c => new OnlineLoggingData(c.Resolve<DateStampCreator>(), c.Resolve<IInputDataLogger>(),c.Resolve<CalcParameters>())).As<OnlineLoggingData>().SingleInstance();
 
-            builder.Register(c => new LogFile(parameters,c.Resolve<FileFactoryAndTracker>(),
-                c.Resolve<OnlineLoggingData>(),
-                c.Resolve<SqlResultLoggingService>())).As<ILogFile>().SingleInstance();
+            builder.Register(c => new LogFile(parameters,c.Resolve<FileFactoryAndTracker>())).As<ILogFile>().SingleInstance();
             builder.RegisterType<OnlineDeviceActivationProcessor>().As<IOnlineDeviceActivationProcessor>().SingleInstance();
             builder.RegisterType<CalcModularHouseholdFactory>().As<CalcModularHouseholdFactory>().SingleInstance();
             builder.Register(x => new DeviceCategoryPicker(r, null)).As<IDeviceCategoryPicker>().SingleInstance();
 
             builder.Register(x => r).As<Random>().SingleInstance();
+            builder.Register(x => wd.InputDataLogger).As<InputDataLogger>().SingleInstance();
             builder.RegisterType<CalcDeviceFactory>().As<CalcDeviceFactory>().SingleInstance();
             builder.RegisterType<CalcDeviceDtoFactory>().As<CalcDeviceDtoFactory>().SingleInstance();
             builder.RegisterType<CalcLocationFactory>().As<CalcLocationFactory>().SingleInstance();
@@ -99,6 +98,7 @@ namespace CalculationController.Tests.Transportation
             builder.RegisterType<VacationDtoFactory>().As<VacationDtoFactory>().SingleInstance();
             builder.RegisterType<AvailabilityDtoRepository>().As<AvailabilityDtoRepository>().SingleInstance();
             builder.RegisterType<CalcVariableRepository>().As<CalcVariableRepository>().SingleInstance();
+            builder.RegisterType<CalcRepo>().As<CalcRepo>().SingleInstance();
             var container = builder.Build();
             using (var scope = container.BeginLifetimeScope())
             {
@@ -132,8 +132,8 @@ namespace CalculationController.Tests.Transportation
                 TravelRoute tr = new TravelRoute(null, db.ConnectionString, "tr1", "desc", home, outside);
                 tr.SaveToDB();
                 trs.AddRoute(tr);*/
-                var lf = scope.Resolve<ILogFile>();
-                lf.InitHousehold(Constants.GeneralHouseholdKey, "General", HouseholdKeyType.General,"desc",null,null);
+                var fft = scope.Resolve<FileFactoryAndTracker>();
+                fft.RegisterHousehold(Constants.GeneralHouseholdKey, "General", HouseholdKeyType.General,"desc",null,null);
                 var ctf = scope.Resolve<CalcTransportationFactory>();
                 //LogFile lf = new LogFile(wd.WorkingDirectory, "hh1", true);
                 //lf.RegisterKey("hh1", "hh1-prettyname");
@@ -151,7 +151,7 @@ namespace CalculationController.Tests.Transportation
                 var cmhf = scope.Resolve<CalcModularHouseholdFactory>();
                 //CalcTransportationDtoFactory dtoFactory = new CalcTransportationDtoFactory(ltdtoDict);
                 //dtoFactory.MakeTransportationDtos(sim, sim.ModularHouseholds[0], tds, trs, out var sites,out var transportationDevices, out var routes, dtohh.LocationDtos, dtohh.HouseholdKey);
-                CalcRepo calcRepo = new CalcRepo();
+                var calcRepo = scope.Resolve<CalcRepo>();
                 CalcHousehold chh = cmhf.MakeCalcModularHousehold(dtohh,out var dtoCalcLocationDict,null,null, calcRepo);
                 //ctf.MakeTransportation(dtohh,dtoCalcLocationDict,chh);
                 if(chh.TransportationHandler == null) {
@@ -164,7 +164,7 @@ namespace CalculationController.Tests.Transportation
                 TimeStep ts = new TimeStep(1,parameters);
                 dst.Affordances[0].IsBusy(ts, src, personname, false);
                 dst.Affordances[0].Activate(ts, personname,  src,  out var personTimeProfile);
-                lf.Close();
+                fft.Dispose();
             }
 
             db.Cleanup();
@@ -183,7 +183,7 @@ namespace CalculationController.Tests.Transportation
             devices1.Should().BeEquivalentTo(devices2);
 
         }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CalcHouseholdDto MakeSingleFactory()
         {
             var builder = new ContainerBuilder();
@@ -225,9 +225,7 @@ namespace CalculationController.Tests.Transportation
                 .As<OnlineLoggingData>().SingleInstance();
 
             builder.Register(c => new LogFile(parameters,
-                c.Resolve<FileFactoryAndTracker>(),
-                c.Resolve<OnlineLoggingData>(),
-                c.Resolve<SqlResultLoggingService>())).As<ILogFile>().SingleInstance();
+                c.Resolve<FileFactoryAndTracker>())).As<ILogFile>().SingleInstance();
             builder.RegisterType<OnlineDeviceActivationProcessor>().As<IOnlineDeviceActivationProcessor>().SingleInstance();
             builder.RegisterType<CalcModularHouseholdFactory>().As<CalcModularHouseholdFactory>().SingleInstance();
             builder.Register(x => new DeviceCategoryPicker(r, null)).As<IDeviceCategoryPicker>().SingleInstance();
@@ -248,6 +246,7 @@ namespace CalculationController.Tests.Transportation
             builder.RegisterType<VacationDtoFactory>().As<VacationDtoFactory>().SingleInstance();
             builder.RegisterType<AvailabilityDtoRepository>().As<AvailabilityDtoRepository>().SingleInstance();
             builder.RegisterType<CalcVariableRepository>().As<CalcVariableRepository>().SingleInstance();
+            builder.RegisterType<CalcRepo>().As<CalcRepo>().SingleInstance();
             var container = builder.Build();
             using (var scope = container.BeginLifetimeScope()) {
                 var hhdtofac = scope.Resolve<CalcModularHouseholdDtoFactory>();
@@ -258,8 +257,8 @@ namespace CalculationController.Tests.Transportation
                 trs.SaveToDB();
                 ChargingStationSet css = sim.ChargingStationSets[0];
                 css.SaveToDB();
-                var lf = scope.Resolve<ILogFile>();
-                lf.InitHousehold(Constants.GeneralHouseholdKey, "General", HouseholdKeyType.General, "desc", null, null);
+                var fft = scope.Resolve<FileFactoryAndTracker>();
+                fft.RegisterHousehold(Constants.GeneralHouseholdKey, "General", HouseholdKeyType.General, "desc", null, null);
                 var dtohh = hhdtofac.MakeCalcModularHouseholdDto(sim,
                     mhh,
                     sim.TemperatureProfiles[0],
@@ -270,7 +269,7 @@ namespace CalculationController.Tests.Transportation
                     trs,
                     EnergyIntensityType.Random,
                     css);
-                lf.Close();
+                fft.Dispose();
                 db.Cleanup();
                 wd.CleanUp();
                 return dtohh;

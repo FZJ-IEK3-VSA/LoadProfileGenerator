@@ -4,15 +4,15 @@ using JetBrains.Annotations;
 
 namespace ChartCreator2.OxyCharts {
     public class ChartTaggingSet {
-        [NotNull] [ItemNotNull] private List<string> _categories = new List<string>();
+        [JetBrains.Annotations.NotNull] [ItemNotNull] private List<string> _categories = new List<string>();
 
-        public ChartTaggingSet([NotNull] string name) => Name = name;
+        public ChartTaggingSet([JetBrains.Annotations.NotNull] string name) => Name = name;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Dictionary<string, string> AffordanceToCategories { get; } = new Dictionary<string, string>();
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public List<string> Categories {
             get {
                 _categories = AffordanceToCategories.Values.Distinct().ToList();
@@ -20,10 +20,10 @@ namespace ChartCreator2.OxyCharts {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string Name { get; }
 
-        public int GetCategoryIndexOfCategory([NotNull] string category) => _categories.IndexOf(category);
+        public int GetCategoryIndexOfCategory([JetBrains.Annotations.NotNull] string category) => _categories.IndexOf(category);
         /*
         public int GetCategoryIndexOfItem(string item)
         {

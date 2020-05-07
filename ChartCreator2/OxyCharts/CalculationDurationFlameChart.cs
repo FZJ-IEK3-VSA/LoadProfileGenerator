@@ -16,12 +16,12 @@ namespace ChartCreator2.OxyCharts {
 
         //private static int _maxLevel;
 
-        [NotNull] private readonly Dictionary<int, double> _textOffsets = new Dictionary<int, double>();
+        [JetBrains.Annotations.NotNull] private readonly Dictionary<int, double> _textOffsets = new Dictionary<int, double>();
 
-        [NotNull] [ItemNotNull] private readonly List<CalculationProfiler.ProgramPart> _parts =new List<CalculationProfiler.ProgramPart>();
+        [JetBrains.Annotations.NotNull] [ItemNotNull] private readonly List<CalculationProfiler.ProgramPart> _parts =new List<CalculationProfiler.ProgramPart>();
 
-        private void AddBars([NotNull] CalculationProfiler.ProgramPart part, int row, double offset, int fontsize,
-            [NotNull] Dictionary<int, IntervalBarSeries> itemsByLevel, [NotNull] OxyPalette palette, [NotNull] PlotModel pm)
+        private void AddBars([JetBrains.Annotations.NotNull] CalculationProfiler.ProgramPart part, int row, double offset, int fontsize,
+            [JetBrains.Annotations.NotNull] Dictionary<int, IntervalBarSeries> itemsByLevel, [JetBrains.Annotations.NotNull] OxyPalette palette, [JetBrains.Annotations.NotNull] PlotModel pm)
         {
             var runningsum = offset;
             for (var i = 0; i < part.Children.Count; i++) {
@@ -77,7 +77,7 @@ namespace ChartCreator2.OxyCharts {
             pm.Annotations.Add(textAnnotation1);
         }
 
-        private void InitPartsList([NotNull] CalculationProfiler.ProgramPart part)
+        private void InitPartsList([JetBrains.Annotations.NotNull] CalculationProfiler.ProgramPart part)
         {
             if (_parts.Contains(part))
             {
@@ -145,7 +145,7 @@ namespace ChartCreator2.OxyCharts {
         }
 
         //convert all durations to double for later adding
-        private static void InitializeDuration2([NotNull] CalculationProfiler.ProgramPart part)
+        private static void InitializeDuration2([JetBrains.Annotations.NotNull] CalculationProfiler.ProgramPart part)
         {
             part.Duration2 = part.Duration.TotalSeconds;
             foreach (var child in part.Children) {
@@ -157,7 +157,7 @@ namespace ChartCreator2.OxyCharts {
         ///     Merges the children of a program part to make the plot slightly less confusing.
         /// </summary>
         /// <param name="part">the program part</param>
-        private static void MergeAndCompress([NotNull] CalculationProfiler.ProgramPart part)
+        private static void MergeAndCompress([JetBrains.Annotations.NotNull] CalculationProfiler.ProgramPart part)
         {
             //part.Children.Sort((x,y)=> String.Compare(x.Key, y.Key, StringComparison.Ordinal));
             for (var i = 0; i < part.Children.Count; i++) {
@@ -180,7 +180,7 @@ namespace ChartCreator2.OxyCharts {
             }
         }
 
-        public void Run([NotNull] CalculationProfiler cp, [NotNull] string outputDirectory, [NotNull] string source)
+        public void Run([JetBrains.Annotations.NotNull] CalculationProfiler cp, [JetBrains.Annotations.NotNull] string outputDirectory, [JetBrains.Annotations.NotNull] string source)
         {
             //var cp =  CalculationProfiler.Read(@"C:\work\CalculationBenchmarks.ActionCarpetPlotTest\");
 

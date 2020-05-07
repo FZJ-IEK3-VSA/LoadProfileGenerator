@@ -52,7 +52,7 @@ using JetBrains.Annotations;
 
 namespace Database.Tests
 {
-    public class DatabaseSetup
+    public class DatabaseSetup: IDisposable
     {
         //public enum TestPackage
         //{
@@ -69,7 +69,7 @@ namespace Database.Tests
         //    CalcPostProcessorTests,
         //}
 
-        //[NotNull]
+        //[JetBrains.Annotations.NotNull]
         //private static readonly Dictionary<TestPackage, string> _packageNames =
         //    new Dictionary<TestPackage, string> {
         //        {TestPackage.DatabaseIo, "DatabaseIO.Tests"},
@@ -90,7 +90,7 @@ namespace Database.Tests
         /// </summary>
         /// <param name="testname"></param>
         /// <param name="sourceFileName"></param>
-        public DatabaseSetup([NotNull] string testname,
+        public DatabaseSetup([JetBrains.Annotations.NotNull] string testname,
                              [CanBeNull] string sourceFileName = null)
         {
             DBBase.NeedsUpdateAllowed = true;
@@ -125,10 +125,10 @@ namespace Database.Tests
             DatabaseVersionChecker.CheckVersion(ConnectionString);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string ConnectionString { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string FileName { get; }
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
@@ -172,7 +172,7 @@ namespace Database.Tests
             Logger.Info("finished cleaning.");
         }
 
-        public void ClearTable([NotNull] string name)
+        public void ClearTable([JetBrains.Annotations.NotNull] string name)
         {
             using (var con = new Connection(ConnectionString))
             {
@@ -184,8 +184,8 @@ namespace Database.Tests
             }
         }
 
-        [NotNull]
-        public static string GetImportFileFullPath([NotNull] string srcfilename)
+        [JetBrains.Annotations.NotNull]
+        public static string GetImportFileFullPath([JetBrains.Annotations.NotNull] string srcfilename)
         {
             const string localPath = @"V:\Dropbox\LPG\ImportFiles\";
 
@@ -217,7 +217,7 @@ namespace Database.Tests
                                    Directory.GetCurrentDirectory());
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static string GetSourcepath([CanBeNull] string pSourcefilename)
         {
             Logger.Info("Looking for DB3 file");
@@ -246,20 +246,20 @@ namespace Database.Tests
             return foundfile.FullName;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<Affordance> LoadAffordances(
-            [NotNull] [ItemNotNull] ObservableCollection<TimeBasedProfile> timeBasedProfiles,
-            [NotNull] [ItemNotNull] out ObservableCollection<SubAffordance> subAffordances,
-            [NotNull] [ItemNotNull] ObservableCollection<DeviceCategory> deviceCategories,
-            [NotNull] [ItemNotNull] ObservableCollection<RealDevice> realDevices,
-            [NotNull] [ItemNotNull] ObservableCollection<Desire> desires,
-            [NotNull] [ItemNotNull] ObservableCollection<VLoadType> loadTypes,
-            [NotNull] [ItemNotNull] ObservableCollection<TimeLimit> timeLimits,
-            [NotNull] [ItemNotNull] ObservableCollection<DeviceAction> deviceActions,
-            [NotNull] [ItemNotNull] ObservableCollection<DeviceActionGroup> deviceActionGroups,
-            [NotNull] [ItemNotNull] ObservableCollection<Location> locations,
-            [NotNull] [ItemNotNull] ObservableCollection<Variable> variables)
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<TimeBasedProfile> timeBasedProfiles,
+           [JetBrains.Annotations.NotNull][ItemNotNull] out ObservableCollection<SubAffordance> subAffordances,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<DeviceCategory> deviceCategories,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<RealDevice> realDevices,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<Desire> desires,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<VLoadType> loadTypes,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<TimeLimit> timeLimits,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<DeviceAction> deviceActions,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<DeviceActionGroup> deviceActionGroups,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<Location> locations,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<Variable> variables)
         {
             var affordances = new ObservableCollection<Affordance>();
             subAffordances = new ObservableCollection<SubAffordance>();
@@ -271,21 +271,21 @@ namespace Database.Tests
             return affordances;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<Affordance> LoadAffordances(
-            [NotNull] [ItemNotNull] out ObservableCollection<TimeBasedProfile> timeBasedProfiles,
-            [NotNull] [ItemNotNull] out ObservableCollection<SubAffordance> subAffordances,
-            [NotNull] [ItemNotNull] out ObservableCollection<DeviceCategory> deviceCategories,
-            [NotNull] [ItemNotNull] out ObservableCollection<RealDevice> realDevices,
-            [NotNull] [ItemNotNull] out ObservableCollection<Desire> desires,
-            [NotNull] [ItemNotNull] out ObservableCollection<VLoadType> loadTypes,
-            [NotNull] [ItemNotNull] out ObservableCollection<TimeLimit> timeLimits,
-            [NotNull] [ItemNotNull] out ObservableCollection<DeviceAction> deviceActions,
-            [NotNull] [ItemNotNull] out ObservableCollection<DeviceActionGroup> deviceActionGroups,
-            [NotNull] [ItemNotNull] out ObservableCollection<Location> locations,
-            [NotNull] [ItemNotNull] out ObservableCollection<Variable> variables,
-            [NotNull] [ItemNotNull] out ObservableCollection<DateBasedProfile> dateBasedProfiles)
+            [JetBrains.Annotations.NotNull] [ItemNotNull] out ObservableCollection<TimeBasedProfile> timeBasedProfiles,
+           [JetBrains.Annotations.NotNull][ItemNotNull] out ObservableCollection<SubAffordance> subAffordances,
+           [JetBrains.Annotations.NotNull][ItemNotNull] out ObservableCollection<DeviceCategory> deviceCategories,
+           [JetBrains.Annotations.NotNull][ItemNotNull] out ObservableCollection<RealDevice> realDevices,
+           [JetBrains.Annotations.NotNull][ItemNotNull] out ObservableCollection<Desire> desires,
+           [JetBrains.Annotations.NotNull][ItemNotNull] out ObservableCollection<VLoadType> loadTypes,
+           [JetBrains.Annotations.NotNull][ItemNotNull] out ObservableCollection<TimeLimit> timeLimits,
+           [JetBrains.Annotations.NotNull][ItemNotNull] out ObservableCollection<DeviceAction> deviceActions,
+           [JetBrains.Annotations.NotNull][ItemNotNull] out ObservableCollection<DeviceActionGroup> deviceActionGroups,
+           [JetBrains.Annotations.NotNull][ItemNotNull] out ObservableCollection<Location> locations,
+           [JetBrains.Annotations.NotNull][ItemNotNull] out ObservableCollection<Variable> variables,
+           [JetBrains.Annotations.NotNull][ItemNotNull] out ObservableCollection<DateBasedProfile> dateBasedProfiles)
         {
             var affordances = new ObservableCollection<Affordance>();
             subAffordances = new ObservableCollection<SubAffordance>();
@@ -305,11 +305,11 @@ namespace Database.Tests
             return affordances;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<AffordanceTaggingSet> LoadAffordanceTaggingSets(
-            [NotNull] [ItemNotNull] ObservableCollection<Affordance> affordances,
-            [NotNull] [ItemNotNull] ObservableCollection<VLoadType> loadTypes)
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<Affordance> affordances,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<VLoadType> loadTypes)
         {
             var affordanceTaggingSets =
                 new ObservableCollection<AffordanceTaggingSet>();
@@ -319,7 +319,7 @@ namespace Database.Tests
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<DateBasedProfile> LoadDateBasedProfiles()
         {
             var dateBasedProfiles = new ObservableCollection<DateBasedProfile>();
@@ -327,7 +327,7 @@ namespace Database.Tests
             return dateBasedProfiles;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<Desire> LoadDesires()
         {
@@ -336,7 +336,7 @@ namespace Database.Tests
             return desires;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<DeviceActionGroup> LoadDeviceActionGroups()
         {
@@ -345,13 +345,13 @@ namespace Database.Tests
             return dags;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<DeviceAction> LoadDeviceActions(
-            [NotNull] [ItemNotNull] ObservableCollection<TimeBasedProfile> timeProfiles,
-            [NotNull] [ItemNotNull] ObservableCollection<RealDevice> realDevices,
-            [NotNull] [ItemNotNull] ObservableCollection<VLoadType> loadTypes,
-            [NotNull] [ItemNotNull] ObservableCollection<DeviceActionGroup> groups)
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<TimeBasedProfile> timeProfiles,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<RealDevice> realDevices,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<VLoadType> loadTypes,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<DeviceActionGroup> groups)
         {
             var deviceActions = new ObservableCollection<DeviceAction>();
             DeviceAction.LoadFromDatabase(deviceActions, ConnectionString, timeProfiles, realDevices, loadTypes, groups,
@@ -359,11 +359,11 @@ namespace Database.Tests
             return deviceActions;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<DeviceCategory> LoadDeviceCategories(
-            [NotNull] [ItemNotNull] ObservableCollection<RealDevice> realDevices,
-            [NotNull] out DeviceCategory dcNone, bool ignoreMissingTables)
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<RealDevice> realDevices,
+           [JetBrains.Annotations.NotNull]out DeviceCategory dcNone, bool ignoreMissingTables)
         {
             var deviceCategories = new ObservableCollection<DeviceCategory>();
             DeviceCategory.LoadFromDatabase(deviceCategories, out var dcNone1, ConnectionString, realDevices,
@@ -372,13 +372,13 @@ namespace Database.Tests
             return deviceCategories;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<DeviceSelection> LoadDeviceSelections(
-            [NotNull] [ItemNotNull] ObservableCollection<DeviceCategory> deviceCategories,
-            [NotNull] [ItemNotNull] ObservableCollection<RealDevice> devices,
-            [NotNull] [ItemNotNull] ObservableCollection<DeviceAction> deviceActions,
-            [NotNull] [ItemNotNull] ObservableCollection<DeviceActionGroup> groups)
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<DeviceCategory> deviceCategories,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<RealDevice> devices,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<DeviceAction> deviceActions,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<DeviceActionGroup> groups)
         {
             var result = new ObservableCollection<DeviceSelection>();
             DeviceSelection.LoadFromDatabase(result, ConnectionString, deviceCategories, devices, deviceActions, groups,
@@ -386,32 +386,32 @@ namespace Database.Tests
             return result;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<EnergyStorage> LoadEnergyStorages(
-            [NotNull] [ItemNotNull] ObservableCollection<VLoadType> loadTypes, ObservableCollection<Variable> variables)
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<VLoadType> loadTypes, ObservableCollection<Variable> variables)
         {
             var energyStorages = new ObservableCollection<EnergyStorage>();
             EnergyStorage.LoadFromDatabase(energyStorages, ConnectionString, loadTypes,variables, false);
             return energyStorages;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<Generator> LoadGenerators(
-            [NotNull] [ItemNotNull] ObservableCollection<VLoadType> loadTypes,
-            [NotNull] [ItemNotNull] ObservableCollection<DateBasedProfile> profiles)
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<VLoadType> loadTypes,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<DateBasedProfile> profiles)
         {
             var generators = new ObservableCollection<Generator>();
             Generator.LoadFromDatabase(generators, ConnectionString, loadTypes, profiles, false);
             return generators;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<GeographicLocation> LoadGeographicLocations(
-            [NotNull] [ItemNotNull] out ObservableCollection<Holiday> holidays,
-            [NotNull] [ItemNotNull] ObservableCollection<TimeLimit> timeLimits)
+           [JetBrains.Annotations.NotNull][ItemNotNull] out ObservableCollection<Holiday> holidays,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<TimeLimit> timeLimits)
         {
             var geographicLocations =
                 new ObservableCollection<GeographicLocation>();
@@ -420,7 +420,7 @@ namespace Database.Tests
             return geographicLocations;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<Holiday> LoadHolidays()
         {
@@ -430,13 +430,13 @@ namespace Database.Tests
         }
 
         public void LoadHouseholdsAndHouses(
-            [NotNull] [ItemNotNull] out ObservableCollection<ModularHousehold> modularHouseholds,
-            [NotNull] [ItemNotNull] out ObservableCollection<House> houses,
-            [NotNull] [ItemNotNull] out ObservableCollection<TimeLimit> timeLimits,
-            [NotNull] [ItemNotNull] ObservableCollection<TraitTag> traitTags,
-            [NotNull] [ItemNotNull] ObservableCollection<ChargingStationSet> chargingStationSets,
-            [NotNull] [ItemNotNull] ObservableCollection<TravelRouteSet> travelRouteSets,
-            [NotNull] [ItemNotNull] ObservableCollection<TransportationDeviceSet> transportationDeviceSets)
+           [JetBrains.Annotations.NotNull][ItemNotNull] out ObservableCollection<ModularHousehold> modularHouseholds,
+           [JetBrains.Annotations.NotNull][ItemNotNull] out ObservableCollection<House> houses,
+           [JetBrains.Annotations.NotNull][ItemNotNull] out ObservableCollection<TimeLimit> timeLimits,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<TraitTag> traitTags,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<ChargingStationSet> chargingStationSets,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<TravelRouteSet> travelRouteSets,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<TransportationDeviceSet> transportationDeviceSets)
         {
             var timeBasedProfiles = LoadTimeBasedProfiles();
             var realDevices =
@@ -484,10 +484,10 @@ namespace Database.Tests
                 travelRouteSets,transportationDeviceSets);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
-        public ObservableCollection<TravelRouteSet> LoadTravelRouteSets([NotNull][ItemNotNull]ObservableCollection<Location> locations,
-            [NotNull][ItemNotNull] ObservableCollection<TransportationDeviceCategory> categories, [NotNull] [ItemNotNull] out ObservableCollection<Site> sites)
+        public ObservableCollection<TravelRouteSet> LoadTravelRouteSets([JetBrains.Annotations.NotNull][ItemNotNull]ObservableCollection<Location> locations,
+            [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<TransportationDeviceCategory> categories,[JetBrains.Annotations.NotNull][ItemNotNull] out ObservableCollection<Site> sites)
         {
             var travelRouteSets = new ObservableCollection<TravelRouteSet>();
 
@@ -498,12 +498,12 @@ namespace Database.Tests
             return travelRouteSets;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<TravelRoute> LoadTravelRoutes(
-            [NotNull][ItemNotNull]ObservableCollection<TransportationDeviceCategory> transportationDeviceCategories,
-            [NotNull][ItemNotNull]ObservableCollection<Location> locations,
-            [NotNull] [ItemNotNull] out ObservableCollection<Site> sites)
+            [JetBrains.Annotations.NotNull][ItemNotNull]ObservableCollection<TransportationDeviceCategory> transportationDeviceCategories,
+            [JetBrains.Annotations.NotNull][ItemNotNull]ObservableCollection<Location> locations,
+           [JetBrains.Annotations.NotNull][ItemNotNull] out ObservableCollection<Site> sites)
 
         {
             var tt = new ObservableCollection<TravelRoute>();
@@ -512,9 +512,9 @@ namespace Database.Tests
             return tt;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
-        public ObservableCollection<Site> LoadSites([NotNull][ItemNotNull]ObservableCollection<Location> locations)
+        public ObservableCollection<Site> LoadSites([JetBrains.Annotations.NotNull][ItemNotNull]ObservableCollection<Location> locations)
         {
             var tt = new ObservableCollection<Site>();
             Site.LoadFromDatabase(tt, ConnectionString,
@@ -522,12 +522,12 @@ namespace Database.Tests
             return tt;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<TransportationDeviceSet> LoadTransportationDeviceSets(
-            [ItemNotNull][NotNull] ObservableCollection<VLoadType> loadtypes,
-            [NotNull][ItemNotNull] out ObservableCollection<TransportationDeviceCategory> devicesCategories,
-            [NotNull][ItemNotNull] out ObservableCollection<TransportationDevice> transportationDevices)
+            [ItemNotNull][JetBrains.Annotations.NotNull] ObservableCollection<VLoadType> loadtypes,
+            [JetBrains.Annotations.NotNull][ItemNotNull] out ObservableCollection<TransportationDeviceCategory> devicesCategories,
+            [JetBrains.Annotations.NotNull][ItemNotNull] out ObservableCollection<TransportationDevice> transportationDevices)
         {
             var tranportationdevicesets = new ObservableCollection<TransportationDeviceSet>();
             devicesCategories = LoadTransportationDeviceCategory();
@@ -536,18 +536,18 @@ namespace Database.Tests
             return tranportationdevicesets;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<TransportationDevice> LoadTransportationDevices(
-            [ItemNotNull][NotNull] ObservableCollection<TransportationDeviceCategory> categories,
-            [ItemNotNull][NotNull] ObservableCollection<VLoadType> loadtypes)
+            [ItemNotNull][JetBrains.Annotations.NotNull] ObservableCollection<TransportationDeviceCategory> categories,
+            [ItemNotNull][JetBrains.Annotations.NotNull] ObservableCollection<VLoadType> loadtypes)
         {
             var tt = new ObservableCollection<TransportationDevice>();
             TransportationDevice.LoadFromDatabase(tt, ConnectionString, false, categories, loadtypes);
             return tt;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<TransportationDeviceCategory> LoadTransportationDeviceCategory()
         {
@@ -556,7 +556,7 @@ namespace Database.Tests
             return tt;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<HouseholdTag> LoadHouseholdTags()
         {
@@ -565,17 +565,17 @@ namespace Database.Tests
             return tt;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<HouseholdTemplate> LoadHouseholdTemplates(
-            [NotNull] [ItemNotNull] out ObservableCollection<RealDevice> realDevices,
-            [NotNull] [ItemNotNull] out ObservableCollection<DeviceCategory> deviceCategories,
-            [NotNull] [ItemNotNull] out ObservableCollection<TimeBasedProfile> timeBasedProfiles,
-            [NotNull] [ItemNotNull] out ObservableCollection<TimeLimit> timeLimits,
-            [NotNull] [ItemNotNull] out ObservableCollection<VLoadType> loadTypes,
-            [NotNull] [ItemNotNull] out ObservableCollection<DeviceAction> deviceActions,
-            [NotNull] [ItemNotNull] out ObservableCollection<DeviceActionGroup> deviceActionGroups,
-            [NotNull] [ItemNotNull] out ObservableCollection<HouseholdTrait> traits
+           [JetBrains.Annotations.NotNull][ItemNotNull] out ObservableCollection<RealDevice> realDevices,
+           [JetBrains.Annotations.NotNull][ItemNotNull] out ObservableCollection<DeviceCategory> deviceCategories,
+           [JetBrains.Annotations.NotNull][ItemNotNull] out ObservableCollection<TimeBasedProfile> timeBasedProfiles,
+           [JetBrains.Annotations.NotNull][ItemNotNull] out ObservableCollection<TimeLimit> timeLimits,
+           [JetBrains.Annotations.NotNull][ItemNotNull] out ObservableCollection<VLoadType> loadTypes,
+           [JetBrains.Annotations.NotNull][ItemNotNull] out ObservableCollection<DeviceAction> deviceActions,
+           [JetBrains.Annotations.NotNull][ItemNotNull] out ObservableCollection<DeviceActionGroup> deviceActionGroups,
+           [JetBrains.Annotations.NotNull][ItemNotNull] out ObservableCollection<HouseholdTrait> traits
         )
         {
             var householdTemplates = new ObservableCollection<HouseholdTemplate>();
@@ -605,21 +605,21 @@ namespace Database.Tests
             return householdTemplates;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<HouseholdTrait> LoadHouseholdTraits(
-            [NotNull] [ItemNotNull] ObservableCollection<Location> locations,
-            [NotNull] [ItemNotNull] ObservableCollection<Affordance> affordances,
-            [NotNull] [ItemNotNull] ObservableCollection<RealDevice> devices,
-            [NotNull] [ItemNotNull] ObservableCollection<DeviceCategory> deviceCategories,
-            [NotNull] [ItemNotNull] ObservableCollection<TimeBasedProfile> timeBasedProfiles,
-            [NotNull] [ItemNotNull] ObservableCollection<VLoadType> loadTypes,
-            [NotNull] [ItemNotNull] ObservableCollection<TimeLimit> timeLimits,
-            [NotNull] [ItemNotNull] ObservableCollection<Desire> desires,
-            [NotNull] [ItemNotNull] ObservableCollection<DeviceAction> deviceActions,
-            [NotNull] [ItemNotNull] ObservableCollection<DeviceActionGroup> groups,
-            [NotNull] [ItemNotNull] ObservableCollection<TraitTag> traitTags,
-            [NotNull] [ItemNotNull] ObservableCollection<Variable> variables)
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<Location> locations,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<Affordance> affordances,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<RealDevice> devices,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<DeviceCategory> deviceCategories,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<TimeBasedProfile> timeBasedProfiles,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<VLoadType> loadTypes,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<TimeLimit> timeLimits,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<Desire> desires,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<DeviceAction> deviceActions,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<DeviceActionGroup> groups,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<TraitTag> traitTags,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<Variable> variables)
         {
             var householdTraits = new ObservableCollection<HouseholdTrait>();
 
@@ -630,16 +630,16 @@ namespace Database.Tests
         }
 
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<House> LoadHouses(
-            [NotNull] [ItemNotNull] ObservableCollection<ModularHousehold> modularHouseholds,
-            [NotNull] [ItemNotNull] ObservableCollection<TemperatureProfile> temperaturProfiles,
-            [NotNull] [ItemNotNull] ObservableCollection<GeographicLocation> geographicLocations,
-            [NotNull] [ItemNotNull] ObservableCollection<HouseType> houseTypes,
-            [NotNull] [ItemNotNull] ObservableCollection<ChargingStationSet> chargingStationSets,
-            [NotNull] [ItemNotNull] ObservableCollection<TravelRouteSet> travelRouteSets,
-            [NotNull] [ItemNotNull] ObservableCollection<TransportationDeviceSet> transportationDeviceSets)
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<ModularHousehold> modularHouseholds,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<TemperatureProfile> temperaturProfiles,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<GeographicLocation> geographicLocations,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<HouseType> houseTypes,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<ChargingStationSet> chargingStationSets,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<TravelRouteSet> travelRouteSets,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<TransportationDeviceSet> transportationDeviceSets)
         {
             var houses = new ObservableCollection<House>();
             House.LoadFromDatabase(houses, ConnectionString, temperaturProfiles, geographicLocations,
@@ -648,21 +648,21 @@ namespace Database.Tests
             return houses;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<HouseType> LoadHouseTypes(
-            [NotNull] [ItemNotNull] ObservableCollection<RealDevice> realDevices,
-            [NotNull] [ItemNotNull] ObservableCollection<DeviceCategory> deviceCategories,
-            [NotNull] [ItemNotNull] ObservableCollection<TimeBasedProfile> timeBasedProfiles,
-            [NotNull] [ItemNotNull] ObservableCollection<TimeLimit> timeLimits,
-            [NotNull] [ItemNotNull] ObservableCollection<VLoadType> loadTypes,
-            [NotNull] [ItemNotNull] ObservableCollection<TransformationDevice> transformationDevices,
-            [NotNull] [ItemNotNull] ObservableCollection<EnergyStorage> energyStorages,
-            [NotNull] [ItemNotNull] ObservableCollection<Generator> generators,
-            [NotNull] [ItemNotNull] ObservableCollection<Location> allLocations,
-            [NotNull] [ItemNotNull] ObservableCollection<DeviceAction> deviceActions,
-            [NotNull] [ItemNotNull] ObservableCollection<DeviceActionGroup> deviceActionGroups,
-            [NotNull] [ItemNotNull] ObservableCollection<Variable> variables)
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<RealDevice> realDevices,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<DeviceCategory> deviceCategories,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<TimeBasedProfile> timeBasedProfiles,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<TimeLimit> timeLimits,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<VLoadType> loadTypes,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<TransformationDevice> transformationDevices,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<EnergyStorage> energyStorages,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<Generator> generators,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<Location> allLocations,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<DeviceAction> deviceActions,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<DeviceActionGroup> deviceActionGroups,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<Variable> variables)
         {
             var houseTypes = new ObservableCollection<HouseType>();
             HouseType.LoadFromDatabase(houseTypes, ConnectionString, realDevices, deviceCategories, timeBasedProfiles,
@@ -671,7 +671,7 @@ namespace Database.Tests
             return houseTypes;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<VLoadType> LoadLoadTypes()
         {
@@ -680,27 +680,27 @@ namespace Database.Tests
             return vLoadTypes;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<Location> LoadLocations(
-            [NotNull] [ItemNotNull] ObservableCollection<RealDevice> realDevices,
-            [NotNull] [ItemNotNull] ObservableCollection<DeviceCategory> deviceCategories,
-            [NotNull] [ItemNotNull] ObservableCollection<VLoadType> loadTypes)
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<RealDevice> realDevices,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<DeviceCategory> deviceCategories,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<VLoadType> loadTypes)
         {
             var locations = new ObservableCollection<Location>();
             Location.LoadFromDatabase(locations, ConnectionString, realDevices, deviceCategories, loadTypes, false);
             return locations;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<ModularHousehold> LoadModularHouseholds(
-            [NotNull] [ItemNotNull] ObservableCollection<HouseholdTrait> householdTraits,
-            [NotNull] [ItemNotNull] ObservableCollection<DeviceSelection> deviceSelections,
-            [NotNull] [ItemNotNull] ObservableCollection<Person> persons,
-            [NotNull] [ItemNotNull] ObservableCollection<Vacation> vacations,
-            [NotNull] [ItemNotNull] ObservableCollection<HouseholdTag> tags,
-            [NotNull] [ItemNotNull] ObservableCollection<TraitTag> traitTags)
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<HouseholdTrait> householdTraits,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<DeviceSelection> deviceSelections,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<Person> persons,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<Vacation> vacations,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<HouseholdTag> tags,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<TraitTag> traitTags)
         {
             var modularHouseholds = new ObservableCollection<ModularHousehold>();
             ModularHousehold.LoadFromDatabase(modularHouseholds, ConnectionString, householdTraits, deviceSelections,
@@ -709,7 +709,7 @@ namespace Database.Tests
         }
 
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<Person> LoadPersons()
         {
@@ -718,21 +718,21 @@ namespace Database.Tests
             return persons;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<RealDevice> LoadRealDevices(
-            [NotNull] [ItemNotNull] out ObservableCollection<DeviceCategory> deviceCategoriesOut,
-            [NotNull] [ItemNotNull] out ObservableCollection<VLoadType> loadTypes,
-            [NotNull] [ItemNotNull] ObservableCollection<TimeBasedProfile> profiles) =>
+           [JetBrains.Annotations.NotNull][ItemNotNull] out ObservableCollection<DeviceCategory> deviceCategoriesOut,
+           [JetBrains.Annotations.NotNull][ItemNotNull] out ObservableCollection<VLoadType> loadTypes,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<TimeBasedProfile> profiles) =>
             LoadRealDevices(out deviceCategoriesOut, out _, out loadTypes, profiles);
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<RealDevice> LoadRealDevices(
-            [NotNull] [ItemNotNull] out ObservableCollection<DeviceCategory> deviceCategoriesOut,
-            [NotNull] out DeviceCategory none,
-            [NotNull] [ItemNotNull] out ObservableCollection<VLoadType> loadTypes,
-            [NotNull] [ItemNotNull] ObservableCollection<TimeBasedProfile> profiles)
+           [JetBrains.Annotations.NotNull][ItemNotNull] out ObservableCollection<DeviceCategory> deviceCategoriesOut,
+           [JetBrains.Annotations.NotNull]out DeviceCategory none,
+           [JetBrains.Annotations.NotNull][ItemNotNull] out ObservableCollection<VLoadType> loadTypes,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<TimeBasedProfile> profiles)
         {
             var realDevices = new ObservableCollection<RealDevice>();
             var deviceCategories = LoadDeviceCategories(realDevices, out DeviceCategory dcnone, false);
@@ -744,7 +744,7 @@ namespace Database.Tests
             return realDevices;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<TemperatureProfile> LoadTemperatureProfiles()
         {
@@ -753,7 +753,7 @@ namespace Database.Tests
             return temperaturProfiles;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<TimeBasedProfile> LoadTimeBasedProfiles()
         {
@@ -762,23 +762,23 @@ namespace Database.Tests
             return timeBasedProfiles;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<TimeLimit> LoadTimeLimits(
-            [NotNull] [ItemNotNull] ObservableCollection<DateBasedProfile> dateBasedProfiles)
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<DateBasedProfile> dateBasedProfiles)
         {
             var timeLimits = new ObservableCollection<TimeLimit>();
             TimeLimit.LoadFromDatabase(timeLimits, dateBasedProfiles, ConnectionString, false);
             return timeLimits;
         }
 
-        public void LoadTransportation([NotNull][ItemNotNull]ObservableCollection<Location> locations,
-            [NotNull][ItemNotNull]  out ObservableCollection<TransportationDeviceSet> transportationDeviceSets,
-            [NotNull][ItemNotNull] out ObservableCollection<TravelRouteSet> travelRouteSets,
-            [ItemNotNull][NotNull] out ObservableCollection<TransportationDevice> transportationDevices,
-            [ItemNotNull][NotNull] out ObservableCollection<TransportationDeviceCategory> transportationDeviceCategories,
-            [ItemNotNull][NotNull] ObservableCollection<VLoadType> loadTypes,
-                                       [NotNull] [ItemNotNull] out ObservableCollection<ChargingStationSet> chargingStationSets)
+        public void LoadTransportation([JetBrains.Annotations.NotNull][ItemNotNull]ObservableCollection<Location> locations,
+            [JetBrains.Annotations.NotNull][ItemNotNull]  out ObservableCollection<TransportationDeviceSet> transportationDeviceSets,
+            [JetBrains.Annotations.NotNull][ItemNotNull] out ObservableCollection<TravelRouteSet> travelRouteSets,
+            [ItemNotNull][JetBrains.Annotations.NotNull] out ObservableCollection<TransportationDevice> transportationDevices,
+            [ItemNotNull][JetBrains.Annotations.NotNull] out ObservableCollection<TransportationDeviceCategory> transportationDeviceCategories,
+            [ItemNotNull][JetBrains.Annotations.NotNull] ObservableCollection<VLoadType> loadTypes,
+                                      [JetBrains.Annotations.NotNull][ItemNotNull] out ObservableCollection<ChargingStationSet> chargingStationSets)
         {
             transportationDeviceSets = LoadTransportationDeviceSets(
                 loadTypes,
@@ -787,11 +787,11 @@ namespace Database.Tests
             chargingStationSets = LoadChargingStationSets(loadTypes,transportationDeviceCategories,sites);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
-        public ObservableCollection<ChargingStationSet> LoadChargingStationSets([NotNull] [ItemNotNull] ObservableCollection<VLoadType> loadTypes,
-                                                                                [NotNull] [ItemNotNull] ObservableCollection<TransportationDeviceCategory> transportationDeviceCategories,
-                                                                                [NotNull] [ItemNotNull] ObservableCollection<Site> sites
+        public ObservableCollection<ChargingStationSet> LoadChargingStationSets([JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<VLoadType> loadTypes,
+                                                                               [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<TransportationDeviceCategory> transportationDeviceCategories,
+                                                                               [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<Site> sites
                                                                                 )
         {
             var tags = new ObservableCollection<ChargingStationSet>();
@@ -799,7 +799,7 @@ namespace Database.Tests
             return tags;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<TraitTag> LoadTraitTags()
         {
@@ -808,11 +808,11 @@ namespace Database.Tests
             return tags;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<TransformationDevice> LoadTransformationDevices(
-            [NotNull] [ItemNotNull] ObservableCollection<VLoadType> loadTypes,
-            [NotNull] [ItemNotNull] ObservableCollection<Variable> variables)
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<VLoadType> loadTypes,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<Variable> variables)
         {
             var transformationDevices =
                 new ObservableCollection<TransformationDevice>();
@@ -821,7 +821,7 @@ namespace Database.Tests
             return transformationDevices;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<Vacation> LoadVacations()
         {
@@ -830,7 +830,7 @@ namespace Database.Tests
             return vacations;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<Variable> LoadVariables()
         {
@@ -840,7 +840,7 @@ namespace Database.Tests
         }
 
         [CanBeNull]
-        private static FileInfo CheckAppDataLocal([NotNull] string filename)
+        private static FileInfo CheckAppDataLocal([JetBrains.Annotations.NotNull] string filename)
         {
             //used by the test runner
             if (Directory.GetCurrentDirectory().Contains(@"AppData\Local"))
@@ -858,7 +858,7 @@ namespace Database.Tests
         }
 
         //[CanBeNull]
-        //private static FileInfo CheckJenkins([NotNull] string filename, TestPackage testPackage)
+        //private static FileInfo CheckJenkins([JetBrains.Annotations.NotNull] string filename, TestPackage testPackage)
         //{
         //    const string jenkinsdir = "c:\\jenkins\\workspace";
         //    Logger.Info("trying jenkins: Checking for " + jenkinsdir);
@@ -893,7 +893,7 @@ namespace Database.Tests
         //}
 
         [CanBeNull]
-        private static FileInfo CheckTeamCityPath([NotNull] string filename)
+        private static FileInfo CheckTeamCityPath([JetBrains.Annotations.NotNull] string filename)
         {
             Logger.Info("trying team city");
             var tmpdir = Environment.GetEnvironmentVariable("TMPDIR");
@@ -930,7 +930,7 @@ namespace Database.Tests
 
 
         [CanBeNull]
-        private static FileInfo CheckDropBoxPath([NotNull] string filename)
+        private static FileInfo CheckDropBoxPath([JetBrains.Annotations.NotNull] string filename)
         {
             // if started from the target directory
             DirectoryInfo di =
@@ -950,7 +950,7 @@ namespace Database.Tests
         }
 
         [CanBeNull]
-        private static FileInfo CheckWpfApplicationPath([NotNull] string filename)
+        private static FileInfo CheckWpfApplicationPath([JetBrains.Annotations.NotNull] string filename)
         {
             // if started from the target directory
             DirectoryInfo di =
@@ -968,7 +968,7 @@ namespace Database.Tests
 
             return null;
         }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static string AssemblyDirectory
         {
             get
@@ -980,7 +980,7 @@ namespace Database.Tests
             }
         }
         [CanBeNull]
-        private static FileInfo FindDB3SourcePath([NotNull] string filename)
+        private static FileInfo FindDB3SourcePath([JetBrains.Annotations.NotNull] string filename)
         {
             var di = CheckDropBoxPath(filename);
             if (di != null)
@@ -1025,6 +1025,11 @@ namespace Database.Tests
 
 
             return null;
+        }
+
+        public void Dispose()
+        {
+            Cleanup();
         }
     }
 }

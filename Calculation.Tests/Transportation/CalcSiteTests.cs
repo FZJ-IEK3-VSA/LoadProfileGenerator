@@ -10,7 +10,6 @@ using CalculationEngine.Transportation;
 using Common;
 using Common.CalcDto;
 using Common.JSON;
-using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
 using Common.Tests;
 using Moq;
@@ -31,14 +30,8 @@ namespace Calculation.Tests.Transportation {
             var fft = new FileFactoryAndTracker(wd.WorkingDirectory, "hhname0",wd.InputDataLogger);
 
             fft.RegisterHousehold(hhkey,"hhname0",HouseholdKeyType.Household,"desc", null, null);
-            DateStampCreator dsc =new DateStampCreator(calcParameters);
             LogFile lf = new LogFile(calcParameters,
-                fft,
-                new OnlineLoggingData(dsc,
-                    wd.InputDataLogger,
-                    calcParameters),
-                null,
-                true);
+                fft, true);
             Random r = new Random(1);
             CalcSite src = new CalcSite("src",Guid.NewGuid().ToString(),hhkey);
             CalcSite dst = new CalcSite("dst", Guid.NewGuid().ToString(),hhkey);
@@ -46,7 +39,7 @@ namespace Calculation.Tests.Transportation {
             //List<CalcTravelRoute> routes = src.GetViableTrafficRoutes(dst);
             //Assert.That(routes.Count,Is.EqualTo( 0));
             var iodap = new Mock<IOnlineDeviceActivationProcessor>();
-            CalcRepo calcRepo = new CalcRepo(odap: iodap.Object, lf: lf, rnd: r);
+            CalcRepo calcRepo = new CalcRepo(odap: iodap.Object, lf: lf, rnd: r, calcParameters:calcParameters);
             CalcTravelRoute firstRoute = new CalcTravelRoute("route1",src,dst, th.VehicleDepot,
                 th.LocationUnlimitedDevices,hhkey, Guid.NewGuid().ToString(),calcRepo);
             CalcTransportationDeviceCategory transcategory =

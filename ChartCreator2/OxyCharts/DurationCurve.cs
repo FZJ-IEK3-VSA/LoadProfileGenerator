@@ -13,9 +13,9 @@ using OxyPlot.Series;
 namespace ChartCreator2.OxyCharts {
     internal class DurationCurve : ChartBaseFileStep
     {
-        public DurationCurve([NotNull] ChartCreationParameters parameters,
-                             [NotNull] FileFactoryAndTracker fft,
-                             [NotNull] ICalculationProfiler calculationProfiler) : base(parameters, fft,
+        public DurationCurve([JetBrains.Annotations.NotNull] ChartCreationParameters parameters,
+                             [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft,
+                             [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler) : base(parameters, fft,
             calculationProfiler, new List<ResultFileID>() { ResultFileID.DurationCurveSums
             },
             "Duration Curve", FileProcessingResult.ShouldCreateFiles

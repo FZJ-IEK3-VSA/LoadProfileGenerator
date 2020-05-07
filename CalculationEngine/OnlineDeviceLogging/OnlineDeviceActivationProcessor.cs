@@ -81,7 +81,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
         Dictionary<ProfileActivationEntry.ProfileActivationEntryKey, ProfileActivationEntry> ProfileEntries { get; }
     }
     public class OnlineDeviceActivationProcessor : IOnlineDeviceActivationProcessor {
-        [NotNull] private readonly ILogFile _lf;
+        private readonly IOnlineLoggingData _old;
         [NotNull] private readonly CalcParameters _calcParameters;
 
         [NotNull]
@@ -103,13 +103,13 @@ namespace CalculationEngine.OnlineDeviceLogging {
         [NotNull]
         private List<OnlineDeviceStateMachine> _statemachines = new List<OnlineDeviceStateMachine>();
 
-        public OnlineDeviceActivationProcessor([NotNull] ILogFile lf, [NotNull] CalcParameters calcParameters)
+        public OnlineDeviceActivationProcessor(IOnlineLoggingData old, [NotNull] CalcParameters calcParameters, [NotNull] FileFactoryAndTracker fft)
         {
-            _lf = lf;
+            _old = old;
             _calcParameters = calcParameters;
-            Oefc = new OnlineEnergyFileColumns(_lf);
+            Oefc = new OnlineEnergyFileColumns(old);
             _loadTypeDict = new Dictionary<CalcLoadTypeDto, int>();
-            _fft = _lf.FileFactoryAndTracker;
+            _fft = fft;
             _binaryOutStreams = new Dictionary<CalcLoadTypeDto, BinaryWriter>();
             _sumBinaryOutStreams = new Dictionary<CalcLoadTypeDto, BinaryWriter>();
             Logger.Info("Initializing the online device activation processor...");
@@ -157,7 +157,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
                 var entry = new DeviceActivationEntry( dsm.AffordanceName,
                     dsm.LoadType,totalEnergysum , activatorName,sv.Values.Count,
                     startTimeStep, calcDeviceDto); // dsm.StepValues.ToArray(),
-                _lf.OnlineLoggingData.RegisterDeviceActivation(entry);
+                _old.RegisterDeviceActivation(entry);
             }
         }
 

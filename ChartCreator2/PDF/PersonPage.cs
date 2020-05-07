@@ -7,7 +7,7 @@ using MigraDoc.DocumentObjectModel;
 
 namespace ChartCreator2.PDF {
     internal class PersonPage : IPageCreatorToc {
-        public void MakePage([NotNull] Document doc, [NotNull] string dstdir, bool requireAll, [ItemNotNull] [NotNull] List<string> pngFiles, [NotNull] Section tocSection) {
+        public void MakePage([JetBrains.Annotations.NotNull] Document doc, [JetBrains.Annotations.NotNull] string dstdir, bool requireAll, [ItemNotNull] [JetBrains.Annotations.NotNull] List<string> pngFiles, [JetBrains.Annotations.NotNull] Section tocSection) {
             var di = new DirectoryInfo(dstdir);
             var files = di.GetFiles("Persons.*.txt");
             if (files.Length == 0) {
@@ -49,8 +49,8 @@ namespace ChartCreator2.PDF {
         }
 
         [ItemNotNull]
-        [NotNull]
-        private static List<string> PersonsReader([NotNull] string filename) {
+        [JetBrains.Annotations.NotNull]
+        private static List<string> PersonsReader([JetBrains.Annotations.NotNull] string filename) {
             var persons = new List<string>();
             using (var sr = new StreamReader(filename)) {
                 while (!sr.EndOfStream) {

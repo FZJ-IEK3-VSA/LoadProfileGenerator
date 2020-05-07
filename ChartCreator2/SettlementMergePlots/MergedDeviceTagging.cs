@@ -13,7 +13,7 @@ namespace ChartCreator2.SettlementMergePlots {
     public class MergedDeviceTagging {
         private const int Fontsize = 30;
 
-        private static void MakeBarCharts([NotNull] string setName, [ItemNotNull] [NotNull] List<TagEntry> entries, [NotNull] string dstDirectory) {
+        private static void MakeBarCharts([JetBrains.Annotations.NotNull] string setName, [ItemNotNull] [JetBrains.Annotations.NotNull] List<TagEntry> entries, [JetBrains.Annotations.NotNull] string dstDirectory) {
             var householdNames = entries.Select(x => x.HouseholdName.Trim()).Distinct().ToList();
             // make absolute values
             var plotModel1 = MakePlotmodel(householdNames,
@@ -88,8 +88,8 @@ namespace ChartCreator2.SettlementMergePlots {
             }
         }
 
-        [NotNull]
-        private static PlotModel MakePlotmodel([ItemNotNull] [NotNull] List<string> householdNames, [NotNull] string yaxislabel) {
+        [JetBrains.Annotations.NotNull]
+        private static PlotModel MakePlotmodel([ItemNotNull] [JetBrains.Annotations.NotNull] List<string> householdNames, [JetBrains.Annotations.NotNull] string yaxislabel) {
             var plotModel1 = new PlotModel
             {
                 DefaultFontSize = Fontsize,
@@ -130,22 +130,22 @@ namespace ChartCreator2.SettlementMergePlots {
             return plotModel1;
         }
 
-        public void Run([NotNull] Dictionary<string, List<TagEntry>> consumption, [NotNull] string dstDirectory) {
+        public void Run([JetBrains.Annotations.NotNull] Dictionary<string, List<TagEntry>> consumption, [JetBrains.Annotations.NotNull] string dstDirectory) {
             foreach (var pair in consumption) {
                 MakeBarCharts(pair.Key, pair.Value, dstDirectory);
             }
         }
 
         public class TagEntry {
-            public TagEntry([NotNull] string tagName, double value, [NotNull] string householdName) {
+            public TagEntry([JetBrains.Annotations.NotNull] string tagName, double value, [JetBrains.Annotations.NotNull] string householdName) {
                 TagName = tagName;
                 Value = value;
                 HouseholdName = householdName;
             }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string HouseholdName { get; }
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string TagName { get; }
             public double Value { get; }
         }

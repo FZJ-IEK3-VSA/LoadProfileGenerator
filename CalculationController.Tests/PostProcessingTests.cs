@@ -24,14 +24,14 @@ namespace CalculationController.Tests
     {
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [MethodImpl(MethodImplOptions.NoInlining)]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private static string GetCurrentMethod() {
             var st = new StackTrace();
             var sf = st.GetFrame(1);
             return sf.GetMethod().Name;
         }
 
-        private static void RunTest([NotNull] Action<GeneralConfig> setOption, [NotNull] string name) {
+        private static void RunTest([JetBrains.Annotations.NotNull] Action<GeneralConfig> setOption, [JetBrains.Annotations.NotNull] string name) {
             CleanTestBase.RunAutomatically(false);
             var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass() + name);
             Logger.Threshold = Severity.Error;

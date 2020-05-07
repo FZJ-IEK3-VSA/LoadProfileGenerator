@@ -14,7 +14,7 @@ namespace ChartCreator2.SettlementMergePlots {
     public class MergedAffordanceTaggingPlot {
         private const int Fontsize = 30;
 
-        private static void MakeBarCharts([ItemNotNull] [NotNull] List<AffTagEntry> entries, [NotNull] string dstDirectory) {
+        private static void MakeBarCharts([ItemNotNull] [JetBrains.Annotations.NotNull] List<AffTagEntry> entries, [JetBrains.Annotations.NotNull] string dstDirectory) {
             var personNames = entries.Select(x => x.PersonName.Trim()).Distinct().ToList();
             // make absolute values
             var plotModel1 = MakePlotmodel(personNames, "Simulationszeit in Prozent");
@@ -102,8 +102,8 @@ namespace ChartCreator2.SettlementMergePlots {
             }
         }
 
-        [NotNull]
-        private static PlotModel MakePlotmodel([ItemNotNull] [NotNull] List<string> personNames, [NotNull] string yaxislabel) {
+        [JetBrains.Annotations.NotNull]
+        private static PlotModel MakePlotmodel([ItemNotNull] [JetBrains.Annotations.NotNull] List<string> personNames, [JetBrains.Annotations.NotNull] string yaxislabel) {
             var plotModel1 = new PlotModel
             {
                 DefaultFontSize = Fontsize,
@@ -192,12 +192,12 @@ namespace ChartCreator2.SettlementMergePlots {
             return plotModel1;
         }
 
-        public void Run([ItemNotNull] [NotNull] List<AffTagEntry> consumption, [NotNull] string dstDir) {
+        public void Run([ItemNotNull] [JetBrains.Annotations.NotNull] List<AffTagEntry> consumption, [JetBrains.Annotations.NotNull] string dstDir) {
             MakeBarCharts(consumption, dstDir);
         }
 
         public class AffTagEntry {
-            public AffTagEntry([NotNull] string affTagName, double value, [NotNull] string personName) {
+            public AffTagEntry([JetBrains.Annotations.NotNull] string affTagName, double value, [JetBrains.Annotations.NotNull] string personName) {
                 AffTagName = affTagName;
                 Value = value;
                 //  HouseholdName = householdName;
@@ -205,10 +205,10 @@ namespace ChartCreator2.SettlementMergePlots {
             }
 
             //private string HouseholdName { get; }
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string AffTagName { get; }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string PersonName { get; }
             public double Value { get; }
         }

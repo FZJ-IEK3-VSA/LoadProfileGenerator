@@ -53,14 +53,14 @@ namespace Calculation.Tests.Transportation
             var fft = new FileFactoryAndTracker(wd.WorkingDirectory, "blub", wd.InputDataLogger);
             //SqlResultLoggingService srls = new SqlResultLoggingService(wd.WorkingDirectory);
             DateStampCreator dsc = new DateStampCreator(calcParameters);
-            InputDataLogger idl = new InputDataLogger(new IDataSaverBase[0]);
+            InputDataLogger idl = new InputDataLogger(Array.Empty<IDataSaverBase>());
             OnlineLoggingData old = new OnlineLoggingData(dsc,idl,calcParameters);
-            LogFile lf = new LogFile(calcParameters,fft,old, wd.SqlResultLoggingService, true);
+            LogFile lf = new LogFile(calcParameters,fft, true);
             HouseholdKey key = new HouseholdKey("hh1");
-            lf.InitHousehold(key,"Household",HouseholdKeyType.Household,"Description", null, null);
+            fft.RegisterHousehold(key,"Household",HouseholdKeyType.Household,"Description", null, null);
             CalcLoadType chargingCalcLoadType = new CalcLoadType("charging load","W","kWh",0.50,false, Guid.NewGuid().ToString());
-            CalcRepo calcRepo = new CalcRepo(rnd:rnd, normalRandom:nr, lf:lf);
-            OnlineDeviceActivationProcessor odap = new OnlineDeviceActivationProcessor(lf,calcParameters);
+            OnlineDeviceActivationProcessor odap = new OnlineDeviceActivationProcessor(old, calcParameters,fft);
+            CalcRepo calcRepo = new CalcRepo(rnd:rnd, normalRandom:nr, lf:lf, calcParameters:calcParameters, odap:odap, onlineLoggingData:old);
             CalcSite srcSite = new CalcSite("srcsite",  Guid.NewGuid().ToString(),key);
             CalcSite dstSite = new CalcSite("dstSite", Guid.NewGuid().ToString(),key);
             CalcChargingStation station = new CalcChargingStation(category,

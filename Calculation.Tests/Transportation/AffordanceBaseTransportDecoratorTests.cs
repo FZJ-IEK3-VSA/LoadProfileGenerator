@@ -33,11 +33,10 @@ namespace Calculation.Tests.Transportation
             wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
             CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();
             HouseholdKey key = new HouseholdKey("hh1");
-            SetupFullWorkingTransportationExample(wd, rnd, out var nr, out var srcloc, out var dstloc,
-                out var dstSite, out var transportationHandler, out var abt,calcParameters,key);
+            SetupFullWorkingTransportationExample(wd, rnd, out _, out var srcloc, out var dstloc,
+                out var dstSite, out var transportationHandler, out var abt,calcParameters,key, out var  calcRepo);
             //make sure there is a travel route
             const string personname = "activator";
-            CalcRepo calcRepo = new CalcRepo(normalRandom:nr);
             TimeStep ts = new TimeStep(0,0,false);
             var travelroute = transportationHandler.GetTravelRouteFromSrcLoc(srcloc, dstSite,
                 ts, personname,calcRepo);
@@ -68,7 +67,7 @@ namespace Calculation.Tests.Transportation
             CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();
             HouseholdKey key = new HouseholdKey("hh1");
             SetupFullWorkingTransportationExample(wd, rnd, out var nr, out var srcloc, out var dstloc,
-                out var dstSite, out var transportationHandler, out var abt,calcParameters,key);
+                out var dstSite, out var transportationHandler, out var abt,calcParameters,key, out var _);
             //make sure there is a travel route
             const string personName = "activator";
             TimeStep ts = new TimeStep(0, 0, false);
@@ -94,7 +93,7 @@ namespace Calculation.Tests.Transportation
         private static void SetupFullWorkingTransportationExample([NotNull] WorkingDir wd, [NotNull] Random rnd, [NotNull] out NormalRandom nr,
             [NotNull] out CalcLocation srcloc, [NotNull] out CalcLocation dstloc, [NotNull] out CalcSite dstSite,
             [NotNull] out TransportationHandler transportationHandler, [NotNull] out AffordanceBaseTransportDecorator abt, [NotNull] CalcParameters calcParameters,
-                                                                  [NotNull] HouseholdKey key)
+                                                                  [NotNull] HouseholdKey key, [NotNull] out CalcRepo calcRepo)
         {
             Config.IsInUnitTesting = true;
             CalcAffordance.DoubleCheckBusyArray = true;
@@ -115,7 +114,10 @@ namespace Calculation.Tests.Transportation
             };
             CalcVariableRepository crv =new CalcVariableRepository();
             Mock<IOnlineDeviceActivationProcessor> iodap = new Mock<IOnlineDeviceActivationProcessor>();
-            CalcRepo calcRepo = new CalcRepo(odap:iodap.Object);
+            var old = new Mock<IOnlineLoggingData>();
+            var fft = new FileFactoryAndTracker(wd.WorkingDirectory, "hh0", wd.InputDataLogger);
+            var lf = new LogFile(calcParameters, fft, true);
+            calcRepo = new CalcRepo(odap:iodap.Object, calcParameters:calcParameters, rnd:rnd, normalRandom:nr, onlineLoggingData:old.Object, lf:lf);
             BitArray isBusy = new BitArray(calcParameters.InternalTimesteps,false);
             var ca = new CalcAffordance("calcaffordance",  cp, dstloc, false, calcdesires,
                 18, 50, PermittedGender.All, false, 0.1, LPGColors.Blue, "affordance category", false,
@@ -129,10 +131,7 @@ namespace Calculation.Tests.Transportation
             srcSite.Locations.Add(srcloc);
             dstSite = new CalcSite("dstSite",  Guid.NewGuid().ToString(),key);
             dstSite.Locations.Add(dstloc);
-            var fft = new FileFactoryAndTracker(wd.WorkingDirectory, "hh0", wd.InputDataLogger);
-            var mock = new Mock<IOnlineLoggingData>();
-            var lf = new LogFile(calcParameters,fft, mock.Object,wd.SqlResultLoggingService,  true);
-            lf.InitHousehold(new HouseholdKey("hh0"),"hh0-prettyname",HouseholdKeyType.Household,
+            fft.RegisterHousehold(new HouseholdKey("hh0"),"hh0-prettyname",HouseholdKeyType.Household,
                 "Desc", null, null);
             transportationHandler = new TransportationHandler();
             transportationHandler.AddSite(srcSite);

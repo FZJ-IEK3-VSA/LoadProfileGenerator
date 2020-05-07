@@ -72,30 +72,35 @@ namespace SimulationEngine.Tests {
 
         [Test]
         [Category(UnitTestCategories.ManualOnly)]
-        public void CSVImportTest2() {
-            var db1 = new DatabaseSetup(Utili.GetCurrentMethodAndClass() + "_export");
-            //export
-            var wd = SetupDB3(Utili.GetCurrentMethodAndClass());
-            const string srcfile = @"v:\work\CHR15a_Sc1.csv";
-            File.Copy(srcfile, Path.Combine(wd.WorkingDirectory, "hh.csv"));
-            var sim = new Simulator("Data Source=profilegenerator.db3") {MyGeneralConfig = {CSVCharacter = ";"}};
-            sim.MyGeneralConfig.SaveToDB();
-            var dbm = new DatabaseMerger(sim);
-            const string importPath = @"v:\work\profilegenerator_hennings.db3";
-            dbm.RunFindItems(importPath, null);
-            dbm.RunImport(null);
-            ModularHouseholdSerializer.ExportAsCSV(sim.ModularHouseholds[0], sim,
-                Path.Combine(wd.WorkingDirectory, "testexportfile.csv"));
-            //import
+        public void CSVImportTest2()
+        {
+            using (var db1 = new DatabaseSetup(Utili.GetCurrentMethodAndClass() + "_export"))
+            {
+                //export
+                using (var wd = SetupDB3(Utili.GetCurrentMethodAndClass()))
+                {
+                    const string srcfile = @"v:\work\CHR15a_Sc1.csv";
+                    File.Copy(srcfile, Path.Combine(wd.WorkingDirectory, "hh.csv"));
+                    var sim = new Simulator("Data Source=profilegenerator.db3") { MyGeneralConfig = { CSVCharacter = ";" } };
+                    sim.MyGeneralConfig.SaveToDB();
+                    var dbm = new DatabaseMerger(sim);
+                    const string importPath = @"v:\work\profilegenerator_hennings.db3";
+                    dbm.RunFindItems(importPath, null);
+                    dbm.RunImport(null);
+                    ModularHouseholdSerializer.ExportAsCSV(sim.ModularHouseholds[0], sim,
+                        Path.Combine(wd.WorkingDirectory, "testexportfile.csv"));
+                    //import
 
-            var arguments = new List<string>
+                    var arguments = new List<string>
             {
                 "--ImportHouseholdDefinition",
                 "hh.csv"
             };
-            Program.Main(arguments.ToArray());
-            db1.Cleanup();
-            wd.CleanUp(1);
+                    Program.Main(arguments.ToArray());
+                    db1.Cleanup();
+                    wd.CleanUp(1);
+                }
+            }
         }
 
         [Test]
@@ -294,15 +299,18 @@ namespace SimulationEngine.Tests {
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void MainTestListModularHouseholds() {
-            var wd = SetupDB3(Utili.GetCurrentMethodAndClass());
-            var arguments = new List<string>
+        public void MainTestListModularHouseholds()
+        {
+            using (var wd = SetupDB3(Utili.GetCurrentMethodAndClass()))
+            {
+                var arguments = new List<string>
             {
                 "List",
                 "-ModularHouseholds"
             };
-            Program.Main(arguments.ToArray());
-            wd.CleanUp(1);
+                Program.Main(arguments.ToArray());
+                wd.CleanUp(1);
+            }
         }
 
         [Test]

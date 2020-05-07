@@ -77,12 +77,12 @@ namespace CalculationEngine.OnlineDeviceLogging {
     }
 
     public class OnlineEnergyFileColumns {
-        [NotNull] private readonly ILogFile _lf;
+        private readonly IOnlineLoggingData _old;
 
         [NotNull]
         private readonly Dictionary<CalcLoadTypeDto, Dictionary<OefcKey, ColumnEntry>> _columnEntriesByLoadTypeByDeviceKey;
-        public OnlineEnergyFileColumns([NotNull] ILogFile lf) {
-            _lf = lf;
+        public OnlineEnergyFileColumns(IOnlineLoggingData old) {
+            _old = old;
             _columnEntriesByLoadTypeByDeviceKey = new Dictionary<CalcLoadTypeDto, Dictionary<OefcKey, ColumnEntry>>();
             ColumnCountByLoadType = new Dictionary<CalcLoadTypeDto, int>();
             _columnEntriesByColumn = new Dictionary<CalcLoadTypeDto, Dictionary<int, ColumnEntry>>();
@@ -125,7 +125,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
                 _columnEntriesByLoadTypeByDeviceKey[lt].Add(key, ce);
                 _columnEntriesByColumn[lt].Add(dstcolum, ce);
                 ColumnCountByLoadType[lt]++;
-                _lf.OnlineLoggingData.AddColumnEntry(ce);
+                _old.AddColumnEntry(ce);
             }
         }
 

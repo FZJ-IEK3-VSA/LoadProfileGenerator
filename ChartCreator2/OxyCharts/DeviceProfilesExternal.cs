@@ -11,9 +11,9 @@ using OxyPlot.Series;
 namespace ChartCreator2.OxyCharts {
     internal class DeviceProfilesExternal : ChartBaseFileStep
     {
-        public DeviceProfilesExternal([NotNull] ChartCreationParameters parameters,
-                                      [NotNull] FileFactoryAndTracker fft,
-                                      [NotNull] ICalculationProfiler calculationProfiler) : base(parameters, fft,
+        public DeviceProfilesExternal([JetBrains.Annotations.NotNull] ChartCreationParameters parameters,
+                                      [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft,
+                                      [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler) : base(parameters, fft,
             calculationProfiler, new List<ResultFileID>() { ResultFileID.DeviceProfileCSVExternal
             },
             "Device Profiles Externals", FileProcessingResult.ShouldCreateFiles

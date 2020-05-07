@@ -32,16 +32,14 @@ namespace Calculation.Tests.OnlineLogging
             fft.HouseholdRegistry.RegisterHousehold(Constants.GeneralHouseholdKey, "general", HouseholdKeyType.General, wd.InputDataLogger, "desc", null, null);
             DateStampCreator dsc = new DateStampCreator(cp);
             OnlineLoggingData old = new OnlineLoggingData(dsc,wd.InputDataLogger,cp);
-            using (LogFile lf = new LogFile(cp,fft, old, wd.SqlResultLoggingService)) {
                 fft.HouseholdRegistry.RegisterHousehold( key,"hh key",HouseholdKeyType.Household,wd.InputDataLogger,"desc", null, null);
                 CalcLoadTypeDto clt = new CalcLoadTypeDto("lt","unitofpower","unitofsum",1,true,"guid");
                 TimeStep ts = new TimeStep(1,1,true);
                 CalcDeviceDto cdd = new CalcDeviceDto("devname","",key,
                     OefcDeviceType.Device,"devcatname","", Guid.NewGuid().ToString(),"locguid","locname");
                 DeviceActivationEntry aeue = new DeviceActivationEntry( "affname", clt, 1, "activatorname", 1,ts, cdd);
-                lf.OnlineLoggingData.RegisterDeviceActivation(aeue);
-                lf.OnlineLoggingData.FinalSaveToDatabase();
-            }
+                old.RegisterDeviceActivation(aeue);
+                old.FinalSaveToDatabase();
             wd.CleanUp();
         }
     }

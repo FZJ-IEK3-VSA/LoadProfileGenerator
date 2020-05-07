@@ -16,9 +16,9 @@ using OxyPlot.Series;
 namespace ChartCreator2.OxyCharts {
     internal class DeviceTaggingSet : ChartBaseFileStep
     {
-        public DeviceTaggingSet([NotNull] ChartCreationParameters parameters,
-                                [NotNull] FileFactoryAndTracker fft,
-                                [NotNull] ICalculationProfiler calculationProfiler) : base(parameters, fft,
+        public DeviceTaggingSet([JetBrains.Annotations.NotNull] ChartCreationParameters parameters,
+                                [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft,
+                                [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler) : base(parameters, fft,
             calculationProfiler, new List<ResultFileID>() { ResultFileID.DeviceTaggingSetFiles
             },
             "Device Tagging Set", FileProcessingResult.ShouldCreateFiles
@@ -26,8 +26,8 @@ namespace ChartCreator2.OxyCharts {
         {
         }
 
-        private void MakeBarCharts([NotNull] ResultFileEntry rfe, [NotNull] string plotName, [NotNull] DirectoryInfo basisPath,
-            [NotNull] Dictionary<string, List<TagEntry>> consumption) {
+        private void MakeBarCharts([JetBrains.Annotations.NotNull] ResultFileEntry rfe, [JetBrains.Annotations.NotNull] string plotName, [JetBrains.Annotations.NotNull] DirectoryInfo basisPath,
+            [JetBrains.Annotations.NotNull] Dictionary<string, List<TagEntry>> consumption) {
             _CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
             foreach (var pair in consumption) {
                 var hasReferenceValue = pair.Value.Any(x => x.ReferenceValues.Count > 0);
@@ -170,8 +170,8 @@ namespace ChartCreator2.OxyCharts {
             _CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
         }
 
-        private void MakePieCharts([NotNull] string fileName, [NotNull] string plotName, [NotNull] DirectoryInfo basisPath,
-            [NotNull] Dictionary<string, List<TagEntry>> consumption) {
+        private void MakePieCharts([JetBrains.Annotations.NotNull] string fileName, [JetBrains.Annotations.NotNull] string plotName, [JetBrains.Annotations.NotNull] DirectoryInfo basisPath,
+            [JetBrains.Annotations.NotNull] Dictionary<string, List<TagEntry>> consumption) {
             foreach (var pair in consumption) {
                 var plotModel1 = new PlotModel();
                 pair.Value.Sort((x, y) => x.Value.CompareTo(y.Value));
@@ -267,8 +267,8 @@ namespace ChartCreator2.OxyCharts {
             return FileProcessingResult.ShouldCreateFiles;
         }
 
-        private static void SetRectangelAnnotation(int col, [NotNull] Dictionary<int, double> colSums, [NotNull] PlotModel plotModel1,
-            [NotNull] string text, double value, double yMin, double yMax, int labelFontSize) {
+        private static void SetRectangelAnnotation(int col, [JetBrains.Annotations.NotNull] Dictionary<int, double> colSums, [JetBrains.Annotations.NotNull] PlotModel plotModel1,
+            [JetBrains.Annotations.NotNull] string text, double value, double yMin, double yMax, int labelFontSize) {
             var textAnnotation1 = new RectangleAnnotation
             {
                 Text = text,
@@ -286,18 +286,18 @@ namespace ChartCreator2.OxyCharts {
         }
 
         private class TagEntry {
-            public TagEntry([NotNull] string tagName, double value) {
+            public TagEntry([JetBrains.Annotations.NotNull] string tagName, double value) {
                 TagName = tagName;
                 Value = value;
             }
 
             [ItemNotNull]
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public List<string> ReferenceHeaders { get; } = new List<string>();
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public List<double> ReferenceValues { get; } = new List<double>();
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string TagName { get; }
             public double Value { get; }
         }

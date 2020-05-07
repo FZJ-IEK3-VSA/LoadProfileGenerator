@@ -9,9 +9,9 @@ using JetBrains.Annotations;
 namespace ChartCreator2.OxyCharts {
     internal class AffordanceTimeUse : ChartBaseFileStep
     {
-        public AffordanceTimeUse([NotNull] ChartCreationParameters parameters,
-                                 [NotNull] FileFactoryAndTracker fft,
-                                 [NotNull] ICalculationProfiler calculationProfiler) : base(parameters, fft,
+        public AffordanceTimeUse([JetBrains.Annotations.NotNull] ChartCreationParameters parameters,
+                                 [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft,
+                                 [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler) : base(parameters, fft,
             calculationProfiler, new List<ResultFileID>() { ResultFileID.AffordanceTimeUse
             },
             "Affordance Time Use", FileProcessingResult.ShouldCreateFiles

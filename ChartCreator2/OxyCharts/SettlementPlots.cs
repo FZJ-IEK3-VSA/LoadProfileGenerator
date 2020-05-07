@@ -20,7 +20,7 @@ namespace ChartCreator2.OxyCharts {
         private const bool LinePlots = true;
         private const bool TotalLinePlot = true;
 
-        private static void MakeBarPlot([NotNull] string outputPath, [ItemNotNull] [NotNull] List<Column> columns, int position, int day,
+        private static void MakeBarPlot([JetBrains.Annotations.NotNull] string outputPath, [ItemNotNull] [JetBrains.Annotations.NotNull] List<Column> columns, int position, int day,
             int minutesToSum) {
             var plotModel2 = new PlotModel();
             var p = OxyPalettes.HueDistinct(columns.Count);
@@ -65,7 +65,7 @@ namespace ChartCreator2.OxyCharts {
             PngExporter.Export(plotModel2, path2, 3200, 1600, OxyColor.FromRgb(255, 255, 255), 100);
         }
 
-        private static void MakeLinePlot([NotNull] string outputPath, [ItemNotNull] [NotNull] List<Column> columns, int position, int day) {
+        private static void MakeLinePlot([JetBrains.Annotations.NotNull] string outputPath, [ItemNotNull] [JetBrains.Annotations.NotNull] List<Column> columns, int position, int day) {
             var p = OxyPalettes.HueDistinct(columns.Count);
             var plotModel1 = new PlotModel
             {
@@ -95,7 +95,7 @@ namespace ChartCreator2.OxyCharts {
             PngExporter.Export(plotModel1, path, 3200, 1600, OxyColor.FromRgb(255, 255, 255), 100);
         }
 
-        private static void MakeTotalLinePlot([NotNull] string outputPath, [NotNull] List<double> sums) {
+        private static void MakeTotalLinePlot([JetBrains.Annotations.NotNull] string outputPath, [JetBrains.Annotations.NotNull] List<double> sums) {
             var plotModel1 = new PlotModel
             {
                 LegendPosition = LegendPosition.BottomCenter,
@@ -120,10 +120,10 @@ namespace ChartCreator2.OxyCharts {
             PngExporter.Export(plotModel1, path, 3200, 1600, OxyColor.FromRgb(255, 255, 255), 100);
         }
 
-        private static void ReadFile([NotNull] string fullName,
-                                     [ItemNotNull] [NotNull] List<Column> columns,
+        private static void ReadFile([JetBrains.Annotations.NotNull] string fullName,
+                                     [ItemNotNull] [JetBrains.Annotations.NotNull] List<Column> columns,
                                     [CanBeNull] int? limit,
-                                     [ItemNotNull] [NotNull] string[] csvArr)
+                                     [ItemNotNull] [JetBrains.Annotations.NotNull] string[] csvArr)
         {
             using (var sr = new StreamReader(fullName)) {
                 var header = sr.ReadLine();
@@ -168,7 +168,7 @@ namespace ChartCreator2.OxyCharts {
         }
 
         [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalse")]
-        public void Run([NotNull] string fullName, [NotNull] string outputPath, [NotNull] string csvChar) {
+        public void Run([JetBrains.Annotations.NotNull] string fullName, [JetBrains.Annotations.NotNull] string outputPath, [JetBrains.Annotations.NotNull] string csvChar) {
             var columns = new List<Column>();
 
             ReadFile(fullName, columns, null, new[] {csvChar});
@@ -200,14 +200,14 @@ namespace ChartCreator2.OxyCharts {
         }
 
         private class Column {
-            [NotNull] private readonly string _name;
+            [JetBrains.Annotations.NotNull] private readonly string _name;
 
-            public Column([NotNull] string name) {
+            public Column([JetBrains.Annotations.NotNull] string name) {
                 _name = name;
                 Values = new List<double>();
             }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string HHNumber {
                 get {
                     var name = _name;
@@ -217,7 +217,7 @@ namespace ChartCreator2.OxyCharts {
                 }
             }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public List<double> Values { get; }
 
             public double MakeSum(int start, int count) {

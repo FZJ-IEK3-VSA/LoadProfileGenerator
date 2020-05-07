@@ -12,8 +12,8 @@ namespace ChartCreator2.PDF {
             MyTargetDirectory = TargetDirectory.Charts;
         }
 
-        [NotNull]
-        protected override string GetGraphTitle([NotNull] string filename) {
+        [JetBrains.Annotations.NotNull]
+        protected override string GetGraphTitle([JetBrains.Annotations.NotNull] string filename) {
             var arr = filename.Split('.');
 
             return "Summed up curve for " + arr[1] + " from " + filename;

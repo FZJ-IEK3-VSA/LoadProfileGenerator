@@ -126,7 +126,7 @@ namespace CalculationController.CalcFactories {
                                                       [CanBeNull] string houseDescription, CalcRepo calcRepo)
         {
             CalcHousehold chh = null;
-            _calcRepo.Logfile.InitHousehold(householdDto.HouseholdKey,
+            _calcRepo.FileFactoryAndTracker.RegisterHousehold(householdDto.HouseholdKey,
                 householdDto.Name,
                 HouseholdKeyType.Household,
                 householdDto.Description,

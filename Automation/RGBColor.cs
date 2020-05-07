@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 
 namespace Automation
 {
-    public class LPGColors {
+    public static class LPGColors {
         public static ColorRGB AliceBlue { get; } = new ColorRGB(240, 248, 255);
         public static ColorRGB Blue { get; } = new ColorRGB(0,0, 255);
         public static ColorRGB Black { get; } = new ColorRGB(0, 0, 0);

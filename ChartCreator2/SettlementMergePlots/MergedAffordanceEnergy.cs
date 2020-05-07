@@ -14,7 +14,7 @@ namespace ChartCreator2.SettlementMergePlots {
     public class MergedAffordanceEnergy {
         private const int Fontsize = 20;
 
-        private static void MakeGeneralBarChart([ItemNotNull] [NotNull] List<AffordanceEntry> entries, [NotNull] string dstDir) {
+        private static void MakeGeneralBarChart([ItemNotNull] [JetBrains.Annotations.NotNull] List<AffordanceEntry> entries, [JetBrains.Annotations.NotNull] string dstDir) {
             var householdNames = entries.Select(x => x.HouseholdName.Trim()).Distinct().ToList();
             // make absolute values
             var plotModel1 = MakePlotmodel(householdNames,
@@ -104,8 +104,8 @@ namespace ChartCreator2.SettlementMergePlots {
             }
         }
 
-        [NotNull]
-        private static PlotModel MakePlotmodel([ItemNotNull] [NotNull] List<string> householdNames, [NotNull] string yaxislabel) {
+        [JetBrains.Annotations.NotNull]
+        private static PlotModel MakePlotmodel([ItemNotNull] [JetBrains.Annotations.NotNull] List<string> householdNames, [JetBrains.Annotations.NotNull] string yaxislabel) {
             var plotModel1 = new PlotModel
             {
                 DefaultFontSize = Fontsize,
@@ -147,7 +147,7 @@ namespace ChartCreator2.SettlementMergePlots {
             return plotModel1;
         }
 
-        public void Run([NotNull] Dictionary<string, List<AffordanceEntry>> entries, [NotNull] string dstDir) {
+        public void Run([JetBrains.Annotations.NotNull] Dictionary<string, List<AffordanceEntry>> entries, [JetBrains.Annotations.NotNull] string dstDir) {
             var allEntries = new List<AffordanceEntry>();
             foreach (var pair in entries) {
                 allEntries.AddRange(pair.Value);
@@ -156,16 +156,16 @@ namespace ChartCreator2.SettlementMergePlots {
         }
 
         public class AffordanceEntry {
-            public AffordanceEntry([NotNull] string affName, double value, [NotNull] string householdName) {
+            public AffordanceEntry([JetBrains.Annotations.NotNull] string affName, double value, [JetBrains.Annotations.NotNull] string householdName) {
                 AffordanceName = affName;
                 Value = value;
                 HouseholdName = householdName;
             }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string AffordanceName { get; }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string HouseholdName { get; }
             public double Value { get; }
         }

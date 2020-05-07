@@ -12,9 +12,9 @@ using OxyPlot.Series;
 namespace ChartCreator2.OxyCharts {
     internal class SumProfiles : ChartBaseFileStep
     {
-        public SumProfiles([NotNull] ChartCreationParameters parameters,
-                           [NotNull] FileFactoryAndTracker fft,
-                           [NotNull] ICalculationProfiler calculationProfiler) : base(parameters, fft,
+        public SumProfiles([JetBrains.Annotations.NotNull] ChartCreationParameters parameters,
+                           [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft,
+                           [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler) : base(parameters, fft,
             calculationProfiler, new List<ResultFileID>() { ResultFileID.CSVSumProfile
             },
             "Sum Profiles", FileProcessingResult.ShouldCreateFiles
@@ -22,8 +22,8 @@ namespace ChartCreator2.OxyCharts {
         {
         }
 
-        private void MakeBoxPlot([NotNull] string fileName, [NotNull] string plotName, [NotNull] DirectoryInfo basisPath, [NotNull] List<double> values,
-            [NotNull] LoadTypeInformation lti)
+        private void MakeBoxPlot([JetBrains.Annotations.NotNull] string fileName, [JetBrains.Annotations.NotNull] string plotName, [JetBrains.Annotations.NotNull] DirectoryInfo basisPath, [JetBrains.Annotations.NotNull] List<double> values,
+            [JetBrains.Annotations.NotNull] LoadTypeInformation lti)
         {
             const int stepsize = 24 * 60;
             var dayEntries = new List<DayEntry>();
@@ -77,8 +77,8 @@ namespace ChartCreator2.OxyCharts {
             Save(plotModel1, plotName, fileName, basisPath, dstFileName);
         }
 
-        private void MakeLinePlot([NotNull] string fileName, [NotNull] string plotName, [NotNull] DirectoryInfo basisPath, [NotNull] List<double> values,
-            [NotNull] LoadTypeInformation lti)
+        private void MakeLinePlot([JetBrains.Annotations.NotNull] string fileName, [JetBrains.Annotations.NotNull] string plotName, [JetBrains.Annotations.NotNull] DirectoryInfo basisPath, [JetBrains.Annotations.NotNull] List<double> values,
+            [JetBrains.Annotations.NotNull] LoadTypeInformation lti)
         {
             var plotModel1 = new PlotModel();
             if (_Parameters.ShowTitle) {
@@ -107,7 +107,7 @@ namespace ChartCreator2.OxyCharts {
             Save(plotModel1, plotName, fileName, basisPath);
         }
 
-        protected override FileProcessingResult MakeOnePlot([NotNull] ResultFileEntry srcEntry)
+        protected override FileProcessingResult MakeOnePlot([JetBrains.Annotations.NotNull] ResultFileEntry srcEntry)
         {
             _CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
             string plotName = "Sum Profile for " + srcEntry.HouseholdNumberString + " " + srcEntry.LoadTypeInformation?.Name;
@@ -138,7 +138,7 @@ namespace ChartCreator2.OxyCharts {
             return FileProcessingResult.ShouldCreateFiles;
         }
 
-        private static double Percentile([NotNull] List<double> sequence, double excelPercentile)
+        private static double Percentile([JetBrains.Annotations.NotNull] List<double> sequence, double excelPercentile)
         {
             sequence.Sort();
             var sequenceCount = sequence.Count;

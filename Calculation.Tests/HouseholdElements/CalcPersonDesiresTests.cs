@@ -42,30 +42,35 @@ namespace Calculation.Tests.HouseholdElements {
     {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void CalcPersonDesiresTest() {
+        public void CalcPersonDesiresTest()
+        {
             CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();
             var r = new Random(1);
-            CalcRepo calcRepo = new CalcRepo(calcParameters:calcParameters, rnd:r);
-            var cpd = new CalcPersonDesires(calcRepo);
-            var cd1 = new CalcDesire("blub0", 1, 0.5m, 0.1m, 1, 1, 1, -1, null,"","");
-            cpd.AddDesires(cd1);
-            var cd2 = new CalcDesire("blub1", 2, 0.5m, 0.1m, 1, 1, 1, -1, null,"","");
-            cpd.AddDesires(cd2);
-            Logger.Info("CalcPersonDesiresTest:" + cd1.Value + " ; " + cd2.Value);
-            // satisfaction
-            var satis1 = new CalcDesire("blub", 1, 0.5m, 12, 1, 1, 60, -1, null,"","") {
-                Value = 1
-            };
-            var satisfactionValues = new List<CalcDesire>
+            using (CalcRepo calcRepo = new CalcRepo(calcParameters: calcParameters, rnd: r))
+            {
+                var cpd = new CalcPersonDesires(calcRepo);
+                var cd1 = new CalcDesire("blub0", 1, 0.5m, 0.1m, 1, 1, 1, -1, null, "", "");
+                cpd.AddDesires(cd1);
+                var cd2 = new CalcDesire("blub1", 2, 0.5m, 0.1m, 1, 1, 1, -1, null, "", "");
+                cpd.AddDesires(cd2);
+                Logger.Info("CalcPersonDesiresTest:" + cd1.Value + " ; " + cd2.Value);
+                // satisfaction
+                var satis1 = new CalcDesire("blub", 1, 0.5m, 12, 1, 1, 60, -1, null, "", "")
+                {
+                    Value = 1
+                };
+                var satisfactionValues = new List<CalcDesire>
             {
                 satis1
             };
-            Logger.Info(cd1.Value + " ; " + cd2.Value);
-            for (var i = 0; i < 20; i++) {
-                TimeStep ts = new TimeStep(i,0,false);
-                cpd.ApplyDecay(ts);
-                cpd.ApplyAffordanceEffect(satisfactionValues, true, "blub");
                 Logger.Info(cd1.Value + " ; " + cd2.Value);
+                for (var i = 0; i < 20; i++)
+                {
+                    TimeStep ts = new TimeStep(i, 0, false);
+                    cpd.ApplyDecay(ts);
+                    cpd.ApplyAffordanceEffect(satisfactionValues, true, "blub");
+                    Logger.Info(cd1.Value + " ; " + cd2.Value);
+                }
             }
         }
 
@@ -75,35 +80,41 @@ namespace Calculation.Tests.HouseholdElements {
         /// </summary>
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void CalcPersonNonSharedDesiresTest() {
+        public void CalcPersonNonSharedDesiresTest()
+        {
             CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();
             var r = new Random(1);
-            CalcRepo calcRepo = new CalcRepo(calcParameters:calcParameters, rnd: r);
-            var cpd = new CalcPersonDesires(calcRepo);
-            var cd1 = new CalcDesire("blub0", 1, 0.5m, 1m, 1, 1, 1, -1, null,"","");
-            cpd.AddDesires(cd1);
-            var cd2 = new CalcDesire("blub1", 2, 0.5m, 2m, 1, 1, 60, -1, null,"","");
-            cpd.AddDesires(cd2);
+            using (CalcRepo calcRepo = new CalcRepo(calcParameters: calcParameters, rnd: r))
+            {
+                var cpd = new CalcPersonDesires(calcRepo);
+                var cd1 = new CalcDesire("blub0", 1, 0.5m, 1m, 1, 1, 1, -1, null, "", "");
+                cpd.AddDesires(cd1);
+                var cd2 = new CalcDesire("blub1", 2, 0.5m, 2m, 1, 1, 60, -1, null, "", "");
+                cpd.AddDesires(cd2);
 
-            Logger.Info("CalcPersonDesiresTest:" + cd1.Value + " ; " + cd2.Value);
-            var satis1 = new CalcDesire("blub", 1, 0.5m, 12, 1, 1, 60, -1, null,"","") {
-                Value = 1
-            };
-            var satisfactionValues = new List<CalcDesire>
+                Logger.Info("CalcPersonDesiresTest:" + cd1.Value + " ; " + cd2.Value);
+                var satis1 = new CalcDesire("blub", 1, 0.5m, 12, 1, 1, 60, -1, null, "", "")
+                {
+                    Value = 1
+                };
+                var satisfactionValues = new List<CalcDesire>
             {
                 satis1
             };
-            for (var i = 0; i < 20; i++) {
-                TimeStep ts = new TimeStep(i,0,true);
-                cpd.ApplyDecay(ts);
-                if (i % 5 == 0) {
-                    cpd.ApplyAffordanceEffect(satisfactionValues, false,  "blub");
+                for (var i = 0; i < 20; i++)
+                {
+                    TimeStep ts = new TimeStep(i, 0, true);
+                    cpd.ApplyDecay(ts);
+                    if (i % 5 == 0)
+                    {
+                        cpd.ApplyAffordanceEffect(satisfactionValues, false, "blub");
+                    }
+                    Logger.Info(i + ": " + cd1.Value + " ; " + cd2.Value);
+                    Assert.AreNotEqual(cd1.Value, cd2.Value);
                 }
-                Logger.Info(i + ": " + cd1.Value + " ; " + cd2.Value);
-                Assert.AreNotEqual(cd1.Value, cd2.Value);
+                // satisfaction
+                Logger.Info(cd1.Value + " ; " + cd2.Value);
             }
-            // satisfaction
-            Logger.Info(cd1.Value + " ; " + cd2.Value);
         }
 
         /// <summary>
@@ -112,38 +123,44 @@ namespace Calculation.Tests.HouseholdElements {
         /// </summary>
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void CalcPersonSharedDesiresTest() {
+        public void CalcPersonSharedDesiresTest()
+        {
             CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();
             var r = new Random(1);
-            CalcRepo calcRepo = new CalcRepo(calcParameters: calcParameters, rnd:r);
-            var sdv = new SharedDesireValue(1,new TimeStep(0,0,true));
-            var cpd = new CalcPersonDesires(calcRepo);
-            var cd1 = new CalcDesire("blub0", 1, 0.5m, 1m, 1, 1, 1, -1, sdv,"","");
-            cpd.AddDesires(cd1);
-            var cd2 = new CalcDesire("blub1", 2, 0.5m, 2m, 1, 1, 60, -1, sdv,"","");
-            cpd.AddDesires(cd2);
+            using (CalcRepo calcRepo = new CalcRepo(calcParameters: calcParameters, rnd: r))
+            {
+                var sdv = new SharedDesireValue(1, new TimeStep(0, 0, true));
+                var cpd = new CalcPersonDesires(calcRepo);
+                var cd1 = new CalcDesire("blub0", 1, 0.5m, 1m, 1, 1, 1, -1, sdv, "", "");
+                cpd.AddDesires(cd1);
+                var cd2 = new CalcDesire("blub1", 2, 0.5m, 2m, 1, 1, 60, -1, sdv, "", "");
+                cpd.AddDesires(cd2);
 
-            Logger.Info("CalcPersonDesiresTest:" + cd1.Value + " ; " + cd2.Value);
-            var satis1 = new CalcDesire("blub", 1, 0.5m, 12, 1, 1, 60, -1, null,"","") {
-                Value = 1
-            };
-            var satisfactionValues = new List<CalcDesire>
+                Logger.Info("CalcPersonDesiresTest:" + cd1.Value + " ; " + cd2.Value);
+                var satis1 = new CalcDesire("blub", 1, 0.5m, 12, 1, 1, 60, -1, null, "", "")
+                {
+                    Value = 1
+                };
+                var satisfactionValues = new List<CalcDesire>
             {
                 satis1
             };
-            for (var i = 0; i < 20; i++) {
-                TimeStep ts = new TimeStep(0,0,true);
-                cpd.ApplyDecay(ts);
-                if (i % 5 == 0) {
-                    cpd.ApplyAffordanceEffect(satisfactionValues, false, "blub");
+                for (var i = 0; i < 20; i++)
+                {
+                    TimeStep ts = new TimeStep(0, 0, true);
+                    cpd.ApplyDecay(ts);
+                    if (i % 5 == 0)
+                    {
+                        cpd.ApplyAffordanceEffect(satisfactionValues, false, "blub");
+                    }
+                    Logger.Info(cd1.Value + " ; " + cd2.Value);
+                    Assert.AreEqual(cd1.Value, cd2.Value);
                 }
+
+                // satisfaction
+
                 Logger.Info(cd1.Value + " ; " + cd2.Value);
-                Assert.AreEqual(cd1.Value, cd2.Value);
             }
-
-            // satisfaction
-
-            Logger.Info(cd1.Value + " ; " + cd2.Value);
         }
     }
 }

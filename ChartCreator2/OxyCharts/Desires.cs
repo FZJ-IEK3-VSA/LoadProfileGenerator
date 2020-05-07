@@ -11,9 +11,9 @@ using OxyPlot.Series;
 namespace ChartCreator2.OxyCharts {
     internal class Desires : ChartBaseFileStep
     {
-        public Desires([NotNull] ChartCreationParameters parameters,
-                       [NotNull] FileFactoryAndTracker fft,
-                       [NotNull] ICalculationProfiler calculationProfiler) : base(parameters, fft,
+        public Desires([JetBrains.Annotations.NotNull] ChartCreationParameters parameters,
+                       [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft,
+                       [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler) : base(parameters, fft,
             calculationProfiler, new List<ResultFileID>() { ResultFileID.DesireFiles
             },
             "Desire Charts", FileProcessingResult.ShouldCreateFiles

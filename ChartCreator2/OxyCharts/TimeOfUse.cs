@@ -12,9 +12,9 @@ using OxyPlot.Series;
 namespace ChartCreator2.OxyCharts {
     internal class TimeOfUse : ChartBaseFileStep
     {
-        public TimeOfUse([NotNull] ChartCreationParameters parameters,
-                         [NotNull] FileFactoryAndTracker fft,
-                         [NotNull] ICalculationProfiler calculationProfiler) : base(parameters, fft,
+        public TimeOfUse([JetBrains.Annotations.NotNull] ChartCreationParameters parameters,
+                         [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft,
+                         [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler) : base(parameters, fft,
             calculationProfiler, new List<ResultFileID>() { ResultFileID.TimeOfUseEnergy, ResultFileID.TimeOfUse
             },
             "Activity Percentages", FileProcessingResult.ShouldCreateFiles
@@ -138,16 +138,16 @@ namespace ChartCreator2.OxyCharts {
         }
 
         private class Device {
-            [NotNull] private readonly List<double> _values = new List<double>();
+            [JetBrains.Annotations.NotNull] private readonly List<double> _values = new List<double>();
 
-            public Device([NotNull] string name) => Name = name;
+            public Device([JetBrains.Annotations.NotNull] string name) => Name = name;
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string Name { get; }
 
             public double Sum => _values.Sum();
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public List<double> Values => _values;
         }
     }

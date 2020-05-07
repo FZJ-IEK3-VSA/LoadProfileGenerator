@@ -19,14 +19,14 @@ namespace ChartCreator2.PDF {
     }
 
     public class MigraPDFCreator {
-        [NotNull] private readonly ICalculationProfiler _calculationProfiler;
-        public MigraPDFCreator([NotNull] ICalculationProfiler calculationProfiler)
+        [JetBrains.Annotations.NotNull] private readonly ICalculationProfiler _calculationProfiler;
+        public MigraPDFCreator([JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler)
         {
             _calculationProfiler = calculationProfiler;
         }
 
-        [NotNull]
-        private static Document CreateDocument([NotNull] string destinationDirectory, bool requireAll, [NotNull] string csvCharacter) {
+        [JetBrains.Annotations.NotNull]
+        private static Document CreateDocument([JetBrains.Annotations.NotNull] string destinationDirectory, bool requireAll, [JetBrains.Annotations.NotNull] string csvCharacter) {
             // Create a new MigraDoc document
             var document = new Document {Info = {Title = "LoadProfileGenerator", Subject = "Overview", Author = "Noah Pflugradt"}};
             var di = new DirectoryInfo(destinationDirectory);
@@ -51,8 +51,8 @@ namespace ChartCreator2.PDF {
             return document;
         }
 
-        public void MakeDocument([NotNull] string pdfDstPath, [NotNull] string calcObjectName, bool startpdf,
-            bool requireAll, [NotNull] string csvCharacter, [NotNull] FileFactoryAndTracker fft) {
+        public void MakeDocument([JetBrains.Annotations.NotNull] string pdfDstPath, [JetBrains.Annotations.NotNull] string calcObjectName, bool startpdf,
+            bool requireAll, [JetBrains.Annotations.NotNull] string csvCharacter, [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft) {
             // Create a MigraDoc document
              _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - PDF Layout");
             var document = CreateDocument(pdfDstPath, requireAll, csvCharacter);
@@ -95,7 +95,7 @@ namespace ChartCreator2.PDF {
         }
 
         [SuppressMessage("ReSharper", "ReplaceWithSingleAssignment.True")]
-        private static void ProcessHousehold([NotNull] Document document, [NotNull] string path, bool requireAll, [NotNull] string csvCharacter) {
+        private static void ProcessHousehold([JetBrains.Annotations.NotNull] Document document, [JetBrains.Annotations.NotNull] string path, bool requireAll, [JetBrains.Annotations.NotNull] string csvCharacter) {
             var di = new DirectoryInfo(path);
             var fis = di.GetFiles("*.png", SearchOption.AllDirectories);
             var pngfiles = fis.Select(x => x.Name).ToList();
@@ -232,8 +232,8 @@ namespace ChartCreator2.PDF {
             }
         }
 
-        [NotNull]
-        private static Section SetTocSection([NotNull] Document document) {
+        [JetBrains.Annotations.NotNull]
+        private static Section SetTocSection([JetBrains.Annotations.NotNull] Document document) {
             var section = document.AddSection();
 
             section.AddPageBreak();

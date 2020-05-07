@@ -16,12 +16,12 @@ using OxyPlot.Series;
 namespace ChartCreator2.OxyCharts {
     internal class DeviceProfiles : ChartBaseFileStep
     {
-        [NotNull] private readonly SqlResultLoggingService _srls;
+        [JetBrains.Annotations.NotNull] private readonly SqlResultLoggingService _srls;
 
-        public DeviceProfiles([NotNull] ChartCreationParameters parameters,
-                              [NotNull] FileFactoryAndTracker fft,
-                              [NotNull] ICalculationProfiler calculationProfiler,
-                              [NotNull] SqlResultLoggingService srls) : base(parameters, fft,
+        public DeviceProfiles([JetBrains.Annotations.NotNull] ChartCreationParameters parameters,
+                              [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft,
+                              [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler,
+                              [JetBrains.Annotations.NotNull] SqlResultLoggingService srls) : base(parameters, fft,
             calculationProfiler, new List<ResultFileID>() { ResultFileID.DeviceProfileCSV
             },
             "Device Profiles", FileProcessingResult.ShouldCreateFiles
@@ -35,7 +35,7 @@ namespace ChartCreator2.OxyCharts {
 
         private static DateTime GetDay(DateTime x) => new DateTime(x.Year, x.Month, x.Day);
 
-        private void GetFirstAndLastDate([NotNull] string fileName, out DateTime firstDate, out DateTime lastDate)
+        private void GetFirstAndLastDate([JetBrains.Annotations.NotNull] string fileName, out DateTime firstDate, out DateTime lastDate)
         {
             firstDate = DateTime.MinValue;
             lastDate = DateTime.MinValue;
@@ -63,11 +63,11 @@ namespace ChartCreator2.OxyCharts {
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        private void MakeChartFromDay([NotNull] string fileName, [NotNull] string plotName, [NotNull] DirectoryInfo basisPath, [NotNull] string yaxisLabel,
+        private void MakeChartFromDay([JetBrains.Annotations.NotNull] string fileName, [JetBrains.Annotations.NotNull] string plotName, [JetBrains.Annotations.NotNull] DirectoryInfo basisPath, [JetBrains.Annotations.NotNull] string yaxisLabel,
             TimeSpan timestep,
-            [ItemNotNull] [NotNull] List<string> headers,
-            [NotNull] DayEntry day,
-            [NotNull] DeviceTaggingSetInformation taggingSet,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] List<string> headers,
+            [JetBrains.Annotations.NotNull] DayEntry day,
+            [JetBrains.Annotations.NotNull] DeviceTaggingSetInformation taggingSet,
             bool makePng)
         {
             // process results
@@ -182,7 +182,7 @@ namespace ChartCreator2.OxyCharts {
             Save(plotModel1, plotName, thisname, basisPath, makePng: makePng);
         }
 
-        protected override FileProcessingResult MakeOnePlot([NotNull] ResultFileEntry srcEntry)
+        protected override FileProcessingResult MakeOnePlot([JetBrains.Annotations.NotNull] ResultFileEntry srcEntry)
         {
             string plotName = "Devices " + srcEntry.HouseholdKey + " " + srcEntry.LoadTypeInformation?.Name;
             _CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
@@ -219,8 +219,8 @@ namespace ChartCreator2.OxyCharts {
             return x;
         }
 
-        private FileProcessingResult ReadAllDays([NotNull] ResultFileEntry rfe, double conversionfactor, [NotNull] List<DateTime> selectedDateTimes,
-            [NotNull] DeviceTaggingSetList taggingSets, [NotNull] string plotName, [NotNull] DirectoryInfo basisPath, [NotNull] string yaxisLabel,
+        private FileProcessingResult ReadAllDays([JetBrains.Annotations.NotNull] ResultFileEntry rfe, double conversionfactor, [JetBrains.Annotations.NotNull] List<DateTime> selectedDateTimes,
+            [JetBrains.Annotations.NotNull] DeviceTaggingSetList taggingSets, [JetBrains.Annotations.NotNull] string plotName, [JetBrains.Annotations.NotNull] DirectoryInfo basisPath, [JetBrains.Annotations.NotNull] string yaxisLabel,
             TimeSpan timestep)
         {
             var pngCount = 0;
@@ -305,18 +305,18 @@ namespace ChartCreator2.OxyCharts {
             public DayEntry(DateTime day) => Day = day;
 
             public DateTime Day { get; }
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public List<DateTime> Times { get; } = new List<DateTime>();
 
             [ItemNotNull]
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public List<double[]> Values { get; } = new List<double[]>();
         }
 
         private class MyColumn {
             [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-            public MyColumn([NotNull] string name, int column, [CanBeNull] DeviceTaggingSetInformation taggingSet,
-                [NotNull] DirectoryInfo basisPath, [NotNull] FileFactoryAndTracker fft)
+            public MyColumn([JetBrains.Annotations.NotNull] string name, int column, [CanBeNull] DeviceTaggingSetInformation taggingSet,
+                [JetBrains.Annotations.NotNull] DirectoryInfo basisPath, [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft)
             {
                 Tag = "";
                 RawName = name;
@@ -360,13 +360,13 @@ namespace ChartCreator2.OxyCharts {
             }
 
             public int Column { get; }
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string RawName { get; }
             public double Sum { get; set; }
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string Tag { get; }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public List<double> Values { get; } = new List<double>();
 
             public override string ToString() => "Tag: " + Tag + " Name: " + RawName;

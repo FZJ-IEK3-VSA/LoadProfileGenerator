@@ -42,9 +42,7 @@ namespace CalculationEngine
         string Name { get; }
         [NotNull]
         HouseholdKey HouseholdKey { get;  }
-        void CloseLogfile();
 
-        //[NotNull]Dictionary<int, CalcProfile> CollectAllProfiles();
         [NotNull]
         [ItemNotNull]
         List<CalcAutoDev> CollectAutoDevs();

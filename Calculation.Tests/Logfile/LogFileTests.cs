@@ -32,7 +32,6 @@ using CalculationController.DtoFactories;
 using CalculationEngine.OnlineLogging;
 using Common;
 using Common.JSON;
-using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
 using Common.Tests;
 using NUnit.Framework;
@@ -53,12 +52,9 @@ namespace Calculation.Tests.Logfile
             FileFactoryAndTracker fft = new FileFactoryAndTracker(wd.WorkingDirectory,"hh1",wd.InputDataLogger);
             fft.RegisterHousehold(Constants.GeneralHouseholdKey,"general",HouseholdKeyType.General,"desc", null, null);
             //SqlResultLoggingService srls = new SqlResultLoggingService(wd.WorkingDirectory);
-            DateStampCreator dsc = new DateStampCreator(calcParameters);
-            InputDataLogger idl = new InputDataLogger(new IDataSaverBase[0]);
-            OnlineLoggingData old = new OnlineLoggingData(dsc,idl,calcParameters);
-            using (LogFile lf = new LogFile(calcParameters,fft,old,wd.SqlResultLoggingService))
+            using (LogFile lf = new LogFile(calcParameters,fft))
             {
-                lf.Close();
+                lf.Dispose();
             }
             wd.CleanUp();
         }

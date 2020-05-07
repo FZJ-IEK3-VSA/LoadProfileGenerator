@@ -7,9 +7,9 @@ namespace ChartCreator2.OxyCharts
 {
     public class NoOpChart: ChartBaseFileStep
     {
-    public NoOpChart([NotNull] ChartCreationParameters parameters,
-                                        [NotNull] FileFactoryAndTracker fft,
-                                        [NotNull] ICalculationProfiler calculationProfiler)
+    public NoOpChart([JetBrains.Annotations.NotNull] ChartCreationParameters parameters,
+                                        [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft,
+                                        [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler)
         : base(parameters, fft,
         calculationProfiler, FilesNotToChart(),
         "Noop Chart", FileProcessingResult.NoFilesTocreate
@@ -17,7 +17,7 @@ namespace ChartCreator2.OxyCharts
     {
     }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private static List<ResultFileID> FilesNotToChart() {
             var l = new List<ResultFileID>
             {

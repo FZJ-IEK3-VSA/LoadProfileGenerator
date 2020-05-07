@@ -14,7 +14,7 @@ using LinearAxis = OxyPlot.Axes.LinearAxis;
 
 namespace ChartCreator2.SettlementMergePlots {
     public static class MergedActivityPlot {
-        private static void MakeBarPlot([NotNull] string outputPath, [ItemNotNull] [NotNull] List<Column> columns, int position, int day) {
+        private static void MakeBarPlot([JetBrains.Annotations.NotNull] string outputPath, [ItemNotNull] [JetBrains.Annotations.NotNull] List<Column> columns, int position, int day) {
             var plotModel2 = new PlotModel();
             // filter significant columns
             var allColumns = new List<Tuple<string, double>>();
@@ -74,7 +74,7 @@ namespace ChartCreator2.SettlementMergePlots {
             PngExporter.Export(plotModel2, path2, 3200, 1600, OxyColor.FromRgb(255, 255, 255), 100);
         }
 
-        private static void ReadFile([NotNull] string fullName, [ItemNotNull] [NotNull] List<Column> columns, [CanBeNull] int? limit) {
+        private static void ReadFile([JetBrains.Annotations.NotNull] string fullName, [ItemNotNull] [JetBrains.Annotations.NotNull] List<Column> columns, [CanBeNull] int? limit) {
             using (var sr = new StreamReader(fullName)) {
                 var header = sr.ReadLine();
                 if (header == null) {
@@ -122,7 +122,7 @@ namespace ChartCreator2.SettlementMergePlots {
             }
         }
 
-        public static void Run([NotNull] string fullName, [NotNull] string outputPath) {
+        public static void Run([JetBrains.Annotations.NotNull] string fullName, [JetBrains.Annotations.NotNull] string outputPath) {
             var columns = new List<Column>();
 
             ReadFile(fullName, columns, null);
@@ -139,14 +139,14 @@ namespace ChartCreator2.SettlementMergePlots {
         }
 
         private class Column {
-            public Column([NotNull] string name) {
+            public Column([JetBrains.Annotations.NotNull] string name) {
                 Name = name;
                 Values = new List<double>();
             }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string Name { get; }
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public List<double> Values { get; }
 
             public double MakeSum(int start, int count) {

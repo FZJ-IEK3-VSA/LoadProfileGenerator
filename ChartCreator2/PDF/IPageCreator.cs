@@ -6,10 +6,10 @@ using MigraDoc.DocumentObjectModel;
 namespace ChartCreator2.PDF {
     internal interface IPageCreator {
         [SuppressMessage("ReSharper", "UnusedMemberInSuper.Global")]
-        void MakePage([NotNull] Document doc, [NotNull] string dstdir, bool requireAll);
+        void MakePage([JetBrains.Annotations.NotNull] Document doc, [JetBrains.Annotations.NotNull] string dstdir, bool requireAll);
     }
 
     internal interface IPageCreatorToc {
-        void MakePage([NotNull] Document doc, [NotNull] string dstdir, bool requireAll, [ItemNotNull] [NotNull] List<string> pngFiles, [NotNull] Section tocSection);
+        void MakePage([JetBrains.Annotations.NotNull] Document doc, [JetBrains.Annotations.NotNull] string dstdir, bool requireAll, [ItemNotNull] [JetBrains.Annotations.NotNull] List<string> pngFiles, [JetBrains.Annotations.NotNull] Section tocSection);
     }
 }

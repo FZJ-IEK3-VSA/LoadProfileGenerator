@@ -108,34 +108,36 @@ namespace Database.Tests.Tables.ModularHouseholds {
         [Category(UnitTestCategories.BasicTest)]
         public void ModularHouseholdOldImportTest()
         {
-            WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            var db1 = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var sim1A = new Simulator(db1.ConnectionString);
-            //make the first
-            var tt = sim1A.ModularHouseholds[0];
-            var jsonHH1 = tt.GetJson();
-            //make a new one, import the first one and compare
-            sim1A.ModularHouseholds.DeleteItem(tt);
-            // ReSharper disable once RedundantAssignment
-            sim1A = null;
+            using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
+            {
+                var db1 = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
+                var sim1A = new Simulator(db1.ConnectionString);
+                //make the first
+                var tt = sim1A.ModularHouseholds[0];
+                var jsonHH1 = tt.GetJson();
+                //make a new one, import the first one and compare
+                sim1A.ModularHouseholds.DeleteItem(tt);
+                // ReSharper disable once RedundantAssignment
+                sim1A = null;
 
-            var sim1B = new Simulator(db1.ConnectionString);
-            var db2 = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            //var sim2 = new Simulator(db1.ConnectionString);
-            DatabaseMerger.DatabaseMerger dbm = new DatabaseMerger.DatabaseMerger(sim1B);
-            dbm.RunFindItems(db2.FileName,null);
-            dbm.RunImport(null);
-            // ReSharper disable once RedundantAssignment
-            sim1B = null;
+                var sim1B = new Simulator(db1.ConnectionString);
+                var db2 = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
+                //var sim2 = new Simulator(db1.ConnectionString);
+                DatabaseMerger.DatabaseMerger dbm = new DatabaseMerger.DatabaseMerger(sim1B);
+                dbm.RunFindItems(db2.FileName, null);
+                dbm.RunImport(null);
+                // ReSharper disable once RedundantAssignment
+                sim1B = null;
 
-            var sim1C = new Simulator(db1.ConnectionString);
-            var tt2 = sim1C.ModularHouseholds[0];
-            var jsonHH2 = tt2.GetJson();
-            jsonHH2.Should().BeEquivalentTo(jsonHH1, o => o
-                .Excluding(x => x.SelectedMemberPath.EndsWith("Guid")
-                                || x.SelectedMemberPath.EndsWith("ID")));
-            db1.Cleanup();
-            wd.CleanUp(0,false);
+                var sim1C = new Simulator(db1.ConnectionString);
+                var tt2 = sim1C.ModularHouseholds[0];
+                var jsonHH2 = tt2.GetJson();
+                jsonHH2.Should().BeEquivalentTo(jsonHH1, o => o
+                    .Excluding(x => x.SelectedMemberPath.EndsWith("Guid")
+                                    || x.SelectedMemberPath.EndsWith("ID")));
+                db1.Cleanup();
+                wd.CleanUp(0, false);
+            }
         }
 
         [Test]

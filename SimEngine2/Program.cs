@@ -8,7 +8,7 @@ using SimulationEngineLib;
 
 namespace SimEngine2
 {
-    public class Program
+    public static class Program
     {
         private static bool _isUnitTest;
 
@@ -51,24 +51,21 @@ namespace SimEngine2
             catch (Exception ex)
             {
                 Logger.Exception(ex);
-                try
-                {
-                    using (var sw = new StreamWriter("errorlog.txt", true))
+                try {
+                    using var sw = new StreamWriter("errorlog.txt", true);
+                    sw.WriteLine("Commandline: ");
+                    var cmd = "";
+                    foreach (var s in args)
                     {
-                        sw.WriteLine("Commandline: ");
-                        var cmd = "";
-                        foreach (var s in args)
-                        {
-                            cmd += s + " ";
-                        }
-
-                        Logger.Info("Command line:" + cmd);
-                        sw.WriteLine(cmd);
-
-                        sw.WriteLine("Error:");
-                        sw.WriteLine(ex.Message + Environment.NewLine + ex.StackTrace + Environment.NewLine +
-                                     Environment.NewLine);
+                        cmd += s + " ";
                     }
+
+                    Logger.Info("Command line:" + cmd);
+                    sw.WriteLine(cmd);
+
+                    sw.WriteLine("Error:");
+                    sw.WriteLine(ex.Message + Environment.NewLine + ex.StackTrace + Environment.NewLine +
+                                 Environment.NewLine);
                 }
                 catch (Exception ex1)
                 {

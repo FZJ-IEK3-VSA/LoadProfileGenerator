@@ -28,6 +28,7 @@
 
 #region
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Automation.ResultFiles;
@@ -40,10 +41,9 @@ using JetBrains.Annotations;
 #endregion
 
 namespace CalculationEngine.OnlineLogging {
-    public class DesiresLogFile : LogfileBase {
+    public class DesiresLogFile : LogfileBase, IDisposable {
         [NotNull]
         private readonly Dictionary<string, StreamWriter> _desireFiles;
-        private readonly bool _displayNegativeTime;
         [NotNull]
         private readonly CalcParameters _calcParameters;
         [NotNull]
@@ -51,10 +51,9 @@ namespace CalculationEngine.OnlineLogging {
         [NotNull]
         private readonly Dictionary<string, bool> _writeDesiresHeader;
 
-        public DesiresLogFile([NotNull] FileFactoryAndTracker fft, bool displayNegativeTime, [NotNull] CalcParameters calcParameters)
+        public DesiresLogFile([NotNull] FileFactoryAndTracker fft, [NotNull] CalcParameters calcParameters)
         {
             _fft = fft;
-            _displayNegativeTime = displayNegativeTime;
             _calcParameters = calcParameters;
             _desireFiles = new Dictionary<string, StreamWriter>();
             _writeDesiresHeader = new Dictionary<string, bool>();
@@ -67,7 +66,7 @@ namespace CalculationEngine.OnlineLogging {
         [NotNull]
         public Dictionary<string, int> DesireColumn { get; } = new Dictionary<string, int>();
 
-        public void Close()
+        public void Dispose()
         {
             foreach (var writer in _desireFiles.Values) {
                 writer?.Close();
@@ -101,7 +100,7 @@ namespace CalculationEngine.OnlineLogging {
                 _desireFiles[GetKey(entry, householdKey)].WriteLine(entry.GenerateHeader());
                 _writeDesiresHeader.Add(GetKey(entry, householdKey), true);
             }
-            if (entry.Timestep.ExternalStep < 0 && !_displayNegativeTime) {
+            if (!entry.Timestep.DisplayThisStep) {
                 return;
             }
             _desireFiles[GetKey(entry, householdKey)].WriteLine(entry.ToString());

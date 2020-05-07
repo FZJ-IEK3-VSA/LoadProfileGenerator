@@ -110,12 +110,8 @@ namespace CalculationEngine {
         [SuppressMessage("ReSharper", "UseNullPropagation")]
         public void Dispose()
         {
-            _calcRepo.Logfile.Dispose();
-        }
-
-        public void CloseLogfile()
-        {
-            _calcRepo.Logfile.Close();
+            CalcObject?.Dispose();
+            _calcRepo.Dispose();
         }
 
         public static bool MakeCharts { get; } = true;
@@ -161,7 +157,7 @@ namespace CalculationEngine {
                 {
                     throw new LPGException("CalcObject was null");
                 }
-                CalcObject.CloseLogfile();
+                CalcObject.Dispose();
                 return false;
             }
             if (CalcObject == null)
@@ -172,7 +168,7 @@ namespace CalculationEngine {
                 // ReSharper disable once PossibleNullReferenceException
                 CalcObject.RunOneStep(timestep, now, true);
                 SaveVariableStatesIfNeeded(timestep);
-                _calcRepo.Logfile.SaveIfNeeded(timestep);
+                _calcRepo.OnlineLoggingData.SaveIfNeeded(timestep);
                 now += _calcRepo.CalcParameters.InternalStepsize;
                 timestep = timestep.AddSteps(1);
             }
@@ -183,14 +179,14 @@ namespace CalculationEngine {
             Logger.Info("Generating the logfiles. This might take a while...");
 
             // post processing
-            _calcRepo.Logfile.Close();
+            _calcRepo.Dispose();
             CalcObject.Dispose();
             GC.Collect();
             if (!_continueRunning && reportCancelFunc!= null) {
                 reportCancelFunc();
                 throw new LPGException("Canceling");
             }
-            PostProcessingManager ppm = new PostProcessingManager(_calcRepo.CalculationProfiler, _calcRepo.Logfile.FileFactoryAndTracker);
+            PostProcessingManager ppm = new PostProcessingManager(_calcRepo.CalculationProfiler, _calcRepo.FileFactoryAndTracker);
             ppm.Run(_resultPath);
             Logger.Info("Finished the logfiles.");
             _calcRepo.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Post Post Processing");
@@ -216,7 +212,7 @@ namespace CalculationEngine {
                 Logger.Exception(e);
             }*/
 
-            CalcObject.CloseLogfile();
+            CalcObject.Dispose();
             _calcRepo.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Post Post Processing");
 
             _calcRepo.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Charting");
@@ -233,12 +229,12 @@ namespace CalculationEngine {
 
             if (Config.IsInUnitTesting)
             {
-                _calcRepo.Logfile.FileFactoryAndTracker.CheckIfAllAreRegistered(_resultPath);
+                _calcRepo.FileFactoryAndTracker.CheckIfAllAreRegistered(_resultPath);
                 Logger.Info("Finished!");
             }
             if (_calcRepo.CalcParameters.IsSet(CalcOption.LogAllMessages) || _calcRepo.CalcParameters.IsSet(CalcOption.LogErrorMessages))
             {
-                InitializeFileLogging(_calcRepo.Logfile.Srls);
+                InitializeFileLogging(_calcRepo.Srls);
             }
             //_fft.FillCalculationResult(_repository.CalculationResult);
             //_repository.CalculationResult.ResultFileEntries.Sort();
@@ -258,7 +254,7 @@ namespace CalculationEngine {
             }
 
             foreach (var variable in _variableRepository.GetAllVariables()) {
-                _calcRepo.Logfile.OnlineLoggingData.AddVariableStatus(new CalcVariableEntry(variable.Name,
+                _calcRepo.OnlineLoggingData.AddVariableStatus(new CalcVariableEntry(variable.Name,
                     variable.Guid,variable.Value,variable.LocationName,variable.LocationGuid,variable.HouseholdKey,timestep));
             }
         }
@@ -316,7 +312,7 @@ namespace CalculationEngine {
                     _calcRepo.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Chart Generator RunAll");
                     ChartCreationParameters ccp = new ChartCreationParameters(144,1600, 1000,
                         false, _calcRepo.CalcParameters.CSVCharacter, new DirectoryInfo(_resultPath));
-                    var cg = new ChartGeneratorManager(_calcRepo.CalculationProfiler, _calcRepo.Logfile.FileFactoryAndTracker, ccp);
+                    var cg = new ChartGeneratorManager(_calcRepo.CalculationProfiler, _calcRepo.FileFactoryAndTracker, ccp);
                     cg.Run(_resultPath);
                     _calcRepo.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Chart Generator RunAll");
                     if (_calcRepo.CalcParameters.IsSet(CalcOption.MakePDF))
@@ -327,7 +323,7 @@ namespace CalculationEngine {
 
                         MigraPDFCreator mpc = new MigraPDFCreator(_calcRepo.CalculationProfiler);
                         mpc.MakeDocument(_resultPath, CalcObject?.Name ??"",  false, false,
-                            _calcRepo.CalcParameters.CSVCharacter, _calcRepo.Logfile.FileFactoryAndTracker);
+                            _calcRepo.CalcParameters.CSVCharacter, _calcRepo.FileFactoryAndTracker);
                         _calcRepo.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - PDF Creation");
                     }
                 }

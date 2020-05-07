@@ -10,16 +10,16 @@ namespace ChartCreator2.OxyCharts {
     internal class AffordanceEnergyUse : ChartBaseFileStep
     {
 
-        public AffordanceEnergyUse([NotNull] ChartCreationParameters parameters,
-                                   [NotNull] FileFactoryAndTracker fft,
-                                   [NotNull] ICalculationProfiler calculationProfiler) : base(parameters, fft,
+        public AffordanceEnergyUse([JetBrains.Annotations.NotNull] ChartCreationParameters parameters,
+                                   [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft,
+                                   [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler) : base(parameters, fft,
                 calculationProfiler, new List<ResultFileID>() { ResultFileID.AffordanceEnergyUse },
                 "Affordance Energy Use", FileProcessingResult.ShouldCreateFiles)
         {
         }
 
-        private void MakeIntervalBars([NotNull] ResultFileEntry rfe, [NotNull] string plotName, [NotNull] DirectoryInfo basisPath,
-            [NotNull] [ItemNotNull] List<Tuple<string, double>> consumption, [ItemNotNull] [NotNull] List<ChartTaggingSet> taggingSets) {
+        private void MakeIntervalBars([JetBrains.Annotations.NotNull] ResultFileEntry rfe, [JetBrains.Annotations.NotNull] string plotName, [JetBrains.Annotations.NotNull] DirectoryInfo basisPath,
+            [JetBrains.Annotations.NotNull] [ItemNotNull] List<Tuple<string, double>> consumption, [ItemNotNull] [JetBrains.Annotations.NotNull] List<ChartTaggingSet> taggingSets) {
             IntervallBarMaker ivbm = new IntervallBarMaker();
             foreach (var chartTaggingSet in taggingSets) {
                 ivbm.MakeIntervalBars( rfe, plotName, basisPath, consumption,chartTaggingSet,chartTaggingSet.Name,false,this);

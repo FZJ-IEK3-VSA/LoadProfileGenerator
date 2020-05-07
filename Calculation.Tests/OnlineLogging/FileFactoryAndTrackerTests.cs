@@ -33,7 +33,7 @@ namespace Calculation.Tests.OnlineLogging {
             var personDto = CalcPersonDto.MakeExamplePerson();
             Random r = new Random();
             Mock<ILogFile> lf = new Mock<ILogFile>();
-            CalcRepo calcRepo = new CalcRepo(rnd:r, lf:lf.Object);
+            CalcRepo calcRepo = new CalcRepo(rnd:r, lf:lf.Object, calcParameters:calcParameters);
             CalcLocation cloc = new CalcLocation("blub",Guid.NewGuid().ToString());
             var cp = new CalcPerson(personDto,
                 cloc,  isSick, isOnVacation, calcRepo);
@@ -52,7 +52,7 @@ namespace Calculation.Tests.OnlineLogging {
             Assert.That(rfes.Count,Is.GreaterThan(0));
             //ResultFileList.ReadResultEntries(wd.WorkingDirectory);
             fft.GetResultFileEntry(ResultFileID.Actions, clt.Name, new HouseholdKey( "hh1"), cp.MakePersonInformation(), null);
-            fft.Close();
+            fft.Dispose();
             wd.CleanUp();
         }
     }

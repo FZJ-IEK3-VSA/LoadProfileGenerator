@@ -12,9 +12,9 @@ using OxyPlot.Series;
 namespace ChartCreator2.OxyCharts {
     internal class HouseholdPlan : ChartBaseFileStep
     {
-        public HouseholdPlan([NotNull] ChartCreationParameters parameters,
-                             [NotNull] FileFactoryAndTracker fft,
-                             [NotNull] ICalculationProfiler calculationProfiler) : base(parameters, fft,
+        public HouseholdPlan([JetBrains.Annotations.NotNull] ChartCreationParameters parameters,
+                             [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft,
+                             [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler) : base(parameters, fft,
             calculationProfiler, new List<ResultFileID>() { ResultFileID.HouseholdPlanTime
             },
             "Household Plan Results", FileProcessingResult.ShouldCreateFiles
@@ -22,8 +22,8 @@ namespace ChartCreator2.OxyCharts {
         {
         }
 
-        [NotNull]
-        private PlotModel MakePlot([NotNull] string title, [NotNull] out CategoryAxis cate, [NotNull] string axistitle) {
+        [JetBrains.Annotations.NotNull]
+        private PlotModel MakePlot([JetBrains.Annotations.NotNull] string title, [JetBrains.Annotations.NotNull] out CategoryAxis cate, [JetBrains.Annotations.NotNull] string axistitle) {
             var plotModel1 = new PlotModel
             {
                 // general

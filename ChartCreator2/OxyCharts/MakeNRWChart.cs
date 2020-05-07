@@ -19,20 +19,20 @@ namespace ChartCreator2.OxyCharts {
         private const int FontSize = 24;
         private readonly int _height;
         private readonly int _width;
-        [NotNull] private readonly CalculationProfiler _calculationProfiler;
+        [JetBrains.Annotations.NotNull] private readonly CalculationProfiler _calculationProfiler;
         private const string Averagelabel = "Average Energy Consumption in Germany";
         private const string Xaxislabel = "Number of Persons in the Household";
 
         private const string Yaxislabel = "Energy Consumption in kWh";
 
-        public MakeNRWChart(int dpi, int height, int width, [NotNull] CalculationProfiler calculationProfiler) {
+        public MakeNRWChart(int dpi, int height, int width, [JetBrains.Annotations.NotNull] CalculationProfiler calculationProfiler) {
             _dpi = dpi;
             _height = height;
             _width = width;
             _calculationProfiler = calculationProfiler;
         }
 
-        private static void AddNRWPoints([NotNull] LineSeries sc, int multiplicator) {
+        private static void AddNRWPoints([JetBrains.Annotations.NotNull] LineSeries sc, int multiplicator) {
             sc.Points.Add(new DataPoint(1 * multiplicator, 1798));
             sc.Points.Add(new DataPoint(2 * multiplicator, 2850));
             sc.Points.Add(new DataPoint(3 * multiplicator, 3733));
@@ -41,7 +41,7 @@ namespace ChartCreator2.OxyCharts {
             sc.Points.Add(new DataPoint(6 * multiplicator, 5816));
         }
 
-        public void MakeScatterChart([ItemNotNull] [NotNull] List<CalculationOutcome> outcomes, [NotNull] string pngfullName, [ItemNotNull] [NotNull] List<SeriesEntry> series) {
+        public void MakeScatterChart([ItemNotNull] [JetBrains.Annotations.NotNull] List<CalculationOutcome> outcomes, [JetBrains.Annotations.NotNull] string pngfullName, [ItemNotNull] [JetBrains.Annotations.NotNull] List<SeriesEntry> series) {
             _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
             var plotModel1 = new PlotModel
             {
@@ -133,20 +133,20 @@ namespace ChartCreator2.OxyCharts {
         }
 
         internal class SeriesEntry {
-            public SeriesEntry(double offset, [NotNull] string energyIntensity, [NotNull] string displayName, [NotNull] string version) {
+            public SeriesEntry(double offset, [JetBrains.Annotations.NotNull] string energyIntensity, [JetBrains.Annotations.NotNull] string displayName, [JetBrains.Annotations.NotNull] string version) {
                 Offset = offset;
                 EnergyIntensity = energyIntensity;
                 DisplayName = displayName;
                 Version = version;
             }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string DisplayName { get; }
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string EnergyIntensity { get; }
 
             public double Offset { get; }
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string Version { get; }
         }
     }

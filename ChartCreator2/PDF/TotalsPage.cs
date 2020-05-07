@@ -16,9 +16,9 @@ namespace ChartCreator2.PDF {
             throw new NotImplementedException();
         }
 
-        public static void MakePage([NotNull] Document doc, [NotNull] string dstdir,
+        public static void MakePage([JetBrains.Annotations.NotNull] Document doc, [JetBrains.Annotations.NotNull] string dstdir,
                                     bool requireAll, FileCreationMode fileCreationMode,
-            [CanBeNull] Section tocSection, [NotNull] string csvCharacter) {
+            [CanBeNull] Section tocSection, [JetBrains.Annotations.NotNull] string csvCharacter) {
             string filename = null;
             if (fileCreationMode == FileCreationMode.Settlement && File.Exists(Path.Combine(dstdir, "totals.csv"))) {
                 filename = Path.Combine(dstdir, DirectoryNames.CalculateTargetdirectory(TargetDirectory.Root),
@@ -67,7 +67,7 @@ namespace ChartCreator2.PDF {
             }
         }
 
-        private static void MakeTable([NotNull] string headline, [NotNull] Section sec, [NotNull] out ParagraphFormat format, [NotNull] out Table table,
+        private static void MakeTable([JetBrains.Annotations.NotNull] string headline, [JetBrains.Annotations.NotNull] Section sec, [JetBrains.Annotations.NotNull] out ParagraphFormat format, [JetBrains.Annotations.NotNull] out Table table,
             TableColumnType tableColumnType) {
             var para = sec.AddParagraph();
             para.Format.Alignment = ParagraphAlignment.Justify;
@@ -122,7 +122,7 @@ namespace ChartCreator2.PDF {
             }
         }
 
-        private static void SetHouseholdEntries([ItemNotNull] [NotNull] List<TotalEntry> totals, [NotNull] Document doc, [NotNull] Section sec) {
+        private static void SetHouseholdEntries([ItemNotNull] [JetBrains.Annotations.NotNull] List<TotalEntry> totals, [JetBrains.Annotations.NotNull] Document doc, [JetBrains.Annotations.NotNull] Section sec) {
             MakeTable("Totals for each Loadtype", sec, out ParagraphFormat format, out var table, TableColumnType.Values);
 
             foreach (var entry in totals) {
@@ -132,7 +132,7 @@ namespace ChartCreator2.PDF {
             doc.LastSection.Add(table);
         }
 
-        private static void SetMinMaxTable([ItemNotNull] [NotNull] List<TotalEntry> totals, [NotNull] Document doc, [NotNull] Section sec) {
+        private static void SetMinMaxTable([ItemNotNull] [JetBrains.Annotations.NotNull] List<TotalEntry> totals, [JetBrains.Annotations.NotNull] Document doc, [JetBrains.Annotations.NotNull] Section sec) {
             MakeTable("Minimum and Maximum for each Loadtype", sec, out ParagraphFormat format, out Table table, TableColumnType.MinMax);
 
             foreach (var entry in totals) {
@@ -145,7 +145,7 @@ namespace ChartCreator2.PDF {
             doc.LastSection.Add(table);
         }
 
-        private static void SetOneRow([NotNull] ParagraphFormat format, [NotNull] Table table, [ItemNotNull] [NotNull] string[] values) {
+        private static void SetOneRow([JetBrains.Annotations.NotNull] ParagraphFormat format, [JetBrains.Annotations.NotNull] Table table, [ItemNotNull] [JetBrains.Annotations.NotNull] string[] values) {
             var row = table.AddRow();
             for (var i = 0; i < values.Length; i++) {
                 var cell = row.Cells[i];
@@ -154,7 +154,7 @@ namespace ChartCreator2.PDF {
             }
         }
 
-        private static void SetPerDayTable([ItemNotNull] [NotNull] List<TotalEntry> totals, [NotNull] Document doc, [NotNull] Section sec) {
+        private static void SetPerDayTable([ItemNotNull] [JetBrains.Annotations.NotNull] List<TotalEntry> totals, [JetBrains.Annotations.NotNull] Document doc, [JetBrains.Annotations.NotNull] Section sec) {
             MakeTable("Totals for each Loadtype per Day", sec, out ParagraphFormat format, out Table table, TableColumnType.Values);
 
             foreach (var entry in totals) {
@@ -165,7 +165,7 @@ namespace ChartCreator2.PDF {
             doc.LastSection.Add(table);
         }
 
-        private static void SetPerPersonDayTable([ItemNotNull] [NotNull] List<TotalEntry> totals, [NotNull] Document doc, [NotNull] Section sec) {
+        private static void SetPerPersonDayTable([ItemNotNull] [JetBrains.Annotations.NotNull] List<TotalEntry> totals, [JetBrains.Annotations.NotNull] Document doc, [JetBrains.Annotations.NotNull] Section sec) {
             MakeTable("Totals for each Loadtype per Person per Day", sec, out ParagraphFormat format, out Table table,
                 TableColumnType.Values);
 
@@ -177,7 +177,7 @@ namespace ChartCreator2.PDF {
             doc.LastSection.Add(table);
         }
 
-        private static void SetPerPersonTable([ItemNotNull] [NotNull] List<TotalEntry> totals, [NotNull] Document doc, [NotNull] Section sec) {
+        private static void SetPerPersonTable([ItemNotNull] [JetBrains.Annotations.NotNull] List<TotalEntry> totals, [JetBrains.Annotations.NotNull] Document doc, [JetBrains.Annotations.NotNull] Section sec) {
             MakeTable("Totals for each Loadtype per Person", sec, out ParagraphFormat format, out Table table, TableColumnType.Values);
 
             foreach (var entry in totals) {
@@ -188,7 +188,7 @@ namespace ChartCreator2.PDF {
             doc.LastSection.Add(table);
         }
 
-        private static void SetSettlementEntries([NotNull] Document doc, [NotNull] Section sec, [NotNull] string filename, [NotNull] string csvCharacter) {
+        private static void SetSettlementEntries([JetBrains.Annotations.NotNull] Document doc, [JetBrains.Annotations.NotNull] Section sec, [JetBrains.Annotations.NotNull] string filename, [JetBrains.Annotations.NotNull] string csvCharacter) {
             MakeTable("Totals for each Loadtype", sec, out ParagraphFormat format, out Table table, TableColumnType.SettlementValues);
 
             var totals = TotalsReader(filename, true, csvCharacter);
@@ -204,8 +204,8 @@ namespace ChartCreator2.PDF {
         }
 
         [ItemNotNull]
-        [NotNull]
-        private static List<TotalEntry> TotalsReader([NotNull] string filename, bool settlement, [NotNull] string csvCharacter) {
+        [JetBrains.Annotations.NotNull]
+        private static List<TotalEntry> TotalsReader([JetBrains.Annotations.NotNull] string filename, bool settlement, [JetBrains.Annotations.NotNull] string csvCharacter) {
             var totals = new List<TotalEntry>();
             using (var sr = new StreamReader(filename)) {
                 sr.ReadLine();
@@ -230,7 +230,7 @@ namespace ChartCreator2.PDF {
         }
 
         private class TotalEntry {
-            public TotalEntry([NotNull] string s, bool settlement, [NotNull] string csvCharacter) {
+            public TotalEntry([JetBrains.Annotations.NotNull] string s, bool settlement, [JetBrains.Annotations.NotNull] string csvCharacter) {
                 string[] csvArr = {csvCharacter};
                 var strarr = s.Split(csvArr, StringSplitOptions.None);
                 if (strarr.Length > 3) {
@@ -255,18 +255,18 @@ namespace ChartCreator2.PDF {
                 }
             }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string Household { get; } = "";
             public double Maximum { get; }
             public double Minimum { get; }
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string Name { get; } = "";
             public double Perday { get; }
             public double PerPerson { get; }
             public double PerPersonPerDay { get; }
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string UnitOfPower { get; } = "";
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string UnitOfSum { get; } = "";
 
             public double Value { get; }

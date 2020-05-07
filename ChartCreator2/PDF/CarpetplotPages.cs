@@ -15,8 +15,8 @@ namespace ChartCreator2.PDF {
             MyTargetDirectory = TargetDirectory.Charts;
         }
 
-        [NotNull]
-        protected override string GetGraphTitle([NotNull] string filename) {
+        [JetBrains.Annotations.NotNull]
+        protected override string GetGraphTitle([JetBrains.Annotations.NotNull] string filename) {
             var str = filename.Split('.');
             var hh = str[1];
             var taggingset = str[2];
@@ -24,7 +24,7 @@ namespace ChartCreator2.PDF {
         }
 
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        public void MakePage([NotNull] Document doc, [NotNull] string dstdir, bool requireAll, [NotNull] Section tocSection) {
+        public void MakePage([JetBrains.Annotations.NotNull] Document doc, [JetBrains.Annotations.NotNull] string dstdir, bool requireAll, [JetBrains.Annotations.NotNull] Section tocSection) {
             var di =
                 new DirectoryInfo(Path.Combine(dstdir, DirectoryNames.CalculateTargetdirectory(MyTargetDirectory)));
             var files = di.GetFiles(Pattern);

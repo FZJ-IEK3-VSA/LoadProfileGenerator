@@ -13,9 +13,9 @@ using OxyPlot.Series;
 namespace ChartCreator2.OxyCharts {
     internal class ExecutedActionsOverviewCount : ChartBaseFileStep
     {
-        public ExecutedActionsOverviewCount([NotNull] ChartCreationParameters parameters,
-                                            [NotNull] FileFactoryAndTracker fft,
-                                            [NotNull] ICalculationProfiler calculationProfiler) : base(parameters, fft,
+        public ExecutedActionsOverviewCount([JetBrains.Annotations.NotNull] ChartCreationParameters parameters,
+                                            [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft,
+                                            [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler) : base(parameters, fft,
             calculationProfiler, new List<ResultFileID>() { ResultFileID.ExecutedActionsOverview
             },
             "Executed Actions Overview Count", FileProcessingResult.ShouldCreateFiles
@@ -23,7 +23,7 @@ namespace ChartCreator2.OxyCharts {
         {
         }
 
-        private static int Comparison([NotNull] Tuple<string, double> x, [NotNull] Tuple<string, double> y)
+        private static int Comparison([JetBrains.Annotations.NotNull] Tuple<string, double> x, [JetBrains.Annotations.NotNull] Tuple<string, double> y)
         {
             if (string.Compare(x.Item1, y.Item1, StringComparison.Ordinal) != 0) {
                 return string.Compare(x.Item1, y.Item1, StringComparison.Ordinal);

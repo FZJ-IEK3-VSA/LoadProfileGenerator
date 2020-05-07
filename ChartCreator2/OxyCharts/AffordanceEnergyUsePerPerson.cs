@@ -14,10 +14,10 @@ using OxyPlot.Series;
 
 namespace ChartCreator2.OxyCharts {
     internal class AffordanceEnergyUsePerPerson : ChartBaseSqlStep {
-        public AffordanceEnergyUsePerPerson([NotNull] ChartCreationParameters parameters,
-                                            [NotNull] FileFactoryAndTracker fft,
-                                            [NotNull] ICalculationProfiler calculationProfiler,
-                                            [NotNull] CalcDataRepository calcDataRepository) : base(parameters,
+        public AffordanceEnergyUsePerPerson([JetBrains.Annotations.NotNull] ChartCreationParameters parameters,
+                                            [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft,
+                                            [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler,
+                                            [JetBrains.Annotations.NotNull] CalcDataRepository calcDataRepository) : base(parameters,
             fft,
             calculationProfiler,
             new List<ResultTableID> {ResultTableID.AffordanceEnergyUse},
@@ -27,7 +27,7 @@ namespace ChartCreator2.OxyCharts {
         {
         }
 
-        protected override FileProcessingResult MakeOnePlot([NotNull] HouseholdKeyEntry hhkey)
+        protected override FileProcessingResult MakeOnePlot([JetBrains.Annotations.NotNull] HouseholdKeyEntry hhkey)
         {
             _CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
             var entries = CalcDataRepository.LoadAffordanceEnergyUses(hhkey.HouseholdKey);
@@ -46,10 +46,10 @@ namespace ChartCreator2.OxyCharts {
             return FileProcessingResult.ShouldCreateFiles;
         }
 
-        private void DrawChart([NotNull] HouseholdKeyEntry hhkey,
-                               [NotNull] Dictionary<string, List<double>> energyUsesPerPersonByAfforcance,
-                               [ItemNotNull] [NotNull] List<string> persons,
-                               [NotNull] CalcLoadTypeDto lti)
+        private void DrawChart([JetBrains.Annotations.NotNull] HouseholdKeyEntry hhkey,
+                               [JetBrains.Annotations.NotNull] Dictionary<string, List<double>> energyUsesPerPersonByAfforcance,
+                               [ItemNotNull] [JetBrains.Annotations.NotNull] List<string> persons,
+                               [JetBrains.Annotations.NotNull] CalcLoadTypeDto lti)
         {
             string plotName = "Affordance Energy Use Per Person " + hhkey.HouseholdKey.Key + " " + lti.Name;
             var plotModel1 = new PlotModel {
@@ -183,9 +183,9 @@ namespace ChartCreator2.OxyCharts {
             Save(plotModel1, plotName, "AffordanceEnergyUsePerPerson." + hhkey.HouseholdKey + "." + lti.FileName + ".png", _Parameters.BaseDirectory);
         }
 
-        private static void PrepareData([ItemNotNull] [NotNull] List<AffordanceEnergyUseEntry> filteredEntries,
-                                        [NotNull] out Dictionary<string, List<double>> energyUsesPerPersonByAfforcance,
-                                        [NotNull] [ItemNotNull] List<string> personNames)
+        private static void PrepareData([ItemNotNull] [JetBrains.Annotations.NotNull] List<AffordanceEnergyUseEntry> filteredEntries,
+                                        [JetBrains.Annotations.NotNull] out Dictionary<string, List<double>> energyUsesPerPersonByAfforcance,
+                                        [JetBrains.Annotations.NotNull] [ItemNotNull] List<string> personNames)
         {
             var affordances = filteredEntries.Select(x => x.AffordanceName).Distinct().ToList();
             energyUsesPerPersonByAfforcance = new Dictionary<string, List<double>>();

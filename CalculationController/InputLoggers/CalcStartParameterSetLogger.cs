@@ -8,7 +8,7 @@ namespace CalculationController.InputLoggers
 {
     using System.Globalization;
 
-    internal class CalcStartParameterSetLogger : DataSaverBase
+    public class CalcStartParameterSetLogger : DataSaverBase
     {
         public CalcStartParameterSetLogger( [NotNull] SqlResultLoggingService srls): base(typeof(CalcStartParameterSet),
             new ResultTableDefinition("CalcStartParameterSet",ResultTableID.CalcStartParameters, "All the calculation start parameters"), srls)

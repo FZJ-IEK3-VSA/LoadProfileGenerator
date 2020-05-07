@@ -41,8 +41,7 @@ using JetBrains.Annotations;
 #endregion
 
 namespace CalculationEngine.OnlineLogging {
-    public interface IThoughtsLogFile {
-        void Close();
+    public interface IThoughtsLogFile: IDisposable {
         void WriteEntry([NotNull] ThoughtEntry entry, [NotNull] HouseholdKey householdKey);
     }
 
@@ -59,12 +58,6 @@ namespace CalculationEngine.OnlineLogging {
         {
             _fft = fft;
             _calcParameters = calcParameters;
-        }
-
-        public void Close() {
-            foreach (var thoughtsFile in _thoughtsFiles) {
-                thoughtsFile.Value.Close();
-            }
         }
 
         public void WriteEntry([NotNull] ThoughtEntry entry, [NotNull] HouseholdKey householdKey) {
@@ -101,6 +94,14 @@ namespace CalculationEngine.OnlineLogging {
                                _calcParameters.CSVCharacter + "Person" +
                                _calcParameters.CSVCharacter + "Thought");
             _thoughtsFiles.Add(new Tuple<HouseholdKey, string>(householdKey, pi.Name), thoughts);
+        }
+
+        public void Dispose()
+        {
+            foreach (var thoughtsFile in _thoughtsFiles)
+            {
+                thoughtsFile.Value.Close();
+            }
         }
     }
 }

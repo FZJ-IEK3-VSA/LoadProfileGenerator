@@ -12,9 +12,9 @@ using OxyPlot.Series;
 namespace ChartCreator2.OxyCharts {
     internal class CriticalThresholdViolations : ChartBaseFileStep
     {
-        public CriticalThresholdViolations([NotNull] ChartCreationParameters parameters,
-                                           [NotNull] FileFactoryAndTracker fft,
-                                           [NotNull] ICalculationProfiler calculationProfiler) : base(parameters, fft,
+        public CriticalThresholdViolations([JetBrains.Annotations.NotNull] ChartCreationParameters parameters,
+                                           [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft,
+                                           [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler) : base(parameters, fft,
             calculationProfiler, new List<ResultFileID>() { ResultFileID.CriticalThresholdViolations
             },
             "Critical Threshold Violations", FileProcessingResult.ShouldCreateFiles

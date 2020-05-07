@@ -119,14 +119,9 @@ namespace CalculationEngine.HouseholdElements {
                 _isBusyForLoadType.Add(calcDeviceLoad.LoadType,
                     new BitArray(calcRepo.CalcParameters.InternalTimesteps));
                 _isBusyForLoadType[calcDeviceLoad.LoadType].SetAll(false);
-                if (calcRepo.Odap == null && !Config.IsInUnitTesting) {
-                    throw new LPGException("odap was null. Please report");
-                }
                 //var key = new OefcKey(calcDeviceDto.HouseholdKey, calcDeviceDto.DeviceType,calcDeviceDto.Guid, calcDeviceDto.LocationGuid,calcDeviceLoad.LoadType.Guid, calcDeviceDto.DeviceCategoryName);
-                var key = calcRepo.Odap?.RegisterDevice( calcDeviceLoad.LoadType.ConvertToDto(), calcDeviceDto);
-                if (key != null) {
-                    _KeyByLoad.Add(calcDeviceLoad.LoadType, key.Value);
-                }
+                var key = calcRepo.Odap.RegisterDevice( calcDeviceLoad.LoadType.ConvertToDto(), calcDeviceDto);
+                    _KeyByLoad.Add(calcDeviceLoad.LoadType, key);
             }
         }
         public readonly Dictionary<CalcLoadType, OefcKey> _KeyByLoad = new Dictionary<CalcLoadType, OefcKey>();
@@ -293,7 +288,6 @@ namespace CalculationEngine.HouseholdElements {
             }
             var totalDuration = calcProfile.StepValues.Count; //.GetNewLengthAfterCompressExpand(timefactor);
             //calcProfile.CompressExpandDoubleArray(timefactor,allProfiles),
-            if (CalcRepo.Odap != null) {
                 var key = _KeyByLoad[cdl.LoadType];
                 StepValues sv = StepValues.MakeStepValues(calcProfile,cdl.PowerStandardDeviation,powerUsageFactor, CalcRepo.NormalRandom);
                 CalcRepo.Odap.AddNewStateMachine(
@@ -305,13 +299,8 @@ namespace CalculationEngine.HouseholdElements {
                     calcProfile.DataSource,
                     key,
                     _calcDeviceDto, sv);
-            }
 
             if (MatchingAutoDevs.Count > 0) {
-                if (CalcRepo.Odap == null) {
-                    throw new LPGException("Odap was null");
-                }
-
                 foreach (CalcAutoDev matchingAutoDev in MatchingAutoDevs) {
                     if (matchingAutoDev._KeyByLoad.ContainsKey(cdl.LoadType)) {
                         var zerokey = matchingAutoDev._KeyByLoad[cdl.LoadType];

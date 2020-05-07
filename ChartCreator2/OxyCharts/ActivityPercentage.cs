@@ -11,9 +11,9 @@ using OxyPlot.Series;
 namespace ChartCreator2.OxyCharts {
     public class ActivityPercentage : ChartBaseFileStep
     {
-        public ActivityPercentage([NotNull] ChartCreationParameters parameters,
-            [NotNull] FileFactoryAndTracker fft,
-        [NotNull] ICalculationProfiler calculationProfiler) : base(parameters, fft,
+        public ActivityPercentage([JetBrains.Annotations.NotNull] ChartCreationParameters parameters,
+            [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft,
+        [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler) : base(parameters, fft,
         calculationProfiler,new List<ResultFileID>() { ResultFileID.ActivityPercentages
         },
         "Activity Percentages",FileProcessingResult.ShouldCreateFiles

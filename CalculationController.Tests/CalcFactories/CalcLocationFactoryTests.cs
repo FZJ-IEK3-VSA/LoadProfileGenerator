@@ -74,7 +74,7 @@ namespace CalculationController.Tests.CalcFactories {
             Dictionary<CalcLocationDto, List<IAssignableDevice>> deviceLocationDict = new Dictionary<CalcLocationDto, List<IAssignableDevice>>();
             LocationDtoDict calclocdict = new LocationDtoDict();
             List<DeviceCategoryDto> devcat = new List<DeviceCategoryDto>();
-            CalcRepo calcRepo = new CalcRepo();
+            using CalcRepo calcRepo = new CalcRepo();
             //devcat.Add(new DeviceCategoryDto(dc.FullPath, Guid.NewGuid().ToString()));
             var locdtos = cldt.MakeCalcLocations(locations,
                 new HouseholdKey("hh1"),
@@ -130,25 +130,26 @@ namespace CalculationController.Tests.CalcFactories {
             builder.Register(x => r).As<Random>().SingleInstance();
             builder.RegisterType<CalcLocationDtoFactory>().As<CalcLocationDtoFactory>();
             builder.RegisterType<CalcDeviceFactory>().As<CalcDeviceFactory>().SingleInstance();
-            CalcRepo calcRepo = new CalcRepo();
+            builder.RegisterType<CalcRepo>().As<CalcRepo>().SingleInstance();
             var container = builder.Build();
-            using (var scope = container.BeginLifetimeScope()) {
-                var cldt = scope.Resolve<CalcLocationDtoFactory>();
-                LocationDtoDict calclocdict = new LocationDtoDict();
-                var locdtos = cldt.MakeCalcLocations(locations,
-                    new HouseholdKey("hh1"),
-                    EnergyIntensityType.EnergyIntensive,
-                    deviceLocationDict,
-                    allDeviceActions,
-                    calclocdict,
-                    devcat);
+            using var scope = container.BeginLifetimeScope();
+            var calcRepo = scope.Resolve<CalcRepo>();
 
-                CalcLocationFactory clf = scope.Resolve<CalcLocationFactory>();
-                DtoCalcLocationDict dcl = new DtoCalcLocationDict();
-                var clocations = clf.MakeCalcLocations(locdtos, dcl, calcRepo);
-                Assert.AreEqual(1, clocations.Count);
-                Assert.AreEqual(2, clocations[0].LightDevices.Count);
-            }
+            var cldt = scope.Resolve<CalcLocationDtoFactory>();
+            LocationDtoDict calclocdict = new LocationDtoDict();
+            var locdtos = cldt.MakeCalcLocations(locations,
+                new HouseholdKey("hh1"),
+                EnergyIntensityType.EnergyIntensive,
+                deviceLocationDict,
+                allDeviceActions,
+                calclocdict,
+                devcat);
+
+            CalcLocationFactory clf = scope.Resolve<CalcLocationFactory>();
+            DtoCalcLocationDict dcl = new DtoCalcLocationDict();
+            var clocations = clf.MakeCalcLocations(locdtos, dcl, calcRepo);
+            Assert.AreEqual(1, clocations.Count);
+            Assert.AreEqual(2, clocations[0].LightDevices.Count);
         }
 
         [Test]
@@ -190,33 +191,33 @@ namespace CalculationController.Tests.CalcFactories {
             builder.RegisterType<CalcDeviceFactory>().As<CalcDeviceFactory>().SingleInstance();
             builder.RegisterType<CalcLocationFactory>().As<CalcLocationFactory>().SingleInstance();
             builder.RegisterType<CalcLocationDtoFactory>().As<CalcLocationDtoFactory>();
+            builder.RegisterType<CalcRepo>().As<CalcRepo>().SingleInstance();
             var container = builder.Build();
-            using (var scope = container.BeginLifetimeScope()) {
-                CalcRepo calcRepo = new CalcRepo();
-                var cldt = scope.Resolve<CalcLocationDtoFactory>();
-                LocationDtoDict calclocdict = new LocationDtoDict();
-                var locdtos = cldt.MakeCalcLocations(locations,
-                    new HouseholdKey("HH1"),
-                    EnergyIntensityType.EnergyIntensive,
-                    deviceLocationDict,
-                    allDeviceActions,
-                    calclocdict,
-                    devcat);
+            using var scope = container.BeginLifetimeScope();
+            var calcRepo = scope.Resolve<CalcRepo>();
+            var cldt = scope.Resolve<CalcLocationDtoFactory>();
+            LocationDtoDict calclocdict = new LocationDtoDict();
+            var locdtos = cldt.MakeCalcLocations(locations,
+                new HouseholdKey("HH1"),
+                EnergyIntensityType.EnergyIntensive,
+                deviceLocationDict,
+                allDeviceActions,
+                calclocdict,
+                devcat);
 
-                //CalcDeviceFactory cdf = scope.Resolve<CalcDeviceFactory>();
-                CalcLocationFactory clf = scope.Resolve<CalcLocationFactory>();
-                DtoCalcLocationDict dtl = new DtoCalcLocationDict();
-                var clocations = clf.MakeCalcLocations(locdtos, dtl, calcRepo);
-                Assert.AreEqual(1, clocations.Count);
-                Assert.AreEqual(1, clocations[0].LightDevices.Count);
-            }
+            //CalcDeviceFactory cdf = scope.Resolve<CalcDeviceFactory>();
+            CalcLocationFactory clf = scope.Resolve<CalcLocationFactory>();
+            DtoCalcLocationDict dtl = new DtoCalcLocationDict();
+            var clocations = clf.MakeCalcLocations(locdtos, dtl, calcRepo);
+            Assert.AreEqual(1, clocations.Count);
+            Assert.AreEqual(1, clocations[0].LightDevices.Count);
         }
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void MakeCalcLocationsTestWithDeviceCategory()
         {
-            WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
+            using WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             var builder = new ContainerBuilder();
             var r = new Random(1);
             CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(2018, 1, 1)
@@ -254,6 +255,7 @@ namespace CalculationController.Tests.CalcFactories {
             Mock<IOnlineDeviceActivationProcessor> odapmock = new Mock<IOnlineDeviceActivationProcessor>();
             builder.Register(x => odapmock.Object).As<IOnlineDeviceActivationProcessor>().SingleInstance();
             builder.Register(x => r).As<Random>().SingleInstance();
+            builder.Register(x => wd.InputDataLogger).As<IInputDataLogger>().SingleInstance();
             builder.Register(x => new FileFactoryAndTracker(wd.WorkingDirectory, "HH1", wd.InputDataLogger)).As<FileFactoryAndTracker>()
                 .SingleInstance();
             builder.Register(x => new SqlResultLoggingService(wd.WorkingDirectory)).As<SqlResultLoggingService>().SingleInstance();
@@ -262,19 +264,18 @@ namespace CalculationController.Tests.CalcFactories {
             builder.Register(x => new OnlineLoggingData(x.Resolve<DateStampCreator>(), x.Resolve<IInputDataLogger>(), x.Resolve<CalcParameters>()))
                 .As<OnlineLoggingData>().SingleInstance();
             builder.Register(x => new LogFile(calcParameters,
-                x.Resolve<FileFactoryAndTracker>(),
-                x.Resolve<OnlineLoggingData>(),
-                x.Resolve<SqlResultLoggingService>())).As<ILogFile>().SingleInstance();
+                x.Resolve<FileFactoryAndTracker>())).As<ILogFile>().SingleInstance();
             builder.RegisterType<CalcDeviceFactory>().As<CalcDeviceFactory>().SingleInstance();
             builder.RegisterType<CalcLocationFactory>().As<CalcLocationFactory>().SingleInstance();
             builder.RegisterType<CalcPersonFactory>().As<CalcPersonFactory>().SingleInstance();
             builder.RegisterType<CalcModularHouseholdFactory>().As<CalcModularHouseholdFactory>().SingleInstance();
             builder.RegisterType<CalcLocationDtoFactory>().As<CalcLocationDtoFactory>();
             builder.RegisterType<InputDataLogger>().As<InputDataLogger>().SingleInstance();
+            builder.RegisterType<CalcRepo>().As<CalcRepo>().SingleInstance();
             var container = builder.Build();
-            CalcRepo calcRepo = new CalcRepo();
             using (var scope = container.BeginLifetimeScope()) {
                 var cldt = scope.Resolve<CalcLocationDtoFactory>();
+                var calcRepo = scope.Resolve<CalcRepo>();
                 LocationDtoDict calclocdict = new LocationDtoDict();
                 var locdtos = cldt.MakeCalcLocations(locations,
                     new HouseholdKey("HH1"),

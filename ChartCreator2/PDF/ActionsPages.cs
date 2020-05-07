@@ -14,10 +14,10 @@ namespace ChartCreator2.PDF {
             MyTargetDirectory = TargetDirectory.Reports;
         }
 
-        [NotNull]
-        protected override string GetGraphTitle([NotNull] string filename) => throw new LPGException("Not implemented on purpose");
+        [JetBrains.Annotations.NotNull]
+        protected override string GetGraphTitle([JetBrains.Annotations.NotNull] string filename) => throw new LPGException("Not implemented on purpose");
 
-        public void MakePage([NotNull] Document doc, [NotNull] string dstdir, bool requireAll, [NotNull] Section tocSection) {
+        public void MakePage([JetBrains.Annotations.NotNull] Document doc, [JetBrains.Annotations.NotNull] string dstdir, bool requireAll, [JetBrains.Annotations.NotNull] Section tocSection) {
             var di =
                 new DirectoryInfo(Path.Combine(dstdir, DirectoryNames.CalculateTargetdirectory(MyTargetDirectory)));
             var fi = di.GetFiles("Actions.*.csv");

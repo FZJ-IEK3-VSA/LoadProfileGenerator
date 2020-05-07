@@ -13,9 +13,9 @@ using OxyPlot.Series;
 namespace ChartCreator2.OxyCharts {
     internal class DeviceSums : ChartBaseFileStep
     {
-        public DeviceSums([NotNull] ChartCreationParameters parameters,
-                          [NotNull] FileFactoryAndTracker fft,
-                          [NotNull] ICalculationProfiler calculationProfiler) : base(parameters, fft,
+        public DeviceSums([JetBrains.Annotations.NotNull] ChartCreationParameters parameters,
+                          [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft,
+                          [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler) : base(parameters, fft,
             calculationProfiler, new List<ResultFileID>() { ResultFileID.DeviceSums
             },
             "Device Sums", FileProcessingResult.ShouldCreateFiles
@@ -70,7 +70,7 @@ namespace ChartCreator2.OxyCharts {
             return FileProcessingResult.NoFilesTocreate;*/
         }
 
-        public void MakePlotMonthly([NotNull] ResultFileEntry rfe, [NotNull] string plotName, [NotNull] DirectoryInfo basisPath) {
+        public void MakePlotMonthly([JetBrains.Annotations.NotNull] ResultFileEntry rfe, [JetBrains.Annotations.NotNull] string plotName, [JetBrains.Annotations.NotNull] DirectoryInfo basisPath) {
             _CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
             var consumption = new List<Tuple<string, List<double>>>();
             var months = 0;

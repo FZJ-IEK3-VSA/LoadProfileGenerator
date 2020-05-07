@@ -11,9 +11,9 @@ using OxyPlot.Series;
 namespace ChartCreator2.OxyCharts {
     internal class LocationStatistics : ChartBaseFileStep
     {
-        public LocationStatistics([NotNull] ChartCreationParameters parameters,
-                                  [NotNull] FileFactoryAndTracker fft,
-                                  [NotNull] ICalculationProfiler calculationProfiler) : base(parameters, fft,
+        public LocationStatistics([JetBrains.Annotations.NotNull] ChartCreationParameters parameters,
+                                  [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft,
+                                  [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler) : base(parameters, fft,
             calculationProfiler, new List<ResultFileID>() { ResultFileID.LocationStatistic
             },
             "Location Statistics", FileProcessingResult.ShouldCreateFiles
@@ -90,15 +90,15 @@ namespace ChartCreator2.OxyCharts {
         }
 
         private class PersonEntry {
-            public PersonEntry([NotNull] string personName) => PersonName = personName;
+            public PersonEntry([JetBrains.Annotations.NotNull] string personName) => PersonName = personName;
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string CleanName => AutomationUtili.CleanFileName(PersonName);
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public Dictionary<string, double> Percentages { get; } = new Dictionary<string, double>();
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             private string PersonName { get; }
         }
     }

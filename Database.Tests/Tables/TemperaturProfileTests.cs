@@ -39,7 +39,7 @@ namespace Database.Tests.Tables {
     [TestFixture]
     public class TemperaturProfileTests : UnitTestBaseClass
     {
-        private static void CompareArray([NotNull] double[] temparr, [NotNull] double[] dstarr) {
+        private static void CompareArray([JetBrains.Annotations.NotNull] double[] temparr,[JetBrains.Annotations.NotNull]double[] dstarr) {
             Assert.AreEqual(temparr.Length, dstarr.Length);
             for (var i = 0; i < temparr.Length; i++) {
                 Logger.Info(temparr[i] + " -> " + dstarr[i]);
