@@ -30,6 +30,7 @@
 
 using System.Collections.ObjectModel;
 using System.Linq;
+using Automation;
 using Database.Database;
 using JetBrains.Annotations;
 
@@ -50,7 +51,7 @@ namespace Database.Tables.BasicHouseholds {
 
         public RealDeviceLoadType([NotNull] string name, [CanBeNull] int? realDeviceID, [CanBeNull] int? loadTypeID, double maxPower,
             [CanBeNull] VLoadType loadType,
-            double standardDeviation, double averageYearlyConsumption, [NotNull] string connectionString, [NotNull] string guid, [CanBeNull] int? id = null)
+            double standardDeviation, double averageYearlyConsumption, [NotNull] string connectionString, [NotNull] StrGuid guid, [CanBeNull] int? id = null)
             : base(name, TableName, connectionString, guid) {
             _realDeviceID = realDeviceID;
             _loadTypeID = loadTypeID;

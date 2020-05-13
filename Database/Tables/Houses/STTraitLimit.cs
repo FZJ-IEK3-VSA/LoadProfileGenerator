@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using Database.Database;
 using Database.Tables.ModularHouseholds;
@@ -14,7 +15,7 @@ namespace Database.Tables.Houses {
         [CanBeNull] private readonly HouseholdTrait _trait;
 
         public STTraitLimit([CanBeNull]int? pID, [NotNull] string connectionString, int settlementTemplateID, [NotNull] string name,
-            [CanBeNull] HouseholdTrait trait, int maximum, [NotNull] string guid) : base(name, TableName, connectionString, guid) {
+            [CanBeNull] HouseholdTrait trait, int maximum, [NotNull] StrGuid guid) : base(name, TableName, connectionString, guid) {
             TypeDescription = "Settlement Template Household Trait Limit";
             ID = pID;
             _trait = trait;

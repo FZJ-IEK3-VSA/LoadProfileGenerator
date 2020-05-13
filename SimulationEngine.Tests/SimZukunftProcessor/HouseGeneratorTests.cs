@@ -68,9 +68,9 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         //public void HouseGeneratorTest()
         //{
         //    Logger.Get().StartCollectingAllMessages();
-        //    HouseData hd = new HouseData(Guid.NewGuid().ToString(),
+        //    HouseData hd = new HouseData(Guid.NewGuid().ToStrGuid(),
         //        "HT01",10000,1000, "MyFirstHouse");
-        //    var hh = new HouseholdData(Guid.NewGuid().ToString(), false,
+        //    var hh = new HouseholdData(Guid.NewGuid().ToStrGuid(), false,
         //        "blub",null,null,null,null, HouseholdDataSpecifictionType.ByPersons);
         //    hd.Households.Add(hh);
         //    hh.HouseholdDataPersonSpecification = new HouseholdDataPersonSpecification(new List<PersonData>() {
@@ -119,7 +119,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         //    sim.MyGeneralConfig.PerformCleanUpChecks = "false";
         //    SimIntegrityChecker.Run(sim);
         //    Logger.Get().StartCollectingAllMessages();
-        //    HouseData hd = new HouseData(Guid.NewGuid().ToString(),
+        //    HouseData hd = new HouseData(Guid.NewGuid().ToStrGuid(),
         //        "HT01", 10000, 1000, "MyFirstHouse");
 
         //    var chargingstationSet = sim.ChargingStationSets.FindFirstByName("Charging At Work with 22 kW");
@@ -140,7 +140,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         //            new TransportationDistanceModifier("Work", "Car", 50000),
         //            new TransportationDistanceModifier("Entertainment", "Car", 70000)
         //        };
-        //        var hh = new HouseholdData(Guid.NewGuid().ToString(),
+        //        var hh = new HouseholdData(Guid.NewGuid().ToStrGuid(),
         //            true,
         //            "blub",
         //            chargingstationSet.GetJsonReference(),
@@ -157,7 +157,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         //            new TransportationDistanceModifier("Work", "Car", 70000),
         //            new TransportationDistanceModifier("Entertainment", "Car", 70000)
         //        };
-        //        var hh = new HouseholdData(Guid.NewGuid().ToString(),
+        //        var hh = new HouseholdData(Guid.NewGuid().ToStrGuid(),
         //            true,
         //            "blub",
         //            chargingstationSet.GetJsonReference(),
@@ -219,7 +219,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         //    Simulator sim = new Simulator(db.ConnectionString);
         //    sim.MyGeneralConfig.PerformCleanUpChecks = "false";
         //    Logger.Get().StartCollectingAllMessages();
-        //    HouseData hd = new HouseData(Guid.NewGuid().ToString(),
+        //    HouseData hd = new HouseData(Guid.NewGuid().ToStrGuid(),
         //        "HT01", 10000, 1000, "MyFirstHouse");
 
         //    var chargingstationSet = sim.ChargingStationSets.FindFirstByName("Charging At Work with 22 kW");
@@ -277,13 +277,13 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         //    SimIntegrityChecker.Run(sim2);
         //}
 
-        //private static void MakeRandomHousehold(int distance, [NotNull] ChargingStationSet chargingstationSet, [NotNull] TransportationDeviceSet transportationdevices, [NotNull] TravelRouteSet travelRoutes, [NotNull] HouseData hd)
+        //private static void MakeRandomHousehold(int distance, [JetBrains.Annotations.NotNull] ChargingStationSet chargingstationSet, [JetBrains.Annotations.NotNull] TransportationDeviceSet transportationdevices, [JetBrains.Annotations.NotNull] TravelRouteSet travelRoutes, [JetBrains.Annotations.NotNull] HouseData hd)
         //{
         //    var transportationModifiers = new List<TransportationDistanceModifier> {
         //        new TransportationDistanceModifier("Work", "Car", distance),
         //        new TransportationDistanceModifier("Entertainment", "Car", distance)
         //    };
-        //    var hh = new HouseholdData(Guid.NewGuid().ToString(),
+        //    var hh = new HouseholdData(Guid.NewGuid().ToStrGuid(),
         //        true,
         //        "blub",
         //        chargingstationSet.GetJsonReference(),
@@ -302,9 +302,9 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         //public void HouseGeneratorWithSkipExisitingTest()
         //{
         //    Logger.Get().StartCollectingAllMessages();
-        //    HouseData hd = new HouseData(Guid.NewGuid().ToString(),
+        //    HouseData hd = new HouseData(Guid.NewGuid().ToStrGuid(),
         //        "HT01", 10000, 1000, "MyFirstHouse");
-        //    var hh = new HouseholdData(Guid.NewGuid().ToString(), false,
+        //    var hh = new HouseholdData(Guid.NewGuid().ToStrGuid(), false,
         //        "blub", null, null, null,null,
         //        HouseholdDataSpecifictionType.ByPersons);
         //    hh.HouseholdDataPersonSpecification = new HouseholdDataPersonSpecification(new List<PersonData>() {

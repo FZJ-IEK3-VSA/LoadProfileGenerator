@@ -227,7 +227,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
         public OefcKey RegisterDevice([NotNull] CalcLoadTypeDto loadType, [NotNull] CalcDeviceDto devicedto)
         {
             var key= new OefcKey(devicedto, loadType.Guid);
-            if(key.LoadtypeGuid != loadType.Guid && key.LoadtypeGuid != "-1") {
+            if(key.LoadtypeGuid != loadType.Guid && key.LoadtypeGuid != "-1".ToStrGuid()) {
                 throw new LPGException("bug: loadtype id was wrong while registering a device");
             }
 

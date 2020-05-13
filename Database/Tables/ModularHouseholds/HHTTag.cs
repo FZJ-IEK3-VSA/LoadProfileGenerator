@@ -15,7 +15,7 @@ namespace Database.Tables.ModularHouseholds {
 
         [CanBeNull] private readonly TraitTag _tag;
 
-        public HHTTag([CanBeNull]int? pID, [CanBeNull] int? householdTraitID, [CanBeNull] TraitTag tag, [NotNull] string connectionString, [NotNull] string name, [NotNull] string guid)
+        public HHTTag([CanBeNull]int? pID, [CanBeNull] int? householdTraitID, [CanBeNull] TraitTag tag, [NotNull] string connectionString, [NotNull] string name, [NotNull] StrGuid guid)
             : base(name, TableName, connectionString,guid) {
             _tag = tag;
             ID = pID;
@@ -102,6 +102,6 @@ namespace Database.Tables.ModularHouseholds {
             return "(no name)";
         }
 
-        public string RelevantGuid => Tag.Guid;
+        public StrGuid RelevantGuid => Tag.Guid;
     }
 }

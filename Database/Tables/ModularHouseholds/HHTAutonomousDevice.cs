@@ -55,7 +55,7 @@ namespace Database.Tables.ModularHouseholds {
             {
             }
 
-            public JsonDto([NotNull] string guid, JsonReference device, JsonReference location, JsonReference timeLimit, JsonReference timeProfile,
+            public JsonDto([NotNull] StrGuid guid, JsonReference device, JsonReference location, JsonReference timeLimit, JsonReference timeProfile,
                            decimal standardDeviation, JsonReference variable, VariableCondition variableCondition, double variableValue, JsonReference loadType)
             {
                 Guid = guid;
@@ -70,7 +70,7 @@ namespace Database.Tables.ModularHouseholds {
                 LoadType = loadType;
             }
 
-            public string Guid { get; set; }
+            public StrGuid Guid { get; set; }
 
             public JsonReference Device { get; set; }
 
@@ -111,7 +111,7 @@ namespace Database.Tables.ModularHouseholds {
             [CanBeNull] TimeBasedProfile timeprofile, int householdTraitID, decimal timeStandardDeviation,
             [CanBeNull] VLoadType vLoadType, [CanBeNull] TimeLimit timeLimit, [NotNull] string connectionString, [NotNull] string name,
             [CanBeNull] Location location, double variableValue, VariableCondition variableCondition,
-            [CanBeNull] Variable variable, [NotNull] string guid) : base(name, TableName, connectionString, guid)
+            [CanBeNull] Variable variable, [NotNull] StrGuid guid) : base(name, TableName, connectionString, guid)
         {
             TypeDescription = "Household Trait Autonomous Device";
             ID = pID;
@@ -408,6 +408,6 @@ namespace Database.Tables.ModularHouseholds {
             SaveToDB();
         }
 
-        public string RelevantGuid => Guid;
+        public StrGuid RelevantGuid => Guid;
     }
 }

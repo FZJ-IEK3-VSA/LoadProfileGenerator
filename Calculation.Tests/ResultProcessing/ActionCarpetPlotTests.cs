@@ -74,9 +74,9 @@
 //            FileFactoryAndTracker fft = new FileFactoryAndTracker(wd.WorkingDirectory,"object",wd.InputDataLogger);
 //            HouseholdKey key = new HouseholdKey("hh1");
 //            fft.RegisterHousehold(key,"testhousehold",HouseholdKeyType.Household,"desc", null, null);
-//            CalcProfileDto personProfile = new CalcProfileDto("bla", 1, ProfileType.Absolute, "bla", Guid.NewGuid().ToString());
-//            CalcLocationDto cloc = new CalcLocationDto("cloc", 1,Guid.NewGuid().ToString());
-//            AvailabilityDataReferenceDto adr = new AvailabilityDataReferenceDto("blub",Guid.NewGuid().ToString());
+//            CalcProfileDto personProfile = new CalcProfileDto("bla", 1, ProfileType.Absolute, "bla", Guid.NewGuid().ToStrGuid());
+//            CalcLocationDto cloc = new CalcLocationDto("cloc", 1,Guid.NewGuid().ToStrGuid());
+//            AvailabilityDataReferenceDto adr = new AvailabilityDataReferenceDto("blub",Guid.NewGuid().ToStrGuid());
 //            CalcAffordanceDto calcAffordance = new CalcAffordanceDto(name: "affName", id: 1, personProfile: personProfile,
 //                calcLocationName: cloc.Name, randomEffect: false, satisfactionvalues: new List<CalcDesireDto>(),
 //                miniumAge: 0, maximumAge: 99, permittedGender: PermittedGender.All, needsLight: false,
@@ -86,7 +86,7 @@
 //                actionAfterInterruption: ActionAfterInterruption.GoBackToOld, timeLimitName: "",
 //                weight: 1, requireAllDesires: false, srcTrait: "",calcLocationGuid:cloc.Guid,colorR: 200,
 //                colorG:100, colorB: 100, affCategory:
-//                "affcatory",guid:Guid.NewGuid().ToString(),isBusyArray:adr, householdKey: key);
+//                "affcatory",guid:Guid.NewGuid().ToStrGuid(),isBusyArray:adr, householdKey: key);
 //            List<CalcAffordanceDto> affs = new List<CalcAffordanceDto>
 //            {
 //                calcAffordance

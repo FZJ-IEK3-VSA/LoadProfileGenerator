@@ -18,9 +18,11 @@ namespace SimulationEngine.Tests.WebRun
         {
             SimulationEngineConfig.CatchErrors = false;
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            File.Copy(@"c:\work\webrun\calcjob.txt", Path.Combine(wd.WorkingDirectory, "calcjob.txt"), true);
-            File.Copy(db.FileName, Path.Combine(wd.WorkingDirectory, "profilegenerator.db3"), true);
+            using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                File.Copy(@"c:\work\webrun\calcjob.txt", Path.Combine(wd.WorkingDirectory, "calcjob.txt"), true);
+                File.Copy(db.FileName, Path.Combine(wd.WorkingDirectory, "profilegenerator.db3"), true);
+            }
             Environment.CurrentDirectory = wd.WorkingDirectory;
             SimulationEngineLib.WebRunner.WebRun.WebRunOptions wo = new SimulationEngineLib.WebRunner.WebRun.WebRunOptions
             {

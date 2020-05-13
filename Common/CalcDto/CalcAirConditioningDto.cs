@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Automation;
 using Automation.ResultFiles;
 using JetBrains.Annotations;
 
@@ -11,15 +12,15 @@ namespace Common.CalcDto {
         [NotNull]
         public HouseholdKey HouseholdKey { get; }
         [NotNull] public string CalcLocationName { get; }
-        [NotNull] public string CalcLocationGuid { get; }
-        [NotNull] public string Guid { get; }
+        [NotNull] public StrGuid CalcLocationGuid { get; }
+        [NotNull] public StrGuid Guid { get; }
         [ItemNotNull]
         [NotNull] public List<CalcDegreeHourDto> CalcDegreeHours { get; }
 
         public CalcAirConditioningDto([NotNull]string name, int id, [ItemNotNull] [NotNull]List<CalcDeviceLoadDto> deviceLoads,
                                       [ItemNotNull] [NotNull] List<CalcDegreeHourDto> calcDegreeHours,
-                                      [NotNull] HouseholdKey householdKey, [NotNull] string calcLocationName, [NotNull] string calcLocationGuid,
-                                      [NotNull]string guid)
+                                      [NotNull] HouseholdKey householdKey, [NotNull] string calcLocationName, [NotNull] StrGuid calcLocationGuid,
+                                      [NotNull]StrGuid guid)
         {
             if (deviceLoads.Count != 1) {
                 throw new LPGException("there should be exactly one loadtype for air conditioning, not more or less.");

@@ -29,6 +29,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Automation;
 using Database.Database;
 using Database.Tables.BasicHouseholds;
 using JetBrains.Annotations;
@@ -43,7 +44,7 @@ namespace Database.Tables.BasicElements {
         [CanBeNull] private AffordanceTag _tag;
 
         public AffordanceTaggingEntry([NotNull] string name, int taggingSetID, [CanBeNull] AffordanceTag tag,
-            [CanBeNull] Affordance affordance, [NotNull] string connectionString,[CanBeNull] int? pID,[NotNull] string guid)
+            [CanBeNull] Affordance affordance, [NotNull] string connectionString,[CanBeNull] int? pID,[NotNull] StrGuid guid)
             : base(name, pID, TableName,
             connectionString,guid)
         {

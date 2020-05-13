@@ -70,7 +70,7 @@ namespace CalculationController.CalcFactories
         [SuppressMessage("Microsoft.Reliability", "CA2000:Objekte verwerfen, bevor Bereich verloren geht")]
         [SuppressMessage("ReSharper", "ThrowingSystemException")]
         [NotNull]
-        public CalcManager GetCalcManager([NotNull] Simulator sim, [NotNull] string resultpath,
+        public CalcManager GetCalcManager([NotNull] Simulator sim,
                 [NotNull] CalcStartParameterSet csps,  bool forceRandom)
             //, ICalcObject hh,
             //bool forceRandom, TemperatureProfile temperatureProfile,
@@ -110,9 +110,9 @@ namespace CalculationController.CalcFactories
                 var cpf = new CalcParametersFactory();
                 var calcParameters = cpf.MakeCalculationParametersFromConfig(csps,forceRandom);
 
-                var sqlFileName = Path.Combine(resultpath, "Results.sqlite");
+                var sqlFileName = Path.Combine(csps.ResultPath, "Results.sqlite");
                 var builder = new ContainerBuilder();
-                RegisterEverything(sim, resultpath, csps, csps.CalcTarget, builder,
+                RegisterEverything(sim, csps.ResultPath, csps, csps.CalcTarget, builder,
                     sqlFileName, calcParameters, ds);
                 csps.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " Initializing");
                 csps.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " Generating Model");
@@ -121,7 +121,7 @@ namespace CalculationController.CalcFactories
                 {
                     var calcRepo = PrepareCalculation(sim, csps, scope,
                          out var dtoltdict,  out var dls, out var variableRepository);
-                    cm = new CalcManager(  resultpath,
+                    cm = new CalcManager(csps.ResultPath,
                         //hh.Name,
                         //householdPlans,
                         //csps.LPGVersion,
@@ -159,7 +159,7 @@ namespace CalculationController.CalcFactories
                         throw new LPGException("The type " + csps.CalcTarget.GetType() + " is missing!");
                     }
                     calcRepo.InputDataLogger.Save(Constants.GeneralHouseholdKey, devicetaggingSets.AllCalcDeviceTaggingSets);
-                    CalcObjectInformation coi = new CalcObjectInformation(cot,ch.Name,resultpath);
+                    CalcObjectInformation coi = new CalcObjectInformation(cot,ch.Name,csps.ResultPath);
                     calcRepo.InputDataLogger.Save(Constants.GeneralHouseholdKey, coi);
                     //this logger doesnt save json, but strings!
                     calcRepo.InputDataLogger.Save(Constants.GeneralHouseholdKey, csps);
@@ -367,6 +367,7 @@ namespace CalculationController.CalcFactories
             builder.RegisterType<CalcVariableDtoLogger>().As<IDataSaverBase>();
             builder.RegisterType<HouseholdKeyLogger>().As<IDataSaverBase>();
             builder.RegisterType<CalcObjectInformationLogger>().As<IDataSaverBase>();
+            builder.RegisterType<BodilyActivityLevelStatisticsLogger>().As<IDataSaverBase>();
             builder.RegisterType<ResultFileEntryLogger>().As<IDataSaverBase>();
             builder.RegisterType<CalcAffordanceDtoLogger>().As<IDataSaverBase>();
             builder.RegisterType<CalcAffordanceTaggingSetDtoLogger>().As<IDataSaverBase>();

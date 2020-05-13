@@ -5,7 +5,6 @@ using System.Globalization;
 using System.IO;
 using Automation.ResultFiles;
 using Common;
-using JetBrains.Annotations;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
@@ -25,10 +24,14 @@ namespace ChartCreator2.OxyCharts {
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         protected override FileProcessingResult MakeOnePlot(ResultFileEntry srcEntry) {
-            _CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
+            Profiler.StartPart(Utili.GetCurrentMethodAndClass());
             string plotName = "Duration Curve " + srcEntry.HouseholdNumberString + " " + srcEntry.LoadTypeInformation?.Name;
             try {
                 var values = new List<double>();
+                if (srcEntry.FullFileName == null)
+                {
+                    throw new LPGException("filename was null");
+                }
                 using (var sr = new StreamReader(srcEntry.FullFileName)) {
                     sr.ReadLine();
                     while (!sr.EndOfStream) {
@@ -36,13 +39,13 @@ namespace ChartCreator2.OxyCharts {
                         if (s == null) {
                             throw new LPGException("Readline failed.");
                         }
-                        var cols = s.Split(_Parameters.CSVCharacterArr, StringSplitOptions.None);
+                        var cols = s.Split(Parameters.CSVCharacterArr, StringSplitOptions.None);
                         var result = Convert.ToDouble(cols[2], CultureInfo.CurrentCulture);
                         values.Add(result);
                     }
                 }
                 var plotModel1 = new PlotModel();
-                if (_Parameters.ShowTitle) {
+                if (Parameters.ShowTitle) {
                     plotModel1.Title = plotName;
                 }
                 var linearAxis1 = new LinearAxis
@@ -67,13 +70,13 @@ namespace ChartCreator2.OxyCharts {
                 //lineSeries1.Smooth = false;
 
                 plotModel1.Series.Add(lineSeries1);
-                Save(plotModel1, plotName, srcEntry.FullFileName, _Parameters.BaseDirectory);
+                Save(plotModel1, plotName, srcEntry.FullFileName, Parameters.BaseDirectory);
             }
             catch (Exception e) {
                 Logger.Error("Error in Duration Curve Chart: " + e.Message);
                 Logger.Exception(e);
             }
-            _CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
+            Profiler.StopPart(Utili.GetCurrentMethodAndClass());
             return FileProcessingResult.ShouldCreateFiles;
         }
     }

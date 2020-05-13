@@ -20,6 +20,7 @@ using SimulationEngineLib;
 namespace SimulationEngine.Tests
 {
     [TestFixture]
+    [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     public class CalculationTests : UnitTestBaseClass
     {
         /*
@@ -29,15 +30,16 @@ namespace SimulationEngine.Tests
             RunBasicTestOutput(arr, name);
         }*/
 
-        private static void RunBasicTestOutput(CalcOption option, [NotNull] string name, [ItemNotNull][NotNull] params string[] addedOptions)
+        private static void RunBasicTestOutput(CalcOption option, [JetBrains.Annotations.NotNull] string name, [ItemNotNull][JetBrains.Annotations.NotNull] params string[] addedOptions)
         {
             //_calculationProfiler.Clear();
             SimulationEngineConfig.CatchErrors = false;
             SimulationEngineConfig.IsUnitTest = true;
             Logger.Info("Current directory before setup:" + Directory.GetCurrentDirectory());
-            var wd = ProgramTests.SetupDB3("RunBasicTestOutput." + name);
-            Logger.Info("Current directory after setup:" + Directory.GetCurrentDirectory());
-            var arguments = new List<string>
+            using (var wd = ProgramTests.SetupDB3("RunBasicTestOutput." + name))
+            {
+                Logger.Info("Current directory after setup:" + Directory.GetCurrentDirectory());
+                var arguments = new List<string>
             {
                 "Calculate",
                 "-CalcObjectType",
@@ -54,32 +56,33 @@ namespace SimulationEngine.Tests
                 "None",
                 "-OutputDirectory"
             };
-            var directoryname = "HH0." + AutomationUtili.CleanFileName(name).Replace("--", string.Empty);
-            arguments.Add(directoryname);
-            arguments.Add("-CalcOption");
-            arguments.Add(option.ToString());
+                var directoryname = "HH0." + AutomationUtili.CleanFileName(name).Replace("--", string.Empty);
+                arguments.Add(directoryname);
+                arguments.Add("-CalcOption");
+                arguments.Add(option.ToString());
 
-            arguments.AddRange(addedOptions);
-            Program.Main(arguments.ToArray());
-            var di = new DirectoryInfo(directoryname);
-            var fis = di.GetFiles("Overview*.pdf");
-            Assert.AreEqual(1, fis.Length);
-            if (fis[0].Length == 0)
-            {
-                Assert.Fail("File is length 0.");
-            }
-            //int numberOfPages;
-            //TODO: add a reader for the number of pages again
-            //using (var pdfReader = new PdfReader(fis[0].FullName))
-            //{
+                arguments.AddRange(addedOptions);
+                MainSimEngine.Run(arguments.ToArray(),"simengine.exe");
+                var di = new DirectoryInfo(directoryname);
+                var fis = di.GetFiles("Overview*.pdf");
+                Assert.AreEqual(1, fis.Length);
+                if (fis[0].Length == 0)
+                {
+                    Assert.Fail("File is length 0.");
+                }
+                //int numberOfPages;
+                //TODO: add a reader for the number of pages again
+                //using (var pdfReader = new PdfReader(fis[0].FullName))
+                //{
                 //numberOfPages = pdfReader.NumberOfPages;
-            //}
-            //Assert.GreaterOrEqual(numberOfPages, 1);
-            //Logger.Info("Pages:" + numberOfPages);
-            wd.CleanUp(1);
+                //}
+                //Assert.GreaterOrEqual(numberOfPages, 1);
+                //Logger.Info("Pages:" + numberOfPages);
+                wd.CleanUp(1);
+            }
         }
 
-        private static void RunDateTimeOnAllFiles([NotNull] string firstTimestep, [NotNull] string firstTimestamp, int targetLineCount)
+        private static void RunDateTimeOnAllFiles([JetBrains.Annotations.NotNull] string firstTimestep, [JetBrains.Annotations.NotNull] string firstTimestamp, int targetLineCount)
         {
             SimulationEngineConfig.CatchErrors = false;
             SimulationEngineConfig.IsUnitTest = true;
@@ -193,8 +196,9 @@ namespace SimulationEngine.Tests
             SimulationEngineConfig.CatchErrors = false;
             SimulationEngineConfig.IsUnitTest = true;
             var startdir = Directory.GetCurrentDirectory();
-            var wd = ProgramTests.SetupDB3(Utili.GetCurrentMethodAndClass());
-            var arguments = new List<string>
+            using (var wd = ProgramTests.SetupDB3(Utili.GetCurrentMethodAndClass()))
+            {
+                var arguments = new List<string>
             {
                 "Calculate",
                 "-CalcObjectType",
@@ -207,8 +211,9 @@ namespace SimulationEngine.Tests
                 "03.07.2015",
                 "-Testing"
             };
-            Program.Main(arguments.ToArray());
-            wd.CleanUp(1);
+                MainSimEngine.Run(arguments.ToArray(), "simengine.exe");
+                wd.CleanUp(1);
+            }
             Directory.SetCurrentDirectory(startdir);
         }
 
@@ -220,8 +225,9 @@ namespace SimulationEngine.Tests
             SimulationEngineConfig.CatchErrors = false;
             SimulationEngineConfig.IsUnitTest = true;
             var startdir = Directory.GetCurrentDirectory();
-            var wd = ProgramTests.SetupDB3(Utili.GetCurrentMethodAndClass());
-            var arguments = new List<string>
+            using (var wd = ProgramTests.SetupDB3(Utili.GetCurrentMethodAndClass()))
+            {
+                var arguments = new List<string>
             {
                 "Calculate",
                 "-CalcObjectType",
@@ -244,9 +250,10 @@ namespace SimulationEngine.Tests
                 "-TemperatureProfileIndex",
                 "0"
             };
-            Program.Main(arguments.ToArray());
-            Directory.SetCurrentDirectory(startdir);
-            wd.CleanUp(1);
+                MainSimEngine.Run(arguments.ToArray(),"simengine.exe");
+                Directory.SetCurrentDirectory(startdir);
+                wd.CleanUp(1);
+            }
         }
 
         //  - - -   0 -GeographicLocationIndex 6 -StartDate 01.01.2017 -EndDate 31.12.2017 -EnergyIntensityType Random
@@ -258,8 +265,9 @@ namespace SimulationEngine.Tests
             SimulationEngineConfig.CatchErrors = false;
             SimulationEngineConfig.IsUnitTest = true;
 
-            var wd = ProgramTests.SetupDB3(Utili.GetCurrentMethodAndClass());
-            var arguments = new List<string>
+            using (var wd = ProgramTests.SetupDB3(Utili.GetCurrentMethodAndClass()))
+            {
+                var arguments = new List<string>
             {
                 "Calculate",
                 "-CalcObjectType",
@@ -277,9 +285,10 @@ namespace SimulationEngine.Tests
                 "-OutputDirectory",
                 "HH0.AllOutputs"
             };
-            Program.Main(arguments.ToArray());
-            Directory.SetCurrentDirectory(wd.PreviousCurrentDir);
-            wd.CleanUp(1);
+                MainSimEngine.Run(arguments.ToArray(), "simengine.exe");
+                Directory.SetCurrentDirectory(wd.PreviousCurrentDir);
+                wd.CleanUp(1);
+            }
         }
 
         [Test]
@@ -306,7 +315,7 @@ namespace SimulationEngine.Tests
                 "-OutputDirectory",
                 "HH0.AllOutputsDelete"
             };
-            Program.Main(arguments.ToArray());
+            MainSimEngine.Run(arguments.ToArray(), "simengine.exe");
             Environment.CurrentDirectory = wd.PreviousCurrentDir;
             wd.CleanUp(1);
         }
@@ -365,8 +374,9 @@ namespace SimulationEngine.Tests
         {
             SimulationEngineConfig.CatchErrors = false;
             SimulationEngineConfig.IsUnitTest = true;
-            var wd = ProgramTests.SetupDB3(Utili.GetCurrentMethodAndClass());
-            var arguments = new List<string>
+            using (var wd = ProgramTests.SetupDB3(Utili.GetCurrentMethodAndClass()))
+            {
+                var arguments = new List<string>
             {
                 "Calculate",
                 "-CalcObjectType",
@@ -383,10 +393,10 @@ namespace SimulationEngine.Tests
                 "-OutputFileDefault",
                 "None"
             };
-            Program.Main(arguments.ToArray());
-            var di = new DirectoryInfo(wd.WorkingDirectory);
-            var fis = di.GetFiles("*.*", SearchOption.AllDirectories);
-            var filtered = new List<string>
+                MainSimEngine.Run(arguments.ToArray(), "simengine.exe");
+                var di = new DirectoryInfo(wd.WorkingDirectory);
+                var fis = di.GetFiles("*.*", SearchOption.AllDirectories);
+                var filtered = new List<string>
             {
                 "profilegenerator.db3",
                 "log.unittest.txt",
@@ -408,19 +418,20 @@ namespace SimulationEngine.Tests
                 "onlinedeviceenergyusage.sums.none.dat",
                 "onlinedeviceenergyusage.sums.warm water.dat"
             };
-            var filteredLow = filtered.Select(x => x.ToLowerInvariant()).ToList();
-            var lowerNames = fis.Select(x => x.Name.ToLowerInvariant()).ToList();
-            var excessFiles = lowerNames.Where(x => !filteredLow.Contains(x)).ToList();
-            if (excessFiles.Count > 0)
-            {
-                var s = "";
-                foreach (var fi in excessFiles)
+                var filteredLow = filtered.Select(x => x.ToLowerInvariant()).ToList();
+                var lowerNames = fis.Select(x => x.Name.ToLowerInvariant()).ToList();
+                var excessFiles = lowerNames.Where(x => !filteredLow.Contains(x)).ToList();
+                if (excessFiles.Count > 0)
                 {
-                    s += fi + Environment.NewLine;
+                    var s = "";
+                    foreach (var fi in excessFiles)
+                    {
+                        s += fi + Environment.NewLine;
+                    }
+                    throw new LPGException("Too many files: " + Environment.NewLine + s);
                 }
-                throw new LPGException("Too many files: " + Environment.NewLine + s);
+                wd.CleanUp(1);
             }
-            wd.CleanUp(1);
         }
 
         [Test]
@@ -471,8 +482,9 @@ namespace SimulationEngine.Tests
             Config.ReallyMakeAllFilesIncludingBothSums = true;
             SimulationEngineConfig.CatchErrors = false;
             SimulationEngineConfig.IsUnitTest = true;
-            var wd = ProgramTests.SetupDB3(Utili.GetCurrentMethodAndClass(), true);
-            var arguments = new List<string>
+            using (var wd = ProgramTests.SetupDB3(Utili.GetCurrentMethodAndClass(), true))
+            {
+                var arguments = new List<string>
             {
                 "Calculate",
                 "-CalcObjectType",
@@ -489,17 +501,17 @@ namespace SimulationEngine.Tests
                 "RecommendedForHouses",
                 "-OutputDirectory"
             };
-            const string directoryname = "H25.Desires";
-            arguments.Add(directoryname);
-            Program.Main(arguments.ToArray());
+                const string directoryname = "H25.Desires";
+                arguments.Add(directoryname);
+                MainSimEngine.Run(arguments.ToArray(), "simengine.exe");
 
-            var di = new DirectoryInfo(Path.Combine(wd.WorkingDirectory, directoryname));
-            SqlResultLoggingService srls = new SqlResultLoggingService(di.FullName);
-            ResultFileEntryLogger rfel = new ResultFileEntryLogger(srls);
-            var rfl = rfel.Load();
-            var registeredFiles = rfl.Select(x => wd.Combine(x.FullFileName).ToLower()).ToList();
-            var fis = di.GetFiles("*.*", SearchOption.AllDirectories);
-            var filteredFiles = new List<string>
+                var di = new DirectoryInfo(Path.Combine(wd.WorkingDirectory, directoryname));
+                SqlResultLoggingService srls = new SqlResultLoggingService(di.FullName);
+                ResultFileEntryLogger rfel = new ResultFileEntryLogger(srls);
+                var rfl = rfel.Load();
+                var registeredFiles = rfl.Select(x => wd.Combine(x.FullFileName??throw new LPGException("was null")).ToLower(CultureInfo.InvariantCulture)).ToList();
+                var fis = di.GetFiles("*.*", SearchOption.AllDirectories);
+                var filteredFiles = new List<string>
             {
                 Constants.FinishedFileFlag,
                 "calculationprofiler.json",
@@ -511,25 +523,27 @@ namespace SimulationEngine.Tests
                 "results.house.sqlite",
                 "calculationdurationflamechart.calcmanager.png"
             };
-            List<string> files = new List<string>();
-            foreach (var fi in fis)
-            {
-                var fullname = fi.FullName;
-                if (filteredFiles.Contains(fi.Name.ToLower()))
+                List<string> files = new List<string>();
+                foreach (var fi in fis)
                 {
-                    continue;
+                    var fullname = fi.FullName;
+                    if (filteredFiles.Contains(fi.Name.ToLower(CultureInfo.InvariantCulture)))
+                    {
+                        continue;
+                    }
+                    if (!registeredFiles.Contains(fullname.ToLower(CultureInfo.InvariantCulture)))
+                    {
+                        files.Add(fi.Name.ToLower(CultureInfo.InvariantCulture));
+                    }
                 }
-                if (!registeredFiles.Contains(fullname.ToLower()))
-                {
-                    files.Add(fi.Name.ToLower());
-                }
-            }
 
-            if (files.Count > 0) {
-                var allfn = string.Join("\n", files);
-                throw new LPGException("unregistered file: " + allfn);
+                if (files.Count > 0)
+                {
+                    var allfn = string.Join("\n", files);
+                    throw new LPGException("unregistered file: " + allfn);
+                }
+                wd.CleanUp(1);
             }
-            wd.CleanUp(1);
         }
 
         [Test]
@@ -538,8 +552,9 @@ namespace SimulationEngine.Tests
         {
             SimulationEngineConfig.CatchErrors = false;
             SimulationEngineConfig.IsUnitTest = true;
-            var wd = ProgramTests.SetupDB3(Utili.GetCurrentMethodAndClass());
-            var arguments = new List<string>
+            using (var wd = ProgramTests.SetupDB3(Utili.GetCurrentMethodAndClass()))
+            {
+                var arguments = new List<string>
             {
                 "Calculate",
                 "-CalcObjectType",
@@ -561,25 +576,26 @@ namespace SimulationEngine.Tests
 #pragma warning restore RCS1015 // Use nameof operator.
                 "-OutputDirectory"
             };
-            const string directoryname = "H25.Desires";
-            arguments.Add(directoryname);
+                const string directoryname = "H25.Desires";
+                arguments.Add(directoryname);
 
-            Program.Main(arguments.ToArray());
-            var di = new DirectoryInfo(directoryname);
-            var fis = di.GetFiles("Overview*.pdf");
-            Assert.AreEqual(1, fis.Length);
-            if (fis[0].Length == 0)
-            {
-                Assert.Fail("File is length 0.");
+                MainSimEngine.Run(arguments.ToArray(), "simulationengine.exe");
+                var di = new DirectoryInfo(directoryname);
+                var fis = di.GetFiles("Overview*.pdf");
+                Assert.AreEqual(1, fis.Length);
+                if (fis[0].Length == 0)
+                {
+                    Assert.Fail("File is length 0.");
+                }
+                //int numberOfPages;
+                /*using (var pdfReader = new PdfReader(fis[0].FullName))
+                {
+                    numberOfPages = pdfReader.NumberOfPages;
+                }
+                Assert.GreaterOrEqual(numberOfPages, 1);
+                Logger.Info("Pages:" + numberOfPages);*/
+                wd.CleanUp(1);
             }
-            //int numberOfPages;
-            /*using (var pdfReader = new PdfReader(fis[0].FullName))
-            {
-                numberOfPages = pdfReader.NumberOfPages;
-            }
-            Assert.GreaterOrEqual(numberOfPages, 1);
-            Logger.Info("Pages:" + numberOfPages);*/
-            wd.CleanUp(1);
         }
 
         [Test]
@@ -589,14 +605,15 @@ namespace SimulationEngine.Tests
             Config.ReallyMakeAllFilesIncludingBothSums = true;
             SimulationEngineConfig.CatchErrors = false;
             SimulationEngineConfig.IsUnitTest = true;
-            var wd = ProgramTests.SetupDB3(Utili.GetCurrentMethodAndClass());
-            var db3File = Path.Combine(wd.WorkingDirectory, "profilegenerator.db3");
-            var connectionString = "Data Source=" + db3File;
-            var sim = new Simulator(connectionString);
-            var house = sim.Houses.FindFirstByName("01, 02 and 03", FindMode.Partial);
-            var idx = sim.Houses.It.IndexOf(house);
+            using (var wd = ProgramTests.SetupDB3(Utili.GetCurrentMethodAndClass()))
+            {
+                var db3File = Path.Combine(wd.WorkingDirectory, "profilegenerator.db3");
+                var connectionString = "Data Source=" + db3File;
+                var sim = new Simulator(connectionString);
+                var house = sim.Houses.FindFirstByName("01, 02 and 03", FindMode.Partial);
+                var idx = sim.Houses.It.IndexOf(house);
 
-            var arguments = new List<string>
+                var arguments = new List<string>
             {
                 "Calculate",
                 "-CalcObjectType",
@@ -613,11 +630,12 @@ namespace SimulationEngine.Tests
                 "RecommendedForHouses",
                 "-OutputDirectory"
             };
-            const string directoryname = "Testhouse";
-            arguments.Add(directoryname);
-            Program.Main(arguments.ToArray());
+                const string directoryname = "Testhouse";
+                arguments.Add(directoryname);
+                MainSimEngine.Run(arguments.ToArray(), "simengine.exe");
 
-            wd.CleanUp(1);
+                wd.CleanUp(1);
+            }
         }
 
         [Test]
@@ -648,12 +666,13 @@ namespace SimulationEngine.Tests
         [Category(UnitTestCategories.BasicTest)]
         public void RunTimeAxisTest2NoSettling()
         {
-            var wd = ProgramTests.SetupDB3(Utili.GetCurrentMethodAndClass());
-            SimulationEngineConfig.CatchErrors = false;
-            SimulationEngineConfig.IsUnitTest = true;
-            DateTime startdate = new DateTime(2015,1,1);
-            DateTime enddate = new DateTime(2015,1,5);
-            var arguments = new List<string>
+            using (var wd = ProgramTests.SetupDB3(Utili.GetCurrentMethodAndClass()))
+            {
+                SimulationEngineConfig.CatchErrors = false;
+                SimulationEngineConfig.IsUnitTest = true;
+                DateTime startdate = new DateTime(2015, 1, 1);
+                DateTime enddate = new DateTime(2015, 1, 5);
+                var arguments = new List<string>
             {
                 "Calculate",
                 "-CalcObjectType",
@@ -669,13 +688,14 @@ namespace SimulationEngine.Tests
                 "-OutputDirectory",
                 "CHH3.RunTimeAxisTest"
             };
-            Program.Main(arguments.ToArray());
+                MainSimEngine.Run(arguments.ToArray(), "simulationengine.exe");
 
-            //this checks if the pre-calc period is correctly hidden
-            var dt = new DateTime(2015, 1, 1);
-            var dtstr = dt.ToShortDateString() + " " + dt.ToShortTimeString();
-            RunDateTimeOnAllFiles("0",  dtstr, 5 * 1440);
-            wd.CleanUp(1);
+                //this checks if the pre-calc period is correctly hidden
+                var dt = new DateTime(2015, 1, 1);
+                var dtstr = dt.ToShortDateString() + " " + dt.ToShortTimeString();
+                RunDateTimeOnAllFiles("0", dtstr, 5 * 1440);
+                wd.CleanUp(1);
+            }
         }
 
         [Test]
@@ -685,9 +705,10 @@ namespace SimulationEngine.Tests
             SimulationEngineConfig.CatchErrors = false;
             SimulationEngineConfig.IsUnitTest = true;
             var oldDir = Directory.GetCurrentDirectory();
-            var wd = ProgramTests.SetupDB3(Utili.GetCurrentMethodAndClass());
-            Directory.SetCurrentDirectory(wd.WorkingDirectory);
-            var arguments = new List<string>
+            using (var wd = ProgramTests.SetupDB3(Utili.GetCurrentMethodAndClass()))
+            {
+                Directory.SetCurrentDirectory(wd.WorkingDirectory);
+                var arguments = new List<string>
             {
                 "Calculate",
                 "-CalcObjectType",
@@ -715,9 +736,10 @@ namespace SimulationEngine.Tests
                 "-EnergyIntensityType",
                 "EnergySavingPreferMeasured"
             };
-            Program.Main(arguments.ToArray());
-            Directory.SetCurrentDirectory(oldDir);
-            wd.CleanUp(1);
+                MainSimEngine.Run(arguments.ToArray(), "simulationengine.exe");
+                Directory.SetCurrentDirectory(oldDir);
+                wd.CleanUp(1);
+            }
         }
 
         [Test]
@@ -727,9 +749,10 @@ namespace SimulationEngine.Tests
             SimulationEngineConfig.CatchErrors = false;
             SimulationEngineConfig.IsUnitTest = true;
             var oldDir = Directory.GetCurrentDirectory();
-            var wd = ProgramTests.SetupDB3(Utili.GetCurrentMethodAndClass());
-            Directory.SetCurrentDirectory(wd.WorkingDirectory);
-            var arguments = new List<string>
+            using (var wd = ProgramTests.SetupDB3(Utili.GetCurrentMethodAndClass()))
+            {
+                Directory.SetCurrentDirectory(wd.WorkingDirectory);
+                var arguments = new List<string>
             {
                 "Calculate",
                 "-CalcObjectType",
@@ -754,9 +777,10 @@ namespace SimulationEngine.Tests
                 "-EnergyIntensityType",
                 "EnergySavingPreferMeasured"
             };
-            Program.Main(arguments.ToArray());
-            Directory.SetCurrentDirectory(oldDir);
-            wd.CleanUp(1);
+                MainSimEngine.Run(arguments.ToArray(), "simulationengine.exe");
+                Directory.SetCurrentDirectory(oldDir);
+                wd.CleanUp(1);
+            }
         }
 
         // todo: fix the plots

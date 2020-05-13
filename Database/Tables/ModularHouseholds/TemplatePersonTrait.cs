@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Database.Database;
@@ -18,7 +19,7 @@ namespace Database.Tables.ModularHouseholds {
                                    [CanBeNull]int? templatePersonID,
                                    [NotNull] string name,
                                    [NotNull] string connectionString,
-            [CanBeNull] HouseholdTrait trait, [NotNull] string guid) : base(name, TableName, connectionString, guid) {
+            [CanBeNull] HouseholdTrait trait, [NotNull] StrGuid guid) : base(name, TableName, connectionString, guid) {
             _trait = trait;
             _templatePersonID = templatePersonID;
             ID = pID;

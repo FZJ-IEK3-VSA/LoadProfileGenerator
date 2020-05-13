@@ -43,15 +43,17 @@ namespace Database.Tests.Tables {
     {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void LoadFromDatabaseTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-
-            var desires = new ObservableCollection<Desire>();
-            Desire.LoadFromDatabase(desires, db.ConnectionString, false);
-            var subaffdes = new ObservableCollection<SubAffordanceDesire>();
-            SubAffordanceDesire.LoadFromDatabase(subaffdes, db.ConnectionString, desires, false);
-            Assert.Greater(subaffdes.Count, 5);
-            db.Cleanup();
+        public void LoadFromDatabaseTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var desires = new ObservableCollection<Desire>();
+                Desire.LoadFromDatabase(desires, db.ConnectionString, false);
+                var subaffdes = new ObservableCollection<SubAffordanceDesire>();
+                SubAffordanceDesire.LoadFromDatabase(subaffdes, db.ConnectionString, desires, false);
+                Assert.Greater(subaffdes.Count, 5);
+                db.Cleanup();
+            }
         }
     }
 }

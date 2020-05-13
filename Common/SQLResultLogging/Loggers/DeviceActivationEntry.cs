@@ -27,6 +27,7 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
+using Automation;
 using Automation.ResultFiles;
 using Newtonsoft.Json;
 
@@ -66,7 +67,7 @@ namespace Common.SQLResultLogging.Loggers {
 
         [UsedImplicitly]
         [NotNull]
-        public string DeviceGuid => CalcDeviceDto.Guid;
+        public StrGuid DeviceGuid => CalcDeviceDto.Guid;
 
         [UsedImplicitly]
         [JsonProperty]
@@ -85,7 +86,7 @@ namespace Common.SQLResultLogging.Loggers {
         [NotNull]
         [UsedImplicitly]
         [JsonProperty]
-        public string LoadTypeGuid { get;  set; }
+        public StrGuid LoadTypeGuid { get;  set; }
 
         [NotNull]
         [UsedImplicitly]

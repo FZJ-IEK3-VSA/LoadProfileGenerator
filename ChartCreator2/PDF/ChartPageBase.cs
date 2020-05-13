@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 //using System.Windows.Media.Imaging;
 using Automation.ResultFiles;
@@ -7,6 +8,7 @@ using JetBrains.Annotations;
 using MigraDoc.DocumentObjectModel;
 
 namespace ChartCreator2.PDF {
+    [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     internal abstract class ChartPageBase : IPageCreatorToc {
         protected ChartPageBase([CanBeNull] string description, [CanBeNull] string fileName, [JetBrains.Annotations.NotNull] string pattern, [JetBrains.Annotations.NotNull] string sectionTitle)
         {
@@ -73,13 +75,13 @@ namespace ChartCreator2.PDF {
 
         [JetBrains.Annotations.NotNull]
         protected static Size GetDimensions([JetBrains.Annotations.NotNull] string fileName) {
-            using (var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read)) {
+            //using (var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read)) {
                 //var bitmapFrame = BitmapFrame.Create(stream, BitmapCreateOptions.DelayCreation, BitmapCacheOption.None);
                 //var width = bitmapFrame.PixelWidth;
                 //var height = bitmapFrame.PixelHeight;
                 //todo: properly look at the file size
                 return new Size(500, 500);
-            }
+            //}
         }
 
         [JetBrains.Annotations.NotNull]

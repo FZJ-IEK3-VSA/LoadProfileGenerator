@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using JetBrains.Annotations;
 
 namespace ChartCreator2.OxyCharts {
+    [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     public class ChartTaggingSet {
         [JetBrains.Annotations.NotNull] [ItemNotNull] private List<string> _categories = new List<string>();
 

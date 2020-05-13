@@ -180,8 +180,9 @@ namespace Common.Tests
             }
             [Test]
             public void RunTest()
+        {
+            using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
             {
-                WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
                 RowCollection rc = new RowCollection("mysheet");
                 var rb = XlsRowBuilder.Start("t1", "mytxt").Add("blub", 1).Add("blub2", 1);
                 rc.Add(rb);
@@ -191,9 +192,10 @@ namespace Common.Tests
                 RowCollection rc2 = new RowCollection("sheet2");
                 var rbc = XlsRowBuilder.GetAllProperties(mc);
                 rc2.Add(rbc);
-                XlsxDumper.WriteToXlsx(wd.Combine("t.xlsx"), rc,rc2);
+                XlsxDumper.WriteToXlsx(wd.Combine("t.xlsx"), rc, rc2);
             }
         }
+    }
 
         public static class XlsxDumper
         {

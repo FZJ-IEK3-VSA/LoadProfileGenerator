@@ -32,6 +32,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Database.Database;
@@ -51,7 +52,7 @@ namespace Database.Tables.BasicElements {
         private TimeProfileType _timeProfileType;
 
         public TimeBasedProfile([NotNull] string name, [CanBeNull] int? pID, [NotNull] string connectionString, TimeProfileType timeProfileType,
-            [NotNull] string dataSource, [NotNull] string guid) : base(name, TableName, connectionString, guid)
+            [NotNull] string dataSource, [NotNull] StrGuid guid) : base(name, TableName, connectionString, guid)
         {
             _timeProfileType = timeProfileType;
             ObservableDatapoints = new ObservableCollection<TimeDataPoint>();
@@ -116,7 +117,7 @@ namespace Database.Tables.BasicElements {
 
         public void AddNewTimepoint(TimeSpan ts, double value, bool saveAndSort = true)
         {
-            var tp = new TimeDataPoint(ts, value, null, IntID, ConnectionString, System.Guid.NewGuid().ToString());
+            var tp = new TimeDataPoint(ts, value, null, IntID, ConnectionString, System.Guid.NewGuid().ToStrGuid());
             lock (ObservableDatapoints) {
                 ObservableDatapoints.Add(tp);
             }
@@ -183,7 +184,7 @@ namespace Database.Tables.BasicElements {
         public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new
             TimeBasedProfile(FindNewName(isNameTaken, "New profile "), null, connectionString,
                 TimeProfileType.Relative,
-                "unknown", System.Guid.NewGuid().ToString());
+                "unknown", System.Guid.NewGuid().ToStrGuid());
 
         public void DeleteAllTimepoints()
         {

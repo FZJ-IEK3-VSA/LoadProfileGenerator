@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using Automation;
 using Automation.ResultFiles;
 using Common.SQLResultLogging.Loggers;
 using JetBrains.Annotations;
@@ -23,8 +24,8 @@ namespace Common.CalcDto {
         {
             return (CalcDeviceDto)this.MemberwiseClone();
         }
-        public CalcDeviceDto([NotNull]string name, [NotNull] string deviceCategoryGuid, [NotNull] HouseholdKey householdKey, OefcDeviceType deviceType,
-                             [NotNull] string deviceCategoryName, [NotNull]string additionalName, [NotNull] string guid, [NotNull] string locationGuid,
+        public CalcDeviceDto([NotNull]string name, [NotNull] StrGuid deviceCategoryGuid, [NotNull] HouseholdKey householdKey, OefcDeviceType deviceType,
+                             [NotNull] string deviceCategoryName, [NotNull]string additionalName, [NotNull] StrGuid guid, [NotNull] StrGuid locationGuid,
                              [NotNull]string locationName)
         {
             Name = name;
@@ -40,7 +41,7 @@ namespace Common.CalcDto {
         [NotNull]
         public string Name { get; set; }
         [NotNull]
-        public string DeviceCategoryGuid { get; set; }
+        public StrGuid DeviceCategoryGuid { get; set; }
         [NotNull]
         public HouseholdKey HouseholdKey
         {
@@ -53,9 +54,9 @@ namespace Common.CalcDto {
         [NotNull]
         public string AdditionalName { get; set; }
         [NotNull]
-        public string Guid { get; set; }
+        public StrGuid Guid { get; set; }
         [NotNull]
-        public string LocationGuid { get; set; }
+        public StrGuid LocationGuid { get; set; }
         [NotNull]
         public string LocationName { get; set; }
         [ItemNotNull]

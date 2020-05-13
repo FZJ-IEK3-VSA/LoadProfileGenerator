@@ -16,22 +16,24 @@ namespace CalculationController.Tests.Helpers
         [Category(UnitTestCategories.BasicTest)]
         public void RunDaylightSavingsLoggerTests()
         {
-            WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            SqlResultLoggingService sqrls = new SqlResultLoggingService(wd.WorkingDirectory);
-
-            BitArray ba = new BitArray(365*24*60);
-            for (int i = 0; i < ba.Length; i++)
+            using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
             {
-                if (i % 3 == 0)
+                SqlResultLoggingService sqrls = new SqlResultLoggingService(wd.WorkingDirectory);
+
+                BitArray ba = new BitArray(365 * 24 * 60);
+                for (int i = 0; i < ba.Length; i++)
                 {
-                    ba[i] = true;
+                    if (i % 3 == 0)
+                    {
+                        ba[i] = true;
+                    }
                 }
+                DayLightStatus dls = new DayLightStatus(ba);
+                CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();
+                DaylightTimesLogger dsl = new DaylightTimesLogger(sqrls, calcParameters);
+                dsl.Run(Constants.GeneralHouseholdKey, dls);
+                wd.CleanUp();
             }
-            DayLightStatus dls = new DayLightStatus(ba);
-            CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();
-            DaylightTimesLogger dsl = new DaylightTimesLogger(sqrls,calcParameters);
-            dsl.Run(Constants.GeneralHouseholdKey,dls);
-            wd.CleanUp();
         }
     }
 }

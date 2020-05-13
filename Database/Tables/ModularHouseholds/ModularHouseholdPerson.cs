@@ -15,7 +15,7 @@ namespace Database.Tables.ModularHouseholds {
 
         public class JsonModularHouseholdPerson : IGuidObject
         {
-            public JsonModularHouseholdPerson([NotNull] JsonReference person, [CanBeNull] JsonReference traitTag, [NotNull] string guid)
+            public JsonModularHouseholdPerson([NotNull] JsonReference person, [CanBeNull] JsonReference traitTag, [NotNull] StrGuid guid)
             {
                 Person = person;
                 TraitTag = traitTag;
@@ -36,7 +36,7 @@ namespace Database.Tables.ModularHouseholds {
             [CanBeNull]
             public JsonReference TraitTag { get; set; }
             [NotNull]
-            public string Guid { get; set; }
+            public StrGuid Guid { get; set; }
 
         }
         [NotNull]
@@ -54,7 +54,7 @@ namespace Database.Tables.ModularHouseholds {
         [CanBeNull] private  Person _person;
 
         public ModularHouseholdPerson([CanBeNull]int? pID, [CanBeNull]int? modularHouseholdID, [NotNull] string name, [NotNull] string connectionString,
-            [CanBeNull] Person person,[CanBeNull] TraitTag traitTag, [NotNull] string guid ) : base(name, TableName, connectionString,
+            [CanBeNull] Person person,[CanBeNull] TraitTag traitTag, [NotNull] StrGuid guid ) : base(name, TableName, connectionString,
             guid) {
             _person = person;
             ID = pID;
@@ -160,6 +160,6 @@ namespace Database.Tables.ModularHouseholds {
             return "(no name)";
         }
 
-        public string RelevantGuid => Guid;
+        public StrGuid RelevantGuid => Guid;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Automation;
 using Automation.ResultFiles;
 using Common.JSON;
 using JetBrains.Annotations;
@@ -11,13 +12,13 @@ namespace Common.CalcDto {
         [NotNull]
         public string LoadTypeName { get; }
         [NotNull]
-        public string LoadtypeGuid { get; }
+        public StrGuid LoadtypeGuid { get; }
         public double TimeStandardDeviation { get; }
         public double Multiplier { get; }
         [NotNull]
         public string CalclocationName { get; }
         [NotNull]
-        public string CalcLocationGuid { get; }
+        public StrGuid CalcLocationGuid { get; }
         /*[CanBeNull]
         public string VariableName { get; }
         public string VariableGuid { get; }
@@ -30,13 +31,13 @@ namespace Common.CalcDto {
         [ItemNotNull]
         [NotNull]
         public List<VariableRequirementDto> Requirements { get; }
-        public CalcAutoDevDto([NotNull]string name, [NotNull]CalcProfileDto calcProfile, [NotNull] string loadTypeName, [NotNull]string loadtypeGuid,
+        public CalcAutoDevDto([NotNull]string name, [NotNull]CalcProfileDto calcProfile, [NotNull] string loadTypeName, [NotNull]StrGuid loadtypeGuid,
                               [ItemNotNull] [NotNull] List<CalcDeviceLoadDto> loads, double timeStandardDeviation,
-                              [NotNull] string deviceCategoryGuid,
+                              [NotNull] StrGuid deviceCategoryGuid,
                               [NotNull] HouseholdKey householdKey, double multiplier,
-                              [NotNull] string calclocationName, [NotNull] string calcLocationGuid,
+                              [NotNull] string calclocationName, [NotNull] StrGuid calcLocationGuid,
                              //[CanBeNull] string variableName, double variableValue, VariableCondition variableCondition,
-                              [NotNull] string deviceCategoryFullPath, [NotNull] string guid, [NotNull]AvailabilityDataReferenceDto busyArr,
+                              [NotNull] string deviceCategoryFullPath, [NotNull] StrGuid guid, [NotNull]AvailabilityDataReferenceDto busyArr,
                               //string variableGuid,
                               [ItemNotNull] [NotNull]List<VariableRequirementDto> requirements,
                              [NotNull] string deviceCategoryName):

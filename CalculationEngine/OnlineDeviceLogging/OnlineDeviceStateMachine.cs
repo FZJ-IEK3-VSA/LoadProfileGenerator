@@ -44,16 +44,23 @@ namespace CalculationEngine.OnlineDeviceLogging {
             Values = values;
         }
         [NotNull]
-        public  static StepValues MakeStepValues([NotNull] CalcProfile dstCalcProfile, double powerStandardDeviation, double powerUsage, [NotNull] NormalRandom nr)
+        public  static StepValues MakeStepValues([NotNull] CalcProfile srcProfile,
+                                                 [NotNull] NormalRandom nr,
+                                                 [NotNull] CalcDeviceLoad cdl, double multiplier)
         {
 
-            var values = new List<double>(dstCalcProfile.StepValues);
+            var powerUsage = cdl.Value * multiplier;
+            if (srcProfile.ProfileType == ProfileType.Absolute)
+            {
+                powerUsage = 1 * multiplier;
+            }
+            var values = new List<double>(srcProfile.StepValues);
             for (var i = 0; i < values.Count; i++)
             {
                 double spread = 1;
-                if (Math.Abs(powerStandardDeviation) > 0.00000001)
+                if (Math.Abs(cdl.PowerStandardDeviation) > 0.00000001)
                 {
-                    spread = nr.NextDouble(1, powerStandardDeviation);
+                    spread = nr.NextDouble(1, cdl.PowerStandardDeviation);
                 }
                 values[i] = values[i] * powerUsage * spread;
             }

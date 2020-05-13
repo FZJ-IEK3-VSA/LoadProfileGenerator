@@ -29,6 +29,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Automation;
 using Database.Database;
 using Database.Tables.BasicHouseholds;
 using JetBrains.Annotations;
@@ -45,7 +46,7 @@ namespace Database.Tables.ModularHouseholds {
 
         public DeviceSelectionItem([CanBeNull]int? pID, [CanBeNull] int? deviceSelectionID, [CanBeNull] DeviceCategory deviceCategory,
             [CanBeNull] RealDevice device,
-            [NotNull] string connectionString, [NotNull] string name, [NotNull] string guid)
+            [NotNull] string connectionString, [NotNull] string name, [NotNull] StrGuid guid)
             : base(name, TableName, connectionString, guid) {
             ID = pID;
             _deviceCategory = deviceCategory;

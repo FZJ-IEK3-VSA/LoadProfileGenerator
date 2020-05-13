@@ -39,7 +39,7 @@ namespace Database.Tables.Houses {
 
         public SettlementTemplate([NotNull] string pName, [CanBeNull] int? id, [CanBeNull] string description, [NotNull] string connectionString,
             int desiredHHCount, [NotNull] string newName, [CanBeNull] TemperatureProfile temperatureProfile,
-            [CanBeNull] GeographicLocation geographicLocation,[NotNull] string guid) : base(pName, TableName, connectionString, guid)
+            [CanBeNull] GeographicLocation geographicLocation,[NotNull] StrGuid guid) : base(pName, TableName, connectionString, guid)
         {
             ID = id;
             _description = description;
@@ -162,7 +162,7 @@ namespace Database.Tables.Houses {
             EnergyIntensityType eit)
         {
             var sthhd = new STHouseholdDistribution(null, ConnectionString, minimum, maximum,
-                percent, IntID, "HSD " + minimum + " " + maximum + " " + percent, eit, System.Guid.NewGuid().ToString());
+                percent, IntID, "HSD " + minimum + " " + maximum + " " + percent, eit, System.Guid.NewGuid().ToStrGuid());
 
             _householdDistributions.Add(sthhd);
             _householdDistributions.Sort();
@@ -180,7 +180,7 @@ namespace Database.Tables.Houses {
                     return;
                 }
             }
-            var sthhd = new STHouseholdTemplate(null, ConnectionString, IntID, hht.Name, hht, System.Guid.NewGuid().ToString());
+            var sthhd = new STHouseholdTemplate(null, ConnectionString, IntID, hht.Name, hht, System.Guid.NewGuid().ToStrGuid());
             _householdTemplates.Add(sthhd);
             _householdTemplates.Sort();
             sthhd.SaveToDB();
@@ -189,7 +189,7 @@ namespace Database.Tables.Houses {
         public void AddHouseSize(int minimum, int maximum, double percent)
         {
             var sthhd = new STHouseSize(null, ConnectionString, IntID,
-                "HSD " + minimum + " " + maximum + " " + percent, minimum, maximum, percent, System.Guid.NewGuid().ToString());
+                "HSD " + minimum + " " + maximum + " " + percent, minimum, maximum, percent, System.Guid.NewGuid().ToStrGuid());
 
             _houseSizes.Add(sthhd);
             sthhd.SaveToDB();
@@ -206,14 +206,14 @@ namespace Database.Tables.Houses {
             {
                 throw new LPGException("House type was null");
             }
-            var sthhd = new STHouseType(null, ConnectionString, IntID, ht.Name, ht, System.Guid.NewGuid().ToString());
+            var sthhd = new STHouseType(null, ConnectionString, IntID, ht.Name, ht, System.Guid.NewGuid().ToStrGuid());
             _houseTypes.Add(sthhd);
             sthhd.SaveToDB();
         }
 
         public void AddTraitLimit([NotNull] HouseholdTrait trait, int maximum)
         {
-            var stl = new STTraitLimit(null, ConnectionString, IntID, trait.PrettyName, trait, maximum, System.Guid.NewGuid().ToString());
+            var stl = new STTraitLimit(null, ConnectionString, IntID, trait.PrettyName, trait, maximum, System.Guid.NewGuid().ToStrGuid());
             stl.SaveToDB();
             _traitLimits.Add(stl);
         }
@@ -243,7 +243,7 @@ namespace Database.Tables.Houses {
         {
             var newname = FindNewName(isNameTaken, "New Settlement Template");
             return new SettlementTemplate(newname, null, "New Settlement Template", connectionString, 100,
-                "Templated from New Settlement Template", null, null, System.Guid.NewGuid().ToString());
+                "Templated from New Settlement Template", null, null, System.Guid.NewGuid().ToStrGuid());
         }
 
         public void CreateSettlementFromPreview([NotNull] Simulator sim)

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Common.Enums;
@@ -8,7 +9,8 @@ using JetBrains.Annotations;
 namespace CalculationEngine.HouseholdElements
 {
     public class CalcVariable {
-        public CalcVariable([NotNull] string name, [NotNull] string guid, double value, [NotNull] string locationName, [NotNull] string locationGuid, [NotNull] HouseholdKey householdKey)
+        public CalcVariable([NotNull] string name, [NotNull] StrGuid guid, double value,
+                            [NotNull] string locationName, [NotNull] StrGuid locationGuid, [NotNull] HouseholdKey householdKey)
         {
             Name = name;
             Guid = guid;
@@ -22,12 +24,12 @@ namespace CalculationEngine.HouseholdElements
         [NotNull]
         public string Name { get; }
         [NotNull]
-        public string Guid { get; }
+        public StrGuid Guid { get; }
         public double Value { get; set; }
         [NotNull]
         public string LocationName { get; }
         [NotNull]
-        public string LocationGuid { get; }
+        public StrGuid LocationGuid { get; }
         [NotNull]
         public HouseholdKey HouseholdKey { get; }
         [NotNull]
@@ -37,7 +39,7 @@ namespace CalculationEngine.HouseholdElements
     public class CalcVariableRepository
     {
         [NotNull]
-        private readonly Dictionary<string, CalcVariable> _variablesByGuid = new Dictionary<string, CalcVariable>();
+        private readonly Dictionary<StrGuid, CalcVariable> _variablesByGuid = new Dictionary<StrGuid, CalcVariable>();
         [NotNull]
         private readonly VariableOperator _variableOperator;
 
@@ -47,7 +49,7 @@ namespace CalculationEngine.HouseholdElements
         }
 
         public void AddExecutionEntry([NotNull] string name, double value, [NotNull] CalcLocation location, VariableAction variableAction,
-                                      [NotNull] TimeStep timeStep, [NotNull] string variableGuid)
+                                      [NotNull] TimeStep timeStep, [NotNull] StrGuid variableGuid)
         {
             _variableOperator.AddEntry(name,value,location,variableAction,
                 timeStep,variableGuid);
@@ -58,7 +60,7 @@ namespace CalculationEngine.HouseholdElements
             _variablesByGuid.Add(variable.Guid,variable);
         }
 
-        public double GetValueByGuid([NotNull] string variableGuid)
+        public double GetValueByGuid([NotNull] StrGuid variableGuid)
         {
             if (!_variablesByGuid.ContainsKey(variableGuid)) {
                 throw new LPGException("Could not find the variable with the guid:" + variableGuid);
@@ -66,7 +68,7 @@ namespace CalculationEngine.HouseholdElements
             return _variablesByGuid[variableGuid].Value;
         }
 
-        public CalcVariable GetVariableByGuid([NotNull] string variableGuid)
+        public CalcVariable GetVariableByGuid([NotNull] StrGuid variableGuid)
         {
             if (!_variablesByGuid.ContainsKey(variableGuid))
             {
@@ -75,17 +77,17 @@ namespace CalculationEngine.HouseholdElements
             return _variablesByGuid[variableGuid];
         }
 
-        public void SetValueByGuid([NotNull] string variableGuid, double value)
+        public void SetValueByGuid([NotNull] StrGuid variableGuid, double value)
         {
             _variablesByGuid[variableGuid].Value = value;
         }
 
-        public void AddToValueByGuid([NotNull] string variableGuid, double value)
+        public void AddToValueByGuid([NotNull] StrGuid variableGuid, double value)
         {
             _variablesByGuid[variableGuid].Value += value;
         }
 
-        public void SubstractFromValueByGuid([NotNull] string variableGuid, double value)
+        public void SubstractFromValueByGuid([NotNull] StrGuid variableGuid, double value)
         {
             _variablesByGuid[variableGuid].Value -= value;
         }
@@ -102,7 +104,7 @@ namespace CalculationEngine.HouseholdElements
             return _variablesByGuid.Values.ToList();
         }
 
-        public bool IsVariableRegistered([NotNull] string variableGuid)
+        public bool IsVariableRegistered([NotNull] StrGuid variableGuid)
         {
             return _variablesByGuid.ContainsKey(variableGuid);
         }

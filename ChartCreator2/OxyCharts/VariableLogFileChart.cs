@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using Automation.ResultFiles;
@@ -10,6 +11,7 @@ using OxyPlot.Axes;
 using OxyPlot.Series;
 
 namespace ChartCreator2.OxyCharts {
+    [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     internal class VariableLogFileChart : ChartBaseFileStep
     {
         public VariableLogFileChart([JetBrains.Annotations.NotNull] ChartCreationParameters parameters,
@@ -34,7 +36,7 @@ namespace ChartCreator2.OxyCharts {
                 LegendPlacement = LegendPlacement.Outside,
                 LegendPosition = LegendPosition.BottomCenter
             };
-            if (_Parameters.ShowTitle) {
+            if (Parameters.ShowTitle) {
                 plotModel1.Title = plotName;
             }
             var dateTimeAxis = new DateTimeAxis
@@ -77,26 +79,30 @@ namespace ChartCreator2.OxyCharts {
         protected override FileProcessingResult MakeOnePlot(ResultFileEntry srcEntry)
         {
             string plotName = "Variables " + srcEntry.HouseholdNumberString;
-            _CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
+            Profiler.StartPart(Utili.GetCurrentMethodAndClass());
             const string yaxisLabel = "Value [-]";
             const double conversionfactor = 1;
 
             var headers = new List<string>();
             var values = new List<double[]>();
             var dates = new List<DateTime>();
+            if (srcEntry.FullFileName == null)
+            {
+                throw new LPGException("filename was null");
+            }
             using (var sr = new StreamReader(srcEntry.FullFileName)) {
                 var topLine = sr.ReadLine();
                 if (topLine == null) {
                     throw new LPGException("Readline Failed");
                 }
-                var header1 = topLine.Split(_Parameters.CSVCharacterArr, StringSplitOptions.None);
+                var header1 = topLine.Split(Parameters.CSVCharacterArr, StringSplitOptions.None);
                 headers.AddRange(header1);
                 while (!sr.EndOfStream) {
                     var s = sr.ReadLine();
                     if (s == null) {
                         throw new LPGException("Readline failed");
                     }
-                    var cols = s.Split(_Parameters. CSVCharacterArr, StringSplitOptions.None);
+                    var cols = s.Split(Parameters. CSVCharacterArr, StringSplitOptions.None);
                     var result = new double[headers.Count];
                     var success1 = DateTime.TryParse(cols[1], CultureInfo.CurrentCulture, DateTimeStyles.None, out var dt);
                     if (!success1) {
@@ -116,12 +122,12 @@ namespace ChartCreator2.OxyCharts {
             var fi = new FileInfo(srcEntry.FullFileName);
             var plotModel1 = MakeChart(plotName, yaxisLabel, srcEntry.TimeResolution, headers, values, dates, 25000);
             var dstfilename = fi.Name.Insert(fi.Name.Length - 4, ".Short");
-            Save(plotModel1, plotName, srcEntry.FullFileName, _Parameters.BaseDirectory, dstfilename);
+            Save(plotModel1, plotName, srcEntry.FullFileName, Parameters.BaseDirectory, dstfilename);
 
             plotModel1 = MakeChart(plotName, yaxisLabel, srcEntry.TimeResolution, headers, values, dates, int.MaxValue);
             dstfilename = fi.Name.Insert(fi.Name.Length - 4, ".Full");
-            Save(plotModel1, plotName, srcEntry.FullFileName, _Parameters.BaseDirectory, dstfilename);
-            _CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
+            Save(plotModel1, plotName, srcEntry.FullFileName, Parameters.BaseDirectory, dstfilename);
+            Profiler.StopPart(Utili.GetCurrentMethodAndClass());
             return FileProcessingResult.ShouldCreateFiles;
         }
     }

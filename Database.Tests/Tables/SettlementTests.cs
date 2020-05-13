@@ -46,83 +46,90 @@ namespace Database.Tests.Tables {
     {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void LoadFromDatabaseTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-
-            ObservableCollection<TraitTag> traitTags = db.LoadTraitTags();
-            var timeprofiles = db.LoadTimeBasedProfiles();
-            var realDevices = db.LoadRealDevices(out var deviceCategories, out var loadtypes, timeprofiles);
-            var locations = db.LoadLocations(realDevices, deviceCategories, loadtypes);
-            db.LoadTransportation(locations, out var transportationDeviceSets,
-                out var travelRouteSets, out var _,
-                out var _, loadtypes,
-                out var chargingStationSets);
-            db.LoadHouseholdsAndHouses(out var modularHouseholds,
-                out var houses, out var timeLimits,traitTags,chargingStationSets,
-                travelRouteSets,transportationDeviceSets);
-            var settlements = new ObservableCollection<Settlement>();
-            var geoloc = db.LoadGeographicLocations(out _, timeLimits);
-            var temperaturProfiles = db.LoadTemperatureProfiles();
-            Settlement.LoadFromDatabase(settlements, db.ConnectionString, temperaturProfiles, geoloc,
-                modularHouseholds, houses, false);
-            db.Cleanup();
+        public void LoadFromDatabaseTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                ObservableCollection<TraitTag> traitTags = db.LoadTraitTags();
+                var timeprofiles = db.LoadTimeBasedProfiles();
+                var realDevices = db.LoadRealDevices(out var deviceCategories, out var loadtypes, timeprofiles);
+                var locations = db.LoadLocations(realDevices, deviceCategories, loadtypes);
+                db.LoadTransportation(locations, out var transportationDeviceSets,
+                    out var travelRouteSets, out var _,
+                    out var _, loadtypes,
+                    out var chargingStationSets);
+                db.LoadHouseholdsAndHouses(out var modularHouseholds,
+                    out var houses, out var timeLimits, traitTags, chargingStationSets,
+                    travelRouteSets, transportationDeviceSets);
+                var settlements = new ObservableCollection<Settlement>();
+                var geoloc = db.LoadGeographicLocations(out _, timeLimits);
+                var temperaturProfiles = db.LoadTemperatureProfiles();
+                Settlement.LoadFromDatabase(settlements, db.ConnectionString, temperaturProfiles, geoloc,
+                    modularHouseholds, houses, false);
+                db.Cleanup();
+            }
         }
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void JsonCalcSpecTest()
         {
-            SkipEndCleaning = true;
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            Simulator sim = new Simulator(db.ConnectionString);
-            Settlement sett = sim.Settlements[1];
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
+                {
+                    Simulator sim = new Simulator(db.ConnectionString);
+                    Settlement sett = sim.Settlements[1];
 
-            sett.WriteJsonCalculationSpecs(wd.WorkingDirectory, @"V:\Dropbox\LPGReleases\releases8.6.0\simulationengine.exe");
-            db.Cleanup();
+                    sett.WriteJsonCalculationSpecs(wd.WorkingDirectory, @"V:\Dropbox\LPGReleases\releases8.6.0\simulationengine.exe");
+                }
+                db.Cleanup();
+            }
         }
 
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void SaveToDatabaseTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
+        public void SaveToDatabaseTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                ObservableCollection<TraitTag> traitTags = db.LoadTraitTags();
+                var timeprofiles = db.LoadTimeBasedProfiles();
+                var realDevices = db.LoadRealDevices(out var deviceCategories, out var loadtypes, timeprofiles);
+                var locations = db.LoadLocations(realDevices, deviceCategories, loadtypes);
+                db.LoadTransportation(locations, out var transportationDeviceSets,
+                    out var travelRouteSets, out var _,
+                    out var _, loadtypes,
+                    out var chargingStationSets);
+                db.LoadHouseholdsAndHouses(out var modularHouseholds,
+                    out var houses, out var timeLimits, traitTags,
+                    chargingStationSets, travelRouteSets, transportationDeviceSets);
+                var settlements = new ObservableCollection<Settlement>();
+                var geoloc = db.LoadGeographicLocations(out _, timeLimits);
+                var temperaturProfiles = db.LoadTemperatureProfiles();
+                Settlement.LoadFromDatabase(settlements, db.ConnectionString, temperaturProfiles, geoloc,
+                    modularHouseholds, houses, false);
+                settlements.Clear();
+                db.ClearTable(Settlement.TableName);
+                db.ClearTable(SettlementHH.TableName);
+                JsonCalcSpecification jcs = JsonCalcSpecification.MakeDefaultsForTesting();
+                jcs.EnergyIntensityType = EnergyIntensityType.EnergySaving;
+                var se = new Settlement("blub", null, "blub",
+                     "fdasdf", "blub", "blub", "asdf", db.ConnectionString, geoloc[0], temperaturProfiles[0], "Testing",
+                    CreationType.ManuallyCreated, Guid.NewGuid().ToStrGuid(), jcs);
+                se.SaveToDB();
 
-            ObservableCollection<TraitTag> traitTags = db.LoadTraitTags();
-            var timeprofiles = db.LoadTimeBasedProfiles();
-            var realDevices = db.LoadRealDevices(out var deviceCategories, out var loadtypes, timeprofiles);
-            var locations = db.LoadLocations(realDevices, deviceCategories, loadtypes);
-            db.LoadTransportation(locations, out var transportationDeviceSets,
-                out var travelRouteSets, out var _,
-                out var _, loadtypes,
-                out var chargingStationSets);
-            db.LoadHouseholdsAndHouses(out var modularHouseholds,
-                out var houses, out var timeLimits,traitTags,
-                chargingStationSets,travelRouteSets,transportationDeviceSets);
-            var settlements = new ObservableCollection<Settlement>();
-            var geoloc = db.LoadGeographicLocations(out _, timeLimits);
-            var temperaturProfiles = db.LoadTemperatureProfiles();
-            Settlement.LoadFromDatabase(settlements, db.ConnectionString, temperaturProfiles, geoloc,
-                modularHouseholds, houses, false);
-            settlements.Clear();
-            db.ClearTable(Settlement.TableName);
-            db.ClearTable(SettlementHH.TableName);
-            JsonCalcSpecification jcs = JsonCalcSpecification.MakeDefaultsForTesting();
-            jcs.EnergyIntensityType = EnergyIntensityType.EnergySaving;
-            var se = new Settlement("blub", null,  "blub",
-                 "fdasdf", "blub", "blub", "asdf", db.ConnectionString, geoloc[0], temperaturProfiles[0],  "Testing",
-                CreationType.ManuallyCreated, Guid.NewGuid().ToString(),jcs);
-            se.SaveToDB();
-
-            se.AddHousehold(modularHouseholds[0], 10);
-            Settlement.LoadFromDatabase(settlements, db.ConnectionString, temperaturProfiles, geoloc,
-                modularHouseholds, houses, false);
-            Assert.AreEqual(1, settlements.Count);
-            Assert.AreEqual(1, settlements[0].Households.Count);
-            Assert.AreEqual(settlements[0].GeographicLocation, geoloc[0]);
-            Assert.AreEqual(settlements[0].TemperatureProfile, temperaturProfiles[0]);
-            Assert.AreEqual(settlements[0].EnergyIntensityType, EnergyIntensityType.EnergySaving);
-            db.Cleanup();
+                se.AddHousehold(modularHouseholds[0], 10);
+                Settlement.LoadFromDatabase(settlements, db.ConnectionString, temperaturProfiles, geoloc,
+                    modularHouseholds, houses, false);
+                Assert.AreEqual(1, settlements.Count);
+                Assert.AreEqual(1, settlements[0].Households.Count);
+                Assert.AreEqual(settlements[0].GeographicLocation, geoloc[0]);
+                Assert.AreEqual(settlements[0].TemperatureProfile, temperaturProfiles[0]);
+                Assert.AreEqual(settlements[0].EnergyIntensityType, EnergyIntensityType.EnergySaving);
+                db.Cleanup();
+            }
         }
     }
 }

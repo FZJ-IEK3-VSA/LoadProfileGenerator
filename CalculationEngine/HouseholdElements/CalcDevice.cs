@@ -32,7 +32,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Text;
+using Automation;
 using Automation.ResultFiles;
 using CalculationEngine.OnlineDeviceLogging;
 using Common;
@@ -87,10 +89,10 @@ namespace CalculationEngine.HouseholdElements {
         private readonly CalcLocation _calcLocation;
         [NotNull]
         private readonly Dictionary<CalcLoadType, BitArray> _isBusyForLoadType;
-        [ItemNotNull]
         [NotNull]
-        private readonly List<CalcDeviceLoad> _powerUsage;
+        private readonly Dictionary<CalcLoadType, CalcDeviceLoad> _deviceLoadsBy = new Dictionary<CalcLoadType, CalcDeviceLoad>();
 
+        public List<CalcDeviceLoad> Loads { get; } = new List<CalcDeviceLoad>();
         private readonly CalcDeviceDto _calcDeviceDto;
         private readonly CalcRepo _calcRepo;
 
@@ -105,9 +107,12 @@ namespace CalculationEngine.HouseholdElements {
                 throw new LPGException("Inconsistent locations. This is a bug.");
             }
             _calcLocation = calcLocation;
-            _powerUsage = powerUsage;
             foreach (var load in powerUsage) {
-                if (Math.Abs(load.Value) < 0.0000001 && load.Name.ToLower() != "none") {
+                _deviceLoadsBy.Add(load.LoadType,load);
+                Loads.Add(load);
+            }
+            foreach (var load in powerUsage) {
+                if (Math.Abs(load.Value) < 0.0000001 && load.Name.ToLower(CultureInfo.InvariantCulture) != "none") {
                     throw new LPGException("Trying to run the device " + calcDeviceDto.Name + " with a power load factor for " + load.LoadType.Name + " of 0. This is not going to work.");
                 }
             }
@@ -115,7 +120,7 @@ namespace CalculationEngine.HouseholdElements {
                 throw new LPGException("Can't run with 0 timesteps");
             }
             _isBusyForLoadType = new Dictionary<CalcLoadType, BitArray>();
-            foreach (var calcDeviceLoad in _powerUsage) {
+            foreach (var calcDeviceLoad in powerUsage) {
                 _isBusyForLoadType.Add(calcDeviceLoad.LoadType,
                     new BitArray(calcRepo.CalcParameters.InternalTimesteps));
                 _isBusyForLoadType[calcDeviceLoad.LoadType].SetAll(false);
@@ -132,25 +137,27 @@ namespace CalculationEngine.HouseholdElements {
         public Dictionary<CalcLoadType, BitArray> IsBusyForLoadType => _isBusyForLoadType;
 
         [NotNull]
-        public string DeviceCategoryGuid => _calcDeviceDto.DeviceCategoryGuid;
+        public StrGuid DeviceCategoryGuid => _calcDeviceDto.DeviceCategoryGuid;
         [NotNull]
         [ItemNotNull]
         public List<CalcAutoDev> MatchingAutoDevs { get; } = new List<CalcAutoDev>();
 
-        [NotNull]
-        [ItemNotNull]
-        public List<CalcDeviceLoad> PowerUsage => _powerUsage;
+    //    [NotNull]
+  //      [ItemNotNull]
+// public List<CalcDeviceLoad> PowerUsage => _powerUsage;
+
+        public int LoadCount => _deviceLoadsBy.Count;
 
         [NotNull]
         public string PrettyName {
             get {
                 var builder = new StringBuilder();
                 builder.Append(Name).Append(" (");
-                foreach (var load in _powerUsage) {
+                foreach (var load in _deviceLoadsBy.Values) {
                     builder.Append(load.Name).Append(", ");
                 }
                 var s = builder.ToString();
-                if (_powerUsage.Count > 0) {
+                if (_deviceLoadsBy.Count > 0) {
                     s = s.Substring(0, s.Length - 2);
                 }
                 s += ")";
@@ -212,7 +219,7 @@ namespace CalculationEngine.HouseholdElements {
         public void SetAllLoadTypesToTimeprofile([NotNull] CalcProfile tbp, [NotNull] TimeStep startidx,
             [NotNull] string affordanceName, [NotNull] string activatorName, double multiplier)
         {
-            foreach (var calcDeviceLoad in _powerUsage) {
+            foreach (var calcDeviceLoad in _deviceLoadsBy.Values) {
                 SetTimeprofile(tbp, startidx, calcDeviceLoad.LoadType,  affordanceName, activatorName,
                     multiplier, false);
             }
@@ -265,12 +272,8 @@ namespace CalculationEngine.HouseholdElements {
             if (calcProfile.StepValues.Count == 0) {
                 throw new LPGException("Trying to set empty device profile. This is a bug. Please report.");
             }
-            CalcDeviceLoad cdl = null;
-            foreach (var calcDeviceLoad in _powerUsage) {
-                if (calcDeviceLoad.LoadType == loadType) {
-                    cdl = calcDeviceLoad;
-                }
-            }
+
+            CalcDeviceLoad cdl = _deviceLoadsBy[loadType];
             if (cdl == null) {
                 throw new LPGException("It was tried to activate the loadtype " + loadType.Name +
                                        " even though that one is not set for the device " + Name);
@@ -279,17 +282,14 @@ namespace CalculationEngine.HouseholdElements {
             /*if (Math.Abs(cdl.Value) < 0.00000001 ) {
                 throw new LPGException("Trying to calculate with a power consumption factor of 0. This is wrong.");
             }*/
-            var powerUsageFactor = cdl.Value * multiplier;
-            if (calcProfile.ProfileType == ProfileType.Absolute) {
-                powerUsageFactor = 1 * multiplier;
-            }
             if (CalcRepo.Odap == null && !Config.IsInUnitTesting) {
                 throw new LPGException("ODAP was null. Please report");
             }
             var totalDuration = calcProfile.StepValues.Count; //.GetNewLengthAfterCompressExpand(timefactor);
             //calcProfile.CompressExpandDoubleArray(timefactor,allProfiles),
                 var key = _KeyByLoad[cdl.LoadType];
-                StepValues sv = StepValues.MakeStepValues(calcProfile,cdl.PowerStandardDeviation,powerUsageFactor, CalcRepo.NormalRandom);
+                StepValues sv = StepValues.MakeStepValues(calcProfile, CalcRepo.NormalRandom,
+                   cdl ,multiplier);
                 CalcRepo.Odap.AddNewStateMachine(
                     startidx,
                     cdl.LoadType.ConvertToDto(),

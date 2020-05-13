@@ -52,7 +52,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
                                       [NotNull] FileFactoryAndTracker fft) : base(repository,
             AutomationUtili.GetOptionList(CalcOption.ActivationsPerHour),
             profiler,
-            "Activiations per Hour")
+            "Activiations per Hour",0)
         {
             _calcParameters = Repository.CalcParameters;
             _fft = fft;

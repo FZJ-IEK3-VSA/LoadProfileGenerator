@@ -173,6 +173,9 @@ namespace Common.JSON {
                 Enable(CalcOption.MakeGraphics);
             }
 
+            if (IsSet(CalcOption.BodilyActivityStatistics)) {
+                Enable(CalcOption.ActionsEachTimestep);
+            }
             /*  if (IsSet(CalcOption.SMAImportFiles))
               {
                   Enable(CalcOption.DetailedDatFiles);

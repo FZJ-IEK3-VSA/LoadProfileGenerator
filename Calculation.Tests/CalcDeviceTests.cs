@@ -54,43 +54,49 @@ namespace Calculation.Tests {
                 CalcParametersFactory.MakeGoodDefaults().SetStartDate(startdate).SetEndDate(enddate);
 
             CalcLoadType clt = MakeCalcLoadType();
-            CalcLocation cloc = new CalcLocation("blub", Guid.NewGuid().ToString());
-            CalcDeviceLoad cdl = new CalcDeviceLoad("cdl1", 1, clt, 1, 0.1, Guid.NewGuid().ToString());
+            CalcLocation cloc = new CalcLocation("blub", Guid.NewGuid().ToStrGuid());
+            CalcDeviceLoad cdl = new CalcDeviceLoad("cdl1", 1, clt, 1, 0.1);
             List<CalcDeviceLoad> cdls = new List<CalcDeviceLoad>();
-            WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            wd.InputDataLogger.AddSaver(new ColumnEntryLogger(wd.SqlResultLoggingService));
-            wd.InputDataLogger.AddSaver(new ResultFileEntryLogger(wd.SqlResultLoggingService));
-            wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
-            FileFactoryAndTracker fft = new FileFactoryAndTracker(wd.WorkingDirectory, "hh1", wd.InputDataLogger);
-            fft.RegisterHousehold(Constants.GeneralHouseholdKey, "General", HouseholdKeyType.General, "desc",null,null);
-            //SqlResultLoggingService srls = new SqlResultLoggingService(wd.WorkingDirectory);
-            DateStampCreator dsc = new DateStampCreator(calcParameters);
+            using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
+            {
+                wd.InputDataLogger.AddSaver(new ColumnEntryLogger(wd.SqlResultLoggingService));
+                wd.InputDataLogger.AddSaver(new ResultFileEntryLogger(wd.SqlResultLoggingService));
+                wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
+                using (FileFactoryAndTracker fft = new FileFactoryAndTracker(wd.WorkingDirectory, "hh1", wd.InputDataLogger))
+                {
+                    fft.RegisterHousehold(Constants.GeneralHouseholdKey, "General", HouseholdKeyType.General, "desc", null, null);
+                    //SqlResultLoggingService srls = new SqlResultLoggingService(wd.WorkingDirectory);
+                    DateStampCreator dsc = new DateStampCreator(calcParameters);
 
-            IOnlineLoggingData old = new OnlineLoggingData(dsc, wd.InputDataLogger, calcParameters);
-                cdls.Add(cdl);
+                    using (IOnlineLoggingData old = new OnlineLoggingData(dsc, wd.InputDataLogger, calcParameters))
+                    {
+                        cdls.Add(cdl);
 
-                OnlineDeviceActivationProcessor odap =
-                    new OnlineDeviceActivationProcessor( old, calcParameters, fft);
-                string deviceCategoryGuid = Guid.NewGuid().ToString();
-                CalcDeviceDto cdd = new CalcDeviceDto("bla", deviceCategoryGuid
-                    , new HouseholdKey("HH-6"), OefcDeviceType.Device, "category",
-                    string.Empty, Guid.NewGuid().ToString(),cloc.Guid,cloc.Name);
-                CalcRepo calcRepo = new CalcRepo(odap:odap, calcParameters:calcParameters, normalRandom:NormalRandom);
-                CalcDevice cd = new CalcDevice( cdls,   cloc,
-                     cdd,calcRepo );
-                CalcProfile cp = MakeCalcProfile5Min100();
-                TimeStep ts1 = new TimeStep(1,calcParameters);
-                cd.SetAllLoadTypesToTimeprofile(cp, ts1, "test", "name1", 1);
-                TimeStep ts = new TimeStep(0, calcParameters);
-                Assert.AreEqual(false, cd.IsBusyDuringTimespan(ts, 1, 1, clt));
-                Assert.AreEqual(true, cd.IsBusyDuringTimespan(ts.AddSteps(1), 1, 1, clt));
-                Assert.AreEqual(true, cd.IsBusyDuringTimespan(ts.AddSteps(2), 1, 1, clt));
-                Assert.AreEqual(true, cd.IsBusyDuringTimespan(ts.AddSteps(3), 1, 1, clt));
-                Assert.AreEqual(true, cd.IsBusyDuringTimespan(ts.AddSteps(4), 1, 1, clt));
-                Assert.AreEqual(true, cd.IsBusyDuringTimespan(ts.AddSteps(5), 1, 1, clt));
-                Assert.AreEqual(false, cd.IsBusyDuringTimespan(ts.AddSteps(6), 0, 1, clt));
+                        OnlineDeviceActivationProcessor odap =
+                            new OnlineDeviceActivationProcessor(old, calcParameters, fft);
+                        var deviceCategoryGuid = Guid.NewGuid().ToStrGuid();
+                        CalcDeviceDto cdd = new CalcDeviceDto("bla", deviceCategoryGuid
+                            , new HouseholdKey("HH-6"), OefcDeviceType.Device, "category",
+                            string.Empty, Guid.NewGuid().ToStrGuid(), cloc.Guid, cloc.Name);
+                        using CalcRepo calcRepo = new CalcRepo(odap: odap, calcParameters: calcParameters, normalRandom: NormalRandom);
+                        CalcDevice cd = new CalcDevice(cdls, cloc,
+    cdd, calcRepo);
+                        CalcProfile cp = MakeCalcProfile5Min100();
+                        TimeStep ts1 = new TimeStep(1, calcParameters);
+                        cd.SetAllLoadTypesToTimeprofile(cp, ts1, "test", "name1", 1);
+                        TimeStep ts = new TimeStep(0, calcParameters);
+                        Assert.AreEqual(false, cd.IsBusyDuringTimespan(ts, 1, 1, clt));
+                        Assert.AreEqual(true, cd.IsBusyDuringTimespan(ts.AddSteps(1), 1, 1, clt));
+                        Assert.AreEqual(true, cd.IsBusyDuringTimespan(ts.AddSteps(2), 1, 1, clt));
+                        Assert.AreEqual(true, cd.IsBusyDuringTimespan(ts.AddSteps(3), 1, 1, clt));
+                        Assert.AreEqual(true, cd.IsBusyDuringTimespan(ts.AddSteps(4), 1, 1, clt));
+                        Assert.AreEqual(true, cd.IsBusyDuringTimespan(ts.AddSteps(5), 1, 1, clt));
+                        Assert.AreEqual(false, cd.IsBusyDuringTimespan(ts.AddSteps(6), 0, 1, clt));
+                    }
+                }
 
-            wd.CleanUp();
+                wd.CleanUp();
+            }
         }
     }
 }

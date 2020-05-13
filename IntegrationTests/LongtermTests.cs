@@ -124,9 +124,10 @@ namespace IntegrationTests {
     }
 
     [TestFixture]
+    [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     public class LongtermTests : UnitTestBaseClass
     {
-        private static void ClearAllTables([NotNull] DatabaseSetup db)
+        private static void ClearAllTables([JetBrains.Annotations.NotNull] DatabaseSetup db)
         {
             using (var con = new Connection(db.ConnectionString)) {
                 con.Open();
@@ -136,7 +137,7 @@ namespace IntegrationTests {
                     while (dr.Read()) {
                         var s = dr.GetString("name").ToLowerInvariant();
                         if (s.StartsWith("tbl", StringComparison.Ordinal)) {
-                            if (s.Equals("tbllpgversion")) {
+                            if (s.Equals("tbllpgversion", StringComparison.Ordinal)) {
                                 continue;
                             }
                             tables.Add(s);
@@ -151,7 +152,7 @@ namespace IntegrationTests {
             }
         }
 
-        private static void DeleteOneElementFromAllTables([NotNull] DatabaseSetup db)
+        private static void DeleteOneElementFromAllTables([JetBrains.Annotations.NotNull] DatabaseSetup db)
         {
             using (var con = new Connection(db.ConnectionString))
             {
@@ -182,8 +183,8 @@ namespace IntegrationTests {
         }
 
         [ItemNotNull]
-        [NotNull]
-        public static List<string> GetTableList([NotNull] DatabaseSetup db)
+        [JetBrains.Annotations.NotNull]
+        public static List<string> GetTableList([JetBrains.Annotations.NotNull] DatabaseSetup db)
         {
             var tables = new List<string>();
             using (var con = new Connection(db.ConnectionString)) {
@@ -202,8 +203,8 @@ namespace IntegrationTests {
             return tables;
         }
 
-        [NotNull]
-        private static Dictionary<string, int> GetTableRowCounts([NotNull] string connectionstring)
+        [JetBrains.Annotations.NotNull]
+        private static Dictionary<string, int> GetTableRowCounts([JetBrains.Annotations.NotNull] string connectionstring)
         {
             var tablerowcounts = new Dictionary<string, int>();
             using (var con = new Connection(connectionstring)) {
@@ -235,16 +236,16 @@ namespace IntegrationTests {
             NoClearing
         }
 
-        private static void TestImport([NotNull] string path, bool clearDstFolder, ClearMode cleartablemode,
+        private static void TestImport([JetBrains.Annotations.NotNull] string path, bool clearDstFolder, ClearMode cleartablemode,
             bool verifyRowCount = false)
         {
             TestImport(path, out _, out _, cleartablemode, verifyRowCount, out _, clearDstFolder);
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        private static void TestImport([NotNull] string srcfilename, [NotNull] out Simulator mainsim,
-            [NotNull] out DatabaseMerger dbm, ClearMode clearTablesMode,
-            bool checkrowcounts, [NotNull] out DatabaseSetup db, bool clearDstFolder)
+        private static void TestImport([JetBrains.Annotations.NotNull] string srcfilename, [JetBrains.Annotations.NotNull] out Simulator mainsim,
+            [JetBrains.Annotations.NotNull] out DatabaseMerger dbm, ClearMode clearTablesMode,
+            bool checkrowcounts, [JetBrains.Annotations.NotNull] out DatabaseSetup db, bool clearDstFolder)
         {
             var acceptedUneven = new List<string>
             {
@@ -388,8 +389,8 @@ namespace IntegrationTests {
             }
         }
 
-        [NotNull]
-        private static FileInfo FindImportFile([NotNull] string srcfilename)
+        [JetBrains.Annotations.NotNull]
+        private static FileInfo FindImportFile([JetBrains.Annotations.NotNull] string srcfilename)
         {
             const string teamcityrelativePath = @"..\..\..\Importfiles\";
             const string jenkinsrelativePath = "Importfiles\\";
@@ -438,17 +439,19 @@ namespace IntegrationTests {
         public void LoadEmptyDatabase()
         {
             CleanTestBase.RunAutomatically(false);
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            ClearAllTables(db);
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                ClearAllTables(db);
 #pragma warning disable S1854 // Dead stores should be removed
 
 #pragma warning disable S1481 // Unused local variables should be removed
 #pragma warning disable IDE0059 // Value assigned to symbol is never used
-            var oldSim = new Simulator(db.ConnectionString); // need to load it for testing
+                var oldSim = new Simulator(db.ConnectionString); // need to load it for testing
 #pragma warning restore IDE0059 // Value assigned to symbol is never used
 #pragma warning restore S1481 // Unused local variables should be removed
 #pragma warning restore S1854 // Dead stores should be removed
-            db.Cleanup();
+                db.Cleanup();
+            }
             CleanTestBase.RunAutomatically(true);
         }
 
@@ -471,24 +474,29 @@ namespace IntegrationTests {
         {
             // tests with the current database without any changes. this should find nothing to import
             HouseholdPlan.FailOnIncorrectImport = true;
-            var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-
-            var path = Path.Combine(wd.WorkingDirectory, "profilegeneratorNothingImportTest.db3");
-            if (File.Exists(path)) {
-                File.Delete(path);
-                Thread.Sleep(3000);
+            using (var wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
+            {
+                var path = Path.Combine(wd.WorkingDirectory, "profilegeneratorNothingImportTest.db3");
+                if (File.Exists(path))
+                {
+                    File.Delete(path);
+                    Thread.Sleep(3000);
+                }
+                File.Copy(DatabaseSetup.GetSourcepath(null), path);
+                using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+                {
+                    var mainSim = new Simulator(db.ConnectionString);
+                    var dbm = new DatabaseMerger(mainSim);
+                    dbm.RunFindItems(path, null);
+                    Logger.Info("Found " + dbm.ItemsToImport.Count + " items.");
+                    if (dbm.ItemsToImport.Count != 0)
+                    {
+                        throw new LPGException("This should not import anything, since its the same database.");
+                    }
+                    db.Cleanup();
+                }
+                wd.CleanUp();
             }
-            File.Copy(DatabaseSetup.GetSourcepath(null), path);
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var mainSim = new Simulator(db.ConnectionString);
-            var dbm = new DatabaseMerger(mainSim);
-            dbm.RunFindItems(path, null);
-            Logger.Info("Found " + dbm.ItemsToImport.Count + " items.");
-            if (dbm.ItemsToImport.Count != 0) {
-                throw new LPGException("This should not import anything, since its the same database.");
-            }
-            db.Cleanup();
-            wd.CleanUp();
         }
 
         [Test]
@@ -496,17 +504,19 @@ namespace IntegrationTests {
         public void RunTestCurrentVersionWithClear()
         {
             HouseholdPlan.FailOnIncorrectImport = true;
-            var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-
-            var path = Path.Combine(wd.WorkingDirectory, "profilegeneratorFullImportTest.db3");
-            if (File.Exists(path)) {
-                File.Delete(path);
+            using (var wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
+            {
+                var path = Path.Combine(wd.WorkingDirectory, "profilegeneratorFullImportTest.db3");
+                if (File.Exists(path))
+                {
+                    File.Delete(path);
+                    Thread.Sleep(3000);
+                }
                 Thread.Sleep(3000);
+                File.Copy(DatabaseSetup.GetSourcepath(null), path);
+                TestImport(path, false, ClearMode.ClearTable, true);
+                wd.CleanUp(1);
             }
-            Thread.Sleep(3000);
-            File.Copy(DatabaseSetup.GetSourcepath(null), path);
-            TestImport(path, false, ClearMode.ClearTable, true);
-            wd.CleanUp(1);
         }
         /*
         [Test]
@@ -542,49 +552,53 @@ namespace IntegrationTests {
         {
             string sourcefilepath = DatabaseSetup.GetImportFileFullPath("profilegenerator520_simon.db3");
             CleanTestBase.RunAutomatically(false);
-            var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            var fi = new FileInfo(sourcefilepath);
-            if (!File.Exists(sourcefilepath)) {
-                throw new LPGException("Missing file: " + fi.FullName);
-            }
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-
-            var mainSim = new Simulator(db.ConnectionString);
-            var dbm = new DatabaseMerger(mainSim);
-            Logger.Info("Full Source: " + fi.FullName);
-            dbm.RunFindItems(sourcefilepath, null);
-            dbm.RunImport(null);
-            var timelimits = dbm.ItemsToImport.Count(x => x.Entry.GetType() == typeof(TimeLimit));
-            Assert.That(timelimits > 0);
-            // ReSharper disable once UnusedVariable
+            using (var wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
+            {
+                var fi = new FileInfo(sourcefilepath);
+                if (!File.Exists(sourcefilepath))
+                {
+                    throw new LPGException("Missing file: " + fi.FullName);
+                }
+                using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+                {
+                    var mainSim = new Simulator(db.ConnectionString);
+                    var dbm = new DatabaseMerger(mainSim);
+                    Logger.Info("Full Source: " + fi.FullName);
+                    dbm.RunFindItems(sourcefilepath, null);
+                    dbm.RunImport(null);
+                    var timelimits = dbm.ItemsToImport.Count(x => x.Entry.GetType() == typeof(TimeLimit));
+                    Assert.That(timelimits > 0);
+                    // ReSharper disable once UnusedVariable
 #pragma warning disable S1481 // Unused local variables should be removed
-            var mainSim2 = new Simulator(db.ConnectionString);
+                    var mainSim2 = new Simulator(db.ConnectionString);
+                }
 #pragma warning restore S1481 // Unused local variables should be removed
-            /*mainSim2.MyGeneralConfig.PerformCleanUpChecks = "false";
-            var toDelete = new List<DeviceActionGroup>();
-            foreach (DeviceActionGroup deviceActionGroup in mainSim2.DeviceActionGroups.It) {
-                var actions = deviceActionGroup.GetDeviceActions(mainSim2.DeviceActions.It);
-                if(actions.Count == 0)
-                    toDelete.Add(deviceActionGroup);
-            }
-            foreach (DeviceActionGroup deviceActionGroup in toDelete) {
-                mainSim2.DeviceActionGroups.DeleteItem(deviceActionGroup);
-            }
-            var dsttag = mainSim2.TraitTags.It.First(x => x.Name.StartsWith("Living "));
-            foreach (ModularHousehold modularHousehold in mainSim2.ModularHouseholds.It) {
-                var toSet = new List<ModularHouseholdPerson>();
-                foreach (ModularHouseholdPerson modularHouseholdPerson in modularHousehold.Persons) {
-                    if (modularHouseholdPerson.TraitTag == null) {
-                        toSet.Add(modularHouseholdPerson);
+                /*mainSim2.MyGeneralConfig.PerformCleanUpChecks = "false";
+                var toDelete = new List<DeviceActionGroup>();
+                foreach (DeviceActionGroup deviceActionGroup in mainSim2.DeviceActionGroups.It) {
+                    var actions = deviceActionGroup.GetDeviceActions(mainSim2.DeviceActions.It);
+                    if(actions.Count == 0)
+                        toDelete.Add(deviceActionGroup);
+                }
+                foreach (DeviceActionGroup deviceActionGroup in toDelete) {
+                    mainSim2.DeviceActionGroups.DeleteItem(deviceActionGroup);
+                }
+                var dsttag = mainSim2.TraitTags.It.First(x => x.Name.StartsWith("Living "));
+                foreach (ModularHousehold modularHousehold in mainSim2.ModularHouseholds.It) {
+                    var toSet = new List<ModularHouseholdPerson>();
+                    foreach (ModularHouseholdPerson modularHouseholdPerson in modularHousehold.Persons) {
+                        if (modularHouseholdPerson.TraitTag == null) {
+                            toSet.Add(modularHouseholdPerson);
+                        }
                     }
+                    foreach (ModularHouseholdPerson person in toSet) {
+                        modularHousehold.SwapPersons(person, person.Person, dsttag);
+                    }
+                    modularHousehold.SaveToDB();
                 }
-                foreach (ModularHouseholdPerson person in toSet) {
-                    modularHousehold.SwapPersons(person, person.Person, dsttag);
-                }
-                modularHousehold.SaveToDB();
+                SimIntegrityChecker.Run(mainSim2);*/
+                wd.CleanUp();
             }
-            SimIntegrityChecker.Run(mainSim2);*/
-            wd.CleanUp();
             CleanTestBase.RunAutomatically(true);
         }
     }

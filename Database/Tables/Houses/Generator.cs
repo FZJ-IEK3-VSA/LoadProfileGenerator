@@ -30,7 +30,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
+using Common;
 using Database.Database;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
@@ -49,7 +51,7 @@ namespace Database.Tables.Houses {
         private double _scalingFactor;
 
         public Generator([NotNull] string pName, [CanBeNull] string description, [CanBeNull] VLoadType loadType, double scalingFactor,
-            [CanBeNull] DateBasedProfile dateBasedProfile, [NotNull] string connectionString, [NotNull] string guid, [CanBeNull] int? pID = null)
+            [CanBeNull] DateBasedProfile dateBasedProfile, [NotNull] string connectionString, [NotNull] StrGuid guid, [CanBeNull] int? pID = null)
             : base(pName, TableName, connectionString, guid)
         {
             ID = pID;
@@ -122,7 +124,7 @@ namespace Database.Tables.Houses {
         public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString)
         {
             var generator = new Generator(FindNewName(isNameTaken, "New Generator "), "New generator description",
-                null, 1, null, connectionString, System.Guid.NewGuid().ToString());
+                null, 1, null, connectionString, System.Guid.NewGuid().ToStrGuid());
             return generator;
         }
 

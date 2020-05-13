@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Common;
 using Database.Tables.Validation;
@@ -14,6 +15,7 @@ using LineSeries = OxyPlot.Series.LineSeries;
 using ScatterSeries = OxyPlot.Series.ScatterSeries;
 
 namespace ChartCreator2.OxyCharts {
+    [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     internal class MakeNRWChart {
         private readonly int _dpi;
         private const int FontSize = 24;

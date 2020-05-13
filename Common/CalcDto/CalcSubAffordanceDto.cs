@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Automation;
 using Common.Enums;
 using JetBrains.Annotations;
 
@@ -12,7 +13,7 @@ namespace Common.CalcDto {
         public string LocName { get; }
 
         [NotNull]
-        public string LocGuid { get; }
+        public StrGuid LocGuid { get; }
         [NotNull][ItemNotNull]
         public List<CalcDesireDto> Satisfactionvalues { get; }
 
@@ -33,15 +34,15 @@ namespace Common.CalcDto {
         [NotNull]
         public string SourceTrait { get; }
         [NotNull]
-        public string Guid { get; }
+        public StrGuid Guid { get; }
 
-        public CalcSubAffordanceDto([NotNull] string name, int id, [NotNull] string locName, [NotNull] string locGuid,
+        public CalcSubAffordanceDto([NotNull] string name, int id, [NotNull] string locName, [NotNull] StrGuid locGuid,
                                     [NotNull][ItemNotNull] List<CalcDesireDto> satisfactionvalues,
                                     int miniumAge, int maximumAge, int delaytimesteps, PermittedGender permittedGender,
                                     [NotNull] string affCategory,
                                     bool isInterruptable, bool isInterrupting,
                                     [ItemNotNull][NotNull] List<CalcAffordanceVariableOpDto> variableOps, int weight, [NotNull] string sourceTrait,
-                                    [NotNull] string guid)
+                                    [NotNull] StrGuid guid)
         {
             Name = name;
             ID = id;

@@ -12,19 +12,21 @@ namespace Database.Tests.Tables.ModularHouseholds {
     {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void TemplateTagTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-
-            db.ClearTable(HouseholdTag.TableName);
-            var cat = new CategoryDBBase<HouseholdTag>("Template Tags");
-            HouseholdTag.LoadFromDatabase(cat.It, db.ConnectionString, false);
-            Assert.AreEqual(0, cat.MyItems.Count);
-            cat.CreateNewItem(db.ConnectionString);
-            cat.SaveToDB();
-            var tags = new ObservableCollection<HouseholdTag>();
-            HouseholdTag.LoadFromDatabase(tags, db.ConnectionString, false);
-            Assert.AreEqual(1, tags.Count);
-            db.Cleanup();
+        public void TemplateTagTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                db.ClearTable(HouseholdTag.TableName);
+                var cat = new CategoryDBBase<HouseholdTag>("Template Tags");
+                HouseholdTag.LoadFromDatabase(cat.It, db.ConnectionString, false);
+                Assert.AreEqual(0, cat.MyItems.Count);
+                cat.CreateNewItem(db.ConnectionString);
+                cat.SaveToDB();
+                var tags = new ObservableCollection<HouseholdTag>();
+                HouseholdTag.LoadFromDatabase(tags, db.ConnectionString, false);
+                Assert.AreEqual(1, tags.Count);
+                db.Cleanup();
+            }
         }
     }
 }

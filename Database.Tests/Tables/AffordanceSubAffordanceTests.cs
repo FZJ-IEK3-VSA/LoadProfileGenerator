@@ -45,32 +45,35 @@ namespace Database.Tests.Tables {
     {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void LoadFromDatabaseTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var desires = new ObservableCollection<Desire>();
-            Desire.LoadFromDatabase(desires, db.ConnectionString, false);
-            var subAffordances = new ObservableCollection<SubAffordance>();
-            var locations = new ObservableCollection<Location>();
-            var variables = new ObservableCollection<Variable>();
-            SubAffordance.LoadFromDatabase(subAffordances, db.ConnectionString, desires, false, locations, variables);
-            var affordances = new ObservableCollection<Affordance>();
-            var affordanceSubAffordances =
-                new ObservableCollection<AffordanceSubAffordance>();
-            var tbp = new ObservableCollection<TimeBasedProfile>();
-            var dateBasedProfiles = db.LoadDateBasedProfiles();
-            var timeLimits = db.LoadTimeLimits(dateBasedProfiles);
-            var aic = new AllItemCollections(timeProfiles: tbp, timeLimits: timeLimits);
-            DBBase.LoadAllFromDatabase(affordances, db.ConnectionString, Affordance.TableName, Affordance.AssignFields,
-                aic, false, true);
-            AffordanceSubAffordance.LoadFromDatabase(affordanceSubAffordances, db.ConnectionString, affordances,
-                subAffordances, false);
-            Assert.Greater(affordanceSubAffordances.Count, 1);
-            db.ClearTable(AffordanceSubAffordance.TableName);
-            affordanceSubAffordances.Clear();
-            AffordanceSubAffordance.LoadFromDatabase(affordanceSubAffordances, db.ConnectionString, affordances,
-                subAffordances, false);
-            Assert.AreEqual(0, affordanceSubAffordances.Count);
-            db.Cleanup();
+        public void LoadFromDatabaseTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var desires = new ObservableCollection<Desire>();
+                Desire.LoadFromDatabase(desires, db.ConnectionString, false);
+                var subAffordances = new ObservableCollection<SubAffordance>();
+                var locations = new ObservableCollection<Location>();
+                var variables = new ObservableCollection<Variable>();
+                SubAffordance.LoadFromDatabase(subAffordances, db.ConnectionString, desires, false, locations, variables);
+                var affordances = new ObservableCollection<Affordance>();
+                var affordanceSubAffordances =
+                    new ObservableCollection<AffordanceSubAffordance>();
+                var tbp = new ObservableCollection<TimeBasedProfile>();
+                var dateBasedProfiles = db.LoadDateBasedProfiles();
+                var timeLimits = db.LoadTimeLimits(dateBasedProfiles);
+                var aic = new AllItemCollections(timeProfiles: tbp, timeLimits: timeLimits);
+                DBBase.LoadAllFromDatabase(affordances, db.ConnectionString, Affordance.TableName, Affordance.AssignFields,
+                    aic, false, true);
+                AffordanceSubAffordance.LoadFromDatabase(affordanceSubAffordances, db.ConnectionString, affordances,
+                    subAffordances, false);
+                Assert.Greater(affordanceSubAffordances.Count, 1);
+                db.ClearTable(AffordanceSubAffordance.TableName);
+                affordanceSubAffordances.Clear();
+                AffordanceSubAffordance.LoadFromDatabase(affordanceSubAffordances, db.ConnectionString, affordances,
+                    subAffordances, false);
+                Assert.AreEqual(0, affordanceSubAffordances.Count);
+                db.Cleanup();
+            }
         }
     }
 }

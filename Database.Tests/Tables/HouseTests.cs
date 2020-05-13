@@ -49,53 +49,56 @@ namespace Database.Tests.Tables {
     {
         [Test]
         [Category(UnitTestCategories.LongTest1)]
-        public void HouseLoadCreationAndSave2Test() {
+        public void HouseLoadCreationAndSave2Test()
+        {
             Config.ShowDeleteMessages = false;
             Logger.Threshold = Severity.Error;
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            db.ClearTable(House.TableName);
-            db.ClearTable(HouseTypeDevice.TableName);
-            db.ClearTable(HouseHousehold.TableName);
-            var houses = new CategoryDBBase<House>("blub");
-            houses.CreateNewItem(db.ConnectionString);
-            var houses1 = new ObservableCollection<House>();
-            var devices = new ObservableCollection<RealDevice>();
-            var deviceCategories = new ObservableCollection<DeviceCategory>();
-            var timeBasedProfiles = new ObservableCollection<TimeBasedProfile>();
-            var timeLimits = new ObservableCollection<TimeLimit>();
-            var persons = new ObservableCollection<Person>();
-            var temperaturProfiles = new ObservableCollection<TemperatureProfile>();
-            var loadTypes = db.LoadLoadTypes();
-            var variables = db.LoadVariables();
-            var geoLocs = db.LoadGeographicLocations(out _, timeLimits);
-            var energyStorages = db.LoadEnergyStorages(loadTypes,variables);
-            var trafoDevices = db.LoadTransformationDevices(loadTypes,
-                variables);
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                db.ClearTable(House.TableName);
+                db.ClearTable(HouseTypeDevice.TableName);
+                db.ClearTable(HouseHousehold.TableName);
+                var houses = new CategoryDBBase<House>("blub");
+                houses.CreateNewItem(db.ConnectionString);
+                var houses1 = new ObservableCollection<House>();
+                var devices = new ObservableCollection<RealDevice>();
+                var deviceCategories = new ObservableCollection<DeviceCategory>();
+                var timeBasedProfiles = new ObservableCollection<TimeBasedProfile>();
+                var timeLimits = new ObservableCollection<TimeLimit>();
+                var persons = new ObservableCollection<Person>();
+                var temperaturProfiles = new ObservableCollection<TemperatureProfile>();
+                var loadTypes = db.LoadLoadTypes();
+                var variables = db.LoadVariables();
+                var geoLocs = db.LoadGeographicLocations(out _, timeLimits);
+                var energyStorages = db.LoadEnergyStorages(loadTypes, variables);
+                var trafoDevices = db.LoadTransformationDevices(loadTypes,
+                    variables);
 
-            var dateprofiles = db.LoadDateBasedProfiles();
-            var generators = db.LoadGenerators(loadTypes, dateprofiles);
-            var locations = db.LoadLocations(devices, deviceCategories, loadTypes);
-            var deviceActionGroups = db.LoadDeviceActionGroups();
-            var deviceActions = db.LoadDeviceActions(timeBasedProfiles, devices,
-                loadTypes, deviceActionGroups);
-            var houseTypes = db.LoadHouseTypes(devices, deviceCategories, timeBasedProfiles,
-                timeLimits, loadTypes, trafoDevices, energyStorages, generators, locations, deviceActions,
-                deviceActionGroups, variables);
-            var householdTraits = new ObservableCollection<HouseholdTrait>();
-            var deviceSelections = new ObservableCollection<DeviceSelection>();
-            var vacations = db.LoadVacations();
-            var householdTags = db.LoadHouseholdTags();
-            var traitTags = db.LoadTraitTags();
-            var modularHouseholds = db.LoadModularHouseholds(householdTraits,
-                deviceSelections, persons, vacations, householdTags,traitTags);
-            db.LoadTransportation(locations,out var transportationDeviceSets,out var travelRouteSets,
-                out var _,
-                out var _,loadTypes,out var chargingStationSets);
-            House.LoadFromDatabase(houses1, db.ConnectionString,
-                temperaturProfiles, geoLocs, houseTypes,
-                modularHouseholds, chargingStationSets,transportationDeviceSets,travelRouteSets, false);
-            Assert.AreEqual(1, houses1.Count);
-            db.Cleanup();
+                var dateprofiles = db.LoadDateBasedProfiles();
+                var generators = db.LoadGenerators(loadTypes, dateprofiles);
+                var locations = db.LoadLocations(devices, deviceCategories, loadTypes);
+                var deviceActionGroups = db.LoadDeviceActionGroups();
+                var deviceActions = db.LoadDeviceActions(timeBasedProfiles, devices,
+                    loadTypes, deviceActionGroups);
+                var houseTypes = db.LoadHouseTypes(devices, deviceCategories, timeBasedProfiles,
+                    timeLimits, loadTypes, trafoDevices, energyStorages, generators, locations, deviceActions,
+                    deviceActionGroups, variables);
+                var householdTraits = new ObservableCollection<HouseholdTrait>();
+                var deviceSelections = new ObservableCollection<DeviceSelection>();
+                var vacations = db.LoadVacations();
+                var householdTags = db.LoadHouseholdTags();
+                var traitTags = db.LoadTraitTags();
+                var modularHouseholds = db.LoadModularHouseholds(householdTraits,
+                    deviceSelections, persons, vacations, householdTags, traitTags);
+                db.LoadTransportation(locations, out var transportationDeviceSets, out var travelRouteSets,
+                    out var _,
+                    out var _, loadTypes, out var chargingStationSets);
+                House.LoadFromDatabase(houses1, db.ConnectionString,
+                    temperaturProfiles, geoLocs, houseTypes,
+                    modularHouseholds, chargingStationSets, transportationDeviceSets, travelRouteSets, false);
+                Assert.AreEqual(1, houses1.Count);
+                db.Cleanup();
+            }
         }
 
         [Test]
@@ -104,77 +107,78 @@ namespace Database.Tests.Tables {
         {
             Config.ShowDeleteMessages = false;
             Logger.Threshold = Severity.Error;
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                db.ClearTable(House.TableName);
+                db.ClearTable(HouseTypeDevice.TableName);
+                db.ClearTable(HouseHousehold.TableName);
+                var loadTypes = db.LoadLoadTypes();
+                var houses = new ObservableCollection<House>();
+                var devices = new ObservableCollection<RealDevice>();
+                var deviceCategories = new ObservableCollection<DeviceCategory>();
+                var timeBasedProfiles = new ObservableCollection<TimeBasedProfile>();
+                var timeLimits = new ObservableCollection<TimeLimit>();
+                var persons = new ObservableCollection<Person>();
+                var temperaturProfiles = new ObservableCollection<TemperatureProfile>();
+                var geoLocs = db.LoadGeographicLocations(out _, timeLimits);
+                var variables = db.LoadVariables();
+                var energyStorages = db.LoadEnergyStorages(loadTypes, variables);
+                var trafoDevices = db.LoadTransformationDevices(loadTypes,
+                    variables);
 
-            db.ClearTable(House.TableName);
-            db.ClearTable(HouseTypeDevice.TableName);
-            db.ClearTable(HouseHousehold.TableName);
-            var loadTypes = db.LoadLoadTypes();
-            var houses = new ObservableCollection<House>();
-            var devices = new ObservableCollection<RealDevice>();
-            var deviceCategories = new ObservableCollection<DeviceCategory>();
-            var timeBasedProfiles = new ObservableCollection<TimeBasedProfile>();
-            var timeLimits = new ObservableCollection<TimeLimit>();
-            var persons = new ObservableCollection<Person>();
-            var temperaturProfiles = new ObservableCollection<TemperatureProfile>();
-            var geoLocs = db.LoadGeographicLocations(out _, timeLimits);
-            var variables = db.LoadVariables();
-            var energyStorages = db.LoadEnergyStorages(loadTypes,variables);
-            var trafoDevices = db.LoadTransformationDevices(loadTypes,
-                variables);
+                var dateprofiles = db.LoadDateBasedProfiles();
+                var locations = db.LoadLocations(devices, deviceCategories, loadTypes);
+                var generators = db.LoadGenerators(loadTypes, dateprofiles);
+                var deviceActionGroups = db.LoadDeviceActionGroups();
+                var deviceActions = db.LoadDeviceActions(timeBasedProfiles, devices,
+                    loadTypes, deviceActionGroups);
+                var houseTypes = db.LoadHouseTypes(devices, deviceCategories, timeBasedProfiles,
+                    timeLimits, loadTypes, trafoDevices, energyStorages, generators, locations, deviceActions,
+                    deviceActionGroups, variables);
+                var householdTraits = new ObservableCollection<HouseholdTrait>();
+                var deviceSelections = new ObservableCollection<DeviceSelection>();
+                var vacations = db.LoadVacations();
+                var householdTags = db.LoadHouseholdTags();
+                var traitTags = db.LoadTraitTags();
+                var modularHouseholds = db.LoadModularHouseholds(householdTraits,
+                    deviceSelections, persons, vacations, householdTags, traitTags);
+                db.LoadTransportation(locations, out var transportationDeviceSets, out var travelRouteSets,
+                    out var _,
+                    out var _, loadTypes, out var chargingStationSets);
+                House.LoadFromDatabase(houses, db.ConnectionString, temperaturProfiles, geoLocs, houseTypes,
+                    modularHouseholds, chargingStationSets, transportationDeviceSets, travelRouteSets, false);
+                Assert.AreEqual(0, houses.Count);
+                var house = new House("haus1", "blub", null, null, null, db.ConnectionString, EnergyIntensityType.Random,
+                    "Testing", CreationType.ManuallyCreated, Guid.NewGuid().ToStrGuid());
+                house.SaveToDB();
+                House.LoadFromDatabase(houses, db.ConnectionString, temperaturProfiles, geoLocs, houseTypes,
+                    modularHouseholds, chargingStationSets, transportationDeviceSets, travelRouteSets, false);
+                Assert.AreEqual(1, houses.Count);
+                // ModularHousehold hh = new ModularHousehold("bla", null, "blub", db.ConnectionString, null, "test",null,null, EnergyIntensityType.Random,CreationType.TemplateCreated);
+                //h/h.SaveToDB();
+                //households.Add(hh);
+                var house2 = houses[0];
+                Assert.AreEqual(0, house2.Households.Count);
 
-            var dateprofiles = db.LoadDateBasedProfiles();
-            var locations = db.LoadLocations(devices, deviceCategories, loadTypes);
-            var generators = db.LoadGenerators(loadTypes, dateprofiles);
-            var deviceActionGroups = db.LoadDeviceActionGroups();
-            var deviceActions = db.LoadDeviceActions(timeBasedProfiles, devices,
-                loadTypes, deviceActionGroups);
-            var houseTypes = db.LoadHouseTypes(devices, deviceCategories, timeBasedProfiles,
-                timeLimits, loadTypes, trafoDevices, energyStorages, generators, locations, deviceActions,
-                deviceActionGroups, variables);
-            var householdTraits = new ObservableCollection<HouseholdTrait>();
-            var deviceSelections = new ObservableCollection<DeviceSelection>();
-            var vacations = db.LoadVacations();
-            var householdTags = db.LoadHouseholdTags();
-            var traitTags = db.LoadTraitTags();
-            var modularHouseholds = db.LoadModularHouseholds(householdTraits,
-                deviceSelections, persons, vacations, householdTags,traitTags);
-            db.LoadTransportation(locations, out var transportationDeviceSets, out var travelRouteSets,
-                out var _,
-                out var _, loadTypes, out var chargingStationSets);
-            House.LoadFromDatabase(houses, db.ConnectionString, temperaturProfiles, geoLocs, houseTypes,
-                modularHouseholds,chargingStationSets,transportationDeviceSets,travelRouteSets, false);
-            Assert.AreEqual(0, houses.Count);
-            var house = new House("haus1", "blub", null, null, null, db.ConnectionString, EnergyIntensityType.Random,
-                "Testing", CreationType.ManuallyCreated, Guid.NewGuid().ToString());
-            house.SaveToDB();
-            House.LoadFromDatabase(houses, db.ConnectionString, temperaturProfiles, geoLocs, houseTypes,
-                modularHouseholds,chargingStationSets,transportationDeviceSets,travelRouteSets, false);
-            Assert.AreEqual(1, houses.Count);
-            // ModularHousehold hh = new ModularHousehold("bla", null, "blub", db.ConnectionString, null, "test",null,null, EnergyIntensityType.Random,CreationType.TemplateCreated);
-            //h/h.SaveToDB();
-            //households.Add(hh);
-            var house2 = houses[0];
-            Assert.AreEqual(0, house2.Households.Count);
+                house.AddHousehold(modularHouseholds[0], false, null, null, null);
+                house.AddHousehold(modularHouseholds[0], false, null, null, null);
+                house.SaveToDB();
+                houses.Clear();
+                House.LoadFromDatabase(houses, db.ConnectionString, temperaturProfiles, geoLocs, houseTypes,
+                    modularHouseholds, chargingStationSets, transportationDeviceSets, travelRouteSets, false);
+                Assert.AreEqual(1, houses.Count);
+                var house3 = houses[0];
+                Assert.AreEqual(2, house3.Households.Count);
+                house3.DeleteHouseholdFromDB(house3.Households[0]);
+                houses.Clear();
 
-            house.AddHousehold(modularHouseholds[0],false,null,null,null);
-            house.AddHousehold(modularHouseholds[0],false,null,null,null);
-            house.SaveToDB();
-            houses.Clear();
-            House.LoadFromDatabase(houses, db.ConnectionString, temperaturProfiles, geoLocs, houseTypes,
-                modularHouseholds,chargingStationSets,transportationDeviceSets,travelRouteSets, false);
-            Assert.AreEqual(1, houses.Count);
-            var house3 = houses[0];
-            Assert.AreEqual(2, house3.Households.Count);
-            house3.DeleteHouseholdFromDB(house3.Households[0]);
-            houses.Clear();
-
-            House.LoadFromDatabase(houses, db.ConnectionString, temperaturProfiles, geoLocs, houseTypes,
-                modularHouseholds,chargingStationSets,transportationDeviceSets,travelRouteSets, false);
-            Assert.AreEqual(1, houses.Count);
-            var house4 = houses[0];
-            Assert.AreEqual(1, house4.Households.Count);
-            db.Cleanup();
+                House.LoadFromDatabase(houses, db.ConnectionString, temperaturProfiles, geoLocs, houseTypes,
+                    modularHouseholds, chargingStationSets, transportationDeviceSets, travelRouteSets, false);
+                Assert.AreEqual(1, houses.Count);
+                var house4 = houses[0];
+                Assert.AreEqual(1, house4.Households.Count);
+                db.Cleanup();
+            }
         }
     }
 }

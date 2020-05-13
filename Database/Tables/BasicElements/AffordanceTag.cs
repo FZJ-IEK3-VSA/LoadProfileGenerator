@@ -38,7 +38,7 @@ namespace Database.Tables.BasicElements {
         private readonly int _taggingSetID;
         private ColorRGB _carpetPlotColor;
 
-        public AffordanceTag([NotNull] string name, int taggingSetID, [NotNull] string connectionString,[CanBeNull] int? pID, ColorRGB color, [NotNull] string guid)
+        public AffordanceTag([NotNull] string name, int taggingSetID, [NotNull] string connectionString,[CanBeNull] int? pID, ColorRGB color, [NotNull] StrGuid guid)
             : base(name, pID, TableName, connectionString,  guid)
         {
             _taggingSetID = taggingSetID;

@@ -16,43 +16,45 @@ namespace Database.Tests.Tables.Transportation
         [Category(UnitTestCategories.BasicTest)]
         public void SiteLocationTest()
         {
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-
-            Location loc = new Location("loc1",null,db.ConnectionString, Guid.NewGuid().ToString());
-            loc.SaveToDB();
-            SiteLocation sl = new SiteLocation(null,loc,-1,db.ConnectionString,"name", Guid.NewGuid().ToString());
-            ObservableCollection<SiteLocation> slocs = new ObservableCollection<SiteLocation>();
-            ObservableCollection<Location> locs = new ObservableCollection<Location>();
-            sl.SaveToDB();
-            locs.Add(loc);
-            SiteLocation.LoadFromDatabase(slocs,db.ConnectionString,locs,false);
-            db.Cleanup();
-            Assert.AreEqual(1,slocs.Count);
+            using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                Location loc = new Location("loc1", null, db.ConnectionString, Guid.NewGuid().ToStrGuid());
+                loc.SaveToDB();
+                SiteLocation sl = new SiteLocation(null, loc, -1, db.ConnectionString, "name", Guid.NewGuid().ToStrGuid());
+                ObservableCollection<SiteLocation> slocs = new ObservableCollection<SiteLocation>();
+                ObservableCollection<Location> locs = new ObservableCollection<Location>();
+                sl.SaveToDB();
+                locs.Add(loc);
+                SiteLocation.LoadFromDatabase(slocs, db.ConnectionString, locs, false);
+                db.Cleanup();
+                Assert.AreEqual(1, slocs.Count);
+            }
         }
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void SiteWithLocationTest()
         {
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-
-            db.ClearTable(Site.TableName);
-            db.ClearTable(SiteLocation.TableName);
-            Location loc = new Location("loc1", null, db.ConnectionString, Guid.NewGuid().ToString());
-            loc.SaveToDB();
-            Site site = new Site("site1", null, db.ConnectionString, "desc",Guid.NewGuid().ToString());
-            site.SaveToDB();
-            site.AddLocation(loc);
-            //loading
-            ObservableCollection<Site> slocs = new ObservableCollection<Site>();
-            ObservableCollection<Location> locs = new ObservableCollection<Location>
+            using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                db.ClearTable(Site.TableName);
+                db.ClearTable(SiteLocation.TableName);
+                Location loc = new Location("loc1", null, db.ConnectionString, Guid.NewGuid().ToStrGuid());
+                loc.SaveToDB();
+                Site site = new Site("site1", null, db.ConnectionString, "desc", Guid.NewGuid().ToStrGuid());
+                site.SaveToDB();
+                site.AddLocation(loc);
+                //loading
+                ObservableCollection<Site> slocs = new ObservableCollection<Site>();
+                ObservableCollection<Location> locs = new ObservableCollection<Location>
             {
                 loc
             };
-            Site.LoadFromDatabase(slocs, db.ConnectionString,
-                false, locs);
-            db.Cleanup();
-            Assert.AreEqual(1, slocs.Count);
+                Site.LoadFromDatabase(slocs, db.ConnectionString,
+                    false, locs);
+                db.Cleanup();
+                Assert.AreEqual(1, slocs.Count);
+            }
         }
     }
 }

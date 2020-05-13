@@ -32,6 +32,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using Common.Enums;
 using Database.Database;
@@ -49,7 +50,7 @@ namespace Database.Tables.Houses {
         private readonly int? _settlementID;
 
         public SettlementHH([CanBeNull]int? pID, [CanBeNull] ICalcObject pHH, int count, [CanBeNull] int? settlementID,
-            [NotNull] string connectionString, [NotNull] string householdName, [NotNull] string guid)
+            [NotNull] string connectionString, [NotNull] string householdName, [NotNull] StrGuid guid)
             : base(householdName, TableName, connectionString, guid) {
             TypeDescription = "Settlement Household";
             ID = pID;

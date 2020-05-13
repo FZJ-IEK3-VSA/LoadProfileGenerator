@@ -29,6 +29,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using CalculationEngine.HouseholdElements;
 using CalculationEngine.OnlineDeviceLogging;
@@ -78,7 +79,7 @@ namespace CalculationEngine.HouseElements {
         public List<OutputLoadType> OutputLoadTypes => _outputLoadTypes;
 
         public void AddCondition([NotNull] string name,
-             [NotNull] CalcVariable variable, double minValue, double maxValue, [NotNull] string guid) {
+             [NotNull] CalcVariable variable, double minValue, double maxValue, [NotNull] StrGuid guid) {
             var cond =
                 new CalcTransformationCondition(name, variable, minValue, maxValue, guid);
             _conditions.Add(cond);

@@ -42,7 +42,7 @@ namespace Database.Tests.Tables {
         [Category(UnitTestCategories.BasicTest)]
         public void ConvertPowerValueWithTimeTest() {
             var vlt = new VLoadType("bla", string.Empty, "Watt", "kWh", 1000, 1, new TimeSpan(1, 0, 0), 1,
-                string.Empty, LoadTypePriority.Mandatory, true, Guid.NewGuid().ToString());
+                string.Empty, LoadTypePriority.Mandatory, true, Guid.NewGuid().ToStrGuid());
 
             Assert.AreEqual(10, vlt.ConvertPowerValueWithTime(10000, new TimeSpan(1, 0, 0)));
             Assert.AreEqual(5, vlt.ConvertPowerValueWithTime(10000, new TimeSpan(0, 30, 0)));
@@ -50,26 +50,28 @@ namespace Database.Tests.Tables {
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void VLoadTypeTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-
-            db.ClearTable(VLoadType.TableName);
-            var loadts = new ObservableCollection<VLoadType>();
-            VLoadType.LoadFromDatabase(loadts, db.ConnectionString, false);
-            Assert.AreEqual(0, loadts.Count);
-            var loadType = new VLoadType("loadtype1", "blub", "bla", "blu", 1000, 1, new TimeSpan(1, 0, 0), 1,
-                db.ConnectionString, LoadTypePriority.Mandatory, true, Guid.NewGuid().ToString());
-            loadType.SaveToDB();
-            VLoadType.LoadFromDatabase(loadts, db.ConnectionString, false);
-            Assert.AreEqual(1, loadts.Count);
-            var lt = loadts[0];
-            Assert.That(lt.Name, Is.EqualTo("loadtype1"));
-            Assert.AreEqual("blub", lt.Description );
-            lt.DeleteFromDB();
-            loadts.Clear();
-            VLoadType.LoadFromDatabase(loadts, db.ConnectionString, false);
-            Assert.AreEqual(0, loadts.Count);
-            db.Cleanup();
+        public void VLoadTypeTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                db.ClearTable(VLoadType.TableName);
+                var loadts = new ObservableCollection<VLoadType>();
+                VLoadType.LoadFromDatabase(loadts, db.ConnectionString, false);
+                Assert.AreEqual(0, loadts.Count);
+                var loadType = new VLoadType("loadtype1", "blub", "bla", "blu", 1000, 1, new TimeSpan(1, 0, 0), 1,
+                    db.ConnectionString, LoadTypePriority.Mandatory, true, Guid.NewGuid().ToStrGuid());
+                loadType.SaveToDB();
+                VLoadType.LoadFromDatabase(loadts, db.ConnectionString, false);
+                Assert.AreEqual(1, loadts.Count);
+                var lt = loadts[0];
+                Assert.That(lt.Name, Is.EqualTo("loadtype1"));
+                Assert.AreEqual("blub", lt.Description);
+                lt.DeleteFromDB();
+                loadts.Clear();
+                VLoadType.LoadFromDatabase(loadts, db.ConnectionString, false);
+                Assert.AreEqual(0, loadts.Count);
+                db.Cleanup();
+            }
         }
     }
 }

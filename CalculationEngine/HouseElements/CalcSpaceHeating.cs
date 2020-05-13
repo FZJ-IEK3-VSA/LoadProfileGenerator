@@ -64,13 +64,13 @@ namespace CalculationEngine.HouseElements {
             var numberOfValuesInOneDay = (int)(oneDay.TotalMilliseconds / CalcRepo.CalcParameters.InternalStepsize.TotalMilliseconds);
             var heatingProfile = new List<double>(new double[numberOfValuesInOneDay]);
             var cdd = _calcDegreeDays[new Tuple<int, int, int>(dateTime.Year, dateTime.Month, dateTime.Day)];
-            var timeUnitValue = cdd.HeatingAmount / numberOfValuesInOneDay / PowerUsage[0].LoadType.ConversionFactor;
+            var timeUnitValue = cdd.HeatingAmount / numberOfValuesInOneDay / Loads[0].LoadType.ConversionFactor;
             for (var i = 0; i < heatingProfile.Count; i++) {
                 heatingProfile[i] = timeUnitValue;
             }
 
             var cp = new CalcProfile("Heating profile - " + time,
-                System.Guid.NewGuid().ToString(),
+                System.Guid.NewGuid().ToStrGuid(),
                 heatingProfile,
                 ProfileType.Relative,
                 "Calculated from Heating Degree Days");

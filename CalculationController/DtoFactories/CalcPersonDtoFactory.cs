@@ -46,7 +46,7 @@ namespace CalculationController.DtoFactories
                     CalculateSicknessdays(hhPerson.Person.SickDays, hhPerson.Person.AverageSicknessDuration);
                 var vacationSpans = _vacationDtoFactory.GetVacationSpans(vacationTimes);
                 CalcPersonDto dto = new CalcPersonDto(hhPerson.Person.PrettyName,
-                    Guid.NewGuid().ToString(),hhPerson.Person.Age,hhPerson.Person.Gender,
+                    Guid.NewGuid().ToStrGuid(),hhPerson.Person.Age,hhPerson.Person.Gender,
                     householdKey, sicknessSpans,vacationSpans,hhPerson.Person.IntID,traitTagName,modularHouseholdName);
                 AddTraitDesiresToOnePerson(traitDesires,dto);
                 personDtOs.Add(dto);

@@ -32,6 +32,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Automation;
 using Database.Database;
 using JetBrains.Annotations;
 
@@ -48,7 +49,7 @@ namespace Database.Tables.BasicHouseholds {
         [CanBeNull] private readonly SubAffordance _subaff;
 
         public AffordanceSubAffordance([CanBeNull]int? pID, [CanBeNull] SubAffordance subaff, decimal delayTime, [NotNull] string name,
-            [NotNull] string connectionString, [CanBeNull]int? affordanceID, [NotNull] string guid) : base(name, TableName, connectionString, guid) {
+            [NotNull] string connectionString, [CanBeNull]int? affordanceID, [NotNull] StrGuid guid) : base(name, TableName, connectionString, guid) {
             TypeDescription = "Affordance - Subaffordance";
             ID = pID;
             _affordanceID = affordanceID;
@@ -60,7 +61,7 @@ namespace Database.Tables.BasicHouseholds {
         }
 
         public AffordanceSubAffordance([CanBeNull]int? pID, [CanBeNull] SubAffordance subaff, decimal delayTime, [CanBeNull]int? affordanceID,
-            [NotNull] string affordanceName, [NotNull] string connectionString, [NotNull] string subaffname, [NotNull] string guid)
+            [NotNull] string affordanceName, [NotNull] string connectionString, [NotNull] string subaffname, [NotNull] StrGuid guid)
             : base(subaffname + "(" + affordanceName + ")", TableName, connectionString, guid) {
             if (subaffname == null) {
                 throw new ArgumentNullException(nameof(subaffname));

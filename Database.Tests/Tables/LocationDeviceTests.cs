@@ -40,25 +40,27 @@ namespace Database.Tests.Tables {
     {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void LocationDeviceTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
+        public void LocationDeviceTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                db.ClearTable(LocationDevice.TableName);
+                var profiles = db.LoadTimeBasedProfiles();
+                var realDevices = db.LoadRealDevices(out var deviceCategories, out var loadTypes,
+                    profiles);
+                var locdevs = new ObservableCollection<LocationDevice>();
+                LocationDevice.LoadFromDatabase(locdevs, db.ConnectionString, realDevices, deviceCategories, loadTypes,
+                    false);
+                Assert.AreEqual(0, locdevs.Count);
+                var locdev = new LocationDevice(null, realDevices[0], 1, db.ConnectionString,
+                    realDevices[0].Name, Guid.NewGuid().ToStrGuid());
+                locdev.SaveToDB();
+                LocationDevice.LoadFromDatabase(locdevs, db.ConnectionString, realDevices, deviceCategories, loadTypes,
+                    false);
+                Assert.AreEqual(1, locdevs.Count);
 
-            db.ClearTable(LocationDevice.TableName);
-            var profiles = db.LoadTimeBasedProfiles();
-            var realDevices = db.LoadRealDevices(out var deviceCategories, out var loadTypes,
-                profiles);
-            var locdevs = new ObservableCollection<LocationDevice>();
-            LocationDevice.LoadFromDatabase(locdevs, db.ConnectionString, realDevices, deviceCategories, loadTypes,
-                false);
-            Assert.AreEqual(0, locdevs.Count);
-            var locdev = new LocationDevice(null, realDevices[0], 1, db.ConnectionString,
-                realDevices[0].Name, Guid.NewGuid().ToString());
-            locdev.SaveToDB();
-            LocationDevice.LoadFromDatabase(locdevs, db.ConnectionString, realDevices, deviceCategories, loadTypes,
-                false);
-            Assert.AreEqual(1, locdevs.Count);
-
-            db.Cleanup();
+                db.Cleanup();
+            }
         }
     }
 }

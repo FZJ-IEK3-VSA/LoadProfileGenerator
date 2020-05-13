@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using Automation;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 
@@ -12,8 +13,8 @@ namespace Common.CalcDto {
         [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
         public DeviceEnergyProfileTupleDto() { }
 
-        public DeviceEnergyProfileTupleDto([NotNull]string calcDeviceName, [NotNull]string calcDeviceGuid, [NotNull]  CalcProfileDto ep, [NotNull] string calcLoadTypeName,
-                                           [NotNull] string calcLoadTypeGuid, decimal timeOffset,
+        public DeviceEnergyProfileTupleDto([NotNull]string calcDeviceName, [NotNull]StrGuid calcDeviceGuid, [NotNull]  CalcProfileDto ep, [NotNull] string calcLoadTypeName,
+                                           [NotNull] StrGuid calcLoadTypeGuid, decimal timeOffset,
                                            TimeSpan stepsize, double multiplier, double probability)
         {
             CalcDeviceName = calcDeviceName;
@@ -40,7 +41,7 @@ namespace Common.CalcDto {
         public string CalcDeviceName { get; private set; }
         [NotNull]
         [JsonProperty]
-        public string CalcDeviceGuid { get; private set; }
+        public StrGuid CalcDeviceGuid { get; private set; }
         [NotNull]
         [JsonProperty]
         public CalcProfileDto TimeProfile { get; private set; }
@@ -49,7 +50,7 @@ namespace Common.CalcDto {
         public string CalcLoadTypeName { get; private set; }
         [NotNull]
         [JsonProperty]
-        public string CalcLoadTypeGuid { get; private set; }
+        public StrGuid CalcLoadTypeGuid { get; private set; }
 
         [NotNull]
         public override string ToString() => "Device:" + CalcDeviceName + ", Profile " + TimeProfile.Name +

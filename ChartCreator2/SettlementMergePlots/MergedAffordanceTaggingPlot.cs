@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -11,6 +12,7 @@ using OxyPlot.Axes;
 using OxyPlot.Series;
 
 namespace ChartCreator2.SettlementMergePlots {
+    [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     public class MergedAffordanceTaggingPlot {
         private const int Fontsize = 30;
 

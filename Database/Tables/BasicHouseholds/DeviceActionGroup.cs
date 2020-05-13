@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Automation;
 using Common;
 using Database.Database;
 using Database.Helpers;
@@ -14,7 +15,7 @@ namespace Database.Tables.BasicHouseholds {
         public const string TableName = "tblDeviceActionGroups";
         [NotNull] private string _description;
 
-        public DeviceActionGroup([NotNull] string pName, [NotNull] string connectionString, [NotNull] string description, [NotNull] string guid, [CanBeNull]int? pID = null)
+        public DeviceActionGroup([NotNull] string pName, [NotNull] string connectionString, [NotNull] string description, [NotNull] StrGuid guid, [CanBeNull]int? pID = null)
             : base(pName, pID, TableName, connectionString, guid) {
             _description = description;
             TypeDescription = "Device Action Group";
@@ -112,7 +113,7 @@ namespace Database.Tables.BasicHouseholds {
         [UsedImplicitly]
         public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) {
             var dc = new DeviceActionGroup(FindNewName(isNameTaken, "New Device Action Group "),
-                connectionString, "(no description)", System.Guid.NewGuid().ToString());
+                connectionString, "(no description)", System.Guid.NewGuid().ToStrGuid());
             return dc;
         }
 

@@ -49,7 +49,7 @@ namespace Database.Tables.ModularHouseholds {
 
             }
 
-            public JsonDto(JsonReference desire, decimal decayTime, HealthStatus sicknessdesire, decimal threshold, decimal weight, int minAge, int maxAge, PermittedGender gender, [NotNull] string guid)
+            public JsonDto(JsonReference desire, decimal decayTime, HealthStatus sicknessdesire, decimal threshold, decimal weight, int minAge, int maxAge, PermittedGender gender, [NotNull] StrGuid guid)
             {
                 Desire = desire;
                 DecayTime = decayTime;
@@ -70,7 +70,7 @@ namespace Database.Tables.ModularHouseholds {
             public int MinAge { get; set; }
             public int MaxAge { get; set; }
             public PermittedGender Gender { get; set; }
-            public string Guid { get; set; }
+            public StrGuid Guid { get; set; }
         }
         public const string ParentIDFieldName = "HouseholdTraitID";
         public const string TableName = "tblHHTDesires";
@@ -92,7 +92,7 @@ namespace Database.Tables.ModularHouseholds {
         public HHTDesire([CanBeNull]int? pID, [CanBeNull] int? householdTraitID, decimal decayTime, [CanBeNull] Desire desire,
             HealthStatus sicknessdesire,
             decimal threshold, decimal weight, [NotNull] string connectionString, [NotNull] string name, int minAge, int maxAge,
-            PermittedGender gender, [NotNull] string guid) : base(name, TableName, connectionString, guid)
+            PermittedGender gender, [NotNull] StrGuid guid) : base(name, TableName, connectionString, guid)
         {
             ID = pID;
             _decayTime = decayTime;
@@ -311,6 +311,6 @@ namespace Database.Tables.ModularHouseholds {
             SaveToDB();
         }
 
-        public string RelevantGuid => Guid;
+        public StrGuid RelevantGuid => Guid;
     }
 }

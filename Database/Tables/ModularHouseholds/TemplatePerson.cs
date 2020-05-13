@@ -32,7 +32,7 @@ namespace Database.Tables.ModularHouseholds {
         [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "basePerson")]
         public TemplatePerson([NotNull] string pName,[CanBeNull] int? id,[NotNull]  string description, [NotNull] string connectionString, int age,
             int averageSicknessDuration, PermittedGender gender, int sickDays,
-            [CanBeNull] ModularHousehold baseHousehold, [CanBeNull] Person basePerson, [NotNull] string guid) : base(pName, TableName,
+            [CanBeNull] ModularHousehold baseHousehold, [CanBeNull] Person basePerson, [NotNull] StrGuid guid) : base(pName, TableName,
             connectionString, guid)
         {
             ID = id;
@@ -102,7 +102,7 @@ namespace Database.Tables.ModularHouseholds {
                 return;
             }
             var entry = new TemplatePersonTrait(null, IntID,
-                "newEntry", ConnectionString, trait, System.Guid.NewGuid().ToString());
+                "newEntry", ConnectionString, trait, System.Guid.NewGuid().ToStrGuid());
             _traits.Add(entry);
             entry.SaveToDB();
             _traits.Sort();
@@ -144,7 +144,7 @@ namespace Database.Tables.ModularHouseholds {
         public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new
             TemplatePerson(FindNewName(isNameTaken, "New  Template Person "), null, "(no description)",
                 connectionString, 30, 3, PermittedGender.Male,
-                10, null, null, System.Guid.NewGuid().ToString());
+                10, null, null, System.Guid.NewGuid().ToStrGuid());
 
         public override void DeleteFromDB()
         {

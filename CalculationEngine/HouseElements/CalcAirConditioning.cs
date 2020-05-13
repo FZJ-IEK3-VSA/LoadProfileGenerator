@@ -68,7 +68,7 @@ namespace CalculationEngine.HouseElements {
                 coolingProfile[i] = timeunitvalue;
             }
 
-            var cp = new CalcProfile("Cooling profile - " + time, System.Guid.NewGuid().ToString(), coolingProfile,
+            var cp = new CalcProfile("Cooling profile - " + time, System.Guid.NewGuid().ToStrGuid(), coolingProfile,
                 ProfileType.Relative, "Calculated from Cooling Hours");
             SetAllLoadTypesToTimeprofile(cp, time, "Air Conditioning", "Air Conditioner", 1);
         }

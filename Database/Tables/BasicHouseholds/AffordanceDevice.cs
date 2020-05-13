@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Globalization;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Database.Database;
@@ -32,7 +33,7 @@ namespace Database.Tables.BasicHouseholds {
         public AffordanceDevice([CanBeNull] IAssignableDevice assignableDevice,
             [CanBeNull] TimeBasedProfile timeProfile, [CanBeNull] int? id, decimal timeOffset, [CanBeNull] int? affordanceID,
             [ItemNotNull] [NotNull] ObservableCollection<RealDevice> simdevices, [ItemNotNull] [NotNull] ObservableCollection<DeviceCategory> simdevcategories,
-            [NotNull] string deviceName, [CanBeNull] VLoadType loadType, [NotNull] string connectionString, double probability, [NotNull] string guid) : base(
+            [NotNull] string deviceName, [CanBeNull] VLoadType loadType, [NotNull] string connectionString, double probability, [NotNull] StrGuid guid) : base(
             deviceName, TableName, connectionString, guid) {
             _assignableDevice = assignableDevice;
             _timeProfile = timeProfile;

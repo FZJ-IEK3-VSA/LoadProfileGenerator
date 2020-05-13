@@ -7,6 +7,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Automation;
 using Database.Database;
 using Database.Tables.BasicHouseholds;
 using JetBrains.Annotations;
@@ -18,7 +19,7 @@ namespace Database.Tables.Transportation {
         [CanBeNull] private readonly Location _location;
 
         public SiteLocation([CanBeNull]int? pID, [CanBeNull] Location location, int siteID, [NotNull] string connectionString,
-            [NotNull] string name, [NotNull] string guid) : base(name, TableName, connectionString, guid)
+            [NotNull] string name, [NotNull] StrGuid guid) : base(name, TableName, connectionString, guid)
         {
             TypeDescription = "Site Location";
             ID = pID;

@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
+using Automation;
 using Automation.ResultFiles;
+using Common;
 using Database.Database;
 using Database.Tables.BasicElements;
 using JetBrains.Annotations;
@@ -23,7 +25,7 @@ namespace Database.Tables.Transportation {
             }
         }
         public TransportationDeviceSet([NotNull] string name, [CanBeNull]int? pID, [NotNull] string connectionString, [CanBeNull] string description,
-            [NotNull] string guid
+            [NotNull] StrGuid guid
             )
             : base(name, TableName, connectionString, guid)
         {
@@ -51,7 +53,7 @@ namespace Database.Tables.Transportation {
         [UsedImplicitly]
         public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new
             TransportationDeviceSet(FindNewName(isNameTaken, "New Transportation Device Set"),
-                null, connectionString,"", System.Guid.NewGuid().ToString());
+                null, connectionString,"", System.Guid.NewGuid().ToStrGuid());
 
         [NotNull]
         [UsedImplicitly]
@@ -127,7 +129,7 @@ namespace Database.Tables.Transportation {
         public void AddDevice([NotNull] TransportationDevice tdev)
         {
                 TransportationDeviceSetEntry tdse = new TransportationDeviceSetEntry(null, IntID,
-                    ConnectionString, tdev.Name, tdev, System.Guid.NewGuid().ToString());
+                    ConnectionString, tdev.Name, tdev, System.Guid.NewGuid().ToStrGuid());
                 tdse.SaveToDB();
             _transportationDevices.Add(tdse);
         }

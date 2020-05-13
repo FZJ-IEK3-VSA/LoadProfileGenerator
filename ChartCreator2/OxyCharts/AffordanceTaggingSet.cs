@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using Automation.ResultFiles;
 using Common;
-using JetBrains.Annotations;
 using OxyPlot;
 using OxyPlot.Annotations;
 using OxyPlot.Axes;
@@ -27,18 +26,21 @@ namespace ChartCreator2.OxyCharts {
         protected override FileProcessingResult MakeOnePlot([JetBrains.Annotations.NotNull] ResultFileEntry rfe)
         {
             string plotName = "Affordance Tagging Set " + rfe.HouseholdNumberString;
-            _CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
+            Profiler.StartPart(Utili.GetCurrentMethodAndClass());
             var consumption = new Dictionary<string, List<double>>();
             var colNames = new Dictionary<int, string>();
             var colSums = new Dictionary<int, double>();
             double totalSum = 0;
+            if (rfe.FullFileName == null) {
+                throw new LPGException("filename was null");
+            }
             using (var sr = new StreamReader(rfe.FullFileName)) {
                 // read data
                 var header = sr.ReadLine();
                 if (header == null) {
                     throw new LPGException("Readline failed.");
                 }
-                var colheaders = header.Split(_Parameters.CSVCharacterArr, StringSplitOptions.None);
+                var colheaders = header.Split(Parameters.CSVCharacterArr, StringSplitOptions.None);
                 for (var index = 1; index < colheaders.Length; index++) {
                     if (colheaders[index].Length > 0) {
                         colNames.Add(index, colheaders[index]);
@@ -50,7 +52,7 @@ namespace ChartCreator2.OxyCharts {
                     if (s == null) {
                         throw new LPGException("Readline failed.");
                     }
-                    var cols = s.Split(_Parameters.CSVCharacterArr, StringSplitOptions.None);
+                    var cols = s.Split(Parameters.CSVCharacterArr, StringSplitOptions.None);
                     var list = new List<double>();
                     consumption.Add(cols[0], list);
 
@@ -74,12 +76,12 @@ namespace ChartCreator2.OxyCharts {
             var pngOffset = 0.1;
             // in the pdfs the vertical text gets moved a little. this is the offset in the png to counter that.
             if (Config.MakePDFCharts) {
-                plotModel1.DefaultFontSize = _Parameters.PDFFontSize;
-                plotModel1.LegendFontSize = _Parameters.PDFFontSize;
+                plotModel1.DefaultFontSize = Parameters.PDFFontSize;
+                plotModel1.LegendFontSize = Parameters.PDFFontSize;
                 labelFontSize = 16;
                 pngOffset = 0;
             }
-            if (_Parameters.ShowTitle) {
+            if (Parameters.ShowTitle) {
                 plotModel1.Title = plotName;
             }
             // axes
@@ -178,8 +180,8 @@ namespace ChartCreator2.OxyCharts {
                 count++;
                 plotModel1.Series.Add(columnSeries2);
             }
-            Save(plotModel1, plotName, rfe.FullFileName, _Parameters.BaseDirectory);
-            _CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
+            Save(plotModel1, plotName, rfe.FullFileName, Parameters.BaseDirectory);
+            Profiler.StopPart(Utili.GetCurrentMethodAndClass());
             return FileProcessingResult.ShouldCreateFiles;
         }
     }

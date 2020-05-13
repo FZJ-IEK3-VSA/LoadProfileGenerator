@@ -43,7 +43,8 @@ namespace Common.SQLResultLogging
         TransportationDeviceEventStatistics,
         PersonAffordanceInformation,
         SingleTimeStepActionEntry,
-        TotalsPerDevice
+        TotalsPerDevice,
+        BodilyActivityLevelCount
     }
     public class ResultTableDefinition: IEquatable<ResultTableDefinition>
     {

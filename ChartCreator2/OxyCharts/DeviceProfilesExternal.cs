@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using Automation.ResultFiles;
 using Common;
-using JetBrains.Annotations;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
@@ -25,22 +24,25 @@ namespace ChartCreator2.OxyCharts {
         {
            string plotName = "Device Profiles External Time Resolution  " + srcResultFileEntry.HouseholdNumberString + " " +
                        srcResultFileEntry.LoadTypeInformation?.Name;
-            _CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
+            Profiler.StartPart(Utili.GetCurrentMethodAndClass());
             var headers = new List<string>();
             var values = new List<double[]>();
+            if (srcResultFileEntry.FullFileName==null) {
+                throw new LPGException("fullfilename was null");
+            }
             using (var sr = new StreamReader(srcResultFileEntry.FullFileName)) {
                 var topLine = sr.ReadLine();
                 if (topLine == null) {
                     throw new LPGException("Readline failed");
                 }
-                var header1 = topLine.Split(_Parameters.CSVCharacterArr, StringSplitOptions.None);
+                var header1 = topLine.Split(Parameters.CSVCharacterArr, StringSplitOptions.None);
                 headers.AddRange(header1);
                 while (!sr.EndOfStream && values.Count < 5000) {
                     var s = sr.ReadLine();
                     if (s == null) {
                         throw new LPGException("Readline failed");
                     }
-                    var cols = s.Split(_Parameters.CSVCharacterArr, StringSplitOptions.None);
+                    var cols = s.Split(Parameters.CSVCharacterArr, StringSplitOptions.None);
                     var result = new double[headers.Count];
                     for (var index = 0; index < cols.Length; index++) {
                         var col = cols[index];
@@ -60,7 +62,7 @@ namespace ChartCreator2.OxyCharts {
                 LegendPlacement = LegendPlacement.Outside,
                 LegendPosition = LegendPosition.BottomCenter
             };
-            if (_Parameters.ShowTitle) {
+            if (Parameters.ShowTitle) {
                 plotModel1.Title = plotName;
             }
             // axes
@@ -105,8 +107,8 @@ namespace ChartCreator2.OxyCharts {
                 plotModel1.Series.Add(columnSeries2);
             }
 
-            Save(plotModel1, plotName, srcResultFileEntry.FullFileName, _Parameters.BaseDirectory);
-            _CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
+            Save(plotModel1, plotName, srcResultFileEntry.FullFileName, Parameters.BaseDirectory);
+            Profiler.StopPart(Utili.GetCurrentMethodAndClass());
             return FileProcessingResult.ShouldCreateFiles;
         }
     }

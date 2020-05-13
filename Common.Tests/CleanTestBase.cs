@@ -7,7 +7,6 @@ using System.Threading;
 using Automation;
 using Automation.ResultFiles;
 using CommonDataWPF.Tests;
-using JetBrains.Annotations;
 using NUnit.Framework;
 
 namespace Common.Tests {

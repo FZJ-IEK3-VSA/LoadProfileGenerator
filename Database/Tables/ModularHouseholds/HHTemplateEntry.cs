@@ -16,10 +16,10 @@ namespace Database.Tables.ModularHouseholds {
     {
 
         [NotNull]
-        public string RelevantGuid => Guid;
+        public StrGuid RelevantGuid => Guid;
         public class JsonDto : IGuidObject
         {
-            public JsonDto([CanBeNull] JsonReference traitTagReference, [NotNull] string guid, int traitCountMax, int traitCountMin, string name)
+            public JsonDto([CanBeNull] JsonReference traitTagReference, [NotNull] StrGuid guid, int traitCountMax, int traitCountMin, string name)
             {
                 TraitTagReference = traitTagReference;
                 Guid = guid;
@@ -31,7 +31,7 @@ namespace Database.Tables.ModularHouseholds {
             [CanBeNull]
             public JsonReference TraitTagReference { get; set; }
             [NotNull]
-            public string Guid { get; set; }
+            public StrGuid Guid { get; set; }
 
             [NotNull]
             [ItemNotNull]
@@ -66,7 +66,7 @@ namespace Database.Tables.ModularHouseholds {
         private int _traitCountMin;
 
         public HHTemplateEntry([CanBeNull]int? pID, [CanBeNull] int? householdTemplateId, [NotNull] string name, [NotNull] string connectionString,
-            [CanBeNull] TraitTag tag, int traitCountMin, int traitCountMax, [NotNull] string guid)
+            [CanBeNull] TraitTag tag, int traitCountMin, int traitCountMax, [NotNull] StrGuid guid)
             : base(name, TableName, connectionString, guid)
         {
             _householdTemplateId = householdTemplateId;
@@ -158,7 +158,7 @@ namespace Database.Tables.ModularHouseholds {
 
         public void AddPerson([NotNull] Person p)
         {
-            var hhgep = new HHTemplateEntryPerson(null, p, IntID, p.Name, ConnectionString, System.Guid.NewGuid().ToString());
+            var hhgep = new HHTemplateEntryPerson(null, p, IntID, p.Name, ConnectionString, System.Guid.NewGuid().ToStrGuid());
             hhgep.SaveToDB();
             _persons.Add(hhgep);
         }

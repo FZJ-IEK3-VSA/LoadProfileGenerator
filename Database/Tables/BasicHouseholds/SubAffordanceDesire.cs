@@ -32,6 +32,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Globalization;
 using System.Linq;
+using Automation;
 using Database.Database;
 using JetBrains.Annotations;
 
@@ -48,7 +49,7 @@ namespace Database.Tables.BasicHouseholds {
         public SubAffordanceDesire([CanBeNull]int? pID, [CanBeNull] Desire desire, [CanBeNull]int? affordanceID, decimal satisfactionvalue,
             [ItemNotNull][NotNull] ObservableCollection<Desire> simdesires, [CanBeNull] Func<SubAffordanceDesire, bool> deleteThis,
             [NotNull] string connectionString,
-            [NotNull] string name, [NotNull] string guid) : base(name, TableName, connectionString, guid) {
+            [NotNull] string name, [NotNull] StrGuid guid) : base(name, TableName, connectionString, guid) {
             ID = pID;
             _deleteThis = deleteThis;
             _desire = desire;

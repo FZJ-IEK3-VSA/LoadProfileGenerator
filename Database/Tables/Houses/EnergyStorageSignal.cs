@@ -28,6 +28,7 @@
 
 using System.Collections.ObjectModel;
 using System.Linq;
+using Automation;
 using Database.Database;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
@@ -38,7 +39,7 @@ namespace Database.Tables.Houses {
         public const string TableName = "tblEnergyStorageSignals";
 
         public EnergyStorageSignal([CanBeNull]int? pID, int energyStorageID, Variable variable, double triggerLevelOn,
-            double triggerLevelOff, double value, [NotNull] string connectionString, [NotNull] string name, [NotNull] string guid)
+            double triggerLevelOff, double value, [NotNull] string connectionString, [NotNull] string name, [NotNull] StrGuid guid)
             : base(name, TableName, connectionString, guid)
         {
             Variable = variable;

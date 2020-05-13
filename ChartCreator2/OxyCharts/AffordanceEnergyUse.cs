@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using Automation.ResultFiles;
@@ -7,6 +8,7 @@ using Common;
 using JetBrains.Annotations;
 
 namespace ChartCreator2.OxyCharts {
+    [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     internal class AffordanceEnergyUse : ChartBaseFileStep
     {
 
@@ -31,16 +33,20 @@ namespace ChartCreator2.OxyCharts {
             //AffordanceEnergyUseLogger aeul = new AffordanceEnergyUseLogger(_srls);
             string plotName = "Affordance Energy Use " + srcEntry.HouseholdNumberString + " " +
                               srcEntry.LoadTypeInformation?.Name;
-            _CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
+            Profiler.StartPart(Utili.GetCurrentMethodAndClass());
             const FileProcessingResult fpr = FileProcessingResult.ShouldCreateFiles;
             var consumption = new List<Tuple<string, double>>();
             var taggingSets = new List<ChartTaggingSet>();
+            if (srcEntry.FullFileName == null)
+            {
+                throw new LPGException("Srcfile was null");
+            }
             using (var sr = new StreamReader(srcEntry.FullFileName)) {
                 var header = sr.ReadLine();
                 if (header == null) {
                     throw new LPGException("Affordance Energy Use file was empty.");
                 }
-                var headerArr = header.Split(_Parameters.CSVCharacterArr, StringSplitOptions.None);
+                var headerArr = header.Split(Parameters.CSVCharacterArr, StringSplitOptions.None);
                 for (var i = 2; i < headerArr.Length; i++) {
                     if (!string.IsNullOrWhiteSpace(headerArr[i])) {
                         taggingSets.Add(new ChartTaggingSet(headerArr[i]));
@@ -51,7 +57,7 @@ namespace ChartCreator2.OxyCharts {
                     if (s == null) {
                         throw new LPGException("Readline failed.");
                     }
-                    var cols = s.Split(_Parameters.CSVCharacterArr, StringSplitOptions.None);
+                    var cols = s.Split(Parameters.CSVCharacterArr, StringSplitOptions.None);
                     var d = Convert.ToDouble(cols[1], CultureInfo.CurrentCulture);
                     consumption.Add(new Tuple<string, double>(cols[0], d));
                     if (cols.Length < 2) {
@@ -64,11 +70,11 @@ namespace ChartCreator2.OxyCharts {
                 }
             }
             if(taggingSets.Count == 0) {
-                _CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
+                Profiler.StopPart(Utili.GetCurrentMethodAndClass());
                 return FileProcessingResult.NoFilesTocreate;
             }
-            MakeIntervalBars(srcEntry,plotName, _Parameters.BaseDirectory, consumption, taggingSets);
-            _CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
+            MakeIntervalBars(srcEntry,plotName, Parameters.BaseDirectory, consumption, taggingSets);
+            Profiler.StopPart(Utili.GetCurrentMethodAndClass());
             return fpr;
         }
     }

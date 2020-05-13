@@ -1,14 +1,16 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using JetBrains.Annotations;
 
-namespace ChartCreator2.Tests
+namespace Common.Tests
 {
+    [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     public static class FileFinder
     {
         [ItemNotNull]
-        [NotNull]
-        public static List<FileInfo> GetRecursiveFiles([NotNull] DirectoryInfo di, [NotNull] string fileName)
+        [JetBrains.Annotations.NotNull]
+        public static List<FileInfo> GetRecursiveFiles([JetBrains.Annotations.NotNull] DirectoryInfo di, [JetBrains.Annotations.NotNull] string fileName)
         {
             DirectoryInfo[] subdirs = di.GetDirectories();
             List<FileInfo> results = new List<FileInfo>();

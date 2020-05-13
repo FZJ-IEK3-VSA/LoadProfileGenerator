@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using Automation;
 using Common;
 using Common.Tests;
 using NUnit.Framework;
+using SimulationEngineLib;
 using SimulationEngineLib.SettlementCalculation;
 
 namespace SimulationEngine.Tests
@@ -13,7 +15,7 @@ namespace SimulationEngine.Tests
     {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void FindNumberOfCoresTest() => Logger.Info(ParallelLauncher.FindNumberOfCores().ToString());
+        public void FindNumberOfCoresTest() => Logger.Info(ParallelLauncher.FindNumberOfCores().ToString(CultureInfo.InvariantCulture));
 
         [Test]
         [Category(UnitTestCategories.ManualOnly)]
@@ -31,7 +33,7 @@ namespace SimulationEngine.Tests
                 "--Archive",
                 @"x:\R2_BridgeDaysWithout"
             };
-            Program.Main(arguments.ToArray());
+            MainSimEngine.Run(arguments.ToArray(), "simulationengine.exe");
         }
     }
 }

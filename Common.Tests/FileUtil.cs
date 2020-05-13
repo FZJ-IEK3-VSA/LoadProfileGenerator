@@ -98,7 +98,7 @@ namespace CommonDataWPF.Tests
         [SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes")]
         static public List<Process> WhoIsLocking([JetBrains.Annotations.NotNull] string path)
         {
-            string key = Guid.NewGuid().ToString();
+            var key = Guid.NewGuid().ToString();
             List<Process> processes = new List<Process>();
 
             int res = RmStartSession(out uint handle, 0, key);

@@ -31,6 +31,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Database.Database;
@@ -56,7 +57,7 @@ namespace Database.Tables.BasicElements {
         private int _longMinute;
         private int _longSecond;
 
-        public GeographicLocation([NotNull] string connectionString, [CanBeNull] TimeLimit lightTimeLimit, [NotNull] string guid) : base("Chemnitz",
+        public GeographicLocation([NotNull] string connectionString, [CanBeNull] TimeLimit lightTimeLimit, [NotNull] StrGuid guid) : base("Chemnitz",
             TableName, connectionString, guid) {
             _lightTimeLimit = lightTimeLimit;
             // dummy loc for unit tests
@@ -74,7 +75,7 @@ namespace Database.Tables.BasicElements {
 
         public GeographicLocation([NotNull] string name, int slathour, int slatMinute, int slatSecond, int slongHour,
             int slongMinute, int slongSecond, [NotNull] string slongDir, [NotNull] string slatDir, [NotNull] string connectionString,
-            [CanBeNull] TimeLimit lightTimeLimit,[NotNull] string guid,[CanBeNull] int? id = null) : base(name, id, TableName, connectionString, guid) {
+            [CanBeNull] TimeLimit lightTimeLimit,[NotNull] StrGuid guid,[CanBeNull] int? id = null) : base(name, id, TableName, connectionString, guid) {
             _latHour = slathour;
             _latMinute = slatMinute;
             _latSecond = slatSecond;
@@ -208,7 +209,7 @@ namespace Database.Tables.BasicElements {
 
         public void AddHoliday([NotNull] Holiday hd) {
             var ghd = new GeographicLocHoliday(null, hd, IntID,
-                ConnectionString, hd.Name, System.Guid.NewGuid().ToString());
+                ConnectionString, hd.Name, System.Guid.NewGuid().ToStrGuid());
             Holidays.Add(ghd);
             Holidays.Sort();
             ghd.SaveToDB();
@@ -257,7 +258,7 @@ namespace Database.Tables.BasicElements {
         public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) {
             var geoloc = new GeographicLocation(FindNewName(isNameTaken, "New Geographic Location "), 1,
                 1, 1, 1, 1, 1,
-                "East", "North", connectionString,null,System.Guid.NewGuid().ToString());
+                "East", "North", connectionString,null,System.Guid.NewGuid().ToStrGuid());
             return geoloc;
         }
 

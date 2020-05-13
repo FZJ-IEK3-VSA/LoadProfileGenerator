@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Database.Database;
@@ -22,7 +23,7 @@ namespace Database.Tables.Transportation {
         [CanBeNull] private string _description;
 
         public Site([NotNull] string name, [CanBeNull] int? pID, [NotNull] string connectionString,
-            [CanBeNull] string description, [NotNull] string guid) : base(name, TableName,
+            [CanBeNull] string description, [NotNull] StrGuid guid) : base(name, TableName,
             connectionString, guid)
         {
             _description = description;
@@ -57,7 +58,7 @@ namespace Database.Tables.Transportation {
                 return;
             }
 
-            var siteloc = new SiteLocation(null, location, IntID, ConnectionString, location.Name, System.Guid.NewGuid().ToString());
+            var siteloc = new SiteLocation(null, location, IntID, ConnectionString, location.Name, System.Guid.NewGuid().ToStrGuid());
             _siteLocations.Add(siteloc);
             if (savetoDB) {
                 siteloc.SaveToDB();
@@ -69,7 +70,7 @@ namespace Database.Tables.Transportation {
         [NotNull]
         [UsedImplicitly]
         public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new Site(
-            FindNewName(isNameTaken, "New Site "), null, connectionString, "",System.Guid.NewGuid().ToString());
+            FindNewName(isNameTaken, "New Site "), null, connectionString, "",System.Guid.NewGuid().ToStrGuid());
 
         public void DeleteLocation([NotNull] SiteLocation ld)
         {

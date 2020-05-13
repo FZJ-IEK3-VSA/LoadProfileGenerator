@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.IO;
 using Automation.ResultFiles;
 using Common;
@@ -11,6 +13,7 @@ using CategoryAxis = OxyPlot.Axes.CategoryAxis;
 using TextAnnotation = OxyPlot.Annotations.TextAnnotation;
 
 namespace ChartCreator2.OxyCharts {
+    [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     public class CalculationDurationFlameChart {
         //private static int _compressedItems;
 
@@ -67,7 +70,7 @@ namespace ChartCreator2.OxyCharts {
                 FontSize = 6,
                 Padding = new OxyThickness(10, 0, 10, 0)
             };
-            var txtValue = name + " - " + part.Duration2.ToString("N1") + "s";
+            var txtValue = name + " - " + part.Duration2.ToString("N1", CultureInfo.InvariantCulture) + "s";
 
             textAnnotation1.Text = txtValue;
 

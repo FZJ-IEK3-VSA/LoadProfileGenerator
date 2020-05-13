@@ -290,7 +290,7 @@ namespace Database.Database
 
             if (_dr[fieldName] != DBNull.Value)
             {
-                return (int)_dr[fieldName];
+                return (long)_dr[fieldName];
             }
             return defaultvalue;
         }

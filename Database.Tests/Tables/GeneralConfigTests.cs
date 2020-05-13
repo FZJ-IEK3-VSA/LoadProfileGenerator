@@ -26,6 +26,7 @@
 
 //-----------------------------------------------------------------------
 
+using System.Globalization;
 using System.Linq;
 using Automation;
 using Common;
@@ -39,26 +40,28 @@ namespace Database.Tests.Tables {
     {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void LoadFromDatabaseTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
+        public void LoadFromDatabaseTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                GeneralConfig.LoadFromDatabase(db.ConnectionString, false);
+                db.ClearTable(GeneralConfig.TableName);
+                db.ClearTable(SingleOption.TableName);
+                var gc = GeneralConfig.LoadFromDatabase(db.ConnectionString, false);
 
-            GeneralConfig.LoadFromDatabase(db.ConnectionString, false);
-            db.ClearTable(GeneralConfig.TableName);
-            db.ClearTable(SingleOption.TableName);
-            var gc = GeneralConfig.LoadFromDatabase(db.ConnectionString, false);
-
-            // options test
-            // first make sure none are enabled after clearing the table
-            var count = gc.Options.Count(x => x.Value.SettingValue);
-            Assert.AreEqual(0, count);
-            // enable one and check
-            gc.Enable(CalcOption.OverallDats);
-            var count2 = gc.Options.Count(x => x.Value.SettingValue);
-            Assert.AreEqual(1, count2);
-            var gc2 = GeneralConfig.LoadFromDatabase(db.ConnectionString, false);
-            var count3 = gc2.Options.Count(x => x.Value.SettingValue);
-            Logger.Info(count3.ToString());
-            db.Cleanup();
+                // options test
+                // first make sure none are enabled after clearing the table
+                var count = gc.Options.Count(x => x.Value.SettingValue);
+                Assert.AreEqual(0, count);
+                // enable one and check
+                gc.Enable(CalcOption.OverallDats);
+                var count2 = gc.Options.Count(x => x.Value.SettingValue);
+                Assert.AreEqual(1, count2);
+                var gc2 = GeneralConfig.LoadFromDatabase(db.ConnectionString, false);
+                var count3 = gc2.Options.Count(x => x.Value.SettingValue);
+                Logger.Info(count3.ToString(CultureInfo.InvariantCulture));
+                db.Cleanup();
+            }
         }
     }
 }

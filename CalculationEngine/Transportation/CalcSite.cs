@@ -1,12 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using CalculationEngine.HouseholdElements;
+using Common;
 using JetBrains.Annotations;
 
 namespace CalculationEngine.Transportation {
     public class CalcSite : CalcBase {
-        public CalcSite([NotNull] string pName, [NotNull] string guid, [NotNull] HouseholdKey householdKey) : base(pName, guid)
+        public CalcSite([NotNull] string pName, [NotNull] StrGuid guid, [NotNull] HouseholdKey householdKey) : base(pName, guid)
         {
             _householdKey = householdKey;
         }
@@ -100,7 +102,7 @@ namespace CalculationEngine.Transportation {
 
             CalcChargingStation station = new CalcChargingStation(cat,
                 gridchargingLoadType, chargingDeviceMaxChargingPower,name,
-                System.Guid.NewGuid().ToString(),_householdKey, carChargingLoadType, calcRepo);
+                System.Guid.NewGuid().ToStrGuid(),_householdKey, carChargingLoadType, calcRepo);
             ChargingDevices.Add(station);
         }
     }

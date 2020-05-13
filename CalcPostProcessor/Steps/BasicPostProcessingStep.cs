@@ -71,16 +71,19 @@ namespace CalcPostProcessor.Steps
 
     public  abstract class BasicPostProcessingStep
     {
+
+        public int Priority { get; }
         [NotNull] private readonly List<CalcOption> _options;
 
         protected BasicPostProcessingStep([NotNull] CalcDataRepository repository, [NotNull] List<CalcOption> options,
                                              [NotNull] ICalculationProfiler calculationProfiler,
-                                             [NotNull] string stepName)
+                                             [NotNull] string stepName, int priority)
         {
             Repository = repository;
             _options = options;
             _calculationProfiler = calculationProfiler;
             _stepName = stepName;
+            Priority = priority;
         }
         public void Run([NotNull] IStepParameters parameters)
         {

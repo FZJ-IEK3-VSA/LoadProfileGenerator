@@ -1,15 +1,16 @@
-﻿using Common.Enums;
+﻿using Automation;
+using Common.Enums;
 using JetBrains.Annotations;
 
 namespace Common.CalcDto {
     public class VariableRequirementDto
     {
         [NotNull]
-        public string VariableGuid { get; }
+        public StrGuid VariableGuid { get; }
 
-        public VariableRequirementDto([NotNull]string name, double value, [NotNull] string location, [NotNull] string locationGuid,
+        public VariableRequirementDto([NotNull]string name, double value, [NotNull] string location, [NotNull] StrGuid locationGuid,
                                       VariableCondition variableCondition,
-                                      [NotNull]string variableGuid)
+                                      [NotNull]StrGuid variableGuid)
         {
             VariableGuid = variableGuid;
             Name = name;
@@ -21,7 +22,7 @@ namespace Common.CalcDto {
         [NotNull]
         public string CalcLocationName { get; }
         [NotNull]
-        public string LocationGuid { get; }
+        public StrGuid LocationGuid { get; }
         [NotNull]
         public string Name { get; }
         public double Value { get; }

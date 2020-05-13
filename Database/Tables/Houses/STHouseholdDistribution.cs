@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Text;
 using Automation;
+using Common;
 using Database.Database;
 using Database.Tables.ModularHouseholds;
 using JetBrains.Annotations;
@@ -18,7 +19,7 @@ namespace Database.Tables.Houses {
         private readonly int _settlementTemplateID;
 
         public STHouseholdDistribution([CanBeNull]int? pID, [NotNull] string connectionString, int minimumNumber, int maximumNumber,
-            double percentOfHouseholds, int settlementTemplateID, [NotNull] string name, EnergyIntensityType energyIntensity, [NotNull] string guid)
+            double percentOfHouseholds, int settlementTemplateID, [NotNull] string name, EnergyIntensityType energyIntensity, [NotNull] StrGuid guid)
             : base(name, TableName, connectionString, guid)
         {
             TypeDescription = "Settlement Template Household Distribution";
@@ -90,7 +91,7 @@ namespace Database.Tables.Houses {
         public void AddTag([NotNull] HouseholdTag tag)
         {
             var stdt = new STHouseholdDistributionTag(null, tag, IntID, tag.Name,
-                ConnectionString, System.Guid.NewGuid().ToString());
+                ConnectionString, System.Guid.NewGuid().ToStrGuid());
             Tags.Add(stdt);
             stdt.SaveToDB();
         }

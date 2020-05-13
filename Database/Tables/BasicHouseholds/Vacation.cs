@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
+using Automation;
 using Common;
 using Common.Enums;
 using Database.Database;
@@ -18,7 +19,7 @@ namespace Database.Tables.BasicHouseholds {
         private int _minimumAge;
 
         public Vacation([NotNull] string name, [CanBeNull] int? pID, [NotNull] string connectionString, int minimumAge, int maximumAge,
-            CreationType creationType, [NotNull] string guid) : base(name, TableName, connectionString, guid)
+            CreationType creationType, [NotNull] StrGuid guid) : base(name, TableName, connectionString, guid)
         {
             _creationType = creationType;
             _minimumAge = minimumAge;
@@ -75,7 +76,7 @@ namespace Database.Tables.BasicHouseholds {
         {
             var name = start.ToLongDateString() + " - " + end.ToLongDateString();
             var vt = new VacationTime(name, null, start, end, IntID,
-                ConnectionString, vacationType, System.Guid.NewGuid().ToString());
+                ConnectionString, vacationType, System.Guid.NewGuid().ToStrGuid());
             vt.SaveToDB();
             Logger.Get().SafeExecute(() => {
                 _vacationTimes.Add(vt);
@@ -100,7 +101,7 @@ namespace Database.Tables.BasicHouseholds {
         [NotNull]
         [UsedImplicitly]
         public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new Vacation(
-            FindNewName(isNameTaken, "New Vacation "), null, connectionString, 1, 99, CreationType.ManuallyCreated, System.Guid.NewGuid().ToString());
+            FindNewName(isNameTaken, "New Vacation "), null, connectionString, 1, 99, CreationType.ManuallyCreated, System.Guid.NewGuid().ToStrGuid());
 
         public override void DeleteFromDB()
         {
@@ -122,7 +123,7 @@ namespace Database.Tables.BasicHouseholds {
         public static Vacation ImportFromItem([NotNull] Vacation toImport,  [NotNull] Simulator dstSim)
         {
             var p = new Vacation(toImport.Name, null, dstSim.ConnectionString, toImport.MinimumAge, toImport.MaximumAge,
-                toImport._creationType, System.Guid.NewGuid().ToString());
+                toImport._creationType, System.Guid.NewGuid().ToStrGuid());
             p.SaveToDB();
             foreach (var vactime in toImport._vacationTimes) {
                 p.AddVacationTime(vactime.Start, vactime.End, vactime.VacationType);

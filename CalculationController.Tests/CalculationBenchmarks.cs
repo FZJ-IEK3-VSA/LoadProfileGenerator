@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using Automation;
 using Automation.ResultFiles;
@@ -11,7 +10,6 @@ using CalculationController.CalcFactories;
 using CalculationController.Integrity;
 using CalculationController.Queue;
 using CalculationEngine;
-using ChartCreator2.Tests;
 using Common;
 using Common.Enums;
 using Common.SQLResultLogging;
@@ -29,7 +27,13 @@ using NUnit.Framework;
 
 namespace CalculationController.Tests {
     [TestFixture]
-    public class CalculationBenchmarks {
+    public class CalculationBenchmarks: UnitTestBaseClass {
+        private static bool ReportCancelFunc()
+        {
+            Logger.Info("canceled");
+            return true;
+        }
+
         [Test]
         [Category(UnitTestCategories.LongTest5)]
         public void ActionCarpetPlotTestBenchmark()
@@ -64,20 +68,13 @@ namespace CalculationController.Tests {
                     Assert.AreNotEqual(null, sim);
 
                     var cmf = new CalcManagerFactory();
-                    var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
                     CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
                         sim.TemperatureProfiles[0], sim.Houses[0], EnergyIntensityType.Random,
-                        false, version, null, LoadTypePriority.RecommendedForHouses, null, null, null,
+                        false,  null, LoadTypePriority.RecommendedForHouses, null, null, null,
                         sim.MyGeneralConfig.AllEnabledOptions(), new DateTime(2015, 1, 1), new DateTime(2015, 1, 31),
                         new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 15, 0), false, false, false, 3, 5,
-                        cp);
-                    var cm = cmf.GetCalcManager(sim, path, csps, false);
-
-                    bool ReportCancelFunc()
-                    {
-                        Logger.Info("canceled");
-                        return true;
-                    }
+                        cp, path);
+                    var cm = cmf.GetCalcManager(sim, csps, false);
 
                     cm.Run(ReportCancelFunc);
                     cp.StopPart("Calculation");
@@ -128,21 +125,71 @@ namespace CalculationController.Tests {
                     Assert.AreNotEqual(null, sim);
 
                     var cmf = new CalcManagerFactory();
-                    var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
                     CalculationProfiler calculationProfiler = new CalculationProfiler();
                     CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
                         sim.TemperatureProfiles[0], sim.Houses[0], EnergyIntensityType.Random,
-                        false, version, null, LoadTypePriority.RecommendedForHouses, null, null, null,
+                        false,  null, LoadTypePriority.RecommendedForHouses, null, null, null,
                         sim.MyGeneralConfig.AllEnabledOptions(), new DateTime(2015, 1, 1), new DateTime(2015, 1, 15),
                         new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 15, 0), false, false, false, 3, 5,
-                        calculationProfiler);
-                    var cm = cmf.GetCalcManager(sim, path, csps, false);
+                        calculationProfiler, path);
+                    var cm = cmf.GetCalcManager(sim, csps, false);
 
-                    bool ReportCancelFunc()
-                    {
-                        Logger.Info("canceled");
-                        return true;
-                    }
+                    cm.Run(ReportCancelFunc);
+                    cp.StopPart("Calculation");
+                    db.Cleanup();
+                }
+                Logger.ImportantInfo("Duration:" + (DateTime.Now - start).TotalSeconds + " seconds");
+                //            var imagefiles = FileFinder.GetRecursiveFiles(new DirectoryInfo(wd1.WorkingDirectory),
+                //              "Carpetplot.*.png");
+                //            Assert.GreaterOrEqual(imagefiles.Count, 1);
+                cp.StopPart(Utili.GetCurrentMethodAndClass());
+                cp.LogToConsole();
+                using (var sw = new StreamWriter(Path.Combine(wd1.WorkingDirectory, Constants.CalculationProfilerJson)))
+                {
+                    cp.WriteJson(sw);
+                }
+            }
+            //      wd1.CleanUp();
+        }
+
+        [Test]
+        [Category(UnitTestCategories.BasicTest)]
+        public void BodilyActivityLevelsTest()
+        {
+            CalculationProfiler cp = new CalculationProfiler();
+            cp.StartPart(Utili.GetCurrentMethodAndClass());
+            using (var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass())) {
+                SkipEndCleaning(wd1);
+                var start = DateTime.Now;
+
+                Logger.Threshold = Severity.Error;
+                var path = wd1.WorkingDirectory;
+                Config.MakePDFCharts = true;
+                if (Directory.Exists(path))
+                {
+                    Directory.Delete(path, true);
+                }
+                Directory.CreateDirectory(path);
+                using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+                {
+                    cp.StartPart("SimLoading");
+                    var sim = new Simulator(db.ConnectionString);
+                    cp.StopPart("SimLoading");
+                    cp.StartPart("Calculation");
+                    sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
+                    sim.MyGeneralConfig.Enable(CalcOption.BodilyActivityStatistics);
+                    sim.MyGeneralConfig.CSVCharacter = ";";
+                    Assert.AreNotEqual(null, sim);
+
+                    var cmf = new CalcManagerFactory();
+                    CalculationProfiler calculationProfiler = new CalculationProfiler();
+                    CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
+                        sim.TemperatureProfiles[0], sim.Houses[0], EnergyIntensityType.Random,
+                        false, null, LoadTypePriority.RecommendedForHouses, null, null, null,
+                        sim.MyGeneralConfig.AllEnabledOptions(), new DateTime(2015, 1, 1), new DateTime(2015, 1, 15),
+                        new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 15, 0), false, false, false, 3, 5,
+                        calculationProfiler, path);
+                    var cm = cmf.GetCalcManager(sim, csps, false);
 
                     cm.Run(ReportCancelFunc);
                     cp.StopPart("Calculation");
@@ -175,7 +222,7 @@ namespace CalculationController.Tests {
                     Logger.Threshold = Severity.Error;
                     for (int i = 0; i < housetypecount && i < 2; i++)
                     {
-                        string path = wd.Combine("HT" + (i + 1).ToString());
+                        string path = wd.Combine("HT" + (i + 1).ToString(CultureInfo.InvariantCulture));
                         var rc = CalculateOneHousetype(path, i);
                         if (rc != null)
                         {
@@ -221,124 +268,125 @@ namespace CalculationController.Tests {
         }*/
 
         [CanBeNull]
-        private static RowCollection? CalculateOneHousetype([NotNull] string path, int housetype)
+        private static RowCollection CalculateOneHousetype([NotNull] string path, int housetype)
         {
-            if (Directory.Exists(path)) {
-                try {
+            if (Directory.Exists(path))
+            {
+                try
+                {
                     Directory.Delete(path, true);
                 }
-                catch (Exception ex) {
+                catch (Exception ex)
+                {
                     Logger.Info(ex.Message);
                 }
             }
 
             Directory.CreateDirectory(path);
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var sim = new Simulator(db.ConnectionString);
-            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.OnlyOverallSum);
-            sim.MyGeneralConfig.Enable(CalcOption.DeviceProfiles);
-            sim.MyGeneralConfig.Enable(CalcOption.TotalsPerDevice);
-            sim.MyGeneralConfig.Enable(CalcOption.TotalsPerLoadtype);
-            sim.MyGeneralConfig.Enable(CalcOption.EnergyStorageFile);
-            //sim.MyGeneralConfig.Enable(CalcOption.VariableLogFile);
-            sim.MyGeneralConfig.CSVCharacter = ";";
-            sim.MyGeneralConfig.ShowSettlingPeriodBool = true;
-            Assert.AreNotEqual(null, sim);
-
-            var cmf = new CalcManagerFactory();
-            var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            var house = sim.Houses.CreateNewItem(sim.ConnectionString);
-            house.GeographicLocation = sim.GeographicLocations[0];
-            house.TemperatureProfile = sim.TemperatureProfiles[0];
-            house.HouseType = sim.HouseTypes[housetype];
-            house.Name = "housetest for " + house.HouseType.Name;
-            house.AddHousehold(sim.ModularHouseholds[0],
-                true,
-                sim.ChargingStationSets[0],
-                sim.TravelRouteSets[0],
-                sim.TransportationDeviceSets[0]);
-            house.SaveToDB();
-
-            CalculationProfiler calculationProfiler = new CalculationProfiler();
-            CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
-                sim.TemperatureProfiles[0],
-                house,
-                EnergyIntensityType.Random,
-                false,
-                version,
-                null,
-                LoadTypePriority.All,
-                null,
-                null,
-                null,
-                sim.MyGeneralConfig.AllEnabledOptions(),
-                new DateTime(2015, 1, 1),
-                new DateTime(2015, 12, 31),
-                new TimeSpan(0, 1, 0),
-                ";",
-                5,
-                new TimeSpan(0, 15, 0),
-                false,
-                false,
-                false,
-                3,
-                5,
-                calculationProfiler);
-            var cm = cmf.GetCalcManager(sim, path, csps, false);
-
-            bool ReportCancelFunc()
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
-                Logger.Info("canceled");
-                return true;
+                var sim = new Simulator(db.ConnectionString);
+                sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.OnlyOverallSum);
+                sim.MyGeneralConfig.Enable(CalcOption.DeviceProfiles);
+                sim.MyGeneralConfig.Enable(CalcOption.TotalsPerDevice);
+                sim.MyGeneralConfig.Enable(CalcOption.TotalsPerLoadtype);
+                sim.MyGeneralConfig.Enable(CalcOption.EnergyStorageFile);
+                //sim.MyGeneralConfig.Enable(CalcOption.VariableLogFile);
+                sim.MyGeneralConfig.CSVCharacter = ";";
+                sim.MyGeneralConfig.ShowSettlingPeriodBool = true;
+                Assert.AreNotEqual(null, sim);
+
+                var cmf = new CalcManagerFactory();
+                var house = sim.Houses.CreateNewItem(sim.ConnectionString);
+                house.GeographicLocation = sim.GeographicLocations[0];
+                house.TemperatureProfile = sim.TemperatureProfiles[0];
+                house.HouseType = sim.HouseTypes[housetype];
+                house.Name = "housetest for " + house.HouseType.Name;
+                house.AddHousehold(sim.ModularHouseholds[0],
+                    true,
+                    sim.ChargingStationSets[0],
+                    sim.TravelRouteSets[0],
+                    sim.TransportationDeviceSets[0]);
+                house.SaveToDB();
+
+                CalculationProfiler calculationProfiler = new CalculationProfiler();
+                CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
+                    sim.TemperatureProfiles[0],
+                    house,
+                    EnergyIntensityType.Random,
+                    false,
+                    null,
+                    LoadTypePriority.All,
+                    null,
+                    null,
+                    null,
+                    sim.MyGeneralConfig.AllEnabledOptions(),
+                    new DateTime(2015, 1, 1),
+                    new DateTime(2015, 12, 31),
+                    new TimeSpan(0, 1, 0),
+                    ";",
+                    5,
+                    new TimeSpan(0, 15, 0),
+                    false,
+                    false,
+                    false,
+                    3,
+                    5,
+                    calculationProfiler, path);
+                var cm = cmf.GetCalcManager(sim, csps, false);
+
+
+                cm.Run(ReportCancelFunc);
+                db.Cleanup();
+
+                string generalfile = Path.Combine(path, "Results." + Constants.GeneralHouseholdKey.Key + ".sqlite");
+                if (!File.Exists(generalfile))
+                {
+                    throw new LPGException("Calculation failed");
+                }
+                string housefile = Path.Combine(path, "Results." + Constants.HouseKey.Key + ".sqlite");
+                if (!File.Exists(housefile))
+                {
+                    return null;
+                }
+                var srls = new SqlResultLoggingService(path);
+                TotalsPerDeviceLogger tpdl = new TotalsPerDeviceLogger(srls);
+                var devices = tpdl.Read(Constants.HouseKey);
+
+                TotalsPerLoadtypeEntryLogger tplt = new TotalsPerLoadtypeEntryLogger(srls);
+                var totalEntries = tplt.Read(Constants.HouseKey);
+
+
+                if (house.HouseType == null) { throw new LPGException("housetype was null"); }
+                var rc = new RowCollection(house.HouseType.HouseTypeCode);
+                var descrb = XlsRowBuilder.Start("Housetype", house.HouseType?.Name);
+                rc.Add(descrb);
+                foreach (var device in house.HouseType?.HouseTransformationDevices)
+                {
+                    var traforb = XlsRowBuilder.Start("Transformation device", device.TransformationDevice?.Name);
+                    rc.Add(traforb);
+                }
+                foreach (var device in house.HouseType?.HouseEnergyStorages)
+                {
+                    var energyrb = XlsRowBuilder.Start("Energy Storage", device.EnergyStorage?.Name);
+                    rc.Add(energyrb);
+                }
+
+                foreach (var entry in totalEntries)
+                {
+                    var ltEntry = XlsRowBuilder.Start("Loadtype", entry.Loadtype.Name).Add("Value", entry.Value);
+                    rc.Add(ltEntry);
+                }
+
+                foreach (var device in devices)
+                {
+                    var rb = XlsRowBuilder.Start("Device-" + device.Loadtype.Name, device.Device.Name);
+                    rb.Add("Value Positive " + device.Loadtype.Name, device.PositiveValues);
+                    rb.Add("Value Negative " + device.Loadtype.Name, device.NegativeValues);
+                    rc.Add(rb);
+                }
+                return rc;
             }
-
-
-            cm.Run(ReportCancelFunc);
-            db.Cleanup();
-
-            string generalfile = Path.Combine(path, "Results." + Constants.GeneralHouseholdKey.Key + ".sqlite");
-            if (!File.Exists(generalfile))
-            {
-                throw new LPGException("Calculation failed");
-            }
-            string housefile = Path.Combine(path, "Results." + Constants.HouseKey.Key + ".sqlite");
-            if (!File.Exists(housefile)) {
-                return null;
-            }
-            var srls = new SqlResultLoggingService(path);
-            TotalsPerDeviceLogger tpdl = new TotalsPerDeviceLogger(srls);
-            var devices = tpdl.Read(Constants.HouseKey);
-
-            TotalsPerLoadtypeEntryLogger tplt = new TotalsPerLoadtypeEntryLogger(srls);
-            var totalEntries = tplt.Read(Constants.HouseKey);
-
-
-            if (house.HouseType == null) { throw new LPGException("housetype was null");}
-            var rc = new RowCollection(house.HouseType.HouseTypeCode);
-            var descrb= XlsRowBuilder.Start("Housetype", house.HouseType?.Name);
-            rc.Add(descrb);
-            foreach (var device in house.HouseType?.HouseTransformationDevices) {
-                var traforb = XlsRowBuilder.Start("Transformation device", device.TransformationDevice?.Name);
-                rc.Add(traforb);
-            }
-            foreach (var device in house.HouseType?.HouseEnergyStorages)
-            {
-                var energyrb = XlsRowBuilder.Start("Energy Storage", device.EnergyStorage?.Name);
-                rc.Add(energyrb);
-            }
-
-            foreach (var entry in totalEntries) {
-                var ltEntry = XlsRowBuilder.Start("Loadtype", entry.Loadtype.Name).Add("Value", entry.Value);
-                rc.Add(ltEntry);
-            }
-
-            foreach (var device in devices) {
-                var rb = XlsRowBuilder.Start("Device-"+device.Loadtype.Name, device.Device.Name);
-                rb.Add("Value Positive "+ device.Loadtype.Name, device.PositiveValues);
-                rb.Add("Value Negative " + device.Loadtype.Name, device.NegativeValues);
-                rc.Add(rb);
-            }
-            return rc;
         }
 
 
@@ -348,53 +396,47 @@ namespace CalculationController.Tests {
         {
             using (var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass()))
             {
-                var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-                var sim = new Simulator(db.ConnectionString);
-                sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
-                //sim.MyGeneralConfig.Enable(CalcOption.LogAllMessages);
-                Assert.AreNotEqual(null, sim);
-                var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-                SimIntegrityChecker.Run(sim);
-                CalcManagerFactory.DoIntegrityRun = false;
-                for (var i = 0; i < sim.ModularHouseholds.It.Count; i++)
+                using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
                 {
-                    if (sim.ModularHouseholds.It[i].CreationType != CreationType.ManuallyCreated)
+                    var sim = new Simulator(db.ConnectionString);
+                    sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
+                    //sim.MyGeneralConfig.Enable(CalcOption.LogAllMessages);
+                    Assert.AreNotEqual(null, sim);
+                    SimIntegrityChecker.Run(sim);
+                    CalcManagerFactory.DoIntegrityRun = false;
+                    for (var i = 0; i < sim.ModularHouseholds.It.Count; i++)
                     {
-                        continue;
-                    }
-                    var cmf = new CalcManagerFactory();
-                    var di = new DirectoryInfo(wd1.WorkingDirectory);
-                    var files = di.GetFiles();
-                    foreach (var file in files)
-                    {
-                        file.Delete();
-                    }
-                    var dirs = di.GetDirectories();
-                    foreach (var dir in dirs)
-                    {
-                        dir.Delete(true);
-                    }
-                    CalculationProfiler calculationProfiler = new CalculationProfiler();
-                    CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
-                        sim.TemperatureProfiles[0], sim.ModularHouseholds[i], EnergyIntensityType.Random,
-                        false, version, null, LoadTypePriority.RecommendedForHouses, null, null, null,
-                        sim.MyGeneralConfig.AllEnabledOptions(), new DateTime(2015, 1, 1), new DateTime(2015, 1, 2), new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 15, 0), false, false, false, 3, 5
-                        , calculationProfiler
-                        );
-                    var cm = cmf.GetCalcManager(sim, wd1.WorkingDirectory, csps, false);
+                        if (sim.ModularHouseholds.It[i].CreationType != CreationType.ManuallyCreated)
+                        {
+                            continue;
+                        }
+                        var cmf = new CalcManagerFactory();
+                        var di = new DirectoryInfo(wd1.WorkingDirectory);
+                        var files = di.GetFiles();
+                        foreach (var file in files)
+                        {
+                            file.Delete();
+                        }
+                        var dirs = di.GetDirectories();
+                        foreach (var dir in dirs)
+                        {
+                            dir.Delete(true);
+                        }
+                        CalculationProfiler calculationProfiler = new CalculationProfiler();
+                        CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
+                            sim.TemperatureProfiles[0], sim.ModularHouseholds[i], EnergyIntensityType.Random,
+                            false,  null, LoadTypePriority.RecommendedForHouses, null, null, null,
+                            sim.MyGeneralConfig.AllEnabledOptions(), new DateTime(2015, 1, 1), new DateTime(2015, 1, 2), new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 15, 0), false, false, false, 3, 5
+                            , calculationProfiler, wd1.WorkingDirectory);
+                        var cm = cmf.GetCalcManager(sim,  csps, false);
 
-                    bool ReportCancelFunc()
-                    {
-                        Logger.Info("canceled");
-                        return true;
+                        CalcManager.ExitCalcFunction = true;
+                        cm.Run(ReportCancelFunc);
+                        GC.Collect();
+                        GC.WaitForPendingFinalizers();
                     }
-
-                    CalcManager.ExitCalcFunction = true;
-                    cm.Run(ReportCancelFunc);
-                    GC.Collect();
-                    GC.WaitForPendingFinalizers();
+                    db.Cleanup();
                 }
-                db.Cleanup();
                 wd1.CleanUp();
             }
             CleanTestBase.RunAutomatically(true);
@@ -410,7 +452,6 @@ namespace CalculationController.Tests {
                 sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
                 sim.MyGeneralConfig.Enable(CalcOption.TotalsPerDevice);
                 Assert.AreNotEqual(null, sim);
-                var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
                 SimIntegrityChecker.Run(sim);
                 CalcManagerFactory.DoIntegrityRun = false;
                 for (var i = 0; i < sim.Houses.It.Count; i++)
@@ -424,19 +465,12 @@ namespace CalculationController.Tests {
                         CalculationProfiler calculationProfiler = new CalculationProfiler();
                         CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
                             sim.TemperatureProfiles[0], sim.Houses[i], EnergyIntensityType.Random,
-                            false, version, null, LoadTypePriority.All, null, null, null,
+                            false,  null, LoadTypePriority.All, null, null, null,
                                 sim.MyGeneralConfig.AllEnabledOptions(), new DateTime(2015, 1, 1), new DateTime(2015, 1, 2), new TimeSpan(0, 1, 0), ";", 5,
                             new TimeSpan(0, 15, 0), false, false, false, 3, 3,
-                            calculationProfiler
-                            );
+                            calculationProfiler, wd1.WorkingDirectory);
                         var cmf = new CalcManagerFactory();
-                        var cm = cmf.GetCalcManager(sim, wd1.WorkingDirectory, csps, false);
-
-                        bool ReportCancelFunc()
-                        {
-                            Logger.Info("canceled");
-                            return true;
-                        }
+                        var cm = cmf.GetCalcManager(sim, csps, false);
 
                         CalcManager.ExitCalcFunction = false;
                         cm.Run(ReportCancelFunc);
@@ -453,58 +487,59 @@ namespace CalculationController.Tests {
         [Category(UnitTestCategories.BasicTest)]
         public void OverallSumFileTest()
         {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var sim = new Simulator(db.ConnectionString) {MyGeneralConfig = {ExternalTimeResolution = "00:15:00"}};
-            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
-            sim.MyGeneralConfig.Enable(CalcOption.OverallSum);
-            sim.MyGeneralConfig.Enable(CalcOption.IndividualSumProfiles);
-            sim.MyGeneralConfig.Enable(CalcOption.SumProfileExternalEntireHouse);
-            Assert.AreNotEqual(null, sim);
-            var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            SimIntegrityChecker.Run(sim);
-            CalcManagerFactory.DoIntegrityRun = false;
-            var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            CalculationProfiler calculationProfiler = new CalculationProfiler();
-            CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
-                sim.TemperatureProfiles[0], sim.Houses[1], EnergyIntensityType.Random,
-                false, version, null, LoadTypePriority.All, null,null, null,
-                sim.MyGeneralConfig.AllEnabledOptions(), new DateTime(2015, 1, 1),
-                new DateTime(2015, 1, 3),
-                new TimeSpan(0, 1, 0), ";", 5,
-                new TimeSpan(0, 15, 0), false, false, false, 3, 3,
-                calculationProfiler
-            );
-            var cmf = new CalcManagerFactory();
-            var cm = cmf.GetCalcManager(sim, wd1.WorkingDirectory, csps,  false);
-
-            bool ReportCancelFunc()
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
-                Logger.Info("canceled");
-                return true;
-            }
+                var sim = new Simulator(db.ConnectionString) { MyGeneralConfig = { ExternalTimeResolution = "00:15:00" } };
+                sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
+                sim.MyGeneralConfig.Enable(CalcOption.OverallSum);
+                sim.MyGeneralConfig.Enable(CalcOption.IndividualSumProfiles);
+                sim.MyGeneralConfig.Enable(CalcOption.SumProfileExternalEntireHouse);
+                Assert.AreNotEqual(null, sim);
+                SimIntegrityChecker.Run(sim);
+                CalcManagerFactory.DoIntegrityRun = false;
+                using (var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass()))
+                {
+                    CalculationProfiler calculationProfiler = new CalculationProfiler();
+                    CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
+                        sim.TemperatureProfiles[0], sim.Houses[1], EnergyIntensityType.Random,
+                        false,  null, LoadTypePriority.All, null, null, null,
+                        sim.MyGeneralConfig.AllEnabledOptions(), new DateTime(2015, 1, 1),
+                        new DateTime(2015, 1, 3),
+                        new TimeSpan(0, 1, 0), ";", 5,
+                        new TimeSpan(0, 15, 0), false, false, false, 3, 3,
+                        calculationProfiler, wd1.WorkingDirectory
+                    );
+                    var cmf = new CalcManagerFactory();
+                    var cm = cmf.GetCalcManager(sim, csps, false);
 
-            CalcManager.ExitCalcFunction = false;
-            cm.Run(ReportCancelFunc);
-            cm.CalcRepo.Logfile.Dispose();
-            DirectoryInfo di = new DirectoryInfo(wd1.Combine("Results"));
-            var files = di.GetFiles("*.csv");
-            foreach (var file in files) {
-                using (StreamReader sr = new StreamReader(file.FullName)) {
-                    sr.ReadLine(); //header
-                    string firstLine = sr.ReadLine();
+                    CalcManager.ExitCalcFunction = false;
+                    cm.Run(ReportCancelFunc);
+                    cm.CalcRepo.Logfile.Dispose();
+                    DirectoryInfo di = new DirectoryInfo(wd1.Combine("Results"));
+                    var files = di.GetFiles("*.csv");
+                    foreach (var file in files)
+                    {
+                        using (StreamReader sr = new StreamReader(file.FullName))
+                        {
+                            sr.ReadLine(); //header
+                            string firstLine = sr.ReadLine();
 
-
-                    Debug.Assert(firstLine != null, nameof(firstLine) + " != null");
-                    var arr = firstLine.Split(';');
-                    int firstnumber = Convert.ToInt32(arr[0]);
-                    if (firstnumber != 0) {
-                        throw new LPGException("negative numbers in first line in file: " + file.Name);
+                            if (firstLine == null) {
+                                throw new LPGException("Could not read");
+                            }
+                            var arr = firstLine.Split(';');
+                            int firstNumber = Convert.ToInt32(arr[0], CultureInfo.InvariantCulture);
+                            if (firstNumber != 0)
+                            {
+                                throw new LPGException("negative numbers in first line in file: " + file.Name);
+                            }
+                        }
                     }
                 }
-            }
-            Thread.Sleep(500);
-              //  wd1.CleanUp();
+                Thread.Sleep(500);
+                //  wd1.CleanUp();
                 db.Cleanup();
+            }
         }
 
         [Test]
@@ -513,53 +548,54 @@ namespace CalculationController.Tests {
         {
             // superslow test, only do manually
 
-            var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            Logger.Threshold = Severity.Error;
-            var path = wd1.WorkingDirectory;
-            Config.MakePDFCharts = false;
-            if (Directory.Exists(path)) {
-                Directory.Delete(path, true);
-            }
-            Directory.CreateDirectory(path);
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var sim = new Simulator(db.ConnectionString) {MyGeneralConfig = {RandomSeed = 5}};
-
-            bool ReportCancelFunc()
+            using (var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass()))
             {
-                Logger.Info("canceled");
-                return true;
-            }
-            foreach (CalcOption option in Enum.GetValues(typeof(CalcOption))) {
-                Logger.Info("Testing option " + option);
-                var calcstart = DateTime.Now;
-                sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
-                sim.MyGeneralConfig.Enable(option);
-                Assert.AreNotEqual(null, sim);
-
-                var cmf = new CalcManagerFactory();
-                var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-                //CalcDevice.UseRanges = true;
-                var geoloc = sim.GeographicLocations.FindFirstByName("Chemnitz", FindMode.Partial);
-                if (geoloc == null) {
-                    throw new LPGException("geoloc not found");
+                Logger.Threshold = Severity.Error;
+                var path = wd1.WorkingDirectory;
+                Config.MakePDFCharts = false;
+                if (Directory.Exists(path))
+                {
+                    Directory.Delete(path, true);
                 }
-                var chh = sim.ModularHouseholds.It[0];
-                CalculationProfiler calculationProfiler = new CalculationProfiler();
-                CalcStartParameterSet csps = new CalcStartParameterSet( geoloc,
-                    sim.TemperatureProfiles[0], chh, EnergyIntensityType.Random,
-                    false, version, null, LoadTypePriority.Mandatory, null,null, null,
-                sim.MyGeneralConfig.AllEnabledOptions(), new DateTime(2015, 1, 1), new DateTime(2015, 1, 3), new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0,1,0),
-                    false,false,false, 3,3,
-                    calculationProfiler);
-                var cm = cmf.GetCalcManager(sim, wd1.WorkingDirectory, csps,  false);
+                Directory.CreateDirectory(path);
+                using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+                {
+                    var sim = new Simulator(db.ConnectionString) { MyGeneralConfig = { RandomSeed = 5 } };
 
-                cm.Run(ReportCancelFunc);
-                Logger.Error("Calc Duration:" + (DateTime.Now - calcstart).TotalSeconds + " seconds");
-                cm.Dispose();
-                wd1.ClearDirectory();
+                    foreach (CalcOption option in Enum.GetValues(typeof(CalcOption)))
+                    {
+                        Logger.Info("Testing option " + option);
+                        var calcstart = DateTime.Now;
+                        sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
+                        sim.MyGeneralConfig.Enable(option);
+                        Assert.AreNotEqual(null, sim);
+
+                        var cmf = new CalcManagerFactory();
+                        //CalcDevice.UseRanges = true;
+                        var geoloc = sim.GeographicLocations.FindFirstByName("Chemnitz", FindMode.Partial);
+                        if (geoloc == null)
+                        {
+                            throw new LPGException("geoloc not found");
+                        }
+                        var chh = sim.ModularHouseholds.It[0];
+                        CalculationProfiler calculationProfiler = new CalculationProfiler();
+                        CalcStartParameterSet csps = new CalcStartParameterSet(geoloc,
+                            sim.TemperatureProfiles[0], chh, EnergyIntensityType.Random,
+                            false,  null, LoadTypePriority.Mandatory, null, null, null,
+                        sim.MyGeneralConfig.AllEnabledOptions(), new DateTime(2015, 1, 1), new DateTime(2015, 1, 3), new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 1, 0),
+                            false, false, false, 3, 3,
+                            calculationProfiler, wd1.WorkingDirectory);
+                        var cm = cmf.GetCalcManager(sim, csps, false);
+
+                        cm.Run(ReportCancelFunc);
+                        Logger.Error("Calc Duration:" + (DateTime.Now - calcstart).TotalSeconds + " seconds");
+                        cm.Dispose();
+                        wd1.ClearDirectory();
+                    }
+                    db.Cleanup();
+                }
+                wd1.CleanUp();
             }
-            db.Cleanup();
-            wd1.CleanUp();
         }
 
         [Test]
@@ -577,45 +613,40 @@ namespace CalculationController.Tests {
                     Directory.Delete(path, true);
                 }
                 Directory.CreateDirectory(path);
-                var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-                var sim = new Simulator(db.ConnectionString);
-                var calcstart = DateTime.Now;
-                sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.All);
-                //sim.MyGeneralConfig.Enable(CalcOption.AffordanceEnergyUse);
-                sim.MyGeneralConfig.Disable(CalcOption.OverallSum);
-                SimIntegrityChecker.Run(sim);
-                //ConfigSetter.SetGlobalTimeParameters(sim.MyGeneralConfig);
-                Assert.AreNotEqual(null, sim);
-
-                var cmf = new CalcManagerFactory();
-                var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-                //CalcDevice.UseRanges = true;
-                var geoloc = sim.GeographicLocations.FindFirstByName("Chemnitz", FindMode.Partial);
-                if (geoloc == null)
+                using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
                 {
-                    throw new LPGException("Geoloc was null");
-                }
-                var chh =
-                    sim.ModularHouseholds.It.First(x => x.Name.StartsWith("CHR20", StringComparison.Ordinal));
-                CalculationProfiler calculationProfiler = new CalculationProfiler();
-                CalcStartParameterSet csps = new CalcStartParameterSet(geoloc,
-                    sim.TemperatureProfiles[0], chh, EnergyIntensityType.Random,
-                    false, version, null, LoadTypePriority.All, null, null, null, sim.MyGeneralConfig.AllEnabledOptions(),
-                    new DateTime(2015, 1, 1), new DateTime(2015, 1, 3), new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 1, 0), false, false, false, 3, 3,
-                    calculationProfiler);
-                var cm = cmf.GetCalcManager(sim, wd1.WorkingDirectory, csps, false);
+                    var sim = new Simulator(db.ConnectionString);
+                    var calcstart = DateTime.Now;
+                    sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.All);
+                    //sim.MyGeneralConfig.Enable(CalcOption.AffordanceEnergyUse);
+                    sim.MyGeneralConfig.Disable(CalcOption.OverallSum);
+                    SimIntegrityChecker.Run(sim);
+                    //ConfigSetter.SetGlobalTimeParameters(sim.MyGeneralConfig);
+                    Assert.AreNotEqual(null, sim);
 
-                bool ReportCancelFunc()
-                {
-                    Logger.Info("canceled");
-                    return true;
-                }
+                    var cmf = new CalcManagerFactory();
+                    //CalcDevice.UseRanges = true;
+                    var geoloc = sim.GeographicLocations.FindFirstByName("Chemnitz", FindMode.Partial);
+                    if (geoloc == null)
+                    {
+                        throw new LPGException("Geoloc was null");
+                    }
+                    var chh =
+                        sim.ModularHouseholds.It.First(x => x.Name.StartsWith("CHR20", StringComparison.Ordinal));
+                    CalculationProfiler calculationProfiler = new CalculationProfiler();
+                    CalcStartParameterSet csps = new CalcStartParameterSet(geoloc,
+                        sim.TemperatureProfiles[0], chh, EnergyIntensityType.Random,
+                        false,  null, LoadTypePriority.All, null, null, null, sim.MyGeneralConfig.AllEnabledOptions(),
+                        new DateTime(2015, 1, 1), new DateTime(2015, 1, 3), new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 1, 0), false, false, false, 3, 3,
+                        calculationProfiler, wd1.WorkingDirectory);
+                    var cm = cmf.GetCalcManager(sim,  csps, false);
 
-                cm.Run(ReportCancelFunc);
-                db.Cleanup();
-                Logger.ImportantInfo("Duration:" + (DateTime.Now - start).TotalSeconds + " seconds");
-                Logger.ImportantInfo("Calc Duration:" + (DateTime.Now - calcstart).TotalSeconds + " seconds");
-                Logger.ImportantInfo("loading Duration:" + (calcstart - start).TotalSeconds + " seconds");
+                    cm.Run(ReportCancelFunc);
+                    db.Cleanup();
+                    Logger.ImportantInfo("Duration:" + (DateTime.Now - start).TotalSeconds + " seconds");
+                    Logger.ImportantInfo("Calc Duration:" + (DateTime.Now - calcstart).TotalSeconds + " seconds");
+                    Logger.ImportantInfo("loading Duration:" + (calcstart - start).TotalSeconds + " seconds");
+                }
             }
             //wd1.CleanUp();
             //CleanTestBase.Run(true);
@@ -625,19 +656,22 @@ namespace CalculationController.Tests {
         [Category(UnitTestCategories.BasicTest)]
         public void SimpleLoading()
         {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var sim = new Simulator(db.ConnectionString);
-            Assert.IsNotNull(sim);
-            Logger.Info("Guids created: " + DBBase._GuidCreationCount);
-            if(DBBase._GuidCreationCount > 0) {
-                throw new LPGException("Guids were created, whatever the reason might be.");
-            }
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var sim = new Simulator(db.ConnectionString);
+                Assert.IsNotNull(sim);
+                Logger.Info("Guids created: " + DBBase.GuidCreationCount);
+                if (DBBase.GuidCreationCount > 0)
+                {
+                    throw new LPGException("Guids were created, whatever the reason might be.");
+                }
 
-            DBBase._GuidCreationCount = 0;
-            DBBase.GuidsToSave.Clear();
-            var sim2 = new Simulator(db.ConnectionString);
-            Assert.IsNotNull(sim2);
-            Logger.Info("Guids created try 2: " + DBBase._GuidCreationCount);
+                DBBase.GuidCreationCount = 0;
+                DBBase.GuidsToSave.Clear();
+                var sim2 = new Simulator(db.ConnectionString);
+                Assert.IsNotNull(sim2);
+            }
+            Logger.Info("Guids created try 2: " + DBBase.GuidCreationCount);
         }
 
         [Test]
@@ -656,42 +690,37 @@ namespace CalculationController.Tests {
                     Directory.Delete(path, true);
                 }
                 Directory.CreateDirectory(path);
-                var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-                //const string connstr = "Data Source=d:\\profilegenerator-r8.db3";
-                var sim = new Simulator(db.ConnectionString);
-                var calcstart = DateTime.Now;
-
-                sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
-                sim.MyGeneralConfig.Disable(CalcOption.OverallSum);
-                sim.MyGeneralConfig.Enable(CalcOption.IndividualSumProfiles);
-                sim.MyGeneralConfig.Enable(CalcOption.MakeGraphics);
-                sim.MyGeneralConfig.Enable(CalcOption.DeviceProfiles);
-
-                //ChartLocalizer.ShouldTranslate = true;
-                Assert.AreNotEqual(null, sim);
-                var cmf = new CalcManagerFactory();
-                var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-                //CalcDevice.UseRanges = true;
-                House houseToCalc = sim.Houses.It[0];
-                CalculationProfiler calculationProfiler = new CalculationProfiler();
-                CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
-                    sim.TemperatureProfiles[0], houseToCalc, EnergyIntensityType.Random,
-                    false, version, null, LoadTypePriority.RecommendedForHouses, null, null, null,
-                    sim.MyGeneralConfig.AllEnabledOptions(), new DateTime(2015, 1, 1), new DateTime(2015, 1, 3),
-                    new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 1, 0), false, false, false, 3, 3,
-                    calculationProfiler);
-                var cm = cmf.GetCalcManager(sim, wd1.WorkingDirectory, csps, false);
-
-                bool ReportCancelFunc()
+                using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
                 {
-                    Logger.Info("canceled");
-                    return true;
-                }
+                    //const string connstr = "Data Source=d:\\profilegenerator-r8.db3";
+                    var sim = new Simulator(db.ConnectionString);
+                    var calcstart = DateTime.Now;
 
-                cm.Run(ReportCancelFunc);
-                //db.Cleanup();
-                Logger.ImportantInfo("Duration:" + (DateTime.Now - start).TotalSeconds + " seconds");
-                Logger.ImportantInfo("Calc Duration:" + (DateTime.Now - calcstart).TotalSeconds + " seconds");
+                    sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
+                    sim.MyGeneralConfig.Disable(CalcOption.OverallSum);
+                    sim.MyGeneralConfig.Enable(CalcOption.IndividualSumProfiles);
+                    sim.MyGeneralConfig.Enable(CalcOption.MakeGraphics);
+                    sim.MyGeneralConfig.Enable(CalcOption.DeviceProfiles);
+
+                    //ChartLocalizer.ShouldTranslate = true;
+                    Assert.AreNotEqual(null, sim);
+                    var cmf = new CalcManagerFactory();
+                    //CalcDevice.UseRanges = true;
+                    House houseToCalc = sim.Houses.It[0];
+                    CalculationProfiler calculationProfiler = new CalculationProfiler();
+                    CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
+                        sim.TemperatureProfiles[0], houseToCalc, EnergyIntensityType.Random,
+                        false,  null, LoadTypePriority.RecommendedForHouses, null, null, null,
+                        sim.MyGeneralConfig.AllEnabledOptions(), new DateTime(2015, 1, 1), new DateTime(2015, 1, 3),
+                        new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 1, 0), false, false, false, 3, 3,
+                        calculationProfiler, wd1.WorkingDirectory);
+                    var cm = cmf.GetCalcManager(sim, csps, false);
+
+                    cm.Run(ReportCancelFunc);
+                    //db.Cleanup();
+                    Logger.ImportantInfo("Duration:" + (DateTime.Now - start).TotalSeconds + " seconds");
+                    Logger.ImportantInfo("Calc Duration:" + (DateTime.Now - calcstart).TotalSeconds + " seconds");
+                }
                 wd1.CleanUp();
             }
             CleanTestBase.RunAutomatically(true);
@@ -704,49 +733,48 @@ namespace CalculationController.Tests {
             //_calcParameters.IsInTransportMode = false;
             CleanTestBase.RunAutomatically(false);
             var start = DateTime.Now;
-            var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            Logger.Threshold = Severity.Error;
-            var path = wd1.WorkingDirectory;
-            Config.MakePDFCharts = false;
-            if (Directory.Exists(path)) {
-                Directory.Delete(path, true);
-            }
-            Directory.CreateDirectory(path);
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var sim = new Simulator(db.ConnectionString);
-            var calcstart = DateTime.Now;
-
-            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.ReasonableWithChartsAndPDF);
-
-            Assert.AreNotEqual(null, sim);
-
-            var cmf = new CalcManagerFactory();
-            var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            //CalcDevice.UseRanges = true;
-            var geoloc = sim.GeographicLocations.FindFirstByName("Chemnitz", FindMode.Partial);
-            if (geoloc == null) {
-                throw new LPGException("Geoloc not found.");
-            }
-            CalculationProfiler calculationProfiler = new CalculationProfiler();
-            CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
-                sim.TemperatureProfiles[0], sim.ModularHouseholds[0], EnergyIntensityType.Random,
-                false, version, null, LoadTypePriority.Mandatory, null, null,null, sim.MyGeneralConfig.AllEnabledOptions(),
-                new DateTime(2015,1,1),new DateTime(2015,1,5),new TimeSpan(0,1,0),";",5,new TimeSpan(0,1,0), false, false, false,3,3,
-                calculationProfiler);
-            var cm = cmf.GetCalcManager(sim, wd1.WorkingDirectory, csps,  false);
-
-            bool ReportCancelFunc()
+            using (var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass()))
             {
-                Logger.Info("canceled");
-                return true;
-            }
+                Logger.Threshold = Severity.Error;
+                var path = wd1.WorkingDirectory;
+                Config.MakePDFCharts = false;
+                if (Directory.Exists(path))
+                {
+                    Directory.Delete(path, true);
+                }
+                Directory.CreateDirectory(path);
+                using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+                {
+                    var sim = new Simulator(db.ConnectionString);
+                    var calcstart = DateTime.Now;
 
-            cm.Run(ReportCancelFunc);
-            db.Cleanup();
-            Logger.ImportantInfo("Duration:" + (DateTime.Now - start).TotalSeconds + " seconds");
-            Logger.ImportantInfo("Calc Duration:" + (DateTime.Now - calcstart).TotalSeconds + " seconds");
-            Logger.ImportantInfo("loading Duration:" + (calcstart - start).TotalSeconds + " seconds");
-            wd1.CleanUp();
+                    sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.ReasonableWithChartsAndPDF);
+
+                    Assert.AreNotEqual(null, sim);
+
+                    var cmf = new CalcManagerFactory();
+                    //CalcDevice.UseRanges = true;
+                    var geoloc = sim.GeographicLocations.FindFirstByName("Chemnitz", FindMode.Partial);
+                    if (geoloc == null)
+                    {
+                        throw new LPGException("Geoloc not found.");
+                    }
+                    CalculationProfiler calculationProfiler = new CalculationProfiler();
+                    CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
+                        sim.TemperatureProfiles[0], sim.ModularHouseholds[0], EnergyIntensityType.Random,
+                        false,  null, LoadTypePriority.Mandatory, null, null, null, sim.MyGeneralConfig.AllEnabledOptions(),
+                        new DateTime(2015, 1, 1), new DateTime(2015, 1, 5), new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 1, 0), false, false, false, 3, 3,
+                        calculationProfiler, wd1.WorkingDirectory);
+                    var cm = cmf.GetCalcManager(sim, csps, false);
+
+                    cm.Run(ReportCancelFunc);
+                    db.Cleanup();
+                    Logger.ImportantInfo("Duration:" + (DateTime.Now - start).TotalSeconds + " seconds");
+                    Logger.ImportantInfo("Calc Duration:" + (DateTime.Now - calcstart).TotalSeconds + " seconds");
+                    Logger.ImportantInfo("loading Duration:" + (calcstart - start).TotalSeconds + " seconds");
+                }
+                wd1.CleanUp();
+            }
             CleanTestBase.RunAutomatically(true);
         }
 
@@ -757,72 +785,75 @@ namespace CalculationController.Tests {
             //_calcParameters.IsInTransportMode = false;
             CleanTestBase.RunAutomatically(false);
             var start = DateTime.Now;
-            var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            Logger.Threshold = Severity.Error;
-            var path = wd1.WorkingDirectory;
-            Config.MakePDFCharts = true;
-            if (Directory.Exists(path)) {
-                Directory.Delete(path, true);
-            }
-            Directory.CreateDirectory(path);
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var sim = new Simulator(db.ConnectionString);
-            var calcstart = DateTime.Now;
-
-            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
-            sim.MyGeneralConfig.Enable(CalcOption.TotalsPerLoadtype);
-            //sim.MyGeneralConfig.Enable(CalcOption.ActivationFrequencies);
-            //ChartLocalizer.ShouldTranslate = true;
-            Assert.AreNotEqual(null, sim);
-            var cmf = new CalcManagerFactory();
-            var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            //CalcDevice.UseRanges = true;
-            var house = sim.Houses.FindFirstByName("01, 02", FindMode.Partial);
-            if (house == null) {
-                throw new LPGException("House was null");
-            }
-
-            CalculationProfiler calculationProfiler = new CalculationProfiler();
-            CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
-                sim.TemperatureProfiles[0], house, EnergyIntensityType.Random,
-                false, version, null, LoadTypePriority.RecommendedForHouses, null,null, null,
-                sim.MyGeneralConfig.AllEnabledOptions(),new DateTime(2015,1,1),new DateTime(2015,1,3),new TimeSpan(0,0,1,0),
-                ";",5,new TimeSpan(0,1,0), false, false, false,3,3,
-                calculationProfiler);
-            var cm = cmf.GetCalcManager(sim, wd1.WorkingDirectory, csps,  false);
-
-            bool ReportCancelFunc()
+            using (var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass()))
             {
-                Logger.Info("canceled");
-                return true;
-            }
+                Logger.Threshold = Severity.Error;
+                var path = wd1.WorkingDirectory;
+                Config.MakePDFCharts = true;
+                if (Directory.Exists(path))
+                {
+                    Directory.Delete(path, true);
+                }
+                Directory.CreateDirectory(path);
+                using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+                {
+                    var sim = new Simulator(db.ConnectionString);
+                    var calcstart = DateTime.Now;
 
-            var cr = cm.Run(ReportCancelFunc);
-            if (!cr) {
-                throw new LPGException("Calculation failed");
-            }
-            /*
-            if (cr.ResultFileEntries.Count == 0) {
-                throw new LPGException("no result files");
-            }
-            foreach (var entry in cr.ResultFileEntries) {
-                Logger.Info("Result File: " + entry.FullFileName);
-            }*/
-            db.Cleanup();
-            Logger.ImportantInfo("Duration:" + (DateTime.Now - start).TotalSeconds + " seconds");
-            Logger.ImportantInfo("Calc Duration:" + (DateTime.Now - calcstart).TotalSeconds + " seconds");
-            TotalsPerLoadtypeEntryLogger tel = new TotalsPerLoadtypeEntryLogger(wd1.SqlResultLoggingService);
-            var keyLogger = new HouseholdKeyLogger(wd1.SqlResultLoggingService);
-            var keys = keyLogger.Load();
-            foreach (HouseholdKeyEntry entry in keys) {
-                if(entry.HouseholdKey == Constants.GeneralHouseholdKey) {
-                    continue;
+                    sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
+                    sim.MyGeneralConfig.Enable(CalcOption.TotalsPerLoadtype);
+                    //sim.MyGeneralConfig.Enable(CalcOption.ActivationFrequencies);
+                    //ChartLocalizer.ShouldTranslate = true;
+                    Assert.AreNotEqual(null, sim);
+                    var cmf = new CalcManagerFactory();
+                    //CalcDevice.UseRanges = true;
+                    var house = sim.Houses.FindFirstByName("01, 02", FindMode.Partial);
+                    if (house == null)
+                    {
+                        throw new LPGException("House was null");
+                    }
+
+                    CalculationProfiler calculationProfiler = new CalculationProfiler();
+                    CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
+                        sim.TemperatureProfiles[0], house, EnergyIntensityType.Random,
+                        false,  null, LoadTypePriority.RecommendedForHouses, null, null, null,
+                        sim.MyGeneralConfig.AllEnabledOptions(), new DateTime(2015, 1, 1), new DateTime(2015, 1, 3), new TimeSpan(0, 0, 1, 0),
+                        ";", 5, new TimeSpan(0, 1, 0), false, false, false, 3, 3,
+                        calculationProfiler, wd1.WorkingDirectory);
+                    var cm = cmf.GetCalcManager(sim, csps, false);
+
+                    var cr = cm.Run(ReportCancelFunc);
+                    if (!cr)
+                    {
+                        throw new LPGException("Calculation failed");
+                    }
+                    /*
+                    if (cr.ResultFileEntries.Count == 0) {
+                        throw new LPGException("no result files");
+                    }
+                    foreach (var entry in cr.ResultFileEntries) {
+                        Logger.Info("Result File: " + entry.FullFileName);
+                    }*/
+                    db.Cleanup();
+                    Logger.ImportantInfo("Duration:" + (DateTime.Now - start).TotalSeconds + " seconds");
+                    Logger.ImportantInfo("Calc Duration:" + (DateTime.Now - calcstart).TotalSeconds + " seconds");
                 }
-                if (entry.KeyType == HouseholdKeyType.House) {
-                    continue;
+                TotalsPerLoadtypeEntryLogger tel = new TotalsPerLoadtypeEntryLogger(wd1.SqlResultLoggingService);
+                var keyLogger = new HouseholdKeyLogger(wd1.SqlResultLoggingService);
+                var keys = keyLogger.Load();
+                foreach (HouseholdKeyEntry entry in keys)
+                {
+                    if (entry.HouseholdKey == Constants.GeneralHouseholdKey)
+                    {
+                        continue;
+                    }
+                    if (entry.KeyType == HouseholdKeyType.House)
+                    {
+                        continue;
+                    }
+                    var totals = tel.Read(entry.HouseholdKey);
+                    Assert.That(totals.Count, Is.GreaterThan(0));
                 }
-                var totals = tel.Read(entry.HouseholdKey);
-                Assert.That(totals.Count,Is.GreaterThan(0));
             }
 
             /*
@@ -856,48 +887,46 @@ namespace CalculationController.Tests {
             //_calcParameters.IsInTransportMode = false;
             CleanTestBase.RunAutomatically(false);
             var start = DateTime.Now;
-            var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            Logger.Threshold = Severity.Error;
-            var path = wd1.WorkingDirectory;
-            Config.MakePDFCharts = true;
-            if (Directory.Exists(path)) {
-                Directory.Delete(path, true);
-            }
-            Directory.CreateDirectory(path);
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var sim = new Simulator(db.ConnectionString);
-            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
-            sim.MyGeneralConfig.Enable(CalcOption.AffordanceEnergyUse);
-            sim.MyGeneralConfig.Enable(CalcOption.EnergyCarpetPlot);
-            sim.MyGeneralConfig.Enable(CalcOption.ActivationFrequencies);
-            //ChartLocalizer.ShouldTranslate = true;
-            Assert.AreNotEqual(null, sim);
-
-            var cmf = new CalcManagerFactory();
-            var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            CalculationProfiler calculationProfiler = new CalculationProfiler();
-            CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
-                sim.TemperatureProfiles[0], sim.ModularHouseholds[0], EnergyIntensityType.Random,
-                false, version, null, LoadTypePriority.RecommendedForHouses, null,null, null,
-                sim.MyGeneralConfig.AllEnabledOptions(), new DateTime(2015,1,1),new DateTime(2015,1,10),
-                new TimeSpan(0,1,0),";",5,new TimeSpan(0,1,0), false, false, false,3,3,
-                calculationProfiler);
-
-            var cm = cmf.GetCalcManager(sim, wd1.WorkingDirectory, csps,  false);
-
-            bool ReportCancelFunc()
+            using (var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass()))
             {
-                Logger.Info("canceled");
-                return true;
-            }
+                Logger.Threshold = Severity.Error;
+                var path = wd1.WorkingDirectory;
+                Config.MakePDFCharts = true;
+                if (Directory.Exists(path))
+                {
+                    Directory.Delete(path, true);
+                }
+                Directory.CreateDirectory(path);
+                using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+                {
+                    var sim = new Simulator(db.ConnectionString);
+                    sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
+                    sim.MyGeneralConfig.Enable(CalcOption.AffordanceEnergyUse);
+                    sim.MyGeneralConfig.Enable(CalcOption.EnergyCarpetPlot);
+                    sim.MyGeneralConfig.Enable(CalcOption.ActivationFrequencies);
+                    //ChartLocalizer.ShouldTranslate = true;
+                    Assert.AreNotEqual(null, sim);
 
-            cm.Run(ReportCancelFunc);
-            db.Cleanup();
-            Logger.ImportantInfo("Duration:" + (DateTime.Now - start).TotalSeconds + " seconds");
-            var imagefiles = FileFinder.GetRecursiveFiles(new DirectoryInfo(wd1.WorkingDirectory),
-                "EnergyCarpetplot.*.png");
-            Assert.GreaterOrEqual(imagefiles.Count, 0);
-            wd1.CleanUp();
+                    var cmf = new CalcManagerFactory();
+                    CalculationProfiler calculationProfiler = new CalculationProfiler();
+                    CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
+                        sim.TemperatureProfiles[0], sim.ModularHouseholds[0], EnergyIntensityType.Random,
+                        false,  null, LoadTypePriority.RecommendedForHouses, null, null, null,
+                        sim.MyGeneralConfig.AllEnabledOptions(), new DateTime(2015, 1, 1), new DateTime(2015, 1, 10),
+                        new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 1, 0), false, false, false, 3, 3,
+                        calculationProfiler, wd1.WorkingDirectory);
+
+                    var cm = cmf.GetCalcManager(sim, csps, false);
+
+                    cm.Run(ReportCancelFunc);
+                    db.Cleanup();
+                }
+                Logger.ImportantInfo("Duration:" + (DateTime.Now - start).TotalSeconds + " seconds");
+                var imagefiles = FileFinder.GetRecursiveFiles(new DirectoryInfo(wd1.WorkingDirectory),
+                    "EnergyCarpetplot.*.png");
+                Assert.GreaterOrEqual(imagefiles.Count, 0);
+                wd1.CleanUp();
+            }
             CleanTestBase.RunAutomatically(true);
         }
 
@@ -905,57 +934,58 @@ namespace CalculationController.Tests {
         [Category(UnitTestCategories.ManualOnly)]
         public void InvalidPersonActivitiesCheck()
         {
-            var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var sim = new Simulator(db.ConnectionString) {
-                MyGeneralConfig = {
+            using (var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass()))
+            {
+                using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+                {
+                    var sim = new Simulator(db.ConnectionString)
+                    {
+                        MyGeneralConfig = {
                     StartDateUIString = "01.01.2015",
                     EndDateUIString = "02.01.2015",
                     InternalTimeResolution = "00:01:00",
                     ExternalTimeResolution = "00:15:00",
                     RandomSeed = 5
                 }
-            };
-            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
-            sim.MyGeneralConfig.Enable(CalcOption.TotalsPerLoadtype);
-            sim.MyGeneralConfig.CSVCharacter = ";";
-            Assert.AreNotEqual(null, sim);
-            var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            SimIntegrityChecker.Run(sim);
-            CalcManagerFactory.DoIntegrityRun = false;
-            var mhh = sim.ModularHouseholds.FindFirstByName("x CHR08 Single woman, 2 children, with work 47");
-            if (mhh == null) {
-                throw new LPGException("Household not found");
-            }
-            var cmf = new CalcManagerFactory();
-            var di = new DirectoryInfo(wd1.WorkingDirectory);
-            var files = di.GetFiles();
-            foreach (var file in files) {
-                file.Delete();
-            }
-            var dirs = di.GetDirectories();
-            foreach (var dir in dirs) {
-                dir.Delete(true);
-            }
-            CalculationProfiler calculationProfiler = new CalculationProfiler();
-            CalcStartParameterSet csps = new CalcStartParameterSet( sim.GeographicLocations[0],
-                sim.TemperatureProfiles[0], mhh, EnergyIntensityType.Random,
-                false, version, null, LoadTypePriority.RecommendedForHouses, null, null,null,
-                sim.MyGeneralConfig.AllEnabledOptions(),new DateTime(2015,1,1),new DateTime(2015,1,2),
-                new TimeSpan(0,1,0),";",5,new TimeSpan(0,15,0), false, false, false,3,3,
-                calculationProfiler);
-            var cm = cmf.GetCalcManager(sim, wd1.WorkingDirectory, csps,  false);
+                    };
+                    sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
+                    sim.MyGeneralConfig.Enable(CalcOption.TotalsPerLoadtype);
+                    sim.MyGeneralConfig.CSVCharacter = ";";
+                    Assert.AreNotEqual(null, sim);
+                    SimIntegrityChecker.Run(sim);
+                    CalcManagerFactory.DoIntegrityRun = false;
+                    var mhh = sim.ModularHouseholds.FindFirstByName("x CHR08 Single woman, 2 children, with work 47");
+                    if (mhh == null)
+                    {
+                        throw new LPGException("Household not found");
+                    }
+                    var cmf = new CalcManagerFactory();
+                    var di = new DirectoryInfo(wd1.WorkingDirectory);
+                    var files = di.GetFiles();
+                    foreach (var file in files)
+                    {
+                        file.Delete();
+                    }
+                    var dirs = di.GetDirectories();
+                    foreach (var dir in dirs)
+                    {
+                        dir.Delete(true);
+                    }
+                    CalculationProfiler calculationProfiler = new CalculationProfiler();
+                    CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
+                        sim.TemperatureProfiles[0], mhh, EnergyIntensityType.Random,
+                        false,  null, LoadTypePriority.RecommendedForHouses, null, null, null,
+                        sim.MyGeneralConfig.AllEnabledOptions(), new DateTime(2015, 1, 1), new DateTime(2015, 1, 2),
+                        new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 15, 0), false, false, false, 3, 3,
+                        calculationProfiler, wd1.WorkingDirectory);
+                    var cm = cmf.GetCalcManager(sim, csps, false);
 
-            bool ReportCancelFunc()
-            {
-                Logger.Info("canceled");
-                return true;
+                    CalcManager.ExitCalcFunction = true;
+                    cm.Run(ReportCancelFunc);
+                    db.Cleanup();
+                }
+                wd1.CleanUp();
             }
-
-            CalcManager.ExitCalcFunction = true;
-            cm.Run(ReportCancelFunc);
-            db.Cleanup();
-            wd1.CleanUp();
         }
 
         [Test]
@@ -963,61 +993,55 @@ namespace CalculationController.Tests {
         public void DoubleWorkCheck()
         {
             //_calcParameters.IsInTransportMode = false;
-            var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var sim = new Simulator(db.ConnectionString) {
-                MyGeneralConfig = {
+            using (var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass()))
+            {
+                using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+                {
+                    var sim = new Simulator(db.ConnectionString)
+                    {
+                        MyGeneralConfig = {
                     StartDateUIString = "01.01.2015",
                     EndDateUIString = "02.01.2015",
                     InternalTimeResolution = "00:01:00",
                     ExternalTimeResolution = "00:15:00",
                     RandomSeed = 5
                 }
-            };
-            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
-            sim.MyGeneralConfig.Enable(CalcOption.TotalsPerLoadtype);
-            sim.MyGeneralConfig.CSVCharacter = ";";
+                    };
+                    sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
+                    sim.MyGeneralConfig.Enable(CalcOption.TotalsPerLoadtype);
+                    sim.MyGeneralConfig.CSVCharacter = ";";
 
-            Assert.AreNotEqual(null, sim);
-            var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            SimIntegrityChecker.Run(sim);
-            CalcManagerFactory.DoIntegrityRun = false;
-            var mhh = sim.Houses[27];
-            if (mhh == null)
-            {
-                throw new LPGException("Household not found");
-            }
-            var cmf = new CalcManagerFactory();
-            var di = new DirectoryInfo(wd1.WorkingDirectory);
-            var files = di.GetFiles();
-            foreach (var file in files)
-            {
-                file.Delete();
-            }
-            var dirs = di.GetDirectories();
-            foreach (var dir in dirs)
-            {
-                dir.Delete(true);
-            }
-            CalculationProfiler calculationProfiler = new CalculationProfiler();
-            CalcStartParameterSet csps = new CalcStartParameterSet( sim.GeographicLocations[0],
-                sim.TemperatureProfiles[0], mhh, EnergyIntensityType.Random,
-                false, version, null, LoadTypePriority.RecommendedForHouses, null, null,null,
-            sim.MyGeneralConfig.AllEnabledOptions(), new DateTime(2015, 1, 1), new DateTime(2015, 1, 2),
-                new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 15, 0), false, false, false,3,3,
-                calculationProfiler);
-            var cm = cmf.GetCalcManager(sim, wd1.WorkingDirectory, csps,  false);
+                    Assert.AreNotEqual(null, sim);
+                    SimIntegrityChecker.Run(sim);
+                    CalcManagerFactory.DoIntegrityRun = false;
+                    var mhh = sim.Houses[27];
+                    var cmf = new CalcManagerFactory();
+                    var di = new DirectoryInfo(wd1.WorkingDirectory);
+                    var files = di.GetFiles();
+                    foreach (var file in files)
+                    {
+                        file.Delete();
+                    }
+                    var dirs = di.GetDirectories();
+                    foreach (var dir in dirs)
+                    {
+                        dir.Delete(true);
+                    }
+                    CalculationProfiler calculationProfiler = new CalculationProfiler();
+                    CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
+                        sim.TemperatureProfiles[0], mhh, EnergyIntensityType.Random,
+                        false,  null, LoadTypePriority.RecommendedForHouses, null, null, null,
+                    sim.MyGeneralConfig.AllEnabledOptions(), new DateTime(2015, 1, 1), new DateTime(2015, 1, 2),
+                        new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 15, 0), false, false, false, 3, 3,
+                        calculationProfiler, wd1.WorkingDirectory);
+                    var cm = cmf.GetCalcManager(sim, csps, false);
 
-            bool ReportCancelFunc()
-            {
-                Logger.Info("canceled");
-                return true;
+                    CalcManager.ExitCalcFunction = false;
+                    cm.Run(ReportCancelFunc);
+                    db.Cleanup();
+                }
+                wd1.CleanUp();
             }
-
-            CalcManager.ExitCalcFunction = false;
-            cm.Run(ReportCancelFunc);
-            db.Cleanup();
-            wd1.CleanUp();
         }
 
         [Test]
@@ -1027,90 +1051,91 @@ namespace CalculationController.Tests {
             //_calcParameters.IsInTransportMode = false;
             CleanTestBase.RunAutomatically(false);
             var start = DateTime.Now;
-            var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            Logger.Threshold = Severity.Error;
-            var path = wd1.WorkingDirectory;
-            Config.MakePDFCharts = true;
-            if (Directory.Exists(path)) {
-                Directory.Delete(path, true);
-            }
-            Directory.CreateDirectory(path);
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var sim = new Simulator(db.ConnectionString);
-            var calcstart = DateTime.Now;
-            sim.MyGeneralConfig.StartDateUIString = "1.1.2015";
-            sim.MyGeneralConfig.EndDateUIString = "3.1.2015";
-            sim.MyGeneralConfig.InternalTimeResolution = "00:01:00";
-            sim.MyGeneralConfig.RandomSeed = 5;
-            sim.MyGeneralConfig.CSVCharacter = ";";
-
-            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
-            sim.MyGeneralConfig.Enable(CalcOption.TotalsPerLoadtype);
-            sim.MyGeneralConfig.Enable(CalcOption.DeviceProfiles);
-            //sim.MyGeneralConfig.Enable(CalcOption.ActivationFrequencies);
-            //ChartLocalizer.ShouldTranslate = true;
-
-            Assert.AreNotEqual(null, sim);
-            var cmf = new CalcManagerFactory();
-            var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            //CalcDevice.UseRanges = true;
-            var house = sim.Houses.FindFirstByName("01, 02", FindMode.Partial);
-            if (house == null) {
-                throw new LPGException("House was null");
-            }
-            CalculationProfiler calculationProfiler = new CalculationProfiler();
-            CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
-                sim.TemperatureProfiles[0], house, EnergyIntensityType.Random,
-                false, version, null, LoadTypePriority.RecommendedForHouses, null, null,null,
-                sim.MyGeneralConfig.AllEnabledOptions(), new DateTime(2015, 1, 1), new DateTime(2015, 1, 3),
-                new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 1, 0), false, false, false,3,3,
-                calculationProfiler);
-            var cm = cmf.GetCalcManager(sim, wd1.WorkingDirectory, csps,  false);
-
-            bool ReportCancelFunc()
+            using (var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass()))
             {
-                Logger.Info("canceled");
-                return true;
-            }
-
-            cm.Run(ReportCancelFunc);
-            db.Cleanup();
-            Logger.ImportantInfo("Duration:" + (DateTime.Now - start).TotalSeconds + " seconds");
-            Logger.ImportantInfo("Calc Duration:" + (DateTime.Now - calcstart).TotalSeconds + " seconds");
-            //var di = new DirectoryInfo(wd1.WorkingDirectory);
-            //var ti = TotalsInformation.Read(Path.Combine(di.FullName, "Reports"));
-            HouseholdKeyLogger hhkls = new HouseholdKeyLogger(wd1.SqlResultLoggingService);
-            var hhkeys = hhkls.Load();
-            TotalsPerLoadtypeEntryLogger tel = new TotalsPerLoadtypeEntryLogger(wd1.SqlResultLoggingService);
-            foreach (HouseholdKeyEntry entry in hhkeys) {
-                if(entry.KeyType == HouseholdKeyType.General) {
-                    continue;
-                }
-                if (entry.KeyType == HouseholdKeyType.House)
+                Logger.Threshold = Severity.Error;
+                var path = wd1.WorkingDirectory;
+                Config.MakePDFCharts = true;
+                if (Directory.Exists(path))
                 {
-                    continue;
+                    Directory.Delete(path, true);
                 }
+                Directory.CreateDirectory(path);
+                using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+                {
+                    var sim = new Simulator(db.ConnectionString);
+                    var calcstart = DateTime.Now;
+                    sim.MyGeneralConfig.StartDateUIString = "1.1.2015";
+                    sim.MyGeneralConfig.EndDateUIString = "3.1.2015";
+                    sim.MyGeneralConfig.InternalTimeResolution = "00:01:00";
+                    sim.MyGeneralConfig.RandomSeed = 5;
+                    sim.MyGeneralConfig.CSVCharacter = ";";
 
-                var ti = tel.Read(entry.HouseholdKey);
-                //var totalEntries = ti.First(x => x.HouseholdKey == Constants.TotalsKey);
-                //var others = ti.HouseholdEntries.Where(x => x.HouseholdKey != Constants.TotalsKey).ToList();
-                Assert.That(ti.Count,Is.GreaterThan(0));
-                //TODO: fix: implement a proper check of the sums vs. the profile sums
-                /*foreach (var totalEntriesLoadTypeEntry in totalEntries.LoadTypeEntries) {
-                    var totalSum = totalEntriesLoadTypeEntry.Total;
-                    var otherEntries =
-                        others.SelectMany(x => x.LoadTypeEntries)
-                            .Where(y => y.LoadTypeInformation.Name ==
-                                        totalEntriesLoadTypeEntry.LoadTypeInformation.Name)
-                            .ToList();
-                    var othersum = otherEntries.Select(x => x.Total).Sum();
-                    if (Math.Abs(totalSum - othersum) > 0.00001) {
-                        throw new LPGException(
-                            "Something is wrong: " + totalEntriesLoadTypeEntry.LoadTypeInformation.Name
-                                                   + Environment.NewLine + "total: " + totalSum + Environment.NewLine +
-                                                   " individual sum:" + othersum);
+                    sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
+                    sim.MyGeneralConfig.Enable(CalcOption.TotalsPerLoadtype);
+                    sim.MyGeneralConfig.Enable(CalcOption.DeviceProfiles);
+                    //sim.MyGeneralConfig.Enable(CalcOption.ActivationFrequencies);
+                    //ChartLocalizer.ShouldTranslate = true;
+
+                    Assert.AreNotEqual(null, sim);
+                    var cmf = new CalcManagerFactory();
+                    //CalcDevice.UseRanges = true;
+                    var house = sim.Houses.FindFirstByName("01, 02", FindMode.Partial);
+                    if (house == null)
+                    {
+                        throw new LPGException("House was null");
                     }
-                }*/
+                    CalculationProfiler calculationProfiler = new CalculationProfiler();
+                    CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
+                        sim.TemperatureProfiles[0], house, EnergyIntensityType.Random,
+                        false,  null, LoadTypePriority.RecommendedForHouses, null, null, null,
+                        sim.MyGeneralConfig.AllEnabledOptions(), new DateTime(2015, 1, 1), new DateTime(2015, 1, 3),
+                        new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 1, 0), false, false, false, 3, 3,
+                        calculationProfiler, wd1.WorkingDirectory);
+                    var cm = cmf.GetCalcManager(sim, csps, false);
+
+                    cm.Run(ReportCancelFunc);
+                    db.Cleanup();
+                    Logger.ImportantInfo("Duration:" + (DateTime.Now - start).TotalSeconds + " seconds");
+                    Logger.ImportantInfo("Calc Duration:" + (DateTime.Now - calcstart).TotalSeconds + " seconds");
+                }
+                //var di = new DirectoryInfo(wd1.WorkingDirectory);
+                //var ti = TotalsInformation.Read(Path.Combine(di.FullName, "Reports"));
+                HouseholdKeyLogger hhkls = new HouseholdKeyLogger(wd1.SqlResultLoggingService);
+                var hhkeys = hhkls.Load();
+                TotalsPerLoadtypeEntryLogger tel = new TotalsPerLoadtypeEntryLogger(wd1.SqlResultLoggingService);
+                foreach (HouseholdKeyEntry entry in hhkeys)
+                {
+                    if (entry.KeyType == HouseholdKeyType.General)
+                    {
+                        continue;
+                    }
+                    if (entry.KeyType == HouseholdKeyType.House)
+                    {
+                        continue;
+                    }
+
+                    var ti = tel.Read(entry.HouseholdKey);
+                    //var totalEntries = ti.First(x => x.HouseholdKey == Constants.TotalsKey);
+                    //var others = ti.HouseholdEntries.Where(x => x.HouseholdKey != Constants.TotalsKey).ToList();
+                    Assert.That(ti.Count, Is.GreaterThan(0));
+                    //TODO: fix: implement a proper check of the sums vs. the profile sums
+                    /*foreach (var totalEntriesLoadTypeEntry in totalEntries.LoadTypeEntries) {
+                        var totalSum = totalEntriesLoadTypeEntry.Total;
+                        var otherEntries =
+                            others.SelectMany(x => x.LoadTypeEntries)
+                                .Where(y => y.LoadTypeInformation.Name ==
+                                            totalEntriesLoadTypeEntry.LoadTypeInformation.Name)
+                                .ToList();
+                        var othersum = otherEntries.Select(x => x.Total).Sum();
+                        if (Math.Abs(totalSum - othersum) > 0.00001) {
+                            throw new LPGException(
+                                "Something is wrong: " + totalEntriesLoadTypeEntry.LoadTypeInformation.Name
+                                                       + Environment.NewLine + "total: " + totalSum + Environment.NewLine +
+                                                       " individual sum:" + othersum);
+                        }
+                    }*/
+                }
             }
         }
 
@@ -1121,82 +1146,87 @@ namespace CalculationController.Tests {
             CleanTestBase.RunAutomatically(false);
             var start = DateTime.Now;
             Config.MakePDFCharts = false;
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var sim = new Simulator(db.ConnectionString);
-            var calcstart = DateTime.Now;
-            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
-            sim.MyGeneralConfig.Enable(CalcOption.OverallSum);
-            sim.MyGeneralConfig.Enable(CalcOption.HouseholdContents);
-            //sim.MyGeneralConfig.Enable(CalcOption.LocationCarpetPlot);
-            //sim.MyGeneralConfig.Enable(CalcOption.PersonStatus);
-            sim.MyGeneralConfig.Enable(CalcOption.ActionCarpetPlot);
-            sim.MyGeneralConfig.Enable(CalcOption.TransportationDeviceCarpetPlot);
-            sim.MyGeneralConfig.Enable(CalcOption.LogAllMessages);
-            sim.MyGeneralConfig.Enable(CalcOption.LogErrorMessages);
-            sim.MyGeneralConfig.Enable(CalcOption.DeviceProfileExternalEntireHouse);
-            sim.MyGeneralConfig.Enable(CalcOption.ActivationFrequencies);
-            sim.MyGeneralConfig.Enable(CalcOption.TransportationStatistics);
-            sim.MyGeneralConfig.Enable(CalcOption.DeviceProfiles);
-            //sim.MyGeneralConfig.Enable(CalcOption.per);
-            SimIntegrityChecker.Run(sim);
-            Assert.AreNotEqual(null, sim);
-            int count = 0;
-            for (var index = 0; index < sim.ModularHouseholds.It.Count && index < 5; index++) {
-                var modularHousehold = sim.ModularHouseholds.It[index];
-                count++;
-                Logger.Info("Processing household " + count);
-                //              if(count<490) {//for skipping the first 50 for debugging
-                //                continue;
-                //          }
-                var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass());
-                var cmf = new CalcManagerFactory();
-                var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-                //CalcDevice.UseRanges = true;
-                var geoloc = sim.GeographicLocations.FindFirstByName("Chemnitz", FindMode.Partial);
-                if (geoloc == null) {
-                    throw new LPGException("Geoloc was null");
-                }
-
-                //var chh =sim.ModularHouseholds.It.First(x => x.Name.StartsWith("CHR07", StringComparison.Ordinal));
-
-                //TransportationDeviceSet transportationDeviceSet = null;
-                //TravelRouteSet travelRouteSet = null;
-                TransportationDeviceSet transportationDeviceSet = sim.TransportationDeviceSets.It[0];
-                TravelRouteSet travelRouteSet = sim.TravelRouteSets[0];
-                ChargingStationSet chargingStationSet = sim.ChargingStationSets[0];
-                CalculationProfiler calculationProfiler = new CalculationProfiler();
-                CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
-                    sim.TemperatureProfiles[0], modularHousehold, EnergyIntensityType.Random,
-                    false, version, null, LoadTypePriority.All,
-                    transportationDeviceSet,chargingStationSet, travelRouteSet,
-                    sim.MyGeneralConfig.AllEnabledOptions(),
-                    new DateTime(2015, 1, 1),
-                    new DateTime(2015, 1, 2),
-                    new TimeSpan(0, 1, 0), ";", 5,
-                    new TimeSpan(0, 1, 0),
-                    false, false, false, 3, 3,
-                    calculationProfiler);
-                var cm = cmf.GetCalcManager(sim, wd1.WorkingDirectory, csps,  false);
-
-                //var cm = cmf.GetCalcManager(sim, path, chh, false, sim.TemperatureProfiles[0], geoloc,
-                //EnergyIntensityType.Random, version, LoadTypePriority.All, null, transportationDeviceSet, travelRouteSet);
-/*
-                bool ReportCancelFunc()
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var sim = new Simulator(db.ConnectionString);
+                var calcstart = DateTime.Now;
+                sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
+                sim.MyGeneralConfig.Enable(CalcOption.OverallSum);
+                sim.MyGeneralConfig.Enable(CalcOption.HouseholdContents);
+                //sim.MyGeneralConfig.Enable(CalcOption.LocationCarpetPlot);
+                //sim.MyGeneralConfig.Enable(CalcOption.PersonStatus);
+                sim.MyGeneralConfig.Enable(CalcOption.ActionCarpetPlot);
+                sim.MyGeneralConfig.Enable(CalcOption.TransportationDeviceCarpetPlot);
+                sim.MyGeneralConfig.Enable(CalcOption.LogAllMessages);
+                sim.MyGeneralConfig.Enable(CalcOption.LogErrorMessages);
+                sim.MyGeneralConfig.Enable(CalcOption.DeviceProfileExternalEntireHouse);
+                sim.MyGeneralConfig.Enable(CalcOption.ActivationFrequencies);
+                sim.MyGeneralConfig.Enable(CalcOption.TransportationStatistics);
+                sim.MyGeneralConfig.Enable(CalcOption.DeviceProfiles);
+                //sim.MyGeneralConfig.Enable(CalcOption.per);
+                SimIntegrityChecker.Run(sim);
+                Assert.AreNotEqual(null, sim);
+                int count = 0;
+                for (var index = 0; index < sim.ModularHouseholds.It.Count && index < 5; index++)
                 {
-                    Logger.Info("canceled");
-                    return true;
+                    var modularHousehold = sim.ModularHouseholds.It[index];
+                    count++;
+                    Logger.Info("Processing household " + count);
+                    //              if(count<490) {//for skipping the first 50 for debugging
+                    //                continue;
+                    //          }
+                    using (var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass()))
+                    {
+                        var cmf = new CalcManagerFactory();
+                        //CalcDevice.UseRanges = true;
+                        var geoloc = sim.GeographicLocations.FindFirstByName("Chemnitz", FindMode.Partial);
+                        if (geoloc == null)
+                        {
+                            throw new LPGException("Geoloc was null");
+                        }
+
+                        //var chh =sim.ModularHouseholds.It.First(x => x.Name.StartsWith("CHR07", StringComparison.Ordinal));
+
+                        //TransportationDeviceSet transportationDeviceSet = null;
+                        //TravelRouteSet travelRouteSet = null;
+                        TransportationDeviceSet transportationDeviceSet = sim.TransportationDeviceSets.It[0];
+                        TravelRouteSet travelRouteSet = sim.TravelRouteSets[0];
+                        ChargingStationSet chargingStationSet = sim.ChargingStationSets[0];
+                        CalculationProfiler calculationProfiler = new CalculationProfiler();
+                        CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
+                            sim.TemperatureProfiles[0], modularHousehold, EnergyIntensityType.Random,
+                            false,  null, LoadTypePriority.All,
+                            transportationDeviceSet, chargingStationSet, travelRouteSet,
+                            sim.MyGeneralConfig.AllEnabledOptions(),
+                            new DateTime(2015, 1, 1),
+                            new DateTime(2015, 1, 2),
+                            new TimeSpan(0, 1, 0), ";", 5,
+                            new TimeSpan(0, 1, 0),
+                            false, false, false, 3, 3,
+                            calculationProfiler, wd1.WorkingDirectory);
+                        var cm = cmf.GetCalcManager(sim, csps, false);
+
+                        //var cm = cmf.GetCalcManager(sim, path, chh, false, sim.TemperatureProfiles[0], geoloc,
+                        //EnergyIntensityType.Random, version, LoadTypePriority.All, null, transportationDeviceSet, travelRouteSet);
+                        /*
+                                        bool ReportCancelFunc()
+                                        {
+                                            Logger.Info("canceled");
+                                            return true;
+                                        }
+                                        cm.Run(ReportCancelFunc);*/
+                        //db.Cleanup();
+                        cm.Dispose();
+                        wd1.CleanUp();
+                    }
                 }
-                cm.Run(ReportCancelFunc);*/
-                //db.Cleanup();
-                cm.Dispose();
-                wd1.CleanUp();
+
+                Logger.ImportantInfo("Duration:" + (DateTime.Now - start).TotalSeconds + " seconds");
+                Logger.ImportantInfo("Calc Duration:" + (DateTime.Now - calcstart).TotalSeconds + " seconds");
+                Logger.ImportantInfo("loading Duration:" + (calcstart - start).TotalSeconds + " seconds");
             }
 
-            Logger.ImportantInfo("Duration:" + (DateTime.Now - start).TotalSeconds + " seconds");
-            Logger.ImportantInfo("Calc Duration:" + (DateTime.Now - calcstart).TotalSeconds + " seconds");
-            Logger.ImportantInfo("loading Duration:" + (calcstart - start).TotalSeconds + " seconds");
-
-           // CleanTestBase.Run(true);
+            // CleanTestBase.Run(true);
         }
     }
 }

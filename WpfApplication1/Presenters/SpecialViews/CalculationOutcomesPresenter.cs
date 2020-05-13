@@ -406,7 +406,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             var actionEntries = ael.Read(key);
             //1. person 2. affname
             Dictionary<string, Dictionary<string, OutcomeStatistic>> resultDict = new Dictionary<string, Dictionary<string, OutcomeStatistic>>();
-            Dictionary<string, ActionEntry> entriesByGuid = new Dictionary<string, ActionEntry>();
+            Dictionary<StrGuid, ActionEntry> entriesByGuid = new Dictionary<StrGuid, ActionEntry>();
             foreach (ActionEntry entry in actionEntries) {
                 entriesByGuid.Add(entry.ActionEntryGuid, entry);
             }
@@ -575,11 +575,9 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                     geographicLocation,
                     temperatureProfile,
                     mycalcObject,
-                    SetCalculationEntries,
                     intensity,
                     ReportCancelFunc,
                     false,
-                    version,
                     null,
                     LoadTypePriority.All,
                     transportationDeviceSet,
@@ -600,9 +598,10 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                     chargingStationSet,
                     null,
                     sim.MyGeneralConfig.DeviceProfileHeaderMode,
-                    false);
+                    false, operatingPath);
 
-                cs.Start(csps, operatingPath);
+                cs.Start(csps);
+                ChartMaker.MakeChartsAndPDF(calculationProfiler,operatingPath);
                 Thread.Sleep(3000);
                 /*if (string.IsNullOrWhiteSpace(errormessage) && _result.Count == 0) {
                     throw new LPGException("No results, but no error message. Something is wrong. Please report.");
@@ -693,7 +692,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                 numberOfPersons,
                 0,
                 null,
-                Guid.NewGuid().ToString());
+                Guid.NewGuid().ToStrGuid());
             calculationOutcome.SaveToDB();
 
             SqlResultLoggingService srls = new SqlResultLoggingService(operatingPath);
@@ -780,7 +779,6 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         //_result.Add(a1);
         private static bool ReportFinishFuncForHousehold(bool a2, [NotNull] string a3, [NotNull] string resultPath) => true;
 
-        private static bool SetCalculationEntries([NotNull] [ItemNotNull] ObservableCollection<CalculationEntry> calculationEntries) => true;
 
         public class OutcomeStatistic {
             public int Executions { get; set; }

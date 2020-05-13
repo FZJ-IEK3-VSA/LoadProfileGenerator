@@ -41,25 +41,27 @@ namespace CalculationController.Tests {
     {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void GetCalcProfileTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-
-            var tp = new TimeBasedProfile("blub", null, db.ConnectionString, TimeProfileType.Relative,
-                "fake", Guid.NewGuid().ToString());
-            tp.SaveToDB();
-            tp.AddNewTimepoint(new TimeSpan(0, 0, 0), 100, false);
-            tp.AddNewTimepoint(new TimeSpan(0, 2, 0), 0, false);
-            tp.AddNewTimepoint(new TimeSpan(0, 4, 0), 100, false);
-            tp.AddNewTimepoint(new TimeSpan(0, 6, 0), 0, false);
-            var ctp = CalcDeviceFactory.GetCalcProfile(tp, new TimeSpan(0, 0, 30));
-            Assert.AreEqual(4, ctp.TimeSpanDataPoints.Count);
-            Assert.AreEqual(12, ctp.StepValues.Count);
-            var v = ctp.StepValues;
-            Assert.AreEqual(v[0], 1);
-            Assert.AreEqual(v[1], 1);
-            Assert.AreEqual(v[2], 1);
-            Assert.AreEqual(v[3], 1);
-            db.Cleanup();
+        public void GetCalcProfileTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var tp = new TimeBasedProfile("blub", null, db.ConnectionString, TimeProfileType.Relative,
+                    "fake", Guid.NewGuid().ToStrGuid());
+                tp.SaveToDB();
+                tp.AddNewTimepoint(new TimeSpan(0, 0, 0), 100, false);
+                tp.AddNewTimepoint(new TimeSpan(0, 2, 0), 0, false);
+                tp.AddNewTimepoint(new TimeSpan(0, 4, 0), 100, false);
+                tp.AddNewTimepoint(new TimeSpan(0, 6, 0), 0, false);
+                var ctp = CalcDeviceFactory.GetCalcProfile(tp, new TimeSpan(0, 0, 30));
+                Assert.AreEqual(4, ctp.TimeSpanDataPoints.Count);
+                Assert.AreEqual(12, ctp.StepValues.Count);
+                var v = ctp.StepValues;
+                Assert.AreEqual(v[0], 1);
+                Assert.AreEqual(v[1], 1);
+                Assert.AreEqual(v[2], 1);
+                Assert.AreEqual(v[3], 1);
+                db.Cleanup();
+            }
         }
     }
 }

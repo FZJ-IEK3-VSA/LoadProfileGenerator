@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
+using Automation;
+using Common;
 using Database.Database;
 using Database.Tables.BasicElements;
 using JetBrains.Annotations;
@@ -67,7 +69,7 @@ namespace Database.Tables.ModularHouseholds {
         private TraitLimitType _traitLimitType;
         private TraitPriority _traitPriority;
         public TraitTag([NotNull] string pName, [NotNull] string connectionString, TraitLimitType traitLimitType, TraitPriority tp,
-                        [NotNull] string guid, [CanBeNull]int? pID = null)
+                        [NotNull] StrGuid guid, [CanBeNull]int? pID = null)
             : base(pName, TableName, connectionString, guid)
         {
             ID = pID;
@@ -108,7 +110,7 @@ namespace Database.Tables.ModularHouseholds {
         [UsedImplicitly]
         public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new TraitTag(
             FindNewName(isNameTaken, "New Trait Tag "), connectionString, TraitLimitType.NoLimit,
-            TraitPriority.Recommended, System.Guid.NewGuid().ToString());
+            TraitPriority.Recommended, System.Guid.NewGuid().ToStrGuid());
 
         [NotNull]
         public override DBBase ImportFromGenericItem([NotNull] DBBase toImport, [NotNull] Simulator dstSim)

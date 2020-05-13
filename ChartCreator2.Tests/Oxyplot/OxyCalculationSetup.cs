@@ -3,7 +3,6 @@ using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
-using System.Reflection;
 using Automation;
 using Automation.ResultFiles;
 using CalculationController.Queue;
@@ -18,11 +17,12 @@ using JetBrains.Annotations;
 
 namespace ChartCreator2.Tests.Oxyplot
 {
-    internal class OxyCalculationSetup
+    [SuppressMessage("ReSharper", "RedundantNameQualifier")]
+    internal class OxyCalculationSetup: IDisposable
     {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly string _directoryName;
-        public OxyCalculationSetup([NotNull] string directoryName)
+        public OxyCalculationSetup([JetBrains.Annotations.NotNull] string directoryName)
         {
             _directoryName = directoryName;
             string dstDirName = directoryName;
@@ -32,13 +32,13 @@ namespace ChartCreator2.Tests.Oxyplot
         }
 
         [CanBeNull] private DatabaseSetup _db;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly WorkingDir _wd;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string DstDir { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public WorkingDir Wd => _wd;
 
         public void CleanUp(int acceptableLeftoverFileCount = 0)
@@ -49,7 +49,7 @@ namespace ChartCreator2.Tests.Oxyplot
             Wd.CleanUp(acceptableLeftoverFileCount);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public FileFactoryAndTracker GetFileTracker()
         {
             if (Wd == null)
@@ -61,27 +61,6 @@ namespace ChartCreator2.Tests.Oxyplot
             return fft;
         }
 
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "filename")]
-        [SuppressMessage("ReSharper", "UnusedParameter.Global")]
-#pragma warning disable RCS1163 // Unused parameter.
-        public static void CopyImage([NotNull] string filename)
-#pragma warning restore RCS1163 // Unused parameter.
-        {
-            /* if (!_copyImage)
-                            return;
-                       if (System.Environment.MachineName.ToLower() != "i5")
-                            return;
-                        const string dstpath = @"c:\work\UnitTestImages\";
-                        if (!Directory.Exists(dstpath))
-                            Directory.CreateDirectory(dstpath);
-                        FileInfo fi = new FileInfo(filename);
-                        string dstName = Path.Combine(dstpath, fi.Name);
-                        if (File.Exists(dstName))
-                            File.Delete(dstName);
-                        File.Copy(filename, dstName);
-                        // Thread.Sleep(1000);
-                        Process.Start(dstName);*/
-        }
 
         private static bool OpenTabFunc([CanBeNull] object o) => true;
 
@@ -95,8 +74,6 @@ namespace ChartCreator2.Tests.Oxyplot
             return true;
         }
 
-        private static bool SetCalculationEntries([NotNull][ItemNotNull] ObservableCollection<CalculationEntry> calculationEntries) => true;
-
         //private ObservableCollection<CalculationEntry> _calculationEntries;
 
 #pragma warning disable RCS1141 // Add parameter to documentation comment.
@@ -104,7 +81,7 @@ namespace ChartCreator2.Tests.Oxyplot
         ///     calc year is 2012
         /// </summary>
         [CanBeNull]
-        public CalcDataRepository StartHousehold(int householdNumber, [NotNull] string csvCharacter,
+        public CalcDataRepository StartHousehold(int householdNumber, [JetBrains.Annotations.NotNull] string csvCharacter,
 
             LoadTypePriority priority = LoadTypePriority.Mandatory, [CanBeNull] DateTime? enddate = null,
             [CanBeNull] Action<GeneralConfig> configSetter = null,
@@ -149,7 +126,6 @@ namespace ChartCreator2.Tests.Oxyplot
             {
                 return null;
             }
-            var lpgVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             string workingDir = Wd.WorkingDirectory;
             CalculationProfiler calculationProfiler = new CalculationProfiler();
             if (useHouse)
@@ -160,16 +136,16 @@ namespace ChartCreator2.Tests.Oxyplot
 
                 var cspsHouse = new CalcStartParameterSet(ReportFinishFuncForHouseAndSettlement,
                     ReportFinishFuncForHousehold, OpenTabFunc, null, sim.GeographicLocations[0],
-                    sim.TemperatureProfiles[0], house, SetCalculationEntries, energyIntensity, ReportCancelFunc, false,
-                    lpgVersion,null, priority, null, null,sim.MyGeneralConfig.AllEnabledOptions(),
+                    sim.TemperatureProfiles[0], house,  energyIntensity, ReportCancelFunc, false,
+                    null, priority, null, null,sim.MyGeneralConfig.AllEnabledOptions(),
                     sim.MyGeneralConfig.StartDateDateTime,sim.MyGeneralConfig.EndDateDateTime,sim.MyGeneralConfig.InternalStepSize,
                     ";",-1,new TimeSpan(0,15,0),false,false,false,3, 3,calculationProfiler,null,null,
-                    DeviceProfileHeaderMode.Standard,false);
+                    DeviceProfileHeaderMode.Standard,false, workingDir);
                 var duration = cspsHouse.OfficialSimulationEndTime - cspsHouse.OfficialSimulationStartTime;
                 if (duration.TotalDays > 370) {
                     throw new LPGException("Trying to test with more than 1 year");
                 }
-                cs.Start(cspsHouse, workingDir);
+                cs.Start(cspsHouse);
                 return null;
             }
             var chh = sim.ModularHouseholds[householdNumber];
@@ -177,28 +153,34 @@ namespace ChartCreator2.Tests.Oxyplot
             Logger.Info("Modular Household Device selection:" + chh.DeviceSelection?.Name);
             var csps = new CalcStartParameterSet(ReportFinishFuncForHouseAndSettlement,
                  ReportFinishFuncForHousehold, OpenTabFunc, null, sim.GeographicLocations[0],
-                sim.TemperatureProfiles[0], chh, SetCalculationEntries, energyIntensity, ReportCancelFunc, false,
-                lpgVersion, null, priority, null, null, sim.MyGeneralConfig.AllEnabledOptions(),
+                sim.TemperatureProfiles[0], chh, energyIntensity, ReportCancelFunc, false,
+                 null, priority, null, null, sim.MyGeneralConfig.AllEnabledOptions(),
                 sim.MyGeneralConfig.StartDateDateTime, sim.MyGeneralConfig.EndDateDateTime, sim.MyGeneralConfig.InternalStepSize,
                 ";", -1, new TimeSpan(0, 15, 0),false,false,false,3,3,calculationProfiler,null,null,
-                 DeviceProfileHeaderMode.Standard,false);
+                 DeviceProfileHeaderMode.Standard,false, workingDir);
             var simduration = csps.OfficialSimulationEndTime - csps.OfficialSimulationStartTime;
             if (simduration.TotalDays > 370)
             {
                 throw new LPGException("Trying to test with more than 1 year");
             }
-            cs.Start(csps, workingDir);
+            cs.Start(csps);
             CalcDataRepository cdr = new CalcDataRepository(Wd.SqlResultLoggingService);
             //sim.ModularHouseholds[householdNumber].Name
             return cdr;
         }
 
-        [NotNull]
-        public ResultFileEntry GetRfeByFilename([NotNull] string filename)
+        [JetBrains.Annotations.NotNull]
+        public ResultFileEntry GetRfeByFilename([JetBrains.Annotations.NotNull] string filename)
         {
             ResultFileEntryLogger rfel = new ResultFileEntryLogger(_wd.SqlResultLoggingService);
             var rfes = rfel.Load();
             return rfes.Single(x => x.FileName == filename);
+        }
+
+        public void Dispose()
+        {
+            _db?.Dispose();
+            _wd.Dispose();
         }
     }
 }

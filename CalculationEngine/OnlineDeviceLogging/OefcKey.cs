@@ -1,4 +1,5 @@
 ﻿using System;
+using Automation;
 using Automation.ResultFiles;
 using Common.CalcDto;
 
@@ -16,7 +17,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
 
         [NotNull]
         public string FullKey { get; }
-        public OefcKey([NotNull] CalcDeviceDto dto, [CanBeNull] string loadtypeGuid)
+        public OefcKey([NotNull] CalcDeviceDto dto, [CanBeNull] StrGuid loadtypeGuid)
         {
             HouseholdKey = dto.HouseholdKey;
             ThisDeviceType =dto.DeviceType;
@@ -99,16 +100,16 @@ namespace CalculationEngine.OnlineDeviceLogging {
         public static bool operator !=(in OefcKey point1, OefcKey point2) => !point1.Equals(point2);
 
         [CanBeNull]
-        public string LoadtypeGuid { get; }
+        public StrGuid LoadtypeGuid { get; }
 
         [NotNull]
         public string DeviceCategory { get; }
 
         [NotNull]
-        public string LocationGuid { get; }
+        public StrGuid LocationGuid { get; }
 
         [NotNull]
-        public string DeviceGuid { get; }
+        public StrGuid DeviceGuid { get; }
         [NotNull]
         public HouseholdKey HouseholdKey { get; }
         public OefcDeviceType ThisDeviceType { get; }

@@ -31,6 +31,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Database.Database;
@@ -44,7 +45,7 @@ namespace Database.Tables.BasicElements {
 
         public DeviceTaggingSet([NotNull] string name,
                                 [NotNull] string description,
-                                [NotNull] string connectionString, [NotNull] string guid,
+                                [NotNull] string connectionString, [NotNull] StrGuid guid,
                                 [CanBeNull]int? pID = null) : base(name,
             TableName, connectionString, guid)
         {
@@ -90,7 +91,7 @@ namespace Database.Tables.BasicElements {
                     return null;
                 }
             }
-            var at = new DeviceTag(name, IntID, ConnectionString, null, System.Guid.NewGuid().ToString());
+            var at = new DeviceTag(name, IntID, ConnectionString, null, System.Guid.NewGuid().ToStrGuid());
             Logger.Get().SafeExecuteWithWait(() => {
                 Tags.Add(at);
                 Tags.Sort();
@@ -107,7 +108,7 @@ namespace Database.Tables.BasicElements {
             }
 
             var at = new DeviceTaggingSetLoadType(loadType.Name, IntID, loadType, ConnectionString, null,
-                System.Guid.NewGuid().ToString());
+                System.Guid.NewGuid().ToStrGuid());
             Logger.Get().SafeExecuteWithWait(() => LoadTypes.Add(at));
             SaveToDB();
         }
@@ -120,7 +121,7 @@ namespace Database.Tables.BasicElements {
                 DeleteReference(deviceTaggingReference);
             }
             var refVal = new DeviceTaggingReference(string.Empty, IntID, tag, ConnectionString, null,
-                personCount, value, loadType, System.Guid.NewGuid().ToString());
+                personCount, value, loadType, System.Guid.NewGuid().ToStrGuid());
             References.Add(refVal);
             References.Sort();
             SaveToDB();
@@ -129,7 +130,7 @@ namespace Database.Tables.BasicElements {
         public void AddTaggingEntry([NotNull] DeviceTag tag, [NotNull] RealDevice device)
         {
             var at = new DeviceTaggingEntry(string.Empty, IntID, tag, device,
-                ConnectionString, null, System.Guid.NewGuid().ToString());
+                ConnectionString, null, System.Guid.NewGuid().ToStrGuid());
             Entries.Add(at);
             Entries.Sort();
             SaveToDB();
@@ -142,14 +143,14 @@ namespace Database.Tables.BasicElements {
             var id = dr.GetIntFromLong("ID");
             var name = dr.GetString("Name");
             var description = dr.GetString("Description");
-            return new DeviceTaggingSet(name, description, connectionString, System.Guid.NewGuid().ToString(), id);
+            return new DeviceTaggingSet(name, description, connectionString, System.Guid.NewGuid().ToStrGuid(), id);
         }
 
         [NotNull]
         [UsedImplicitly]
         public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new
             DeviceTaggingSet(FindNewName(isNameTaken, "New Device Tagging Set "), "(no description)",
-                connectionString, System.Guid.NewGuid().ToString());
+                connectionString, System.Guid.NewGuid().ToStrGuid());
 
         private void DeleteEntry([NotNull] DeviceTaggingEntry at)
         {
@@ -204,7 +205,7 @@ namespace Database.Tables.BasicElements {
         public static DeviceTaggingSet ImportFromItem([NotNull] DeviceTaggingSet toImport, [NotNull] Simulator dstSim)
         {
             var hd = new DeviceTaggingSet(toImport.Name,
-                toImport.Description, dstSim.ConnectionString,System.Guid.NewGuid().ToString());
+                toImport.Description, dstSim.ConnectionString,System.Guid.NewGuid().ToStrGuid());
             hd.SaveToDB();
             foreach (var tag in toImport.Tags) {
                 hd.AddNewTag(tag.Name);

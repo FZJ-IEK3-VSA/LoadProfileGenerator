@@ -15,7 +15,9 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
 
         public TransportationStatisticsWriter([JetBrains.Annotations.NotNull] CalcDataRepository repository,
                                               [JetBrains.Annotations.NotNull] ICalculationProfiler profiler, [JetBrains.Annotations.NotNull] IInputDataLogger logger)
-            : base(repository, AutomationUtili.GetOptionList(CalcOption.TransportationStatistics), profiler, "Transportation Statistics Use") =>
+            : base(repository,
+                AutomationUtili.GetOptionList(CalcOption.TransportationStatistics),
+                profiler, "Transportation Statistics Use",0) =>
             _logger = logger;
 
         protected override void PerformActualStep(IStepParameters parameters)
@@ -32,7 +34,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
             var deviceActivations = Repository.LoadTransportationDeviceStates(hsp.Key.HouseholdKey);
             var devices = deviceActivations.Select(x => x.TransportationDeviceGuid).Distinct().ToList();
             List<TransportationDeviceStatisticsEntry> statistics = new List<TransportationDeviceStatisticsEntry>();
-            foreach (string device in devices) {
+            foreach (var device in devices) {
                 List<TransportationDeviceStateEntry> activations =
                     deviceActivations.Where(x => x.TransportationDeviceGuid == device).ToList();
                 TransportationDeviceStatisticsEntry e = new TransportationDeviceStatisticsEntry(device,

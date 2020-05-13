@@ -16,35 +16,42 @@ namespace Database.Tests {
         /// </summary>
         [Test]
         [Category(UnitTestCategories.LongTest2)]
-        public void Run() {
+        public void Run()
+        {
             Logger.Info("Starting test");
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            Directory.SetCurrentDirectory(wd.WorkingDirectory);
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                using (var wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
+                {
+                    Directory.SetCurrentDirectory(wd.WorkingDirectory);
 
-            var sim = new Simulator(db.ConnectionString) {MyGeneralConfig = {PerformCleanUpChecks = "true"}};
-            Logger.Info("First hh");
-            for (var i = 0; i < sim.ModularHouseholds.It.Count && i < 5; i++) {
-                var mhh = sim.ModularHouseholds[i];
-                Logger.Info("exporting and importing " + mhh.Name);
-                var start = DateTime.Now;
-                if (mhh.CreationType != CreationType.ManuallyCreated) {
-                    continue;
+                    var sim = new Simulator(db.ConnectionString) { MyGeneralConfig = { PerformCleanUpChecks = "true" } };
+                    Logger.Info("First hh");
+                    for (var i = 0; i < sim.ModularHouseholds.It.Count && i < 5; i++)
+                    {
+                        var mhh = sim.ModularHouseholds[i];
+                        Logger.Info("exporting and importing " + mhh.Name);
+                        var start = DateTime.Now;
+                        if (mhh.CreationType != CreationType.ManuallyCreated)
+                        {
+                            continue;
+                        }
+                        var filename = Path.Combine(wd.WorkingDirectory, "testexport." + i + ".csv");
+                        ModularHouseholdSerializer.ExportAsCSV(mhh, sim, filename);
+                        ModularHouseholdSerializer.ImportFromCSV(filename, sim);
+                        var import = DateTime.Now;
+                        SimIntegrityChecker.Run(sim);
+                        var durationTotal = DateTime.Now - start;
+                        var durationIntegrityCheck = DateTime.Now - import;
+                        Logger.Info("Duration: total " + durationTotal.TotalSeconds + " seconds, integrity check: " +
+                                    durationIntegrityCheck.TotalSeconds);
+                    }
+                    Logger.Info("finished");
+                    Directory.SetCurrentDirectory(wd.PreviousCurrentDir);
+                    db.Cleanup();
+                    wd.CleanUp(1);
                 }
-                var filename = Path.Combine(wd.WorkingDirectory, "testexport." + i + ".csv");
-                ModularHouseholdSerializer.ExportAsCSV(mhh, sim, filename);
-                ModularHouseholdSerializer.ImportFromCSV(filename, sim);
-                var import = DateTime.Now;
-                SimIntegrityChecker.Run(sim);
-                var durationTotal = DateTime.Now - start;
-                var durationIntegrityCheck = DateTime.Now - import;
-                Logger.Info("Duration: total " + durationTotal.TotalSeconds + " seconds, integrity check: " +
-                            durationIntegrityCheck.TotalSeconds);
             }
-            Logger.Info("finished");
-            Directory.SetCurrentDirectory(wd.PreviousCurrentDir);
-            db.Cleanup();
-            wd.CleanUp(1);
         }
         /*
         [Test]

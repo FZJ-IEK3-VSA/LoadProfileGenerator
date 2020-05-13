@@ -9,13 +9,15 @@ namespace CalcPostProcessor.Steps
     {
         void Run([JetBrains.Annotations.NotNull] IStepParameters parameters);
         bool IsEnabled();
+
+        int Priority { get; }
     }
     public abstract class HouseholdStepBase : BasicPostProcessingStep, IGeneralHouseholdStep
     {
         protected HouseholdStepBase([JetBrains.Annotations.NotNull] CalcDataRepository repository, [JetBrains.Annotations.NotNull] List<CalcOption> options,
                                              [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler,
-                                             [JetBrains.Annotations.NotNull] string stepName) : base(repository, options, calculationProfiler,
-            stepName)
+                                             [JetBrains.Annotations.NotNull] string stepName, int priority) : base(repository, options, calculationProfiler,
+            stepName, priority)
         {
         }
     }

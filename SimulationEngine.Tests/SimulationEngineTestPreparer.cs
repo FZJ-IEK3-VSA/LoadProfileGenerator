@@ -1,18 +1,18 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading;
 using Common;
 using Database.Tests;
-using JetBrains.Annotations;
 using NUnit.Framework;
 using SimulationEngineLib;
 
 namespace SimulationEngine.Tests {
-    internal class SimulationEngineTestPreparer {
-        [NotNull] private static string _lastDirectory = "c:\\";
+    internal class SimulationEngineTestPreparer : IDisposable {
+        [JetBrains.Annotations.NotNull] private static string _lastDirectory = "c:\\";
 
-        [NotNull] private readonly WorkingDir _wd;
+        [JetBrains.Annotations.NotNull] private readonly WorkingDir _wd;
 
-        public SimulationEngineTestPreparer([NotNull] string name) {
+        public SimulationEngineTestPreparer([JetBrains.Annotations.NotNull] string name) {
             Logger.Info(TestContext.CurrentContext.TestDirectory);
             SimulationEngineConfig.CatchErrors = false;
             var di = new DirectoryInfo(TestContext.CurrentContext.TestDirectory);
@@ -40,12 +40,17 @@ namespace SimulationEngine.Tests {
             File.Copy(db3Path, "profilegenerator.db3");
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string WorkingDirectory => _wd.WorkingDirectory;
 
         public void Clean() {
             Directory.SetCurrentDirectory(_lastDirectory);
             _wd.CleanUp();
+        }
+
+        public void Dispose()
+        {
+            _wd.Dispose();
         }
     }
 }

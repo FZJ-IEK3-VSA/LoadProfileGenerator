@@ -7,7 +7,6 @@ using System.Linq;
 using Automation;
 using Automation.ResultFiles;
 using Common;
-using JetBrains.Annotations;
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.Rendering;
 using PdfSharp.Pdf;

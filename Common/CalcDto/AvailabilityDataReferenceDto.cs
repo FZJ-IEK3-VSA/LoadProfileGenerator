@@ -1,8 +1,9 @@
-﻿using JetBrains.Annotations;
+﻿using Automation;
+using JetBrains.Annotations;
 
 namespace Common.CalcDto {
     public class AvailabilityDataReferenceDto {
-        public AvailabilityDataReferenceDto([NotNull]string name, [NotNull]string guid)
+        public AvailabilityDataReferenceDto([NotNull]string name, [NotNull]StrGuid guid)
         {
             Name = name;
             Guid = guid;
@@ -10,6 +11,6 @@ namespace Common.CalcDto {
         [NotNull]
         public string Name { get; }
         [NotNull]
-        public string Guid { get; }
+        public StrGuid Guid { get; }
     }
 }

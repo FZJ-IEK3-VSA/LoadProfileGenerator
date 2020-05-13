@@ -1,4 +1,5 @@
-﻿using Automation.ResultFiles;
+﻿using Automation;
+using Automation.ResultFiles;
 using Common.SQLResultLogging.Loggers;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
@@ -12,7 +13,7 @@ namespace Common.JSON
         public AffordanceEnergyUseEntry()
         {
         }
-        public AffordanceEnergyUseEntry([NotNull] HouseholdKey hhkey, [NotNull] string loadTypeGuid, [NotNull] string affordanceName, [NotNull] string personName, [NotNull] string loadTypeName)
+        public AffordanceEnergyUseEntry([NotNull] HouseholdKey hhkey, [NotNull] StrGuid loadTypeGuid, [NotNull] string affordanceName, [NotNull] string personName, [NotNull] string loadTypeName)
         {
             HouseholdKey = hhkey;
             LoadTypeGuid = loadTypeGuid;
@@ -26,7 +27,7 @@ namespace Common.JSON
         public string LoadTypeName { get; set; }
 
         [NotNull]
-        public static string MakeKey([NotNull] HouseholdKey hhkey, [NotNull] string loadTypeGuid, [NotNull] string affordanceName, [NotNull] string personName)
+        public static string MakeKey([NotNull] HouseholdKey hhkey, [NotNull] StrGuid loadTypeGuid, [NotNull] string affordanceName, [NotNull] string personName)
         {
             return hhkey.Key + "#" + loadTypeGuid + "#" + affordanceName + "#" + personName;
         }
@@ -38,7 +39,7 @@ namespace Common.JSON
         [NotNull]
         [JsonProperty]
         [UsedImplicitly]
-        public string LoadTypeGuid { get; private set; }
+        public StrGuid LoadTypeGuid { get; private set; }
         [JsonProperty]
         [UsedImplicitly]
         public HouseholdKey HouseholdKey { get; private set; }

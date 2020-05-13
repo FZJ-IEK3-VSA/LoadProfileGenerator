@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Reflection;
 using Automation;
 using Automation.ResultFiles;
 using CalculationController.CalcFactories;
@@ -31,15 +30,14 @@ namespace Calculation.Tests.PostProcessing
             Assert.AreNotEqual(null, sim);
             sim.MyGeneralConfig.RandomSeed = 10;
             CalcManagerFactory cmf = new CalcManagerFactory();
-            string version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
                 CalculationProfiler calculationProfiler = new CalculationProfiler();
             CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
                 sim.TemperatureProfiles[0],sim.ModularHouseholds[0],
-                EnergyIntensityType.Random,false,version,null,
+                EnergyIntensityType.Random,false,null,
                 LoadTypePriority.All,null,null,null,sim.MyGeneralConfig.AllEnabledOptions(),
                 new DateTime(2015,1,15), new DateTime(2015,1,18), new TimeSpan(0,1,0),";",10,new TimeSpan(0,1,0),false,false,false,3 ,3,
-                calculationProfiler);
-            CalcManager cm = cmf.GetCalcManager(sim, wd.WorkingDirectory, csps, false);
+                calculationProfiler, wd.WorkingDirectory);
+            CalcManager cm = cmf.GetCalcManager(sim, csps, false);
                 //wd.WorkingDirectory, sim.ModularHouseholds[0],  false,
                 //sim.TemperatureProfiles[0], sim.GeographicLocations[0], EnergyIntensityType.Random, version,
                 //LoadTypePriority.All, null,null,null);

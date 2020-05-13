@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Automation.ResultFiles;
 using JetBrains.Annotations;
 using MigraDoc.DocumentObjectModel;
 
 namespace ChartCreator2.PDF {
+    [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     internal class PersonPage : IPageCreatorToc {
         public void MakePage([JetBrains.Annotations.NotNull] Document doc, [JetBrains.Annotations.NotNull] string dstdir, bool requireAll, [ItemNotNull] [JetBrains.Annotations.NotNull] List<string> pngFiles, [JetBrains.Annotations.NotNull] Section tocSection) {
             var di = new DirectoryInfo(dstdir);

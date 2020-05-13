@@ -36,7 +36,7 @@ namespace CalcPostProcessor.GeneralSteps
 
         public AffordanceTagsWriter([JetBrains.Annotations.NotNull] CalcDataRepository repository, [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler,
                                     [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft)
-            : base(repository, AutomationUtili.GetOptionList(CalcOption.HouseholdContents), calculationProfiler, "Affordance Tags")
+            : base(repository, AutomationUtili.GetOptionList(CalcOption.HouseholdContents), calculationProfiler, "Affordance Tags",0)
         {
             _fft = fft;
         }

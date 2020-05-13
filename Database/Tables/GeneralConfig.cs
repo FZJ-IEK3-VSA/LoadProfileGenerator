@@ -58,7 +58,7 @@ namespace Database.Tables {
 
         [NotNull] private Dictionary<string, SingleSetting> _settings = new Dictionary<string, SingleSetting>();
 
-        public GeneralConfig([NotNull] string connectionString) : base("GeneralConfig", TableName, connectionString, "E5E37859-2ECB-4F62-A164-3ADD39300225") {
+        public GeneralConfig([NotNull] string connectionString) : base("GeneralConfig", TableName, connectionString, "E5E37859-2ECB-4F62-A164-3ADD39300225".ToStrGuid()) {
             Options = new Dictionary<CalcOption, SingleOption>();
         }
         public int CarpetPlotWidth {
@@ -445,7 +445,7 @@ namespace Database.Tables {
 
         private void CheckExistence([NotNull] string key, [NotNull] string defaultvalue, bool ignoreMissing) {
             if (!_settings.ContainsKey(key)) {
-                var ss = new SingleSetting(key, defaultvalue, ConnectionString,System.Guid.NewGuid().ToString());
+                var ss = new SingleSetting(key, defaultvalue, ConnectionString,System.Guid.NewGuid().ToStrGuid());
                 if(!ignoreMissing) {
                     ss.SaveToDB();
                 }
@@ -528,7 +528,7 @@ namespace Database.Tables {
                 var enumOptions = Enum.GetValues(typeof(CalcOption)).Cast<CalcOption>().ToList();
                 foreach (var o in enumOptions) {
                     if (!gc.Options.ContainsKey(o)) {
-                        var so = new SingleOption(o, false, connectionString, System.Guid.NewGuid().ToString());
+                        var so = new SingleOption(o, false, connectionString, System.Guid.NewGuid().ToStrGuid());
                         so.SaveToDB();
                         gc.Options.Add(o, so);
                     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Automation;
 using Database.Database;
 using JetBrains.Annotations;
 
@@ -18,7 +19,7 @@ namespace Database.Tables.Transportation {
         private readonly int _stepNumber;
 
         public TravelRouteStep([CanBeNull]int? pID, int routeID, [NotNull] string connectionString, [NotNull] string name,
-            [CanBeNull] TransportationDeviceCategory deviceCategory, double distance, int stepNumber, [NotNull] string guid, [CanBeNull] string stepKey) : base(name, TableName,
+            [CanBeNull] TransportationDeviceCategory deviceCategory, double distance, int stepNumber, [NotNull] StrGuid guid, [CanBeNull] string stepKey) : base(name, TableName,
             connectionString, guid)
         {
             StepKey = stepKey;

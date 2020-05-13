@@ -26,6 +26,7 @@
 
 //-----------------------------------------------------------------------
 
+using Automation;
 using Automation.ResultFiles;
 
 namespace CalculationEngine.OnlineDeviceLogging {
@@ -108,7 +109,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
             => _columnEntriesByLoadTypeByDeviceKey;
 
         public void AddColumnEntry([NotNull] string name, OefcKey key,
-                                   [NotNull] string locationName, [NotNull] CalcLoadTypeDto lt, [NotNull] string deviceGuid,
+                                   [NotNull] string locationName, [NotNull] CalcLoadTypeDto lt, [NotNull] StrGuid deviceGuid,
             [NotNull] HouseholdKey householdKey, [NotNull] string deviceCategory, [NotNull] CalcDeviceDto calcDeviceDto) {
             if (!ColumnCountByLoadType.ContainsKey(lt)) {
                 ColumnCountByLoadType.Add(lt, 0);

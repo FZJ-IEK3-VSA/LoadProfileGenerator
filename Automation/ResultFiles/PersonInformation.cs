@@ -6,11 +6,13 @@ namespace Automation.ResultFiles {
         // needed for xml deserialize
         [UsedImplicitly]
         // ReSharper disable once NotNullMemberIsNotInitialized
+#pragma warning disable 8618
         public PersonInformation()
+#pragma warning restore 8618
         {
         }
 
-        public PersonInformation([NotNull] string name, [NotNull] string guid, [NotNull] string traitTag)
+        public PersonInformation([NotNull] string name, [NotNull] StrGuid guid, [NotNull] string traitTag)
         {
             Name = name;
 
@@ -18,16 +20,15 @@ namespace Automation.ResultFiles {
             TraitTag = traitTag;
         }
 
-        [NotNull]
         [UsedImplicitly]
-        public string Guid { get; set; }
+        public StrGuid Guid { get; set; }
 
         // needed for xml deserialize
         [UsedImplicitly]
         [NotNull]
-        public string Name { get; set; }
+        public string? Name { get; set; }
         [UsedImplicitly]
         [NotNull]
-        public string TraitTag { get; set; }
+        public string? TraitTag { get; set; }
     }
 }

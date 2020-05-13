@@ -44,22 +44,24 @@ namespace Database.Tests.Tables {
     {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void LoadFromDatabaseTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-
-            var desires = new ObservableCollection<Desire>();
-            Desire.LoadFromDatabase(desires, db.ConnectionString, false);
-            var subAffordances = new ObservableCollection<SubAffordance>();
-            var locations = new ObservableCollection<Location>();
-            var variables = new ObservableCollection<Variable>();
-            SubAffordance.LoadFromDatabase(subAffordances, db.ConnectionString, desires, false, locations, variables);
-            db.ClearTable(SubAffordance.TableName);
-            db.ClearTable(SubAffordanceDesire.TableName);
-            db.ClearTable(SubAffordanceVariableOp.TableName);
-            subAffordances.Clear();
-            SubAffordance.LoadFromDatabase(subAffordances, db.ConnectionString, desires, false, locations, variables);
-            Assert.AreEqual(0, subAffordances.Count);
-            db.Cleanup();
+        public void LoadFromDatabaseTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var desires = new ObservableCollection<Desire>();
+                Desire.LoadFromDatabase(desires, db.ConnectionString, false);
+                var subAffordances = new ObservableCollection<SubAffordance>();
+                var locations = new ObservableCollection<Location>();
+                var variables = new ObservableCollection<Variable>();
+                SubAffordance.LoadFromDatabase(subAffordances, db.ConnectionString, desires, false, locations, variables);
+                db.ClearTable(SubAffordance.TableName);
+                db.ClearTable(SubAffordanceDesire.TableName);
+                db.ClearTable(SubAffordanceVariableOp.TableName);
+                subAffordances.Clear();
+                SubAffordance.LoadFromDatabase(subAffordances, db.ConnectionString, desires, false, locations, variables);
+                Assert.AreEqual(0, subAffordances.Count);
+                db.Cleanup();
+            }
         }
     }
 }

@@ -10,11 +10,13 @@ namespace Common.Tests
         [Category(UnitTestCategories.BasicTest)]
         public void GetLatestVersionTest()
         {
-            WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            UpdateChecker uc = new UpdateChecker();
-            string s = uc.GetLatestVersion(out _);
-            Logger.Info(s);
-            wd.CleanUp();
+            using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
+            {
+                UpdateChecker uc = new UpdateChecker();
+                string s = uc.GetLatestVersion(out _);
+                Logger.Info(s);
+                wd.CleanUp();
+            }
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
+using Automation;
 using Common.Enums;
 using Database.Database;
 using Database.Tables.BasicElements;
@@ -29,7 +30,7 @@ namespace Database.Tables.BasicHouseholds {
                                     [CanBeNull] int? affordanceID,
                                     [NotNull] string connectionString,
             VariableLocationMode variableLocationMode, [CanBeNull] Location location, VariableAction variableAction,
-            [CanBeNull] Variable variable, [CanBeNull] string description, VariableExecutionTime variableExecutionTime,[NotNull] string name, [NotNull] string guid)
+            [CanBeNull] Variable variable, [CanBeNull] string description, VariableExecutionTime variableExecutionTime,[NotNull] string name, [NotNull] StrGuid guid)
             : base(name, TableName, connectionString, guid) {
             _variableValue = variableValue;
             ID = id;

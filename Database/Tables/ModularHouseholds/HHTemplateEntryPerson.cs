@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Automation;
 using Database.Database;
 using Database.Tables.BasicHouseholds;
 using JetBrains.Annotations;
@@ -13,7 +14,7 @@ namespace Database.Tables.ModularHouseholds {
         [CanBeNull] private readonly Person _person;
 
         public HHTemplateEntryPerson([CanBeNull]int? pID, [CanBeNull] Person pPerson, int hhTemplateEntryID, [NotNull] string name,
-            [NotNull] string connectionString, [NotNull] string guid)
+            [NotNull] string connectionString, [NotNull] StrGuid guid)
             : base(name, TableName, connectionString, guid) {
             ID = pID;
             _person = pPerson;

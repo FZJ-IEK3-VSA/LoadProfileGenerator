@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Automation;
+using Common;
 using Common.CalcDto;
 using JetBrains.Annotations;
 
@@ -9,7 +11,7 @@ namespace CalculationController.DtoFactories
     public class AvailabilityDtoRepository
     {
         public class Entry {
-            public Entry([NotNull] string name, [NotNull] string guid, [NotNull][ItemNotNull] BitArray array)
+            public Entry([NotNull] string name, [NotNull] StrGuid guid, [NotNull][ItemNotNull] BitArray array)
             {
                 Name = name;
                 Guid = guid;
@@ -22,15 +24,15 @@ namespace CalculationController.DtoFactories
             [ItemNotNull]
             public BitArray Array { get; }
             [NotNull]
-            public string Guid { get; }
+            public StrGuid Guid { get; }
         }
 
         [NotNull]
-        private Dictionary<string, Entry> Entries { get; } = new Dictionary<string, Entry>();
+        private Dictionary<StrGuid, Entry> Entries { get; } = new Dictionary<StrGuid, Entry>();
 
         [NotNull]
         [ItemNotNull]
-        public BitArray GetByGuid([NotNull] string guid)
+        public BitArray GetByGuid([NotNull] StrGuid guid)
         {
             return Entries[guid].Array;
         }
@@ -38,7 +40,7 @@ namespace CalculationController.DtoFactories
         [NotNull]
         public AvailabilityDataReferenceDto MakeNewReference([NotNull] string name, [NotNull][ItemNotNull] BitArray timearray)
         {
-            string guid = Guid.NewGuid().ToString();
+            StrGuid guid = Guid.NewGuid().ToStrGuid();
             Entry e = new Entry(name,guid,timearray);
             Entries.Add(e.Guid,e);
             return new AvailabilityDataReferenceDto(name,guid);

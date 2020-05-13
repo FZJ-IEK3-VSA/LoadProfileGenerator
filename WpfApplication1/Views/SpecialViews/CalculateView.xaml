@@ -436,53 +436,11 @@
                             The LPG includes a command line interface that you can use for scripting.
                             It can be used with either batch files or JSON calculation definition files.
                             Here you can export the current settings to a JSON file that you can then modify with any text editor and execute
-                            with &quot;simulationengine.exe -i filename.json&quot;
+                            with &quot;simulationengine.exe processhousejob -j filename.json&quot;
                         </TextBlock>
                     </Grid>
                 </Expander>
-                <Expander IsExpanded="True" Style="{StaticResource ExpanderStyle}">
-                    <Expander.Header>
-                        <Border Style="{StaticResource GroupBoxHeader}">
-                            <TextBlock Text="Calculation" />
-                        </Border>
-                    </Expander.Header>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-
-                        </Grid.ColumnDefinitions>
-
-                        <Label
-                            Grid.Row="0"
-                            HorizontalAlignment="Left"
-                            Content="Calculation Progress"
-                            Style="{StaticResource LabelStyle}" />
-                        <ListView
-                            Grid.Row="1"
-                            Grid.Column="0"
-                            MinHeight="150"
-                            ItemsSource="{Binding CalculationEntries}"
-                            Style="{StaticResource ListViewStyle}">
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn Width="Auto" Header="Household Name" />
-                                    <GridViewColumn
-                                        Width="Auto"
-                                        DisplayMemberBinding="{Binding StartTime}"
-                                        Header="Calculation Start time" />
-                                    <GridViewColumn
-                                        Width="Auto"
-                                        DisplayMemberBinding="{Binding EndTime}"
-                                        Header="Calculation End time" />
-                                </GridView>
-                            </ListView.View>
-                        </ListView>
-                    </Grid>
-                </Expander>
+                
             </StackPanel>
 
         </ScrollViewer>

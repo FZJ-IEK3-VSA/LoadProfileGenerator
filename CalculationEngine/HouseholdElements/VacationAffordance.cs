@@ -13,10 +13,10 @@ namespace CalculationEngine.HouseholdElements {
     [SuppressMessage("ReSharper", "ConvertToAutoProperty")]
     public class VacationAffordance : CalcAffordanceBase {
         //TODO: figure out if this is still needed
-        public VacationAffordance( [NotNull] string guid,
+        public VacationAffordance( [NotNull] StrGuid guid,
                                   [ItemNotNull] [NotNull] BitArray isBusy, [NotNull] CalcRepo calcRepo)
             : base(
-                Constants.TakingAVacationString, new CalcLocation("Vacation", System.Guid.NewGuid().ToString()),
+                Constants.TakingAVacationString, new CalcLocation("Vacation", System.Guid.NewGuid().ToStrGuid()),
                 new List<CalcDesire>(), 0, 99, PermittedGender.All, false,
                 false, "Vacation", false, false, ActionAfterInterruption.GoBackToOld, 0, false,
                 CalcAffordanceType.Vacation, guid, isBusy, BodilyActivityLevel.Outside, calcRepo)

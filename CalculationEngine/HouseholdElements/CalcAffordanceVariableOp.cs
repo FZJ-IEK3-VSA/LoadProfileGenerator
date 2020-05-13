@@ -1,10 +1,11 @@
-﻿using Common.Enums;
+﻿using Automation;
+using Common.Enums;
 using JetBrains.Annotations;
 
 namespace CalculationEngine.HouseholdElements {
     public class CalcAffordanceVariableOp {
         public CalcAffordanceVariableOp([NotNull] string name, double value, [NotNull] CalcLocation location, VariableAction variableAction,
-            VariableExecutionTime executionTime, [NotNull] string variableGuid)
+            VariableExecutionTime executionTime, [NotNull] StrGuid variableGuid)
         {
             Name = name;
             Value = value;
@@ -18,7 +19,7 @@ namespace CalculationEngine.HouseholdElements {
         public CalcLocation CalcLocation { get; }
         public VariableExecutionTime ExecutionTime { get; }
         [NotNull]
-        public string VariableGuid { get; }
+        public StrGuid VariableGuid { get; }
 
         [NotNull]
         public string Name { get; }

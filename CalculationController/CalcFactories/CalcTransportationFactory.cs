@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
+using Automation;
 using Automation.ResultFiles;
 using Common.CalcDto;
 using JetBrains.Annotations;
@@ -94,7 +95,7 @@ namespace CalculationController.CalcFactories {
                         CalcLoadTypeDto loadType = _loadTypeDict.GetLoadtypeDtoByLoadType(lt);
                         loads.Add(new CalcDeviceLoadDto(transportationDevice.Name + " - " + lt.Name,
                             transportationDevice.IntID, loadType.Name, loadType.Guid,
-                            0, 0, Guid.NewGuid().ToString(), load.MaxPower));
+                            0, 0, Guid.NewGuid().ToStrGuid(), load.MaxPower));
                     }
                 }
 
@@ -111,7 +112,7 @@ namespace CalculationController.CalcFactories {
                 CalcTransportationDeviceDto cd = new CalcTransportationDeviceDto(transportationDevice.Name,
                     transportationDevice.IntID, categoriesDict[transportationDevice.TransportationDeviceCategory],
                     transportationDevice.SpeedInMPerSecond, loads,key, transportationDevice.TotalRangeInMeters,
-                    distanceToEnergyFactor, transportationDevice.ChargingPower, chargingLoadType?.Name,chargingLoadType?.Guid, Guid.NewGuid().ToString(),
+                    distanceToEnergyFactor, transportationDevice.ChargingPower, chargingLoadType?.Name,chargingLoadType?.Guid, Guid.NewGuid().ToStrGuid(),
                     transportationDevice.TransportationDeviceCategory.IsLimitedToSingleLocation);
                 transportationDeviceDtos.Add(cd);
             }
@@ -134,7 +135,7 @@ namespace CalculationController.CalcFactories {
                 new Dictionary<TransportationDeviceCategory, CalcTransportationDeviceCategoryDto>();
             foreach (TransportationDeviceCategory category in sim.TransportationDeviceCategories.It) {
                 CalcTransportationDeviceCategoryDto ctdc = new CalcTransportationDeviceCategoryDto(category.Name,
-                    category.IntID, category.IsLimitedToSingleLocation, Guid.NewGuid().ToString());
+                    category.IntID, category.IsLimitedToSingleLocation, Guid.NewGuid().ToStrGuid());
                 categoriesDict.Add(category, ctdc);
             }
 
@@ -201,7 +202,7 @@ namespace CalculationController.CalcFactories {
             List<CalcSiteDto> calcSites = new List<CalcSiteDto>();
             //create the calcsites
             foreach (Site site in householdSites) {
-                CalcSiteDto calcSite = new CalcSiteDto(site.Name, site.IntID, Guid.NewGuid().ToString(),householdKey);
+                CalcSiteDto calcSite = new CalcSiteDto(site.Name, site.IntID, Guid.NewGuid().ToStrGuid(),householdKey);
                 if (chargingStationSet != null) {
                     var chargingStationsAtSite =
                         chargingStationSet.ChargingStations.Where(x => x.Site == site).ToList();
@@ -260,18 +261,18 @@ namespace CalculationController.CalcFactories {
                 CalcSiteDto siteA = calcSites.Single(x => x.ID == entry.TravelRoute.SiteA.IntID);
                 CalcSiteDto siteB = calcSites.Single(x => x.ID == entry.TravelRoute.SiteB.IntID);
                 CalcTravelRouteDto ctr = new CalcTravelRouteDto(entry.TravelRoute.Name,entry.TravelRoute.IntID, key,
-                    Guid.NewGuid().ToString(), siteA.Name, siteA.Guid,siteB.Name,siteB.Guid);
+                    Guid.NewGuid().ToStrGuid(), siteA.Name, siteA.Guid,siteB.Name,siteB.Guid);
                 foreach (TravelRouteStep step in entry.TravelRoute.Steps) {
                     CalcTransportationDeviceCategoryDto cat = categoriesDict[step.TransportationDeviceCategory];
                     ctr.AddTravelRouteStep(step.Name, step.IntID, cat, step.StepNumber, step.Distance,
-                        Guid.NewGuid().ToString());
+                        Guid.NewGuid().ToStrGuid());
                 }
                 routes.Add(ctr);
             }
 
             foreach (var site in calcSites) {
                 CalcTravelRouteDto ctr = new CalcTravelRouteDto("Travel Route inside the site " + site.Name,
-                    -1,key, Guid.NewGuid().ToString(), site.Name, site.Guid,site.Name,site.Guid);
+                    -1,key, Guid.NewGuid().ToStrGuid(), site.Name, site.Guid,site.Name,site.Guid);
                 routes.Add(ctr);
             }
             return routes;
@@ -506,7 +507,7 @@ namespace CalculationController.CalcFactories {
 
                     AffordanceBaseTransportDecorator abtd = new AffordanceBaseTransportDecorator(
                         aff, sites[0], chh.TransportationHandler, aff.Name,
-                        chh.HouseholdKey, Guid.NewGuid().ToString(), _calcRepo);
+                        chh.HouseholdKey, Guid.NewGuid().ToStrGuid(), _calcRepo);
                     location.AddTransportationAffordance(abtd);
                 }
             }
@@ -520,7 +521,7 @@ namespace CalculationController.CalcFactories {
                 var loads = new List<CalcDeviceLoad>();
                 foreach (var load in transportationDevice.Loads) {
                     CalcLoadType clt = _loadTypeDict.GetLoadtypeByGuid(load.LoadTypeGuid);
-                    loads.Add(new CalcDeviceLoad(load.Name, load.MaxPower, clt, 0, 0, load.Guid));
+                    loads.Add(new CalcDeviceLoad(load.Name, load.MaxPower, clt, 0, 0));
                 }
 
                 double distanceToEnergyFactor = transportationDevice.EnergyToDistanceFactor;
@@ -538,7 +539,7 @@ namespace CalculationController.CalcFactories {
                     transportationDevice.Category.Guid,
                     chh.HouseholdKey,
                     OefcDeviceType.Transportation,transportationDevice.Category.Name,
-                    string.Empty,transportationDevice.Guid, string.Empty,string.Empty);
+                    string.Empty,transportationDevice.Guid, StrGuid.Empty, string.Empty);
                 var category = chh.TransportationHandler.GetCategory(transportationDevice.Category);
                 CalcTransportationDevice cd = new CalcTransportationDevice(
                     category,

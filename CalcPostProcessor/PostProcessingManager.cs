@@ -43,6 +43,7 @@ namespace CalcPostProcessor
             builder.RegisterType<MakeActivationsPerFrequencies>().As<IGeneralHouseholdStep>().SingleInstance();
             builder.RegisterType<MakeActivationsPerHour>().As<IGeneralHouseholdStep>().SingleInstance();
             builder.RegisterType<MakeHouseholdPlanResult>().As<IGeneralHouseholdStep>().SingleInstance();
+            builder.RegisterType<MakeBodilyActivityLevelStatistics>().As<IGeneralHouseholdStep>().SingleInstance();
             //builder.RegisterType<ActionCarpetPlot>().As<IGeneralHouseholdStep>().SingleInstance();
             builder.RegisterType<MakeActionsEachTimestep>().As<IGeneralHouseholdStep>().SingleInstance();
             builder.RegisterType<LocationStatisticsMaker>().As<IGeneralHouseholdStep>().SingleInstance();
@@ -71,6 +72,7 @@ namespace CalcPostProcessor
             builder.RegisterType<InputDataLogger>().As<IInputDataLogger>().SingleInstance();
             builder.RegisterType<TotalsPerLoadtypeEntryLogger>().As<IDataSaverBase>().SingleInstance();
             builder.RegisterType<TotalsPerDeviceLogger>().As<IDataSaverBase>().SingleInstance();
+            builder.RegisterType<BodilyActivityLevelStatisticsLogger>().As<IDataSaverBase>().SingleInstance();
             builder.RegisterType<PersonAffordanceInformationLogger>().As<IDataSaverBase>().SingleInstance();
             builder.RegisterType<SingleTimestepActionEntryLogger>().As<IDataSaverBase>().SingleInstance();
             builder.RegisterType<AffordanceEnergyUseLogger>().As<IDataSaverBase>();

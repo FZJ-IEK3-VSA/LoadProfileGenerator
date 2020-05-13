@@ -30,6 +30,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Common.Enums;
@@ -45,7 +46,7 @@ namespace Database.Tables.Houses {
         [CanBeNull] private readonly ICalcObject _household;
 
         public HouseHousehold([CanBeNull]int? pID, int houseID, [CanBeNull] ICalcObject household, [NotNull] string connectionString,
-            [NotNull] string householdName, [NotNull] string guid, [CanBeNull] TransportationDeviceSet transportationDeviceSet, [CanBeNull] ChargingStationSet chargingStationSet, [CanBeNull] TravelRouteSet travelRouteSet,
+            [NotNull] string householdName, [NotNull] StrGuid guid, [CanBeNull] TransportationDeviceSet transportationDeviceSet, [CanBeNull] ChargingStationSet chargingStationSet, [CanBeNull] TravelRouteSet travelRouteSet,
                               bool enableTransportationModelling) : base(householdName, TableName, connectionString, guid)
         {
             EnableTransportationModelling = enableTransportationModelling;

@@ -211,7 +211,9 @@ namespace Database.DatabaseMerger {
             }
         }
 
+#pragma warning disable CA1036 // Override methods on comparable types
         public class ImportEntry : INotifyPropertyChanged, IComparable {
+#pragma warning restore CA1036 // Override methods on comparable types
             private readonly int _step;
             private bool _import;
 

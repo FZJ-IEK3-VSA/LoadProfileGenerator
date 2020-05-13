@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using Automation;
 using Database.Database;
 using JetBrains.Annotations;
 
@@ -9,7 +10,7 @@ namespace Database.Tables.Houses {
         private readonly double _referenceValue;
 
         public TransformationFactorDatapoint([CanBeNull]int? pID, double referenceValue, double factor, int transformationDeviceID,
-            [NotNull] string connectionString, [NotNull] string guid)
+            [NotNull] string connectionString, [NotNull] StrGuid guid)
             : base(referenceValue + " - " + factor, TableName, connectionString, guid)
         {
             ID = pID;

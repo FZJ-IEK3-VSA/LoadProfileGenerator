@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Database.Database;
@@ -25,7 +26,7 @@ namespace Database.Tables.BasicElements {
         public HouseholdPlan([NotNull] string name, [CanBeNull] AffordanceTaggingSet taggingSet,
             [CanBeNull] ICalcObject calcObject,
                              [NotNull] string description,
-                             [NotNull] string connectionString, [NotNull] string guid,
+                             [NotNull] string connectionString, [NotNull] StrGuid guid,
                              [CanBeNull]int? pID = null) : base(
             name, TableName, connectionString, guid)
         {
@@ -79,7 +80,7 @@ namespace Database.Tables.BasicElements {
                 }
             }
             var at = new HouseholdPlanEntry(name, IntID, tag, person, times, timecount, timeType,
-                ConnectionString, null, _calcObject, System.Guid.NewGuid().ToString());
+                ConnectionString, null, _calcObject, System.Guid.NewGuid().ToStrGuid());
             Logger.Get().SafeExecuteWithWait(() => {
                 _entries.Add(at);
                 _entries.Sort();
@@ -110,7 +111,7 @@ namespace Database.Tables.BasicElements {
         [UsedImplicitly]
         public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString)
             => new HouseholdPlan(FindNewName(isNameTaken, "New Household Plan "), null, null, "(no description)",
-                connectionString, System.Guid.NewGuid().ToString());
+                connectionString, System.Guid.NewGuid().ToStrGuid());
 
         public void DeleteEntry([NotNull] HouseholdPlanEntry at)
         {

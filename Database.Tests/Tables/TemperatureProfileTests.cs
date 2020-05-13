@@ -32,12 +32,11 @@ using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables.BasicElements;
-using JetBrains.Annotations;
 using NUnit.Framework;
 
 namespace Database.Tests.Tables {
     [TestFixture]
-    public class TemperaturProfileTests : UnitTestBaseClass
+    public class TemperatureProfileTests : UnitTestBaseClass
     {
         private static void CompareArray([JetBrains.Annotations.NotNull] double[] temparr,[JetBrains.Annotations.NotNull]double[] dstarr) {
             Assert.AreEqual(temparr.Length, dstarr.Length);
@@ -57,9 +56,9 @@ namespace Database.Tests.Tables {
             var startdate = new DateTime(2014, 1, 1);
             var endDate = new DateTime(2014, 1, 4);
             var stepsize = new TimeSpan(12, 0, 0);
-            var temperatureValue = new TemperatureValue(new DateTime(2014, 1, 2), 5, -1, -1, string.Empty, Guid.NewGuid().ToString());
+            var temperatureValue = new TemperatureValue(new DateTime(2014, 1, 2), 5, -1, -1, string.Empty, Guid.NewGuid().ToStrGuid());
             var temperatureValue2 = new TemperatureValue(new DateTime(2014, 1, 2, 12, 0, 0), 10, -1, -1,
-                string.Empty, Guid.NewGuid().ToString());
+                string.Empty, Guid.NewGuid().ToStrGuid());
             var tempvalues = new ObservableCollection<TemperatureValue>
             {
                 temperatureValue,
@@ -77,9 +76,9 @@ namespace Database.Tests.Tables {
             var startdate = new DateTime(2014, 1, 1);
             var endDate = new DateTime(2014, 1, 4);
             var stepsize = new TimeSpan(12, 0, 0);
-            var temperatureValue = new TemperatureValue(new DateTime(2012, 1, 2), 5, -1, -1, string.Empty, Guid.NewGuid().ToString());
+            var temperatureValue = new TemperatureValue(new DateTime(2012, 1, 2), 5, -1, -1, string.Empty, Guid.NewGuid().ToStrGuid());
             var temperatureValue2 = new TemperatureValue(new DateTime(2012, 1, 2, 12, 0, 0), 10, -1, -1,
-                string.Empty, Guid.NewGuid().ToString());
+                string.Empty, Guid.NewGuid().ToStrGuid());
             var tempvalues = new ObservableCollection<TemperatureValue>
             {
                 temperatureValue,
@@ -97,10 +96,10 @@ namespace Database.Tests.Tables {
             var startdate = new DateTime(2014, 2, 27);
             var endDate = new DateTime(2014, 3, 2);
             var stepsize = new TimeSpan(12, 0, 0);
-            var temperatureValue = new TemperatureValue(new DateTime(2012, 2, 2), 5, -1, -1, string.Empty, Guid.NewGuid().ToString());
+            var temperatureValue = new TemperatureValue(new DateTime(2012, 2, 2), 5, -1, -1, string.Empty, Guid.NewGuid().ToStrGuid());
             var temperatureValue2 = new TemperatureValue(new DateTime(2012, 2, 29), 10, -1, -1,
-                string.Empty, Guid.NewGuid().ToString());
-            var temperatureValue3 = new TemperatureValue(new DateTime(2012, 3, 1), 15, -1, -1, string.Empty, Guid.NewGuid().ToString());
+                string.Empty, Guid.NewGuid().ToStrGuid());
+            var temperatureValue3 = new TemperatureValue(new DateTime(2012, 3, 1), 15, -1, -1, string.Empty, Guid.NewGuid().ToStrGuid());
             var tempvalues = new ObservableCollection<TemperatureValue>
             {
                 temperatureValue,
@@ -119,9 +118,9 @@ namespace Database.Tests.Tables {
             var startdate = new DateTime(2013, 12, 27);
             var endDate = new DateTime(2014, 1, 3);
             var stepsize = new TimeSpan(12, 0, 0);
-            var temperatureValue = new TemperatureValue(new DateTime(2012, 1, 1), 5, -1, -1, string.Empty, Guid.NewGuid().ToString());
-            var temperatureValue2 = new TemperatureValue(new DateTime(2012, 1, 2), 10, -1, -1, string.Empty, Guid.NewGuid().ToString());
-            var temperatureValue3 = new TemperatureValue(new DateTime(2012, 12, 28), 15, -1, -1,string.Empty, Guid.NewGuid().ToString());
+            var temperatureValue = new TemperatureValue(new DateTime(2012, 1, 1), 5, -1, -1, string.Empty, Guid.NewGuid().ToStrGuid());
+            var temperatureValue2 = new TemperatureValue(new DateTime(2012, 1, 2), 10, -1, -1, string.Empty, Guid.NewGuid().ToStrGuid());
+            var temperatureValue3 = new TemperatureValue(new DateTime(2012, 12, 28), 15, -1, -1,string.Empty, Guid.NewGuid().ToStrGuid());
             var tempvalues = new ObservableCollection<TemperatureValue>
             {
                 temperatureValue,
@@ -136,28 +135,31 @@ namespace Database.Tests.Tables {
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void LoadFromDatabaseTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
+        public void LoadFromDatabaseTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                db.ClearTable(TemperatureProfile.TableName);
+                db.ClearTable(TemperatureValue.TableName);
+                var profiles = new ObservableCollection<TemperatureProfile>();
+                TemperatureProfile.LoadFromDatabase(profiles, db.ConnectionString, false);
+                foreach (var temperaturProfile in profiles)
+                {
+                    temperaturProfile.DeleteFromDB();
+                }
+                var tp = new TemperatureProfile("tempprofil1", null, "desc1", db.ConnectionString, Guid.NewGuid().ToStrGuid());
+                tp.SaveToDB();
+                tp.AddTemperature(new DateTime(2011, 1, 1), 20);
+                tp.AddTemperature(new DateTime(2011, 2, 1), 15);
+                tp.SaveToDB();
+                TemperatureProfile.LoadFromDatabase(profiles, db.ConnectionString, false);
 
-            db.ClearTable(TemperatureProfile.TableName);
-            db.ClearTable(TemperatureValue.TableName);
-            var profiles = new ObservableCollection<TemperatureProfile>();
-            TemperatureProfile.LoadFromDatabase(profiles, db.ConnectionString, false);
-            foreach (var temperaturProfile in profiles) {
-                temperaturProfile.DeleteFromDB();
+                Assert.AreEqual(1, profiles.Count);
+                Assert.AreEqual(2, profiles[0].TemperatureValues.Count);
+                profiles[0].DeleteOneTemperatur(profiles[0].TemperatureValues[0]);
+                Assert.AreEqual(1, profiles[0].TemperatureValues.Count);
+                db.Cleanup();
             }
-            var tp = new TemperatureProfile("tempprofil1", null, "desc1", db.ConnectionString, Guid.NewGuid().ToString());
-            tp.SaveToDB();
-            tp.AddTemperature(new DateTime(2011, 1, 1), 20);
-            tp.AddTemperature(new DateTime(2011, 2, 1), 15);
-            tp.SaveToDB();
-            TemperatureProfile.LoadFromDatabase(profiles, db.ConnectionString, false);
-
-            Assert.AreEqual(1, profiles.Count);
-            Assert.AreEqual(2, profiles[0].TemperatureValues.Count);
-            profiles[0].DeleteOneTemperatur(profiles[0].TemperatureValues[0]);
-            Assert.AreEqual(1, profiles[0].TemperatureValues.Count);
-            db.Cleanup();
         }
 
         [Test]
@@ -168,7 +170,7 @@ namespace Database.Tests.Tables {
             var stepsize = new TimeSpan(1, 0, 0);
             var temperatureValues = new ObservableCollection<TemperatureValue>
             {
-                new TemperatureValue(new DateTime(2010, 1, 2), 10, -1, null, string.Empty, Guid.NewGuid().ToString())
+                new TemperatureValue(new DateTime(2010, 1, 2), 10, -1, null, string.Empty, Guid.NewGuid().ToStrGuid())
             };
             var values = TemperatureProfile.GetTemperatureArray(startdt, endDt, stepsize, temperatureValues);
             Assert.AreEqual(240, values.Length);
@@ -184,10 +186,10 @@ namespace Database.Tests.Tables {
             var stepsize = new TimeSpan(1, 0, 0);
             var temperatureValues = new ObservableCollection<TemperatureValue>
             {
-                new TemperatureValue(new DateTime(2010, 1, 1), 10, -1, null, string.Empty,Guid.NewGuid().ToString()),
-                new TemperatureValue(new DateTime(2010, 1, 2), 5, -1, null, string.Empty,Guid.NewGuid().ToString()),
-                new TemperatureValue(new DateTime(2010, 1, 3), 6, -1, null, string.Empty,Guid.NewGuid().ToString()),
-                new TemperatureValue(new DateTime(2010, 1, 4), 7, -1, null, string.Empty,Guid.NewGuid().ToString())
+                new TemperatureValue(new DateTime(2010, 1, 1), 10, -1, null, string.Empty,Guid.NewGuid().ToStrGuid()),
+                new TemperatureValue(new DateTime(2010, 1, 2), 5, -1, null, string.Empty,Guid.NewGuid().ToStrGuid()),
+                new TemperatureValue(new DateTime(2010, 1, 3), 6, -1, null, string.Empty,Guid.NewGuid().ToStrGuid()),
+                new TemperatureValue(new DateTime(2010, 1, 4), 7, -1, null, string.Empty,Guid.NewGuid().ToStrGuid())
             };
             var values = TemperatureProfile.GetTemperatureArray(startdt, endDt, stepsize, temperatureValues);
             Assert.AreEqual(240, values.Length);
@@ -209,10 +211,10 @@ namespace Database.Tests.Tables {
             var stepsize = new TimeSpan(1, 0, 0);
             var temperatureValues = new ObservableCollection<TemperatureValue>
             {
-                new TemperatureValue(new DateTime(2010, 1, 1), 10, -1, null, string.Empty, Guid.NewGuid().ToString()),
-                new TemperatureValue(new DateTime(2010, 1, 1, 1, 0, 0), 5, -1, null, string.Empty, Guid.NewGuid().ToString()),
-                new TemperatureValue(new DateTime(2010, 1, 1, 2, 0, 0), 6, -1, null, string.Empty, Guid.NewGuid().ToString()),
-                new TemperatureValue(new DateTime(2010, 1, 1, 3, 0, 0), 7, -1, null, string.Empty, Guid.NewGuid().ToString())
+                new TemperatureValue(new DateTime(2010, 1, 1), 10, -1, null, string.Empty, Guid.NewGuid().ToStrGuid()),
+                new TemperatureValue(new DateTime(2010, 1, 1, 1, 0, 0), 5, -1, null, string.Empty, Guid.NewGuid().ToStrGuid()),
+                new TemperatureValue(new DateTime(2010, 1, 1, 2, 0, 0), 6, -1, null, string.Empty, Guid.NewGuid().ToStrGuid()),
+                new TemperatureValue(new DateTime(2010, 1, 1, 3, 0, 0), 7, -1, null, string.Empty, Guid.NewGuid().ToStrGuid())
             };
             var values = TemperatureProfile.GetTemperatureArray(startdt, endDt, stepsize, temperatureValues);
             Assert.AreEqual(240, values.Length);

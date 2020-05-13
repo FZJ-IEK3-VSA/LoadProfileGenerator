@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Database.Database;
@@ -103,7 +104,7 @@ namespace Database.Tables.BasicElements {
         private TimeType _timeType;
 
         public HouseholdPlanEntry([NotNull] string name, int householdPlanID, [CanBeNull] AffordanceTag tag, [CanBeNull] Person person, double times, double timeCount, TimeType timeType,
-                                  [NotNull] string connectionString, [CanBeNull] int? pID, [CanBeNull] ICalcObject calcObject, [NotNull] string guid) : base(name, pID, TableName, connectionString,
+                                  [NotNull] string connectionString, [CanBeNull] int? pID, [CanBeNull] ICalcObject calcObject, [NotNull] StrGuid guid) : base(name, pID, TableName, connectionString,
             guid)
         {
             _householdPlanID = householdPlanID;

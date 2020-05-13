@@ -29,6 +29,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using Automation;
 using Common;
 using Database.Database;
 using JetBrains.Annotations;
@@ -44,7 +45,7 @@ namespace Database.Tables.BasicElements {
                                     [CanBeNull]int? pID,
                                     int profileID,
                                     [NotNull] string connectionString,
-                                    [NotNull] string guid)
+                                    [NotNull] StrGuid guid)
             : base(dt.ToString(CultureInfo.InvariantCulture), pID, TableName, connectionString,
                 guid) {
             _dateAndTime = dt;

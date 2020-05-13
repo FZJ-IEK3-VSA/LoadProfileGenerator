@@ -33,6 +33,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Database.Database;
@@ -48,7 +49,7 @@ namespace Database.Tables.BasicHouseholds {
         [ItemNotNull] [NotNull] private readonly ObservableCollection<LocationDevice> _locDevs = new ObservableCollection<LocationDevice>();
 
         public Location([NotNull] string name, [CanBeNull]int? pID, [NotNull] string connectionString,
-                        [NotNull] string guid) : base(name, TableName, connectionString, guid)
+                        [NotNull] StrGuid guid) : base(name, TableName, connectionString, guid)
         {
             ID = pID;
             AreNumbersOkInNameForIntegrityCheck = true;
@@ -64,7 +65,7 @@ namespace Database.Tables.BasicHouseholds {
             if (device.ConnectionString != ConnectionString) {
                 throw new LPGException("A device from another DB was just added!");
             }
-            var locdev = new LocationDevice(null, device, IntID, ConnectionString, device.Name, System.Guid.NewGuid().ToString());
+            var locdev = new LocationDevice(null, device, IntID, ConnectionString, device.Name, System.Guid.NewGuid().ToStrGuid());
             _locDevs.Add(locdev);
             if (save) {
                 locdev.SaveToDB();
@@ -109,7 +110,7 @@ namespace Database.Tables.BasicHouseholds {
         [NotNull]
         [UsedImplicitly]
         public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new Location(
-            FindNewName(isNameTaken, "New Location "), null, connectionString, System.Guid.NewGuid().ToString());
+            FindNewName(isNameTaken, "New Location "), null, connectionString, System.Guid.NewGuid().ToStrGuid());
 
         public void DeleteDevice([NotNull] LocationDevice ld)
         {

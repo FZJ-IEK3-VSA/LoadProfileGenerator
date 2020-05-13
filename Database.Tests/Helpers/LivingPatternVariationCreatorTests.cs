@@ -14,14 +14,16 @@ namespace Database.Tests.Helpers
         [Category(UnitTestCategories.BasicTest)]
         public void RunTest()
         {
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            Simulator sim  = new Simulator( db.ConnectionString);
-            LivingPatternVariationCreator lpvc = new LivingPatternVariationCreator();
-        //    lpvc.RunOfficeJobs(sim);
-          //  lpvc.RunSleep(sim);
-          lpvc.RunAlarm(sim);
-            SimIntegrityChecker.Run(sim);
-           db.Cleanup();
+            using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                Simulator sim = new Simulator(db.ConnectionString);
+                LivingPatternVariationCreator lpvc = new LivingPatternVariationCreator();
+                //    lpvc.RunOfficeJobs(sim);
+                //  lpvc.RunSleep(sim);
+                lpvc.RunAlarm(sim);
+                SimIntegrityChecker.Run(sim);
+                db.Cleanup();
+            }
 
         }
     }

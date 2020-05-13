@@ -30,6 +30,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Automation;
 using Database.Database;
 using JetBrains.Annotations;
 
@@ -40,7 +41,7 @@ namespace Database.Tables.Houses {
         [CanBeNull] private readonly EnergyStorage _energyStorage;
 
         public HouseTypeEnergyStorage([CanBeNull]int? pID, [NotNull] string name, int houseID, [CanBeNull] EnergyStorage es,
-            [NotNull] string connectionString, [NotNull] string guid)
+            [NotNull] string connectionString, [NotNull] StrGuid guid)
             : base(name, TableName, connectionString, guid)
         {
             ID = pID;

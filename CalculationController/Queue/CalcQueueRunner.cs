@@ -28,7 +28,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Automation.ResultFiles;
@@ -64,17 +63,16 @@ namespace CalculationController.Queue {
           //  TransportationDeviceSet transportationDeviceSet, TravelRouteSet travelRouteSet
 
         [SuppressMessage("ReSharper", "RedundantAssignment")]
-        private static bool RunOneCalcEntry([NotNull] CalcStartParameterSet csps, [NotNull] CalculationEntry calcEntry, [NotNull] Simulator sim, bool forceRandom)
+        private static bool RunOneCalcEntry([NotNull] CalcStartParameterSet csps, [NotNull] Simulator sim, bool forceRandom)
         {
             CalcManager.StartRunning();
             Logger.Info("Running the simulation for " + csps.CalcTarget.Name + " from " +
                         sim.MyGeneralConfig.StartDateDateTime.ToShortDateString() + " to " +
                         sim.MyGeneralConfig.EndDateDateTime.ToShortDateString());
             CalcManager calcManager = null;
-            calcEntry.StartTime = DateTime.Now;
             try {
                 var cmf = new CalcManagerFactory();
-                calcManager = cmf.GetCalcManager(sim, calcEntry.Path,csps,  forceRandom);
+                calcManager = cmf.GetCalcManager(sim, csps,  forceRandom);
                     //, forceRandom,
                     //temperatureProfile,  geographicLocation, calcEntry.EnergyIntensity,
                     //fileVersion, loadTypePriority, deviceSelection, transportationDeviceSet, travelRouteSet);
@@ -130,9 +128,8 @@ namespace CalculationController.Queue {
                     GC.Collect();
 #pragma warning restore S1215 // "GC.Collect" should not be called
                     if (Logger.Get().Errors.Count == 0) {
-                        calcEntry.EndTime = DateTime.Now;
-                        string finishedFile = Path.Combine(calcEntry.Path, Constants.FinishedFileFlag);
-                        TimeSpan duration = DateTime.Now - calcEntry.StartTime;
+                        string finishedFile = Path.Combine(csps.ResultPath, Constants.FinishedFileFlag);
+                        TimeSpan duration = DateTime.Now - csps.CalculationStartTime;
                         using (var sw = new StreamWriter(finishedFile)) {
                             sw.WriteLine("Finished at " + DateTime.Now);
                             sw.WriteLine("Duration in seconds:");
@@ -148,43 +145,12 @@ namespace CalculationController.Queue {
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         [SuppressMessage("ReSharper", "HeuristicUnreachableCode")]
         private static void SaveRun(bool forceRandom,
-                                    [NotNull][ItemNotNull] ObservableCollection<CalculationEntry> calculationEntries,
                                     [NotNull] Simulator sim,
-                                    [NotNull] CalcStartParameterSet csps, [NotNull] string resultPath)
+                                    [NotNull] CalcStartParameterSet csps)
         {
             bool allgood = true;
-            foreach (var entry in calculationEntries) {
-                /*
-                ResultFileEntryLogger rfel = new 
-                var resultFullFilename = Path.Combine(entry.Path, Constants.ResultFileName);
-                var runCalculation = true;
-                if (File.Exists(resultFullFilename)) {
-                    var xs = new XmlSerializer(typeof(CalculationResult));
-                    CalculationResult cr;
-                    using (var sr = new StreamReader(resultFullFilename)) {
-                        cr = (CalculationResult) xs.Deserialize(sr);
-                    }
-                    if (cr == null) {
-                        throw new LPGException("No Calculation Result in CalcQueueRunner. Please report.");
-                    }
-                    entry.CalculationResult = cr;
-                    var resultFileEntries = new List<ResultFileEntry>();
-                    resultFileEntries.AddRange(cr.HiddenResultFileEntries);
-                    resultFileEntries.AddRange(cr.ResultFileEntries);
-                    var allfilesexist = true;
-                    foreach (var rfe in resultFileEntries) {
-                        if (!File.Exists(rfe.FullFileName)) {
-                            allfilesexist = false;
-                        }
-                    }
-                    _results = cr;
-                    if (allfilesexist) {
-                        runCalculation = false;
-                    }
-                }*/
-                //if (runCalculation) {
 #pragma warning disable 162
-                bool success =  RunOneCalcEntry(csps,entry,sim, forceRandom);
+                bool success =  RunOneCalcEntry(csps,sim, forceRandom);
                 if (!success) {
                     allgood = false;
                 }
@@ -195,22 +161,20 @@ namespace CalculationController.Queue {
                     return;
                 }
 #pragma warning restore 162
-            }
             if (allgood) {
                 var cpf = new CalcParametersFactory();
                 var calcParameters = cpf.MakeCalculationParametersFromConfig(csps, forceRandom);
-                var cpp = new DatFileDeletor( calcParameters,resultPath, csps.CalcTarget.Name);
+                var cpp = new DatFileDeletor( calcParameters,csps.ResultPath, csps.CalcTarget.Name);
                 cpp.ProcessResults();
-                SaveCallFunction(csps.ReportFinishFuncForHousehold,csps,resultPath);
+                SaveCallFunction(csps.ReportFinishFuncForHousehold,csps);
             }
             else {
                 throw new LPGException("No Results in CalcQueRunner! Please report this bug.");
             }
         }
 
-        private static void SaveCallFunction([CanBeNull] Func<bool, string, string, bool> reportFinishFuncForHousehold,
-                                             [NotNull] CalcStartParameterSet csps,
-                                             [NotNull] string resultPath)
+        private static void SaveCallFunction([CanBeNull] Func<bool, string,string , bool> reportFinishFuncForHousehold,
+                                             [NotNull] CalcStartParameterSet csps                                             )
         {
             if (reportFinishFuncForHousehold == null) {
                 return;
@@ -218,19 +182,17 @@ namespace CalculationController.Queue {
 
             Logger.Get()
                 .SafeExecuteWithWait(
-                    () => reportFinishFuncForHousehold(true,csps.CalcTarget.Name, resultPath));
+                    () => reportFinishFuncForHousehold(true,csps.CalcTarget.Name, csps.ResultPath));
         }
         [SuppressMessage("ReSharper", "ReplaceWithSingleAssignment.False")]
         [SuppressMessage("ReSharper", "ConvertIfToOrExpression")]
-        public void Start([NotNull] CalcStartParameterSet csps, [NotNull][ItemNotNull] ObservableCollection<CalculationEntry> calculationEntries,
-            [NotNull] Simulator sim, [NotNull] string resultPath) {
-            csps.SetCalculationEntries?.Invoke(calculationEntries);
+        public void Start([NotNull] CalcStartParameterSet csps, [NotNull] Simulator sim) {
             try {
                 var forceRandom = false;
                 if (csps.CalcTarget.GetType() == typeof(Settlement)) {
                     forceRandom = true;
                 }
-                SaveRun(forceRandom, calculationEntries, sim,csps, resultPath);
+                SaveRun(forceRandom,  sim,csps);
             }
             catch (DataIntegrityException e) {
                 Logger.Error("DataIntegrityException:"+ Environment.NewLine + e.Message);

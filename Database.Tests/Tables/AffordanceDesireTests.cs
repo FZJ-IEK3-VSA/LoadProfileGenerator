@@ -39,18 +39,20 @@ namespace Database.Tests.Tables {
     {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void LoadFromDatabaseTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-
-            var desires = new ObservableCollection<Desire>();
-            Desire.LoadFromDatabase(desires, db.ConnectionString, false);
-            var affDesires = new ObservableCollection<AffordanceDesire>();
-            AffordanceDesire.LoadFromDatabase(affDesires, db.ConnectionString, desires, false);
-            db.ClearTable(AffordanceDesire.TableName);
-            affDesires.Clear();
-            AffordanceDesire.LoadFromDatabase(affDesires, db.ConnectionString, desires, false);
-            Assert.AreEqual(0, affDesires.Count);
-            db.Cleanup();
+        public void LoadFromDatabaseTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var desires = new ObservableCollection<Desire>();
+                Desire.LoadFromDatabase(desires, db.ConnectionString, false);
+                var affDesires = new ObservableCollection<AffordanceDesire>();
+                AffordanceDesire.LoadFromDatabase(affDesires, db.ConnectionString, desires, false);
+                db.ClearTable(AffordanceDesire.TableName);
+                affDesires.Clear();
+                AffordanceDesire.LoadFromDatabase(affDesires, db.ConnectionString, desires, false);
+                Assert.AreEqual(0, affDesires.Count);
+                db.Cleanup();
+            }
         }
     }
 }

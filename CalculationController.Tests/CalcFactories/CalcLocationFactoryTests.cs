@@ -57,7 +57,7 @@ namespace CalculationController.Tests.CalcFactories {
         public void MakeCalcLocationsTest()
         {
             var locations = new List<Location>();
-            var loc = new Location("loc", 1, string.Empty, Guid.NewGuid().ToString());
+            var loc = new Location("loc", 1, string.Empty, Guid.NewGuid().ToStrGuid());
             locations.Add(loc);
             Random r = new Random(1);
             DeviceCategoryPicker picker = new DeviceCategoryPicker(r, null);
@@ -75,7 +75,7 @@ namespace CalculationController.Tests.CalcFactories {
             LocationDtoDict calclocdict = new LocationDtoDict();
             List<DeviceCategoryDto> devcat = new List<DeviceCategoryDto>();
             using CalcRepo calcRepo = new CalcRepo();
-            //devcat.Add(new DeviceCategoryDto(dc.FullPath, Guid.NewGuid().ToString()));
+            //devcat.Add(new DeviceCategoryDto(dc.FullPath, Guid.NewGuid().ToStrGuid()));
             var locdtos = cldt.MakeCalcLocations(locations,
                 new HouseholdKey("hh1"),
                 EnergyIntensityType.EnergyIntensive,
@@ -103,15 +103,15 @@ namespace CalculationController.Tests.CalcFactories {
             CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(2018, 1, 1)
                 .SetEndDate(new DateTime(2018, 1, 1, 2, 0, 0)).SetSettlingDays(0).EnableShowSettlingPeriod();
             var locations = new List<Location>();
-            var loc = new Location("loc", 1, string.Empty, Guid.NewGuid().ToString());
+            var loc = new Location("loc", 1, string.Empty, Guid.NewGuid().ToStrGuid());
             locations.Add(loc);
             var devices = new ObservableCollection<RealDevice>();
-            var dc = new DeviceCategory("dc", -1, string.Empty, false, devices, Guid.NewGuid().ToString(), 1, true);
+            var dc = new DeviceCategory("dc", -1, string.Empty, false, devices, Guid.NewGuid().ToStrGuid(), 1, true);
             List<DeviceCategoryDto> devcat = new List<DeviceCategoryDto> {
-                new DeviceCategoryDto(dc.FullPath, Guid.NewGuid().ToString())
+                new DeviceCategoryDto(dc.FullPath, Guid.NewGuid().ToStrGuid())
             };
-            var rd = new RealDevice("rda", 1, string.Empty, dc, string.Empty, false, false, string.Empty, Guid.NewGuid().ToString(), 1);
-            var rd2 = new RealDevice("rdb", 1, string.Empty, dc, string.Empty, false, false, string.Empty, Guid.NewGuid().ToString(), 1);
+            var rd = new RealDevice("rda", 1, string.Empty, dc, string.Empty, false, false, string.Empty, Guid.NewGuid().ToStrGuid(), 1);
+            var rd2 = new RealDevice("rdb", 1, string.Empty, dc, string.Empty, false, false, string.Empty, Guid.NewGuid().ToStrGuid(), 1);
             loc.AddDevice(rd, false);
             loc.AddDevice(rd2, false);
             var deviceLocationDict = new Dictionary<CalcLocationDto, List<IAssignableDevice>>();
@@ -164,14 +164,14 @@ namespace CalculationController.Tests.CalcFactories {
             builder.Register(x => picker).As<DeviceCategoryPicker>().SingleInstance();
             //var nr = new NormalRandom(0, 1, r);
             var locations = new List<Location>();
-            var loc = new Location("loc", 1, string.Empty, Guid.NewGuid().ToString());
+            var loc = new Location("loc", 1, string.Empty, Guid.NewGuid().ToStrGuid());
             locations.Add(loc);
             var devices = new ObservableCollection<RealDevice>();
-            var dc = new DeviceCategory("dc", -1, string.Empty, false, devices, Guid.NewGuid().ToString(), 1, true);
+            var dc = new DeviceCategory("dc", -1, string.Empty, false, devices, Guid.NewGuid().ToStrGuid(), 1, true);
             List<DeviceCategoryDto> devcat = new List<DeviceCategoryDto> {
-                new DeviceCategoryDto(dc.FullPath, Guid.NewGuid().ToString())
+                new DeviceCategoryDto(dc.FullPath, Guid.NewGuid().ToStrGuid())
             };
-            var rd = new RealDevice("rd", 1, string.Empty, dc, string.Empty, false, false, string.Empty, Guid.NewGuid().ToString(), 1);
+            var rd = new RealDevice("rd", 1, string.Empty, dc, string.Empty, false, false, string.Empty, Guid.NewGuid().ToStrGuid(), 1);
             loc.AddDevice(rd, false);
             var deviceLocationDict = new Dictionary<CalcLocationDto, List<IAssignableDevice>>();
             var allDeviceActions = new ObservableCollection<DeviceAction>();
@@ -225,20 +225,20 @@ namespace CalculationController.Tests.CalcFactories {
             //CalcFactoryParameters.SetSkipChecking(true);
             //var nr = new NormalRandom(0, 1, r);
             var locations = new List<Location>();
-            var loc = new Location("loc", 1, string.Empty, Guid.NewGuid().ToString());
+            var loc = new Location("loc", 1, string.Empty, Guid.NewGuid().ToStrGuid());
             locations.Add(loc);
             var devices = new ObservableCollection<RealDevice>();
 
-            var dc = new DeviceCategory("dc", -1, string.Empty, false, devices, Guid.NewGuid().ToString(), 1, true);
-            var rd = new RealDevice("rd", 1, string.Empty, dc, string.Empty, false, false, string.Empty, Guid.NewGuid().ToString(), 1);
-            var rd2 = new RealDevice("rd2", 1, string.Empty, dc, string.Empty, false, false, string.Empty, Guid.NewGuid().ToString(), 1);
+            var dc = new DeviceCategory("dc", -1, string.Empty, false, devices, Guid.NewGuid().ToStrGuid(), 1, true);
+            var rd = new RealDevice("rd", 1, string.Empty, dc, string.Empty, false, false, string.Empty, Guid.NewGuid().ToStrGuid(), 1);
+            var rd2 = new RealDevice("rd2", 1, string.Empty, dc, string.Empty, false, false, string.Empty, Guid.NewGuid().ToStrGuid(), 1);
             dc.SubDevices.Add(rd);
             loc.AddDevice(dc, false);
             loc.AddDevice(rd2, false);
             var deviceLocationDict = new Dictionary<CalcLocationDto, List<IAssignableDevice>>();
 
             List<DeviceCategoryDto> devcat = new List<DeviceCategoryDto> {
-                new DeviceCategoryDto(dc.FullPath, Guid.NewGuid().ToString())
+                new DeviceCategoryDto(dc.FullPath, Guid.NewGuid().ToStrGuid())
             };
             devices.Add(rd);
             devices.Add(rd2);
@@ -255,10 +255,12 @@ namespace CalculationController.Tests.CalcFactories {
             Mock<IOnlineDeviceActivationProcessor> odapmock = new Mock<IOnlineDeviceActivationProcessor>();
             builder.Register(x => odapmock.Object).As<IOnlineDeviceActivationProcessor>().SingleInstance();
             builder.Register(x => r).As<Random>().SingleInstance();
-            builder.Register(x => wd.InputDataLogger).As<IInputDataLogger>().SingleInstance();
-            builder.Register(x => new FileFactoryAndTracker(wd.WorkingDirectory, "HH1", wd.InputDataLogger)).As<FileFactoryAndTracker>()
+            var idl = wd.InputDataLogger;
+            builder.Register(x => idl).As<IInputDataLogger>().SingleInstance();
+            string path = wd.WorkingDirectory;
+            builder.Register(x => new FileFactoryAndTracker(path, "HH1", idl)).As<FileFactoryAndTracker>()
                 .SingleInstance();
-            builder.Register(x => new SqlResultLoggingService(wd.WorkingDirectory)).As<SqlResultLoggingService>().SingleInstance();
+            builder.Register(x => new SqlResultLoggingService(path)).As<SqlResultLoggingService>().SingleInstance();
             builder.Register(x => new DateStampCreator(x.Resolve<CalcParameters>())).As<DateStampCreator>().SingleInstance();
             builder.Register(x => new DateStampCreator(x.Resolve<CalcParameters>())).As<DateStampCreator>().SingleInstance();
             builder.Register(x => new OnlineLoggingData(x.Resolve<DateStampCreator>(), x.Resolve<IInputDataLogger>(), x.Resolve<CalcParameters>()))

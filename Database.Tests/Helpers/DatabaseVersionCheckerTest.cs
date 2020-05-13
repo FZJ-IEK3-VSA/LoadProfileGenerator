@@ -13,13 +13,14 @@ namespace Database.Tests.Helpers
         [Category(UnitTestCategories.BasicTest)]
         public void Run()
         {
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-
-            DatabaseVersionChecker.CheckVersion(db.ConnectionString);
-            string previousVersion = DatabaseVersionChecker.DstVersion;
-            DatabaseVersionChecker.DstVersion = "asdf";
-            Assert.Throws(typeof(LPGException), () => DatabaseVersionChecker.CheckVersion(db.ConnectionString));
-            DatabaseVersionChecker.DstVersion = previousVersion;
+            using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                DatabaseVersionChecker.CheckVersion(db.ConnectionString);
+                string previousVersion = DatabaseVersionChecker.DstVersion;
+                DatabaseVersionChecker.DstVersion = "asdf";
+                Assert.Throws(typeof(LPGException), () => DatabaseVersionChecker.CheckVersion(db.ConnectionString));
+                DatabaseVersionChecker.DstVersion = previousVersion;
+            }
         }
     }
 }

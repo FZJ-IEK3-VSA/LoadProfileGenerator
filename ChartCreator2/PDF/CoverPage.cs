@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Automation.ResultFiles;
 using Common;
@@ -7,6 +8,7 @@ using JetBrains.Annotations;
 using MigraDoc.DocumentObjectModel;
 
 namespace ChartCreator2.PDF {
+    [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     internal class CoverPage : IPageCreator {
         [CanBeNull] private string _endDate;
 

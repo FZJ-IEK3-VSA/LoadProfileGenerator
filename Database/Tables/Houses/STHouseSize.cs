@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Globalization;
+using Automation;
 using Database.Database;
 using JetBrains.Annotations;
 
@@ -13,7 +14,7 @@ namespace Database.Tables.Houses {
 
         public STHouseSize([CanBeNull]int? pID, [NotNull] string connectionString, int settlementTemplateID, [NotNull] string name,
                            int minimumSize,
-            int maximumSize, double percentage, [NotNull] string guid) : base(name, TableName, connectionString, guid)
+            int maximumSize, double percentage, [NotNull] StrGuid guid) : base(name, TableName, connectionString, guid)
         {
             TypeDescription = "Settlement Template House Size";
             ID = pID;

@@ -16,17 +16,20 @@ namespace LoadProfileGenerator.Tests {
         [Category(UnitTestCategories.LongTest2)]
         public void RunHouseholdTemplateCreatorTest()
         {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var sim = new Simulator(db.ConnectionString);
-            var hhtc = new HouseholdTemplateCreator(sim);
-            while (sim.HouseholdTemplates.It.Count > 0) {
-                sim.HouseholdTemplates.DeleteItem(sim.HouseholdTemplates.It[0]);
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var sim = new Simulator(db.ConnectionString);
+                var hhtc = new HouseholdTemplateCreator(sim);
+                while (sim.HouseholdTemplates.It.Count > 0)
+                {
+                    sim.HouseholdTemplates.DeleteItem(sim.HouseholdTemplates.It[0]);
+                }
+
+                hhtc.Run(false, sim);
+
+                SimIntegrityChecker.Run(sim);
+                db.Cleanup();
             }
-
-            hhtc.Run(false, sim);
-
-            SimIntegrityChecker.Run(sim);
-            db.Cleanup();
         }
     }
 }

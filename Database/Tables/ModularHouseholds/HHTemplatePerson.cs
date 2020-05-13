@@ -19,7 +19,7 @@ namespace Database.Tables.ModularHouseholds {
         [CanBeNull] private  Person _person;
 
         public class JsonDto : IGuidObject {
-            public JsonDto([NotNull] string guid, [CanBeNull] JsonReference personReference,
+            public JsonDto([NotNull] StrGuid guid, [CanBeNull] JsonReference personReference,
                            [CanBeNull] JsonReference livingPatternTraitTagReference, string name)
             {
                 Guid = guid;
@@ -38,7 +38,7 @@ namespace Database.Tables.ModularHouseholds {
             }
 
             [NotNull]
-            public string Guid { get; set; }
+            public StrGuid Guid { get; set; }
             [CanBeNull]
             public JsonReference PersonReference { get; set; }
             [CanBeNull]
@@ -71,7 +71,7 @@ namespace Database.Tables.ModularHouseholds {
         }
 
         public HHTemplatePerson([CanBeNull]int? pID, [CanBeNull] Person pPerson, int hhTemplateID, [NotNull] string name,
-            [NotNull] string connectionString,[CanBeNull] TraitTag livingPattern, [NotNull] string guid)
+            [NotNull] string connectionString,[CanBeNull] TraitTag livingPattern, [NotNull] StrGuid guid)
             : base(name, TableName, connectionString, guid) {
             ID = pID;
             _person = pPerson;
@@ -142,7 +142,7 @@ namespace Database.Tables.ModularHouseholds {
         public override string ToString() => Person.Name;
 
         [NotNull]
-        public string RelevantGuid => Guid;
+        public StrGuid RelevantGuid => Guid;
 
     }
 }

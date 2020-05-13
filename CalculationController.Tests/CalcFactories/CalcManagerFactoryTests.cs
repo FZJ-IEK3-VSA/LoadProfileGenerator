@@ -31,7 +31,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using Automation;
 using Automation.ResultFiles;
 using CalculationController.CalcFactories;
@@ -66,28 +65,23 @@ namespace CalculationController.Tests.CalcFactories {
 
             Assert.AreNotEqual(null, sim);
             var cmf = new CalcManagerFactory();
-            var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             CalculationProfiler calculationProfiler = new CalculationProfiler();
             //todo: put in a full house with transportation
             //var house = sim.Houses.CreateNewItem()
             CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
                 sim.TemperatureProfiles[0], sim.ModularHouseholds[0],
                 EnergyIntensityType.Random, false,
-                version, null, LoadTypePriority.Mandatory, null,null, null,sim.MyGeneralConfig.AllEnabledOptions(),
+                 null, LoadTypePriority.Mandatory, null,null, null,sim.MyGeneralConfig.AllEnabledOptions(),
                 new DateTime(2015,1,15),
                 new DateTime(2015,1,18),
                 new TimeSpan(0,1,0),";" ,
                 5 , new TimeSpan(0,1,0) ,
                 false,false,false,3,
                 sim.MyGeneralConfig.RepetitionCount,
-                calculationProfiler);
+                calculationProfiler, path);
 
-            var cm = cmf.GetCalcManager(sim, path,csps,  false);
-            bool ReportCancelFunc()
-            {
-                Logger.Error("canceled");
-                return true;
-            }
+            var cm = cmf.GetCalcManager(sim,csps,  false);
+
             bool success = cm.Run(ReportCancelFunc);
             if(!success) {
                 throw new LPGException("Calculation failed");
@@ -95,6 +89,7 @@ namespace CalculationController.Tests.CalcFactories {
 
             db.Cleanup();
         }
+
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
@@ -111,21 +106,15 @@ namespace CalculationController.Tests.CalcFactories {
                     sim.MyGeneralConfig.RandomSeed = 10;
 
                     var cmf = new CalcManagerFactory();
-                    var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
                     CalculationProfiler calculationProfiler = new CalculationProfiler();
                     CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
                         sim.TemperatureProfiles[0], sim.ModularHouseholds[0], EnergyIntensityType.Random, false,
-                        version, null, LoadTypePriority.Mandatory, null, null, null, sim.MyGeneralConfig.AllEnabledOptions(), new DateTime(2018, 1, 15),
+                         null, LoadTypePriority.Mandatory, null, null, null, sim.MyGeneralConfig.AllEnabledOptions(), new DateTime(2018, 1, 15),
                         new DateTime(2018, 1, 18), new TimeSpan(0, 1, 0), ";", -1, new TimeSpan(0, 1, 0), false, false, false, 3, 3,
-                        calculationProfiler);
+                        calculationProfiler, wd.WorkingDirectory);
 
-                    var cm = cmf.GetCalcManager(sim, wd.WorkingDirectory, csps, false);
+                    var cm = cmf.GetCalcManager(sim, csps, false);
 
-                    bool ReportCancelFunc()
-                    {
-                        Logger.Info("canceled");
-                        return true;
-                    }
                     cm.Run(ReportCancelFunc);
                     db.Cleanup();
                 }
@@ -148,21 +137,14 @@ namespace CalculationController.Tests.CalcFactories {
                     Assert.AreNotEqual(null, sim);
 
                     var cmf = new CalcManagerFactory();
-                    var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
                     CalculationProfiler calculationProfiler = new CalculationProfiler();
                     CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
                         sim.TemperatureProfiles[0], sim.Houses[sim.Houses.MyItems.Count - 1], EnergyIntensityType.Random, false,
-                        version, null, LoadTypePriority.RecommendedForHouses, null, null, null, sim.MyGeneralConfig.AllEnabledOptions(),
+                         null, LoadTypePriority.RecommendedForHouses, null, null, null, sim.MyGeneralConfig.AllEnabledOptions(),
                             new DateTime(2015, 1, 15), new DateTime(2015, 1, 18), new TimeSpan(0, 1, 0), ";", -1, new TimeSpan(0, 1, 0), false, false, false, 3, 3,
-                        calculationProfiler);
+                        calculationProfiler, wd.WorkingDirectory);
 
-                    var cm = cmf.GetCalcManager(sim, wd.WorkingDirectory, csps, false);
-
-                    bool ReportCancelFunc()
-                    {
-                        Logger.Info("canceled");
-                        return true;
-                    }
+                    var cm = cmf.GetCalcManager(sim, csps, false);
 
                     cm.Run(ReportCancelFunc);
                     db.Cleanup();
@@ -182,11 +164,11 @@ namespace CalculationController.Tests.CalcFactories {
                     Config.IsInUnitTesting = true;
                     var sim = new Simulator(db.ConnectionString);
                     sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.ReasonableWithChartsAndPDF);
-                    DeviceCategory? light = null;
+                    DeviceCategory light = null;
                     foreach (var deviceCategory in sim.DeviceCategories.MyItems)
                     {
                         deviceCategory.RefreshSubDevices();
-                        if (deviceCategory.Name.Contains("Light", StringComparison.InvariantCulture))
+                        if (deviceCategory.Name.Contains("Light"))
                         {
                             light = deviceCategory;
                         }
@@ -202,7 +184,7 @@ namespace CalculationController.Tests.CalcFactories {
                     sim.MyGeneralConfig.Enable(CalcOption.HouseholdContents);
                     Assert.AreNotEqual(null, sim);
                     var cmf = new CalcManagerFactory();
-                    ModularHousehold? chs3 = null;
+                    ModularHousehold chs3 = null;
                     foreach (var modularHousehold in sim.ModularHouseholds.MyItems)
                     {
                         if (modularHousehold.Name.StartsWith("CHS01", StringComparison.Ordinal))
@@ -215,21 +197,14 @@ namespace CalculationController.Tests.CalcFactories {
                         throw new LPGException("Could not find the household CHS01");
                     }
                     Logger.Info(chs3.ToString());
-                    var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
                     CalculationProfiler calculationProfiler = new CalculationProfiler();
                     CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
                         sim.TemperatureProfiles[0], chs3, EnergyIntensityType.Random, false,
-                        version, null, LoadTypePriority.Mandatory, null, null, null, sim.MyGeneralConfig.AllEnabledOptions(),
+                         null, LoadTypePriority.Mandatory, null, null, null, sim.MyGeneralConfig.AllEnabledOptions(),
                         new DateTime(2015, 1, 15), new DateTime(2015, 1, 18), new TimeSpan(0, 1, 0), ";", -1, new TimeSpan(0, 1, 0), false, false, false, 3, 3,
-                        calculationProfiler);
+                        calculationProfiler, wd.WorkingDirectory);
 
-                    var cm = cmf.GetCalcManager(sim, wd.WorkingDirectory, csps, false);
-
-                    bool ReportCancelFunc()
-                    {
-                        Logger.Info("canceled");
-                        return true;
-                    }
+                    var cm = cmf.GetCalcManager(sim, csps, false);
 
                     cm.Run(ReportCancelFunc);
                     cm.Dispose();
@@ -239,6 +214,11 @@ namespace CalculationController.Tests.CalcFactories {
             }
         }
 
+        private static bool ReportCancelFunc()
+        {
+            Logger.Info("canceled");
+            return true;
+        }
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void GetCalcManagerModularHouseholdTest()
@@ -248,11 +228,11 @@ namespace CalculationController.Tests.CalcFactories {
                 using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
                 {
                     var sim = new Simulator(db.ConnectionString);
-                    DeviceCategory? light = null;
+                    DeviceCategory light = null;
                     foreach (var deviceCategory in sim.DeviceCategories.MyItems)
                     {
                         deviceCategory.RefreshSubDevices();
-                        if (deviceCategory.Name.Contains("Light", StringComparison.InvariantCulture))
+                        if (deviceCategory.Name.Contains("Light"))
                         {
                             light = deviceCategory;
                         }
@@ -266,21 +246,14 @@ namespace CalculationController.Tests.CalcFactories {
                     Assert.AreNotEqual(null, sim);
 
                     var cmf = new CalcManagerFactory();
-                    var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
                     CalculationProfiler calculationProfiler = new CalculationProfiler();
                     CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
                         sim.TemperatureProfiles[0], sim.ModularHouseholds[0], EnergyIntensityType.Random, false,
-                        version, null, LoadTypePriority.Mandatory, null, null, null, sim.MyGeneralConfig.AllEnabledOptions(),
+                         null, LoadTypePriority.Mandatory, null, null, null, sim.MyGeneralConfig.AllEnabledOptions(),
                         new DateTime(2015, 1, 15), new DateTime(2015, 1, 18), new TimeSpan(0, 1, 0), ";", -1, new TimeSpan(0, 1, 0), false, false, false, 3, 3,
-                        calculationProfiler);
+                        calculationProfiler, wd.WorkingDirectory);
 
-                    var cm = cmf.GetCalcManager(sim, wd.WorkingDirectory, csps, false);
-
-                    bool ReportCancelFunc()
-                    {
-                        Logger.Info("canceled");
-                        return true;
-                    }
+                    var cm = cmf.GetCalcManager(sim, csps, false);
 
                     cm.Run(ReportCancelFunc);
                     db.Cleanup();
@@ -298,11 +271,11 @@ namespace CalculationController.Tests.CalcFactories {
                 using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
                 {
                     var sim = new Simulator(db.ConnectionString);
-                    DeviceCategory? light = null;
+                    DeviceCategory light = null;
                     foreach (var deviceCategory in sim.DeviceCategories.MyItems)
                     {
                         deviceCategory.RefreshSubDevices();
-                        if (deviceCategory.Name.Contains("Light", StringComparison.InvariantCulture))
+                        if (deviceCategory.Name.Contains("Light"))
                         {
                             light = deviceCategory;
                         }
@@ -314,15 +287,14 @@ namespace CalculationController.Tests.CalcFactories {
                     sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.OnlyOverallSum);
                     Assert.AreNotEqual(null, sim);
                     var cmf = new CalcManagerFactory();
-                    var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
                     CalculationProfiler calculationProfiler = new CalculationProfiler();
                     CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
                         sim.TemperatureProfiles[0], sim.ModularHouseholds[0], EnergyIntensityType.Random, false,
-                        version, null, LoadTypePriority.Mandatory, null, null, null, sim.MyGeneralConfig.AllEnabledOptions(),
+                         null, LoadTypePriority.Mandatory, null, null, null, sim.MyGeneralConfig.AllEnabledOptions(),
                         new DateTime(2015, 1, 15), new DateTime(2015, 1, 18), new TimeSpan(0, 1, 0), ";", -1, new TimeSpan(0, 1, 0), false, false, false, 3, 3,
-                        calculationProfiler);
+                        calculationProfiler, wd.WorkingDirectory);
 
-                    var cm = cmf.GetCalcManager(sim, wd.WorkingDirectory, csps, false);
+                    var cm = cmf.GetCalcManager(sim, csps, false);
 
                     var chh = (CalcHousehold)cm.CalcObject;
                     var devicenameByCategoryAndLocationID = new Dictionary<string, string>();
@@ -369,7 +341,6 @@ namespace CalculationController.Tests.CalcFactories {
         [Category(UnitTestCategories.BasicTest)]
         public void GetDuplicateCalcManagerHouseholdTest()
         {
-            SkipEndCleaning = true;
             using (var wd1 = new WorkingDir("GetDuplicateCalcManagerHouseholdTest1"))
             {
                 CalculateOneHousehold(wd1.WorkingDirectory);
@@ -391,7 +362,7 @@ namespace CalculationController.Tests.CalcFactories {
                     var rfel2 = new ResultFileEntryLogger(wd2.SqlResultLoggingService);
                     var rfes2 = rfel2.Load();
                     rfes1.Should().BeEquivalentTo(rfes2, o => o.Excluding(
-                         x => x.SelectedMemberPath.EndsWith("FullFileName")));
+                         x => x.SelectedMemberPath.EndsWith("FullFileName", StringComparison.InvariantCultureIgnoreCase)));
 
                     CompareCsv(rfes1, rfes2);
                     wd1.CleanUp();
@@ -410,10 +381,17 @@ namespace CalculationController.Tests.CalcFactories {
                 if (filesToIgnore.Contains(fileEntry1.FileName)) {
                     continue;
                 }
-                if (fileEntry1.FileName.ToUpperInvariant().EndsWith(".CSV", StringComparison.Ordinal)) {
+                if (fileEntry1.FileName?.ToUpperInvariant().EndsWith(".CSV", StringComparison.Ordinal)==true) {
                     foreach (var fileEntry2 in rfes2) {
                         if (fileEntry1.FileName == fileEntry2.FileName) {
                             Logger.Info("comparing " + fileEntry1.Name + " with " + fileEntry2.Name);
+                            if (fileEntry1.FullFileName == null) {
+                                throw new LPGException("fileEntry1.FullFileName was null");
+                            }
+
+                            if (fileEntry2.FullFileName == null) {
+                                throw new LPGException("fileEntry2.FullFileName was null");
+                            }
                             using var sr1 = new StreamReader(fileEntry1.FullFileName);
                             using (var sr2 = new StreamReader(fileEntry2.FullFileName)) {
                                 while (!sr1.EndOfStream) {

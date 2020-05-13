@@ -14,6 +14,7 @@ using OxyPlot.Axes;
 using OxyPlot.Series;
 
 namespace ChartCreator2.OxyCharts {
+    [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     internal class DeviceProfiles : ChartBaseFileStep
     {
         [JetBrains.Annotations.NotNull] private readonly SqlResultLoggingService _srls;
@@ -47,7 +48,7 @@ namespace ChartCreator2.OxyCharts {
                     if (s == null) {
                         throw new LPGException("Readline failed.");
                     }
-                    var cols = s.Split(_Parameters.CSVCharacterArr, StringSplitOptions.None);
+                    var cols = s.Split(Parameters.CSVCharacterArr, StringSplitOptions.None);
                     var success1 = DateTime.TryParse(cols[1], CultureInfo.CurrentCulture, DateTimeStyles.None, out DateTime dt);
                     if (success1) {
                         if (line == 0) {
@@ -117,14 +118,14 @@ namespace ChartCreator2.OxyCharts {
                 LegendPosition = LegendPosition.BottomCenter
             };
             if (Config.MakePDFCharts) {
-                plotModel1.LegendFontSize =_Parameters.PDFFontSize;
-                plotModel1.DefaultFontSize = _Parameters.PDFFontSize;
+                plotModel1.LegendFontSize =Parameters.PDFFontSize;
+                plotModel1.DefaultFontSize = Parameters.PDFFontSize;
             }
             if (Config.SpecialChartFontSize != null) {
                 plotModel1.LegendFontSize = Config.SpecialChartFontSize.Value;
                 plotModel1.DefaultFontSize = Config.SpecialChartFontSize.Value;
             }
-            if (_Parameters.ShowTitle) {
+            if (Parameters.ShowTitle) {
                 plotModel1.Title = plotName;
             }
             var dateTimeAxis = new DateTimeAxis
@@ -185,7 +186,7 @@ namespace ChartCreator2.OxyCharts {
         protected override FileProcessingResult MakeOnePlot([JetBrains.Annotations.NotNull] ResultFileEntry srcEntry)
         {
             string plotName = "Devices " + srcEntry.HouseholdKey + " " + srcEntry.LoadTypeInformation?.Name;
-            _CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
+            Profiler.StartPart(Utili.GetCurrentMethodAndClass());
             var lti = srcEntry.LoadTypeInformation;
             if(lti == null) {
                 throw new LPGException("LTI was null");
@@ -195,6 +196,9 @@ namespace ChartCreator2.OxyCharts {
             var unitName = lti.Name + " in " + lti.UnitOfPower + string.Empty;
             var yaxisLabel = ChartLocalizer.Get().GetTranslation(unitName);
             var conversionfactor = lti.ConversionFaktor;
+            if (srcEntry.FullFileName == null) {
+                throw new LPGException("filename was null");
+            }
             GetFirstAndLastDate(srcEntry.FullFileName, out DateTime first, out var last);
             var selectedDateTimes = new List<DateTime>();
             var r = new Random();
@@ -213,9 +217,9 @@ namespace ChartCreator2.OxyCharts {
             //var tagFiles =_Parameters.BaseDirectory.GetFiles(Constants.DeviceTaggingSetFileName);
             var taggingSets = DeviceTaggingSetList.Read(_srls);
            var x = ReadAllDays(srcEntry, conversionfactor, selectedDateTimes,
-               taggingSets, plotName, _Parameters.BaseDirectory,
+               taggingSets, plotName, Parameters.BaseDirectory,
                 yaxisLabel, timestep);
-            _CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
+            Profiler.StopPart(Utili.GetCurrentMethodAndClass());
             return x;
         }
 
@@ -226,12 +230,15 @@ namespace ChartCreator2.OxyCharts {
             var pngCount = 0;
             try {
                 var headers = new List<string>();
+                if (rfe.FullFileName == null) {
+                    throw new LPGException("filename was null");
+                }
                 using (var sr = new StreamReader(rfe.FullFileName)) {
                     var topLine = sr.ReadLine();
                     if (topLine == null) {
                         throw new LPGException("Readline failed.");
                     }
-                    var header1 = topLine.Split(_Parameters.CSVCharacterArr, StringSplitOptions.None);
+                    var header1 = topLine.Split(Parameters.CSVCharacterArr, StringSplitOptions.None);
                     if (header1.Length < 2) {
                         throw new LPGException("Could not split the line from the device profiles properly: " +
                                                header1);
@@ -243,7 +250,7 @@ namespace ChartCreator2.OxyCharts {
                         if (s == null) {
                             throw new LPGException("Readline failed.");
                         }
-                        var cols = s.Split(_Parameters.CSVCharacterArr, StringSplitOptions.None);
+                        var cols = s.Split(Parameters.CSVCharacterArr, StringSplitOptions.None);
                         if (cols.Length < 2) {
                             throw new LPGException("Could not split the line from the device profiles properly: " + s);
                         }

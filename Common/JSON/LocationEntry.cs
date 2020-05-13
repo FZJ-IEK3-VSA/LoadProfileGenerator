@@ -26,6 +26,7 @@
 
 //-----------------------------------------------------------------------
 
+using Automation;
 using Automation.ResultFiles;
 using Common.SQLResultLogging.Loggers;
 using JetBrains.Annotations;
@@ -42,22 +43,22 @@ namespace Common.JSON {
 
         [NotNull]
         [JsonProperty]
-        public string LocationGuid { get; private set; }
+        public StrGuid LocationGuid { get; private set; }
 
         [NotNull]
         [JsonProperty]
         public  string PersonName { get; private set; }
         [NotNull]
         [JsonProperty]
-        public string PersonGuid { get; private set; }
+        public StrGuid PersonGuid { get; private set; }
         [JsonProperty]
         [NotNull]
         public TimeStep Timestep { get; private set; }
 
         public LocationEntry([NotNull] HouseholdKey householdKey,
-                             [NotNull] string personName, [NotNull] string personGuid,
+                             [NotNull] string personName, [NotNull] StrGuid personGuid,
                              [NotNull] TimeStep pTimestep,
-                             [NotNull] string locationName, [NotNull] string locationGuid
+                             [NotNull] string locationName, [NotNull] StrGuid locationGuid
                              ) {
             HouseholdKey = householdKey;
             PersonName = personName;

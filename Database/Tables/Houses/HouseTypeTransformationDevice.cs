@@ -29,6 +29,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Automation;
 using Database.Database;
 using JetBrains.Annotations;
 
@@ -40,7 +41,7 @@ namespace Database.Tables.Houses {
 
         public HouseTypeTransformationDevice([CanBeNull]int? pID, int houseID, [CanBeNull] TransformationDevice td,
             [NotNull] string connectionString,
-            [NotNull] string tdName, [NotNull] string guid) : base(tdName, TableName, connectionString, guid)
+            [NotNull] string tdName, [NotNull] StrGuid guid) : base(tdName, TableName, connectionString, guid)
         {
             ID = pID;
             HouseID = houseID;

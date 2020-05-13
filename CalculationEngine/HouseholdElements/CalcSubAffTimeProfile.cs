@@ -28,6 +28,8 @@
 
 using JetBrains.Annotations;
 using System.Collections.Generic;
+using Automation;
+using Common;
 
 namespace CalculationEngine.HouseholdElements {
     internal class CalcSubAffTimeProfile : ICalcProfile {
@@ -42,6 +44,7 @@ namespace CalculationEngine.HouseholdElements {
             }
 
             TimeFactor = 1;
+            Guid = System.Guid.NewGuid().ToStrGuid();
             DataSource = "Sub Affordance Time Profile";
         }
 
@@ -57,6 +60,8 @@ namespace CalculationEngine.HouseholdElements {
         public double TimeFactor { get; }
         [NotNull]
         public string DataSource { get; }
+
+        public StrGuid Guid { get; }
 
         #endregion
     }

@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Database.Database;
@@ -52,7 +53,7 @@ namespace Database.Tables.Transportation {
             }
         }
         public TravelRoute([CanBeNull]int? pID, [NotNull] string connectionString, [NotNull] string name, [CanBeNull] string description, [CanBeNull] Site siteA,
-            [CanBeNull] Site siteB, [NotNull] string guid, [CanBeNull] string routeKey)
+            [CanBeNull] Site siteB, [NotNull] StrGuid guid, [CanBeNull] string routeKey)
             : base(name, TableName, connectionString, guid)
         {
             TypeDescription = "Travel Route";
@@ -108,7 +109,7 @@ namespace Database.Tables.Transportation {
         public void AddStep([NotNull] string name, [NotNull] TransportationDeviceCategory category, double distance, int stepNumber, [CanBeNull] string stepKey, bool save = true)
         {
             var step = new TravelRouteStep(null, IntID, ConnectionString,
-                name, category, distance, stepNumber, System.Guid.NewGuid().ToString(), stepKey);
+                name, category, distance, stepNumber, System.Guid.NewGuid().ToStrGuid(), stepKey);
             _steps.Add(step);
             if (save) {
                 step.SaveToDB();
@@ -139,7 +140,7 @@ namespace Database.Tables.Transportation {
         [UsedImplicitly]
         public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new TravelRoute(
             null, connectionString, FindNewName(isNameTaken, "New Travel Route "),
-            "", null, null, System.Guid.NewGuid().ToString(),"");
+            "", null, null, System.Guid.NewGuid().ToStrGuid(),"");
 
         public void DeleteStep([NotNull] TravelRouteStep step)
         {

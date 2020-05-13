@@ -128,7 +128,7 @@ namespace CalculationController.DtoFactories
                                 ltdto.Name, ltdto.Guid, cdl,
                                 (double)hhautodev.TimeStandardDeviation,
                                 deviceCategoryDto.Guid,  householdKey, 1, calcLocation.Name, calcLocation.Guid,
-                                deviceCategoryDto.FullCategoryName,  Guid.NewGuid().ToString(),
+                                deviceCategoryDto.FullCategoryName,  Guid.NewGuid().ToStrGuid(),
                                 timeprofilereference, requirementDtos, deviceCategoryDto.FullCategoryName);
                             autodevs.Add(cautodev);
                         }
@@ -178,7 +178,7 @@ namespace CalculationController.DtoFactories
                                     (double) hhautodev.TimeStandardDeviation,
                                     deviceCategoryDto.Guid,
                                     householdKey, actionProfile.Multiplier, calcLocation.Name,calcLocation.Guid,
-                                    deviceAction.Device.DeviceCategory.FullPath, Guid.NewGuid().ToString(),
+                                    deviceAction.Device.DeviceCategory.FullPath, Guid.NewGuid().ToStrGuid(),
                                     timeprofilereference, requirementDtos,
                                     deviceCategoryDto.FullCategoryName);
                                 autodevs.Add(cautodev);
@@ -198,7 +198,7 @@ namespace CalculationController.DtoFactories
         public static CalcProfileDto GetCalcProfileDto([NotNull] TimeBasedProfile tp)
         {
             var cp = new CalcProfileDto(tp.Name, tp.IntID, (ProfileType)tp.TimeProfileType,
-                tp.DataSource, Guid.NewGuid().ToString());
+                tp.DataSource, Guid.NewGuid().ToStrGuid());
             foreach (var timeDataPoint in tp.ObservableDatapoints)
             {
                 cp.AddNewTimepoint(timeDataPoint.Time, timeDataPoint.Value);
@@ -221,7 +221,7 @@ namespace CalculationController.DtoFactories
                     var cdl = new CalcDeviceLoadDto(realDeviceLoadType.Name, realDeviceLoadType.IntID,
                         ltdtodict.Ltdtodict[realDeviceLoadType.LoadType].Name, ltdtodict.Ltdtodict[realDeviceLoadType.LoadType].Guid,
                         realDeviceLoadType.AverageYearlyConsumption, realDeviceLoadType.StandardDeviation,
-                        Guid.NewGuid().ToString(), realDeviceLoadType.MaxPower);
+                        Guid.NewGuid().ToStrGuid(), realDeviceLoadType.MaxPower);
                     deviceLoads.Add(cdl);
                 }
             }
@@ -279,7 +279,7 @@ namespace CalculationController.DtoFactories
                     DeviceCategoryDto dcdto =
                         deviceCategories.Single(x => x.FullCategoryName == rd.DeviceCategory.FullPath);
                     CalcDeviceDto cdd = new CalcDeviceDto(rd.Name, dcdto.Guid, householdKey, OefcDeviceType.Device,
-                        rd.DeviceCategory.FullPath, string.Empty, Guid.NewGuid().ToString(),
+                        rd.DeviceCategory.FullPath, string.Empty, Guid.NewGuid().ToStrGuid(),
                          locdto.Guid, locdto.Name);
                     cdd.AddLoads(MakeCalcDeviceLoads(rd, loadtypes));
                     calcDeviceDtos.Add(cdd);

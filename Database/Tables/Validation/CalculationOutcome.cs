@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using Automation;
+using Common;
 using Database.Database;
 using Database.Tables.BasicElements;
 using JetBrains.Annotations;
@@ -16,7 +18,7 @@ namespace Database.Tables.Validation {
         public CalculationOutcome([NotNull] string name, [NotNull] string householdName, [NotNull] string lpgVersion, [NotNull] string temperatureProfile,
             [NotNull] string geographicLocaiton, [NotNull] string errorMessage, [NotNull] string timeResolution, [NotNull] string energyIntensity,
             TimeSpan calculationDuration, DateTime simulationStartTime, DateTime simulationEndtime,
-            [NotNull] string connectionString, int numberOfPersons, int randomSeed, [CanBeNull] int? pID, [NotNull] string guid) : base(name, TableName,
+            [NotNull] string connectionString, int numberOfPersons, int randomSeed, [CanBeNull] int? pID, [NotNull] StrGuid guid) : base(name, TableName,
             connectionString, guid) {
             Entries = new ObservableCollection<LoadtypeOutcome>();
             AffordanceTimeUses = new ObservableCollection<AffordanceTimeUseOutcome>();
@@ -127,14 +129,14 @@ namespace Database.Tables.Validation {
             int executions) {
             var name = affordanceName + " -  " + personName;
             var lo = new AffordanceTimeUseOutcome(name, IntID, affordanceName, timeInMinutes,
-                personName, executions, ConnectionString, System.Guid.NewGuid().ToString());
+                personName, executions, ConnectionString, System.Guid.NewGuid().ToStrGuid());
             lo.SaveToDB();
             AffordanceTimeUses.Add(lo);
         }
 
         public void AddLoadType([NotNull] string loadTypeName, double value) {
             var name = loadTypeName + " -  " + value;
-            var lo = new LoadtypeOutcome(name, IntID, loadTypeName, value, ConnectionString, System.Guid.NewGuid().ToString());
+            var lo = new LoadtypeOutcome(name, IntID, loadTypeName, value, ConnectionString, System.Guid.NewGuid().ToStrGuid());
             lo.SaveToDB();
             Entries.Add(lo);
         }
@@ -168,7 +170,7 @@ namespace Database.Tables.Validation {
             return new CalculationOutcome(name, householdName, lpgVersion, temperatureProfile, geographicLocationName,
                 errorMessage, timeResolution, energyIntensity, calculationDuration, simulationStartTime,
                 simulationEndTime, connectionString,
-                numberOfPersons, randomSeed, id, System.Guid.NewGuid().ToString());
+                numberOfPersons, randomSeed, id, System.Guid.NewGuid().ToStrGuid());
         }
 
         [NotNull]
@@ -176,7 +178,7 @@ namespace Database.Tables.Validation {
         public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new
             CalculationOutcome(FindNewName(isNameTaken, "Calculation Outcome "), string.Empty, string.Empty,
                 string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, TimeSpan.Zero, DateTime.Today,
-                DateTime.Today, connectionString, 0, 0, null, System.Guid.NewGuid().ToString());
+                DateTime.Today, connectionString, 0, 0, null, System.Guid.NewGuid().ToStrGuid());
 
         public override void DeleteFromDB() {
             base.DeleteFromDB();

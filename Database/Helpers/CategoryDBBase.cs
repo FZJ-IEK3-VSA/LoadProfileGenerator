@@ -54,7 +54,7 @@ namespace Database.Helpers {
         [ItemNotNull] [CanBeNull] public ObservableCollection<T> _PrevFilteredMyItems;
 
         [CanBeNull]
-        public T FindByGuid([CanBeNull] string guid)
+        public T FindByGuid([CanBeNull] StrGuid guid)
         {
             if (guid == null) {
                 return null;

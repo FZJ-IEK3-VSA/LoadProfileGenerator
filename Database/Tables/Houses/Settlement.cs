@@ -34,6 +34,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -85,7 +86,7 @@ namespace Database.Tables.Houses {
                           [CanBeNull] TemperatureProfile temperatureProfile,
                           [NotNull] string source,
                           CreationType creationType,
-                          [NotNull] string guid,
+                          [NotNull] StrGuid guid,
                           [CanBeNull] JsonCalcSpecification calcSpecification) : base(pName, TableName, connectionString, guid)
         {
             _calcSpecification = calcSpecification ?? JsonCalcSpecification.MakeDefaultsForProduction();
@@ -456,7 +457,7 @@ namespace Database.Tables.Houses {
                 DeleteSettlementHHFromDB(item2Delete);
             }
 
-            var shh = new SettlementHH(null, hh, count, ID, ConnectionString, hh.Name, System.Guid.NewGuid().ToString());
+            var shh = new SettlementHH(null, hh, count, ID, ConnectionString, hh.Name, System.Guid.NewGuid().ToStrGuid());
             _households.Add(shh);
             shh.SaveToDB();
             return shh;
@@ -615,7 +616,7 @@ namespace Database.Tables.Houses {
                 null,
                 "Manually Created",
                 CreationType.ManuallyCreated,
-                System.Guid.NewGuid().ToString(),
+                System.Guid.NewGuid().ToStrGuid(),
                 jcs);
         }
 
@@ -959,7 +960,7 @@ namespace Database.Tables.Houses {
                 if (StartDate == null) {
                     throw new LPGException("No startdate was set.");
                 }
-                HouseCreationAndCalculationJob housejob = new HouseCreationAndCalculationJob(PrettyName,StartDate.Value.Year.ToString(),null);
+                HouseCreationAndCalculationJob housejob = new HouseCreationAndCalculationJob(PrettyName,StartDate.Value.Year.ToString(CultureInfo.InvariantCulture),null);
                 var calcSettings = new JsonCalcSpecification(_calcSpecification) {
                     GeographicLocation = GeographicLocation?.GetJsonReference(),
                     TemperatureProfile = TemperatureProfile?.GetJsonReference(),
@@ -1208,7 +1209,7 @@ namespace Database.Tables.Houses {
                 throw new NotImplementedException();
             }
 
-            public static bool operator ==(AgeEntry left, AgeEntry right)
+            public static bool operator ==([CanBeNull] AgeEntry left, [CanBeNull] AgeEntry right)
             {
                 if (ReferenceEquals(left, null))
                 {
@@ -1218,27 +1219,27 @@ namespace Database.Tables.Houses {
                 return left.Equals(right);
             }
 
-            public static bool operator !=(AgeEntry left, AgeEntry right)
+            public static bool operator !=([CanBeNull] AgeEntry left, [CanBeNull] AgeEntry right)
             {
                 return !(left == right);
             }
 
-            public static bool operator <(AgeEntry left, AgeEntry right)
+            public static bool operator <([CanBeNull] AgeEntry left, [CanBeNull] AgeEntry right)
             {
                 return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0;
             }
 
-            public static bool operator <=(AgeEntry left, AgeEntry right)
+            public static bool operator <=([CanBeNull] AgeEntry left, AgeEntry right)
             {
                 return ReferenceEquals(left, null) || left.CompareTo(right) <= 0;
             }
 
-            public static bool operator >(AgeEntry left, AgeEntry right)
+            public static bool operator >([CanBeNull] AgeEntry left, AgeEntry right)
             {
                 return !ReferenceEquals(left, null) && left.CompareTo(right) > 0;
             }
 
-            public static bool operator >=(AgeEntry left, AgeEntry right)
+            public static bool operator >=([CanBeNull] AgeEntry left, [CanBeNull] AgeEntry right)
             {
                 return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0;
             }

@@ -85,7 +85,7 @@ namespace CalculationController.CalcFactories {
             HouseholdKey houseKey = Constants.HouseKey;
             List<DeviceCategoryDto> deviceCategoryDtos = new List<DeviceCategoryDto>();
             foreach (var deviceCategory in sim.DeviceCategories.It) {
-                deviceCategoryDtos.Add(new DeviceCategoryDto(deviceCategory.FullPath, Guid.NewGuid().ToString()));
+                deviceCategoryDtos.Add(new DeviceCategoryDto(deviceCategory.FullPath, Guid.NewGuid().ToStrGuid()));
             }
 
             HouseIntegrityChecker.Run(house, sim);
@@ -183,7 +183,7 @@ namespace CalculationController.CalcFactories {
                     variableDto,
                     condition.MinValue,
                     condition.MaxValue,
-                    Guid.NewGuid().ToString());
+                    Guid.NewGuid().ToStrGuid());
                 calcconditions.Add(trafocondition);
             }
         }
@@ -215,7 +215,7 @@ namespace CalculationController.CalcFactories {
                             signal.TriggerLevelOn,
                             signal.Value,
                             cvdto,
-                            Guid.NewGuid().ToString());
+                            Guid.NewGuid().ToStrGuid());
                         signals.Add(cessig);
                     }
 
@@ -233,7 +233,7 @@ namespace CalculationController.CalcFactories {
                         es.InitialFill,
                         es.StorageCapacity,
                         householdKey,
-                        Guid.NewGuid().ToString(),
+                        Guid.NewGuid().ToStrGuid(),
                         signals);
                     calcEnergyStorages.Add(ces);
                     if (es.Signals.Count != ces.Signals.Count) {
@@ -316,12 +316,12 @@ namespace CalculationController.CalcFactories {
                 lt.Guid,
                 coolingParameter.YearlyConsumption,
                 0,
-                Guid.NewGuid().ToString(),
+                Guid.NewGuid().ToStrGuid(),
                 1);
             var cdls = new List<CalcDeviceLoadDto> {
                 cdl
             };
-            airConditioningLocation = new CalcLocationDto("Air Conditioning", -100, Guid.NewGuid().ToString());
+            airConditioningLocation = new CalcLocationDto("Air Conditioning", -100, Guid.NewGuid().ToStrGuid());
             var csh = new CalcAirConditioningDto("Air Conditioning",
                 -1,
                 cdls,
@@ -329,7 +329,7 @@ namespace CalculationController.CalcFactories {
                 householdKey,
                 airConditioningLocation.Name,
                 airConditioningLocation.Guid,
-                Guid.NewGuid().ToString());
+                Guid.NewGuid().ToStrGuid());
             return csh;
         }
 
@@ -418,7 +418,7 @@ namespace CalculationController.CalcFactories {
                     calcLocation.Name,
                     calcLocation.Guid,
                     deviceCategoryDto.FullCategoryName,
-                    Guid.NewGuid().ToString(),
+                    Guid.NewGuid().ToStrGuid(),
                     timearray,
                     reqDtos,deviceCategoryDto.FullCategoryName);
                 //cautodev.ApplyBitArry(busyarr, _ltDict.LtDict[hhautodev.LoadType]);
@@ -502,7 +502,7 @@ namespace CalculationController.CalcFactories {
                         calcLocation.Name,
                         calcLocation.Guid,
                         devcat.FullCategoryName,
-                        Guid.NewGuid().ToString(),
+                        Guid.NewGuid().ToStrGuid(),
                         availref,
                         reqDtos, devcat.FullCategoryName);
                     autodevs.Add(cautodev);
@@ -584,7 +584,7 @@ namespace CalculationController.CalcFactories {
                 }
 
                 if (deviceLocations.All(x => x.Name != hhautodev.Location.Name)) {
-                    deviceLocations.Add(new CalcLocationDto(hhautodev.Location.Name, hhautodev.Location.IntID, Guid.NewGuid().ToString()));
+                    deviceLocations.Add(new CalcLocationDto(hhautodev.Location.Name, hhautodev.Location.IntID, Guid.NewGuid().ToStrGuid()));
                 }
 
                 var calcLocation = deviceLocations.Single(x => x.Name == hhautodev.Location.Name);
@@ -694,7 +694,7 @@ namespace CalculationController.CalcFactories {
                         _ltDict.GetLoadtypeDtoByLoadType(lt),
                         values.ToList(),
                         householdKey,
-                        Guid.NewGuid().ToString());
+                        Guid.NewGuid().ToStrGuid());
                     cgens.Add(cgen);
                     //TODO: add to tagging sets
                     /*foreach (CalcDeviceTaggingSet set in calcDeviceTaggingSets) {
@@ -764,12 +764,12 @@ namespace CalculationController.CalcFactories {
                 lt.Guid,
                 heatingparameter.YearlyConsumption,
                 0,
-                Guid.NewGuid().ToString(),
+                Guid.NewGuid().ToStrGuid(),
                 1);
             var cdls = new List<CalcDeviceLoadDto> {
                 cdl
             };
-            heatingLocation = new CalcLocationDto("Space Heating Location", -102, Guid.NewGuid().ToString());
+            heatingLocation = new CalcLocationDto("Space Heating Location", -102, Guid.NewGuid().ToStrGuid());
             var csh = new CalcSpaceHeatingDto("Space Heating",
                 -1,
                 cdls,
@@ -777,7 +777,7 @@ namespace CalculationController.CalcFactories {
                 householdKey,
                 heatingLocation.Name,
                 heatingLocation.Guid,
-                Guid.NewGuid().ToString());
+                Guid.NewGuid().ToStrGuid());
             //foreach (var calcDeviceTaggingSet in taggingSets) {
             //calcDeviceTaggingSet.AddTag("Space Heating","House Device");
             //}
@@ -825,7 +825,7 @@ namespace CalculationController.CalcFactories {
                     trafo.MinimumInputPower,
                     trafo.MaximumInputPower,
                     householdKey,
-                    Guid.NewGuid().ToString(),
+                    Guid.NewGuid().ToStrGuid(),
                     calcconditions,
                     datapoints,
                     outputs,

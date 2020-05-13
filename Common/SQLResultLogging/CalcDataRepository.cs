@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using Common.CalcDto;
 using Common.JSON;
@@ -202,7 +203,7 @@ namespace Common.SQLResultLogging {
         //public TotalsInformation TotalInformation { get; set; }
 
         [NotNull]
-        public CalcLoadTypeDto GetLoadTypeInformationByGuid([NotNull] string guid)
+        public CalcLoadTypeDto GetLoadTypeInformationByGuid([NotNull] StrGuid guid)
         {
             if (_loadtypes == null)
             {
@@ -273,6 +274,13 @@ namespace Common.SQLResultLogging {
         {
             CalcAutoDevDtoLogger cpl = new CalcAutoDevDtoLogger(_srls);
             return cpl.Load(key);
+        }
+
+        [NotNull]
+        public List<SingleTimestepActionEntry> ReadSingleTimestepActionEntries([NotNull] HouseholdKey key)
+        {
+            SingleTimestepActionEntryLogger stael = new SingleTimestepActionEntryLogger(_srls);
+            return stael.Read(key);
         }
     }
 }

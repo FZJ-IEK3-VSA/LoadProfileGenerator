@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Automation.ResultFiles;
 using Common;
-using JetBrains.Annotations;
 
 namespace ChartCreator2.OxyCharts
 {

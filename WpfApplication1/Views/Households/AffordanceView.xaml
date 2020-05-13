@@ -206,7 +206,7 @@
                         <ComboBox Name="CmbActionAfterInterruption"
                                   Grid.Row="15"
                                   Grid.Column="1"
-                                  ItemsSource="{Binding BodilyActivityLevelDict}"
+                                  ItemsSource="{Binding ActionsAfterInterruptions}"
                                   SelectedItem="{Binding ThisAffordance.ActionAfterInterruptionStr}"
                                   Style="{StaticResource ComboBoxStyle}" />
                         <Label Grid.Row="16"

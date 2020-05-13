@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Automation;
 using Common;
 using Database.Database;
 using JetBrains.Annotations;
@@ -34,7 +35,7 @@ namespace Database.Tables.BasicHouseholds {
         private VacationType _vacationType;
 
         public VacationTime([NotNull] string name, [CanBeNull] int? pID, DateTime start, DateTime end, int vacationID,
-            [NotNull] string connectionString, VacationType vacationType, [NotNull] string guid)
+            [NotNull] string connectionString, VacationType vacationType, [NotNull] StrGuid guid)
             : base(name, TableName, connectionString, guid)
         {
             _vacationType = vacationType;

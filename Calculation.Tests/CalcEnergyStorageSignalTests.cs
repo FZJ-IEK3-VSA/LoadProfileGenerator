@@ -55,10 +55,10 @@ namespace Calculation.Tests
         {
             CalcParameters cp = CalcParameters.GetNew();
             cp.DummyCalcSteps = 0;
-            //CalcLoadType clt = new CalcLoadType("clt","power","sum",1,true, Guid.NewGuid().ToString());
-            CalcVariable cv = new CalcVariable("myvariable",Guid.NewGuid().ToString(),0,"House",Guid.NewGuid().ToString(),
+            //CalcLoadType clt = new CalcLoadType("clt","power","sum",1,true, Guid.NewGuid().ToStrGuid());
+            CalcVariable cv = new CalcVariable("myvariable",Guid.NewGuid().ToStrGuid(),0,"House",Guid.NewGuid().ToStrGuid(),
                 Constants.HouseKey);
-            CalcEnergyStorageSignal cess = new CalcEnergyStorageSignal("blub",  100, 50, 2, cv, Guid.NewGuid().ToString());
+            CalcEnergyStorageSignal cess = new CalcEnergyStorageSignal("blub",  100, 50, 2, cv, Guid.NewGuid().ToStrGuid());
             List<double> values = new List<double>();
             int i = 0;
             TestCess(cess,new TimeStep(  i++,cp), 100, 100, values);
@@ -83,10 +83,10 @@ namespace Calculation.Tests
         {
             CalcParameters cp = CalcParameters.GetNew();
             cp.DummyCalcSteps = 0;
-            //CalcLoadType clt = new CalcLoadType("clt",  "power", "sum", 1, true, Guid.NewGuid().ToString());
-            CalcVariable cv = new CalcVariable("myvariable", Guid.NewGuid().ToString(), 0, "House", Guid.NewGuid().ToString(),
+            //CalcLoadType clt = new CalcLoadType("clt",  "power", "sum", 1, true, Guid.NewGuid().ToStrGuid());
+            CalcVariable cv = new CalcVariable("myvariable", Guid.NewGuid().ToStrGuid(), 0, "House", Guid.NewGuid().ToStrGuid(),
                 Constants.HouseKey);
-            CalcEnergyStorageSignal cess = new CalcEnergyStorageSignal("blub", 100, 50, 2, cv, Guid.NewGuid().ToString());
+            CalcEnergyStorageSignal cess = new CalcEnergyStorageSignal("blub", 100, 50, 2, cv, Guid.NewGuid().ToStrGuid());
             List<double> values = new List<double>();
             int i = 0;
             TestCess(cess, new TimeStep(i++, cp), 100, 100, values);

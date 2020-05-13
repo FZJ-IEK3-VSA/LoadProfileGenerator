@@ -52,6 +52,7 @@ using JetBrains.Annotations;
 
 namespace Database.Tests
 {
+    [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     public class DatabaseSetup: IDisposable
     {
         //public enum TestPackage
@@ -974,6 +975,8 @@ namespace Database.Tests
             get
             {
                 string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+                if(codeBase==null)
+                {throw new LPGException("codebase was null");}
                 UriBuilder uri = new UriBuilder(codeBase);
                 string path = Uri.UnescapeDataString(uri.Path);
                 return Path.GetDirectoryName(path) ?? throw new LPGException("No path found for assembly");

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using Automation;
 using Database.Database;
 using JetBrains.Annotations;
 
@@ -11,7 +12,7 @@ namespace Database.Tables.Validation {
         public AffordanceTimeUseOutcome([NotNull] string name, int calculationOutcomeID, [NotNull] string affordanceName,
             double timeInMinutes,
             [NotNull] string personName, int executions,
-            [NotNull] string connectionString,[NotNull] string guid, [CanBeNull] int? pID = null)
+            [NotNull] string connectionString,[NotNull] StrGuid guid, [CanBeNull] int? pID = null)
             : base(name, pID, TableName, connectionString, guid) {
             _calculationOutcomeID = calculationOutcomeID;
             AffordanceName = affordanceName;

@@ -2,12 +2,10 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Reflection;
 using System.Threading;
 using Automation;
 using Automation.ResultFiles;
 using CalculationController.Queue;
-using ChartCreator2.OxyCharts;
 using Common;
 using Common.Enums;
 using Database;
@@ -108,7 +106,7 @@ namespace SimulationEngineLib.SimZukunftProcessor {
         }
 
         [SuppressMessage("ReSharper", "UseObjectOrCollectionInitializer")]
-        public void StartHousehold([NotNull] Simulator sim, [NotNull] JsonCalcSpecification jcs, [NotNull] JsonReference calcObjectReference)
+        public void StartHousehold([NotNull] Simulator sim, [NotNull] JsonCalcSpecification jcs, [NotNull] JsonReference calcObjectReference, [CanBeNull] Action<CalculationProfiler, string> makeAllCharts)
         {
             if(!CheckSimulator(jcs, sim))
             {
@@ -143,10 +141,10 @@ namespace SimulationEngineLib.SimZukunftProcessor {
                 Logger.Warning("Directory already exists, but calculation is not finished or skip existing is not specified. Deleting folder.");
                 var files = generalResultsDirectory.GetFiles();
                 foreach (FileInfo file in files) {
-                    if (file.Name.StartsWith("Log.")) {
+                    if (file.Name.StartsWith("Log.", StringComparison.OrdinalIgnoreCase)) {
                         continue;
                     }
-                    if (file.Name.EndsWith(".db3"))
+                    if (file.Name.EndsWith(".db3", StringComparison.OrdinalIgnoreCase))
                     {
                         continue;
                     }
@@ -218,7 +216,6 @@ namespace SimulationEngineLib.SimZukunftProcessor {
                 throw new LPGException("Geographic location not found.");
             }
 
-            var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
             DeviceSelection deviceSelection = null;
             if (jcs.DeviceSelection != null) {
@@ -266,11 +263,9 @@ namespace SimulationEngineLib.SimZukunftProcessor {
                 geographicLocation,
                 temperatureProfile,
                 calcObject,
-                SetCalculationEntries,
                 eit,
                 ReportCancelFunc,
                 false,
-                version,
                 deviceSelection,
                 jcs.LoadTypePriority,
                 transportationDeviceSet,
@@ -291,9 +286,22 @@ namespace SimulationEngineLib.SimZukunftProcessor {
                 chargingStationSet,
                 jcs.LoadtypesForPostprocessing,
                 sim.MyGeneralConfig.DeviceProfileHeaderMode,
-                jcs.IgnorePreviousActivitiesWhenNeeded);
+                jcs.IgnorePreviousActivitiesWhenNeeded, jcs.OutputDirectory);
             calcStartParameterSet.PreserveLogfileWhileClearingFolder = true;
-            cs.Start(calcStartParameterSet, jcs.OutputDirectory);
+            cs.Start(calcStartParameterSet);
+            if (jcs.CalcOptions != null && jcs.CalcOptions.Contains(CalcOption.CalculationFlameChart))
+            {
+                string targetfile = Path.Combine(generalResultsDirectory.FullName, Constants.CalculationProfilerJson);
+                using (StreamWriter sw = new StreamWriter(targetfile))
+                {
+                    _calculationProfiler.WriteJson(sw);
+                }
+            }
+            _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
+            if(makeAllCharts!=null) {
+                makeAllCharts(_calculationProfiler, calcStartParameterSet.ResultPath);
+            }
+
             var duration = DateTime.Now - calculationStartTime;
             if (jcs.DeleteAllButPDF) {
                 var allFileInfos = generalResultsDirectory.GetFiles("*.*", SearchOption.AllDirectories);
@@ -329,25 +337,6 @@ namespace SimulationEngineLib.SimZukunftProcessor {
             }
 
             Logger.ImportantInfo("Calculation duration:" + duration);
-            _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
-            if (jcs.CalcOptions != null && jcs.CalcOptions.Contains(CalcOption.CalculationFlameChart)) {
-                string targetfile = Path.Combine(generalResultsDirectory.FullName, Constants.CalculationProfilerJson);
-                using (StreamWriter sw = new StreamWriter(targetfile)) {
-                    _calculationProfiler.WriteJson(sw);
-                    CalculationDurationFlameChart cdfc = new CalculationDurationFlameChart();
-                    Thread t = new Thread(() => {
-                        try {
-                            cdfc.Run(_calculationProfiler, generalResultsDirectory.FullName, "JsonCommandLineCalc");
-                        }
-                        catch (Exception ex) {
-                            Logger.Exception(ex);
-                        }
-                    });
-                    t.SetApartmentState(ApartmentState.STA);
-                    t.Start();
-                    t.Join();
-                }
-            }
 
             //cleanup empty directories
             var subdirs = generalResultsDirectory.GetDirectories();
@@ -392,7 +381,6 @@ namespace SimulationEngineLib.SimZukunftProcessor {
 
         private static bool ReportFinishFuncForHousehold(bool a2, [NotNull] string a3, [NotNull] string path) => true;
 
-        private static bool SetCalculationEntries([NotNull] [ItemNotNull] ObservableCollection<CalculationEntry> calculationEntries) => true;
         /*
         [CanBeNull]
         private CalcOption? GetCalcOption([CanBeNull] string strOption)

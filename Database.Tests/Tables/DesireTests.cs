@@ -44,29 +44,33 @@ namespace Database.Tests.Tables {
     {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void DesireTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-
-            db.ClearTable(Desire.TableName);
-            var cat = new CategoryDBBase<Desire>("Desires");
-            Desire.LoadFromDatabase(cat.MyItems, db.ConnectionString, false);
-            Assert.AreEqual(0, cat.MyItems.Count);
-            cat.CreateNewItem(db.ConnectionString);
-            cat.SaveToDB();
-            var desires = new ObservableCollection<Desire>();
-            Desire.LoadFromDatabase(desires, db.ConnectionString, false);
-            Assert.AreEqual(1, desires.Count);
-            db.Cleanup();
+        public void DesireTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                db.ClearTable(Desire.TableName);
+                var cat = new CategoryDBBase<Desire>("Desires");
+                Desire.LoadFromDatabase(cat.MyItems, db.ConnectionString, false);
+                Assert.AreEqual(0, cat.MyItems.Count);
+                cat.CreateNewItem(db.ConnectionString);
+                cat.SaveToDB();
+                var desires = new ObservableCollection<Desire>();
+                Desire.LoadFromDatabase(desires, db.ConnectionString, false);
+                Assert.AreEqual(1, desires.Count);
+                db.Cleanup();
+            }
         }
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void MakeNewDesireTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-
-            var cat = new CategoryDBBase<Desire>("Desires");
-            cat.CreateNewItem(db.ConnectionString);
-            db.Cleanup();
+        public void MakeNewDesireTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var cat = new CategoryDBBase<Desire>("Desires");
+                cat.CreateNewItem(db.ConnectionString);
+                db.Cleanup();
+            }
         }
     }
 }

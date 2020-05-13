@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
+using Automation;
 using Common;
 using Database.Database;
 using Database.Tables.BasicElements;
@@ -20,7 +21,7 @@ namespace Database.Tables.BasicHouseholds {
 
         public DeviceActionProfile([CanBeNull] TimeBasedProfile timeprofile, [CanBeNull] int? id, decimal timeOffset,
             int deviceActionID,
-            [NotNull] string deviceName, [CanBeNull] VLoadType vLoadType, [NotNull] string connectionString, double multiplier, [NotNull] string guid)
+            [NotNull] string deviceName, [CanBeNull] VLoadType vLoadType, [NotNull] string connectionString, double multiplier, [NotNull] StrGuid guid)
             : base(deviceName, TableName, connectionString, guid) {
             _deviceActionID = deviceActionID;
             _timeprofile = timeprofile;

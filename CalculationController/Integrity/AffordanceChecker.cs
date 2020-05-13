@@ -2,11 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using Automation.ResultFiles;
 using CalculationController.CalcFactories;
 using CalculationEngine.Helper;
 using Common;
+using Common.Enums;
 using Database;
 using Database.Helpers;
 using Database.Tables;
@@ -215,6 +217,7 @@ namespace CalculationController.Integrity {
                     "The affordance " + affordance.Name +
                     " has white set as color. This is impossible to read, so please fix.", affordance);
             }
+
         }
 
         private void CheckOverlappingDeviceProfiles([NotNull] Affordance affordance,
@@ -473,8 +476,8 @@ namespace CalculationController.Integrity {
             if (!PerformCleanupChecks) {
                 return;
             }
-            var foodDesires = sim.Desires.It.Where(x => x.Name.ToLower().StartsWith("food / ")).ToList();
-            var unhungry = sim.Desires.It.First(x => x.Name.ToLower().Contains("hungry"));
+            var foodDesires = sim.Desires.It.Where(x => x.Name.StartsWith("food / ", StringComparison.OrdinalIgnoreCase)).ToList();
+            var unhungry = sim.Desires.It.First(x => x.Name.ToLower(CultureInfo.InvariantCulture).Contains("hungry"));
             //check if the unhungry afforances have proper desires
             var unhungryaffordances = sim.Affordances.It.Where(x => x.AffordanceDesires.Any(z => z.Desire == unhungry))
                 .ToList();
@@ -556,6 +559,18 @@ namespace CalculationController.Integrity {
                 affordanceNames.Add(affordance.Name.ToUpperInvariant());
                 CheckAffordanceDevices(affordance);
                 CheckOverlappingDeviceProfiles(affordance, sim.DeviceActions.It,rnd);
+            }
+
+            List<Affordance> broken = new List<Affordance>();
+            foreach (var affordance in sim.Affordances.It) {
+                if (PerformCleanupChecks && affordance.BodilyActivityLevel == BodilyActivityLevel.Unknown)
+                {
+                    broken.Add(affordance);
+                }
+            }
+
+            if (broken.Count > 0) {
+                throw new DataIntegrityException("The opened affordances have no bodily activity level set. Please fix.", broken.Take(10).Cast<BasicElement>().ToList());
             }
         }
 

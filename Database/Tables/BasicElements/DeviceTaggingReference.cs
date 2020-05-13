@@ -31,6 +31,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
+using Automation;
 using Database.Database;
 using Database.Tables.BasicHouseholds;
 using JetBrains.Annotations;
@@ -50,7 +51,7 @@ namespace Database.Tables.BasicElements {
         public DeviceTaggingReference([NotNull] string name, int taggingSetID, [CanBeNull] DeviceTag tag, [NotNull] string connectionString,
                                       [CanBeNull]int? pID,
             int personCount, double referenceValue, [CanBeNull] VLoadType loadType,
-            [NotNull] string guid) : base(name, pID, TableName,
+            [NotNull] StrGuid guid) : base(name, pID, TableName,
             connectionString, guid)
         {
             _taggingSetID = taggingSetID;

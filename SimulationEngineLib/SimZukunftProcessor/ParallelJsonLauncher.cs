@@ -27,7 +27,7 @@ namespace SimulationEngineLib.SimZukunftProcessor {
         //[NotNull] private readonly CalculationProfiler _calculationProfiler;
         [ItemNotNull] [NotNull] private readonly ConcurrentQueue<CalcJobQueueEntry> _calculationsToProcess = new ConcurrentQueue<CalcJobQueueEntry>();
         [ItemNotNull] [NotNull] private readonly ConcurrentQueue<string> _foldersToArchive = new ConcurrentQueue<string>();
-        [CanBeNull] public DirectoryInfo _BaseDirectoryInfo;
+        [CanBeNull] public DirectoryInfo BaseDirectoryInfo { get; set; }
         private bool _continueArchiving = true;
         private bool _continueProcessing = true;
 
@@ -207,10 +207,10 @@ namespace SimulationEngineLib.SimZukunftProcessor {
                 }
 
                 //check if there even is an output directory
-                if (string.IsNullOrWhiteSpace(jcs.CalcSpec.OutputDirectory)) {
+                if (string.IsNullOrWhiteSpace(jcs.CalcSpec?.OutputDirectory)) {
                     Logger.Error("Skipping file: No output directory set in the file " + inputFiles[calcidx].Name);
                     if (ThrowOnInvalidFile) {
-                        throw new LPGException("No output file was set: " + jcs.CalcSpec.OutputDirectory);
+                        throw new LPGException("No output file was set: " + jcs.CalcSpec?.OutputDirectory);
                     }
                     continue;
                 }
@@ -250,15 +250,15 @@ namespace SimulationEngineLib.SimZukunftProcessor {
         [NotNull]
         private string GetArchiveDirectory([NotNull] DirectoryInfo outputDirectory, [NotNull] ParallelJsonLauncherOptions pjl)
         {
-            if (_BaseDirectoryInfo == null) {
+            if (BaseDirectoryInfo == null) {
                 throw new LPGException("BaseDirectory was not set.");
             }
-            var relativePath = outputDirectory.FullName.Replace(_BaseDirectoryInfo.FullName, "");
+            var relativePath = outputDirectory.FullName.Replace(BaseDirectoryInfo.FullName, "");
             if (pjl.ArchiveDirectory == null || string.IsNullOrWhiteSpace(pjl.ArchiveDirectory)) {
                 throw new Exception("Output directory was null");
             }
 
-            if (relativePath.StartsWith("\\")) {
+            if (relativePath.StartsWith("\\", StringComparison.OrdinalIgnoreCase)) {
                 relativePath = relativePath.Substring(1);
             }
 
@@ -276,7 +276,7 @@ namespace SimulationEngineLib.SimZukunftProcessor {
             Logger.Info("Number of cores to use: " + options.NumberOfCores);
             Logger.Info("Search in the subdirectories for files: " + options.SearchSecondLevel);
             Logger.Info("Archiving folder is " + options.ArchiveDirectory);
-            _BaseDirectoryInfo = new DirectoryInfo(Environment.CurrentDirectory);
+            BaseDirectoryInfo = new DirectoryInfo(Environment.CurrentDirectory);
             var startTime = DateTime.Now;
 
             if (string.IsNullOrEmpty(options.JsonDirectory)) {
@@ -350,7 +350,7 @@ namespace SimulationEngineLib.SimZukunftProcessor {
 
             Logger.Info("All threads finished");
             var duration = DateTime.Now - startTime;
-            Logger.Info("Calculation Duration: " + duration + " (" + duration.TotalMinutes.ToString("F1") + " minutes)");
+            Logger.Info("Calculation Duration: " + duration + " (" + duration.TotalMinutes.ToString("F1", CultureInfo.InvariantCulture) + " minutes)");
         }
 
         [DllImport("User32.dll", CharSet = CharSet.Unicode)]

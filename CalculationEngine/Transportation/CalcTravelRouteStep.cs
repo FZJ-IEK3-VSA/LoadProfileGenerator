@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Automation;
 using CalculationEngine.HouseholdElements;
 using Common;
 using JetBrains.Annotations;
@@ -12,7 +13,7 @@ namespace CalculationEngine.Transportation {
 
         public CalcTravelRouteStep([NotNull] string pName,
                                    [NotNull] CalcTransportationDeviceCategory transportationDeviceCategory, int stepNumber, double distanceInM,
-                                   [NotNull] string guid, [NotNull] [ItemNotNull] List<CalcTransportationDevice> vehiclePool,
+                                   [NotNull] StrGuid guid, [NotNull] [ItemNotNull] List<CalcTransportationDevice> vehiclePool,
                                    CalcRepo calcRepo) : base(pName, guid)
         {
             TransportationDeviceCategory = transportationDeviceCategory;

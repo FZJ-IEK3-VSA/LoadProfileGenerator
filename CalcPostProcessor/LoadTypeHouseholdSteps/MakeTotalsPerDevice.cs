@@ -96,9 +96,10 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             var deviceTaggingSetInformations = Repository.GetDeviceTaggingSets();
             var deviceNameToCategory = new Dictionary<string, string>();
 
-            var avgYearlyDict = new Dictionary<CalcLoadTypeDto, Dictionary<string, double>>();
+            var avgYearlyDict = new Dictionary<CalcLoadTypeDto, Dictionary<StrGuid, double>>();
             if (p.Key.KeyType != HouseholdKeyType.House) {
-                avgYearlyDict = GetAverageYearlyConsumptionPerDevice(Repository.LoadDevices(p.Key.HouseholdKey).ConvertAll(x => (ICalcDeviceDto)x));
+                avgYearlyDict = GetAverageYearlyConsumptionPerDevice(
+                    Repository.LoadDevices(p.Key.HouseholdKey).ConvertAll(x => (ICalcDeviceDto)x));
                 var devices = Repository.LoadDevices(p.Key.HouseholdKey);
                 foreach (var device in devices) {
                     if (deviceNameToCategory.ContainsKey(device.Name)) {
@@ -124,16 +125,16 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
         }
 
         [NotNull]
-        private Dictionary<CalcLoadTypeDto, Dictionary<string, double>> GetAverageYearlyConsumptionPerDevice(
+        private Dictionary<CalcLoadTypeDto, Dictionary<StrGuid, double>> GetAverageYearlyConsumptionPerDevice(
             [NotNull] [ItemNotNull] List<ICalcDeviceDto> alldevices)
         {
-            var averageYearlyConsumptionPerDevice = new Dictionary<CalcLoadTypeDto, Dictionary<string, double>>();
+            var averageYearlyConsumptionPerDevice = new Dictionary<CalcLoadTypeDto, Dictionary<StrGuid, double>>();
             // build a device to power dictionary
             foreach (var calcDevice in alldevices) {
                 foreach (var calcDeviceLoad in calcDevice.Loads) {
                     var lt = Repository.GetLoadTypeInformationByGuid(calcDeviceLoad.LoadTypeGuid);
                     if (!averageYearlyConsumptionPerDevice.ContainsKey(lt)) {
-                        averageYearlyConsumptionPerDevice.Add(lt, new Dictionary<string, double>());
+                        averageYearlyConsumptionPerDevice.Add(lt, new Dictionary<StrGuid, double>());
                     }
 
                     if (!averageYearlyConsumptionPerDevice[lt].ContainsKey(calcDevice.Guid)) {
@@ -146,13 +147,13 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
         }
 
         [NotNull]
-        private static Dictionary<string, Dictionary<int, double>> MakeSumPerMonthPerDeviceID(
+        private static Dictionary<StrGuid, Dictionary<int, double>> MakeSumPerMonthPerDeviceID(
             [NotNull] CalcLoadTypeDto dstLoadType,
             [NotNull] EnergyFileColumns efc,
             [NotNull] Dictionary<int, OnlineEnergyFileRow> sumsPerMonth,
             [NotNull] out Dictionary<int, ColumnEntry> columns)
         {
-            var sumPerMonthPerDeviceID = new Dictionary<string, Dictionary<int, double>>();
+            var sumPerMonthPerDeviceID = new Dictionary<StrGuid, Dictionary<int, double>>();
             columns = efc.ColumnEntriesByColumn[dstLoadType];
             foreach (var onlineEnergyFileRow in sumsPerMonth) {
                 var month = onlineEnergyFileRow.Key;
@@ -310,7 +311,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                          [NotNull] [ItemNotNull] List<OnlineEnergyFileRow> energyFileRows,
                          [NotNull] FileFactoryAndTracker fft,
                          [NotNull] EnergyFileColumns efc,
-                         [NotNull] Dictionary<CalcLoadTypeDto, Dictionary<string, double>> loadTypeTodeviceIDToAverageLookup,
+                         [NotNull] Dictionary<CalcLoadTypeDto, Dictionary<StrGuid, double>> loadTypeTodeviceIDToAverageLookup,
                          [ItemNotNull] [NotNull] List<DeviceTaggingSetInformation> deviceTaggingSets,
                          [NotNull] Dictionary<string, string> deviceNameToCategory,
                          [NotNull] Dictionary<string, double> deviceEnergyDict,
@@ -334,8 +335,8 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             }*/
             var sumPerMonthPerDeviceID = MakeSumPerMonthPerDeviceID(dstLoadType, efc, sumsPerMonth, out var columns);
 
-            var sumsPerDeviceID = new Dictionary<string, double>();
-            var deviceNamesPerID = new Dictionary<string, string>();
+            var sumsPerDeviceID = new Dictionary<StrGuid, double>();
+            var deviceNamesPerID = new Dictionary<StrGuid, string>();
             var sumPerDeviceName = new Dictionary<string, double>();
             foreach (var pair in columns) {
                 var ce = pair.Value;
@@ -464,8 +465,8 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
 
         private void WriteMonthlyDeviceSums([NotNull] FileFactoryAndTracker fft,
                                             [NotNull] CalcLoadTypeDto dstLoadType,
-                                            [NotNull] Dictionary<string, Dictionary<int, double>> values,
-                                            [NotNull] Dictionary<string, string> deviceNamesPerID,
+                                            [NotNull] Dictionary<StrGuid, Dictionary<int, double>> values,
+                                            [NotNull] Dictionary<StrGuid, string> deviceNamesPerID,
                                             [NotNull] HouseholdKey key)
         {
             var devicesums = fft.MakeFile<StreamWriter>("DeviceSums_Monthly." + dstLoadType.Name + "." + key.Key + ".csv",

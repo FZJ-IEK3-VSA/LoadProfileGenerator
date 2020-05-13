@@ -23,15 +23,19 @@ namespace SimulationEngine.Tests
         [Category(UnitTestCategories.BasicTest)]
         public void TestSettlementInformation()
         {
-            WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            Simulator sim = new Simulator(db.ConnectionString);
-            Settlement set = sim.Settlements[0];
-            BatchOptions bo = new BatchOptions();
-            BatchfileFromSettlement.MakeSettlementJson(set,sim,bo,wd.WorkingDirectory);
-            SettlementInformation si = SettlementInformation.Read(wd.WorkingDirectory);
-            Assert.NotNull(si);
-            db.Cleanup();
+            using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
+            {
+                using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+                {
+                    Simulator sim = new Simulator(db.ConnectionString);
+                    Settlement set = sim.Settlements[0];
+                    BatchOptions bo = new BatchOptions();
+                    BatchfileFromSettlement.MakeSettlementJson(set, sim, bo, wd.WorkingDirectory);
+                    SettlementInformation si = SettlementInformation.Read(wd.WorkingDirectory);
+                    Assert.NotNull(si);
+                    db.Cleanup();
+                }
+            }
             //wd.CleanUp();
         }
 
@@ -47,7 +51,7 @@ namespace SimulationEngine.Tests
             {
                 "--MakeLightBatch"
             };
-            Program.Main(arguments.ToArray());
+            MainSimEngine.Run(arguments.ToArray(), "simulationengine.exe");
             se.Clean();
         }
 
@@ -61,7 +65,7 @@ namespace SimulationEngine.Tests
             {
                 "--MakeMasterBatch"
             };
-            Program.Main(arguments.ToArray());
+            MainSimEngine.Run(arguments.ToArray(), "simulationengine.exe");
             DateTime d = DateTime.Now;
             string dstDir = @"x:\Calc\" + d.Year + "." + d.Month + "." + d.Day + ".." + d.Hour + "." + d.Minute;
             Process p = new Process {StartInfo = {FileName = "robocopy.exe", Arguments = se.WorkingDirectory + " " + dstDir + " /E /MIR", UseShellExecute = true}};
@@ -89,7 +93,7 @@ namespace SimulationEngine.Tests
                 "--Batch-ModularHouseholds"
             };
             SimulationEngineConfig.IsUnitTest = true;
-            Program.Main(arguments.ToArray());
+            MainSimEngine.Run(arguments.ToArray(), "simulationengine.exe");
             DateTime d = DateTime.Now;
             string dstDir = @"x:\Calc\" + d.Year + "." + d.Month + "." + d.Day + ".." + d.Hour + "." + d.Minute;
             using (Process p = new Process {StartInfo = {FileName = "robocopy.exe", Arguments = se.WorkingDirectory + " " + dstDir + " /E /MIR", UseShellExecute = true}}) {

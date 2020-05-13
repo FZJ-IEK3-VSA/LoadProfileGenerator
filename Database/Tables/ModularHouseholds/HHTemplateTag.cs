@@ -9,14 +9,14 @@ using JetBrains.Annotations;
 namespace Database.Tables.ModularHouseholds {
     public class HHTemplateTag : DBBase, IJSonSubElement<JsonReference> {
         [NotNull]
-        public string RelevantGuid => Tag.Guid;
+        public StrGuid RelevantGuid => Tag.Guid;
         public const string TableName = "tblHHTemplateTag";
         private readonly int _hhTemplateID;
 
         [CanBeNull] private readonly HouseholdTag _householdTag;
 
         public HHTemplateTag([CanBeNull]int? pID, [CanBeNull] HouseholdTag householdTag, int hhTemplateID, [NotNull] string name,
-            [NotNull] string connectionString, [NotNull] string guid)
+            [NotNull] string connectionString, [NotNull] StrGuid guid)
             : base(name, TableName, connectionString, guid) {
             ID = pID;
             _householdTag = householdTag;

@@ -45,30 +45,34 @@ namespace Database.Tests.Tables {
     {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void LoadFromDatabaseTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-
-            var persons = new ObservableCollection<Person>();
-            Person.LoadFromDatabase(persons, db.ConnectionString, false);
-            db.Cleanup();
+        public void LoadFromDatabaseTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var persons = new ObservableCollection<Person>();
+                Person.LoadFromDatabase(persons, db.ConnectionString, false);
+                db.Cleanup();
+            }
         }
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void SaveToDatabaseTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-
-            var persons = new ObservableCollection<Person>();
-            Person.LoadFromDatabase(persons, db.ConnectionString, false);
-            db.ClearTable(Person.TableName);
-            persons.Clear();
-            Person.LoadFromDatabase(persons, db.ConnectionString, false);
-            Assert.AreEqual(0, persons.Count);
-            var newp = new Person("name", 18, null, 1, 1, PermittedGender.Male, db.ConnectionString, string.Empty, Guid.NewGuid().ToString());
-            newp.SaveToDB();
-            Person.LoadFromDatabase(persons, db.ConnectionString, false);
-            Assert.AreEqual(1, persons.Count);
-            db.Cleanup();
+        public void SaveToDatabaseTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var persons = new ObservableCollection<Person>();
+                Person.LoadFromDatabase(persons, db.ConnectionString, false);
+                db.ClearTable(Person.TableName);
+                persons.Clear();
+                Person.LoadFromDatabase(persons, db.ConnectionString, false);
+                Assert.AreEqual(0, persons.Count);
+                var newp = new Person("name", 18, null, 1, 1, PermittedGender.Male, db.ConnectionString, string.Empty, Guid.NewGuid().ToStrGuid());
+                newp.SaveToDB();
+                Person.LoadFromDatabase(persons, db.ConnectionString, false);
+                Assert.AreEqual(1, persons.Count);
+                db.Cleanup();
+            }
         }
     }
 }

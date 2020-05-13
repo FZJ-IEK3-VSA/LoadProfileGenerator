@@ -31,6 +31,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Automation;
 using Common;
 using Database.Database;
 using Database.Tables.BasicElements;
@@ -67,7 +68,7 @@ namespace Database.Tables.Houses {
                                     [NotNull] string connectionString,
                                     double minimumInputPower,
                                     double maximumInputPower,
-                                    [NotNull] string guid,
+                                    [NotNull] StrGuid guid,
                                     [CanBeNull] int? pID = null) : base(pName, TableName, connectionString, guid)
         {
             _minValue = minValue;
@@ -140,7 +141,7 @@ namespace Database.Tables.Houses {
 
         public void AddDataPoint(double refvalue, double factor, bool sort = true)
         {
-            var dp = new TransformationFactorDatapoint(null, refvalue, factor, IntID, ConnectionString, System.Guid.NewGuid().ToString());
+            var dp = new TransformationFactorDatapoint(null, refvalue, factor, IntID, ConnectionString, System.Guid.NewGuid().ToStrGuid());
             _factorDatapoints.Add(dp);
             dp.SaveToDB();
             if (sort) {
@@ -168,7 +169,7 @@ namespace Database.Tables.Houses {
                 ConnectionString,
                 lt.Name,
                 factorType,
-                System.Guid.NewGuid().ToString());
+                System.Guid.NewGuid().ToStrGuid());
             _loadTypesOut.Add(tdlt);
             tdlt.SaveToDB();
         }
@@ -181,7 +182,7 @@ namespace Database.Tables.Houses {
                 IntID,
                 ConnectionString,
                 variable.Name,
-                System.Guid.NewGuid().ToString(),
+                System.Guid.NewGuid().ToStrGuid(),
                 variable);
             _conditions.Add(tdlt);
             tdlt.SaveToDB();
@@ -214,7 +215,7 @@ namespace Database.Tables.Houses {
                 connectionString,
                 0,
                 100000,
-                System.Guid.NewGuid().ToString());
+                System.Guid.NewGuid().ToStrGuid());
             return house;
         }
 

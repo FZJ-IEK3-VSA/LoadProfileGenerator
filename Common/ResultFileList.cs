@@ -43,6 +43,9 @@ namespace Common {
 //                oldPath = OriginalPath;
             //          }
             foreach (var rfe in ResultFiles) {
+                if (rfe.Value.FullFileName == null) {
+                    throw new LPGException("was null");
+                }
                 rfe.Value.FullFileName = rfe.Value.FullFileName.Replace(oldPath, newPath);
                 if (rfe.Value.ResultFileID == ResultFileID.LogfileForErrors) {
                     continue;

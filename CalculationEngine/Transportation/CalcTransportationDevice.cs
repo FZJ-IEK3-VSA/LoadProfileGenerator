@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using CalculationEngine.HouseholdElements;
 using CalculationEngine.OnlineDeviceLogging;
@@ -37,7 +38,7 @@ namespace CalculationEngine.Transportation {
         [CanBeNull] private CalcChargingStation _lastChargingStation;
 
         [CanBeNull] private string _lastUsingPerson;
-        private readonly Dictionary<string, Dictionary<CalcLoadType, OefcKey>> _keysByLocGuidAndLoadtype = new Dictionary<string, Dictionary<CalcLoadType, OefcKey>>();
+        private readonly Dictionary<StrGuid, Dictionary<CalcLoadType, OefcKey>> _keysByLocGuidAndLoadtype = new Dictionary<StrGuid, Dictionary<CalcLoadType, OefcKey>>();
 
         [NotNull] private readonly CalcDeviceDto _calcDeviceDto;
         private readonly CalcRepo _calcRepo;
@@ -75,10 +76,10 @@ namespace CalculationEngine.Transportation {
             //throw new DataIntegrityException("The transportation device " + pName +
             //" seems to have no load types. That is not very useful. Please fix.");
             //}
-            const string vehiclePoolGuid = "8C426E95-B269-402E-9806-C3785D6C8433";
+            var vehiclePoolGuid = "8C426E95-B269-402E-9806-C3785D6C8433".ToStrGuid();
             _calcDeviceDto.LocationGuid = vehiclePoolGuid;
             _calcDeviceDto.LocationName = "Vehicle Pool";
-            if (string.IsNullOrEmpty(calcDeviceDto.LocationGuid)) {
+            if (calcDeviceDto.LocationGuid==null) {
                 throw new LPGException("Trying to initalize with empty location guid");
             }
             foreach (CalcDeviceLoad deviceLoad in loads) {
@@ -161,7 +162,7 @@ namespace CalculationEngine.Transportation {
                 }
 
                 var cp = new CalcProfile(srcSite.Name + " - " + dstSite.Name + " - " + Name,
-                    System.Guid.NewGuid().ToString(),
+                    System.Guid.NewGuid().ToStrGuid(),
                     transportationDeviceProfile,
                     ProfileType.Relative,
                     "Synthetic for " + Name);
@@ -276,7 +277,7 @@ namespace CalculationEngine.Transportation {
                     };
 
                     var cp = new CalcProfile("Profile for " + _currentSite.Name + " - Charging - " + Name,
-                        System.Guid.NewGuid().ToString(),
+                        System.Guid.NewGuid().ToStrGuid(),
                         chargingProfile, ProfileType.Absolute,
                         "Synthetic Charging for " + Name + " @ " + _currentSite.Name);
                     var dstLoadType = chargingStation.GridChargingLoadType;
@@ -285,7 +286,8 @@ namespace CalculationEngine.Transportation {
                     //if (dstLoadType == null) {
                     //    throw new Exception("???");
                     //}
-                    var sv = StepValues.MakeStepValues(cp, 0, 1, _calcRepo.NormalRandom);
+                    CalcDeviceLoad cdl = new CalcDeviceLoad("",1,dstLoadType,0,0);
+                    var sv = StepValues.MakeStepValues(cp,  _calcRepo.NormalRandom,cdl,1);
                     _calcRepo.Odap.AddNewStateMachine( currentTimeStep,
                          dstLoadType.ConvertToDto(),
                         "Charging for " + Name + " @ " + _currentSite,
@@ -381,7 +383,7 @@ namespace CalculationEngine.Transportation {
 
         private void SetTimeprofile([NotNull] CalcProfile calcProfile, [NotNull] TimeStep startidx,
                                     [NotNull] CalcLoadType loadType,
-                                    [NotNull] string affordanceName, [NotNull] string activatingPersonName, [NotNull] string locationGuid)
+                                    [NotNull] string affordanceName, [NotNull] string activatingPersonName, [NotNull] StrGuid locationGuid)
         {
             CalcDeviceLoad cdl = null;
             foreach (var calcDeviceLoad in _loads) {
@@ -407,7 +409,7 @@ namespace CalculationEngine.Transportation {
             //   var totalDuration = calcProfile.GetNewLengthAfterCompressExpand(timefactor);
             //OefcKey key = new OefcKey(_calcDeviceDto.HouseholdKey, OefcDeviceType.Transportation, Guid, "-1", cdl.LoadType.Guid, "Transportation");
             var key = _keysByLocGuidAndLoadtype[locationGuid][cdl.LoadType];
-            var sv = StepValues.MakeStepValues(calcProfile, cdl.PowerStandardDeviation, 1, _calcRepo.NormalRandom);
+            var sv = StepValues.MakeStepValues(calcProfile,  _calcRepo.NormalRandom, cdl,1);
             _calcRepo.Odap.AddNewStateMachine(startidx,cdl.LoadType.ConvertToDto(), affordanceName, activatingPersonName,
                 calcProfile.Name, calcProfile.DataSource, key, _calcDeviceDto,sv);
             //SetBusy(startidx, totalDuration, loadType, activateDespiteBeingBusy);

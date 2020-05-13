@@ -50,38 +50,44 @@ namespace Calculation.Tests.Logfile
         [Category(UnitTestCategories.BasicTest)]
         public void BasicTest()
         {
-            WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults().EnableShowSettlingPeriod().SetSettlingDays(5);
-            FileFactoryAndTracker fft = new FileFactoryAndTracker(wd.WorkingDirectory,"blub",wd.InputDataLogger);
-            wd.InputDataLogger.AddSaver(new ResultFileEntryLogger(wd.SqlResultLoggingService));
-            wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
-            fft.RegisterHousehold(new HouseholdKey("HH1"),"test",HouseholdKeyType.Household,"desc", null, null);
-            ThoughtsLogFile tlf = new ThoughtsLogFile(fft,calcParameters);
-            Random rnd = new Random();
-            //NormalRandom nr = new NormalRandom(0, 0.1, rnd);
-            // this array is pure nonsense and only to make it stop crashing the unit test
-            //_calcParameters.InternalDateTimeForSteps = new List<DateTime>(4);
-            //for (int i = 0; i < 4; i++)
-            //{
-              //  _calcParameters.InternalDateTimeForSteps.Add(DateTime.Now);
-            //}
-            CalcLocation cloc = new CalcLocation("cloc",Guid.NewGuid().ToString());
-            BitArray isSick  =new BitArray(calcParameters.InternalTimesteps);
-            BitArray isOnVacation = new BitArray(calcParameters.InternalTimesteps);
-            CalcPersonDto dto = CalcPersonDto.MakeExamplePerson();
-            Mock<ILogFile> lf = new Mock<ILogFile>();
-            NormalRandom nr = new NormalRandom(0, 0.1, rnd);
-            CalcRepo calcRepo = new CalcRepo(rnd: rnd, lf:lf.Object, calcParameters:calcParameters , normalRandom:nr);
-            CalcPerson cp = new CalcPerson(dto,
-                cloc, isSick,isOnVacation,calcRepo);
-            //"personName", 0, 1, rnd, 1, PermittedGender.Male, null, "HH1" ,cloc,"traittag", "hhname0",calcParameters,isSick,Guid.NewGuid().ToString());
-            TimeStep ts = new TimeStep(0, 0, false);
-            ThoughtEntry te = new ThoughtEntry(cp, ts, "blua");
-            calcParameters.SetSettlingDays(0);
-            tlf.WriteEntry(te, new HouseholdKey("HH1"));
-            tlf.Dispose();
-            Assert.AreEqual(true, true);
-            wd.CleanUp();
+            using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
+            {
+                CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults().EnableShowSettlingPeriod().SetSettlingDays(5);
+                using (FileFactoryAndTracker fft = new FileFactoryAndTracker(wd.WorkingDirectory, "blub", wd.InputDataLogger))
+                {
+                    wd.InputDataLogger.AddSaver(new ResultFileEntryLogger(wd.SqlResultLoggingService));
+                    wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
+                    fft.RegisterHousehold(new HouseholdKey("HH1"), "test", HouseholdKeyType.Household, "desc", null, null);
+                    ThoughtsLogFile tlf = new ThoughtsLogFile(fft, calcParameters);
+                    Random rnd = new Random();
+                    //NormalRandom nr = new NormalRandom(0, 0.1, rnd);
+                    // this array is pure nonsense and only to make it stop crashing the unit test
+                    //_calcParameters.InternalDateTimeForSteps = new List<DateTime>(4);
+                    //for (int i = 0; i < 4; i++)
+                    //{
+                    //  _calcParameters.InternalDateTimeForSteps.Add(DateTime.Now);
+                    //}
+                    CalcLocation cloc = new CalcLocation("cloc", Guid.NewGuid().ToStrGuid());
+                    BitArray isSick = new BitArray(calcParameters.InternalTimesteps);
+                    BitArray isOnVacation = new BitArray(calcParameters.InternalTimesteps);
+                    CalcPersonDto dto = CalcPersonDto.MakeExamplePerson();
+                    Mock<ILogFile> lf = new Mock<ILogFile>();
+                    NormalRandom nr = new NormalRandom(0, 0.1, rnd);
+                    using (CalcRepo calcRepo = new CalcRepo(rnd: rnd, lf: lf.Object, calcParameters: calcParameters, normalRandom: nr))
+                    {
+                        CalcPerson cp = new CalcPerson(dto,
+cloc, isSick, isOnVacation, calcRepo);
+                        //"personName", 0, 1, rnd, 1, PermittedGender.Male, null, "HH1" ,cloc,"traittag", "hhname0",calcParameters,isSick,Guid.NewGuid().ToStrGuid());
+                        TimeStep ts = new TimeStep(0, 0, false);
+                        ThoughtEntry te = new ThoughtEntry(cp, ts, "blua");
+                        calcParameters.SetSettlingDays(0);
+                        tlf.WriteEntry(te, new HouseholdKey("HH1"));
+                    }
+                    tlf.Dispose();
+                }
+                Assert.AreEqual(true, true);
+                wd.CleanUp();
+            }
         }
     }
 }

@@ -29,6 +29,7 @@
 #region
 
 using System.Collections.Generic;
+using Automation;
 using Automation.ResultFiles;
 using Database.Database;
 using JetBrains.Annotations;
@@ -40,7 +41,7 @@ namespace Database.Tables {
         [CanBeNull] private string _settingValue;
 
         public SingleSetting([NotNull] string settingName, [NotNull] string settingValue, [NotNull] string connectionString,
-                             [NotNull] string guid,
+                             [NotNull] StrGuid guid,
                              [CanBeNull]int? pID = null)
             : base(settingName, GeneralConfig.TableName, connectionString, guid) {
             _settingValue = settingValue;

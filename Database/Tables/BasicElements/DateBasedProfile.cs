@@ -32,6 +32,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
+using Automation;
 using Common;
 using Database.Database;
 using Database.Tables.Houses;
@@ -44,7 +45,7 @@ namespace Database.Tables.BasicElements {
         [ItemNotNull] [NotNull] private readonly ObservableCollection<DateProfileDataPoint> _datapoints;
         [NotNull] private string _description;
 
-        public DateBasedProfile([NotNull] string name, [NotNull] string description, [NotNull] string connectionString, [NotNull] string guid, [CanBeNull] int? pID = null) : base(name, TableName,
+        public DateBasedProfile([NotNull] string name, [NotNull] string description, [NotNull] string connectionString, [NotNull] StrGuid guid, [CanBeNull] int? pID = null) : base(name, TableName,
             connectionString, guid)
         {
             _datapoints = new ObservableCollection<DateProfileDataPoint>();
@@ -70,7 +71,7 @@ namespace Database.Tables.BasicElements {
         [NotNull]
         public DateProfileDataPoint AddNewDatePoint(DateTime dt, double value, bool saveAndSort = true)
         {
-            var tp = new DateProfileDataPoint(dt, value, null, IntID, ConnectionString, System.Guid.NewGuid().ToString());
+            var tp = new DateProfileDataPoint(dt, value, null, IntID, ConnectionString, System.Guid.NewGuid().ToStrGuid());
             _datapoints.Add(tp);
             if (saveAndSort) {
                 SaveToDB();
@@ -109,7 +110,7 @@ namespace Database.Tables.BasicElements {
         [NotNull]
         [UsedImplicitly]
         public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) =>
-            new DateBasedProfile(FindNewName(isNameTaken, "New profile "), "(no description)", connectionString, System.Guid.NewGuid().ToString());
+            new DateBasedProfile(FindNewName(isNameTaken, "New profile "), "(no description)", connectionString, System.Guid.NewGuid().ToStrGuid());
 
         public void DeleteAllTimepoints()
         {
@@ -196,7 +197,7 @@ namespace Database.Tables.BasicElements {
                             i++;
                             reportProgress(i);
                         }
-                        else if (_GuidCreationCount > 0) {
+                        else if (GuidCreationCount > 0) {
                             tp.SaveToDB();
                         }
                     }
@@ -232,7 +233,7 @@ namespace Database.Tables.BasicElements {
                 }
             }
 
-            if (_GuidCreationCount > 0) {
+            if (GuidCreationCount > 0) {
                 foreach (var dp in _datapoints) {
                     if (GuidsToSave.Contains(dp.Guid)) {
                         dp.SaveToDB();

@@ -10,6 +10,7 @@
         SpaceHeating,
         AirConditioning,
         Transportation,
-        Charging
+        Charging,
+        HumanInnerGains
     }
 }

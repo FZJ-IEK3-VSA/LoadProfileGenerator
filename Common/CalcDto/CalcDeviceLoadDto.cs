@@ -1,12 +1,14 @@
 ﻿using System;
+using System.Globalization;
+using Automation;
 using Automation.ResultFiles;
 using JetBrains.Annotations;
 
 namespace Common.CalcDto {
     public class CalcDeviceLoadDto
     {
-        public CalcDeviceLoadDto([NotNull]string name, int id, [NotNull]string loadTypeName, [NotNull] string loadTypeGuid,
-                                 double averageYearlyConsumption, double powerStandardDeviation, [NotNull] string guid,
+        public CalcDeviceLoadDto([NotNull]string name, int id, [NotNull]string loadTypeName, [NotNull] StrGuid loadTypeGuid,
+                                 double averageYearlyConsumption, double powerStandardDeviation, [NotNull] StrGuid guid,
                                  double maxPower)
         {
             Name = name;
@@ -17,7 +19,7 @@ namespace Common.CalcDto {
             PowerStandardDeviation = powerStandardDeviation;
             Guid = guid;
             MaxPower = maxPower;
-            if (Math.Abs(MaxPower) < 0.000000001 && loadTypeName.ToLower()!= "none") {
+            if (Math.Abs(MaxPower) < 0.000000001 && loadTypeName.ToLower(CultureInfo.InvariantCulture) != "none") {
                 throw new LPGException("Trying to initialize a Device load with a max power of 0. Device Name was " + name + " and load type " + loadTypeName );
             }
         }
@@ -25,13 +27,13 @@ namespace Common.CalcDto {
 
         public double PowerStandardDeviation { get; }
         [NotNull]
-        public string Guid { get; }
+        public StrGuid Guid { get; }
         public double MaxPower { get; }
         [NotNull]
         public string Name { get; }
         public int ID { get; }
         [NotNull]
-        public string LoadTypeGuid { get; }
+        public StrGuid LoadTypeGuid { get; }
         [NotNull]
         public string LoadTypeName { get; }
     }

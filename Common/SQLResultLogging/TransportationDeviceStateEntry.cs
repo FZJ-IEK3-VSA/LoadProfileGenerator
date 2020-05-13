@@ -1,4 +1,5 @@
-﻿using Automation.ResultFiles;
+﻿using Automation;
+using Automation.ResultFiles;
 using Common.SQLResultLogging.Loggers;
 using JetBrains.Annotations;
 
@@ -17,7 +18,7 @@ namespace Common.SQLResultLogging
         [NotNull]
         public HouseholdKey HouseholdKey { get; set; }
         public TransportationDeviceStateEntry([NotNull]string transportationDeviceName,
-                                              [NotNull] string transportationDeviceGuid, [NotNull] TimeStep timeStep,
+                                              [NotNull] StrGuid transportationDeviceGuid, [NotNull] TimeStep timeStep,
                                               TransportationDeviceState transportationDeviceStateEnum,
                                               double currentSOC, [NotNull] HouseholdKey householdKey,
                                               double currentRange, [CanBeNull] string currentSite,
@@ -48,7 +49,7 @@ namespace Common.SQLResultLogging
         [NotNull]
         public string TransportationDeviceName { get; set; }
         [NotNull]
-        public string TransportationDeviceGuid { get; set; }
+        public StrGuid TransportationDeviceGuid { get; set; }
         [NotNull]
         public TimeStep TimeStep { get; set; }
         [NotNull]

@@ -65,7 +65,7 @@ namespace Database.Tables.ModularHouseholds {
             }
         }
         public class JsonModularHousehold {
-            public JsonModularHousehold([NotNull] string name, [CanBeNull] string description, [NotNull] string guid, CreationType creationType, [CanBeNull] JsonReference deviceSelection, EnergyIntensityType energyIntensityType, JsonReference vacation)
+            public JsonModularHousehold([NotNull] string name, [CanBeNull] string description, [NotNull] StrGuid guid, CreationType creationType, [CanBeNull] JsonReference deviceSelection, EnergyIntensityType energyIntensityType, JsonReference vacation)
             {
                 Name = name;
                 Description = description;
@@ -92,7 +92,7 @@ namespace Database.Tables.ModularHouseholds {
             public string Description { get; set; }
 
             [NotNull]
-            public string Guid { get; set; }
+            public StrGuid Guid { get; set; }
 
             [NotNull]
             [ItemNotNull]
@@ -256,7 +256,7 @@ namespace Database.Tables.ModularHouseholds {
 
         public ModularHousehold([NotNull] string pName, [CanBeNull] int? id, [NotNull] string description, [NotNull] string connectionString,
             [CanBeNull] DeviceSelection deviceSelection, [NotNull] string source, [CanBeNull] int? generatorID, [CanBeNull] Vacation vacation,
-            EnergyIntensityType energyIntensityType, CreationType creationType, [NotNull] string guid) : base(pName, TableName,
+            EnergyIntensityType energyIntensityType, CreationType creationType, [NotNull] StrGuid guid) : base(pName, TableName,
             connectionString, guid)
         {
             ID = id;
@@ -408,7 +408,7 @@ namespace Database.Tables.ModularHouseholds {
                 return;
             }
             var chhtag =
-                new ModularHouseholdTag(null, householdTag, IntID, householdTag.Name, ConnectionString, System.Guid.NewGuid().ToString());
+                new ModularHouseholdTag(null, householdTag, IntID, householdTag.Name, ConnectionString, System.Guid.NewGuid().ToStrGuid());
             chhtag.SaveToDB();
             _modularHouseholdTags.Add(chhtag);
         }
@@ -419,7 +419,7 @@ namespace Database.Tables.ModularHouseholds {
             if (_persons.Any(x => x.Person == person)) {
                 return null;
             }
-            var chp = new ModularHouseholdPerson(null, IntID, person.Name, ConnectionString, person, tag, System.Guid.NewGuid().ToString());
+            var chp = new ModularHouseholdPerson(null, IntID, person.Name, ConnectionString, person, tag, System.Guid.NewGuid().ToStrGuid());
             PurePersons.Add(person);
             chp.SaveToDB();
             _persons.Add(chp);
@@ -440,7 +440,7 @@ namespace Database.Tables.ModularHouseholds {
             }
 
             var chht = new ModularHouseholdTrait(null, IntID, hht.Name, ConnectionString, hht, person,
-                modularHouseholdTraitAssignType, System.Guid.NewGuid().ToString());
+                modularHouseholdTraitAssignType, System.Guid.NewGuid().ToStrGuid());
             _traits.Add(chht);
             _traits.Sort();
             SaveToDB();
@@ -584,7 +584,7 @@ namespace Database.Tables.ModularHouseholds {
         public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new
             ModularHousehold(FindNewName(isNameTaken, "New Modular Household "), null, "(no description yet)",
                 connectionString, null, "Manually created", null, null, EnergyIntensityType.Random,
-                CreationType.ManuallyCreated, System.Guid.NewGuid().ToString());
+                CreationType.ManuallyCreated, System.Guid.NewGuid().ToStrGuid());
 
         public override void DeleteFromDB()
         {

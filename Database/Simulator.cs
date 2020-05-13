@@ -33,6 +33,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Common.Enums;
@@ -61,7 +62,7 @@ namespace Database {
     {
 
         [CanBeNull]
-        public IAssignableDevice GetAssignableDeviceByGuid([CanBeNull] string guid)
+        public IAssignableDevice GetAssignableDeviceByGuid([CanBeNull] StrGuid guid)
         {
             if (guid == null) {
                 return null;
@@ -620,7 +621,7 @@ namespace Database {
         private void LoadFromDB(bool ignoreMissingTables) {
             DBBase.IsLoading = true;
             DBBase.TypesThatMadeGuids.Clear();
-            DBBase._GuidCreationCount = 0;
+            DBBase.GuidCreationCount = 0;
             var step = 1;
             Logger.Info("Starting the database from " + ConnectionString);
             var start = DateTime.Now;
@@ -628,11 +629,11 @@ namespace Database {
             var list = GetLoadingActions(ignoreMissingTables);
             foreach (var loadingAction in list) {
                 DataReader.TotalReads = 0;
-                var prevguidCreationCount = DBBase._GuidCreationCount;
+                var prevguidCreationCount = DBBase.GuidCreationCount;
                 loadingAction.Action.Invoke();
-                var afterGuidCreationcount = DBBase._GuidCreationCount;
+                var afterGuidCreationcount = DBBase.GuidCreationCount;
                 int newGuids = afterGuidCreationcount - prevguidCreationCount;
-                string guidscreatedstring = "";
+                var guidscreatedstring = "";
                 if(newGuids > 0) {
                     guidscreatedstring = ", " + newGuids + " Guids created";
                 }
@@ -668,11 +669,11 @@ namespace Database {
                     dynamic d = category;
                     var saveToDB = !ignoreMissingTables;
                     d.CheckForDuplicateNames(saveToDB);
-                    if (!ignoreMissingTables && DBBase._GuidCreationCount > 0) {
+                    if (!ignoreMissingTables && DBBase.GuidCreationCount > 0) {
                         d.SaveEverything();
                     }
                 }else if (thisType.Name.Contains("CategoryOutcome")) {
-                    if (!ignoreMissingTables && DBBase._GuidCreationCount > 0)
+                    if (!ignoreMissingTables && DBBase.GuidCreationCount > 0)
                     {
                         dynamic d = category;
                         d.SaveEverything();

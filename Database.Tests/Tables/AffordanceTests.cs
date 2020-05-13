@@ -43,45 +43,50 @@ namespace Database.Tests.Tables {
     {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void LoadFromDatabaseTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
+        public void LoadFromDatabaseTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var profiles = db.LoadTimeBasedProfiles();
+                var realDevices = db.LoadRealDevices(out var deviceCategories, out var loadTypes,
+                    profiles);
+                var timeBasedProfiles = db.LoadTimeBasedProfiles();
+                var desires = db.LoadDesires();
 
-            var profiles = db.LoadTimeBasedProfiles();
-            var realDevices = db.LoadRealDevices(out var deviceCategories, out var loadTypes,
-                profiles);
-            var timeBasedProfiles = db.LoadTimeBasedProfiles();
-            var desires = db.LoadDesires();
+                var affordances = new ObservableCollection<Affordance>();
+                var subaffordances = new ObservableCollection<SubAffordance>();
+                var dateBasedProfiles = db.LoadDateBasedProfiles();
 
-            var affordances = new ObservableCollection<Affordance>();
-            var subaffordances = new ObservableCollection<SubAffordance>();
-            var dateBasedProfiles = db.LoadDateBasedProfiles();
+                var timeLimits = db.LoadTimeLimits(dateBasedProfiles);
+                var deviceActionGroups = db.LoadDeviceActionGroups();
 
-            var timeLimits = db.LoadTimeLimits(dateBasedProfiles);
-            var deviceActionGroups = db.LoadDeviceActionGroups();
+                var deviceActions = db.LoadDeviceActions(timeBasedProfiles, realDevices,
+                    loadTypes, deviceActionGroups);
+                var locations = db.LoadLocations(realDevices, deviceCategories, loadTypes);
+                var variables = db.LoadVariables();
+                SubAffordance.LoadFromDatabase(subaffordances, db.ConnectionString, desires, false, locations, variables);
+                Affordance.LoadFromDatabase(affordances, db.ConnectionString, timeBasedProfiles, deviceCategories,
+                    realDevices, desires, subaffordances, loadTypes, timeLimits, deviceActions, deviceActionGroups,
+                    locations, false, variables);
 
-            var deviceActions = db.LoadDeviceActions(timeBasedProfiles, realDevices,
-                loadTypes, deviceActionGroups);
-            var locations = db.LoadLocations(realDevices, deviceCategories, loadTypes);
-            var variables = db.LoadVariables();
-            SubAffordance.LoadFromDatabase(subaffordances, db.ConnectionString, desires, false, locations, variables);
-            Affordance.LoadFromDatabase(affordances, db.ConnectionString, timeBasedProfiles, deviceCategories,
-                realDevices, desires, subaffordances, loadTypes, timeLimits, deviceActions, deviceActionGroups,
-                locations, false, variables);
-
-            db.Cleanup();
+                db.Cleanup();
+            }
         }
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void CalcAverageEnergyTest()
         {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            Simulator sim  = new Simulator(db.ConnectionString);
-            foreach (var aff in sim.Affordances.It) {
-                aff.CalculateAverageEnergyUse(sim.DeviceActions.It);
-            }
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                Simulator sim = new Simulator(db.ConnectionString);
+                foreach (var aff in sim.Affordances.It)
+                {
+                    aff.CalculateAverageEnergyUse(sim.DeviceActions.It);
+                }
 
-            db.Cleanup();
+                db.Cleanup();
+            }
         }
     }
 }

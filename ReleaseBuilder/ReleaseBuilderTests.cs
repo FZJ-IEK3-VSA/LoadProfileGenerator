@@ -390,35 +390,42 @@ namespace ReleaseBuilder
 
         private void ReleaseCheck([NotNull] string filename)
         {
-            var db = new DatabaseSetup("CheckForNewLeftovers", filename);
-            var sim = new Simulator(db.ConnectionString);
-            CheckForNewItems(sim);
-            CheckForDevicesWithoutCategory(sim);
-            FindUnusedAffordance(sim);
-            FindUnusedDevices(sim);
-            //TODO: Add the trait check back
-            //FindUnusedTraits(sim);
+            using (var db = new DatabaseSetup("CheckForNewLeftovers", filename))
+            {
+                var sim = new Simulator(db.ConnectionString);
+                CheckForNewItems(sim);
+                CheckForDevicesWithoutCategory(sim);
+                FindUnusedAffordance(sim);
+                FindUnusedDevices(sim);
+                //TODO: Add the trait check back
+                //FindUnusedTraits(sim);
 
-            SimIntegrityChecker.Run(sim);
-            db.Cleanup();
+                SimIntegrityChecker.Run(sim);
+                db.Cleanup();
+            }
             CheckForCalculationOutcomeCompleteness();
         }
 
         [Test]
         [Category("BasicTest")]
+        [SuppressMessage("ReSharper", "HeuristicUnreachableCode")]
         public void CheckForCalculationOutcomeCompleteness()
         {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            Logger.Info("Using file " + db.FileName);
-            var sim = new Simulator(db.ConnectionString);
-            var count = CalculationOutcomesPresenter.CountMissingEntries(sim);
-#pragma warning disable S2583 // Conditionally executed blocks should be reachable
-            if (count != 0 && ThrowOnMissingOutcomes)
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
+                Logger.Info("Using file " + db.FileName);
+                var sim = new Simulator(db.ConnectionString);
+                var count = CalculationOutcomesPresenter.CountMissingEntries(sim);
+#pragma warning disable S2583 // Conditionally executed blocks should be reachable
+                // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+                if (count != 0 && ThrowOnMissingOutcomes)
+                    // ReSharper disable once HeuristicUnreachableCode
+                {
 #pragma warning restore S2583 // Conditionally executed blocks should be reachable
-                throw new LPGException("Missing " + count + " calculation outcomes!");
+                    throw new LPGException("Missing " + count + " calculation outcomes!");
+                }
+                db.Cleanup();
             }
-            db.Cleanup();
         }
 
         [Test]
@@ -427,7 +434,6 @@ namespace ReleaseBuilder
         [SuppressMessage("ReSharper", "HeuristicUnreachableCode")]
         public void MakeRelease()
         {
-            SkipEndCleaning = true;
             const string filename = "profilegenerator-latest.db3";
             const bool cleanDatabase = true;
             const bool makeZipAndSetup = true;
@@ -441,10 +447,12 @@ namespace ReleaseBuilder
 
             if (Directory.Exists(dst))
             {
-                try {
+                try
+                {
                     Directory.Delete(dst, true);
                 }
-                catch (Exception ex) {
+                catch (Exception ex)
+                {
                     Logger.Info(ex.Message);
                 }
             }
@@ -452,81 +460,84 @@ namespace ReleaseBuilder
             Thread.Sleep(100);
             Directory.CreateDirectory(dst);
             Thread.Sleep(100);
-           // CopyFiles(src, dst);
+            // CopyFiles(src, dst);
             ReleaseCheck(filename);
             CopyFiles(src, dst);
             //CopyFilesSimulationEngine(srcsim, dst);
-            var db = new DatabaseSetup("Release", filename);
-            Logger.Info("Using database " + filename);
+            using (var db = new DatabaseSetup("Release", filename))
+            {
+                Logger.Info("Using database " + filename);
 #pragma warning disable S2583 // Conditionally executed blocks should be reachable
-            if (cleanDatabase)
-            {
+                if (cleanDatabase)
+                {
 #pragma warning restore S2583 // Conditionally executed blocks should be reachable
-                //DeleteOldCalcOutcomes(db);
-                DissStuffDatabaseCleaner.Run(db.FileName);
-            }
-            if (cleanCalcOutcomes)
-            {
-                CalculationOutcome.ClearTable(db.ConnectionString);
-            }
-            var sim = new Simulator(db.ConnectionString);
-            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.ReasonableWithChartsAndPDF);
-            sim.MyGeneralConfig.PerformCleanUpChecks = "True";
-            sim.MyGeneralConfig.ShowSettlingPeriod = "False";
-            sim.MyGeneralConfig.DestinationPath = "C:\\Work\\";
-            sim.MyGeneralConfig.ImagePath = "C:\\Work\\";
-            sim.MyGeneralConfig.RandomSeed = -1;
-            sim.MyGeneralConfig.StartDateString = "01.01.2016";
-            sim.MyGeneralConfig.EndDateString = "31.12.2016";
-            SimIntegrityChecker.Run(sim);
-            sim.MyGeneralConfig.PerformCleanUpChecks = "False";
-            sim.MyGeneralConfig.CSVCharacter = ";";
-            var forgottenUpdates = false;
-            foreach (var trait in sim.HouseholdTraits.It)
-            {
-                switch (trait.Name)
-                {
-                    case "Cooking, average":
-                    case "Cooking, maximum": continue;
-
-                    default:
-
-                        var count = trait.EstimatedTimeCount;
-                        var tt = trait.EstimatedTimeType;
-                        trait.CalculateEstimatedTimes();
-                        if (Math.Abs(trait.EstimatedTimeCount - count) > 0.0000001 || trait.EstimatedTimeType != tt)
-                        {
-                            forgottenUpdates = true;
-                            Logger.Error("seems you forgot to update the estimate for " + trait.PrettyName +
-                                         Environment.NewLine + "Prev count: " + count + " curr: " +
-                                         trait.EstimatedTimeCount + Environment.NewLine + "prev tt: " + tt +
-                                         " curr tt: " + trait.EstimatedTimeType);
-                        }
-                        break;
+                    //DeleteOldCalcOutcomes(db);
+                    DissStuffDatabaseCleaner.Run(db.FileName);
                 }
-            }
-            if (forgottenUpdates)
-            {
-                throw new LPGException("Forgotten updates!\n" + Logger.Get().ReturnAllLoggedErrors());
-            }
+                if (cleanCalcOutcomes)
+                {
+                    CalculationOutcome.ClearTable(db.ConnectionString);
+                }
+                var sim = new Simulator(db.ConnectionString);
+                sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.ReasonableWithChartsAndPDF);
+                sim.MyGeneralConfig.PerformCleanUpChecks = "True";
+                sim.MyGeneralConfig.ShowSettlingPeriod = "False";
+                sim.MyGeneralConfig.DestinationPath = "C:\\Work\\";
+                sim.MyGeneralConfig.ImagePath = "C:\\Work\\";
+                sim.MyGeneralConfig.RandomSeed = -1;
+                sim.MyGeneralConfig.StartDateString = "01.01.2016";
+                sim.MyGeneralConfig.EndDateString = "31.12.2016";
+                SimIntegrityChecker.Run(sim);
+                sim.MyGeneralConfig.PerformCleanUpChecks = "False";
+                sim.MyGeneralConfig.CSVCharacter = ";";
+                var forgottenUpdates = false;
+                foreach (var trait in sim.HouseholdTraits.It)
+                {
+                    switch (trait.Name)
+                    {
+                        case "Cooking, average":
+                        case "Cooking, maximum": continue;
 
-            // get rid of all templated items
+                        default:
+
+                            var count = trait.EstimatedTimeCount;
+                            var tt = trait.EstimatedTimeType;
+                            trait.CalculateEstimatedTimes();
+                            if (Math.Abs(trait.EstimatedTimeCount - count) > 0.0000001 || trait.EstimatedTimeType != tt)
+                            {
+                                forgottenUpdates = true;
+                                Logger.Error("seems you forgot to update the estimate for " + trait.PrettyName +
+                                             Environment.NewLine + "Prev count: " + count + " curr: " +
+                                             trait.EstimatedTimeCount + Environment.NewLine + "prev tt: " + tt +
+                                             " curr tt: " + trait.EstimatedTimeType);
+                            }
+                            break;
+                    }
+                }
+                if (forgottenUpdates)
+                {
+                    throw new LPGException("Forgotten updates!\n" + Logger.Get().ReturnAllLoggedErrors());
+                }
+
+                // get rid of all templated items
 #pragma warning disable S2583 // Conditions should not unconditionally evaluate to "true" or to "false"
-            if (cleanDatabase)
-            {
-#pragma warning restore S2583 // Conditions should not unconditionally evaluate to "true" or to "false" {
-                var templatedItems = sim.FindAndDeleteAllTemplated();
-                if (templatedItems > 0)
+                if (cleanDatabase)
                 {
-                    throw new LPGException("Left templated items");
+#pragma warning restore S2583 // Conditions should not unconditionally evaluate to "true" or to "false" {
+                    var templatedItems = sim.FindAndDeleteAllTemplated();
+                    if (templatedItems > 0)
+                    {
+                        throw new LPGException("Left templated items");
+                    }
                 }
-            }
 
-            File.Copy(db.FileName, Path.Combine(dst, "profilegenerator.db3"));
+                File.Copy(db.FileName, Path.Combine(dst, "profilegenerator.db3"));
+            }
             Thread.Sleep(1000);
 
             //CopyFilesSimulationEngine(srcsim, dst);
-            if (makeZipAndSetup) {
+            if (makeZipAndSetup)
+            {
                 MakeZipFile(releasename, dst);
                 MakeSetup(dst, releasename);
             }

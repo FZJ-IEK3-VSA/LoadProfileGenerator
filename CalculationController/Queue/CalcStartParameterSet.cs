@@ -49,6 +49,7 @@ namespace CalculationController.Queue {
 
 
     public class CalcStartParameterSet {
+        public DateTime CalculationStartTime { get; set; }
         //public const string TableName = "CalcStartParameterSet";
 
         /// <summary>
@@ -59,7 +60,7 @@ namespace CalculationController.Queue {
             [NotNull] TemperatureProfile temperatureProfile,
             [NotNull] ICalcObject calcTarget,
             EnergyIntensityType energyIntensity,
-            bool resumeSettlement, [NotNull] string lpgVersion,
+            bool resumeSettlement,
             [CanBeNull] DeviceSelection deviceSelection,
             LoadTypePriority loadTypePriority,
             [CanBeNull] TransportationDeviceSet transportationDeviceSet, [CanBeNull] ChargingStationSet chargingStationSet,
@@ -70,7 +71,7 @@ namespace CalculationController.Queue {
             [NotNull] string csvCharacter,
             int selectedRandomSeed,
             TimeSpan externalTimeResolution, bool deleteDatFiles, bool writeExcelColumn, bool showSettlingPeriod,
-            int settlingDays, int affordanceRepetitionCount, [NotNull] CalculationProfiler calculationProfiler)
+            int settlingDays, int affordanceRepetitionCount, [NotNull] CalculationProfiler calculationProfiler, string resultPath)
         {
             OfficialSimulationStartTime = officialSimulationStartTime;
             OfficialSimulationEndTime = officialSimulationEndTime;
@@ -89,7 +90,7 @@ namespace CalculationController.Queue {
             CalcTarget = calcTarget;
             EnergyIntensity = energyIntensity;
             ResumeSettlement = resumeSettlement;
-            LPGVersion = lpgVersion;
+            LPGVersion = Utili.GetCurrentAssemblyVersion();
             DeviceSelection = deviceSelection;
             LoadTypePriority = loadTypePriority;
             TransportationDeviceSet = transportationDeviceSet;
@@ -97,6 +98,8 @@ namespace CalculationController.Queue {
             CalcOptions = calcOptions;
             ChargingStationSet = chargingStationSet;
             DeviceProfileHeaderMode = DeviceProfileHeaderMode.Standard;
+            ResultPath = resultPath;
+            CalculationStartTime = DateTime.Now;
         }
 
         /// <summary>
@@ -110,9 +113,7 @@ namespace CalculationController.Queue {
             [NotNull] GeographicLocation geographicLocation,
             [NotNull] TemperatureProfile temperatureProfile,
             [NotNull] ICalcObject calcTarget,
-            [NotNull] Func<ObservableCollection<CalculationEntry>, bool> setCalculationEntries,
             EnergyIntensityType energyIntensity, [NotNull] Func<bool> reportCancelFunc, bool resumeSettlement,
-            [NotNull] string lpgVersion,
             [CanBeNull] DeviceSelection deviceSelection, LoadTypePriority loadTypePriority,
             [CanBeNull] TransportationDeviceSet transportationDeviceSet, [CanBeNull] TravelRouteSet travelRouteSet,
             [NotNull] List<CalcOption> calcOptions,
@@ -126,9 +127,10 @@ namespace CalculationController.Queue {
             [CanBeNull] ChargingStationSet chargingStationSet,
             [CanBeNull][ItemNotNull] List<string> loadTypesToProcess,
             DeviceProfileHeaderMode deviceProfileHeaderMode,
-            bool ignorePreviousActivitiesWhenNeeded)
+            bool ignorePreviousActivitiesWhenNeeded, string resultPath)
         {
             IgnorePreviousActivitiesWhenNeeded = ignorePreviousActivitiesWhenNeeded;
+            ResultPath = resultPath;
             LoadTypesToProcess = loadTypesToProcess;
             ExternalTimeResolution = externalTimeResolution;
             DeleteDatFiles = deleteDatFiles;
@@ -149,11 +151,10 @@ namespace CalculationController.Queue {
             GeographicLocation = geographicLocation;
             TemperatureProfile = temperatureProfile;
             CalcTarget = calcTarget;
-            SetCalculationEntries = setCalculationEntries;
             EnergyIntensity = energyIntensity;
             ReportCancelFunc = reportCancelFunc;
             ResumeSettlement = resumeSettlement;
-            LPGVersion = lpgVersion;
+            LPGVersion = Utili.GetCurrentAssemblyVersion();
             DeviceSelection = deviceSelection;
             LoadTypePriority = loadTypePriority;
             TransportationDeviceSet = transportationDeviceSet;
@@ -161,7 +162,10 @@ namespace CalculationController.Queue {
             CalcOptions = calcOptions;
             ChargingStationSet = chargingStationSet;
             DeviceProfileHeaderMode = deviceProfileHeaderMode;
+            CalculationStartTime = DateTime.Now;
         }
+
+        public string ResultPath { get; set; }
 
         [NotNull]
         public CalculationProfiler CalculationProfiler { get; }
@@ -215,8 +219,6 @@ namespace CalculationController.Queue {
         public bool ResumeSettlement { get; }
         public int SelectedRandomSeed { get; }
 
-        [CanBeNull]
-        public Func<ObservableCollection<CalculationEntry>, bool> SetCalculationEntries { get; }
 
         public int SettlingDays { get; }
         public bool ShowSettlingPeriod { get; }

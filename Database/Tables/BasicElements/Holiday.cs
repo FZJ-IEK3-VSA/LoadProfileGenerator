@@ -31,6 +31,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
+using Automation;
 using Common;
 using Database.Database;
 using JetBrains.Annotations;
@@ -51,7 +52,7 @@ namespace Database.Tables.BasicElements {
 
         [NotNull] private string _description;
 
-        public Holiday([NotNull] string name, [NotNull] string description, [NotNull] string connectionString, [NotNull] string guid, [CanBeNull] int? pID = null) : base(name,
+        public Holiday([NotNull] string name, [NotNull] string description, [NotNull] string connectionString, [NotNull] StrGuid guid, [CanBeNull] int? pID = null) : base(name,
             TableName, connectionString, guid) {
             _holidayDates = new ObservableCollection<HolidayDate>();
             ID = pID;
@@ -104,7 +105,7 @@ namespace Database.Tables.BasicElements {
         public HolidayProbabilities ProbWednesday => GetHolidayProbability(DayOfWeek.Wednesday);
 
         public void AddNewDate(DateTime dt) {
-            var tp = new HolidayDate(dt, IntID, ConnectionString, null, System.Guid.NewGuid().ToString());
+            var tp = new HolidayDate(dt, IntID, ConnectionString, null, System.Guid.NewGuid().ToStrGuid());
             _holidayDates.Add(tp);
             _holidayDates.Sort();
             SaveToDB();
@@ -133,7 +134,7 @@ namespace Database.Tables.BasicElements {
         [NotNull]
         [UsedImplicitly]
         public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new Holiday(
-            FindNewName(isNameTaken, "New Holiday "), "(no description)", connectionString, System.Guid.NewGuid().ToString());
+            FindNewName(isNameTaken, "New Holiday "), "(no description)", connectionString, System.Guid.NewGuid().ToStrGuid());
 
         public override void DeleteFromDB() {
             base.DeleteFromDB();
@@ -155,7 +156,7 @@ namespace Database.Tables.BasicElements {
             if (!_probabilities.ContainsKey(dayOfWeek)) {
                 var hp =
                     new HolidayProbabilities(IntID, null, dayOfWeek,
-                        0, 0, 0, 0, 0, ConnectionString, System.Guid.NewGuid().ToString());
+                        0, 0, 0, 0, 0, ConnectionString, System.Guid.NewGuid().ToStrGuid());
                 _probabilities.Add(dayOfWeek, hp);
                 hp.SaveToDB();
                 return hp;

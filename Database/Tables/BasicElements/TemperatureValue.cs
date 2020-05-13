@@ -31,6 +31,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Database.Database;
@@ -45,7 +46,7 @@ namespace Database.Tables.BasicElements {
         private readonly DateTime _time;
         private readonly double _value;
 
-        public TemperatureValue(DateTime time, double value, int tempProfileID, [CanBeNull]int? id, [NotNull] string connectionString, [NotNull] string guid)
+        public TemperatureValue(DateTime time, double value, int tempProfileID, [CanBeNull]int? id, [NotNull] string connectionString, [NotNull] StrGuid guid)
             : base(
                 time.ToShortDateString() + " " + value.ToString(CultureInfo.InvariantCulture), id, TableName,
                 connectionString, guid)
@@ -125,7 +126,7 @@ namespace Database.Tables.BasicElements {
                 NeedsUpdate = false;
             }
 
-            if (_GuidCreationCount > 0) {
+            if (GuidCreationCount > 0) {
                 base.SaveToDB();
             }
         }

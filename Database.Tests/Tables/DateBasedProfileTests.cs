@@ -40,24 +40,27 @@ namespace Database.Tests.Tables {
     {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void DateBasedProfileSaveAndRestore() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            db.ClearTable(DateBasedProfile.TableName);
-            db.ClearTable(DateProfileDataPoint.TableName);
-            var profiles = new ObservableCollection<DateBasedProfile>();
-            DateBasedProfile.LoadFromDatabase(profiles, db.ConnectionString, false);
-            Assert.AreEqual(0, profiles.Count);
-            var dbp = new DateBasedProfile("tempprofil1", "desc1", db.ConnectionString, Guid.NewGuid().ToString());
-            dbp.SaveToDB();
-            dbp.AddNewDatePoint(new DateTime(2014, 1, 1), 15);
-            dbp.AddNewDatePoint(new DateTime(2014, 2, 1), 15);
-            dbp.SaveToDB();
-            DateBasedProfile.LoadFromDatabase(profiles, db.ConnectionString, false);
-            Assert.AreEqual(1, profiles.Count);
-            Assert.AreEqual(2, profiles[0].Datapoints.Count);
-            profiles[0].DeleteDatePoint(profiles[0].Datapoints[0]);
-            Assert.AreEqual(1, profiles[0].Datapoints.Count);
-            db.Cleanup();
+        public void DateBasedProfileSaveAndRestore()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                db.ClearTable(DateBasedProfile.TableName);
+                db.ClearTable(DateProfileDataPoint.TableName);
+                var profiles = new ObservableCollection<DateBasedProfile>();
+                DateBasedProfile.LoadFromDatabase(profiles, db.ConnectionString, false);
+                Assert.AreEqual(0, profiles.Count);
+                var dbp = new DateBasedProfile("tempprofil1", "desc1", db.ConnectionString, Guid.NewGuid().ToStrGuid());
+                dbp.SaveToDB();
+                dbp.AddNewDatePoint(new DateTime(2014, 1, 1), 15);
+                dbp.AddNewDatePoint(new DateTime(2014, 2, 1), 15);
+                dbp.SaveToDB();
+                DateBasedProfile.LoadFromDatabase(profiles, db.ConnectionString, false);
+                Assert.AreEqual(1, profiles.Count);
+                Assert.AreEqual(2, profiles[0].Datapoints.Count);
+                profiles[0].DeleteDatePoint(profiles[0].Datapoints[0]);
+                Assert.AreEqual(1, profiles[0].Datapoints.Count);
+                db.Cleanup();
+            }
         }
     }
 }

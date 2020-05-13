@@ -28,6 +28,7 @@
 
 using JetBrains.Annotations;
 using System.Collections.Generic;
+using Automation;
 
 namespace CalculationEngine
 {
@@ -40,6 +41,8 @@ namespace CalculationEngine
         double TimeFactor { get; }
         [NotNull]
         string DataSource { get; }
+
+        StrGuid Guid { get; }
         //string DataSource { get; }
     }
 }

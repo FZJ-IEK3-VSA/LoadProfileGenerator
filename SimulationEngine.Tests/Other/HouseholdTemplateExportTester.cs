@@ -15,74 +15,91 @@ namespace SimulationEngine.Tests.Other
         [Category(UnitTestCategories.BasicTest)]
         public void RunHouseholdTemplateTests()
         {
-            WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            JsonDatabaseExporter hte = new JsonDatabaseExporter(db.ConnectionString);
-            JsonDatabaseExportOptions hteo = new JsonDatabaseExportOptions();
-            string jsonPath = wd.Combine("hhexport.json");
-            hteo.Output = jsonPath;
-            hteo.ProcessingType = TypesToProcess.HouseholdTemplates;
-            hte.Export(hteo);
-            JsonDatabaseImportOptions htio = new JsonDatabaseImportOptions {Input = jsonPath, Type = TypesToProcess.HouseholdTemplates};
-            JsonDatabaseImporter hti = new JsonDatabaseImporter(db.ConnectionString);
-            hti.Import(htio);
+            using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
+            {
+                using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+                {
+                    JsonDatabaseExporter hte = new JsonDatabaseExporter(db.ConnectionString);
+                    JsonDatabaseExportOptions hteo = new JsonDatabaseExportOptions();
+                    string jsonPath = wd.Combine("hhexport.json");
+                    hteo.Output = jsonPath;
+                    hteo.ProcessingType = TypesToProcess.HouseholdTemplates;
+                    hte.Export(hteo);
+                    JsonDatabaseImportOptions htio = new JsonDatabaseImportOptions { Input = jsonPath, Type = TypesToProcess.HouseholdTemplates };
+                    JsonDatabaseImporter hti = new JsonDatabaseImporter(db.ConnectionString);
+                    hti.Import(htio);
+                }
+            }
         }
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void RunHouseholdTraits()
         {
-            WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            JsonDatabaseExporter hte = new JsonDatabaseExporter(db.ConnectionString);
-            JsonDatabaseExportOptions hteo = new JsonDatabaseExportOptions();
-            string jsonPath = wd.Combine("hhtraitexport.json");
-            hteo.Output = jsonPath;
-            hteo.ProcessingType = TypesToProcess.HouseholdTraits;
-            hte.Export(hteo);
-            JsonDatabaseImportOptions htio = new JsonDatabaseImportOptions { Input = jsonPath, Type = TypesToProcess.HouseholdTraits };
-            JsonDatabaseImporter hti = new JsonDatabaseImporter(db.ConnectionString);
-            hti.Import(htio);
+            using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
+            {
+                using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+                {
+                    JsonDatabaseExporter hte = new JsonDatabaseExporter(db.ConnectionString);
+                    JsonDatabaseExportOptions hteo = new JsonDatabaseExportOptions();
+                    string jsonPath = wd.Combine("hhtraitexport.json");
+                    hteo.Output = jsonPath;
+                    hteo.ProcessingType = TypesToProcess.HouseholdTraits;
+                    hte.Export(hteo);
+                    JsonDatabaseImportOptions htio = new JsonDatabaseImportOptions { Input = jsonPath, Type = TypesToProcess.HouseholdTraits };
+                    JsonDatabaseImporter hti = new JsonDatabaseImporter(db.ConnectionString);
+                    hti.Import(htio);
+                }
+            }
         }
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void RunHouseholdTraitsWithDeviceCategories()
         {
-            WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            JsonDatabaseExporter hte = new JsonDatabaseExporter(db.ConnectionString);
-            JsonDatabaseExportOptions hteo = new JsonDatabaseExportOptions();
-            string jsonPath = wd.Combine("hhtraitexport.json");
-            hteo.Output = jsonPath;
-            hteo.ProcessingType = TypesToProcess.HouseholdTraitsWithDeviceCategories;
-            hte.Export(hteo);
+            using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
+            {
+                using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+                {
+                    JsonDatabaseExporter hte = new JsonDatabaseExporter(db.ConnectionString);
+                    JsonDatabaseExportOptions hteo = new JsonDatabaseExportOptions();
+                    string jsonPath = wd.Combine("hhtraitexport.json");
+                    hteo.Output = jsonPath;
+                    hteo.ProcessingType = TypesToProcess.HouseholdTraitsWithDeviceCategories;
+                    hte.Export(hteo);
+                }
+            }
         }
         [Test]
         [Category(UnitTestCategories.LongTest5)]
         public void RunModularHouseholdTests()
         {
-            WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            JsonDatabaseExporter hte = new JsonDatabaseExporter(db.ConnectionString);
-            JsonDatabaseExportOptions hteo = new JsonDatabaseExportOptions();
-            string jsonPath = wd.Combine("hhexport.json");
-            hteo.Output = jsonPath;
-            hteo.ProcessingType = TypesToProcess.ModularHouseholds;
-            hte.Export(hteo);
-            Simulator sim1 = new Simulator(db.ConnectionString);
-            int hhcount = sim1.ModularHouseholds.It.Count;
-            foreach (ModularHousehold household in sim1.ModularHouseholds.It) {
-                household.DeleteFromDB();
+            using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
+            {
+                using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+                {
+                    JsonDatabaseExporter hte = new JsonDatabaseExporter(db.ConnectionString);
+                    JsonDatabaseExportOptions hteo = new JsonDatabaseExportOptions();
+                    string jsonPath = wd.Combine("hhexport.json");
+                    hteo.Output = jsonPath;
+                    hteo.ProcessingType = TypesToProcess.ModularHouseholds;
+                    hte.Export(hteo);
+                    Simulator sim1 = new Simulator(db.ConnectionString);
+                    int hhcount = sim1.ModularHouseholds.It.Count;
+                    foreach (ModularHousehold household in sim1.ModularHouseholds.It)
+                    {
+                        household.DeleteFromDB();
+                    }
+                    Logger.Info("################################################");
+                    Logger.Info("Finished deleting");
+                    Logger.Info("################################################");
+                    JsonDatabaseImportOptions htio = new JsonDatabaseImportOptions { Input = jsonPath, Type = TypesToProcess.ModularHouseholds };
+                    JsonDatabaseImporter hti = new JsonDatabaseImporter(db.ConnectionString);
+                    hti.Import(htio);
+                    Simulator sim2 = new Simulator(db.ConnectionString);
+                    Assert.AreEqual(hhcount, sim2.ModularHouseholds.It.Count);
+                }
             }
-            Logger.Info("################################################");
-            Logger.Info("Finished deleting");
-            Logger.Info("################################################");
-            JsonDatabaseImportOptions htio = new JsonDatabaseImportOptions {Input = jsonPath, Type = TypesToProcess.ModularHouseholds};
-            JsonDatabaseImporter hti = new JsonDatabaseImporter(db.ConnectionString);
-            hti.Import(htio);
-            Simulator sim2 = new Simulator(db.ConnectionString);
-            Assert.AreEqual(hhcount,sim2.ModularHouseholds.It.Count);
         }
     }
 }

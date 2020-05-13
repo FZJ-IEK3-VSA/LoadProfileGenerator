@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Common.CalcDto;
@@ -13,6 +15,7 @@ using OxyPlot.Axes;
 using OxyPlot.Series;
 
 namespace ChartCreator2.OxyCharts {
+    [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     internal class AffordanceEnergyUsePerPerson : ChartBaseSqlStep {
         public AffordanceEnergyUsePerPerson([JetBrains.Annotations.NotNull] ChartCreationParameters parameters,
                                             [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft,
@@ -29,11 +32,11 @@ namespace ChartCreator2.OxyCharts {
 
         protected override FileProcessingResult MakeOnePlot([JetBrains.Annotations.NotNull] HouseholdKeyEntry hhkey)
         {
-            _CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
+            CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
             var entries = CalcDataRepository.LoadAffordanceEnergyUses(hhkey.HouseholdKey);
             var usedLoadtypes = entries.Select(x => x.LoadTypeGuid).Distinct().ToList();
             var loadTypeInfos = CalcDataRepository.LoadTypes;
-            foreach (string loadtypeGuid in usedLoadtypes) {
+            foreach (StrGuid loadtypeGuid in usedLoadtypes) {
                 var lti = loadTypeInfos.Single(x => x.Guid == loadtypeGuid);
 
                 List<AffordanceEnergyUseEntry> filteredEntries = entries.Where(x => x.LoadTypeGuid == loadtypeGuid).ToList();
@@ -42,7 +45,7 @@ namespace ChartCreator2.OxyCharts {
                 DrawChart(hhkey, energyUsesPerPersonByAffordance, persons, lti);
             }
 
-            _CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
+            CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
             return FileProcessingResult.ShouldCreateFiles;
         }
 
@@ -63,12 +66,12 @@ namespace ChartCreator2.OxyCharts {
             };
             var labelfontsize = 14;
             if (Config.MakePDFCharts) {
-                plotModel1.DefaultFontSize = _Parameters.PDFFontSize;
+                plotModel1.DefaultFontSize = Parameters.PDFFontSize;
                 plotModel1.LegendFontSize = 16;
                 labelfontsize = 18;
             }
 
-            if (_Parameters.ShowTitle) {
+            if (Parameters.ShowTitle) {
                 plotModel1.Title = plotName;
             }
 
@@ -180,7 +183,7 @@ namespace ChartCreator2.OxyCharts {
                 }
             }
 
-            Save(plotModel1, plotName, "AffordanceEnergyUsePerPerson." + hhkey.HouseholdKey + "." + lti.FileName + ".png", _Parameters.BaseDirectory);
+            Save(plotModel1, plotName, "AffordanceEnergyUsePerPerson." + hhkey.HouseholdKey + "." + lti.FileName + ".png", Parameters.BaseDirectory);
         }
 
         private static void PrepareData([ItemNotNull] [JetBrains.Annotations.NotNull] List<AffordanceEnergyUseEntry> filteredEntries,

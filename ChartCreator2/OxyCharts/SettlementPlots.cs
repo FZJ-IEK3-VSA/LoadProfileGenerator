@@ -15,6 +15,7 @@ using LinearAxis = OxyPlot.Axes.LinearAxis;
 using LineSeries = OxyPlot.Series.LineSeries;
 
 namespace ChartCreator2.OxyCharts {
+    [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     internal class SettlementPlots {
         private const bool BarPlots = true;
         private const bool LinePlots = true;

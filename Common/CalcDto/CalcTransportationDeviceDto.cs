@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Automation;
 using Automation.ResultFiles;
 using Common.SQLResultLogging.Loggers;
 using JetBrains.Annotations;
@@ -21,9 +22,9 @@ namespace Common.CalcDto {
         [CanBeNull]
         public string ChargingCalcLoadTypeName { get; }
         [CanBeNull]
-        public string ChargingCalcLoadTypeGuid { get; }
+        public StrGuid ChargingCalcLoadTypeGuid { get; }
         [NotNull]
-        public string Guid { get; }
+        public StrGuid Guid { get; }
         public bool IsLimitedToSingleLocation { get; }
 
         public CalcTransportationDeviceDto([NotNull]string name, int id, [NotNull] CalcTransportationDeviceCategoryDto category,
@@ -31,8 +32,8 @@ namespace Common.CalcDto {
                                            [NotNull] HouseholdKey householdKey, double fullRangeInMeters,
                                            double energyToDistanceFactor,
                                            double maxChargingPower,
-                                           [CanBeNull]string chargingCalcLoadTypeName, [CanBeNull] string chargingCalcLoadTypeGuid,
-                                           [NotNull]string guid, bool isLimitedToSingleLocation)
+                                           [CanBeNull]string chargingCalcLoadTypeName, [CanBeNull] StrGuid chargingCalcLoadTypeGuid,
+                                           [NotNull]StrGuid guid, bool isLimitedToSingleLocation)
         {
             Name = name;
             ID = id;

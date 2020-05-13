@@ -18,24 +18,26 @@ namespace ChartCreator2.Tests.Oxyplot {
         {
             CleanTestBase.RunAutomatically(false);
             var cs = new OxyCalculationSetup(Utili.GetCurrentMethodAndClass());
-            cs.StartHousehold(1,  GlobalConsts.CSVCharacter,
+            cs.StartHousehold(1, GlobalConsts.CSVCharacter,
                 LoadTypePriority.Mandatory, enddate: new DateTime(2012, 12, 31),
                 x => x.Enable(CalcOption.WeekdayProfiles));
-            FileFactoryAndTracker fft = new FileFactoryAndTracker(cs.DstDir, "1", cs.Wd.InputDataLogger);
-            fft.ReadExistingFilesFromSql();
-            CalculationProfiler cp = new CalculationProfiler();
-            ChartCreationParameters ccps = new ChartCreationParameters(300,4000,
-                2500,  false,  GlobalConsts.CSVCharacter, new DirectoryInfo(cs.DstDir));
-            var aeupp = new WeekdayProfiles(ccps,fft,cp);
-            Logger.Info("Making picture");
-            var di = new DirectoryInfo(cs.DstDir);
-            var rfe = cs.GetRfeByFilename("WeekdayProfiles.Electricity.csv");
-            aeupp.MakePlot(rfe);
-            Logger.Info("finished picture");
-            //OxyCalculationSetup.CopyImage(resultFileEntries[0].FullFileName);
+            using (FileFactoryAndTracker fft = new FileFactoryAndTracker(cs.DstDir, "1", cs.Wd.InputDataLogger))
+            {
+                fft.ReadExistingFilesFromSql();
+                CalculationProfiler cp = new CalculationProfiler();
+                ChartCreationParameters ccps = new ChartCreationParameters(300, 4000,
+                    2500, false, GlobalConsts.CSVCharacter, new DirectoryInfo(cs.DstDir));
+                var aeupp = new WeekdayProfiles(ccps, fft, cp);
+                Logger.Info("Making picture");
+                var di = new DirectoryInfo(cs.DstDir);
+                var rfe = cs.GetRfeByFilename("WeekdayProfiles.Electricity.csv");
+                aeupp.MakePlot(rfe);
+                Logger.Info("finished picture");
+                //OxyCalculationSetup.CopyImage(resultFileEntries[0].FullFileName);
 
-            var imagefiles = FileFinder.GetRecursiveFiles(di, "WeekdayProfiles.*.png");
-            Assert.GreaterOrEqual(imagefiles.Count, 1);
+                var imagefiles = FileFinder.GetRecursiveFiles(di, "WeekdayProfiles.*.png");
+                Assert.GreaterOrEqual(imagefiles.Count, 1);
+            }
             cs.CleanUp();
             CleanTestBase.RunAutomatically(true);
         }

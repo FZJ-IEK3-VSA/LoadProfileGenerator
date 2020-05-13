@@ -1,9 +1,12 @@
-﻿using NUnit.Framework;
+﻿using JetBrains.Annotations;
+using NUnit.Framework;
 
 namespace Common.Tests
 {
     public class UnitTestBaseClass
     {
+        private bool _skipEndCleaning;
+
         [SetUp]
         public void BaseSetUp()
         {
@@ -13,11 +16,18 @@ namespace Common.Tests
             Logger.Info("Base Test Path is " + basePath);
         }
 
-        public bool SkipEndCleaning { get; set; }
+        public void SkipEndCleaning([CanBeNull] WorkingDir wd)
+        {
+            _skipEndCleaning = true;
+            if (wd != null) {
+                wd.SkipCleaning = true;
+            }
+        }
+
         [TearDown]
         public void BaseTearDown()
         {
-            if (SkipEndCleaning) {
+            if (_skipEndCleaning) {
                 return;
             }
 

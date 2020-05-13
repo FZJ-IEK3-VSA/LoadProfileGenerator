@@ -12,17 +12,20 @@ namespace ReleaseBuilder.Tables.Houses {
     {
         [Test]
         [Category("QuickChart")]
-        public void MakeTraitStatisticsTest() {
-            var dbs = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
+        public void MakeTraitStatisticsTest()
+        {
+            using (var dbs = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var sim = new Simulator(dbs.ConnectionString);
+                var set = sim.Settlements.FindFirstByName("combination", FindMode.Partial);
+                if (set == null)
+                {
+                    throw new LPGException("settlement not found.");
+                }
+                set.MakeTraitStatistics(@"e:\hhstatistics.csv", @"e:\affStatistics.csv", sim);
 
-            var sim = new Simulator(dbs.ConnectionString);
-            var set = sim.Settlements.FindFirstByName("combination", FindMode.Partial);
-            if (set == null) {
-                throw new LPGException("settlement not found.");
+                dbs.Cleanup();
             }
-            set.MakeTraitStatistics(@"e:\hhstatistics.csv", @"e:\affStatistics.csv", sim);
-
-            dbs.Cleanup();
         }
     }
 }

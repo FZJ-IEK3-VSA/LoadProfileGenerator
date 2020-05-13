@@ -1,10 +1,11 @@
-﻿using JetBrains.Annotations;
+﻿using Automation;
+using JetBrains.Annotations;
 
 namespace Common.CalcDto {
     public class CalcTransportationDeviceCategoryDto
     {
         public CalcTransportationDeviceCategoryDto([NotNull] string name, int id, bool isLimitedToSingleLocation,
-                                                   [NotNull] string guid)
+                                                   [NotNull] StrGuid guid)
         {
             Name = name;
             ID = id;
@@ -16,6 +17,6 @@ namespace Common.CalcDto {
         public int ID { get; }
         public bool IsLimitedToSingleLocation { get; }
         [NotNull]
-        public string Guid { get; }
+        public StrGuid Guid { get; }
     }
 }

@@ -35,7 +35,7 @@ namespace Database.Tables.ModularHouseholds {
             int householdTraitID,
         [NotNull]    string connectionString, [NotNull] string hhaffName,[CanBeNull] TimeLimit timeLimit, int weight
             , int startMinusMinutes, int startPlusMinutes, int endMinusMinutes, int endPlusMinutes,
-            [NotNull] string guid) : base(hhaffName, TableName, connectionString, guid)
+            [NotNull] StrGuid guid) : base(hhaffName, TableName, connectionString, guid)
         {
             _timeLimit = timeLimit;
             _weight = weight;
@@ -214,7 +214,7 @@ namespace Database.Tables.ModularHouseholds {
         }
 
         public class JsonDto {
-            public JsonDto(JsonReference affordance, JsonReference timeLimit, int weight, int startMinusMinutes, int startPlusMinutes, int endMinusMinutes, int endPlusMinutes, string guid)
+            public JsonDto(JsonReference affordance, JsonReference timeLimit, int weight, int startMinusMinutes, int startPlusMinutes, int endMinusMinutes, int endPlusMinutes, [NotNull] StrGuid guid)
             {
                 Affordance = affordance;
                 TimeLimit = timeLimit;
@@ -238,9 +238,9 @@ namespace Database.Tables.ModularHouseholds {
             public int StartPlusMinutes { get; set; }
             public int EndMinusMinutes { get; set; }
             public int EndPlusMinutes { get; set; }
-            public  string Guid { get; set; }
+            public  StrGuid Guid { get; set; }
         }
 
-        public string RelevantGuid => Guid;
+        public StrGuid RelevantGuid => Guid;
     }
 }

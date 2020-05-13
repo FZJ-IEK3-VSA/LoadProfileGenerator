@@ -33,10 +33,23 @@ using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Automation;
 using Automation.ResultFiles;
 
 namespace Common {
     public static class Extensions {
+
+        [NotNull]
+        public static StrGuid ToStrGuid(this Guid myguid)
+        {
+            return new StrGuid(myguid);
+        }
+
+        [NotNull]
+        public static StrGuid ToStrGuid([NotNull] this string myguid)
+        {
+            return new StrGuid(myguid);
+        }
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [MethodImpl(MethodImplOptions.NoInlining)]
         //public static string GetCurrentMethod() {

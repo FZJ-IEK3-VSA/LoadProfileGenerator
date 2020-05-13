@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using Automation;
 using Database.Database;
 using JetBrains.Annotations;
 
@@ -8,7 +9,7 @@ namespace Database.Tables.Validation {
         private readonly int _calculationOutcomeID;
 
         public LoadtypeOutcome([NotNull] string name, int calculationOutcomeID, [NotNull] string loadTypeName, double value,
-            [NotNull] string connectionString,[NotNull] string guid, [CanBeNull]int? pID = null) : base(name, pID, TableName, connectionString, guid) {
+            [NotNull] string connectionString,[NotNull] StrGuid guid, [CanBeNull]int? pID = null) : base(name, pID, TableName, connectionString, guid) {
             _calculationOutcomeID = calculationOutcomeID;
             LoadTypeName = loadTypeName;
             Value = value;

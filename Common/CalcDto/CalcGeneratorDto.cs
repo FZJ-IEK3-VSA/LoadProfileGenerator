@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Automation;
 using Automation.ResultFiles;
 using JetBrains.Annotations;
 
@@ -12,12 +13,12 @@ namespace Common.CalcDto {
         [NotNull]
         public List<double> Values { get; }
         [NotNull]
-        public string Guid { get; }
+        public StrGuid Guid { get; }
         [NotNull]
         public HouseholdKey HouseholdKey { get; }
 
         public CalcGeneratorDto([NotNull]string name, int id, [NotNull]CalcLoadTypeDto loadType,
-                                [NotNull]  List<double> values, [NotNull] HouseholdKey householdKey, [NotNull] string guid)
+                                [NotNull]  List<double> values, [NotNull] HouseholdKey householdKey, [NotNull] StrGuid guid)
         {
             Name = name;
             ID = id;

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Common.Enums;
@@ -19,7 +20,7 @@ namespace CalculationEngine.HouseholdElements {
         }
 
         public void AddEntry([NotNull] string name, double value, [NotNull] CalcLocation location, VariableAction variableAction,
-            [NotNull] TimeStep timeStep, [NotNull] string variableGuid)
+            [NotNull] TimeStep timeStep, [NotNull] StrGuid variableGuid)
         {
             var ee = new ExecutionEntry(name, value, location, variableAction,
                 timeStep,variableGuid);
@@ -42,10 +43,10 @@ namespace CalculationEngine.HouseholdElements {
 
         private class ExecutionEntry {
             [NotNull]
-            private readonly string _variableGuid;
+            private readonly StrGuid _variableGuid;
 
             public ExecutionEntry([NotNull] string name, double value, [NotNull] CalcLocation location, VariableAction variableAction,
-                                  [NotNull] TimeStep timeStep, [NotNull] string variableGuid)
+                                  [NotNull] TimeStep timeStep, [NotNull] StrGuid variableGuid)
             {
                 _variableGuid = variableGuid;
                 Name = name;

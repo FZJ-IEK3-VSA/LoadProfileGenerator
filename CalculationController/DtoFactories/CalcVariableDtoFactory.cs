@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using CalculationController.CalcFactories;
+using Common;
 using Common.CalcDto;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
@@ -37,10 +39,10 @@ namespace CalculationController.DtoFactories
         }
 
         [NotNull]
-        public CalcVariableDto RegisterVariable([NotNull] Variable variable, [NotNull] string locationName, [NotNull] string locationGuid,
+        public CalcVariableDto RegisterVariable([NotNull] Variable variable, [NotNull] string locationName, [NotNull] StrGuid locationGuid,
                                                 [NotNull] HouseholdKey householdKey)
         {
-            string variableGuid = Guid.NewGuid().ToString();
+            StrGuid variableGuid = Guid.NewGuid().ToStrGuid();
             CalcVariableDto cvd = new CalcVariableDto(variable.PrettyName, variableGuid, 0,
                 locationName, locationGuid, householdKey);
             string key = MakeKey(variable, locationName, householdKey);
@@ -73,7 +75,7 @@ namespace CalculationController.DtoFactories
         }*/
         [NotNull]
         public CalcVariableDto RegisterVariableIfNotRegistered([NotNull] Variable variable, [NotNull] string locationName,
-                                                               [NotNull] string locationGuid,
+                                                               [NotNull] StrGuid locationGuid,
                                                                [NotNull] HouseholdKey householdKey)
         {
             string key = MakeKey(variable, locationName, householdKey);
@@ -89,7 +91,7 @@ namespace CalculationController.DtoFactories
                                                                [NotNull] HouseholdKey householdKey,
             [NotNull] LocationDtoDict locationDict)
         {
-            string locGuid = locationDict.LocationDict[location].Guid;
+            StrGuid locGuid = locationDict.LocationDict[location].Guid;
             return RegisterVariableIfNotRegistered(variable, location.PrettyName, locGuid,
                 householdKey);
         }

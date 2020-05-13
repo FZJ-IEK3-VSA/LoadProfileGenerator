@@ -65,7 +65,7 @@ namespace SimulationEngineLib.Other {
                 case TypesToProcess.HouseholdTraitsWithDeviceCategories:
                     throw new LPGException("You need to set a type that you want to process");
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(JsonDatabaseImportOptions));
             }
 
             _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());

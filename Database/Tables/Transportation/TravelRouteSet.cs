@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Database.Database;
@@ -20,7 +21,7 @@ namespace Database.Tables.Transportation {
         public TravelRouteSet([NotNull] string name,
                               [CanBeNull]int? pID,
                               [NotNull] string connectionString,
-                              [CanBeNull] string description, [NotNull] string guid) : base(name,
+                              [CanBeNull] string description, [NotNull] StrGuid guid) : base(name,
             TableName, connectionString, guid)
         {
             _description = description;
@@ -54,7 +55,7 @@ namespace Database.Tables.Transportation {
             if (route.ConnectionString != ConnectionString) {
                 throw new LPGException("A location from another DB was just added!");
             }
-            var entry = new TravelRouteSetEntry(null, IntID, ConnectionString, route.Name, route, System.Guid.NewGuid().ToString());
+            var entry = new TravelRouteSetEntry(null, IntID, ConnectionString, route.Name, route, System.Guid.NewGuid().ToStrGuid());
             _routes.Add(entry);
             if(savetodb) {
                 entry.SaveToDB();
@@ -77,7 +78,7 @@ namespace Database.Tables.Transportation {
         [NotNull]
         [UsedImplicitly]
         public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new
-            TravelRouteSet(FindNewName(isNameTaken, "New Travel Route Set "), null, connectionString, "", System.Guid.NewGuid().ToString());
+            TravelRouteSet(FindNewName(isNameTaken, "New Travel Route Set "), null, connectionString, "", System.Guid.NewGuid().ToStrGuid());
 
         public void DeleteEntry([NotNull] TravelRouteSetEntry ld)
         {

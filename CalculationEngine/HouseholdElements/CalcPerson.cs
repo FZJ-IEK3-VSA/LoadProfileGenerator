@@ -74,6 +74,9 @@ namespace CalculationEngine.HouseholdElements {
         [NotNull]
         private readonly CalcPersonDto _calcPerson;
 
+        [NotNull]
+        public HouseholdKey HouseholdKey => _calcPerson.HouseholdKey;
+
         private readonly CalcRepo _calcRepo;
 
         public CalcPerson([NotNull] CalcPersonDto calcPerson,
@@ -92,13 +95,13 @@ namespace CalculationEngine.HouseholdElements {
             IsSick = isSick;
             IsOnVacation = isOnVacation;
             CurrentLocation = startingLocation;
-            _vacationAffordanceGuid = System.Guid.NewGuid().ToString();
-            _vacationLocationGuid = System.Guid.NewGuid().ToString();
+            _vacationAffordanceGuid = System.Guid.NewGuid().ToStrGuid();
+            _vacationLocationGuid = System.Guid.NewGuid().ToStrGuid();
         }
 
         //guid for all vacations of this person
-        [NotNull] private readonly string _vacationAffordanceGuid;
-        [NotNull] private readonly string _vacationLocationGuid;
+        [NotNull] private readonly StrGuid _vacationAffordanceGuid;
+        [NotNull] private readonly StrGuid _vacationLocationGuid;
         [NotNull]
         private CalcLocation CurrentLocation { get; set; }
 
@@ -858,12 +861,12 @@ namespace CalculationEngine.HouseholdElements {
             }
 
             if (isLightActivationneeded) {
-                var cp = new CalcProfile(loc.Name + " - light", System.Guid.NewGuid().ToString(), lightprofile,  ProfileType.Relative,
+                var cp = new CalcProfile(loc.Name + " - light", System.Guid.NewGuid().ToStrGuid(), lightprofile,  ProfileType.Relative,
                     "Synthetic for Light Device");
 
                 // this function is for a light device so that the light is turned on, even if someone else was already in the room
-                if (loc.LightDevices.Count > 0 && loc.LightDevices[0].PowerUsage.Count > 0 &&
-                    !loc.LightDevices[0].IsBusyDuringTimespan(time, 1, 1, loc.LightDevices[0].PowerUsage[0].LoadType)) {
+                if (loc.LightDevices.Count > 0 && loc.LightDevices[0].LoadCount > 0 &&
+                    !loc.LightDevices[0].IsBusyDuringTimespan(time, 1, 1, loc.LightDevices[0].Loads[0].LoadType)) {
                     for (var i = 0; i < loc.LightDevices.Count; i++) {
                         loc.LightDevices[i].SetAllLoadTypesToTimeprofile(cp, time, "Light", Name, 1);
                     }
@@ -931,6 +934,115 @@ namespace CalculationEngine.HouseholdElements {
             [ItemNotNull]
             public List<ICalcAffordanceBase> PotentialInterruptingAffordances { get; } =
                 new List<ICalcAffordanceBase>();
+        }
+
+    }
+
+    public class HumanHeatGainManager {
+        private readonly HumanHeatGainSpecification _hhgs;
+        private readonly Dictionary<string, CalcDevice> _devices = new Dictionary<string, CalcDevice>();
+
+        public HumanHeatGainManager(CalcPerson person, [NotNull] List<CalcLocation> allLocations, [NotNull] CalcRepo calcRepo)
+        {
+            _hhgs = calcRepo.HumanHeatGainSpecification;
+            var sampleLoc = allLocations[0];
+            foreach (BodilyActivityLevel activityLevel in Enum.GetValues(typeof(BodilyActivityLevel)))
+            {
+                //power load type split by location and activity level
+                //register all possible combinations for the power
+                foreach (var location in allLocations) {
+                //register all possible combinations for the power
+                    var devicename = "Inner Heat Gain - " + person.Name + " - " + _hhgs.PowerLoadtype.Name + " - " + location.Name;
+                    CalcDeviceLoad cdl = new CalcDeviceLoad(_hhgs.PowerLoadtype.Name, 1, _hhgs.PowerLoadtype, 0, 0);
+                    var cdlList = new List<CalcDeviceLoad>();
+                    cdlList.Add(cdl);
+                    CalcDeviceDto cdd = new CalcDeviceDto(devicename, Guid.NewGuid().ToStrGuid(), person.HouseholdKey,
+                        OefcDeviceType.HumanInnerGains, "Human Inner Gains", "", Guid.NewGuid().ToStrGuid(),
+                        location.Guid,
+                        location.Name);
+                    CalcDevice cd = new CalcDevice(cdlList, location, cdd, calcRepo);
+                    var key = MakePowerKey(person,  location, activityLevel);
+                    _devices.Add(key,cd);
+                }
+                //powercounts: one activity level per person for a single location, count as 0/1
+                //register all possible combinations for the power
+                var countDevicename = "Inner Heat Gain - " + person.Name + " - " + _hhgs.CountLoadtype.Name;
+                CalcDeviceLoad countCdl = new CalcDeviceLoad(_hhgs.CountLoadtype.Name, 1, _hhgs.CountLoadtype, 0, 0);
+                var countCdlList = new List<CalcDeviceLoad>();
+                countCdlList.Add(countCdl);
+                CalcDeviceDto countCdd = new CalcDeviceDto(countDevicename, Guid.NewGuid().ToStrGuid(), person.HouseholdKey,
+                    OefcDeviceType.HumanInnerGains, "Human Inner Gains", "", Guid.NewGuid().ToStrGuid(),
+                    sampleLoc.Guid,sampleLoc.Name);
+                CalcDevice countCd = new CalcDevice(countCdlList, sampleLoc, countCdd, calcRepo);
+                var ckey = MakeCountKey(person, activityLevel);
+                _devices.Add(ckey, countCd);
+            }
+        }
+
+        public double GetPowerForActivityLevel(BodilyActivityLevel bal)
+        {
+            switch (bal) {
+                case BodilyActivityLevel.Unknown:
+                    return 0;
+                case BodilyActivityLevel.Outside:
+                    return 0;
+                case BodilyActivityLevel.Low:
+                    return 100;
+                case BodilyActivityLevel.High:
+                    return 150;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(bal), bal, null);
+            }
+        }
+
+        public void Activate([NotNull] CalcPerson person, BodilyActivityLevel level,  [NotNull] CalcLocation loc, [NotNull] TimeStep timeidx, [NotNull] ICalcProfile personProfile,
+                             [NotNull] string affordanceName)
+        {
+            List<double> powerProfile = new List<double>();
+            List<double> countProfile = new List<double>();
+            //rectangle power profile
+            double power = GetPowerForActivityLevel(level);
+            foreach (var value in personProfile.StepValues)
+            {
+                if (value > 0)
+                {
+                    powerProfile.Add(power);
+                    countProfile.Add(1);
+                }
+                else
+                {
+                    powerProfile.Add(0);
+                    countProfile.Add(0);
+                }
+            }
+
+            {
+                var key = MakePowerKey(person, loc, level);
+                var dev = _devices[key];
+
+                CalcProfile cp = new CalcProfile("PersonProfile", personProfile.Guid, powerProfile,
+                    ProfileType.Absolute, "Inner Gains");
+                dev.SetTimeprofile(cp, timeidx, _hhgs.PowerLoadtype, "", affordanceName, 1, true);
+            }
+            var countKey = MakeCountKey(person,  level);
+            var dev2 = _devices[countKey];
+            CalcProfile countCp = new CalcProfile("PersonProfile", personProfile.Guid, countProfile,
+                ProfileType.Absolute, "Inner Gains Count");
+            dev2.SetTimeprofile(countCp, timeidx, _hhgs.CountLoadtype, "", affordanceName, 1, true);
+
+        }
+
+        [NotNull]
+        public string MakePowerKey([NotNull] CalcPerson person,  [NotNull] CalcLocation location, BodilyActivityLevel level)
+        {
+            return person.HouseholdKey.Key + "#" + _hhgs.PowerLoadtype.Name + "#" + person.Name + "#" + location.Name + "#" +
+                   level.ToString();
+        }
+
+        [NotNull]
+        public string MakeCountKey([NotNull] CalcPerson person, BodilyActivityLevel level)
+        {
+            return person.HouseholdKey.Key + "#" + person.Name + "#" + level.ToString();
         }
     }
 }

@@ -4,8 +4,9 @@ using Newtonsoft.Json.Converters;
 
 namespace Automation.ResultFiles {
     public class HouseholdKeyEntry {
-        public HouseholdKeyEntry([NotNull] HouseholdKey householdKey, [NotNull] string householdName, HouseholdKeyType type, [NotNull] string householdDescription, [CanBeNull] string houseName,
-                                 [CanBeNull] string houseDescription)
+        public HouseholdKeyEntry([NotNull] HouseholdKey householdKey, [NotNull] string householdName, HouseholdKeyType type,
+                                 [NotNull] string householdDescription, [CanBeNull] string? houseName,
+                                 [CanBeNull] string? houseDescription)
         {
             HouseholdKey = householdKey;
             HouseholdName = householdName;
@@ -14,9 +15,8 @@ namespace Automation.ResultFiles {
             HouseName = houseName;
             HouseDescription = houseDescription;
         }
-        [CanBeNull]
         [JsonProperty]
-        public string HouseDescription { get; set; }
+        public string? HouseDescription { get; set; }
 
         [NotNull]
         [JsonProperty]
@@ -29,9 +29,8 @@ namespace Automation.ResultFiles {
         [NotNull]
         [JsonProperty]
         public string HouseholdName { get; private set; }
-        [CanBeNull]
         [JsonProperty]
-        public string HouseName { get; set; }
+        public string? HouseName { get; set; }
 
         [JsonProperty]
         [JsonConverter(typeof(StringEnumConverter))]

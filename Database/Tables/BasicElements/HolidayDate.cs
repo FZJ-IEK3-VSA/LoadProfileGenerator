@@ -29,6 +29,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using Automation;
 using Database.Database;
 using JetBrains.Annotations;
 
@@ -37,7 +38,7 @@ namespace Database.Tables.BasicElements {
         public const string TableName = "tblHolidayDates";
         private DateTime _dateAndTime;
 
-        public HolidayDate(DateTime dt, int holidayID, [NotNull] string connectionString, [CanBeNull] int? pID, [NotNull] string guid)
+        public HolidayDate(DateTime dt, int holidayID, [NotNull] string connectionString, [CanBeNull] int? pID, [NotNull] StrGuid guid)
             : base(dt.ToLongDateString(), pID, TableName, connectionString, guid)
         {
             _dateAndTime = dt;

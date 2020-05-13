@@ -45,55 +45,59 @@ namespace Database.Tests.Tables {
     {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void LoadFromDatabaseTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-
-            ObservableCollection<TraitTag> traitTags = db.LoadTraitTags();
-            var timeprofiles = db.LoadTimeBasedProfiles();
-            var realDevices = db.LoadRealDevices(out var deviceCategories, out var loadtypes, timeprofiles);
-            var locations = db.LoadLocations(realDevices, deviceCategories, loadtypes);
-            db.LoadTransportation(locations,out var transportationDeviceSets,
-                out var travelRouteSets,out var _,
-                out var _, loadtypes,
-                out var chargingStationSets);
-            db.LoadHouseholdsAndHouses(out var modularHouseholds,
-                out var houses, out _,traitTags,chargingStationSets,travelRouteSets,transportationDeviceSets);
-            var settlementHhs = new ObservableCollection<SettlementHH>();
-            SettlementHH.LoadFromDatabase(settlementHhs, db.ConnectionString, modularHouseholds, houses,
-                false);
-            db.Cleanup();
+        public void LoadFromDatabaseTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                ObservableCollection<TraitTag> traitTags = db.LoadTraitTags();
+                var timeprofiles = db.LoadTimeBasedProfiles();
+                var realDevices = db.LoadRealDevices(out var deviceCategories, out var loadtypes, timeprofiles);
+                var locations = db.LoadLocations(realDevices, deviceCategories, loadtypes);
+                db.LoadTransportation(locations, out var transportationDeviceSets,
+                    out var travelRouteSets, out var _,
+                    out var _, loadtypes,
+                    out var chargingStationSets);
+                db.LoadHouseholdsAndHouses(out var modularHouseholds,
+                    out var houses, out _, traitTags, chargingStationSets, travelRouteSets, transportationDeviceSets);
+                var settlementHhs = new ObservableCollection<SettlementHH>();
+                SettlementHH.LoadFromDatabase(settlementHhs, db.ConnectionString, modularHouseholds, houses,
+                    false);
+                db.Cleanup();
+            }
         }
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void SaveToDatabaseTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-
-            ObservableCollection<TraitTag> traitTags = db.LoadTraitTags();
-            var timeprofiles = db.LoadTimeBasedProfiles();
-            var realDevices = db.LoadRealDevices(out var deviceCategories, out var loadtypes, timeprofiles);
-            var locations = db.LoadLocations(realDevices, deviceCategories, loadtypes);
-            db.LoadTransportation(locations, out var transportationDeviceSets,
-                out var travelRouteSets, out var _,
-                out var _, loadtypes,
-                out var chargingStationSets);
-            db.LoadHouseholdsAndHouses(out var modularHouseholds,
-                out var houses, out _,traitTags,chargingStationSets,
-                travelRouteSets,transportationDeviceSets);
-            var settlementHhs = new ObservableCollection<SettlementHH>();
-            SettlementHH.LoadFromDatabase(settlementHhs, db.ConnectionString, modularHouseholds, houses,
-                false);
-            db.ClearTable(SettlementHH.TableName);
-            settlementHhs.Clear();
-            // new one
-            var hh = new SettlementHH(null, modularHouseholds[0], 1, 1, db.ConnectionString, "hhname",
-                Guid.NewGuid().ToString());
-            hh.SaveToDB();
-            // test if it's there
-            SettlementHH.LoadFromDatabase(settlementHhs, db.ConnectionString, modularHouseholds, houses,
-                false);
-            Assert.AreEqual(1, settlementHhs.Count);
-            db.Cleanup();
+        public void SaveToDatabaseTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                ObservableCollection<TraitTag> traitTags = db.LoadTraitTags();
+                var timeprofiles = db.LoadTimeBasedProfiles();
+                var realDevices = db.LoadRealDevices(out var deviceCategories, out var loadtypes, timeprofiles);
+                var locations = db.LoadLocations(realDevices, deviceCategories, loadtypes);
+                db.LoadTransportation(locations, out var transportationDeviceSets,
+                    out var travelRouteSets, out var _,
+                    out var _, loadtypes,
+                    out var chargingStationSets);
+                db.LoadHouseholdsAndHouses(out var modularHouseholds,
+                    out var houses, out _, traitTags, chargingStationSets,
+                    travelRouteSets, transportationDeviceSets);
+                var settlementHhs = new ObservableCollection<SettlementHH>();
+                SettlementHH.LoadFromDatabase(settlementHhs, db.ConnectionString, modularHouseholds, houses,
+                    false);
+                db.ClearTable(SettlementHH.TableName);
+                settlementHhs.Clear();
+                // new one
+                var hh = new SettlementHH(null, modularHouseholds[0], 1, 1, db.ConnectionString, "hhname",
+                    Guid.NewGuid().ToStrGuid());
+                hh.SaveToDB();
+                // test if it's there
+                SettlementHH.LoadFromDatabase(settlementHhs, db.ConnectionString, modularHouseholds, houses,
+                    false);
+                Assert.AreEqual(1, settlementHhs.Count);
+                db.Cleanup();
+            }
         }
     }
 }

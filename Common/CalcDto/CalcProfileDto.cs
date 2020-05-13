@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Automation;
 using Automation.ResultFiles;
 using JetBrains.Annotations;
 
@@ -9,7 +10,7 @@ namespace Common.CalcDto {
         public string Name { get; }
         public int ID { get; }
         [NotNull]
-        public string Guid { get; }
+        public StrGuid Guid { get; }
         public ProfileType ProfileType { get; }
         [NotNull]
         public string DataSource { get; }
@@ -18,7 +19,7 @@ namespace Common.CalcDto {
         [NotNull]
         public List<CalcTimeDataPointDto> Datapoints { get; } = new List<CalcTimeDataPointDto>();
 
-        public CalcProfileDto([NotNull] string name, int id,  ProfileType profileType, [NotNull] string dataSource, [NotNull] string guid)
+        public CalcProfileDto([NotNull] string name, int id,  ProfileType profileType, [NotNull] string dataSource, [NotNull] StrGuid guid)
         {
             Name = name;
             ID = id;

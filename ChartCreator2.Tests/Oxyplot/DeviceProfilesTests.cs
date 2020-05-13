@@ -18,27 +18,30 @@ namespace ChartCreator2.Tests.Oxyplot {
         {
             CleanTestBase.RunAutomatically(false);
             var cs = new OxyCalculationSetup(Utili.GetCurrentMethodAndClass());
-            cs.StartHousehold(2,  GlobalConsts.CSVCharacter, LoadTypePriority.Mandatory,
-                configSetter: x => {
+            cs.StartHousehold(2, GlobalConsts.CSVCharacter, LoadTypePriority.Mandatory,
+                configSetter: x =>
+                {
                     x.Enable(CalcOption.DeviceProfiles);
                     x.Enable(CalcOption.HouseholdContents);
                     x.SelectedEnergyIntensity = EnergyIntensityType.EnergySavingPreferMeasured;
-                    x.EndDateDateTime = new DateTime(2012,12,31);
+                    x.EndDateDateTime = new DateTime(2012, 12, 31);
                 }, energyIntensity: EnergyIntensityType.EnergySavingPreferMeasured);
-            FileFactoryAndTracker fft = new FileFactoryAndTracker(cs.DstDir,"1", cs.Wd.InputDataLogger);
-            fft.ReadExistingFilesFromSql();
-            DeviceProfiles.DaysToMake = 365;
-            CalculationProfiler cp = new CalculationProfiler();
-            ChartCreationParameters ccps = new ChartCreationParameters(300,4000,
-                2500,  false,  GlobalConsts.CSVCharacter, new DirectoryInfo(cs.DstDir));
-            var aeupp = new DeviceProfiles(ccps,fft,cp, cs.Wd.SqlResultLoggingService);
-            Logger.Info("Making picture");
-            var di = new DirectoryInfo(cs.DstDir);
-            var rfe = cs.GetRfeByFilename("DeviceProfiles.Electricity.csv");
-            aeupp.MakePlot(rfe);
-            Logger.Info("finished picture");
-            var imagefiles = FileFinder.GetRecursiveFiles(di, "DeviceProfiles.*.png");
-            Assert.GreaterOrEqual(imagefiles.Count, 1);
+            using (FileFactoryAndTracker fft = new FileFactoryAndTracker(cs.DstDir, "1", cs.Wd.InputDataLogger))
+            {
+                fft.ReadExistingFilesFromSql();
+                DeviceProfiles.DaysToMake = 365;
+                CalculationProfiler cp = new CalculationProfiler();
+                ChartCreationParameters ccps = new ChartCreationParameters(300, 4000,
+                    2500, false, GlobalConsts.CSVCharacter, new DirectoryInfo(cs.DstDir));
+                var aeupp = new DeviceProfiles(ccps, fft, cp, cs.Wd.SqlResultLoggingService);
+                Logger.Info("Making picture");
+                var di = new DirectoryInfo(cs.DstDir);
+                var rfe = cs.GetRfeByFilename("DeviceProfiles.Electricity.csv");
+                aeupp.MakePlot(rfe);
+                Logger.Info("finished picture");
+                var imagefiles = FileFinder.GetRecursiveFiles(di, "DeviceProfiles.*.png");
+                Assert.GreaterOrEqual(imagefiles.Count, 1);
+            }
             cs.CleanUp();
             CleanTestBase.RunAutomatically(true);
         }

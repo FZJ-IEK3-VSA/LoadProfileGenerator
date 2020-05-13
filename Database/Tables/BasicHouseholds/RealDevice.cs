@@ -34,6 +34,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Database.Database;
@@ -61,7 +62,7 @@ namespace Database.Tables.BasicHouseholds {
 
         public RealDevice([NotNull] string pName, int pYear, [NotNull] string pPicture, [CanBeNull] DeviceCategory deviceCategory,
             [NotNull] string description,
-            bool forceAllLoadTypesToBeSet, bool isStandbyDevice, [NotNull] string connectionString, [NotNull] string guid, [CanBeNull]int? pID = null)
+            bool forceAllLoadTypesToBeSet, bool isStandbyDevice, [NotNull] string connectionString, [NotNull] StrGuid guid, [CanBeNull]int? pID = null)
             : base(pName, TableName, connectionString, guid)
         {
             ID = pID;
@@ -203,7 +204,7 @@ namespace Database.Tables.BasicHouseholds {
                 }
             }
             var load = new RealDeviceLoadType(loadType.Name, IntID, loadType.IntID, maxpower, loadType,
-                standardDeviation, averageYearlyConsumption, ConnectionString, System.Guid.NewGuid().ToString());
+                standardDeviation, averageYearlyConsumption, ConnectionString, System.Guid.NewGuid().ToStrGuid());
             Logger.Get().SafeExecuteWithWait(() => {
                 _loads.Add(load);
                 load.SaveToDB();
@@ -243,7 +244,7 @@ namespace Database.Tables.BasicHouseholds {
                 i++;
             }
             var db = new RealDevice(s + i, DateTime.Now.Year, string.Empty, null, string.Empty, true, false,
-                connectionString, System.Guid.NewGuid().ToString());
+                connectionString, System.Guid.NewGuid().ToStrGuid());
             return db;
         }
 

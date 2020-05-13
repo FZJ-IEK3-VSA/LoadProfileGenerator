@@ -32,6 +32,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Database.Database;
@@ -48,7 +49,7 @@ namespace Database.Tables.BasicElements {
 
         [CanBeNull] private TimeLimitEntry _rootEntry;
 
-        public TimeLimit([NotNull] string pName, [NotNull] string connectionString,[NotNull] string guid, [CanBeNull]int? pID = null)
+        public TimeLimit([NotNull] string pName, [NotNull] string connectionString,[NotNull] StrGuid guid, [CanBeNull]int? pID = null)
             : base(pName, TableName, connectionString, guid)
         {
             if (guid == null) {
@@ -153,7 +154,7 @@ namespace Database.Tables.BasicElements {
                 dateRangeEnd, dateProfileID, maxDateValue, minDateValue, duringVacation, duringNotVacation,
                 duringVacationLongerThan, duringVacationShorterThan, vacationDurationLimit, duringHoliday,
                 dateBasedProfiles, ConnectionString, randomizeTimeAmount, dateBasedMinVariation, dateBasedMaxVariation,
-                System.Guid.NewGuid().ToString())
+                System.Guid.NewGuid().ToStrGuid())
             {
                 ParentEntry = parent
             };
@@ -193,7 +194,7 @@ namespace Database.Tables.BasicElements {
         public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString)
         {
             var dc = new TimeLimit(FindNewName(isNameTaken, "New time limit "),
-                connectionString, System.Guid.NewGuid().ToString());
+                connectionString, System.Guid.NewGuid().ToStrGuid());
             return dc;
         }
 

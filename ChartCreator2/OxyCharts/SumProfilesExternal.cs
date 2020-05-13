@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using Automation.ResultFiles;
 using Common;
-using JetBrains.Annotations;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
@@ -23,10 +22,13 @@ namespace ChartCreator2.OxyCharts {
 
         protected override FileProcessingResult MakeOnePlot(ResultFileEntry rfe)
         {
-            _CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
+            Profiler.StartPart(Utili.GetCurrentMethodAndClass());
             string plotName = "Sum Profile for " + rfe.HouseholdNumberString + " " + rfe.LoadTypeInformation?.Name;
             var values = new List<double>();
-
+            if (rfe.FullFileName == null)
+            {
+                throw new LPGException("filename was null");
+            }
             using (var sr = new StreamReader(rfe.FullFileName)) {
                 sr.ReadLine();
                 while (!sr.EndOfStream) {
@@ -34,7 +36,7 @@ namespace ChartCreator2.OxyCharts {
                     if (s == null) {
                         throw new LPGException("Readline failed");
                     }
-                    var cols = s.Split(_Parameters.CSVCharacterArr, StringSplitOptions.None);
+                    var cols = s.Split(Parameters.CSVCharacterArr, StringSplitOptions.None);
                     var col = cols[cols.Length - 1];
                     var success = double.TryParse(col, out var d);
                     if (!success) {
@@ -44,7 +46,7 @@ namespace ChartCreator2.OxyCharts {
                 }
             }
             var plotModel1 = new PlotModel();
-            if (_Parameters.ShowTitle) {
+            if (Parameters.ShowTitle) {
                 plotModel1.Title = plotName;
             }
             var linearAxis1 = new LinearAxis
@@ -67,8 +69,8 @@ namespace ChartCreator2.OxyCharts {
                 lineSeries1.Points.Add(new DataPoint(j, values[j]));
             }
             plotModel1.Series.Add(lineSeries1);
-            Save(plotModel1, plotName, rfe.FullFileName, _Parameters.BaseDirectory);
-            _CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
+            Save(plotModel1, plotName, rfe.FullFileName, Parameters.BaseDirectory);
+            Profiler.StopPart(Utili.GetCurrentMethodAndClass());
             return FileProcessingResult.ShouldCreateFiles;
         }
     }

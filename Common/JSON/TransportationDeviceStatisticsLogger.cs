@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Automation;
 using Automation.ResultFiles;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.Loggers;
@@ -43,7 +44,7 @@ namespace Common.JSON
 
     public class TransportationDeviceStatisticsEntry:IHouseholdKey
         {
-            public TransportationDeviceStatisticsEntry([NotNull] string transportationDeviceGuid, [NotNull] string transportationDeviceName, [NotNull] HouseholdKey householdKey)
+            public TransportationDeviceStatisticsEntry([NotNull] StrGuid transportationDeviceGuid, [NotNull] string transportationDeviceName, [NotNull] HouseholdKey householdKey)
             {
                 TransportationDeviceGuid = transportationDeviceGuid;
                 TransportationDeviceName = transportationDeviceName;
@@ -51,7 +52,7 @@ namespace Common.JSON
             }
 
             [NotNull]
-            public string TransportationDeviceGuid { get; }
+            public StrGuid TransportationDeviceGuid { get; }
             [NotNull]
             public string TransportationDeviceName { get; }
             public double TotalDistanceTraveled { get; set; }

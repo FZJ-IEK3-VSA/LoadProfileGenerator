@@ -54,9 +54,9 @@ namespace CalculationController.Tests.CalcFactories {
             HouseholdKey key = new HouseholdKey( "hh5");
             var persons = new List<ModularHouseholdPerson>();
             var p = new Person("blub", 1, 1, 1, 1,
-                PermittedGender.Male, string.Empty, string.Empty, Guid.NewGuid().ToString());
-            var tt = new TraitTag("traittag", "", TraitLimitType.NoLimit, TraitPriority.All, Guid.NewGuid().ToString());
-            var mhp = new ModularHouseholdPerson(null, -1, p.PrettyName, "", p, tt, Guid.NewGuid().ToString());
+                PermittedGender.Male, string.Empty, string.Empty, Guid.NewGuid().ToStrGuid());
+            var tt = new TraitTag("traittag", "", TraitLimitType.NoLimit, TraitPriority.All, Guid.NewGuid().ToStrGuid());
+            var mhp = new ModularHouseholdPerson(null, -1, p.PrettyName, "", p, tt, Guid.NewGuid().ToStrGuid());
             persons.Add(mhp);
             var hhVacations = new List<VacationTimeframe>();
             Random r = new Random(1);
@@ -64,19 +64,19 @@ namespace CalculationController.Tests.CalcFactories {
             //DeviceCategoryPicker picker = new DeviceCategoryPicker(r,null);
             //var parameters = new CalcFactoryParameters(picker);
             //CalcFactoryParameters.SetSkipChecking(true);
-            //var cloc = new CalcLocation("cloc", 1, Guid.NewGuid().ToString());
+            //var cloc = new CalcLocation("cloc", 1, Guid.NewGuid().ToStrGuid());
             //var mock = new Mock<ILogFile>();
             CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();
             VacationDtoFactory vfac = new VacationDtoFactory(calcParameters,r);
             CalcPersonDtoFactory cpf = new CalcPersonDtoFactory(parameters, r,nr,vfac);
             var hhtDesires =
                 new List<ModularHousehold.PersonTraitDesireEntry>();
-            var d = new Desire("desire", 1, 1, 1, string.Empty, 1, false, 1, "", Guid.NewGuid().ToString());
+            var d = new Desire("desire", 1, 1, 1, string.Empty, 1, false, 1, "", Guid.NewGuid().ToStrGuid());
             var hhtDesire = new HHTDesire(1, 1, 1, d, HealthStatus.Healthy, 1, 1, string.Empty, "name", 1, 100,
-                PermittedGender.All, Guid.NewGuid().ToString());
+                PermittedGender.All, Guid.NewGuid().ToStrGuid());
             var hht = new HouseholdTrait("blub", null, "", "", "", 1, 1, 1, 1, 1, TimeType.Day, 1, 1, TimeType.Day, 1,
                 1, EstimateType.FromCalculations,
-                "", Guid.NewGuid().ToString());
+                "", Guid.NewGuid().ToStrGuid());
             hhtDesires.Add(
                 new ModularHousehold.PersonTraitDesireEntry(
                     ModularHouseholdTrait.ModularHouseholdTraitAssignType.Age, null, hhtDesire, hht));

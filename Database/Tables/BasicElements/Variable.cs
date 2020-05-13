@@ -30,6 +30,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
+using Automation;
+using Common;
 using Database.Database;
 using JetBrains.Annotations;
 
@@ -41,7 +43,7 @@ namespace Database.Tables.BasicElements {
         [NotNull] private string _unit;
 
         public Variable([NotNull] string name, [NotNull] string description, [NotNull] string unit, [NotNull] string connectionString,
-                        [NotNull] string guid,[CanBeNull]int? pID = null)
+                        [NotNull] StrGuid guid,[CanBeNull]int? pID = null)
             : base(name, TableName, connectionString, guid) {
             _description = description;
             _unit = unit;
@@ -79,7 +81,7 @@ namespace Database.Tables.BasicElements {
         [UsedImplicitly]
         public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new Variable(
             FindNewName(isNameTaken, "New Variable "), "(no description)", "(no unit)",
-            connectionString, System.Guid.NewGuid().ToString());
+            connectionString, System.Guid.NewGuid().ToStrGuid());
 
         [NotNull]
         public override DBBase ImportFromGenericItem([NotNull] DBBase toImport,  [NotNull] Simulator dstSim)

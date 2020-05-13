@@ -41,82 +41,93 @@ namespace Calculation.Tests.Transportation
         [Category(UnitTestCategories.BasicTest)]
         public void CalcTransportationDeviceDriveTest()
         {
-            WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
-            //_calcParameters.CSVCharacter = ";";_calcParameters.InitializeTimeSteps(new DateTime(2018,1,1),new DateTime(2018,1,31),new TimeSpan(0,1,0),3,true  );
-            CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();
+            using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
+            {
+                wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
+                //_calcParameters.CSVCharacter = ";";_calcParameters.InitializeTimeSteps(new DateTime(2018,1,1),new DateTime(2018,1,31),new TimeSpan(0,1,0),3,true  );
+                CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();
 
-            CalcTransportationDeviceCategory category = new CalcTransportationDeviceCategory("category",true, Guid.NewGuid().ToString());
-            CalcLoadType lt2 = new CalcLoadType("driving load",  "km/h", "km", 10000, false, Guid.NewGuid().ToString());
-            Random rnd  =new Random(1);
-            NormalRandom nr = new NormalRandom(0,0.1,rnd);
-            var fft = new FileFactoryAndTracker(wd.WorkingDirectory, "blub", wd.InputDataLogger);
-            //SqlResultLoggingService srls = new SqlResultLoggingService(wd.WorkingDirectory);
-            DateStampCreator dsc = new DateStampCreator(calcParameters);
-            InputDataLogger idl = new InputDataLogger(Array.Empty<IDataSaverBase>());
-            OnlineLoggingData old = new OnlineLoggingData(dsc,idl,calcParameters);
-            LogFile lf = new LogFile(calcParameters,fft, true);
-            HouseholdKey key = new HouseholdKey("hh1");
-            fft.RegisterHousehold(key,"Household",HouseholdKeyType.Household,"Description", null, null);
-            CalcLoadType chargingCalcLoadType = new CalcLoadType("charging load","W","kWh",0.50,false, Guid.NewGuid().ToString());
-            OnlineDeviceActivationProcessor odap = new OnlineDeviceActivationProcessor(old, calcParameters,fft);
-            CalcRepo calcRepo = new CalcRepo(rnd:rnd, normalRandom:nr, lf:lf, calcParameters:calcParameters, odap:odap, onlineLoggingData:old);
-            CalcSite srcSite = new CalcSite("srcsite",  Guid.NewGuid().ToString(),key);
-            CalcSite dstSite = new CalcSite("dstSite", Guid.NewGuid().ToString(),key);
-            CalcChargingStation station = new CalcChargingStation(category,
-                chargingCalcLoadType, 500,
-                "stationname","stationguid",key,chargingCalcLoadType,calcRepo);
-            dstSite.ChargingDevices.Add(station);
-            List<CalcSite> calcSites = new List<CalcSite>
+                CalcTransportationDeviceCategory category = new CalcTransportationDeviceCategory("category", true, Guid.NewGuid().ToStrGuid());
+                CalcLoadType lt2 = new CalcLoadType("driving load", "km/h", "km", 10000, false, Guid.NewGuid().ToStrGuid());
+                Random rnd = new Random(1);
+                NormalRandom nr = new NormalRandom(0, 0.1, rnd);
+                using (var fft = new FileFactoryAndTracker(wd.WorkingDirectory, "blub", wd.InputDataLogger))
+                {
+                    //SqlResultLoggingService srls = new SqlResultLoggingService(wd.WorkingDirectory);
+                    DateStampCreator dsc = new DateStampCreator(calcParameters);
+                    InputDataLogger idl = new InputDataLogger(Array.Empty<IDataSaverBase>());
+                    using (OnlineLoggingData old = new OnlineLoggingData(dsc, idl, calcParameters))
+                    {
+                        using (LogFile lf = new LogFile(calcParameters, fft, true))
+                        {
+                            HouseholdKey key = new HouseholdKey("hh1");
+                            fft.RegisterHousehold(key, "Household", HouseholdKeyType.Household, "Description", null, null);
+                            CalcLoadType chargingCalcLoadType = new CalcLoadType("charging load", "W", "kWh", 0.50, false, Guid.NewGuid().ToStrGuid());
+                            OnlineDeviceActivationProcessor odap = new OnlineDeviceActivationProcessor(old, calcParameters, fft);
+                            using (CalcRepo calcRepo = new CalcRepo(rnd: rnd, normalRandom: nr, lf: lf, calcParameters: calcParameters, odap: odap, onlineLoggingData: old))
+                            {
+                                CalcSite srcSite = new CalcSite("srcsite", Guid.NewGuid().ToStrGuid(), key);
+                                CalcSite dstSite = new CalcSite("dstSite", Guid.NewGuid().ToStrGuid(), key);
+                                CalcChargingStation station = new CalcChargingStation(category,
+                                    chargingCalcLoadType, 500,
+                                    "stationname", "stationguid".ToStrGuid(), key, chargingCalcLoadType, calcRepo);
+                                dstSite.ChargingDevices.Add(station);
+                                List<CalcSite> calcSites = new List<CalcSite>
             {
                 srcSite,
                 dstSite
             };
-            CalcDeviceDto cdd = new CalcDeviceDto("transport device",
-                category.Guid,key,OefcDeviceType.Transportation,
-                category.Name,string.Empty, Guid.NewGuid().ToString(),
-                string.Empty,string.Empty);
-            List<CalcDeviceLoad> loads = new List<CalcDeviceLoad>
+                                CalcDeviceDto cdd = new CalcDeviceDto("transport device",
+                                    category.Guid, key, OefcDeviceType.Transportation,
+                                    category.Name, string.Empty, Guid.NewGuid().ToStrGuid(),
+                                    StrGuid.Empty,  string.Empty);
+                                List<CalcDeviceLoad> loads = new List<CalcDeviceLoad>
             {
-                new CalcDeviceLoad("load1", 10, lt2, 10000, 0,Guid.NewGuid().ToString())
+                new CalcDeviceLoad("load1", 10, lt2, 10000, 0)
             };
-            CalcTransportationDevice ctd = new CalcTransportationDevice(category,
-                10,loads,
-                10000,1,1000,
-                chargingCalcLoadType,calcSites,
-                 cdd,calcRepo);
-            TimeStep start = new TimeStep(1, 0, false);
-            TimeStep end = new TimeStep(11, 0, false);
-            ctd.Activate(start, 10,srcSite,dstSite,"myroute","myperson", start,
-                end);
+                                CalcTransportationDevice ctd = new CalcTransportationDevice(category,
+                                    10, loads,
+                                    10000, 1, 1000,
+                                    chargingCalcLoadType, calcSites,
+                                     cdd, calcRepo);
+                                TimeStep start = new TimeStep(1, 0, false);
+                                TimeStep end = new TimeStep(11, 0, false);
+                                ctd.Activate(start, 10, srcSite, dstSite, "myroute", "myperson", start,
+                                    end);
 
-            Assert.That(ctd.AvailableRangeInMeters,Is.EqualTo(10000));
-            //TODO: fix this and comment out
-            //station.IsAvailable = false;
-            double prevrange = 0;
-            for (int i = 1; i < 11; i++) {
-                TimeStep ts = new TimeStep(i, 0,false);
-                ctd.DriveAndCharge(ts);
-                odap.ProcessOneTimestep(ts);
-                double diffRange = prevrange - ctd.AvailableRangeInMeters;
-                Logger.Info("timestep: " + i +  " Range: " + ctd.AvailableRangeInMeters + " diff:" + diffRange);
-                prevrange = ctd.AvailableRangeInMeters;
-                Assert.That(ctd.Currentsite, Is.EqualTo(null));
-            }
-            //no charging
-            Assert.That(ctd.AvailableRangeInMeters, Is.EqualTo(10000-10*60*10)); //10m/s = 600m/minute
-            Logger.Info("currentSite:" + ctd.Currentsite?.Name);
+                                Assert.That(ctd.AvailableRangeInMeters, Is.EqualTo(10000));
+                                //TODO: fix this and comment out
+                                //station.IsAvailable = false;
+                                double prevrange = 0;
+                                for (int i = 1; i < 11; i++)
+                                {
+                                    TimeStep ts = new TimeStep(i, 0, false);
+                                    ctd.DriveAndCharge(ts);
+                                    odap.ProcessOneTimestep(ts);
+                                    double diffRange = prevrange - ctd.AvailableRangeInMeters;
+                                    Logger.Info("timestep: " + i + " Range: " + ctd.AvailableRangeInMeters + " diff:" + diffRange);
+                                    prevrange = ctd.AvailableRangeInMeters;
+                                    Assert.That(ctd.Currentsite, Is.EqualTo(null));
+                                }
+                                //no charging
+                                Assert.That(ctd.AvailableRangeInMeters, Is.EqualTo(10000 - 10 * 60 * 10)); //10m/s = 600m/minute
+                                Logger.Info("currentSite:" + ctd.Currentsite?.Name);
 
-            //station.IsAvailable = true;
-            for (int i = 11; i < 50; i++)
-            {
-                TimeStep ts = new TimeStep(i, 0,false);
-                ctd.DriveAndCharge(ts);
-                odap.ProcessOneTimestep(ts);
-                Logger.Info("timestep: " + i + " Range: " + ctd.AvailableRangeInMeters);
+                                //station.IsAvailable = true;
+                                for (int i = 11; i < 50; i++)
+                                {
+                                    TimeStep ts = new TimeStep(i, 0, false);
+                                    ctd.DriveAndCharge(ts);
+                                    odap.ProcessOneTimestep(ts);
+                                    Logger.Info("timestep: " + i + " Range: " + ctd.AvailableRangeInMeters);
+                                }
+                                Assert.That(ctd.Currentsite, Is.EqualTo(dstSite));
+                            }
+                        }
+                    }
+                }
+                wd.CleanUp(1);
             }
-            Assert.That(ctd.Currentsite, Is.EqualTo(dstSite));
-            wd.CleanUp(1);
         }
     }
 }

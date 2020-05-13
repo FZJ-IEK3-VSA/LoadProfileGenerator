@@ -45,58 +45,62 @@ namespace Database.Tests.Tables {
     {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void RealDeviceLoadCreationAndSaveTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
+        public void RealDeviceLoadCreationAndSaveTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var loadTypes = db.LoadLoadTypes();
+                var alldevices = new ObservableCollection<RealDevice>();
+                var deviceCategories = db.LoadDeviceCategories(alldevices, out var dcnone,
+                    false);
+                var profiles = db.LoadTimeBasedProfiles();
 
-            var loadTypes = db.LoadLoadTypes();
-            var alldevices = new ObservableCollection<RealDevice>();
-            var deviceCategories = db.LoadDeviceCategories(alldevices, out var dcnone,
-                false);
-            var profiles = db.LoadTimeBasedProfiles();
+                RealDevice.LoadFromDatabase(alldevices, deviceCategories, dcnone, db.ConnectionString, loadTypes, profiles,
+                    false);
 
-            RealDevice.LoadFromDatabase(alldevices, deviceCategories, dcnone, db.ConnectionString, loadTypes, profiles,
-                false);
-
-            db.ClearTable(RealDevice.TableName);
-            db.ClearTable(RealDeviceLoadType.TableName);
-            alldevices.Clear();
-            RealDevice.LoadFromDatabase(alldevices, deviceCategories, dcnone, db.ConnectionString, loadTypes, profiles,
-                false);
-            Assert.AreEqual(0, alldevices.Count);
-            var rd = new RealDevice("bla", 3, "p1", null, "name", true, false, db.ConnectionString, Guid.NewGuid().ToString());
-            rd.SaveToDB();
-            alldevices.Clear();
-            RealDevice.LoadFromDatabase(alldevices, deviceCategories, dcnone, db.ConnectionString, loadTypes, profiles,
-                false);
-            Assert.AreEqual(1, alldevices.Count);
-            var rd2 = new RealDevice("bla2", 3, "p1", null, "name", true, false, db.ConnectionString, Guid.NewGuid().ToString());
-            rd2.SaveToDB();
-            alldevices.Clear();
-            RealDevice.LoadFromDatabase(alldevices, deviceCategories, dcnone, db.ConnectionString, loadTypes, profiles,
-                false);
-            Assert.AreEqual(2, alldevices.Count);
-            db.Cleanup();
+                db.ClearTable(RealDevice.TableName);
+                db.ClearTable(RealDeviceLoadType.TableName);
+                alldevices.Clear();
+                RealDevice.LoadFromDatabase(alldevices, deviceCategories, dcnone, db.ConnectionString, loadTypes, profiles,
+                    false);
+                Assert.AreEqual(0, alldevices.Count);
+                var rd = new RealDevice("bla", 3, "p1", null, "name", true, false, db.ConnectionString, Guid.NewGuid().ToStrGuid());
+                rd.SaveToDB();
+                alldevices.Clear();
+                RealDevice.LoadFromDatabase(alldevices, deviceCategories, dcnone, db.ConnectionString, loadTypes, profiles,
+                    false);
+                Assert.AreEqual(1, alldevices.Count);
+                var rd2 = new RealDevice("bla2", 3, "p1", null, "name", true, false, db.ConnectionString, Guid.NewGuid().ToStrGuid());
+                rd2.SaveToDB();
+                alldevices.Clear();
+                RealDevice.LoadFromDatabase(alldevices, deviceCategories, dcnone, db.ConnectionString, loadTypes, profiles,
+                    false);
+                Assert.AreEqual(2, alldevices.Count);
+                db.Cleanup();
+            }
         }
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void RealDeviceTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-
-            db.ClearTable(RealDevice.TableName);
-            db.ClearTable(RealDeviceLoadType.TableName);
-            var rdcat = new CategoryDBBase<RealDevice>("blub");
-            var rd = rdcat.CreateNewItem(db.ConnectionString);
-            var profiles = db.LoadTimeBasedProfiles();
-            var alldevices = db.LoadRealDevices(out var deviceCategories, out var dcNone,
-                out var loadTypes, profiles);
-            Assert.AreEqual(1, alldevices.Count);
-            alldevices.Clear();
-            rdcat.DeleteItem(rd);
-            RealDevice.LoadFromDatabase(alldevices, deviceCategories, dcNone, db.ConnectionString, loadTypes, profiles,
-                false);
-            Assert.AreEqual(0, alldevices.Count);
-            db.Cleanup();
+        public void RealDeviceTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                db.ClearTable(RealDevice.TableName);
+                db.ClearTable(RealDeviceLoadType.TableName);
+                var rdcat = new CategoryDBBase<RealDevice>("blub");
+                var rd = rdcat.CreateNewItem(db.ConnectionString);
+                var profiles = db.LoadTimeBasedProfiles();
+                var alldevices = db.LoadRealDevices(out var deviceCategories, out var dcNone,
+                    out var loadTypes, profiles);
+                Assert.AreEqual(1, alldevices.Count);
+                alldevices.Clear();
+                rdcat.DeleteItem(rd);
+                RealDevice.LoadFromDatabase(alldevices, deviceCategories, dcNone, db.ConnectionString, loadTypes, profiles,
+                    false);
+                Assert.AreEqual(0, alldevices.Count);
+                db.Cleanup();
+            }
         }
     }
 }

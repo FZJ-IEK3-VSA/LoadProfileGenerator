@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Automation;
 using Automation.ResultFiles;
 using JetBrains.Annotations;
 
@@ -15,7 +16,7 @@ namespace Common.CalcDto {
         [NotNull]
         public string TemperatureprofileName { get; }
         [NotNull]
-        public string Guid { get; }
+        public StrGuid Guid { get; }
         [NotNull][ItemNotNull]
         public List<CalcLocationDto> LocationDtos { get;  }
         [NotNull]
@@ -39,7 +40,7 @@ namespace Common.CalcDto {
         public string Description { get; }
 
         public CalcHouseholdDto([NotNull]string name, int id,
-                                [NotNull] string temperatureprofileName, [NotNull]HouseholdKey householdkey, [NotNull]string guid, [NotNull] string geographicLocationName,
+                                [NotNull] string temperatureprofileName, [NotNull]HouseholdKey householdkey, [NotNull]StrGuid guid, [NotNull] string geographicLocationName,
                                 [NotNull]List<DateTime> bridgeDays, [NotNull][ItemNotNull]List<CalcAutoDevDto> autoDevices,
                                 [NotNull][ItemNotNull] List<CalcLocationDto> locationDtos, [NotNull][ItemNotNull]List<CalcPersonDto> persons,[NotNull][ItemNotNull]List<CalcDeviceDto> deviceDtos,
                                 [NotNull][ItemNotNull] List<CalcAffordanceDto> affordances,

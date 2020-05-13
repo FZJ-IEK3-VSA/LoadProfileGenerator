@@ -47,7 +47,7 @@ namespace Calculation.Tests
 
         [JetBrains.Annotations.NotNull]
         protected static CalcLoadType MakeCalcLoadType() => new CalcLoadType("loadtype1", "Watt", "kWh", 1 / 1000.0,
-            true, Guid.NewGuid().ToString());
+            true, Guid.NewGuid().ToStrGuid());
 
         /*
         [NotNull]
@@ -57,14 +57,14 @@ namespace Calculation.Tests
             BitArray isOnVacation = new BitArray(calcParameters.InternalTimesteps);
             CalcPersonDto pdto = CalcPersonDto.MakeExamplePerson();
             //calcpersonname", 1, 1, new Random(), 1, PermittedGender.Male, null,
-            //"hh-6", cloc, "traittag", "testhh", calcParameters,isSick, Guid.NewGuid().ToString()
+            //"hh-6", cloc, "traittag", "testhh", calcParameters,isSick, Guid.NewGuid().ToStrGuid()
             return new CalcPerson(pdto,new Random(), lf,cloc,calcParameters,isSick,isOnVacation);
         }*/
 
         [JetBrains.Annotations.NotNull]
         protected static CalcProfile MakeCalcProfile5Min100()
         {
-            var cp = new CalcProfile("5min100%", Guid.NewGuid().ToString(),  new TimeSpan(0, 1, 0), ProfileType.Relative, "foo");
+            var cp = new CalcProfile("5min100%", Guid.NewGuid().ToStrGuid(),  new TimeSpan(0, 1, 0), ProfileType.Relative, "foo");
             cp.AddNewTimepoint(new TimeSpan(0, 0, 0), 1);
             cp.AddNewTimepoint(new TimeSpan(0, 5, 0), 0);
             cp.ConvertToTimesteps();
@@ -79,12 +79,13 @@ namespace Calculation.Tests
         {
             var st = new StackTrace(1);
             var sf = st.GetFrame(0);
-            var declaringType = sf.GetMethod().DeclaringType;
+            var declaringType = sf?.GetMethod()?.DeclaringType;
             if (declaringType == null)
             {
                 throw new LPGException("type was null.");
             }
-            var msg = declaringType.FullName + "." + sf.GetMethod().Name;
+            // ReSharper disable once ConstantConditionalAccessQualifier
+            var msg = declaringType.FullName + "." + sf?.GetMethod()?.Name;
             var rnd = new Random();
             NormalRandom = new NormalRandom(0, 1, rnd);
             Logger.Info("locked by " + msg);
@@ -100,12 +101,13 @@ namespace Calculation.Tests
             Monitor.Exit(MyLock.Locker);
             var st = new StackTrace(1);
             var sf = st.GetFrame(0);
-            var type = sf.GetMethod().DeclaringType;
+            var type = sf?.GetMethod()?.DeclaringType;
             if (type == null)
             {
                 throw new LPGException("Type was null.");
             }
-            var msg = type.FullName + "." + sf.GetMethod().Name;
+            // ReSharper disable once ConstantConditionalAccessQualifier
+            var msg = type.FullName + "." + sf?.GetMethod()?.Name;
             Logger.LogToFile = false;
             Logger.Info("unlocked by " + msg);
         }

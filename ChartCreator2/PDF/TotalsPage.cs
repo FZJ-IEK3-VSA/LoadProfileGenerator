@@ -11,6 +11,7 @@ using Table = MigraDoc.DocumentObjectModel.Tables.Table;
 
 namespace ChartCreator2.PDF {
     [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
+    [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     internal class TotalsPage : IPageCreator {
         public void MakePage(Document doc, string dstdir, bool requireAll) {
             throw new NotImplementedException();

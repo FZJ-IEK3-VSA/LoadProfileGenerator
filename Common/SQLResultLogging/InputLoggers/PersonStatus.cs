@@ -1,4 +1,5 @@
-﻿using Automation.ResultFiles;
+﻿using Automation;
+using Automation.ResultFiles;
 using Common.SQLResultLogging.Loggers;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
@@ -8,9 +9,9 @@ namespace Common.SQLResultLogging.InputLoggers
     public class PersonStatus: IHouseholdKey
     {
         public PersonStatus([NotNull] HouseholdKey householdKey, [CanBeNull] string personName,
-                            [NotNull] string personGuid, [NotNull] string locationName,
-                            [NotNull] string locationGuid, [CanBeNull] string siteName, [CanBeNull] string siteGuid,
-                            [CanBeNull] string activeAffordance, [CanBeNull] string activeAffordanceGuid, [NotNull] TimeStep timeStep)
+                            [NotNull] StrGuid personGuid, [NotNull] string locationName,
+                            [NotNull] StrGuid locationGuid, [CanBeNull] string siteName, [CanBeNull] StrGuid siteGuid,
+                            [CanBeNull] string activeAffordance, [CanBeNull] StrGuid activeAffordanceGuid, [NotNull] TimeStep timeStep)
         {
             HouseholdKey = householdKey;
             PersonName = personName;
@@ -33,24 +34,24 @@ namespace Common.SQLResultLogging.InputLoggers
         public string PersonName { get; set; }
         [NotNull]
         [JsonProperty]
-        public string PersonGuid { get; set; }
+        public StrGuid PersonGuid { get; set; }
         [NotNull]
         [JsonProperty]
         public string LocationName { get; set; }
         [NotNull]
         [JsonProperty]
-        public string LocationGuid { get; set; }
+        public StrGuid LocationGuid { get; set; }
         [CanBeNull]
         [JsonProperty]
         public string SiteName { get; set; }
         [CanBeNull]
         [JsonProperty]
-        public string SiteGuid { get; set; }
+        public StrGuid SiteGuid { get; set; }
         [CanBeNull]
         [JsonProperty]
         public string ActiveAffordance { get; set; }
         [CanBeNull]
         [JsonProperty]
-        public string ActiveAffordanceGuid { get; set; }
+        public StrGuid ActiveAffordanceGuid { get; set; }
     }
 }

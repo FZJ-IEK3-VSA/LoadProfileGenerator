@@ -99,46 +99,58 @@ namespace LoadProfileGenerator.Tests {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
 #pragma warning restore S125 // Sections of code should not be "commented out"
-        public void RunTemplatePersonCreation() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var sim = new Simulator(db.ConnectionString) {MyGeneralConfig = {PerformCleanUpChecks = "False"}};
-            SimIntegrityChecker.Run(sim);
-            TemplatePersonCreator.CreateTemplatePersons(sim);
-            db.Cleanup();
+        public void RunTemplatePersonCreation()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var sim = new Simulator(db.ConnectionString) { MyGeneralConfig = { PerformCleanUpChecks = "False" } };
+                SimIntegrityChecker.Run(sim);
+                TemplatePersonCreator.CreateTemplatePersons(sim);
+                db.Cleanup();
+            }
         }
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void TemplatePersonFullCalculationTest() {
+        public void TemplatePersonFullCalculationTest()
+        {
             //TODO: fix this test
-            var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var sim = new Simulator(db.ConnectionString) {MyGeneralConfig = {PerformCleanUpChecks = "False"}};
-            SimIntegrityChecker.Run(sim);
-            var newchh = TemplatePersonCreator.RunCalculationTests(sim);
-            foreach (var household in newchh) {
-                var traits2Delete = new List<ModularHouseholdTrait>();
-                foreach (var modularHouseholdTrait in household.Traits) {
-                    if (modularHouseholdTrait.HouseholdTrait.MinimumPersonsInCHH > 1) {
-                        traits2Delete.Add(modularHouseholdTrait);
+            using (var wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
+            {
+                using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+                {
+                    var sim = new Simulator(db.ConnectionString) { MyGeneralConfig = { PerformCleanUpChecks = "False" } };
+                    SimIntegrityChecker.Run(sim);
+                    var newchh = TemplatePersonCreator.RunCalculationTests(sim);
+                    foreach (var household in newchh)
+                    {
+                        var traits2Delete = new List<ModularHouseholdTrait>();
+                        foreach (var modularHouseholdTrait in household.Traits)
+                        {
+                            if (modularHouseholdTrait.HouseholdTrait.MinimumPersonsInCHH > 1)
+                            {
+                                traits2Delete.Add(modularHouseholdTrait);
+                            }
+                        }
+                        foreach (var modularHouseholdTrait in traits2Delete)
+                        {
+                            household.DeleteTraitFromDB(modularHouseholdTrait);
+                        }
                     }
-                }
-                foreach (var modularHouseholdTrait in traits2Delete) {
-                    household.DeleteTraitFromDB(modularHouseholdTrait);
-                }
-            }
 
-            SimIntegrityChecker.Run(sim);
-            sim.MyGeneralConfig.StartDateUIString = "1.1.2015";
-            sim.MyGeneralConfig.EndDateUIString = "5.01.2015";
-            sim.MyGeneralConfig.InternalTimeResolution = "00:01:00";
-            sim.MyGeneralConfig.RandomSeed = 5;
-            sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.Reasonable);
-            //ChartLocalizer.ShouldTranslate = false;
-            //ConfigSetter.SetGlobalTimeParameters(sim.MyGeneralConfig);
-            Assert.AreNotEqual(null, sim);
-            db.Cleanup();
-            wd.CleanUp();
+                    SimIntegrityChecker.Run(sim);
+                    sim.MyGeneralConfig.StartDateUIString = "1.1.2015";
+                    sim.MyGeneralConfig.EndDateUIString = "5.01.2015";
+                    sim.MyGeneralConfig.InternalTimeResolution = "00:01:00";
+                    sim.MyGeneralConfig.RandomSeed = 5;
+                    sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.Reasonable);
+                    //ChartLocalizer.ShouldTranslate = false;
+                    //ConfigSetter.SetGlobalTimeParameters(sim.MyGeneralConfig);
+                    Assert.AreNotEqual(null, sim);
+                    db.Cleanup();
+                }
+                wd.CleanUp();
+            }
         }
     }
 }

@@ -26,6 +26,7 @@
 
 //-----------------------------------------------------------------------
 
+using Automation;
 using Automation.ResultFiles;
 using CalculationEngine.HouseholdElements;
 using Common;
@@ -47,7 +48,7 @@ namespace CalculationEngine.HouseElements {
         private double _tankLastValue;
 
         public CalcEnergyStorageSignal([NotNull] string pName, double triggerOff, double triggerOn, double value,
-            CalcVariable calcVariable, [NotNull] string guid) : base(pName,guid) {
+            CalcVariable calcVariable, [NotNull] StrGuid guid) : base(pName,guid) {
             _triggerOffPercent = triggerOff ;
             _triggerOnPercent = triggerOn;
             _value = value;

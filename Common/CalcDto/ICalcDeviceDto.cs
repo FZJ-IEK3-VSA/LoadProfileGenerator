@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Automation;
 using JetBrains.Annotations;
 
 namespace Common.CalcDto {
@@ -12,7 +13,7 @@ namespace Common.CalcDto {
         //string DeviceCategoryName { get; }
         //string AdditionalName { get; }
         [NotNull]
-        string Guid { get; }
+        StrGuid Guid { get; }
         //int LocationID { get; }
         //string LocationGuid { get; }
         //string LocationName { get; }

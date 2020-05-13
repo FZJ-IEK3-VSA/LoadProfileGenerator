@@ -48,7 +48,7 @@ namespace Calculation.Tests {
             var tmparr = new List<double>();
             tmparr.AddRange(new double[] {1, 2, 3});
 
-            var cp = new CalcProfile("bla", Guid.NewGuid().ToString(), tmparr,  ProfileType.Absolute,
+            var cp = new CalcProfile("bla", Guid.NewGuid().ToStrGuid(), tmparr,  ProfileType.Absolute,
                 "bla");
             var result = cp.CompressExpandDoubleArray(2);
             //List<double> result = CalcProfile.CompressExpandDoubleArray(tmparr, 2);
@@ -67,7 +67,7 @@ namespace Calculation.Tests {
         {
             var tmparr = new List<double>();
             tmparr.AddRange(new double[] {1, 2, 3});
-            var cp = new CalcProfile("bla", Guid.NewGuid().ToString(), tmparr, ProfileType.Absolute, "bla");
+            var cp = new CalcProfile("bla", Guid.NewGuid().ToStrGuid(), tmparr, ProfileType.Absolute, "bla");
             var result = cp.CompressExpandDoubleArray(1.5);
             //List<double> result = CalcProfile.CompressExpandDoubleArray(tmparr, 1.5);
             Assert.AreEqual(5, result.StepValues.Count);
@@ -85,7 +85,7 @@ namespace Calculation.Tests {
             double[] tmparr = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
             //List<double> tmplist = new List<double>(tmparr);
             //List<double> result = CalcProfile.CompressExpandDoubleArray(tmplist, 1.1);
-            var cp = new CalcProfile("bla", Guid.NewGuid().ToString(), tmparr.ToList(), ProfileType.Absolute,
+            var cp = new CalcProfile("bla", Guid.NewGuid().ToStrGuid(), tmparr.ToList(), ProfileType.Absolute,
                 "bla");
             var result = cp.CompressExpandDoubleArray(1.5);
             foreach (double resultStepValue in result.StepValues) {
@@ -114,7 +114,7 @@ namespace Calculation.Tests {
         public void CompressExpandDoubleArrayShrink1ShouldWork()
         {
             double[] tmparr = {1, 2, 3, 4};
-            var cp = new CalcProfile("bla", Guid.NewGuid().ToString(), tmparr.ToList(), ProfileType.Absolute,
+            var cp = new CalcProfile("bla", Guid.NewGuid().ToStrGuid(), tmparr.ToList(), ProfileType.Absolute,
                 "bla");
             var result = cp.CompressExpandDoubleArray(0.5);
             //List<double> result = CalcProfile.CompressExpandDoubleArray(tmplist, 0.5);
@@ -130,7 +130,7 @@ namespace Calculation.Tests {
             double[] tmparr = {1, 2, 3, 4, 5};
             //List<double> tmplist = new List<double>(tmparr);
             //List<double> result = CalcProfile.CompressExpandDoubleArray(tmplist, 0.5);
-            var cp = new CalcProfile("bla", Guid.NewGuid().ToString(), tmparr.ToList(),ProfileType.Absolute,
+            var cp = new CalcProfile("bla", Guid.NewGuid().ToStrGuid(), tmparr.ToList(),ProfileType.Absolute,
                 "bla");
             var result = cp.CompressExpandDoubleArray(0.5);
             Assert.AreEqual(3, result.StepValues.Count);

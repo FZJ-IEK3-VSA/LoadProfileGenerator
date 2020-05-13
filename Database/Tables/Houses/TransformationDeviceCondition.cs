@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
+using Automation;
 using Database.Database;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
@@ -18,7 +19,7 @@ namespace Database.Tables.Houses {
         public TransformationDeviceCondition([CanBeNull]int? pID,
              double minValue, double maxValue,
              int transformationDeviceID, [NotNull] string connectionString, [NotNull] string name,
-                                             [NotNull] string guid, Variable variable) : base(
+                                             [NotNull] StrGuid guid, Variable variable) : base(
             name, TableName, connectionString, guid)
         {
             ID = pID;

@@ -221,5 +221,17 @@ namespace Common {
 
         [NotNull]
         public override string ToString() => "Internal: " + InternalStep + " External:  " + ExternalStep + (DisplayThisStep ? "(D)" : "()");
+
+        [NotNull]
+        public static TimeStep Add(TimeStep left, TimeStep right)
+        {
+            return left + right;
+        }
+
+        [NotNull]
+        public static TimeStep Subtract(TimeStep left, TimeStep right)
+        {
+            return left - right;
+        }
     }
 }

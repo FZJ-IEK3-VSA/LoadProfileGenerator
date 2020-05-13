@@ -43,6 +43,7 @@
         ActionsEachTimestep = 40,
         CalculationFlameChart = 41,
         SumProfileExternalIndividualHouseholdsAsJson = 42,
-        JsonSumFiles = 43
+        JsonSumFiles = 43,
+        BodilyActivityStatistics = 44
     }
 }

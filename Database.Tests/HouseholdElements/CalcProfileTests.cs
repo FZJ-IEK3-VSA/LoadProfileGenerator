@@ -16,7 +16,7 @@ namespace Database.Tests.HouseholdElements
         public void CalcProfileTest1MinPro1MinStep()
         {
             TimeSpan stepsize = new TimeSpan(0, 1, 0);
-            CalcProfile cp = new CalcProfile("name", Guid.NewGuid().ToString(), stepsize, ProfileType.Absolute, "made up");
+            CalcProfile cp = new CalcProfile("name", Guid.NewGuid().ToStrGuid(), stepsize, ProfileType.Absolute, "made up");
             cp.AddNewTimepoint(new TimeSpan(0, 0, 0), 100);
             cp.AddNewTimepoint(new TimeSpan(0, 1, 0), 100);
             cp.ConvertToTimesteps();
@@ -29,7 +29,7 @@ namespace Database.Tests.HouseholdElements
         public void CalcProfileTest2MinPro1MinStep()
         {
             TimeSpan stepsize = new TimeSpan(0, 1, 0);
-            CalcProfile cp = new CalcProfile("name", Guid.NewGuid().ToString(), stepsize, ProfileType.Absolute, "made up");
+            CalcProfile cp = new CalcProfile("name", Guid.NewGuid().ToStrGuid(), stepsize, ProfileType.Absolute, "made up");
             cp.AddNewTimepoint(new TimeSpan(0, 0, 0), 100);
             cp.AddNewTimepoint(new TimeSpan(0, 2, 0), 100);
             cp.ConvertToTimesteps();
@@ -44,7 +44,7 @@ namespace Database.Tests.HouseholdElements
         {
             Config.IsInUnitTesting = true;
             TimeSpan stepsize = new TimeSpan(0, 1, 0);
-            CalcProfile cp = new CalcProfile("name", Guid.NewGuid().ToString(), stepsize, ProfileType.Absolute, "made up");
+            CalcProfile cp = new CalcProfile("name", Guid.NewGuid().ToStrGuid(), stepsize, ProfileType.Absolute, "made up");
             cp.AddNewTimepoint(new TimeSpan(0, 0, 0), 100);
             cp.AddNewTimepoint(new TimeSpan(0, 0, 30), 50);
             cp.AddNewTimepoint(new TimeSpan(0, 1, 30), 0);

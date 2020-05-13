@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using Automation.ResultFiles;
 using Common;
-using JetBrains.Annotations;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
@@ -23,17 +22,20 @@ namespace ChartCreator2.OxyCharts {
 
         protected override FileProcessingResult MakeOnePlot(ResultFileEntry rfe)
         {
-            _CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
+            Profiler.StartPart(Utili.GetCurrentMethodAndClass());
             string plotName = "Time of Use " + rfe.HouseholdNumberString + " " + rfe.LoadTypeInformation?.Name;
             bool isEnergy = rfe.ResultFileID == ResultFileID.TimeOfUseEnergy;
             var devices = new List<Device>();
-
+            if (rfe.FullFileName == null)
+            {
+                throw new LPGException("filename was null");
+            }
             using (var sr = new StreamReader(rfe.FullFileName)) {
                 var s = sr.ReadLine();
                 if (s == null) {
                     throw new LPGException("Readline failed");
                 }
-                var header1 = s.Split(_Parameters.CSVCharacterArr, StringSplitOptions.None);
+                var header1 = s.Split(Parameters.CSVCharacterArr, StringSplitOptions.None);
                 foreach (var header in header1) {
                     devices.Add(new Device(header));
                 }
@@ -42,7 +44,7 @@ namespace ChartCreator2.OxyCharts {
                     if (s == null) {
                         throw new LPGException("Readline failed");
                     }
-                    var cols = s.Split(_Parameters.CSVCharacterArr, StringSplitOptions.None);
+                    var cols = s.Split(Parameters.CSVCharacterArr, StringSplitOptions.None);
                     for (var index = 2; index < cols.Length; index++) {
                         var col = cols[index];
                         if (col.Length > 0) {
@@ -81,7 +83,7 @@ namespace ChartCreator2.OxyCharts {
                 LegendPosition = LegendPosition.BottomCenter
             };
 
-            if (_Parameters.ShowTitle) {
+            if (Parameters.ShowTitle) {
                 plotModel1.Title = plotName;
             }
             // axes
@@ -132,8 +134,8 @@ namespace ChartCreator2.OxyCharts {
                 columnSeries2.FillColor = p.Colors[i];
                 plotModel1.Series.Add(columnSeries2);
             }
-            Save(plotModel1, plotName, rfe.FullFileName, _Parameters.BaseDirectory);
-            _CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
+            Save(plotModel1, plotName, rfe.FullFileName, Parameters.BaseDirectory);
+            Profiler.StopPart(Utili.GetCurrentMethodAndClass());
             return FileProcessingResult.ShouldCreateFiles;
         }
 

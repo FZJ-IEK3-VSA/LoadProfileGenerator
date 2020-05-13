@@ -45,18 +45,22 @@ namespace Calculation.Tests.Logfile
         [Category(UnitTestCategories.BasicTest)]
         public void BasicTest()
         {
-            WorkingDir wd = new WorkingDir("BasicLogfileTest");
-            CalcParameters calcParameters =CalcParametersFactory.MakeGoodDefaults().EnableShowSettlingPeriod();
-            wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
-            wd.InputDataLogger.AddSaver(new ResultFileEntryLogger(wd.SqlResultLoggingService));
-            FileFactoryAndTracker fft = new FileFactoryAndTracker(wd.WorkingDirectory,"hh1",wd.InputDataLogger);
-            fft.RegisterHousehold(Constants.GeneralHouseholdKey,"general",HouseholdKeyType.General,"desc", null, null);
-            //SqlResultLoggingService srls = new SqlResultLoggingService(wd.WorkingDirectory);
-            using (LogFile lf = new LogFile(calcParameters,fft))
+            using (WorkingDir wd = new WorkingDir("BasicLogfileTest"))
             {
-                lf.Dispose();
+                CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults().EnableShowSettlingPeriod();
+                wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
+                wd.InputDataLogger.AddSaver(new ResultFileEntryLogger(wd.SqlResultLoggingService));
+                using (FileFactoryAndTracker fft = new FileFactoryAndTracker(wd.WorkingDirectory, "hh1", wd.InputDataLogger))
+                {
+                    fft.RegisterHousehold(Constants.GeneralHouseholdKey, "general", HouseholdKeyType.General, "desc", null, null);
+                    //SqlResultLoggingService srls = new SqlResultLoggingService(wd.WorkingDirectory);
+                    using (LogFile lf = new LogFile(calcParameters, fft))
+                    {
+                        lf.Dispose();
+                    }
+                }
+                wd.CleanUp();
             }
-            wd.CleanUp();
         }
     }
 }

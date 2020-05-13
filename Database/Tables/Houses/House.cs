@@ -67,7 +67,7 @@ namespace Database.Tables.Houses {
 
         public House([NotNull] string pName, [CanBeNull] string description, [CanBeNull] TemperatureProfile temperatureProfile, [CanBeNull] GeographicLocation geographicLocation,
                      [CanBeNull] HouseType houseType, [NotNull] string connectionString, EnergyIntensityType energyIntensity, [CanBeNull] string source, CreationType creationType,
-                     [NotNull] string guid, [CanBeNull] int? pID = null) : base(pName, TableName, connectionString, guid)
+                     [NotNull] StrGuid guid, [CanBeNull] int? pID = null) : base(pName, TableName, connectionString, guid)
         {
             ID = pID;
             TypeDescription = "House";
@@ -216,7 +216,7 @@ namespace Database.Tables.Houses {
             }
 
             var hd = new HouseHousehold(
-                null, IntID, hh, ConnectionString, hh.Name, System.Guid.NewGuid().ToString(), transportationDeviceSet, chargingstations, travelrouteset,
+                null, IntID, hh, ConnectionString, hh.Name, System.Guid.NewGuid().ToStrGuid(), transportationDeviceSet, chargingstations, travelrouteset,
                 enableTransportationModelling);
             _houseHouseholds.Add(hd);
             _houseHouseholds.Sort();
@@ -226,7 +226,7 @@ namespace Database.Tables.Houses {
         [NotNull]
         public HouseData MakeHouseData()
         {
-            HouseData hd = new HouseData(System.Guid.NewGuid().ToString(), HouseType?.HouseTypeCode,
+            HouseData hd = new HouseData(System.Guid.NewGuid().ToStrGuid(), HouseType?.HouseTypeCode,
                 HouseType?.HeatingYearlyTotal, HouseType?.CoolingYearlyTotal, Name);
             int householdIdx = 1;
             foreach (var houseHousehold in Households)
@@ -240,7 +240,7 @@ namespace Database.Tables.Houses {
                 var hhd = new HouseholdData(householdName, household.IsTransportationEnabled,
                     houseHousehold.Name, houseHousehold.ChargingStationSet?.GetJsonReference(),
                     houseHousehold.TransportationDeviceSet?.GetJsonReference(),
-                    houseHousehold.TravelRouteSet?.GetJsonReference(), null, HouseholdDataSpecifictionType.ByHouseholdName);
+                    houseHousehold.TravelRouteSet?.GetJsonReference(), null, HouseholdDataSpecificationType.ByHouseholdName);
                 hhd.HouseholdNameSpecification = new HouseholdNameSpecification(household.Name);
                 hd.Households.Add(hhd);
                 householdIdx++;
@@ -256,7 +256,7 @@ namespace Database.Tables.Houses {
         public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString)
         {
             var house = new House(FindNewName(isNameTaken, "New House "), "New house description", null, null, null, connectionString, EnergyIntensityType.Random, "Manually Created",
-                CreationType.ManuallyCreated, System.Guid.NewGuid().ToString());
+                CreationType.ManuallyCreated, System.Guid.NewGuid().ToStrGuid());
             return house;
         }
 
@@ -310,7 +310,7 @@ namespace Database.Tables.Houses {
             }
 
             var house = new House(item.Name, item.Description, tp, geographic, ht, dstSim.ConnectionString, EnergyIntensityType.Random, item._source, item._creationType,
-                System.Guid.NewGuid().ToString());
+                System.Guid.NewGuid().ToStrGuid());
             house.SaveToDB();
             foreach (var hhh in item.Households) {
                 if (hhh.CalcObject == null) {

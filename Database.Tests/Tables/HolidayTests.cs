@@ -40,100 +40,111 @@ namespace Database.Tests.Tables {
     {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void HolidayProbabilitesCalculateTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            // test the normal loading
-            var holidays = new ObservableCollection<Holiday>();
-            Holiday.LoadFromDatabase(holidays, db.ConnectionString, false);
-            // delete everything and check
-            holidays.Clear();
-            db.ClearTable(Holiday.TableName);
-            db.ClearTable(HolidayDate.TableName);
-            db.ClearTable(HolidayProbabilities.TableName);
-            Holiday.LoadFromDatabase(holidays, db.ConnectionString, false);
-            Assert.AreEqual(0, holidays.Count);
-            // add one and load again
-            var hd = new Holiday("my holiday", "blub", db.ConnectionString, Guid.NewGuid().ToString());
-            hd.SaveToDB();
-            hd.ProbMonday.Tuesday = 100;
-            hd.ProbMonday.Wednesday = 0;
-            var holiday = new DateTime(2014, 2, 17);
-            hd.AddNewDate(holiday);
-            hd.SaveToDB();
-            var r = new Random(1);
-            var dts = hd.GetListOfWorkFreeDates(r, "test");
-            Assert.AreEqual(2, dts.Count);
-            Assert.True(dts.ContainsKey(holiday));
-            Assert.True(dts.ContainsKey(holiday.AddDays(1)));
-            db.Cleanup();
+        public void HolidayProbabilitesCalculateTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                // test the normal loading
+                var holidays = new ObservableCollection<Holiday>();
+                Holiday.LoadFromDatabase(holidays, db.ConnectionString, false);
+                // delete everything and check
+                holidays.Clear();
+                db.ClearTable(Holiday.TableName);
+                db.ClearTable(HolidayDate.TableName);
+                db.ClearTable(HolidayProbabilities.TableName);
+                Holiday.LoadFromDatabase(holidays, db.ConnectionString, false);
+                Assert.AreEqual(0, holidays.Count);
+                // add one and load again
+                var hd = new Holiday("my holiday", "blub", db.ConnectionString, Guid.NewGuid().ToStrGuid());
+                hd.SaveToDB();
+                hd.ProbMonday.Tuesday = 100;
+                hd.ProbMonday.Wednesday = 0;
+                var holiday = new DateTime(2014, 2, 17);
+                hd.AddNewDate(holiday);
+                hd.SaveToDB();
+                var r = new Random(1);
+                var dts = hd.GetListOfWorkFreeDates(r, "test");
+                Assert.AreEqual(2, dts.Count);
+                Assert.True(dts.ContainsKey(holiday));
+                Assert.True(dts.ContainsKey(holiday.AddDays(1)));
+                db.Cleanup();
+            }
         }
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void HolidayProbabilitesSaveTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            // test the normal loading
-            var holidays = new ObservableCollection<Holiday>();
-            Holiday.LoadFromDatabase(holidays, db.ConnectionString, false);
-            // delete everything and check
-            holidays.Clear();
-            db.ClearTable(Holiday.TableName);
-            db.ClearTable(HolidayDate.TableName);
-            db.ClearTable(HolidayProbabilities.TableName);
-            Holiday.LoadFromDatabase(holidays, db.ConnectionString, false);
-            Assert.AreEqual(0, holidays.Count);
-            // add one and load again
-            var hd = new Holiday("my holiday", "blub", db.ConnectionString, Guid.NewGuid().ToString());
-            hd.SaveToDB();
-            hd.ProbMonday.Monday = 5;
-            hd.SaveToDB();
-            Holiday.LoadFromDatabase(holidays, db.ConnectionString, false);
-            Assert.AreEqual(1, holidays.Count);
-            Assert.AreEqual(5, holidays[0].ProbMonday.Monday);
-            // delete the loaded one
-            holidays[0].DeleteFromDB();
-            holidays.Clear();
-            Holiday.LoadFromDatabase(holidays, db.ConnectionString, false);
-            Assert.AreEqual(0, holidays.Count);
-            db.Cleanup();
+        public void HolidayProbabilitesSaveTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                // test the normal loading
+                var holidays = new ObservableCollection<Holiday>();
+                Holiday.LoadFromDatabase(holidays, db.ConnectionString, false);
+                // delete everything and check
+                holidays.Clear();
+                db.ClearTable(Holiday.TableName);
+                db.ClearTable(HolidayDate.TableName);
+                db.ClearTable(HolidayProbabilities.TableName);
+                Holiday.LoadFromDatabase(holidays, db.ConnectionString, false);
+                Assert.AreEqual(0, holidays.Count);
+                // add one and load again
+                var hd = new Holiday("my holiday", "blub", db.ConnectionString, Guid.NewGuid().ToStrGuid());
+                hd.SaveToDB();
+                hd.ProbMonday.Monday = 5;
+                hd.SaveToDB();
+                Holiday.LoadFromDatabase(holidays, db.ConnectionString, false);
+                Assert.AreEqual(1, holidays.Count);
+                Assert.AreEqual(5, holidays[0].ProbMonday.Monday);
+                // delete the loaded one
+                holidays[0].DeleteFromDB();
+                holidays.Clear();
+                Holiday.LoadFromDatabase(holidays, db.ConnectionString, false);
+                Assert.AreEqual(0, holidays.Count);
+                db.Cleanup();
+            }
         }
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void LoadFromDatabaseTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
+        public void LoadFromDatabaseTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
 
-            // test the normal loading
-            var holidays = new ObservableCollection<Holiday>();
-            Holiday.LoadFromDatabase(holidays, db.ConnectionString, false);
-            // delete everything and check
-            holidays.Clear();
-            db.ClearTable(Holiday.TableName);
-            db.ClearTable(HolidayDate.TableName);
-            Holiday.LoadFromDatabase(holidays, db.ConnectionString, false);
-            Assert.AreEqual(0, holidays.Count);
-            // add one and load again
-            var hd = new Holiday("my holiday", "blub", db.ConnectionString, Guid.NewGuid().ToString());
-            hd.SaveToDB();
-            Holiday.LoadFromDatabase(holidays, db.ConnectionString, false);
-            Assert.AreEqual(1, holidays.Count);
-            // delete the loaded one
-            holidays[0].DeleteFromDB();
-            holidays.Clear();
-            Holiday.LoadFromDatabase(holidays, db.ConnectionString, false);
-            Assert.AreEqual(0, holidays.Count);
-            db.Cleanup();
+                // test the normal loading
+                var holidays = new ObservableCollection<Holiday>();
+                Holiday.LoadFromDatabase(holidays, db.ConnectionString, false);
+                // delete everything and check
+                holidays.Clear();
+                db.ClearTable(Holiday.TableName);
+                db.ClearTable(HolidayDate.TableName);
+                Holiday.LoadFromDatabase(holidays, db.ConnectionString, false);
+                Assert.AreEqual(0, holidays.Count);
+                // add one and load again
+                var hd = new Holiday("my holiday", "blub", db.ConnectionString, Guid.NewGuid().ToStrGuid());
+                hd.SaveToDB();
+                Holiday.LoadFromDatabase(holidays, db.ConnectionString, false);
+                Assert.AreEqual(1, holidays.Count);
+                // delete the loaded one
+                holidays[0].DeleteFromDB();
+                holidays.Clear();
+                Holiday.LoadFromDatabase(holidays, db.ConnectionString, false);
+                Assert.AreEqual(0, holidays.Count);
+                db.Cleanup();
+            }
         }
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void CreateNewHolidays()
         {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            Simulator sim = new Simulator(db.ConnectionString);
-            sim.Holidays.CreateNewItem(sim.ConnectionString);
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                Simulator sim = new Simulator(db.ConnectionString);
+                sim.Holidays.CreateNewItem(sim.ConnectionString);
 
-            db.Cleanup();
+                db.Cleanup();
+            }
         }
     }
 }

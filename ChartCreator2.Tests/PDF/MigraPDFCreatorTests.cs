@@ -81,7 +81,8 @@ namespace ChartCreator2.Tests.PDF {
 
         [Test]
         [Category(UnitTestCategories.BrokenTest)]
-        public void MakeFullPDFDocumentTest() {
+        public void MakeFullPDFDocumentTest()
+        {
             //const bool blub = true;
             //// doesn't work on the testing server somehow
             //if (blub)
@@ -89,22 +90,25 @@ namespace ChartCreator2.Tests.PDF {
 
             Config.ReallyMakeAllFilesIncludingBothSums = true;
             var cs = new OxyCalculationSetup(Utili.GetCurrentMethodAndClass());
-            var name = cs.StartHousehold(1,  GlobalConsts.CSVCharacter,
-                LoadTypePriority.Mandatory, null, x => {
+            var name = cs.StartHousehold(1, GlobalConsts.CSVCharacter,
+                LoadTypePriority.Mandatory, null, x =>
+                {
                     x.ApplyOptionDefault(OutputFileDefault.All);
                     x.CarpetPlotWidth = 7;
                     x.Disable(CalcOption.MakeGraphics);
                     x.Disable(CalcOption.MakePDF);
                 });
             CalculationProfiler cp = new CalculationProfiler();
-            ChartCreationParameters ccp = new ChartCreationParameters(144,1600,1000,false,GlobalConsts.CSVCharacter,new DirectoryInfo(cs.DstDir));
-            var fft = cs.GetFileTracker();
-            var cg = new ChartGeneratorManager(cp,fft,ccp);
-            Logger.Info("Making picture");
-            cg.Run(cs.DstDir);
-            Logger.Info("finished picture");
-            MigraPDFCreator mpc  = new MigraPDFCreator(cp);
-            mpc.MakeDocument(cs.DstDir, name + ".test", false, true, GlobalConsts.CSVCharacter,fft);
+            ChartCreationParameters ccp = new ChartCreationParameters(144, 1600, 1000, false, GlobalConsts.CSVCharacter, new DirectoryInfo(cs.DstDir));
+            using (var fft = cs.GetFileTracker())
+            {
+                var cg = new ChartGeneratorManager(cp, fft, ccp);
+                Logger.Info("Making picture");
+                cg.Run(cs.DstDir);
+                Logger.Info("finished picture");
+                MigraPDFCreator mpc = new MigraPDFCreator(cp);
+                mpc.MakeDocument(cs.DstDir, name + ".test", false, true, GlobalConsts.CSVCharacter, fft);
+            }
 
             Thread.Sleep(5000);
             cs.CleanUp();

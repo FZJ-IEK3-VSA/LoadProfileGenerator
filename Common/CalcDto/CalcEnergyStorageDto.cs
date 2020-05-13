@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Automation;
 using Automation.ResultFiles;
 using JetBrains.Annotations;
 
@@ -7,7 +8,7 @@ namespace Common.CalcDto {
         [NotNull]
         public HouseholdKey HouseholdKey { get; }
         [NotNull]
-        public string Guid { get; }
+        public StrGuid Guid { get; }
         [NotNull]
         public string Name { get; }
         public int ID { get; }
@@ -30,7 +31,7 @@ namespace Common.CalcDto {
                                     double maximumStorageRate, double maximumWithdrawRate, double minimumStorageRate,
                                     double minimumWithdrawRate,
                                     double initialFill, double storageCapacity,
-                                    [NotNull]HouseholdKey householdKey, [NotNull] string guid, [ItemNotNull] [NotNull]List<CalcEnergyStorageSignalDto> signals)
+                                    [NotNull]HouseholdKey householdKey, [NotNull] StrGuid guid, [ItemNotNull] [NotNull]List<CalcEnergyStorageSignalDto> signals)
         {
             Name = name;
             ID = id;

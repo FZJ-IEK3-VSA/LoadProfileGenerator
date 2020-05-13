@@ -30,6 +30,7 @@ using System;
 using System.Collections.ObjectModel;
 using Automation;
 using CalculationController.CalcFactories;
+using Common;
 using Common.Tests;
 using Database.Tables.BasicHouseholds;
 using NUnit.Framework;
@@ -45,7 +46,7 @@ namespace CalculationController.Tests.CalcFactories
         {
             //_calcParameters.CSVCharacter = ";";
             VLoadType vlt = new VLoadType("vlt", string.Empty, "W", "kWh", 1000, 1, new TimeSpan(1, 0, 0), 1,
-                string.Empty, LoadTypePriority.Mandatory,true,Guid.NewGuid().ToString(), 1);
+                string.Empty, LoadTypePriority.Mandatory,true,Guid.NewGuid().ToStrGuid(), 1);
 
             ObservableCollection<VLoadType> vlts = new ObservableCollection<VLoadType> {vlt};
             var dtoDict =  CalcLoadTypeDtoFactory.MakeLoadTypes(vlts, new TimeSpan(0, 0, 1),LoadTypePriority.All);

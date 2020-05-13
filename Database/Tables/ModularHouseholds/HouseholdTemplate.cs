@@ -30,7 +30,7 @@ namespace Database.Tables.ModularHouseholds {
 
     public interface IRelevantGuidProvider {
         [NotNull]
-        string RelevantGuid { get; }
+        StrGuid RelevantGuid { get; }
     }
 
     public interface IJSonSubElement<T>: IJsonSerializable<T>, IGuidObject, IRelevantGuidProvider {
@@ -64,7 +64,7 @@ namespace Database.Tables.ModularHouseholds {
 
         public HouseholdTemplate([NotNull] string pName, [CanBeNull] int? id, [CanBeNull] string description, [NotNull] string connectionString, [CanBeNull] string newName, int count,
                                  [CanBeNull] DateBasedProfile timeProfileForVacations, TemplateVacationType templateVacationType, int minNumberOfVacations, int maxNumberOfVacations,
-                                 int averageVacationDuration, int minTotalVacationDays, int maxTotalVacationDays, [NotNull] string guid) : base(pName, TableName, connectionString, guid)
+                                 int averageVacationDuration, int minTotalVacationDays, int maxTotalVacationDays, [NotNull] StrGuid guid) : base(pName, TableName, connectionString, guid)
         {
             _templateVacationType = templateVacationType;
             _minNumberOfVacations = minNumberOfVacations;
@@ -215,7 +215,7 @@ namespace Database.Tables.ModularHouseholds {
         [NotNull]
         public HHTemplateEntry AddEntry([NotNull] TraitTag tag, int min, int max)
         {
-            var entry = new HHTemplateEntry(null, IntID, "newEntry", ConnectionString, tag, min, max, System.Guid.NewGuid().ToString());
+            var entry = new HHTemplateEntry(null, IntID, "newEntry", ConnectionString, tag, min, max, System.Guid.NewGuid().ToStrGuid());
             _entries.Add(entry);
             entry.SaveToDB();
             _entries.Sort();
@@ -237,7 +237,7 @@ namespace Database.Tables.ModularHouseholds {
                 }
             }
 
-            var entry = new HHTemplateEntry(null, IntID, "newEntry", ConnectionString, tag, min, max, System.Guid.NewGuid().ToString());
+            var entry = new HHTemplateEntry(null, IntID, "newEntry", ConnectionString, tag, min, max, System.Guid.NewGuid().ToStrGuid());
 
             _entries.Add(entry);
             entry.SaveToDB();
@@ -259,7 +259,7 @@ namespace Database.Tables.ModularHouseholds {
                 }
             }
 
-            var entry = new HHTemplatePerson(null, p, IntID, "...", ConnectionString, tag, System.Guid.NewGuid().ToString());
+            var entry = new HHTemplatePerson(null, p, IntID, "...", ConnectionString, tag, System.Guid.NewGuid().ToStrGuid());
             _persons.Add(entry);
             entry.SaveToDB();
             _persons.Sort();
@@ -281,7 +281,7 @@ namespace Database.Tables.ModularHouseholds {
             }
 
             var entry = new HHTemplateTag(null, tag,
-                IntID, tag.Name, ConnectionString, System.Guid.NewGuid().ToString());
+                IntID, tag.Name, ConnectionString, System.Guid.NewGuid().ToStrGuid());
             entry.SaveToDB();
             _templateTags.Add(entry);
             _templateTags.Sort((x, y) => {
@@ -311,7 +311,7 @@ namespace Database.Tables.ModularHouseholds {
                 }
             }
 
-            var entry = new HHTemplateVacation(null, v, IntID, "...", ConnectionString, System.Guid.NewGuid().ToString());
+            var entry = new HHTemplateVacation(null, v, IntID, "...", ConnectionString, System.Guid.NewGuid().ToStrGuid());
             _vacations.Add(entry);
             entry.SaveToDB();
             _vacations.Sort();
@@ -323,7 +323,7 @@ namespace Database.Tables.ModularHouseholds {
         [NotNull]
         [UsedImplicitly]
         public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new HouseholdTemplate(FindNewName(isNameTaken, "New  Household Template"),
-            null, "(no description yet)", connectionString, "Automatically generated Household", 10, null, TemplateVacationType.FromList, 1, 3, 7, 10, 14, System.Guid.NewGuid().ToString());
+            null, "(no description yet)", connectionString, "Automatically generated Household", 10, null, TemplateVacationType.FromList, 1, 3, 7, 10, 14, System.Guid.NewGuid().ToStrGuid());
 
         public void DeleteEntryFromDB([NotNull] HHTemplateEntry entry)
         {
@@ -703,7 +703,7 @@ namespace Database.Tables.ModularHouseholds {
         public class JsonDto {
             public JsonDto([NotNull] string name, [CanBeNull] string description, [CanBeNull] string newHouseholdName, int count, [CanBeNull] JsonReference timeProfileForVacations,
                            TemplateVacationType templateVacationType, int minNumberOfVacations, int maxNumberOfVacations, int averageVacationDuration, int minTotalVacationDays,
-                           int maxTotalVacationDays, [NotNull] string guid)
+                           int maxTotalVacationDays, [NotNull] StrGuid guid)
             {
                 Name = name;
                 Description = description;
@@ -734,7 +734,7 @@ namespace Database.Tables.ModularHouseholds {
             public string Description { get; set; }
 
             [NotNull]
-            public string Guid { get; set; }
+            public StrGuid Guid { get; set; }
 
             [NotNull]
             [ItemNotNull]

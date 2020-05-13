@@ -55,7 +55,7 @@ namespace CalculationEngine.HouseholdElements {
                                      ActionAfterInterruption actionAfterInterruption, int weight,
                                      bool requireAllAffordances,
                                      CalcAffordanceType calcAffordanceType,
-                                     [NotNull] string guid,
+                                     [NotNull] StrGuid guid,
                                      [ItemNotNull] [NotNull] BitArray isBusyArray,
                                      BodilyActivityLevel bodilyActivityLevel,[NotNull] CalcRepo calcRepo,
                                      [CanBeNull] CalcSite site = null) : base(pName, guid)

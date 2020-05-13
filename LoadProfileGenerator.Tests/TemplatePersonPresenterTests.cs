@@ -23,17 +23,18 @@ namespace LoadProfileGenerator.Tests
         [Category(UnitTestCategories.BasicTest)]
         public void Run()
         {
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-
-            Simulator sim = new Simulator(db.ConnectionString);
-            ObservableCollection<TemplatePersonPresenter.TraitPrio> traitPrios =
-                new ObservableCollection<TemplatePersonPresenter.TraitPrio>();
-            TemplatePerson template = sim.TemplatePersons.CreateNewItem(db.ConnectionString);
-            template.SaveToDB();
-            template.AddTrait(sim.HouseholdTraits.It[0]);
-            TemplatePersonPresenter.RefreshTree(traitPrios, sim, template);
-            Assert.That(traitPrios.Count > 0);
-            db.Cleanup();
+            using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                Simulator sim = new Simulator(db.ConnectionString);
+                ObservableCollection<TemplatePersonPresenter.TraitPrio> traitPrios =
+                    new ObservableCollection<TemplatePersonPresenter.TraitPrio>();
+                TemplatePerson template = sim.TemplatePersons.CreateNewItem(db.ConnectionString);
+                template.SaveToDB();
+                template.AddTrait(sim.HouseholdTraits.It[0]);
+                TemplatePersonPresenter.RefreshTree(traitPrios, sim, template);
+                Assert.That(traitPrios.Count > 0);
+                db.Cleanup();
+            }
         }
     }
 }

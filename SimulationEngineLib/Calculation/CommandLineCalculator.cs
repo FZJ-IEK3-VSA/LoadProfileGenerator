@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Reflection;
 using System.Threading;
 using Automation;
 using Automation.ResultFiles;
 using CalculationController.Queue;
-using ChartCreator2.OxyCharts;
 using Common;
 using Common.Enums;
 using Database;
@@ -20,7 +18,7 @@ namespace SimulationEngineLib.Calculation {
 
         public CommandLineCalculator() => _calculationProfiler = new CalculationProfiler();
 
-        public bool Calculate([NotNull] CalculationOptions calculationOptions, [NotNull] string connectionString)
+        public bool Calculate([NotNull] CalculationOptions calculationOptions, [NotNull] string connectionString, Action<DirectoryInfo,CalculationProfiler> makeFlameChart)
         {
             _calculationProfiler.StartPart("CommandLineCalculator");
             if (!calculationOptions.CheckSettings(connectionString)) {
@@ -44,7 +42,7 @@ namespace SimulationEngineLib.Calculation {
             Logger.Info("Loading...");
             var sim = new Simulator(calculationOptions.ConnectionString);
             Logger.Info("Loading finished.");
-            StartHousehold(sim, calculationOptions);
+            StartHousehold(sim, calculationOptions, makeFlameChart);
             _calculationProfiler.StopPart("CommandLineCalculator");
             return true;
         }
@@ -92,9 +90,7 @@ namespace SimulationEngineLib.Calculation {
 
         private static bool ReportFinishFuncForHousehold(bool a2, [NotNull] string a3, [NotNull] string path) => true;
 
-        private static bool SetCalculationEntries([NotNull] [ItemNotNull] ObservableCollection<CalculationEntry> calculationEntries) => true;
-
-        private void StartHousehold([NotNull] Simulator sim, [NotNull] CalculationOptions cop)
+        private void StartHousehold([NotNull] Simulator sim, [NotNull] CalculationOptions cop, Action<DirectoryInfo,CalculationProfiler> makeFlameChart)
         {
             _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
             if (cop.CalcObjectNumber == null) {
@@ -193,7 +189,6 @@ namespace SimulationEngineLib.Calculation {
             }
 
             var geographicLocation = sim.GeographicLocations[(int)cop.GeographicLocationIndex];
-            var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
             DeviceSelection deviceSelection = null;
             if (!string.IsNullOrWhiteSpace(cop.DeviceSelectionName)) {
@@ -234,11 +229,9 @@ namespace SimulationEngineLib.Calculation {
                 geographicLocation,
                 temps,
                 calcObject,
-                SetCalculationEntries,
                 eit,
                 ReportCancelFunc,
                 false,
-                version,
                 deviceSelection,
                 cop.LoadTypePriority,
                 transportationDeviceSet,
@@ -259,9 +252,9 @@ namespace SimulationEngineLib.Calculation {
                 chargingStationSet,
                 null,
                 sim.MyGeneralConfig.DeviceProfileHeaderMode,
-                false);
+                false, cop.OutputDirectory);
 
-            cs.Start(calcStartParameterSet, cop.OutputDirectory);
+            cs.Start(calcStartParameterSet);
             var duration = DateTime.Now - calculationStartTime;
             if (cop.DeleteAllButPDF) {
                 var allFileInfos = di.GetFiles("*.*", SearchOption.AllDirectories);
@@ -284,23 +277,8 @@ namespace SimulationEngineLib.Calculation {
 
             Logger.ImportantInfo("Calculation duration:" + duration);
             _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
-            if (cop.MeasureCalculationTimes) {
-                string targetfile = Path.Combine(di.FullName, Constants.CalculationProfilerJson);
-                using (StreamWriter sw = new StreamWriter(targetfile)) {
-                    _calculationProfiler.WriteJson(sw);
-                    CalculationDurationFlameChart cdfc = new CalculationDurationFlameChart();
-                    Thread t = new Thread(() => {
-                        try {
-                            cdfc.Run(_calculationProfiler, di.FullName, "CommandlineCalc");
-                        }
-                        catch (Exception ex) {
-                            Logger.Exception(ex);
-                        }
-                    });
-                    t.SetApartmentState(ApartmentState.STA);
-                    t.Start();
-                    t.Join();
-                }
+            if (cop.MeasureCalculationTimes&& makeFlameChart!=null) {
+                makeFlameChart(di,_calculationProfiler);
             }
 
             using (var sw = new StreamWriter(finishedFile)) {

@@ -41,84 +41,99 @@ namespace Database.Tests.Tables.BasicElements {
     {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void AffordanceTaggingSetTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            db.ClearTable(AffordanceTaggingSet.TableName);
-            db.ClearTable(AffordanceTaggingEntry.TableName);
-            db.ClearTable(AffordanceTag.TableName);
-            db.ClearTable(AffordanceTagReference.TableName);
-            db.ClearTable(AffordanceTaggingSetLoadType.TableName);
-            var profiles = db.LoadTimeBasedProfiles();
-            var realDevices = db.LoadRealDevices(out var deviceCategories, out var loadTypes,
-                profiles);
-            var timeBasedProfiles = db.LoadTimeBasedProfiles();
-            var desires = db.LoadDesires();
-            var dateBasedProfiles = db.LoadDateBasedProfiles();
+        public void AffordanceTaggingSetTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                db.ClearTable(AffordanceTaggingSet.TableName);
+                db.ClearTable(AffordanceTaggingEntry.TableName);
+                db.ClearTable(AffordanceTag.TableName);
+                db.ClearTable(AffordanceTagReference.TableName);
+                db.ClearTable(AffordanceTaggingSetLoadType.TableName);
+                var profiles = db.LoadTimeBasedProfiles();
+                var realDevices = db.LoadRealDevices(out var deviceCategories, out var loadTypes,
+                    profiles);
+                var timeBasedProfiles = db.LoadTimeBasedProfiles();
+                var desires = db.LoadDesires();
+                var dateBasedProfiles = db.LoadDateBasedProfiles();
 
-            var timeLimits = db.LoadTimeLimits(dateBasedProfiles);
-            var deviceActionGroups = db.LoadDeviceActionGroups();
-            var deviceActions = db.LoadDeviceActions(timeBasedProfiles, realDevices,
-                loadTypes, deviceActionGroups);
-            var locations = db.LoadLocations(realDevices, deviceCategories, loadTypes);
-            var variables = db.LoadVariables();
-            var affordances = db.LoadAffordances(timeBasedProfiles, out _,
-                deviceCategories, realDevices, desires, loadTypes, timeLimits, deviceActions, deviceActionGroups,
-                locations, variables);
-            var ats = new ObservableCollection<AffordanceTaggingSet>();
-            AffordanceTaggingSet.LoadFromDatabase(ats, db.ConnectionString, false, affordances,loadTypes);
-            var ats1 = new AffordanceTaggingSet("test", "desc", db.ConnectionString, true, System.Guid.NewGuid().ToString());
-            ats1.SaveToDB();
-            var tag = ats1.AddNewTag("newtag");
-            if (tag == null) {
-                throw new LPGException("Tag was null");
+                var timeLimits = db.LoadTimeLimits(dateBasedProfiles);
+                var deviceActionGroups = db.LoadDeviceActionGroups();
+                var deviceActions = db.LoadDeviceActions(timeBasedProfiles, realDevices,
+                    loadTypes, deviceActionGroups);
+                var locations = db.LoadLocations(realDevices, deviceCategories, loadTypes);
+                var variables = db.LoadVariables();
+                var affordances = db.LoadAffordances(timeBasedProfiles, out _,
+                    deviceCategories, realDevices, desires, loadTypes, timeLimits, deviceActions, deviceActionGroups,
+                    locations, variables);
+                var ats = new ObservableCollection<AffordanceTaggingSet>();
+                AffordanceTaggingSet.LoadFromDatabase(ats, db.ConnectionString, false, affordances, loadTypes);
+                var ats1 = new AffordanceTaggingSet("test", "desc", db.ConnectionString, true, System.Guid.NewGuid().ToStrGuid());
+                ats1.SaveToDB();
+                var tag = ats1.AddNewTag("newtag");
+                if (tag == null)
+                {
+                    throw new LPGException("Tag was null");
+                }
+                ats1.SaveToDB();
+                ats1.AddTaggingEntry(tag, affordances[0]);
+                ats1.AddTagReference(tag, PermittedGender.Male, 1, 99, 0.15);
+                ats1.SaveToDB();
+                ats.Clear();
+                AffordanceTaggingSet.LoadFromDatabase(ats, db.ConnectionString, false, affordances, loadTypes);
+                ats1 = ats[0];
+                ats1.DeleteTag(ats1.Tags[0]);
+                ats1.DeleteFromDB();
+                ats.Clear();
+                AffordanceTaggingSet.LoadFromDatabase(ats, db.ConnectionString, false, affordances, loadTypes);
+                Assert.AreEqual(0, ats.Count);
+                db.Cleanup();
             }
-            ats1.SaveToDB();
-            ats1.AddTaggingEntry(tag, affordances[0]);
-            ats1.AddTagReference(tag, PermittedGender.Male, 1, 99, 0.15);
-            ats1.SaveToDB();
-            ats.Clear();
-            AffordanceTaggingSet.LoadFromDatabase(ats, db.ConnectionString, false, affordances,loadTypes);
-            ats1 = ats[0];
-            ats1.DeleteTag(ats1.Tags[0]);
-            ats1.DeleteFromDB();
-            ats.Clear();
-            AffordanceTaggingSet.LoadFromDatabase(ats, db.ConnectionString, false, affordances,loadTypes);
-            Assert.AreEqual(0, ats.Count);
-            db.Cleanup();
         }
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void AffordanceTaggingSetTestNone() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var sim = new Simulator(db.ConnectionString);
-            foreach (var affordanceTaggingSet in sim.AffordanceTaggingSets.MyItems) {
-                foreach (var affordanceTaggingEntry in affordanceTaggingSet.Entries) {
-                    if (affordanceTaggingEntry.Tag == null)
+        public void AffordanceTaggingSetTestNone()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var sim = new Simulator(db.ConnectionString);
+                foreach (var affordanceTaggingSet in sim.AffordanceTaggingSets.MyItems)
+                {
+                    foreach (var affordanceTaggingEntry in affordanceTaggingSet.Entries)
                     {
-                        throw new LPGException("Tag was null");
-                    }
-                    if (affordanceTaggingEntry.Tag.Name == "none") {
-                        throw new LPGException("None-Tag found in " + affordanceTaggingSet.Name + " for affordance " +
-                                               affordanceTaggingEntry.Affordance?.Name);
+                        if (affordanceTaggingEntry.Tag == null)
+                        {
+                            throw new LPGException("Tag was null");
+                        }
+                        if (affordanceTaggingEntry.Tag.Name == "none")
+                        {
+                            throw new LPGException("None-Tag found in " + affordanceTaggingSet.Name + " for affordance " +
+                                                   affordanceTaggingEntry.Affordance?.Name);
+                        }
                     }
                 }
+                db.Cleanup();
             }
-            db.Cleanup();
         }
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void RemoveAllOldEntriesTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var sim = new Simulator(db.ConnectionString);
-            foreach (var affordanceTaggingSet in sim.AffordanceTaggingSets.MyItems) {
-                Logger.Info(affordanceTaggingSet.Name);
-                if (affordanceTaggingSet.Name.ToUpperInvariant().Contains("PLANNING")) {
-                    affordanceTaggingSet.RemoveAllOldEntries(sim.Affordances.It);
+        public void RemoveAllOldEntriesTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var sim = new Simulator(db.ConnectionString);
+                foreach (var affordanceTaggingSet in sim.AffordanceTaggingSets.MyItems)
+                {
+                    Logger.Info(affordanceTaggingSet.Name);
+                    if (affordanceTaggingSet.Name.ToUpperInvariant().Contains("PLANNING"))
+                    {
+                        affordanceTaggingSet.RemoveAllOldEntries(sim.Affordances.It);
+                    }
                 }
+                db.Cleanup();
             }
-            db.Cleanup();
         }
     }
 }

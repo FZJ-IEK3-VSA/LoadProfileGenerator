@@ -30,6 +30,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Automation;
 using Database.Database;
 using JetBrains.Annotations;
 
@@ -40,7 +41,7 @@ namespace Database.Tables.BasicElements {
         [CanBeNull] private readonly Holiday _holiday;
 
         public GeographicLocHoliday([CanBeNull]int? pID, [CanBeNull] Holiday holiday, int geographicLocID, [NotNull] string connectionString,
-            [NotNull] string holidayname, [NotNull] string guid) : base(holidayname, TableName, connectionString, guid)
+            [NotNull] string holidayname, [NotNull] StrGuid guid) : base(holidayname, TableName, connectionString, guid)
         {
             ID = pID;
             _holiday = holiday;

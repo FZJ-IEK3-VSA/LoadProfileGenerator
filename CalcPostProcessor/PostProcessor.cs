@@ -163,9 +163,15 @@ namespace CalcPostProcessor {
 
             foreach (HouseholdKeyEntry keyEntry in _repository.HouseholdKeys) {
                 HouseholdStepParameters gsp = new HouseholdStepParameters(keyEntry);
-                foreach (var generalPostProcessingStep in _generalHouseholdSteps) {
-                    if(generalPostProcessingStep.IsEnabled()) {
-                        generalPostProcessingStep.Run(gsp);
+                var prios = _generalHouseholdSteps.Select(x => x.Priority).OrderBy(x => x).Distinct().ToList();
+                foreach (var i in prios) {
+                    var filteredSteps = _generalHouseholdSteps.Where(x => x.Priority == i).ToList();
+                    foreach (var generalPostProcessingStep in filteredSteps)
+                    {
+                        if (generalPostProcessingStep.IsEnabled())
+                        {
+                            generalPostProcessingStep.Run(gsp);
+                        }
                     }
                 }
             }
@@ -302,6 +308,9 @@ namespace CalcPostProcessor {
             var energyFileRows = new List<OnlineEnergyFileRow>();
 
             total = 0;
+            if (path == null) {
+                throw new LPGException("path was null");
+            }
             using (Stream fs = new FileStream(path, FileMode.Open))
             {
                 long currentPosition = 0;

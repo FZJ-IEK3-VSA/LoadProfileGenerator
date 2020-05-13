@@ -1,20 +1,19 @@
 ﻿using System.Collections.Generic;
-using JetBrains.Annotations;
 
 namespace SimulationEngine.Tests.SimZukunftProcessor
 {
     public class YearlyProfile {
-        public YearlyProfile([NotNull] string name, [NotNull] string srcFile)
+        public YearlyProfile([JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] string srcFile)
         {
             Name = name;
             SrcFile = srcFile;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string Name { get; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string SrcFile { get; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public List<double> Values { get; } = new List<double>();
     }
     /*

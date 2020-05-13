@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using Automation.ResultFiles;
 using Common;
-using JetBrains.Annotations;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
@@ -51,7 +50,7 @@ namespace ChartCreator2.OxyCharts {
                 LegendPosition = LegendPosition.BottomCenter,
                 IsLegendVisible = true
             };
-            if (_Parameters.ShowTitle) {
+            if (Parameters.ShowTitle) {
                 plotModel1.Title = plotName;
             }
             var linearAxis1 = new LinearAxis
@@ -81,7 +80,7 @@ namespace ChartCreator2.OxyCharts {
             [JetBrains.Annotations.NotNull] LoadTypeInformation lti)
         {
             var plotModel1 = new PlotModel();
-            if (_Parameters.ShowTitle) {
+            if (Parameters.ShowTitle) {
                 plotModel1.Title = plotName;
             }
             var linearAxis1 = new LinearAxis
@@ -109,9 +108,13 @@ namespace ChartCreator2.OxyCharts {
 
         protected override FileProcessingResult MakeOnePlot([JetBrains.Annotations.NotNull] ResultFileEntry srcEntry)
         {
-            _CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
+            Profiler.StartPart(Utili.GetCurrentMethodAndClass());
             string plotName = "Sum Profile for " + srcEntry.HouseholdNumberString + " " + srcEntry.LoadTypeInformation?.Name;
             var values = new List<double>();
+            if (srcEntry.FullFileName == null)
+            {
+                throw new LPGException("filename was null");
+            }
             using (var sr = new StreamReader(srcEntry.FullFileName)) {
                 sr.ReadLine();
                 while (!sr.EndOfStream) {
@@ -119,7 +122,7 @@ namespace ChartCreator2.OxyCharts {
                     if (s == null) {
                         throw new LPGException("Readline failed");
                     }
-                    var cols = s.Split(_Parameters.CSVCharacterArr, StringSplitOptions.None);
+                    var cols = s.Split(Parameters.CSVCharacterArr, StringSplitOptions.None);
                     var col = cols[cols.Length - 1];
                     var success = double.TryParse(col, out double d);
                     if (!success) {
@@ -132,9 +135,9 @@ namespace ChartCreator2.OxyCharts {
                     values.Add(d / srcEntry.LoadTypeInformation.ConversionFaktor);
                 }
             }
-            MakeBoxPlot(srcEntry.FullFileName, plotName, _Parameters.BaseDirectory, values, srcEntry.LoadTypeInformation ?? throw new InvalidOperationException());
-            MakeLinePlot(srcEntry.FullFileName, plotName, _Parameters.BaseDirectory, values, srcEntry.LoadTypeInformation);
-            _CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
+            MakeBoxPlot(srcEntry.FullFileName, plotName, Parameters.BaseDirectory, values, srcEntry.LoadTypeInformation ?? throw new InvalidOperationException());
+            MakeLinePlot(srcEntry.FullFileName, plotName, Parameters.BaseDirectory, values, srcEntry.LoadTypeInformation);
+            Profiler.StopPart(Utili.GetCurrentMethodAndClass());
             return FileProcessingResult.ShouldCreateFiles;
         }
 

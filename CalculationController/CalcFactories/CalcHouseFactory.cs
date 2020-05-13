@@ -122,8 +122,8 @@ namespace CalculationController.CalcFactories {
                                                   [NotNull] HouseholdKey householdKey) //List<CalcDeviceTaggingSet> taggingSets,
         {
             var ctds = new List<CalcTransformationDevice>();
-            var devcategoryGuid = Guid.NewGuid().ToString();
-            var trafolocGuid = Guid.NewGuid().ToString();
+            var devcategoryGuid = Guid.NewGuid().ToStrGuid();
+            var trafolocGuid = Guid.NewGuid().ToStrGuid();
             foreach (var trafo in house.TransformationDevices) {
                 foreach (var set in _calcDeviceTaggingSets.AllCalcDeviceTaggingSets) {
                     set.AddTag(trafo.Name, "House Device");
@@ -176,8 +176,7 @@ namespace CalculationController.CalcFactories {
                         loadDto.MaxPower,
                         _ltDict.GetLoadtypeByGuid(loadDto.LoadTypeGuid),
                         loadDto.AverageYearlyConsumption,
-                        loadDto.PowerStandardDeviation,
-                        loadDto.Guid);
+                        loadDto.PowerStandardDeviation);
                     loads.Add(load);
                 }
 
@@ -216,8 +215,8 @@ namespace CalculationController.CalcFactories {
             //,
         {
             var cgens = new List<CalcGenerator>();
-            var gendevcategoryGuid = Guid.NewGuid().ToString();
-            var genlocGuid = Guid.NewGuid().ToString();
+            var gendevcategoryGuid = Guid.NewGuid().ToStrGuid();
+            var genlocGuid = Guid.NewGuid().ToStrGuid();
             foreach (var gen in generators) {
                 //CalcLoadType lt = _ltDict.GetLoadtypeByGuid(gen.LoadType.Guid);
                 CalcDeviceDto deviceDto = new CalcDeviceDto(gen.Name,
@@ -269,15 +268,15 @@ namespace CalculationController.CalcFactories {
 
             var load = heating.PowerUsage[0];
             var lt = _ltDict.GetLoadtypeByGuid(load.LoadTypeGuid);
-            var cdl = new CalcDeviceLoad(lt.Name, load.MaxPower, lt, load.AverageYearlyConsumption, load.PowerStandardDeviation, load.Guid);
+            var cdl = new CalcDeviceLoad(lt.Name, load.MaxPower, lt, load.AverageYearlyConsumption, load.PowerStandardDeviation);
             var cdls = new List<CalcDeviceLoad> {
                 cdl
             };
             var heatloc = locations.Single(x => heating.CalcLocationGuid == x.Guid);
             CalcDeviceDto calcDeviceDto = new CalcDeviceDto("Space Heating",
-                Guid.NewGuid().ToString(),
+                Guid.NewGuid().ToStrGuid(),
                 householdKey,OefcDeviceType.SpaceHeating,"Space Heating",
-                string.Empty,Guid.NewGuid().ToString(),
+                string.Empty,Guid.NewGuid().ToStrGuid(),
                 heatloc.Guid,heatloc.Name);
             var csh = new CalcSpaceHeating(cdls,
                 degreeDayDict,
@@ -318,18 +317,17 @@ namespace CalculationController.CalcFactories {
                 deviceLoad.MaxPower,
                 loadtype,
                 deviceLoad.AverageYearlyConsumption,
-                deviceLoad.PowerStandardDeviation,
-                deviceLoad.Guid);
+                deviceLoad.PowerStandardDeviation);
             var cdls = new List<CalcDeviceLoad> {
                 cdl
             };
 
             var acloc = calcLocations.Single(x => x.Guid == acdto.CalcLocationGuid);
             CalcDeviceDto acDevdto = new CalcDeviceDto("Air Conditioning",
-                Guid.NewGuid().ToString(),
+                Guid.NewGuid().ToStrGuid(),
                 house.HouseKey,OefcDeviceType.AirConditioning,
                 "Air Conditioning",
-                string.Empty,Guid.NewGuid().ToString(),
+                string.Empty,Guid.NewGuid().ToStrGuid(),
                 acloc.Guid,acloc.Name);
             var csh = new CalcAirConditioning(
                 cdls,
@@ -345,8 +343,8 @@ namespace CalculationController.CalcFactories {
                                               ) //, List<CalcDeviceTaggingSet> deviceTaggingSets)
         {
             var cess = new List<CalcEnergyStorage>();
-            var esCategoryGuid = Guid.NewGuid().ToString();
-            var esLocGuid = Guid.NewGuid().ToString();
+            var esCategoryGuid = Guid.NewGuid().ToStrGuid();
+            var esLocGuid = Guid.NewGuid().ToStrGuid();
             foreach (var es in energyStorages) {
                 //foreach (DeviceTaggingSet set in deviceTaggingSets) {
                 //set.AddTag(es.Name,"House Device");

@@ -46,14 +46,16 @@ namespace CalculationController.Tests
         public void CheckSimIntegrityCheckerTest()
         {
             CleanTestBase.RunAutomatically(false);
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            Simulator sim = new Simulator(db.ConnectionString);
-            Assert.AreNotEqual(null, sim);
-            Vacation vac = sim.Vacations.CreateNewItem(sim.ConnectionString);
-            vac.AddVacationTime(new DateTime(2017,1,1),new DateTime(2017,2,1),VacationType.GoAway  );
-            vac.AddVacationTime(new DateTime(2017, 2, 1), new DateTime(2017, 2, 15), VacationType.GoAway);
-            SimIntegrityChecker.Run(sim);
-            db.Cleanup();
+            using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                Simulator sim = new Simulator(db.ConnectionString);
+                Assert.AreNotEqual(null, sim);
+                Vacation vac = sim.Vacations.CreateNewItem(sim.ConnectionString);
+                vac.AddVacationTime(new DateTime(2017, 1, 1), new DateTime(2017, 2, 1), VacationType.GoAway);
+                vac.AddVacationTime(new DateTime(2017, 2, 1), new DateTime(2017, 2, 15), VacationType.GoAway);
+                SimIntegrityChecker.Run(sim);
+                db.Cleanup();
+            }
             CleanTestBase.RunAutomatically(true);
         }
 
@@ -63,19 +65,21 @@ namespace CalculationController.Tests
         {
             CleanTestBase.RunAutomatically(false);
             const int runcount = 1;
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            Simulator sim = new Simulator(db.ConnectionString) {MyGeneralConfig = {PerformCleanUpChecks = "True"}};
-            Assert.AreNotEqual(null, sim);
-            DateTime start = DateTime.Now;
-            for (int i = 0; i < runcount; i++)
+            using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
-                SimIntegrityChecker.Run(sim);
-            }
+                Simulator sim = new Simulator(db.ConnectionString) { MyGeneralConfig = { PerformCleanUpChecks = "True" } };
+                Assert.AreNotEqual(null, sim);
+                DateTime start = DateTime.Now;
+                for (int i = 0; i < runcount; i++)
+                {
+                    SimIntegrityChecker.Run(sim);
+                }
 
-            DateTime end = DateTime.Now;
-            var duration = end - start;
-            Logger.Info("Duration was:" + duration.TotalMilliseconds/runcount + " milliseconds");
-            db.Cleanup();
+                DateTime end = DateTime.Now;
+                var duration = end - start;
+                Logger.Info("Duration was:" + duration.TotalMilliseconds / runcount + " milliseconds");
+                db.Cleanup();
+            }
             CleanTestBase.RunAutomatically(true);
         }
 
@@ -84,14 +88,16 @@ namespace CalculationController.Tests
         public void SimHouseIntegiryChecker()
         {
             CleanTestBase.RunAutomatically(false);
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            Simulator sim = new Simulator(db.ConnectionString);
-            Assert.AreNotEqual(null, sim);
-            foreach (var house in sim.Houses.MyItems)
+            using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
-                HouseIntegrityChecker.Run(house, sim);
+                Simulator sim = new Simulator(db.ConnectionString);
+                Assert.AreNotEqual(null, sim);
+                foreach (var house in sim.Houses.MyItems)
+                {
+                    HouseIntegrityChecker.Run(house, sim);
+                }
+                db.Cleanup();
             }
-            db.Cleanup();
             CleanTestBase.RunAutomatically(true);
         }
     }

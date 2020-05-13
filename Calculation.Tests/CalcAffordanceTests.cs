@@ -58,11 +58,11 @@ namespace Calculation.Tests {
             CalcParameters calcParameters =
                 CalcParametersFactory.MakeGoodDefaults().SetStartDate(startdate).SetEndDate(enddate);
             var timeStep = new TimeSpan(0, 1, 0);
-            var cp = new CalcProfile("profile", Guid.NewGuid().ToString(), timeStep, ProfileType.Absolute, "blub");
+            var cp = new CalcProfile("profile", Guid.NewGuid().ToStrGuid(), timeStep, ProfileType.Absolute, "blub");
             cp.AddNewTimepoint(new TimeSpan(0), 100);
             cp.AddNewTimepoint(new TimeSpan(0, 10, 0), 0);
             cp.ConvertToTimesteps();
-            loc = new CalcLocation(Utili.GetCurrentMethodAndClass(), Guid.NewGuid().ToString());
+            loc = new CalcLocation(Utili.GetCurrentMethodAndClass(), Guid.NewGuid().ToStrGuid());
             CalcVariableRepository cvr = new CalcVariableRepository();
             BitArray isBusy = new BitArray(100, false);
             var r = new Random(0);
@@ -91,24 +91,24 @@ namespace Calculation.Tests {
                 100,
                 false,
                 "",
-                Guid.NewGuid().ToString(),
+                Guid.NewGuid().ToStrGuid(),
                 cvr,
                 new List<CalcAffordance.DeviceEnergyProfileTuple>(),
                 isBusy,
                 BodilyActivityLevel.Low,
                 calcRepo);
-            lt = new CalcLoadType("load", "unit1", "unit2", 1, true, Guid.NewGuid().ToString());
-            var cdl = new CalcDeviceLoad("cdl", 1, lt, 1, 0.1, Guid.NewGuid().ToString());
+            lt = new CalcLoadType("load", "unit1", "unit2", 1, true, Guid.NewGuid().ToStrGuid());
+            var cdl = new CalcDeviceLoad("cdl", 1, lt, 1, 0.1);
             var devloads = new List<CalcDeviceLoad> {
                 cdl
             };
             CalcDeviceDto cdd = new CalcDeviceDto("device",
-                "devcategoryguid",
+                "devcategoryguid".ToStrGuid(),
                 new HouseholdKey("HH1"),
                 OefcDeviceType.Device,
                 "category",
                 string.Empty,
-                Guid.NewGuid().ToString(),
+                Guid.NewGuid().ToStrGuid(),
                 loc.Guid,
                 loc.Name);
             cd = new CalcDevice(devloads, loc, cdd, calcRepo);
@@ -327,15 +327,15 @@ namespace Calculation.Tests {
             CalcParameters calcParameters =
                 CalcParametersFactory.MakeGoodDefaults().SetStartDate(startdate).SetEndDate(enddate);
             var timeStep = new TimeSpan(0, 1, 0);
-            var cp = new CalcProfile("profile", Guid.NewGuid().ToString(), timeStep, ProfileType.Absolute, "blub");
+            var cp = new CalcProfile("profile", Guid.NewGuid().ToStrGuid(), timeStep, ProfileType.Absolute, "blub");
             cp.AddNewTimepoint(new TimeSpan(0), 100);
             cp.AddNewTimepoint(new TimeSpan(0, 10, 0), 0);
             cp.ConvertToTimesteps();
             //var variableOperator = new VariableOperator();
             var variables = new List<CalcAffordanceVariableOp>();
             var variableReqs = new List<VariableRequirement>();
-            var loc = new CalcLocation("loc", Guid.NewGuid().ToString());
-            string variableGuid = Guid.NewGuid().ToString();
+            var loc = new CalcLocation("loc", Guid.NewGuid().ToStrGuid());
+            var variableGuid = Guid.NewGuid().ToStrGuid();
             CalcVariableRepository variableRepository = new CalcVariableRepository();
             HouseholdKey key = new HouseholdKey("hh1");
             CalcVariable cv = new CalcVariable("calcvar1", variableGuid, 0, loc.Name, loc.Guid, key);
@@ -346,17 +346,17 @@ namespace Calculation.Tests {
             using CalcRepo calcRepo = new CalcRepo(rnd: r,normalRandom:nr,calcParameters:calcParameters, odap: new Mock<IOnlineDeviceActivationProcessor>().Object);
             var aff = new CalcAffordance("bla", cp, loc, false, new List<CalcDesire>(), 0, 99,
                 PermittedGender.All, false, 0.1, new ColorRGB(0, 0, 0), "bla", false, false, variables, variableReqs,
-                ActionAfterInterruption.GoBackToOld, "bla", 100, false, "",  Guid.NewGuid().ToString(),
+                ActionAfterInterruption.GoBackToOld, "bla", 100, false, "",  Guid.NewGuid().ToStrGuid(),
                 variableRepository,
                 new List<CalcAffordance.DeviceEnergyProfileTuple>(), isBusy, BodilyActivityLevel.Low,calcRepo);
-            var lt = new CalcLoadType("load", "unit1", "unit2", 1, true, Guid.NewGuid().ToString());
-            var cdl = new CalcDeviceLoad("cdl", 1, lt, 1, 0.1, Guid.NewGuid().ToString());
+            var lt = new CalcLoadType("load", "unit1", "unit2", 1, true, Guid.NewGuid().ToStrGuid());
+            var cdl = new CalcDeviceLoad("cdl", 1, lt, 1, 0.1);
             var devloads = new List<CalcDeviceLoad> {
                 cdl
             };
-            string categoryGuid = Guid.NewGuid().ToString();
+            var categoryGuid = Guid.NewGuid().ToStrGuid();
             CalcDeviceDto dto = new CalcDeviceDto("device", categoryGuid, new HouseholdKey("HH1"),
-                OefcDeviceType.Device, "category", string.Empty, Guid.NewGuid().ToString(),
+                OefcDeviceType.Device, "category", string.Empty, Guid.NewGuid().ToStrGuid(),
                 loc.Guid,loc.Name);
             var cd = new CalcDevice( devloads, loc, dto,calcRepo );
 
@@ -380,7 +380,7 @@ namespace Calculation.Tests {
         [Category(UnitTestCategories.BasicTest)]
         public void CalcAffordanceVariableTestSet()
         {
-            string deviceCategoryGuid = Guid.NewGuid().ToString();
+            var deviceCategoryGuid = Guid.NewGuid().ToStrGuid();
             //var r = new Random(0);
             //var nr = new NormalRandom(0, 0.1, r);
             const int stepcount = 150;
@@ -391,15 +391,15 @@ namespace Calculation.Tests {
             CalcParameters calcParameters =
                 CalcParametersFactory.MakeGoodDefaults().SetStartDate(startdate).SetEndDate(enddate);
             var timeStep = new TimeSpan(0, 1, 0);
-            var cp = new CalcProfile("profile", Guid.NewGuid().ToString(), timeStep, ProfileType.Absolute, "blub");
+            var cp = new CalcProfile("profile", Guid.NewGuid().ToStrGuid(), timeStep, ProfileType.Absolute, "blub");
             cp.AddNewTimepoint(new TimeSpan(0), 100);
             cp.AddNewTimepoint(new TimeSpan(0, 10, 0), 0);
             cp.ConvertToTimesteps();
             var variables = new List<CalcAffordanceVariableOp>();
             var variableReqs = new List<VariableRequirement>();
-            var loc = new CalcLocation("loc", Guid.NewGuid().ToString());
+            var loc = new CalcLocation("loc", Guid.NewGuid().ToStrGuid());
             CalcVariableRepository calcVariableRepository = new CalcVariableRepository();
-            string variableGuid = Guid.NewGuid().ToString();
+            var variableGuid = Guid.NewGuid().ToStrGuid();
             HouseholdKey key = new HouseholdKey("hh1");
             CalcVariable cv = new CalcVariable("varname", variableGuid, 0, loc.Name, loc.Guid, key);
             calcVariableRepository.RegisterVariable(cv);
@@ -411,17 +411,17 @@ namespace Calculation.Tests {
             using CalcRepo calcRepo = new CalcRepo(calcParameters: calcParameters, odap: new Mock<IOnlineDeviceActivationProcessor>().Object, normalRandom:nr, rnd:rnd);
             var aff = new CalcAffordance("bla", cp, loc, false, new List<CalcDesire>(), 0, 99,
                 PermittedGender.All, false, 0.1, new ColorRGB(0, 0, 0), "bla", false, false, variables, variableReqs,
-                ActionAfterInterruption.GoBackToOld, "bla", 100, false, "", Guid.NewGuid().ToString(),
+                ActionAfterInterruption.GoBackToOld, "bla", 100, false, "", Guid.NewGuid().ToStrGuid(),
                 calcVariableRepository,
                 new List<CalcAffordance.DeviceEnergyProfileTuple>(), isBusy, BodilyActivityLevel.Low, calcRepo);
-            var lt = new CalcLoadType("load", "unit1", "unit2", 1, true, Guid.NewGuid().ToString());
-            var cdl = new CalcDeviceLoad("cdl", 1, lt, 1, 0.1, Guid.NewGuid().ToString());
+            var lt = new CalcLoadType("load", "unit1", "unit2", 1, true, Guid.NewGuid().ToStrGuid());
+            var cdl = new CalcDeviceLoad("cdl", 1, lt, 1, 0.1);
             var devloads = new List<CalcDeviceLoad> {
                 cdl
             };
             CalcDeviceDto cdd = new CalcDeviceDto("device", deviceCategoryGuid,key,
                 OefcDeviceType.Device,"category",string.Empty,
-                Guid.NewGuid().ToString(),loc.Guid,loc.Name);
+                Guid.NewGuid().ToStrGuid(),loc.Guid,loc.Name);
             var cd = new CalcDevice( devloads,  loc,
                  cdd, calcRepo);
             //loc.Variables.Add("Variable1", 0);
@@ -447,14 +447,14 @@ namespace Calculation.Tests {
             CalcParameters calcParameters =
                 CalcParametersFactory.MakeGoodDefaults().SetStartDate(startdate).SetEndDate(enddate);
             var timeStep = new TimeSpan(0, 1, 0);
-            var cp = new CalcProfile("profile", Guid.NewGuid().ToString(), timeStep, ProfileType.Absolute, "blub");
+            var cp = new CalcProfile("profile", Guid.NewGuid().ToStrGuid(), timeStep, ProfileType.Absolute, "blub");
             cp.AddNewTimepoint(new TimeSpan(0), 100);
             cp.AddNewTimepoint(new TimeSpan(0, 10, 0), 0);
             cp.ConvertToTimesteps();
             var variables = new List<CalcAffordanceVariableOp>();
             var variableReqs = new List<VariableRequirement>();
-            var loc = new CalcLocation("loc", Guid.NewGuid().ToString());
-            string variableGuid = Guid.NewGuid().ToString();
+            var loc = new CalcLocation("loc", Guid.NewGuid().ToStrGuid());
+            var variableGuid = Guid.NewGuid().ToStrGuid();
 
             variables.Add(new CalcAffordanceVariableOp("Variable1", 1, loc, VariableAction.Subtract,
                 VariableExecutionTime.Beginning, variableGuid));
@@ -468,21 +468,21 @@ namespace Calculation.Tests {
                 rnd:rnd, normalRandom:nr);
             var aff = new CalcAffordance("bla", cp, loc, false, new List<CalcDesire>(), 0, 99,
                 PermittedGender.All, false, 0.1, new ColorRGB(0, 0, 0), "bla", false, false, variables, variableReqs,
-                ActionAfterInterruption.GoBackToOld, "bla", 100, false, "", Guid.NewGuid().ToString(),
+                ActionAfterInterruption.GoBackToOld, "bla", 100, false, "", Guid.NewGuid().ToStrGuid(),
                 crv,
                 new List<CalcAffordance.DeviceEnergyProfileTuple>(), isBusy, BodilyActivityLevel.Low, calcRepo);
-            var lt = new CalcLoadType("load", "unit1", "unit2", 1, true, Guid.NewGuid().ToString());
-            var cdl = new CalcDeviceLoad("cdl", 1, lt, 1, 0.1, Guid.NewGuid().ToString());
+            var lt = new CalcLoadType("load", "unit1", "unit2", 1, true, Guid.NewGuid().ToStrGuid());
+            var cdl = new CalcDeviceLoad("cdl", 1, lt, 1, 0.1);
             var devloads = new List<CalcDeviceLoad> {
                 cdl
             };
-            string devCatGuid = Guid.NewGuid().ToString();
+            var devCatGuid = Guid.NewGuid().ToStrGuid();
             CalcDeviceDto cdd = new CalcDeviceDto("device",
                 devCatGuid,
                 key,
                 OefcDeviceType.Device,
                 "category",
-                string.Empty, Guid.NewGuid().ToString(),loc.Guid,loc.Name);
+                string.Empty, Guid.NewGuid().ToStrGuid(),loc.Guid,loc.Name);
             var cd = new CalcDevice( devloads, loc,
                 cdd, calcRepo);
 
@@ -510,18 +510,18 @@ namespace Calculation.Tests {
             //var r = new Random(0);
             //var nr = new NormalRandom(0, 0.1, r);
             const int stepcount = 150;
-            string devCategoryGuid = Guid.NewGuid().ToString();
+            var devCategoryGuid = Guid.NewGuid().ToStrGuid();
             Config.IsInUnitTesting = true;
             DateTime startdate = new DateTime(2018, 1, 1);
             DateTime enddate = startdate.AddMinutes(stepcount);
             CalcParameters calcParameters =
                 CalcParametersFactory.MakeGoodDefaults().SetStartDate(startdate).SetEndDate(enddate);
             var timeStep = new TimeSpan(0, 1, 0);
-            var cp = new CalcProfile("profile", Guid.NewGuid().ToString(), timeStep, ProfileType.Absolute, "blub");
+            var cp = new CalcProfile("profile", Guid.NewGuid().ToStrGuid(), timeStep, ProfileType.Absolute, "blub");
             cp.AddNewTimepoint(new TimeSpan(0), 100);
             cp.AddNewTimepoint(new TimeSpan(0, 10, 0), 0);
             cp.ConvertToTimesteps();
-            var loc = new CalcLocation(Utili.GetCurrentMethodAndClass(), Guid.NewGuid().ToString());
+            var loc = new CalcLocation(Utili.GetCurrentMethodAndClass(), Guid.NewGuid().ToStrGuid());
             CalcVariableRepository crv = new CalcVariableRepository();
             BitArray isBusy = new BitArray(calcParameters.InternalTimesteps, false);
             Random rnd = new Random();
@@ -531,10 +531,10 @@ namespace Calculation.Tests {
             var aff = new CalcAffordance("bla", cp, loc, false, new List<CalcDesire>(), 0, 99, PermittedGender.All,
                 false, 0, new ColorRGB(0, 0, 0), "bla", false, false, new List<CalcAffordanceVariableOp>(),
                 new List<VariableRequirement>(), ActionAfterInterruption.GoBackToOld, "bla", 100, false, "",
-                Guid.NewGuid().ToString(), crv,
+                Guid.NewGuid().ToStrGuid(), crv,
                 new List<CalcAffordance.DeviceEnergyProfileTuple>(), isBusy, BodilyActivityLevel.Low, calcRepo);
-            var lt = new CalcLoadType("load", "unit1", "unit2", 1, true, Guid.NewGuid().ToString());
-            var cdl = new CalcDeviceLoad("cdl", 1, lt, 1, 0.1, Guid.NewGuid().ToString());
+            var lt = new CalcLoadType("load", "unit1", "unit2", 1, true, Guid.NewGuid().ToStrGuid());
+            var cdl = new CalcDeviceLoad("cdl", 1, lt, 1, 0.1);
             //var variableOperator = new VariableOperator();
             var devloads = new List<CalcDeviceLoad> {
                 cdl
@@ -546,7 +546,7 @@ namespace Calculation.Tests {
                 OefcDeviceType.Device,
                 "category",
                 string.Empty,
-                Guid.NewGuid().ToString(),
+                Guid.NewGuid().ToStrGuid(),
                 loc.Guid,
                 loc.Name);
             var cd = new CalcDevice( devloads,  loc, cdd, calcRepo);

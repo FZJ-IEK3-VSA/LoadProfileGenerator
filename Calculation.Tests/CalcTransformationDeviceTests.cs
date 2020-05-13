@@ -55,22 +55,23 @@ namespace Calculation.Tests {
             using var fft = new FileFactoryAndTracker(wd.WorkingDirectory, "name", wd.InputDataLogger);
             using var old = new OnlineLoggingData(new DateStampCreator(calcParameters), wd.InputDataLogger, calcParameters);
             var odap = new OnlineDeviceActivationProcessor(old, calcParameters, fft);
-            var clt = new CalcLoadType("clt1", "W", "kWh", 1, true, Guid.NewGuid().ToString());
-            var devguid = Guid.NewGuid().ToString();
-            var locguid = Guid.NewGuid().ToString();
-            var cdd = new CalcDeviceDto("dev1", "devcatguid", new HouseholdKey("HH1"), OefcDeviceType.Device, "devcatname", "", devguid, locguid,
+            var clt = new CalcLoadType("clt1", "W", "kWh", 1, true, Guid.NewGuid().ToStrGuid());
+            var devguid = Guid.NewGuid().ToStrGuid();
+            var locguid = Guid.NewGuid().ToStrGuid();
+            var cdd = new CalcDeviceDto("dev1", "devcatguid".ToStrGuid(), new HouseholdKey("HH1"), OefcDeviceType.Device, "devcatname", "", devguid, locguid,
                 "loc");
             var key = new OefcKey(cdd, clt.Guid);
             odap.RegisterDevice(clt.ConvertToDto(), cdd);
             double[] timestepValues = { 0, 5, 10.0, 20, 30, 40, 0 };
-            var cp = new CalcProfile("myCalcProfile", Guid.NewGuid().ToString(), timestepValues.ToList(), ProfileType.Absolute, "synthetic");
+            var cp = new CalcProfile("myCalcProfile", Guid.NewGuid().ToStrGuid(), timestepValues.ToList(), ProfileType.Absolute, "synthetic");
             var ts1 = new TimeStep(1, 0, true);
-            var sv = StepValues.MakeStepValues(cp, 0, 1, NormalRandom);
+            CalcDeviceLoad cdl = new CalcDeviceLoad("",1,clt,0,0);
+            var sv = StepValues.MakeStepValues(cp,  NormalRandom,cdl,1);
             odap.AddNewStateMachine(ts1, clt.ConvertToDto(), "blub", "name1", "p1", "syn", key, cdd, sv);
             double[] resultValues = { 0, 0, 5, 10.0, 20, 30, 40, 0 };
             //double[] resultValuesRow1 = {0, 0, 5, 10, 200, 3000, 4000, 0};
             var ctd = new CalcTransformationDevice(odap, -1, 080, -1000, 1000, cdd, clt);
-            var clt2 = new CalcLoadType("clt2", "W2", "kWh2", 1, true, Guid.NewGuid().ToString());
+            var clt2 = new CalcLoadType("clt2", "W2", "kWh2", 1, true, Guid.NewGuid().ToStrGuid());
             ctd.AddOutputLoadType(clt2, 2, TransformationOutputFactorType.Interpolated);
 
             ctd.AddDatapoint(10, 1);
@@ -110,28 +111,29 @@ namespace Calculation.Tests {
             using var fft = new FileFactoryAndTracker(wd.WorkingDirectory, "hh1", wd.InputDataLogger);
             using var old = new OnlineLoggingData(new DateStampCreator(calcParameters), wd.InputDataLogger, calcParameters);
             var odap = new OnlineDeviceActivationProcessor(old, calcParameters, fft);
-            var clt = new CalcLoadType("clt1", "W", "kWh", 1, true, Guid.NewGuid().ToString());
-            var deviceGuid = Guid.NewGuid().ToString();
-            var locGuid = Guid.NewGuid().ToString();
-            var cdd = new CalcDeviceDto("dev1", "devcatguid", new HouseholdKey("HH1"), OefcDeviceType.Device, "devcatname", string.Empty,
+            var clt = new CalcLoadType("clt1", "W", "kWh", 1, true, Guid.NewGuid().ToStrGuid());
+            var deviceGuid = Guid.NewGuid().ToStrGuid();
+            var locGuid = Guid.NewGuid().ToStrGuid();
+            var cdd = new CalcDeviceDto("dev1", "devcatguid".ToStrGuid(), new HouseholdKey("HH1"), OefcDeviceType.Device, "devcatname", string.Empty,
                 deviceGuid, locGuid, "loc");
             var key = new OefcKey(cdd, clt.Guid);
             odap.RegisterDevice(clt.ConvertToDto(), cdd);
             double[] timestepValues = {1.0, 0};
             var tmplist = new List<double>(timestepValues);
-            var cp = new CalcProfile("myCalcProfile", Guid.NewGuid().ToString(), tmplist, ProfileType.Absolute, "synthetic");
+            var cp = new CalcProfile("myCalcProfile", Guid.NewGuid().ToStrGuid(), tmplist, ProfileType.Absolute, "synthetic");
             var ts1 = new TimeStep(1, 0, true);
-            var sv = StepValues.MakeStepValues(cp, 0, 10, NormalRandom);
+            var cdl = new CalcDeviceLoad("",10,clt,0,0);
+            var sv = StepValues.MakeStepValues(cp, NormalRandom,cdl,1);
             odap.AddNewStateMachine(ts1, clt.ConvertToDto(), "blub", "name1", "p1", "syn", key, cdd, sv);
             double[] resultValues = {0, 10.0, 0, 0, 0, 0, 0, 0, 0, 0};
             double[] resultValuesRow1 = {0, 20.0, 0, 0, 0, 0, 0, 0, 0, 0};
             double[] resultValuesRow2 = {0, 30.0, 0, 0, 0, 0, 0, 0, 0, 0};
-            var trafocdd = new CalcDeviceDto("trafo1", "devcatguid", new HouseholdKey("housekey"), OefcDeviceType.Device, "devcatname",
-                string.Empty, Guid.NewGuid().ToString(), locGuid, "loc");
+            var trafocdd = new CalcDeviceDto("trafo1", "devcatguid".ToStrGuid(), new HouseholdKey("housekey"), OefcDeviceType.Device, "devcatname",
+                string.Empty, Guid.NewGuid().ToStrGuid(), locGuid, "loc");
             var ctd = new CalcTransformationDevice(odap, -1, 080, -1000, 1000, trafocdd, clt);
-            var clt2 = new CalcLoadType("clt2", "W2", "kWh2", 1, true, Guid.NewGuid().ToString());
+            var clt2 = new CalcLoadType("clt2", "W2", "kWh2", 1, true, Guid.NewGuid().ToStrGuid());
             ctd.AddOutputLoadType(clt2, 2, TransformationOutputFactorType.FixedFactor);
-            var clt3 = new CalcLoadType("clt3", "W2", "kWh2", 1, true, Guid.NewGuid().ToString());
+            var clt3 = new CalcLoadType("clt3", "W2", "kWh2", 1, true, Guid.NewGuid().ToStrGuid());
             ctd.AddOutputLoadType(clt3, 3, TransformationOutputFactorType.FixedFactor);
             for (var i = 0; i < 10; i++) {
                 var ts = new TimeStep(i, 0, true);

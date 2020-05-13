@@ -44,49 +44,56 @@ namespace Database.Tests.Tables {
     {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void LoadFromDatabaseTest() {
+        public void LoadFromDatabaseTest()
+        {
             // tests loading
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-
-            var datapoints = new ObservableCollection<TimeDataPoint>();
-            TimeDataPoint.LoadFromDatabase(datapoints, db.ConnectionString, false);
-            db.Cleanup();
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var datapoints = new ObservableCollection<TimeDataPoint>();
+                TimeDataPoint.LoadFromDatabase(datapoints, db.ConnectionString, false);
+                db.Cleanup();
+            }
         }
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void TimeDataPointTest() {
+        public void TimeDataPointTest()
+        {
             // tests saving and loading
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-
-            db.ClearTable(TimeDataPoint.TableName);
-            var tp = new TimeDataPoint(new DateTime(2010, 1, 1), 1, null, 1, db.ConnectionString,
-                Guid.NewGuid().ToString());
-            tp.SaveToDB();
-            tp = new TimeDataPoint(new TimeSpan(2010, 1, 1), 1, null, 1,
-                db.ConnectionString, Guid.NewGuid().ToString());
-            tp.SaveToDB();
-            var datapoints = new ObservableCollection<TimeDataPoint>();
-            TimeDataPoint.LoadFromDatabase(datapoints, db.ConnectionString, false);
-            Assert.AreEqual(datapoints.Count, 2);
-            db.Cleanup();
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                db.ClearTable(TimeDataPoint.TableName);
+                var tp = new TimeDataPoint(new DateTime(2010, 1, 1), 1, null, 1, db.ConnectionString,
+                    Guid.NewGuid().ToStrGuid());
+                tp.SaveToDB();
+                tp = new TimeDataPoint(new TimeSpan(2010, 1, 1), 1, null, 1,
+                    db.ConnectionString, Guid.NewGuid().ToStrGuid());
+                tp.SaveToDB();
+                var datapoints = new ObservableCollection<TimeDataPoint>();
+                TimeDataPoint.LoadFromDatabase(datapoints, db.ConnectionString, false);
+                Assert.AreEqual(datapoints.Count, 2);
+                db.Cleanup();
+            }
         }
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void TimeDataPointTestTimespan() {
+        public void TimeDataPointTestTimespan()
+        {
             // tests init with time span and saving and loading to db
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            db.ClearTable(TimeDataPoint.TableName);
-            var tp = new TimeDataPoint(new TimeSpan(0, 1, 0),
-                1, null, 1, db.ConnectionString, Guid.NewGuid().ToString());
-            tp.SaveToDB();
-            Assert.AreEqual(1, tp.Time.TotalMinutes);
-            var datapoints = new ObservableCollection<TimeDataPoint>();
-            TimeDataPoint.LoadFromDatabase(datapoints, db.ConnectionString, false);
-            Assert.AreEqual(datapoints.Count, 1);
-            Assert.AreEqual(1, datapoints[0].Time.TotalMinutes);
-            db.Cleanup();
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                db.ClearTable(TimeDataPoint.TableName);
+                var tp = new TimeDataPoint(new TimeSpan(0, 1, 0),
+                    1, null, 1, db.ConnectionString, Guid.NewGuid().ToStrGuid());
+                tp.SaveToDB();
+                Assert.AreEqual(1, tp.Time.TotalMinutes);
+                var datapoints = new ObservableCollection<TimeDataPoint>();
+                TimeDataPoint.LoadFromDatabase(datapoints, db.ConnectionString, false);
+                Assert.AreEqual(datapoints.Count, 1);
+                Assert.AreEqual(1, datapoints[0].Time.TotalMinutes);
+                db.Cleanup();
+            }
         }
     }
 }

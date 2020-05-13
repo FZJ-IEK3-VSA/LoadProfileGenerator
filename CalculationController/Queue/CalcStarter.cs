@@ -29,7 +29,6 @@
 #region
 
 using System;
-using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using CalculationEngine;
@@ -43,14 +42,10 @@ using JetBrains.Annotations;
 namespace CalculationController.Queue {
     // this class sets up the entire environment, starts the entry factory and then the queue runner and the post processing
     public class CalcStarter {
-        [ItemNotNull]
-        [NotNull]
-        private readonly ObservableCollection<CalculationEntry> _calculationEntries;
         [NotNull]
         private readonly Simulator _sim;
 
         public CalcStarter([NotNull] Simulator sim) {
-            _calculationEntries = new ObservableCollection<CalculationEntry>();
             _sim = sim;
             CalcManager.ExitCalcFunction = false;
         }
@@ -120,21 +115,18 @@ namespace CalculationController.Queue {
             return true;
         }
 
-        public void Start([NotNull] CalcStartParameterSet csps, [NotNull] string resultPath) {
+        public void Start([NotNull] CalcStartParameterSet csps) {
             if (!csps.ResumeSettlement || csps.CalcTarget.CalcObjectType != CalcObjectType.Settlement) {
                 if (!Config.IsInHeadless) {
-                    if (!CheckAndClearDirectory(resultPath, csps.PreserveLogfileWhileClearingFolder)) {
-                        csps.ReportFinishFuncForHousehold?.Invoke(false, string.Empty, resultPath);
+                    if (!CheckAndClearDirectory(csps.ResultPath, csps.PreserveLogfileWhileClearingFolder)) {
+                        csps.ReportFinishFuncForHousehold?.Invoke(false, string.Empty, csps.ResultPath);
                         return;
                     }
                 }
             }
-            _calculationEntries.Clear();
             try {
-                CalcEntryFactory.MakeCalcEntries(csps, _calculationEntries,resultPath);
-                csps.SetCalculationEntries?.Invoke(_calculationEntries);
                 var cqr = new CalcQueueRunner();
-                cqr.Start(csps, _calculationEntries, _sim,resultPath);
+                cqr.Start(csps,  _sim);
             }
             catch (Exception e) {
                 Logger.Exception(e);

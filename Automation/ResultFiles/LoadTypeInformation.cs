@@ -40,12 +40,12 @@ namespace Automation.ResultFiles {
         {
             unchecked {
                 var hashCode = ConversionFaktor.GetHashCode();
-                hashCode = (hashCode * 397) ^ FileName.GetHashCode();
-                hashCode = (hashCode * 397) ^ Guid.GetHashCode();
-                hashCode = (hashCode * 397) ^ Name.GetHashCode();
+                hashCode = (hashCode * 397) ^ FileName?.GetHashCode()??1;
+                hashCode = (hashCode * 397) ^ Guid?.GetHashCode() ?? 1;
+                hashCode = (hashCode * 397) ^ Name?.GetHashCode() ?? 1;
                 hashCode = (hashCode * 397) ^ ShowInCharts.GetHashCode();
-                hashCode = (hashCode * 397) ^ UnitOfPower.GetHashCode();
-                hashCode = (hashCode * 397) ^ UnitOfSum.GetHashCode();
+                hashCode = (hashCode * 397) ^ UnitOfPower?.GetHashCode() ?? 1;
+                hashCode = (hashCode * 397) ^ UnitOfSum?.GetHashCode() ?? 1;
                 return hashCode;
             }
         }
@@ -56,11 +56,13 @@ namespace Automation.ResultFiles {
 
         [UsedImplicitly]
         // ReSharper disable once NotNullMemberIsNotInitialized
+#pragma warning disable 8618
         public LoadTypeInformation() {
+#pragma warning restore 8618
         }
 
         public LoadTypeInformation([NotNull] string name, [NotNull] string unitOfSum, [NotNull] string unitOfPower, double conversionFaktor,
-            bool showInCharts, [NotNull] string fileName, [NotNull] string guid) {
+            bool showInCharts, [NotNull] string fileName, [NotNull] StrGuid guid) {
             Name = name;
             UnitOfSum = unitOfSum;
             UnitOfPower = unitOfPower;
@@ -76,15 +78,15 @@ namespace Automation.ResultFiles {
 
         [UsedImplicitly]
         [NotNull]
-        public string FileName { get; set; }
+        public string? FileName { get; set; }
 
         [NotNull]
-        public string Guid { get; }
+        public StrGuid Guid { get; }
 
         // needed for xml deserialize
         [UsedImplicitly]
         [NotNull]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         // needed for xml deserialize
         [UsedImplicitly]
@@ -93,11 +95,11 @@ namespace Automation.ResultFiles {
         // needed for xml deserialize
         [UsedImplicitly]
         [NotNull]
-        public string UnitOfPower { get; set; }
+        public string? UnitOfPower { get; set; }
 
         // needed for xml deserialize
         [UsedImplicitly]
         [NotNull]
-        public string UnitOfSum { get; set; }
+        public string? UnitOfSum { get; set; }
     }
 }

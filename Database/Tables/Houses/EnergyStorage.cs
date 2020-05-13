@@ -30,7 +30,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
+using Common;
 using Database.Database;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
@@ -58,7 +60,7 @@ namespace Database.Tables.Houses {
                              [CanBeNull] VLoadType loadType, double storageCapacity,
             double initialFill, double minimumStorageRate, double maximumStorageRate,
                              double minimumWithdrawRate,
-            double maximumWithdrawRate, [NotNull] string connectionString,[NotNull] string guid, [CanBeNull]int? pID = null)
+            double maximumWithdrawRate, [NotNull] string connectionString,[NotNull] StrGuid guid, [CanBeNull]int? pID = null)
             : base(pName, TableName, connectionString, guid)
         {
             ID = pID;
@@ -135,7 +137,7 @@ namespace Database.Tables.Houses {
         public void AddSignal([NotNull] Variable variable, double triggerOn, double triggerOff, double value)
         {
             var ess = new EnergyStorageSignal(null, IntID, variable, triggerOn, triggerOff, value,
-                ConnectionString, variable.Name, System.Guid.NewGuid().ToString());
+                ConnectionString, variable.Name, System.Guid.NewGuid().ToStrGuid());
             _signals.Add(ess);
             ess.SaveToDB();
         }
@@ -187,7 +189,7 @@ namespace Database.Tables.Houses {
             var house = new EnergyStorage(FindNewName(isNameTaken, "New Energy Storage Device "),
                 "New energy storage device description", null, 5, 5,
                 0, 10, 0, 10, connectionString,
-                System.Guid.NewGuid().ToString());
+                System.Guid.NewGuid().ToStrGuid());
             return house;
         }
 

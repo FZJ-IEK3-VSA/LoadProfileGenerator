@@ -40,59 +40,61 @@ namespace Database.Tests.Tables.ModularHouseholds {
     {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void DeviceSelectionTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
+        public void DeviceSelectionTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                db.ClearTable(DeviceSelection.TableName);
+                db.ClearTable(DeviceSelectionItem.TableName);
+                db.ClearTable(DeviceSelectionDeviceAction.TableName);
+                var timeBasedProfiles = db.LoadTimeBasedProfiles();
+                var devices = db.LoadRealDevices(out var deviceCategories, out _, out var loadTypes,
+                    timeBasedProfiles);
 
-            db.ClearTable(DeviceSelection.TableName);
-            db.ClearTable(DeviceSelectionItem.TableName);
-            db.ClearTable(DeviceSelectionDeviceAction.TableName);
-            var timeBasedProfiles = db.LoadTimeBasedProfiles();
-            var devices = db.LoadRealDevices(out var deviceCategories, out _, out var loadTypes,
-                timeBasedProfiles);
+                var deviceSelections = new ObservableCollection<DeviceSelection>();
+                var groups = db.LoadDeviceActionGroups();
+                var deviceActions = db.LoadDeviceActions(timeBasedProfiles, devices,
+                    loadTypes, groups);
+                DeviceSelection.LoadFromDatabase(deviceSelections, db.ConnectionString, deviceCategories, devices,
+                    deviceActions, groups, false);
 
-            var deviceSelections = new ObservableCollection<DeviceSelection>();
-            var groups = db.LoadDeviceActionGroups();
-            var deviceActions = db.LoadDeviceActions(timeBasedProfiles, devices,
-                loadTypes, groups);
-            DeviceSelection.LoadFromDatabase(deviceSelections, db.ConnectionString, deviceCategories, devices,
-                deviceActions, groups, false);
+                var ds = new DeviceSelection("blub", null, "bla", db.ConnectionString, Guid.NewGuid().ToStrGuid());
+                ds.SaveToDB();
+                ds.AddItem(deviceCategories[0], devices[0]);
 
-            var ds = new DeviceSelection("blub", null, "bla", db.ConnectionString, Guid.NewGuid().ToString());
-            ds.SaveToDB();
-            ds.AddItem(deviceCategories[0], devices[0]);
+                ds.AddAction(groups[0], deviceActions[0]);
+                ds.SaveToDB();
+                Assert.AreEqual(1, ds.Items.Count);
+                Assert.AreEqual(1, ds.Actions.Count);
 
-            ds.AddAction(groups[0], deviceActions[0]);
-            ds.SaveToDB();
-            Assert.AreEqual(1, ds.Items.Count);
-            Assert.AreEqual(1, ds.Actions.Count);
+                // loading test
+                deviceSelections = new ObservableCollection<DeviceSelection>();
+                DeviceSelection.LoadFromDatabase(deviceSelections, db.ConnectionString, deviceCategories, devices,
+                    deviceActions, groups, false);
 
-            // loading test
-            deviceSelections = new ObservableCollection<DeviceSelection>();
-            DeviceSelection.LoadFromDatabase(deviceSelections, db.ConnectionString, deviceCategories, devices,
-                deviceActions, groups, false);
+                ds = deviceSelections[0];
+                Assert.AreEqual(1, ds.Actions.Count);
+                Assert.AreEqual(1, ds.Items.Count);
+                ds.DeleteItemFromDB(ds.Items[0]);
+                ds.DeleteActionFromDB(ds.Actions[0]);
+                Assert.AreEqual(0, ds.Items.Count);
+                Assert.AreEqual(0, ds.Actions.Count);
 
-            ds = deviceSelections[0];
-            Assert.AreEqual(1, ds.Actions.Count);
-            Assert.AreEqual(1, ds.Items.Count);
-            ds.DeleteItemFromDB(ds.Items[0]);
-            ds.DeleteActionFromDB(ds.Actions[0]);
-            Assert.AreEqual(0, ds.Items.Count);
-            Assert.AreEqual(0, ds.Actions.Count);
+                // deleting and loading
+                deviceSelections = new ObservableCollection<DeviceSelection>();
+                DeviceSelection.LoadFromDatabase(deviceSelections, db.ConnectionString, deviceCategories, devices,
+                    deviceActions, groups, false);
+                Assert.AreEqual(0, ds.Items.Count);
+                ds = deviceSelections[0];
+                ds.DeleteFromDB();
 
-            // deleting and loading
-            deviceSelections = new ObservableCollection<DeviceSelection>();
-            DeviceSelection.LoadFromDatabase(deviceSelections, db.ConnectionString, deviceCategories, devices,
-                deviceActions, groups, false);
-            Assert.AreEqual(0, ds.Items.Count);
-            ds = deviceSelections[0];
-            ds.DeleteFromDB();
-
-            // deleting
-            deviceSelections = new ObservableCollection<DeviceSelection>();
-            DeviceSelection.LoadFromDatabase(deviceSelections, db.ConnectionString, deviceCategories, devices,
-                deviceActions, groups, false);
-            Assert.AreEqual(0, deviceSelections.Count);
-            db.Cleanup();
+                // deleting
+                deviceSelections = new ObservableCollection<DeviceSelection>();
+                DeviceSelection.LoadFromDatabase(deviceSelections, db.ConnectionString, deviceCategories, devices,
+                    deviceActions, groups, false);
+                Assert.AreEqual(0, deviceSelections.Count);
+                db.Cleanup();
+            }
         }
     }
 }

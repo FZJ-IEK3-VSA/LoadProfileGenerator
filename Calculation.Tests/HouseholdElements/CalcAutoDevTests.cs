@@ -54,13 +54,13 @@ namespace Calculation.Tests.HouseholdElements {
             DateTime startdate = new DateTime(2018, 1, 1);
             DateTime enddate = startdate.AddMinutes(100);
             CalcParameters calculationParameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(startdate).SetEndDate(enddate).EnableShowSettlingPeriod();
-            var profile = new CalcProfile("profile", Guid.NewGuid().ToString(), new TimeSpan(0, 1, 0), ProfileType.Relative, "blub");
+            var profile = new CalcProfile("profile", Guid.NewGuid().ToStrGuid(), new TimeSpan(0, 1, 0), ProfileType.Relative, "blub");
             profile.AddNewTimepoint(new TimeSpan(0), 0.01);
             profile.AddNewTimepoint(new TimeSpan(1, 0, 0), 0.01);
             profile.ConvertToTimesteps();
-            var cloadtype = new CalcLoadType("loadtype",  "power", "sum", 1, true, Guid.NewGuid().ToString());
+            var cloadtype = new CalcLoadType("loadtype",  "power", "sum", 1, true, Guid.NewGuid().ToStrGuid());
             var loads = new List<CalcDeviceLoad>();
-            var cdl = new CalcDeviceLoad("cdevload",  100, cloadtype, 100, 0.1, Guid.NewGuid().ToString());
+            var cdl = new CalcDeviceLoad("cdevload",  100, cloadtype, 100, 0.1);
             loads.Add(cdl);
             var r = new Random(5);
             HouseholdKey key = new HouseholdKey("hh1");
@@ -74,9 +74,9 @@ namespace Calculation.Tests.HouseholdElements {
             using OnlineLoggingData old = new OnlineLoggingData(dsc,wd.InputDataLogger,calculationParameters);
                 var odap = new OnlineDeviceActivationProcessor( old,calculationParameters,fft);
                 using CalcRepo calcRepo = new CalcRepo(odap:odap, normalRandom:nr, calcParameters:calculationParameters);
-                var location = new CalcLocation("calcloc", Guid.NewGuid().ToString());
+                var location = new CalcLocation("calcloc", Guid.NewGuid().ToStrGuid());
                 CalcVariableRepository crv = new CalcVariableRepository();
-                string variableGuid = Guid.NewGuid().ToString();
+                var variableGuid = Guid.NewGuid().ToStrGuid();
                 CalcVariable cv = new CalcVariable("varname",variableGuid,0,location.Name,location.Guid,key);
                 crv.RegisterVariable(cv);
                 VariableRequirement vreq = new VariableRequirement(cv.Name,0,location.Name,location.Guid,
@@ -85,9 +85,9 @@ namespace Calculation.Tests.HouseholdElements {
                 {
                     vreq
                 };
-                string deviceCategoryGuid = Guid.NewGuid().ToString();
+                var deviceCategoryGuid = Guid.NewGuid().ToStrGuid();
                 CalcDeviceDto cdd = new CalcDeviceDto("autodevnamename", deviceCategoryGuid,key,
-                    OefcDeviceType.AutonomousDevice, "device category","", Guid.NewGuid().ToString(),
+                    OefcDeviceType.AutonomousDevice, "device category","", Guid.NewGuid().ToStrGuid(),
                     location.Guid,location.Name);
                 var cad = new CalcAutoDev( profile, cloadtype, loads,
                     0.8,   1, location,

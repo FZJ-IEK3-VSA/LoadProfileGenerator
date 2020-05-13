@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using CalculationEngine.HouseholdElements;
 using Common;
@@ -26,7 +27,7 @@ namespace CalculationEngine.Transportation
         public CalcTravelRoute([NotNull] string pName, [NotNull] CalcSite siteA, [NotNull] CalcSite siteB,
             [NotNull][ItemNotNull] List<CalcTransportationDevice> vehiclePool,
             [NotNull][ItemNotNull] List<CalcTransportationDevice> locationUnlimitedDevices,
-            [NotNull] HouseholdKey householdkey, [NotNull] string guid,
+            [NotNull] HouseholdKey householdkey, [NotNull] StrGuid guid,
                                CalcRepo calcRepo) : base(pName, guid)
         {
             _householdkey = householdkey;
@@ -117,7 +118,7 @@ namespace CalculationEngine.Transportation
         }
 
         public void AddTravelRouteStep([NotNull] string stepName, [NotNull] CalcTransportationDeviceCategory deviceCategory,
-            int stepNumber, double distanceInM, [NotNull] string guid)
+            int stepNumber, double distanceInM, [NotNull] StrGuid guid)
         {
             CalcTravelRouteStep trs = new CalcTravelRouteStep(
                 stepName, deviceCategory, stepNumber,

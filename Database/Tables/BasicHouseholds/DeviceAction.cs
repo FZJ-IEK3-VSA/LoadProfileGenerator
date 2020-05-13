@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Database.Database;
@@ -21,7 +22,7 @@ namespace Database.Tables.BasicHouseholds {
         [CanBeNull] private DeviceActionGroup _deviceActionGroup;
 
         public DeviceAction([NotNull] string pName, [CanBeNull]int? id, [NotNull] string description, [NotNull] string connectionString,
-            [CanBeNull] DeviceActionGroup deviceActionGroup, [CanBeNull] RealDevice device, [NotNull] string guid) : base(pName, TableName,
+            [CanBeNull] DeviceActionGroup deviceActionGroup, [CanBeNull] RealDevice device, [NotNull] StrGuid guid) : base(pName, TableName,
             connectionString, guid) {
             ID = id;
             _profiles = new ObservableCollection<DeviceActionProfile>();
@@ -102,7 +103,7 @@ namespace Database.Tables.BasicHouseholds {
         public void AddDeviceProfile([NotNull] TimeBasedProfile tp, decimal timeoffset, [NotNull] VLoadType vLoadType, double multiplier) {
             var deviceName = vLoadType.Name;
             var dad = new DeviceActionProfile(tp, null, timeoffset, IntID, deviceName, vLoadType,
-                ConnectionString, multiplier,System.Guid.NewGuid().ToString());
+                ConnectionString, multiplier,System.Guid.NewGuid().ToStrGuid());
             Logger.Get().SafeExecuteWithWait(() => {
                 _profiles.Add(dad);
                 _profiles.Sort();
@@ -171,7 +172,7 @@ namespace Database.Tables.BasicHouseholds {
         [UsedImplicitly]
         public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) {
             var aff = new DeviceAction(FindNewName(isNameTaken, "New Device Action "), null, string.Empty,
-                connectionString, null, null, System.Guid.NewGuid().ToString());
+                connectionString, null, null, System.Guid.NewGuid().ToStrGuid());
             return aff;
         }
 
@@ -253,7 +254,7 @@ namespace Database.Tables.BasicHouseholds {
             if (toImport.DeviceActionGroup != null) {
                 group = GetItemFromListByName(dstSim.DeviceActionGroups.MyItems, toImport.DeviceActionGroup.Name);
             }
-            var da = new DeviceAction(toImport.Name, null, toImport.Description, dstSim.ConnectionString, group, rd, System.Guid.NewGuid().ToString());
+            var da = new DeviceAction(toImport.Name, null, toImport.Description, dstSim.ConnectionString, group, rd, System.Guid.NewGuid().ToStrGuid());
             da.SaveToDB();
 
             foreach (var daProfile in toImport.Profiles) {

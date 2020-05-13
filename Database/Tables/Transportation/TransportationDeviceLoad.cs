@@ -30,6 +30,7 @@
 
 using System.Collections.ObjectModel;
 using System.Linq;
+using Automation;
 using Database.Database;
 using Database.Tables.BasicHouseholds;
 using JetBrains.Annotations;
@@ -48,7 +49,7 @@ namespace Database.Tables.Transportation {
 
         public TransportationDeviceLoad([NotNull] string name, [CanBeNull] int? transportationDeviceID, double maxPower,
             [CanBeNull] VLoadType loadType,
-             [NotNull] string connectionString,[NotNull] string guid, [CanBeNull] int? id = null)
+             [NotNull] string connectionString,[NotNull] StrGuid guid, [CanBeNull] int? id = null)
             : base(name, TableName, connectionString, guid) {
             _transportationDeviceID = transportationDeviceID;
             _maxPower = maxPower;

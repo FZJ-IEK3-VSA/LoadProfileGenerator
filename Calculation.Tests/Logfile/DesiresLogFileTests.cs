@@ -54,34 +54,38 @@ namespace Calculation.Tests.Logfile
             DateTime startdate = new DateTime(2018, 1, 1);
             DateTime enddate = startdate.AddMinutes(100);
             CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(startdate).SetEndDate(enddate).EnableShowSettlingPeriod().SetSettlingDays(0);
-            WorkingDir wd = new WorkingDir("desiresLogfile");
-            wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
-            wd.InputDataLogger.AddSaver(new ResultFileEntryLogger(wd.SqlResultLoggingService));
-            var fft = new FileFactoryAndTracker(wd.WorkingDirectory, "test1",wd.InputDataLogger);
-            fft.RegisterHousehold(Constants.GeneralHouseholdKey,"general",HouseholdKeyType.General,"desc", null, null);
-            //SqlResultLoggingService srls = new SqlResultLoggingService(wd.WorkingDirectory);
-            CalculationProfiler profiler = new CalculationProfiler();
-            CalcRepo calcRepo = CalcRepo.Make(calcParameters, wd.InputDataLogger, wd.WorkingDirectory, "name", profiler);
-                DesiresLogFile dlf = new DesiresLogFile(fft, calcParameters);
-                CalcDesire cd1 = new CalcDesire("desire1", 1, 0.5m, 12, 1, 1, 60, -1, null,"","");
+            using (WorkingDir wd = new WorkingDir("desiresLogfile"))
+            {
+                wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
+                wd.InputDataLogger.AddSaver(new ResultFileEntryLogger(wd.SqlResultLoggingService));
+                using (var fft = new FileFactoryAndTracker(wd.WorkingDirectory, "test1", wd.InputDataLogger))
+                {
+                    fft.RegisterHousehold(Constants.GeneralHouseholdKey, "general", HouseholdKeyType.General, "desc", null, null);
+                    //SqlResultLoggingService srls = new SqlResultLoggingService(wd.WorkingDirectory);
+                    CalculationProfiler profiler = new CalculationProfiler();
+                    CalcRepo calcRepo = CalcRepo.Make(calcParameters, wd.InputDataLogger, wd.WorkingDirectory, "name", profiler);
+                    DesiresLogFile dlf = new DesiresLogFile(fft, calcParameters);
+                    CalcDesire cd1 = new CalcDesire("desire1", 1, 0.5m, 12, 1, 1, 60, -1, null, "", "");
 
-                //NormalRandom nr = new NormalRandom(0, 0.1, r);
-                CalcLocation cloc = new CalcLocation("cloc",Guid.NewGuid().ToString());
-                BitArray isSick = new BitArray(calcParameters.InternalTimesteps);
-                BitArray isOnVacation = new BitArray(calcParameters.InternalTimesteps);
-                CalcPersonDto calcPerson = CalcPersonDto.MakeExamplePerson();
-                CalcPerson cp = new CalcPerson(calcPerson,  cloc,
-                     isSick, isOnVacation,calcRepo);
-                    //"bla", 1, 5, r, 48, PermittedGender.Male, lf, "HH1", cloc, "traittag", "hhname0",calcParameters,isSick,Guid.NewGuid().ToString());
-                cp.PersonDesires.AddDesires(cd1);
-                dlf.RegisterDesires(cp.PersonDesires.Desires.Values);
-                TimeStep ts = new TimeStep(0,0,true);
-                DesireEntry de = new DesireEntry(cp, ts, cp.PersonDesires, dlf,calcParameters);
-                fft.RegisterHousehold(new HouseholdKey("hh1"), "bla", HouseholdKeyType.Household,"desc",null,null);
-                dlf.WriteEntry(de, new HouseholdKey("hh1"));
-                dlf.Dispose();
+                    //NormalRandom nr = new NormalRandom(0, 0.1, r);
+                    CalcLocation cloc = new CalcLocation("cloc", Guid.NewGuid().ToStrGuid());
+                    BitArray isSick = new BitArray(calcParameters.InternalTimesteps);
+                    BitArray isOnVacation = new BitArray(calcParameters.InternalTimesteps);
+                    CalcPersonDto calcPerson = CalcPersonDto.MakeExamplePerson();
+                    CalcPerson cp = new CalcPerson(calcPerson, cloc,
+                         isSick, isOnVacation, calcRepo);
+                    //"bla", 1, 5, r, 48, PermittedGender.Male, lf, "HH1", cloc, "traittag", "hhname0",calcParameters,isSick,Guid.NewGuid().ToStrGuid());
+                    cp.PersonDesires.AddDesires(cd1);
+                    dlf.RegisterDesires(cp.PersonDesires.Desires.Values);
+                    TimeStep ts = new TimeStep(0, 0, true);
+                    DesireEntry de = new DesireEntry(cp, ts, cp.PersonDesires, dlf, calcParameters);
+                    fft.RegisterHousehold(new HouseholdKey("hh1"), "bla", HouseholdKeyType.Household, "desc", null, null);
+                    dlf.WriteEntry(de, new HouseholdKey("hh1"));
+                    dlf.Dispose();
+                }
                 Assert.AreEqual(true, true);
-            wd.CleanUp();
+                wd.CleanUp();
+            }
         }
     }
 }

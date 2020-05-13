@@ -47,7 +47,7 @@ namespace Database.Tables.ModularHouseholds {
         [CanBeNull] private Location _location;
 
         public HHTLocation([CanBeNull]int? pID, [CanBeNull] Location ploc, [CanBeNull] int? householdTraitID, [NotNull] string name,
-            [NotNull] string connectionString, [NotNull] string guid)
+            [NotNull] string connectionString, [NotNull] StrGuid guid)
             : base(name, TableName, connectionString, guid) {
             TypeDescription = "Household Trait Location";
             ID = pID;
@@ -181,7 +181,7 @@ namespace Database.Tables.ModularHouseholds {
         }
 
         public class JsonDto :IGuidObject {
-            public JsonDto(List<HHTAffordance.JsonDto> affordances, JsonReference location, [NotNull] string guid)
+            public JsonDto(List<HHTAffordance.JsonDto> affordances, JsonReference location, [NotNull] StrGuid guid)
             {
                 Affordances = affordances;
                 Location = location;
@@ -195,9 +195,9 @@ namespace Database.Tables.ModularHouseholds {
 
             public List<HHTAffordance.JsonDto> Affordances { get; set; }
             public JsonReference Location { get; set; }
-            public string Guid { get; set; }
+            public StrGuid Guid { get; set; }
         }
 
-        public string RelevantGuid => Guid;
+        public StrGuid RelevantGuid => Guid;
     }
 }

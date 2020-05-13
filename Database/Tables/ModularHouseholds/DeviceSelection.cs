@@ -30,6 +30,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Database.Database;
@@ -45,7 +46,7 @@ namespace Database.Tables.ModularHouseholds {
         [CanBeNull] private string _description;
 
         public DeviceSelection([NotNull] string pName, [CanBeNull]int? id, [CanBeNull] string description,
-                               [NotNull] string connectionString, [NotNull] string guid)
+                               [NotNull] string connectionString, [NotNull] StrGuid guid)
             : base(pName, TableName, connectionString, guid)
         {
             ID = id;
@@ -83,7 +84,7 @@ namespace Database.Tables.ModularHouseholds {
                 }
             }
             var newdsi = new DeviceSelectionDeviceAction(null, IntID,
-                dag, da, ConnectionString,dag.Name, System.Guid.NewGuid().ToString());
+                dag, da, ConnectionString,dag.Name, System.Guid.NewGuid().ToStrGuid());
             _selectionActions.Add(newdsi);
             _selectionActions.Sort();
             SaveToDB();
@@ -101,7 +102,7 @@ namespace Database.Tables.ModularHouseholds {
                 }
             }
             var newdsi = new DeviceSelectionItem(null, IntID, dc,
-                rd, ConnectionString, dc.Name, System.Guid.NewGuid().ToString());
+                rd, ConnectionString, dc.Name, System.Guid.NewGuid().ToStrGuid());
             _selectionItems.Add(newdsi);
             _selectionItems.Sort();
             SaveToDB();
@@ -125,7 +126,7 @@ namespace Database.Tables.ModularHouseholds {
         public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new
             DeviceSelection(FindNewName(isNameTaken, "New Device Selection "),
                 null, "(no description yet)",
-                connectionString, System.Guid.NewGuid().ToString());
+                connectionString, System.Guid.NewGuid().ToStrGuid());
 
         public void DeleteActionFromDB([NotNull] DeviceSelectionDeviceAction dsi)
         {

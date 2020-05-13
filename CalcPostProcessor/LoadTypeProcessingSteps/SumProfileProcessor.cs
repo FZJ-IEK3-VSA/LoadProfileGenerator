@@ -82,6 +82,9 @@ namespace CalcPostProcessor.LoadTypeProcessingSteps {
                               dstLoadType.UnitOfSum + "]");
             var srcFile = _fft.GetResultFileEntry(ResultFileID.OnlineSumActivationFiles, dstLoadType.Name,
                 Constants.GeneralHouseholdKey, null, null);
+            if (srcFile.FullFileName == null) {
+                throw new LPGException("Filename was null in resultfileentry");
+            }
             var bytes = File.ReadAllBytes(srcFile.FullFileName);
             var values = new double[bytes.Length / 8];
             Buffer.BlockCopy(bytes, 0, values, 0, values.Length * 8);

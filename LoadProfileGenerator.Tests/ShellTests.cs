@@ -14,10 +14,12 @@ namespace LoadProfileGenerator.Tests
         [Category(UnitTestCategories.BasicTest)]
         public void UpdateVacationsInHouseholdTemplates1Test()
         {
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            Simulator sim = new Simulator(db.ConnectionString);
-            Shell.UpdateVacationsInHouseholdTemplates1(sim);
-            db.Cleanup();
+            using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                Simulator sim = new Simulator(db.ConnectionString);
+                Shell.UpdateVacationsInHouseholdTemplates1(sim);
+                db.Cleanup();
+            }
         }
     }
 }

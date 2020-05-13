@@ -321,6 +321,10 @@ namespace Database.Database {
             if (typename == typeof(CreationType).FullName) {
                 return DbType.Int32;
             }
+            if (typename == typeof(BodilyActivityLevel).FullName)
+            {
+                return DbType.Int32;
+            }
             const string s = nameof(PermittedGender);
             var s2 = typeof(PermittedGender).FullName;
             throw new LPGException("Type fehlt:" + typename + Environment.NewLine + s + Environment.NewLine + s2);

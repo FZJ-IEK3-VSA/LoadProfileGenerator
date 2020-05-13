@@ -15,7 +15,7 @@ namespace CalcPostProcessor.Steps
         protected HouseholdLoadTypeStepBase([JetBrains.Annotations.NotNull] CalcDataRepository repository, [JetBrains.Annotations.NotNull] List<CalcOption> options,
                                              [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler,
                                              [JetBrains.Annotations.NotNull] string stepName) : base(repository, options, calculationProfiler,
-            stepName)
+            stepName,0)
         {
         }
     }

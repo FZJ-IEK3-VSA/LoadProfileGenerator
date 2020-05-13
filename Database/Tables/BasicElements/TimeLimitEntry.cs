@@ -34,6 +34,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Database.Database;
@@ -97,7 +98,7 @@ namespace Database.Tables.BasicElements {
             bool duringNotVacation, bool duringVacationLongerThan, bool duringVacationShorterThan,
             int vacationDurationLimit, bool duringHoliday, [ItemNotNull] [NotNull] ObservableCollection<DateBasedProfile> allDateProfiles,
             [NotNull] string connectionString, int randomizeTimeAmount, double dateProfileMinVariation,
-            double dateProfileMaxVariation, [NotNull] string guid) : base(startTime + " " + endTime, TableName, connectionString, guid)
+            double dateProfileMaxVariation, [NotNull] StrGuid guid) : base(startTime + " " + endTime, TableName, connectionString, guid)
         {
             ID = id;
             AllDateProfiles = allDateProfiles;
@@ -575,7 +576,7 @@ namespace Database.Tables.BasicElements {
             AnyAllTimeLimitCondition.All, new DateTime(2014, 12, 1), new DateTime(2014, 12, 31), -1, 0, 0, false,
             false,
             false, false, 5, true, dateBasedProfiles, connectionString, 0, 0, 0,
-            System.Guid.NewGuid().ToString());
+            System.Guid.NewGuid().ToStrGuid());
 
         [ItemNotNull]
         [NotNull]

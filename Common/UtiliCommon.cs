@@ -4,10 +4,17 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using Automation.ResultFiles;
 
 namespace Common {
     public static class Utili {
+        [NotNull]
+        public static string GetCurrentAssemblyVersion()
+        {
+            var version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "unknown version";
+            return version;
+        }
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [NotNull]
         public static string GetCurrentMethodAndClass() {

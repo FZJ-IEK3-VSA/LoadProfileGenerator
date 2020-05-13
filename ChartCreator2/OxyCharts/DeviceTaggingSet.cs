@@ -14,6 +14,7 @@ using OxyPlot.Axes;
 using OxyPlot.Series;
 
 namespace ChartCreator2.OxyCharts {
+    [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     internal class DeviceTaggingSet : ChartBaseFileStep
     {
         public DeviceTaggingSet([JetBrains.Annotations.NotNull] ChartCreationParameters parameters,
@@ -28,7 +29,7 @@ namespace ChartCreator2.OxyCharts {
 
         private void MakeBarCharts([JetBrains.Annotations.NotNull] ResultFileEntry rfe, [JetBrains.Annotations.NotNull] string plotName, [JetBrains.Annotations.NotNull] DirectoryInfo basisPath,
             [JetBrains.Annotations.NotNull] Dictionary<string, List<TagEntry>> consumption) {
-            _CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
+            Profiler.StartPart(Utili.GetCurrentMethodAndClass());
             foreach (var pair in consumption) {
                 var hasReferenceValue = pair.Value.Any(x => x.ReferenceValues.Count > 0);
                 if (!hasReferenceValue) {
@@ -42,12 +43,12 @@ namespace ChartCreator2.OxyCharts {
                 plotModel1.LegendPosition = LegendPosition.BottomCenter;
                 var labelFontSize = 12;
                 if (Config.MakePDFCharts) {
-                    plotModel1.DefaultFontSize = _Parameters.PDFFontSize;
-                    plotModel1.LegendFontSize = _Parameters.PDFFontSize;
+                    plotModel1.DefaultFontSize = Parameters.PDFFontSize;
+                    plotModel1.LegendFontSize = Parameters.PDFFontSize;
                     labelFontSize = 16;
                 }
                 plotModel1.LegendSymbolMargin = 20;
-                if (_Parameters.ShowTitle) {
+                if (Parameters.ShowTitle) {
                     plotModel1.Title = plotName;
                 }
 
@@ -167,7 +168,7 @@ namespace ChartCreator2.OxyCharts {
                 var cleanedfullname = Path.Combine(fi.DirectoryName, modifiedName);
                 Save(plotModel1, plotName, cleanedfullname, basisPath);
             }
-            _CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
+            Profiler.StopPart(Utili.GetCurrentMethodAndClass());
         }
 
         private void MakePieCharts([JetBrains.Annotations.NotNull] string fileName, [JetBrains.Annotations.NotNull] string plotName, [JetBrains.Annotations.NotNull] DirectoryInfo basisPath,
@@ -179,7 +180,7 @@ namespace ChartCreator2.OxyCharts {
                 plotModel1.LegendOrientation = LegendOrientation.Horizontal;
                 plotModel1.LegendPlacement = LegendPlacement.Outside;
                 plotModel1.LegendPosition = LegendPosition.BottomCenter;
-                if (_Parameters.ShowTitle) {
+                if (Parameters.ShowTitle) {
                     plotModel1.Title = plotName;
                 }
 
@@ -217,6 +218,10 @@ namespace ChartCreator2.OxyCharts {
             var consumption = new Dictionary<string, List<TagEntry>>();
             var tagname = string.Empty;
             var referenceHeaders = new List<string>();
+            if (srcEntry.FullFileName == null)
+            {
+                throw new LPGException("filename was null");
+            }
             using (var sr = new StreamReader(srcEntry.FullFileName)) {
                 while (!sr.EndOfStream) {
                     var s = sr.ReadLine();
@@ -234,13 +239,13 @@ namespace ChartCreator2.OxyCharts {
                         if (header == null) {
                             throw new LPGException("File was empty: " + srcEntry.FullFileName);
                         }
-                        var arr = header.Split(_Parameters.CSVCharacterArr, StringSplitOptions.None);
+                        var arr = header.Split(Parameters.CSVCharacterArr, StringSplitOptions.None);
                         for (var i = 3; i < arr.Length && !string.IsNullOrWhiteSpace(arr[i]); i++) {
                             referenceHeaders.Add(arr[i]);
                         }
                     }
                     if (!s.StartsWith("Sum;", StringComparison.Ordinal) && s.Length > 0) {
-                        var cols = s.Split(_Parameters.CSVCharacterArr, StringSplitOptions.None);
+                        var cols = s.Split(Parameters.CSVCharacterArr, StringSplitOptions.None);
                         if (cols.Length > 1) {
                             var tagValue = Math.Abs(Convert.ToDouble(cols[1], CultureInfo.CurrentCulture));
                             var name = cols[0];
@@ -262,8 +267,8 @@ namespace ChartCreator2.OxyCharts {
 
             string plotName = "Device Tagging Set " + srcEntry.HouseholdNumberString + " " +
                               srcEntry.LoadTypeInformation?.Name;
-            MakePieCharts(srcEntry.FullFileName, plotName, _Parameters.BaseDirectory, consumption);
-            MakeBarCharts(srcEntry, plotName, _Parameters.BaseDirectory, consumption);
+            MakePieCharts(srcEntry.FullFileName, plotName, Parameters.BaseDirectory, consumption);
+            MakeBarCharts(srcEntry, plotName, Parameters.BaseDirectory, consumption);
             return FileProcessingResult.ShouldCreateFiles;
         }
 

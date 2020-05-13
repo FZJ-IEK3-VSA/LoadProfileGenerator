@@ -22,13 +22,13 @@ namespace Automation {
         }
 
         [NotNull]
-        public string RouteKey { get; set; }
+        public string? RouteKey { get; set; }
         [NotNull]
-        public string StepKey { get; set; }
+        public string? StepKey { get; set; }
         public double NewDistanceInMeters { get; set; }
     }
 
-    public enum HouseholdDataSpecifictionType {
+    public enum HouseholdDataSpecificationType {
         ByPersons,
         ByTemplateName,
         ByHouseholdName
@@ -61,7 +61,7 @@ namespace Automation {
         }
 
         [NotNull]
-        public string HouseholdTemplateName { get; set; }
+        public string? HouseholdTemplateName { get; set; }
     }
 
     public class HouseholdNameSpecification {
@@ -74,14 +74,14 @@ namespace Automation {
         }
 
         [NotNull]
-        public string HouseholdName { get; set; }
+        public string? HouseholdName { get; set; }
     }
     public class HouseholdData {
         public HouseholdData([NotNull] string uniqueHouseholdId,
-                             bool enableTransportationModelling, [NotNull] string name, [CanBeNull] JsonReference chargingStationSet,
-                             [CanBeNull] JsonReference transportationDeviceSet, [CanBeNull] JsonReference travelRouteSet,
-                             [ItemNotNull][CanBeNull] List<TransportationDistanceModifier> transportationDistanceModifiers,
-                             HouseholdDataSpecifictionType householdDataSpecifictionType)
+                             bool enableTransportationModelling, [NotNull] string name, [CanBeNull] JsonReference? chargingStationSet,
+                             [CanBeNull] JsonReference? transportationDeviceSet, [CanBeNull] JsonReference? travelRouteSet,
+                             [ItemNotNull][CanBeNull] List<TransportationDistanceModifier>? transportationDistanceModifiers,
+                             HouseholdDataSpecificationType householdDataSpecifictionType)
         {
             UniqueHouseholdId = uniqueHouseholdId;
             EnableTransportationModelling = enableTransportationModelling;
@@ -95,36 +95,38 @@ namespace Automation {
 
         [Obsolete("For json only")]
         [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
+#pragma warning disable 8618
         public HouseholdData()
+#pragma warning restore 8618
         {
         }
 
         [CanBeNull]
-    public  HouseholdDataPersonSpecification HouseholdDataPersonSpecification { get; set; }
+    public  HouseholdDataPersonSpecification? HouseholdDataPersonSpecification { get; set; }
     [CanBeNull]
-        public HouseholdTemplateSpecification HouseholdTemplateSpecification { get; set; }
+        public HouseholdTemplateSpecification? HouseholdTemplateSpecification { get; set; }
         [CanBeNull]
-        public HouseholdNameSpecification HouseholdNameSpecification { get; set; }
+        public HouseholdNameSpecification? HouseholdNameSpecification { get; set; }
 
                 [NotNull]
         public string UniqueHouseholdId { get; set; }
 
         [NotNull]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
 
         public bool EnableTransportationModelling { get; set; }
         [CanBeNull]
-        public JsonReference ChargingStationSet { get; set; }
+        public JsonReference? ChargingStationSet { get; set; }
         [CanBeNull]
-        public JsonReference TransportationDeviceSet { get; set; }
+        public JsonReference? TransportationDeviceSet { get; set; }
         [CanBeNull]
-        public JsonReference TravelRouteSet { get; set; }
+        public JsonReference? TravelRouteSet { get; set; }
 
         [CanBeNull]
         [ItemNotNull]
-        public List<TransportationDistanceModifier> TransportationDistanceModifiers { get; set; }
+        public List<TransportationDistanceModifier>? TransportationDistanceModifiers { get; set; }
         [JsonConverter(typeof(StringEnumConverter))]
-        public HouseholdDataSpecifictionType HouseholdDataSpecifictionType { get; set; }
+        public HouseholdDataSpecificationType HouseholdDataSpecifictionType { get; set; }
     }
 }

@@ -29,6 +29,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Automation;
 using Common.Enums;
 using Database.Database;
 using JetBrains.Annotations;
@@ -48,7 +49,7 @@ namespace Database.Tables.BasicElements {
 
         public AffordanceTagReference([NotNull] string name, int taggingSetID, [CanBeNull] AffordanceTag tag,
             [NotNull] string connectionString,
-                                      [CanBeNull]int? pID, PermittedGender gender, int minAge, int maxAge, double percentage, [NotNull] string guid)
+                                      [CanBeNull]int? pID, PermittedGender gender, int minAge, int maxAge, double percentage, [NotNull] StrGuid guid)
             : base(name, pID, TableName, connectionString, guid)
         {
             _taggingSetID = taggingSetID;

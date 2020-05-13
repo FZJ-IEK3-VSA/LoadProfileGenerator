@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using Automation;
 using Common;
 using Common.Tests;
@@ -20,24 +21,29 @@ namespace IntegrationTests
         public void TryCleaningEachTable()
         {
             CleanTestBase.RunAutomatically(false);
-            var db1 = new DatabaseSetup("TryCleaningEach");
-            var alltables = LongtermTests.GetTableList(db1);
-            db1.Cleanup();
-            for (var index = 0; index < alltables.Count; index++)
+            using (var db1 = new DatabaseSetup("TryCleaningEach"))
             {
-                Logger.Info("processing table " + index + " out of " + alltables.Count);
-                var table = alltables[index];
-                if (table == "tblLPGVersion") {
-                    continue;
-                }
-                var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-                DBBase.HideDeleteMessages();
-                Command.HideDeleteMessages();
+                var alltables = LongtermTests.GetTableList(db1);
+                db1.Cleanup();
+                for (var index = 0; index < alltables.Count; index++)
+                {
+                    Logger.Info("processing table " + index + " out of " + alltables.Count);
+                    var table = alltables[index];
+                    if (table == "tblLPGVersion")
+                    {
+                        continue;
+                    }
+                    using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+                    {
+                        DBBase.HideDeleteMessages();
+                        Command.HideDeleteMessages();
 
-                db.ClearTable(table);
-                var oldSim = new Simulator(db.ConnectionString); // need to load it for testing
-                Logger.Info(oldSim.ModularHouseholds.It.Count.ToString());
-                db.Cleanup();
+                        db.ClearTable(table);
+                        var oldSim = new Simulator(db.ConnectionString); // need to load it for testing
+                        Logger.Info(oldSim.ModularHouseholds.It.Count.ToString(CultureInfo.InvariantCulture));
+                        db.Cleanup();
+                    }
+                }
             }
             CleanTestBase.RunAutomatically(true);
         }

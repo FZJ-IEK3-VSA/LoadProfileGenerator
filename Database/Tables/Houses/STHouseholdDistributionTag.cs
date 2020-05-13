@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
+using Automation;
 using Database.Database;
 using Database.Tables.ModularHouseholds;
 using JetBrains.Annotations;
@@ -13,7 +14,7 @@ namespace Database.Tables.Houses {
 
         public STHouseholdDistributionTag([CanBeNull]int? pID, [CanBeNull] HouseholdTag tag, int stHouseholdDistributionID,
             [NotNull] string name,
-            [NotNull] string connectionString, [NotNull] string guid) : base(name, TableName, connectionString, guid) {
+            [NotNull] string connectionString, [NotNull] StrGuid guid) : base(name, TableName, connectionString, guid) {
             ID = pID;
             _tag = tag;
             _stHouseholdDistributionID = stHouseholdDistributionID;

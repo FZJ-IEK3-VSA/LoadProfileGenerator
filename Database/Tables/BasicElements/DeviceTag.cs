@@ -28,6 +28,7 @@
 
 using System;
 using System.Collections.ObjectModel;
+using Automation;
 using Database.Database;
 using JetBrains.Annotations;
 
@@ -35,7 +36,7 @@ namespace Database.Tables.BasicElements {
     public class DeviceTag : DBBase, IComparable<DeviceTag> {
         public const string TableName = "tblDeviceTags";
 
-        public DeviceTag([NotNull] string name, int taggingSetID, [NotNull] string connectionString, [CanBeNull]int? pID,[NotNull] string guid)
+        public DeviceTag([NotNull] string name, int taggingSetID, [NotNull] string connectionString, [CanBeNull]int? pID,[NotNull] StrGuid guid)
             : base(name, pID, TableName, connectionString, guid)
         {
             TaggingSetID = taggingSetID;
@@ -49,7 +50,7 @@ namespace Database.Tables.BasicElements {
             if (other == null) {
                 return 0;
             }
-            return string.Compare(Name, other.Name, StringComparison.Ordinal);
+            return string.CompareOrdinal(Name, other.Name);
         }
 
         [NotNull]

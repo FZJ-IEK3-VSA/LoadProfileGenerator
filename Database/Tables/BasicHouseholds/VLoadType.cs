@@ -35,6 +35,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Automation;
 using Automation.ResultFiles;
+using Common;
 using Database.Database;
 using Database.Tables.BasicElements;
 using JetBrains.Annotations;
@@ -56,7 +57,7 @@ namespace Database.Tables.BasicHouseholds {
 
         public VLoadType([NotNull] string pName, [NotNull] string description, [NotNull] string unitOfPower, [NotNull] string unitOfSum, double exampleOfPower,
             double exampleOfSum, TimeSpan timeSpanForSum, double loadTypeWeight, [NotNull] string connectionString,
-            LoadTypePriority priority, bool showInCharts, [NotNull] string guid, [CanBeNull]int? pID = null)
+            LoadTypePriority priority, bool showInCharts, [NotNull] StrGuid guid, [CanBeNull]int? pID = null)
             : base(pName, TableName, connectionString, guid)
         {
             if (pID == 0 || pID == -1) {
@@ -172,7 +173,7 @@ namespace Database.Tables.BasicHouseholds {
             var vLoadType = new VLoadType(name
                 , "(no description)", "Watt", "kWh", 1000, 1,
                 new TimeSpan(1, 0, 0), 1, connectionString, LoadTypePriority.Mandatory, true,
-                System.Guid.NewGuid().ToString());
+                System.Guid.NewGuid().ToStrGuid());
             return vLoadType;
         }
 

@@ -144,7 +144,7 @@ namespace CalculationController.DtoFactories
                     aff.Affordance.IsInterruptable, aff.Affordance.IsInterrupting, variableOps, variableRequirements,
                     aff.Affordance.ActionAfterInterruption, timeLimitName, aff.Weight,
                     aff.Affordance.RequireAllDesires, aff.SrcTraitName,
-                    Guid.NewGuid().ToString(), availabilityDataReference,householdKey, aff.Affordance.BodilyActivityLevel);
+                    Guid.NewGuid().ToStrGuid(), availabilityDataReference,householdKey, aff.Affordance.BodilyActivityLevel);
                 foreach (var devtup in aff.Affordance.AffordanceDevices)
                 {
                     MakeAffordanceDevices(calcloc, internalStepSize, ltdict, allDeviceActions, aff, caff, devtup, deviceDtosAtLocation,
@@ -409,7 +409,7 @@ namespace CalculationController.DtoFactories
                     calcDesires, affsubaff.SubAffordance.MinimumAge, affsubaff.SubAffordance.MaximumAge,
                     delayTimeInSteps, affsubaff.SubAffordance.PermittedGender, aff.AffCategory,
                     affsubaff.SubAffordance.IsInterruptable, affsubaff.SubAffordance.IsInterrupting,
-                    calcAffordanceVariableOps, weight, srcTrait, Guid.NewGuid().ToString());
+                    calcAffordanceVariableOps, weight, srcTrait, Guid.NewGuid().ToStrGuid());
                 caff.SubAffordance.Add(csubaff);
             }
         }

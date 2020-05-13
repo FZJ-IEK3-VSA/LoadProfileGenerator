@@ -30,7 +30,7 @@ namespace CalculationEngine.Transportation {
         public AffordanceBaseTransportDecorator([NotNull] ICalcAffordanceBase sourceAffordance,
             [NotNull] CalcSite site, [NotNull] TransportationHandler transportationHandler,
             [NotNull] string name,   [NotNull] HouseholdKey householdkey,
-                                                [NotNull] string guid, CalcRepo calcRepo)
+                                                [NotNull] StrGuid guid, CalcRepo calcRepo)
             : base(name, guid)
         {
             if (!site.Locations.Contains(sourceAffordance.ParentLocation)) {
@@ -80,7 +80,7 @@ namespace CalculationEngine.Transportation {
                      out var sourcePersonProfile);
             CalcProfile newPersonProfile = new CalcProfile(
                     "Travel Profile for Route " + route.Name + " to affordance " + _sourceAffordance.Name,
-                    System.Guid.NewGuid().ToString(),
+                    System.Guid.NewGuid().ToStrGuid(),
                     CalcProfile.MakeListwithValue1AndCustomDuration(routeduration),  ProfileType.Absolute,
                     sourcePersonProfile.DataSource);
                 newPersonProfile.AppendProfile(sourcePersonProfile);
@@ -95,7 +95,7 @@ namespace CalculationEngine.Transportation {
                 //this is if the simulation ends during a transport
                 CalcProfile newPersonProfile = new CalcProfile(
                     "Travel Profile for Route " + route.Name + " to affordance " + _sourceAffordance.Name,
-                    System.Guid.NewGuid().ToString(),
+                    System.Guid.NewGuid().ToStrGuid(),
                     CalcProfile.MakeListwithValue1AndCustomDuration(routeduration),  ProfileType.Absolute,
                     _sourceAffordance.Name);
                 personTimeProfile = newPersonProfile;

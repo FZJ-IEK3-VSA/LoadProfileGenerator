@@ -24,7 +24,8 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
                                        [NotNull] CalcDataRepository repository,
                                        [NotNull] ICalculationProfiler profiler,
                                        [NotNull] FileFactoryAndTracker fft):base(repository,
-            AutomationUtili.GetOptionList(CalcOption.HouseholdPlan),profiler,"Household Plans")
+            AutomationUtili.GetOptionList(CalcOption.HouseholdPlan),
+            profiler,"Household Plans",0)
         {
             _calcParameters = Repository.CalcParameters;
             _fft = fft;
@@ -49,7 +50,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
         }
 
         private  void Run(
-            [NotNull] Dictionary<string, Dictionary<string, double>>
+            [NotNull] Dictionary<StrGuid, Dictionary<string, double>>
                 energyByAffordanceByLoadTypeByHousehold, [NotNull] string householdName, [NotNull][ItemNotNull] List<CalcHouseholdPlanDto> householdPlans,
             [NotNull] FileFactoryAndTracker fft, [NotNull] HouseholdKey householdKey,
             [NotNull] Dictionary<string, Dictionary<string, Dictionary<string, int>>> affordanceTaggingSetByPersonByTagTimeUse,
@@ -67,14 +68,14 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
         }
 
         private  void RunEnergyPerAffordance(
-            [NotNull]  Dictionary<string, Dictionary<string, double>>
+            [NotNull]  Dictionary<StrGuid, Dictionary<string, double>>
                 energyByAffordanceByLoadtype, [NotNull] string householdName, [NotNull][ItemNotNull] List<CalcHouseholdPlanDto> householdPlans,
             [NotNull] HouseholdKey householdKey, [NotNull] Dictionary<Tuple<HouseholdKey, int>, StreamWriter> fileNumberTracker)
         {
             var simduration = _calcParameters.OfficialEndTime -
                               _calcParameters.OfficialStartTime;
             var timefactor = 8760 / simduration.TotalHours;
-            Dictionary<string,CalcLoadTypeDto> loadTypeByGuid = new Dictionary<string, CalcLoadTypeDto>();
+            Dictionary<StrGuid,CalcLoadTypeDto> loadTypeByGuid = new Dictionary<StrGuid, CalcLoadTypeDto>();
             foreach (CalcLoadTypeDto loadType in Repository.LoadTypes) {
                 loadTypeByGuid.Add(loadType.Guid,loadType);
             }
@@ -280,7 +281,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
             foreach (var key in Repository.HouseholdKeys) {
 #pragma warning restore S1135 // Track uses of "TODO" tags
                 var activations = Repository.LoadDeviceActivations(key.HouseholdKey);
-                Dictionary<string, Dictionary<string, double>> energyusePerAffordanceByLoadtype = new Dictionary<string, Dictionary<string, double>>();
+                Dictionary<StrGuid, Dictionary<string, double>> energyusePerAffordanceByLoadtype = new Dictionary<StrGuid, Dictionary<string, double>>();
                 foreach (DeviceActivationEntry activationEntry in activations) {
                     if (!energyusePerAffordanceByLoadtype.ContainsKey(activationEntry.LoadTypeGuid)) {
                         energyusePerAffordanceByLoadtype.Add(activationEntry.LoadTypeGuid, new Dictionary<string, double>());

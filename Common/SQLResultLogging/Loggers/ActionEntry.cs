@@ -28,6 +28,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using Automation;
 using Automation.ResultFiles;
 using Common.Enums;
 using JetBrains.Annotations;
@@ -45,7 +46,7 @@ namespace Common.SQLResultLogging.Loggers {
         }
 
         public SingleTimestepActionEntry([NotNull] HouseholdKey householdKey, int timeStep,
-                           DateTime dateTime, [NotNull] string personGuid, [CanBeNull] string actionEntryGuid)
+                           DateTime dateTime, [NotNull] StrGuid personGuid, [CanBeNull] StrGuid actionEntryGuid)
         {
             HouseholdKey = householdKey;
             TimeStep = timeStep;
@@ -62,11 +63,11 @@ namespace Common.SQLResultLogging.Loggers {
 
         [NotNull]
         [JsonProperty]
-        public string PersonGuid { get; set; }
+        public StrGuid PersonGuid { get; set; }
 
         [NotNull]
         [JsonProperty]
-        public string ActionEntryGuid { get; set; }
+        public StrGuid ActionEntryGuid { get; set; }
 
         [JsonProperty]
         public int TimeStep { get; set; }
@@ -83,8 +84,8 @@ namespace Common.SQLResultLogging.Loggers {
         }
 
         public ActionEntry([NotNull] string category, [NotNull] HouseholdKey householdKey, [NotNull] TimeStep timeStep,
-                           DateTime dateTime, [NotNull] string personGuid, [NotNull] string personName, bool isSick,
-                           [NotNull] string affordanceName, [NotNull] string affordanceGuid, int id, BodilyActivityLevel bodilyActivityLevel)
+                           DateTime dateTime, [NotNull] StrGuid personGuid, [NotNull] string personName, bool isSick,
+                           [NotNull] string affordanceName, [NotNull] StrGuid affordanceGuid, int id, BodilyActivityLevel bodilyActivityLevel)
         {
             Category = category;
             HouseholdKey = householdKey;
@@ -97,16 +98,16 @@ namespace Common.SQLResultLogging.Loggers {
             AffordanceGuid = affordanceGuid;
             ID = id;
             BodilyActivityLevel = bodilyActivityLevel;
-            ActionEntryGuid = Guid.NewGuid().ToString();
+            ActionEntryGuid = Guid.NewGuid().ToStrGuid();
         }
 
         [JsonProperty]
         [NotNull]
-        public string ActionEntryGuid { get; set; }
+        public StrGuid ActionEntryGuid { get; set; }
 
         [NotNull]
         [JsonProperty]
-        public string AffordanceGuid { get; set; }
+        public StrGuid AffordanceGuid { get; set; }
 
         [NotNull]
         [JsonProperty]
@@ -129,7 +130,7 @@ namespace Common.SQLResultLogging.Loggers {
 
         [NotNull]
         [JsonProperty]
-        public string PersonGuid { get; set; }
+        public StrGuid PersonGuid { get; set; }
 
         [NotNull]
         [JsonProperty]
@@ -143,10 +144,10 @@ namespace Common.SQLResultLogging.Loggers {
         public HouseholdKey HouseholdKey { get; set; }
 
         [NotNull]
-        public static ActionEntry MakeActionEntry([NotNull] TimeStep timeStep, [NotNull] string personGuid,
+        public static ActionEntry MakeActionEntry([NotNull] TimeStep timeStep, [NotNull] StrGuid personGuid,
                                                   [NotNull] string personName,
                                                   bool isSick, [NotNull] string affordanceName,
-                                                  [NotNull] string affordanceGuid, [NotNull] HouseholdKey householdKey,
+                                                  [NotNull] StrGuid affordanceGuid, [NotNull] HouseholdKey householdKey,
                                                   [NotNull] string category,
                                                   DateTime timestamp, BodilyActivityLevel bodilyActivityLevel)
         {

@@ -32,6 +32,8 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Automation;
+using Common;
 using Database.Database;
 using Database.Tables.BasicElements;
 using JetBrains.Annotations;
@@ -51,7 +53,7 @@ namespace Database.Tables.BasicHouseholds {
 
         public Desire([NotNull] string pName, decimal pDefaultDecayRate, decimal defaultThreshold, decimal defaultWeight,
             [NotNull] string connectionString, decimal criticalThreshold, bool isSharedDesire, [CanBeNull] int? pID,
-                      [NotNull] string desireCategory, [NotNull] string guid)
+                      [NotNull] string desireCategory, [NotNull] StrGuid guid)
             : base(pName, TableName, connectionString, guid)
         {
             ID = pID;
@@ -123,7 +125,7 @@ namespace Database.Tables.BasicHouseholds {
         [UsedImplicitly]
         public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new Desire(
             FindNewName(isNameTaken, "New Desire "), 12m, 0.5m, 1,
-            connectionString, -1, false, null,"", System.Guid.NewGuid().ToString());
+            connectionString, -1, false, null,"", System.Guid.NewGuid().ToStrGuid());
 
         [NotNull]
         public override DBBase ImportFromGenericItem([NotNull] DBBase toImport, [NotNull] Simulator dstSim)

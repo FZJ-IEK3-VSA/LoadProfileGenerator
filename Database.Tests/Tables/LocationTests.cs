@@ -44,24 +44,26 @@ namespace Database.Tests.Tables {
     {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void LocationTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-
-            db.ClearTable(Location.TableName);
-            var cat = new CategoryDBBase<Location>("Locations");
-            var profiles = db.LoadTimeBasedProfiles();
-            var devices = db.LoadRealDevices(out var deviceCategories, out var loadTypes, profiles);
-            Location.LoadFromDatabase(cat.MyItems, db.ConnectionString, devices, deviceCategories, loadTypes, false);
-            Assert.AreEqual(0, cat.MyItems.Count);
-            var loc = cat.CreateNewItem(db.ConnectionString);
-            cat.SaveToDB();
-            loc.AddDevice(devices[0]);
-            loc.SaveToDB();
-            var locations = new ObservableCollection<Location>();
-            Location.LoadFromDatabase(locations, db.ConnectionString, devices, deviceCategories, loadTypes, false);
-            Assert.AreEqual(1, locations.Count);
-            Assert.AreEqual(1, locations[0].LocationDevices.Count);
-            db.Cleanup();
+        public void LocationTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                db.ClearTable(Location.TableName);
+                var cat = new CategoryDBBase<Location>("Locations");
+                var profiles = db.LoadTimeBasedProfiles();
+                var devices = db.LoadRealDevices(out var deviceCategories, out var loadTypes, profiles);
+                Location.LoadFromDatabase(cat.MyItems, db.ConnectionString, devices, deviceCategories, loadTypes, false);
+                Assert.AreEqual(0, cat.MyItems.Count);
+                var loc = cat.CreateNewItem(db.ConnectionString);
+                cat.SaveToDB();
+                loc.AddDevice(devices[0]);
+                loc.SaveToDB();
+                var locations = new ObservableCollection<Location>();
+                Location.LoadFromDatabase(locations, db.ConnectionString, devices, deviceCategories, loadTypes, false);
+                Assert.AreEqual(1, locations.Count);
+                Assert.AreEqual(1, locations[0].LocationDevices.Count);
+                db.Cleanup();
+            }
         }
     }
 }

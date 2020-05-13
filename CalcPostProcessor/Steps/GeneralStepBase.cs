@@ -14,8 +14,9 @@ namespace CalcPostProcessor.Steps
     {
         protected GeneralStepBase([JetBrains.Annotations.NotNull] CalcDataRepository repository,[JetBrains.Annotations.NotNull] List< CalcOption> option,
                                   [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler,
-                                  [JetBrains.Annotations.NotNull] string stepName) : base(repository, option, calculationProfiler,
-            stepName)
+                                  [JetBrains.Annotations.NotNull] string stepName, int priority) : base(
+            repository, option, calculationProfiler,
+            stepName,priority)
         {
         }
     }

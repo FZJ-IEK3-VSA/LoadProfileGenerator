@@ -40,29 +40,32 @@ namespace Database.Tests.Tables {
     {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void TransformationDeviceLoadCreationAndSaveTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var tdlts =
-                new ObservableCollection<TransformationDeviceLoadType>();
-            var loadTypes = db.LoadLoadTypes();
-            TransformationDeviceLoadType.LoadFromDatabase(tdlts, db.ConnectionString, loadTypes, false);
-            // delete everything and check
-            tdlts.Clear();
-            db.ClearTable(TransformationDeviceLoadType.TableName);
-            TransformationDeviceLoadType.LoadFromDatabase(tdlts, db.ConnectionString, loadTypes, false);
-            Assert.AreEqual(0, tdlts.Count);
-            // add one and load again
-            var tdlt = new TransformationDeviceLoadType(null, loadTypes[0], 1, 1,
-                db.ConnectionString, loadTypes[0].Name, TransformationFactorType.FixedFactor, Guid.NewGuid().ToString());
-            tdlt.SaveToDB();
-            TransformationDeviceLoadType.LoadFromDatabase(tdlts, db.ConnectionString, loadTypes, false);
-            Assert.AreEqual(1, tdlts.Count);
-            // delete the loaded one
-            tdlts[0].DeleteFromDB();
-            tdlts.Clear();
-            TransformationDeviceLoadType.LoadFromDatabase(tdlts, db.ConnectionString, loadTypes, false);
-            Assert.AreEqual(0, tdlts.Count);
-            db.Cleanup();
+        public void TransformationDeviceLoadCreationAndSaveTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var tdlts =
+new ObservableCollection<TransformationDeviceLoadType>();
+                var loadTypes = db.LoadLoadTypes();
+                TransformationDeviceLoadType.LoadFromDatabase(tdlts, db.ConnectionString, loadTypes, false);
+                // delete everything and check
+                tdlts.Clear();
+                db.ClearTable(TransformationDeviceLoadType.TableName);
+                TransformationDeviceLoadType.LoadFromDatabase(tdlts, db.ConnectionString, loadTypes, false);
+                Assert.AreEqual(0, tdlts.Count);
+                // add one and load again
+                var tdlt = new TransformationDeviceLoadType(null, loadTypes[0], 1, 1,
+                    db.ConnectionString, loadTypes[0].Name, TransformationFactorType.FixedFactor, Guid.NewGuid().ToStrGuid());
+                tdlt.SaveToDB();
+                TransformationDeviceLoadType.LoadFromDatabase(tdlts, db.ConnectionString, loadTypes, false);
+                Assert.AreEqual(1, tdlts.Count);
+                // delete the loaded one
+                tdlts[0].DeleteFromDB();
+                tdlts.Clear();
+                TransformationDeviceLoadType.LoadFromDatabase(tdlts, db.ConnectionString, loadTypes, false);
+                Assert.AreEqual(0, tdlts.Count);
+                db.Cleanup();
+            }
         }
     }
 }

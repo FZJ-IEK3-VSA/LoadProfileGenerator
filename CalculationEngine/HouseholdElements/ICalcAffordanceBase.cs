@@ -35,7 +35,7 @@ namespace CalculationEngine.HouseholdElements
         List<CalcDesire> Satisfactionvalues { get; }
         int Weight { get; }
         [NotNull]
-        string Guid { get; }
+        StrGuid Guid { get; }
 
         void Activate([NotNull] TimeStep startTime, [NotNull] string activatorName,
              [NotNull] CalcLocation personSourceLocation,

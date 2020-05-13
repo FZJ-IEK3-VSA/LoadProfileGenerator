@@ -5,7 +5,6 @@ using System.IO;
 using Automation;
 using Automation.ResultFiles;
 using Common;
-using JetBrains.Annotations;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
@@ -33,18 +32,22 @@ namespace ChartCreator2.OxyCharts {
 
         protected override FileProcessingResult MakeOnePlot(ResultFileEntry rfe)
         {
-            _CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
+            Profiler.StartPart(Utili.GetCurrentMethodAndClass());
             string plotName = "Execution Count for " + rfe.HouseholdNumberString;
             var consumption =
                 new Dictionary<string, List<Tuple<string, double>>>();
             var lastname = string.Empty;
+            if (rfe.FullFileName == null)
+            {
+                throw new LPGException("filename was null");
+            }
             using (var sr = new StreamReader(rfe.FullFileName)) {
                 while (!sr.EndOfStream) {
                     var s = sr.ReadLine();
                     if (s == null) {
                         throw new LPGException("Readline failed.");
                     }
-                    var cols = s.Split(_Parameters.CSVCharacterArr, StringSplitOptions.None);
+                    var cols = s.Split(Parameters.CSVCharacterArr, StringSplitOptions.None);
                     if (s == "-----") {
                         var name = sr.ReadLine();
                         if (name == null) {
@@ -74,7 +77,7 @@ namespace ChartCreator2.OxyCharts {
                     LegendPosition = LegendPosition.BottomCenter
                 };
                 var personName = pair.Key;
-                if (_Parameters.ShowTitle) {
+                if (Parameters.ShowTitle) {
                     plotModel1.Title = plotName + " " + personName;
                 }
                 plotModel1.IsLegendVisible = false;
@@ -135,9 +138,9 @@ namespace ChartCreator2.OxyCharts {
                     throw new LPGException("Directory Name was null");
                 }
                 var correctfilename = Path.Combine(fi.DirectoryName, pn + cleanedName + ".png");
-                Save(plotModel1, plotName, correctfilename, _Parameters.BaseDirectory);
+                Save(plotModel1, plotName, correctfilename, Parameters.BaseDirectory);
             }
-            _CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
+            Profiler.StopPart(Utili.GetCurrentMethodAndClass());
             return FileProcessingResult.ShouldCreateFiles;
         }
     }

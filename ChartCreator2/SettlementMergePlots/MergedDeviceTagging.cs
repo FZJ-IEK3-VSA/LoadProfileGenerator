@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using Automation;
@@ -10,6 +11,7 @@ using OxyPlot.Axes;
 using OxyPlot.Series;
 
 namespace ChartCreator2.SettlementMergePlots {
+    [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     public class MergedDeviceTagging {
         private const int Fontsize = 30;
 

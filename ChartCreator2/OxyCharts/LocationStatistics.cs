@@ -4,7 +4,6 @@ using System.IO;
 using Automation;
 using Automation.ResultFiles;
 using Common;
-using JetBrains.Annotations;
 using OxyPlot;
 using OxyPlot.Series;
 
@@ -22,9 +21,13 @@ namespace ChartCreator2.OxyCharts {
         }
 
         protected override FileProcessingResult MakeOnePlot(ResultFileEntry rfe) {
-            _CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
+            Profiler.StartPart(Utili.GetCurrentMethodAndClass());
             string plotName = "Location Statistics " + rfe.HouseholdNumberString;
             var persons = new List<PersonEntry>();
+            if (rfe.FullFileName == null)
+            {
+                throw new LPGException("filename was null");
+            }
             using (var sr = new StreamReader(rfe.FullFileName)) {
                 PersonEntry lastPerson = null;
                 while (!sr.EndOfStream) {
@@ -44,7 +47,7 @@ namespace ChartCreator2.OxyCharts {
                         if (lastPerson == null) {
                             throw new LPGException("lastperson was null");
                         }
-                        var cols = s.Split(_Parameters.CSVCharacterArr, StringSplitOptions.None);
+                        var cols = s.Split(Parameters.CSVCharacterArr, StringSplitOptions.None);
                         var val = Utili.ConvertToDoubleWithMessage(cols[2], "LocationStatisticsPlot");
                         if (val > 0) {
                             lastPerson.Percentages.Add(cols[0], val);
@@ -60,7 +63,7 @@ namespace ChartCreator2.OxyCharts {
                     LegendPlacement = LegendPlacement.Outside,
                     LegendPosition = LegendPosition.BottomCenter
                 };
-                if (_Parameters.ShowTitle) {
+                if (Parameters.ShowTitle) {
                     plotModel1.Title = plotName;
                 }
 
@@ -83,9 +86,9 @@ namespace ChartCreator2.OxyCharts {
 
                 plotModel1.Series.Add(pieSeries1);
                 var newfilename = "LocationStatistics." + entry.CleanName;
-                Save(plotModel1, plotName, rfe.FullFileName, _Parameters.BaseDirectory, newfilename);
+                Save(plotModel1, plotName, rfe.FullFileName, Parameters.BaseDirectory, newfilename);
             }
-            _CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
+            Profiler.StopPart(Utili.GetCurrentMethodAndClass());
             return FileProcessingResult.ShouldCreateFiles;
         }
 

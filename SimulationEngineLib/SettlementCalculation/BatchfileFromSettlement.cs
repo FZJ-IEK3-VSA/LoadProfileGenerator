@@ -209,7 +209,7 @@ namespace SimulationEngineLib.SettlementCalculation {
             var parfilename = "Start-" + cleanSettlementName + "." + bo.Suffix + "Parallel.cmd";
             using (var sw = new StreamWriter(parfilename)) {
                 if (string.IsNullOrWhiteSpace(bo.ParallelCores)) {
-                    bo.ParallelCores = Environment.ProcessorCount.ToString();
+                    bo.ParallelCores = Environment.ProcessorCount.ToString(CultureInfo.InvariantCulture);
                 }
                 sw.WriteLine("Simulationengine.exe LaunchParallel -NumberOfCores " + bo.ParallelCores + " -Batchfile " + filename +
                              " -ArchiveDirectory f:\\"+ cleanSettlementName + "_archive");

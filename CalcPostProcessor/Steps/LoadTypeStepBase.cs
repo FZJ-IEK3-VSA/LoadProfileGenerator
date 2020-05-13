@@ -22,7 +22,7 @@ namespace CalcPostProcessor.Steps
         protected LoadTypeSumStepBase([JetBrains.Annotations.NotNull] CalcDataRepository repository, [JetBrains.Annotations.NotNull] List<CalcOption> options,
                                       [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler,
                                       [JetBrains.Annotations.NotNull] string stepName) : base(repository, options, calculationProfiler,
-            stepName)
+            stepName,0)
         {
         }
     }
@@ -31,7 +31,7 @@ namespace CalcPostProcessor.Steps
         protected LoadTypeStepBase([JetBrains.Annotations.NotNull] CalcDataRepository repository, [JetBrains.Annotations.NotNull] List<CalcOption> options,
                                              [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler,
                                              [JetBrains.Annotations.NotNull] string stepName) : base(repository, options, calculationProfiler,
-            stepName)
+            stepName,0)
         {
         }
     }

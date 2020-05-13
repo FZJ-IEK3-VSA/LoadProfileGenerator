@@ -176,7 +176,7 @@ namespace Database.Tables.ModularHouseholds {
                               double estimatedTimePerYearInH,
                               EstimateType estimateType,
                               [NotNull] string shortDescription,
-                              [NotNull] string guid) : base(pName, TableName, connectionString, guid)
+                              [NotNull] StrGuid guid) : base(pName, TableName, connectionString, guid)
         {
             ID = id;
             _locations = new ObservableCollection<HHTLocation>();
@@ -543,7 +543,7 @@ namespace Database.Tables.ModularHouseholds {
                 return null;
             }
 
-            var hhttag = new HHTTag(null, IntID, tag, ConnectionString, tag.Name, System.Guid.NewGuid().ToString());
+            var hhttag = new HHTTag(null, IntID, tag, ConnectionString, tag.Name, System.Guid.NewGuid().ToStrGuid());
             _tags.Add(hhttag);
             _tags.Sort();
             hhttag.SaveToDB();
@@ -794,7 +794,7 @@ namespace Database.Tables.ModularHouseholds {
             0,
             EstimateType.Theoretical,
             "",
-            System.Guid.NewGuid().ToString());
+            System.Guid.NewGuid().ToStrGuid());
 
         public void DeleteAffordanceFromDB([NotNull] HHTAffordance hhaff)
         {
@@ -1509,7 +1509,7 @@ namespace Database.Tables.ModularHouseholds {
                 startPlusTime,
                 endMinusTime,
                 endPlusTime,
-                System.Guid.NewGuid().ToString());
+                System.Guid.NewGuid().ToStrGuid());
             hhaff.SaveToDB();
             Logger.Get().SafeExecute(() => {
                 hhl.AffordanceLocations.Add(hhaff);
@@ -1544,7 +1544,7 @@ namespace Database.Tables.ModularHouseholds {
                 variableValue,
                 variableCondition,
                 variable,
-                System.Guid.NewGuid().ToString());
+                System.Guid.NewGuid().ToStrGuid());
 
             Logger.Get().SafeExecuteWithWait(() => {
                 Autodevs.Add(hhad);
@@ -1577,7 +1577,7 @@ namespace Database.Tables.ModularHouseholds {
                 minAge,
                 maxAge,
                 gender,
-                System.Guid.NewGuid().ToString());
+                System.Guid.NewGuid().ToStrGuid());
             Desires.Add(hht);
             hht.SaveToDB();
             return hht;
@@ -1592,7 +1592,7 @@ namespace Database.Tables.ModularHouseholds {
                 }
             }
 
-            var hhl = new HHTLocation(null, location, ID, location.Name, ConnectionString, System.Guid.NewGuid().ToString());
+            var hhl = new HHTLocation(null, location, ID, location.Name, ConnectionString, System.Guid.NewGuid().ToStrGuid());
             _locations.Add(hhl);
             hhl.SaveToDB();
             _locations.Sort();
@@ -1605,7 +1605,7 @@ namespace Database.Tables.ModularHouseholds {
                 return;
             }
 
-            var hhad = new HHTTrait(null, ID, trait, ConnectionString, trait.Name, System.Guid.NewGuid().ToString());
+            var hhad = new HHTTrait(null, ID, trait, ConnectionString, trait.Name, System.Guid.NewGuid().ToStrGuid());
             _subTraits.Add(hhad);
             _subTraits.Sort();
             SaveToDB();
@@ -1830,7 +1830,7 @@ namespace Database.Tables.ModularHouseholds {
                            int maximumPersonsInCHH,
                            int minimumPersonsInCHH,
                            string shortDescription,
-                           string guid,
+                           StrGuid guid,
                            double estimatedTimeInSeconds)
             {
                 Name = name;
@@ -1877,7 +1877,7 @@ namespace Database.Tables.ModularHouseholds {
             public TimeType EstimatedTimeType { get; set; }
             public TimeType EstimatedTimeType2 { get; set; }
             public EstimateType EstimateType { get; set; }
-            public string Guid { get; set; }
+            public StrGuid Guid { get; set; }
 
             [NotNull]
             [ItemNotNull]

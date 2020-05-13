@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using Automation.ResultFiles;
 using JetBrains.Annotations;
 
@@ -55,7 +56,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
                     }
                     _current = _walker.Current.Value;
                 }
-                string currentText = _current.ToString("X");
+                string currentText = _current.ToString("X", CultureInfo.InvariantCulture);
                 if (currentText.Length == 1)
                 {
                     currentText = "0" + currentText;

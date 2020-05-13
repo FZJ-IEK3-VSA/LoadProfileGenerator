@@ -33,6 +33,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Database.Database;
@@ -65,7 +66,7 @@ namespace Database.Tables.BasicHouseholds {
         private int _parentID;
 
         public DeviceCategory([NotNull] string pName, int parentID, [NotNull] string connectionString, bool ignoreInRealDeviceViews,
-            [ItemNotNull] [NotNull] ObservableCollection<RealDevice> devices, [NotNull] string guid,
+            [ItemNotNull] [NotNull] ObservableCollection<RealDevice> devices, [NotNull] StrGuid guid,
                               [CanBeNull]int? pID = null, bool isEmptyconnectionStringOk = false)
             : base(pName, TableName, connectionString, guid)
         {
@@ -200,7 +201,7 @@ namespace Database.Tables.BasicHouseholds {
         public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString)
         {
             var dc = new DeviceCategory(FindNewName(isNameTaken, "New Device Category "), -1,
-                connectionString, false, _allDevicesDict[connectionString], System.Guid.NewGuid().ToString());
+                connectionString, false, _allDevicesDict[connectionString], System.Guid.NewGuid().ToStrGuid());
             return dc;
         }
 
@@ -326,7 +327,7 @@ namespace Database.Tables.BasicHouseholds {
             var aic = new AllItemCollections(realDevices: devices);
             _allDevicesDict[connectionString] = devices;
             deviceCategoryNone = new DeviceCategory("(none)", -1, connectionString, false,
-                devices, "04290EB6-4FC1-4D4D-92B8-E7E12A104C0F", -1);
+                devices, "04290EB6-4FC1-4D4D-92B8-E7E12A104C0F".ToStrGuid(), -1);
             _dcNoneCategory[connectionString] = deviceCategoryNone;
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);
             result.Add(_dcNoneCategory[connectionString]);

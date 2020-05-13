@@ -38,42 +38,46 @@ using Database;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.ModularHouseholds;
 using Database.Tests;
-using JetBrains.Annotations;
 using NUnit.Framework;
 
 namespace IntegrationTests {
     [TestFixture]
     public class DatabaseMergerTests : UnitTestBaseClass
     {
-        private static void TestImport([NotNull] string path) {
+        private static void TestImport([JetBrains.Annotations.NotNull] string path) {
             TestImport(path, out _, out _);
         }
 
-        private static void TestImport([NotNull] string path, [NotNull] out Simulator mainsim) {
+        private static void TestImport([JetBrains.Annotations.NotNull] string path, [JetBrains.Annotations.NotNull] out Simulator mainsim) {
             TestImport(path, out mainsim, out _);
         }
 
-        private static void TestImport([NotNull]string path, [NotNull]out Simulator mainsim,
-            [NotNull]out Database.DatabaseMerger.DatabaseMerger dbm) {
+        private static void TestImport([JetBrains.Annotations.NotNull]string path, [JetBrains.Annotations.NotNull]out Simulator mainsim,
+            [JetBrains.Annotations.NotNull]out Database.DatabaseMerger.DatabaseMerger dbm)
+        {
             var di = new DirectoryInfo(Path.Combine(Directory.GetCurrentDirectory(), path));
             Logger.Debug(di.FullName);
             var fi = FindImportFiles(path);
-            var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            var newpath = Path.Combine(wd.WorkingDirectory, "mergertest.db3");
-            File.Copy(fi.FullName, newpath);
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var mainSim = new Simulator(db.ConnectionString);
-            dbm = new Database.DatabaseMerger.DatabaseMerger(mainSim);
+            using (var wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
+            {
+                var newpath = Path.Combine(wd.WorkingDirectory, "mergertest.db3");
+                File.Copy(fi.FullName, newpath);
+                using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+                {
+                    var mainSim = new Simulator(db.ConnectionString);
+                    dbm = new Database.DatabaseMerger.DatabaseMerger(mainSim);
 
-            dbm.RunFindItems(newpath, null);
-            dbm.RunImport(null);
-            mainsim = mainSim;
-            db.Cleanup();
-            wd.CleanUp();
+                    dbm.RunFindItems(newpath, null);
+                    dbm.RunImport(null);
+                    mainsim = mainSim;
+                    db.Cleanup();
+                }
+                wd.CleanUp();
+            }
         }
 
-        [NotNull]
-        private static FileInfo FindImportFiles([NotNull] string path)
+        [JetBrains.Annotations.NotNull]
+        private static FileInfo FindImportFiles([JetBrains.Annotations.NotNull] string path)
         {
             const string teamcityrelativePath = @"..\..\..\Importfiles\";
             FileInfo fi = new FileInfo(Path.Combine(teamcityrelativePath, path));
@@ -96,26 +100,31 @@ namespace IntegrationTests {
 
         [Test]
         [Category(UnitTestCategories.LongTest2)]
-        public void TestImportWithHouseholdTemplateDelete600() {
+        public void TestImportWithHouseholdTemplateDelete600()
+        {
             const string srcFileName = "profilegenerator600.db3";
-            string sourcepath =  DatabaseSetup.GetImportFileFullPath(srcFileName);
+            string sourcepath = DatabaseSetup.GetImportFileFullPath(srcFileName);
             if (!File.Exists(sourcepath))
             {
                 throw new LPGException("Missing file!");
             }
 
-            var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            var newpath = Path.Combine(wd.WorkingDirectory, "mergertest.db3");
-            File.Copy(sourcepath, newpath);
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var mainSim = new Simulator(db.ConnectionString);
-            db.ClearTable(HouseholdTemplate.TableName);
-            Database.DatabaseMerger.DatabaseMerger dbm = new Database.DatabaseMerger.DatabaseMerger(mainSim);
+            using (var wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
+            {
+                var newpath = Path.Combine(wd.WorkingDirectory, "mergertest.db3");
+                File.Copy(sourcepath, newpath);
+                using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+                {
+                    var mainSim = new Simulator(db.ConnectionString);
+                    db.ClearTable(HouseholdTemplate.TableName);
+                    Database.DatabaseMerger.DatabaseMerger dbm = new Database.DatabaseMerger.DatabaseMerger(mainSim);
 
-            dbm.RunFindItems(newpath, null);
-            dbm.RunImport(null);
-            db.Cleanup();
-            wd.CleanUp();
+                    dbm.RunFindItems(newpath, null);
+                    dbm.RunImport(null);
+                    db.Cleanup();
+                }
+                wd.CleanUp();
+            }
         }
 
         [Test]
@@ -129,18 +138,22 @@ namespace IntegrationTests {
                 throw new LPGException("Missing file!");
             }
 
-            var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            var newpath = Path.Combine(wd.WorkingDirectory, "mergertest.db3");
-            File.Copy(sourcepath, newpath);
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var mainSim = new Simulator(db.ConnectionString);
-            db.ClearTable(HouseholdTemplate.TableName);
-            Database.DatabaseMerger.DatabaseMerger dbm = new Database.DatabaseMerger.DatabaseMerger(mainSim);
+            using (var wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
+            {
+                var newpath = Path.Combine(wd.WorkingDirectory, "mergertest.db3");
+                File.Copy(sourcepath, newpath);
+                using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+                {
+                    var mainSim = new Simulator(db.ConnectionString);
+                    db.ClearTable(HouseholdTemplate.TableName);
+                    Database.DatabaseMerger.DatabaseMerger dbm = new Database.DatabaseMerger.DatabaseMerger(mainSim);
 
-            dbm.RunFindItems(newpath, null);
-            dbm.RunImport(null);
-            db.Cleanup();
-            wd.CleanUp();
+                    dbm.RunFindItems(newpath, null);
+                    dbm.RunImport(null);
+                    db.Cleanup();
+                }
+                wd.CleanUp();
+            }
         }
 
         [Test]
@@ -190,134 +203,164 @@ namespace IntegrationTests {
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void RunTestCurrentDeviceActions() {
-            var dbOriginal = new DatabaseSetup("RunTestCurrentDeviceActionsOriginal");
+        public void RunTestCurrentDeviceActions()
+        {
+            using (var dbOriginal = new DatabaseSetup("RunTestCurrentDeviceActionsOriginal"))
+            {
+                var originalSim = new Simulator(dbOriginal.ConnectionString);
 
-            var originalSim = new Simulator(dbOriginal.ConnectionString);
-
-            const string path = "profilegeneratorcopy.db3";
-            if (File.Exists(path)) {
-                File.Delete(path);
-            }
-            File.Copy(DatabaseSetup.GetSourcepath(null), path);
-            if (!File.Exists(path)) {
-                throw new LPGException("Missing file!");
-            }
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-
-            db.ClearTable(DeviceAction.TableName);
-            db.ClearTable(DeviceActionGroup.TableName);
-            db.ClearTable(DeviceActionProfile.TableName);
-            var mainSim = new Simulator(db.ConnectionString);
-            var dbm = new Database.DatabaseMerger.DatabaseMerger(mainSim);
-            dbm.RunFindItems(path, null);
-
-            foreach (var dbBase in dbm.ItemsToImport) {
-                Logger.Error(dbBase.Entry.Name + " " + dbBase.Import);
-                dbBase.Import = true;
-            }
-            dbm.RunImport(null);
-            var newActions = mainSim.DeviceActions.It;
-            var nullOldcount = 0;
-            foreach (var oldAction in originalSim.DeviceActions.It) {
-                if (oldAction.DeviceActionGroup == null) {
-                    nullOldcount++;
+                const string path = "profilegeneratorcopy.db3";
+                if (File.Exists(path))
+                {
+                    File.Delete(path);
                 }
-                var newAction = newActions.First(x => x.Name == oldAction.Name);
-                if (oldAction.DeviceActionGroup != null) {
-                    if (oldAction.DeviceActionGroup.Name != newAction.DeviceActionGroup?.Name) {
-                        Assert.Fail("Missing device category");
+                File.Copy(DatabaseSetup.GetSourcepath(null), path);
+                if (!File.Exists(path))
+                {
+                    throw new LPGException("Missing file!");
+                }
+                using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+                {
+                    db.ClearTable(DeviceAction.TableName);
+                    db.ClearTable(DeviceActionGroup.TableName);
+                    db.ClearTable(DeviceActionProfile.TableName);
+                    var mainSim = new Simulator(db.ConnectionString);
+                    var dbm = new Database.DatabaseMerger.DatabaseMerger(mainSim);
+                    dbm.RunFindItems(path, null);
+
+                    foreach (var dbBase in dbm.ItemsToImport)
+                    {
+                        Logger.Error(dbBase.Entry.Name + " " + dbBase.Import);
+                        dbBase.Import = true;
                     }
+                    dbm.RunImport(null);
+                    var newActions = mainSim.DeviceActions.It;
+                    var nullOldcount = 0;
+                    foreach (var oldAction in originalSim.DeviceActions.It)
+                    {
+                        if (oldAction.DeviceActionGroup == null)
+                        {
+                            nullOldcount++;
+                        }
+                        var newAction = newActions.First(x => x.Name == oldAction.Name);
+                        if (oldAction.DeviceActionGroup != null)
+                        {
+                            if (oldAction.DeviceActionGroup.Name != newAction.DeviceActionGroup?.Name)
+                            {
+                                Assert.Fail("Missing device category");
+                            }
+                        }
+                    }
+                    Logger.Info("oldAction total:" + originalSim.DeviceActions.It.Count + " null:" + nullOldcount);
+                    dbOriginal.Cleanup();
+                    db.Cleanup();
                 }
             }
-            Logger.Info("oldAction total:" + originalSim.DeviceActions.It.Count + " null:" + nullOldcount);
-            dbOriginal.Cleanup();
-            db.Cleanup();
         }
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void RunTestCurrentDeviceCategory() {
-            WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
+        public void RunTestCurrentDeviceCategory()
+        {
+            using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
+            {
+                const string path = "profilegeneratorcopy.db3";
 
-            const string path =  "profilegeneratorcopy.db3";
-
-            if (File.Exists(path)) {
-                File.Delete(path);
-            }
-
-            string sourcefile = DatabaseSetup.GetSourcepath(null);
-            File.Copy(sourcefile, path);
-            if (!File.Exists(path)) {
-                throw new LPGException("Missing file!");
-            }
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            db.ClearTable(DeviceCategory.TableName);
-            db.ClearTable(AffordanceDevice.TableName);
-            var mainSim = new Simulator(db.ConnectionString);
-            var dbm = new Database.DatabaseMerger.DatabaseMerger(mainSim);
-            dbm.RunFindItems(path, null);
-
-            foreach (var dbBase in dbm.ItemsToImport) {
-                Logger.Error(dbBase.Entry.Name + " " + dbBase.Import);
-                dbBase.Import = true;
-            }
-            dbm.RunImport(null);
-            var newCategories = mainSim.DeviceCategories.CollectAllDBBaseItems();
-            var oldCategories = dbm.OldSimulator.DeviceCategories.CollectAllDBBaseItems();
-            var newcats = new Dictionary<string, DeviceCategory>();
-            foreach (var newCategory in newCategories) {
-                var cat = (DeviceCategory) newCategory;
-                newcats.Add(cat.ShortName, cat);
-            }
-            foreach (var oldCategory in oldCategories) {
-                Logger.Debug("checking: " + oldCategory.Name);
-                var oldCat = (DeviceCategory) oldCategory;
-                if (!newcats.ContainsKey(oldCat.ShortName)) {
-                    Assert.Fail("Missing category");
+                if (File.Exists(path))
+                {
+                    File.Delete(path);
                 }
-                var newcat = newcats[oldCat.ShortName];
-                Assert.AreEqual(newcat.FullPath, oldCat.FullPath);
-                Assert.AreEqual(newcat.ParentCategory?.Name, oldCat.ParentCategory?.Name);
+
+                string sourcefile = DatabaseSetup.GetSourcepath(null);
+                File.Copy(sourcefile, path);
+                if (!File.Exists(path))
+                {
+                    throw new LPGException("Missing file!");
+                }
+                using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+                {
+                    db.ClearTable(DeviceCategory.TableName);
+                    db.ClearTable(AffordanceDevice.TableName);
+                    var mainSim = new Simulator(db.ConnectionString);
+                    var dbm = new Database.DatabaseMerger.DatabaseMerger(mainSim);
+                    dbm.RunFindItems(path, null);
+
+                    foreach (var dbBase in dbm.ItemsToImport)
+                    {
+                        Logger.Error(dbBase.Entry.Name + " " + dbBase.Import);
+                        dbBase.Import = true;
+                    }
+                    dbm.RunImport(null);
+                    var newCategories = mainSim.DeviceCategories.CollectAllDBBaseItems();
+                    var oldCategories = dbm.OldSimulator.DeviceCategories.CollectAllDBBaseItems();
+                    var newcats = new Dictionary<string, DeviceCategory>();
+                    foreach (var newCategory in newCategories)
+                    {
+                        var cat = (DeviceCategory)newCategory;
+                        newcats.Add(cat.ShortName, cat);
+                    }
+                    foreach (var oldCategory in oldCategories)
+                    {
+                        Logger.Debug("checking: " + oldCategory.Name);
+                        var oldCat = (DeviceCategory)oldCategory;
+                        if (!newcats.ContainsKey(oldCat.ShortName))
+                        {
+                            Assert.Fail("Missing category");
+                        }
+                        var newcat = newcats[oldCat.ShortName];
+                        Assert.AreEqual(newcat.FullPath, oldCat.FullPath);
+                        Assert.AreEqual(newcat.ParentCategory?.Name, oldCat.ParentCategory?.Name);
+                    }
+                    db.Cleanup();
+                }
+                wd.CleanUp(throwAllErrors: false);
             }
-            db.Cleanup();
-            wd.CleanUp(throwAllErrors:false);
         }
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void RunTestCurrentTimeLimits() {
-            var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            var path = Path.Combine(wd.WorkingDirectory, "profilegeneratorcopy.db3");
-            var sourcepath = DatabaseSetup.GetSourcepath(null);
+        public void RunTestCurrentTimeLimits()
+        {
+            using (var wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
+            {
+                var path = Path.Combine(wd.WorkingDirectory, "profilegeneratorcopy.db3");
+                var sourcepath = DatabaseSetup.GetSourcepath(null);
 
-            File.Copy(sourcepath, path);
-            if (!File.Exists(path)) {
-                throw new LPGException("Missing file!");
-            }
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var mainSim = new Simulator(db.ConnectionString);
-            mainSim.TimeLimits.DeleteItem(mainSim.TimeLimits[0]);
-            mainSim.TimeLimits.DeleteItem(mainSim.TimeLimits[1]);
-            var dbm = new Database.DatabaseMerger.DatabaseMerger(mainSim);
-            dbm.RunFindItems(path, null);
-            Logger.Debug("importing:");
-            foreach (var dbBase in dbm.ItemsToImport) {
-                Logger.Debug("importing:"+ Environment.NewLine + dbBase.Entry.Name + " " + dbBase.Import);
-                dbBase.Import = true;
-            }
-            dbm.RunImport(null);
-            var allTimeLimits = new Dictionary<string, bool>();
-            foreach (var timeLimit in mainSim.TimeLimits.MyItems) {
-                allTimeLimits.Add(timeLimit.CombineCompleteString(), true);
-            }
-            foreach (var timeLimit in dbm.OldSimulator.TimeLimits.MyItems) {
-                if (!allTimeLimits.ContainsKey(timeLimit.CombineCompleteString())) {
-                    Assert.Fail();
+                File.Copy(sourcepath, path);
+                if (!File.Exists(path))
+                {
+                    throw new LPGException("Missing file!");
                 }
+                using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+                {
+                    var mainSim = new Simulator(db.ConnectionString);
+                    mainSim.TimeLimits.DeleteItem(mainSim.TimeLimits[0]);
+                    mainSim.TimeLimits.DeleteItem(mainSim.TimeLimits[1]);
+                    var dbm = new Database.DatabaseMerger.DatabaseMerger(mainSim);
+                    dbm.RunFindItems(path, null);
+                    Logger.Debug("importing:");
+                    foreach (var dbBase in dbm.ItemsToImport)
+                    {
+                        Logger.Debug("importing:" + Environment.NewLine + dbBase.Entry.Name + " " + dbBase.Import);
+                        dbBase.Import = true;
+                    }
+                    dbm.RunImport(null);
+                    var allTimeLimits = new Dictionary<string, bool>();
+                    foreach (var timeLimit in mainSim.TimeLimits.MyItems)
+                    {
+                        allTimeLimits.Add(timeLimit.CombineCompleteString(), true);
+                    }
+                    foreach (var timeLimit in dbm.OldSimulator.TimeLimits.MyItems)
+                    {
+                        if (!allTimeLimits.ContainsKey(timeLimit.CombineCompleteString()))
+                        {
+                            Assert.Fail();
+                        }
+                    }
+                    db.Cleanup();
+                }
+                wd.CleanUp();
             }
-            db.Cleanup();
-            wd.CleanUp();
         }
     }
 }

@@ -28,7 +28,7 @@ namespace CalculationController.CalcFactories {
             return Ltdtodict[loadType];
         }
         /*
-        public bool SimulateLoadtype([NotNull] string guid)
+        public bool SimulateLoadtype([NotNull] StrGuid guid)
         {
             if (_guids.Contains(guid))
             {

@@ -24,7 +24,8 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
         public LocationStatisticsMaker( [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft,
                                        [JetBrains.Annotations.NotNull] CalcDataRepository repository,
                                        [JetBrains.Annotations.NotNull] ICalculationProfiler profiler) : base(repository,
-            AutomationUtili.GetOptionList(CalcOption.LocationsFile), profiler, "Location Statistics")
+            AutomationUtili.GetOptionList(CalcOption.LocationsFile),
+            profiler, "Location Statistics",0)
         {
             _calcParameters = repository.CalcParameters;
             _fft = fft;
@@ -64,7 +65,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
             }
 
             var distinctLocations = locationEntries.Select(x => x.LocationGuid).Distinct().ToList();
-            var locLookup = new Dictionary<string, byte>();
+            var locLookup = new Dictionary<StrGuid, byte>();
             for (byte i = 0; i < distinctLocations.Count; i++) {
                 locLookup.Add(distinctLocations[i], i);
             }

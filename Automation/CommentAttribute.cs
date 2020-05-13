@@ -61,7 +61,7 @@ namespace Automation {
                     break;
                 default:
 #pragma warning disable CA2208 // Instantiate argument exceptions correctly
-                    throw new ArgumentOutOfRangeException("unknown option");
+                    throw new ArgumentOutOfRangeException(nameof(List));
 #pragma warning restore CA2208 // Instantiate argument exceptions correctly
             }
 

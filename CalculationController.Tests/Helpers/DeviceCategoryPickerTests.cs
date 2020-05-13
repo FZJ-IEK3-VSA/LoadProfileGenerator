@@ -22,14 +22,14 @@ namespace CalculationController.Tests.Helpers
         public void DeviceCategoryPickerTestDeviceCategories()
         {
             Random r = new Random(5);
-            DeviceSelection ds = new DeviceSelection("ds", 1, string.Empty, string.Empty, Guid.NewGuid().ToString());
+            DeviceSelection ds = new DeviceSelection("ds", 1, string.Empty, string.Empty, Guid.NewGuid().ToStrGuid());
             DeviceCategoryPicker dcp = new DeviceCategoryPicker(r, ds);
             ObservableCollection<RealDevice> allDevices = new ObservableCollection<RealDevice>();
-            DeviceCategory dc = new DeviceCategory("dc", -1, "bla", false, allDevices, Guid.NewGuid().ToString());
+            DeviceCategory dc = new DeviceCategory("dc", -1, "bla", false, allDevices, Guid.NewGuid().ToStrGuid());
             RealDevice rd = new RealDevice("bla", 0, string.Empty, dc, "desc", false, true, string.Empty,
-                Guid.NewGuid().ToString(),-1);
+                Guid.NewGuid().ToStrGuid(),-1);
             allDevices.Add(rd);
-            Location loc = new Location("bla", -1, string.Empty, Guid.NewGuid().ToString());
+            Location loc = new Location("bla", -1, string.Empty, Guid.NewGuid().ToStrGuid());
             List<IAssignableDevice> devices = new List<IAssignableDevice>
             {
                 rd
@@ -58,13 +58,13 @@ namespace CalculationController.Tests.Helpers
         public void DeviceCategoryPickerTestRealDevices()
         {
             Random r = new Random(5);
-            DeviceSelection ds = new DeviceSelection("ds", 1, string.Empty, string.Empty, Guid.NewGuid().ToString());
+            DeviceSelection ds = new DeviceSelection("ds", 1, string.Empty, string.Empty, Guid.NewGuid().ToStrGuid());
             DeviceCategoryPicker dcp = new DeviceCategoryPicker(r, ds);
             ObservableCollection<RealDevice> allDevices = new ObservableCollection<RealDevice>();
-            DeviceCategory dc = new DeviceCategory("dc", -1, "bla", false, allDevices, Guid.NewGuid().ToString());
-            RealDevice rd = new RealDevice("bla", 0, string.Empty, dc, "desc", false, true, string.Empty,Guid.NewGuid().ToString(), -1);
+            DeviceCategory dc = new DeviceCategory("dc", -1, "bla", false, allDevices, Guid.NewGuid().ToStrGuid());
+            RealDevice rd = new RealDevice("bla", 0, string.Empty, dc, "desc", false, true, string.Empty,Guid.NewGuid().ToStrGuid(), -1);
             allDevices.Add(rd);
-            Location loc = new Location("bla", -1, string.Empty, Guid.NewGuid().ToString());
+            Location loc = new Location("bla", -1, string.Empty, Guid.NewGuid().ToStrGuid());
             List<IAssignableDevice> devices = new List<IAssignableDevice>
             {
                 rd
@@ -85,19 +85,22 @@ namespace CalculationController.Tests.Helpers
         [Category(UnitTestCategories.BasicTest)]
         public void TestMultiplePickingShouldAlwaysGiveSameResult()
         {
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            Simulator sim = new Simulator(db.ConnectionString);
-            for (int i = 0; i < 100; i++) {
-                Random r = new Random(5);
-                DeviceCategoryPicker dcp = new DeviceCategoryPicker(r, null);
-                Location loc = new Location("bla", -1, string.Empty, Guid.NewGuid().ToString());
-                List<IAssignableDevice> devices = new List<IAssignableDevice>();
-                devices.Add(sim.RealDevices[0]);
-                dcp.GetOrPickDevice(sim.DeviceActionGroups[1], loc, EnergyIntensityType.Random, devices, sim.DeviceActions.It);
+            using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                Simulator sim = new Simulator(db.ConnectionString);
+                for (int i = 0; i < 100; i++)
+                {
+                    Random r = new Random(5);
+                    DeviceCategoryPicker dcp = new DeviceCategoryPicker(r, null);
+                    Location loc = new Location("bla", -1, string.Empty, Guid.NewGuid().ToStrGuid());
+                    List<IAssignableDevice> devices = new List<IAssignableDevice>();
+                    devices.Add(sim.RealDevices[0]);
+                    dcp.GetOrPickDevice(sim.DeviceActionGroups[1], loc, EnergyIntensityType.Random, devices, sim.DeviceActions.It);
+                }
             }
             //ObservableCollection<RealDevice> allDevices = new ObservableCollection<RealDevice>();
-            //DeviceCategory dc = new DeviceCategory("dc", -1, "bla", false, allDevices, Guid.NewGuid().ToString());
-            //RealDevice rd = new RealDevice("bla", 0, string.Empty, dc, "desc", false, true, string.Empty, Guid.NewGuid().ToString(), -1);
+            //DeviceCategory dc = new DeviceCategory("dc", -1, "bla", false, allDevices, Guid.NewGuid().ToStrGuid());
+            //RealDevice rd = new RealDevice("bla", 0, string.Empty, dc, "desc", false, true, string.Empty, Guid.NewGuid().ToStrGuid(), -1);
             //allDevices.Add(rd);
 
             //List<IAssignableDevice> devices = new List<IAssignableDevice>
@@ -120,16 +123,16 @@ namespace CalculationController.Tests.Helpers
         public void DeviceCategoryPickerDeviceActionGroupAutoDev()
         {
             Random r = new Random(2);
-            DeviceSelection ds = new DeviceSelection("ds", 1, string.Empty, string.Empty, Guid.NewGuid().ToString());
+            DeviceSelection ds = new DeviceSelection("ds", 1, string.Empty, string.Empty, Guid.NewGuid().ToStrGuid());
             DeviceCategoryPicker picker = new DeviceCategoryPicker(r, ds);
             // device stuff
             ObservableCollection<RealDevice> allDevices = new ObservableCollection<RealDevice>();
-            DeviceCategory dc = new DeviceCategory("dc", -1, "bla", false, allDevices, Guid.NewGuid().ToString());
-            RealDevice rd1 = new RealDevice("device1", 0, string.Empty, dc, "desc", false, true, string.Empty, Guid.NewGuid().ToString(), - 1);
-            RealDevice rd2 = new RealDevice("device2", 0, string.Empty, dc, "desc", false, true, string.Empty, Guid.NewGuid().ToString(), -1);
-            DeviceActionGroup dag = new DeviceActionGroup("Dag1", string.Empty, "blub",Guid.NewGuid().ToString(), -1);
-            DeviceAction da1 = new DeviceAction("da1", -1, "blub", string.Empty, dag, rd1, Guid.NewGuid().ToString());
-            DeviceAction da2 = new DeviceAction("da2", -1, "blub", string.Empty, dag, rd2, Guid.NewGuid().ToString());
+            DeviceCategory dc = new DeviceCategory("dc", -1, "bla", false, allDevices, Guid.NewGuid().ToStrGuid());
+            RealDevice rd1 = new RealDevice("device1", 0, string.Empty, dc, "desc", false, true, string.Empty, Guid.NewGuid().ToStrGuid(), - 1);
+            RealDevice rd2 = new RealDevice("device2", 0, string.Empty, dc, "desc", false, true, string.Empty, Guid.NewGuid().ToStrGuid(), -1);
+            DeviceActionGroup dag = new DeviceActionGroup("Dag1", string.Empty, "blub",Guid.NewGuid().ToStrGuid(), -1);
+            DeviceAction da1 = new DeviceAction("da1", -1, "blub", string.Empty, dag, rd1, Guid.NewGuid().ToStrGuid());
+            DeviceAction da2 = new DeviceAction("da2", -1, "blub", string.Empty, dag, rd2, Guid.NewGuid().ToStrGuid());
             ObservableCollection<DeviceAction> deviceActions = new ObservableCollection<DeviceAction>
             {
                 da1,

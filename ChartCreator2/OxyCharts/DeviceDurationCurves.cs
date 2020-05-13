@@ -12,6 +12,7 @@ using OxyPlot.Axes;
 using OxyPlot.Series;
 
 namespace ChartCreator2.OxyCharts {
+    [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     internal class DeviceDurationCurves : ChartBaseFileStep
     {
         public DeviceDurationCurves([JetBrains.Annotations.NotNull] ChartCreationParameters parameters,
@@ -28,15 +29,19 @@ namespace ChartCreator2.OxyCharts {
         protected override FileProcessingResult MakeOnePlot(ResultFileEntry srcEntry)
         {
             string plotName = "Device Duration Curve " + srcEntry.HouseholdNumberString + " " + srcEntry.LoadTypeInformation?.Name;
-            _CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
+            Profiler.StartPart(Utili.GetCurrentMethodAndClass());
 
             var entries = new Dictionary<int, ValueEntry>();
+            if (srcEntry.FullFileName == null)
+            {
+                throw new LPGException("Filename was null");
+            }
             ReadFile(srcEntry.FullFileName, entries);
             foreach (var keyValuePair in entries) {
                 keyValuePair.Value.Values.Sort((x, y) => y.CompareTo(x));
             }
             var plotModel1 = new PlotModel();
-            if (_Parameters.ShowTitle) {
+            if (Parameters.ShowTitle) {
                 plotModel1.Title = plotName;
             }
             var linearAxis1 = new LinearAxis
@@ -88,18 +93,22 @@ namespace ChartCreator2.OxyCharts {
                     plotModel1.Annotations.Add(pointAnnotation1);
                 }
             }
-            Save(plotModel1, plotName, srcEntry.FullFileName, _Parameters.BaseDirectory);
-            _CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
+            Save(plotModel1, plotName, srcEntry.FullFileName, Parameters.BaseDirectory);
+            Profiler.StopPart(Utili.GetCurrentMethodAndClass());
             return FileProcessingResult.ShouldCreateFiles;
         }
 
-        private void ReadFile([JetBrains.Annotations.NotNull] string fileName, [JetBrains.Annotations.NotNull] Dictionary<int, ValueEntry> entries) {
+        private void ReadFile([CanBeNull] string fileName, [JetBrains.Annotations.NotNull] Dictionary<int, ValueEntry> entries) {
+            if (fileName == null) {
+                throw new LPGException("filename was nul" +
+                                       "l");
+            }
             using (var sr = new StreamReader(fileName)) {
                 var top = sr.ReadLine();
                 if (top == null) {
                     throw new LPGException("Readline failed.");
                 }
-                var header1 = top.Split(_Parameters.CSVCharacterArr, StringSplitOptions.None);
+                var header1 = top.Split(Parameters.CSVCharacterArr, StringSplitOptions.None);
                 for (var i = 0; i < header1.Length; i++) {
                     entries.Add(i, new ValueEntry(header1[i], i));
                 }
@@ -108,7 +117,7 @@ namespace ChartCreator2.OxyCharts {
                     if (s == null) {
                         throw new LPGException("Readline failed");
                     }
-                    var cols = s.Split(_Parameters.CSVCharacterArr, StringSplitOptions.None);
+                    var cols = s.Split(Parameters.CSVCharacterArr, StringSplitOptions.None);
                     var result = new double[entries.Count];
                     for (var index = 0; index < cols.Length; index++) {
                         var col = cols[index];

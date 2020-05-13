@@ -27,6 +27,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using Automation;
 using Automation.ResultFiles;
 using CalculationEngine.Helper;
 using CalculationEngine.OnlineDeviceLogging;
@@ -37,7 +38,16 @@ using Common.SQLResultLogging;
 using JetBrains.Annotations;
 
 namespace CalculationEngine.HouseholdElements {
+    public class HumanHeatGainSpecification
+    {
+        public CalcLoadType PowerLoadtype { get; set; }
+        public CalcLoadType CountLoadtype { get; set; }
+
+    }
+
     public class CalcRepo: IDisposable {
+        public HumanHeatGainSpecification HumanHeatGainSpecification { get; }
+
         [NotNull]
         public DateStampCreator DateStampCreator => _dateStampCreator ?? throw new LPGException("no dsc");
 
@@ -59,7 +69,7 @@ namespace CalculationEngine.HouseholdElements {
                 idl,calculationProfiler,fft,dsc);
             return cr;
         }
-        [NotNull] private readonly FileFactoryAndTracker _fft;
+        [CanBeNull] private readonly FileFactoryAndTracker _fft;
 
         public CalcRepo(
                         [CanBeNull] IOnlineDeviceActivationProcessor odap = null,
@@ -72,8 +82,10 @@ namespace CalculationEngine.HouseholdElements {
                         [CanBeNull] IInputDataLogger inputDataLogger=null,
                         [CanBeNull] CalculationProfiler calculationProfiler=null,
             [CanBeNull] FileFactoryAndTracker fft =null,
-                        DateStampCreator dsc = null)
+                        [CanBeNull] DateStampCreator dsc = null,
+                        HumanHeatGainSpecification humanHeatGainSpecification = null)
         {
+            HumanHeatGainSpecification = humanHeatGainSpecification;
             _dateStampCreator = dsc;
             _fft = fft;
             _odap = odap;
@@ -86,13 +98,13 @@ namespace CalculationEngine.HouseholdElements {
             _inputDataLogger = inputDataLogger;
             _calculationProfiler = calculationProfiler;
         }
-        [NotNull]
+        [CanBeNull]
         private readonly ILogFile _lf;
 
         [NotNull] private readonly IOnlineDeviceActivationProcessor _odap;
         [NotNull] private readonly Random _rnd;
         private readonly CalcParameters _calcParameters;
-        [NotNull] private readonly IOnlineLoggingData _onlineLoggingData;
+        [CanBeNull] private readonly IOnlineLoggingData _onlineLoggingData;
         private readonly NormalRandom _normalRandom;
         [NotNull] private readonly SqlResultLoggingService _srls;
         private readonly IInputDataLogger _inputDataLogger;
@@ -132,9 +144,9 @@ namespace CalculationEngine.HouseholdElements {
 
         public void Dispose()
         {
-            _fft.Dispose();
-            _lf.Dispose();
-            _onlineLoggingData.Dispose();
+            _fft?.Dispose();
+            _lf?.Dispose();
+            _onlineLoggingData?.Dispose();
         }
     }
     public abstract class CalcBase {
@@ -142,8 +154,8 @@ namespace CalculationEngine.HouseholdElements {
         private readonly string _name;
 
         [NotNull]
-        public string Guid { get; }
-        protected CalcBase([NotNull] string pName,  [NotNull] string guid)
+        public StrGuid Guid { get; }
+        protected CalcBase([NotNull] string pName,  [NotNull] StrGuid guid)
         {
             _name = pName;
             Guid = guid;

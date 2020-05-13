@@ -20,26 +20,29 @@ namespace ChartCreator2.Tests.Oxyplot {
             var start = DateTime.Now;
             //ChartLocalizer.ShouldTranslate = true;
             var cs = new OxyCalculationSetup(Utili.GetCurrentMethodAndClass());
-            cs.StartHousehold(2, GlobalConsts.CSVCharacter, configSetter: x => {
+            cs.StartHousehold(2, GlobalConsts.CSVCharacter, configSetter: x =>
+            {
                 x.Enable(CalcOption.TotalsPerDevice);
                 x.Enable(CalcOption.HouseholdContents);
             });
             var simend = DateTime.Now;
-            FileFactoryAndTracker fft = new FileFactoryAndTracker(cs.DstDir, "1", cs.Wd.InputDataLogger);
-            CalculationProfiler cp = new CalculationProfiler();
-            ChartCreationParameters ccps = new ChartCreationParameters(300,4000,
-                2500,  false,  GlobalConsts.CSVCharacter,new DirectoryInfo(cs.DstDir));
-            var aeupp = new DeviceTaggingSet(ccps,fft,cp);
-            Logger.Info("Making picture");
-            var di = new DirectoryInfo(cs.DstDir);
-            var rfe = cs.GetRfeByFilename("DeviceTaggingSet.Electricity.General.csv");
-            aeupp.MakePlot(rfe);
-            Logger.Info("finished picture");
-            //OxyCalculationSetup.CopyImage(resultFileEntries[0].FullFileName);
-            Logger.Info("Simulation Time:" + (simend - start));
-            Logger.Info("Chart Time:" + (DateTime.Now - simend));
-            var imagefiles = FileFinder.GetRecursiveFiles(di, "DeviceTaggingSet.*.png");
-            Assert.GreaterOrEqual(imagefiles.Count, 1);
+            using (FileFactoryAndTracker fft = new FileFactoryAndTracker(cs.DstDir, "1", cs.Wd.InputDataLogger))
+            {
+                CalculationProfiler cp = new CalculationProfiler();
+                ChartCreationParameters ccps = new ChartCreationParameters(300, 4000,
+                    2500, false, GlobalConsts.CSVCharacter, new DirectoryInfo(cs.DstDir));
+                var aeupp = new DeviceTaggingSet(ccps, fft, cp);
+                Logger.Info("Making picture");
+                var di = new DirectoryInfo(cs.DstDir);
+                var rfe = cs.GetRfeByFilename("DeviceTaggingSet.Electricity.General.csv");
+                aeupp.MakePlot(rfe);
+                Logger.Info("finished picture");
+                //OxyCalculationSetup.CopyImage(resultFileEntries[0].FullFileName);
+                Logger.Info("Simulation Time:" + (simend - start));
+                Logger.Info("Chart Time:" + (DateTime.Now - simend));
+                var imagefiles = FileFinder.GetRecursiveFiles(di, "DeviceTaggingSet.*.png");
+                Assert.GreaterOrEqual(imagefiles.Count, 1);
+            }
             cs.CleanUp();
             CleanTestBase.RunAutomatically(true);
         }

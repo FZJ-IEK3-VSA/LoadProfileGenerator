@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Automation;
 using Automation.ResultFiles;
 using JetBrains.Annotations;
 
@@ -19,14 +20,14 @@ namespace Common.CalcDto {
         [NotNull]
         public string CalcLocationName { get; }
         [NotNull]
-        public string CalcLocationGuid { get; }
+        public StrGuid CalcLocationGuid { get; }
         [NotNull]
-        public string Guid { get; }
+        public StrGuid Guid { get; }
 
         public CalcSpaceHeatingDto([NotNull]string name, int id, [ItemNotNull] [NotNull]List<CalcDeviceLoadDto> powerUsage,
                                    [ItemNotNull] [NotNull]List<CalcDegreeDayDto> calcDegreeDays,
-                                   [NotNull]HouseholdKey householdKey, [NotNull]string calcLocationName, [NotNull] string calcLocationGuid,
-                                   [NotNull]string guid)
+                                   [NotNull]HouseholdKey householdKey, [NotNull]string calcLocationName, [NotNull] StrGuid calcLocationGuid,
+                                   [NotNull]StrGuid guid)
         {
             if (powerUsage.Count != 1) {
                 throw new LPGException("there should be exactly one loadtype for space heating, not more or less.");

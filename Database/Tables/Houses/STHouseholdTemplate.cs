@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using Database.Database;
 using Database.Tables.ModularHouseholds;
@@ -14,7 +15,7 @@ namespace Database.Tables.Houses {
         private readonly int _settlementTemplateID;
 
         public STHouseholdTemplate([CanBeNull]int? pID, [NotNull] string connectionString, int settlementTemplateID, [NotNull] string name,
-            [CanBeNull] HouseholdTemplate householdTemplate, [NotNull] string guid) : base(name, TableName, connectionString, guid) {
+            [CanBeNull] HouseholdTemplate householdTemplate, [NotNull] StrGuid guid) : base(name, TableName, connectionString, guid) {
             TypeDescription = "Settlement Template Household Templates";
             ID = pID;
             _householdTemplate = householdTemplate;

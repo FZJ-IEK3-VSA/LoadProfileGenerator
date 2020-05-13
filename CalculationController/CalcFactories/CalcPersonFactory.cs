@@ -58,7 +58,7 @@ namespace CalculationController.CalcFactories {
         [ItemNotNull]
         public List<CalcPerson> MakeCalcPersons([NotNull] [ItemNotNull] List<CalcPersonDto> persons,
                                                 [NotNull] CalcLocation startLocation,
-                                                [NotNull] string householdName)
+                                                [NotNull] string householdName, DtoCalcLocationDict dict, HumanHeatGainSpecification hhgs)
         {
             var calcPersons = new List<CalcPerson>();
             Dictionary<string, SharedDesireValue> sharedDesireValues = new Dictionary<string, SharedDesireValue>();
@@ -69,11 +69,12 @@ namespace CalculationController.CalcFactories {
                 var cp = new CalcPerson(hhPerson, startLocation,  isSick, vacationTimes,_calcRepo);
                 /* repetitionCount, _random,hhPerson.Person.Age, hhPerson.Person.Gender, _logFile,
                  householdKey, startLocation, traitTagName, householdName, _calcParameters, isSick,
-                 Guid.NewGuid().ToString());*/
+                 Guid.NewGuid().ToStrGuid());*/
                 // vacations setzen
                 foreach (PersonDesireDto desire in hhPerson.Desires) {
                     AddDesireToPerson(desire, cp, sharedDesireValues, householdName);
                 }
+
 
                 calcPersons.Add(cp);
             }

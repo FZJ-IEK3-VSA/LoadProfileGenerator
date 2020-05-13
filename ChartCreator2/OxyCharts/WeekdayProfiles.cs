@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using Automation.ResultFiles;
@@ -10,6 +11,7 @@ using OxyPlot.Axes;
 using OxyPlot.Series;
 
 namespace ChartCreator2.OxyCharts {
+    [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     internal class WeekdayProfiles : ChartBaseFileStep
     {
         public WeekdayProfiles([JetBrains.Annotations.NotNull] ChartCreationParameters parameters,
@@ -53,8 +55,8 @@ namespace ChartCreator2.OxyCharts {
             };
             var strokeThickness = 1;
             if (Config.MakePDFCharts) {
-                plotModel1.DefaultFontSize = _Parameters.PDFFontSize;
-                plotModel1.LegendFontSize = _Parameters.PDFFontSize;
+                plotModel1.DefaultFontSize = Parameters.PDFFontSize;
+                plotModel1.LegendFontSize = Parameters.PDFFontSize;
                 strokeThickness = 1;
             }
             if (showTitle) {
@@ -153,6 +155,10 @@ namespace ChartCreator2.OxyCharts {
         {
             const string plotName = "Weekday Profiles";
             var entries = new List<Entry>();
+            if (srcEntry.FullFileName == null)
+            {
+                throw new LPGException("filename was null");
+            }
             using (var sr = new StreamReader(srcEntry.FullFileName)) {
                 var s = sr.ReadLine();
                 while (s != "By Season" && !sr.EndOfStream) {
@@ -167,7 +173,7 @@ namespace ChartCreator2.OxyCharts {
                 if (s == null) {
                     throw new LPGException("Readline failed");
                 }
-                var header = s.Split(_Parameters.CSVCharacterArr, StringSplitOptions.None);
+                var header = s.Split(Parameters.CSVCharacterArr, StringSplitOptions.None);
 
                 foreach (var s1 in header) {
                     entries.Add(new Entry(s1));
@@ -178,7 +184,7 @@ namespace ChartCreator2.OxyCharts {
                     if (s1 == null) {
                         throw new LPGException("Readline failed");
                     }
-                    var cols = s1.Split(_Parameters.CSVCharacterArr, StringSplitOptions.None);
+                    var cols = s1.Split(Parameters.CSVCharacterArr, StringSplitOptions.None);
                     for (var index = 0; index < cols.Length; index++) {
                         var col = cols[index];
                         if (col.Length > 0) {
@@ -194,8 +200,8 @@ namespace ChartCreator2.OxyCharts {
             entries.RemoveAt(0);
             entries.RemoveAt(entries.Count - 1);
 
-            var plotModel1 = MakeChart(plotName, entries, _Parameters.ShowTitle, srcEntry.LoadTypeInformation);
-            Save(plotModel1, plotName, srcEntry.FullFileName, _Parameters.BaseDirectory);
+            var plotModel1 = MakeChart(plotName, entries, Parameters.ShowTitle, srcEntry.LoadTypeInformation);
+            Save(plotModel1, plotName, srcEntry.FullFileName, Parameters.BaseDirectory);
             return FileProcessingResult.ShouldCreateFiles;
         }
 

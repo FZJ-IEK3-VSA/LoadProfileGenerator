@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using Automation.ResultFiles;
 using Common;
-using JetBrains.Annotations;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
@@ -24,23 +23,27 @@ namespace ChartCreator2.OxyCharts {
         protected override FileProcessingResult MakeOnePlot(ResultFileEntry srcEntry)
         {
             string plotName = "Desires for " + srcEntry.HouseholdNumberString;
-            _CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
+            Profiler.StartPart(Utili.GetCurrentMethodAndClass());
             var headers = new List<string>();
             var values = new List<double[]>();
 
+            if (srcEntry.FullFileName == null)
+            {
+                throw new LPGException("Filename was null");
+            }
             using (var sr = new StreamReader(srcEntry.FullFileName)) {
                 var top = sr.ReadLine();
                 if (top == null) {
                     throw new LPGException("Readline failed");
                 }
-                var header1 = top.Split(_Parameters.CSVCharacterArr, StringSplitOptions.None);
+                var header1 = top.Split(Parameters.CSVCharacterArr, StringSplitOptions.None);
                 headers.AddRange(header1);
                 while (!sr.EndOfStream) {
                     var s = sr.ReadLine();
                     if (s == null) {
                         throw new LPGException("Readline failed");
                     }
-                    var cols = s.Split(_Parameters.CSVCharacterArr, StringSplitOptions.None);
+                    var cols = s.Split(Parameters.CSVCharacterArr, StringSplitOptions.None);
                     var result = new double[headers.Count];
                     for (var index = 0; index < cols.Length; index++) {
                         var col = cols[index];
@@ -53,7 +56,7 @@ namespace ChartCreator2.OxyCharts {
                 }
             }
             var plotModel1 = new PlotModel();
-            if (_Parameters.ShowTitle) {
+            if (Parameters.ShowTitle) {
                 plotModel1.Title = plotName;
             }
             var linearAxis1 = new LinearAxis
@@ -78,8 +81,8 @@ namespace ChartCreator2.OxyCharts {
                 }
                 plotModel1.Series.Add(lineSeries1);
             }
-            Save(plotModel1, plotName, srcEntry.FullFileName,_Parameters.BaseDirectory);
-            _CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
+            Save(plotModel1, plotName, srcEntry.FullFileName,Parameters.BaseDirectory);
+            Profiler.StopPart(Utili.GetCurrentMethodAndClass());
             return FileProcessingResult.ShouldCreateFiles;
         }
     }

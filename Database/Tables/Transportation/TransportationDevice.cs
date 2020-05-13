@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
+using Common;
 using Database.Database;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
@@ -32,7 +34,7 @@ namespace Database.Tables.Transportation {
                                     double chargingPower,
                                     double chargingDistanceAmount,
                                     double chargingEnergyAmount,
-                                    [CanBeNull] VLoadType chargingLoadType, [NotNull] string guid) : base(name, TableName,
+                                    [CanBeNull] VLoadType chargingLoadType, [NotNull] StrGuid guid) : base(name, TableName,
             connectionString, guid)
         {
             _description = description;
@@ -126,7 +128,7 @@ namespace Database.Tables.Transportation {
         {
             TransportationDeviceLoad load =
                 new TransportationDeviceLoad(mylt.Name, IntID, maxpower, mylt, ConnectionString,
-                    System.Guid.NewGuid().ToString());
+                    System.Guid.NewGuid().ToStrGuid());
             load.SaveToDB();
             Loads.Add(load);
         }
@@ -136,7 +138,7 @@ namespace Database.Tables.Transportation {
         public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new
             TransportationDevice(FindNewName(isNameTaken, "New Transportation Device "), null, connectionString, "", 100,
                 SpeedUnit.Kmh, null,-1,0,100,
-                0,null, System.Guid.NewGuid().ToString());
+                0,null, System.Guid.NewGuid().ToStrGuid());
 
         public void DeleteLoad([NotNull] TransportationDeviceLoad transportationDeviceLoad)
         {

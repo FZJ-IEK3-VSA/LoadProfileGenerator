@@ -32,6 +32,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Automation;
 using CalculationEngine.HouseholdElements;
+using Common;
 using Common.CalcDto;
 using Database.Tables.BasicHouseholds;
 using JetBrains.Annotations;
@@ -43,7 +44,7 @@ namespace CalculationController.CalcFactories {
         {
             DtoCalcDict = dtoCalcDict;
             _calcLoadTypes = dtoCalcDict.Values.ToList();
-            _guids = new HashSet<string>(_calcLoadTypes.Select(x => x.Guid));
+            _guids = new HashSet<StrGuid>(_calcLoadTypes.Select(x => x.Guid));
         }
 
         [ItemNotNull]
@@ -55,15 +56,15 @@ namespace CalculationController.CalcFactories {
 
         [ItemNotNull]
         [NotNull]
-        private readonly HashSet<string> _guids;
+        private readonly HashSet<StrGuid> _guids;
 
         [NotNull]
-        public CalcLoadType GetLoadtypeByGuid([NotNull] string loadtypeGuid)
+        public CalcLoadType GetLoadtypeByGuid([NotNull] StrGuid loadtypeGuid)
         {
             return _calcLoadTypes.Single(x => x.Guid == loadtypeGuid);
         }
 
-        public bool SimulateLoadtype([NotNull] string guid)
+        public bool SimulateLoadtype([NotNull] StrGuid guid)
         {
             if (_guids.Contains(guid)) {
                 return true;
@@ -106,7 +107,7 @@ namespace CalculationController.CalcFactories {
             foreach (var lt in loadTypes) {
                 // ReSharper disable once ReplaceWithSingleAssignment.True
                 if (lt.Priority <= priority) {
-                    var guid = Guid.NewGuid().ToString();
+                    var guid = Guid.NewGuid().ToStrGuid();
                     var calcLoadTypeDto = new CalcLoadTypeDto(lt.Name,  lt.UnitOfPower, lt.UnitOfSum,
                         lt.ConvertPowerValueWithTime(1, internalTimeResolution), lt.ShowInCharts, guid);
                     ltDtoDict.Add(lt, calcLoadTypeDto);

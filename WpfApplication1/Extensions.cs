@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 
 namespace LoadProfileGenerator
 {
-    public static class Extensions
+    public static class LPGExtensions
     {
 
         public static void ResizeColummns([NotNull] this ListView lv, [CanBeNull] double? maxWidth = null)

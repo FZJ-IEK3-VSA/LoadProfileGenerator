@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
+using Automation;
 using Database.Database;
 using JetBrains.Annotations;
 
@@ -12,7 +13,7 @@ namespace Database.Tables.Houses {
         private readonly int _settlementTemplateID;
 
         public STHouseType([CanBeNull]int? pID, [NotNull] string connectionString, int settlementTemplateID, [NotNull] string name,
-            [CanBeNull] HouseType houseType, [NotNull] string guid)
+            [CanBeNull] HouseType houseType, [NotNull] StrGuid guid)
             : base(name, TableName, connectionString, guid) {
             TypeDescription = "Settlement Template House Type";
             ID = pID;

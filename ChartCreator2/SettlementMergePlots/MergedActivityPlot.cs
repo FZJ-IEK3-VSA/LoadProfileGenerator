@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using Automation.ResultFiles;
@@ -13,6 +14,7 @@ using ColumnSeries = OxyPlot.Series.ColumnSeries;
 using LinearAxis = OxyPlot.Axes.LinearAxis;
 
 namespace ChartCreator2.SettlementMergePlots {
+    [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     public static class MergedActivityPlot {
         private static void MakeBarPlot([JetBrains.Annotations.NotNull] string outputPath, [ItemNotNull] [JetBrains.Annotations.NotNull] List<Column> columns, int position, int day) {
             var plotModel2 = new PlotModel();

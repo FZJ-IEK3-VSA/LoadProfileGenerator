@@ -17,29 +17,30 @@ namespace Common.Tests.SQLResultLogging.InputLoggers {
         [Category(UnitTestCategories.BasicTest)]
         public void RunColumnEntryLoggerTest()
         {
-            SkipEndCleaning = true;
-            WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            ColumnEntryLogger ael = new ColumnEntryLogger(wd.SqlResultLoggingService);
-            HouseholdKey key = new HouseholdKey("hhkey");
-            List<IDataSaverBase> savers = new List<IDataSaverBase>
+            using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
+            {
+                ColumnEntryLogger ael = new ColumnEntryLogger(wd.SqlResultLoggingService);
+                HouseholdKey key = new HouseholdKey("hhkey");
+                List<IDataSaverBase> savers = new List<IDataSaverBase>
             {
                 ael
             };
-            InputDataLogger idl = new InputDataLogger(savers.ToArray());
-            CalcLoadTypeDto cltd = new CalcLoadTypeDto("ltname", "kw", "kwh", 1, false, "guid");
-            CalcDeviceDto cdd = new CalcDeviceDto("device","guid",key,OefcDeviceType.Device,"devcatname","","guid","guid","loc");
-            ColumnEntry ce = new ColumnEntry("name", 1, "locname", "guid", key, cltd, "oefckey", "devicecategory",cdd);
-            List<ColumnEntry> aes = new List<ColumnEntry>
+                InputDataLogger idl = new InputDataLogger(savers.ToArray());
+                CalcLoadTypeDto cltd = new CalcLoadTypeDto("ltname", "kw", "kwh", 1, false, "guid".ToStrGuid());
+                CalcDeviceDto cdd = new CalcDeviceDto("device", "guid".ToStrGuid(), key, OefcDeviceType.Device, "devcatname", "", "guid".ToStrGuid(), "guid".ToStrGuid(), "loc");
+                ColumnEntry ce = new ColumnEntry("name", 1, "locname", "guid".ToStrGuid(), key, cltd, "oefckey", "devicecategory", cdd);
+                List<ColumnEntry> aes = new List<ColumnEntry>
             {
                 ce
             };
-            idl.Save(aes);
-            var res = ael.Read(key);
-            var s1 = JsonConvert.SerializeObject(aes, Formatting.Indented);
-            var s2 = JsonConvert.SerializeObject(res, Formatting.Indented);
-            File.WriteAllText(wd.Combine("original.json"),s1);
-            File.WriteAllText(wd.Combine("deserialized.json"), s2);
-            Assert.AreEqual(s1, s2);
+                idl.Save(aes);
+                var res = ael.Read(key);
+                var s1 = JsonConvert.SerializeObject(aes, Formatting.Indented);
+                var s2 = JsonConvert.SerializeObject(res, Formatting.Indented);
+                File.WriteAllText(wd.Combine("original.json"), s1);
+                File.WriteAllText(wd.Combine("deserialized.json"), s2);
+                Assert.AreEqual(s1, s2);
+            }
             //wd.CleanUp();
         }
     }

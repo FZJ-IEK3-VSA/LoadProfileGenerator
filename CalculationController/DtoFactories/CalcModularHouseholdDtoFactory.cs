@@ -85,7 +85,7 @@ namespace CalculationController.DtoFactories
                 locationDict = new LocationDtoDict();
                 List<DeviceCategoryDto> deviceCategoryDtos = new List<DeviceCategoryDto>();
                 foreach (var deviceCategory in sim.DeviceCategories.It) {
-                    deviceCategoryDtos.Add(new DeviceCategoryDto(deviceCategory.FullPath,Guid.NewGuid().ToString()));
+                    deviceCategoryDtos.Add(new DeviceCategoryDto(deviceCategory.FullPath,Guid.NewGuid().ToStrGuid()));
                 }
                 var locationDtos = _calcLocationDtoFactory.MakeCalcLocations(locations,
                     householdKey,
@@ -181,7 +181,7 @@ namespace CalculationController.DtoFactories
                 _calcRepo.InputDataLogger.SaveList(routes.ConvertAll(x => (IHouseholdKey)x));
             }
             _calcRepo.CalcParameters.SetInTransportMode(householdKey, mhh.IsTransportationEnabled);
-            var chh = new CalcHouseholdDto(name, mhh.IntID, temperatureProfile.Name,householdKey,  Guid.NewGuid().ToString(),
+            var chh = new CalcHouseholdDto(name, mhh.IntID, temperatureProfile.Name,householdKey,  Guid.NewGuid().ToStrGuid(),
                     geographicLocation.Name,
                     bridgeDays,autoDevDtos,locationDtos,personDtos,deviceDtos,
                     allAffordances, mhh.Vacation.VacationTimeframes(),

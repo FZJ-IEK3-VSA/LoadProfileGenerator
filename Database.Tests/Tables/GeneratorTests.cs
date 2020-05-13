@@ -40,29 +40,32 @@ namespace Database.Tests.Tables {
     {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void LoadFromDatabaseTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var generators = new ObservableCollection<Generator>();
-            var loadTypes = db.LoadLoadTypes();
-            var dateBasedProfiles = db.LoadDateBasedProfiles();
-            Generator.LoadFromDatabase(generators, db.ConnectionString, loadTypes, dateBasedProfiles, false);
-            // delete everything and check
-            generators.Clear();
-            db.ClearTable(Generator.TableName);
-            Generator.LoadFromDatabase(generators, db.ConnectionString, loadTypes, dateBasedProfiles, false);
-            Assert.AreEqual(0, generators.Count);
-            // add one and load again
-            var gen = new Generator("generator1", "gen1 desc", loadTypes[0], 5, dateBasedProfiles[0],
-                db.ConnectionString,Guid.NewGuid().ToString());
-            gen.SaveToDB();
-            Generator.LoadFromDatabase(generators, db.ConnectionString, loadTypes, dateBasedProfiles, false);
-            Assert.AreEqual(1, generators.Count);
-            // delete the loaded one
-            generators[0].DeleteFromDB();
-            generators.Clear();
-            Generator.LoadFromDatabase(generators, db.ConnectionString, loadTypes, dateBasedProfiles, false);
-            Assert.AreEqual(0, generators.Count);
-            db.Cleanup();
+        public void LoadFromDatabaseTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var generators = new ObservableCollection<Generator>();
+                var loadTypes = db.LoadLoadTypes();
+                var dateBasedProfiles = db.LoadDateBasedProfiles();
+                Generator.LoadFromDatabase(generators, db.ConnectionString, loadTypes, dateBasedProfiles, false);
+                // delete everything and check
+                generators.Clear();
+                db.ClearTable(Generator.TableName);
+                Generator.LoadFromDatabase(generators, db.ConnectionString, loadTypes, dateBasedProfiles, false);
+                Assert.AreEqual(0, generators.Count);
+                // add one and load again
+                var gen = new Generator("generator1", "gen1 desc", loadTypes[0], 5, dateBasedProfiles[0],
+                    db.ConnectionString, Guid.NewGuid().ToStrGuid());
+                gen.SaveToDB();
+                Generator.LoadFromDatabase(generators, db.ConnectionString, loadTypes, dateBasedProfiles, false);
+                Assert.AreEqual(1, generators.Count);
+                // delete the loaded one
+                generators[0].DeleteFromDB();
+                generators.Clear();
+                Generator.LoadFromDatabase(generators, db.ConnectionString, loadTypes, dateBasedProfiles, false);
+                Assert.AreEqual(0, generators.Count);
+                db.Cleanup();
+            }
         }
     }
 }

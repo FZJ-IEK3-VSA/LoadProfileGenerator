@@ -55,7 +55,7 @@ namespace Database.Tables.BasicElements {
         [NotNull] private string _description;
         private bool _makeCharts;
 
-        public AffordanceTaggingSet([NotNull] string name, [NotNull] string description, [NotNull] string connectionString, bool makeCharts, [NotNull] string guid,
+        public AffordanceTaggingSet([NotNull] string name, [NotNull] string description, [NotNull] string connectionString, bool makeCharts, [NotNull] StrGuid guid,
                                     [CanBeNull]int? pID = null) : base(name, TableName, connectionString, guid)
         {
             _tags = new ObservableCollection<AffordanceTag>();
@@ -109,7 +109,7 @@ namespace Database.Tables.BasicElements {
                 }
             }
             ColorRGB white = new ColorRGB(255,255,255);
-            var at = new AffordanceTag(name, IntID, ConnectionString, null, white, System.Guid.NewGuid().ToString());
+            var at = new AffordanceTag(name, IntID, ConnectionString, null, white, System.Guid.NewGuid().ToStrGuid());
             Logger.Get().SafeExecuteWithWait(() => {
                 _tags.Add(at);
                 _tags.Sort();
@@ -125,14 +125,14 @@ namespace Database.Tables.BasicElements {
             }
 
             var at = new AffordanceTaggingSetLoadType(loadType.Name, IntID, loadType, ConnectionString,null,
-                System.Guid.NewGuid().ToString());
+                System.Guid.NewGuid().ToStrGuid());
             _loadTypes.Add(at);
             SaveToDB();
         }
 
         public void AddTaggingEntry([NotNull] AffordanceTag tag, [NotNull] Affordance aff)
         {
-            var at = new AffordanceTaggingEntry(string.Empty, IntID, tag, aff, ConnectionString, null, System.Guid.NewGuid().ToString())
+            var at = new AffordanceTaggingEntry(string.Empty, IntID, tag, aff, ConnectionString, null, System.Guid.NewGuid().ToStrGuid())
             {
                 AllParentTags = _tags
             };
@@ -148,7 +148,7 @@ namespace Database.Tables.BasicElements {
             double percentage)
         {
             var at = new AffordanceTagReference(tag.Name, IntID, tag, ConnectionString, null, gender, minAge, maxAge,
-                percentage, System.Guid.NewGuid().ToString());
+                percentage, System.Guid.NewGuid().ToStrGuid());
             Logger.Get().SafeExecuteWithWait(() => {
                 _tagReferences.Add(at);
                 _tagReferences.Sort();
@@ -173,7 +173,7 @@ namespace Database.Tables.BasicElements {
         public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new
             AffordanceTaggingSet(FindNewName(isNameTaken, "New Affordance Tagging Set "),
                 "(no description)",
-                connectionString, true, System.Guid.NewGuid().ToString());
+                connectionString, true, System.Guid.NewGuid().ToStrGuid());
 
         private void DeleteEntry([NotNull] AffordanceTaggingEntry at)
         {

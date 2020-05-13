@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Automation;
+using Common;
 using Database.Database;
 using Database.Tables.BasicElements;
 using JetBrains.Annotations;
@@ -12,7 +14,7 @@ namespace Database.Tables.ModularHouseholds {
         [CanBeNull]
         private string _classification;
 
-        public HouseholdTag([NotNull] string pName, [NotNull] string connectionString, [CanBeNull] string classification,[NotNull] string guid, [CanBeNull] int? pID = null)
+        public HouseholdTag([NotNull] string pName, [NotNull] string connectionString, [CanBeNull] string classification,[NotNull] StrGuid guid, [CanBeNull] int? pID = null)
             : base(pName, TableName, connectionString, guid)
         {
             ID = pID;
@@ -42,7 +44,7 @@ namespace Database.Tables.ModularHouseholds {
         [NotNull]
         [UsedImplicitly]
         public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new HouseholdTag(
-            FindNewName(isNameTaken, "New Template Tag "), connectionString, string.Empty, System.Guid.NewGuid().ToString());
+            FindNewName(isNameTaken, "New Template Tag "), connectionString, string.Empty, System.Guid.NewGuid().ToStrGuid());
 
         [NotNull]
         public override DBBase ImportFromGenericItem([NotNull] DBBase toImport, [NotNull] Simulator dstSim)
@@ -95,6 +97,6 @@ namespace Database.Tables.ModularHouseholds {
             }
         }
 
-        public string RelevantGuid => Guid;
+        public StrGuid RelevantGuid => Guid;
     }
 }

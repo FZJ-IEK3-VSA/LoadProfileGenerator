@@ -34,6 +34,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Globalization;
 using System.Linq;
+using Automation;
 using Common;
 using Database.Database;
 using JetBrains.Annotations;
@@ -50,7 +51,7 @@ namespace Database.Tables.BasicHouseholds {
 
         public AffordanceDesire([CanBeNull]int? pID, [CanBeNull] Desire desire, [CanBeNull] int? affordanceID, decimal satisfactionvalue,
             [ItemNotNull] [NotNull] ObservableCollection<Desire> desires, [NotNull] string name, [NotNull] string connectionString,
-                                [NotNull] string guid) : base(name, TableName,
+                                [NotNull] StrGuid guid) : base(name, TableName,
             connectionString, guid) {
             desires.CollectionChanged += DesirecollOnCollectionChanged;
             ID = pID;

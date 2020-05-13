@@ -44,21 +44,23 @@ namespace Database.Tests.Tables {
     {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void LoadFromDatabaseTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-
-            var deviceCategories = new ObservableCollection<DeviceCategory>();
-            var realDevices = new ObservableCollection<RealDevice>();
-            DeviceCategory.LoadFromDatabase(deviceCategories, out var dcnone, db.ConnectionString, realDevices, false);
-            Assert.Greater(deviceCategories.Count, 0);
-            db.ClearTable(DeviceCategory.TableName);
-            var dc = new DeviceCategory("hallo", dcnone.IntID, db.ConnectionString, false, realDevices,
-                Guid.NewGuid().ToString());
-            dc.SaveToDB();
-            deviceCategories.Clear();
-            DeviceCategory.LoadFromDatabase(deviceCategories, out _, db.ConnectionString, realDevices, false);
-            Assert.AreEqual(deviceCategories.Count, 2);
-            db.Cleanup();
+        public void LoadFromDatabaseTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var deviceCategories = new ObservableCollection<DeviceCategory>();
+                var realDevices = new ObservableCollection<RealDevice>();
+                DeviceCategory.LoadFromDatabase(deviceCategories, out var dcnone, db.ConnectionString, realDevices, false);
+                Assert.Greater(deviceCategories.Count, 0);
+                db.ClearTable(DeviceCategory.TableName);
+                var dc = new DeviceCategory("hallo", dcnone.IntID, db.ConnectionString, false, realDevices,
+                    Guid.NewGuid().ToStrGuid());
+                dc.SaveToDB();
+                deviceCategories.Clear();
+                DeviceCategory.LoadFromDatabase(deviceCategories, out _, db.ConnectionString, realDevices, false);
+                Assert.AreEqual(deviceCategories.Count, 2);
+                db.Cleanup();
+            }
         }
     }
 }

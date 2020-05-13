@@ -4,7 +4,6 @@ using System.Globalization;
 using System.IO;
 using Automation.ResultFiles;
 using Common;
-using JetBrains.Annotations;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
@@ -33,7 +32,7 @@ namespace ChartCreator2.OxyCharts {
                 LegendPosition = LegendPosition.BottomCenter,
                 PlotMargins = new OxyThickness(double.NaN, double.NaN, double.NaN, 200)
             };
-            if (_Parameters.ShowTitle) {
+            if (Parameters.ShowTitle) {
                 plotModel1.Title = title;
             }
             // axes
@@ -58,7 +57,11 @@ namespace ChartCreator2.OxyCharts {
         }
 
         protected override FileProcessingResult MakeOnePlot(ResultFileEntry srcEntry) {
-            _CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
+            Profiler.StartPart(Utili.GetCurrentMethodAndClass());
+            if (srcEntry.FullFileName == null)
+            {
+                throw new LPGException("filename was null");
+            }
             using (var sr = new StreamReader(srcEntry.FullFileName)) {
                 var currentSection = string.Empty;
                 ColumnSeries plan = null;
@@ -81,10 +84,10 @@ namespace ChartCreator2.OxyCharts {
                             pmAbsolute.Series.Add(plan);
                             pmAbsolute.Series.Add(actual);
                             Save(pmAbsolute, "Household Plan " + currentSection, srcEntry.FullFileName + "." + currentSection,
-                                _Parameters.BaseDirectory);
+                                Parameters.BaseDirectory);
                             pmRelative.Series.Add(relativeSeries);
                             Save(pmRelative, "Household Plan Percentage " + currentSection,
-                                srcEntry.FullFileName + "." + currentSection + ".Percent", _Parameters.BaseDirectory);
+                                srcEntry.FullFileName + "." + currentSection + ".Percent", Parameters.BaseDirectory);
                         }
                         currentSection = s.Substring(6, s.Length - 12);
                         var axistitle = "Hours";
@@ -113,7 +116,7 @@ namespace ChartCreator2.OxyCharts {
                         };
                     }
                     else {
-                        var cols = s.Split(_Parameters.CSVCharacterArr, StringSplitOptions.None);
+                        var cols = s.Split(Parameters.CSVCharacterArr, StringSplitOptions.None);
                         var values = new List<double>();
                         var success = double.TryParse(cols[1], out _);
                         // check if it's a line with numbers and otherwise skip
@@ -134,7 +137,7 @@ namespace ChartCreator2.OxyCharts {
                     }
                 }
             }
-            _CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
+            Profiler.StopPart(Utili.GetCurrentMethodAndClass());
             return FileProcessingResult.ShouldCreateFiles;
         }
     }

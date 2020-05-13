@@ -4,7 +4,6 @@ using System.IO;
 using System.Text;
 using Automation.ResultFiles;
 using Common;
-using JetBrains.Annotations;
 using MigraDoc.DocumentObjectModel;
 
 namespace ChartCreator2.PDF {

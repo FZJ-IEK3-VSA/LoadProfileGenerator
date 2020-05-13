@@ -311,10 +311,9 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hash = 17;
+                const int hash = 17;
                 // Suitable nullity checks etc, of course :)
-                hash = hash * 23 + TabHeaderPath.GetHashCode();
-                return hash;
+                return hash * 23 + TabHeaderPath.GetHashCode();
             }
         }
 
@@ -575,8 +574,6 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
                 }
             });
         }
-
-        
     }
     public class StatisticsEntry
     {

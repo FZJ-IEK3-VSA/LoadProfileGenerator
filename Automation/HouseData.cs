@@ -6,7 +6,7 @@ using JetBrains.Annotations;
 namespace Automation {
     public class HouseData {
 
-        public HouseData([NotNull] string houseGuid, [CanBeNull] string houseTypeCode, double? targetHeatDemand,
+        public HouseData([NotNull] StrGuid houseGuid, string? houseTypeCode, double? targetHeatDemand,
                          double? targetCoolingDemand, [NotNull] string name)
         {
             HouseGuid = houseGuid;
@@ -18,20 +18,21 @@ namespace Automation {
 
         [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
         [Obsolete("Only for json")]
+#pragma warning disable 8618
         public HouseData()
+#pragma warning restore 8618
         {
         }
         [CanBeNull]
-        public string Name { get; set; }
-        [NotNull]
-        public string HouseGuid { get; set; }
+        public string? Name { get; set; }
+        public StrGuid? HouseGuid { get; set; }
 
         [NotNull]
         [ItemNotNull]
         public List<HouseholdData> Households { get; set; } = new List<HouseholdData>();
 
         [CanBeNull]
-        public string HouseTypeCode { get; set; }
+        public string? HouseTypeCode { get; set; }
 
         public double? TargetCoolingDemand { get; set; }
         public double? TargetHeatDemand { get; set; }

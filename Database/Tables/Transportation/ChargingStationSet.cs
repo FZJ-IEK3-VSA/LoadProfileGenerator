@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Automation;
+using Common;
 using Database.Database;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
@@ -32,7 +34,7 @@ namespace Database.Tables.Transportation
         [CanBeNull] private string _description;
 
         public ChargingStationSet([NotNull] string name, [CanBeNull] int? pID, [NotNull] string connectionString,
-            [CanBeNull] string description, [NotNull] string guid) : base(name, TableName,
+            [CanBeNull] string description, [NotNull] StrGuid guid) : base(name, TableName,
             connectionString, guid)
         {
             _description = description;
@@ -54,7 +56,7 @@ namespace Database.Tables.Transportation
         {
             ChargingStationSetEntry station = new ChargingStationSetEntry(null,
                 carloadType, deviceCategory, IntID,
-                chargingPower, ConnectionString, "Charging Station",site, System.Guid.NewGuid().ToString(), gridLoadType);
+                chargingPower, ConnectionString, "Charging Station",site, System.Guid.NewGuid().ToStrGuid(), gridLoadType);
             station.SaveToDB();
             _chargingStations.Add(station);
         }
@@ -68,7 +70,7 @@ namespace Database.Tables.Transportation
         public static DBBase CreateNewItem
             ([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new ChargingStationSet(
             FindNewName(isNameTaken, "New Charging Station Set "),
-            null, connectionString, "", System.Guid.NewGuid().ToString());
+            null, connectionString, "", System.Guid.NewGuid().ToStrGuid());
 
         public override void DeleteFromDB()
         {

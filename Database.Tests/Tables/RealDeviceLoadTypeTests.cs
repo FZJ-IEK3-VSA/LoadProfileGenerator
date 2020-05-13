@@ -40,22 +40,24 @@ namespace Database.Tests.Tables {
     {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void LoadFromDatabaseTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
+        public void LoadFromDatabaseTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var loadTypes = db.LoadLoadTypes();
+                var rdlt = new ObservableCollection<RealDeviceLoadType>();
+                RealDeviceLoadType.LoadFromDatabase(rdlt, db.ConnectionString, loadTypes, false);
+                rdlt.Clear();
+                db.ClearTable(RealDeviceLoadType.TableName);
 
-            var loadTypes = db.LoadLoadTypes();
-            var rdlt = new ObservableCollection<RealDeviceLoadType>();
-            RealDeviceLoadType.LoadFromDatabase(rdlt, db.ConnectionString, loadTypes, false);
-            rdlt.Clear();
-            db.ClearTable(RealDeviceLoadType.TableName);
+                var newrdlt = new RealDeviceLoadType("bla", 1, loadTypes[0].ID, 1, loadTypes[0], 0.1, 10,
+                    db.ConnectionString, Guid.NewGuid().ToStrGuid());
+                newrdlt.SaveToDB();
 
-            var newrdlt = new RealDeviceLoadType("bla", 1, loadTypes[0].ID, 1, loadTypes[0], 0.1, 10,
-                db.ConnectionString, Guid.NewGuid().ToString());
-            newrdlt.SaveToDB();
-
-            RealDeviceLoadType.LoadFromDatabase(rdlt, db.ConnectionString, loadTypes, false);
-            Assert.AreEqual(1, rdlt.Count);
-            db.Cleanup();
+                RealDeviceLoadType.LoadFromDatabase(rdlt, db.ConnectionString, loadTypes, false);
+                Assert.AreEqual(1, rdlt.Count);
+                db.Cleanup();
+            }
         }
     }
 }

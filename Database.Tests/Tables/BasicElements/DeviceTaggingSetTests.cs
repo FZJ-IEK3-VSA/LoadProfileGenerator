@@ -40,62 +40,70 @@ namespace Database.Tests.Tables.BasicElements {
     {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void DeviceTaggingSetTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
+        public void DeviceTaggingSetTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                db.ClearTable(DeviceTaggingSet.TableName);
+                db.ClearTable(DeviceTaggingEntry.TableName);
+                db.ClearTable(DeviceTag.TableName);
+                db.ClearTable(DeviceTaggingReference.TableName);
+                db.ClearTable(DeviceTaggingSetLoadType.TableName);
+                var profiles = db.LoadTimeBasedProfiles();
+                var realDevices = db.LoadRealDevices(out _, out var loadTypes,
+                    profiles);
 
-            db.ClearTable(DeviceTaggingSet.TableName);
-            db.ClearTable(DeviceTaggingEntry.TableName);
-            db.ClearTable(DeviceTag.TableName);
-            db.ClearTable(DeviceTaggingReference.TableName);
-            db.ClearTable(DeviceTaggingSetLoadType.TableName);
-            var profiles = db.LoadTimeBasedProfiles();
-            var realDevices = db.LoadRealDevices(out _, out var loadTypes,
-                profiles);
+                var ats = new ObservableCollection<DeviceTaggingSet>();
+                DeviceTaggingSet.LoadFromDatabase(ats, db.ConnectionString, false, realDevices, loadTypes);
+                var ats1 = new DeviceTaggingSet("test", "desc", db.ConnectionString, System.Guid.NewGuid().ToStrGuid());
+                ats1.SaveToDB();
+                var tag = ats1.AddNewTag("newtag");
+                ats1.SaveToDB();
 
-            var ats = new ObservableCollection<DeviceTaggingSet>();
-            DeviceTaggingSet.LoadFromDatabase(ats, db.ConnectionString, false, realDevices, loadTypes);
-            var ats1 = new DeviceTaggingSet("test", "desc", db.ConnectionString, System.Guid.NewGuid().ToString());
-            ats1.SaveToDB();
-            var tag = ats1.AddNewTag("newtag");
-            ats1.SaveToDB();
-
-            if (tag == null) {
-                throw new LPGException("Tag was null");
+                if (tag == null)
+                {
+                    throw new LPGException("Tag was null");
+                }
+                ats1.AddTaggingEntry(tag, realDevices[0]);
+                ats1.SaveToDB();
+                ats1.AddReferenceEntry(tag, 1, 10, loadTypes[0]);
+                ats.Clear();
+                DeviceTaggingSet.LoadFromDatabase(ats, db.ConnectionString, false, realDevices, loadTypes);
+                Assert.AreEqual(1, ats[0].References.Count);
+                Assert.AreEqual(1, ats[0].References[0].PersonCount);
+                Assert.AreEqual(10, ats[0].References[0].ReferenceValue);
+                ats1 = ats[0];
+                ats1.DeleteTag(ats1.Tags[0]);
+                ats1.DeleteFromDB();
+                ats.Clear();
+                DeviceTaggingSet.LoadFromDatabase(ats, db.ConnectionString, false, realDevices, loadTypes);
+                Assert.AreEqual(0, ats.Count);
+                db.Cleanup();
             }
-            ats1.AddTaggingEntry(tag, realDevices[0]);
-            ats1.SaveToDB();
-            ats1.AddReferenceEntry(tag, 1, 10, loadTypes[0]);
-            ats.Clear();
-            DeviceTaggingSet.LoadFromDatabase(ats, db.ConnectionString, false, realDevices, loadTypes);
-            Assert.AreEqual(1, ats[0].References.Count);
-            Assert.AreEqual(1, ats[0].References[0].PersonCount);
-            Assert.AreEqual(10, ats[0].References[0].ReferenceValue);
-            ats1 = ats[0];
-            ats1.DeleteTag(ats1.Tags[0]);
-            ats1.DeleteFromDB();
-            ats.Clear();
-            DeviceTaggingSet.LoadFromDatabase(ats, db.ConnectionString, false, realDevices, loadTypes);
-            Assert.AreEqual(0, ats.Count);
-            db.Cleanup();
             CleanTestBase.RunAutomatically(true);
         }
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void DeviceTaggingSetTestNone() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-
-            var sim = new Simulator(db.ConnectionString);
-            db.Cleanup();
-            foreach (var tagset in sim.DeviceTaggingSets.MyItems) {
-                foreach (var deviceTaggingEntry in tagset.Entries) {
-                    if (deviceTaggingEntry.Tag == null)
+        public void DeviceTaggingSetTestNone()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var sim = new Simulator(db.ConnectionString);
+                db.Cleanup();
+                foreach (var tagset in sim.DeviceTaggingSets.MyItems)
+                {
+                    foreach (var deviceTaggingEntry in tagset.Entries)
                     {
-                        throw new LPGException("Tag was null");
-                    }
-                    if (deviceTaggingEntry.Tag.Name == "none") {
-                        throw new LPGException("None-Tag found in " + tagset.Name + " on " +
-                                               deviceTaggingEntry.Device?.Name);
+                        if (deviceTaggingEntry.Tag == null)
+                        {
+                            throw new LPGException("Tag was null");
+                        }
+                        if (deviceTaggingEntry.Tag.Name == "none")
+                        {
+                            throw new LPGException("None-Tag found in " + tagset.Name + " on " +
+                                                   deviceTaggingEntry.Device?.Name);
+                        }
                     }
                 }
             }

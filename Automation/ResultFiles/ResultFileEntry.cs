@@ -78,7 +78,7 @@ namespace Automation.ResultFiles {
 //                oldPath = OriginalPath;
             //          }
             foreach (var rfe in ResultFiles) {
-                rfe.Value.FullFileName = rfe.Value.FullFileName.Replace(oldPath, newPath);
+                rfe.Value.FullFileName = rfe.Value.FullFileName?.Replace(oldPath, newPath);
                 if (rfe.Value.ResultFileID == ResultFileID.LogfileForErrors) {
                     continue;
                 }
@@ -135,7 +135,9 @@ namespace Automation.ResultFiles {
               ResultFiles.Values.First(x => x.FileName == fileName);*/
     }
 
+#pragma warning disable CA1036 // Override methods on comparable types
     public class ResultFileEntry : IComparable {
+#pragma warning restore CA1036 // Override methods on comparable types
         public ResultFileEntry([NotNull] string name,
                                [NotNull] FileInfo fileInfo,
                                bool displayEntry,
@@ -193,7 +195,7 @@ namespace Automation.ResultFiles {
                                bool displayEntry,
                                ResultFileID rfid,
                                [NotNull] string householdKey,
-                               [CanBeNull] string additionalFileIndex)
+                               [CanBeNull] string? additionalFileIndex)
         {
             Name = name;
             FileName = fileinfo.Name;
@@ -218,23 +220,22 @@ namespace Automation.ResultFiles {
         }
 
         [UsedImplicitly]
-        [CanBeNull]
-        public string AdditionalFileIndex { get; set; }
+        public string? AdditionalFileIndex { get; set; }
 
         [JsonIgnore]
         [CanBeNull]
-        public BinaryWriter BinaryWriter { get; }
+        public BinaryWriter? BinaryWriter { get; }
 
         [UsedImplicitly]
         public bool DisplayEntry { get; set; }
 
         [UsedImplicitly]
         [NotNull]
-        public string FileName { get; set; }
+        public string? FileName { get; set; }
 
         [UsedImplicitly]
         [NotNull]
-        public string FullFileName { get; set; }
+        public string? FullFileName { get; set; }
 
         [NotNull]
         public string HashKey => CalculateHashKey(ResultFileID,
@@ -246,28 +247,26 @@ namespace Automation.ResultFiles {
 
         [UsedImplicitly]
         [CanBeNull]
-        public string HouseholdKey { get; set; }
+        public string? HouseholdKey { get; set; }
 
         [UsedImplicitly]
         [CanBeNull]
-        public string HouseholdName { get; set; }
+        public string? HouseholdName { get; set; }
 
         [JsonIgnore]
         [UsedImplicitly]
-        [CanBeNull]
-        public string HouseholdNumberString => HouseholdKey;
+        public string? HouseholdNumberString => HouseholdKey;
 
         [UsedImplicitly]
         [CanBeNull]
-        public LoadTypeInformation LoadTypeInformation { get; set; }
+        public LoadTypeInformation? LoadTypeInformation { get; set; }
 
         [UsedImplicitly]
-        [NotNull]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [UsedImplicitly]
         [CanBeNull]
-        public PersonInformation PersonInformation { get; set; }
+        public PersonInformation? PersonInformation { get; set; }
 
         [UsedImplicitly]
         [NotNull]
@@ -291,11 +290,11 @@ namespace Automation.ResultFiles {
 
         [JsonIgnore]
         [CanBeNull]
-        public Stream Stream { get; }
+        public Stream? Stream { get; }
 
         [JsonIgnore]
         [CanBeNull]
-        public StreamWriter StreamWriter { get; }
+        public StreamWriter? StreamWriter { get; }
 
         [UsedImplicitly]
         public TimeSpan TimeResolution { get; set; }
@@ -311,11 +310,11 @@ namespace Automation.ResultFiles {
 
         [NotNull]
         public static string CalculateHashKey(ResultFileID resultFileID,
-                                              [CanBeNull] string householdName,
-                                              [CanBeNull] string loadTypeName,
-                                              [CanBeNull] string householdKey,
-                                              [CanBeNull] string personName,
-                                              [CanBeNull] string additionalFileIndex)
+                                              [CanBeNull] string? householdName,
+                                              [CanBeNull] string? loadTypeName,
+                                              [CanBeNull] string? householdKey,
+                                              [CanBeNull] string? personName,
+                                              [CanBeNull] string? additionalFileIndex)
         {
             var s = "";
             s += resultFileID + "#";

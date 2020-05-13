@@ -84,7 +84,7 @@ namespace CalculationEngine.HouseholdElements {
                               int weight,
                               bool requireAllDesires,
                               [NotNull] string srcTrait,
-                              [NotNull] string guid,
+                              [NotNull] StrGuid guid,
                               [NotNull] CalcVariableRepository variableRepository,
                               [NotNull] [ItemNotNull] List<DeviceEnergyProfileTuple> energyprofiles,
                               [ItemNotNull] [NotNull] BitArray isBusy, BodilyActivityLevel bodilyActivityLevel,
@@ -202,7 +202,8 @@ namespace CalculationEngine.HouseholdElements {
                             throw new LPGException("Forgotten Variable Execution Time");
                     }
 
-                    _variableRepository.AddExecutionEntry(op.Name, op.Value, op.CalcLocation, op.VariableAction, time, op.VariableGuid);
+                    _variableRepository.AddExecutionEntry(op.Name, op.Value, op.CalcLocation,
+                        op.VariableAction, time, op.VariableGuid);
                     _variableRepository.Execute(startTime);
                 }
             }

@@ -32,6 +32,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
+using Automation;
 using Common;
 using Common.Enums;
 using Database.Database;
@@ -52,7 +53,7 @@ namespace Database.Tables.BasicHouseholds {
         private int _sickDays;
 
         public Person([NotNull] string name, int age, [CanBeNull]int? pID, int sickDays, int averageSicknessDuration, PermittedGender gender,
-            [NotNull] string connectionString, [NotNull] string description, [NotNull] string guid) : base(name, TableName, connectionString, guid)
+            [NotNull] string connectionString, [NotNull] string description, [NotNull] StrGuid guid) : base(name, TableName, connectionString, guid)
         {
             _age = age;
             ID = pID;
@@ -133,7 +134,7 @@ namespace Database.Tables.BasicHouseholds {
         [UsedImplicitly]
         public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new Person(
             FindNewName(isNameTaken, "New Person "), 20, null, 5, 2, PermittedGender.Male, connectionString,
-            "(no description)", System.Guid.NewGuid().ToString());
+            "(no description)", System.Guid.NewGuid().ToStrGuid());
 
         [NotNull]
         public override DBBase ImportFromGenericItem([NotNull] DBBase toImport, [NotNull] Simulator dstSim) =>

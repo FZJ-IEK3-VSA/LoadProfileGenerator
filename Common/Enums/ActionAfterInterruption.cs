@@ -5,10 +5,10 @@ using System.Linq;
 namespace Common.Enums {
     public enum BodilyActivityLevel
     {
-        Unknown,
-        Outside,
-        Low,
-        High
+        Unknown = 0,
+        Outside = 1,
+        Low = 2,
+        High = 3
     }
 
     public static class BodilyActivityLevelHelper
@@ -16,6 +16,7 @@ namespace Common.Enums {
         [NotNull]
         public static Dictionary<BodilyActivityLevel, string> BodilyActivityLevelEnumDictionary { get; } =
             new Dictionary<BodilyActivityLevel, string> {
+                {BodilyActivityLevel.Unknown, "Unknown / Not Set"},
                 {BodilyActivityLevel.Outside, "No internal heat gain"},
                 {BodilyActivityLevel.Low, "Low activity level (100W-120W)"},
                 {BodilyActivityLevel.High, "High activity level (>120W)"},

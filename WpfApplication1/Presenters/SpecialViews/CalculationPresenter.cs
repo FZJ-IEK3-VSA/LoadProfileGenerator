@@ -35,7 +35,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
@@ -143,11 +142,6 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         [NotNull]
         [UsedImplicitly]
         public Dictionary<CalcObjectType, string> CalcObjectTypes => CalcObjectTypeHelper.CalcObjectTypeEnumDictionary;
-
-        [ItemNotNull]
-        [CanBeNull]
-        [UsedImplicitly]
-        public ObservableCollection<CalculationEntry> CalculationEntries { get; private set; }
 
         [ItemNotNull]
         [NotNull]
@@ -526,7 +520,6 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             }
 
             SetIsInCalc(true);
-            var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
             if (_selectedCalcObject == null) {
                 Logger.Error("Please select a calc object!");
@@ -556,17 +549,17 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                 // ReSharper disable once AssignNullToNotNullAttribute
                 SelectedTemperatureProfile,
                 // ReSharper disable once AssignNullToNotNullAttribute
-                _selectedCalcObject, SetCalculationEntries, EnergyIntensity.EnergyIntensityType, ReportCancel, ResumeSettlement, version, null, Sim.MyGeneralConfig.SelectedLoadTypePriority, tds, trs,
+                _selectedCalcObject, EnergyIntensity.EnergyIntensityType, ReportCancel, ResumeSettlement,  null, Sim.MyGeneralConfig.SelectedLoadTypePriority, tds, trs,
                 Sim.MyGeneralConfig.AllEnabledOptions(), Sim.MyGeneralConfig.StartDateDateTime, Sim.MyGeneralConfig.EndDateDateTime, Sim.MyGeneralConfig.InternalStepSize,
                 Sim.MyGeneralConfig.CSVCharacter, Sim.MyGeneralConfig.RandomSeed, Sim.MyGeneralConfig.ExternalStepSize, Sim.MyGeneralConfig.DeleteDatFilesBool,
                 Sim.MyGeneralConfig.WriteExcelColumnBool, Sim.MyGeneralConfig.ShowSettlingPeriodBool, 3,
                 Sim.MyGeneralConfig.RepetitionCount, calculationProfiler, SelectedChargingStationSet,null,
-                Sim.MyGeneralConfig.DeviceProfileHeaderMode,false);
+                Sim.MyGeneralConfig.DeviceProfileHeaderMode,false,resultpath);
             var cs = new CalcStarter(Sim);
             //_calculationProfiler.Clear();
 #pragma warning disable S2930 // "IDisposables" should be disposed
 #pragma warning disable CC0022 // Should dispose object
-            var task1 = new Task(() => cs.Start(csps, resultpath));
+            var task1 = new Task(() => cs.Start(csps));
 #pragma warning restore CC0022 // Should dispose object
 #pragma warning restore S2930 // "IDisposables" should be disposed
             task1.Start();
@@ -721,12 +714,6 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             return everythingOk;
         }
 
-        private bool SetCalculationEntries([ItemNotNull] [NotNull] ObservableCollection<CalculationEntry> calculationEntries)
-        {
-            CalculationEntries = calculationEntries;
-            OnPropertyChanged(nameof(CalculationEntries));
-            return true;
-        }
 
         private void SetIsInCalc(bool value)
         {

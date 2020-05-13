@@ -51,6 +51,7 @@ namespace CalculationEngine.HouseElements {
 
         [CanBeNull] private CalcSpaceHeating _calcSpaceHeating;
 
+
         [ItemNotNull] [CanBeNull] private List<CalcEnergyStorage> _energyStorages;
 
         [ItemNotNull] [CanBeNull] private List<CalcGenerator> _generators;
@@ -150,7 +151,7 @@ namespace CalculationEngine.HouseElements {
                         swHouse.WriteLine("Degree day sum: " + summedDegreeDays);
                         swHouse.WriteLine("Load types");
                         CalcLoadType lt = null;
-                        foreach (var load in _calcSpaceHeating.PowerUsage) {
+                        foreach (var load in _calcSpaceHeating.Loads) {
                             lt = load.LoadType;
                             swHouse.WriteLine("\t" + load.LoadType.Name + " Avg:" + load.AverageYearlyConsumption + " - StdDev:" + load.PowerStandardDeviation + " Val:" + load.Value);
                         }
@@ -252,13 +253,13 @@ namespace CalculationEngine.HouseElements {
             }
 
             if (_calcSpaceHeating != null) {
-                if (!_calcSpaceHeating.IsBusyDuringTimespan(timestep, 1, 1, _calcSpaceHeating.PowerUsage[0].LoadType)) {
+                if (!_calcSpaceHeating.IsBusyDuringTimespan(timestep, 1, 1, _calcSpaceHeating.Loads[0].LoadType)) {
                     _calcSpaceHeating.Activate(timestep,  now);
                 }
             }
 
             if (_calcAirConditioning?.IsBusyDuringTimespan(timestep, 1, 1,
-                    _calcAirConditioning.PowerUsage[0].LoadType) == false) {
+                    _calcAirConditioning.Loads[0].LoadType) == false) {
                 _calcAirConditioning.Activate(timestep,  now);
             }
 

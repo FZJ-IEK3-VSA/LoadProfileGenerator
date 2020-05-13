@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
+using Automation;
 using Database.Database;
 using Database.Tables.BasicHouseholds;
 using JetBrains.Annotations;
@@ -12,7 +13,7 @@ namespace Database.Tables.BasicElements {
         [CanBeNull] private VLoadType _loadType;
 
         public AffordanceTaggingSetLoadType([NotNull] string name, int taggingSetID, [CanBeNull] VLoadType loadType,
-            [NotNull] string connectionString,[CanBeNull]int? pID, [NotNull] string guid) : base(name, pID, TableName,
+            [NotNull] string connectionString,[CanBeNull]int? pID, [NotNull] StrGuid guid) : base(name, pID, TableName,
             connectionString, guid)
         {
             _taggingSetID = taggingSetID;

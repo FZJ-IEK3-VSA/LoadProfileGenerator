@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -32,16 +33,16 @@ namespace SimulationEngineLib.SimZukunftProcessor {
         public PersonCategory(int age, PermittedGender gender)
         {
             switch (age) {
-                case int myage when myage <= 18:
+                case { } myage when myage <= 18:
                     AgeRange = AgeRange.Child;
                     break;
-                case int myage when myage > 18 && myage <= 25:
+                case { } myage when myage > 18 && myage <= 25:
                     AgeRange = AgeRange.Student;
                     break;
-                case int myage when myage > 25 && myage < 65:
+                case { } myage when myage > 25 && myage < 65:
                     AgeRange = AgeRange.Adult;
                     break;
-                case int myage when myage >= 65:
+                case { } myage when myage >= 65:
                     AgeRange = AgeRange.Retiree;
                     break;
                 default: throw new LPGException("Nothing found: Age: " + age + " Gender: " + gender);
@@ -111,10 +112,10 @@ namespace SimulationEngineLib.SimZukunftProcessor {
             }
 
             Simulator sim = new Simulator(connectionString);
-            HouseData houseData1 = new HouseData(Guid.NewGuid().ToString(), "HT01", 20000, 10000, "MyFirstHouse");
+            HouseData houseData1 = new HouseData(Guid.NewGuid().ToStrGuid(), "HT01", 20000, 10000, "MyFirstHouse");
 
             HouseholdData hhd1 = new HouseholdData(Guid.NewGuid().ToString(), false, "My First Household, template randomly chosen based on persons", null, null,
-                null, new List<TransportationDistanceModifier>(), HouseholdDataSpecifictionType.ByPersons);
+                null, new List<TransportationDistanceModifier>(), HouseholdDataSpecificationType.ByPersons);
             HouseholdDataPersonSpecification personSpec = new HouseholdDataPersonSpecification(new List<PersonData>() {
             new PersonData(25, Gender.Male)  });
             hhd1.HouseholdDataPersonSpecification = personSpec;
@@ -125,15 +126,15 @@ namespace SimulationEngineLib.SimZukunftProcessor {
                 sim.ChargingStationSets[0].GetJsonReference(),
                 sim.TransportationDeviceSets[0].GetJsonReference(),
                 sim.TravelRouteSets[0].GetJsonReference(),
-                null, HouseholdDataSpecifictionType.ByTemplateName);
+                null, HouseholdDataSpecificationType.ByTemplateName);
             hhd2.HouseholdTemplateSpecification = new HouseholdTemplateSpecification("CHR01");
             houseData1.Households.Add(hhd2);
-            HouseData houseData2 = new HouseData(Guid.NewGuid().ToString(), "HT02", 20000, 10000, "MySecondHouse");
+            HouseData houseData2 = new HouseData(Guid.NewGuid().ToStrGuid(), "HT02", 20000, 10000, "MySecondHouse");
             HouseholdData hhd3 = new HouseholdData(Guid.NewGuid().ToString(), false, "My Third Household, using predefined household",
-                null, null, null, null, HouseholdDataSpecifictionType.ByHouseholdName);
+                null, null, null, null, HouseholdDataSpecificationType.ByHouseholdName);
             hhd3.HouseholdNameSpecification = new HouseholdNameSpecification("CHR01");
             houseData2.Households.Add(hhd3);
-            HouseholdData hhd4 = new HouseholdData(Guid.NewGuid().ToString(), false, "My Fourth Household", null, null, null, null, HouseholdDataSpecifictionType.ByPersons);
+            HouseholdData hhd4 = new HouseholdData(Guid.NewGuid().ToString(), false, "My Fourth Household", null, null, null, null, HouseholdDataSpecificationType.ByPersons);
             hhd4.HouseholdDataPersonSpecification = new HouseholdDataPersonSpecification(new List<PersonData>() {
                 new PersonData(75, Gender.Male),
                 new PersonData(74, Gender.Female)
@@ -254,7 +255,7 @@ namespace SimulationEngineLib.SimZukunftProcessor {
         //    Simulator sim = new Simulator(connectionString);
         //    var settlement = sim.Settlements.CreateNewItem(sim.ConnectionString);
         //    settlement.Name = districtData.Name;
-        //    settlement.Description = Guid.NewGuid().ToString();
+        //    settlement.Description = Guid.NewGuid().ToStrGuid();
         //    settlement.SaveToDB();
         //    var geoloc = FindGeographicLocation(sim, calcSpecification);
 
@@ -319,7 +320,7 @@ namespace SimulationEngineLib.SimZukunftProcessor {
             return geoloc;
         }
 
-        public void ProcessSingleHouseJob([NotNull] string houseJobFile)
+        public void ProcessSingleHouseJob([NotNull] string houseJobFile, Action<CalculationProfiler, string> makeallthecharts)
         {
             string resultDir = "Results";
             try {
@@ -368,7 +369,7 @@ namespace SimulationEngineLib.SimZukunftProcessor {
                 }
                 JsonCalculator jc = new JsonCalculator();
                 //hcj.CalcSpec.CalcObject = null;
-                jc.StartHousehold(sim, hcj.CalcSpec,newlyCreatedCalcObject);
+                jc.StartHousehold(sim, hcj.CalcSpec,newlyCreatedCalcObject, makeallthecharts);
             }
             catch (Exception ex) {
                 var rdi = new DirectoryInfo(resultDir);
@@ -484,7 +485,7 @@ namespace SimulationEngineLib.SimZukunftProcessor {
                 throw new LPGException("Was null even though this was checked before the function was called.");
             }
             var newName  = travelrouteset.Name + "(" + house.Name + " - " + householdData.Name + " " + householdidx + ")";
-            var adjustedTravelrouteset = new TravelRouteSet(newName, null, sim.ConnectionString, travelrouteset.Description, Guid.NewGuid().ToString());
+            var adjustedTravelrouteset = new TravelRouteSet(newName, null, sim.ConnectionString, travelrouteset.Description, Guid.NewGuid().ToStrGuid());
             adjustedTravelrouteset.SaveToDB();
             sim.TravelRouteSets.It.Add(adjustedTravelrouteset);
             int adjustingDistances = 0;
@@ -492,11 +493,11 @@ namespace SimulationEngineLib.SimZukunftProcessor {
                 bool addUnmodifiedRoute = true;
                 foreach (var modifier in householdData.TransportationDistanceModifiers)
                 {
-                    string modRouteKey = modifier.RouteKey.ToLower();
-                    if (oldTravelRouteSetEntry.TravelRoute.RouteKey?.ToLower() == modRouteKey) {
+                    string modRouteKey = modifier.RouteKey?.ToLower(CultureInfo.InvariantCulture);
+                    if (oldTravelRouteSetEntry.TravelRoute.RouteKey?.ToLower(CultureInfo.InvariantCulture) == modRouteKey) {
                         Logger.Info("Adjusting distances for key " + modifier.RouteKey + "-" + modifier.StepKey + ", total routes in the db: " + sim.TravelRoutes.It.Count);
-                        var modStepKey = modifier.StepKey.ToLower();
-                        var oldRouteSteps = oldTravelRouteSetEntry.TravelRoute.Steps.Where(x => x.StepKey?.ToLower() == modStepKey).ToList();
+                        var modStepKey = modifier.StepKey?.ToLower(CultureInfo.InvariantCulture);
+                        var oldRouteSteps = oldTravelRouteSetEntry.TravelRoute.Steps.Where(x => x.StepKey?.ToLower(CultureInfo.InvariantCulture) == modStepKey).ToList();
                         if (oldRouteSteps.Count > 0) {
                              MakeNewAdjustedRoute(sim, oldTravelRouteSetEntry, adjustingDistances, modRouteKey, modifier, adjustedTravelrouteset);
                              addUnmodifiedRoute = false;
@@ -513,7 +514,7 @@ namespace SimulationEngineLib.SimZukunftProcessor {
             travelrouteset = adjustedTravelrouteset;
             adjustedTravelrouteset.SaveToDB();
             sw.Stop();
-            Logger.Info("Total distances adjusted: " + adjustingDistances + ". This took " + sw.Elapsed.TotalSeconds.ToString("F2") + " seconds.");
+            Logger.Info("Total distances adjusted: " + adjustingDistances + ". This took " + sw.Elapsed.TotalSeconds.ToString("F2",CultureInfo.InvariantCulture) + " seconds.");
             return travelrouteset;
         }
 
@@ -531,13 +532,13 @@ namespace SimulationEngineLib.SimZukunftProcessor {
                 oldRoute.Description,
                 oldRoute.SiteA,
                 oldRoute.SiteB,
-                Guid.NewGuid().ToString(),
+                Guid.NewGuid().ToStrGuid(),
                 oldRoute.RouteKey);
             newRoute.SaveToDB();
             sim.TravelRoutes.It.Add(newRoute);
             foreach (var step in oldRoute.Steps) {
                 double distance = step.Distance;
-                if (step.StepKey?.ToLower() == modRouteKey) {
+                if (step.StepKey?.ToLower(CultureInfo.InvariantCulture) == modRouteKey) {
                     distance = modifier.NewDistanceInMeters;
                 }
                 newRoute.AddStep(step.Name, step.TransportationDeviceCategory, distance, step.StepNumber, step.StepKey,false);
@@ -577,7 +578,7 @@ namespace SimulationEngineLib.SimZukunftProcessor {
         {
             //house creation
             House house = sim.Houses.CreateNewItem(sim.ConnectionString);
-            house.Name = hd.Name ?? hd.HouseGuid;
+            house.Name = hd.Name ?? hd.HouseGuid?.ToString() ?? "";
             house.Description = DescriptionText + hd.HouseGuid;
             house.SaveToDB();
             var housetypecode = hd.HouseTypeCode;
@@ -589,7 +590,7 @@ namespace SimulationEngineLib.SimZukunftProcessor {
                 throw new LPGException("Could not find house type " + hd.HouseTypeCode);
             }
             //house type adjustment
-            var potentialHts = sim.HouseTypes.It.Where(x => x.Name.StartsWith(housetypecode)).ToList();
+            var potentialHts = sim.HouseTypes.It.Where(x => x.Name.StartsWith(housetypecode,StringComparison.Ordinal)).ToList();
             if (potentialHts.Count == 0) {
                 throw new LPGException("No house type found for " + housetypecode);
             }
@@ -623,29 +624,29 @@ namespace SimulationEngineLib.SimZukunftProcessor {
 
             // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
             switch (householdData.HouseholdDataSpecifictionType) {
-                case HouseholdDataSpecifictionType.ByPersons when householdData.HouseholdDataPersonSpecification == null:
+                case HouseholdDataSpecificationType.ByPersons when householdData.HouseholdDataPersonSpecification == null:
                     throw new LPGException("No person specification was set for the household " + householdData.Name);
-                case HouseholdDataSpecifictionType.ByPersons when householdData.HouseholdDataPersonSpecification.Persons.Count == 0:
+                case HouseholdDataSpecificationType.ByPersons when householdData.HouseholdDataPersonSpecification.Persons.Count == 0:
                     throw new LPGException("No persons were defined for the household " + householdData.Name);
-                case HouseholdDataSpecifictionType.ByTemplateName when householdData.HouseholdTemplateSpecification == null :
+                case HouseholdDataSpecificationType.ByTemplateName when householdData.HouseholdTemplateSpecification == null :
                     throw new LPGException("No household template specification was set for the household " + householdData.Name);
-                case HouseholdDataSpecifictionType.ByTemplateName when string.IsNullOrWhiteSpace(householdData.HouseholdTemplateSpecification.HouseholdTemplateName):
+                case HouseholdDataSpecificationType.ByTemplateName when string.IsNullOrWhiteSpace(householdData.HouseholdTemplateSpecification.HouseholdTemplateName):
                     throw new LPGException("No household template name was set for the household " + householdData.Name);
-                case HouseholdDataSpecifictionType.ByHouseholdName when householdData.HouseholdNameSpecification == null :
+                case HouseholdDataSpecificationType.ByHouseholdName when householdData.HouseholdNameSpecification == null :
                     throw new LPGException("No household specification was set for the household " + householdData.Name);
-                case HouseholdDataSpecifictionType.ByHouseholdName when string.IsNullOrWhiteSpace(householdData.HouseholdNameSpecification.HouseholdName):
+                case HouseholdDataSpecificationType.ByHouseholdName when string.IsNullOrWhiteSpace(householdData.HouseholdNameSpecification.HouseholdName):
                     throw new LPGException("No household name was set for the household " + householdData.Name);
             }
 
             switch (householdData.HouseholdDataSpecifictionType) {
-                case HouseholdDataSpecifictionType.ByPersons:
+                case HouseholdDataSpecificationType.ByPersons:
                     return MakeHouseholdBaseOnPersonSpec(sim, householdData, r);
-                case HouseholdDataSpecifictionType.ByTemplateName:
+                case HouseholdDataSpecificationType.ByTemplateName:
                     return MakeHouseholdBaseOnTemplateSpec(sim, householdData);
-                case HouseholdDataSpecifictionType.ByHouseholdName:
+                case HouseholdDataSpecificationType.ByHouseholdName:
                     return MakeHouseholdBaseOnHouseholdName(sim, householdData);
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new LPGException(nameof(HouseholdDataSpecificationType));
             }
         }
 
@@ -767,13 +768,13 @@ namespace SimulationEngineLib.SimZukunftProcessor {
             return hhs[0];
         }
 
-        public static void ProcessHouseJob([NotNull] HouseJobProcessingOptions args)
+        public static void ProcessHouseJob([NotNull] HouseJobProcessingOptions args, Action<CalculationProfiler,string> makeallthecharts)
         {
             HouseGenerator hg = new HouseGenerator();
             if (args.JsonPath == null) {
                 throw new LPGCommandlineException("Path to the house job file was not set. This won't work.");
             }
-            hg.ProcessSingleHouseJob(args.JsonPath);
+            hg.ProcessSingleHouseJob(args.JsonPath,makeallthecharts);
         }
     }
 }

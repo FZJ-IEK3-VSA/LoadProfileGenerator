@@ -30,6 +30,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Common.Enums;
@@ -72,7 +73,7 @@ namespace Database.Tables.Houses {
             double coolingYearlyTotal, [CanBeNull] VLoadType coolingLoadType, bool adjustYearlyEnergy,
             double referenceDegreeDays,
             bool adjustYearlyCooling, double referenceCoolingHours, int minimumHouseholdCount,
-            int maximumHouseholdCount,[NotNull] string guid,
+            int maximumHouseholdCount,[NotNull] StrGuid guid,
             [CanBeNull]int? pID = null) : base(pName, TableName, connectionString, guid)
         {
             ID = pID;
@@ -240,7 +241,7 @@ namespace Database.Tables.Houses {
             {
                 throw new LPGException("Energy storage was null");
             }
-            var hes = new HouseTypeEnergyStorage(null, es.Name, IntID, es, ConnectionString, System.Guid.NewGuid().ToString());
+            var hes = new HouseTypeEnergyStorage(null, es.Name, IntID, es, ConnectionString, System.Guid.NewGuid().ToStrGuid());
             HouseEnergyStorages.Add(hes);
             hes.SetDeleteFunction(DeleteHouseEnergyStorage);
             hes.SaveToDB();
@@ -248,7 +249,7 @@ namespace Database.Tables.Houses {
 
         public void AddGenerator([NotNull] Generator gen)
         {
-            var hgen = new HouseTypeGenerator(null, IntID, gen, ConnectionString, gen.Name, System.Guid.NewGuid().ToString());
+            var hgen = new HouseTypeGenerator(null, IntID, gen, ConnectionString, gen.Name, System.Guid.NewGuid().ToStrGuid());
             HouseGenerators.Add(hgen);
             hgen.SaveToDB();
         }
@@ -259,7 +260,7 @@ namespace Database.Tables.Houses {
         {
             var hd = new HouseTypeDevice(null, adev, profile, IntID, devTimeLimit, standardDeviation,
                 vLoadType, ConnectionString, adev.Name + " [" + devTimeLimit + "]", loc, variableValue,
-                variableCondition, variable, System.Guid.NewGuid().ToString());
+                variableCondition, variable, System.Guid.NewGuid().ToStrGuid());
             HouseDevices.Add(hd);
             hd.SaveToDB();
         }
@@ -267,7 +268,7 @@ namespace Database.Tables.Houses {
         public void AddTransformationDevice([NotNull] TransformationDevice td)
         {
             var htd = new HouseTypeTransformationDevice(null, IntID, td, ConnectionString,
-                td.Name, System.Guid.NewGuid().ToString());
+                td.Name, System.Guid.NewGuid().ToStrGuid());
             HouseTransformationDevices.Add(htd);
             htd.SaveToDB();
         }
@@ -315,7 +316,7 @@ namespace Database.Tables.Houses {
         {
             var housetype = new HouseType(FindNewName(isNameTaken, "New House Type "),
                 "New house type description", 5000, 15, 20, null, connectionString, 19, 2000, null, false, 400, false,
-                200, 1, 10, System.Guid.NewGuid().ToString());
+                200, 1, 10, System.Guid.NewGuid().ToStrGuid());
             return housetype;
         }
 

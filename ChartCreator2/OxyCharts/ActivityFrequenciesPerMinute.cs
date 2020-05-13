@@ -4,7 +4,6 @@ using System.Globalization;
 using System.IO;
 using Automation.ResultFiles;
 using Common;
-using JetBrains.Annotations;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
@@ -22,17 +21,21 @@ namespace ChartCreator2.OxyCharts {
         protected override FileProcessingResult MakeOnePlot(ResultFileEntry srcEntry)
         {
             string plotName = "Activity Frequencies per Minute " + srcEntry.HouseholdNumberString;
-            _CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
+            Profiler.StartPart(Utili.GetCurrentMethodAndClass());
             var consumption =
                 new Dictionary<string, List<Tuple<string, List<double>>>>();
             var lastname = string.Empty;
+            if (srcEntry.FullFileName == null)
+            {
+                throw new LPGException("filename was null");
+            }
             using (var sr = new StreamReader(srcEntry.FullFileName)) {
                 while (!sr.EndOfStream) {
                     var s = sr.ReadLine();
                     if (s == null) {
                         throw new LPGException("Readline failed");
                     }
-                    var cols = s.Split(_Parameters.CSVCharacterArr, StringSplitOptions.None);
+                    var cols = s.Split(Parameters.CSVCharacterArr, StringSplitOptions.None);
                     if (cols.Length == 1) {
                         consumption.Add(cols[0], new List<Tuple<string, List<double>>>());
                         lastname = cols[0];
@@ -58,7 +61,7 @@ namespace ChartCreator2.OxyCharts {
                     LegendPosition = LegendPosition.BottomCenter
                 };
                 var personName = pair.Key;
-                if (_Parameters.ShowTitle) {
+                if (Parameters.ShowTitle) {
                     plotModel1.Title = plotName + " " + personName;
                 }
                 // axes
@@ -104,9 +107,9 @@ namespace ChartCreator2.OxyCharts {
                     columnSeries2.FillColor = p.Colors[i];
                     plotModel1.Series.Add(columnSeries2);
                 }
-                Save(plotModel1, plotName, srcEntry.FullFileName + "." + personName, _Parameters.BaseDirectory);
+                Save(plotModel1, plotName, srcEntry.FullFileName + "." + personName, Parameters.BaseDirectory);
             }
-            _CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
+            Profiler.StopPart(Utili.GetCurrentMethodAndClass());
             return FileProcessingResult.ShouldCreateFiles;
         }
     }

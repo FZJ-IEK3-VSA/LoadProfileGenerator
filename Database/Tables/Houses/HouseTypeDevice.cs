@@ -31,6 +31,7 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using Common.Enums;
 using Database.Database;
@@ -65,7 +66,7 @@ namespace Database.Tables.Houses {
             [CanBeNull] TimeLimit timeLimit, double timeStandardDeviation, [CanBeNull] VLoadType loadType,
             [NotNull] string connectionString, [NotNull] string name,
             [CanBeNull] Location loc, double variableValue, VariableCondition variableCondition,
-            [CanBeNull] Variable variable, [NotNull] string guid)
+            [CanBeNull] Variable variable, [NotNull] StrGuid guid)
             : base(name, TableName, connectionString, guid)
         {
             ID = pID;

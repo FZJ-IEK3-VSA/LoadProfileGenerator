@@ -28,6 +28,7 @@
 
 using System.Collections.ObjectModel;
 using System.Linq;
+using Automation;
 using Database.Database;
 using Database.Tables.BasicHouseholds;
 using JetBrains.Annotations;
@@ -47,7 +48,7 @@ namespace Database.Tables.Houses {
 
         public TransformationDeviceLoadType([CanBeNull]int? pID, [CanBeNull] VLoadType loadType, double factor,
             int transformationDeviceID,
-            [NotNull] string connectionString, [NotNull] string loadTypeName, TransformationFactorType factorType ,[NotNull] string guid)
+            [NotNull] string connectionString, [NotNull] string loadTypeName, TransformationFactorType factorType ,[NotNull] StrGuid guid)
             : base(loadTypeName, TableName, connectionString, guid)
         {
             ID = pID;

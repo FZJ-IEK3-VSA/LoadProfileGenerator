@@ -29,6 +29,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Automation;
 using Database.Database;
 using JetBrains.Annotations;
 
@@ -39,7 +40,7 @@ namespace Database.Tables.Houses {
         [CanBeNull] private readonly Generator _generator;
 
         public HouseTypeGenerator([CanBeNull]int? pID, int houseID, [CanBeNull] Generator gen, [NotNull] string connectionString,
-            [NotNull] string generatorName, [NotNull] string guid)
+            [NotNull] string generatorName, [NotNull] StrGuid guid)
             : base(generatorName, TableName, connectionString, guid)
         {
             ID = pID;

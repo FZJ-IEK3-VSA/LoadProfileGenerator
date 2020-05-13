@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
@@ -14,7 +15,6 @@ using Database;
 using Database.DatabaseMerger;
 using Database.Helpers;
 using Database.Tests;
-using JetBrains.Annotations;
 using NUnit.Framework;
 using SimulationEngineLib;
 
@@ -22,8 +22,8 @@ namespace SimulationEngine.Tests {
     [TestFixture]
     public class ProgramTests : UnitTestBaseClass
     {
-        [NotNull]
-        public static WorkingDir SetupDB3([NotNull] string name, bool clearTemplatedFirst = false) {
+        [JetBrains.Annotations.NotNull]
+        public static WorkingDir SetupDB3([JetBrains.Annotations.NotNull] string name, bool clearTemplatedFirst = false) {
             var srcPath = DatabaseSetup.GetSourcepath(null);
             SimulationEngineConfig.CatchErrors = false;
             var wd = new WorkingDir(name);
@@ -50,24 +50,28 @@ namespace SimulationEngine.Tests {
 
         [Test]
         [Category(UnitTestCategories.ManualOnly)]
-        public void CSVImportTest() {
-            var db1 = new DatabaseSetup(Utili.GetCurrentMethodAndClass() + "_export");
-            //export
-            var wd = SetupDB3(Utili.GetCurrentMethodAndClass());
+        public void CSVImportTest()
+        {
+            using (var db1 = new DatabaseSetup(Utili.GetCurrentMethodAndClass() + "_export"))
+            {
+                //export
+                using (var wd = SetupDB3(Utili.GetCurrentMethodAndClass()))
+                {
+                    var sim = new Simulator(db1.ConnectionString);
+                    ModularHouseholdSerializer.ExportAsCSV(sim.ModularHouseholds[0], sim,
+                        Path.Combine(wd.WorkingDirectory, "testexportfile.csv"));
+                    //import
 
-            var sim = new Simulator(db1.ConnectionString);
-            ModularHouseholdSerializer.ExportAsCSV(sim.ModularHouseholds[0], sim,
-                Path.Combine(wd.WorkingDirectory, "testexportfile.csv"));
-            //import
-
-            var arguments = new List<string>
+                    var arguments = new List<string>
             {
                 "--ImportHouseholdDefinition",
                 "testexportfile.csv"
             };
-            Program.Main(arguments.ToArray());
-            db1.Cleanup();
-            wd.CleanUp(1);
+                    MainSimEngine.Run(arguments.ToArray(), "simulationengine.exe");
+                    db1.Cleanup();
+                    wd.CleanUp(1);
+                }
+            }
         }
 
         [Test]
@@ -96,7 +100,7 @@ namespace SimulationEngine.Tests {
                 "--ImportHouseholdDefinition",
                 "hh.csv"
             };
-                    Program.Main(arguments.ToArray());
+                    MainSimEngine.Run(arguments.ToArray(), "simulationengine.exe");
                     db1.Cleanup();
                     wd.CleanUp(1);
                 }
@@ -108,41 +112,48 @@ namespace SimulationEngine.Tests {
         public void ListEnviromentalVariables() {
             SimulationEngineConfig.CatchErrors = false;
             var dict = Environment.GetEnvironmentVariables();
+#pragma warning disable CS8605 // Unboxing a possibly null value.
             foreach (DictionaryEntry env in dict) {
+#pragma warning restore CS8605 // Unboxing a possibly null value.
                 var name = (string) env.Key;
-                var value = (string) env.Value;
+                var value =( (string?) env.Value)??throw new LPGException("value was null");
                 Logger.Info(name + " = " + value);
             }
         }
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void MainListLoadTypePriorities() {
-            var wd = SetupDB3(Utili.GetCurrentMethodAndClass());
-            var arguments = new List<string>
+        public void MainListLoadTypePriorities()
+        {
+            using (var wd = SetupDB3(Utili.GetCurrentMethodAndClass()))
+            {
+                var arguments = new List<string>
             {
                 "List",
                 "-LoadtypePriorities"
             };
-            Program.Main(arguments.ToArray());
-            wd.CleanUp(1);
+                MainSimEngine.Run(arguments.ToArray(), "simulationengine.exe");
+                wd.CleanUp(1);
+            }
         }
 
         [Test]
         [Category(UnitTestCategories.ManualOnly)]
-        public void MainTestBatchCommandlineModularHouseholds() {
-            var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            SetupDB3(Utili.GetCurrentMethodAndClass());
-            var arguments = new List<string>();
-            var dstpath = Path.Combine(wd.WorkingDirectory, "calc");
-            var args =
-                "Calculate -CalcObjectType ModularHousehold -CalcObjectNumber 0 -OutputFileDefault ReasonableWithChartsAndPDF " +
-                "-StartDate 01.01.2015 -EndDate 10.01.2015 -SkipExisting -OutputDirectory " +
-                dstpath;
-            arguments.AddRange(args.Split(' '));
-            arguments = arguments.Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
-            Program.Main(arguments.ToArray());
-            wd.CleanUp(1);
+        public void MainTestBatchCommandlineModularHouseholds()
+        {
+            using (var wd = SetupDB3(Utili.GetCurrentMethodAndClass()))
+            {
+                var arguments = new List<string>();
+                var dstpath = Path.Combine(wd.WorkingDirectory, "calc");
+                var args =
+                    "Calculate -CalcObjectType ModularHousehold -CalcObjectNumber 0 -OutputFileDefault ReasonableWithChartsAndPDF " +
+                    "-StartDate 01.01.2015 -EndDate 10.01.2015 -SkipExisting -OutputDirectory " +
+                    dstpath;
+                arguments.AddRange(args.Split(' '));
+                arguments = arguments.Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
+                MainSimEngine.Run(arguments.ToArray(), "simulationengine.exe");
+                wd.CleanUp(1);
+            }
         }
 
         /*
@@ -184,73 +195,86 @@ namespace SimulationEngine.Tests {
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void MainTestForHelp() {
-            var wd = SetupDB3(Utili.GetCurrentMethodAndClass());
-            var args = Array.Empty<string>();
-            Assert.Throws<LPGException>(()=> Program.Main(args));
-            wd.CleanUp(1);
+        public void MainTestForHelp()
+        {
+            using (var wd = SetupDB3(Utili.GetCurrentMethodAndClass()))
+            {
+                var args = Array.Empty<string>();
+                Assert.Throws<LPGException>(() => MainSimEngine.Run(args.ToArray(), "simulationengine.exe"));
+                wd.CleanUp(1);
+            }
         }
 
         [Test]
         [Category(UnitTestCategories.ManualOnly)]
-        public void MainTestLaunchParallelModularHouseholds() {
+        public void MainTestLaunchParallelModularHouseholds()
+        {
             SimulationEngineConfig.CatchErrors = false;
             var di = new DirectoryInfo(".");
             var fis = di.GetFiles("*.*");
             var oldDir = Directory.GetCurrentDirectory();
             var db3Path = Path.Combine(oldDir, "profilegenerator-latest.db3");
-            var wd = new WorkingDir("ModularBatchPar");
-            Thread.Sleep(1000);
-            var prevDir = Directory.GetCurrentDirectory();
-            Directory.SetCurrentDirectory(wd.WorkingDirectory);
-            foreach (var fi in fis) {
-                var dstpath = Path.Combine(wd.WorkingDirectory, fi.Name);
-                fi.CopyTo(dstpath);
-            }
-            if (File.Exists("profilegenerator.db3")) {
-                File.Delete("profilegenerator.db3");
-            }
-            File.Copy(db3Path, "profilegenerator.db3");
-            const string filename = "Start-ModularHousehold.cmd";
-            if (File.Exists(filename)) {
-                File.Delete(filename);
-            }
-            var arguments = new List<string>
+            using (var wd = new WorkingDir("ModularBatchPar"))
+            {
+                Thread.Sleep(1000);
+                var prevDir = Directory.GetCurrentDirectory();
+                Directory.SetCurrentDirectory(wd.WorkingDirectory);
+                foreach (var fi in fis)
+                {
+                    var dstpath = Path.Combine(wd.WorkingDirectory, fi.Name);
+                    fi.CopyTo(dstpath);
+                }
+                if (File.Exists("profilegenerator.db3"))
+                {
+                    File.Delete("profilegenerator.db3");
+                }
+                File.Copy(db3Path, "profilegenerator.db3");
+                const string filename = "Start-ModularHousehold.cmd";
+                if (File.Exists(filename))
+                {
+                    File.Delete(filename);
+                }
+                var arguments = new List<string>
             {
                 "--Batch-ModularHouseholds"
             };
-            Program.Main(arguments.ToArray());
-            Assert.IsTrue(File.Exists(filename));
-            arguments.Clear();
-            arguments.Add("--LaunchParallel");
-            arguments.Add("--NumberCores");
-            arguments.Add("4");
-            arguments.Add("--Batchfile");
-            arguments.Add("Start-ModularHousehold.cmd");
-            Program.Main(arguments.ToArray());
-            Directory.SetCurrentDirectory(prevDir);
-            wd.CleanUp(1);
+                MainSimEngine.Run(arguments.ToArray(), "simulationengine.exe");
+                Assert.IsTrue(File.Exists(filename));
+                arguments.Clear();
+                arguments.Add("--LaunchParallel");
+                arguments.Add("--NumberCores");
+                arguments.Add("4");
+                arguments.Add("--Batchfile");
+                arguments.Add("Start-ModularHousehold.cmd");
+                MainSimEngine.Run(arguments.ToArray(), "simulationengine.exe");
+                Directory.SetCurrentDirectory(prevDir);
+                wd.CleanUp(1);
+            }
         }
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void MainTestListGeoLocs() {
-            var wd = SetupDB3(Utili.GetCurrentMethodAndClass());
-            var arguments = new List<string>
+        public void MainTestListGeoLocs()
+        {
+            using (var wd = SetupDB3(Utili.GetCurrentMethodAndClass()))
+            {
+                var arguments = new List<string>
             {
                 "List",
                 "-GeographicLocations"
             };
-            Program.Main(arguments.ToArray());
-            wd.CleanUp(1);
+                MainSimEngine.Run(arguments.ToArray(), "simulationengine.exe");
+                wd.CleanUp(1);
+            }
         }
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void ProfilesGeoLocs()
         {
-            var wd = SetupDB3(Utili.GetCurrentMethodAndClass());
-            var arguments = new List<string>
+            using (var wd = SetupDB3(Utili.GetCurrentMethodAndClass()))
+            {
+                var arguments = new List<string>
             {
                 "Calculate",
                 "-CalcObjectType",
@@ -280,21 +304,25 @@ namespace SimulationEngine.Tests {
                 "-CalcOption",
                 "LocationsFile"
             };
-            Program.Main(arguments.ToArray());
-            wd.CleanUp(1);
+                MainSimEngine.Run(arguments.ToArray(), "simulationengine.exe");
+                wd.CleanUp(1);
+            }
         }
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void MainTestListHouses() {
-            var wd = SetupDB3(Utili.GetCurrentMethodAndClass());
-            var arguments = new List<string>
+        public void MainTestListHouses()
+        {
+            using (var wd = SetupDB3(Utili.GetCurrentMethodAndClass()))
+            {
+                var arguments = new List<string>
             {
                 "List",
                 "-Houses"
             };
-            Program.Main(arguments.ToArray());
-            wd.CleanUp(1);
+                MainSimEngine.Run(arguments.ToArray(), "simulationengine.exe");
+                wd.CleanUp(1);
+            }
         }
 
         [Test]
@@ -308,36 +336,42 @@ namespace SimulationEngine.Tests {
                 "List",
                 "-ModularHouseholds"
             };
-                Program.Main(arguments.ToArray());
+                MainSimEngine.Run(arguments.ToArray(), "simulationengine.exe");
                 wd.CleanUp(1);
             }
         }
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void MainTestListSettlements() {
+        public void MainTestListSettlements()
+        {
             SimulationEngineConfig.CatchErrors = false;
-            var wd = SetupDB3(Utili.GetCurrentMethodAndClass());
-            var arguments = new List<string>
+            using (var wd = SetupDB3(Utili.GetCurrentMethodAndClass()))
+            {
+                var arguments = new List<string>
             {
                 "List",
                 "-Settlements"
             };
-            Program.Main(arguments.ToArray());
-            wd.CleanUp(1);
+                MainSimEngine.Run(arguments.ToArray(), "simulationengine.exe");
+                wd.CleanUp(1);
+            }
         }
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void MainTestListTemperatureProfiles() {
-            var wd = SetupDB3(Utili.GetCurrentMethodAndClass());
-            var arguments = new List<string>
+        public void MainTestListTemperatureProfiles()
+        {
+            using (var wd = SetupDB3(Utili.GetCurrentMethodAndClass()))
+            {
+                var arguments = new List<string>
             {
                 "List",
                 "-TemperatureProfiles"
             };
-            Program.Main(arguments.ToArray());
-            wd.CleanUp(1);
+                MainSimEngine.Run(arguments.ToArray(), "simulationengine.exe");
+                wd.CleanUp(1);
+            }
         }
 
         [Test]
@@ -349,21 +383,22 @@ namespace SimulationEngine.Tests {
             }
             SimulationEngineConfig.IsUnitTest = true;
             var args = Array.Empty<string>();
-            Assert.Throws<LPGException>(() => Program.Main(args));
+            Assert.Throws<LPGException>(() => MainSimEngine.Run(args.ToArray(), "simulationengine.exe"));
         }
 
         [Test]
         [Category(UnitTestCategories.LongTest5)]
         public void SettlementToBatchTest()
         {
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            Simulator sim = new Simulator(db.ConnectionString);
-            var settlementname = sim.Settlements.It[0].Name.Substring(0,20);
-            db.Cleanup();
-            SimulationEngineConfig.CatchErrors = false;
-            SimulationEngineConfig.IsUnitTest = true;
-            var setp = new SimulationEngineTestPreparer(nameof(SettlementToBatchTest));
-            var arguments = new List<string>
+            using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                Simulator sim = new Simulator(db.ConnectionString);
+                var settlementname = sim.Settlements.It[0].Name.Substring(0, 20);
+                db.Cleanup();
+                SimulationEngineConfig.CatchErrors = false;
+                SimulationEngineConfig.IsUnitTest = true;
+                using var setp = new SimulationEngineTestPreparer(nameof(SettlementToBatchTest));
+                var arguments = new List<string>
             {
                 "Batch",
                 "-SettlementIndex",
@@ -373,33 +408,39 @@ namespace SimulationEngine.Tests {
                 "-OutputFileDefault",
                 "OnlyOverallSum"
             };
-            Program.Main(arguments.ToArray());
-            var di = new DirectoryInfo(setp.WorkingDirectory);
-            var fis = di.GetFiles("*.cmd", SearchOption.AllDirectories);
-            string targetname = "Start-" + settlementname + ".Test.cmd";
-            Logger.Info("Targetname: " + targetname);
-            foreach (FileInfo info in fis) {
-                Logger.Info("File: " + info.Name);
+                MainSimEngine.Run(arguments.ToArray(), "simulationengine.exe");
+                var di = new DirectoryInfo(setp.WorkingDirectory);
+                var fis = di.GetFiles("*.cmd", SearchOption.AllDirectories);
+                string targetname = "Start-" + settlementname + ".Test.cmd";
+                Logger.Info("Targetname: " + targetname);
+                foreach (FileInfo info in fis)
+                {
+                    Logger.Info("File: " + info.Name);
+                }
+                var fi = fis.First(x => x.Name == targetname);
+                string? line;
+                using (var sr = new StreamReader(fi.FullName))
+                {
+                    line = sr.ReadLine();
+                }
+                if (line == null)
+                {
+                    throw new LPGException("Readline failed.");
+                }
+                var arr = line.Split(' ');
+                var args2 = new List<string>();
+                Logger.Info("Line: " + line);
+                for (var i = 1; i < arr.Length; i++)
+                {
+                    args2.Add(arr[i]);
+                }
+                foreach (var arg in args2)
+                {
+                    Logger.Info(arg);
+                }
+                MainSimEngine.Run(args2.ToArray(), "simulationengine.exe");
+                setp.Clean();
             }
-            var fi = fis.First(x => x.Name == targetname);
-            string line;
-            using (var sr = new StreamReader(fi.FullName)) {
-                line = sr.ReadLine();
-            }
-            if (line == null) {
-                throw new LPGException("Readline failed.");
-            }
-            var arr = line.Split(' ');
-            var args2 = new List<string>();
-            Logger.Info("Line: " + line);
-            for (var i = 1; i < arr.Length; i++) {
-                args2.Add(arr[i]);
-            }
-            foreach (var arg in args2) {
-                Logger.Info(arg);
-            }
-            Program.Main(args2.ToArray());
-            setp.Clean();
         }
     }
 }

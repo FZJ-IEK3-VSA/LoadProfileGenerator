@@ -6,6 +6,7 @@
 
 using System.Collections.ObjectModel;
 using System.Linq;
+using Automation;
 using Database.Database;
 using Database.Tables.BasicHouseholds;
 using JetBrains.Annotations;
@@ -31,7 +32,7 @@ namespace Database.Tables.Transportation {
 
         public ChargingStationSetEntry([CanBeNull]int? pID, [CanBeNull] VLoadType carChargingLoadtype,  [CanBeNull] TransportationDeviceCategory transportationDeviceCategory,
     int chargingStationSetID, double maxChargingPower, [NotNull] string connectionString,
-            [NotNull] string name, [CanBeNull] Site site, [NotNull] string guid, [CanBeNull] VLoadType gridChargingLoadtype) : base(name, TableName, connectionString, guid)
+            [NotNull] string name, [CanBeNull] Site site, [NotNull] StrGuid guid, [CanBeNull] VLoadType gridChargingLoadtype) : base(name, TableName, connectionString, guid)
         {
             _site = site;
             TypeDescription = "Site Location";

@@ -58,7 +58,7 @@ namespace Database
         int IntID { get; }
 
         [NotNull]
-        string Guid { get; }
+        StrGuid Guid { get; }
         [NotNull]
         string Name { get; }
         CalcObjectType CalcObjectType { get; }

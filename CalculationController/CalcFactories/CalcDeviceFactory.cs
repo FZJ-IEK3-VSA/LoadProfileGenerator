@@ -32,6 +32,7 @@ using System.Linq;
 using Automation.ResultFiles;
 using CalculationController.DtoFactories;
 using CalculationEngine.HouseholdElements;
+using Common;
 using Common.CalcDto;
 using Common.JSON;
 using Database.Tables.BasicElements;
@@ -110,7 +111,7 @@ namespace CalculationController.CalcFactories {
         [NotNull]
         public static CalcProfile GetCalcProfile([NotNull] TimeBasedProfile timeBasedProfile, TimeSpan ts)
         {
-            CalcProfile cp = new CalcProfile(timeBasedProfile.Name, Guid.NewGuid().ToString(),
+            CalcProfile cp = new CalcProfile(timeBasedProfile.Name, Guid.NewGuid().ToStrGuid(),
                 ts,(ProfileType)  timeBasedProfile.TimeProfileType, timeBasedProfile.DataSource);
             foreach (var dp in timeBasedProfile.ObservableDatapoints)
             {
@@ -133,7 +134,7 @@ namespace CalculationController.CalcFactories {
                     var lt = calcLoadTypeDictionary.GetLoadtypeByGuid(ltdto.LoadTypeGuid);
                     var cdl = new CalcDeviceLoad(ltdto.Name,
                         ltdto.MaxPower, lt,
-                        ltdto.AverageYearlyConsumption, ltdto.PowerStandardDeviation, ltdto.Guid);
+                        ltdto.AverageYearlyConsumption, ltdto.PowerStandardDeviation);
                     deviceLoads.Add(cdl);
                 }
             }
@@ -152,7 +153,7 @@ namespace CalculationController.CalcFactories {
                     var lt = calcLoadTypeDictionary.GetLoadtypeByGuid(ltdto.LoadTypeGuid);
                     var cdl = new CalcDeviceLoad(ltdto.Name,
                         ltdto.MaxPower, lt,
-                        ltdto.AverageYearlyConsumption, ltdto.PowerStandardDeviation, ltdto.Guid);
+                        ltdto.AverageYearlyConsumption, ltdto.PowerStandardDeviation);
                     deviceLoads.Add(cdl);
                 }
             }

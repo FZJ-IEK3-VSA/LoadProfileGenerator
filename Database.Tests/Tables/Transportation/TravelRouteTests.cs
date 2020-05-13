@@ -16,58 +16,60 @@ namespace Database.Tests.Tables.Transportation
         [Category(UnitTestCategories.BasicTest)]
         public void TravelRouteTest()
         {
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
+            using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                db.ClearTable(TravelRoute.TableName);
+                db.ClearTable(TravelRouteStep.TableName);
+                Location loc = new Location("loc1", null, db.ConnectionString, Guid.NewGuid().ToStrGuid());
+                loc.SaveToDB();
+                Site siteA = new Site("site1", null, db.ConnectionString, "desc", Guid.NewGuid().ToStrGuid());
+                siteA.SaveToDB();
 
-            db.ClearTable(TravelRoute.TableName);
-            db.ClearTable(TravelRouteStep.TableName);
-            Location loc = new Location("loc1", null, db.ConnectionString, Guid.NewGuid().ToString());
-            loc.SaveToDB();
-            Site siteA = new Site("site1", null, db.ConnectionString, "desc", Guid.NewGuid().ToString());
-            siteA.SaveToDB();
+                Site siteB = new Site("site2", null, db.ConnectionString, "desc", Guid.NewGuid().ToStrGuid());
+                siteB.SaveToDB();
 
-            Site siteB = new Site("site2", null, db.ConnectionString, "desc", Guid.NewGuid().ToString());
-            siteB.SaveToDB();
-
-            TransportationDeviceCategory td = new
-                TransportationDeviceCategory("transportationdevicecategory",null,db.ConnectionString,"desc",true, Guid.NewGuid().ToString());
-            td.SaveToDB();
-            TravelRoute tr = new TravelRoute(null,db.ConnectionString,"route","desc",siteA,siteB,
-                Guid.NewGuid().ToString(),null);
-            tr.SaveToDB();
-            tr.AddStep("name1",td,100,1,"key1");
-            tr.AddStep("name3", td, 100, 10,"key3");
-            tr.AddStep("name2", td, 100, 2, "key2");
-            //test the  sorting of steps while adding based on step number
-            Assert.That(tr.Steps[0].Name,Is.EqualTo("name1"));
-            Assert.That(tr.Steps[1].Name, Is.EqualTo("name2"));
-            Assert.That(tr.Steps[2].Name, Is.EqualTo("name3"));
-            Assert.That(tr.Steps[0].StepKey, Is.EqualTo("key1"));
-            Assert.That(tr.Steps[1].StepKey, Is.EqualTo("key2"));
-            Assert.That(tr.Steps[2].StepKey, Is.EqualTo("key3"));
-            foreach (TravelRouteStep step in tr.Steps) {
-                Logger.Info(step.Name);
-            }
-            //loading
-            ObservableCollection<Site> sites = new ObservableCollection<Site>
+                TransportationDeviceCategory td = new
+                    TransportationDeviceCategory("transportationdevicecategory", null, db.ConnectionString, "desc", true, Guid.NewGuid().ToStrGuid());
+                td.SaveToDB();
+                TravelRoute tr = new TravelRoute(null, db.ConnectionString, "route", "desc", siteA, siteB,
+                    Guid.NewGuid().ToStrGuid(), null);
+                tr.SaveToDB();
+                tr.AddStep("name1", td, 100, 1, "key1");
+                tr.AddStep("name3", td, 100, 10, "key3");
+                tr.AddStep("name2", td, 100, 2, "key2");
+                //test the  sorting of steps while adding based on step number
+                Assert.That(tr.Steps[0].Name, Is.EqualTo("name1"));
+                Assert.That(tr.Steps[1].Name, Is.EqualTo("name2"));
+                Assert.That(tr.Steps[2].Name, Is.EqualTo("name3"));
+                Assert.That(tr.Steps[0].StepKey, Is.EqualTo("key1"));
+                Assert.That(tr.Steps[1].StepKey, Is.EqualTo("key2"));
+                Assert.That(tr.Steps[2].StepKey, Is.EqualTo("key3"));
+                foreach (TravelRouteStep step in tr.Steps)
+                {
+                    Logger.Info(step.Name);
+                }
+                //loading
+                ObservableCollection<Site> sites = new ObservableCollection<Site>
             {
                 siteA,
                 siteB
             };
-            ObservableCollection<TransportationDeviceCategory> transportationDeviceCategories = new ObservableCollection<TransportationDeviceCategory>
+                ObservableCollection<TransportationDeviceCategory> transportationDeviceCategories = new ObservableCollection<TransportationDeviceCategory>
             {
                 td
             };
-            ObservableCollection<TravelRoute> routes = new ObservableCollection<TravelRoute>();
-            TravelRoute.LoadFromDatabase(routes,db.ConnectionString,false,transportationDeviceCategories, sites);
-            Assert.AreEqual(1, routes.Count);
-            tr = routes[0];
-            Assert.That(tr.Steps[0].Name, Is.EqualTo("name1"));
-            Assert.That(tr.Steps[1].Name, Is.EqualTo("name2"));
-            Assert.That(tr.Steps[2].Name, Is.EqualTo("name3"));
-            Assert.That(tr.Steps[0].StepKey, Is.EqualTo("key1"));
-            Assert.That(tr.Steps[1].StepKey, Is.EqualTo("key2"));
-            Assert.That(tr.Steps[2].StepKey, Is.EqualTo("key3"));
-            db.Cleanup();
+                ObservableCollection<TravelRoute> routes = new ObservableCollection<TravelRoute>();
+                TravelRoute.LoadFromDatabase(routes, db.ConnectionString, false, transportationDeviceCategories, sites);
+                Assert.AreEqual(1, routes.Count);
+                tr = routes[0];
+                Assert.That(tr.Steps[0].Name, Is.EqualTo("name1"));
+                Assert.That(tr.Steps[1].Name, Is.EqualTo("name2"));
+                Assert.That(tr.Steps[2].Name, Is.EqualTo("name3"));
+                Assert.That(tr.Steps[0].StepKey, Is.EqualTo("key1"));
+                Assert.That(tr.Steps[1].StepKey, Is.EqualTo("key2"));
+                Assert.That(tr.Steps[2].StepKey, Is.EqualTo("key3"));
+                db.Cleanup();
+            }
         }
     }
 }

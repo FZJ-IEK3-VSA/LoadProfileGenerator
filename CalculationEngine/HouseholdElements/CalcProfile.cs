@@ -32,6 +32,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Common.CalcDto;
@@ -48,11 +49,11 @@ namespace CalculationEngine.HouseholdElements {
         // ReSharper disable once NotAccessedField.Local
 #pragma warning disable IDE0052 // Remove unread private members
         //saving this for information purposes
-        [NotNull] private readonly string _guid;
+        [NotNull] private readonly StrGuid _guid;
 #pragma warning restore IDE0052 // Remove unread private members
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public CalcProfile([NotNull] string name, [NotNull] string guid, TimeSpan stepSize, ProfileType profileType, [NotNull] string dataSource):base(name)
+        public CalcProfile([NotNull] string name, [NotNull] StrGuid guid, TimeSpan stepSize, ProfileType profileType, [NotNull] string dataSource):base(name)
         {
             _guid = guid;
             _stepSize = stepSize;
@@ -62,7 +63,7 @@ namespace CalculationEngine.HouseholdElements {
             StepValues = new List<double>();
         }
 
-        public CalcProfile([NotNull] string name, [NotNull] string guid, [NotNull] List<double> newValues,
+        public CalcProfile([NotNull] string name, [NotNull] StrGuid guid, [NotNull] List<double> newValues,
             ProfileType profileType, [NotNull] string dataSource, double timeFactor = 1):base(name)
         {
             _guid = guid;
@@ -119,7 +120,7 @@ namespace CalculationEngine.HouseholdElements {
                 {
                     stepvaluesCompressed[newlength - 1] = StepValues[StepValues.Count - 1];
                 }
-                CalcProfile newcp = new CalcProfile(Name, Guid.NewGuid().ToString(), stepvaluesCompressed.ToList(), ProfileType, DataSource);
+                CalcProfile newcp = new CalcProfile(Name, System.Guid.NewGuid().ToStrGuid(), stepvaluesCompressed.ToList(), ProfileType, DataSource);
                 ChangedProfiles.Add(timeFactor,newcp);
                 return newcp;
             }
@@ -133,7 +134,7 @@ namespace CalculationEngine.HouseholdElements {
                 }
                 lastidx = nextidx;
             }
-            CalcProfile cp = new CalcProfile(Name, Guid.NewGuid().ToString(), stepvaluesCompressed.ToList(), ProfileType, DataSource);
+            CalcProfile cp = new CalcProfile(Name, System.Guid.NewGuid().ToStrGuid(), stepvaluesCompressed.ToList(), ProfileType, DataSource);
             ChangedProfiles.Add(timeFactor, cp);
             return cp;
         }
@@ -328,6 +329,9 @@ namespace CalculationEngine.HouseholdElements {
 
         [NotNull]
         public string DataSource { get; }
+
+        // ReSharper disable once UnassignedGetOnlyAutoProperty
+        public StrGuid Guid { get; }
 
         #endregion
 

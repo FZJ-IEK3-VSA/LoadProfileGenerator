@@ -28,6 +28,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using CalculationEngine.HouseholdElements;
 using Common;
@@ -73,7 +74,7 @@ namespace CalculationController.CalcFactories {
         public Dictionary<CalcLocationDto, CalcLocation> LocationDtoDict { get; } = new Dictionary<CalcLocationDto, CalcLocation>();
 
         [NotNull]
-        public CalcLocation GetCalcLocationByGuid([NotNull] string calcLocationGuid)
+        public CalcLocation GetCalcLocationByGuid([NotNull] StrGuid calcLocationGuid)
         {
             return LocationDtoDict.Values.First(x => x.Guid == calcLocationGuid);
         }
@@ -123,7 +124,7 @@ namespace CalculationController.CalcFactories {
         public CalcHousehold MakeCalcModularHousehold([NotNull] CalcHouseholdDto householdDto,
                                                       [NotNull] out DtoCalcLocationDict dtoCalcLocationDict,
                                                       [CanBeNull] string houseName,
-                                                      [CanBeNull] string houseDescription, CalcRepo calcRepo)
+                                                      [CanBeNull] string houseDescription, [NotNull] CalcRepo calcRepo)
         {
             CalcHousehold chh = null;
             _calcRepo.FileFactoryAndTracker.RegisterHousehold(householdDto.HouseholdKey,
@@ -154,7 +155,8 @@ namespace CalculationController.CalcFactories {
                 }*/
 
                 //_cdf.MakeCalcDevices(calcLocations, householdDto.DeviceDtos, calcDevices,householdDto.HouseholdKey, _ltDict);
-                var calcpersons = _cpf.MakeCalcPersons(householdDto.Persons, calcLocations[0], householdDto.Name);
+                var calcpersons = _cpf.MakeCalcPersons(householdDto.Persons, calcLocations[0], householdDto.Name,
+                    dtoCalcLocationDict,calcRepo.HumanHeatGainSpecification);
                 chh = new CalcHousehold(name,
                     householdDto.GeographicLocationName,
                     householdDto.TemperatureprofileName,
@@ -165,7 +167,7 @@ namespace CalculationController.CalcFactories {
                     calcpersons,
                     householdDto.Description,
                     _calcRepo);
-                HashSet<string> deviceGuids = new HashSet<string>();
+                HashSet<StrGuid> deviceGuids = new HashSet<StrGuid>();
                 foreach (CalcDevice device in calcDevices) {
                     if (!deviceGuids.Add(device.Guid)) {
                         throw new LPGException("Tried to add the same device guid twice");

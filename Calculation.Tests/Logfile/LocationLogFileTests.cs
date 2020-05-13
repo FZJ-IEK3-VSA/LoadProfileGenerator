@@ -54,18 +54,20 @@ namespace Calculation.Tests.Logfile
                 DateTime enddate = startdate.AddMinutes(1000);
                 CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(startdate).SetEndDate(enddate).SetSettlingDays(0).EnableShowSettlingPeriod();
                 //FileFactoryAndTracker fft = new FileFactoryAndTracker(wd.WorkingDirectory,"blub",wd.InputDataLogger);
-                //CalcLocation cl = new CalcLocation("blub", 1, Guid.NewGuid().ToString());
+                //CalcLocation cl = new CalcLocation("blub", 1, Guid.NewGuid().ToStrGuid());
                 //Mock<ILogFile> lf = new Mock<ILogFile>();
                 //CalcPerson cp = MakeCalcPerson(cl,calcParameters,lf.Object);
                 HouseholdKey key = new HouseholdKey("hh1");
                 TimeStep ts = new TimeStep(1, 0, false);
-                LocationEntry le = new LocationEntry(key, "personName", "personGuid", ts, "locname",
-                    "locguid");
+                LocationEntry le = new LocationEntry(key, "personName", "personGuid".ToStrGuid(), ts, "locname",
+                    "locguid".ToStrGuid());
                 DateStampCreator dsc = new DateStampCreator(calcParameters);
-                OnlineLoggingData old = new OnlineLoggingData(dsc, wd.InputDataLogger, calcParameters);
-                wd.InputDataLogger.AddSaver(new LocationEntryLogger(wd.SqlResultLoggingService));
-                old.AddLocationEntry(le);
-                old.FinalSaveToDatabase();
+                using (OnlineLoggingData old = new OnlineLoggingData(dsc, wd.InputDataLogger, calcParameters))
+                {
+                    wd.InputDataLogger.AddSaver(new LocationEntryLogger(wd.SqlResultLoggingService));
+                    old.AddLocationEntry(le);
+                    old.FinalSaveToDatabase();
+                }
                 var lel = new LocationEntryLogger(wd.SqlResultLoggingService);
                 var e = lel.Load(key);
                 Assert.That(e.Count, Is.EqualTo(1));
@@ -87,7 +89,7 @@ namespace Calculation.Tests.Logfile
 
                 //FileFactoryAndTracker fft = new FileFactoryAndTracker(wd.WorkingDirectory, "hhname", wd.InputDataLogger);
                 //LocationsLogFile llf = new LocationsLogFile(true, fft, calcParameters);
-                //CalcLocation cl = new CalcLocation("blub", 1, Guid.NewGuid().ToString());
+                //CalcLocation cl = new CalcLocation("blub", 1, Guid.NewGuid().ToStrGuid());
                 //Mock<ILogFile> lf = new Mock<ILogFile>();
                 //CalcPerson cp = MakeCalcPerson(cl,calcParameters,lf.Object);
                 //LocationEntry le = new LocationEntry(cp, 1, cl,calcParameters);
@@ -98,20 +100,22 @@ namespace Calculation.Tests.Logfile
                 Assert.AreEqual(true, true);
                 HouseholdKey key1 = new HouseholdKey("hh1");
                 TimeStep ts = new TimeStep(1, 0, false);
-                LocationEntry le1 = new LocationEntry(key1, "personName", "personGuid", ts, "locname",
-                    "locguid");
+                LocationEntry le1 = new LocationEntry(key1, "personName", "personGuid".ToStrGuid(), ts, "locname",
+                    "locguid".ToStrGuid());
                 HouseholdKey key2 = new HouseholdKey("hh2");
-                LocationEntry le2 = new LocationEntry(key2, "personName", "personGuid", ts, "locname",
-                    "locguid");
+                LocationEntry le2 = new LocationEntry(key2, "personName", "personGuid".ToStrGuid(), ts, "locname",
+                    "locguid".ToStrGuid());
                 HouseholdKey key3 = new HouseholdKey("hh3");
-                LocationEntry le3 = new LocationEntry(key3, "personName", "personGuid", ts, "locname",
-                    "locguid");
+                LocationEntry le3 = new LocationEntry(key3, "personName", "personGuid".ToStrGuid(), ts, "locname",
+                    "locguid".ToStrGuid());
                 DateStampCreator dsc = new DateStampCreator(calcParameters);
-                OnlineLoggingData old = new OnlineLoggingData(dsc, wd.InputDataLogger, calcParameters);
-                old.AddLocationEntry(le1);
-                old.AddLocationEntry(le2);
-                old.AddLocationEntry(le3);
-                old.FinalSaveToDatabase();
+                using (OnlineLoggingData old = new OnlineLoggingData(dsc, wd.InputDataLogger, calcParameters))
+                {
+                    old.AddLocationEntry(le1);
+                    old.AddLocationEntry(le2);
+                    old.AddLocationEntry(le3);
+                    old.FinalSaveToDatabase();
+                }
                 LocationEntryLogger lel = new LocationEntryLogger(wd.SqlResultLoggingService);
                 var le = lel.Load(key1);
                 Logger.Info("count: " + le.Count);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Automation;
 using Database.Database;
 using JetBrains.Annotations;
 
@@ -13,7 +14,7 @@ namespace Database.Tables.ModularHouseholds {
         [CanBeNull] private readonly HouseholdTag _householdTag;
 
         public ModularHouseholdTag([CanBeNull]int? pID, [CanBeNull] HouseholdTag householdTag, int chhID, [NotNull] string name,
-            [NotNull] string connectionString, [NotNull] string guid)
+            [NotNull] string connectionString, [NotNull] StrGuid guid)
             : base(name, TableName, connectionString, guid) {
             ID = pID;
             _householdTag = householdTag;
@@ -71,6 +72,6 @@ namespace Database.Tables.ModularHouseholds {
             return _householdTag.Name;
         }
 
-        public string RelevantGuid => Tag.Guid;
+        public StrGuid RelevantGuid => Tag.Guid;
     }
 }

@@ -4,7 +4,6 @@ using System.Globalization;
 using System.IO;
 using Automation.ResultFiles;
 using Common;
-using JetBrains.Annotations;
 using OxyPlot;
 using OxyPlot.Annotations;
 using OxyPlot.Axes;
@@ -71,10 +70,13 @@ namespace ChartCreator2.OxyCharts {
         }
 
         public void MakePlotMonthly([JetBrains.Annotations.NotNull] ResultFileEntry rfe, [JetBrains.Annotations.NotNull] string plotName, [JetBrains.Annotations.NotNull] DirectoryInfo basisPath) {
-            _CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
+            Profiler.StartPart(Utili.GetCurrentMethodAndClass());
             var consumption = new List<Tuple<string, List<double>>>();
             var months = 0;
             double totalSum = 0;
+            if (rfe.FullFileName == null) {
+                throw new LPGException("filename was null");
+            }
             using (var sr = new StreamReader(rfe.FullFileName)) {
                 sr.ReadLine(); // header
                 while (!sr.EndOfStream) {
@@ -83,7 +85,7 @@ namespace ChartCreator2.OxyCharts {
                         throw new LPGException("Readline failed.");
                     }
                     if (!s.StartsWith("Sums;", StringComparison.Ordinal)) {
-                        var cols = s.Split(_Parameters.CSVCharacterArr, StringSplitOptions.None);
+                        var cols = s.Split(Parameters.CSVCharacterArr, StringSplitOptions.None);
                         var l = new List<double>();
                         for (var i = 1; i < cols.Length; i++) {
                             if (cols[i].Length > 0) {
@@ -171,7 +173,7 @@ namespace ChartCreator2.OxyCharts {
                 plotModel1.Series.Add(columnSeries2);
             }
             Save(plotModel1, plotName, rfe.FullFileName, basisPath);
-            _CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
+            Profiler.StopPart(Utili.GetCurrentMethodAndClass());
         }
     }
 }

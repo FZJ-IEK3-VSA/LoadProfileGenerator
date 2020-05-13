@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using Automation;
+using JetBrains.Annotations;
 
 namespace Common.CalcDto {
     public class CalcTravelRouteStepDto  {
@@ -10,12 +11,12 @@ namespace Common.CalcDto {
         public int StepNumber { get; }
         public double DistanceInM { get; }
         [NotNull]
-        public string Guid { get; }
+        public StrGuid Guid { get; }
 
         public CalcTravelRouteStepDto([NotNull]string name, int id,
                                       [NotNull] CalcTransportationDeviceCategoryDto transportationDeviceCategory, int stepNumber,
                                       double distanceInM,
-                                      [NotNull]string guid)
+                                      [NotNull]StrGuid guid)
         {
             Name = name;
             ID = id;

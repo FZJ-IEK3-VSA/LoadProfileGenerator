@@ -50,7 +50,7 @@ namespace CalculationEngine.HouseholdElements {
             bool isInterruptable, bool isInterrupting,[NotNull] CalcAffordance parentAffordance,
             [NotNull][ItemNotNull] List<CalcAffordanceVariableOp> variableOps, int weight,
                                  [NotNull] string sourceTrait,
-                                 [NotNull] string guid, [ItemNotNull] [NotNull] BitArray isBusy,
+                                 [NotNull] StrGuid guid, [ItemNotNull] [NotNull] BitArray isBusy,
             [NotNull] CalcVariableRepository repository, BodilyActivityLevel bodilyActivityLevel, [NotNull] CalcRepo calcRepo)
             : base(
                 pName, loc, satisfactionvalues, miniumAge, maximumAge, permittedGender, false, false, pAffCategory,

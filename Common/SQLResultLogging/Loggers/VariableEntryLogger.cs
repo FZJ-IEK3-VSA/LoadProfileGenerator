@@ -1,4 +1,5 @@
-﻿using Automation.ResultFiles;
+﻿using Automation;
+using Automation.ResultFiles;
 
 namespace Common.SQLResultLogging.Loggers {
     using System.Collections.Generic;
@@ -9,8 +10,8 @@ namespace Common.SQLResultLogging.Loggers {
     using SQLResultLogging;
 
     public class CalcVariableEntry :IHouseholdKey{
-        public CalcVariableEntry([NotNull] string name, [NotNull] string guid, double value,
-                                 [NotNull] string locationName, [NotNull] string locationGuid,
+        public CalcVariableEntry([NotNull] string name, [NotNull] StrGuid guid, double value,
+                                 [NotNull] string locationName, [NotNull] StrGuid locationGuid,
                                  [NotNull] HouseholdKey householdKey, [NotNull] TimeStep timeStep)
         {
             Name = name;
@@ -26,12 +27,12 @@ namespace Common.SQLResultLogging.Loggers {
         [NotNull]
         public string Name { get; set; }
         [NotNull]
-        public string Guid { get; set; }
+        public StrGuid Guid { get; set; }
         public double Value { get; set; }
         [NotNull]
         public string LocationName { get; set; }
         [NotNull]
-        public string LocationGuid { get; set; }
+        public StrGuid LocationGuid { get; set; }
         [NotNull]
         public HouseholdKey HouseholdKey { get; set; }
 

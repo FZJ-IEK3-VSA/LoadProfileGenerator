@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
+using Automation;
 using Common.Enums;
 using Database.Database;
 using Database.Tables.BasicElements;
@@ -27,7 +28,7 @@ namespace Database.Tables.BasicHouseholds {
         public AffVariableRequirement(double value, [CanBeNull]int? id, [CanBeNull]int? affordanceID, [NotNull] string connectionString,
             VariableLocationMode variableLocationMode, [CanBeNull] Location location, VariableCondition condition,
             [CanBeNull] Variable variable,
-            [NotNull] string description, [NotNull] string name, [NotNull] string guid) : base(name, TableName, connectionString, guid) {
+            [NotNull] string description, [NotNull] string name, [NotNull] StrGuid guid) : base(name, TableName, connectionString, guid) {
             _value = value;
             ID = id;
             _affordanceID = affordanceID;

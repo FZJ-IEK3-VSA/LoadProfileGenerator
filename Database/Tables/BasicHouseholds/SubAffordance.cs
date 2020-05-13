@@ -33,6 +33,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Common.Enums;
@@ -54,7 +55,7 @@ namespace Database.Tables.BasicHouseholds {
         private PermittedGender _permittedGender;
 
         public SubAffordance([NotNull] string pName, [CanBeNull] int? id, PermittedGender permittedGender, [NotNull] string connectionString,
-            bool isInterruptable, bool isInterrupting, int maximumAge, int minimumAge, [NotNull] string guid) : base(pName, TableName,
+            bool isInterruptable, bool isInterrupting, int maximumAge, int minimumAge, [NotNull] StrGuid guid) : base(pName, TableName,
             connectionString, guid)
         {
             ID = id;
@@ -137,7 +138,7 @@ namespace Database.Tables.BasicHouseholds {
                 throw new LPGException("Desire added to sub affordance that wasn't saved!");
             }
             var affd = new SubAffordanceDesire(null, desire, ID, satisfactionvalue, simdesires,
-                DeleteAffordanceDesireFromDB, ConnectionString, desire.Name, System.Guid.NewGuid().ToString());
+                DeleteAffordanceDesireFromDB, ConnectionString, desire.Name, System.Guid.NewGuid().ToStrGuid());
             _subAffordanceDesires.Add(affd);
             affd.SaveToDB();
         }
@@ -153,7 +154,7 @@ namespace Database.Tables.BasicHouseholds {
                 _subAffordanceVariableOps.Remove(variableOp);
             }
             var at = new SubAffordanceVariableOp(value, null, IntID, ConnectionString, clm, loc,
-                action, variable, variableExecutionTime, variable.Name, System.Guid.NewGuid().ToString());
+                action, variable, variableExecutionTime, variable.Name, System.Guid.NewGuid().ToStrGuid());
 
             _subAffordanceVariableOps.Add(at);
             at.SaveToDB();
@@ -187,7 +188,7 @@ namespace Database.Tables.BasicHouseholds {
         {
             var subAffordance = new SubAffordance(FindNewName(isNameTaken, "New Sub-Affordance "), null,
                 PermittedGender.All, connectionString, false, false, 0, 99,
-                System.Guid.NewGuid().ToString());
+                System.Guid.NewGuid().ToStrGuid());
             return subAffordance;
         }
 

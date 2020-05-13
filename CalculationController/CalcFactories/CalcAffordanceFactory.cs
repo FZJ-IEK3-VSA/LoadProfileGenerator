@@ -160,7 +160,7 @@ namespace CalculationController.CalcFactories {
             List<CalcAffordance.DeviceEnergyProfileTuple> deviceEnergyProfiles =
                 new List<CalcAffordance.DeviceEnergyProfileTuple>();
             foreach (DeviceEnergyProfileTupleDto dto in affordancedto.Energyprofiles) {
-                string devguid = dto.CalcDeviceGuid;
+                StrGuid devguid = dto.CalcDeviceGuid;
                 CalcDevice device = devices.Single(x => x.Guid == devguid);
                 CalcProfile cp = CalcDeviceFactory.MakeCalcProfile(dto.TimeProfile, _calcRepo.CalcParameters);
                 CalcLoadType clt = _loadTypeDictionary.GetLoadtypeByGuid(dto.CalcLoadTypeGuid);

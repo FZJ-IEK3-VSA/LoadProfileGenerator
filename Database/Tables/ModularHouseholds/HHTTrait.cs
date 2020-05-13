@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Automation;
 using Database.Database;
 using JetBrains.Annotations;
 
@@ -12,7 +13,7 @@ namespace Database.Tables.ModularHouseholds {
         [CanBeNull] private readonly HouseholdTrait _thisTrait;
 
         public HHTTrait([CanBeNull]int? pID, [CanBeNull] int? parentTraitID, [CanBeNull] HouseholdTrait thisTrait, [NotNull] string connectionString,
-            [NotNull] string name, [NotNull] string guid)
+            [NotNull] string name, [NotNull] StrGuid guid)
             : base(name, TableName, connectionString, guid)
         {
             ID = pID;

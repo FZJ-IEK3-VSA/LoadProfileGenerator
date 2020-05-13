@@ -29,6 +29,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Automation;
 using Database.Database;
 using Database.Tables.BasicHouseholds;
 using JetBrains.Annotations;
@@ -44,7 +45,7 @@ namespace Database.Tables.BasicElements {
 
         public DeviceTaggingEntry([NotNull] string name, int taggingSetID, [CanBeNull] DeviceTag tag,
             [CanBeNull] RealDevice device,
-            [NotNull] string connectionString, [CanBeNull]int? pID, [NotNull] string guid) : base(name, pID, TableName, connectionString, guid)
+            [NotNull] string connectionString, [CanBeNull]int? pID, [NotNull] StrGuid guid) : base(name, pID, TableName, connectionString, guid)
         {
             _taggingSetID = taggingSetID;
             _tag = tag;

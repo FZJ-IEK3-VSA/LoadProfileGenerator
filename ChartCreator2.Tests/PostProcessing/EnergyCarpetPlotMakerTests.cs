@@ -19,7 +19,7 @@ namespace ChartCreator2.Tests.PostProcessing {
 #pragma warning disable 162
             CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();
             calcParameters.SetTransportMode(false);
-            var clt = new CalcLoadType("Electricity", 1, "kW", "kWh", 1, true, Guid.NewGuid().ToString());
+            var clt = new CalcLoadType("Electricity", 1, "kW", "kWh", 1, true, Guid.NewGuid().ToStrGuid());
             List<double> values;
             int count;
             using (

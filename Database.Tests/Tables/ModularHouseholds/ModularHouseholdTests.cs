@@ -47,60 +47,64 @@ namespace Database.Tests.Tables.ModularHouseholds {
         [Category(UnitTestCategories.BasicTest)]
         public void ModularHouseholdJsonTest()
         {
-            WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var sim = new Simulator(db.ConnectionString);
-            //make the first
-            var tt = sim.ModularHouseholds[0];
-            var jsonHH1 = tt.GetJson();
-            var jsonHH1String = JsonConvert.SerializeObject(jsonHH1, Formatting.Indented);
-            //make a new one, import the first one and compare
-            sim.ModularHouseholds.DeleteItem(tt);
-            var newhh = sim.ModularHouseholds.CreateNewItem(sim.ConnectionString);
-            newhh.ImportFromJsonTemplate(jsonHH1, sim);
-            var newJson = newhh.GetJson();
-            var s2 = JsonConvert.SerializeObject(newJson, Formatting.Indented);
-            Assert.AreEqual(jsonHH1String, s2);
-
-            //
-            //modify the trait entry and make sure it is different
-            int prevcount = tt.Traits.Count;
-            int idx = 0;
-            while (jsonHH1.Traits.Count == prevcount)
+            using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
             {
-                //count up idx because the trait might already exist
-                newhh.AddTrait(sim.HouseholdTraits[idx++],ModularHouseholdTrait.ModularHouseholdTraitAssignType.Age,null);
-                prevcount++;
+                using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+                {
+                    var sim = new Simulator(db.ConnectionString);
+                    //make the first
+                    var tt = sim.ModularHouseholds[0];
+                    var jsonHH1 = tt.GetJson();
+                    var jsonHH1String = JsonConvert.SerializeObject(jsonHH1, Formatting.Indented);
+                    //make a new one, import the first one and compare
+                    sim.ModularHouseholds.DeleteItem(tt);
+                    var newhh = sim.ModularHouseholds.CreateNewItem(sim.ConnectionString);
+                    newhh.ImportFromJsonTemplate(jsonHH1, sim);
+                    var newJson = newhh.GetJson();
+                    var s2 = JsonConvert.SerializeObject(newJson, Formatting.Indented);
+                    Assert.AreEqual(jsonHH1String, s2);
+
+                    //
+                    //modify the trait entry and make sure it is different
+                    int prevcount = tt.Traits.Count;
+                    int idx = 0;
+                    while (jsonHH1.Traits.Count == prevcount)
+                    {
+                        //count up idx because the trait might already exist
+                        newhh.AddTrait(sim.HouseholdTraits[idx++], ModularHouseholdTrait.ModularHouseholdTraitAssignType.Age, null);
+                        prevcount++;
+                    }
+
+                    Assert.AreEqual(jsonHH1.Traits.Count + 1, newhh.Traits.Count);
+                    var newJson2 = newhh.GetJson();
+                    var newJson2String = JsonConvert.SerializeObject(newJson2, Formatting.Indented);
+                    Assert.AreNotEqual(jsonHH1String, newJson2String);
+
+                    //import again
+                    newhh.ImportFromJsonTemplate(jsonHH1, sim);
+                    var newJson3 = newhh.GetJson();
+                    var newJson3String = JsonConvert.SerializeObject(newJson3, Formatting.Indented);
+                    Assert.AreEqual(jsonHH1String, newJson3String);
+
+
+                    //modify the persons and make sure it is different
+                    newhh.AddPerson(sim.Persons[5], sim.TraitTags[0]);
+                    Assert.AreEqual(jsonHH1.Persons.Count + 1, newhh.Persons.Count);
+                    var newJson5 = newhh.GetJson();
+                    var newJson5String = JsonConvert.SerializeObject(newJson5, Formatting.Indented);
+                    Assert.AreNotEqual(jsonHH1String, newJson5String);
+
+                    //import again
+                    newhh.ImportFromJsonTemplate(jsonHH1, sim);
+                    var newJson6 = newhh.GetJson();
+                    var s6 = JsonConvert.SerializeObject(newJson6, Formatting.Indented);
+                    Assert.AreEqual(jsonHH1String, s6);
+
+
+                    db.Cleanup();
+                }
+                wd.CleanUp();
             }
-
-            Assert.AreEqual(jsonHH1.Traits.Count + 1, newhh.Traits.Count);
-            var newJson2 = newhh.GetJson();
-            var newJson2String = JsonConvert.SerializeObject(newJson2, Formatting.Indented);
-            Assert.AreNotEqual(jsonHH1String, newJson2String);
-
-            //import again
-            newhh.ImportFromJsonTemplate(jsonHH1, sim);
-            var newJson3 = newhh.GetJson();
-            var newJson3String = JsonConvert.SerializeObject(newJson3, Formatting.Indented);
-            Assert.AreEqual(jsonHH1String, newJson3String);
-
-
-            //modify the persons and make sure it is different
-            newhh.AddPerson(sim.Persons[5], sim.TraitTags[0]);
-            Assert.AreEqual(jsonHH1.Persons.Count + 1, newhh.Persons.Count);
-            var newJson5 = newhh.GetJson();
-            var newJson5String = JsonConvert.SerializeObject(newJson5, Formatting.Indented);
-            Assert.AreNotEqual(jsonHH1String, newJson5String);
-
-            //import again
-            newhh.ImportFromJsonTemplate(jsonHH1, sim);
-            var newJson6 = newhh.GetJson();
-            var s6 = JsonConvert.SerializeObject(newJson6, Formatting.Indented);
-            Assert.AreEqual(jsonHH1String, s6);
-
-
-            db.Cleanup();
-            wd.CleanUp();
         }
 
 
@@ -110,32 +114,36 @@ namespace Database.Tests.Tables.ModularHouseholds {
         {
             using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
             {
-                var db1 = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-                var sim1A = new Simulator(db1.ConnectionString);
-                //make the first
-                var tt = sim1A.ModularHouseholds[0];
-                var jsonHH1 = tt.GetJson();
-                //make a new one, import the first one and compare
-                sim1A.ModularHouseholds.DeleteItem(tt);
-                // ReSharper disable once RedundantAssignment
-                sim1A = null;
+                using (var db1 = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+                {
+                    var sim1A = new Simulator(db1.ConnectionString);
+                    //make the first
+                    var tt = sim1A.ModularHouseholds[0];
+                    var jsonHH1 = tt.GetJson();
+                    //make a new one, import the first one and compare
+                    sim1A.ModularHouseholds.DeleteItem(tt);
+                    // ReSharper disable once RedundantAssignment
+                    sim1A = null;
 
-                var sim1B = new Simulator(db1.ConnectionString);
-                var db2 = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-                //var sim2 = new Simulator(db1.ConnectionString);
-                DatabaseMerger.DatabaseMerger dbm = new DatabaseMerger.DatabaseMerger(sim1B);
-                dbm.RunFindItems(db2.FileName, null);
-                dbm.RunImport(null);
-                // ReSharper disable once RedundantAssignment
-                sim1B = null;
+                    var sim1B = new Simulator(db1.ConnectionString);
+                    using (var db2 = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+                    {
+                        //var sim2 = new Simulator(db1.ConnectionString);
+                        DatabaseMerger.DatabaseMerger dbm = new DatabaseMerger.DatabaseMerger(sim1B);
+                        dbm.RunFindItems(db2.FileName, null);
+                        dbm.RunImport(null);
+                    }
+                    // ReSharper disable once RedundantAssignment
+                    sim1B = null;
 
-                var sim1C = new Simulator(db1.ConnectionString);
-                var tt2 = sim1C.ModularHouseholds[0];
-                var jsonHH2 = tt2.GetJson();
-                jsonHH2.Should().BeEquivalentTo(jsonHH1, o => o
-                    .Excluding(x => x.SelectedMemberPath.EndsWith("Guid")
-                                    || x.SelectedMemberPath.EndsWith("ID")));
-                db1.Cleanup();
+                    var sim1C = new Simulator(db1.ConnectionString);
+                    var tt2 = sim1C.ModularHouseholds[0];
+                    var jsonHH2 = tt2.GetJson();
+                    jsonHH2.Should().BeEquivalentTo(jsonHH1, o => o
+                        .Excluding(x => x.SelectedMemberPath.EndsWith("Guid")
+                                        || x.SelectedMemberPath.EndsWith("ID")));
+                    db1.Cleanup();
+                }
                 wd.CleanUp(0, false);
             }
         }
@@ -144,36 +152,40 @@ namespace Database.Tests.Tables.ModularHouseholds {
         [Category(UnitTestCategories.BasicTest)]
         public void SwapPersonsTestWithOther()
         {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            Simulator sim = new Simulator(db.ConnectionString);
-            ModularHousehold mhh = sim.ModularHouseholds.It[0];
-            ModularHouseholdPerson mhhPerson = mhh.Persons[0];
-            Person dstPerson = sim.Persons.It[10];
-            TraitTag dstTag = sim.TraitTags.It[10];
-            int traitsBefore = mhh.Traits.Count;
-            mhh.SwapPersons(mhhPerson, dstPerson, dstTag);
-            int traitsAfter = mhh.Traits.Count;
-            Assert.AreEqual(traitsBefore, traitsAfter);
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                Simulator sim = new Simulator(db.ConnectionString);
+                ModularHousehold mhh = sim.ModularHouseholds.It[0];
+                ModularHouseholdPerson mhhPerson = mhh.Persons[0];
+                Person dstPerson = sim.Persons.It[10];
+                TraitTag dstTag = sim.TraitTags.It[10];
+                int traitsBefore = mhh.Traits.Count;
+                mhh.SwapPersons(mhhPerson, dstPerson, dstTag);
+                int traitsAfter = mhh.Traits.Count;
+                Assert.AreEqual(traitsBefore, traitsAfter);
 
-            db.Cleanup();
+                db.Cleanup();
+            }
         }
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void SwapTagTest()
         {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            Simulator sim = new Simulator(db.ConnectionString);
-            ModularHousehold mhh = sim.ModularHouseholds.It[0];
-            ModularHouseholdPerson mhhPerson = mhh.Persons[0];
-            Person dstPerson = mhhPerson.Person;
-            TraitTag dstTag = sim.TraitTags.It[10];
-            int traitsBefore = mhh.Traits.Count;
-            mhh.SwapPersons(mhhPerson, dstPerson, dstTag);
-            int traitsAfter = mhh.Traits.Count;
-            Assert.AreEqual(traitsBefore, traitsAfter);
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                Simulator sim = new Simulator(db.ConnectionString);
+                ModularHousehold mhh = sim.ModularHouseholds.It[0];
+                ModularHouseholdPerson mhhPerson = mhh.Persons[0];
+                Person dstPerson = mhhPerson.Person;
+                TraitTag dstTag = sim.TraitTags.It[10];
+                int traitsBefore = mhh.Traits.Count;
+                mhh.SwapPersons(mhhPerson, dstPerson, dstTag);
+                int traitsAfter = mhh.Traits.Count;
+                Assert.AreEqual(traitsBefore, traitsAfter);
 
-            db.Cleanup();
+                db.Cleanup();
+            }
         }
 
 
@@ -181,61 +193,64 @@ namespace Database.Tests.Tables.ModularHouseholds {
         [Category(UnitTestCategories.BasicTest)]
         public void ModularHouseholdJsonImportExporTest()
         {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            Simulator sim = new Simulator(db.ConnectionString);
-            ModularHousehold mhh = sim.ModularHouseholds.It[0];
-            var modjson = mhh.GetJson();
-            var newhh = sim.ModularHouseholds.CreateNewItem(sim.ConnectionString);
-            newhh.ImportFromJsonTemplate(modjson,sim);
-            newhh.Should().BeEquivalentTo(mhh, options => options
-                .Excluding(x => x.SelectedMemberPath.EndsWith(".Guid") ||
-                                x.SelectedMemberPath.EndsWith(".ID") ||
-                                x.SelectedMemberPath.EndsWith(".IntID") ||
-                                x.SelectedMemberPath.EndsWith(".ModularHouseholdID")
-                                ||x.SelectedMemberPath.EndsWith(".PrettyName")
-                                || x.SelectedMemberPath.EndsWith(".HeaderString")).Excluding(x=> x.ID).Excluding(x=> x.IntID));
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                Simulator sim = new Simulator(db.ConnectionString);
+                ModularHousehold mhh = sim.ModularHouseholds.It[0];
+                var modjson = mhh.GetJson();
+                var newhh = sim.ModularHouseholds.CreateNewItem(sim.ConnectionString);
+                newhh.ImportFromJsonTemplate(modjson, sim);
+                newhh.Should().BeEquivalentTo(mhh, options => options
+                    .Excluding(x => x.SelectedMemberPath.EndsWith(".Guid",StringComparison.OrdinalIgnoreCase) ||
+                                    x.SelectedMemberPath.EndsWith(".ID", StringComparison.OrdinalIgnoreCase) ||
+                                    x.SelectedMemberPath.EndsWith(".IntID", StringComparison.OrdinalIgnoreCase) ||
+                                    x.SelectedMemberPath.EndsWith(".ModularHouseholdID", StringComparison.OrdinalIgnoreCase)
+                                    || x.SelectedMemberPath.EndsWith(".PrettyName", StringComparison.OrdinalIgnoreCase)
+                                    || x.SelectedMemberPath.EndsWith(".HeaderString", StringComparison.OrdinalIgnoreCase)).Excluding(x => x.ID).Excluding(x => x.IntID));
 
-            db.Cleanup();
+                db.Cleanup();
+            }
         }
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void ModularHouseholdTest()
         {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                db.ClearTable(ModularHousehold.TableName);
+                db.ClearTable(ModularHouseholdTrait.TableName);
+                db.ClearTable(ModularHouseholdPerson.TableName);
+                var persons = new ObservableCollection<Person>();
+                var result = new ObservableCollection<ModularHousehold>();
+                var householdTraits = new ObservableCollection<HouseholdTrait>();
+                var hht = new HouseholdTrait("blub", null, "blub", db.ConnectionString, "none", 1, 100, 10, 1, 1,
+                    TimeType.Day, 1, 1, TimeType.Day, 1, 0, EstimateType.Theoretical, "", Guid.NewGuid().ToStrGuid());
+                hht.SaveToDB();
+                householdTraits.Add(hht);
+                var deviceSelections = new ObservableCollection<DeviceSelection>();
+                var ds = new DeviceSelection("ds", null, "bla", db.ConnectionString, Guid.NewGuid().ToStrGuid());
+                ds.SaveToDB();
+                deviceSelections.Add(ds);
+                var vacations = db.LoadVacations();
+                var hhTags = db.LoadHouseholdTags();
+                var traitTags = db.LoadTraitTags();
 
-            db.ClearTable(ModularHousehold.TableName);
-            db.ClearTable(ModularHouseholdTrait.TableName);
-            db.ClearTable(ModularHouseholdPerson.TableName);
-            var persons = new ObservableCollection<Person>();
-            var result = new ObservableCollection<ModularHousehold>();
-            var householdTraits = new ObservableCollection<HouseholdTrait>();
-            var hht = new HouseholdTrait("blub", null, "blub", db.ConnectionString, "none", 1, 100, 10, 1, 1,
-                TimeType.Day, 1, 1, TimeType.Day, 1, 0, EstimateType.Theoretical, "", Guid.NewGuid().ToString());
-            hht.SaveToDB();
-            householdTraits.Add(hht);
-            var deviceSelections = new ObservableCollection<DeviceSelection>();
-            var ds = new DeviceSelection("ds", null, "bla", db.ConnectionString, Guid.NewGuid().ToString());
-            ds.SaveToDB();
-            deviceSelections.Add(ds);
-            var vacations = db.LoadVacations();
-            var hhTags = db.LoadHouseholdTags();
-            var traitTags = db.LoadTraitTags();
-
-            ModularHousehold.LoadFromDatabase(result, db.ConnectionString, householdTraits, deviceSelections, false,
-                persons, vacations, hhTags, traitTags);
-            Assert.AreEqual(0, result.Count);
-            var chh = new ModularHousehold("blub", null, "blub", db.ConnectionString, ds, "src", null, null,
-                EnergyIntensityType.Random, CreationType.ManuallyCreated, Guid.NewGuid().ToString());
-            chh.SaveToDB();
-            chh.AddTrait(hht, ModularHouseholdTrait.ModularHouseholdTraitAssignType.Age, null);
-            chh.SaveToDB();
-            result.Clear();
-            ModularHousehold.LoadFromDatabase(result, db.ConnectionString, householdTraits, deviceSelections, false,
-                persons, vacations, hhTags, traitTags);
-            Assert.AreEqual(1, result.Count);
-            Assert.AreEqual(1, result[0].Traits.Count);
-            db.Cleanup();
+                ModularHousehold.LoadFromDatabase(result, db.ConnectionString, householdTraits, deviceSelections, false,
+                    persons, vacations, hhTags, traitTags);
+                Assert.AreEqual(0, result.Count);
+                var chh = new ModularHousehold("blub", null, "blub", db.ConnectionString, ds, "src", null, null,
+                    EnergyIntensityType.Random, CreationType.ManuallyCreated, Guid.NewGuid().ToStrGuid());
+                chh.SaveToDB();
+                chh.AddTrait(hht, ModularHouseholdTrait.ModularHouseholdTraitAssignType.Age, null);
+                chh.SaveToDB();
+                result.Clear();
+                ModularHousehold.LoadFromDatabase(result, db.ConnectionString, householdTraits, deviceSelections, false,
+                    persons, vacations, hhTags, traitTags);
+                Assert.AreEqual(1, result.Count);
+                Assert.AreEqual(1, result[0].Traits.Count);
+                db.Cleanup();
+            }
         }
     }
 }

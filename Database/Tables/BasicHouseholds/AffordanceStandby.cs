@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Database.Database;
@@ -18,7 +19,7 @@ namespace Database.Tables.BasicHouseholds {
 
         public AffordanceStandby([CanBeNull] IAssignableDevice assignableDevice, [CanBeNull]int? id, [CanBeNull]int? affordanceID,
             [NotNull] string connectionString,
-            [NotNull] string deviceName, [NotNull] string guid) : base(deviceName, TableName, connectionString, guid) {
+            [NotNull] string deviceName, [NotNull] StrGuid guid) : base(deviceName, TableName, connectionString, guid) {
             _assignableDevice = assignableDevice;
             ID = id;
             _affordanceID = affordanceID;

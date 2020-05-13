@@ -5,15 +5,15 @@ using System.Threading;
 using Automation;
 using Common;
 using Common.Tests;
-using JetBrains.Annotations;
 using NUnit.Framework;
+using SimulationEngineLib;
 
 namespace SimulationEngine.Tests {
     [TestFixture]
     [Apartment(ApartmentState.STA)]
     public class SettlementProcessorTests : UnitTestBaseClass
     {
-        private static void MakeOneCalculation([NotNull] string srcPath, int idx) {
+        private static void MakeOneCalculation([JetBrains.Annotations.NotNull] string srcPath, int idx) {
             using (var p = new Process()) {
                 p.StartInfo.WorkingDirectory = srcPath;
                 p.StartInfo.FileName = "SimulationEngine.exe";
@@ -27,7 +27,7 @@ namespace SimulationEngine.Tests {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
         public void RunTest() {
-            var se = new SimulationEngineTestPreparer(Utili.GetCurrentMethodAndClass());
+            using var se = new SimulationEngineTestPreparer(Utili.GetCurrentMethodAndClass());
             var srcPath = se.WorkingDirectory;
             Directory.SetCurrentDirectory(srcPath);
             for (var idx = 0; idx < 5; idx++) {
@@ -56,7 +56,7 @@ namespace SimulationEngine.Tests {
                 ".",
                 "-SettlementResultPDF"
             };
-            Program.Main(arguments.ToArray());
+            MainSimEngine.Run(arguments.ToArray(), "simulationengine.exe");
         }
     }
 }

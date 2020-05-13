@@ -56,7 +56,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
                                              [NotNull] IInputDataLogger logger) : base(repository,
             AutomationUtili.GetOptionList(CalcOption.ActivationFrequencies),
             profiler,
-            "Activation Frequency Analysis")
+            "Activation Frequency Analysis",0)
         {
             _dataLogger = logger;
             _calcParameters = Repository.CalcParameters;
@@ -254,34 +254,33 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
                                                  [NotNull] Dictionary<string, Dictionary<string, int[]>> frequencies)
         {
             if (_calcParameters.IsSet(CalcOption.ActivationFrequencies)) {
-                using (var sw = _fft.MakeFile<StreamWriter>("ActivityFrequenciesPerMinute." + householdKey + ".csv",
+                using var sw = _fft.MakeFile<StreamWriter>("ActivityFrequenciesPerMinute." + householdKey + ".csv",
                     "Activity frequencies ",
                     true,
                     ResultFileID.ActivationFrequencies,
                     householdKey,
                     TargetDirectory.Reports,
-                    _calcParameters.InternalStepsize)) {
-                    foreach (var person in frequencies) {
-                        sw.WriteLine(person.Key);
+                    _calcParameters.InternalStepsize);
+                foreach (var person in frequencies) {
+                    sw.WriteLine(person.Key);
 
-                        var s = new StringBuilder();
-                        s.Append("Minute").Append(_calcParameters.CSVCharacter);
-                        for (var i = 0; i < 1440; i++) {
-                            s.Append(i).Append(_calcParameters.CSVCharacter);
+                    var s = new StringBuilder();
+                    s.Append("Minute").Append(_calcParameters.CSVCharacter);
+                    for (var i = 0; i < 1440; i++) {
+                        s.Append(i).Append(_calcParameters.CSVCharacter);
+                    }
+
+                    sw.WriteLine(s);
+                    var sb = new StringBuilder();
+                    foreach (var device in person.Value) {
+                        sb.Clear();
+                        sb.Append(device.Key);
+                        for (var i = 0; i < device.Value.Length; i++) {
+                            sb.Append(_calcParameters.CSVCharacter);
+                            sb.Append(device.Value[i].ToString(CultureInfo.InvariantCulture));
                         }
 
-                        sw.WriteLine(s);
-                        var sb = new StringBuilder();
-                        foreach (var device in person.Value) {
-                            sb.Clear();
-                            sb.Append(device.Key);
-                            for (var i = 0; i < device.Value.Length; i++) {
-                                sb.Append(_calcParameters.CSVCharacter);
-                                sb.Append(device.Value[i].ToString(CultureInfo.InvariantCulture));
-                            }
-
-                            sw.WriteLine(sb);
-                        }
+                        sw.WriteLine(sb);
                     }
                 }
             }

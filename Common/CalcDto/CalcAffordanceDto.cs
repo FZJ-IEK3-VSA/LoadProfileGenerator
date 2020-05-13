@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Automation;
 using Automation.ResultFiles;
 using Common.Enums;
 using Common.SQLResultLogging.Loggers;
@@ -17,7 +18,7 @@ namespace Common.CalcDto {
         [NotNull]
         public string CalcLocationName { get; }
         [NotNull]
-        public string CalcLocationGuid { get; }
+        public StrGuid CalcLocationGuid { get; }
 
         public bool RandomEffect { get; }
         [NotNull]
@@ -50,12 +51,12 @@ namespace Common.CalcDto {
         [NotNull]
         public string SrcTrait { get; }
         [NotNull]
-        public string Guid { get; }
+        public StrGuid Guid { get; }
         [ItemNotNull][NotNull]
         public List<CalcSubAffordanceDto> SubAffordance { get; } = new List<CalcSubAffordanceDto>();
 
         public CalcAffordanceDto([NotNull]string name, int id, [NotNull]CalcProfileDto personProfile, [NotNull]string  calcLocationName,
-                                 [NotNull] string calcLocationGuid, bool randomEffect,
+                                 [NotNull] StrGuid calcLocationGuid, bool randomEffect,
                                  [ItemNotNull] [NotNull]List<CalcDesireDto> satisfactionvalues, int miniumAge, int maximumAge,
                                  PermittedGender permittedGender,
                                  bool needsLight, double timeStandardDeviation, byte colorR, byte colorG, byte colorB, [NotNull] string affCategory,
@@ -63,7 +64,7 @@ namespace Common.CalcDto {
                                  [ItemNotNull] [NotNull]List<VariableRequirementDto> variableRequirements,
                                  ActionAfterInterruption actionAfterInterruption, [NotNull] string timeLimitName, int weight,
                                  bool requireAllDesires, [NotNull] string srcTrait,
-                                 [NotNull] string guid, [NotNull] AvailabilityDataReferenceDto isBusyArray,
+                                 [NotNull] StrGuid guid, [NotNull] AvailabilityDataReferenceDto isBusyArray,
                                  [NotNull] HouseholdKey householdKey, BodilyActivityLevel bodilyActivityLevel)
         {
             Name = name;
@@ -99,8 +100,8 @@ namespace Common.CalcDto {
         [ItemNotNull]
         [NotNull]
         public List<DeviceEnergyProfileTupleDto> Energyprofiles { get; } = new List<DeviceEnergyProfileTupleDto>();
-        public void AddDeviceTuple([NotNull]string calcDeviceName, [NotNull] string calcDeviceGuid, [NotNull]
-                                   CalcProfileDto newprof, [NotNull]string calcLoadTypeName, [NotNull] string calcLoadtypeGuid, decimal timeoffset,
+        public void AddDeviceTuple([NotNull]string calcDeviceName, [NotNull] StrGuid calcDeviceGuid, [NotNull]
+                                   CalcProfileDto newprof, [NotNull]string calcLoadTypeName, [NotNull] StrGuid calcLoadtypeGuid, decimal timeoffset,
                                    TimeSpan internalstepsize, double multiplier, double probability)
         {
             var calctup = new DeviceEnergyProfileTupleDto(calcDeviceName, calcDeviceGuid, newprof, calcLoadTypeName, calcLoadtypeGuid, timeoffset,

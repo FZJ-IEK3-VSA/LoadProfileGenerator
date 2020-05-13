@@ -31,6 +31,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using Automation;
 using Common;
 using Database.Database;
 using JetBrains.Annotations;
@@ -43,7 +44,7 @@ namespace Database.Tables.BasicElements {
         private TimeSpan _time;
         private double _value;
 
-        public TimeDataPoint(TimeSpan ts, double pvalue, [CanBeNull]int? pID, int profileID, [NotNull] string connectionString, [NotNull] string guid)
+        public TimeDataPoint(TimeSpan ts, double pvalue, [CanBeNull]int? pID, int profileID, [NotNull] string connectionString, [NotNull] StrGuid guid)
             : base(ts.ToString(), pID, TableName, connectionString, guid) {
             TypeDescription = "Time Data Point";
             _time = ts;
@@ -51,7 +52,7 @@ namespace Database.Tables.BasicElements {
             ProfileID = profileID;
         }
 
-        public TimeDataPoint(DateTime dbtime, double pvalue, [CanBeNull]int? pID, int profileID, [NotNull] string connectionString, [NotNull] string guid)
+        public TimeDataPoint(DateTime dbtime, double pvalue, [CanBeNull]int? pID, int profileID, [NotNull] string connectionString, [NotNull] StrGuid guid)
             : base(dbtime.ToString(CultureInfo.InvariantCulture),
                 pID, TableName, connectionString, guid) {
             TypeDescription = "Time Data Point";

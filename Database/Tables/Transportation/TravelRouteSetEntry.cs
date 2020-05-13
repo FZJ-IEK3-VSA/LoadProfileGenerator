@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Automation;
 using Database.Database;
 using JetBrains.Annotations;
 
@@ -13,7 +14,7 @@ namespace Database.Tables.Transportation {
         private readonly int _travelRouteSetID;
 
         public TravelRouteSetEntry([CanBeNull]int? pID, int travelRouteSetID, [NotNull] string connectionString, [NotNull] string name,
-            [CanBeNull] TravelRoute travelRoute, [NotNull] string guid)
+            [CanBeNull] TravelRoute travelRoute, [NotNull] StrGuid guid)
             : base(name, TableName, connectionString, guid)
         {
             TypeDescription = "Travel Route Step";

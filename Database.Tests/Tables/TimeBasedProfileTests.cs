@@ -44,25 +44,27 @@ namespace Database.Tests.Tables {
     {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void LoadFromDatabaseTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
+        public void LoadFromDatabaseTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var tps = new ObservableCollection<TimeBasedProfile>();
+                TimeBasedProfile.LoadFromDatabase(tps, db.ConnectionString, false);
+                Assert.Greater(tps.Count, 1);
+                db.ClearTable(TimeBasedProfile.TableName);
+                db.ClearTable(TimeDataPoint.TableName);
+                tps.Clear();
+                var tp = new TimeBasedProfile("hey", null, db.ConnectionString, TimeProfileType.Absolute,
+                    "fake", Guid.NewGuid().ToStrGuid());
+                tp.SaveToDB();
+                tp.AddNewTimepoint(new TimeSpan(1, 0, 0), 1);
+                TimeBasedProfile.LoadFromDatabase(tps, db.ConnectionString, false);
 
-            var tps = new ObservableCollection<TimeBasedProfile>();
-            TimeBasedProfile.LoadFromDatabase(tps, db.ConnectionString, false);
-            Assert.Greater(tps.Count, 1);
-            db.ClearTable(TimeBasedProfile.TableName);
-            db.ClearTable(TimeDataPoint.TableName);
-            tps.Clear();
-            var tp = new TimeBasedProfile("hey", null, db.ConnectionString, TimeProfileType.Absolute,
-                "fake", Guid.NewGuid().ToString());
-            tp.SaveToDB();
-            tp.AddNewTimepoint(new TimeSpan(1, 0, 0), 1);
-            TimeBasedProfile.LoadFromDatabase(tps, db.ConnectionString, false);
-
-            Assert.AreEqual(1, tps.Count);
-            Assert.AreEqual(TimeProfileType.Absolute, tps[0].TimeProfileType);
-            Assert.AreEqual(1, tps[0].ObservableDatapoints.Count);
-            db.Cleanup();
+                Assert.AreEqual(1, tps.Count);
+                Assert.AreEqual(TimeProfileType.Absolute, tps[0].TimeProfileType);
+                Assert.AreEqual(1, tps[0].ObservableDatapoints.Count);
+                db.Cleanup();
+            }
         }
     }
 }

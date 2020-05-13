@@ -1,4 +1,5 @@
-﻿using Automation.ResultFiles;
+﻿using Automation;
+using Automation.ResultFiles;
 
 namespace Common.JSON {
     using System;
@@ -12,7 +13,7 @@ namespace Common.JSON {
         [NotNull]
         [JsonProperty]
         public CalcDeviceDto CalcDeviceDto { get; set; }
-        public ColumnEntry([NotNull] string name, int dstcolumn, [NotNull] string locationName, [NotNull] string deviceGuid, [NotNull] HouseholdKey householdKey,
+        public ColumnEntry([NotNull] string name, int dstcolumn, [NotNull] string locationName, [NotNull] StrGuid deviceGuid, [NotNull] HouseholdKey householdKey,
                            [NotNull] CalcLoadTypeDto loadType, [NotNull] string oefckey, [NotNull] string deviceCategory,
                            [NotNull] CalcDeviceDto calcDeviceDto)
         {
@@ -31,7 +32,7 @@ namespace Common.JSON {
         public int Column { get; private set; }
         [NotNull]
         [JsonProperty]
-        public string DeviceGuid { get; private set; }
+        public StrGuid DeviceGuid { get; private set; }
 
         [NotNull]
         [JsonProperty]

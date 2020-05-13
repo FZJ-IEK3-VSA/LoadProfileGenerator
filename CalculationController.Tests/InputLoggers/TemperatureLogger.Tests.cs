@@ -21,11 +21,13 @@ namespace CalculationController.Tests.InputLoggers {
                 new SqlResultLoggingService(Path.Combine(wd.WorkingDirectory));
             var calcParameters = CalcParametersFactory.MakeGoodDefaults();
             calcParameters.Enable(CalcOption.TemperatureFile);
-            DatabaseSetup ds = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            Simulator sim = new Simulator(ds.ConnectionString);
-            TemperatureDataLogger tdl = new TemperatureDataLogger(srls, calcParameters);
-            tdl.Run(Constants.GeneralHouseholdKey, sim.TemperatureProfiles[0]);
-            ds.Cleanup();
+            using (DatabaseSetup ds = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                Simulator sim = new Simulator(ds.ConnectionString);
+                TemperatureDataLogger tdl = new TemperatureDataLogger(srls, calcParameters);
+                tdl.Run(Constants.GeneralHouseholdKey, sim.TemperatureProfiles[0]);
+                ds.Cleanup();
+            }
             wd.CleanUp();
         }
         /*

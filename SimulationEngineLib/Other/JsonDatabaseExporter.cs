@@ -52,7 +52,7 @@ namespace SimulationEngineLib.Other {
                     ExportHHTsWithDeviceCategories(jsonFileName, sim);
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(TypesToProcess));
             }
 
             _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());

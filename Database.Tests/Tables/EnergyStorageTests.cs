@@ -40,33 +40,35 @@ namespace Database.Tests.Tables {
     {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void LoadFromDatabaseTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-
-            var storages = new ObservableCollection<EnergyStorage>();
-            var loadTypes = db.LoadLoadTypes();
-            var variables = db.LoadVariables();
-            EnergyStorage.LoadFromDatabase(storages, db.ConnectionString, loadTypes,variables, false);
-            // delete everything and check
-            storages.Clear();
-            db.ClearTable(EnergyStorage.TableName);
-            db.ClearTable(EnergyStorageSignal.TableName);
-            EnergyStorage.LoadFromDatabase(storages, db.ConnectionString, loadTypes, variables, false);
-            Assert.AreEqual(0, storages.Count);
-            // add one and load again
-            var stor = new EnergyStorage("tdlt", "desc", loadTypes[0], 10, 10, 0, 10, 0, 10,
-                db.ConnectionString, Guid.NewGuid().ToString());
-            stor.SaveToDB();
-            stor.AddSignal(variables[0], 100, 50, 60);
-            EnergyStorage.LoadFromDatabase(storages, db.ConnectionString, loadTypes, variables, false);
-            Assert.AreEqual(1, storages.Count);
-            Assert.AreEqual(1, storages[0].Signals.Count);
-            // delete the loaded one
-            storages[0].DeleteFromDB();
-            storages.Clear();
-            EnergyStorage.LoadFromDatabase(storages, db.ConnectionString, loadTypes, variables, false);
-            Assert.AreEqual(0, storages.Count);
-            db.Cleanup();
+        public void LoadFromDatabaseTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var storages = new ObservableCollection<EnergyStorage>();
+                var loadTypes = db.LoadLoadTypes();
+                var variables = db.LoadVariables();
+                EnergyStorage.LoadFromDatabase(storages, db.ConnectionString, loadTypes, variables, false);
+                // delete everything and check
+                storages.Clear();
+                db.ClearTable(EnergyStorage.TableName);
+                db.ClearTable(EnergyStorageSignal.TableName);
+                EnergyStorage.LoadFromDatabase(storages, db.ConnectionString, loadTypes, variables, false);
+                Assert.AreEqual(0, storages.Count);
+                // add one and load again
+                var stor = new EnergyStorage("tdlt", "desc", loadTypes[0], 10, 10, 0, 10, 0, 10,
+                    db.ConnectionString, Guid.NewGuid().ToStrGuid());
+                stor.SaveToDB();
+                stor.AddSignal(variables[0], 100, 50, 60);
+                EnergyStorage.LoadFromDatabase(storages, db.ConnectionString, loadTypes, variables, false);
+                Assert.AreEqual(1, storages.Count);
+                Assert.AreEqual(1, storages[0].Signals.Count);
+                // delete the loaded one
+                storages[0].DeleteFromDB();
+                storages.Clear();
+                EnergyStorage.LoadFromDatabase(storages, db.ConnectionString, loadTypes, variables, false);
+                Assert.AreEqual(0, storages.Count);
+                db.Cleanup();
+            }
         }
     }
 }

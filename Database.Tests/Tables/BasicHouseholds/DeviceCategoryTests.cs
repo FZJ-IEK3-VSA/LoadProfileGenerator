@@ -40,21 +40,25 @@ namespace Database.Tests.Tables.BasicHouseholds {
     {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void GetAllNameTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
+        public void GetAllNameTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var deviceCategories = new ObservableCollection<DeviceCategory>();
 
-            var deviceCategories = new ObservableCollection<DeviceCategory>();
-
-            var realDevices = new ObservableCollection<RealDevice>();
-            DeviceCategory.LoadFromDatabase(deviceCategories, out _, db.ConnectionString, realDevices, false);
-            var s = string.Empty;
-            foreach (var deviceCategory in deviceCategories) {
-                if (deviceCategory.IsRootCategory) {
-                    s += deviceCategory.GetAllName(1) + Environment.NewLine;
+                var realDevices = new ObservableCollection<RealDevice>();
+                DeviceCategory.LoadFromDatabase(deviceCategories, out _, db.ConnectionString, realDevices, false);
+                var s = string.Empty;
+                foreach (var deviceCategory in deviceCategories)
+                {
+                    if (deviceCategory.IsRootCategory)
+                    {
+                        s += deviceCategory.GetAllName(1) + Environment.NewLine;
+                    }
                 }
+                Logger.Info(s);
+                db.Cleanup();
             }
-            Logger.Info(s);
-            db.Cleanup();
         }
     }
 }

@@ -42,42 +42,45 @@ namespace Database.Tests.Tables {
     {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void LoadFromDatabaseTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var affdev = new ObservableCollection<AffordanceDevice>();
-            var deviceCategories = new ObservableCollection<DeviceCategory>();
-            var realDevices = new ObservableCollection<RealDevice>();
-            var timeBasedProfiles = new ObservableCollection<TimeBasedProfile>();
-            var affordances = new ObservableCollection<Affordance>();
-            var dateBasedProfiles = db.LoadDateBasedProfiles();
-            var timeLimits = db.LoadTimeLimits(dateBasedProfiles);
-            var loadtypes = db.LoadLoadTypes();
-            var deviceActionGroups = db.LoadDeviceActionGroups();
-            var deviceActions = new ObservableCollection<DeviceAction>();
-            db.ClearTable(AffordanceDevice.TableName);
-            AffordanceDevice.LoadFromDatabase(affdev, db.ConnectionString, deviceCategories, realDevices,
-                timeBasedProfiles, affordances, loadtypes, deviceActions, deviceActionGroups, false);
-            Assert.AreEqual(0, affdev.Count);
-            var rd = new RealDevice("blub", 1, "1", null, "name", true, false, db.ConnectionString, Guid.NewGuid().ToString());
-            rd.SaveToDB();
-            realDevices.Add(rd);
-            var tp = new TimeBasedProfile("blub", null, db.ConnectionString, TimeProfileType.Relative,
-                "fake", Guid.NewGuid().ToString());
-            tp.SaveToDB();
-            timeBasedProfiles.Add(tp);
-            var aff = new Affordance("blub", tp, null, true, PermittedGender.All, 0, new ColorRGB(255, 0, 0),
-                "bla", timeLimits[0], string.Empty, db.ConnectionString, false, false, 0, 99, false,
-                ActionAfterInterruption.GoBackToOld,false, Guid.NewGuid().ToString(), BodilyActivityLevel.Low);
-            aff.SaveToDB();
-            affordances.Add(aff);
-            var newaffdev = new AffordanceDevice(rd, tp, null, 0, aff.ID, realDevices, deviceCategories,
-                "blub", loadtypes[0], db.ConnectionString, 1, Guid.NewGuid().ToString());
-            newaffdev.SaveToDB();
-            AffordanceDevice.LoadFromDatabase(affdev, db.ConnectionString, deviceCategories, realDevices,
-                timeBasedProfiles, affordances, loadtypes, deviceActions, deviceActionGroups, false);
-            Assert.AreEqual(1, affdev.Count);
-            Assert.AreEqual(loadtypes[0], affdev[0].LoadType);
-            db.Cleanup();
+        public void LoadFromDatabaseTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var affdev = new ObservableCollection<AffordanceDevice>();
+                var deviceCategories = new ObservableCollection<DeviceCategory>();
+                var realDevices = new ObservableCollection<RealDevice>();
+                var timeBasedProfiles = new ObservableCollection<TimeBasedProfile>();
+                var affordances = new ObservableCollection<Affordance>();
+                var dateBasedProfiles = db.LoadDateBasedProfiles();
+                var timeLimits = db.LoadTimeLimits(dateBasedProfiles);
+                var loadtypes = db.LoadLoadTypes();
+                var deviceActionGroups = db.LoadDeviceActionGroups();
+                var deviceActions = new ObservableCollection<DeviceAction>();
+                db.ClearTable(AffordanceDevice.TableName);
+                AffordanceDevice.LoadFromDatabase(affdev, db.ConnectionString, deviceCategories, realDevices,
+                    timeBasedProfiles, affordances, loadtypes, deviceActions, deviceActionGroups, false);
+                Assert.AreEqual(0, affdev.Count);
+                var rd = new RealDevice("blub", 1, "1", null, "name", true, false, db.ConnectionString, Guid.NewGuid().ToStrGuid());
+                rd.SaveToDB();
+                realDevices.Add(rd);
+                var tp = new TimeBasedProfile("blub", null, db.ConnectionString, TimeProfileType.Relative,
+                    "fake", Guid.NewGuid().ToStrGuid());
+                tp.SaveToDB();
+                timeBasedProfiles.Add(tp);
+                var aff = new Affordance("blub", tp, null, true, PermittedGender.All, 0, new ColorRGB(255, 0, 0),
+                    "bla", timeLimits[0], string.Empty, db.ConnectionString, false, false, 0, 99, false,
+                    ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToStrGuid(), BodilyActivityLevel.Low);
+                aff.SaveToDB();
+                affordances.Add(aff);
+                var newaffdev = new AffordanceDevice(rd, tp, null, 0, aff.ID, realDevices, deviceCategories,
+                    "blub", loadtypes[0], db.ConnectionString, 1, Guid.NewGuid().ToStrGuid());
+                newaffdev.SaveToDB();
+                AffordanceDevice.LoadFromDatabase(affdev, db.ConnectionString, deviceCategories, realDevices,
+                    timeBasedProfiles, affordances, loadtypes, deviceActions, deviceActionGroups, false);
+                Assert.AreEqual(1, affdev.Count);
+                Assert.AreEqual(loadtypes[0], affdev[0].LoadType);
+                db.Cleanup();
+            }
         }
     }
 }

@@ -75,12 +75,12 @@ namespace Common.CalcDto {
         public double ConversionFactor { get; }
         public bool ShowInCharts { get; }
         [NotNull]
-        public string Guid { get; }
+        public StrGuid Guid { get; }
         [NotNull]
         public string FileName { get; }
         public CalcLoadTypeDto([NotNull]string name,  [NotNull]string unitOfPower,
                                [NotNull]string unitOfSum, double conversionFactor,
-                               bool showInCharts, [NotNull] string guid)
+                               bool showInCharts, [NotNull] StrGuid guid)
         {
             Name = name;
             UnitOfPower = unitOfPower;
@@ -115,7 +115,7 @@ namespace Common.CalcDto {
                 return 1;
             }
 
-            return string.Compare(Guid, other.Guid, StringComparison.Ordinal);
+            return Guid.CompareTo( other.Guid);
         }
     }
 }

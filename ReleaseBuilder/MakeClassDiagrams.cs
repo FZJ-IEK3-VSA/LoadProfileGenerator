@@ -117,10 +117,8 @@ namespace ReleaseBuilder {
                     BaseName = myType.BaseType.Namespace + "." + myType.BaseType.Name;
                 }
             }
-            [CanBeNull]
-            public MyClassNode BaseClassNode { get; set; }
-            [CanBeNull]
-            public string BaseName { get; }
+            public MyClassNode? BaseClassNode { get; set; }
+            public string? BaseName { get; }
 
             public int ID { get; }
             [NotNull]

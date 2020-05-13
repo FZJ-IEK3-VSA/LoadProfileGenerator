@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
+using Automation;
 using Database.Database;
 using JetBrains.Annotations;
 
@@ -13,7 +14,7 @@ namespace Database.Tables.Transportation {
 
         public TransportationDeviceSetEntry([CanBeNull]int? pID, int transportationDeviceSetID, [NotNull] string connectionString,
             [NotNull] string name, [CanBeNull] TransportationDevice device,
-                                            [NotNull] string guid) : base(name, TableName, connectionString, guid)
+                                            [NotNull] StrGuid guid) : base(name, TableName, connectionString, guid)
         {
             TypeDescription = "Transportation Device Set Entry";
             ID = pID;

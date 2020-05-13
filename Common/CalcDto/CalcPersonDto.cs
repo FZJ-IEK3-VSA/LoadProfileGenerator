@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Automation;
 using Automation.ResultFiles;
 using Common.Enums;
 using Common.SQLResultLogging.Loggers;
@@ -8,7 +9,7 @@ using JetBrains.Annotations;
 namespace Common.CalcDto {
     [Serializable]
     public class CalcPersonDto : IHouseholdKey {
-        public CalcPersonDto([NotNull]string name, [NotNull] string guid, int age, PermittedGender gender,
+        public CalcPersonDto([NotNull]string name, [NotNull] StrGuid guid, int age, PermittedGender gender,
                              [NotNull]HouseholdKey householdKey, [ItemNotNull] [NotNull]List<DateSpan> sicknessSpans, [NotNull][ItemNotNull] List<DateSpan> vacationSpans, int id,
                              [NotNull] string traitTag, [NotNull] string householdName)
         {
@@ -31,7 +32,7 @@ namespace Common.CalcDto {
         {
             List<DateSpan> sicknessTimes = new List<DateSpan>();
             List<DateSpan> vacationTimes = new List<DateSpan>();
-            return new CalcPersonDto("Example Person", System.Guid.NewGuid().ToString(),
+            return new CalcPersonDto("Example Person", System.Guid.NewGuid().ToStrGuid(),
                 40,PermittedGender.Male,new HouseholdKey("HH1"),sicknessTimes,vacationTimes,1,"traitTag","householdname");
         }
 
@@ -43,7 +44,7 @@ namespace Common.CalcDto {
         [NotNull]
         public string Name { get; }
         [NotNull]
-        public string Guid { get; }
+        public StrGuid Guid { get; }
         public int Age { get; }
         public PermittedGender Gender { get; }
         [Ignore][NotNull]

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Automation;
+using Common;
 using Database.Database;
 using Database.Tables.BasicElements;
 using JetBrains.Annotations;
@@ -13,7 +15,7 @@ namespace Database.Tables.Transportation {
 
         public TransportationDeviceCategory([NotNull] string name, [CanBeNull] int? pID,
                                             [NotNull] string connectionString, [CanBeNull] string description,
-            bool isLimitedToSingleLocation, [NotNull] string guid)
+            bool isLimitedToSingleLocation, [NotNull] StrGuid guid)
             : base(name, TableName, connectionString, guid)
         {
             _isLimitedToSingleLocation = isLimitedToSingleLocation;
@@ -39,7 +41,7 @@ namespace Database.Tables.Transportation {
         [UsedImplicitly]
         public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new
             TransportationDeviceCategory(FindNewName(isNameTaken, "New Transportation Device Category "), null,
-                connectionString, "", false, System.Guid.NewGuid().ToString());
+                connectionString, "", false, System.Guid.NewGuid().ToStrGuid());
 
         [NotNull]
         [UsedImplicitly]

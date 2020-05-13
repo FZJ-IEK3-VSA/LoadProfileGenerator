@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
+using Automation;
 using Automation.ResultFiles;
 using Common.SQLResultLogging.Loggers;
 using JetBrains.Annotations;
 
 namespace Common.CalcDto {
     public class CalcSiteDto : IHouseholdKey {
-        public CalcSiteDto([NotNull] string name, int id, [NotNull] string guid, [NotNull] HouseholdKey householdKey)
+        public CalcSiteDto([NotNull] string name, int id, [NotNull] StrGuid guid, [NotNull] HouseholdKey householdKey)
         {
             Name = name;
             ID = id;
@@ -18,13 +19,13 @@ namespace Common.CalcDto {
         public List<CalcChargingStationDto> ChargingStations { get; } = new List<CalcChargingStationDto>();
 
         [NotNull]
-        public string Guid { get; }
+        public StrGuid Guid { get; }
 
         public int ID { get; }
 
         [NotNull]
         [ItemNotNull]
-        public List<string> LocationGuid { get; } = new List<string>();
+        public List<StrGuid> LocationGuid { get; } = new List<StrGuid>();
 
         [NotNull]
         [ItemNotNull]

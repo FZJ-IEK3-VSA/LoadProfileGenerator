@@ -1,4 +1,5 @@
-﻿using Automation.ResultFiles;
+﻿using Automation;
+using Automation.ResultFiles;
 using CalculationEngine.HouseholdElements;
 using Common;
 using Common.SQLResultLogging.InputLoggers;
@@ -11,7 +12,7 @@ namespace CalculationEngine.Transportation {
 
         public CalcChargingStation([NotNull] CalcTransportationDeviceCategory deviceCategory, [NotNull] CalcLoadType gridChargingLoadType,
                                    double maxChargingPower,
-                                   [NotNull] string chargingStationName, [NotNull] string chargingStationGuid,
+                                   [NotNull] string chargingStationName, [NotNull] StrGuid chargingStationGuid,
                                    [NotNull] HouseholdKey householdKey,
                                    [NotNull] CalcLoadType carChargingLoadType, CalcRepo calcRepo)
         {
@@ -40,7 +41,7 @@ namespace CalculationEngine.Transportation {
         [NotNull]
         public string ChargingStationName { get; }
         [NotNull]
-        public string ChargingStationGuid { get; }
+        public StrGuid ChargingStationGuid { get; }
         public bool IsAvailable { get; private set; }
         [CanBeNull] private CalcTransportationDevice _connectedCar;
         public void SetConnectedCar([NotNull] CalcTransportationDevice device)

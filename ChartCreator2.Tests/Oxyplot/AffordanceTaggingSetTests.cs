@@ -22,21 +22,23 @@ namespace ChartCreator2.Tests.Oxyplot {
             var cs = new OxyCalculationSetup(Utili.GetCurrentMethodAndClass());
             cs.StartHousehold(2, GlobalConsts.CSVCharacter,
                 configSetter: x => x.Enable(CalcOption.ActivationFrequencies));
-            FileFactoryAndTracker fft = new FileFactoryAndTracker(cs.DstDir, "1", cs.Wd.InputDataLogger);
-            fft.ReadExistingFilesFromSql();
-            CalculationProfiler cp = new CalculationProfiler();
-            ChartCreationParameters ccps = new ChartCreationParameters(300,4000,
-                2500,  false,  GlobalConsts.CSVCharacter,new DirectoryInfo(cs.DstDir));
-            var aeupp = new AffordanceTaggingSet(ccps,fft,cp);
-            Logger.Debug("Making picture");
-            var di = new DirectoryInfo(cs.DstDir);
-            ResultFileEntry rfe = cs.GetRfeByFilename("AffordanceTaggingSet.Wo bleibt die Zeit.HH1.csv");
+            using (FileFactoryAndTracker fft = new FileFactoryAndTracker(cs.DstDir, "1", cs.Wd.InputDataLogger))
+            {
+                fft.ReadExistingFilesFromSql();
+                CalculationProfiler cp = new CalculationProfiler();
+                ChartCreationParameters ccps = new ChartCreationParameters(300, 4000,
+                    2500, false, GlobalConsts.CSVCharacter, new DirectoryInfo(cs.DstDir));
+                var aeupp = new AffordanceTaggingSet(ccps, fft, cp);
+                Logger.Debug("Making picture");
+                var di = new DirectoryInfo(cs.DstDir);
+                ResultFileEntry rfe = cs.GetRfeByFilename("AffordanceTaggingSet.Wo bleibt die Zeit.HH1.csv");
 
-            aeupp.MakePlot(rfe);
-            Logger.Debug("finished picture");
-            //OxyCalculationSetup.CopyImage(resultFileEntries[0].FullFileName);
-            var imagefiles = FileFinder.GetRecursiveFiles(di, "AffordanceTaggingSet.*.png");
-            Assert.GreaterOrEqual(imagefiles.Count, 1);
+                aeupp.MakePlot(rfe);
+                Logger.Debug("finished picture");
+                //OxyCalculationSetup.CopyImage(resultFileEntries[0].FullFileName);
+                var imagefiles = FileFinder.GetRecursiveFiles(di, "AffordanceTaggingSet.*.png");
+                Assert.GreaterOrEqual(imagefiles.Count, 1);
+            }
             Logger.Warning("Open threads for database: " + Connection.ConnectionCount);
             Command.PrintOpenConnections();
             cs.CleanUp();

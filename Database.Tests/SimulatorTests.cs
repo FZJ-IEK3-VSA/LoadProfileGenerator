@@ -54,341 +54,418 @@ namespace Database.Tests {
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void SimulatorAffordancesDeleteTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var sim = new Simulator(db.ConnectionString);
-            var count = sim.Affordances.MyItems.Count;
-            sim.Affordances.DeleteItem(sim.Affordances.MyItems[0]);
-            var sim2 = new Simulator(db.ConnectionString);
-            Assert.AreEqual(count - 1, sim2.Affordances.MyItems.Count);
-            db.Cleanup();
-        }
-
-        [Test]
-        [Category(UnitTestCategories.BasicTest)]
-        public void SimulatorCreateTest() {
-            var step = 1;
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var sim = new Simulator(db.ConnectionString);
-            var dt = DateTime.Now;
-            sim.Affordances.CreateNewItem(db.ConnectionString);
-            LogStepProgress(ref dt, ref step);
-            sim.Affordances.CreateNewItem(db.ConnectionString);
-            LogStepProgress(ref dt, ref step);
-            sim.Desires.CreateNewItem(db.ConnectionString);
-            LogStepProgress(ref dt, ref step);
-            sim.DeviceCategories.CreateNewItem(db.ConnectionString);
-            LogStepProgress(ref dt, ref step);
-            sim.TimeLimits.CreateNewItem(db.ConnectionString);
-            LogStepProgress(ref dt, ref step);
-            sim.Houses.CreateNewItem(db.ConnectionString);
-            LogStepProgress(ref dt, ref step);
-            sim.Locations.CreateNewItem(db.ConnectionString);
-            LogStepProgress(ref dt, ref step);
-            sim.Persons.CreateNewItem(db.ConnectionString);
-            LogStepProgress(ref dt, ref step);
-            sim.RealDevices.CreateNewItem(db.ConnectionString);
-            LogStepProgress(ref dt, ref step);
-            sim.Settlements.CreateNewItem(db.ConnectionString);
-            LogStepProgress(ref dt, ref step);
-            sim.SubAffordances.CreateNewItem(db.ConnectionString);
-            LogStepProgress(ref dt, ref step);
-            sim.TemperatureProfiles.CreateNewItem(db.ConnectionString);
-            LogStepProgress(ref dt, ref step);
-            sim.Timeprofiles.CreateNewItem(db.ConnectionString);
-            LogStepProgress(ref dt, ref step);
-            sim.LoadTypes.CreateNewItem(db.ConnectionString);
-            LogStepProgress(ref dt, ref step);
-            sim.HouseholdTraits.CreateNewItem(db.ConnectionString);
-            LogStepProgress(ref dt, ref step);
-            sim.HouseTypes.CreateNewItem(db.ConnectionString);
-            LogStepProgress(ref dt, ref step);
-            db.Cleanup();
-        }
-
-        [Test]
-        [Category(UnitTestCategories.BasicTest)]
-        public void SimulatorDateBasedProfilesDeleteTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var sim = new Simulator(db.ConnectionString);
-            var count = sim.DateBasedProfiles.MyItems.Count;
-            sim.DateBasedProfiles.DeleteItem(sim.DateBasedProfiles.MyItems[0]);
-            var sim2 = new Simulator(db.ConnectionString);
-            Assert.AreEqual(count - 1, sim2.DateBasedProfiles.MyItems.Count);
-            db.Cleanup();
-        }
-
-        [Test]
-        [Category(UnitTestCategories.BasicTest)]
-        public void SimulatorDesiresDeleteTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var sim = new Simulator(db.ConnectionString);
-            var count = sim.Desires.MyItems.Count;
-            sim.Desires.DeleteItem(sim.Desires.MyItems[0]);
-            var sim2 = new Simulator(db.ConnectionString);
-            Assert.AreEqual(count - 1, sim2.Desires.MyItems.Count);
-            db.Cleanup();
-        }
-
-        [Test]
-        [Category(UnitTestCategories.BasicTest)]
-        public void SimulatorDeviceCategoriesDeleteTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            // load to check if everything is ok
-            var sim0 = new Simulator(db.ConnectionString);
-            if (sim0.Persons.It.Count == 0) {
-                throw new LPGException("0 persons!?");
+        public void SimulatorAffordancesDeleteTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var sim = new Simulator(db.ConnectionString);
+                var count = sim.Affordances.MyItems.Count;
+                sim.Affordances.DeleteItem(sim.Affordances.MyItems[0]);
+                var sim2 = new Simulator(db.ConnectionString);
+                Assert.AreEqual(count - 1, sim2.Affordances.MyItems.Count);
+                db.Cleanup();
             }
-            // load for deleting one
-            var sim = new Simulator(db.ConnectionString);
-            var count = sim.DeviceCategories.MyItems.Count;
-            sim.DeviceCategories.DeleteItem(sim.DeviceCategories.MyItems[sim.DeviceCategories.MyItems.Count - 1]);
-            // load again to double check
-            var sim2 = new Simulator(db.ConnectionString);
-            Assert.AreEqual(count - 1, sim2.DeviceCategories.MyItems.Count);
-            db.Cleanup();
         }
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void SimulatorEnergyStoragesDeleteTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var sim = new Simulator(db.ConnectionString);
-            var count = sim.EnergyStorages.MyItems.Count;
-            sim.EnergyStorages.DeleteItem(sim.EnergyStorages.MyItems[0]);
-            var sim2 = new Simulator(db.ConnectionString);
-            Assert.AreEqual(count - 1, sim2.EnergyStorages.MyItems.Count);
-            db.Cleanup();
+        public void SimulatorCreateTest()
+        {
+            var step = 1;
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var sim = new Simulator(db.ConnectionString);
+                var dt = DateTime.Now;
+                sim.Affordances.CreateNewItem(db.ConnectionString);
+                LogStepProgress(ref dt, ref step);
+                sim.Affordances.CreateNewItem(db.ConnectionString);
+                LogStepProgress(ref dt, ref step);
+                sim.Desires.CreateNewItem(db.ConnectionString);
+                LogStepProgress(ref dt, ref step);
+                sim.DeviceCategories.CreateNewItem(db.ConnectionString);
+                LogStepProgress(ref dt, ref step);
+                sim.TimeLimits.CreateNewItem(db.ConnectionString);
+                LogStepProgress(ref dt, ref step);
+                sim.Houses.CreateNewItem(db.ConnectionString);
+                LogStepProgress(ref dt, ref step);
+                sim.Locations.CreateNewItem(db.ConnectionString);
+                LogStepProgress(ref dt, ref step);
+                sim.Persons.CreateNewItem(db.ConnectionString);
+                LogStepProgress(ref dt, ref step);
+                sim.RealDevices.CreateNewItem(db.ConnectionString);
+                LogStepProgress(ref dt, ref step);
+                sim.Settlements.CreateNewItem(db.ConnectionString);
+                LogStepProgress(ref dt, ref step);
+                sim.SubAffordances.CreateNewItem(db.ConnectionString);
+                LogStepProgress(ref dt, ref step);
+                sim.TemperatureProfiles.CreateNewItem(db.ConnectionString);
+                LogStepProgress(ref dt, ref step);
+                sim.Timeprofiles.CreateNewItem(db.ConnectionString);
+                LogStepProgress(ref dt, ref step);
+                sim.LoadTypes.CreateNewItem(db.ConnectionString);
+                LogStepProgress(ref dt, ref step);
+                sim.HouseholdTraits.CreateNewItem(db.ConnectionString);
+                LogStepProgress(ref dt, ref step);
+                sim.HouseTypes.CreateNewItem(db.ConnectionString);
+                LogStepProgress(ref dt, ref step);
+                db.Cleanup();
+            }
         }
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void SimulatorGeneratorsDeleteTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var sim = new Simulator(db.ConnectionString);
-            var count = sim.Generators.MyItems.Count;
-            sim.Generators.DeleteItem(sim.Generators.MyItems[0]);
-            var sim2 = new Simulator(db.ConnectionString);
-            Assert.AreEqual(count - 1, sim2.Generators.MyItems.Count);
-            db.Cleanup();
+        public void SimulatorDateBasedProfilesDeleteTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var sim = new Simulator(db.ConnectionString);
+                var count = sim.DateBasedProfiles.MyItems.Count;
+                sim.DateBasedProfiles.DeleteItem(sim.DateBasedProfiles.MyItems[0]);
+                var sim2 = new Simulator(db.ConnectionString);
+                Assert.AreEqual(count - 1, sim2.DateBasedProfiles.MyItems.Count);
+                db.Cleanup();
+            }
         }
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void SimulatorGeographicLocationsDeleteTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var sim = new Simulator(db.ConnectionString);
-            var count = sim.GeographicLocations.MyItems.Count;
-            sim.GeographicLocations.DeleteItem(sim.GeographicLocations.MyItems[0]);
-            var sim2 = new Simulator(db.ConnectionString);
-            Assert.AreEqual(count - 1, sim2.GeographicLocations.MyItems.Count);
-            db.Cleanup();
+        public void SimulatorDesiresDeleteTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var sim = new Simulator(db.ConnectionString);
+                var count = sim.Desires.MyItems.Count;
+                sim.Desires.DeleteItem(sim.Desires.MyItems[0]);
+                var sim2 = new Simulator(db.ConnectionString);
+                Assert.AreEqual(count - 1, sim2.Desires.MyItems.Count);
+                db.Cleanup();
+            }
         }
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void SimulatorHolidaysDeleteTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var sim = new Simulator(db.ConnectionString);
-            var count = sim.Holidays.MyItems.Count;
-            sim.Holidays.DeleteItem(sim.Holidays.MyItems[0]);
-            var sim2 = new Simulator(db.ConnectionString);
-            Assert.AreEqual(count - 1, sim2.Holidays.MyItems.Count);
-            db.Cleanup();
+        public void SimulatorDeviceCategoriesDeleteTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                // load to check if everything is ok
+                var sim0 = new Simulator(db.ConnectionString);
+                if (sim0.Persons.It.Count == 0)
+                {
+                    throw new LPGException("0 persons!?");
+                }
+                // load for deleting one
+                var sim = new Simulator(db.ConnectionString);
+                var count = sim.DeviceCategories.MyItems.Count;
+                sim.DeviceCategories.DeleteItem(sim.DeviceCategories.MyItems[sim.DeviceCategories.MyItems.Count - 1]);
+                // load again to double check
+                var sim2 = new Simulator(db.ConnectionString);
+                Assert.AreEqual(count - 1, sim2.DeviceCategories.MyItems.Count);
+                db.Cleanup();
+            }
         }
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void SimulatorHouseholdsDeleteTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var sim = new Simulator(db.ConnectionString);
-            var count = sim.ModularHouseholds.MyItems.Count;
-            sim.ModularHouseholds.DeleteItem(sim.ModularHouseholds.MyItems[0]);
-            var sim2 = new Simulator(db.ConnectionString);
-            Assert.AreEqual(count - 1, sim2.ModularHouseholds.MyItems.Count);
-            db.Cleanup();
+        public void SimulatorEnergyStoragesDeleteTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var sim = new Simulator(db.ConnectionString);
+                var count = sim.EnergyStorages.MyItems.Count;
+                sim.EnergyStorages.DeleteItem(sim.EnergyStorages.MyItems[0]);
+                var sim2 = new Simulator(db.ConnectionString);
+                Assert.AreEqual(count - 1, sim2.EnergyStorages.MyItems.Count);
+                db.Cleanup();
+            }
         }
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void SimulatorHouseholdTraitsDeleteTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var sim = new Simulator(db.ConnectionString);
-            var count = sim.HouseholdTraits.MyItems.Count;
-            sim.HouseholdTraits.DeleteItem(sim.HouseholdTraits.MyItems[0]);
-            var sim2 = new Simulator(db.ConnectionString);
-            Assert.AreEqual(count - 1, sim2.HouseholdTraits.MyItems.Count);
-            db.Cleanup();
+        public void SimulatorGeneratorsDeleteTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var sim = new Simulator(db.ConnectionString);
+                var count = sim.Generators.MyItems.Count;
+                sim.Generators.DeleteItem(sim.Generators.MyItems[0]);
+                var sim2 = new Simulator(db.ConnectionString);
+                Assert.AreEqual(count - 1, sim2.Generators.MyItems.Count);
+                db.Cleanup();
+            }
         }
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void SimulatorHousesDeleteTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var sim = new Simulator(db.ConnectionString);
-            var count = sim.Houses.MyItems.Count;
-            sim.Houses.DeleteItem(sim.Houses.MyItems[0]);
-            var sim2 = new Simulator(db.ConnectionString);
-            Assert.AreEqual(count - 1, sim2.Houses.MyItems.Count);
-            db.Cleanup();
+        public void SimulatorGeographicLocationsDeleteTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var sim = new Simulator(db.ConnectionString);
+                var count = sim.GeographicLocations.MyItems.Count;
+                sim.GeographicLocations.DeleteItem(sim.GeographicLocations.MyItems[0]);
+                var sim2 = new Simulator(db.ConnectionString);
+                Assert.AreEqual(count - 1, sim2.GeographicLocations.MyItems.Count);
+                db.Cleanup();
+            }
         }
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void SimulatorLoadTypesDeleteTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var sim = new Simulator(db.ConnectionString);
-            var count = sim.LoadTypes.MyItems.Count;
-            sim.LoadTypes.DeleteItem(sim.LoadTypes.MyItems[0]);
-            sim.LoadTypes.DeleteItem(sim.LoadTypes.MyItems[1]);
-            sim.LoadTypes.DeleteItem(sim.LoadTypes.MyItems[2]);
-            var sim2 = new Simulator(db.ConnectionString);
-            Assert.AreEqual(count - 3, sim2.LoadTypes.MyItems.Count);
-            db.Cleanup();
+        public void SimulatorHolidaysDeleteTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var sim = new Simulator(db.ConnectionString);
+                var count = sim.Holidays.MyItems.Count;
+                sim.Holidays.DeleteItem(sim.Holidays.MyItems[0]);
+                var sim2 = new Simulator(db.ConnectionString);
+                Assert.AreEqual(count - 1, sim2.Holidays.MyItems.Count);
+                db.Cleanup();
+            }
+        }
+
+        [Test]
+        [Category(UnitTestCategories.BasicTest)]
+        public void SimulatorHouseholdsDeleteTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var sim = new Simulator(db.ConnectionString);
+                var count = sim.ModularHouseholds.MyItems.Count;
+                sim.ModularHouseholds.DeleteItem(sim.ModularHouseholds.MyItems[0]);
+                var sim2 = new Simulator(db.ConnectionString);
+                Assert.AreEqual(count - 1, sim2.ModularHouseholds.MyItems.Count);
+                db.Cleanup();
+            }
+        }
+
+        [Test]
+        [Category(UnitTestCategories.BasicTest)]
+        public void SimulatorHouseholdTraitsDeleteTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var sim = new Simulator(db.ConnectionString);
+                var count = sim.HouseholdTraits.MyItems.Count;
+                sim.HouseholdTraits.DeleteItem(sim.HouseholdTraits.MyItems[0]);
+                var sim2 = new Simulator(db.ConnectionString);
+                Assert.AreEqual(count - 1, sim2.HouseholdTraits.MyItems.Count);
+                db.Cleanup();
+            }
+        }
+
+        [Test]
+        [Category(UnitTestCategories.BasicTest)]
+        public void SimulatorHousesDeleteTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var sim = new Simulator(db.ConnectionString);
+                var count = sim.Houses.MyItems.Count;
+                sim.Houses.DeleteItem(sim.Houses.MyItems[0]);
+                var sim2 = new Simulator(db.ConnectionString);
+                Assert.AreEqual(count - 1, sim2.Houses.MyItems.Count);
+                db.Cleanup();
+            }
+        }
+
+        [Test]
+        [Category(UnitTestCategories.BasicTest)]
+        public void SimulatorLoadTypesDeleteTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var sim = new Simulator(db.ConnectionString);
+                var count = sim.LoadTypes.MyItems.Count;
+                sim.LoadTypes.DeleteItem(sim.LoadTypes.MyItems[0]);
+                sim.LoadTypes.DeleteItem(sim.LoadTypes.MyItems[1]);
+                sim.LoadTypes.DeleteItem(sim.LoadTypes.MyItems[2]);
+                var sim2 = new Simulator(db.ConnectionString);
+                Assert.AreEqual(count - 3, sim2.LoadTypes.MyItems.Count);
+                db.Cleanup();
+            }
         }
 
         [Test]
         [Category(UnitTestCategories.LongTest5)]
-        public void SimulatorLoadWithoutNeedsUpdateTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var sim = new Simulator(db.ConnectionString); // load once to clear problems
-            foreach (var plan in sim.HouseholdPlans.It) {
-                plan.Refresh(null);
-            }
-            DBBase.NeedsUpdateAllowed = false;
-            var sim2 = new Simulator(db.ConnectionString); // load again and see if it fails
-            foreach (var plan in sim2.HouseholdPlans.It) {
-                plan.Refresh(null);
-            }
-            DBBase.NeedsUpdateAllowed = true;
-            db.Cleanup();
-        }
-
-        [Test]
-        [Category(UnitTestCategories.BasicTest)]
-        public void SimulatorLocationsDeleteTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var sim = new Simulator(db.ConnectionString);
-            var locationscount = sim.Locations.MyItems.Count;
-            sim.Locations.DeleteItem(sim.Locations.MyItems[0]);
-            var sim2 = new Simulator(db.ConnectionString);
-            Assert.AreEqual(locationscount - 1, sim2.Locations.MyItems.Count);
-            db.Cleanup();
-        }
-
-        [Test]
-        [Category(UnitTestCategories.BasicTest)]
-        public void SimulatorPersonsDeleteTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var sim = new Simulator(db.ConnectionString);
-            var personcount = sim.Persons.MyItems.Count;
-            sim.Persons.DeleteItem(sim.Persons.MyItems[0]);
-            var sim2 = new Simulator(db.ConnectionString);
-            Assert.AreEqual(personcount - 1, sim2.Persons.MyItems.Count);
-            db.Cleanup();
-        }
-
-        [Test]
-        [Category(UnitTestCategories.BasicTest)]
-        public void SimulatorRealDevicesDeleteTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var sim = new Simulator(db.ConnectionString);
-            var count = sim.RealDevices.MyItems.Count;
-            sim.RealDevices.DeleteItem(sim.RealDevices.MyItems[0]);
-            var sim2 = new Simulator(db.ConnectionString);
-            Assert.AreEqual(count - 1, sim2.RealDevices.MyItems.Count);
-            db.Cleanup();
-        }
-
-        [Test]
-        [Category(UnitTestCategories.BasicTest)]
-        public void SimulatorSettlementsDeleteTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var sim = new Simulator(db.ConnectionString);
-            var count = sim.Settlements.MyItems.Count;
-            sim.Settlements.DeleteItem(sim.Settlements.MyItems[0]);
-            var sim2 = new Simulator(db.ConnectionString);
-            Assert.AreEqual(count - 1, sim2.Settlements.MyItems.Count);
-            db.Cleanup();
-        }
-
-        [Test]
-        [Category(UnitTestCategories.BasicTest)]
-        public void SimulatorTemperaturProfilesDeleteTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var sim = new Simulator(db.ConnectionString);
-            var count = sim.TemperatureProfiles.MyItems.Count;
-            sim.TemperatureProfiles.DeleteItem(sim.TemperatureProfiles.MyItems[0]);
-            var sim2 = new Simulator(db.ConnectionString);
-            Assert.AreEqual(count - 1, sim2.TemperatureProfiles.MyItems.Count);
-            db.Cleanup();
-        }
-
-        [Test]
-        [Category(UnitTestCategories.BasicTest)]
-        public void SimulatorTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var sim = new Simulator(db.ConnectionString);
-            Assert.AreNotEqual(null, sim);
-            db.Cleanup();
-        }
-
-        [Test]
-        [Category(UnitTestCategories.BasicTest)]
-        public void SimulatorTest2() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var sim = new Simulator(db.ConnectionString);
-            Assert.AreNotEqual(null, sim);
-            var emptycount = 0;
-            foreach (var realDevice in sim.RealDevices.MyItems) {
-                if (realDevice.Loads.Count == 0) {
-                    emptycount++;
-                    Logger.Info("no load:" + realDevice.Name);
+        public void SimulatorLoadWithoutNeedsUpdateTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var sim = new Simulator(db.ConnectionString); // load once to clear problems
+                foreach (var plan in sim.HouseholdPlans.It)
+                {
+                    plan.Refresh(null);
                 }
-                if (string.IsNullOrEmpty(realDevice.Description)) {
-                    emptycount++;
-                    Logger.Info("no description:" + realDevice.Name);
+                DBBase.NeedsUpdateAllowed = false;
+                var sim2 = new Simulator(db.ConnectionString); // load again and see if it fails
+                foreach (var plan in sim2.HouseholdPlans.It)
+                {
+                    plan.Refresh(null);
                 }
+                DBBase.NeedsUpdateAllowed = true;
+                db.Cleanup();
             }
-            Logger.Info(emptycount.ToString(CultureInfo.CurrentCulture));
-            db.Cleanup();
         }
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void SimulatorTimeLimitsDeleteTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var sim = new Simulator(db.ConnectionString);
-            var count = sim.TimeLimits.MyItems.Count;
-            sim.TimeLimits.DeleteItem(sim.TimeLimits.MyItems[0]);
-            var sim2 = new Simulator(db.ConnectionString);
-            Assert.AreEqual(count - 1, sim2.TimeLimits.MyItems.Count);
-            db.Cleanup();
+        public void SimulatorLocationsDeleteTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var sim = new Simulator(db.ConnectionString);
+                var locationscount = sim.Locations.MyItems.Count;
+                sim.Locations.DeleteItem(sim.Locations.MyItems[0]);
+                var sim2 = new Simulator(db.ConnectionString);
+                Assert.AreEqual(locationscount - 1, sim2.Locations.MyItems.Count);
+                db.Cleanup();
+            }
         }
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void SimulatorTimeProfilesDeleteTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var sim = new Simulator(db.ConnectionString);
-            var count = sim.Timeprofiles.MyItems.Count;
-            sim.Timeprofiles.DeleteItem(sim.Timeprofiles.MyItems[0]);
-            var sim2 = new Simulator(db.ConnectionString);
-            Assert.AreEqual(count - 1, sim2.Timeprofiles.MyItems.Count);
-            db.Cleanup();
+        public void SimulatorPersonsDeleteTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var sim = new Simulator(db.ConnectionString);
+                var personcount = sim.Persons.MyItems.Count;
+                sim.Persons.DeleteItem(sim.Persons.MyItems[0]);
+                var sim2 = new Simulator(db.ConnectionString);
+                Assert.AreEqual(personcount - 1, sim2.Persons.MyItems.Count);
+                db.Cleanup();
+            }
         }
 
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void SimulatorTransformationDevicesDeleteTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
+        public void SimulatorRealDevicesDeleteTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var sim = new Simulator(db.ConnectionString);
+                var count = sim.RealDevices.MyItems.Count;
+                sim.RealDevices.DeleteItem(sim.RealDevices.MyItems[0]);
+                var sim2 = new Simulator(db.ConnectionString);
+                Assert.AreEqual(count - 1, sim2.RealDevices.MyItems.Count);
+                db.Cleanup();
+            }
+        }
 
-            var sim = new Simulator(db.ConnectionString);
-            var count = sim.TransformationDevices.MyItems.Count;
-            sim.TransformationDevices.DeleteItem(sim.TransformationDevices.MyItems[0]);
-            var sim2 = new Simulator(db.ConnectionString);
-            Assert.AreEqual(count - 1, sim2.TransformationDevices.MyItems.Count);
-            db.Cleanup();
+        [Test]
+        [Category(UnitTestCategories.BasicTest)]
+        public void SimulatorSettlementsDeleteTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var sim = new Simulator(db.ConnectionString);
+                var count = sim.Settlements.MyItems.Count;
+                sim.Settlements.DeleteItem(sim.Settlements.MyItems[0]);
+                var sim2 = new Simulator(db.ConnectionString);
+                Assert.AreEqual(count - 1, sim2.Settlements.MyItems.Count);
+                db.Cleanup();
+            }
+        }
+
+        [Test]
+        [Category(UnitTestCategories.BasicTest)]
+        public void SimulatorTemperaturProfilesDeleteTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var sim = new Simulator(db.ConnectionString);
+                var count = sim.TemperatureProfiles.MyItems.Count;
+                sim.TemperatureProfiles.DeleteItem(sim.TemperatureProfiles.MyItems[0]);
+                var sim2 = new Simulator(db.ConnectionString);
+                Assert.AreEqual(count - 1, sim2.TemperatureProfiles.MyItems.Count);
+                db.Cleanup();
+            }
+        }
+
+        [Test]
+        [Category(UnitTestCategories.BasicTest)]
+        public void SimulatorTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var sim = new Simulator(db.ConnectionString);
+                Assert.AreNotEqual(null, sim);
+                db.Cleanup();
+            }
+        }
+
+        [Test]
+        [Category(UnitTestCategories.BasicTest)]
+        public void SimulatorTest2()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var sim = new Simulator(db.ConnectionString);
+                Assert.AreNotEqual(null, sim);
+                var emptycount = 0;
+                foreach (var realDevice in sim.RealDevices.MyItems)
+                {
+                    if (realDevice.Loads.Count == 0)
+                    {
+                        emptycount++;
+                        Logger.Info("no load:" + realDevice.Name);
+                    }
+                    if (string.IsNullOrEmpty(realDevice.Description))
+                    {
+                        emptycount++;
+                        Logger.Info("no description:" + realDevice.Name);
+                    }
+                }
+                Logger.Info(emptycount.ToString(CultureInfo.CurrentCulture));
+                db.Cleanup();
+            }
+        }
+
+        [Test]
+        [Category(UnitTestCategories.BasicTest)]
+        public void SimulatorTimeLimitsDeleteTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var sim = new Simulator(db.ConnectionString);
+                var count = sim.TimeLimits.MyItems.Count;
+                sim.TimeLimits.DeleteItem(sim.TimeLimits.MyItems[0]);
+                var sim2 = new Simulator(db.ConnectionString);
+                Assert.AreEqual(count - 1, sim2.TimeLimits.MyItems.Count);
+                db.Cleanup();
+            }
+        }
+
+        [Test]
+        [Category(UnitTestCategories.BasicTest)]
+        public void SimulatorTimeProfilesDeleteTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var sim = new Simulator(db.ConnectionString);
+                var count = sim.Timeprofiles.MyItems.Count;
+                sim.Timeprofiles.DeleteItem(sim.Timeprofiles.MyItems[0]);
+                var sim2 = new Simulator(db.ConnectionString);
+                Assert.AreEqual(count - 1, sim2.Timeprofiles.MyItems.Count);
+                db.Cleanup();
+            }
+        }
+
+        [Test]
+        [Category(UnitTestCategories.BasicTest)]
+        public void SimulatorTransformationDevicesDeleteTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var sim = new Simulator(db.ConnectionString);
+                var count = sim.TransformationDevices.MyItems.Count;
+                sim.TransformationDevices.DeleteItem(sim.TransformationDevices.MyItems[0]);
+                var sim2 = new Simulator(db.ConnectionString);
+                Assert.AreEqual(count - 1, sim2.TransformationDevices.MyItems.Count);
+                db.Cleanup();
+            }
         }
     }
 }

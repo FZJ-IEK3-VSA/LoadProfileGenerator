@@ -3,7 +3,6 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using Automation;
 using Automation.ResultFiles;
@@ -49,17 +48,18 @@ namespace SimulationEngineLib.WebRunner
             TemperatureProfile temps = sim.TemperatureProfiles.It.First(x => x.IntID == aspHh.TemperatureProfileID);
             GeographicLocation geographicLocation =
                 sim.GeographicLocations.It.First(x => x.IntID == aspHh.GeographicLocationID);
-            string version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             CalculationProfiler calculationProfiler = new CalculationProfiler();
             CalcStartParameterSet calcStartParameterSet =
                 new CalcStartParameterSet(ReportFinishFuncForHouseAndSettlement,
-                    ReportFinishFuncForHousehold, OpenTabFunc, null, geographicLocation, temps, chh,
-                    SetCalculationEntries, eit, ReportCancelFunc, false, version, null, LoadTypePriority.Mandatory,null,null, sim.MyGeneralConfig.AllEnabledOptions(),
+                    ReportFinishFuncForHousehold, OpenTabFunc,
+                    null, geographicLocation, temps, chh,
+                     eit, ReportCancelFunc, false,  null,
+                    LoadTypePriority.Mandatory,null,null, sim.MyGeneralConfig.AllEnabledOptions(),
                      new DateTime(now.Year, 1, 1), new DateTime(now.Year, 12, 31),
                     new TimeSpan(0,1,0),";",-1,
                     new TimeSpan(0,1,0),false,false,false,3,3,calculationProfiler,null,null,
-                    DeviceProfileHeaderMode.Standard,false);
-            cs.Start(calcStartParameterSet, dstPath);
+                    DeviceProfileHeaderMode.Standard,false, dstPath);
+            cs.Start(calcStartParameterSet );
         }
 
         private static bool OpenTabFunc([CanBeNull] object o) => true;
@@ -71,6 +71,5 @@ namespace SimulationEngineLib.WebRunner
 
         private static bool ReportFinishFuncForHousehold(bool a2, [CanBeNull] string a3, [CanBeNull] string a4) => true;
 
-        private static bool SetCalculationEntries([ItemNotNull] [NotNull] ObservableCollection<CalculationEntry> calculationEntries) => true;
     }
 }

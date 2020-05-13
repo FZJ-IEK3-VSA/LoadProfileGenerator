@@ -31,7 +31,7 @@ namespace ReleaseBuilder {
                 sim.ModularHouseholds.DeleteItem(modularHousehold);
                 i++;
                 if (i % interval == 0) {
-                    Logger.Info(i.ToString());
+                    Logger.Info(i.ToString(CultureInfo.InvariantCulture));
                 }
             }
 
@@ -42,7 +42,7 @@ namespace ReleaseBuilder {
                 sim.Houses.DeleteItem(house);
                 i++;
                 if (i % interval == 0) {
-                    Logger.Info(i.ToString());
+                    Logger.Info(i.ToString(CultureInfo.InvariantCulture));
                 }
             }
 
@@ -53,7 +53,7 @@ namespace ReleaseBuilder {
                 sim.Vacations.DeleteItem(vaca);
                 i++;
                 if (i % interval == 0) {
-                    Logger.Info(i.ToString());
+                    Logger.Info(i.ToString(CultureInfo.InvariantCulture));
                 }
             }
 
@@ -66,7 +66,7 @@ namespace ReleaseBuilder {
                 sim.Settlements.DeleteItem(vaca);
                 i++;
                 if (i % interval == 0) {
-                    Logger.Info(i.ToString());
+                    Logger.Info(i.ToString(CultureInfo.InvariantCulture));
                 }
             }
 
@@ -77,7 +77,7 @@ namespace ReleaseBuilder {
                 sim.SettlementTemplates.DeleteItem(vaca);
                 i++;
                 if (i % interval == 0) {
-                    Logger.Info(i.ToString());
+                    Logger.Info(i.ToString(CultureInfo.InvariantCulture));
                 }
             }
 

@@ -102,8 +102,8 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                 }
                 foreach (var entry in _resultFiles) {
                     if (string.IsNullOrEmpty(_resultFilter) ||
-                        entry.Name.ToLower(CultureInfo.CurrentCulture)
-                            .Contains(_resultFilter.ToLower(CultureInfo.CurrentCulture))) {
+                        entry.Name?.ToLower(CultureInfo.CurrentCulture)
+                            .Contains(_resultFilter.ToLower(CultureInfo.CurrentCulture))==true) {
                         _filteredResultFiles.Add(entry);
                     }
                 }
@@ -149,7 +149,9 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
 #pragma warning disable S2930 // "IDisposables" should be disposed
 #pragma warning disable CC0022 // Should dispose object
 #pragma warning disable IDE0067 // Dispose objects before losing scope
-            var excel = new Process {StartInfo = {FileName = resultFile.FullFileName, UseShellExecute = true}};
+            var excel = new Process();
+            excel.StartInfo.FileName = resultFile.FullFileName??throw new LPGException("fullfilename was null");
+            excel.StartInfo.UseShellExecute = true;
 #pragma warning restore IDE0067 // Dispose objects before losing scope
 #pragma warning restore CC0022 // Should dispose object
 #pragma warning restore S2930 // "IDisposables" should be disposed

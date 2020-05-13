@@ -28,6 +28,7 @@
 
 using System.Collections.ObjectModel;
 using System.Linq;
+using Automation;
 using Database.Database;
 using Database.Helpers;
 using Database.Tables.BasicElements;
@@ -42,7 +43,7 @@ namespace Database.Tables.BasicHouseholds {
         private readonly int _locationID;
 
         public LocationDevice([CanBeNull]int? pID, [CanBeNull] IAssignableDevice adev, int locationID, [NotNull] string connectionString,
-            [NotNull] string name, [NotNull] string guid)
+            [NotNull] string name, [NotNull] StrGuid guid)
             : base(name, TableName, connectionString, guid)
         {
             TypeDescription = "Location Device";

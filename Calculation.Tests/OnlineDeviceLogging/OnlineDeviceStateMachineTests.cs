@@ -62,15 +62,16 @@ namespace Calculation.Tests.OnlineDeviceLogging {
             var valueList = new List<double>(values);
             var r = new Random(1);
             var nr = new NormalRandom(0, 1, r);
-            string devGuid = Guid.NewGuid().ToString();
-            string locGuid = Guid.NewGuid().ToString();
-            var clt = new CalcLoadType("lt", "kWh", "W", 1, true, Guid.NewGuid().ToString());
+            var devGuid = Guid.NewGuid().ToStrGuid();
+            var locGuid = Guid.NewGuid().ToStrGuid();
+            var clt = new CalcLoadType("lt", "kWh", "W", 1, true, Guid.NewGuid().ToStrGuid());
             var calcDeviceDto  = new CalcDeviceDto("device",devGuid, new HouseholdKey("hh1"),OefcDeviceType.Device,
                 "mycategory","", devGuid,locGuid,"locname");
             var key = new OefcKey(calcDeviceDto, locGuid);
-            var cp = new CalcProfile("mycalcprofile", Guid.NewGuid().ToString(), valueList, ProfileType.Absolute, "bla");
+            var cp = new CalcProfile("mycalcprofile", Guid.NewGuid().ToStrGuid(), valueList, ProfileType.Absolute, "bla");
             TimeStep ts = new TimeStep(5, 0, false);
-            StepValues sv = StepValues.MakeStepValues(cp, 0, 1, nr);
+            CalcDeviceLoad cdl = new CalcDeviceLoad("",1,clt,0,0);
+            StepValues sv = StepValues.MakeStepValues(cp, nr,cdl,1);
             var odsm = new OnlineDeviceStateMachine(ts,  clt.ConvertToDto(), "device", key,"affordance",
                 calcParameters, sv);
             calcParameters.SetDummyTimeSteps(0);

@@ -4,7 +4,6 @@ using System.Globalization;
 using System.IO;
 using Automation.ResultFiles;
 using Common;
-using JetBrains.Annotations;
 
 namespace ChartCreator2.OxyCharts {
     internal class AffordanceTimeUse : ChartBaseFileStep
@@ -22,11 +21,15 @@ namespace ChartCreator2.OxyCharts {
         protected override FileProcessingResult MakeOnePlot(ResultFileEntry srcResultFileEntry)
         {
             string plotName = "Affordance Time Use " + srcResultFileEntry.HouseholdNumberString;
-            _CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
+            Profiler.StartPart(Utili.GetCurrentMethodAndClass());
             var allConsumptions =
                 new Dictionary<string, List<Tuple<string, double>>>();
             var lastName = string.Empty;
             var taggingSets = new Dictionary<string, List<ChartTaggingSet>>();
+            if (srcResultFileEntry.FullFileName == null)
+            {
+                throw new LPGException("Srcfile was null");
+            }
             using (var sr = new StreamReader(srcResultFileEntry.FullFileName)) {
                 while (!sr.EndOfStream) {
                     var s = sr.ReadLine();
@@ -38,7 +41,7 @@ namespace ChartCreator2.OxyCharts {
                         if (s == null) {
                             throw new LPGException("Readline failed");
                         }
-                        var arr = s.Split(_Parameters.CSVCharacterArr, StringSplitOptions.None);
+                        var arr = s.Split(Parameters.CSVCharacterArr, StringSplitOptions.None);
                         lastName = arr[0];
                         allConsumptions.Add(lastName, new List<Tuple<string, double>>());
                         taggingSets.Add(lastName, new List<ChartTaggingSet>());
@@ -49,7 +52,7 @@ namespace ChartCreator2.OxyCharts {
                         }
                     }
                     else {
-                        var cols = s.Split(_Parameters.CSVCharacterArr, StringSplitOptions.None);
+                        var cols = s.Split(Parameters.CSVCharacterArr, StringSplitOptions.None);
                         var d = Convert.ToDouble(cols[1], CultureInfo.CurrentCulture);
                         allConsumptions[lastName].Add(new Tuple<string, double>(cols[0], d));
                         for (var i = 2; i < cols.Length; i++) {
@@ -63,10 +66,10 @@ namespace ChartCreator2.OxyCharts {
                 var cts = taggingSets[pair.Key];
 
                 foreach (var set in cts) {
-                    ivm.MakeIntervalBars(srcResultFileEntry, plotName, _Parameters.BaseDirectory, pair.Value, set, "." + pair.Key + "." + set.Name,false,this);
+                    ivm.MakeIntervalBars(srcResultFileEntry, plotName, Parameters.BaseDirectory, pair.Value, set, "." + pair.Key + "." + set.Name,false,this);
                 }
             }
-            _CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
+            Profiler.StopPart(Utili.GetCurrentMethodAndClass());
             return FileProcessingResult.ShouldCreateFiles;
         }
     }

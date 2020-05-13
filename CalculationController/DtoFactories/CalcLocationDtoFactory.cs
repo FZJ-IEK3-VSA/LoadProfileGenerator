@@ -6,6 +6,7 @@ using Automation;
 using Automation.ResultFiles;
 using CalculationController.CalcFactories;
 using CalculationController.Helpers;
+using Common;
 using Common.CalcDto;
 using Common.JSON;
 using Database.Helpers;
@@ -15,7 +16,7 @@ using JetBrains.Annotations;
 namespace CalculationController.DtoFactories
 {
     public class DeviceCategoryDto {
-        public DeviceCategoryDto([NotNull] string fullCategoryName, [NotNull] string guid)
+        public DeviceCategoryDto([NotNull] string fullCategoryName, [NotNull] StrGuid guid)
         {
             FullCategoryName = fullCategoryName;
             Guid = guid;
@@ -26,7 +27,7 @@ namespace CalculationController.DtoFactories
         public string FullCategoryName { get; set; }
         [NotNull]
         [UsedImplicitly]
-        public string Guid { get; set; }
+        public StrGuid Guid { get; set; }
     }
 
     public class CalcLocationDtoFactory {
@@ -57,7 +58,7 @@ namespace CalculationController.DtoFactories
             foreach (var t in locations)
             {
                 // loc anlegen
-                var cloc = new CalcLocationDto(t.Name, t.IntID, Guid.NewGuid().ToString());
+                var cloc = new CalcLocationDto(t.Name, t.IntID, Guid.NewGuid().ToStrGuid());
                 foreach (var locdev in t.LocationDevices)
                 {
                     RealDevice rd;
@@ -84,7 +85,7 @@ namespace CalculationController.DtoFactories
                     var devcatdto = deviceCategoryDtos.Single(x => x.FullCategoryName == rd.DeviceCategory.FullPath);
                     var clightdevice = new CalcDeviceDto(deviceName,  devcatdto.Guid,
                         householdKey, OefcDeviceType.Light, rd.DeviceCategory.FullPath,
-                        string.Empty, Guid.NewGuid().ToString(),cloc.Guid,cloc.Name);
+                        string.Empty, Guid.NewGuid().ToStrGuid(),cloc.Guid,cloc.Name);
                     clightdevice.AddLoads(CalcDeviceDtoFactory.MakeCalcDeviceLoads(rd, _calcLoadTypeDict));
                     cloc.AddLightDevice(clightdevice);
                 }

@@ -81,7 +81,7 @@ namespace CalculationEngine.HouseholdElements {
 
         public CalcHousehold([NotNull] string pName, [NotNull] string locationname,
                              [NotNull] string temperatureprofileName, [NotNull] HouseholdKey householdkey,
-                              [NotNull] string guid,
+                              [NotNull] StrGuid guid,
                              [NotNull] CalcVariableRepository calcVariableRepository,
                              [ItemNotNull] [NotNull] List<CalcLocation> locations,
                              [ItemNotNull] [NotNull] List<CalcPerson> persons,

@@ -4,7 +4,6 @@ using System.Globalization;
 using System.IO;
 using Automation.ResultFiles;
 using Common;
-using JetBrains.Annotations;
 using OxyPlot;
 using OxyPlot.Series;
 
@@ -24,10 +23,13 @@ namespace ChartCreator2.OxyCharts {
             string plotName = "Activity Percentages " + srcResultFileEntry.HouseholdKey + " " +
                               srcResultFileEntry.LoadTypeInformation?.Name;
 
-            _CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
+            Profiler.StartPart(Utili.GetCurrentMethodAndClass());
             var consumption =
                 new Dictionary<string, List<Tuple<string, double>>>();
             var lastname = string.Empty;
+            if (srcResultFileEntry.FullFileName == null) {
+                throw new LPGException("Srcfile was null");
+            }
             using (var sr = new StreamReader(srcResultFileEntry.FullFileName)) {
                 while (!sr.EndOfStream) {
                     var s = sr.ReadLine();
@@ -35,7 +37,7 @@ namespace ChartCreator2.OxyCharts {
                         throw new LPGException("Readline failed");
                     }
 
-                    var cols = s.Split(_Parameters.CSVCharacterArr, StringSplitOptions.None);
+                    var cols = s.Split(Parameters.CSVCharacterArr, StringSplitOptions.None);
                     if (cols.Length == 1) {
                         consumption.Add(cols[0], new List<Tuple<string, double>>());
                         lastname = cols[0];
@@ -57,7 +59,7 @@ namespace ChartCreator2.OxyCharts {
                     LegendPlacement = LegendPlacement.Outside,
                     LegendPosition = LegendPosition.BottomCenter
                 };
-                if (_Parameters.ShowTitle) {
+                if (Parameters.ShowTitle) {
                     plotModel1.Title = plotName + " " + personname;
                 }
 
@@ -90,9 +92,9 @@ namespace ChartCreator2.OxyCharts {
                 }
 
                 plotModel1.Series.Add(pieSeries1);
-                Save(plotModel1, plotName, srcResultFileEntry.FullFileName + "." + personname, _Parameters.BaseDirectory);
+                Save(plotModel1, plotName, srcResultFileEntry.FullFileName + "." + personname, Parameters.BaseDirectory);
             }
-            _CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
+            Profiler.StopPart(Utili.GetCurrentMethodAndClass());
             return FileProcessingResult.ShouldCreateFiles;
         }
     }

@@ -29,7 +29,6 @@ namespace CalcPostProcessorTests {
                         sim.ModularHouseholds[0],
                         EnergyIntensityType.EnergySaving,
                         false,
-                        "1",
                         null,
                         LoadTypePriority.Optional,
                         null,
@@ -47,9 +46,9 @@ namespace CalcPostProcessorTests {
                         false,
                         3,
                         3,
-                        calculationProfiler);
+                        calculationProfiler, wd.WorkingDirectory);
                     var cmf = new CalcManagerFactory();
-                    var cm = cmf.GetCalcManager(sim, wd.WorkingDirectory, csps, false);
+                    var cm = cmf.GetCalcManager(sim, csps, false);
                     cm.Run(null);
 
                     var mq = new Mock<ICalculationProfiler>();

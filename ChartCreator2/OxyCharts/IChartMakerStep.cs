@@ -3,7 +3,6 @@
 using System.Collections.Generic;
 using Automation.ResultFiles;
 using Common.SQLResultLogging;
-using JetBrains.Annotations;
 
 namespace ChartCreator2.OxyCharts {
     public interface IChartMakerStep {

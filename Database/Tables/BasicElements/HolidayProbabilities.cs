@@ -28,6 +28,7 @@
 
 using System;
 using System.Collections.ObjectModel;
+using Automation;
 using Database.Database;
 using JetBrains.Annotations;
 
@@ -42,7 +43,7 @@ namespace Database.Tables.BasicElements {
         private double _wednesday;
 
         public HolidayProbabilities(int holidayID,[CanBeNull] int? pID, DayOfWeek dayOfWeek, double monday, double tuesday,
-            double wednesday, double thursday, double friday, [NotNull] string connectionString, [NotNull] string guid)
+            double wednesday, double thursday, double friday, [NotNull] string connectionString, [NotNull] StrGuid guid)
             : base(dayOfWeek.ToString(), pID, TableName, connectionString, guid)
         {
             HolidayID = holidayID;

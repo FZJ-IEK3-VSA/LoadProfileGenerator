@@ -50,6 +50,8 @@ namespace Common {
         [NotNull]
         public string WorkingDirectory => _lastDirectory;
 
+        public bool SkipCleaning { get; set; } = false;
+
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public void ClearDirectory()
         {
@@ -63,8 +65,16 @@ namespace Common {
             }
         }
 
+        private bool _isClean;
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public void CleanUp(int numberOfFilesToTolerate = 0, bool throwAllErrors = true) {
+            if (_isClean) {
+                return;
+            }
+
+            if (SkipCleaning) {
+                return;
+            }
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();
@@ -82,6 +92,7 @@ namespace Common {
             }
             var tryCount = 0;
             Exception lastException = null;
+            _isClean = true;
             while (tryCount < 300) {
                 try {
                     if (tryCount > 0) {
@@ -114,6 +125,7 @@ namespace Common {
                 Logger.Exception(lastException);
                 throw lastException;
             }
+
         }
 
         [NotNull]

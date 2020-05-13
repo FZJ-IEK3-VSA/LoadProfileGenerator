@@ -50,11 +50,11 @@ namespace Automation {
         public override int GetHashCode()
         {
             unchecked {
-                return (Name.GetHashCode() * 397) ^ Guid.GetHashCode();
+                return (Name?.GetHashCode()??0 * 397) ^ (Guid?.GetHashCode()??0);
             }
         }
 
-        public JsonReference([NotNull] string name, [NotNull] string guid)
+        public JsonReference([NotNull] string name, [NotNull] StrGuid guid)
         {
             Name = name;
             Guid = guid;
@@ -68,12 +68,13 @@ namespace Automation {
         [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public JsonReference()
         {
+            Guid = StrGuid.Empty;
         }
 
         [NotNull]
-        public string Name { get; set; }
+        public string? Name { get; set; }
         [NotNull]
-        public string Guid { get; set; }
+        public StrGuid Guid { get; set; }
 
         [NotNull]
         public override string ToString() => Name + "(" + Guid + ")";

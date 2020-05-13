@@ -54,7 +54,7 @@ namespace Database.Tables.ModularHouseholds {
             {
             }
 
-            public JsonModularHouseholdTrait([NotNull] string guid) => Guid = guid;
+            public JsonModularHouseholdTrait([NotNull] StrGuid guid) => Guid = guid;
 
             public ModularHouseholdTraitAssignType AssignType { get; set; }
 
@@ -64,7 +64,7 @@ namespace Database.Tables.ModularHouseholds {
             [CanBeNull]
             public JsonReference HouseholdTrait { get; set; }
             [NotNull]
-            public string Guid { get; set; }
+            public StrGuid Guid { get; set; }
 
 
         }
@@ -111,7 +111,7 @@ namespace Database.Tables.ModularHouseholds {
 
         public ModularHouseholdTrait([CanBeNull]int? pID, [CanBeNull]int? modularHouseholdID, [NotNull] string name, [NotNull] string connectionString,
             [CanBeNull] HouseholdTrait ht, [CanBeNull] Person dstPerson, ModularHouseholdTraitAssignType assignType,
-                                     [NotNull] string guid)
+                                     [NotNull] StrGuid guid)
             : base(name, TableName, connectionString, guid) {
             AssignType = assignType;
             _dstPerson = dstPerson;
@@ -293,6 +293,6 @@ namespace Database.Tables.ModularHouseholds {
             return "(no name)";
         }
 
-        public string RelevantGuid => Guid;
+        public StrGuid RelevantGuid => Guid;
     }
 }

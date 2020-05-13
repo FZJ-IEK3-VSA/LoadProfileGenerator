@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Automation;
 using Automation.ResultFiles;
 using Common.SQLResultLogging.Loggers;
 using JetBrains.Annotations;
@@ -11,18 +12,18 @@ namespace Common.CalcDto {
         [NotNull]
         public string SiteAName { get; }
         [NotNull]
-        public string SiteAGuid { get; }
+        public StrGuid SiteAGuid { get; }
         [NotNull]
         public string SiteBName { get; }
         [NotNull]
-        public string SiteBGuid { get; }
+        public StrGuid SiteBGuid { get; }
         [NotNull]
         public HouseholdKey HouseholdKey { get; }
         [NotNull]
-        public string Guid { get; }
+        public StrGuid Guid { get; }
 
-        public CalcTravelRouteDto([NotNull]string name, int id, [NotNull] HouseholdKey householdkey, [NotNull] string guid,
-                                  [NotNull]string siteAName, [NotNull]string siteAGuid, [NotNull] string siteBName, [NotNull]string siteBGuid)
+        public CalcTravelRouteDto([NotNull]string name, int id, [NotNull] HouseholdKey householdkey, [NotNull] StrGuid guid,
+                                  [NotNull]string siteAName, [NotNull]StrGuid siteAGuid, [NotNull] string siteBName, [NotNull]StrGuid siteBGuid)
         {
             Name = name;
             ID = id;
@@ -35,7 +36,7 @@ namespace Common.CalcDto {
         }
         [NotNull][ItemNotNull]
         public List<CalcTravelRouteStepDto> Steps { get; } = new List<CalcTravelRouteStepDto>();
-        public void AddTravelRouteStep([NotNull]string stepName, int stepIntID, [NotNull]CalcTransportationDeviceCategoryDto deviceCategory, int stepNumber, double distanceInM, [NotNull]string guid)
+        public void AddTravelRouteStep([NotNull]string stepName, int stepIntID, [NotNull]CalcTransportationDeviceCategoryDto deviceCategory, int stepNumber, double distanceInM, [NotNull]StrGuid guid)
         {
             CalcTravelRouteStepDto trs = new CalcTravelRouteStepDto(stepName, stepIntID, deviceCategory, stepNumber, distanceInM, guid);
             Steps.Add(trs);

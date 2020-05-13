@@ -219,7 +219,7 @@ namespace Database.Tables
 #pragma warning restore CA2235 // Mark all non-serializable fields
         private bool _needsUpdate;
 
-        protected DBBase([NotNull]string pName, [NotNull] string tableName, [NotNull] string connectionString,[NotNull] string guid):base(pName)
+        protected DBBase([NotNull]string pName, [NotNull] string tableName, [NotNull] string connectionString,[NotNull] StrGuid guid):base(pName)
         {
             _guid = guid;
             if(guid==null) {
@@ -232,7 +232,7 @@ namespace Database.Tables
         }
 
         protected DBBase([NotNull]string pName, [CanBeNull] int? pID, [NotNull] string tableName, [NotNull] string connectionString,
-                         [NotNull] string guid):base(pName)
+                         [NotNull] StrGuid guid):base(pName)
         {
             _guid = guid;
             if (guid == null)
@@ -267,12 +267,12 @@ namespace Database.Tables
             protected set => _id = value;
         }
 
-        [NotNull] private string _guid;
+        [NotNull] private StrGuid _guid;
         [NotNull]
-        public string Guid
+        public StrGuid Guid
         {
             get => _guid;
-            set => SetValueWithNotify(value, ref _guid, nameof(Guid));
+            set => SetValueWithNotify(value, ref _guid,true, nameof(Guid));
         }
 
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "int")]
@@ -556,7 +556,7 @@ namespace Database.Tables
             }
             foreach (var item in col)
             {
-                if (string.Equals(item.Guid, reference.Guid, StringComparison.OrdinalIgnoreCase))
+                if (item.Guid == reference.Guid)
                 {
                     return item;
                 }
@@ -597,7 +597,7 @@ namespace Database.Tables
             [NotNull] string pTableName, [NotNull] Func<DataReader, string, bool, AllItemCollections, T> assignFields,
             [NotNull] AllItemCollections allItemCollections, bool ignoreMissingTables, bool sort) where T : DBBase
         {
-            int prevCount = _GuidCreationCount;
+            int prevCount = GuidCreationCount;
             if (ignoreMissingTables)
             {
                 if (!DoesTableExist(connectionString, pTableName))
@@ -644,7 +644,7 @@ namespace Database.Tables
                 }
                 //if any guids were created, just save all the objects
                 foreach (var dbBase in objList) {
-                    if (prevCount != _GuidCreationCount)
+                    if (prevCount != GuidCreationCount)
                     {
                         dbBase._needsUpdate = true;
                     }
@@ -696,24 +696,26 @@ namespace Database.Tables
             cmd.AddParameter("Guid",  Guid);
         }
 
-        [NotNull] [ItemNotNull] public static readonly HashSet<string> GuidsToSave = new HashSet<string>();
+        [NotNull] [ItemNotNull] public static readonly HashSet<StrGuid> GuidsToSave = new HashSet<StrGuid>();
         [NotNull] [ItemNotNull] public static readonly List<string> TypesThatMadeGuids = new List<string>();
-        public static int _GuidCreationCount ;
+        public static int GuidCreationCount { get; set; }
         [NotNull]
-        public static string GetGuid([NotNull] DataReader dr, bool ignoreMissingFields)
+        public static StrGuid GetGuid([NotNull] DataReader dr, bool ignoreMissingFields)
         {
-            var guid = dr.GetString("Guid", false, "", ignoreMissingFields);
-            if (string.IsNullOrWhiteSpace(guid))
+            var oldguid = dr.GetString("Guid", false, "", ignoreMissingFields);
+            if (string.IsNullOrWhiteSpace(oldguid))
             {
-                guid = System.Guid.NewGuid().ToString();
+                var guid = System.Guid.NewGuid().ToStrGuid();
                 GuidsToSave.Add(guid);
-                _GuidCreationCount++;
+                GuidCreationCount++;
                 string callingMethod = Utili.GetCallingMethodAndClass();
                 if (!TypesThatMadeGuids.Contains(callingMethod)) {
                     TypesThatMadeGuids.Add(callingMethod);
                 }
+
+                return guid;
             }
-            return guid;
+            return new StrGuid(oldguid);
         }
 
         public virtual void SaveToDB([NotNull] Connection con)

@@ -32,6 +32,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using Automation;
 using Common;
 using Database.Database;
 using JetBrains.Annotations;
@@ -44,7 +45,7 @@ namespace Database.Tables.BasicElements {
         [ItemNotNull] [NotNull] private readonly ObservableCollection<TemperatureValue> _temperatureValues;
         [NotNull] private string _description;
         public TemperatureProfile([NotNull] string name,[CanBeNull] int? id, [NotNull] string description, [NotNull] string connectionString,
-                                  [NotNull] string guid) : base(name,
+                                  [NotNull] StrGuid guid) : base(name,
             TableName, connectionString, guid) {
             _description = description;
             _temperatureValues = new ObservableCollection<TemperatureValue>();
@@ -64,7 +65,7 @@ namespace Database.Tables.BasicElements {
         public ObservableCollection<TemperatureValue> TemperatureValues => _temperatureValues;
 
         public void AddTemperature(DateTime time, double value, [CanBeNull]int? id = null, bool sort = true, bool save = true) {
-            var tv = new TemperatureValue(time, value, IntID, id, ConnectionString, System.Guid.NewGuid().ToString());
+            var tv = new TemperatureValue(time, value, IntID, id, ConnectionString, System.Guid.NewGuid().ToStrGuid());
             _temperatureValues.Add(tv);
             if (id == null && save) {
                 SaveToDB();
@@ -88,7 +89,7 @@ namespace Database.Tables.BasicElements {
         [UsedImplicitly]
         public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) {
             var house = new TemperatureProfile(FindNewName(isNameTaken, "New Temperature Profile "),
-                null, "(no description)", connectionString, System.Guid.NewGuid().ToString());
+                null, "(no description)", connectionString, System.Guid.NewGuid().ToStrGuid());
             return house;
         }
 
@@ -253,7 +254,7 @@ namespace Database.Tables.BasicElements {
                 }
             }
 
-            if (_GuidCreationCount > 0) {
+            if (GuidCreationCount > 0) {
                 foreach (var temperatureValue in _temperatureValues) {
                     if (GuidsToSave.Contains(temperatureValue.Guid)) {
                         temperatureValue.SaveToDB();

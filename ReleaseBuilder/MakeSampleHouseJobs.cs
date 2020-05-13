@@ -40,63 +40,74 @@ namespace ReleaseBuilder
         [Test]
         public void RunDirectHouseholds()
         {
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            Simulator sim = new Simulator(db.ConnectionString);
-            string dir = wd.Combine("DirectHouseJobs");
-            if (!Directory.Exists(dir)) {
-                Directory.CreateDirectory(dir);
+            using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
+                {
+                    Simulator sim = new Simulator(db.ConnectionString);
+                    string dir = wd.Combine("DirectHouseJobs");
+                    if (!Directory.Exists(dir))
+                    {
+                        Directory.CreateDirectory(dir);
+                    }
+                    foreach (var mhh in sim.ModularHouseholds.It)
+                    {
+                        HouseCreationAndCalculationJob hj = new HouseCreationAndCalculationJob("Households", "2019", "TK");
+                        hj.House = new HouseData(Guid.NewGuid().ToStrGuid(), "HT01", 10000, 10000, "House for " + mhh.Name);
+                        hj.House.Households.Add(new HouseholdData(Guid.NewGuid().ToString(),
+                            false, mhh.Name, null, null, null, null, HouseholdDataSpecificationType.ByHouseholdName));
+                        hj.House.Households[0].HouseholdNameSpecification = new HouseholdNameSpecification(mhh.Name);
+                        SetCalcSpec(hj, sim);
+                        string fn = Path.Combine(dir, AutomationUtili.CleanFileName(mhh.Name) + ".json");
+                        File.WriteAllText(fn, JsonConvert.SerializeObject(hj, Formatting.Indented));
+                    }
+                    CopyAll(new DirectoryInfo(dir), new DirectoryInfo(@"X:\HouseJobs\Blockstrom\DirectHouseholds"));
+                }
             }
-            foreach (var mhh in sim.ModularHouseholds.It) {
-                HouseCreationAndCalculationJob hj = new HouseCreationAndCalculationJob("Households","2019","TK");
-                hj.House = new HouseData(Guid.NewGuid().ToString(),"HT01",10000,10000,"House for " + mhh.Name);
-                hj.House.Households.Add( new HouseholdData(Guid.NewGuid().ToString(),
-                    false,mhh.Name ,null,null,null,null,HouseholdDataSpecifictionType.ByHouseholdName));
-                hj.House.Households[0].HouseholdNameSpecification = new HouseholdNameSpecification(mhh.Name);
-                SetCalcSpec(hj, sim);
-                string fn =Path.Combine(dir, AutomationUtili.CleanFileName(mhh.Name)  + ".json");
-                File.WriteAllText(fn,JsonConvert.SerializeObject(hj,Formatting.Indented));
-            }
-            CopyAll(new DirectoryInfo(dir),new DirectoryInfo(@"X:\HouseJobs\Blockstrom\DirectHouseholds") );
         }
 
         [Test]
         public void RunHouseholdTemplate()
         {
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
-            Simulator sim = new Simulator(db.ConnectionString);
-            string dir = wd.Combine("DirectHouseJobs");
-            if (!Directory.Exists(dir))
+            using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
-                Directory.CreateDirectory(dir);
-            }
-            Random rnd = new Random();
-
-            List<string> houseTypes = sim.HouseTypes.It.Select(x => x.Name.Substring(0, x.Name.IndexOf(" ", StringComparison.Ordinal))).ToList();
-            foreach (var mhh in sim.HouseholdTemplates.It)
-            {
-                for (int i = 0; i < 100; i++) {
-                    HouseCreationAndCalculationJob hj = new HouseCreationAndCalculationJob("TemplatedRandomHouseType", "2019", "TK");
-                    string ht = houseTypes[rnd.Next(houseTypes.Count)];
-                    Logger.Info(ht);
-                    hj.House = new HouseData(Guid.NewGuid().ToString(), ht, 10000, 10000, "House for " + mhh.Name + " " + i);
-                    hj.House.Households.Add(new HouseholdData(Guid.NewGuid().ToString(), false,
-                        mhh.Name, null, null, null,
-                        null, HouseholdDataSpecifictionType.ByTemplateName));
-                    hj.House.Households[0].HouseholdTemplateSpecification = new HouseholdTemplateSpecification(mhh.Name);
-                    SetCalcSpec(hj, sim);
-                    if(hj.CalcSpec.CalcOptions == null)
+                using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
+                {
+                    Simulator sim = new Simulator(db.ConnectionString);
+                    string dir = wd.Combine("DirectHouseJobs");
+                    if (!Directory.Exists(dir))
                     {
-                        throw new LPGException("calcoption not set");
+                        Directory.CreateDirectory(dir);
                     }
-                    hj.CalcSpec.CalcOptions.Add(CalcOption.EnergyCarpetPlot);
-                    hj.CalcSpec.CalcOptions.Add(CalcOption.IndividualSumProfiles);
-                    string fn = Path.Combine(dir, AutomationUtili.CleanFileName(mhh.Name) + "." +i+ ".json");
-                    File.WriteAllText(fn, JsonConvert.SerializeObject(hj, Formatting.Indented));
+                    Random rnd = new Random();
+
+                    List<string> houseTypes = sim.HouseTypes.It.Select(x => x.Name.Substring(0, x.Name.IndexOf(" ", StringComparison.Ordinal))).ToList();
+                    foreach (var mhh in sim.HouseholdTemplates.It)
+                    {
+                        for (int i = 0; i < 100; i++)
+                        {
+                            HouseCreationAndCalculationJob hj = new HouseCreationAndCalculationJob("TemplatedRandomHouseType", "2019", "TK");
+                            string ht = houseTypes[rnd.Next(houseTypes.Count)];
+                            Logger.Info(ht);
+                            hj.House = new HouseData(Guid.NewGuid().ToStrGuid(), ht, 10000, 10000, "House for " + mhh.Name + " " + i);
+                            hj.House.Households.Add(new HouseholdData(Guid.NewGuid().ToString(), false,
+                                mhh.Name, null, null, null,
+                                null, HouseholdDataSpecificationType.ByTemplateName));
+                            hj.House.Households[0].HouseholdTemplateSpecification = new HouseholdTemplateSpecification(mhh.Name);
+                            SetCalcSpec(hj, sim);
+                            if (hj.CalcSpec?.CalcOptions == null)
+                            {
+                                throw new LPGException("calcoption not set");
+                            }
+                            hj.CalcSpec.CalcOptions.Add(CalcOption.EnergyCarpetPlot);
+                            hj.CalcSpec.CalcOptions.Add(CalcOption.IndividualSumProfiles);
+                            string fn = Path.Combine(dir, AutomationUtili.CleanFileName(mhh.Name) + "." + i + ".json");
+                            File.WriteAllText(fn, JsonConvert.SerializeObject(hj, Formatting.Indented));
+                        }
+                    }
+                    CopyAll(new DirectoryInfo(dir), new DirectoryInfo(@"X:\HouseJobs\Blockstrom\TemplatedHouses"));
                 }
             }
-            CopyAll(new DirectoryInfo(dir), new DirectoryInfo(@"X:\HouseJobs\Blockstrom\TemplatedHouses"));
         }
 
         private static void SetCalcSpec([NotNull] HouseCreationAndCalculationJob hj, [NotNull] Simulator sim)

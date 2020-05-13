@@ -18,12 +18,12 @@ namespace Automation
         {
         }
 
-        public string Name { get; set; }
+        public string? Name { get; set; }
         public TimeSpan TimeResolution { get; set; }
         public List<double> Values { get; set; } = new List<double>();
         public DateTime StartTime { get; set; }
 
-        public string LoadTypeName { get; set; }
-        public string Unit { get; set; }
+        public string? LoadTypeName { get; set; }
+        public string? Unit { get; set; }
     }
 }

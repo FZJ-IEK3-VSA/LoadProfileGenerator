@@ -42,32 +42,34 @@ namespace Database.Tests.Tables.ModularHouseholds {
     {
         [Test]
         [Category(UnitTestCategories.BasicTest)]
-        public void LoadFromDatabaseTest() {
-            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
+        public void LoadFromDatabaseTest()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var persons = db.LoadPersons();
 
-            var persons = db.LoadPersons();
-
-            db.ClearTable(HouseholdTrait.TableName);
-            var affordances = db.LoadAffordances(out var timeBasedProfiles, out _,
-                out var deviceCategories, out var realDevices, out var desires, out var loadTypes, out var timeLimits, out ObservableCollection<DeviceAction> deviceActions,
-                out ObservableCollection<DeviceActionGroup> deviceActionGroups, out var locations, out var variables, out _);
-            var tags = db.LoadTraitTags();
-            var householdTraits = db.LoadHouseholdTraits(locations, affordances,
-                realDevices, deviceCategories, timeBasedProfiles, loadTypes, timeLimits, desires, deviceActions,
-                deviceActionGroups, tags, variables);
-            var hht = new HouseholdTrait("bla", null, "blub", db.ConnectionString, "none", 1, 100, 10, 1, 1,
-                TimeType.Day, 1, 1, TimeType.Day, 1, 0, EstimateType.Theoretical, "", Guid.NewGuid().ToString());
-            hht.SaveToDB();
-            householdTraits.Add(hht);
-            var chht = new ModularHouseholdTrait(null, null, "hallo", db.ConnectionString,
-                householdTraits[0], null, ModularHouseholdTrait.ModularHouseholdTraitAssignType.Age, Guid.NewGuid().ToString());
-            chht.DeleteFromDB();
-            chht.SaveToDB();
-            var chht1 = new ModularHouseholdTrait(null, null, "hallo2", db.ConnectionString,
-                householdTraits[0], persons[0], ModularHouseholdTrait.ModularHouseholdTraitAssignType.Name, Guid.NewGuid().ToString());
-            chht1.SaveToDB();
-            chht1.DeleteFromDB();
-            db.Cleanup();
+                db.ClearTable(HouseholdTrait.TableName);
+                var affordances = db.LoadAffordances(out var timeBasedProfiles, out _,
+                    out var deviceCategories, out var realDevices, out var desires, out var loadTypes, out var timeLimits, out ObservableCollection<DeviceAction> deviceActions,
+                    out ObservableCollection<DeviceActionGroup> deviceActionGroups, out var locations, out var variables, out _);
+                var tags = db.LoadTraitTags();
+                var householdTraits = db.LoadHouseholdTraits(locations, affordances,
+                    realDevices, deviceCategories, timeBasedProfiles, loadTypes, timeLimits, desires, deviceActions,
+                    deviceActionGroups, tags, variables);
+                var hht = new HouseholdTrait("bla", null, "blub", db.ConnectionString, "none", 1, 100, 10, 1, 1,
+                    TimeType.Day, 1, 1, TimeType.Day, 1, 0, EstimateType.Theoretical, "", Guid.NewGuid().ToStrGuid());
+                hht.SaveToDB();
+                householdTraits.Add(hht);
+                var chht = new ModularHouseholdTrait(null, null, "hallo", db.ConnectionString,
+                    householdTraits[0], null, ModularHouseholdTrait.ModularHouseholdTraitAssignType.Age, Guid.NewGuid().ToStrGuid());
+                chht.DeleteFromDB();
+                chht.SaveToDB();
+                var chht1 = new ModularHouseholdTrait(null, null, "hallo2", db.ConnectionString,
+                    householdTraits[0], persons[0], ModularHouseholdTrait.ModularHouseholdTraitAssignType.Name, Guid.NewGuid().ToStrGuid());
+                chht1.SaveToDB();
+                chht1.DeleteFromDB();
+                db.Cleanup();
+            }
         }
     }
 }

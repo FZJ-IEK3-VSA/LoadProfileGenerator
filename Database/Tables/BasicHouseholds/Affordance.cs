@@ -92,7 +92,7 @@ namespace Database.Tables.BasicHouseholds {
             [CanBeNull] TimeLimit timeLimitLimit, [CanBeNull] string description, [NotNull] string connectionString,
             bool isInterruptable,
             bool isInterrupting, int minimumAge, int maximumAge, bool randomResults,
-            ActionAfterInterruption actionAfterInterruption, bool requireAllDesires, [NotNull] string guid,
+            ActionAfterInterruption actionAfterInterruption, bool requireAllDesires, [NotNull] StrGuid guid,
             BodilyActivityLevel bodilyActivityLevel) : base(pName, TableName,
             connectionString, guid)
         {
@@ -331,7 +331,7 @@ namespace Database.Tables.BasicHouseholds {
             }
 
             var affordanceDesire = new AffordanceDesire(null, desire, IntID, satisfactionvalue, desires,
-                desire.Name, ConnectionString, System.Guid.NewGuid().ToString());
+                desire.Name, ConnectionString, System.Guid.NewGuid().ToStrGuid());
             _affDesires.Add(affordanceDesire);
             affordanceDesire.SaveToDB();
             _affDesires.Sort();
@@ -345,7 +345,7 @@ namespace Database.Tables.BasicHouseholds {
         {
             var deviceName = device.Name;
             var dtl = new AffordanceDevice(device, tp, null, timeoffset, IntID, allDevices,
-                allDeviceCategories, deviceName, vLoadType, ConnectionString, probability, System.Guid.NewGuid().ToString());
+                allDeviceCategories, deviceName, vLoadType, ConnectionString, probability, System.Guid.NewGuid().ToStrGuid());
 
             _deviceprofiles.Add(dtl);
             _deviceprofiles.Sort();
@@ -356,7 +356,7 @@ namespace Database.Tables.BasicHouseholds {
         {
             var deviceName = device.Name;
             var standby = new AffordanceStandby(device, null,
-                IntID, ConnectionString, deviceName, System.Guid.NewGuid().ToString());
+                IntID, ConnectionString, deviceName, System.Guid.NewGuid().ToStrGuid());
             _affStandby.Add(standby);
             _affStandby.Sort();
             standby.SaveToDB();
@@ -365,7 +365,7 @@ namespace Database.Tables.BasicHouseholds {
         public void AddSubAffordance([NotNull] SubAffordance subAffordance, decimal delaytime)
         {
             var affordanceSubAffordance = new AffordanceSubAffordance(null, subAffordance,
-                delaytime, IntID, Name, ConnectionString, subAffordance.Name, System.Guid.NewGuid().ToString());
+                delaytime, IntID, Name, ConnectionString, subAffordance.Name, System.Guid.NewGuid().ToStrGuid());
             SubAffordances.Add(affordanceSubAffordance);
             affordanceSubAffordance.SaveToDB();
         }
@@ -385,7 +385,7 @@ namespace Database.Tables.BasicHouseholds {
             var name = variable.Name;
             //}
             var at = new AffVariableOperation(value, null, IntID, ConnectionString, clm, loc, action,
-                variable, description, executionTime, name, System.Guid.NewGuid().ToString());
+                variable, description, executionTime, name, System.Guid.NewGuid().ToStrGuid());
 
             _executedVariables.Add(at);
             at.SaveToDB();
@@ -403,7 +403,7 @@ namespace Database.Tables.BasicHouseholds {
             }
 
             var at = new AffVariableRequirement(value, null, IntID, ConnectionString, clm, loc,
-                action, variable, description, "(no name)", System.Guid.NewGuid().ToString());
+                action, variable, description, "(no name)", System.Guid.NewGuid().ToStrGuid());
             _requiredVariables.Add(at);
             at.SaveToDB();
             _requiredVariables.Sort();
@@ -437,7 +437,7 @@ namespace Database.Tables.BasicHouseholds {
             var colorint2 = dr.GetInt("CarpetPlotColor2", false, 0, ignoreMissingFields);
             var colorint3 = dr.GetInt("CarpetPlotColor3", false, 0, ignoreMissingFields);
             var colorint4 = dr.GetInt("CarpetPlotColor4", false, 0, ignoreMissingFields);
-            var bodilyactivitylevel =(BodilyActivityLevel) dr.GetInt("BodilyActivityLevel", false, 0, ignoreMissingFields);
+            var bodilyactivitylevel =(BodilyActivityLevel) dr.GetLong("BodilyActivityLevel", false, 0, ignoreMissingFields);
             var carpetPlotColor = new ColorRGB((byte) colorint1, (byte) colorint2, (byte) colorint3,
                 (byte) colorint4);
             var timeLimitID = dr.GetNullableIntFromLong("TimeLimitID", false, ignoreMissingFields);
@@ -578,7 +578,7 @@ namespace Database.Tables.BasicHouseholds {
             var aff = new Affordance(FindNewName(isNameTaken, "New Affordance "), null, null, false,
                 PermittedGender.All, 0.1m, new ColorRGB(255, 255, 255), string.Empty, null, string.Empty,
                 connectionString, false, false, 0, 99, false, ActionAfterInterruption.GoBackToOld,
-                false, System.Guid.NewGuid().ToString(), BodilyActivityLevel.Low);
+                false, System.Guid.NewGuid().ToStrGuid(), BodilyActivityLevel.Low);
             return aff;
         }
 
@@ -999,6 +999,7 @@ namespace Database.Tables.BasicHouseholds {
             cmd.AddParameter("CarpetPlotColor2", "@CarpetPlotColor2", _carpetPlotColor.R);
             cmd.AddParameter("CarpetPlotColor3", "@CarpetPlotColor3", _carpetPlotColor.G);
             cmd.AddParameter("CarpetPlotColor4", "@CarpetPlotColor4", _carpetPlotColor.B);
+            cmd.AddParameter("BodilyActivityLevel", _bodilyActivityLevel);
             if (_affCategory != null) {
                 cmd.AddParameter("AffCategory", _affCategory);
             }

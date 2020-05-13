@@ -37,7 +37,7 @@ namespace SimulationEngineLib.SimZukunftProcessor {
             [NotNull]
             public string GetCsvLine()
             {
-                return FileName + ";"  + Jcs.House?.Name + ";" + Jcs.CalcSpec.OutputDirectory + ";" + TotalPersonCount
+                return FileName + ";"  + Jcs.House?.Name + ";" + Jcs.CalcSpec?.OutputDirectory + ";" + TotalPersonCount
                        + ";" + HouseholdCount + ";" + PlannedPersonCount + ";" + PlannedHouseholdCount + ";" + SourceDistrict;
             }
         }

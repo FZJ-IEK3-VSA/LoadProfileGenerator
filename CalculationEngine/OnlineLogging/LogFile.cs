@@ -64,9 +64,9 @@ namespace CalculationEngine.OnlineLogging {
     }
 
     public interface IOnlineLoggingData: IDisposable {
-        void AddActionEntry([NotNull] TimeStep timeStep, [NotNull] string personGuid, [NotNull] string personName, bool isSick,
+        void AddActionEntry([NotNull] TimeStep timeStep, [NotNull] StrGuid personGuid, [NotNull] string personName, bool isSick,
                             [NotNull] string affordanceName,
-                            [NotNull] string affordanceGuid, [NotNull] HouseholdKey householdKey,
+                            [NotNull] StrGuid affordanceGuid, [NotNull] HouseholdKey householdKey,
                             [NotNull] string affordanceCategory, BodilyActivityLevel bodilyActivityLevel);
 
         void AddColumnEntry([NotNull] ColumnEntry ce);
@@ -149,8 +149,8 @@ namespace CalculationEngine.OnlineLogging {
             }
         }
 
-        public void AddActionEntry([NotNull] TimeStep timeStep, [NotNull] string personGuid, [NotNull] string personName,
-                                   bool isSick, [NotNull] string affordanceName, [NotNull] string affordanceGuid,
+        public void AddActionEntry([NotNull] TimeStep timeStep, [NotNull] StrGuid personGuid, [NotNull] string personName,
+                                   bool isSick, [NotNull] string affordanceName, [NotNull] StrGuid affordanceGuid,
                                    [NotNull] HouseholdKey householdKey, [NotNull]
                                    string affordanceCategory, BodilyActivityLevel bodilyActivityLevel)
         {

@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-        <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFrameworks>net48</TargetFrameworks>
     <LangVersion>8.0</LangVersion>
-<Nullable>enable</Nullable>
+<Nullable>disable</Nullable>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -36,7 +36,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Automation\Automation.csproj" />
     <ProjectReference Include="..\CalculationController\CalculationController.csproj" />
-    <ProjectReference Include="..\ChartCreator2.Tests\ChartCreator2.Tests.csproj" />
     <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\Database.Tests\Database.Tests.csproj" />
     <ProjectReference Include="..\Database\Database.csproj" />
