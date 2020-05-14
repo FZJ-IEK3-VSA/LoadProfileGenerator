@@ -287,9 +287,9 @@ namespace CalculationEngine.Transportation {
                     //    throw new Exception("???");
                     //}
                     CalcDeviceLoad cdl = new CalcDeviceLoad("",1,dstLoadType,0,0);
-                    if (cp.DataSource != "Synthetic") {
-                        throw new LPGException("wrong data source");
-                    }
+                    //if (cp.DataSource != "Synthetic") {
+                        //throw new LPGException("wrong data source");
+                    //}
                     var rsv = RandomValueProfile.MakeStepValues(cp, _calcRepo.NormalRandom, cdl.PowerStandardDeviation);
                     var sv = StepValues.MakeStepValues(cp,  1,rsv,cdl);
                     _calcRepo.Odap.AddNewStateMachine( currentTimeStep,

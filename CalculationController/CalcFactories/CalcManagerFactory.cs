@@ -195,8 +195,7 @@ namespace CalculationController.CalcFactories
             var affordanceTaggingSetFactory = scope.Resolve<AffordanceTaggingSetFactory>();
             var affordanceTaggingSets = affordanceTaggingSetFactory.GetAffordanceTaggingSets(sim);
             inputDataLogger.Save(affordanceTaggingSets);
-            calcRepo.FileFactoryAndTracker.RegisterHousehold(Constants.GeneralHouseholdKey, "General Information",
-                HouseholdKeyType.General,"General",null,null);
+            calcRepo.FileFactoryAndTracker.RegisterGeneralHouse();
             dls = scope.Resolve<DayLightStatus>();
             if (calcRepo.CalcParameters.Options.Contains(CalcOption.DaylightTimesList)) {
                 inputDataLogger.Save(Constants.GeneralHouseholdKey, dls);

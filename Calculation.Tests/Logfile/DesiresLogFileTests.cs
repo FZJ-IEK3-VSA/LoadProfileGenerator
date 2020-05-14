@@ -53,13 +53,12 @@ namespace Calculation.Tests.Logfile
         public void TestBasics()
         {
             // needs major redesign of calcperson class
-            // StreamFactory sf = new StreamFactory();
+            using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
+            {// StreamFactory sf = new StreamFactory();
 
-            DateTime startdate = new DateTime(2018, 1, 1);
+                DateTime startdate = new DateTime(2018, 1, 1);
             DateTime enddate = startdate.AddMinutes(100);
             CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(startdate).SetEndDate(enddate).EnableShowSettlingPeriod().SetSettlingDays(0);
-            using (WorkingDir wd = new WorkingDir("desiresLogfile"))
-            {
                 wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
                 wd.InputDataLogger.AddSaver(new ResultFileEntryLogger(wd.SqlResultLoggingService));
                 using (var fft = new FileFactoryAndTracker(wd.WorkingDirectory, "test1", wd.InputDataLogger))

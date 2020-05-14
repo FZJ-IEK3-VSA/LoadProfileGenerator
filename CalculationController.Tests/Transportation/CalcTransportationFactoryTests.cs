@@ -108,7 +108,7 @@ namespace CalculationController.Tests.Transportation {
                 var css = sim.ChargingStationSets[0];
                 css.SaveToDB();
                 var fft = scope.Resolve<FileFactoryAndTracker>();
-                fft.RegisterHousehold(Constants.GeneralHouseholdKey, "General", HouseholdKeyType.General, "desc", null,
+                fft.RegisterGeneralHouse();
                     null);
                 var dtohh = hhdtofac.MakeCalcModularHouseholdDto(sim,
                     mhh,
@@ -256,8 +256,7 @@ namespace CalculationController.Tests.Transportation {
                         tr.SaveToDB();
                         trs.AddRoute(tr);*/
                         var fft = scope.Resolve<FileFactoryAndTracker>();
-                        fft.RegisterHousehold(Constants.GeneralHouseholdKey, "General", HouseholdKeyType.General,
-                            "desc", null, null);
+                        fft.RegisterGeneralHouse();
                         var ctf = scope.Resolve<CalcTransportationFactory>();
                         //LogFile lf = new LogFile(wd.WorkingDirectory, "hh1", true);
                         //lf.RegisterKey("hh1", "hh1-prettyname");

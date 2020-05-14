@@ -350,9 +350,17 @@ namespace Common {
             }
         }
 
-        public void RegisterHousehold([NotNull] HouseholdKey householdKey, [NotNull] string name, HouseholdKeyType type, [NotNull] string description, [CanBeNull] string houseName, [CanBeNull] string houseDescription)
+        public void RegisterHousehold([NotNull] HouseholdKey householdKey, [NotNull] string name, HouseholdKeyType type,
+                                      [NotNull] string description, [CanBeNull] string houseName, [CanBeNull] string houseDescription)
         {
-            HouseholdRegistry.RegisterHousehold(householdKey, name, type,_inputDataLogger, description, houseName,houseDescription);
+            HouseholdRegistry.RegisterHousehold(householdKey, name, type,_inputDataLogger, 
+                description, houseName,houseDescription);
+        }
+
+        public void RegisterGeneralHouse()
+        {
+            HouseholdRegistry.RegisterHousehold(Constants.GeneralHouseholdKey, "General Information",
+                HouseholdKeyType.General, _inputDataLogger,"General", null, null);
         }
 
         public void Dispose()
@@ -362,6 +370,10 @@ namespace Common {
                 entry.BinaryWriter?.Close();
                 entry.StreamWriter?.Close();
                 entry.Stream?.Close();
+            }
+
+            if (Config.IsInUnitTesting && !HouseholdRegistry.IsHouseholdRegistered(Constants.GeneralHouseholdKey)) {
+                return;
             }
             if (ResultFileList.ResultFiles.All(x => x.Value.ResultFileID != ResultFileID.JsonResultFileList))
             {

@@ -127,6 +127,7 @@ namespace Calculation.Tests.HouseholdElements {
         [Fact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void NextStepTest() {
+            using var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             DateTime startdate = new DateTime(2018, 1, 1);
             DateTime enddate = startdate.AddMinutes(100);
             CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(startdate).SetEndDate(enddate);
@@ -136,7 +137,6 @@ namespace Calculation.Tests.HouseholdElements {
             var desire1 = new CalcDesire("desire1", 1, 0.5m, 4, 1, 1, 60, -1, null,"","");
 
             var lt = new CalcLoadType("calcLoadtype1",  "kwh", "W", 1, true, Guid.NewGuid().ToStrGuid());
-            using var wd = new WorkingDir(nameof(NextStepTest));
             wd.InputDataLogger.AddSaver(new ActionEntryLogger(wd.SqlResultLoggingService));
             wd.InputDataLogger.AddSaver(new ColumnEntryLogger(wd.SqlResultLoggingService));
             wd.InputDataLogger.AddSaver(new LocationEntryLogger(wd.SqlResultLoggingService));
@@ -160,7 +160,7 @@ namespace Calculation.Tests.HouseholdElements {
                 var odap = new OnlineDeviceActivationProcessor( old, calcParameters,fft);
                 Random rnd = new Random();
                 NormalRandom nr = new NormalRandom(0, 1, rnd);
-                using CalcRepo calcRepo = new CalcRepo(lf:lf, odap: odap, calcParameters:calcParameters, rnd:rnd, normalRandom:nr);
+                using CalcRepo calcRepo = new CalcRepo(lf:lf, odap: odap, calcParameters:calcParameters, rnd:rnd, normalRandom:nr, onlineLoggingData:old);
                 var cp = new CalcPerson(calcPerson,   cloc,  isSick, isOnVacation,calcRepo);
                     //20, PermittedGender.Male, lf, "HH1", cloc, "traittag","hhname0", calcParameters,isSick, Guid.NewGuid().ToStrGuid());
                 cp.PersonDesires.AddDesires(desire1);
@@ -226,12 +226,13 @@ namespace Calculation.Tests.HouseholdElements {
                     ts = ts.AddSteps(1);
                 }
             }
-            wd.CleanUp();
+            //wd.CleanUp();
         }
 
         [Fact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void TestInterruptionTest() {
+            using var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             DateTime startdate = new DateTime(2018, 1, 1);
             DateTime enddate = startdate.AddMinutes(100);
             CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(startdate).SetEndDate(enddate).SetSettlingDays(0).EnableShowSettlingPeriod().DisableShowSettlingPeriod().SetAffordanceRepetitionCount(1);
@@ -239,7 +240,6 @@ namespace Calculation.Tests.HouseholdElements {
             //var nr = new NormalRandom(0, 1, r);
             var desire1 = new CalcDesire("desire1", 1, 0.5m, 4, 1, 1, 60, -1, null,"","");
             var lt = new CalcLoadType("calcLoadtype1",  "kwh", "W", 1, true, Guid.NewGuid().ToStrGuid());
-            using var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             //var variableOperator = new VariableOperator();
             using var fft = new FileFactoryAndTracker(wd.WorkingDirectory,"blub",wd.InputDataLogger);
             var key = new HouseholdKey("HH1");
@@ -261,7 +261,7 @@ namespace Calculation.Tests.HouseholdElements {
             var odap = new OnlineDeviceActivationProcessor( old, calcParameters,fft);
             Random rnd = new Random();
             NormalRandom nr = new NormalRandom(0, 1, rnd);
-            using CalcRepo calcRepo = new CalcRepo(lf:lf, odap:odap, calcParameters:calcParameters, rnd: rnd, normalRandom: nr);
+            using CalcRepo calcRepo = new CalcRepo(lf:lf, odap:odap, calcParameters:calcParameters, rnd: rnd, normalRandom: nr, onlineLoggingData:old);
             var cp = new CalcPerson(calcPerson, cloc,  isSick, isOnVacation, calcRepo);
             //"blub", 1, 1, r,20, PermittedGender.Male, lf, "HH1", cloc,"traittag","hhname0", calcParameters,isSick, Guid.NewGuid().ToStrGuid());
             cp.PersonDesires.AddDesires(desire1);
@@ -337,7 +337,7 @@ namespace Calculation.Tests.HouseholdElements {
                 cp.NextStep(ts, clocs, dls, new HouseholdKey("hh1"), persons, 1);
             }
 
-            wd.CleanUp();
+            //wd.CleanUp();
         }
 
         public CalcPersonTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)

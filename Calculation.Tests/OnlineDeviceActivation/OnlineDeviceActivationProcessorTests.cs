@@ -51,6 +51,7 @@ using Common.SQLResultLogging.Loggers;
 using Common.Tests;
 using Database;
 using Database.Tests;
+using JetBrains.Annotations;
 using NUnit.Framework;
 using Xunit;
 using Xunit.Abstractions;
@@ -63,7 +64,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
         {
         }
 
-        private static bool OpenTabFunc([JetBrains.Annotations.CanBeNull] object o)
+        private static bool OpenTabFunc([CanBeNull] object o)
         {
             Logger.Warning("OpenTabFunc was called");
             return true;
@@ -71,9 +72,8 @@ namespace Calculation.Tests.OnlineDeviceActivation {
 
         private static bool ReportCancelFunc() => throw new LPGException("Not implemented");
 
-        private static bool ReportFinishFuncForHouseAndSettlement(bool b,
-                                                                  [JetBrains.Annotations.NotNull] string arg3,
-                                                                  [JetBrains.Annotations.NotNull] [JetBrains.Annotations.ItemNotNull] ObservableCollection<ResultFileEntry> arg4)
+        private static bool ReportFinishFuncForHouseAndSettlement(bool b, [JetBrains.Annotations.NotNull] string arg3,
+                                                                  [JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<ResultFileEntry> arg4)
         {
             Logger.Info(Utili.GetCurrentMethodAndClass());
             return true;
@@ -93,17 +93,15 @@ namespace Calculation.Tests.OnlineDeviceActivation {
         ///     For example if a TV with standby use is turned on, then it is not running in standby simultanously.
         /// </summary>
         [Fact]
-        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.BasicTest)]
         public void OnlineDeviceActivationProcessorSetToZeroTest()
         {
             var rnd = new Random(1);
             var nr = new NormalRandom(0, 1, rnd);
             var startdate = new DateTime(2018, 1, 1);
             var enddate = startdate.AddMinutes(100);
-            CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(startdate)
-                .SetEndDate(enddate).EnableShowSettlingPeriod();
-            using (var wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
-            {
+            var calcParameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(startdate).SetEndDate(enddate).EnableShowSettlingPeriod();
+            using (var wd = new WorkingDir(Utili.GetCurrentMethodAndClass())) {
                 wd.InputDataLogger.AddSaver(new ColumnEntryLogger(wd.SqlResultLoggingService));
                 wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
                 wd.InputDataLogger.AddSaver(new ResultFileEntryLogger(wd.SqlResultLoggingService));
@@ -127,96 +125,65 @@ namespace Calculation.Tests.OnlineDeviceActivation {
 
                 var cdl = new CalcDeviceLoad("lt1", 100, clt, 100, 0);
                 var loads = new List<CalcDeviceLoad>();
-                var results = new List<string> {"100;0;", "100;0;",
-                "100;0;",
-                "100;0;",
-                "100;0;",
-                "100;0;",
-                "0;50;",
-                "0;50;",
-                "0;50;",
-                "100;0;",
-                "100;0;",
-                "100;0;",
-                "100;0;",
-                "100;0;",
-                "100;0;"
-            };
+                var results = new List<string> {
+                    "100;0;", "100;0;",
+                    "100;0;",
+                    "100;0;",
+                    "100;0;",
+                    "100;0;",
+                    "0;50;",
+                    "0;50;",
+                    "0;50;",
+                    "100;0;",
+                    "100;0;",
+                    "100;0;",
+                    "100;0;",
+                    "100;0;",
+                    "100;0;"
+                };
                 loads.Add(cdl);
-                using (var fft = new FileFactoryAndTracker(wd.WorkingDirectory, "hh1", wd.InputDataLogger))
-                {
+                using (var fft = new FileFactoryAndTracker(wd.WorkingDirectory, "hh1", wd.InputDataLogger)) {
                     fft.RegisterHousehold(Constants.GeneralHouseholdKey, "general", HouseholdKeyType.General, "desc", null, null);
                     //SqlResultLoggingService srls = new SqlResultLoggingService(Path.Combine(wd.WorkingDirectory,"results.sqlite"));
-                    DateStampCreator dsc = new DateStampCreator(calcParameters);
-                    using (IOnlineLoggingData old = new OnlineLoggingData(dsc, wd.InputDataLogger, calcParameters))
-                    {
+                    var dsc = new DateStampCreator(calcParameters);
+                    using (IOnlineLoggingData old = new OnlineLoggingData(dsc, wd.InputDataLogger, calcParameters)) {
                         {
                             var odap = new OnlineDeviceActivationProcessor(old, calcParameters, fft);
-                            using (CalcRepo calcRepo = new CalcRepo(calcParameters: calcParameters, odap: odap, rnd: rnd, normalRandom: nr))
-                            {
-                                List<VariableRequirement> requirements = new List<VariableRequirement>();
+                            using (var calcRepo = new CalcRepo(calcParameters: calcParameters, odap: odap, rnd: rnd, normalRandom: nr)) {
+                                var requirements = new List<VariableRequirement>();
                                 var devCatGuid = Guid.NewGuid().ToStrGuid();
                                 var key = new HouseholdKey("HH1");
-                                CalcDeviceDto cddauto = new CalcDeviceDto("devicename",
-                                    devCatGuid,
-                                    key,
-                                    OefcDeviceType.Device,
-                                    "device category",
-                                    " (autonomous)",
-                                    Guid.NewGuid().ToStrGuid(),
-                                    cloc.Guid,
-                                    cloc.Name);
-                                var autodev = new CalcAutoDev(
-                                     profileWith100,
-                                     clt,
-                                     loads,
-                                     0,
-                                     1,
-                                     cloc,
-                                     requirements, cddauto, calcRepo);
-                                CalcDeviceDto cdd = new CalcDeviceDto("devicename",
-                                    devCatGuid,
-                                    key,
-                                    OefcDeviceType.Device,
-                                    "device category",
-                                    "",
-                                    Guid.NewGuid().ToStrGuid(),
-                                    cloc.Guid,
-                                    cloc.Name);
-                                var device = new CalcDevice(loads,
-                                    cloc,
-                                     cdd, calcRepo);
+                                var cddauto = new CalcDeviceDto("devicename", devCatGuid, key, OefcDeviceType.Device, "device category",
+                                    " (autonomous)", Guid.NewGuid().ToStrGuid(), cloc.Guid, cloc.Name);
+                                var autodev = new CalcAutoDev(profileWith100, clt, loads, 0, 1, cloc, requirements, cddauto, calcRepo);
+                                var cdd = new CalcDeviceDto("devicename", devCatGuid, key, OefcDeviceType.Device, "device category", "",
+                                    Guid.NewGuid().ToStrGuid(), cloc.Guid, cloc.Name);
+                                var device = new CalcDevice(loads, cloc, cdd, calcRepo);
                                 var autoDevs = new List<CalcAutoDev> {
-                    autodev
-                };
+                                    autodev
+                                };
                                 var devices = new List<CalcDevice> {
-                    device
-                };
+                                    device
+                                };
                                 CalcHousehold.MatchAutonomousDevicesWithNormalDevices(autoDevs, devices);
-                                if (device.MatchingAutoDevs.Count == 0)
-                                {
+                                if (device.MatchingAutoDevs.Count == 0) {
                                     throw new LPGException("Matching devices didn't work");
                                 }
 
-                                foreach (var pair in odap.Oefc.ColumnEntriesByLoadTypeByDeviceKey)
-                                {
+                                foreach (var pair in odap.Oefc.ColumnEntriesByLoadTypeByDeviceKey) {
                                     Logger.Info(pair.Key.Name);
-                                    foreach (KeyValuePair<OefcKey, ColumnEntry> entry in pair.Value)
-                                    {
+                                    foreach (var entry in pair.Value) {
                                         Logger.Info(entry.Key + " - " + entry.Value.Name);
                                     }
                                 }
 
-                                for (var i = 0; i < 15; i++)
-                                {
-                                    TimeStep ts = new TimeStep(i, 0, true);
-                                    if (!autodev.IsBusyDuringTimespan(ts, 1, 1, clt))
-                                    {
+                                for (var i = 0; i < 15; i++) {
+                                    var ts = new TimeStep(i, 0, true);
+                                    if (!autodev.IsBusyDuringTimespan(ts, 1, 1, clt)) {
                                         autodev.Activate(ts);
                                     }
 
-                                    if (i == 6)
-                                    {
+                                    if (i == 6) {
                                         device.SetTimeprofile(profileWith50, ts, clt, "blub", "Person", 1, false);
                                     }
 
@@ -225,8 +192,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                                     Assert.AreEqual(2, filerows[0].EnergyEntries.Count);
                                     var entries = string.Empty;
 
-                                    foreach (var d in filerows[0].EnergyEntries)
-                                    {
+                                    foreach (var d in filerows[0].EnergyEntries) {
                                         entries += d.ToString(CultureInfo.CurrentCulture) + ";";
                                     }
 
@@ -243,27 +209,24 @@ namespace Calculation.Tests.OnlineDeviceActivation {
         }
 
         [Fact]
-        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.BasicTest)]
         public void OnlineDeviceActivationProcessorTest()
         {
             var rnd = new Random(1);
             var nr = new NormalRandom(0, 1, rnd);
-            using (var wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
-            {
+            using (var wd = new WorkingDir(Utili.GetCurrentMethodAndClass())) {
                 wd.InputDataLogger.AddSaver(new ColumnEntryLogger(wd.SqlResultLoggingService));
                 wd.InputDataLogger.AddSaver(new ResultFileEntryLogger(wd.SqlResultLoggingService));
                 wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
-                CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults().EnableShowSettlingPeriod();
+                var calcParameters = CalcParametersFactory.MakeGoodDefaults().EnableShowSettlingPeriod();
                 calcParameters.Enable(CalcOption.ActionsLogfile);
                 calcParameters.Enable(CalcOption.DeviceProfiles);
                 calcParameters.Enable(CalcOption.DetailedDatFiles);
-                using (var fft = new FileFactoryAndTracker(wd.WorkingDirectory, "hh1", wd.InputDataLogger))
-                {
+                using (var fft = new FileFactoryAndTracker(wd.WorkingDirectory, "hh1", wd.InputDataLogger)) {
                     //SqlResultLoggingService srls = new SqlResultLoggingService(Path.Combine(wd.WorkingDirectory, "results.sqlite"));
-                    DateStampCreator dsc = new DateStampCreator(calcParameters);
+                    var dsc = new DateStampCreator(calcParameters);
 
-                    using (IOnlineLoggingData old = new OnlineLoggingData(dsc, wd.InputDataLogger, calcParameters))
-                    {
+                    using (IOnlineLoggingData old = new OnlineLoggingData(dsc, wd.InputDataLogger, calcParameters)) {
                         var hhkey = new HouseholdKey("HH1");
                         fft.RegisterHousehold(Constants.GeneralHouseholdKey, "generalhousehold", HouseholdKeyType.General, "Description", null, null);
                         fft.RegisterHousehold(hhkey, "hh1", HouseholdKeyType.Household, "Description", null, null);
@@ -271,34 +234,29 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                         var deviceGuid = "devguid".ToStrGuid();
                         var locationGuid = "locationGuid".ToStrGuid();
                         var loadtypeGuid = "ltguid".ToStrGuid();
-                        CalcDeviceDto cdd = new CalcDeviceDto("devicename", "devcatguid".ToStrGuid(), hhkey,
-                            OefcDeviceType.Device, "devcatname", "",
+                        var cdd = new CalcDeviceDto("devicename", "devcatguid".ToStrGuid(), hhkey, OefcDeviceType.Device, "devcatname", "",
                             deviceGuid, locationGuid, "loc");
 
                         var key = new OefcKey(cdd, loadtypeGuid);
                         var clt = new CalcLoadType("lt1", "W", "kWh", 1, true, loadtypeGuid);
                         odap.RegisterDevice(clt.ConvertToDto(), cdd);
-                        double[] stepValues = { 1.0, 0 };
+                        double[] stepValues = {1.0, 0};
                         var valueList = new List<double>(stepValues);
                         var cp = new CalcProfile("myCalcProfile", Guid.NewGuid().ToStrGuid(), valueList, ProfileType.Absolute, "synthetic");
-                        TimeStep ts1 = new TimeStep(1, 0, false);
-                        CalcDeviceLoad cdl = new CalcDeviceLoad("",10,clt,0,0);
-                        StepValues sv = StepValues.MakeStepValues(cp,  1, RandomValueProfile.MakeStepValues(cp, nr, 0), cdl);
-                        odap.AddNewStateMachine(ts1,
-                            clt.ConvertToDto(),  "name1",
-                            "p1",  key, cdd, sv);
-                        double[] resultValues = { 0, 10.0, 0, 0, 0, 0, 0, 0, 0, 0 };
+                        var ts1 = new TimeStep(1, 0, false);
+                        var cdl = new CalcDeviceLoad("", 10, clt, 0, 0);
+                        var sv = StepValues.MakeStepValues(cp, 1, RandomValueProfile.MakeStepValues(cp, nr, 0), cdl);
+                        odap.AddNewStateMachine(ts1, clt.ConvertToDto(), "name1", "p1", key, cdd, sv);
+                        double[] resultValues = {0, 10.0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-                        for (var i = 0; i < 10; i++)
-                        {
-                            TimeStep ts = new TimeStep(i, 0, true);
+                        for (var i = 0; i < 10; i++) {
+                            var ts = new TimeStep(i, 0, true);
                             var filerows = odap.ProcessOneTimestep(ts);
                             Assert.AreEqual(1, filerows.Count);
                             Assert.AreEqual(1, filerows[0].EnergyEntries.Count);
                             Logger.Info(filerows[0].EnergyEntries[0].ToString(CultureInfo.CurrentCulture));
                             Assert.AreEqual(resultValues[i], filerows[0].EnergyEntries[0]);
-                            foreach (var fileRow in filerows)
-                            {
+                            foreach (var fileRow in filerows) {
                                 fileRow.Save(odap.BinaryOutStreams[fileRow.LoadType]);
                             }
                         }
@@ -312,135 +270,113 @@ namespace Calculation.Tests.OnlineDeviceActivation {
 
         [Fact]
         [SuppressMessage("ReSharper", "CollectionNeverUpdated.Local")]
-        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.BasicTest)]
         public void PostProcessingTestSingleActivation()
         {
-            CalculationProfiler calculationProfiler = new CalculationProfiler();
-            var startdate = new DateTime(2018, 1, 1);
-            var enddate = startdate.AddMinutes(1000);
-            CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(startdate)
-                .SetEndDate(enddate).EnableShowSettlingPeriod();
+            using (var wd = new WorkingDir(Utili.GetCurrentMethodAndClass())) {
+                wd.InputDataLogger.AddSaver(new CalcParameterLogger(wd.SqlResultLoggingService));
+                wd.InputDataLogger.AddSaver(new ColumnEntryLogger(wd.SqlResultLoggingService));
+                wd.InputDataLogger.AddSaver(new ResultFileEntryLogger(wd.SqlResultLoggingService));
+                wd.InputDataLogger.AddSaver(new DeviceActivationEntryLogger(wd.SqlResultLoggingService));
+                wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
+                wd.InputDataLogger.AddSaver(new CalcLoadTypeDtoLogger(wd.SqlResultLoggingService));
+                wd.InputDataLogger.AddSaver(new CalcPersonDtoLogger(wd.SqlResultLoggingService));
+                wd.InputDataLogger.AddSaver(new DeviceTaggingSetLogger(wd.SqlResultLoggingService));
+                var calculationProfiler = new CalculationProfiler();
 
-            var rnd = new Random(1);
-            var nr = new NormalRandom(0, 1, rnd);
-            using (var wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
-            {
+                var startdate = new DateTime(2018, 1, 1);
+                var enddate = startdate.AddMinutes(1000);
+                var calcParameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(startdate).SetEndDate(enddate).EnableShowSettlingPeriod();
+
+                var rnd = new Random(1);
+                var nr = new NormalRandom(0, 1, rnd);
+
                 calcParameters.Enable(CalcOption.IndividualSumProfiles);
                 calcParameters.Enable(CalcOption.DeviceProfiles);
                 calcParameters.Enable(CalcOption.TotalsPerDevice);
                 calcParameters.Enable(CalcOption.TotalsPerLoadtype);
                 calcParameters.Enable(CalcOption.DetailedDatFiles);
-                HouseholdKey key = new HouseholdKey("hh1");
-                wd.InputDataLogger.AddSaver(new CalcParameterLogger(wd.SqlResultLoggingService));
+                var key = new HouseholdKey("hh1");
+
                 wd.InputDataLogger.Save(calcParameters);
-                using (var fft = new FileFactoryAndTracker(wd.WorkingDirectory, "hhname", wd.InputDataLogger))
-                {
-                    wd.InputDataLogger.AddSaver(new ColumnEntryLogger(wd.SqlResultLoggingService));
-                    wd.InputDataLogger.AddSaver(new ResultFileEntryLogger(wd.SqlResultLoggingService));
-                    wd.InputDataLogger.AddSaver(new DeviceActivationEntryLogger(wd.SqlResultLoggingService));
-                    wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
-                    wd.InputDataLogger.AddSaver(new CalcLoadTypeDtoLogger(wd.SqlResultLoggingService));
-                    wd.InputDataLogger.AddSaver(new CalcPersonDtoLogger(wd.SqlResultLoggingService));
-                    wd.InputDataLogger.AddSaver(new DeviceTaggingSetLogger(wd.SqlResultLoggingService));
+
+                using (var fft = new FileFactoryAndTracker(wd.WorkingDirectory, "hhname", wd.InputDataLogger)) {
                     //wd.InputDataLogger.AddSaver(new CalcDeviceDtoLogger(wd.SqlResultLoggingService));
-                    DateStampCreator dsc = new DateStampCreator(calcParameters);
-                    using (IOnlineLoggingData old = new OnlineLoggingData(dsc, wd.InputDataLogger, calcParameters))
-                    {
-                        CalcPersonDto calcPersonDto = new CalcPersonDto("blub",
-                            "personguid".ToStrGuid(),
-                            1,
-                            PermittedGender.Male,
-                            key,
-                            new List<DateSpan>(),
-                            new List<DateSpan>(),
-                            1,
-                            "traittag",
-                            "householdname");
-                        List<CalcPersonDto> persons = new List<CalcPersonDto> {
-                calcPersonDto
-            };
+                    var dsc = new DateStampCreator(calcParameters);
+                    using (IOnlineLoggingData old = new OnlineLoggingData(dsc, wd.InputDataLogger, calcParameters)) {
+                        var calcPersonDto = new CalcPersonDto("blub", "personguid".ToStrGuid(), 1, PermittedGender.Male, key, new List<DateSpan>(),
+                            new List<DateSpan>(), 1, "traittag", "householdname");
+                        var persons = new List<CalcPersonDto> {
+                            calcPersonDto
+                        };
                         wd.InputDataLogger.SaveList(persons.ConvertAll(x => (IHouseholdKey)x));
 
-                        using (var lf = new LogFile(calcParameters, fft))
-                        {
+                        using (var lf = new LogFile(calcParameters, fft)) {
                             fft.RegisterHousehold(key, "test hh", HouseholdKeyType.Household, "Description", null, null);
                             fft.RegisterHousehold(Constants.GeneralHouseholdKey, "General", HouseholdKeyType.General, "Description", null, null);
                             var odap = new OnlineDeviceActivationProcessor(old, calcParameters, fft);
                             var clt = new CalcLoadType("lt1", "W", "kWh", 3, true, Guid.NewGuid().ToStrGuid());
-                            List<CalcLoadTypeDto> loadTypeDtos = new List<CalcLoadTypeDto> {
-                    clt.ConvertToDto()
-                };
+                            var loadTypeDtos = new List<CalcLoadTypeDto> {
+                                clt.ConvertToDto()
+                            };
                             wd.InputDataLogger.Save(loadTypeDtos);
                             //var loadTypes = new List<CalcLoadType> {clt};
                             var cdl = new CalcDeviceLoad("devload1", 10, clt, 666, 0);
                             var deviceLoads = new List<CalcDeviceLoad> {
-                    cdl
-                };
+                                cdl
+                            };
                             var cloc = new CalcLocation("locname", Guid.NewGuid().ToStrGuid());
                             var deviceCategoryGuid = Guid.NewGuid().ToStrGuid();
-                            CalcDeviceDto calcDeviceDto = new CalcDeviceDto("devicename",
-                                deviceCategoryGuid,
-                                key,
-                                OefcDeviceType.Device,
-                                "category",
-                                string.Empty,
-                                Guid.NewGuid().ToStrGuid(),
-                                cloc.Guid,
-                                cloc.Name);
-                            List<CalcDeviceDto> calcDeviceDtos = new List<CalcDeviceDto> {
-                    calcDeviceDto
-                };
+                            var calcDeviceDto = new CalcDeviceDto("devicename", deviceCategoryGuid, key, OefcDeviceType.Device, "category",
+                                string.Empty, Guid.NewGuid().ToStrGuid(), cloc.Guid, cloc.Name);
+                            var calcDeviceDtos = new List<CalcDeviceDto> {
+                                calcDeviceDto
+                            };
                             wd.InputDataLogger.SaveList(calcDeviceDtos.ConvertAll(x => (IHouseholdKey)x));
                             //device tagging set for the post processing
-                            List<DeviceTaggingSetInformation> cdts = new List<DeviceTaggingSetInformation>();
-                            DeviceTaggingSetInformation dtsi = new DeviceTaggingSetInformation("myset");
+                            var cdts = new List<DeviceTaggingSetInformation>();
+                            var dtsi = new DeviceTaggingSetInformation("myset");
                             dtsi.AddTag(calcDeviceDto.Name, "testTag ");
                             cdts.Add(dtsi);
                             wd.InputDataLogger.Save(cdts);
                             //device
-                            using (CalcRepo calcRepo = new CalcRepo(calcParameters: calcParameters, odap: odap,
-                                rnd: rnd, normalRandom: nr))
-                            {
-                                var device = new CalcDevice(
-            deviceLoads,
-            cloc,
-            calcDeviceDto, calcRepo);
+                            using (var calcRepo = new CalcRepo(calcParameters: calcParameters, odap: odap, rnd: rnd, normalRandom: nr)) {
+                                var device = new CalcDevice(deviceLoads, cloc, calcDeviceDto, calcRepo);
                                 //var devices = new List<CalcDevice> {device};
-                                double[] resultValues = { 0, 100.0, 0, 0, 0, 0, 0, 0, 0, 0 };
-                                var cp = new CalcProfile("profile1", Guid.NewGuid().ToStrGuid(), new TimeSpan(0, 1, 0), ProfileType.Absolute, "custom");
+                                double[] resultValues = {0, 100.0, 0, 0, 0, 0, 0, 0, 0, 0};
+                                var cp = new CalcProfile("profile1", Guid.NewGuid().ToStrGuid(), new TimeSpan(0, 1, 0), ProfileType.Absolute,
+                                    "custom");
                                 cp.AddNewTimepoint(new TimeSpan(0), 0);
                                 cp.AddNewTimepoint(new TimeSpan(0, 1, 0), 10);
                                 cp.AddNewTimepoint(new TimeSpan(0, 2, 0), 0);
                                 cp.ConvertToTimesteps();
                                 //var locations = new List<CalcLocation> {cloc};
-                                TimeStep ts1 = new TimeStep(0, calcParameters);
-                                device.SetTimeprofile(cp, ts1, clt, "affordanceName",
-                                    "activatorName", 10, false);
-                                for (var i = 0; i < 10; i++)
-                                {
-                                    TimeStep ts = new TimeStep(i, calcParameters);
+                                var ts1 = new TimeStep(0, calcParameters);
+                                device.SetTimeprofile(cp, ts1, clt, "affordanceName", "activatorName", 10, false);
+                                for (var i = 0; i < 10; i++) {
+                                    var ts = new TimeStep(i, calcParameters);
                                     var filerows = odap.ProcessOneTimestep(ts);
                                     Assert.AreEqual(1, filerows.Count);
                                     Assert.AreEqual(1, filerows[0].EnergyEntries.Count);
                                     Logger.Info(filerows[0].EnergyEntries[0].ToString(CultureInfo.CurrentCulture));
                                     Assert.AreEqual(resultValues[i], filerows[0].EnergyEntries[0]);
-                                    foreach (var fileRow in filerows)
-                                    {
+                                    foreach (var fileRow in filerows) {
                                         fileRow.Save(odap.BinaryOutStreams[fileRow.LoadType]);
                                     }
                                 }
                             }
 
+                            fft.Dispose();
                             lf.Dispose(); // needed to free the file access
-                                          //var autoDevs = new List<CalcAutoDev>();
-                                          //var ps = new Postprocessor(lf.FileFactoryAndTracker, calculationProfiler,calcParameters );
-                                          //var householdKeys = new HashSet<string> {"1"};
-                                          //var calcAffordanceTaggingSets = new List<CalcAffordanceTaggingSet>();
-                                          //var calcDeviceTaggingSets = new List<CalcDeviceTaggingSet>();
-                                          //var calcDeviceTaggingSets = new List<DeviceTaggingSetInformation>();
-                                          //var householdPlans = new List<CalcHouseholdPlan>();
-                                          //var householdNamesByNumber = new Dictionary<string, string> {["HH1"] = "household"};
-                                          //var affordanceEnergyUseFile = new AffordanceEnergyUseFile(lf.FileFactoryAndTracker,calcParameters);
+                            //var autoDevs = new List<CalcAutoDev>();
+                            //var ps = new Postprocessor(lf.FileFactoryAndTracker, calculationProfiler,calcParameters );
+                            //var householdKeys = new HashSet<string> {"1"};
+                            //var calcAffordanceTaggingSets = new List<CalcAffordanceTaggingSet>();
+                            //var calcDeviceTaggingSets = new List<CalcDeviceTaggingSet>();
+                            //var calcDeviceTaggingSets = new List<DeviceTaggingSetInformation>();
+                            //var householdPlans = new List<CalcHouseholdPlan>();
+                            //var householdNamesByNumber = new Dictionary<string, string> {["HH1"] = "household"};
+                            //var affordanceEnergyUseFile = new AffordanceEnergyUseFile(lf.FileFactoryAndTracker,calcParameters);
 
                             //var results = new Dictionary<string, double>();
                             //BitArray isSick = new BitArray(calcParameters.InternalTimesteps);
@@ -449,27 +385,24 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                             //var persons = new List<CalcPerson> {new CalcPerson(cpd, new Random(), lf,cloc,calcParameters,isSick,isOnVacation)};
                             //var deviceNamesToCategory = new Dictionary<string, string>();
                             //CalcDeviceTaggingSets calcDeviceTaggingSets = new CalcDeviceTaggingSets();
-                            PostProcessingManager cpp = new PostProcessingManager(calculationProfiler, fft);
+                            var cpp = new PostProcessingManager(calculationProfiler, fft);
                             cpp.Run(wd.WorkingDirectory);
                             /*ps.EndOfSimulationProcessing(devices, locations, autoDevs, loadTypes, odap.Oefc, householdKeys
                                 ,calcAffordanceTaggingSets, calcDeviceTaggingSets, householdPlans, householdNamesByNumber
                                 ,affordanceEnergyUseFile, results, CalcObjectType.ModularHousehold, persons, deviceNamesToCategory,10);*/
                             //var dstpath = Path.Combine(wd.WorkingDirectory,DirectoryNames.CalculateTargetdirectory(TargetDirectory.Reports),"DeviceSums." + clt.Name + ".csv");
                             lf.Dispose(); // needed to free the file access
-                            DirectoryInfo di = new DirectoryInfo(wd.WorkingDirectory);
-                            FileInfo[] fis = di.GetFiles("DeviceSums.*", SearchOption.AllDirectories);
+                            var di = new DirectoryInfo(wd.WorkingDirectory);
+                            var fis = di.GetFiles("DeviceSums.*", SearchOption.AllDirectories);
 
-                            if (fis.Length == 0)
-                            {
+                            if (fis.Length == 0) {
                                 throw new LPGException("No Sum File was generated");
                             }
 
-                            using (var sr = new StreamReader(fis[0].FullName))
-                            {
+                            using (var sr = new StreamReader(fis[0].FullName)) {
                                 sr.ReadLine(); //header
                                 var result = sr.ReadLine(); //0
-                                if (result == null)
-                                {
+                                if (result == null) {
                                     throw new LPGException("Result was null");
                                 }
 
@@ -487,19 +420,17 @@ namespace Calculation.Tests.OnlineDeviceActivation {
 
         [Fact]
         [SuppressMessage("ReSharper", "CollectionNeverUpdated.Local")]
-        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.BasicTest)]
         public void PostProcessingTestTwoActivation()
         {
             var startdate = new DateTime(2018, 1, 1);
             var enddate = startdate.AddMinutes(100);
-            CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(startdate)
-                .SetEndDate(enddate).EnableShowSettlingPeriod();
+            var calcParameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(startdate).SetEndDate(enddate).EnableShowSettlingPeriod();
             //CalculationProfiler calculationProfiler = new CalculationProfiler();
 
             var rnd = new Random(1);
             var nr = new NormalRandom(0, 1, rnd);
-            using (var wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
-            {
+            using (var wd = new WorkingDir(Utili.GetCurrentMethodAndClass())) {
                 calcParameters.Enable(CalcOption.IndividualSumProfiles);
                 calcParameters.Enable(CalcOption.DeviceProfiles);
                 calcParameters.Enable(CalcOption.TotalsPerDevice);
@@ -516,72 +447,60 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                 wd.InputDataLogger.AddSaver(new CalcPersonDtoLogger(wd.SqlResultLoggingService));
                 wd.InputDataLogger.AddSaver(new DeviceTaggingSetLogger(wd.SqlResultLoggingService));
                 wd.InputDataLogger.Save(calcParameters);
-                using (var fft = new FileFactoryAndTracker(wd.WorkingDirectory, "hh1", wd.InputDataLogger))
-                {
+                using (var fft = new FileFactoryAndTracker(wd.WorkingDirectory, "hh1", wd.InputDataLogger)) {
                     fft.RegisterHousehold(Constants.GeneralHouseholdKey, "general", HouseholdKeyType.General, "desc", null, null);
                     //fft.RegisterHousehold(Constants.GeneralHouseholdKey, "general", HouseholdKeyType.General,"desc");
                     //SqlResultLoggingService srls =new SqlResultLoggingService(Path.Combine(wd.WorkingDirectory, "results.sqlite"));
-                    DateStampCreator dsc = new DateStampCreator(calcParameters);
-                    using (IOnlineLoggingData old = new OnlineLoggingData(dsc, wd.InputDataLogger, calcParameters))
-                    {
-                        CalcObjectInformation coi = new CalcObjectInformation(CalcObjectType.ModularHousehold, "objname", wd.WorkingDirectory);
+                    var dsc = new DateStampCreator(calcParameters);
+                    using (IOnlineLoggingData old = new OnlineLoggingData(dsc, wd.InputDataLogger, calcParameters)) {
+                        var coi = new CalcObjectInformation(CalcObjectType.ModularHousehold, "objname", wd.WorkingDirectory);
                         wd.InputDataLogger.Save(coi);
-                        using (var lf = new LogFile(calcParameters, fft))
-                        {
-                            HouseholdKey key = new HouseholdKey("hh1");
+                        using (var lf = new LogFile(calcParameters, fft)) {
+                            var key = new HouseholdKey("hh1");
                             fft.RegisterHousehold(key, "hh1 key", HouseholdKeyType.Household, "Description", null, null);
                             var odap = new OnlineDeviceActivationProcessor(old, calcParameters, fft);
                             var clt = new CalcLoadType("lt1", "W", "kWh", 3, true, Guid.NewGuid().ToStrGuid());
-                            var loadTypes = new List<CalcLoadTypeDto> { clt.ConvertToDto() };
+                            var loadTypes = new List<CalcLoadTypeDto> {clt.ConvertToDto()};
                             wd.InputDataLogger.Save(loadTypes);
                             var cdl = new CalcDeviceLoad("devload1", 10, clt, 666, 0);
                             var deviceLoads = new List<CalcDeviceLoad> {
-                    cdl
-                };
+                                cdl
+                            };
                             var cloc = new CalcLocation("locname", Guid.NewGuid().ToStrGuid());
                             var devguid = Guid.NewGuid().ToStrGuid();
                             var devcategoryguid = Guid.NewGuid().ToStrGuid();
-                            CalcDeviceDto cdto = new CalcDeviceDto("devicename",
-                                devcategoryguid,
-                                key,
-                                OefcDeviceType.Device,
-                                "category",
-                                "",
-                                devguid,
-                                cloc.Guid,
-                                cloc.Name);
+                            var cdto = new CalcDeviceDto("devicename", devcategoryguid, key, OefcDeviceType.Device, "category", "", devguid,
+                                cloc.Guid, cloc.Name);
                             var devices = new List<IHouseholdKey> {
-                    cdto
-                };
+                                cdto
+                            };
                             wd.InputDataLogger.SaveList(devices);
-                            using (CalcRepo calcRepo = new CalcRepo(odap: odap, calcParameters: calcParameters, rnd: rnd, normalRandom: nr))
-                            {
-                                var device = new CalcDevice(
-    deviceLoads,
-    cloc,
-    cdto, calcRepo);
+                            using (var calcRepo = new CalcRepo(odap, calcParameters: calcParameters, rnd: rnd, normalRandom: nr)) {
+                                var device = new CalcDevice(deviceLoads, cloc, cdto, calcRepo);
                                 //var devices = new List<CalcDevice> {device};
-                                var cp = new CalcProfile("profile1", Guid.NewGuid().ToStrGuid(), new TimeSpan(0, 1, 0), ProfileType.Absolute, "custom");
+                                var cp = new CalcProfile("profile1", Guid.NewGuid().ToStrGuid(), new TimeSpan(0, 1, 0), ProfileType.Absolute,
+                                    "custom");
                                 cp.AddNewTimepoint(new TimeSpan(0), 0);
                                 cp.AddNewTimepoint(new TimeSpan(0, 1, 0), 10);
                                 cp.AddNewTimepoint(new TimeSpan(0, 2, 0), 0);
                                 cp.ConvertToTimesteps();
                                 //var locations = new List<CalcLocation> {cloc};
-                                TimeStep ts = new TimeStep(0, calcParameters);
+                                var ts = new TimeStep(0, calcParameters);
                                 device.SetTimeprofile(cp, ts, clt, "affordanceName", "activatorName", 1, false);
                                 device.SetTimeprofile(cp, ts.AddSteps(5), clt, "affordanceName", "activatorName", 1, false);
-                                device.SetTimeprofile(cp.CompressExpandDoubleArray(0.5), ts.AddSteps(8), clt, "affordanceName", "activatorName", 1, false);
-                                device.SetTimeprofile(cp.CompressExpandDoubleArray(2), ts.AddSteps(10), clt, "affordanceName", "activatorName", 1, false);
+                                device.SetTimeprofile(cp.CompressExpandDoubleArray(0.5), ts.AddSteps(8), clt, "affordanceName", "activatorName", 1,
+                                    false);
+                                device.SetTimeprofile(cp.CompressExpandDoubleArray(2), ts.AddSteps(10), clt, "affordanceName", "activatorName", 1,
+                                    false);
                             }
-                            for (var i = 0; i < 30; i++)
-                            {
-                                TimeStep ts1 = new TimeStep(i, calcParameters);
+
+                            for (var i = 0; i < 30; i++) {
+                                var ts1 = new TimeStep(i, calcParameters);
                                 var filerows = odap.ProcessOneTimestep(ts1);
                                 Assert.AreEqual(1, filerows.Count);
                                 Assert.AreEqual(1, filerows[0].EnergyEntries.Count);
                                 Logger.Info(filerows[0].EnergyEntries[0].ToString(CultureInfo.CurrentCulture));
-                                foreach (var fileRow in filerows)
-                                {
+                                foreach (var fileRow in filerows) {
                                     fileRow.Save(odap.BinaryOutStreams[fileRow.LoadType]);
                                 }
                             }
@@ -591,9 +510,9 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                             //var householdKeys = new HashSet<string> {"1"};
                             //var calcAffordanceTaggingSets = new List<CalcAffordanceTaggingSet>();
                             var deviceTaggingSetInformation = new DeviceTaggingSetInformation("name");
-                            List<DeviceTaggingSetInformation> taggingsets = new List<DeviceTaggingSetInformation> {
-                    deviceTaggingSetInformation
-                };
+                            var taggingsets = new List<DeviceTaggingSetInformation> {
+                                deviceTaggingSetInformation
+                            };
                             wd.InputDataLogger.Save(taggingsets);
                             //var householdPlans = new List<CalcHouseholdPlan>();
                             //var householdNamesByNumber = new Dictionary<string, string> {["HH1"] = "household"};
@@ -601,24 +520,17 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                             //lf.Close(null); // needed to free file access
                             //var results = new Dictionary<string, double>();
                             var persons = new List<CalcPersonDto>();
-                            CalcPersonDto dto = new CalcPersonDto("name",
-                                Guid.NewGuid().ToStrGuid(),
-                                18,
-                                PermittedGender.Female,
-                                key,
-                                new List<DateSpan>(),
-                                new List<DateSpan>(),
-                                1,
-                                "tag",
-                                "hhname");
+                            var dto = new CalcPersonDto("name", Guid.NewGuid().ToStrGuid(), 18, PermittedGender.Female, key, new List<DateSpan>(),
+                                new List<DateSpan>(), 1, "tag", "hhname");
                             persons.Add(dto);
                             wd.InputDataLogger.SaveList(persons.ConvertAll(x => (IHouseholdKey)x));
                             //var deviceNamesToCategory = new Dictionary<string, string>();
                             lf.Dispose();
-                            CalculationProfiler cprof = new CalculationProfiler();
-                            PostProcessingManager ppm = new PostProcessingManager(cprof, fft);
+                            fft.Dispose();
+                            var cprof = new CalculationProfiler();
+                            var ppm = new PostProcessingManager(cprof, fft);
                             ppm.Run(wd.WorkingDirectory);
-                            TotalsPerLoadtypeEntryLogger tel = new TotalsPerLoadtypeEntryLogger(wd.SqlResultLoggingService);
+                            var tel = new TotalsPerLoadtypeEntryLogger(wd.SqlResultLoggingService);
                             var results = tel.Read(key);
                             Assert.That(results[0].Value, Is.EqualTo(150));
                         }
@@ -631,13 +543,11 @@ namespace Calculation.Tests.OnlineDeviceActivation {
         }
 
         [Fact]
-        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.BasicTest)]
         public void RunCalcStarter()
         {
-            using (var wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
-            {
-                using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
-                {
+            using (var wd = new WorkingDir(Utili.GetCurrentMethodAndClass())) {
+                using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass())) {
                     var sim = new Simulator(db.ConnectionString);
                     sim.MyGeneralConfig.StartDateString = "01.01.2013";
                     Config.IsInUnitTesting = true;
@@ -647,40 +557,14 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                     sim.MyGeneralConfig.Enable(CalcOption.TotalsPerLoadtype);
                     sim.MyGeneralConfig.Enable(CalcOption.TotalsPerDevice);
                     sim.MyGeneralConfig.InternalTimeResolution = "00:01:00";
-                    CalculationProfiler cp = new CalculationProfiler();
-                    var csps = new CalcStartParameterSet(ReportFinishFuncForHouseAndSettlement,
-                        ReportFinishFuncForHousehold,
-                        OpenTabFunc,
-                        null,
-                        sim.GeographicLocations[0],
-                        sim.TemperatureProfiles[0],
-                        sim.ModularHouseholds[0],
-                        EnergyIntensityType.EnergySaving,
-                        ReportCancelFunc,
-                        false,
-                        null,
-                        LoadTypePriority.Mandatory,
-                        null,
-                        null,
-                        sim.MyGeneralConfig.AllEnabledOptions(),
-                        new DateTime(2018, 1, 1),
-                        new DateTime(2018, 1, 2),
-                        new TimeSpan(0, 1, 0),
-                        ";",
-                        5,
-                        new TimeSpan(0, 1, 0),
-                        false,
-                        false,
-                        false,
-                        3,
-                        3,
-                        cp,
-                        null,
-                        null,
-                        DeviceProfileHeaderMode.Standard,
-                        false, wd.WorkingDirectory);
+                    var cp = new CalculationProfiler();
+                    var csps = new CalcStartParameterSet(ReportFinishFuncForHouseAndSettlement, ReportFinishFuncForHousehold, OpenTabFunc, null,
+                        sim.GeographicLocations[0], sim.TemperatureProfiles[0], sim.ModularHouseholds[0], EnergyIntensityType.EnergySaving,
+                        ReportCancelFunc, false, null, LoadTypePriority.Mandatory, null, null, sim.MyGeneralConfig.AllEnabledOptions(),
+                        new DateTime(2018, 1, 1), new DateTime(2018, 1, 2), new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 1, 0), false, false, false,
+                        3, 3, cp, null, null, DeviceProfileHeaderMode.Standard, false, wd.WorkingDirectory);
                     var cs = new CalcStarter(sim);
-                    cs.Start(csps );
+                    cs.Start(csps);
                     /*var dstpath = Path.Combine(wd.WorkingDirectory,
                         DirectoryNames.CalculateTargetdirectory(TargetDirectory.Reports), "TotalsPerLoadtype.csv");
                     using (var sr = new StreamReader(dstpath)) {

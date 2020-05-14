@@ -56,12 +56,14 @@ namespace Calculation.Tests.Logfile
         {
             using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
             {
+                wd.InputDataLogger.AddSaver(new ResultFileEntryLogger(wd.SqlResultLoggingService));
+                wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
                 CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults().EnableShowSettlingPeriod().SetSettlingDays(5);
                 using (FileFactoryAndTracker fft = new FileFactoryAndTracker(wd.WorkingDirectory, "blub", wd.InputDataLogger))
                 {
-                    wd.InputDataLogger.AddSaver(new ResultFileEntryLogger(wd.SqlResultLoggingService));
-                    wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
-                    fft.RegisterHousehold(new HouseholdKey("HH1"), "test", HouseholdKeyType.Household, "desc", null, null);
+                    fft.RegisterGeneralHouse();
+                    fft.RegisterHousehold(new HouseholdKey("HH1"), "test", HouseholdKeyType.Household, "desc",
+                        null, null);
                     ThoughtsLogFile tlf = new ThoughtsLogFile(fft, calcParameters);
                     Random rnd = new Random();
                     //NormalRandom nr = new NormalRandom(0, 0.1, rnd);

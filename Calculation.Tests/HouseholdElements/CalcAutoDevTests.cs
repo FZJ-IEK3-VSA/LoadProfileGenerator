@@ -112,7 +112,6 @@ namespace Calculation.Tests.HouseholdElements {
                         }
                     }
                 }
-            wd.CleanUp();
         }
     }
 
