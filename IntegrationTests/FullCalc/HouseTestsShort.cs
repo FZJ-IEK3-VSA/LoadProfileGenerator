@@ -71,7 +71,7 @@ namespace IntegrationTests.FullCalc {
         }
 
         [Fact]
-        [Trait(UnitTestCategories.Category, UnitTestCategories.FullCalcHouses2)]
+        [Trait("Category", UnitTestCategories.FullCalcHouses2)]
         public void StartHouse10() {
             FullCalculationStarter.StartHouse(10);
         }
