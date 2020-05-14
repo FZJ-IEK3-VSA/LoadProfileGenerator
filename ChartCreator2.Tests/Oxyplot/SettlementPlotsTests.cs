@@ -13,7 +13,7 @@ namespace ChartCreator2.Tests.Oxyplot {
     public class SettlementPlotsTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.ManualOnly)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
         public void RunTest() {
             var sp = new SettlementPlots();
             sp.Run(@"F:\Dissertation\Results2015-12-13\Sum.Profiles.Electricity.csv",

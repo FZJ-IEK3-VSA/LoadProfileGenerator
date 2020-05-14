@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Database;
@@ -11,7 +12,6 @@ using Database.Database;
 using Database.Helpers;
 using Database.Tables.BasicElements;
 using JetBrains.Annotations;
-using NUnit.Framework;
 using Xunit;
 
 namespace ReleaseBuilder {
@@ -139,7 +139,7 @@ namespace ReleaseBuilder {
 
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         [Fact]
-        [Category("QuickChart")]
+        [Trait(UnitTestCategories.Category,"QuickChart")]
         public void RunTest()
         {
             const string srcpath = @"e:\profilegenerator.db3";

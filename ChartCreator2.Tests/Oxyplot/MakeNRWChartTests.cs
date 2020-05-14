@@ -21,7 +21,7 @@ namespace ChartCreator2.Tests.Oxyplot {
     public class MakeNRWChartTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void MakeNRWChartTest()
         {
             CleanTestBase.RunAutomatically(false);

@@ -15,7 +15,7 @@ namespace ChartCreator2.Tests.Oxyplot {
     public class SumProfilesTest {
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         [Fact]
-        [Category(UnitTestCategories.LongTest4)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.LongTest4)]
         public void MakePlotTest()
         {
             CleanTestBase.RunAutomatically(false);

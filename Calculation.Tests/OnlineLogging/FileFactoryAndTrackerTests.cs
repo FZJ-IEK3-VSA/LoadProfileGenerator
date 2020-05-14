@@ -27,7 +27,7 @@ namespace Calculation.Tests.OnlineLogging {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void FileFactoryAndTrackerTest()
         {
             Config.IsInUnitTesting = true;

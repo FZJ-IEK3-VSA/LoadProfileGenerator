@@ -48,7 +48,7 @@ namespace Database.Tests.Tables {
     public class RealDeviceTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void RealDeviceLoadCreationAndSaveTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
@@ -85,7 +85,7 @@ namespace Database.Tests.Tables {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void RealDeviceTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))

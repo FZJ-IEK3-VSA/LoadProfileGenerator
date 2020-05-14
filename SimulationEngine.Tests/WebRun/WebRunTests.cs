@@ -16,7 +16,7 @@ namespace SimulationEngine.Tests.WebRun
     public class WebRunTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.ManualOnly)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
         public void RunTest()
         {
             SimulationEngineConfig.CatchErrors = false;

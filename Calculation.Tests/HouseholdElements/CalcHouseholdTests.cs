@@ -33,7 +33,7 @@ namespace Calculation.HouseholdElements.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void DumpHouseholdContentsToTextTest()
         {
             using (var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass()))
@@ -96,7 +96,7 @@ namespace Calculation.Tests.HouseholdElements {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void MatchAutonomousDevicesWithNormalDevicesTest()
         {
             // make different devices at different locations

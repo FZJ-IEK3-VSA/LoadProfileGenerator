@@ -17,7 +17,7 @@ namespace Database.Tests.Tables.Transportation
     public class ChargingStationSetTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void RunChargingStationSetTests()
         {
             using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))

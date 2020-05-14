@@ -44,7 +44,7 @@ namespace Database.Tests.Tables {
     public class GeographicLocationTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void TimeLimitLoadCreationAndSaveTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
@@ -76,7 +76,7 @@ namespace Database.Tests.Tables {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void GeographicLocationTypoTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))

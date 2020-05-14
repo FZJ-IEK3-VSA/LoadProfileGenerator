@@ -12,7 +12,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
     public class HouseGeneratorTests
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void RunMatchingTest()
         {
             PersonCategory pc10Male = new PersonCategory(10, PermittedGender.Male);
@@ -66,7 +66,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         }
 
         //[Fact]
-        //[Category(UnitTestCategories.BasicTest)]
+        //[Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         //public void HouseGeneratorTest()
         //{
         //    Logger.Get().StartCollectingAllMessages();
@@ -113,7 +113,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         //    }
         //}
         //[Fact]
-        //[Category(UnitTestCategories.BasicTest)]
+        //[Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         //public void HouseGeneratorTransportationTest()
         //{
         //    DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.SimulationEngine);
@@ -214,7 +214,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
 
 
         //[Fact]
-        //[Category(UnitTestCategories.BasicTest)]
+        //[Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         //public void HouseGeneratorModifiedRouteTest()
         //{
         //    DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(), DatabaseSetup.TestPackage.SimulationEngine);
@@ -300,7 +300,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         //}
 
         //[Fact]
-        //[Category(UnitTestCategories.BasicTest)]
+        //[Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         //public void HouseGeneratorWithSkipExisitingTest()
         //{
         //    Logger.Get().StartCollectingAllMessages();

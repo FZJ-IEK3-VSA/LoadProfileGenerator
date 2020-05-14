@@ -14,7 +14,7 @@ namespace Database.Tests.Templating {
     public class SettlementTemplateExecutorTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.LongTest5)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.LongTest5)]
         public void GenerateSettlementPreviewTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
@@ -30,7 +30,7 @@ namespace Database.Tests.Templating {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void InitializeHouseSizesTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))

@@ -11,7 +11,7 @@ namespace LoadProfileGenerator.Tests {
     public class DotNetVersionCheckTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void GetReleaseKeyTest()
         {
             var version = DotNetVersionCheck.GetReleaseKey();

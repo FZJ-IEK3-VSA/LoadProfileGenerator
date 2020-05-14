@@ -44,7 +44,7 @@ namespace Database.Tests.Tables.BasicElements {
     public class AffordanceTaggingSetTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void AffordanceTaggingSetTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
@@ -96,7 +96,7 @@ namespace Database.Tests.Tables.BasicElements {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void AffordanceTaggingSetTestNone()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
@@ -122,7 +122,7 @@ namespace Database.Tests.Tables.BasicElements {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void RemoveAllOldEntriesTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))

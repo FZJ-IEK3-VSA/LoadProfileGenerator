@@ -15,7 +15,7 @@ namespace Database.Tests.Tables.BasicElements
     public class VariableTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void VariableTest()
         {
             using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))

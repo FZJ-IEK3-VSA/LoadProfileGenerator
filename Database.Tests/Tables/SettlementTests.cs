@@ -49,7 +49,7 @@ namespace Database.Tests.Tables {
     public class SettlementTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void LoadFromDatabaseTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
@@ -75,7 +75,7 @@ namespace Database.Tests.Tables {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void JsonCalcSpecTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
@@ -93,7 +93,7 @@ namespace Database.Tests.Tables {
 
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void SaveToDatabaseTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))

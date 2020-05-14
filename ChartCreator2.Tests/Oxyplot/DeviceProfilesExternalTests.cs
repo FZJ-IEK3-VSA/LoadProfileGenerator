@@ -16,7 +16,7 @@ namespace ChartCreator2.Tests.Oxyplot {
     public class DeviceProfilesExternalTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BrokenTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BrokenTest)]
         public void MakePlotTest()
         {
             CleanTestBase.RunAutomatically(false);
@@ -51,7 +51,7 @@ namespace ChartCreator2.Tests.Oxyplot {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BrokenTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BrokenTest)]
         public void MakePlotTestForHouse()
         {
             CleanTestBase.RunAutomatically(false);
@@ -84,7 +84,7 @@ namespace ChartCreator2.Tests.Oxyplot {
         }
         /*
         [Fact]
-        [Category(UnitTestCategories.ManualOnly)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
         public void MakePlotTestMini()
         {
             var oldCharts = new DirectoryInfo(@"F:\DissCalcs_2\Chr03ht04CalcIntensive2\Charts");

@@ -48,7 +48,7 @@ namespace Calculation.Tests.Logfile
     public class LocationLogFileTests : TestBasis
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void TestLocationEntryBasics()
         {
             Config.IsInUnitTesting = true;
@@ -80,7 +80,7 @@ namespace Calculation.Tests.Logfile
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void TestLocationEntryBasicsWithFile()
         {
             Config.IsInUnitTesting = true;

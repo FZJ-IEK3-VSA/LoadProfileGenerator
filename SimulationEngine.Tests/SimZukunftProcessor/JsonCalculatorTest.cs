@@ -12,7 +12,6 @@ using Database;
 using Database.Tests;
 using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
 using SimulationEngineLib.SimZukunftProcessor;
 using Xunit;
 
@@ -112,7 +111,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
     public class JsonCalculatorTest
     {
         [Fact]
-        [Category(UnitTestCategories.ManualOnly)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
         public void SumChecker()
         {
             const string startpath = @"D:\LPGUnitTest\JsonCalculatorTest.EndToEndTest\results";
@@ -143,7 +142,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         }
 
         [Fact]
-        [Category(UnitTestCategories.ManualOnly)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
         public void OnlyExternalTest()
         {
             Logger.Get().StartCollectingAllMessages();
@@ -220,7 +219,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void TestDistrictDefinition()
         {
             using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
@@ -236,7 +235,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
 
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void RunJsonCalculatorTest()
         {
             Logger.Get().StartCollectingAllMessages();
@@ -269,7 +268,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
 
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void RunJsonCalculatorTestForExternalTimeResolutionJsonFile()
         {
             Logger.Get().StartCollectingAllMessages();
@@ -301,7 +300,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
             }
         }
         //[Fact]
-        //[Category(UnitTestCategories.ManualOnly)]
+        //[Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
         //public void RunJsonCalculatorExportTest()
         //{
         //    Config.IsInHeadless = true;
@@ -322,7 +321,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         //}
 
         [Fact]
-        [Category(UnitTestCategories.ManualOnly)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
         public void RunBrokenHouseholdCalcTest()
         {
             Config.IsInHeadless = true;
@@ -339,7 +338,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         }
 
         //[Fact]
-        //[Category(UnitTestCategories.ManualOnly)]
+        //[Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
         //public void RunFailingStuffTest()
         //{
         //    Config.IsInHeadless = true;

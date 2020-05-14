@@ -17,7 +17,7 @@ namespace ChartCreator2.Tests.Oxyplot {
     public class AffordanceEnergyUseTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BrokenTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BrokenTest)]
         public void MakePlotTest()
         {
             CleanTestBase.RunAutomatically(false);
@@ -46,7 +46,7 @@ namespace ChartCreator2.Tests.Oxyplot {
         }
         /*
         [Fact]
-        [Category(UnitTestCategories.ManualOnly)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
         public void MakePlotTestMini()
         {
             Config.MakePDFCharts = true;

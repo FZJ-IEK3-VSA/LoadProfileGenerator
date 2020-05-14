@@ -20,7 +20,7 @@ namespace Calculation.Tests.OnlineDeviceLogging
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void ProfileActivationEntryTest()
         {
             CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();

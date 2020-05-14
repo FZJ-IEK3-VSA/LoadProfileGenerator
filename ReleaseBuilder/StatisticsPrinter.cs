@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Linq;
+using Automation;
 using Common;
 using Database;
 using Database.Tests;
@@ -13,7 +14,7 @@ namespace ReleaseBuilder
     public class StatisticsPrinter
     {
         [Fact]
-        [Category("BasicTest")]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.BasicTest)]
         public void MakeStatistic()
         {
             using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))

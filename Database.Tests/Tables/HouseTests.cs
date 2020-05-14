@@ -52,7 +52,7 @@ namespace Database.Tests.Tables {
     public class HouseTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.LongTest1)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.LongTest1)]
         public void HouseLoadCreationAndSave2Test()
         {
             Config.ShowDeleteMessages = false;
@@ -106,7 +106,7 @@ namespace Database.Tests.Tables {
         }
 
         [Fact]
-        [Category(UnitTestCategories.LongTest1)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.LongTest1)]
         public void HouseLoadCreationAndSaveTest()
         {
             Config.ShowDeleteMessages = false;

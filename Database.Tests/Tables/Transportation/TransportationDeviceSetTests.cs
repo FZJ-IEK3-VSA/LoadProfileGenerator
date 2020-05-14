@@ -16,7 +16,7 @@ namespace Database.Tests.Tables.Transportation
     public class TransportationDeviceSetTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void TransportationDeviceSetTest()
         {
             using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
@@ -55,7 +55,7 @@ namespace Database.Tests.Tables.Transportation
             }
         }
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void TransportationDeviceImportTest()
         {
             using (var db1 = new DatabaseSetup(Utili.GetCurrentMethodAndClass() + "1"))

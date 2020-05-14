@@ -16,7 +16,7 @@ namespace LoadProfileGenerator.Tests {
     public class HouseholdTemplateCreatorTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.LongTest2)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.LongTest2)]
         public void RunHouseholdTemplateCreatorTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))

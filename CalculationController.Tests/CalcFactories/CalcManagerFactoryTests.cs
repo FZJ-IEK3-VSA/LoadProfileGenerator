@@ -95,7 +95,7 @@ namespace CalculationController.Tests.CalcFactories {
 
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void GetCalcManagerHouseholdTest()
         {
             using (var wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
@@ -126,7 +126,7 @@ namespace CalculationController.Tests.CalcFactories {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void GetCalcManagerHouseTest()
         {
             using (var wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
@@ -157,7 +157,7 @@ namespace CalculationController.Tests.CalcFactories {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void GetCalcManagerModularHousehold03Test()
         {
             using (var wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
@@ -223,7 +223,7 @@ namespace CalculationController.Tests.CalcFactories {
             return true;
         }
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void GetCalcManagerModularHouseholdTest()
         {
             using (var wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
@@ -266,7 +266,7 @@ namespace CalculationController.Tests.CalcFactories {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void GetCalcManagerModularHouseholdTestForDevicePicking()
         {
             using (var wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
@@ -341,7 +341,7 @@ namespace CalculationController.Tests.CalcFactories {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void GetDuplicateCalcManagerHouseholdTest()
         {
             using (var wd1 = new WorkingDir("GetDuplicateCalcManagerHouseholdTest1"))

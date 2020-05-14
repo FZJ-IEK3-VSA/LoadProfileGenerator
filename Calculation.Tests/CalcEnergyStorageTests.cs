@@ -50,7 +50,7 @@ namespace Calculation.Tests {
     [TestFixture]
     public class CalcEnergyStorageTests : TestBasis {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void ProcessOneEnergyStorageTimestepTest()
         {
             using (var wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))

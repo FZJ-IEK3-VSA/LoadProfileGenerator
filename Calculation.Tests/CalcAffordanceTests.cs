@@ -199,7 +199,7 @@ namespace Calculation.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void CalcAffordanceActivateTest100Percent()
         {
             const int stepcount = 150;
@@ -230,7 +230,7 @@ namespace Calculation.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void CalcAffordanceActivateTest25Percent()
         {
             const int stepcount = 150;
@@ -262,7 +262,7 @@ namespace Calculation.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void CalcAffordanceActivateTest50Percent()
         {
             const int stepcount = 150;
@@ -294,7 +294,7 @@ namespace Calculation.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void CalcAffordanceActivateTest75Percent()
         {
             const int stepcount = 150;
@@ -324,7 +324,7 @@ namespace Calculation.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void CalcAffordanceVariableTestAdd()
         {
             var r = new Random(0);
@@ -386,7 +386,7 @@ namespace Calculation.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void CalcAffordanceVariableTestSet()
         {
             var deviceCategoryGuid = Guid.NewGuid().ToStrGuid();
@@ -443,7 +443,7 @@ namespace Calculation.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void CalcAffordanceVariableTestSubtract()
         {
             //var r = new Random(0);
@@ -513,7 +513,7 @@ namespace Calculation.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void RunDeviceOffsetTest()
         {
             //var r = new Random(0);

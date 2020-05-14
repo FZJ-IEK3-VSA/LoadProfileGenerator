@@ -24,7 +24,7 @@ namespace Calculation.Tests.Transportation {
     public class CalcSiteTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void TestCalcSite()
         {
             using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))

@@ -44,7 +44,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
     public class ModularHouseholdTraitTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void LoadFromDatabaseTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))

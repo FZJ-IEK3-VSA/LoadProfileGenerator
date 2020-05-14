@@ -104,7 +104,7 @@ namespace IntegrationTests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.LongTest2)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.LongTest2)]
         public void TestImportWithHouseholdTemplateDelete600()
         {
             const string srcFileName = "profilegenerator600.db3";
@@ -133,7 +133,7 @@ namespace IntegrationTests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.LongTest2)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.LongTest2)]
         public void TestImportWithHouseholdTemplateDelete880()
         {
             const string srcFileName = "profilegenerator880.db3";
@@ -162,19 +162,19 @@ namespace IntegrationTests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.LongTest2)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.LongTest2)]
         public void RunTest124() => TestImport("profilegenerator124.db3");
 
         [Fact]
-        [Category(UnitTestCategories.LongTest2)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.LongTest2)]
         public void RunTest160() => TestImport("profilegenerator160.db3");
 
         [Fact]
-        [Category(UnitTestCategories.LongTest2)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.LongTest2)]
         public void RunTest170() => TestImport("profilegenerator170.db3");
 
         [Fact]
-        [Category(UnitTestCategories.LongTest2)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.LongTest2)]
         public void RunTest171() {
             TestImport("profilegenerator171.db3", out var sim);
             var found = false;
@@ -187,27 +187,27 @@ namespace IntegrationTests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.LongTest2)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.LongTest2)]
         public void RunTest201() => TestImport("profilegenerator201.db3");
 
         [Fact]
-        [Category(UnitTestCategories.LongTest2)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.LongTest2)]
         public void RunTest203() => TestImport("profilegenerator203.db3");
 
         [Fact]
-        [Category(UnitTestCategories.LongTest2)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.LongTest2)]
         public void RunTest210() => TestImport("profilegenerator210.db3");
 
         [Fact]
-        [Category(UnitTestCategories.LongTest2)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.LongTest2)]
         public void RunTest280Sarah() => TestImport("profilegenerator280SARAH.db3");
 
         [Fact]
-        [Category(UnitTestCategories.LongTest2)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.LongTest2)]
         public void RunTest520() => TestImport("profilegenerator520.db3");
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void RunTestCurrentDeviceActions()
         {
             using (var dbOriginal = new DatabaseSetup("RunTestCurrentDeviceActionsOriginal"))
@@ -264,7 +264,7 @@ namespace IntegrationTests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void RunTestCurrentDeviceCategory()
         {
             using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
@@ -323,7 +323,7 @@ namespace IntegrationTests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void RunTestCurrentTimeLimits()
         {
             using (var wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))

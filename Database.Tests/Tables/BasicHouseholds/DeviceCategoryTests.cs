@@ -42,7 +42,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
     public class DeviceCategoryTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void GetAllNameTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))

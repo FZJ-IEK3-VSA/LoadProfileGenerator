@@ -17,7 +17,7 @@ namespace IntegrationTests
     public class CleanEachTable
     {
         [Fact]
-        [Category(UnitTestCategories.CleanEachTable)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.CleanEachTable)]
         [SuppressMessage("ReSharper", "UnusedVariable")]
         public void TryCleaningEachTable()
         {

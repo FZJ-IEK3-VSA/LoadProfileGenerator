@@ -13,7 +13,7 @@ namespace ChartCreator2.Tests.OxyCharts {
     public class CalculationDurationFlameChartTests : UnitTestBaseClass
     {
         [Fact][Apartment(ApartmentState.STA)]
-        [Category(UnitTestCategories.ManualOnly)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
         public void RunTest()
         {
             var cdfc = new CalculationDurationFlameChart();

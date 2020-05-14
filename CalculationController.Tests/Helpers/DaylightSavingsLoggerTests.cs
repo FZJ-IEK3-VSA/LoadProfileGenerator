@@ -6,7 +6,6 @@ using CalculationEngine.Helper;
 using Common;
 using Common.JSON;
 using Common.SQLResultLogging;
-using NUnit.Framework;
 using Xunit;
 
 namespace CalculationController.Tests.Helpers
@@ -14,7 +13,7 @@ namespace CalculationController.Tests.Helpers
     public class DaylightSavingsLoggerTests
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void RunDaylightSavingsLoggerTests()
         {
             using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))

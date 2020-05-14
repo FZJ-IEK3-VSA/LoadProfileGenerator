@@ -57,7 +57,7 @@ namespace CalculationController.Tests.CalcFactories {
     [TestFixture]
     public class CalcLocationFactoryTests : UnitTestBaseClass {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void MakeCalcLocationsTest()
         {
             var locations = new List<Location>();
@@ -99,7 +99,7 @@ namespace CalculationController.Tests.CalcFactories {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void MakeCalcLocationsTestWith2Device()
         {
             var builder = new ContainerBuilder();
@@ -157,7 +157,7 @@ namespace CalculationController.Tests.CalcFactories {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void MakeCalcLocationsTestWithDevice()
         {
             var builder = new ContainerBuilder();
@@ -218,7 +218,7 @@ namespace CalculationController.Tests.CalcFactories {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void MakeCalcLocationsTestWithDeviceCategory()
         {
             using WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());

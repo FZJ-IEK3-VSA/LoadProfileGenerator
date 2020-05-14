@@ -17,7 +17,7 @@ namespace ChartCreator2.Tests.Oxyplot {
     public class DeviceSumsTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BrokenTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BrokenTest)]
         public void MakePlotMonthlyTest()
         {
             CleanTestBase.RunAutomatically(false);
@@ -44,7 +44,7 @@ namespace ChartCreator2.Tests.Oxyplot {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BrokenTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BrokenTest)]
         public void MakePlotTest()
         {
             var cs = new OxyCalculationSetup(Utili.GetCurrentMethodAndClass());
@@ -70,7 +70,7 @@ namespace ChartCreator2.Tests.Oxyplot {
         }
         /*
         [Fact]
-        [Category(UnitTestCategories.ManualOnly)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
         public void MakePlotTestMini()
         {
             ChartLocalizer.ShouldTranslate = true;

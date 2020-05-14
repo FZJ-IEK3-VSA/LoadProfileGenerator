@@ -15,7 +15,7 @@ namespace ChartCreator2.Tests.Oxyplot {
     public class ChartGeneratorTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.LongTest3)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.LongTest3)]
         public void RunChartGeneratorTests()
         {
             Config.ReallyMakeAllFilesIncludingBothSums = true;

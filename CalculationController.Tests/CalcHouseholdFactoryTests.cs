@@ -44,7 +44,7 @@ namespace CalculationController.Tests {
     public class CalcHouseholdFactoryTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void GetCalcProfileTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))

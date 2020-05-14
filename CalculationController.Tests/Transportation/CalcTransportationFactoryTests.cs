@@ -129,7 +129,7 @@ namespace CalculationController.Tests.Transportation {
 
         [Fact]
         [SuppressMessage("ReSharper", "UnusedVariable")]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void DuplicateDtoFactoryTest()
         {
             using var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass() + "1");
@@ -145,7 +145,7 @@ namespace CalculationController.Tests.Transportation {
 
         [Fact]
         [SuppressMessage("ReSharper", "UnusedVariable")]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void RunMakeCalcTest()
         {
             //TODO: fix the container registering

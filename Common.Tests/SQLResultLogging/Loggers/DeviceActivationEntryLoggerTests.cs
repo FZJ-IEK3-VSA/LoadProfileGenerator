@@ -18,7 +18,7 @@ namespace Common.Tests.SQLResultLogging.Loggers
     public class DeviceActivationEntryLoggerTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void ReadTest()
         {
             using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))

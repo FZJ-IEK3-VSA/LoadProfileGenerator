@@ -25,7 +25,7 @@ namespace Calculation.Tests.Transportation
     public class CalcTransportationDeviceTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void CalcDistanceDurationTest()
         {
             //_calcParameters.InitializeTimeSteps(new DateTime(2015,1,1), new DateTime(2015, 5, 1),new TimeSpan(0, 1, 0),3,false);
@@ -42,7 +42,7 @@ namespace Calculation.Tests.Transportation
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void CalcTransportationDeviceDriveTest()
         {
             using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))

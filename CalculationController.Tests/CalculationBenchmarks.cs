@@ -38,7 +38,7 @@ namespace CalculationController.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.LongTest5)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.LongTest5)]
         public void ActionCarpetPlotTestBenchmark()
         {
             CalculationProfiler cp = new CalculationProfiler();
@@ -98,7 +98,7 @@ namespace CalculationController.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void ActionEachStepTest()
         {
             CalculationProfiler cp = new CalculationProfiler();
@@ -156,7 +156,7 @@ namespace CalculationController.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void BodilyActivityLevelsTest()
         {
             CalculationProfiler cp = new CalculationProfiler();
@@ -213,7 +213,7 @@ namespace CalculationController.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.LongTest4)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.LongTest4)]
         public void HouseTypeTest()
         {
             using (var wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
@@ -394,7 +394,7 @@ namespace CalculationController.Tests {
 
 
         [Fact]
-        [Category(UnitTestCategories.LongTest5)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.LongTest5)]
         public void AllHouseholdFactoryTest()
         {
             using (var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass()))
@@ -446,7 +446,7 @@ namespace CalculationController.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.LongTest3)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.LongTest3)]
         public void AllHousesFactoryTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
@@ -487,7 +487,7 @@ namespace CalculationController.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void OverallSumFileTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
@@ -546,7 +546,7 @@ namespace CalculationController.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.ManualOnly)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
         public void CalcOptionTester()
         {
             // superslow test, only do manually
@@ -602,7 +602,7 @@ namespace CalculationController.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.LongTest3)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.LongTest3)]
         public void CalculationBenchmarksBasicTest()
         {
             CleanTestBase.RunAutomatically(false);
@@ -656,7 +656,7 @@ namespace CalculationController.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void SimpleLoading()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
@@ -678,7 +678,7 @@ namespace CalculationController.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void CalculationBenchmarksBasicTestHouse()
         {
             //CleanTestBase.Run(false);
@@ -730,7 +730,7 @@ namespace CalculationController.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.LongTest3)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.LongTest3)]
         public void CheckTimeAxisTests()
         {
             //_calcParameters.IsInTransportMode = false;
@@ -782,7 +782,7 @@ namespace CalculationController.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void DuplicateTotalsEntriesTest()
         {
             //_calcParameters.IsInTransportMode = false;
@@ -884,7 +884,7 @@ namespace CalculationController.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void EnergyCarpetPlotTest()
         {
             //_calcParameters.IsInTransportMode = false;
@@ -934,7 +934,7 @@ namespace CalculationController.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.ManualOnly)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
         public void InvalidPersonActivitiesCheck()
         {
             using (var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass()))
@@ -992,7 +992,7 @@ namespace CalculationController.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void DoubleWorkCheck()
         {
             //_calcParameters.IsInTransportMode = false;
@@ -1048,7 +1048,7 @@ namespace CalculationController.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void MissingTotalsEntriesTest()
         {
             //_calcParameters.IsInTransportMode = false;
@@ -1143,7 +1143,7 @@ namespace CalculationController.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void CalculationTransportationTest()
         {
             CleanTestBase.RunAutomatically(false);

@@ -14,7 +14,7 @@ namespace IntegrationTests {
     [TestFixture]
     public class IppischMergeTest {
         [Fact]
-        [Category(UnitTestCategories.ManualOnly)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
         public void TestImport()
         {
             const string importPath = @"e:\Haushalt3.db3";

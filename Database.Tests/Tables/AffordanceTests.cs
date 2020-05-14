@@ -45,7 +45,7 @@ namespace Database.Tests.Tables {
     public class AffordanceTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void LoadFromDatabaseTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
@@ -77,7 +77,7 @@ namespace Database.Tests.Tables {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void CalcAverageEnergyTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))

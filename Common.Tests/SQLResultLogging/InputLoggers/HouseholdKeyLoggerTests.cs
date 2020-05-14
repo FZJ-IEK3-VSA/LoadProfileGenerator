@@ -16,7 +16,7 @@ namespace Common.Tests.SQLResultLogging.InputLoggers
     public class HouseholdKeyLoggerTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void RunTest()
         {
             using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))

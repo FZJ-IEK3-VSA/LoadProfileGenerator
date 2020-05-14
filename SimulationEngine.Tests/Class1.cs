@@ -14,7 +14,7 @@ namespace SimulationEngine.Tests
     public class CalculationOptionProcessorTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void DateTimeTests()
         {
             SimulationEngineConfig.CatchErrors = false;

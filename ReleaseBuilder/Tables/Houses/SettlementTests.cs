@@ -1,4 +1,5 @@
-﻿using Automation.ResultFiles;
+﻿using Automation;
+using Automation.ResultFiles;
 using Common;
 using Common.Tests;
 using Database;
@@ -14,7 +15,7 @@ namespace ReleaseBuilder.Tables.Houses {
     public class SettlementTests : UnitTestBaseClass
     {
         [Fact]
-        [Category("QuickChart")]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.ManualOnly)]
         public void MakeTraitStatisticsTest()
         {
             using (var dbs = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))

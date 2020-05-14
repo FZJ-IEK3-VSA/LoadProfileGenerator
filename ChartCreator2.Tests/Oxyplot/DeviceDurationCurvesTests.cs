@@ -17,7 +17,7 @@ namespace ChartCreator2.Tests.Oxyplot {
     public class DeviceDurationCurvesTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.LongTest5)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.LongTest5)]
         public void MakePlotTest()
         {
             CleanTestBase.RunAutomatically(false);
@@ -47,7 +47,7 @@ namespace ChartCreator2.Tests.Oxyplot {
         }
         /*
         [Fact]
-        [Category(UnitTestCategories.ManualOnly)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
         public void MakePlotTest2()
         {
             const string dstdir = @"E:\unittest\StartHousehold1";

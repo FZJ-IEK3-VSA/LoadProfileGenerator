@@ -17,7 +17,7 @@ namespace ChartCreator2.Tests.PDF {
     public class MigraPDFCreatorTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.LongTest4)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.LongTest4)]
         public void MakeDocumentTest()
         {
             var cs = new OxyCalculationSetup(Utili.GetCurrentMethodAndClass());
@@ -43,7 +43,7 @@ namespace ChartCreator2.Tests.PDF {
         }
 
         [Fact]
-        [Category(UnitTestCategories.ManualOnly)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
         public void MakeDocumentTestFull()
         {
             var cs = new OxyCalculationSetup(Utili.GetCurrentMethodAndClass());
@@ -64,7 +64,7 @@ namespace ChartCreator2.Tests.PDF {
         }
         /*
         [Fact]
-        [Category(UnitTestCategories.ManualOnly)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
         public void MakeDocumentTestFullPDF() {
             var path = @"E:\unittest\MigraPDFCreatorTests.MakeDocumentTestFull";
             var di = new DirectoryInfo(path);
@@ -83,7 +83,7 @@ namespace ChartCreator2.Tests.PDF {
 #pragma warning disable S2583 // Conditions should not unconditionally evaluate to "true" or to "false"
 
         [Fact]
-        [Category(UnitTestCategories.BrokenTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BrokenTest)]
         public void MakeFullPDFDocumentTest()
         {
             //const bool blub = true;

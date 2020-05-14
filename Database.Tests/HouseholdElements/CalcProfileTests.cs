@@ -16,7 +16,7 @@ namespace Database.Tests.HouseholdElements
     public class CalcProfileTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void CalcProfileTest1MinPro1MinStep()
         {
             TimeSpan stepsize = new TimeSpan(0, 1, 0);
@@ -29,7 +29,7 @@ namespace Database.Tests.HouseholdElements
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void CalcProfileTest2MinPro1MinStep()
         {
             TimeSpan stepsize = new TimeSpan(0, 1, 0);
@@ -43,7 +43,7 @@ namespace Database.Tests.HouseholdElements
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void CalcProfileTest30SPro1MinStep()
         {
             Config.IsInUnitTesting = true;

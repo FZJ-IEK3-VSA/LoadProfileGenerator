@@ -11,7 +11,6 @@ using Database;
 using Database.Tests;
 using JetBrains.Annotations;
 using Moq;
-using NUnit.Framework;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -22,7 +21,7 @@ namespace CalcPostProcessorTests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void Run()
         {
             using (var wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))

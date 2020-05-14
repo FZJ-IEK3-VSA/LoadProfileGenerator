@@ -8,7 +8,6 @@ using Common.Tests;
 using Database;
 using Database.Tests;
 using JetBrains.Annotations;
-using NUnit.Framework;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -16,7 +15,7 @@ namespace CalculationController.Tests.InputLoggers {
     public class TemperatureLoggerTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void RunTest()
         {
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());

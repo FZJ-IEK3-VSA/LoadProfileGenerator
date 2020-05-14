@@ -47,7 +47,7 @@ namespace Database.Tests.Tables {
     public class LocationTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void LocationTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))

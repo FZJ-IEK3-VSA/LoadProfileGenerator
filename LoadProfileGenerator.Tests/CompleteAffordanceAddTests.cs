@@ -18,7 +18,7 @@ namespace LoadProfileGenerator.Tests
     public class CompleteAffordanceAddTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void CompleteAffordanceCreatorTest()
         {
             using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))

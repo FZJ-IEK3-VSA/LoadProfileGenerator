@@ -12,7 +12,6 @@ using Database;
 using Database.Tables.BasicHouseholds;
 using Database.Tests;
 using JetBrains.Annotations;
-using NUnit.Framework;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -23,7 +22,7 @@ namespace CalculationController.Tests.InputLoggers
     public class DeviceTaggingSetLoggerTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void RunTest()
         {
             using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))

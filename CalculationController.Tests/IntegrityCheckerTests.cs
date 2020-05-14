@@ -46,7 +46,7 @@ namespace CalculationController.Tests
     public class IntegrityCheckerTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void CheckSimIntegrityCheckerTest()
         {
             CleanTestBase.RunAutomatically(false);
@@ -64,7 +64,7 @@ namespace CalculationController.Tests
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void CheckSimIntegrityCheckerBenchmark()
         {
             CleanTestBase.RunAutomatically(false);
@@ -88,7 +88,7 @@ namespace CalculationController.Tests
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void SimHouseIntegiryChecker()
         {
             CleanTestBase.RunAutomatically(false);

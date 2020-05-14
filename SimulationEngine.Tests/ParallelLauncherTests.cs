@@ -17,11 +17,11 @@ namespace SimulationEngine.Tests
     public class ParallelLauncherTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void FindNumberOfCoresTest() => Logger.Info(ParallelLauncher.FindNumberOfCores().ToString(CultureInfo.InvariantCulture));
 
         [Fact]
-        [Category(UnitTestCategories.ManualOnly)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
         public void RunTest()
         {
             const string path = @"G:\2016.2.1..20.6";

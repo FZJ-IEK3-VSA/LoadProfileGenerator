@@ -4,7 +4,6 @@ using Automation.ResultFiles;
 using Common;
 using Database.Tables.BasicElements;
 using Database.Tests;
-using NUnit.Framework;
 using SimulationEngineLib.Other;
 using Xunit;
 
@@ -13,7 +12,7 @@ namespace SimulationEngine.Tests.Other
     public class CSVImportTest
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void RunTest()
         {
             //make dummy csv file

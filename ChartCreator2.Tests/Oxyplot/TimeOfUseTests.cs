@@ -15,7 +15,7 @@ namespace ChartCreator2.Tests.Oxyplot {
     public class TimeOfUseTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         [Apartment(ApartmentState.STA)]
         public void MakePlotTest()
         {

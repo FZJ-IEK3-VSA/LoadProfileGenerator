@@ -22,7 +22,7 @@ namespace CalculationController.Tests.Helpers
     public class DeviceCategoryPickerTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void DeviceCategoryPickerTestDeviceCategories()
         {
             Random r = new Random(5);
@@ -58,7 +58,7 @@ namespace CalculationController.Tests.Helpers
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void DeviceCategoryPickerTestRealDevices()
         {
             Random r = new Random(5);
@@ -86,7 +86,7 @@ namespace CalculationController.Tests.Helpers
 
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void TestMultiplePickingShouldAlwaysGiveSameResult()
         {
             using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
@@ -123,7 +123,7 @@ namespace CalculationController.Tests.Helpers
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void DeviceCategoryPickerDeviceActionGroupAutoDev()
         {
             Random r = new Random(2);

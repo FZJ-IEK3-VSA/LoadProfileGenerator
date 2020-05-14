@@ -23,7 +23,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
     {
 
         [Fact]
-        [Category(UnitTestCategories.ManualOnly)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
         public void HouseGeneratorTestForPrecreated()
         {
             //setup
@@ -41,7 +41,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
             }
         }
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void HouseGeneratorTestWithPersonSpecAndTransport()
         {
             //setup
@@ -79,7 +79,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
             }
         }
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void HouseGeneratorTestWithPersonSpec()
         {
             //setup
@@ -111,7 +111,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
 
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void HouseGeneratorTestWithTemplateSpec()
         {
             //setup
@@ -139,7 +139,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void HouseJobForHeatpump()
         {
             //setup
@@ -186,7 +186,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
 
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void HouseJobForHouseTypes()
         {
             //setup
@@ -268,7 +268,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void HouseGeneratorTestWithHouseholdSpec()
         {
             //setup
@@ -335,7 +335,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         }
 
         [Fact]
-        [Category(UnitTestCategories.ManualOnly)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
         public void RunSinglePredefinedJson()
         {
             Logger.Get().StartCollectingAllMessages();

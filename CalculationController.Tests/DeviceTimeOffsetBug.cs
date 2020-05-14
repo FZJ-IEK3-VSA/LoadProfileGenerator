@@ -95,7 +95,7 @@ namespace CalculationController.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void TimeOffsetBugTest()
         {
             Config.AdjustTimesForSettlement = false;

@@ -61,7 +61,7 @@ namespace Calculation.HouseholdElements.Tests
 
         [Fact]
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void PickRandomAffordanceFromEquallyAttractiveOnesTest()
         {
             using (var wd = new WorkingDir(nameof(PickRandomAffordanceFromEquallyAttractiveOnesTest))) {
@@ -125,7 +125,7 @@ namespace Calculation.Tests.HouseholdElements {
     [TestFixture]
     public class CalcPersonTests : TestBasis {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void NextStepTest() {
             DateTime startdate = new DateTime(2018, 1, 1);
             DateTime enddate = startdate.AddMinutes(100);
@@ -230,7 +230,7 @@ namespace Calculation.Tests.HouseholdElements {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void TestInterruptionTest() {
             DateTime startdate = new DateTime(2018, 1, 1);
             DateTime enddate = startdate.AddMinutes(100);

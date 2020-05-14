@@ -18,7 +18,7 @@ namespace LoadProfileGenerator.Tests.Presenters.SpecialViews
     {
         [Fact]
         [Apartment(ApartmentState.STA)]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
 
         public void StartCalcOutcomesChart()
         {
@@ -31,7 +31,7 @@ namespace LoadProfileGenerator.Tests.Presenters.SpecialViews
         }
 
         [Fact]
-        [Category(UnitTestCategories.LongTest3)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.LongTest3)]
         public void StartOneCalculationTest()
         {
             using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))

@@ -18,7 +18,7 @@ namespace Database.Tests {
         /// exportiert alle haushalte und reimportiert sie einmal
         /// </summary>
         [Fact]
-        [Category(UnitTestCategories.LongTest2)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.LongTest2)]
         public void Run()
         {
             Logger.Info("Starting test");
@@ -58,7 +58,7 @@ namespace Database.Tests {
         }
         /*
         [Fact]
-        [Category(UnitTestCategories.ManualOnly)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
         public void RunJuelich() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(),DatabaseSetup.TestPackage.DatabaseIo);
             var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());

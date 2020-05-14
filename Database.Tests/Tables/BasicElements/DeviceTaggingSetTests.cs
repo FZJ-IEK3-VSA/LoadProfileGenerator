@@ -43,7 +43,7 @@ namespace Database.Tests.Tables.BasicElements {
     public class DeviceTaggingSetTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void DeviceTaggingSetTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
@@ -88,7 +88,7 @@ namespace Database.Tests.Tables.BasicElements {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void DeviceTaggingSetTestNone()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))

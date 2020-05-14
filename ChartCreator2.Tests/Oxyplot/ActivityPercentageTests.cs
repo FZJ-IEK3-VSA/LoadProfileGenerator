@@ -14,7 +14,7 @@ using Assert = NUnit.Framework.Assert;
 namespace ChartCreator2.Tests.Oxyplot {
     [TestFixture]
     [Apartment(ApartmentState.STA)]
-    [Category(UnitTestCategories.BasicTest)]
+    [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
     public class ActivityPercentageTests : UnitTestBaseClass
     {
         [Fact]

@@ -17,7 +17,7 @@ namespace Common.Tests.SQLResultLogging.InputLoggers
     public class CalcParameterLoggerTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void CalcParameterLoggerTest()
         {
             CalcParameters cp = CalcParameters.GetNew();

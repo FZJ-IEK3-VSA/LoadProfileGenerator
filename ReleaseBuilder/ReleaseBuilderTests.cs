@@ -409,7 +409,7 @@ namespace ReleaseBuilder
         }
 
         [Fact]
-        [Category("BasicTest")]
+        [Trait(UnitTestCategories.Category,"BasicTest")]
         [SuppressMessage("ReSharper", "HeuristicUnreachableCode")]
         public void CheckForCalculationOutcomeCompleteness()
         {
@@ -431,7 +431,7 @@ namespace ReleaseBuilder
         }
 
         [Fact]
-        [Category("ReleaseMaker")]
+        [Trait(UnitTestCategories.Category,"ReleaseMaker")]
         [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalse")]
         [SuppressMessage("ReSharper", "HeuristicUnreachableCode")]
         public void MakeRelease()

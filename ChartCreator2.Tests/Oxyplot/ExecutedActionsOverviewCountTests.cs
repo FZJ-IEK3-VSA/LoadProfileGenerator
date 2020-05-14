@@ -16,7 +16,7 @@ namespace ChartCreator2.Tests.Oxyplot {
     public class ExecutedActionsOverviewCountTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void MakePlotTest()
         {
             CleanTestBase.RunAutomatically(false);

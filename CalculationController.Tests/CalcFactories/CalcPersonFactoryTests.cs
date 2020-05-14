@@ -50,7 +50,7 @@ namespace CalculationController.Tests.CalcFactories {
     public class CalcPersonFactoryTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void AddMoreDesiresTest()
         {
             Config.IsInUnitTesting = true;

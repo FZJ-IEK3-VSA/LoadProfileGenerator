@@ -55,7 +55,7 @@ namespace Database.Tests.Tables {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void GetTemperatureArrayTest() {
             // test converting
             var startdate = new DateTime(2014, 1, 1);
@@ -75,7 +75,7 @@ namespace Database.Tests.Tables {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void GetTemperatureArrayTest2() {
             // test mapping to a different year
             var startdate = new DateTime(2014, 1, 1);
@@ -95,7 +95,7 @@ namespace Database.Tests.Tables {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void GetTemperatureArrayTest3() {
             // test schaltjahr
             var startdate = new DateTime(2014, 2, 27);
@@ -117,7 +117,7 @@ namespace Database.Tests.Tables {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void GetTemperatureArrayTest4() {
             // test Jahres�bergang
             var startdate = new DateTime(2013, 12, 27);
@@ -139,7 +139,7 @@ namespace Database.Tests.Tables {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void LoadFromDatabaseTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
@@ -168,7 +168,7 @@ namespace Database.Tests.Tables {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void RealDeviceOneValueTest() {
             var startdt = new DateTime(2010, 1, 1);
             var endDt = new DateTime(2010, 1, 11);
@@ -184,7 +184,7 @@ namespace Database.Tests.Tables {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void RealDeviceTempArrayTestTest() {
             var startdt = new DateTime(2010, 1, 1);
             var endDt = new DateTime(2010, 1, 11);
@@ -209,7 +209,7 @@ namespace Database.Tests.Tables {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void RealDeviceTwoValuesTest() {
             var startdt = new DateTime(2010, 1, 1);
             var endDt = new DateTime(2010, 1, 11);

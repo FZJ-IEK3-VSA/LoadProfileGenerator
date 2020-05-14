@@ -19,7 +19,7 @@ namespace Database.Tests.Tables.Houses {
     public class SettlementTemplateTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void SettlementTemplatePreviewTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
@@ -88,7 +88,7 @@ namespace Database.Tests.Tables.Houses {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void SettlementTemplateTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))

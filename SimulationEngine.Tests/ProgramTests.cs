@@ -54,7 +54,7 @@ namespace SimulationEngine.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.ManualOnly)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
         public void CSVImportTest()
         {
             using (var db1 = new DatabaseSetup(Utili.GetCurrentMethodAndClass() + "_export"))
@@ -80,7 +80,7 @@ namespace SimulationEngine.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.ManualOnly)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
         public void CSVImportTest2()
         {
             using (var db1 = new DatabaseSetup(Utili.GetCurrentMethodAndClass() + "_export"))
@@ -113,7 +113,7 @@ namespace SimulationEngine.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void ListEnviromentalVariables() {
             SimulationEngineConfig.CatchErrors = false;
             var dict = Environment.GetEnvironmentVariables();
@@ -127,7 +127,7 @@ namespace SimulationEngine.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void MainListLoadTypePriorities()
         {
             using (var wd = SetupDB3(Utili.GetCurrentMethodAndClass()))
@@ -143,7 +143,7 @@ namespace SimulationEngine.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.ManualOnly)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
         public void MainTestBatchCommandlineModularHouseholds()
         {
             using (var wd = SetupDB3(Utili.GetCurrentMethodAndClass()))
@@ -163,7 +163,7 @@ namespace SimulationEngine.Tests {
 
         /*
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void MainTestBatchModularHouseholds() {
             var wd = SetupDB3(Utili.GetCurrentMethodAndClass());
             const string filename = "Start-ModularHousehold.cmd";
@@ -181,7 +181,7 @@ namespace SimulationEngine.Tests {
         }*/
         /*
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void MainTestBatchSettlements() {
             const string filename = "Start-Settlement.cmd";
             if (File.Exists(filename)) {
@@ -199,7 +199,7 @@ namespace SimulationEngine.Tests {
         }*/
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void MainTestForHelp()
         {
             using (var wd = SetupDB3(Utili.GetCurrentMethodAndClass()))
@@ -211,7 +211,7 @@ namespace SimulationEngine.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.ManualOnly)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
         public void MainTestLaunchParallelModularHouseholds()
         {
             SimulationEngineConfig.CatchErrors = false;
@@ -258,7 +258,7 @@ namespace SimulationEngine.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void MainTestListGeoLocs()
         {
             using (var wd = SetupDB3(Utili.GetCurrentMethodAndClass()))
@@ -274,7 +274,7 @@ namespace SimulationEngine.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void ProfilesGeoLocs()
         {
             using (var wd = SetupDB3(Utili.GetCurrentMethodAndClass()))
@@ -315,7 +315,7 @@ namespace SimulationEngine.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void MainTestListHouses()
         {
             using (var wd = SetupDB3(Utili.GetCurrentMethodAndClass()))
@@ -331,7 +331,7 @@ namespace SimulationEngine.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void MainTestListModularHouseholds()
         {
             using (var wd = SetupDB3(Utili.GetCurrentMethodAndClass()))
@@ -347,7 +347,7 @@ namespace SimulationEngine.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void MainTestListSettlements()
         {
             SimulationEngineConfig.CatchErrors = false;
@@ -364,7 +364,7 @@ namespace SimulationEngine.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void MainTestListTemperatureProfiles()
         {
             using (var wd = SetupDB3(Utili.GetCurrentMethodAndClass()))
@@ -380,7 +380,7 @@ namespace SimulationEngine.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void MainTestNoDB3() {
             SimulationEngineConfig.CatchErrors = false;
             if (File.Exists("profilegenerator.db3")) {
@@ -392,7 +392,7 @@ namespace SimulationEngine.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.LongTest5)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.LongTest5)]
         public void SettlementToBatchTest()
         {
             using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))

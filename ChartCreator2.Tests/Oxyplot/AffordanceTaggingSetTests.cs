@@ -18,7 +18,7 @@ namespace ChartCreator2.Tests.Oxyplot {
     public class AffordanceTaggingSetTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void MakePlotTest()
         {
             CleanTestBase.RunAutomatically(false);
@@ -50,7 +50,7 @@ namespace ChartCreator2.Tests.Oxyplot {
         }
         /*
         [Fact]
-        [Category(UnitTestCategories.ManualOnly)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
         public void MakePlotTestMini()
         {
             ChartLocalizer.ShouldTranslate = true;

@@ -49,7 +49,7 @@ namespace Calculation.Tests.Logfile
     public class DesiresLogFileTests : TestBasis
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void TestBasics()
         {
             // needs major redesign of calcperson class

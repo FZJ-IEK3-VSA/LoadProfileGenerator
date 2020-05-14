@@ -48,7 +48,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
     public class ModularHouseholdTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void ModularHouseholdJsonTest()
         {
             using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
@@ -113,7 +113,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
 
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void ModularHouseholdOldImportTest()
         {
             using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
@@ -153,7 +153,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void SwapPersonsTestWithOther()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
@@ -173,7 +173,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void SwapTagTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
@@ -194,7 +194,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
 
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void ModularHouseholdJsonImportExporTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
@@ -217,7 +217,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void ModularHouseholdTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))

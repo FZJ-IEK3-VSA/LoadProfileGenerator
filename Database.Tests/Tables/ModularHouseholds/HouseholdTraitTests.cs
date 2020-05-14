@@ -51,7 +51,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
     public class HouseholdTraitTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void TraitImportExportTest()
         {
             //  WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
@@ -124,7 +124,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void HouseholdTraitImportTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
@@ -142,7 +142,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void HouseholdTraitAffordanceTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
@@ -210,7 +210,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void HouseholdTraitTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))

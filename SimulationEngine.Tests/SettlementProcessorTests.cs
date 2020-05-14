@@ -29,7 +29,7 @@ namespace SimulationEngine.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void RunTest() {
             using var se = new SimulationEngineTestPreparer(Utili.GetCurrentMethodAndClass());
             var srcPath = se.WorkingDirectory;
@@ -44,7 +44,7 @@ namespace SimulationEngine.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.ManualOnly)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
         public void RunQuickTest()
         {
             if(Directory.Exists(@"Z:\IEEEv7\SettlementProcessing")) {

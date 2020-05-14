@@ -42,7 +42,7 @@ namespace Database.Tests.Helpers {
     public class MakeCalcDegreeHoursTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void MakeDegreeDaysTest3Days()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
@@ -71,7 +71,7 @@ namespace Database.Tests.Helpers {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void MakeDegreeDaysTest3Years()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
@@ -100,7 +100,7 @@ namespace Database.Tests.Helpers {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void MakeDegreeDaysTestMinus3Days()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
@@ -131,7 +131,7 @@ namespace Database.Tests.Helpers {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void MakeDegreeHoursTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))

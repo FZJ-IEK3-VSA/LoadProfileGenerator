@@ -11,7 +11,7 @@ namespace ChartCreator.Tests {
     internal static class CisbatLEDChart {
         public class Durchschnittsprofil {
             [Fact]
-            [Category(UnitTestCategories.ManualOnly)]
+            [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
             public void Run()
             {
                 const string glue = "hh1000200w.csv";
@@ -64,7 +64,7 @@ namespace ChartCreator.Tests {
             }
             
             [Fact]
-            [Category(UnitTestCategories.ManualOnly)]
+            [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
             public void RunOnlyMerge()
             {
                 const string dstDir = @"X:\ResultDir";

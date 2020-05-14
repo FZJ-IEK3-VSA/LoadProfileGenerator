@@ -2,7 +2,6 @@
 using Automation;
 using Automation.ResultFiles;
 using Common.SQLResultLogging;
-using NUnit.Framework;
 using Xunit;
 
 namespace Common.Tests.SQLResultLogging
@@ -24,7 +23,7 @@ namespace Common.Tests.SQLResultLogging
         }*/
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void CreateTableFromFieldlistTest()
         {
             using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
@@ -42,7 +41,7 @@ namespace Common.Tests.SQLResultLogging
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void SaveDictionaryTest()
         {
             using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
@@ -66,7 +65,7 @@ namespace Common.Tests.SQLResultLogging
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void DoubleSaveDictionaryTest()
         {
             using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
@@ -90,7 +89,7 @@ namespace Common.Tests.SQLResultLogging
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void SaveDictionaryCalcParametersTest()
         {
             using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))

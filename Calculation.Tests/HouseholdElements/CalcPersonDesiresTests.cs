@@ -49,7 +49,7 @@ namespace Calculation.Tests.HouseholdElements {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void CalcPersonDesiresTest()
         {
             CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();
@@ -87,7 +87,7 @@ namespace Calculation.Tests.HouseholdElements {
         ///     therefore the desires should be unequal
         /// </summary>
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void CalcPersonNonSharedDesiresTest()
         {
             CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();
@@ -130,7 +130,7 @@ namespace Calculation.Tests.HouseholdElements {
         ///     therefore the desires should be equal
         /// </summary>
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void CalcPersonSharedDesiresTest()
         {
             CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();

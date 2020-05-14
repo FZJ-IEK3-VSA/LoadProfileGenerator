@@ -51,7 +51,7 @@ namespace Calculation.Tests {
     [TestFixture]
     public class CalcTransformationDeviceTests : TestBasis {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void ProcessOneTimestepTestVariableFactor()
         {
             var calcParameters = CalcParametersFactory.MakeGoodDefaults();
@@ -106,7 +106,7 @@ namespace Calculation.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void ProcessOneTransformationDeviceTimestepTest()
         {
             var calcParameters = CalcParametersFactory.MakeGoodDefaults();

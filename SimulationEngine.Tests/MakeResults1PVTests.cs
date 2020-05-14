@@ -10,7 +10,7 @@ namespace SimulationEngine.Tests
     public class MakeResults1PvTests
     {
         [Fact]
-        [Category(UnitTestCategories.ManualOnly)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
         public void RunTest()
         {
             using SimulationEngineTestPreparer se = new SimulationEngineTestPreparer("MakeResults1PV");

@@ -1,5 +1,4 @@
 ﻿using Automation;
-using NUnit.Framework;
 using Xunit;
 
 namespace CalculationController.Tests.Helpers
@@ -7,7 +6,7 @@ namespace CalculationController.Tests.Helpers
     public class InputDataLoggerTests
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void RunConfigSaveTest()
         {
             //TODO: Fix

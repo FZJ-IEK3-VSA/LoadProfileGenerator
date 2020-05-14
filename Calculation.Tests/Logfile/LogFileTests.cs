@@ -49,7 +49,7 @@ namespace Calculation.Tests.Logfile
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void BasicTest()
         {
             using (WorkingDir wd = new WorkingDir("BasicLogfileTest"))

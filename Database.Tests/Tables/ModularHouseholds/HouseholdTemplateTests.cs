@@ -22,7 +22,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
     {
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void HouseholdTemplateJsonTestWithFluentAssertion()
         {
             //  WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
@@ -58,7 +58,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
         }
         /*
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void HouseholdTemplateJsonTest()
         {
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
@@ -121,7 +121,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
 
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void HouseholdTemplateGenerationTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
@@ -149,7 +149,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void HouseholdTemplateAddTests()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
@@ -176,7 +176,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void HouseholdTemplateTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
@@ -205,7 +205,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void HouseholdTemplateTest2()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
@@ -260,7 +260,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void ImportExistingModularTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))

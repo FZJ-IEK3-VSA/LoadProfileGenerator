@@ -18,7 +18,7 @@ namespace Common.Tests.SQLResultLogging.InputLoggers {
     public class ColumnEntryLoggerTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void RunColumnEntryLoggerTest()
         {
             using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using Automation;
 using JetBrains.Annotations;
 using NUnit.Framework;
 using Xunit;
@@ -129,7 +130,7 @@ namespace ReleaseBuilder {
             public List<MyClassNode> Subclasses { get; } = new List<MyClassNode>();
         }
 
-        [Category("QuickChart")]
+        [Trait(UnitTestCategories.Category,"QuickChart")]
         [Fact]
         public void Run() {
             ProcessAssembly("loadprofilegenerator.exe", @"e:\lpg.gml");

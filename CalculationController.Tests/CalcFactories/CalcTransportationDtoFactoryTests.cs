@@ -17,7 +17,7 @@ namespace CalculationController.Tests.CalcFactories
     public class CalcTransportationDtoFactoryTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void DistanceToEnergyFactorTest()
         {
             VLoadType vlt = new VLoadType("elec","","W","kWh",1000,1,new TimeSpan(1,0,0),

@@ -49,7 +49,7 @@ namespace Calculation.Tests {
     [TestFixture]
     public class CalcDeviceTests : TestBasis {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void SetTimeprofileTest()
         {
             DateTime startdate = new DateTime(2018, 1, 1);

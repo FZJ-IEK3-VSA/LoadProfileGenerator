@@ -16,7 +16,7 @@ namespace ChartCreator2.Tests.Oxyplot {
     public class HouseholdPlanTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BrokenTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BrokenTest)]
         public void MainHouseholdPlanTest()
         {
             CleanTestBase.RunAutomatically(false);

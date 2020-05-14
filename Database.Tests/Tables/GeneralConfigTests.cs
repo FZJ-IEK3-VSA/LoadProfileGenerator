@@ -43,7 +43,7 @@ namespace Database.Tests.Tables {
     public class GeneralConfigTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void LoadFromDatabaseTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))

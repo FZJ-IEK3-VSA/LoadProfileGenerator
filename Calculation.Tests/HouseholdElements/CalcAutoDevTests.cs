@@ -30,7 +30,7 @@ namespace Calculation.Tests.HouseholdElements {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void CheckConditionTest() {
             Assert.IsTrue(VariableConditionHelper.CheckCondition(1, VariableCondition.Equal, 1));
             Assert.IsFalse(VariableConditionHelper.CheckCondition(0, VariableCondition.Equal, 1));
@@ -53,7 +53,7 @@ namespace Calculation.Tests.HouseholdElements {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void CheckResultingProfile() {
             using var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             wd.InputDataLogger.AddSaver(new ColumnEntryLogger(wd.SqlResultLoggingService));

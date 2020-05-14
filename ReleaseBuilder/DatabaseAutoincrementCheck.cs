@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Database.Database;
@@ -12,7 +13,7 @@ namespace ReleaseBuilder {
     [TestFixture]
     public class DatabaseAutoincrementCheck {
         [Fact]
-        [Category("BasicTest")]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void RunDatabaseTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
@@ -86,7 +87,7 @@ namespace ReleaseBuilder {
             }
         }
         [Fact]
-        [Category("BasicTest")]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.BasicTest)]
         public void RunDatabaseGuidTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))

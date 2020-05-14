@@ -1,6 +1,5 @@
 ﻿using Automation;
 using Automation.ResultFiles;
-using NUnit.Framework;
 using SimulationEngineLib.SimZukunftProcessor;
 using Xunit;
 
@@ -9,7 +8,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
     public class HouseGenerationStatisticsTest
     {
         [Fact]
-        [Category(UnitTestCategories.ManualOnly)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
         public void RunStatistics()
         {
             const string path = @"C:\work\GeneratedHouses";

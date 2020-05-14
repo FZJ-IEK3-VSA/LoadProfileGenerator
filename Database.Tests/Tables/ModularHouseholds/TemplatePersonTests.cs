@@ -16,7 +16,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
     public class TemplatePersonTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void TemplatePersonTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))

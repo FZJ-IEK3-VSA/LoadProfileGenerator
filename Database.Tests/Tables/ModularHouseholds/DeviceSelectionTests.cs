@@ -43,7 +43,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
     public class DeviceSelectionTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void DeviceSelectionTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))

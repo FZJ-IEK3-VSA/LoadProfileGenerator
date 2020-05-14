@@ -10,7 +10,7 @@ namespace Common.Tests
     public class UtiliTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void GetCurrentMethodAndClassTest()
         {
             string s = Utili.GetCurrentMethodAndClass();

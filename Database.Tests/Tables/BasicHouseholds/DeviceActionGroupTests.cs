@@ -16,7 +16,7 @@ namespace Database.Tests.Tables.BasicHouseholds
     public class DeviceActionGroupTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void DeviceActionGroupTestDeleteFromSim()
         {
             Config.IsInUnitTesting = true;
@@ -30,7 +30,7 @@ namespace Database.Tests.Tables.BasicHouseholds
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void DeviceActionGroupTestsAll()
         {
             using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))

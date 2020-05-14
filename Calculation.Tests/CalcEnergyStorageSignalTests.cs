@@ -56,7 +56,7 @@ namespace Calculation.Tests
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void EnergyStorageSignalTests()
         {
             CalcParameters cp = CalcParameters.GetNew();
@@ -84,7 +84,7 @@ namespace Calculation.Tests
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void EnergyStorageSignalTests2()
         {
             CalcParameters cp = CalcParameters.GetNew();

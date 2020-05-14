@@ -14,7 +14,7 @@ namespace Database.Tests.Tables.BasicElements {
     public class HouseholdPlanTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.LongTest5)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.LongTest5)]
         public void HouseholdPlanEntryAverageTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
@@ -42,7 +42,7 @@ namespace Database.Tests.Tables.BasicElements {
 
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         [Fact]
-        [Category(UnitTestCategories.LongTest5)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.LongTest5)]
         public void HouseholdPlanEntryRefreshTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
@@ -99,7 +99,7 @@ namespace Database.Tests.Tables.BasicElements {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void HouseholdPlanEntryTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))

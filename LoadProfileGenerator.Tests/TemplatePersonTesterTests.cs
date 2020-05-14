@@ -101,7 +101,7 @@ namespace LoadProfileGenerator.Tests {
         }*/
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
 #pragma warning restore S125 // Sections of code should not be "commented out"
         public void RunTemplatePersonCreation()
         {
@@ -115,7 +115,7 @@ namespace LoadProfileGenerator.Tests {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void TemplatePersonFullCalculationTest()
         {
             //TODO: fix this test

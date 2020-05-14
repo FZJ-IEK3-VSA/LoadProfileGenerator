@@ -11,7 +11,7 @@ namespace LoadProfileGenerator.Tests {
     public class ErrorReporterTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void RunTest()
         {
             var er = new ErrorReporter();

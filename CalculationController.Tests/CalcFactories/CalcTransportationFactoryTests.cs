@@ -17,7 +17,7 @@ namespace CalculationController.Tests.CalcFactories {
     public class CalcTransportationFactoryTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void CheckReachabilityofLocationsTest()
         {
             List<Location> locations = new List<Location>();
@@ -46,7 +46,7 @@ namespace CalculationController.Tests.CalcFactories {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void CheckRouteCompletenessTest()
         {
             TravelRouteSet trs = new TravelRouteSet("trs", 1, "", "", Guid.NewGuid().ToStrGuid());

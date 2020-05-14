@@ -19,7 +19,7 @@ namespace Database.Tests.Templates {
     public class HouseholdTemplateExecutorTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void RunMakeProbabilityArrayTest() {
             //tests the make probability array function
             // the function finds the probabiltiies in a date profile, normalizes them and then generates a sorted 1000 member array to pick the proper
@@ -51,7 +51,7 @@ namespace Database.Tests.Templates {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void RunVacationGetProbabilityRangesTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
@@ -77,7 +77,7 @@ namespace Database.Tests.Templates {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void RunVacGenerationTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))

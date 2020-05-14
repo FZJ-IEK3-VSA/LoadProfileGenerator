@@ -20,7 +20,7 @@ namespace Common.Tests.SQLResultLogging.InputLoggers
     public class CalcAffordanceDtoLoggerTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void CalcAffordanceDtoLoggerTest()
         {
             using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))

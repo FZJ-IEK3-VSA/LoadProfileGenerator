@@ -51,7 +51,7 @@
 //    public class ActionCarpetPlotTests : TestBasis
 //    {
 //        [Fact]
-//        [Category(UnitTestCategories.BasicTest)]
+//        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
 //        [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
 //        public void ActionCarpetPlotTest()
 //        {

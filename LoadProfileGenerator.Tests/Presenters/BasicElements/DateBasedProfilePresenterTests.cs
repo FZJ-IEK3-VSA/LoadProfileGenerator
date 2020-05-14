@@ -20,7 +20,7 @@ namespace LoadProfileGenerator.Tests.Presenters.BasicElements {
     public class DateBasedProfilePresenterTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
         public void DateBasedProfilePresenterTest()
         {

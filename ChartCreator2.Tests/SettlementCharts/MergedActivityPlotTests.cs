@@ -14,7 +14,7 @@ namespace ChartCreator2.Tests.SettlementCharts
     public class MergedActivityPlotTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.ManualOnly)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
         public void RunTest()
         {
             MergedActivityPlot.Run(@"e:\MergedActivities.csv", @"e:\pictures");

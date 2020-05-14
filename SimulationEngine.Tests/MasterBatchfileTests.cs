@@ -23,7 +23,7 @@ namespace SimulationEngine.Tests
     public class MasterBatchfileTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void TestSettlementInformation()
         {
             using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
@@ -44,7 +44,7 @@ namespace SimulationEngine.Tests
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         [Fact]
-        [Category(UnitTestCategories.ManualOnly)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
         public void RunNaturalLightBatch()
         {
             SimulationEngineConfig.IsUnitTest = true;
@@ -60,7 +60,7 @@ namespace SimulationEngine.Tests
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         [Fact]
-        [Category(UnitTestCategories.ManualOnly)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
         public void RunTest()
         {
             SimulationEngineTestPreparer se = new SimulationEngineTestPreparer("MasterBatch");
@@ -87,7 +87,7 @@ namespace SimulationEngine.Tests
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         [Fact]
-        [Category(UnitTestCategories.ManualOnly)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
         public void PdfReplacerTest()
         {
             SimulationEngineTestPreparer se = new SimulationEngineTestPreparer("MasterBatch");

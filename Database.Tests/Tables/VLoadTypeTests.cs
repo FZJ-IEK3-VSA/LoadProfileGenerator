@@ -43,7 +43,7 @@ namespace Database.Tests.Tables {
     public class VLoadTypeTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void ConvertPowerValueWithTimeTest() {
             var vlt = new VLoadType("bla", string.Empty, "Watt", "kWh", 1000, 1, new TimeSpan(1, 0, 0), 1,
                 string.Empty, LoadTypePriority.Mandatory, true, Guid.NewGuid().ToStrGuid());
@@ -53,7 +53,7 @@ namespace Database.Tests.Tables {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void VLoadTypeTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))

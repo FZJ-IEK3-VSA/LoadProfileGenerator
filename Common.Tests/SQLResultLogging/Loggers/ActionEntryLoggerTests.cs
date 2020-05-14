@@ -19,7 +19,7 @@ namespace Common.Tests.SQLResultLogging.Loggers
 
     public class CalcLoadtypeDtoLoggerTest {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void RunCalcLoadtypeDtoLoggerTest()
         {
             using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
@@ -38,7 +38,7 @@ namespace Common.Tests.SQLResultLogging.Loggers
     public class ActionEntryLoggerTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void RunTest()
         {
             using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))

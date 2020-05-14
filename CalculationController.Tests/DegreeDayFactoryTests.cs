@@ -8,7 +8,6 @@ using Common.Enums;
 using Database;
 using Database.Tables.Houses;
 using Database.Tests;
-using NUnit.Framework;
 using Xunit;
 
 namespace CalculationController.Tests
@@ -16,7 +15,7 @@ namespace CalculationController.Tests
     public class DegreeDayFactoryTests
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void Run()
         {
             //WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());

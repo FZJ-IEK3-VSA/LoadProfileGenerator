@@ -8,6 +8,7 @@ using Automation;
 using Automation.ResultFiles;
 using CommonDataWPF.Tests;
 using NUnit.Framework;
+using Xunit;
 
 namespace Common.Tests {
     [TestFixture]
@@ -31,7 +32,7 @@ namespace Common.Tests {
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         [TestCase(true)]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public static void RunAutomatically(bool throwExceptionOnLeftover) {
             Logger.Info("Starting to clean...");
             var myDrives = DriveInfo.GetDrives();

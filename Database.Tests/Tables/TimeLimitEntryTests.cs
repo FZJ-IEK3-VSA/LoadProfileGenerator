@@ -47,7 +47,7 @@ namespace Database.Tests.Tables {
     public class TimeLimitEntryTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void GetOneYearArrayTest()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
@@ -94,7 +94,7 @@ namespace Database.Tests.Tables {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void TimeLimitEntryTests1()
         {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))

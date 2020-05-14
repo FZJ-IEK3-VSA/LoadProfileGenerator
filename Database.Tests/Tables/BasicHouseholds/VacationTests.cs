@@ -18,7 +18,7 @@ namespace Database.Tests.Tables.BasicHouseholds
     {
         [Fact]
         [SuppressMessage("ReSharper", "RedundantAssignment")]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void VacationTest()
         {
             using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))

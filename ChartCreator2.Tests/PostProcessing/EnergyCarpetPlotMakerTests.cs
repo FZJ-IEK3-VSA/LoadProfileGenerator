@@ -12,7 +12,7 @@ namespace ChartCreator2.Tests.PostProcessing {
     public class EnergyCarpetPlotMakerTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.ManualOnly)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
         [SuppressMessage("ReSharper", "HeuristicUnreachableCode")]
         public void MakeCarpetTest()
         {

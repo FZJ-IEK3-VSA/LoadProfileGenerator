@@ -15,7 +15,7 @@ namespace Database.Tests.Tables.Transportation
     public class TransportationDeviceCategoryTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void TransportationDeviceCategoryTest()
         {
             using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))

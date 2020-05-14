@@ -18,7 +18,6 @@ using Common.SQLResultLogging.InputLoggers;
 using Common.Tests;
 using JetBrains.Annotations;
 using Moq;
-using NUnit.Framework;
 using Xunit;
 using Xunit.Abstractions;
 using Assert = NUnit.Framework.Assert;
@@ -28,7 +27,7 @@ namespace Calculation.Tests.Transportation
     public class AffordanceBaseTransportDecoratorTests : UnitTestBaseClass
     {
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void RunDoubleActivationTest()
         {
             var rnd = new Random(1);
@@ -63,7 +62,7 @@ namespace Calculation.Tests.Transportation
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void RunTransportDecoratorTest()
         {
             using (var wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))

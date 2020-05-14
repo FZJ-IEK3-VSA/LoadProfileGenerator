@@ -54,7 +54,7 @@ namespace Calculation.Tests.OnlineDeviceLogging {
         }
 
         [Fact]
-        [Category(UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void OnlineDeviceStateMachineTest()
         {
             var startdate = new DateTime(2018, 1, 1);
