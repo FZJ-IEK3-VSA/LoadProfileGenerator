@@ -693,7 +693,7 @@ namespace Database.Tables
             if (Guid == null) {
                 throw new LPGException("Guid was null");
             }
-            cmd.AddParameter("Guid",  Guid);
+            cmd.AddParameter("Guid",  Guid.Value);
         }
 
         [NotNull] [ItemNotNull] public static readonly HashSet<StrGuid> GuidsToSave = new HashSet<StrGuid>();
