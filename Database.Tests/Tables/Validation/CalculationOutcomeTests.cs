@@ -4,13 +4,17 @@ using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables.Validation;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Database.Tests.Tables.Validation {
     [TestFixture]
     public class CalculationOutcomeTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTest1)]
         public void CalculationOutcomeTest()
         {
@@ -35,7 +39,7 @@ namespace Database.Tests.Tables.Validation {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTest1)]
         public void CalculationOutcomeTest2()
         {
@@ -60,6 +64,10 @@ namespace Database.Tests.Tables.Validation {
 
                 db.Cleanup();
             }
+        }
+
+        public CalculationOutcomeTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

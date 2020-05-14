@@ -11,13 +11,21 @@ using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
 using Common.SQLResultLogging.Loggers;
 using Common.Tests;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Calculation.Tests.OnlineLogging {
     [TestFixture]
     public class VariableLogfileTests : UnitTestBaseClass
     {
-        [Test]
+        public VariableLogfileTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
+        }
+
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void VariableLogfileTests1()
         {

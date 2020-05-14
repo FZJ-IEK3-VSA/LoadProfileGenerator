@@ -6,7 +6,7 @@ namespace Common.Tests
     [TestFixture]
     public class ChartLocalizerTests :UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         public void RunTest()
         {
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());

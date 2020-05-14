@@ -31,13 +31,17 @@ using Automation;
 using Common;
 using Common.Tests;
 using Database.Helpers;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Database.Tests.Helpers {
     [TestFixture]
     public class CalcDegreeDaysTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void MakeDegreeDaysTest()
         {
@@ -68,7 +72,7 @@ namespace Database.Tests.Helpers {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void MakeDegreeDaysTestWithPrecalcPeriod()
         {
@@ -103,7 +107,7 @@ namespace Database.Tests.Helpers {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void MakeDegreeDaysTest3Days()
         {
@@ -133,7 +137,7 @@ namespace Database.Tests.Helpers {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void MakeDegreeDaysTest3Years()
         {
@@ -163,7 +167,7 @@ namespace Database.Tests.Helpers {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void MakeDegreeDaysTestMinus3Days()
         {
@@ -193,6 +197,10 @@ namespace Database.Tests.Helpers {
                 Assert.Less(Math.Abs(val - sumPercentages), 0.1);
                 db.Cleanup();
             }
+        }
+
+        public CalcDegreeDaysTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

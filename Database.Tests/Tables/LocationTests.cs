@@ -34,7 +34,11 @@ using Common;
 using Common.Tests;
 using Database.Helpers;
 using Database.Tables.BasicHouseholds;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 #endregion
 
@@ -42,7 +46,7 @@ namespace Database.Tests.Tables {
     [TestFixture]
     public class LocationTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void LocationTest()
         {
@@ -64,6 +68,10 @@ namespace Database.Tests.Tables {
                 Assert.AreEqual(1, locations[0].LocationDevices.Count);
                 db.Cleanup();
             }
+        }
+
+        public LocationTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

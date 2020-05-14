@@ -919,7 +919,7 @@ namespace BrookNovak.Collections
  * [TestFixture]
 public class ExampleTestFixture {
      
-    [Test]
+    [Fact]
     public void FindAt_Overlapping ()
     {
         // ARRANGE

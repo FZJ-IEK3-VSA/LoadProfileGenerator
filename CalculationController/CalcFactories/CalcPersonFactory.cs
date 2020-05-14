@@ -58,7 +58,7 @@ namespace CalculationController.CalcFactories {
         [ItemNotNull]
         public List<CalcPerson> MakeCalcPersons([NotNull] [ItemNotNull] List<CalcPersonDto> persons,
                                                 [NotNull] CalcLocation startLocation,
-                                                [NotNull] string householdName, DtoCalcLocationDict dict, HumanHeatGainSpecification hhgs)
+                                                [NotNull] string householdName)
         {
             var calcPersons = new List<CalcPerson>();
             Dictionary<string, SharedDesireValue> sharedDesireValues = new Dictionary<string, SharedDesireValue>();

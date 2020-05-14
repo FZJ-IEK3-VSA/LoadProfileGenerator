@@ -32,13 +32,16 @@ using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables.BasicHouseholds;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace Database.Tests.Tables.BasicHouseholds {
     [TestFixture]
     public class DeviceCategoryTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void GetAllNameTest()
         {
@@ -59,6 +62,10 @@ namespace Database.Tests.Tables.BasicHouseholds {
                 Logger.Info(s);
                 db.Cleanup();
             }
+        }
+
+        public DeviceCategoryTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

@@ -37,6 +37,7 @@ using Common;
 using Common.CalcDto;
 using Common.Tests;
 using NUnit.Framework;
+using Xunit.Abstractions;
 
 namespace Calculation.Tests
 {
@@ -116,6 +117,10 @@ namespace Calculation.Tests
         {
             [JetBrains.Annotations.NotNull]
             public static object Locker { get; } = new object();
+        }
+
+        public TestBasis([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

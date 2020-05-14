@@ -5,12 +5,15 @@ using Common;
 using Common.Tests;
 using Database.Tables.BasicElements;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Database.Tests.Tables.BasicElements {
     [TestFixture]
     public class HouseholdPlanTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTest5)]
         public void HouseholdPlanEntryAverageTest()
         {
@@ -38,7 +41,7 @@ namespace Database.Tests.Tables.BasicElements {
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTest5)]
         public void HouseholdPlanEntryRefreshTest()
         {
@@ -95,7 +98,7 @@ namespace Database.Tests.Tables.BasicElements {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void HouseholdPlanEntryTest()
         {
@@ -156,6 +159,10 @@ namespace Database.Tests.Tables.BasicElements {
                 Assert.AreEqual(0, plans.Count);
                 db.Cleanup();
             }
+        }
+
+        public HouseholdPlanTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

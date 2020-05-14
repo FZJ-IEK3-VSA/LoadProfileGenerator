@@ -19,12 +19,15 @@ using Common.Tests;
 using JetBrains.Annotations;
 using Moq;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Calculation.Tests.Transportation
 {
     public class AffordanceBaseTransportDecoratorTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunDoubleActivationTest()
         {
@@ -59,7 +62,7 @@ namespace Calculation.Tests.Transportation
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunTransportDecoratorTest()
         {
@@ -177,5 +180,8 @@ namespace Calculation.Tests.Transportation
 
         //TODO: test for interrupting while driving
         //TODO: only interrupt at the same site
+        public AffordanceBaseTransportDecoratorTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
+        }
     }
 }

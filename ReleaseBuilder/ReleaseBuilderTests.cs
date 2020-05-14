@@ -23,6 +23,8 @@ using Database.Tests;
 using JetBrains.Annotations;
 using LoadProfileGenerator.Presenters.SpecialViews;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
 
 #pragma warning disable 162
 
@@ -406,7 +408,7 @@ namespace ReleaseBuilder
             CheckForCalculationOutcomeCompleteness();
         }
 
-        [Test]
+        [Fact]
         [Category("BasicTest")]
         [SuppressMessage("ReSharper", "HeuristicUnreachableCode")]
         public void CheckForCalculationOutcomeCompleteness()
@@ -428,7 +430,7 @@ namespace ReleaseBuilder
             }
         }
 
-        [Test]
+        [Fact]
         [Category("ReleaseMaker")]
         [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalse")]
         [SuppressMessage("ReSharper", "HeuristicUnreachableCode")]
@@ -619,6 +621,10 @@ namespace ReleaseBuilder
                 process.Start();
                 process.WaitForExit(); // Waits here for the process to exit.
             }
+        }
+
+        public ReleaseBuilderTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

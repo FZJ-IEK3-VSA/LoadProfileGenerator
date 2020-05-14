@@ -23,6 +23,8 @@ using Database.Tests;
 using FluentAssertions;
 using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace CalculationController.Tests.Transportation {
     [TestFixture]
@@ -125,7 +127,7 @@ namespace CalculationController.Tests.Transportation {
             }
         }
 
-        [Test]
+        [Fact]
         [SuppressMessage("ReSharper", "UnusedVariable")]
         [Category(UnitTestCategories.BasicTest)]
         public void DuplicateDtoFactoryTest()
@@ -141,7 +143,7 @@ namespace CalculationController.Tests.Transportation {
             devices1.Should().BeEquivalentTo(devices2);
         }
 
-        [Test]
+        [Fact]
         [SuppressMessage("ReSharper", "UnusedVariable")]
         [Category(UnitTestCategories.BasicTest)]
         public void RunMakeCalcTest()
@@ -295,6 +297,10 @@ namespace CalculationController.Tests.Transportation {
 
                 wd.CleanUp();
             }
+        }
+
+        public CalcTransportationFactoryTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

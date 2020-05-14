@@ -14,13 +14,17 @@ using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
 using Common.Tests;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Calculation.Tests.Transportation
 {
     public class CalcTransportationDeviceTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void CalcDistanceDurationTest()
         {
@@ -37,7 +41,7 @@ namespace Calculation.Tests.Transportation
             Assert.That(val2, Is.EqualTo(2000 / 60 / 2 + 1));
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void CalcTransportationDeviceDriveTest()
         {
@@ -128,6 +132,10 @@ namespace Calculation.Tests.Transportation
                 }
                 wd.CleanUp(1);
             }
+        }
+
+        public CalcTransportationDeviceTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

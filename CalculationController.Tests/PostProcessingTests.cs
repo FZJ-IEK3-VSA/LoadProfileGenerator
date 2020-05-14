@@ -13,7 +13,11 @@ using Common.Tests;
 using Database;
 using Database.Tables;
 using Database.Tests;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace CalculationController.Tests
 {
@@ -22,14 +26,14 @@ namespace CalculationController.Tests
     {
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [MethodImpl(MethodImplOptions.NoInlining)]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private static string GetCurrentMethod() {
             var st = new StackTrace();
             var sf = st.GetFrame(1);
             return sf?.GetMethod()?.Name ??"No stack frame";
         }
 
-        private static void RunTest([JetBrains.Annotations.NotNull] Action<GeneralConfig> setOption, [JetBrains.Annotations.NotNull] string name)
+        private static void RunTest([NotNull] Action<GeneralConfig> setOption, [NotNull] string name)
         {
             CleanTestBase.RunAutomatically(false);
             using (var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass() + name))
@@ -80,7 +84,7 @@ namespace CalculationController.Tests
 
         [SuppressMessage("Microsoft.Performance", "CA1809:AvoidExcessiveLocals")]
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void PostProcessingTestCompareAllResultFiles()
         {
@@ -325,16 +329,20 @@ namespace CalculationController.Tests
             return true;
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunOnlyDevice() {
             RunTest(x => x.Enable(CalcOption.DeviceProfiles), GetCurrentMethod());
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunOnlyDeviceProfileExternal() {
             RunTest(x => x.Enable(CalcOption.DeviceProfileExternalEntireHouse), GetCurrentMethod());
+        }
+
+        public PostProcessingTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

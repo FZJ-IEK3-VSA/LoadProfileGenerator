@@ -1,11 +1,12 @@
 ﻿using Automation;
 using NUnit.Framework;
+using Xunit;
 
 namespace CalculationController.Tests.Helpers
 {
-    internal class InputDataLoggerTests
+    public class InputDataLoggerTests
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunConfigSaveTest()
         {

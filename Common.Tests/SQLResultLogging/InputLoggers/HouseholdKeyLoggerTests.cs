@@ -3,15 +3,19 @@ using Automation;
 using Automation.ResultFiles;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Common.Tests.SQLResultLogging.InputLoggers
 {
     [TestFixture()]
     public class HouseholdKeyLoggerTests : UnitTestBaseClass
     {
-        [Test()]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunTest()
         {
@@ -37,6 +41,10 @@ namespace Common.Tests.SQLResultLogging.InputLoggers
                 Assert.AreEqual(s1, s2);
                 wd.CleanUp();
             }
+        }
+
+        public HouseholdKeyLoggerTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

@@ -6,11 +6,12 @@ using Common;
 using Database.Database;
 using Database.Tests;
 using NUnit.Framework;
+using Xunit;
 
 namespace ReleaseBuilder {
     [TestFixture]
     public class DatabaseAutoincrementCheck {
-        [Test]
+        [Fact]
         [Category("BasicTest")]
         public void RunDatabaseTest()
         {
@@ -84,7 +85,7 @@ namespace ReleaseBuilder {
                 db.Cleanup();
             }
         }
-        [Test]
+        [Fact]
         [Category("BasicTest")]
         public void RunDatabaseGuidTest()
         {

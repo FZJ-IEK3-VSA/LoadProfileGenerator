@@ -4,14 +4,18 @@ using Automation;
 using ChartCreator2.OxyCharts;
 using Common;
 using Common.Tests;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace ChartCreator2.Tests.Oxyplot {
     [TestFixture]
     [Apartment(ApartmentState.STA)]
     public class DeviceProfilesExternalTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BrokenTest)]
         public void MakePlotTest()
         {
@@ -46,7 +50,7 @@ namespace ChartCreator2.Tests.Oxyplot {
             CleanTestBase.RunAutomatically(true);
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BrokenTest)]
         public void MakePlotTestForHouse()
         {
@@ -79,7 +83,7 @@ namespace ChartCreator2.Tests.Oxyplot {
             CleanTestBase.RunAutomatically(true);
         }
         /*
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.ManualOnly)]
         public void MakePlotTestMini()
         {
@@ -103,5 +107,8 @@ namespace ChartCreator2.Tests.Oxyplot {
             aeupp.MakePlot(rfe, "dev profiles", di);
             Logger.Info("finished picture");
         }*/
+        public DeviceProfilesExternalTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
+        }
     }
 }

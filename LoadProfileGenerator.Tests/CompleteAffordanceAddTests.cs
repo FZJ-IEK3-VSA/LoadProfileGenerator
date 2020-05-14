@@ -7,14 +7,17 @@ using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.ModularHouseholds;
 using Database.Tests;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace LoadProfileGenerator.Tests
 {
     [TestFixture]
     public class CompleteAffordanceAddTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void CompleteAffordanceCreatorTest()
         {
@@ -33,6 +36,10 @@ namespace LoadProfileGenerator.Tests
                 SimIntegrityChecker.Run(sim);
                 db.Cleanup();
             }
+        }
+
+        public CompleteAffordanceAddTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

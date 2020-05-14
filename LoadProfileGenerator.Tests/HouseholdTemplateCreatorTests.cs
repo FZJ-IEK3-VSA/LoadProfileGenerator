@@ -5,14 +5,17 @@ using Common;
 using Common.Tests;
 using Database;
 using Database.Tests;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace LoadProfileGenerator.Tests {
     [TestFixture]
     [Apartment(ApartmentState.STA)]
     public class HouseholdTemplateCreatorTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTest2)]
         public void RunHouseholdTemplateCreatorTest()
         {
@@ -30,6 +33,10 @@ namespace LoadProfileGenerator.Tests {
                 SimIntegrityChecker.Run(sim);
                 db.Cleanup();
             }
+        }
+
+        public HouseholdTemplateCreatorTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

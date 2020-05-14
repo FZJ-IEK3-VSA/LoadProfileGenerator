@@ -37,7 +37,11 @@ using Common;
 using Common.Tests;
 using Database.Helpers;
 using Database.Tables.BasicElements;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 #endregion
 
@@ -45,7 +49,7 @@ namespace Database.Tests.Tables {
     [TestFixture]
     public class TimeLimitTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void TimeLimitArrayTestDateProfileTest()
         {
@@ -92,7 +96,7 @@ namespace Database.Tests.Tables {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void TimeLimitArrayTestlightControlledTest()
         {
@@ -132,7 +136,7 @@ namespace Database.Tests.Tables {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void TimeLimitArrayTestTemperatureControlledTest() {
             // test temperatures
@@ -164,7 +168,7 @@ namespace Database.Tests.Tables {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void TimeLimitBoolEntryLoadCreationAndSaveTest()
         {
@@ -204,7 +208,7 @@ namespace Database.Tests.Tables {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void TimeLimitLoadCreationAndSaveTest()
         {
@@ -241,6 +245,10 @@ namespace Database.Tests.Tables {
                 Assert.AreEqual(1, timeLimits[0].TimeLimitEntries.Count);
                 db.Cleanup();
             }
+        }
+
+        public TimeLimitTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

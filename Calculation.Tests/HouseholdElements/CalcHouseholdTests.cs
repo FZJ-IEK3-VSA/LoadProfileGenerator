@@ -17,14 +17,22 @@ using Common.JSON;
 using Common.Tests;
 using Database;
 using Database.Tests;
+using JetBrains.Annotations;
 using Moq;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Calculation.HouseholdElements.Tests {
     [TestFixture]
     public class CalcHouseholdTests : UnitTestBaseClass
     {
-        [Test]
+        public CalcHouseholdTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
+        }
+
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void DumpHouseholdContentsToTextTest()
         {
@@ -83,7 +91,11 @@ namespace Calculation.Tests.HouseholdElements {
     [TestFixture]
     public class CalcHouseholdTests : UnitTestBaseClass
     {
-        [Test]
+        public CalcHouseholdTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
+        }
+
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void MatchAutonomousDevicesWithNormalDevicesTest()
         {

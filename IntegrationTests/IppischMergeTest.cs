@@ -8,11 +8,12 @@ using Database;
 using Database.DatabaseMerger;
 using Database.Tests;
 using NUnit.Framework;
+using Xunit;
 
 namespace IntegrationTests {
     [TestFixture]
     public class IppischMergeTest {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.ManualOnly)]
         public void TestImport()
         {

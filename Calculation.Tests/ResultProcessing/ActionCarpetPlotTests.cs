@@ -50,7 +50,7 @@
 //    [TestFixture]
 //    public class ActionCarpetPlotTests : TestBasis
 //    {
-//        [Test]
+//        [Fact]
 //        [Category(UnitTestCategories.BasicTest)]
 //        [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
 //        public void ActionCarpetPlotTest()

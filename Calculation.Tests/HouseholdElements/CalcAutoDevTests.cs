@@ -15,13 +15,21 @@ using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
 using Common.Tests;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Calculation.Tests.HouseholdElements {
     [TestFixture]
     public class CalcAutoDevTests : UnitTestBaseClass
     {
-        [Test]
+        public CalcAutoDevTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
+        }
+
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void CheckConditionTest() {
             Assert.IsTrue(VariableConditionHelper.CheckCondition(1, VariableCondition.Equal, 1));
@@ -44,7 +52,7 @@ namespace Calculation.Tests.HouseholdElements {
             Assert.IsFalse(VariableConditionHelper.CheckCondition(0, VariableCondition.Greater, 1));
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void CheckResultingProfile() {
             using var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());

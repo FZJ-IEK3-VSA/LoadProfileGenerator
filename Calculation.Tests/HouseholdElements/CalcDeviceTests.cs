@@ -5,6 +5,8 @@ using Calculation.HouseholdElements;
 using CommonDataWPF;*/
 
 using Common.Tests;
+using JetBrains.Annotations;
+using Xunit.Abstractions;
 
 namespace Calculation.Tests.HouseholdElements
 {
@@ -28,7 +30,7 @@ namespace Calculation.Tests.HouseholdElements
                return false;
            }
 
-           [Test]
+           [Fact]
            public void IsBusyDuringTimespanTest2ByteFirstbusy()
            {
                BitArray br = new BitArray(2*4*8);
@@ -40,7 +42,7 @@ namespace Calculation.Tests.HouseholdElements
                CompareResults(33, 64, br, entrys);
            }
 
-           [Test]
+           [Fact]
            public void IsBusyDuringTimespanTest4Byte2Ndbusy()
            {
                BitArray br = new BitArray(4*4*8);
@@ -55,7 +57,7 @@ namespace Calculation.Tests.HouseholdElements
                CompareResults(64, 96, br, entrys);
            }
 
-           [Test]
+           [Fact]
            public void IsBusyDuringTimespanTest4ByteFirstbusy()
            {
                BitArray br = new BitArray(4*4*8);
@@ -71,7 +73,7 @@ namespace Calculation.Tests.HouseholdElements
                CompareResults(64, 96, br, entrys);
            }
 
-           [Test]
+           [Fact]
            public void IsBusyDuringTimespanTest4ByteLastbusy()
            {
                BitArray br = new BitArray(4*4*8);
@@ -87,7 +89,7 @@ namespace Calculation.Tests.HouseholdElements
            */
 
             /*
-        [Test]
+        [Fact]
            public void IsBusyDuringTimespanTestFirst()
            {
                BitArray br = new BitArray(10);
@@ -108,7 +110,7 @@ namespace Calculation.Tests.HouseholdElements
                }
            }
 
-        [Test]
+        [Fact]
         public void IsBusyDuringTimespanTestLast()
         {
             BitArray br = new BitArray(10);
@@ -118,7 +120,7 @@ namespace Calculation.Tests.HouseholdElements
             CompareResults(0, 9, br, entrys);
         }
 
-        [Test]
+        [Fact]
         public void IsBusyDuringTimespanTestLastBusy()
         {
             BitArray br = new BitArray(10);
@@ -132,7 +134,7 @@ namespace Calculation.Tests.HouseholdElements
                     Assert.False(CalcDevice.HasBusyEntryDuringTimespan(i, 1, entrys));
         }
 
-        [Test]
+        [Fact]
         public void IsBusyDuringTimespanTestMiddle()
         {
             BitArray br = new BitArray(10);
@@ -145,7 +147,7 @@ namespace Calculation.Tests.HouseholdElements
             Assert.False(CalcDevice.HasBusyEntryDuringTimespan(6, 1, entrys));
         }
 
-        [Test]
+        [Fact]
         public void IsBusyDuringTimespanTestMiddle2()
         {
             BitArray br = new BitArray(10);
@@ -158,7 +160,7 @@ namespace Calculation.Tests.HouseholdElements
             Assert.False(CalcDevice.HasBusyEntryDuringTimespan(0, 1, entrys));
         }
 
-        [Test]
+        [Fact]
         public void IsBusyDuringTimespanTestMiddle3()
         {
             BitArray br = new BitArray(10);
@@ -171,7 +173,7 @@ namespace Calculation.Tests.HouseholdElements
             Assert.False(CalcDevice.HasBusyEntryDuringTimespan(6, 2, entrys));
         }
 
-        [Test]
+        [Fact]
         public void IsBusyDuringTimespanTestMiddle4()
         {
             BitArray br = new BitArray(10);
@@ -188,7 +190,7 @@ namespace Calculation.Tests.HouseholdElements
             Assert.False(CalcDevice.HasBusyEntryDuringTimespan(3, 1, entrys));
         }
 
-        [Test]
+        [Fact]
         public void IsBusyDuringTimespanTestNone()
         {
             BitArray br = new BitArray(10);
@@ -201,7 +203,7 @@ namespace Calculation.Tests.HouseholdElements
             }
         }
 
-        [Test]
+        [Fact]
         public void IsBusyRandomTimespans()
         {
             Random r = new Random(1);
@@ -224,5 +226,8 @@ namespace Calculation.Tests.HouseholdElements
                 }
             }
         }*/
+            public CalcDeviceTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+            {
+            }
     }
 }

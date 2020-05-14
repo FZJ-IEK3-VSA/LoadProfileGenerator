@@ -7,14 +7,18 @@ using Common.Enums;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
 using Common.SQLResultLogging.Loggers;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Common.Tests.SQLResultLogging.Loggers
 {
 
     public class CalcLoadtypeDtoLoggerTest {
-        [Test()]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunCalcLoadtypeDtoLoggerTest()
         {
@@ -33,7 +37,7 @@ namespace Common.Tests.SQLResultLogging.Loggers
     [TestFixture()]
     public class ActionEntryLoggerTests : UnitTestBaseClass
     {
-        [Test()]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunTest()
         {
@@ -60,6 +64,10 @@ namespace Common.Tests.SQLResultLogging.Loggers
                 Assert.AreEqual(s1, s2);
                 wd.CleanUp();
             }
+        }
+
+        public ActionEntryLoggerTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

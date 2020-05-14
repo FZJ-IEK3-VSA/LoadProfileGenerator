@@ -5,13 +5,17 @@ using Common.Tests;
 using Database.Helpers;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.ModularHouseholds;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Database.Tests.Tables.ModularHouseholds {
     [TestFixture]
     public class TemplatePersonTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void TemplatePersonTest()
         {
@@ -54,6 +58,10 @@ namespace Database.Tests.Tables.ModularHouseholds {
                 Assert.AreEqual(1, templatePerson.Count);
                 db.Cleanup();
             }
+        }
+
+        public TemplatePersonTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

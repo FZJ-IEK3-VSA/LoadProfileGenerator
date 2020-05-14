@@ -6,18 +6,20 @@ using ChartCreator2.OxyCharts;
 using Common;
 using Common.Tests;
 using NUnit.Framework;
+using Xunit;
+using Assert = NUnit.Framework.Assert;
 
 namespace ChartCreator2.Tests.Oxyplot {
     [TestFixture]
     [Apartment(ApartmentState.STA)]
-    internal class SumProfilesTest {
+    public class SumProfilesTest {
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTest4)]
         public void MakePlotTest()
         {
             CleanTestBase.RunAutomatically(false);
-            var cs = new OxyCalculationSetup(Utili.GetCurrentMethodAndClass());
+            using var cs = new OxyCalculationSetup(Utili.GetCurrentMethodAndClass());
             cs.StartHousehold(1, GlobalConsts.CSVCharacter,
                 LoadTypePriority.Mandatory,
                 configSetter: x => x.Enable(CalcOption.IndividualSumProfiles));

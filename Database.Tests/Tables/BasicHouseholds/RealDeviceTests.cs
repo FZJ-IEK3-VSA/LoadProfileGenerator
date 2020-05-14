@@ -8,14 +8,18 @@ using Database;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
 using Database.Tests;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace DatabaseIO.Tables.BasicHouseholds.Tests
 {
     [TestFixture()]
     public class RealDeviceTests : UnitTestBaseClass
     {
-        [Test()]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void ImportFromOtherDeviceTest()
         {
@@ -30,6 +34,10 @@ namespace DatabaseIO.Tables.BasicHouseholds.Tests
                 db.Cleanup();
             }
         }
+
+        public RealDeviceTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
+        }
     }
 }
 
@@ -37,7 +45,7 @@ namespace DatabaseIO.Tests.Tables.BasicHouseholds {
     [TestFixture]
     public class RealDeviceTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void CalculateAverageEnergyUseTestAbsoluteProfile()
         {
@@ -71,7 +79,7 @@ namespace DatabaseIO.Tests.Tables.BasicHouseholds {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void CalculateAverageEnergyUseTestRelativeProfile()
         {
@@ -121,6 +129,10 @@ namespace DatabaseIO.Tests.Tables.BasicHouseholds {
                 Assert.AreEqual(666 * 2 * 0.5, first3.Item2);
                 db.Cleanup();
             }
+        }
+
+        public RealDeviceTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

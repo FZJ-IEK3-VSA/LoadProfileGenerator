@@ -5,14 +5,18 @@ using CalculationController.CalcFactories;
 using Common;
 using Common.Tests;
 using Database.Tables.BasicHouseholds;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace CalculationController.Tests.CalcFactories
 {
     [TestFixture()]
     public class CalcTransportationDtoFactoryTests : UnitTestBaseClass
     {
-        [Test()]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void DistanceToEnergyFactorTest()
         {
@@ -24,6 +28,10 @@ namespace CalculationController.Tests.CalcFactories
             double distanceGained = 15000 * result*3600;
             Assert.That(distanceGained, Is.EqualTo(100000).Within(0.001));
             Logger.Info(result.ToString(CultureInfo.InvariantCulture));
+        }
+
+        public CalcTransportationDtoFactoryTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

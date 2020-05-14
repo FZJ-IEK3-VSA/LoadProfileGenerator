@@ -36,13 +36,17 @@ using Common.Tests;
 using Database.Helpers;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Database.Tests.Tables {
     [TestFixture]
     public class TimeLimitEntryTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void GetOneYearArrayTest()
         {
@@ -89,7 +93,7 @@ namespace Database.Tests.Tables {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void TimeLimitEntryTests1()
         {
@@ -131,6 +135,10 @@ namespace Database.Tests.Tables {
 
                 db.Cleanup();
             }
+        }
+
+        public TimeLimitEntryTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

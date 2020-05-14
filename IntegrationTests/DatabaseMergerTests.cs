@@ -28,6 +28,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using Automation;
@@ -39,9 +40,13 @@ using Database.Tables.BasicHouseholds;
 using Database.Tables.ModularHouseholds;
 using Database.Tests;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace IntegrationTests {
     [TestFixture]
+    [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     public class DatabaseMergerTests : UnitTestBaseClass
     {
         private static void TestImport([JetBrains.Annotations.NotNull] string path) {
@@ -98,7 +103,7 @@ namespace IntegrationTests {
             throw new LPGException("Missing file: " + fi.FullName + "\n Current Directory:" + Directory.GetCurrentDirectory());
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTest2)]
         public void TestImportWithHouseholdTemplateDelete600()
         {
@@ -127,7 +132,7 @@ namespace IntegrationTests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTest2)]
         public void TestImportWithHouseholdTemplateDelete880()
         {
@@ -156,19 +161,19 @@ namespace IntegrationTests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTest2)]
         public void RunTest124() => TestImport("profilegenerator124.db3");
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTest2)]
         public void RunTest160() => TestImport("profilegenerator160.db3");
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTest2)]
         public void RunTest170() => TestImport("profilegenerator170.db3");
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTest2)]
         public void RunTest171() {
             TestImport("profilegenerator171.db3", out var sim);
@@ -181,27 +186,27 @@ namespace IntegrationTests {
             Assert.AreEqual(true, found);
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTest2)]
         public void RunTest201() => TestImport("profilegenerator201.db3");
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTest2)]
         public void RunTest203() => TestImport("profilegenerator203.db3");
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTest2)]
         public void RunTest210() => TestImport("profilegenerator210.db3");
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTest2)]
         public void RunTest280Sarah() => TestImport("profilegenerator280SARAH.db3");
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTest2)]
         public void RunTest520() => TestImport("profilegenerator520.db3");
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunTestCurrentDeviceActions()
         {
@@ -258,7 +263,7 @@ namespace IntegrationTests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunTestCurrentDeviceCategory()
         {
@@ -317,7 +322,7 @@ namespace IntegrationTests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunTestCurrentTimeLimits()
         {
@@ -361,6 +366,10 @@ namespace IntegrationTests {
                 }
                 wd.CleanUp();
             }
+        }
+
+        public DatabaseMergerTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

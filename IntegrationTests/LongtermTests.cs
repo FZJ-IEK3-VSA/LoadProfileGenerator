@@ -18,6 +18,9 @@ using Database.Tables.BasicHouseholds;
 using Database.Tests;
 using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace IntegrationTests {
 
@@ -422,7 +425,7 @@ namespace IntegrationTests {
     }
 
         /*
-        [Test]
+        [Fact]
         public void ComparisonTest()
         {
             var importedDBString = "Data Source=e:\\importeddb.db3";
@@ -433,7 +436,7 @@ namespace IntegrationTests {
         }
         */
         [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "oldSim")]
-        [Test]
+        [Fact]
         [SuppressMessage("ReSharper", "UnusedVariable")]
         [Category(UnitTestCategories.LongTermMerge)]
         public void LoadEmptyDatabase()
@@ -455,20 +458,20 @@ namespace IntegrationTests {
             CleanTestBase.RunAutomatically(true);
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTermMerge)]
         public void RunTest124WithClear() => TestImport("profilegenerator124.db3", true,ClearMode.NoClearing);
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTermMerge)]
         public void RunTest240SMAWithClear() => TestImport("profilegenerator240SMA.db3", true,ClearMode.NoClearing);
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTermMerge)]
         public void RunTest520SimonWithClear() => TestImport("profilegenerator520_simon.db3",
             true,ClearMode.NoClearing);
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTermMerge)]
         public void RunTestCurrentVersionIdentical()
         {
@@ -499,7 +502,7 @@ namespace IntegrationTests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTermMerge)]
         public void RunTestCurrentVersionWithClear()
         {
@@ -519,7 +522,7 @@ namespace IntegrationTests {
             }
         }
         /*
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTermMerge)]
         public void RunTestCurrentVersionWithClearFast()
         {
@@ -538,7 +541,7 @@ namespace IntegrationTests {
             wd.CleanUp(1);
         }*/
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTermMerge)]
         public void RunTestSMA381()
         {
@@ -546,7 +549,7 @@ namespace IntegrationTests {
             TestImport(DatabaseSetup.GetImportFileFullPath("Profilegenerator381SMA.db3"), true,ClearMode.NoClearing);
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTermMerge)]
         public void Version520TimeLimitImport()
         {
@@ -600,6 +603,10 @@ namespace IntegrationTests {
                 wd.CleanUp();
             }
             CleanTestBase.RunAutomatically(true);
+        }
+
+        public LongtermTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

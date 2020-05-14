@@ -32,13 +32,17 @@ using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables.BasicHouseholds;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Database.Tests.Tables {
     [TestFixture]
     public class VLoadTypeTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void ConvertPowerValueWithTimeTest() {
             var vlt = new VLoadType("bla", string.Empty, "Watt", "kWh", 1000, 1, new TimeSpan(1, 0, 0), 1,
@@ -48,7 +52,7 @@ namespace Database.Tests.Tables {
             Assert.AreEqual(5, vlt.ConvertPowerValueWithTime(10000, new TimeSpan(0, 30, 0)));
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void VLoadTypeTest()
         {
@@ -72,6 +76,10 @@ namespace Database.Tests.Tables {
                 Assert.AreEqual(0, loadts.Count);
                 db.Cleanup();
             }
+        }
+
+        public VLoadTypeTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

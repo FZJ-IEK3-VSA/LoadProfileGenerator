@@ -18,6 +18,8 @@ using Database.Helpers;
 using Database.Tests;
 using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Assert = NUnit.Framework.Assert;
 
 //using Calculation.HouseholdElements;
 //
@@ -92,7 +94,7 @@ namespace CalculationController.Tests {
             public Dictionary<string, double> Values { get; } = new Dictionary<string, double>();
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void TimeOffsetBugTest()
         {

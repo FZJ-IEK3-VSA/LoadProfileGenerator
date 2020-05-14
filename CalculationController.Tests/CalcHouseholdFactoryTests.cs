@@ -33,13 +33,17 @@ using Common;
 using Common.Tests;
 using Database.Tables.BasicElements;
 using Database.Tests;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace CalculationController.Tests {
     [TestFixture]
     public class CalcHouseholdFactoryTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void GetCalcProfileTest()
         {
@@ -62,6 +66,10 @@ namespace CalculationController.Tests {
                 Assert.AreEqual(v[3], 1);
                 db.Cleanup();
             }
+        }
+
+        public CalcHouseholdFactoryTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

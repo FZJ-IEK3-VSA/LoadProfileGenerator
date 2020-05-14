@@ -38,15 +38,45 @@ using Common.JSON;
 using JetBrains.Annotations;
 
 namespace CalculationEngine.OnlineDeviceLogging {
-    public class StepValues {
-        private StepValues([NotNull] List<double> values)
+
+    public class RandomValueProfile
+    {
+        private RandomValueProfile([NotNull] List<double> values)
         {
             Values = values;
         }
+
+        [NotNull]
+        public static RandomValueProfile MakeStepValues([NotNull] CalcProfile srcProfile, [NotNull] NormalRandom nr, double powerStandardDeviation)
+        {
+
+            var values = new List<double>(srcProfile.StepValues);
+            if (Math.Abs(powerStandardDeviation) > 0.00000001) {
+                for (var i = 0; i < values.Count; i++) {
+                    values[i] = nr.NextDouble(1, powerStandardDeviation);
+                }
+            }
+            else {
+                for (var i = 0; i < values.Count; i++) {
+                    values[i] = 1;
+                }
+            }
+
+            return new RandomValueProfile(values);
+        }
+        [NotNull]
+        public List<double> Values { get; }
+    }
+    public class StepValues {
+        private StepValues([NotNull] List<double> values, string name, string dataSource)
+        {
+            Values = values;
+            Name = name;
+            DataSource = dataSource;
+        }
         [NotNull]
         public  static StepValues MakeStepValues([NotNull] CalcProfile srcProfile,
-                                                 [NotNull] NormalRandom nr,
-                                                 [NotNull] CalcDeviceLoad cdl, double multiplier)
+                                                  double multiplier, RandomValueProfile rvp, [NotNull] CalcDeviceLoad cdl)
         {
 
             var powerUsage = cdl.Value * multiplier;
@@ -57,17 +87,15 @@ namespace CalculationEngine.OnlineDeviceLogging {
             var values = new List<double>(srcProfile.StepValues);
             for (var i = 0; i < values.Count; i++)
             {
-                double spread = 1;
-                if (Math.Abs(cdl.PowerStandardDeviation) > 0.00000001)
-                {
-                    spread = nr.NextDouble(1, cdl.PowerStandardDeviation);
-                }
-                values[i] = values[i] * powerUsage * spread;
+                values[i] = values[i] * powerUsage * rvp.Values[i];
             }
-            return new StepValues(values);
+            return new StepValues(values, srcProfile.Name, srcProfile.DataSource);
         }
         [NotNull]
         public List<double> Values { get; }
+
+        public string Name { get; }
+        public string DataSource { get; }
     }
     public class OnlineDeviceStateMachine {
         [NotNull]

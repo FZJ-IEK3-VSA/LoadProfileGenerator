@@ -32,13 +32,17 @@ using Automation.ResultFiles;
 using Common;
 using Common.Tests;
 using Database.Tables.BasicElements;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Database.Tests.Tables.BasicElements {
     [TestFixture]
     public class DeviceTaggingSetTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void DeviceTaggingSetTest()
         {
@@ -83,7 +87,7 @@ namespace Database.Tests.Tables.BasicElements {
             CleanTestBase.RunAutomatically(true);
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void DeviceTaggingSetTestNone()
         {
@@ -107,6 +111,10 @@ namespace Database.Tests.Tables.BasicElements {
                     }
                 }
             }
+        }
+
+        public DeviceTaggingSetTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

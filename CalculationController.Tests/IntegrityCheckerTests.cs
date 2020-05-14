@@ -34,14 +34,18 @@ using Common.Tests;
 using Database;
 using Database.Tables.BasicHouseholds;
 using Database.Tests;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace CalculationController.Tests
 {
     [TestFixture]
     public class IntegrityCheckerTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void CheckSimIntegrityCheckerTest()
         {
@@ -59,7 +63,7 @@ namespace CalculationController.Tests
             CleanTestBase.RunAutomatically(true);
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void CheckSimIntegrityCheckerBenchmark()
         {
@@ -83,7 +87,7 @@ namespace CalculationController.Tests
             CleanTestBase.RunAutomatically(true);
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void SimHouseIntegiryChecker()
         {
@@ -99,6 +103,10 @@ namespace CalculationController.Tests
                 db.Cleanup();
             }
             CleanTestBase.RunAutomatically(true);
+        }
+
+        public IntegrityCheckerTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

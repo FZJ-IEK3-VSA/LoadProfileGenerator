@@ -11,13 +11,17 @@ using Database.Helpers;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.ModularHouseholds;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Database.Tests.Tables.BasicHouseholds {
     [TestFixture]
     public class AffordanceTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void AffordanceRequirementVariableTest()
         {
@@ -40,7 +44,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void AffordanceStandbyTests1()
         {
@@ -61,7 +65,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void AffordanceStandbyTests2()
         {
@@ -101,7 +105,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void AffordanceVariableTests1()
         {
@@ -125,7 +129,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void AffordanceVariableTests2()
         {
@@ -166,7 +170,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void CalculateAverageEnergyUseTestDeviceAction()
         {
@@ -218,7 +222,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void CalculateAverageEnergyUseTestRealDevice()
         {
@@ -262,7 +266,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void CalculateMaximumInternalTimeResolutionTestForDeviceAction()
         {
@@ -307,7 +311,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void CalculateMaximumInternalTimeResolutionTestForDeviceActionGroup()
         {
@@ -351,7 +355,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void CalculateMaximumInternalTimeResolutionTestForRealDevice()
         {
@@ -391,7 +395,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void IsAffordanceAvailableTestAffordanceHasNoDevice() {
             // Location: realdevice
@@ -413,7 +417,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             Assert.IsFalse(result);
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void IsAffordanceAvailableTestCheckDeviceActionGroupInDeviceAction() {
             // Location: device action
@@ -458,7 +462,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             Assert.IsTrue(aff.IsAffordanceAvailable(allDevices3, deviceActions));
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void IsAffordanceAvailableTestCheckDeviceActionGroupInDeviceActionGroup() {
             // Location: device action group
@@ -503,7 +507,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             Assert.IsTrue(aff.IsAffordanceAvailable(allDevices3, deviceActions));
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void IsAffordanceAvailableTestCheckDeviceActionInDeviceAction() {
             // Location: device action
@@ -540,7 +544,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             Assert.IsTrue(aff.IsAffordanceAvailable(allDevices3, deviceActions));
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void IsAffordanceAvailableTestCheckDeviceActionInDeviceDeviceAction() {
             // Location: realDevice
@@ -577,7 +581,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             Assert.IsTrue(aff.IsAffordanceAvailable(allDevices3, deviceActions));
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void IsAffordanceAvailableTestCheckDeviceActionInDeviceDeviceAction2() {
             // Location: other realDevice
@@ -615,7 +619,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             Assert.IsFalse(aff.IsAffordanceAvailable(allDevices3, deviceActions));
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void IsAffordanceAvailableTestCheckDeviceCategoryInDeviceCategory() {
             // Location: device category
@@ -651,7 +655,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             Assert.IsTrue(aff.IsAffordanceAvailable(allDevices3, deviceActions));
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void IsAffordanceAvailableTestCheckRealDeviceInDeviceCategory() {
             // Location: realdevice
@@ -688,7 +692,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             Assert.IsTrue(aff.IsAffordanceAvailable(allDevices3, deviceActions));
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void IsAffordanceAvailableTestRealDeviceIsNotThere() {
             // Location: realdevice
@@ -717,7 +721,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             Assert.IsFalse(result);
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void IsAffordanceAvailableTestRealDeviceIsThere() {
             // Location: realdevice
@@ -743,6 +747,10 @@ namespace Database.Tests.Tables.BasicHouseholds {
                 new ObservableCollection<RealDevice>(),
                 new ObservableCollection<DeviceCategory>(), "name", lt, string.Empty, 1, Guid.NewGuid().ToStrGuid()));
             Assert.IsTrue(aff.IsAffordanceAvailable(allDevices1, deviceActions));
+        }
+
+        public AffordanceTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

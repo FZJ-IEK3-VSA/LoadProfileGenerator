@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading;
 using Automation;
@@ -7,10 +8,13 @@ using Common;
 using Common.Tests;
 using NUnit.Framework;
 using SimulationEngineLib;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace SimulationEngine.Tests {
     [TestFixture]
     [Apartment(ApartmentState.STA)]
+    [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     public class SettlementProcessorTests : UnitTestBaseClass
     {
         private static void MakeOneCalculation([JetBrains.Annotations.NotNull] string srcPath, int idx) {
@@ -24,7 +28,7 @@ namespace SimulationEngine.Tests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunTest() {
             using var se = new SimulationEngineTestPreparer(Utili.GetCurrentMethodAndClass());
@@ -39,7 +43,7 @@ namespace SimulationEngine.Tests {
             se.Clean();
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.ManualOnly)]
         public void RunQuickTest()
         {
@@ -57,6 +61,10 @@ namespace SimulationEngine.Tests {
                 "-SettlementResultPDF"
             };
             MainSimEngine.Run(arguments.ToArray(), "simulationengine.exe");
+        }
+
+        public SettlementProcessorTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

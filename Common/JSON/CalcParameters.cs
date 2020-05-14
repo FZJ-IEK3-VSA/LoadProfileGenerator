@@ -13,7 +13,7 @@ namespace Common.JSON {
         OnlyDeviceCategories
     }
 
-    public class DeviceProfileHeaderModeHelper {
+    public static class DeviceProfileHeaderModeHelper {
         [NotNull]
         public static Dictionary<DeviceProfileHeaderMode, string> DeviceProfileHeaderModeDict { get; } = new Dictionary<DeviceProfileHeaderMode, string> {
             [DeviceProfileHeaderMode.Standard] = "Standard mode (Household - Location - Device [Unit])",

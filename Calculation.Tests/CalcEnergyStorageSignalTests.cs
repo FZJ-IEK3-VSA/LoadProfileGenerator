@@ -36,12 +36,18 @@ using Common.JSON;
 using Common.Tests;
 using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace Calculation.Tests
 {
     [TestFixture]
     public class CalcEnergyStorageSignalTests : UnitTestBaseClass
     {
+        public CalcEnergyStorageSignalTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
+        }
+
         private static void TestCess([NotNull] CalcEnergyStorageSignal cess, [NotNull] TimeStep timestep, double capacity, double currentfill, [NotNull] List<double> values)
         {
             double d = cess.GetValue(timestep, capacity, currentfill);
@@ -49,7 +55,7 @@ namespace Calculation.Tests
             values.Add(d);
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void EnergyStorageSignalTests()
         {
@@ -77,7 +83,7 @@ namespace Calculation.Tests
             TestCess(cess, new TimeStep(i, cp), 100, 100, values);
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void EnergyStorageSignalTests2()
         {

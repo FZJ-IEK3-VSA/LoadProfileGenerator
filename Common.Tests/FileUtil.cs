@@ -61,9 +61,9 @@ namespace CommonDataWPF.Tests
             UInt32 nFiles,[ItemNotNull]
             [JetBrains.Annotations.NotNull] string[] rgsFilenames,
             UInt32 nApplications,
-            [JetBrains.Annotations.NotNull] [In] RM_UNIQUE_PROCESS[] rgApplications,
+            [In] RM_UNIQUE_PROCESS[]? rgApplications,
             UInt32 nServices,
-            [ItemNotNull] [JetBrains.Annotations.NotNull] string[] rgsServiceNames);
+            [ItemNotNull] string[]? rgsServiceNames);
 
         [SuppressMessage("Microsoft.Design", "CA1060:MovePInvokesToNativeMethodsClass")]
         [SuppressMessage("Microsoft.Globalization", "CA2101:SpecifyMarshalingForPInvokeStringArguments", MessageId = "2")]
@@ -79,7 +79,7 @@ namespace CommonDataWPF.Tests
         private static extern int RmGetList(uint dwSessionHandle,
             out uint pnProcInfoNeeded,
             ref uint pnProcInfo,
-            [JetBrains.Annotations.NotNull] [In, Out] RM_PROCESS_INFO[] rgAffectedApps,
+            [In, Out] RM_PROCESS_INFO[]? rgAffectedApps,
             ref uint lpdwRebootReasons);
 
         /// <summary>
@@ -112,7 +112,8 @@ namespace CommonDataWPF.Tests
 
                 string[] resources = { path }; // Just checking on one resource.
 
-                res = RmRegisterResources(handle, (uint)resources.Length, resources, 0, null, 0, null);
+                res = RmRegisterResources(handle, (uint)resources.Length, resources, 0,
+                    null, 0, null);
 
                 if (res != 0) throw new LPGException("Could not register resource.");
 

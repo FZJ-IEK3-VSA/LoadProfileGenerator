@@ -36,14 +36,18 @@ using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.ModularHouseholds;
 using FluentAssertions;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Database.Tests.Tables.ModularHouseholds {
     [TestFixture]
     public class ModularHouseholdTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void ModularHouseholdJsonTest()
         {
@@ -108,7 +112,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
         }
 
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void ModularHouseholdOldImportTest()
         {
@@ -148,7 +152,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void SwapPersonsTestWithOther()
         {
@@ -168,7 +172,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void SwapTagTest()
         {
@@ -189,7 +193,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
         }
 
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void ModularHouseholdJsonImportExporTest()
         {
@@ -212,7 +216,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void ModularHouseholdTest()
         {
@@ -251,6 +255,10 @@ namespace Database.Tests.Tables.ModularHouseholds {
                 Assert.AreEqual(1, result[0].Traits.Count);
                 db.Cleanup();
             }
+        }
+
+        public ModularHouseholdTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

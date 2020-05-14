@@ -11,14 +11,22 @@ using Common.CalcDto;
 using Common.JSON;
 using Common.SQLResultLogging.InputLoggers;
 using Common.Tests;
+using JetBrains.Annotations;
 using Moq;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Calculation.Tests.OnlineLogging {
     [TestFixture]
     public class FileFactoryAndTrackerTests : UnitTestBaseClass
     {
-        [Test]
+        public FileFactoryAndTrackerTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
+        }
+
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void FileFactoryAndTrackerTest()
         {

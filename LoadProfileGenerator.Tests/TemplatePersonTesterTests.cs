@@ -6,7 +6,11 @@ using Common.Tests;
 using Database;
 using Database.Tables.ModularHouseholds;
 using Database.Tests;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace LoadProfileGenerator.Tests {
     [TestFixture]
@@ -14,7 +18,7 @@ namespace LoadProfileGenerator.Tests {
     {
 #pragma warning disable S125 // Sections of code should not be "commented out"
 /*
-        [Test]
+        [Fact]
         public void FillPersonDescriptions()
         {
             DatabaseSetup db = new DatabaseSetup();
@@ -27,7 +31,7 @@ namespace LoadProfileGenerator.Tests {
         }
         */
         /*
-        [Test]
+        [Fact]
         public void RunTemplatePersonCreator()
         {
             DatabaseSetup db = new DatabaseSetup();
@@ -96,7 +100,7 @@ namespace LoadProfileGenerator.Tests {
             }
         }*/
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
 #pragma warning restore S125 // Sections of code should not be "commented out"
         public void RunTemplatePersonCreation()
@@ -110,7 +114,7 @@ namespace LoadProfileGenerator.Tests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void TemplatePersonFullCalculationTest()
         {
@@ -151,6 +155,10 @@ namespace LoadProfileGenerator.Tests {
                 }
                 wd.CleanUp();
             }
+        }
+
+        public TemplatePersonTesterTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

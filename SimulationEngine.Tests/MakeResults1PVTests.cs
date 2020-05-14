@@ -2,13 +2,14 @@
 using Automation;
 using NUnit.Framework;
 using SimulationEngineLib;
+using Xunit;
 
 namespace SimulationEngine.Tests
 {
     [TestFixture]
     public class MakeResults1PvTests
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.ManualOnly)]
         public void RunTest()
         {

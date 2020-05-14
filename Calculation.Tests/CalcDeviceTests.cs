@@ -39,12 +39,16 @@ using Common.CalcDto;
 using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Calculation.Tests {
     [TestFixture]
     public class CalcDeviceTests : TestBasis {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void SetTimeprofileTest()
         {
@@ -97,6 +101,10 @@ namespace Calculation.Tests {
 
                 wd.CleanUp();
             }
+        }
+
+        public CalcDeviceTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

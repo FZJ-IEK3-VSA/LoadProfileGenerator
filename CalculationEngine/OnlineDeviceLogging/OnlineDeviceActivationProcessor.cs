@@ -61,8 +61,8 @@ namespace CalculationEngine.OnlineDeviceLogging {
         OefcKey RegisterDevice([NotNull] CalcLoadTypeDto loadType, [NotNull] CalcDeviceDto device);
 
         void AddNewStateMachine( [NotNull] TimeStep startTimeStep,
-                                [NotNull] CalcLoadTypeDto loadType, [NotNull] string affordanceName, [NotNull] string activatorName, [NotNull] string profileName,
-            [NotNull] string profileSource, OefcKey oefckey, CalcDeviceDto calcDeviceDto, StepValues sv);
+                                [NotNull] CalcLoadTypeDto loadType, [NotNull] string affordanceName, [NotNull] string activatorName,
+             OefcKey oefckey, CalcDeviceDto calcDeviceDto, StepValues sv);
 
         void AddZeroEntryForAutoDev(OefcKey zeKey,[NotNull] TimeStep starttime, int totalDuration);
 
@@ -129,18 +129,18 @@ namespace CalculationEngine.OnlineDeviceLogging {
         public Dictionary<CalcLoadTypeDto, BinaryWriter> SumBinaryOutStreams => _sumBinaryOutStreams;
 
         public void AddNewStateMachine( [NotNull] TimeStep startTimeStep,
-                                       [NotNull] CalcLoadTypeDto loadType, [NotNull] string affordanceName, [NotNull] string activatorName, [NotNull] string profileName,
-                                       [NotNull] string profileSource,  OefcKey oefckey, [NotNull] CalcDeviceDto calcDeviceDto, [NotNull] StepValues sv)
+                                       [NotNull] CalcLoadTypeDto loadType, [NotNull] string affordanceName, [NotNull] string activatorName,
+                                             OefcKey oefckey, [NotNull] CalcDeviceDto calcDeviceDto, [NotNull] StepValues sv)
         {
             Oefc.IsDeviceRegistered(loadType, oefckey);
             //OefcKey oefckey = new OefcKey(householdKey, deviceType, deviceID, locationID, loadType.ID);
             // this is for logging the used time profiles which gets dumped to the time profile log
             ProfileActivationEntry.ProfileActivationEntryKey key =
-                new ProfileActivationEntry.ProfileActivationEntryKey(calcDeviceDto.Name, profileName, profileSource,
+                new ProfileActivationEntry.ProfileActivationEntryKey(calcDeviceDto.Name, sv.Name, sv.DataSource,
                     loadType.Name);
             if (!_profileEntries.ContainsKey(key))
             {
-                ProfileActivationEntry entry = new ProfileActivationEntry(calcDeviceDto.Name, profileName, profileSource,
+                ProfileActivationEntry entry = new ProfileActivationEntry(calcDeviceDto.Name, sv.Name, sv.DataSource,
                     loadType.Name,_calcParameters);
                 _profileEntries.Add(entry.GenerateKey(), entry);
             }

@@ -6,12 +6,13 @@ using Database.Tables.BasicElements;
 using Database.Tests;
 using NUnit.Framework;
 using SimulationEngineLib.Other;
+using Xunit;
 
 namespace SimulationEngine.Tests.Other
 {
     public class CSVImportTest
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunTest()
         {

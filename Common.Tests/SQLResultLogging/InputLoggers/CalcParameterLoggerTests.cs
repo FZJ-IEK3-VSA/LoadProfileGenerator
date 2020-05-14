@@ -3,7 +3,11 @@ using Automation;
 using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Common.Tests.SQLResultLogging.InputLoggers
 {
@@ -12,7 +16,7 @@ namespace Common.Tests.SQLResultLogging.InputLoggers
     [TestFixture()]
     public class CalcParameterLoggerTests : UnitTestBaseClass
     {
-        [Test()]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void CalcParameterLoggerTest()
         {
@@ -40,6 +44,10 @@ namespace Common.Tests.SQLResultLogging.InputLoggers
                 Assert.NotNull(cp2);
                 wd.CleanUp();
             }
+        }
+
+        public CalcParameterLoggerTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

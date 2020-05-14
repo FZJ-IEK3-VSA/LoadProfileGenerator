@@ -34,13 +34,17 @@ using Common.Enums;
 using Common.Tests;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Database.Tests.Tables {
     [TestFixture]
     public class AffordanceDeviceTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void LoadFromDatabaseTest()
         {
@@ -81,6 +85,10 @@ namespace Database.Tests.Tables {
                 Assert.AreEqual(loadtypes[0], affdev[0].LoadType);
                 db.Cleanup();
             }
+        }
+
+        public AffordanceDeviceTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

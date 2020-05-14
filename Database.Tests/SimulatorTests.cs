@@ -35,7 +35,11 @@ using Automation.ResultFiles;
 using Common;
 using Common.Tests;
 using Database.Tables;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 #endregion
 
@@ -52,7 +56,7 @@ namespace Database.Tests {
             lasttime = now;
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorAffordancesDeleteTest()
         {
@@ -67,7 +71,7 @@ namespace Database.Tests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorCreateTest()
         {
@@ -112,7 +116,7 @@ namespace Database.Tests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorDateBasedProfilesDeleteTest()
         {
@@ -127,7 +131,7 @@ namespace Database.Tests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorDesiresDeleteTest()
         {
@@ -142,7 +146,7 @@ namespace Database.Tests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorDeviceCategoriesDeleteTest()
         {
@@ -165,7 +169,7 @@ namespace Database.Tests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorEnergyStoragesDeleteTest()
         {
@@ -180,7 +184,7 @@ namespace Database.Tests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorGeneratorsDeleteTest()
         {
@@ -195,7 +199,7 @@ namespace Database.Tests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorGeographicLocationsDeleteTest()
         {
@@ -210,7 +214,7 @@ namespace Database.Tests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorHolidaysDeleteTest()
         {
@@ -225,7 +229,7 @@ namespace Database.Tests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorHouseholdsDeleteTest()
         {
@@ -240,7 +244,7 @@ namespace Database.Tests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorHouseholdTraitsDeleteTest()
         {
@@ -255,7 +259,7 @@ namespace Database.Tests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorHousesDeleteTest()
         {
@@ -270,7 +274,7 @@ namespace Database.Tests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorLoadTypesDeleteTest()
         {
@@ -287,7 +291,7 @@ namespace Database.Tests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTest5)]
         public void SimulatorLoadWithoutNeedsUpdateTest()
         {
@@ -309,7 +313,7 @@ namespace Database.Tests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorLocationsDeleteTest()
         {
@@ -324,7 +328,7 @@ namespace Database.Tests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorPersonsDeleteTest()
         {
@@ -339,7 +343,7 @@ namespace Database.Tests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorRealDevicesDeleteTest()
         {
@@ -354,7 +358,7 @@ namespace Database.Tests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorSettlementsDeleteTest()
         {
@@ -369,7 +373,7 @@ namespace Database.Tests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorTemperaturProfilesDeleteTest()
         {
@@ -384,7 +388,7 @@ namespace Database.Tests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorTest()
         {
@@ -396,7 +400,7 @@ namespace Database.Tests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorTest2()
         {
@@ -423,7 +427,7 @@ namespace Database.Tests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorTimeLimitsDeleteTest()
         {
@@ -438,7 +442,7 @@ namespace Database.Tests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorTimeProfilesDeleteTest()
         {
@@ -453,7 +457,7 @@ namespace Database.Tests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void SimulatorTransformationDevicesDeleteTest()
         {
@@ -466,6 +470,10 @@ namespace Database.Tests {
                 Assert.AreEqual(count - 1, sim2.TransformationDevices.MyItems.Count);
                 db.Cleanup();
             }
+        }
+
+        public SimulatorTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

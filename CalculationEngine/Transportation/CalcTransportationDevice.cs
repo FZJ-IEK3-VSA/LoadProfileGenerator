@@ -287,11 +287,15 @@ namespace CalculationEngine.Transportation {
                     //    throw new Exception("???");
                     //}
                     CalcDeviceLoad cdl = new CalcDeviceLoad("",1,dstLoadType,0,0);
-                    var sv = StepValues.MakeStepValues(cp,  _calcRepo.NormalRandom,cdl,1);
+                    if (cp.DataSource != "Synthetic") {
+                        throw new LPGException("wrong data source");
+                    }
+                    var rsv = RandomValueProfile.MakeStepValues(cp, _calcRepo.NormalRandom, cdl.PowerStandardDeviation);
+                    var sv = StepValues.MakeStepValues(cp,  1,rsv,cdl);
                     _calcRepo.Odap.AddNewStateMachine( currentTimeStep,
                          dstLoadType.ConvertToDto(),
                         "Charging for " + Name + " @ " + _currentSite,
-                        "(autonomous)", cp.Name, "Synthetic", key, _calcDeviceDto,sv);
+                        "(autonomous)", key, _calcDeviceDto,sv);
                     double gainedDistance = maxChargingPower * _energyToDistanceFactor *
                                             _calcRepo.CalcParameters.InternalStepsize.TotalSeconds;
                     _availableRangeInMeters += gainedDistance;
@@ -409,9 +413,10 @@ namespace CalculationEngine.Transportation {
             //   var totalDuration = calcProfile.GetNewLengthAfterCompressExpand(timefactor);
             //OefcKey key = new OefcKey(_calcDeviceDto.HouseholdKey, OefcDeviceType.Transportation, Guid, "-1", cdl.LoadType.Guid, "Transportation");
             var key = _keysByLocGuidAndLoadtype[locationGuid][cdl.LoadType];
-            var sv = StepValues.MakeStepValues(calcProfile,  _calcRepo.NormalRandom, cdl,1);
+            var rvp = RandomValueProfile.MakeStepValues(calcProfile, _calcRepo.NormalRandom, 0);
+            var sv = StepValues.MakeStepValues(calcProfile,  1,rvp,cdl);
             _calcRepo.Odap.AddNewStateMachine(startidx,cdl.LoadType.ConvertToDto(), affordanceName, activatingPersonName,
-                calcProfile.Name, calcProfile.DataSource, key, _calcDeviceDto,sv);
+                 key, _calcDeviceDto,sv);
             //SetBusy(startidx, totalDuration, loadType, activateDespiteBeingBusy);
             // return totalDuration + startidx;
         }

@@ -8,10 +8,20 @@ namespace CalculationEngine.OnlineDeviceLogging {
     using Common.JSON;
     using JetBrains.Annotations;
 
-    public readonly struct OefcKey {
+    public readonly struct OefcKey : IEquatable<OefcKey> {
         public override int GetHashCode()
         {
-            return _hashCode;
+            unchecked {
+                var hashCode = _hashCode;
+                hashCode = (hashCode * 397) ^ FullKey.GetHashCode();
+                hashCode = (hashCode * 397) ^ (LoadtypeGuid != null ? LoadtypeGuid.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ DeviceCategory.GetHashCode();
+                hashCode = (hashCode * 397) ^ LocationGuid.GetHashCode();
+                hashCode = (hashCode * 397) ^ DeviceGuid.GetHashCode();
+                hashCode = (hashCode * 397) ^ HouseholdKey.GetHashCode();
+                hashCode = (hashCode * 397) ^ (int)ThisDeviceType;
+                return hashCode;
+            }
         }
         private readonly int _hashCode;
 
@@ -72,10 +82,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
         }
         */
         public override bool Equals([CanBeNull] object obj) {
-            if (obj is null) {
-                return false;
-            }
-            return obj is OefcKey a && Equals(a);
+            return obj is OefcKey other && Equals(other);
         }
         [NotNull]
         public  string MakeKey()
@@ -93,7 +100,10 @@ namespace CalculationEngine.OnlineDeviceLogging {
         }
 
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-        public bool Equals(OefcKey other) => String.Equals(FullKey, other.FullKey);
+        public bool Equals(OefcKey other)
+        {
+            return _hashCode == other._hashCode && FullKey == other.FullKey && Equals(LoadtypeGuid, other.LoadtypeGuid) && DeviceCategory == other.DeviceCategory && LocationGuid.Equals(other.LocationGuid) && DeviceGuid.Equals(other.DeviceGuid) && HouseholdKey.Equals(other.HouseholdKey) && ThisDeviceType == other.ThisDeviceType;
+        }
 
         public static bool operator ==(in OefcKey point1, OefcKey point2) => point1.Equals(point2);
 

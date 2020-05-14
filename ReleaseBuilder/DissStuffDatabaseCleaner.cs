@@ -12,6 +12,7 @@ using Database.Helpers;
 using Database.Tables.BasicElements;
 using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
 
 namespace ReleaseBuilder {
     public class DissStuffDatabaseCleaner {
@@ -137,7 +138,7 @@ namespace ReleaseBuilder {
         }
 
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        [Test]
+        [Fact]
         [Category("QuickChart")]
         public void RunTest()
         {

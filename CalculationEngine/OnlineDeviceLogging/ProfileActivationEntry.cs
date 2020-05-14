@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Common.JSON;
 using JetBrains.Annotations;
 
@@ -38,7 +39,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
         public ProfileActivationEntryKey GenerateKey() => new ProfileActivationEntryKey(Device, Profile, ProfileSource,
             LoadType);
 
-        public readonly struct ProfileActivationEntryKey  {
+        public readonly struct ProfileActivationEntryKey : IEquatable<ProfileActivationEntryKey> {
             public ProfileActivationEntryKey([NotNull] string device, [NotNull] string profile, [NotNull] string profileSource, [NotNull] string loadType)
                 : this() {
                 Device = device;
@@ -56,21 +57,18 @@ namespace CalculationEngine.OnlineDeviceLogging {
             private string LoadType { get; }
 
             [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-            public bool Equals(ProfileActivationEntryKey other) => string.Equals(Device, other.Device) &&
-                                                                   string.Equals(Profile, other.Profile) &&
-                                                                   string.Equals(ProfileSource, other.ProfileSource) &&
-                                                                   string.Equals(LoadType, other.LoadType);
+            public bool Equals(ProfileActivationEntryKey other)
+            {
+                return Device == other.Device && Profile == other.Profile && ProfileSource == other.ProfileSource && LoadType == other.LoadType;
+            }
 
             public override bool Equals([CanBeNull] object obj) {
-                if (obj is null) {
-                    return false;
-                }
-                return obj is ProfileActivationEntryKey key && Equals(key);
+                return obj is ProfileActivationEntryKey other && Equals(other);
             }
 
             public override int GetHashCode() {
                 unchecked {
-                    var hashCode =  Device.GetHashCode();
+                    var hashCode = Device.GetHashCode();
                     hashCode = (hashCode * 397) ^ Profile.GetHashCode();
                     hashCode = (hashCode * 397) ^ ProfileSource.GetHashCode();
                     hashCode = (hashCode * 397) ^ LoadType.GetHashCode();

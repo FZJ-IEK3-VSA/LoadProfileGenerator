@@ -32,13 +32,17 @@ using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Database.Tests.Tables {
     [TestFixture]
     public class GeneralConfigTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void LoadFromDatabaseTest()
         {
@@ -62,6 +66,10 @@ namespace Database.Tests.Tables {
                 Logger.Info(count3.ToString(CultureInfo.InvariantCulture));
                 db.Cleanup();
             }
+        }
+
+        public GeneralConfigTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

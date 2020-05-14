@@ -5,15 +5,18 @@ using Common.Tests;
 using Database;
 using Database.Tables.ModularHouseholds;
 using Database.Tests;
+using JetBrains.Annotations;
 using LoadProfileGenerator.Presenters.SpecialViews;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace LoadProfileGenerator.Tests.Presenters.SpecialViews
 {
     [TestFixture]
     public class CalculationOutcomesPresenterTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Apartment(ApartmentState.STA)]
         [Category(UnitTestCategories.BasicTest)]
 
@@ -27,7 +30,7 @@ namespace LoadProfileGenerator.Tests.Presenters.SpecialViews
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTest3)]
         public void StartOneCalculationTest()
         {
@@ -45,6 +48,10 @@ namespace LoadProfileGenerator.Tests.Presenters.SpecialViews
                     wd.CleanUp();
                 }
             }
+        }
+
+        public CalculationOutcomesPresenterTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

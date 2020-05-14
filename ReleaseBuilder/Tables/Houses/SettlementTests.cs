@@ -4,13 +4,16 @@ using Common.Tests;
 using Database;
 using Database.Helpers;
 using Database.Tests;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace ReleaseBuilder.Tables.Houses {
     [TestFixture]
     public class SettlementTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category("QuickChart")]
         public void MakeTraitStatisticsTest()
         {
@@ -26,6 +29,10 @@ namespace ReleaseBuilder.Tables.Houses {
 
                 dbs.Cleanup();
             }
+        }
+
+        public SettlementTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

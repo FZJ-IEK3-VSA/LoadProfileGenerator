@@ -8,13 +8,17 @@ using Common.Tests;
 using Database.Tables.BasicElements;
 using Database.Tables.ModularHouseholds;
 using Database.Templating;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Database.Tests.Templates {
     [TestFixture]
     public class HouseholdTemplateExecutorTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunMakeProbabilityArrayTest() {
             //tests the make probability array function
@@ -46,7 +50,7 @@ namespace Database.Tests.Templates {
             Assert.AreEqual(counts[0.3], 300);
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunVacationGetProbabilityRangesTest()
         {
@@ -72,7 +76,7 @@ namespace Database.Tests.Templates {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunVacGenerationTest()
         {
@@ -102,6 +106,10 @@ namespace Database.Tests.Templates {
                 }
                 db.Cleanup();
             }
+        }
+
+        public HouseholdTemplateExecutorTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

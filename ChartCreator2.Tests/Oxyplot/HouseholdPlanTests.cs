@@ -4,14 +4,18 @@ using Automation;
 using ChartCreator2.OxyCharts;
 using Common;
 using Common.Tests;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace ChartCreator2.Tests.Oxyplot {
     [TestFixture]
     [Apartment(ApartmentState.STA)]
     public class HouseholdPlanTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BrokenTest)]
         public void MainHouseholdPlanTest()
         {
@@ -42,6 +46,10 @@ namespace ChartCreator2.Tests.Oxyplot {
             }
             cs.CleanUp();
             CleanTestBase.RunAutomatically(true);
+        }
+
+        public HouseholdPlanTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

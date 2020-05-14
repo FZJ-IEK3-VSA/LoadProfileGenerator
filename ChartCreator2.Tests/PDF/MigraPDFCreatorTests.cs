@@ -6,14 +6,17 @@ using ChartCreator2.PDF;
 using ChartCreator2.Tests.Oxyplot;
 using Common;
 using Common.Tests;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace ChartCreator2.Tests.PDF {
     [TestFixture]
     [Apartment(ApartmentState.STA)]
     public class MigraPDFCreatorTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTest4)]
         public void MakeDocumentTest()
         {
@@ -39,7 +42,7 @@ namespace ChartCreator2.Tests.PDF {
             cs.CleanUp(1);
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.ManualOnly)]
         public void MakeDocumentTestFull()
         {
@@ -60,7 +63,7 @@ namespace ChartCreator2.Tests.PDF {
             //cs.CleanUp(1);
         }
         /*
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.ManualOnly)]
         public void MakeDocumentTestFullPDF() {
             var path = @"E:\unittest\MigraPDFCreatorTests.MakeDocumentTestFull";
@@ -79,7 +82,7 @@ namespace ChartCreator2.Tests.PDF {
 #pragma warning disable RECS0110 // Condition is always 'true' or always 'false'
 #pragma warning disable S2583 // Conditions should not unconditionally evaluate to "true" or to "false"
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BrokenTest)]
         public void MakeFullPDFDocumentTest()
         {
@@ -118,5 +121,8 @@ namespace ChartCreator2.Tests.PDF {
 #pragma warning restore RECS0110 // Condition is always 'true' or always 'false'
         }
 #pragma warning disable CS0162 // Unreachable code detected
+        public MigraPDFCreatorTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
+        }
     }
 }

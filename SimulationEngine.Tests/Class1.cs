@@ -2,15 +2,18 @@
 using Automation;
 using Common;
 using Common.Tests;
+using JetBrains.Annotations;
 using NUnit.Framework;
 using SimulationEngineLib;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace SimulationEngine.Tests
 {
     [TestFixture]
     public class CalculationOptionProcessorTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void DateTimeTests()
         {
@@ -19,7 +22,7 @@ namespace SimulationEngine.Tests
             Logger.Info(dt.ToShortDateString());
         }
 
-        //[Test]
+        //[Fact]
         //public void ReadOptionsTestRandomSeed()
         //{
         //    Program.CatchErrors = false;
@@ -33,7 +36,7 @@ namespace SimulationEngine.Tests
         //}
 
 /*
-        [Test]
+        [Fact]
         public void ReadOptionsTestStartDate()
         {
             CalculationOptionProcessor cop = new CalculationOptionProcessor();
@@ -45,7 +48,7 @@ namespace SimulationEngine.Tests
             Assert.AreEqual(new DateTime(2014, 1, 1), cop.StartDate);
         }
 
-        [Test]
+        [Fact]
         public void ReadOptionsTestEndDate()
         {
             CalculationOptionProcessor cop = new CalculationOptionProcessor();
@@ -57,7 +60,7 @@ namespace SimulationEngine.Tests
             Assert.AreEqual(new DateTime(2014, 2, 1), cop.EndDate);
         }
 
-        [Test]
+        [Fact]
         public void ReadOptionsTestCalcObjectNumber()
         {
             CalculationOptionProcessor cop = new CalculationOptionProcessor();
@@ -68,5 +71,8 @@ namespace SimulationEngine.Tests
             cop.ReadOptions(options.ToArray());
             Assert.AreEqual(1, cop.CalcObjectNumber);
         }*/
+public CalculationOptionProcessorTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+{
+}
     }
 }

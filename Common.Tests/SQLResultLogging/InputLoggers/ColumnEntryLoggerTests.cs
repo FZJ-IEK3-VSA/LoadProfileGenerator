@@ -6,14 +6,18 @@ using Common.CalcDto;
 using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Common.Tests.SQLResultLogging.InputLoggers {
     [TestFixture]
     public class ColumnEntryLoggerTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunColumnEntryLoggerTest()
         {
@@ -42,6 +46,10 @@ namespace Common.Tests.SQLResultLogging.InputLoggers {
                 Assert.AreEqual(s1, s2);
             }
             //wd.CleanUp();
+        }
+
+        public ColumnEntryLoggerTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

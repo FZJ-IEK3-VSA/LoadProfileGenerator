@@ -7,12 +7,15 @@ using Common.SQLResultLogging;
 using Common.Tests;
 using Database;
 using Database.Tests;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace CalculationController.Tests.InputLoggers {
     public class TemperatureLoggerTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunTest()
         {
@@ -31,7 +34,7 @@ namespace CalculationController.Tests.InputLoggers {
             wd.CleanUp();
         }
         /*
-        [Test]
+        [Fact]
         public void RunTest2()
         {
             ContainerBuilder cb = new ContainerBuilder();
@@ -46,5 +49,8 @@ namespace CalculationController.Tests.InputLoggers {
                 ipl.Save(s);
             }
         }*/
+        public TemperatureLoggerTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
+        }
     }
 }

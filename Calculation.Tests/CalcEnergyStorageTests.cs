@@ -40,12 +40,16 @@ using Common;
 using Common.CalcDto;
 using Common.JSON;
 using Common.SQLResultLogging;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Calculation.Tests {
     [TestFixture]
     public class CalcEnergyStorageTests : TestBasis {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void ProcessOneEnergyStorageTimestepTest()
         {
@@ -70,22 +74,21 @@ namespace Calculation.Tests {
                         var cp = new CalcProfile("myCalcProfile", Guid.NewGuid().ToStrGuid(), timestepValues,
                             ProfileType.Absolute, "synthetic");
                         CalcDeviceLoad cdl1 = new CalcDeviceLoad("", -10, clt, 0, 0);
-                        StepValues sv1 = StepValues.MakeStepValues(cp,  NormalRandom,cdl1,1);
+                        StepValues sv1 = StepValues.MakeStepValues(cp,  1, RandomValueProfile.MakeStepValues(cp,NormalRandom,0),cdl1);
                         odap.AddNewStateMachine(new TimeStep(1, 0, true),
-                            clt.ConvertToDto(), "blub",
-                            "name1", "p1", "syn", key, cdd, sv1);
+                            clt.ConvertToDto(), "name1", "p1", key, cdd, sv1);
                         CalcDeviceLoad cdl2 = new CalcDeviceLoad("", -100, clt, 0, 0);
-                        StepValues sv2 = StepValues.MakeStepValues(cp,  NormalRandom,cdl2,1);
+                        StepValues sv2 = StepValues.MakeStepValues(cp, 1,RandomValueProfile.MakeStepValues(cp, NormalRandom, 0), cdl2);
                         odap.AddNewStateMachine(new TimeStep(3, 0, true),
-                             clt.ConvertToDto(), "blub", "name2", "p1", "syn", key, cdd, sv2);
+                             clt.ConvertToDto(),  "name2",  "syn", key, cdd, sv2);
                         CalcDeviceLoad cdl3 = new CalcDeviceLoad("", -10, clt, 0, 0);
-                        StepValues sv3 = StepValues.MakeStepValues(cp, NormalRandom,cdl3,1);
+                        StepValues sv3 = StepValues.MakeStepValues(cp,1, RandomValueProfile.MakeStepValues(cp, NormalRandom, 0), cdl3);
                         odap.AddNewStateMachine(new TimeStep(5, 0, true),
-                            clt.ConvertToDto(), "blub", "name3", "p3", "syn", key, cdd, sv3);
+                            clt.ConvertToDto(),  "name3",  "syn", key, cdd, sv3);
                         CalcDeviceLoad cdl4 = new CalcDeviceLoad("", 100, clt, 0, 0);
-                        StepValues sv4 = StepValues.MakeStepValues(cp,  NormalRandom,cdl4,1);
+                        StepValues sv4 = StepValues.MakeStepValues(cp,  1, RandomValueProfile.MakeStepValues(cp, NormalRandom, 0), cdl4);
                         odap.AddNewStateMachine(new TimeStep(7, 0, true),
-                            clt.ConvertToDto(), "blub", "name4", "p4", "syn", key, cdd, sv4);
+                            clt.ConvertToDto(),  "name4", "syn", key, cdd, sv4);
                         double[] resultValues = { 0, -10.0, 0, -100, 0, 10, 0, 100, 0, 0 };
                         var ces = new CalcEnergyStorage(odap, clt.ConvertToDto(),
                             100, 7, 0, 0, 5, 20, null,
@@ -132,6 +135,10 @@ namespace Calculation.Tests {
                 }
                 wd.CleanUp();
             }
+        }
+
+        public CalcEnergyStorageTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

@@ -32,13 +32,17 @@ using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables.BasicElements;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Database.Tests.Tables {
     [TestFixture]
     public class DateBasedProfileTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void DateBasedProfileSaveAndRestore()
         {
@@ -61,6 +65,10 @@ namespace Database.Tests.Tables {
                 Assert.AreEqual(1, profiles[0].Datapoints.Count);
                 db.Cleanup();
             }
+        }
+
+        public DateBasedProfileTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

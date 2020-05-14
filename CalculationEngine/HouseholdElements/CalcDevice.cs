@@ -126,10 +126,10 @@ namespace CalculationEngine.HouseholdElements {
                 _isBusyForLoadType[calcDeviceLoad.LoadType].SetAll(false);
                 //var key = new OefcKey(calcDeviceDto.HouseholdKey, calcDeviceDto.DeviceType,calcDeviceDto.Guid, calcDeviceDto.LocationGuid,calcDeviceLoad.LoadType.Guid, calcDeviceDto.DeviceCategoryName);
                 var key = calcRepo.Odap.RegisterDevice( calcDeviceLoad.LoadType.ConvertToDto(), calcDeviceDto);
-                    _KeyByLoad.Add(calcDeviceLoad.LoadType, key);
+                    _keyByLoad.Add(calcDeviceLoad.LoadType, key);
             }
         }
-        public readonly Dictionary<CalcLoadType, OefcKey> _KeyByLoad = new Dictionary<CalcLoadType, OefcKey>();
+        private readonly Dictionary<CalcLoadType, OefcKey> _keyByLoad = new Dictionary<CalcLoadType, OefcKey>();
         [NotNull]
         public CalcLocation CalcLocation => _calcLocation;
 
@@ -266,6 +266,59 @@ namespace CalculationEngine.HouseholdElements {
         }
 
         [NotNull]
+        public TimeStep SetTimeprofile([NotNull] TimeStep startidx, [NotNull] CalcLoadType loadType,
+            [NotNull] string affordanceName, [NotNull] string activatingPersonName,
+                                        bool activateDespiteBeingBusy, [NotNull] StepValues stepValues)
+        {
+            if (stepValues.Values.Count == 0)
+            {
+                throw new LPGException("Trying to set empty device profile. This is a bug. Please report.");
+            }
+
+            CalcDeviceLoad cdl = _deviceLoadsBy[loadType];
+            if (cdl == null)
+            {
+                throw new LPGException("It was tried to activate the loadtype " + loadType.Name +
+                                       " even though that one is not set for the device " + Name);
+            }
+
+            /*if (Math.Abs(cdl.Value) < 0.00000001 ) {
+                throw new LPGException("Trying to calculate with a power consumption factor of 0. This is wrong.");
+            }*/
+            if (CalcRepo.Odap == null && !Config.IsInUnitTesting)
+            {
+                throw new LPGException("ODAP was null. Please report");
+            }
+            var totalDuration = stepValues.Values.Count; //.GetNewLengthAfterCompressExpand(timefactor);
+                                                              //calcProfile.CompressExpandDoubleArray(timefactor,allProfiles),
+            var key = _keyByLoad[cdl.LoadType];
+            CalcRepo.Odap.AddNewStateMachine(
+                startidx,
+                cdl.LoadType.ConvertToDto(),
+                affordanceName,
+                activatingPersonName,
+                key,
+                _calcDeviceDto, stepValues);
+
+            if (MatchingAutoDevs.Count > 0)
+            {
+                foreach (CalcAutoDev matchingAutoDev in MatchingAutoDevs)
+                {
+                    if (matchingAutoDev._keyByLoad.ContainsKey(cdl.LoadType))
+                    {
+                        var zerokey = matchingAutoDev._keyByLoad[cdl.LoadType];
+                        CalcRepo.Odap.AddZeroEntryForAutoDev(zerokey,
+                            startidx,
+                            totalDuration);
+                    }
+                }
+            }
+            SetBusy(startidx, totalDuration, loadType, activateDespiteBeingBusy);
+            return startidx.AddSteps(totalDuration);
+        }
+
+        //private Dictionary<string, RandomValueProfile> _randomProfileCache;
+        [NotNull]
         public TimeStep SetTimeprofile([NotNull] CalcProfile calcProfile, [NotNull] TimeStep startidx, [NotNull] CalcLoadType loadType,
             [NotNull] string affordanceName, [NotNull] string activatingPersonName, double multiplier, bool activateDespiteBeingBusy)
         {
@@ -287,23 +340,23 @@ namespace CalculationEngine.HouseholdElements {
             }
             var totalDuration = calcProfile.StepValues.Count; //.GetNewLengthAfterCompressExpand(timefactor);
             //calcProfile.CompressExpandDoubleArray(timefactor,allProfiles),
-                var key = _KeyByLoad[cdl.LoadType];
-                StepValues sv = StepValues.MakeStepValues(calcProfile, CalcRepo.NormalRandom,
-                   cdl ,multiplier);
+                var key = _keyByLoad[cdl.LoadType];
+            RandomValueProfile rvp = RandomValueProfile.MakeStepValues(calcProfile,CalcRepo.NormalRandom,
+                cdl.PowerStandardDeviation);
+                StepValues sv = StepValues.MakeStepValues(calcProfile,
+                    multiplier, rvp, cdl );
                 CalcRepo.Odap.AddNewStateMachine(
                     startidx,
                     cdl.LoadType.ConvertToDto(),
                     affordanceName,
                     activatingPersonName,
-                    calcProfile.Name,
-                    calcProfile.DataSource,
                     key,
                     _calcDeviceDto, sv);
 
             if (MatchingAutoDevs.Count > 0) {
                 foreach (CalcAutoDev matchingAutoDev in MatchingAutoDevs) {
-                    if (matchingAutoDev._KeyByLoad.ContainsKey(cdl.LoadType)) {
-                        var zerokey = matchingAutoDev._KeyByLoad[cdl.LoadType];
+                    if (matchingAutoDev._keyByLoad.ContainsKey(cdl.LoadType)) {
+                        var zerokey = matchingAutoDev._keyByLoad[cdl.LoadType];
                         CalcRepo.Odap.AddZeroEntryForAutoDev(zerokey,
                             startidx,
                             totalDuration);

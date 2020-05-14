@@ -12,6 +12,7 @@ using Database.Tests;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using NUnit.Framework;
+using Xunit;
 using Logger = Common.Logger;
 
 namespace ReleaseBuilder
@@ -37,7 +38,7 @@ namespace ReleaseBuilder
                 CopyAll(diSourceSubDir, nextTargetSubDir);
             }
         }
-        [Test]
+        [Fact]
         public void RunDirectHouseholds()
         {
             using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
@@ -66,7 +67,7 @@ namespace ReleaseBuilder
             }
         }
 
-        [Test]
+        [Fact]
         public void RunHouseholdTemplate()
         {
             using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))

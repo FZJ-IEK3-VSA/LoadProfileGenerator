@@ -24,6 +24,9 @@ using Database.Tables.Transportation;
 using Database.Tests;
 using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace CalculationController.Tests {
     [TestFixture]
@@ -34,7 +37,7 @@ namespace CalculationController.Tests {
             return true;
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTest5)]
         public void ActionCarpetPlotTestBenchmark()
         {
@@ -94,7 +97,7 @@ namespace CalculationController.Tests {
             //      wd1.CleanUp();
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void ActionEachStepTest()
         {
@@ -152,7 +155,7 @@ namespace CalculationController.Tests {
             //      wd1.CleanUp();
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void BodilyActivityLevelsTest()
         {
@@ -209,7 +212,7 @@ namespace CalculationController.Tests {
             //      wd1.CleanUp();
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTest4)]
         public void HouseTypeTest()
         {
@@ -390,7 +393,7 @@ namespace CalculationController.Tests {
         }
 
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTest5)]
         public void AllHouseholdFactoryTest()
         {
@@ -442,7 +445,7 @@ namespace CalculationController.Tests {
             CleanTestBase.RunAutomatically(true);
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTest3)]
         public void AllHousesFactoryTest()
         {
@@ -483,7 +486,7 @@ namespace CalculationController.Tests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void OverallSumFileTest()
         {
@@ -542,7 +545,7 @@ namespace CalculationController.Tests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.ManualOnly)]
         public void CalcOptionTester()
         {
@@ -598,7 +601,7 @@ namespace CalculationController.Tests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTest3)]
         public void CalculationBenchmarksBasicTest()
         {
@@ -652,7 +655,7 @@ namespace CalculationController.Tests {
             //CleanTestBase.Run(true);
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void SimpleLoading()
         {
@@ -674,7 +677,7 @@ namespace CalculationController.Tests {
             Logger.Info("Guids created try 2: " + DBBase.GuidCreationCount);
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void CalculationBenchmarksBasicTestHouse()
         {
@@ -726,7 +729,7 @@ namespace CalculationController.Tests {
             CleanTestBase.RunAutomatically(true);
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTest3)]
         public void CheckTimeAxisTests()
         {
@@ -778,7 +781,7 @@ namespace CalculationController.Tests {
             CleanTestBase.RunAutomatically(true);
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void DuplicateTotalsEntriesTest()
         {
@@ -880,7 +883,7 @@ namespace CalculationController.Tests {
             //CleanTestBase.Run(true);
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void EnergyCarpetPlotTest()
         {
@@ -930,7 +933,7 @@ namespace CalculationController.Tests {
             CleanTestBase.RunAutomatically(true);
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.ManualOnly)]
         public void InvalidPersonActivitiesCheck()
         {
@@ -988,7 +991,7 @@ namespace CalculationController.Tests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void DoubleWorkCheck()
         {
@@ -1044,7 +1047,7 @@ namespace CalculationController.Tests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void MissingTotalsEntriesTest()
         {
@@ -1139,7 +1142,7 @@ namespace CalculationController.Tests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void CalculationTransportationTest()
         {
@@ -1227,6 +1230,10 @@ namespace CalculationController.Tests {
             }
 
             // CleanTestBase.Run(true);
+        }
+
+        public CalculationBenchmarks([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

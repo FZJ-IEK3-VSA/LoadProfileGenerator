@@ -7,13 +7,16 @@ using Common.Enums;
 using Common.Tests;
 using Database.Tables.BasicHouseholds;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Database.Tests.Tables.BasicHouseholds
 {
     [TestFixture]
     public class VacationTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [SuppressMessage("ReSharper", "RedundantAssignment")]
         [Category(UnitTestCategories.BasicTest)]
         public void VacationTest()
@@ -50,6 +53,10 @@ namespace Database.Tests.Tables.BasicHouseholds
 
                 db.Cleanup();
             }
+        }
+
+        public VacationTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

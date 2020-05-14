@@ -4,13 +4,17 @@ using Common;
 using Common.Tests;
 using Database.Helpers;
 using Database.Tables.ModularHouseholds;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Database.Tests.Tables.ModularHouseholds {
     [TestFixture]
     public class TemplateTagTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void TemplateTagTest()
         {
@@ -27,6 +31,10 @@ namespace Database.Tests.Tables.ModularHouseholds {
                 Assert.AreEqual(1, tags.Count);
                 db.Cleanup();
             }
+        }
+
+        public TemplateTagTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

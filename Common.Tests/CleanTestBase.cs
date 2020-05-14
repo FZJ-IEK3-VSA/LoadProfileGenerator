@@ -35,7 +35,7 @@ namespace Common.Tests {
         public static void RunAutomatically(bool throwExceptionOnLeftover) {
             Logger.Info("Starting to clean...");
             var myDrives = DriveInfo.GetDrives();
-            string path = null;
+            string? path = null;
             foreach (var drive in myDrives) {
                 if (drive.IsReady && drive.VolumeLabel == "RamDisk") {
                     path = drive.RootDirectory.FullName;

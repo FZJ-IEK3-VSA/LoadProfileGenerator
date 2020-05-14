@@ -4,14 +4,18 @@ using CalculationEngine.HouseholdElements;
 using Common;
 using Common.CalcDto;
 using Common.Tests;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Database.Tests.HouseholdElements
 {
     [TestFixture]
     public class CalcProfileTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void CalcProfileTest1MinPro1MinStep()
         {
@@ -24,7 +28,7 @@ namespace Database.Tests.HouseholdElements
             Assert.AreEqual(1, cp.StepValues.Count);
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void CalcProfileTest2MinPro1MinStep()
         {
@@ -38,7 +42,7 @@ namespace Database.Tests.HouseholdElements
             Assert.AreEqual(2, cp.StepValues.Count);
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void CalcProfileTest30SPro1MinStep()
         {
@@ -52,6 +56,10 @@ namespace Database.Tests.HouseholdElements
             Assert.AreEqual(2, cp.StepValues.Count);
             Assert.AreEqual(75, cp.StepValues[0]);
             Assert.AreEqual(25, cp.StepValues[1]);
+        }
+
+        public CalcProfileTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

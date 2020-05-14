@@ -5,7 +5,10 @@ using CalculationController.Integrity;
 using Common;
 using Common.Enums;
 using Common.Tests;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace Database.Tests {
     [TestFixture]
@@ -14,7 +17,7 @@ namespace Database.Tests {
         /// <summary>
         /// exportiert alle haushalte und reimportiert sie einmal
         /// </summary>
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTest2)]
         public void Run()
         {
@@ -54,7 +57,7 @@ namespace Database.Tests {
             }
         }
         /*
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.ManualOnly)]
         public void RunJuelich() {
             var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass(),DatabaseSetup.TestPackage.DatabaseIo);
@@ -69,5 +72,8 @@ namespace Database.Tests {
 
             db.Cleanup();
         }*/
+        public ModularHouseholdSerializerTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
+        }
     }
 }

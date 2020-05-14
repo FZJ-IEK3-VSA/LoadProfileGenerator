@@ -3,14 +3,17 @@ using Common;
 using Common.Tests;
 using Database;
 using Database.Tests;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace LoadProfileGenerator.Tests
 {
     [TestFixture]
     public class ShellTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void UpdateVacationsInHouseholdTemplates1Test()
         {
@@ -20,6 +23,10 @@ namespace LoadProfileGenerator.Tests
                 Shell.UpdateVacationsInHouseholdTemplates1(sim);
                 db.Cleanup();
             }
+        }
+
+        public ShellTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

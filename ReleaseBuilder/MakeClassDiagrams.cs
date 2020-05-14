@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
 
 namespace ReleaseBuilder {
     [TestFixture]
@@ -129,7 +130,7 @@ namespace ReleaseBuilder {
         }
 
         [Category("QuickChart")]
-        [Test]
+        [Fact]
         public void Run() {
             ProcessAssembly("loadprofilegenerator.exe", @"e:\lpg.gml");
             ProcessAssembly("DatabaseIO.dll", @"e:\Db.gml");

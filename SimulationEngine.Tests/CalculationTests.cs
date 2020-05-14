@@ -16,6 +16,9 @@ using Database.Helpers;
 using JetBrains.Annotations;
 using NUnit.Framework;
 using SimulationEngineLib;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace SimulationEngine.Tests
 {
@@ -189,7 +192,7 @@ namespace SimulationEngine.Tests
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTest()
         {
@@ -217,7 +220,7 @@ namespace SimulationEngine.Tests
             Directory.SetCurrentDirectory(startdir);
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTest5)]
         public void RunBasicTest2()
         {
@@ -258,7 +261,7 @@ namespace SimulationEngine.Tests
 
         //  - - -   0 -GeographicLocationIndex 6 -StartDate 01.01.2017 -EndDate 31.12.2017 -EnergyIntensityType Random
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTest3)]
         public void RunBasicTestAllOutput()
         {
@@ -291,7 +294,7 @@ namespace SimulationEngine.Tests
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestAllOutputWithDelete()
         {
@@ -320,55 +323,55 @@ namespace SimulationEngine.Tests
             wd.CleanUp(1);
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestCriticalViolations() => RunBasicTestOutput(CalcOption.CriticalViolations,
             "criticalviolations");
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestDaylightTimesToCSV() => RunBasicTestOutput(CalcOption.DaylightTimesList, "daylight");
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestDesiresLogfile() => RunBasicTestOutput(CalcOption.DesiresLogfile, "desires");
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestDeviceProfile() => RunBasicTestOutput(CalcOption.DeviceProfiles, "deviceprofiles");
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestDeviceProfileExternal() => RunBasicTestOutput(CalcOption.DeviceProfileExternalEntireHouse,
             "device profile external", "-ExternalTimeResolution", "01:00:00");
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestDurationCurve() => RunBasicTestOutput(CalcOption.DurationCurve, "durationcurve");
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestEnergyCarpetPlot() => RunBasicTestOutput(CalcOption.EnergyCarpetPlot,
             "Energycarpetplot");
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestHouseholdContents() => RunBasicTestOutput(CalcOption.HouseholdContents,
             "householdcontents");
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestHouseholdPlan() => RunBasicTestOutput(CalcOption.HouseholdPlan, "householdplan");
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestImportFiles() => RunBasicTestOutput(CalcOption.PolysunImportFiles, "importfiles");
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestLocations() => RunBasicTestOutput(CalcOption.LocationsFile, "locations");
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestNoOutput()
         {
@@ -434,11 +437,11 @@ namespace SimulationEngine.Tests
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestSumProfile() => RunBasicTestOutput(CalcOption.OverallSum, "sumprofile");
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestSumProfileExternal()
         {
@@ -446,36 +449,36 @@ namespace SimulationEngine.Tests
                 "00:15:00");
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestTemperatureFile() => RunBasicTestOutput(CalcOption.TemperatureFile, "temperaturefile");
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestThoughtsLogfile() => RunBasicTestOutput(CalcOption.ThoughtsLogfile, "thoughtsfile");
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestTimeOfUse() => RunBasicTestOutput(CalcOption.TimeOfUsePlot, "timeofuse");
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestTimeProfileFile() => RunBasicTestOutput(CalcOption.TimeProfileFile, "timeprofilefile");
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestTotalsPerDevice() => RunBasicTestOutput(CalcOption.TotalsPerDevice, "totalsperdevice");
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestTotalsPerLoadtype() => RunBasicTestOutput(CalcOption.TotalsPerLoadtype,
             "totalsperloadtype");
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunBasicTestWeekday() => RunBasicTestOutput(CalcOption.WeekdayProfiles, "weekday");
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTest5)]
         public void RunHouseCheckFileRegistration()
         {
@@ -546,7 +549,7 @@ namespace SimulationEngine.Tests
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunHouseDesireOutput()
         {
@@ -598,7 +601,7 @@ namespace SimulationEngine.Tests
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTest3)]
         public void RunHouseWithMultipleCheck()
         {
@@ -638,7 +641,7 @@ namespace SimulationEngine.Tests
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.ManualOnly)]
         public void RunRegistrationTest()
         {
@@ -662,7 +665,7 @@ namespace SimulationEngine.Tests
         }
 
         [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "RunTime")]
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunTimeAxisTest2NoSettling()
         {
@@ -698,7 +701,7 @@ namespace SimulationEngine.Tests
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTest3)]
         public void TestCrashingHH()
         {
@@ -742,7 +745,7 @@ namespace SimulationEngine.Tests
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTest3)]
         public void TestCrashingHH1()
         {
@@ -786,7 +789,7 @@ namespace SimulationEngine.Tests
         // todo: fix the plots
 #pragma warning disable S125 // Sections of code should not be "commented out"
         /*  [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "RunTime")]
-                [Test]
+                [Fact]
                 public void RunTimeAxisTestWithSettling()
                 {
                    WorkingDir wd =  ProgramTests.SetupDB3(Utili.GetCurrentMethodAndClass());
@@ -811,5 +814,8 @@ namespace SimulationEngine.Tests
                     wd.CleanUp(1);
                 }*/
 #pragma warning restore S125 // Sections of code should not be "commented out"
+        public CalculationTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
+        }
     }
 }

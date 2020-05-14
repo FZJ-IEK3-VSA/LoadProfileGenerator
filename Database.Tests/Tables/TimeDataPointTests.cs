@@ -34,7 +34,11 @@ using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables.BasicElements;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 #endregion
 
@@ -42,7 +46,7 @@ namespace Database.Tests.Tables {
     [TestFixture]
     public class TimeDataPointTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void LoadFromDatabaseTest()
         {
@@ -55,7 +59,7 @@ namespace Database.Tests.Tables {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void TimeDataPointTest()
         {
@@ -76,7 +80,7 @@ namespace Database.Tests.Tables {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void TimeDataPointTestTimespan()
         {
@@ -94,6 +98,10 @@ namespace Database.Tests.Tables {
                 Assert.AreEqual(1, datapoints[0].Time.TotalMinutes);
                 db.Cleanup();
             }
+        }
+
+        public TimeDataPointTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

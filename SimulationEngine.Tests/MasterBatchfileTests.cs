@@ -13,13 +13,16 @@ using NUnit.Framework;
 using SimulationEngineLib;
 using SimulationEngineLib.Calculation;
 using SimulationEngineLib.SettlementCalculation;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace SimulationEngine.Tests
 {
     [TestFixture]
     public class MasterBatchfileTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void TestSettlementInformation()
         {
@@ -40,7 +43,7 @@ namespace SimulationEngine.Tests
         }
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.ManualOnly)]
         public void RunNaturalLightBatch()
         {
@@ -56,7 +59,7 @@ namespace SimulationEngine.Tests
         }
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.ManualOnly)]
         public void RunTest()
         {
@@ -83,7 +86,7 @@ namespace SimulationEngine.Tests
         }
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.ManualOnly)]
         public void PdfReplacerTest()
         {
@@ -110,6 +113,10 @@ namespace SimulationEngine.Tests
             }
 
             se.Clean();
+        }
+
+        public MasterBatchfileTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

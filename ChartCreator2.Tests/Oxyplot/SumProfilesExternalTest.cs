@@ -7,13 +7,15 @@ using ChartCreator2.OxyCharts;
 using Common;
 using Common.Tests;
 using NUnit.Framework;
+using Xunit;
+using Assert = NUnit.Framework.Assert;
 
 namespace ChartCreator2.Tests.Oxyplot {
     [TestFixture]
     [Apartment(ApartmentState.STA)]
     public class SumProfilesExternalTest {
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BrokenTest)]
         public void MakePlotTest()
         {

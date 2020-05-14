@@ -2,13 +2,16 @@
 using System.Diagnostics.CodeAnalysis;
 using Automation;
 using Common.Tests;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace ChartCreator2.Tests.PostProcessing {
     [TestFixture]
     public class EnergyCarpetPlotMakerTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.ManualOnly)]
         [SuppressMessage("ReSharper", "HeuristicUnreachableCode")]
         public void MakeCarpetTest()
@@ -53,6 +56,10 @@ namespace ChartCreator2.Tests.PostProcessing {
                 //ecp.MakeCarpet(fs, values.ToArray(), totalDuration, clt.Name, 5,"Watt");
             }
 #pragma warning restore 162*/
+        }
+
+        public EnergyCarpetPlotMakerTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

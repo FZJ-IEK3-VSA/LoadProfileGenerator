@@ -38,15 +38,19 @@ using Common;
 using Common.CalcDto;
 using Common.JSON;
 using Common.SQLResultLogging.InputLoggers;
+using JetBrains.Annotations;
 using Moq;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Calculation.Tests.Logfile
 {
     [TestFixture]
     public class ThoughtsLogFileTests : TestBasis
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void BasicTest()
         {
@@ -88,6 +92,10 @@ cloc, isSick, isOnVacation, calcRepo);
                 Assert.AreEqual(true, true);
                 wd.CleanUp();
             }
+        }
+
+        public ThoughtsLogFileTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

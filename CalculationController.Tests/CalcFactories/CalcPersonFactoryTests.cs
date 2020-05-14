@@ -39,13 +39,17 @@ using Common.Tests;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.ModularHouseholds;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace CalculationController.Tests.CalcFactories {
     [TestFixture]
     public class CalcPersonFactoryTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void AddMoreDesiresTest()
         {
@@ -91,6 +95,10 @@ namespace CalculationController.Tests.CalcFactories {
             Assert.AreEqual(p.Age, cp.Age);
             // id 1 for the dictionary
             Assert.AreEqual(d.PrettyName, cp.Desires[0].Name);
+        }
+
+        public CalcPersonFactoryTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

@@ -33,7 +33,10 @@ using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables.BasicHouseholds;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
 
 #endregion
 
@@ -41,7 +44,7 @@ namespace Database.Tests.Tables {
     [TestFixture]
     public class AffordanceTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void LoadFromDatabaseTest()
         {
@@ -73,7 +76,7 @@ namespace Database.Tests.Tables {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void CalcAverageEnergyTest()
         {
@@ -87,6 +90,10 @@ namespace Database.Tests.Tables {
 
                 db.Cleanup();
             }
+        }
+
+        public AffordanceTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

@@ -10,14 +10,18 @@ using Database.Helpers;
 using Database.Tables.Houses;
 using Database.Tables.ModularHouseholds;
 using FluentAssertions;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Database.Tests.Tables.ModularHouseholds {
     [TestFixture]
     public class HouseholdTemplateTests : UnitTestBaseClass
     {
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void HouseholdTemplateJsonTestWithFluentAssertion()
         {
@@ -53,7 +57,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
 
         }
         /*
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void HouseholdTemplateJsonTest()
         {
@@ -116,7 +120,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
 
 
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void HouseholdTemplateGenerationTest()
         {
@@ -144,7 +148,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void HouseholdTemplateAddTests()
         {
@@ -171,7 +175,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void HouseholdTemplateTest()
         {
@@ -200,7 +204,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void HouseholdTemplateTest2()
         {
@@ -255,7 +259,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void ImportExistingModularTest()
         {
@@ -284,6 +288,10 @@ namespace Database.Tests.Tables.ModularHouseholds {
                 Assert.That(total, Is.GreaterThanOrEqualTo(chh.Traits.Count));
                 db.Cleanup();
             }
+        }
+
+        public HouseholdTemplateTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

@@ -2,12 +2,13 @@
 using Automation.ResultFiles;
 using NUnit.Framework;
 using SimulationEngineLib.SimZukunftProcessor;
+using Xunit;
 
 namespace SimulationEngine.Tests.SimZukunftProcessor
 {
     public class HouseGenerationStatisticsTest
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.ManualOnly)]
         public void RunStatistics()
         {

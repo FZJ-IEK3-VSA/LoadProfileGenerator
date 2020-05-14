@@ -31,13 +31,17 @@ using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables.BasicHouseholds;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Database.Tests.Tables {
     [TestFixture]
     public class AffordanceDesireTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void LoadFromDatabaseTest()
         {
@@ -53,6 +57,10 @@ namespace Database.Tests.Tables {
                 Assert.AreEqual(0, affDesires.Count);
                 db.Cleanup();
             }
+        }
+
+        public AffordanceDesireTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

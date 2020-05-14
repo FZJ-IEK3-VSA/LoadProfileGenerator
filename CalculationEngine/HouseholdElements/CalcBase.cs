@@ -38,15 +38,15 @@ using Common.SQLResultLogging;
 using JetBrains.Annotations;
 
 namespace CalculationEngine.HouseholdElements {
-    public class HumanHeatGainSpecification
+    /*public class HumanHeatGainSpecification
     {
         public CalcLoadType PowerLoadtype { get; set; }
         public CalcLoadType CountLoadtype { get; set; }
 
-    }
+    }*/
 
     public class CalcRepo: IDisposable {
-        public HumanHeatGainSpecification HumanHeatGainSpecification { get; }
+        //public HumanHeatGainSpecification HumanHeatGainSpecification { get; }
 
         [NotNull]
         public DateStampCreator DateStampCreator => _dateStampCreator ?? throw new LPGException("no dsc");
@@ -82,10 +82,8 @@ namespace CalculationEngine.HouseholdElements {
                         [CanBeNull] IInputDataLogger inputDataLogger=null,
                         [CanBeNull] CalculationProfiler calculationProfiler=null,
             [CanBeNull] FileFactoryAndTracker fft =null,
-                        [CanBeNull] DateStampCreator dsc = null,
-                        HumanHeatGainSpecification humanHeatGainSpecification = null)
+                        [CanBeNull] DateStampCreator dsc = null)
         {
-            HumanHeatGainSpecification = humanHeatGainSpecification;
             _dateStampCreator = dsc;
             _fft = fft;
             _odap = odap;

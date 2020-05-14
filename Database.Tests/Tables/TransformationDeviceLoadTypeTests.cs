@@ -32,13 +32,17 @@ using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables.Houses;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Database.Tests.Tables {
     [TestFixture]
     public class TransformationDeviceLoadTypeTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void TransformationDeviceLoadCreationAndSaveTest()
         {
@@ -66,6 +70,10 @@ new ObservableCollection<TransformationDeviceLoadType>();
                 Assert.AreEqual(0, tdlts.Count);
                 db.Cleanup();
             }
+        }
+
+        public TransformationDeviceLoadTypeTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

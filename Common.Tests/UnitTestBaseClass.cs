@@ -1,10 +1,16 @@
 ﻿using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit.Abstractions;
 
 namespace Common.Tests
 {
     public class UnitTestBaseClass
     {
+
+        public UnitTestBaseClass(ITestOutputHelper testOutputHelper)
+        {
+            Logger.Get().SetOutputHelper(testOutputHelper);
+        }
         private bool _skipEndCleaning;
 
         [SetUp]

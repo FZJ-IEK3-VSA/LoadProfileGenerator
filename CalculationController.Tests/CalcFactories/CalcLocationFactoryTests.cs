@@ -45,14 +45,18 @@ using Common.SQLResultLogging;
 using Common.Tests;
 using Database.Helpers;
 using Database.Tables.BasicHouseholds;
+using JetBrains.Annotations;
 using Moq;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 using Logger = Common.Logger;
 
 namespace CalculationController.Tests.CalcFactories {
     [TestFixture]
     public class CalcLocationFactoryTests : UnitTestBaseClass {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void MakeCalcLocationsTest()
         {
@@ -94,7 +98,7 @@ namespace CalculationController.Tests.CalcFactories {
             Assert.That(calclocs[0].Guid, Is.EqualTo(locdtos[0].Guid));
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void MakeCalcLocationsTestWith2Device()
         {
@@ -152,7 +156,7 @@ namespace CalculationController.Tests.CalcFactories {
             Assert.AreEqual(2, clocations[0].LightDevices.Count);
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void MakeCalcLocationsTestWithDevice()
         {
@@ -213,7 +217,7 @@ namespace CalculationController.Tests.CalcFactories {
             Assert.AreEqual(1, clocations[0].LightDevices.Count);
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void MakeCalcLocationsTestWithDeviceCategory()
         {
@@ -299,6 +303,10 @@ namespace CalculationController.Tests.CalcFactories {
             }
 
             wd.CleanUp();
+        }
+
+        public CalcLocationFactoryTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

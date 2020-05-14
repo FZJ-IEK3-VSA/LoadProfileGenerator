@@ -6,8 +6,8 @@ using System.Reflection;
 using System.Threading;
 using Automation.ResultFiles;
 using JetBrains.Annotations;
-using NUnit.Framework;
 using OfficeOpenXml;
+using Xunit;
 
 namespace Common.Tests
 {
@@ -39,10 +39,9 @@ namespace Common.Tests
     {
         [NotNull]
         public string Name { get; }
-        [CanBeNull]
-        public object Value { get; set; }
+        public object? Value { get; set; }
 
-        public RowValue([NotNull] string name, [CanBeNull] object value, ValueOrEquation valueOrEquation = ValueOrEquation.Value)
+        public RowValue([NotNull] string name, object? value, ValueOrEquation valueOrEquation = ValueOrEquation.Value)
         {
             Name = name;
             Value = value;
@@ -58,7 +57,7 @@ namespace Common.Tests
         public List<RowValue> RowValues { get; } = new List<RowValue>();
 
         [NotNull]
-        public XlsRowBuilder Add([NotNull] string name, [CanBeNull] object content)
+        public XlsRowBuilder Add([NotNull] string name, object? content)
         {
             if (RowValues.Any(x => x.Name == name))
             {
@@ -90,9 +89,12 @@ namespace Common.Tests
         }
 
         [NotNull]
-        public static XlsRowBuilder GetAllProperties([NotNull] object o)
+        public static XlsRowBuilder GetAllProperties(object? o)
         {
             var rb = new XlsRowBuilder();
+            if (o == null) {
+                throw new LPGException("object was null");
+            }
             var properties = o.GetType().GetProperties();
             foreach (PropertyInfo property in properties)
             {
@@ -102,7 +104,7 @@ namespace Common.Tests
                     continue;
                 }
 
-                object val = property.GetValue(o);
+                object? val = property.GetValue(o);
                 if (o is List<string> mylist)
                 {
                     val = string.Join(",", mylist);
@@ -126,7 +128,7 @@ namespace Common.Tests
         }
 
         [NotNull]
-        public static XlsRowBuilder Start([NotNull] string name, [CanBeNull] object content)
+        public static XlsRowBuilder Start([NotNull] string name, object? content)
         {
             var rb = new XlsRowBuilder();
             return rb.Add(name, content);
@@ -174,11 +176,11 @@ namespace Common.Tests
     public class XlsxDumperTest
         {
 
-            public class Myclass {
+            public class MyTst {
                 public int MyVal1 { get; } = 1;
                 public string MyVal2 { get; } = "blub";
             }
-            [Test]
+            [Fact]
             public void RunTest()
         {
             using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
@@ -188,7 +190,7 @@ namespace Common.Tests
                 rc.Add(rb);
                 var rb2 = XlsRowBuilder.Start("t1", "mytxt").Add("blub", 1).Add("blub5", 1);
                 rc.Add(rb2);
-                Myclass mc = new Myclass();
+                MyTst mc = new MyTst();
                 RowCollection rc2 = new RowCollection("sheet2");
                 var rbc = XlsRowBuilder.GetAllProperties(mc);
                 rc2.Add(rbc);

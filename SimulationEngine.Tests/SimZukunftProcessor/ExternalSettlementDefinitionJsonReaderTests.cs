@@ -19,7 +19,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
     /*
     public class ExternalSettlementDefinitionJsonReaderTests : UnitTestBaseClass
     {
-       /* [Test]
+       /* [Fact]
         public void MergeDataForAdaptricity()
         {
             const string filename = @"V:\BurgdorfStatistics\firstExport.json";

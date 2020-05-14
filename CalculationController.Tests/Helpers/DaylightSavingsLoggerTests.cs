@@ -7,12 +7,13 @@ using Common;
 using Common.JSON;
 using Common.SQLResultLogging;
 using NUnit.Framework;
+using Xunit;
 
 namespace CalculationController.Tests.Helpers
 {
-    internal class DaylightSavingsLoggerTests
+    public class DaylightSavingsLoggerTests
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunDaylightSavingsLoggerTests()
         {

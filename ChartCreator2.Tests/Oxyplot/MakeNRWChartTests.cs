@@ -9,14 +9,18 @@ using Common;
 using Common.Tests;
 using Database;
 using Database.Tests;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace ChartCreator2.Tests.Oxyplot {
     [TestFixture]
     [Apartment(ApartmentState.STA)]
     public class MakeNRWChartTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void MakeNRWChartTest()
         {
@@ -68,6 +72,10 @@ namespace ChartCreator2.Tests.Oxyplot {
                 wd.CleanUp();
             }
             CleanTestBase.RunAutomatically(true);
+        }
+
+        public MakeNRWChartTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

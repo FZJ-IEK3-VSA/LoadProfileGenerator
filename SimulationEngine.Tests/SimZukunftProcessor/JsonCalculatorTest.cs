@@ -14,6 +14,7 @@ using FluentAssertions;
 using JetBrains.Annotations;
 using NUnit.Framework;
 using SimulationEngineLib.SimZukunftProcessor;
+using Xunit;
 
 namespace SimulationEngine.Tests.SimZukunftProcessor
 {
@@ -110,7 +111,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
 
     public class JsonCalculatorTest
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.ManualOnly)]
         public void SumChecker()
         {
@@ -141,7 +142,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
 
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.ManualOnly)]
         public void OnlyExternalTest()
         {
@@ -218,7 +219,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
             // db.Cleanup();
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void TestDistrictDefinition()
         {
@@ -234,7 +235,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         }
 
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunJsonCalculatorTest()
         {
@@ -267,7 +268,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         }
 
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunJsonCalculatorTestForExternalTimeResolutionJsonFile()
         {
@@ -299,7 +300,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
                 wd.CleanUp();
             }
         }
-        //[Test]
+        //[Fact]
         //[Category(UnitTestCategories.ManualOnly)]
         //public void RunJsonCalculatorExportTest()
         //{
@@ -320,7 +321,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         //    //wd.CleanUp();
         //}
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.ManualOnly)]
         public void RunBrokenHouseholdCalcTest()
         {
@@ -337,7 +338,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
             }
         }
 
-        //[Test]
+        //[Fact]
         //[Category(UnitTestCategories.ManualOnly)]
         //public void RunFailingStuffTest()
         //{

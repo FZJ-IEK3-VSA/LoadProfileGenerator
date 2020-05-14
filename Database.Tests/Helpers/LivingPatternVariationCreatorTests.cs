@@ -3,14 +3,17 @@ using CalculationController.Integrity;
 using Common;
 using Common.Tests;
 using Database.Helpers;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace Database.Tests.Helpers
 {
     [TestFixture()]
     public class LivingPatternVariationCreatorTests : UnitTestBaseClass
     {
-        [Test()]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunTest()
         {
@@ -25,6 +28,10 @@ namespace Database.Tests.Helpers
                 db.Cleanup();
             }
 
+        }
+
+        public LivingPatternVariationCreatorTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

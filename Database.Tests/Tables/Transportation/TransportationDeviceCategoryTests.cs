@@ -3,14 +3,18 @@ using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables.Transportation;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Database.Tests.Tables.Transportation
 {
     [TestFixture]
     public class TransportationDeviceCategoryTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void TransportationDeviceCategoryTest()
         {
@@ -26,6 +30,10 @@ namespace Database.Tests.Tables.Transportation
                 db.Cleanup();
                 Assert.AreEqual(1, slocs.Count);
             }
+        }
+
+        public TransportationDeviceCategoryTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

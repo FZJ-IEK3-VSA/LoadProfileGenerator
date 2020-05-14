@@ -33,13 +33,17 @@ using Common;
 using Common.Tests;
 using Database.Helpers;
 using Database.Tables.BasicElements;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Database.Tests.Tables {
     [TestFixture]
     public class GeographicLocationTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void TimeLimitLoadCreationAndSaveTest()
         {
@@ -71,7 +75,7 @@ namespace Database.Tests.Tables {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void GeographicLocationTypoTest()
         {
@@ -88,6 +92,10 @@ namespace Database.Tests.Tables {
                 }
                 db.Cleanup();
             }
+        }
+
+        public GeographicLocationTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

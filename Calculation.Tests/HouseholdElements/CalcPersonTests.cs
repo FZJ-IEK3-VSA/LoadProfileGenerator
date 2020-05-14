@@ -46,77 +46,77 @@ using Common.SQLResultLogging.InputLoggers;
 using Common.SQLResultLogging.Loggers;
 using Common.Tests;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Calculation.HouseholdElements.Tests
 {
     [TestFixture()]
     public class CalcPersonTests : UnitTestBaseClass
     {
-        [Test()]
+        public CalcPersonTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
+        }
+
+        [Fact]
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
         [Category(UnitTestCategories.BasicTest)]
         public void PickRandomAffordanceFromEquallyAttractiveOnesTest()
         {
-            CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();
-            calcParameters.AffordanceRepetitionCount = 0;
-            using var wd = new WorkingDir(nameof(PickRandomAffordanceFromEquallyAttractiveOnesTest));
-            wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
-            wd.InputDataLogger.AddSaver(new ResultFileEntryLogger(wd.SqlResultLoggingService));
-            using var fft = new FileFactoryAndTracker(wd.WorkingDirectory, "blub", wd.InputDataLogger);
-            fft.RegisterHousehold(Constants.GeneralHouseholdKey, "general", HouseholdKeyType.General, "desc",null,null);
-            //SqlResultLoggingService srls = new SqlResultLoggingService(wd.WorkingDirectory);
-            //DateStampCreator dsc = new DateStampCreator(calcParameters);
-            Random rnd = new Random();
-            //OnlineLoggingData old = new OnlineLoggingData(dsc, wd.InputDataLogger, calcParameters);
-            using (var lf = new LogFile(calcParameters, fft)) {
-                CalcProfile cp = new CalcProfile("cp1", Guid.NewGuid().ToStrGuid(), TimeSpan.FromMinutes(1),
-                    ProfileType.Absolute, "bla");
-                CalcVariableRepository crv = new CalcVariableRepository();
-                BitArray isBusy = new BitArray(calcParameters.InternalTimesteps, false);
-                using CalcRepo calcRepo = new CalcRepo(lf:lf, calcParameters:calcParameters, rnd:rnd);
-                CalcAffordance aff1 = new CalcAffordance("aff1", cp, null, false, new List<CalcDesire>(), 10, 20,
-                    PermittedGender.All, true, 1, LPGColors.AliceBlue,
-                    null, false, false, null, null,
-                    ActionAfterInterruption.GoBackToOld, "", 900,
-                    false, "",
-                    Guid.NewGuid().ToStrGuid(), crv,
-                    new List<CalcAffordance.DeviceEnergyProfileTuple>(), isBusy, BodilyActivityLevel.Low,
-                    calcRepo
-                    );
-                CalcAffordance aff2 = new CalcAffordance("aff2", cp, null, false, new List<CalcDesire>(), 10, 20,
-                    PermittedGender.All, true, 1, LPGColors.AliceBlue,
-                    null, false, false, null, null,
-                    ActionAfterInterruption.GoBackToOld, "", 100, false, "",
-                    Guid.NewGuid().ToStrGuid(), crv, new List<CalcAffordance.DeviceEnergyProfileTuple>(),
-                    isBusy, BodilyActivityLevel.Low,calcRepo);
+            using (var wd = new WorkingDir(nameof(PickRandomAffordanceFromEquallyAttractiveOnesTest))) {
+                CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();
+                calcParameters.AffordanceRepetitionCount = 0;
+                wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
+                wd.InputDataLogger.AddSaver(new ResultFileEntryLogger(wd.SqlResultLoggingService));
+                using (var fft = new FileFactoryAndTracker(wd.WorkingDirectory, "blub", wd.InputDataLogger)) {
+                    fft.RegisterHousehold(Constants.GeneralHouseholdKey, "general", HouseholdKeyType.General, "desc", null, null);
+                    //SqlResultLoggingService srls = new SqlResultLoggingService(wd.WorkingDirectory);
+                    //DateStampCreator dsc = new DateStampCreator(calcParameters);
+                    Random rnd = new Random();
+                    //OnlineLoggingData old = new OnlineLoggingData(dsc, wd.InputDataLogger, calcParameters);
+                    using (var lf = new LogFile(calcParameters, fft)) {
+                        CalcProfile cp = new CalcProfile("cp1", Guid.NewGuid().ToStrGuid(), TimeSpan.FromMinutes(1), ProfileType.Absolute, "bla");
+                        CalcVariableRepository crv = new CalcVariableRepository();
+                        BitArray isBusy = new BitArray(calcParameters.InternalTimesteps, false);
+                        using CalcRepo calcRepo = new CalcRepo(lf: lf, calcParameters: calcParameters, rnd: rnd);
+                        CalcAffordance aff1 = new CalcAffordance("aff1", cp, null, false, new List<CalcDesire>(), 10, 20, PermittedGender.All, true,
+                            1, LPGColors.AliceBlue, null, false, false, null, null, ActionAfterInterruption.GoBackToOld, "", 900, false, "",
+                            Guid.NewGuid().ToStrGuid(), crv, new List<CalcAffordance.DeviceEnergyProfileTuple>(), isBusy, BodilyActivityLevel.Low,
+                            calcRepo);
+                        CalcAffordance aff2 = new CalcAffordance("aff2", cp, null, false, new List<CalcDesire>(), 10, 20, PermittedGender.All, true,
+                            1, LPGColors.AliceBlue, null, false, false, null, null, ActionAfterInterruption.GoBackToOld, "", 100, false, "",
+                            Guid.NewGuid().ToStrGuid(), crv, new List<CalcAffordance.DeviceEnergyProfileTuple>(), isBusy, BodilyActivityLevel.Low,
+                            calcRepo);
 
-                List<ICalcAffordanceBase> affs = new List<ICalcAffordanceBase> {
-                    aff1,
-                    aff2
-                };
-                int aff1C = 0;
-                int aff2C = 0;
-                BitArray isSick = new BitArray(calcParameters.InternalTimesteps);
-                BitArray isOnVacation = new BitArray(calcParameters.InternalTimesteps);
-                CalcPersonDto calcPerson = CalcPersonDto.MakeExamplePerson();
-                CalcPerson cperson = new CalcPerson(calcPerson, null,  isSick, isOnVacation, calcRepo);
-                TimeStep ts = new TimeStep(1,0,true);
-                for (int i = 0; i < 1000; i++) {
-                    ICalcAffordanceBase cab = cperson.PickRandomAffordanceFromEquallyAttractiveOnes(affs,  ts, null,
-                        new HouseholdKey("bla"));
-                    if (cab == aff1) {
-                        aff1C++;
-                    }
+                        List<ICalcAffordanceBase> affs = new List<ICalcAffordanceBase> {
+                            aff1,
+                            aff2
+                        };
+                        int aff1C = 0;
+                        int aff2C = 0;
+                        BitArray isSick = new BitArray(calcParameters.InternalTimesteps);
+                        BitArray isOnVacation = new BitArray(calcParameters.InternalTimesteps);
+                        CalcPersonDto calcPerson = CalcPersonDto.MakeExamplePerson();
+                        CalcPerson cperson = new CalcPerson(calcPerson, null, isSick, isOnVacation, calcRepo);
+                        TimeStep ts = new TimeStep(1, 0, true);
+                        for (int i = 0; i < 1000; i++) {
+                            ICalcAffordanceBase cab = cperson.PickRandomAffordanceFromEquallyAttractiveOnes(affs, ts, null, new HouseholdKey("bla"));
+                            if (cab == aff1) {
+                                aff1C++;
+                            }
 
-                    if (cab == aff2) {
-                        aff2C++;
+                            if (cab == aff2) {
+                                aff2C++;
+                            }
+                        }
+
+                        Assert.That(aff1C, Is.EqualTo(900).Within(10).Percent);
+                        Logger.Info("Number of selections for 90%:" + aff1C + ", 10%:" + aff2C);
                     }
                 }
-
-                Assert.That(aff1C, Is.EqualTo(900).Within(10).Percent);
-                Logger.Info("Number of selections for 90%:" + aff1C + ", 10%:" + aff2C);
+                wd.CleanUp();
             }
-            wd.CleanUp();
         }
     }
 }
@@ -124,7 +124,7 @@ namespace Calculation.HouseholdElements.Tests
 namespace Calculation.Tests.HouseholdElements {
     [TestFixture]
     public class CalcPersonTests : TestBasis {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void NextStepTest() {
             DateTime startdate = new DateTime(2018, 1, 1);
@@ -229,7 +229,7 @@ namespace Calculation.Tests.HouseholdElements {
             wd.CleanUp();
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void TestInterruptionTest() {
             DateTime startdate = new DateTime(2018, 1, 1);
@@ -338,6 +338,10 @@ namespace Calculation.Tests.HouseholdElements {
             }
 
             wd.CleanUp();
+        }
+
+        public CalcPersonTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

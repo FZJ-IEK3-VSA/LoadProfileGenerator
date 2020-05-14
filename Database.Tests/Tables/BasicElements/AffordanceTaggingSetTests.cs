@@ -33,13 +33,17 @@ using Common;
 using Common.Enums;
 using Common.Tests;
 using Database.Tables.BasicElements;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Database.Tests.Tables.BasicElements {
     [TestFixture]
     public class AffordanceTaggingSetTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void AffordanceTaggingSetTest()
         {
@@ -91,7 +95,7 @@ namespace Database.Tests.Tables.BasicElements {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void AffordanceTaggingSetTestNone()
         {
@@ -117,7 +121,7 @@ namespace Database.Tests.Tables.BasicElements {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RemoveAllOldEntriesTest()
         {
@@ -134,6 +138,10 @@ namespace Database.Tests.Tables.BasicElements {
                 }
                 db.Cleanup();
             }
+        }
+
+        public AffordanceTaggingSetTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

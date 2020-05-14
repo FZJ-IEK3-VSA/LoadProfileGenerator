@@ -34,7 +34,11 @@ using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables.BasicHouseholds;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 #endregion
 
@@ -42,7 +46,7 @@ namespace Database.Tests.Tables {
     [TestFixture]
     public class DeviceCategoryTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void LoadFromDatabaseTest()
         {
@@ -61,6 +65,10 @@ namespace Database.Tests.Tables {
                 Assert.AreEqual(deviceCategories.Count, 2);
                 db.Cleanup();
             }
+        }
+
+        public DeviceCategoryTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

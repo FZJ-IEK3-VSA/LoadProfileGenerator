@@ -33,6 +33,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -40,6 +41,7 @@ using Automation;
 using Automation.ResultFiles;
 using Common.Enums;
 using JetBrains.Annotations;
+using Xunit.Abstractions;
 
 #endregion
 
@@ -258,7 +260,7 @@ namespace Common {
                     if (!preserveNewLines) {
                         msg = message.Replace(Environment.NewLine, " ");
                     }
-                    var s = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToString("hh:mm:ss") + " [" + sev +
+                    var s = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToString("hh:mm:ss", CultureInfo.InvariantCulture) + " [" + sev +
                             "] " +msg;
                     sw.WriteLine(s);
                 }
@@ -304,8 +306,12 @@ namespace Common {
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         private void ReportString([NotNull] string message, Severity severity, bool preserveLinebreaks = false)
         {
-            // if(Config.isInUnitTesting)
-            Console.WriteLine(message);
+            if (Config.IsInUnitTesting) {
+                OutputHelper.WriteLine(message);
+            }
+            else {
+                Console.WriteLine(message);
+            }
 
             if (LogToFile) {
                 try {
@@ -447,5 +453,12 @@ namespace Common {
             [NotNull]
             public override string ToString() => "[" + Severity + "] " + Message ;
         }
+
+        public void SetOutputHelper(ITestOutputHelper outputHelper)
+        {
+            OutputHelper = outputHelper;
+        }
+
+        public ITestOutputHelper OutputHelper { get; set; }
     }
 }

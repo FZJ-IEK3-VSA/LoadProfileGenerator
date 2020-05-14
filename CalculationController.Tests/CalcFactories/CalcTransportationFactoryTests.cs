@@ -6,13 +6,17 @@ using Common;
 using Common.Tests;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.Transportation;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace CalculationController.Tests.CalcFactories {
     [TestFixture]
     public class CalcTransportationFactoryTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void CheckReachabilityofLocationsTest()
         {
@@ -41,7 +45,7 @@ namespace CalculationController.Tests.CalcFactories {
                 "travelroutesetname");
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void CheckRouteCompletenessTest()
         {
@@ -67,6 +71,10 @@ namespace CalculationController.Tests.CalcFactories {
             //add missing route
             trs.AddRoute(new TravelRoute(1, "", "Route3", "desc", sitea, sitec, Guid.NewGuid().ToStrGuid(),null), false);
             CalcTransportationDtoFactory.CheckRouteCompleteness(trs, sites);
+        }
+
+        public CalcTransportationFactoryTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

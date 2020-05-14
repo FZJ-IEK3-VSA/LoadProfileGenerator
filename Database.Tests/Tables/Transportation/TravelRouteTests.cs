@@ -5,14 +5,18 @@ using Common;
 using Common.Tests;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.Transportation;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Database.Tests.Tables.Transportation
 {
     [TestFixture]
     public class TravelRouteTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void TravelRouteTest()
         {
@@ -70,6 +74,10 @@ namespace Database.Tests.Tables.Transportation
                 Assert.That(tr.Steps[2].StepKey, Is.EqualTo("key3"));
                 db.Cleanup();
             }
+        }
+
+        public TravelRouteTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

@@ -10,14 +10,22 @@ using Common.SQLResultLogging.InputLoggers;
 using Common.Tests;
 using Database;
 using Database.Tests;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Calculation.Tests.PostProcessing
 {
     [TestFixture]
     public class LocationStatisticsMakerTests : UnitTestBaseClass
     {
-        [Test]
+        public LocationStatisticsMakerTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
+        }
+
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunTest()
         {

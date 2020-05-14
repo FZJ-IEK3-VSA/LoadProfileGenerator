@@ -3,14 +3,18 @@ using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables.BasicElements;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Database.Tests.Tables.BasicElements
 {
     [TestFixture]
     public class VariableTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void VariableTest()
         {
@@ -28,6 +32,10 @@ namespace Database.Tests.Tables.BasicElements
                 Assert.AreEqual(0, allVariables.Count);
                 db.Cleanup();
             }
+        }
+
+        public VariableTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

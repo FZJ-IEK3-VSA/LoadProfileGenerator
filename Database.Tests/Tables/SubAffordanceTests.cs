@@ -34,7 +34,11 @@ using Common;
 using Common.Tests;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 #endregion
 
@@ -42,7 +46,7 @@ namespace Database.Tests.Tables {
     [TestFixture]
     public class SubAffordanceTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void LoadFromDatabaseTest()
         {
@@ -62,6 +66,10 @@ namespace Database.Tests.Tables {
                 Assert.AreEqual(0, subAffordances.Count);
                 db.Cleanup();
             }
+        }
+
+        public SubAffordanceTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

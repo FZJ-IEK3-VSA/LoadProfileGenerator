@@ -34,13 +34,21 @@ using CalculationEngine.HouseholdElements;
 using Common;
 using Common.JSON;
 using Common.Tests;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Calculation.Tests.HouseholdElements {
     [TestFixture]
     public class CalcPersonDesiresTests : UnitTestBaseClass
     {
-        [Test]
+        public CalcPersonDesiresTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
+        }
+
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void CalcPersonDesiresTest()
         {
@@ -78,7 +86,7 @@ namespace Calculation.Tests.HouseholdElements {
         ///     Run two desires 20 steps decay without a shared desire value between them
         ///     therefore the desires should be unequal
         /// </summary>
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void CalcPersonNonSharedDesiresTest()
         {
@@ -121,7 +129,7 @@ namespace Calculation.Tests.HouseholdElements {
         ///     Run two desires 20 steps decay with a shared desire value between them
         ///     therefore the desires should be equal
         /// </summary>
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void CalcPersonSharedDesiresTest()
         {

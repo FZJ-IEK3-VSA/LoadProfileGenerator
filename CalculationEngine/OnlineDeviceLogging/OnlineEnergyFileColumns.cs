@@ -26,6 +26,7 @@
 
 //-----------------------------------------------------------------------
 
+using System;
 using Automation;
 using Automation.ResultFiles;
 
@@ -37,19 +38,27 @@ namespace CalculationEngine.OnlineDeviceLogging {
     using JetBrains.Annotations;
     using OnlineLogging;
 
-    public readonly struct ZeroEntryKey {
+    public readonly struct ZeroEntryKey:IEquatable<ZeroEntryKey> {
+        public ZeroEntryKey([NotNull] string locationGuid, [NotNull] string deviceGuid, [NotNull] HouseholdKey householdKey, OefcDeviceType deviceType)
+        {
+            _locationGuid = locationGuid;
+            _deviceGuid = deviceGuid;
+            _householdKey = householdKey;
+            _deviceType = deviceType;
+        }
+
         public override int GetHashCode() {
             unchecked {
                 var hashCode = _locationGuid.GetHashCode();
                 hashCode = (hashCode * 397) ^ _deviceGuid.GetHashCode();
                 hashCode = (hashCode * 397) ^ _householdKey.GetHashCode();
-                return (hashCode * 397) ^ (int) _DeviceType;
+                return (hashCode * 397) ^ (int) _deviceType;
             }
         }
 
         public ZeroEntryKey([NotNull] HouseholdKey householdKey, OefcDeviceType deviceType, [NotNull] string deviceID, [NotNull] string locationID) {
             _householdKey = householdKey;
-            _DeviceType = deviceType;
+            _deviceType = deviceType;
             _deviceGuid = deviceID;
             _locationGuid = locationID;
         }
@@ -64,7 +73,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public bool Equals(ZeroEntryKey other) => _locationGuid == other._locationGuid && _deviceGuid == other._deviceGuid &&
                                                   _householdKey == other._householdKey &&
-                                                  _DeviceType == other._DeviceType;
+                                                  _deviceType == other._deviceType;
 
         public static bool operator ==(ZeroEntryKey point1, ZeroEntryKey point2) => point1.Equals(point2);
 
@@ -74,7 +83,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
         [NotNull] private readonly string _deviceGuid;
         [NotNull]
         private readonly HouseholdKey _householdKey;
-        public readonly OefcDeviceType _DeviceType;
+        private readonly OefcDeviceType _deviceType;
     }
 
     public class OnlineEnergyFileColumns {

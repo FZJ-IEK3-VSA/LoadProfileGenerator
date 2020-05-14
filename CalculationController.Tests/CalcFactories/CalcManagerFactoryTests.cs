@@ -46,6 +46,9 @@ using Database.Tests;
 using FluentAssertions;
 using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace CalculationController.Tests.CalcFactories {
     [TestFixture]
@@ -91,7 +94,7 @@ namespace CalculationController.Tests.CalcFactories {
         }
 
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void GetCalcManagerHouseholdTest()
         {
@@ -122,7 +125,7 @@ namespace CalculationController.Tests.CalcFactories {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void GetCalcManagerHouseTest()
         {
@@ -153,7 +156,7 @@ namespace CalculationController.Tests.CalcFactories {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void GetCalcManagerModularHousehold03Test()
         {
@@ -219,7 +222,7 @@ namespace CalculationController.Tests.CalcFactories {
             Logger.Info("canceled");
             return true;
         }
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void GetCalcManagerModularHouseholdTest()
         {
@@ -262,7 +265,7 @@ namespace CalculationController.Tests.CalcFactories {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void GetCalcManagerModularHouseholdTestForDevicePicking()
         {
@@ -337,7 +340,7 @@ namespace CalculationController.Tests.CalcFactories {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void GetDuplicateCalcManagerHouseholdTest()
         {
@@ -407,6 +410,10 @@ namespace CalculationController.Tests.CalcFactories {
                     }
                 }
             }
+        }
+
+        public CalcManagerFactoryTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

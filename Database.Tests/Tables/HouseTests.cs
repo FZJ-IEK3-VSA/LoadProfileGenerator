@@ -39,7 +39,11 @@ using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.Houses;
 using Database.Tables.ModularHouseholds;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 #endregion
 
@@ -47,7 +51,7 @@ namespace Database.Tests.Tables {
     [TestFixture]
     public class HouseTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTest1)]
         public void HouseLoadCreationAndSave2Test()
         {
@@ -101,7 +105,7 @@ namespace Database.Tests.Tables {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTest1)]
         public void HouseLoadCreationAndSaveTest()
         {
@@ -179,6 +183,10 @@ namespace Database.Tests.Tables {
                 Assert.AreEqual(1, house4.Households.Count);
                 db.Cleanup();
             }
+        }
+
+        public HouseTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

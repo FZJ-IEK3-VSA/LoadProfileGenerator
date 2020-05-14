@@ -7,13 +7,17 @@ using Automation.ResultFiles;
 using ChartCreator2.OxyCharts;
 using Common;
 using Common.Tests;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace ChartCreator2.Tests.Oxyplot {
     [TestFixture]
     [Apartment(ApartmentState.STA)]
     public class ActivityFrequenciesPerMinuteTests : UnitTestBaseClass {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTest3)]
         public void MakePlotTest()
         {
@@ -41,6 +45,10 @@ namespace ChartCreator2.Tests.Oxyplot {
             cs.CleanUp();
 
             //CleanTestBase.Run(true);
+        }
+
+        public ActivityFrequenciesPerMinuteTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

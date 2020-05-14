@@ -7,14 +7,14 @@ using Common.JSON;
 using Database;
 using Database.Tables.Houses;
 using Database.Tests;
-using NUnit.Framework;
 using SimulationEngineLib.SimZukunftProcessor;
+using Xunit;
 
 namespace SimulationEngine.Tests.SimZukunftProcessor
 {
     public class ParallelJsonLauncherTests
     {
-        [Test]
+        [Fact]
         public void TestParallelLaunch()
         {
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());

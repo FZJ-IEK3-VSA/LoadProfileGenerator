@@ -3,13 +3,15 @@ using Automation;
 using Common.Enums;
 using NUnit.Framework;
 using SimulationEngineLib.SimZukunftProcessor;
+using Xunit;
+using Assert = NUnit.Framework.Assert;
 
 namespace SimulationEngine.Tests.SimZukunftProcessor
 {
     [TestFixture]
     public class HouseGeneratorTests
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunMatchingTest()
         {
@@ -63,7 +65,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
             }
         }
 
-        //[Test]
+        //[Fact]
         //[Category(UnitTestCategories.BasicTest)]
         //public void HouseGeneratorTest()
         //{
@@ -110,7 +112,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         //        jc.Calculate(jo);
         //    }
         //}
-        //[Test]
+        //[Fact]
         //[Category(UnitTestCategories.BasicTest)]
         //public void HouseGeneratorTransportationTest()
         //{
@@ -211,7 +213,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         //}
 
 
-        //[Test]
+        //[Fact]
         //[Category(UnitTestCategories.BasicTest)]
         //public void HouseGeneratorModifiedRouteTest()
         //{
@@ -297,7 +299,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         //    hd.Households.Add(hh);
         //}
 
-        //[Test]
+        //[Fact]
         //[Category(UnitTestCategories.BasicTest)]
         //public void HouseGeneratorWithSkipExisitingTest()
         //{

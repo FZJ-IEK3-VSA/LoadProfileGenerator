@@ -13,6 +13,7 @@ using Database.Tests;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using SimulationEngineLib.SimZukunftProcessor;
+using Xunit;
 using Formatting = Newtonsoft.Json.Formatting;
 
 namespace SimulationEngine.Tests.SimZukunftProcessor
@@ -21,7 +22,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
     public class HouseGeneratorJobTests
     {
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.ManualOnly)]
         public void HouseGeneratorTestForPrecreated()
         {
@@ -39,7 +40,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
                 }
             }
         }
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void HouseGeneratorTestWithPersonSpecAndTransport()
         {
@@ -77,7 +78,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
                 }
             }
         }
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void HouseGeneratorTestWithPersonSpec()
         {
@@ -109,7 +110,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         }
 
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void HouseGeneratorTestWithTemplateSpec()
         {
@@ -137,7 +138,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void HouseJobForHeatpump()
         {
@@ -184,7 +185,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         }
 
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void HouseJobForHouseTypes()
         {
@@ -266,7 +267,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void HouseGeneratorTestWithHouseholdSpec()
         {
@@ -333,7 +334,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
             houseGenerator.ProcessSingleHouseJob(houseJobFile,null);
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.ManualOnly)]
         public void RunSinglePredefinedJson()
         {

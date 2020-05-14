@@ -4,13 +4,16 @@ using CalculationController.Integrity;
 using Common;
 using Common.Tests;
 using Database.Templating;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace Database.Tests.Templating {
     [TestFixture]
     public class SettlementTemplateExecutorTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTest5)]
         public void GenerateSettlementPreviewTest()
         {
@@ -26,7 +29,7 @@ namespace Database.Tests.Templating {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void InitializeHouseSizesTest()
         {
@@ -47,6 +50,10 @@ namespace Database.Tests.Templating {
                 }
                 db.Cleanup();
             }
+        }
+
+        public SettlementTemplateExecutorTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

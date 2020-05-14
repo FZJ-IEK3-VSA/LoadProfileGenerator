@@ -155,8 +155,7 @@ namespace CalculationController.CalcFactories {
                 }*/
 
                 //_cdf.MakeCalcDevices(calcLocations, householdDto.DeviceDtos, calcDevices,householdDto.HouseholdKey, _ltDict);
-                var calcpersons = _cpf.MakeCalcPersons(householdDto.Persons, calcLocations[0], householdDto.Name,
-                    dtoCalcLocationDict,calcRepo.HumanHeatGainSpecification);
+                var calcpersons = _cpf.MakeCalcPersons(householdDto.Persons, calcLocations[0], householdDto.Name);
                 chh = new CalcHousehold(name,
                     householdDto.GeographicLocationName,
                     householdDto.TemperatureprofileName,

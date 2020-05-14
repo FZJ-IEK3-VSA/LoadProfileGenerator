@@ -34,7 +34,11 @@ using Common;
 using Common.Tests;
 using Database.Helpers;
 using Database.Tables.BasicHouseholds;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 #endregion
 
@@ -42,7 +46,7 @@ namespace Database.Tests.Tables {
     [TestFixture]
     public class DesireTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void DesireTest()
         {
@@ -61,7 +65,7 @@ namespace Database.Tests.Tables {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void MakeNewDesireTest()
         {
@@ -71,6 +75,10 @@ namespace Database.Tests.Tables {
                 cat.CreateNewItem(db.ConnectionString);
                 db.Cleanup();
             }
+        }
+
+        public DesireTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

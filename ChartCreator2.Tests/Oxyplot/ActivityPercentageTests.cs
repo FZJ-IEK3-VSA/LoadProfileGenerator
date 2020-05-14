@@ -5,7 +5,11 @@ using ChartCreator2.OxyCharts;
 using Common;
 using Common.Tests;
 using Database.Database;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace ChartCreator2.Tests.Oxyplot {
     [TestFixture]
@@ -13,7 +17,7 @@ namespace ChartCreator2.Tests.Oxyplot {
     [Category(UnitTestCategories.BasicTest)]
     public class ActivityPercentageTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         public void MakePlotTest()
         {
             CleanTestBase.RunAutomatically(false);
@@ -40,6 +44,10 @@ namespace ChartCreator2.Tests.Oxyplot {
             cs.CleanUp();
 
             //CleanTestBase.Run(true);
+        }
+
+        public ActivityPercentageTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

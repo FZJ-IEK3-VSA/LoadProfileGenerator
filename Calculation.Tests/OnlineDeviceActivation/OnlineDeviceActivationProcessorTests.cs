@@ -52,10 +52,17 @@ using Common.Tests;
 using Database;
 using Database.Tests;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Calculation.Tests.OnlineDeviceActivation {
     [TestFixture]
     public class OnlineDeviceActivationProcessorTests : UnitTestBaseClass {
+        public OnlineDeviceActivationProcessorTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
+        }
+
         private static bool OpenTabFunc([JetBrains.Annotations.CanBeNull] object o)
         {
             Logger.Warning("OpenTabFunc was called");
@@ -85,7 +92,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
         ///     user controlled is activated manually
         ///     For example if a TV with standby use is turned on, then it is not running in standby simultanously.
         /// </summary>
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void OnlineDeviceActivationProcessorSetToZeroTest()
         {
@@ -235,7 +242,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void OnlineDeviceActivationProcessorTest()
         {
@@ -276,10 +283,10 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                         var cp = new CalcProfile("myCalcProfile", Guid.NewGuid().ToStrGuid(), valueList, ProfileType.Absolute, "synthetic");
                         TimeStep ts1 = new TimeStep(1, 0, false);
                         CalcDeviceLoad cdl = new CalcDeviceLoad("",10,clt,0,0);
-                        StepValues sv = StepValues.MakeStepValues(cp,  nr,cdl,1);
+                        StepValues sv = StepValues.MakeStepValues(cp,  1, RandomValueProfile.MakeStepValues(cp, nr, 0), cdl);
                         odap.AddNewStateMachine(ts1,
-                            clt.ConvertToDto(), "blub", "name1",
-                            "p1", "syn", key, cdd, sv);
+                            clt.ConvertToDto(),  "name1",
+                            "p1",  key, cdd, sv);
                         double[] resultValues = { 0, 10.0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
                         for (var i = 0; i < 10; i++)
@@ -303,7 +310,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
             }
         }
 
-        [Test]
+        [Fact]
         [SuppressMessage("ReSharper", "CollectionNeverUpdated.Local")]
         [Category(UnitTestCategories.BasicTest)]
         public void PostProcessingTestSingleActivation()
@@ -478,7 +485,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
             }
         }
 
-        [Test]
+        [Fact]
         [SuppressMessage("ReSharper", "CollectionNeverUpdated.Local")]
         [Category(UnitTestCategories.BasicTest)]
         public void PostProcessingTestTwoActivation()
@@ -623,7 +630,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunCalcStarter()
         {

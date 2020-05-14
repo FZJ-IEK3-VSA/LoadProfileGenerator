@@ -34,13 +34,16 @@ using Common.Tests;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.ModularHouseholds;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace Database.Tests.Tables.ModularHouseholds {
     [TestFixture]
     public class ModularHouseholdTraitTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void LoadFromDatabaseTest()
         {
@@ -70,6 +73,10 @@ namespace Database.Tests.Tables.ModularHouseholds {
                 chht1.DeleteFromDB();
                 db.Cleanup();
             }
+        }
+
+        public ModularHouseholdTraitTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

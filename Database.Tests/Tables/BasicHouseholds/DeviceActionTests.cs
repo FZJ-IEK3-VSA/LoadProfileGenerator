@@ -5,14 +5,18 @@ using Common;
 using Common.Tests;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Database.Tests.Tables.BasicHouseholds
 {
     [TestFixture]
     public class DeviceActionTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void DeviceActionTest()
         {
@@ -46,6 +50,10 @@ namespace Database.Tests.Tables.BasicHouseholds
                 Assert.AreEqual(0, das.Count);
                 db.Cleanup();
             }
+        }
+
+        public DeviceActionTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

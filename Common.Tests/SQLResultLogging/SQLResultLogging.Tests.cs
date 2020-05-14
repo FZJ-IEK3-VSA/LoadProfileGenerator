@@ -3,10 +3,11 @@ using Automation;
 using Automation.ResultFiles;
 using Common.SQLResultLogging;
 using NUnit.Framework;
+using Xunit;
 
 namespace Common.Tests.SQLResultLogging
 {
-    internal class SqlResultLoggingTest
+    public class SqlResultLoggingTest
     {
         /*
         private class TestDataClass  {
@@ -22,7 +23,7 @@ namespace Common.Tests.SQLResultLogging
             public string Name { [UsedImplicitly] get; }
         }*/
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void CreateTableFromFieldlistTest()
         {
@@ -40,7 +41,7 @@ namespace Common.Tests.SQLResultLogging
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void SaveDictionaryTest()
         {
@@ -64,7 +65,7 @@ namespace Common.Tests.SQLResultLogging
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void DoubleSaveDictionaryTest()
         {
@@ -88,7 +89,7 @@ namespace Common.Tests.SQLResultLogging
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void SaveDictionaryCalcParametersTest()
         {

@@ -44,7 +44,7 @@ using NUnit.Framework;
 namespace Calculation.Tests.Logfile {
     [TestFixture]
     public class ActionLogFileTests : TestBasis {
-        [Test]
+        [Fact]
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
         public static void TestActionLogFileTestsBasics() {
             var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
@@ -72,7 +72,7 @@ namespace Calculation.Tests.Logfile {
             wd.CleanUp();
         }
 
-        [Test]
+        [Fact]
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
         public void TestLoading() {
             SetUp();

@@ -2,7 +2,10 @@
 using Automation;
 using ChartCreator2.SettlementMergePlots;
 using Common.Tests;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace ChartCreator2.Tests.SettlementCharts
 {
@@ -10,11 +13,15 @@ namespace ChartCreator2.Tests.SettlementCharts
     [Apartment(ApartmentState.STA)]
     public class MergedActivityPlotTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.ManualOnly)]
         public void RunTest()
         {
             MergedActivityPlot.Run(@"e:\MergedActivities.csv", @"e:\pictures");
+        }
+
+        public MergedActivityPlotTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

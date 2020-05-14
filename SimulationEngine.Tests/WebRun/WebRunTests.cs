@@ -4,15 +4,18 @@ using Automation;
 using Common;
 using Common.Tests;
 using Database.Tests;
+using JetBrains.Annotations;
 using NUnit.Framework;
 using SimulationEngineLib;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace SimulationEngine.Tests.WebRun
 {
     [TestFixture]
     public class WebRunTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.ManualOnly)]
         public void RunTest()
         {
@@ -29,6 +32,10 @@ namespace SimulationEngine.Tests.WebRun
                 Directory = wd.WorkingDirectory
             };
             SimulationEngineLib.WebRunner.WebRun.Run(wo);
+        }
+
+        public WebRunTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

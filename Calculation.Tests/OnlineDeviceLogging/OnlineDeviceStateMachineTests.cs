@@ -39,13 +39,21 @@ using Common;
 using Common.CalcDto;
 using Common.JSON;
 using Common.Tests;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Calculation.Tests.OnlineDeviceLogging {
     [TestFixture]
     public class OnlineDeviceStateMachineTests : UnitTestBaseClass
     {
-        [Test]
+        public OnlineDeviceStateMachineTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
+        }
+
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void OnlineDeviceStateMachineTest()
         {
@@ -71,7 +79,7 @@ namespace Calculation.Tests.OnlineDeviceLogging {
             var cp = new CalcProfile("mycalcprofile", Guid.NewGuid().ToStrGuid(), valueList, ProfileType.Absolute, "bla");
             TimeStep ts = new TimeStep(5, 0, false);
             CalcDeviceLoad cdl = new CalcDeviceLoad("",1,clt,0,0);
-            StepValues sv = StepValues.MakeStepValues(cp, nr,cdl,1);
+            StepValues sv = StepValues.MakeStepValues(cp, 1, RandomValueProfile.MakeStepValues(cp, nr, 0), cdl);
             var odsm = new OnlineDeviceStateMachine(ts,  clt.ConvertToDto(), "device", key,"affordance",
                 calcParameters, sv);
             calcParameters.SetDummyTimeSteps(0);

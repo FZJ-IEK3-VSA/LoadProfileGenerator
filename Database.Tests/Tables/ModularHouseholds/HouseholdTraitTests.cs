@@ -29,6 +29,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using Automation;
 using Automation.ResultFiles;
 using Common;
@@ -40,12 +41,16 @@ using Database.Tables.ModularHouseholds;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Database.Tests.Tables.ModularHouseholds {
     [TestFixture]
+    [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     public class HouseholdTraitTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void TraitImportExportTest()
         {
@@ -118,7 +123,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
             return false;
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void HouseholdTraitImportTest()
         {
@@ -136,7 +141,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void HouseholdTraitAffordanceTest()
         {
@@ -204,7 +209,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void HouseholdTraitTest()
         {
@@ -282,6 +287,10 @@ namespace Database.Tests.Tables.ModularHouseholds {
                 Assert.AreEqual(0, hhts.Count);
                 db.Cleanup();
             }
+        }
+
+        public HouseholdTraitTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

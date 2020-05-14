@@ -4,14 +4,18 @@ using Common;
 using Common.Tests;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.Transportation;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Database.Tests.Tables.Transportation
 {
     [TestFixture]
     public class TransportationDeviceSetTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void TransportationDeviceSetTest()
         {
@@ -50,7 +54,7 @@ namespace Database.Tests.Tables.Transportation
                 Assert.AreEqual(1, result[0].TransportationDeviceSetEntries.Count);
             }
         }
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void TransportationDeviceImportTest()
         {
@@ -67,6 +71,10 @@ namespace Database.Tests.Tables.Transportation
                     }
                 }
             }
+        }
+
+        public TransportationDeviceSetTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

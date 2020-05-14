@@ -5,13 +5,15 @@ using Database.Tables.ModularHouseholds;
 using Database.Tests;
 using NUnit.Framework;
 using SimulationEngineLib.Other;
+using Xunit;
+using Assert = NUnit.Framework.Assert;
 
 namespace SimulationEngine.Tests.Other
 {
     [TestFixture]
     public class HouseholdTemplateExportTester
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunHouseholdTemplateTests()
         {
@@ -32,7 +34,7 @@ namespace SimulationEngine.Tests.Other
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunHouseholdTraits()
         {
@@ -53,7 +55,7 @@ namespace SimulationEngine.Tests.Other
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunHouseholdTraitsWithDeviceCategories()
         {
@@ -70,7 +72,7 @@ namespace SimulationEngine.Tests.Other
                 }
             }
         }
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTest5)]
         public void RunModularHouseholdTests()
         {

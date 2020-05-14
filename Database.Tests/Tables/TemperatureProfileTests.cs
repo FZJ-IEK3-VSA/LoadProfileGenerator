@@ -28,14 +28,19 @@
 
 using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables.BasicElements;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Database.Tests.Tables {
     [TestFixture]
+    [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     public class TemperatureProfileTests : UnitTestBaseClass
     {
         private static void CompareArray([JetBrains.Annotations.NotNull] double[] temparr,[JetBrains.Annotations.NotNull]double[] dstarr) {
@@ -49,7 +54,7 @@ namespace Database.Tests.Tables {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void GetTemperatureArrayTest() {
             // test converting
@@ -69,7 +74,7 @@ namespace Database.Tests.Tables {
             CompareArray(temparr, dstarr);
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void GetTemperatureArrayTest2() {
             // test mapping to a different year
@@ -89,7 +94,7 @@ namespace Database.Tests.Tables {
             CompareArray(temparr, dstarr);
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void GetTemperatureArrayTest3() {
             // test schaltjahr
@@ -111,7 +116,7 @@ namespace Database.Tests.Tables {
             CompareArray(temparr, dstarr);
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void GetTemperatureArrayTest4() {
             // test Jahres�bergang
@@ -133,7 +138,7 @@ namespace Database.Tests.Tables {
             CompareArray(temparr, dstarr);
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void LoadFromDatabaseTest()
         {
@@ -162,7 +167,7 @@ namespace Database.Tests.Tables {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RealDeviceOneValueTest() {
             var startdt = new DateTime(2010, 1, 1);
@@ -178,7 +183,7 @@ namespace Database.Tests.Tables {
             Assert.AreEqual(10, values[239]);
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RealDeviceTempArrayTestTest() {
             var startdt = new DateTime(2010, 1, 1);
@@ -203,7 +208,7 @@ namespace Database.Tests.Tables {
             Assert.AreEqual(7, values[239]);
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RealDeviceTwoValuesTest() {
             var startdt = new DateTime(2010, 1, 1);
@@ -223,6 +228,10 @@ namespace Database.Tests.Tables {
             Assert.AreEqual(6, values[2]);
             Assert.AreEqual(7, values[3]);
             Assert.AreEqual(7, values[239]);
+        }
+
+        public TemperatureProfileTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

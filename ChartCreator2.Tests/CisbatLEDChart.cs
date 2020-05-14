@@ -10,7 +10,7 @@ using SettlementProcessing.CSVProcessing;
 namespace ChartCreator.Tests {
     internal static class CisbatLEDChart {
         public class Durchschnittsprofil {
-            [Test]
+            [Fact]
             [Category(UnitTestCategories.ManualOnly)]
             public void Run()
             {
@@ -63,7 +63,7 @@ namespace ChartCreator.Tests {
                 mwp.MakeOneDayChart(Path.Combine(dstdir, "Light.pdf"), entries, "kW", yaxislabel, 30);
             }
             
-            [Test]
+            [Fact]
             [Category(UnitTestCategories.ManualOnly)]
             public void RunOnlyMerge()
             {

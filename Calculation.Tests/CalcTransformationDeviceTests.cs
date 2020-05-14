@@ -41,12 +41,16 @@ using Common;
 using Common.CalcDto;
 using Common.JSON;
 using Common.SQLResultLogging;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Calculation.Tests {
     [TestFixture]
     public class CalcTransformationDeviceTests : TestBasis {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void ProcessOneTimestepTestVariableFactor()
         {
@@ -66,8 +70,8 @@ namespace Calculation.Tests {
             var cp = new CalcProfile("myCalcProfile", Guid.NewGuid().ToStrGuid(), timestepValues.ToList(), ProfileType.Absolute, "synthetic");
             var ts1 = new TimeStep(1, 0, true);
             CalcDeviceLoad cdl = new CalcDeviceLoad("",1,clt,0,0);
-            var sv = StepValues.MakeStepValues(cp,  NormalRandom,cdl,1);
-            odap.AddNewStateMachine(ts1, clt.ConvertToDto(), "blub", "name1", "p1", "syn", key, cdd, sv);
+            var sv = StepValues.MakeStepValues(cp,  1, RandomValueProfile.MakeStepValues(cp, NormalRandom, 0), cdl);
+            odap.AddNewStateMachine(ts1, clt.ConvertToDto(),  "name1", "p1",  key, cdd, sv);
             double[] resultValues = { 0, 0, 5, 10.0, 20, 30, 40, 0 };
             //double[] resultValuesRow1 = {0, 0, 5, 10, 200, 3000, 4000, 0};
             var ctd = new CalcTransformationDevice(odap, -1, 080, -1000, 1000, cdd, clt);
@@ -101,7 +105,7 @@ namespace Calculation.Tests {
             wd.CleanUp();
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void ProcessOneTransformationDeviceTimestepTest()
         {
@@ -123,8 +127,9 @@ namespace Calculation.Tests {
             var cp = new CalcProfile("myCalcProfile", Guid.NewGuid().ToStrGuid(), tmplist, ProfileType.Absolute, "synthetic");
             var ts1 = new TimeStep(1, 0, true);
             var cdl = new CalcDeviceLoad("",10,clt,0,0);
-            var sv = StepValues.MakeStepValues(cp, NormalRandom,cdl,1);
-            odap.AddNewStateMachine(ts1, clt.ConvertToDto(), "blub", "name1", "p1", "syn", key, cdd, sv);
+            var sv = StepValues.MakeStepValues(cp, 1, RandomValueProfile.MakeStepValues(cp, NormalRandom, 0), cdl);
+            odap.AddNewStateMachine(ts1, clt.ConvertToDto(),
+                "name1", "p1", key, cdd, sv);
             double[] resultValues = {0, 10.0, 0, 0, 0, 0, 0, 0, 0, 0};
             double[] resultValuesRow1 = {0, 20.0, 0, 0, 0, 0, 0, 0, 0, 0};
             double[] resultValuesRow2 = {0, 30.0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -160,6 +165,10 @@ namespace Calculation.Tests {
             }
 
             wd.CleanUp();
+        }
+
+        public CalcTransformationDeviceTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

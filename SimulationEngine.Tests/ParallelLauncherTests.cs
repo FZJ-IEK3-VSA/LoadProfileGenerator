@@ -4,20 +4,23 @@ using System.IO;
 using Automation;
 using Common;
 using Common.Tests;
+using JetBrains.Annotations;
 using NUnit.Framework;
 using SimulationEngineLib;
 using SimulationEngineLib.SettlementCalculation;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace SimulationEngine.Tests
 {
     [TestFixture]
     public class ParallelLauncherTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void FindNumberOfCoresTest() => Logger.Info(ParallelLauncher.FindNumberOfCores().ToString(CultureInfo.InvariantCulture));
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.ManualOnly)]
         public void RunTest()
         {
@@ -34,6 +37,10 @@ namespace SimulationEngine.Tests
                 @"x:\R2_BridgeDaysWithout"
             };
             MainSimEngine.Run(arguments.ToArray(), "simulationengine.exe");
+        }
+
+        public ParallelLauncherTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

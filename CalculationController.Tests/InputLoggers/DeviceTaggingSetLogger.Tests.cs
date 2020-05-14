@@ -11,7 +11,10 @@ using Common.Tests;
 using Database;
 using Database.Tables.BasicHouseholds;
 using Database.Tests;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace CalculationController.Tests.InputLoggers
 {
@@ -19,7 +22,7 @@ namespace CalculationController.Tests.InputLoggers
 
     public class DeviceTaggingSetLoggerTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunTest()
         {
@@ -41,6 +44,10 @@ namespace CalculationController.Tests.InputLoggers
                     ds.Cleanup();
                 }
             }
+        }
+
+        public DeviceTaggingSetLoggerTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

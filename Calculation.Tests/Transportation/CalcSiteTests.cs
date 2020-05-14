@@ -12,14 +12,18 @@ using Common.CalcDto;
 using Common.JSON;
 using Common.SQLResultLogging.InputLoggers;
 using Common.Tests;
+using JetBrains.Annotations;
 using Moq;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Calculation.Tests.Transportation {
     [TestFixture]
     public class CalcSiteTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void TestCalcSite()
         {
@@ -82,6 +86,10 @@ namespace Calculation.Tests.Transportation {
                 }
                 wd.CleanUp();
             }
+        }
+
+        public CalcSiteTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

@@ -6,14 +6,18 @@ using ChartCreator2.OxyCharts;
 using Common;
 using Common.Tests;
 using Database.Database;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace ChartCreator2.Tests.Oxyplot {
     [TestFixture]
     [Apartment(ApartmentState.STA)]
     public class AffordanceTaggingSetTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void MakePlotTest()
         {
@@ -45,7 +49,7 @@ namespace ChartCreator2.Tests.Oxyplot {
             CleanTestBase.RunAutomatically(true);
         }
         /*
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.ManualOnly)]
         public void MakePlotTestMini()
         {
@@ -63,5 +67,8 @@ namespace ChartCreator2.Tests.Oxyplot {
             aeupp.MakePlot(rfe, "affordance tagging set", di);
             Logger.Debug("finished picture");
         }*/
+        public AffordanceTaggingSetTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
+        }
     }
 }

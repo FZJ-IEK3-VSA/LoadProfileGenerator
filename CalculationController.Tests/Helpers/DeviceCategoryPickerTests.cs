@@ -10,14 +10,18 @@ using Database.Helpers;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.ModularHouseholds;
 using Database.Tests;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace CalculationController.Tests.Helpers
 {
     [TestFixture]
     public class DeviceCategoryPickerTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void DeviceCategoryPickerTestDeviceCategories()
         {
@@ -53,7 +57,7 @@ namespace CalculationController.Tests.Helpers
             Assert.AreEqual(rd, result4);
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void DeviceCategoryPickerTestRealDevices()
         {
@@ -81,7 +85,7 @@ namespace CalculationController.Tests.Helpers
         }
 
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void TestMultiplePickingShouldAlwaysGiveSameResult()
         {
@@ -118,7 +122,7 @@ namespace CalculationController.Tests.Helpers
             //Assert.AreEqual(null, result2);
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void DeviceCategoryPickerDeviceActionGroupAutoDev()
         {
@@ -154,6 +158,10 @@ namespace CalculationController.Tests.Helpers
                 Logger.Info("Device Action  " + i + " " + deviceAction2);
                 Assert.AreEqual(pickedDeviceAction, deviceAction2);
             }
+        }
+
+        public DeviceCategoryPickerTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

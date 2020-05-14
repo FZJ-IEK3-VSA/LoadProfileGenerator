@@ -5,14 +5,18 @@ using Common;
 using Common.Tests;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.Transportation;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Database.Tests.Tables.Transportation
 {
     [TestFixture]
     public class ChargingStationSetTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunChargingStationSetTests()
         {
@@ -50,6 +54,10 @@ namespace Database.Tests.Tables.Transportation
                 Assert.AreEqual(1, css.Count);
                 Assert.AreEqual(1, css[0].ChargingStations.Count);
             }
+        }
+
+        public ChargingStationSetTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

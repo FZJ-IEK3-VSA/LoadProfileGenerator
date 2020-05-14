@@ -35,13 +35,21 @@ using CalculationEngine.HouseholdElements;
 using Common;
 using Common.CalcDto;
 using Common.Tests;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Calculation.Tests {
     [TestFixture]
     public class CalcProfileTests : UnitTestBaseClass
     {
-        [Test]
+        public CalcProfileTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
+        }
+
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void CompressExpandDoubleArrayExpand1ShouldWork()
         {
@@ -61,7 +69,7 @@ namespace Calculation.Tests {
             Assert.AreEqual(3, result.StepValues[5]);
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void CompressExpandDoubleArrayExpand2ShouldWork()
         {
@@ -78,7 +86,7 @@ namespace Calculation.Tests {
             Assert.AreEqual(3, result.StepValues[4]);
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public static void CompressExpandDoubleArrayExpand3ShouldWork()
         {
@@ -109,7 +117,7 @@ namespace Calculation.Tests {
             Assert.AreEqual(9, result.StepValues[14]);
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void CompressExpandDoubleArrayShrink1ShouldWork()
         {
@@ -123,7 +131,7 @@ namespace Calculation.Tests {
             Assert.AreEqual(4, result.StepValues[1]);
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void CompressExpandDoubleArrayShrink2ShouldWork()
         {

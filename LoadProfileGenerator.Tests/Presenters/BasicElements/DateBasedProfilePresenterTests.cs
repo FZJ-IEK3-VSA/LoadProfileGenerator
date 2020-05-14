@@ -8,14 +8,18 @@ using Common;
 using Common.Tests;
 using Database;
 using Database.Tests;
+using JetBrains.Annotations;
 using LoadProfileGenerator.Presenters.BasicElements;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace LoadProfileGenerator.Tests.Presenters.BasicElements {
     [TestFixture]
     public class DateBasedProfilePresenterTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
         public void DateBasedProfilePresenterTest()
@@ -59,6 +63,10 @@ namespace LoadProfileGenerator.Tests.Presenters.BasicElements {
                 }
                 db.Cleanup();
             }
+        }
+
+        public DateBasedProfilePresenterTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

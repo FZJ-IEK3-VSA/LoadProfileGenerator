@@ -5,14 +5,18 @@ using ChartCreator2.OxyCharts;
 using Common;
 //using Common.SQLResultLogging;
 using Common.Tests;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace ChartCreator2.Tests.Oxyplot {
     [TestFixture]
     [Apartment(ApartmentState.STA)]
     public class AffordanceEnergyUseTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BrokenTest)]
         public void MakePlotTest()
         {
@@ -41,7 +45,7 @@ namespace ChartCreator2.Tests.Oxyplot {
             //CleanTestBase.RunAutomatically(true);
         }
         /*
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.ManualOnly)]
         public void MakePlotTestMini()
         {
@@ -59,5 +63,8 @@ namespace ChartCreator2.Tests.Oxyplot {
             aeupp.MakePlot(rfe, "AffordanceEnergyUse HH1 Electricity", di);
             Logger.Debug("finished picture");
         }*/
+        public AffordanceEnergyUseTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
+        }
     }
 }

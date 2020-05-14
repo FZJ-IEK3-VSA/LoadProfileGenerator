@@ -8,6 +8,7 @@ using Database.Database;
 using Database.Tables;
 using Database.Tests;
 using NUnit.Framework;
+using Xunit;
 using Logger = Common.Logger;
 
 namespace IntegrationTests
@@ -15,7 +16,7 @@ namespace IntegrationTests
     [TestFixture]
     public class CleanEachTable
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.CleanEachTable)]
         [SuppressMessage("ReSharper", "UnusedVariable")]
         public void TryCleaningEachTable()

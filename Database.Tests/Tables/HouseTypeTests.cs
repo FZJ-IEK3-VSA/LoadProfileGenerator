@@ -36,13 +36,17 @@ using Database.Helpers;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.Houses;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Database.Tests.Tables {
     [TestFixture]
     public class HouseTypeTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void HouseDeviceLoadCreationAndSaveTest()
         {
@@ -119,7 +123,7 @@ namespace Database.Tests.Tables {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void HouseDeviceOrphanCreatingTest()
         {
@@ -182,7 +186,7 @@ namespace Database.Tests.Tables {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void HouseEnergyStorageLoadCreationAndSaveTest()
         {
@@ -244,7 +248,7 @@ namespace Database.Tests.Tables {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void HouseLoadCreationAndSaveTest()
         {
@@ -303,7 +307,7 @@ namespace Database.Tests.Tables {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void HouseTransformationDeviceLoadCreationAndSaveTest()
         {
@@ -363,7 +367,7 @@ namespace Database.Tests.Tables {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void HouseTypeLoadCreationAndSave2Test()
         {
@@ -397,6 +401,10 @@ namespace Database.Tests.Tables {
                 Assert.GreaterOrEqual(houseTypes.Count, 1);
                 db.Cleanup();
             }
+        }
+
+        public HouseTypeTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

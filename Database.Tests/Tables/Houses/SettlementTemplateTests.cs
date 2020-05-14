@@ -8,13 +8,17 @@ using Common;
 using Common.Tests;
 using Database.Tables.Houses;
 using Database.Tables.ModularHouseholds;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Database.Tests.Tables.Houses {
     [TestFixture]
     public class SettlementTemplateTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void SettlementTemplatePreviewTest()
         {
@@ -83,7 +87,7 @@ namespace Database.Tests.Tables.Houses {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void SettlementTemplateTest()
         {
@@ -147,6 +151,10 @@ namespace Database.Tests.Tables.Houses {
                 Assert.AreEqual(0, sts[0].HouseSizes.Count);
                 db.Cleanup();
             }
+        }
+
+        public SettlementTemplateTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

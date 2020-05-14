@@ -3,14 +3,17 @@ using CalculationController.Integrity;
 using Common;
 using Common.Tests;
 using Database.Helpers;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace Database.Tests.Helpers
 {
     [TestFixture]
     public class RealisticTraitEstimatorTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunTest()
         {
@@ -21,6 +24,10 @@ namespace Database.Tests.Helpers
                 SimIntegrityChecker.Run(sim);
                 db.Cleanup();
             }
+        }
+
+        public RealisticTraitEstimatorTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

@@ -35,15 +35,19 @@ using Common;
 using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.Loggers;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Calculation.Tests.Logfile
 {
     [TestFixture]
     public class LocationLogFileTests : TestBasis
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void TestLocationEntryBasics()
         {
@@ -75,7 +79,7 @@ namespace Calculation.Tests.Logfile
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void TestLocationEntryBasicsWithFile()
         {
@@ -124,6 +128,10 @@ namespace Calculation.Tests.Logfile
                 Assert.That(loaded, Is.EqualTo(prev));
                 wd.CleanUp();
             }
+        }
+
+        public LocationLogFileTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

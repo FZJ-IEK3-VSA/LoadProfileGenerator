@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -17,9 +18,13 @@ using Database.Helpers;
 using Database.Tests;
 using NUnit.Framework;
 using SimulationEngineLib;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace SimulationEngine.Tests {
     [TestFixture]
+    [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     public class ProgramTests : UnitTestBaseClass
     {
         [JetBrains.Annotations.NotNull]
@@ -48,7 +53,7 @@ namespace SimulationEngine.Tests {
             return wd;
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.ManualOnly)]
         public void CSVImportTest()
         {
@@ -74,7 +79,7 @@ namespace SimulationEngine.Tests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.ManualOnly)]
         public void CSVImportTest2()
         {
@@ -107,7 +112,7 @@ namespace SimulationEngine.Tests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void ListEnviromentalVariables() {
             SimulationEngineConfig.CatchErrors = false;
@@ -121,7 +126,7 @@ namespace SimulationEngine.Tests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void MainListLoadTypePriorities()
         {
@@ -137,7 +142,7 @@ namespace SimulationEngine.Tests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.ManualOnly)]
         public void MainTestBatchCommandlineModularHouseholds()
         {
@@ -157,7 +162,7 @@ namespace SimulationEngine.Tests {
         }
 
         /*
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void MainTestBatchModularHouseholds() {
             var wd = SetupDB3(Utili.GetCurrentMethodAndClass());
@@ -175,7 +180,7 @@ namespace SimulationEngine.Tests {
             wd.CleanUp(1);
         }*/
         /*
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void MainTestBatchSettlements() {
             const string filename = "Start-Settlement.cmd";
@@ -193,7 +198,7 @@ namespace SimulationEngine.Tests {
             wd.CleanUp(1);
         }*/
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void MainTestForHelp()
         {
@@ -205,7 +210,7 @@ namespace SimulationEngine.Tests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.ManualOnly)]
         public void MainTestLaunchParallelModularHouseholds()
         {
@@ -252,7 +257,7 @@ namespace SimulationEngine.Tests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void MainTestListGeoLocs()
         {
@@ -268,7 +273,7 @@ namespace SimulationEngine.Tests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void ProfilesGeoLocs()
         {
@@ -309,7 +314,7 @@ namespace SimulationEngine.Tests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void MainTestListHouses()
         {
@@ -325,7 +330,7 @@ namespace SimulationEngine.Tests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void MainTestListModularHouseholds()
         {
@@ -341,7 +346,7 @@ namespace SimulationEngine.Tests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void MainTestListSettlements()
         {
@@ -358,7 +363,7 @@ namespace SimulationEngine.Tests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void MainTestListTemperatureProfiles()
         {
@@ -374,7 +379,7 @@ namespace SimulationEngine.Tests {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void MainTestNoDB3() {
             SimulationEngineConfig.CatchErrors = false;
@@ -386,7 +391,7 @@ namespace SimulationEngine.Tests {
             Assert.Throws<LPGException>(() => MainSimEngine.Run(args.ToArray(), "simulationengine.exe"));
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.LongTest5)]
         public void SettlementToBatchTest()
         {
@@ -441,6 +446,10 @@ namespace SimulationEngine.Tests {
                 MainSimEngine.Run(args2.ToArray(), "simulationengine.exe");
                 setp.Clean();
             }
+        }
+
+        public ProgramTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

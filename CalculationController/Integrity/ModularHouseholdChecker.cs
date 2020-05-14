@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using Automation.ResultFiles;
 using Common;
@@ -47,18 +48,18 @@ namespace CalculationController.Integrity {
                 }
                 var traits = mhh.Traits.Where(x => x.DstPerson == mhhPerson.Person).ToList();
 
-                if (mhhPerson.TraitTag.Name.ToLower().Contains("school")) {
+                if (mhhPerson.TraitTag.Name.ToLower(CultureInfo.InvariantCulture).Contains("school")) {
                     //this is a school child
-                    if (!traits.Any(x => x.PrettyName.ToLower().Contains("school"))) {
+                    if (!traits.Any(x => x.PrettyName.ToLower(CultureInfo.InvariantCulture).Contains("school"))) {
                         throw new DataIntegrityException(
                             "The " + mhhPerson.Name +
                             " does not seem to have any school, even though the living pattern says it is a school child",
                             mhh);
                     }
                 }
-                if (mhhPerson.TraitTag.Name.ToLower().Contains("worker")) {
+                if (mhhPerson.TraitTag.Name.ToLower(CultureInfo.InvariantCulture).Contains("worker")) {
                     //this is an office worker
-                    if (!traits.Any(x => x.PrettyName.ToLower().Contains("work"))) {
+                    if (!traits.Any(x => x.PrettyName.ToLower(CultureInfo.InvariantCulture).Contains("work"))) {
                         throw new DataIntegrityException(
                             "The " + mhhPerson.Name +
                             " does not seem to have any work, even though the living pattern says it is an worker",
@@ -174,7 +175,7 @@ namespace CalculationController.Integrity {
                     " for " + modularHouseholdPerson.Person.PrettyName, modularHousehold);
             }
             if (school) {
-                var homework = traitsForPerson.Any(x => x.HouseholdTrait.Name.ToLower().Contains("homework"));
+                var homework = traitsForPerson.Any(x => x.HouseholdTrait.Name.ToLower(CultureInfo.InvariantCulture).Contains("homework"));
                 if(!homework) {
                     throw new DataIntegrityException("No homework in the household " + modularHousehold.PrettyName
                         + " for the person " + modularHouseholdPerson.Person.PrettyName, modularHousehold);

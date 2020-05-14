@@ -9,12 +9,13 @@ using Database;
 using Database.Tables.Houses;
 using Database.Tests;
 using NUnit.Framework;
+using Xunit;
 
 namespace CalculationController.Tests
 {
     public class DegreeDayFactoryTests
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void Run()
         {

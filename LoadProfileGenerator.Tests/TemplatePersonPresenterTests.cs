@@ -11,15 +11,19 @@ using Common.Tests;
 using Database;
 using Database.Tables.ModularHouseholds;
 using Database.Tests;
+using JetBrains.Annotations;
 using LoadProfileGenerator.Presenters.Households;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace LoadProfileGenerator.Tests
 {
     [TestFixture]
     public class TemplatePersonPresenterTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void Run()
         {
@@ -35,6 +39,10 @@ namespace LoadProfileGenerator.Tests
                 Assert.That(traitPrios.Count > 0);
                 db.Cleanup();
             }
+        }
+
+        public TemplatePersonPresenterTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

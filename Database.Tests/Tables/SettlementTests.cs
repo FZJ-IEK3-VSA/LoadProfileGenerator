@@ -36,7 +36,11 @@ using Common.Enums;
 using Common.Tests;
 using Database.Tables.Houses;
 using Database.Tables.ModularHouseholds;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 #endregion
 
@@ -44,7 +48,7 @@ namespace Database.Tests.Tables {
     [TestFixture]
     public class SettlementTests : UnitTestBaseClass
     {
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void LoadFromDatabaseTest()
         {
@@ -70,7 +74,7 @@ namespace Database.Tests.Tables {
             }
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void JsonCalcSpecTest()
         {
@@ -88,7 +92,7 @@ namespace Database.Tests.Tables {
         }
 
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void SaveToDatabaseTest()
         {
@@ -130,6 +134,10 @@ namespace Database.Tests.Tables {
                 Assert.AreEqual(settlements[0].EnergyIntensityType, EnergyIntensityType.EnergySaving);
                 db.Cleanup();
             }
+        }
+
+        public SettlementTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

@@ -14,5 +14,6 @@
         public const string FullCalcHouses2 = "FullCalcHouses2";
         public const string FullCalcHouses3 = "FullCalcHouses3";
         public const string LongTermMerge = "LongTermMerge";
+        public const string Category = "Category";
     }
 }

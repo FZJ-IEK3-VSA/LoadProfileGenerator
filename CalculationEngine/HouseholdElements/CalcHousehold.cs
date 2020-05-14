@@ -30,6 +30,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using Automation;
@@ -438,7 +439,7 @@ namespace CalculationEngine.HouseholdElements {
                 Logger.Info("Simulating household " + Name + " Time:" + now.ToShortDateString() + " " +
                             now.ToShortTimeString() + ", Timestep:" + timestep.InternalStep
                             + ", speed: "
-                            + speed.ToString("F2") + " steps/second, " + timeelapesed.ToString() + " elapsed" + timeLeftStr);
+                            + speed.ToString("F2", CultureInfo.InvariantCulture) + " steps/second, " + timeelapesed.ToString() + " elapsed" + timeLeftStr);
 
                 _lastDisplay = DateTime.Now;
             }

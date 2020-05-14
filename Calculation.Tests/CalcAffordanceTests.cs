@@ -43,11 +43,19 @@ using Common.Tests;
 using JetBrains.Annotations;
 using Moq;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
+using Assert = NUnit.Framework.Assert;
 
 namespace Calculation.Tests {
     [TestFixture]
     public class CalcAffordanceTests : UnitTestBaseClass
     {
+
+        public CalcAffordanceTests([NotNull] ITestOutputHelper testOutputHelper):base(testOutputHelper)
+        {
+        }
+
         private static void SetupProbabilityTest([NotNull] out CalcAffordance aff, [NotNull] out CalcLoadType lt,
                                                  [NotNull] out CalcDevice cd,
                                                  [NotNull] out CalcLocation loc, int stepcount, double probability)
@@ -158,10 +166,11 @@ namespace Calculation.Tests {
             Logger.Info("cd.isbusyarray 100: " + cd.GetIsBusyForTesting(ts5, lt));
         }
 
-        [Test]
-        [Category(UnitTestCategories.BasicTest)]
+        [Fact]
+        [Trait("Category",UnitTestCategories.BasicTest)]
         public void CalcAffordanceActivateTest0Percent()
         {
+            Logger.Info("hi");
             var calcParameters = CalcParameters.GetNew();
             const int stepcount = 150;
             SetupProbabilityTest(out var aff, out var lt, out var cd, out var loc, stepcount, 0);
@@ -189,7 +198,7 @@ namespace Calculation.Tests {
             Assert.That(trueCount, Is.EqualTo(0).Within(10).Percent);
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void CalcAffordanceActivateTest100Percent()
         {
@@ -220,7 +229,7 @@ namespace Calculation.Tests {
             Assert.That(trueCount, Is.EqualTo(resultcount).Within(10).Percent);
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void CalcAffordanceActivateTest25Percent()
         {
@@ -252,7 +261,7 @@ namespace Calculation.Tests {
 #pragma warning restore VSD0045 // The operands of a divisive expression are both integers and result in an implicit rounding.
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void CalcAffordanceActivateTest50Percent()
         {
@@ -284,7 +293,7 @@ namespace Calculation.Tests {
 #pragma warning restore VSD0045 // The operands of a divisive expression are both integers and result in an implicit rounding.
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void CalcAffordanceActivateTest75Percent()
         {
@@ -314,7 +323,7 @@ namespace Calculation.Tests {
             Assert.That(trueCount, Is.EqualTo(resultcount * 0.75).Within(10).Percent);
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void CalcAffordanceVariableTestAdd()
         {
@@ -376,7 +385,7 @@ namespace Calculation.Tests {
             Assert.AreEqual(2, variableRepository.GetValueByGuid(variableGuid));
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void CalcAffordanceVariableTestSet()
         {
@@ -433,7 +442,7 @@ namespace Calculation.Tests {
             Assert.AreEqual(1, calcVariableRepository.GetValueByGuid(variableGuid));
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void CalcAffordanceVariableTestSubtract()
         {
@@ -503,7 +512,7 @@ namespace Calculation.Tests {
             Assert.AreEqual(-2, crv.GetValueByGuid(variableGuid));
         }
 
-        [Test]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void RunDeviceOffsetTest()
         {

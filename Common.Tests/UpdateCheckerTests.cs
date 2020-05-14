@@ -1,12 +1,15 @@
 ﻿using Automation;
+using JetBrains.Annotations;
 using NUnit.Framework;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace Common.Tests
 {
     [TestFixture()]
     public class UpdateCheckerTests : UnitTestBaseClass
     {
-        [Test()]
+        [Fact]
         [Category(UnitTestCategories.BasicTest)]
         public void GetLatestVersionTest()
         {
@@ -17,6 +20,10 @@ namespace Common.Tests
                 Logger.Info(s);
                 wd.CleanUp();
             }
+        }
+
+        public UpdateCheckerTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }
