@@ -59,6 +59,7 @@ using Assert = NUnit.Framework.Assert;
 
 namespace Calculation.Tests.OnlineDeviceActivation {
     [TestFixture]
+    [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     public class OnlineDeviceActivationProcessorTests : UnitTestBaseClass {
         public OnlineDeviceActivationProcessorTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {

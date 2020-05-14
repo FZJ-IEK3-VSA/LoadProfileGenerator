@@ -353,8 +353,7 @@ namespace Common {
         public void RegisterHousehold([NotNull] HouseholdKey householdKey, [NotNull] string name, HouseholdKeyType type,
                                       [NotNull] string description, [CanBeNull] string houseName, [CanBeNull] string houseDescription)
         {
-            HouseholdRegistry.RegisterHousehold(householdKey, name, type,_inputDataLogger, 
-                description, houseName,houseDescription);
+            HouseholdRegistry.RegisterHousehold(householdKey, name, type,_inputDataLogger, description, houseName,houseDescription);
         }
 
         public void RegisterGeneralHouse()

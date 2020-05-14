@@ -109,7 +109,6 @@ namespace CalculationController.Tests.Transportation {
                 css.SaveToDB();
                 var fft = scope.Resolve<FileFactoryAndTracker>();
                 fft.RegisterGeneralHouse();
-                    null);
                 var dtohh = hhdtofac.MakeCalcModularHouseholdDto(sim,
                     mhh,
                     sim.TemperatureProfiles[0],
