@@ -19,13 +19,12 @@ using Database;
 using Database.Tests;
 using JetBrains.Annotations;
 using Moq;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Calculation.HouseholdElements.Tests {
-    [TestFixture]
     public class CalcHouseholdTests : UnitTestBaseClass
     {
         public CalcHouseholdTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
@@ -54,7 +53,7 @@ namespace Calculation.HouseholdElements.Tests {
                     sim.MyGeneralConfig.Enable(CalcOption.TotalsPerDevice);
                     sim.MyGeneralConfig.CSVCharacter = ";";
                     //ConfigSetter.SetGlobalTimeParameters(sim.MyGeneralConfig);
-                    Assert.AreNotEqual(null, sim);
+                    Assert.NotEqual(null, sim);
                     SimIntegrityChecker.Run(sim);
                     CalcManagerFactory.DoIntegrityRun = false;
 
@@ -88,7 +87,6 @@ namespace Calculation.HouseholdElements.Tests {
 }
 
 namespace Calculation.Tests.HouseholdElements {
-    [TestFixture]
     public class CalcHouseholdTests : UnitTestBaseClass
     {
         public CalcHouseholdTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
@@ -164,9 +162,9 @@ cloc1.Guid, cloc1.Name);
                         Logger.Info("\t" + matchingAutoDev.Name);
                     }
                 }
-                Assert.AreEqual(1, cdLoc1.MatchingAutoDevs.Count);
+                Assert.Equal(1, cdLoc1.MatchingAutoDevs.Count);
             }
-            //Assert.AreEqual(1, totalmatchcount);
+            //(totalmatchcount).Should().Be(1);
         }
     }
 }

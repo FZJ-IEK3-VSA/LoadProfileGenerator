@@ -31,7 +31,6 @@ using System.Collections;
 using Automation;
 using Automation.ResultFiles;
 using CalculationController.DtoFactories;
-using CalculationEngine.Helper;
 using CalculationEngine.HouseholdElements;
 using CalculationEngine.OnlineLogging;
 using Common;
@@ -40,15 +39,14 @@ using Common.JSON;
 using Common.SQLResultLogging.InputLoggers;
 using JetBrains.Annotations;
 using Moq;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Calculation.Tests.Logfile
 {
-    [TestFixture]
-    public class ThoughtsLogFileTests : TestBasis
+    public class ThoughtsLogFileTests : CalcUnitTestBase
     {
         [Fact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
@@ -91,7 +89,6 @@ cloc, isSick, isOnVacation, calcRepo);
                     }
                     tlf.Dispose();
                 }
-                Assert.AreEqual(true, true);
                 wd.CleanUp();
             }
         }

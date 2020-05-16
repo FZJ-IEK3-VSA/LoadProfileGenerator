@@ -45,14 +45,13 @@ using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
 using Common.SQLResultLogging.Loggers;
 using Common.Tests;
-using NUnit.Framework;
+using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Calculation.HouseholdElements.Tests
 {
-    [TestFixture()]
     public class CalcPersonTests : UnitTestBaseClass
     {
         public CalcPersonTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
@@ -64,7 +63,7 @@ namespace Calculation.HouseholdElements.Tests
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void PickRandomAffordanceFromEquallyAttractiveOnesTest()
         {
-            using (var wd = new WorkingDir(nameof(PickRandomAffordanceFromEquallyAttractiveOnesTest))) {
+            using (var wd = new WorkingDir(Utili.GetCurrentMethodAndClass())) {
                 CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();
                 calcParameters.AffordanceRepetitionCount = 0;
                 wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
@@ -111,7 +110,7 @@ namespace Calculation.HouseholdElements.Tests
                             }
                         }
 
-                        Assert.That(aff1C, Is.EqualTo(900).Within(10).Percent);
+                        aff1C.Should().BeApproximatelyWithinPercent(900,0.1);
                         Logger.Info("Number of selections for 90%:" + aff1C + ", 10%:" + aff2C);
                     }
                 }
@@ -122,8 +121,7 @@ namespace Calculation.HouseholdElements.Tests
 }
 
 namespace Calculation.Tests.HouseholdElements {
-    [TestFixture]
-    public class CalcPersonTests : TestBasis {
+    public class CalcPersonTests : CalcUnitTestBase {
         [Fact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void NextStepTest() {
@@ -340,7 +338,7 @@ namespace Calculation.Tests.HouseholdElements {
             //wd.CleanUp();
         }
 
-        public CalcPersonTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public CalcPersonTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base( testOutputHelper)
         {
         }
     }

@@ -16,16 +16,16 @@ using Common.Tests;
 using Database;
 using Database.Helpers;
 using Database.Tests;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
-using Assert = NUnit.Framework.Assert;
+
 
 //using Calculation.HouseholdElements;
 //
 
 namespace CalculationController.Tests {
-    [TestFixture]
     public class DeviceTimeOffsetBug {
         private static void CheckForOverdoneOffsets([NotNull] string path, [NotNull] SqlResultLoggingService srls) {
             //var actionsName = Path.Combine(path, "Reports", "ActionsEachStep.HH1.csv");
@@ -124,7 +124,7 @@ namespace CalculationController.Tests {
                     sim.MyGeneralConfig.SelectedLoadTypePriority = LoadTypePriority.RecommendedForHouseholds;
                     SimIntegrityChecker.Run(sim);
 
-                    Assert.AreNotEqual(null, sim);
+                    sim.Should().NotBeNull();
 
                     var cmf = new CalcManagerFactory();
                     //CalcDevice.UseRanges = true;

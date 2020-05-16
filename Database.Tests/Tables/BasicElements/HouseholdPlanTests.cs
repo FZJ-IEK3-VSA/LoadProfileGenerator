@@ -4,13 +4,13 @@ using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables.BasicElements;
-using NUnit.Framework;
+using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Database.Tests.Tables.BasicElements {
-    [TestFixture]
+
     public class HouseholdPlanTests : UnitTestBaseClass
     {
         [Fact]
@@ -93,7 +93,7 @@ namespace Database.Tests.Tables.BasicElements {
                 {
                     Logger.Info(entry.Name);
                 }
-                Assert.AreEqual(hh.Persons.Count * set.Tags.Count, hhp.Entries.Count);
+                (hh.Persons.Count * set.Tags.Count).Should().Be(hhp.Entries.Count);
                 db.Cleanup();
             }
         }
@@ -148,15 +148,15 @@ namespace Database.Tests.Tables.BasicElements {
                 HouseholdPlan.LoadFromDatabase(plans, db.ConnectionString, false, persons, sets,
                     modularHouseholds);
                 hhp = plans[0];
-                Assert.AreEqual(hhp.CalcObject, hh);
-                Assert.AreEqual(hhp.AffordanceTaggingSet, set);
-                Assert.AreEqual(1, hhp.Entries.Count);
+                hhp.CalcObject.Should().Be( hh);
+                hhp.AffordanceTaggingSet.Should().Be(set);
+                hhp.Entries.Count.Should().Be(1);
                 hhp.DeleteEntry(hhp.Entries[0]);
                 hhp.DeleteFromDB();
                 plans.Clear();
                 HouseholdPlan.LoadFromDatabase(plans, db.ConnectionString, false, persons, sets,
                     modularHouseholds);
-                Assert.AreEqual(0, plans.Count);
+                plans.Count.Should().Be(0);
                 db.Cleanup();
             }
         }

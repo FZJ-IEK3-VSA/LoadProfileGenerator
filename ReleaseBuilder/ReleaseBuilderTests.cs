@@ -22,7 +22,7 @@ using Database.Tables.Validation;
 using Database.Tests;
 using JetBrains.Annotations;
 using LoadProfileGenerator.Presenters.SpecialViews;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
 
@@ -30,7 +30,6 @@ using Xunit.Abstractions;
 
 namespace ReleaseBuilder
 {
-    [TestFixture]
     [SuppressMessage("ReSharper", "RedundantAssignment")]
     public class ReleaseBuilderTests : UnitTestBaseClass
     {

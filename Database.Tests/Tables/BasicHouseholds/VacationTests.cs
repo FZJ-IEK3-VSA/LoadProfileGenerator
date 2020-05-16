@@ -6,14 +6,14 @@ using Common;
 using Common.Enums;
 using Common.Tests;
 using Database.Tables.BasicHouseholds;
-using NUnit.Framework;
+using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Database.Tests.Tables.BasicHouseholds
 {
-    [TestFixture]
+
     public class VacationTests : UnitTestBaseClass
     {
         [Fact]
@@ -31,13 +31,13 @@ namespace Database.Tests.Tables.BasicHouseholds
                 vac.AddVacationTime(dt, dt, VacationType.GoAway);
                 ObservableCollection<Vacation> vacations = new ObservableCollection<Vacation>();
                 Vacation.LoadFromDatabase(vacations, db.ConnectionString, false);
-                Assert.AreEqual(1, vacations.Count);
+                (vacations.Count).Should().Be(1);
                 Vacation v1 = vacations[0];
-                Assert.AreEqual("name", v1.Name);
-                Assert.AreEqual(1, v1.VacationTimes.Count);
+                (v1.Name).Should().Be("name");
+                (v1.VacationTimes.Count).Should().Be(1);
                 VacationTime vt = v1.VacationTimes[0];
-                Assert.AreEqual(dt, vt.Start);
-                Assert.AreEqual(dt, vt.End);
+                (vt.Start).Should().Be(dt);
+                (vt.End).Should().Be(dt);
                 v1.DeleteVacationTime(vt);
 #pragma warning disable S1854 // Dead stores should be removed
 #pragma warning disable IDE0059 // Value assigned to symbol is never used
@@ -46,10 +46,10 @@ namespace Database.Tests.Tables.BasicHouseholds
 #pragma warning restore S1854 // Dead stores should be removed
                 ObservableCollection<Vacation> vacations1 = new ObservableCollection<Vacation>();
                 Vacation.LoadFromDatabase(vacations1, db.ConnectionString, false);
-                Assert.AreEqual(1, vacations.Count);
+                (vacations.Count).Should().Be(1);
                 Vacation v2 = vacations[0];
-                Assert.AreEqual("name", v2.Name);
-                Assert.AreEqual(0, v2.VacationTimes.Count);
+                (v2.Name).Should().Be("name");
+                (v2.VacationTimes.Count).Should().Be(0);
 
                 db.Cleanup();
             }

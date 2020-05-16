@@ -31,7 +31,6 @@ using System.Collections.Generic;
 using Automation;
 using Automation.ResultFiles;
 using CalculationController.DtoFactories;
-using CalculationEngine.Helper;
 using Common;
 using Common.Enums;
 using Common.JSON;
@@ -40,13 +39,12 @@ using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.ModularHouseholds;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace CalculationController.Tests.CalcFactories {
-    [TestFixture]
     public class CalcPersonFactoryTests : UnitTestBaseClass
     {
         [Fact]
@@ -86,15 +84,15 @@ namespace CalculationController.Tests.CalcFactories {
                     ModularHouseholdTrait.ModularHouseholdTraitAssignType.Age, null, hhtDesire, hht));
             //var sharedDesireValues = new Dictionary<Desire, SharedDesireValue>();
             var cpersons = cpf.MakePersonDtos(persons, key, hhVacations, hhtDesires, "hhname");
-            Assert.AreEqual(1, cpersons.Count);
+            Assert.Equal(1, cpersons.Count);
             var cp = cpersons[0];
             //CalcPersonFactory.AddTraitDesires(hhtDesires, cpersons, 1, "name", sharedDesireValues);
-            Assert.AreEqual(1, cp.Desires.Count);
-            Assert.AreEqual(1, cp.Desires.Count);
-            Assert.AreEqual(p.PrettyName, cp.Name);
-            Assert.AreEqual(p.Age, cp.Age);
+            Assert.Equal(1, cp.Desires.Count);
+            Assert.Equal(1, cp.Desires.Count);
+            Assert.Equal(p.PrettyName, cp.Name);
+            Assert.Equal(p.Age, cp.Age);
             // id 1 for the dictionary
-            Assert.AreEqual(d.PrettyName, cp.Desires[0].Name);
+            Assert.Equal(d.PrettyName, cp.Desires[0].Name);
         }
 
         public CalcPersonFactoryTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)

@@ -4,7 +4,6 @@ using System.Globalization;
 using Automation;
 using Automation.ResultFiles;
 using CalculationController.DtoFactories;
-using CalculationEngine.Helper;
 using CalculationEngine.HouseholdElements;
 using CalculationEngine.OnlineDeviceLogging;
 using CalculationEngine.OnlineLogging;
@@ -15,14 +14,13 @@ using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
 using Common.Tests;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Calculation.Tests.HouseholdElements {
-    [TestFixture]
     public class CalcAutoDevTests : UnitTestBaseClass
     {
         public CalcAutoDevTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
@@ -32,24 +30,24 @@ namespace Calculation.Tests.HouseholdElements {
         [Fact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void CheckConditionTest() {
-            Assert.IsTrue(VariableConditionHelper.CheckCondition(1, VariableCondition.Equal, 1));
-            Assert.IsFalse(VariableConditionHelper.CheckCondition(0, VariableCondition.Equal, 1));
+            VariableConditionHelper.CheckCondition(1, VariableCondition.Equal, 1).Should().BeTrue();
+            VariableConditionHelper.CheckCondition(0, VariableCondition.Equal, 1).Should().BeFalse();
 
-            Assert.IsTrue(VariableConditionHelper.CheckCondition(1, VariableCondition.EqualOrGreater, 1));
-            Assert.IsTrue(VariableConditionHelper.CheckCondition(1.5, VariableCondition.EqualOrGreater, 1));
-            Assert.IsFalse(VariableConditionHelper.CheckCondition(0, VariableCondition.EqualOrGreater, 1));
+            VariableConditionHelper.CheckCondition(1, VariableCondition.EqualOrGreater, 1).Should().BeTrue();
+            VariableConditionHelper.CheckCondition(1.5, VariableCondition.EqualOrGreater, 1).Should().BeTrue();
+            VariableConditionHelper.CheckCondition(0, VariableCondition.EqualOrGreater, 1).Should().BeFalse();
 
-            Assert.IsTrue(VariableConditionHelper.CheckCondition(0, VariableCondition.EqualOrLess, 1));
-            Assert.IsTrue(VariableConditionHelper.CheckCondition(1, VariableCondition.EqualOrLess, 1));
-            Assert.IsFalse(VariableConditionHelper.CheckCondition(1.1, VariableCondition.EqualOrLess, 1));
+            VariableConditionHelper.CheckCondition(0, VariableCondition.EqualOrLess, 1).Should().BeTrue();
+            VariableConditionHelper.CheckCondition(1, VariableCondition.EqualOrLess, 1).Should().BeTrue();
+            VariableConditionHelper.CheckCondition(1.1, VariableCondition.EqualOrLess, 1).Should().BeFalse();
 
-            Assert.IsTrue(VariableConditionHelper.CheckCondition(0, VariableCondition.Less, 1));
-            Assert.IsFalse(VariableConditionHelper.CheckCondition(1, VariableCondition.Less, 1));
-            Assert.IsFalse(VariableConditionHelper.CheckCondition(1.1, VariableCondition.Less, 1));
+            VariableConditionHelper.CheckCondition(0, VariableCondition.Less, 1).Should().BeTrue();
+            VariableConditionHelper.CheckCondition(1, VariableCondition.Less, 1).Should().BeFalse();
+            VariableConditionHelper.CheckCondition(1.1, VariableCondition.Less, 1).Should().BeFalse();
 
-            Assert.IsTrue(VariableConditionHelper.CheckCondition(1.5, VariableCondition.Greater, 1));
-            Assert.IsFalse(VariableConditionHelper.CheckCondition(1, VariableCondition.Greater, 1));
-            Assert.IsFalse(VariableConditionHelper.CheckCondition(0, VariableCondition.Greater, 1));
+            VariableConditionHelper.CheckCondition(1.5, VariableCondition.Greater, 1).Should().BeTrue();
+            VariableConditionHelper.CheckCondition(1, VariableCondition.Greater, 1).Should().BeFalse();
+            VariableConditionHelper.CheckCondition(0, VariableCondition.Greater, 1).Should().BeFalse();
         }
 
         [Fact]

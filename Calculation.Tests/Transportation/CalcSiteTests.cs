@@ -10,17 +10,18 @@ using CalculationEngine.Transportation;
 using Common;
 using Common.CalcDto;
 using Common.JSON;
+using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
 using Common.Tests;
+using FluentAssertions;
 using JetBrains.Annotations;
 using Moq;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Calculation.Tests.Transportation {
-    [TestFixture]
     public class CalcSiteTests : UnitTestBaseClass
     {
         [Fact]
@@ -30,11 +31,14 @@ namespace Calculation.Tests.Transportation {
             using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
             {
                 wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
+                wd.InputDataLogger.AddSaver(new ResultFileEntryLogger(wd.SqlResultLoggingService) );
                 CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(2018, 1, 1).SetEndDate(2018, 2, 1).SetSettlingDays(0).EnableShowSettlingPeriod();
                 HouseholdKey hhkey = new HouseholdKey("hh0");
                 using (var fft = new FileFactoryAndTracker(wd.WorkingDirectory, "hhname0", wd.InputDataLogger))
                 {
                     fft.RegisterHousehold(hhkey, "hhname0", HouseholdKeyType.Household, "desc", null, null);
+                    fft.RegisterGeneralHouse();
+                    OnlineLoggingData old = new OnlineLoggingData(new DateStampCreator(calcParameters),wd.InputDataLogger,calcParameters);
                     using (LogFile lf = new LogFile(calcParameters,
                         fft, true))
                     {
@@ -45,7 +49,7 @@ namespace Calculation.Tests.Transportation {
                         //List<CalcTravelRoute> routes = src.GetViableTrafficRoutes(dst);
                         //Assert.That(routes.Count,Is.EqualTo( 0));
                         var iodap = new Mock<IOnlineDeviceActivationProcessor>();
-                        using (CalcRepo calcRepo = new CalcRepo(odap: iodap.Object, lf: lf, rnd: r, calcParameters: calcParameters))
+                        using (CalcRepo calcRepo = new CalcRepo(odap: iodap.Object, lf: lf, rnd: r, calcParameters: calcParameters, onlineLoggingData: old))
                         {
                             CalcTravelRoute firstRoute = new CalcTravelRoute("route1", src, dst, th.VehicleDepot,
     th.LocationUnlimitedDevices, hhkey, Guid.NewGuid().ToStrGuid(), calcRepo);
@@ -74,13 +78,13 @@ namespace Calculation.Tests.Transportation {
                                 calcSites, dto, calcRepo);
                             th.VehicleDepot.Add(ctd);
                             //List<CalcTravelRoute> routes3 = src.GetViableTrafficRoutes(dst);
-                            //Assert.That(routes3.Count, Is.EqualTo(1));
+                            //(1).Should().Be(routes3.Count);
                             TimeStep ts = new TimeStep(1, 0, false);
                             int? duration = firstRoute.GetDuration(ts, "name", new List<CalcTransportationDevice>());
                             Logger.Info("Duration: " + duration);
-                            Assert.That(duration, Is.EqualTo(60)); // 3600 m bei 1 m/s
+                            duration.Should().Be(60); // 3600 m bei 1 m/s
                             int? duration2 = firstRoute.GetDuration(ts, "name", new List<CalcTransportationDevice>());
-                            Assert.That(duration, Is.EqualTo(duration2)); // 3600 m bei 1 m/s*/
+                            duration.Should().Be(duration2); // 3600 m bei 1 m/s*/
                         }
                     }
                 }

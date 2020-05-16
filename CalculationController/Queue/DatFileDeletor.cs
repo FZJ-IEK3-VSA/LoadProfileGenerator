@@ -60,7 +60,7 @@ namespace CalculationController.Queue {
 
         public DatFileDeletor(//[NotNull] CalculationResult results,
                                  [NotNull] CalcParameters parameters,
-            //[NotNull][ItemNotNull] ObservableCollection<CalculationEntry> calculationEntries, 
+            //[NotNull][ItemNotNull] ObservableCollection<CalculationEntry> calculationEntries,
                                  [NotNull] string resultPath, [NotNull] string calcObjectName) {
             CalcObjectName = calcObjectName;
             //_results = results;

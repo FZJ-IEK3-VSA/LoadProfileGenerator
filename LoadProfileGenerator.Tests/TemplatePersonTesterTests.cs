@@ -6,14 +6,14 @@ using Common.Tests;
 using Database;
 using Database.Tables.ModularHouseholds;
 using Database.Tests;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace LoadProfileGenerator.Tests {
-    [TestFixture]
     public class TemplatePersonTesterTests : UnitTestBaseClass
     {
 #pragma warning disable S125 // Sections of code should not be "commented out"
@@ -150,7 +150,7 @@ namespace LoadProfileGenerator.Tests {
                     sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.Reasonable);
                     //ChartLocalizer.ShouldTranslate = false;
                     //ConfigSetter.SetGlobalTimeParameters(sim.MyGeneralConfig);
-                    Assert.AreNotEqual(null, sim);
+                    sim.Should().NotBeNull();
                     db.Cleanup();
                 }
                 wd.CleanUp();

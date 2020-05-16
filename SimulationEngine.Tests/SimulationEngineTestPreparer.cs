@@ -3,19 +3,18 @@ using System.IO;
 using System.Threading;
 using Common;
 using Database.Tests;
-using NUnit.Framework;
-using SimulationEngineLib;
+
 
 namespace SimulationEngine.Tests {
-    internal class SimulationEngineTestPreparer : IDisposable {
+    internal class SimulationEngineTestPreparer :  IDisposable {
         [JetBrains.Annotations.NotNull] private static string _lastDirectory = "c:\\";
 
         [JetBrains.Annotations.NotNull] private readonly WorkingDir _wd;
 
         public SimulationEngineTestPreparer([JetBrains.Annotations.NotNull] string name) {
-            Logger.Info(TestContext.CurrentContext.TestDirectory);
-            SimulationEngineConfig.CatchErrors = false;
-            var di = new DirectoryInfo(TestContext.CurrentContext.TestDirectory);
+            Logger.Info(Environment.CurrentDirectory);
+            Config.CatchErrors = false;
+            var di = new DirectoryInfo(Environment.CurrentDirectory);
             var fis = di.GetFiles("*.*");
             var db3Path = DatabaseSetup.GetSourcepath(null);
             _wd = new WorkingDir(name);

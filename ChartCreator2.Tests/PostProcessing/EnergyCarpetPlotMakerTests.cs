@@ -3,12 +3,12 @@ using System.Diagnostics.CodeAnalysis;
 using Automation;
 using Common.Tests;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
 
 namespace ChartCreator2.Tests.PostProcessing {
-    [TestFixture]
+
     public class EnergyCarpetPlotMakerTests : UnitTestBaseClass
     {
         [Fact]

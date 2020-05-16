@@ -1,20 +1,18 @@
 ﻿using System.IO;
-using System.Threading;
 using Automation;
 using ChartCreator2.OxyCharts;
 using Common;
 using Common.Tests;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
 
 namespace ChartCreator2.Tests.Oxyplot {
-    [TestFixture]
-    [Apartment(ApartmentState.STA)]
+
     public class ChartGeneratorTests : UnitTestBaseClass
     {
-        [Fact]
+        [StaFact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.LongTest3)]
         public void RunChartGeneratorTests()
         {

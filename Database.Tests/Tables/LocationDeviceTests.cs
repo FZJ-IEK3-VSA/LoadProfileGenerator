@@ -32,14 +32,15 @@ using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables.BasicHouseholds;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Database.Tests.Tables {
-    [TestFixture]
+
     public class LocationDeviceTests : UnitTestBaseClass
     {
         [Fact]
@@ -55,13 +56,13 @@ namespace Database.Tests.Tables {
                 var locdevs = new ObservableCollection<LocationDevice>();
                 LocationDevice.LoadFromDatabase(locdevs, db.ConnectionString, realDevices, deviceCategories, loadTypes,
                     false);
-                Assert.AreEqual(0, locdevs.Count);
+                (locdevs.Count).Should().Be(0);
                 var locdev = new LocationDevice(null, realDevices[0], 1, db.ConnectionString,
                     realDevices[0].Name, Guid.NewGuid().ToStrGuid());
                 locdev.SaveToDB();
                 LocationDevice.LoadFromDatabase(locdevs, db.ConnectionString, realDevices, deviceCategories, loadTypes,
                     false);
-                Assert.AreEqual(1, locdevs.Count);
+                (locdevs.Count).Should().Be(1);
 
                 db.Cleanup();
             }

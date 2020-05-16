@@ -35,16 +35,17 @@ using Common;
 using Common.Enums;
 using Common.Tests;
 using Database.Tables.BasicHouseholds;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 #endregion
 
 namespace Database.Tests.Tables {
-    [TestFixture]
+
     public class PersonTests : UnitTestBaseClass
     {
         [Fact]
@@ -70,11 +71,11 @@ namespace Database.Tests.Tables {
                 db.ClearTable(Person.TableName);
                 persons.Clear();
                 Person.LoadFromDatabase(persons, db.ConnectionString, false);
-                Assert.AreEqual(0, persons.Count);
+                (persons.Count).Should().Be(0);
                 var newp = new Person("name", 18, null, 1, 1, PermittedGender.Male, db.ConnectionString, string.Empty, Guid.NewGuid().ToStrGuid());
                 newp.SaveToDB();
                 Person.LoadFromDatabase(persons, db.ConnectionString, false);
-                Assert.AreEqual(1, persons.Count);
+                (persons.Count).Should().Be(1);
                 db.Cleanup();
             }
         }

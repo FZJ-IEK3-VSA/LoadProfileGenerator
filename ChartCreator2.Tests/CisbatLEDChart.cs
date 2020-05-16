@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using ChartCreator.SettlementMergePlots;
 using CommonDataWPF;
-using NUnit.Framework;
+
 using SettlementProcessing.CSVProcessing;
 
 namespace ChartCreator.Tests {

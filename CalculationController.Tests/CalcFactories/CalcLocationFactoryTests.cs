@@ -45,16 +45,16 @@ using Common.SQLResultLogging;
 using Common.Tests;
 using Database.Helpers;
 using Database.Tables.BasicHouseholds;
+using FluentAssertions;
 using JetBrains.Annotations;
 using Moq;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 using Logger = Common.Logger;
 
 namespace CalculationController.Tests.CalcFactories {
-    [TestFixture]
     public class CalcLocationFactoryTests : UnitTestBaseClass {
         [Fact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
@@ -87,15 +87,15 @@ namespace CalculationController.Tests.CalcFactories {
                 deviceActions,
                 calclocdict,
                 devcat);
-            Assert.That(locdtos.Count, Is.EqualTo(1));
-            Assert.That(locdtos[0].Name, Is.EqualTo(loc.Name));
+            locdtos.Count.Should().Be(1);
+            locdtos[0].Name.Should().Be(loc.Name);
             CalcLocationFactory clf = new CalcLocationFactory (ltDict,calcRepo);
             //"HH1", EnergyIntensityType.EnergySaving, dict,deviceActions,
             DtoCalcLocationDict dcl = new DtoCalcLocationDict();
             var calclocs = clf.MakeCalcLocations(locdtos, dcl,calcRepo);
-            Assert.That(calclocs.Count, Is.EqualTo(1));
-            Assert.That(calclocs[0].Name, Is.EqualTo(loc.Name));
-            Assert.That(calclocs[0].Guid, Is.EqualTo(locdtos[0].Guid));
+            calclocs.Count.Should().Be(1);
+            calclocs[0].Name.Should().Be(loc.Name);
+            calclocs[0].Guid.Should().Be(locdtos[0].Guid);
         }
 
         [Fact]
@@ -152,8 +152,8 @@ namespace CalculationController.Tests.CalcFactories {
             CalcLocationFactory clf = scope.Resolve<CalcLocationFactory>();
             DtoCalcLocationDict dcl = new DtoCalcLocationDict();
             var clocations = clf.MakeCalcLocations(locdtos, dcl, calcRepo);
-            Assert.AreEqual(1, clocations.Count);
-            Assert.AreEqual(2, clocations[0].LightDevices.Count);
+            clocations.Count.Should().Be(1);
+            clocations[0].LightDevices.Count.Should().Be(2);
         }
 
         [Fact]
@@ -213,8 +213,8 @@ namespace CalculationController.Tests.CalcFactories {
             CalcLocationFactory clf = scope.Resolve<CalcLocationFactory>();
             DtoCalcLocationDict dtl = new DtoCalcLocationDict();
             var clocations = clf.MakeCalcLocations(locdtos, dtl, calcRepo);
-            Assert.AreEqual(1, clocations.Count);
-            Assert.AreEqual(1, clocations[0].LightDevices.Count);
+            clocations.Count.Should().Be(1);
+            clocations[0].LightDevices.Count.Should().Be(2);
         }
 
         [Fact]
@@ -295,8 +295,8 @@ namespace CalculationController.Tests.CalcFactories {
                 DtoCalcLocationDict dtl = new DtoCalcLocationDict();
                 var clocations = clf.MakeCalcLocations(locdtos, dtl,calcRepo);
 
-                Assert.AreEqual(1, clocations.Count);
-                Assert.AreEqual(2, clocations[0].LightDevices.Count);
+                clocations.Count.Should().Be(1);
+                clocations[0].LightDevices.Count.Should().Be(2);
                 foreach (var device in clocations[0].LightDevices) {
                     Logger.Info(device.Name);
                 }

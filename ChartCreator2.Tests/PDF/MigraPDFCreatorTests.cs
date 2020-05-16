@@ -7,16 +7,15 @@ using ChartCreator2.Tests.Oxyplot;
 using Common;
 using Common.Tests;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
 
 namespace ChartCreator2.Tests.PDF {
-    [TestFixture]
-    [Apartment(ApartmentState.STA)]
+
     public class MigraPDFCreatorTests : UnitTestBaseClass
     {
-        [Fact]
+        [StaFact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.LongTest4)]
         public void MakeDocumentTest()
         {

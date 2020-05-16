@@ -33,14 +33,15 @@ using Common;
 using Common.Enums;
 using Common.Tests;
 using Database.Tables.BasicElements;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Database.Tests.Tables.BasicElements {
-    [TestFixture]
+
     public class AffordanceTaggingSetTests : UnitTestBaseClass
     {
         [Fact]
@@ -90,7 +91,7 @@ namespace Database.Tests.Tables.BasicElements {
                 ats1.DeleteFromDB();
                 ats.Clear();
                 AffordanceTaggingSet.LoadFromDatabase(ats, db.ConnectionString, false, affordances, loadTypes);
-                Assert.AreEqual(0, ats.Count);
+                ats.Count.Should().Be(0);
                 db.Cleanup();
             }
         }

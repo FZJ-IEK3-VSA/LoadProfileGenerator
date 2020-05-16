@@ -11,13 +11,12 @@ using Database.Helpers;
 using Database.Tests;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
-using NUnit.Framework;
+
 using Xunit;
 using Logger = Common.Logger;
 
 namespace ReleaseBuilder
 {
-    [TestFixture]
     public class MakeSampleHouseJobs
     {
         private static void CopyAll([NotNull] DirectoryInfo source, [NotNull] DirectoryInfo target)

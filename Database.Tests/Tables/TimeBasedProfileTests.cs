@@ -34,16 +34,17 @@ using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables.BasicElements;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 #endregion
 
 namespace Database.Tests.Tables {
-    [TestFixture]
+
     public class TimeBasedProfileTests : UnitTestBaseClass
     {
         [Fact]
@@ -54,7 +55,7 @@ namespace Database.Tests.Tables {
             {
                 var tps = new ObservableCollection<TimeBasedProfile>();
                 TimeBasedProfile.LoadFromDatabase(tps, db.ConnectionString, false);
-                Assert.Greater(tps.Count, 1);
+                tps.Count.Should().BeGreaterThan( 1);
                 db.ClearTable(TimeBasedProfile.TableName);
                 db.ClearTable(TimeDataPoint.TableName);
                 tps.Clear();
@@ -64,9 +65,9 @@ namespace Database.Tests.Tables {
                 tp.AddNewTimepoint(new TimeSpan(1, 0, 0), 1);
                 TimeBasedProfile.LoadFromDatabase(tps, db.ConnectionString, false);
 
-                Assert.AreEqual(1, tps.Count);
-                Assert.AreEqual(TimeProfileType.Absolute, tps[0].TimeProfileType);
-                Assert.AreEqual(1, tps[0].ObservableDatapoints.Count);
+                (tps.Count).Should().Be(1);
+                (tps[0].TimeProfileType).Should().Be(TimeProfileType.Absolute);
+                (tps[0].ObservableDatapoints.Count).Should().Be(1);
                 db.Cleanup();
             }
         }

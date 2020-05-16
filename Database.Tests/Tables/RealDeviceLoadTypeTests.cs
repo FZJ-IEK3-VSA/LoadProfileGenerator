@@ -32,14 +32,15 @@ using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables.BasicHouseholds;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Database.Tests.Tables {
-    [TestFixture]
+
     public class RealDeviceLoadTypeTests : UnitTestBaseClass
     {
         [Fact]
@@ -59,7 +60,7 @@ namespace Database.Tests.Tables {
                 newrdlt.SaveToDB();
 
                 RealDeviceLoadType.LoadFromDatabase(rdlt, db.ConnectionString, loadTypes, false);
-                Assert.AreEqual(1, rdlt.Count);
+                (rdlt.Count).Should().Be(1);
                 db.Cleanup();
             }
         }

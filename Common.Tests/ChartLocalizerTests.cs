@@ -1,9 +1,9 @@
 ﻿/*using System.IO;
-using NUnit.Framework;
+
 
 namespace Common.Tests
 {
-    [TestFixture]
+    
     public class ChartLocalizerTests :UnitTestBaseClass
     {
         [Fact]
@@ -19,7 +19,7 @@ namespace Common.Tests
                 sw.WriteLine("Time;Zeit");
             }
             ChartLocalizer.ShouldTranslate = true;
-            Assert.AreEqual("Zeit", ChartLocalizer.Get().GetTranslation("Time"));
+            (ChartLocalizer.Get().GetTranslation("Time")).Should().Be("Zeit");
             wd.CleanUp();
         }
     }

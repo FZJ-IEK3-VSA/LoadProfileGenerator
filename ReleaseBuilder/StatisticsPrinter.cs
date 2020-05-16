@@ -5,12 +5,11 @@ using Common;
 using Database;
 using Database.Tests;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 
 namespace ReleaseBuilder
 {
-    [TestFixture]
     public class StatisticsPrinter
     {
         [Fact]

@@ -8,15 +8,16 @@ using Database;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
 using Database.Tests;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace DatabaseIO.Tables.BasicHouseholds.Tests
 {
-    [TestFixture()]
+
     public class RealDeviceTests : UnitTestBaseClass
     {
         [Fact]
@@ -42,7 +43,7 @@ namespace DatabaseIO.Tables.BasicHouseholds.Tests
 }
 
 namespace DatabaseIO.Tests.Tables.BasicHouseholds {
-    [TestFixture]
+
     public class RealDeviceTests : UnitTestBaseClass
     {
         [Fact]
@@ -72,9 +73,9 @@ namespace DatabaseIO.Tests.Tables.BasicHouseholds {
                 {
                     Logger.Info(keyValuePair.Item1 + ": " + keyValuePair.Item2);
                 }
-                Assert.AreEqual(1, res.Count);
+                (res.Count).Should().Be(1);
                 var first = res.First();
-                Assert.AreEqual(200, first.Item2);
+                (first.Item2).Should().Be(200);
                 db.Cleanup();
             }
         }
@@ -106,27 +107,27 @@ namespace DatabaseIO.Tests.Tables.BasicHouseholds {
                 {
                     Logger.Info(keyValuePair.Item1 + ": " + keyValuePair.Item2);
                 }
-                Assert.AreEqual(1, res.Count);
+                (res.Count).Should().Be(1);
                 var first = res.First();
-                Assert.AreEqual(666 * 2, first.Item2);
+                (first.Item2).Should().Be(666 * 2);
                 // multiplier test
                 var res2 = rd2.CalculateAverageEnergyUse(lt, allActions, tp, 0.5, 1);
                 foreach (var keyValuePair in res2)
                 {
                     Logger.Info(keyValuePair.Item1 + ": " + keyValuePair.Item2);
                 }
-                Assert.AreEqual(1, res2.Count);
+                (res2.Count).Should().Be(1);
                 var first2 = res2.First();
-                Assert.AreEqual(666 * 2 * 0.5, first2.Item2);
+                (first2.Item2).Should().Be(666 * 2 * 0.5);
                 // probabilityTest
                 var res3 = rd2.CalculateAverageEnergyUse(lt, allActions, tp, 1, 0.5);
                 foreach (var keyValuePair in res3)
                 {
                     Logger.Info(keyValuePair.Item1 + ": " + keyValuePair.Item2);
                 }
-                Assert.AreEqual(1, res3.Count);
+                (res3.Count).Should().Be(1);
                 var first3 = res3.First();
-                Assert.AreEqual(666 * 2 * 0.5, first3.Item2);
+                (first3.Item2).Should().Be(666 * 2 * 0.5);
                 db.Cleanup();
             }
         }

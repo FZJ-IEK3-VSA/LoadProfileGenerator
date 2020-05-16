@@ -132,7 +132,7 @@ namespace CommonDataWPF.Tests
                     if (res == 0) {
                         processes = new List<Process>((int)pnProcInfo);
 
-                        // Enumerate all of the results and add them to the 
+                        // Enumerate all of the results and add them to the
                         // list to be returned
                         for (int i = 0; i < pnProcInfo; i++) {
                             try {

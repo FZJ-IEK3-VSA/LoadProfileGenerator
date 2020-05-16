@@ -4,13 +4,13 @@ using Common;
 using Common.Tests;
 using Database.Helpers;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Database.Tests.Helpers
 {
-    [TestFixture()]
+
     public class LivingPatternVariationCreatorTests : UnitTestBaseClass
     {
         [Fact]

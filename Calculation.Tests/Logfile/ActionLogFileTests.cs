@@ -39,10 +39,10 @@ using Calculation.OnlineLogging;
 using CommonDataWPF;
 using CommonDataWPF.Enums;
 using CommonDataWPF.JSON;
-using NUnit.Framework;
+
 
 namespace Calculation.Tests.Logfile {
-    [TestFixture]
+    
     public class ActionLogFileTests : TestBasis {
         [Fact]
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
@@ -68,7 +68,7 @@ namespace Calculation.Tests.Logfile {
                 new List<CalcAffordanceVariableRequirement>(),ActionAfterInterruption.GoBackToOld, "",1,false,"",calcParameters );
             alf.WriteEntry( "HH1-6",0,cp,calcAffordance,false);
             alf.Close();
-            Assert.AreEqual(true, true);
+            (true).Should().Be(true);
             wd.CleanUp();
         }
 
@@ -111,7 +111,7 @@ namespace Calculation.Tests.Logfile {
             }
             var readae = new ActionEntry(s,calcParameters);
             alf.Close();
-            Assert.AreEqual(ae.CPerson?.Name, readae.StrPerson);
+            (readae.StrPerson).Should().Be(ae.CPerson?.Name);
             wd.CleanUp();
             TearDown();
         }

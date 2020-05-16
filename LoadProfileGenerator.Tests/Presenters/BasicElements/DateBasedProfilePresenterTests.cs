@@ -8,15 +8,15 @@ using Common;
 using Common.Tests;
 using Database;
 using Database.Tests;
+using FluentAssertions;
 using JetBrains.Annotations;
 using LoadProfileGenerator.Presenters.BasicElements;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace LoadProfileGenerator.Tests.Presenters.BasicElements {
-    [TestFixture]
     public class DateBasedProfilePresenterTests : UnitTestBaseClass
     {
         [Fact]
@@ -36,7 +36,7 @@ namespace LoadProfileGenerator.Tests.Presenters.BasicElements {
                         var dbp = sim.DateBasedProfiles.It.First();
                         var ap = new ApplicationPresenter(null, sim, null);
                         var dp = new DateBasedProfilePresenter(ap, null, dbp);
-                        Assert.AreEqual(dbp, dp.ThisProfile);
+                        dbp.Should().Be(dp.ThisProfile);
                         dp.AddDataPoint(new DateTime(2010, 1, 1), 1);
                         dp.DeleteAllDataPoints();
                         var hashCode = dp.GetHashCode();

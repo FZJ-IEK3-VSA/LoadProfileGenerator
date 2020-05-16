@@ -180,7 +180,7 @@ namespace SimulationEngineLib.SettlementCalculation {
                                 Logger.Warning("Thread " + index + ": Please make at least 5GB space on " +
                                                driveInfo.RootDirectory);
                                 Thread.Sleep(5000);
-                                if (count > 5 && !SimulationEngineConfig.CatchErrors) {
+                                if (count > 5 && !Config.CatchErrors) {
                                     throw new LPGException("Not Enough space!");
                                 }
                             }

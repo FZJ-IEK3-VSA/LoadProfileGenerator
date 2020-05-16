@@ -32,14 +32,15 @@ using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables.Houses;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Database.Tests.Tables {
-    [TestFixture]
+
     public class GeneratorTests : UnitTestBaseClass
     {
         [Fact]
@@ -56,18 +57,18 @@ namespace Database.Tests.Tables {
                 generators.Clear();
                 db.ClearTable(Generator.TableName);
                 Generator.LoadFromDatabase(generators, db.ConnectionString, loadTypes, dateBasedProfiles, false);
-                Assert.AreEqual(0, generators.Count);
+                (generators.Count).Should().Be(0);
                 // add one and load again
                 var gen = new Generator("generator1", "gen1 desc", loadTypes[0], 5, dateBasedProfiles[0],
                     db.ConnectionString, Guid.NewGuid().ToStrGuid());
                 gen.SaveToDB();
                 Generator.LoadFromDatabase(generators, db.ConnectionString, loadTypes, dateBasedProfiles, false);
-                Assert.AreEqual(1, generators.Count);
+                (generators.Count).Should().Be(1);
                 // delete the loaded one
                 generators[0].DeleteFromDB();
                 generators.Clear();
                 Generator.LoadFromDatabase(generators, db.ConnectionString, loadTypes, dateBasedProfiles, false);
-                Assert.AreEqual(0, generators.Count);
+                (generators.Count).Should().Be(0);
                 db.Cleanup();
             }
         }

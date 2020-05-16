@@ -33,14 +33,15 @@ using Common;
 using Common.Tests;
 using Database.Helpers;
 using Database.Tables.BasicElements;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Database.Tests.Tables {
-    [TestFixture]
+
     public class GeographicLocationTests : UnitTestBaseClass
     {
         [Fact]
@@ -56,20 +57,20 @@ namespace Database.Tests.Tables {
                 var dbp = db.LoadDateBasedProfiles();
                 var timeLimits = db.LoadTimeLimits(dbp);
                 GeographicLocation.LoadFromDatabase(geolocs, db.ConnectionString, holidays, timeLimits, false);
-                Assert.AreEqual(0, geolocs.Count);
+                (geolocs.Count).Should().Be(0);
                 var geoloc = new GeographicLocation("bla", 1, 2, 3, 4, 5, 6, "North", "West",
                     db.ConnectionString, timeLimits[0], System.Guid.NewGuid().ToStrGuid());
                 geoloc.SaveToDB();
                 geoloc.AddHoliday(holidays[0]);
                 GeographicLocation.LoadFromDatabase(geolocs, db.ConnectionString, holidays, timeLimits, false);
-                Assert.AreEqual(1, geolocs.Count);
-                Assert.AreEqual(1, geolocs[0].Holidays.Count);
+                (geolocs.Count).Should().Be(1);
+                (geolocs[0].Holidays.Count).Should().Be(1);
                 var gl = geolocs[0];
-                Assert.AreEqual(gl.Name, "bla");
+                ("bla").Should().Be(gl.Name);
                 gl.DeleteFromDB();
                 geolocs.Clear();
                 GeographicLocation.LoadFromDatabase(geolocs, db.ConnectionString, holidays, timeLimits, false);
-                Assert.AreEqual(0, geolocs.Count);
+                (geolocs.Count).Should().Be(0);
 
                 db.Cleanup();
             }

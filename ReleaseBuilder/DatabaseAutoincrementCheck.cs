@@ -6,11 +6,10 @@ using Automation.ResultFiles;
 using Common;
 using Database.Database;
 using Database.Tests;
-using NUnit.Framework;
+
 using Xunit;
 
 namespace ReleaseBuilder {
-    [TestFixture]
     public class DatabaseAutoincrementCheck {
         [Fact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]

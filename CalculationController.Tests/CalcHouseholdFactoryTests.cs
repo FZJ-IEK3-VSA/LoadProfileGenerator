@@ -33,14 +33,14 @@ using Common;
 using Common.Tests;
 using Database.Tables.BasicElements;
 using Database.Tests;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace CalculationController.Tests {
-    [TestFixture]
     public class CalcHouseholdFactoryTests : UnitTestBaseClass
     {
         [Fact]
@@ -57,13 +57,13 @@ namespace CalculationController.Tests {
                 tp.AddNewTimepoint(new TimeSpan(0, 4, 0), 100, false);
                 tp.AddNewTimepoint(new TimeSpan(0, 6, 0), 0, false);
                 var ctp = CalcDeviceFactory.GetCalcProfile(tp, new TimeSpan(0, 0, 30));
-                Assert.AreEqual(4, ctp.TimeSpanDataPoints.Count);
-                Assert.AreEqual(12, ctp.StepValues.Count);
+                ctp.TimeSpanDataPoints.Count.Should().Be(4);
+                ctp.StepValues.Count.Should().Be(12);
                 var v = ctp.StepValues;
-                Assert.AreEqual(v[0], 1);
-                Assert.AreEqual(v[1], 1);
-                Assert.AreEqual(v[2], 1);
-                Assert.AreEqual(v[3], 1);
+                 v[0].Should().Be(1);
+                v[1].Should().Be(1);
+                v[2].Should().Be(1);
+                v[3].Should().Be(1);
                 db.Cleanup();
             }
         }

@@ -32,14 +32,15 @@ using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Database.Tests.Tables {
-    [TestFixture]
+
     public class GeneralConfigTests : UnitTestBaseClass
     {
         [Fact]
@@ -56,11 +57,11 @@ namespace Database.Tests.Tables {
                 // options test
                 // first make sure none are enabled after clearing the table
                 var count = gc.Options.Count(x => x.Value.SettingValue);
-                Assert.AreEqual(0, count);
+                (count).Should().Be(0);
                 // enable one and check
                 gc.Enable(CalcOption.OverallDats);
                 var count2 = gc.Options.Count(x => x.Value.SettingValue);
-                Assert.AreEqual(1, count2);
+                (count2).Should().Be(1);
                 var gc2 = GeneralConfig.LoadFromDatabase(db.ConnectionString, false);
                 var count3 = gc2.Options.Count(x => x.Value.SettingValue);
                 Logger.Info(count3.ToString(CultureInfo.InvariantCulture));

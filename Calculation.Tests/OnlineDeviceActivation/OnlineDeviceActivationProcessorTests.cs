@@ -37,7 +37,6 @@ using Automation.ResultFiles;
 using CalcPostProcessor;
 using CalculationController.DtoFactories;
 using CalculationController.Queue;
-using CalculationEngine.Helper;
 using CalculationEngine.HouseholdElements;
 using CalculationEngine.OnlineDeviceLogging;
 using CalculationEngine.OnlineLogging;
@@ -51,14 +50,14 @@ using Common.SQLResultLogging.Loggers;
 using Common.Tests;
 using Database;
 using Database.Tests;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Calculation.Tests.OnlineDeviceActivation {
-    [TestFixture]
     [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     public class OnlineDeviceActivationProcessorTests : UnitTestBaseClass {
         public OnlineDeviceActivationProcessorTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
@@ -189,8 +188,8 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                                     }
 
                                     var filerows = odap.ProcessOneTimestep(ts);
-                                    Assert.AreEqual(1, filerows.Count);
-                                    Assert.AreEqual(2, filerows[0].EnergyEntries.Count);
+                                    filerows.Count.Should().Be(1);
+                                    filerows[0].EnergyEntries.Count.Should().Be(2);
                                     var entries = string.Empty;
 
                                     foreach (var d in filerows[0].EnergyEntries) {
@@ -198,7 +197,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                                     }
 
                                     Logger.Info(entries);
-                                    Assert.AreEqual(results[i], entries);
+                                    results[i].Should().Be(entries);
                                 }
                             }
                         }
@@ -253,10 +252,10 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                         for (var i = 0; i < 10; i++) {
                             var ts = new TimeStep(i, 0, true);
                             var filerows = odap.ProcessOneTimestep(ts);
-                            Assert.AreEqual(1, filerows.Count);
-                            Assert.AreEqual(1, filerows[0].EnergyEntries.Count);
+                            filerows.Count.Should().Be(1);
+                            filerows[0].EnergyEntries.Count.Should().Be(1);
                             Logger.Info(filerows[0].EnergyEntries[0].ToString(CultureInfo.CurrentCulture));
-                            Assert.AreEqual(resultValues[i], filerows[0].EnergyEntries[0]);
+                            resultValues[i].Should().Be(filerows[0].EnergyEntries[0]);
                             foreach (var fileRow in filerows) {
                                 fileRow.Save(odap.BinaryOutStreams[fileRow.LoadType]);
                             }
@@ -357,16 +356,16 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                                 for (var i = 0; i < 10; i++) {
                                     var ts = new TimeStep(i, calcParameters);
                                     var filerows = odap.ProcessOneTimestep(ts);
-                                    Assert.AreEqual(1, filerows.Count);
-                                    Assert.AreEqual(1, filerows[0].EnergyEntries.Count);
+                                    filerows.Count.Should().Be(1);
+                                    filerows[0].EnergyEntries.Count.Should().Be(1);
                                     Logger.Info(filerows[0].EnergyEntries[0].ToString(CultureInfo.CurrentCulture));
-                                    Assert.AreEqual(resultValues[i], filerows[0].EnergyEntries[0]);
+                                    filerows[0].EnergyEntries[0].Should().Be(resultValues[i]);
                                     foreach (var fileRow in filerows) {
                                         fileRow.Save(odap.BinaryOutStreams[fileRow.LoadType]);
                                     }
                                 }
                             }
-
+                            old.FinalSaveToDatabase();
                             fft.Dispose();
                             lf.Dispose(); // needed to free the file access
                             //var autoDevs = new List<CalcAutoDev>();
@@ -399,7 +398,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                             if (fis.Length == 0) {
                                 throw new LPGException("No Sum File was generated");
                             }
-
+                            fft.Dispose();
                             using (var sr = new StreamReader(fis[0].FullName)) {
                                 sr.ReadLine(); //header
                                 var result = sr.ReadLine(); //0
@@ -408,7 +407,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                                 }
 
                                 var arr = result.Split(';');
-                                Assert.AreEqual("300", arr[1]);
+                                Assert.Equal("300", arr[1]);
                             }
                         }
                     }
@@ -498,8 +497,8 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                             for (var i = 0; i < 30; i++) {
                                 var ts1 = new TimeStep(i, calcParameters);
                                 var filerows = odap.ProcessOneTimestep(ts1);
-                                Assert.AreEqual(1, filerows.Count);
-                                Assert.AreEqual(1, filerows[0].EnergyEntries.Count);
+                                Assert.Equal(1, filerows.Count);
+                                Assert.Equal(1, filerows[0].EnergyEntries.Count);
                                 Logger.Info(filerows[0].EnergyEntries[0].ToString(CultureInfo.CurrentCulture));
                                 foreach (var fileRow in filerows) {
                                     fileRow.Save(odap.BinaryOutStreams[fileRow.LoadType]);
@@ -514,6 +513,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                             var taggingsets = new List<DeviceTaggingSetInformation> {
                                 deviceTaggingSetInformation
                             };
+
                             wd.InputDataLogger.Save(taggingsets);
                             //var householdPlans = new List<CalcHouseholdPlan>();
                             //var householdNamesByNumber = new Dictionary<string, string> {["HH1"] = "household"};
@@ -526,6 +526,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                             persons.Add(dto);
                             wd.InputDataLogger.SaveList(persons.ConvertAll(x => (IHouseholdKey)x));
                             //var deviceNamesToCategory = new Dictionary<string, string>();
+                            old.FinalSaveToDatabase();
                             lf.Dispose();
                             fft.Dispose();
                             var cprof = new CalculationProfiler();
@@ -533,7 +534,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                             ppm.Run(wd.WorkingDirectory);
                             var tel = new TotalsPerLoadtypeEntryLogger(wd.SqlResultLoggingService);
                             var results = tel.Read(key);
-                            Assert.That(results[0].Value, Is.EqualTo(150));
+                            results[0].Value.Should().Be(150);
                         }
                     }
                 }
@@ -604,7 +605,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                                             arr2 = arr2.Substring(0, 6);
                                         }
 
-                                        Assert.AreEqual(arr1, arr2);
+                                        (arr2).Should().Be(arr1);
                                     }
                                 }
                             }

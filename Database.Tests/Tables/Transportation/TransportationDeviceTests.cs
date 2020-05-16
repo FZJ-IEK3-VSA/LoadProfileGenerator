@@ -5,14 +5,15 @@ using Common;
 using Common.Tests;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.Transportation;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Database.Tests.Tables.Transportation {
-    [TestFixture]
+
     public class TransportationDeviceTests : UnitTestBaseClass {
         [Fact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
@@ -43,9 +44,9 @@ namespace Database.Tests.Tables.Transportation {
 
                 TransportationDevice.LoadFromDatabase(slocs, db.ConnectionString, false, categories, loadTypes);
                 db.Cleanup();
-                Assert.AreEqual(1, slocs.Count);
+                (slocs.Count).Should().Be(1);
                 TransportationDevice td = slocs[0];
-                Assert.AreEqual(chargingloadType, td.ChargingLoadType);
+                (td.ChargingLoadType).Should().Be(chargingloadType);
             }
         }
 

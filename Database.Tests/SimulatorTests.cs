@@ -35,16 +35,17 @@ using Automation.ResultFiles;
 using Common;
 using Common.Tests;
 using Database.Tables;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 #endregion
 
 namespace Database.Tests {
-    [TestFixture]
+
     public class SimulatorTests : UnitTestBaseClass
     {
         private static void LogStepProgress(ref DateTime lasttime, ref int step) {
@@ -66,7 +67,7 @@ namespace Database.Tests {
                 var count = sim.Affordances.MyItems.Count;
                 sim.Affordances.DeleteItem(sim.Affordances.MyItems[0]);
                 var sim2 = new Simulator(db.ConnectionString);
-                Assert.AreEqual(count - 1, sim2.Affordances.MyItems.Count);
+                sim2.Affordances.MyItems.Count.Should().Be(count - 1);
                 db.Cleanup();
             }
         }
@@ -126,7 +127,7 @@ namespace Database.Tests {
                 var count = sim.DateBasedProfiles.MyItems.Count;
                 sim.DateBasedProfiles.DeleteItem(sim.DateBasedProfiles.MyItems[0]);
                 var sim2 = new Simulator(db.ConnectionString);
-                Assert.AreEqual(count - 1, sim2.DateBasedProfiles.MyItems.Count);
+                sim2.DateBasedProfiles.MyItems.Count.Should().Be(count-1);
                 db.Cleanup();
             }
         }
@@ -141,7 +142,7 @@ namespace Database.Tests {
                 var count = sim.Desires.MyItems.Count;
                 sim.Desires.DeleteItem(sim.Desires.MyItems[0]);
                 var sim2 = new Simulator(db.ConnectionString);
-                Assert.AreEqual(count - 1, sim2.Desires.MyItems.Count);
+                sim2.Desires.MyItems.Count.Should().Be(count-1);
                 db.Cleanup();
             }
         }
@@ -164,7 +165,7 @@ namespace Database.Tests {
                 sim.DeviceCategories.DeleteItem(sim.DeviceCategories.MyItems[sim.DeviceCategories.MyItems.Count - 1]);
                 // load again to double check
                 var sim2 = new Simulator(db.ConnectionString);
-                Assert.AreEqual(count - 1, sim2.DeviceCategories.MyItems.Count);
+                sim2.DeviceCategories.MyItems.Count.Should().Be(count - 1);
                 db.Cleanup();
             }
         }
@@ -179,7 +180,7 @@ namespace Database.Tests {
                 var count = sim.EnergyStorages.MyItems.Count;
                 sim.EnergyStorages.DeleteItem(sim.EnergyStorages.MyItems[0]);
                 var sim2 = new Simulator(db.ConnectionString);
-                Assert.AreEqual(count - 1, sim2.EnergyStorages.MyItems.Count);
+                sim2.EnergyStorages.MyItems.Count.Should().Be(count-1);
                 db.Cleanup();
             }
         }
@@ -194,7 +195,7 @@ namespace Database.Tests {
                 var count = sim.Generators.MyItems.Count;
                 sim.Generators.DeleteItem(sim.Generators.MyItems[0]);
                 var sim2 = new Simulator(db.ConnectionString);
-                Assert.AreEqual(count - 1, sim2.Generators.MyItems.Count);
+                sim2.Generators.MyItems.Count.Should().Be(count - 1);
                 db.Cleanup();
             }
         }
@@ -209,7 +210,7 @@ namespace Database.Tests {
                 var count = sim.GeographicLocations.MyItems.Count;
                 sim.GeographicLocations.DeleteItem(sim.GeographicLocations.MyItems[0]);
                 var sim2 = new Simulator(db.ConnectionString);
-                Assert.AreEqual(count - 1, sim2.GeographicLocations.MyItems.Count);
+                sim2.GeographicLocations.MyItems.Count.Should().Be(count - 1);
                 db.Cleanup();
             }
         }
@@ -224,7 +225,7 @@ namespace Database.Tests {
                 var count = sim.Holidays.MyItems.Count;
                 sim.Holidays.DeleteItem(sim.Holidays.MyItems[0]);
                 var sim2 = new Simulator(db.ConnectionString);
-                Assert.AreEqual(count - 1, sim2.Holidays.MyItems.Count);
+                sim2.Holidays.MyItems.Count.Should().Be(count - 1);
                 db.Cleanup();
             }
         }
@@ -239,7 +240,7 @@ namespace Database.Tests {
                 var count = sim.ModularHouseholds.MyItems.Count;
                 sim.ModularHouseholds.DeleteItem(sim.ModularHouseholds.MyItems[0]);
                 var sim2 = new Simulator(db.ConnectionString);
-                Assert.AreEqual(count - 1, sim2.ModularHouseholds.MyItems.Count);
+                sim2.ModularHouseholds.MyItems.Count.Should().Be(count - 1);
                 db.Cleanup();
             }
         }
@@ -254,7 +255,7 @@ namespace Database.Tests {
                 var count = sim.HouseholdTraits.MyItems.Count;
                 sim.HouseholdTraits.DeleteItem(sim.HouseholdTraits.MyItems[0]);
                 var sim2 = new Simulator(db.ConnectionString);
-                Assert.AreEqual(count - 1, sim2.HouseholdTraits.MyItems.Count);
+                sim2.HouseholdTraits.MyItems.Count.Should().Be(count - 1);
                 db.Cleanup();
             }
         }
@@ -269,7 +270,7 @@ namespace Database.Tests {
                 var count = sim.Houses.MyItems.Count;
                 sim.Houses.DeleteItem(sim.Houses.MyItems[0]);
                 var sim2 = new Simulator(db.ConnectionString);
-                Assert.AreEqual(count - 1, sim2.Houses.MyItems.Count);
+                sim2.Houses.MyItems.Count.Should().Be(count - 1);
                 db.Cleanup();
             }
         }
@@ -286,7 +287,7 @@ namespace Database.Tests {
                 sim.LoadTypes.DeleteItem(sim.LoadTypes.MyItems[1]);
                 sim.LoadTypes.DeleteItem(sim.LoadTypes.MyItems[2]);
                 var sim2 = new Simulator(db.ConnectionString);
-                Assert.AreEqual(count - 3, sim2.LoadTypes.MyItems.Count);
+                sim2.LoadTypes.MyItems.Count.Should().Be(count - 3);
                 db.Cleanup();
             }
         }
@@ -323,7 +324,7 @@ namespace Database.Tests {
                 var locationscount = sim.Locations.MyItems.Count;
                 sim.Locations.DeleteItem(sim.Locations.MyItems[0]);
                 var sim2 = new Simulator(db.ConnectionString);
-                Assert.AreEqual(locationscount - 1, sim2.Locations.MyItems.Count);
+                sim2.Locations.MyItems.Count.Should().Be(locationscount - 1);
                 db.Cleanup();
             }
         }
@@ -338,7 +339,7 @@ namespace Database.Tests {
                 var personcount = sim.Persons.MyItems.Count;
                 sim.Persons.DeleteItem(sim.Persons.MyItems[0]);
                 var sim2 = new Simulator(db.ConnectionString);
-                Assert.AreEqual(personcount - 1, sim2.Persons.MyItems.Count);
+                sim2.Persons.MyItems.Count.Should().Be(personcount - 1);
                 db.Cleanup();
             }
         }
@@ -353,7 +354,7 @@ namespace Database.Tests {
                 var count = sim.RealDevices.MyItems.Count;
                 sim.RealDevices.DeleteItem(sim.RealDevices.MyItems[0]);
                 var sim2 = new Simulator(db.ConnectionString);
-                Assert.AreEqual(count - 1, sim2.RealDevices.MyItems.Count);
+                sim2.RealDevices.MyItems.Count.Should().Be(count - 1);
                 db.Cleanup();
             }
         }
@@ -368,7 +369,7 @@ namespace Database.Tests {
                 var count = sim.Settlements.MyItems.Count;
                 sim.Settlements.DeleteItem(sim.Settlements.MyItems[0]);
                 var sim2 = new Simulator(db.ConnectionString);
-                Assert.AreEqual(count - 1, sim2.Settlements.MyItems.Count);
+                sim2.Settlements.MyItems.Count.Should().Be(count - 1);
                 db.Cleanup();
             }
         }
@@ -383,7 +384,7 @@ namespace Database.Tests {
                 var count = sim.TemperatureProfiles.MyItems.Count;
                 sim.TemperatureProfiles.DeleteItem(sim.TemperatureProfiles.MyItems[0]);
                 var sim2 = new Simulator(db.ConnectionString);
-                Assert.AreEqual(count - 1, sim2.TemperatureProfiles.MyItems.Count);
+                sim2.TemperatureProfiles.MyItems.Count.Should().Be(count - 1);
                 db.Cleanup();
             }
         }
@@ -395,7 +396,7 @@ namespace Database.Tests {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
                 var sim = new Simulator(db.ConnectionString);
-                Assert.AreNotEqual(null, sim);
+                sim.Should().BeNull();
                 db.Cleanup();
             }
         }
@@ -407,7 +408,7 @@ namespace Database.Tests {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
                 var sim = new Simulator(db.ConnectionString);
-                Assert.AreNotEqual(null, sim);
+                sim.Should().BeNull();
                 var emptycount = 0;
                 foreach (var realDevice in sim.RealDevices.MyItems)
                 {
@@ -437,7 +438,7 @@ namespace Database.Tests {
                 var count = sim.TimeLimits.MyItems.Count;
                 sim.TimeLimits.DeleteItem(sim.TimeLimits.MyItems[0]);
                 var sim2 = new Simulator(db.ConnectionString);
-                Assert.AreEqual(count - 1, sim2.TimeLimits.MyItems.Count);
+                sim2.TimeLimits.MyItems.Count.Should().Be(count - 1);
                 db.Cleanup();
             }
         }
@@ -452,7 +453,7 @@ namespace Database.Tests {
                 var count = sim.Timeprofiles.MyItems.Count;
                 sim.Timeprofiles.DeleteItem(sim.Timeprofiles.MyItems[0]);
                 var sim2 = new Simulator(db.ConnectionString);
-                Assert.AreEqual(count - 1, sim2.Timeprofiles.MyItems.Count);
+                sim2.Timeprofiles.MyItems.Count.Should().Be(count - 1);
                 db.Cleanup();
             }
         }
@@ -467,7 +468,7 @@ namespace Database.Tests {
                 var count = sim.TransformationDevices.MyItems.Count;
                 sim.TransformationDevices.DeleteItem(sim.TransformationDevices.MyItems[0]);
                 var sim2 = new Simulator(db.ConnectionString);
-                Assert.AreEqual(count - 1, sim2.TransformationDevices.MyItems.Count);
+                sim2.TransformationDevices.MyItems.Count.Should().Be(count - 1);
                 db.Cleanup();
             }
         }

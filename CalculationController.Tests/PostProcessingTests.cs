@@ -13,15 +13,15 @@ using Common.Tests;
 using Database;
 using Database.Tables;
 using Database.Tests;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace CalculationController.Tests
 {
-    [TestFixture]
     public class PostProcessingTests : UnitTestBaseClass
     {
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
@@ -58,7 +58,7 @@ namespace CalculationController.Tests
 
                     Logger.Info("Temperature:" + sim.MyGeneralConfig.SelectedTemperatureProfile);
                     Logger.Info("Geographic:" + sim.MyGeneralConfig.GeographicLocation);
-                    Assert.AreNotEqual(null, sim);
+                    sim.Should().NotBeNull();
                     var cmf = new CalcManagerFactory();
                     CalculationProfiler calculationProfiler = new CalculationProfiler();
                     CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
@@ -118,7 +118,7 @@ namespace CalculationController.Tests
                     sim.MyGeneralConfig.Enable(CalcOption.OverallSum);
                     Logger.Info("Temperature:" + sim.MyGeneralConfig.SelectedTemperatureProfile);
                     Logger.Info("Geographic:" + sim.MyGeneralConfig.GeographicLocation);
-                    Assert.AreNotEqual(null, sim);
+                    sim.Should().NotBeNull();
                     var cmf = new CalcManagerFactory();
                     CalculationProfiler calculationProfiler = new CalculationProfiler();
                     CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
@@ -179,7 +179,7 @@ namespace CalculationController.Tests
                             }
                         }
                     }
-                    Assert.That(sumDeviceProfiles, Is.EqualTo(sumSumProfiles).Within(0.1).Percent);
+                    sumDeviceProfiles.Should().BeApproximatelyWithinPercent(sumSumProfiles,0.001);
                     Logger.Info("sumSumProfiles: " + sumSumProfiles);
                     var pathExtSumProfiles = Path.Combine(wd1.WorkingDirectory,
                         DirectoryNames.CalculateTargetdirectory(TargetDirectory.Results), "SumProfiles_600s.Electricity.csv");
@@ -206,7 +206,7 @@ namespace CalculationController.Tests
                         }
                     }
                     Logger.Info("sumExtSumProfiles: " + sumExtSumProfiles);
-                    Assert.That(sumDeviceProfiles, Is.EqualTo(sumExtSumProfiles).Within(0.1).Percent);
+                    sumDeviceProfiles.Should().BeApproximatelyWithinPercent(sumExtSumProfiles,0.001);
 
                     var pathExtDeviceProfiles = Path.Combine(wd1.WorkingDirectory,
                         DirectoryNames.CalculateTargetdirectory(TargetDirectory.Results),
@@ -234,7 +234,7 @@ namespace CalculationController.Tests
                         }
                     }
                     Logger.Info("sumExtDeviceProfiles: " + sumExtDeviceProfiles);
-                    Assert.That(sumDeviceProfiles, Is.EqualTo(sumExtDeviceProfiles).Within(0.1).Percent);
+                    sumDeviceProfiles.Should().BeApproximatelyWithinPercent(sumExtSumProfiles, 0.001);
                     var pathImportFile = Path.Combine(wd1.WorkingDirectory,
                         DirectoryNames.CalculateTargetdirectory(TargetDirectory.Results), "ImportProfile.900s.Electricity.csv");
                     double sumImportFile = 0;
@@ -262,7 +262,7 @@ namespace CalculationController.Tests
                     Logger.Info("sumImportFile: " + sumImportFile);
                     var supposedValue = sumDeviceProfiles; // convert to watt/5 min
                     Logger.Info("supposedValue: " + supposedValue);
-                    Assert.That(supposedValue, Is.EqualTo(sumImportFile).Within(1).Percent);
+                    supposedValue.Should().BeApproximatelyWithinPercent(sumImportFile,0.001);
 
                     var pathExtSumProfileshh1 = Path.Combine(wd1.WorkingDirectory,
                         DirectoryNames.CalculateTargetdirectory(TargetDirectory.Results), "SumProfiles_600s.HH1.Electricity.csv");
@@ -289,7 +289,7 @@ namespace CalculationController.Tests
                         }
                     }
                     Logger.Info("sumExtSumProfiles.hh1: " + sumExtSumProfilesHH1);
-                    Assert.That(sumDeviceProfiles, Is.EqualTo(sumExtSumProfilesHH1).Within(0.1).Percent);
+                    sumDeviceProfiles.Should().BeApproximatelyWithinPercent(sumExtSumProfilesHH1,0.001);
 
                     var pathOverallSum = Path.Combine(wd1.WorkingDirectory,
                         DirectoryNames.CalculateTargetdirectory(TargetDirectory.Results), "Overall.SumProfiles.Electricity.csv");
@@ -316,7 +316,7 @@ namespace CalculationController.Tests
                         }
                     }
                     Logger.Info("overallSum: " + overallSum);
-                    Assert.That(sumDeviceProfiles, Is.EqualTo(overallSum).Within(0.1).Percent);
+                    sumDeviceProfiles.Should().BeApproximatelyWithinPercent(overallSum,0.001);
 
                     CleanTestBase.RunAutomatically(true);
                 }

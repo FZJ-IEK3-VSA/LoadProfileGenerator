@@ -7,11 +7,10 @@ using System.Threading;
 using Automation;
 using Automation.ResultFiles;
 using CommonDataWPF.Tests;
-using NUnit.Framework;
+
 using Xunit;
 
 namespace Common.Tests {
-    [TestFixture]
     public static class CleanTestBase {
         [JetBrains.Annotations.NotNull]
         private static string GetPrettySize(long size) {
@@ -31,7 +30,6 @@ namespace Common.Tests {
         }
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        [TestCase(true)]
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public static void RunAutomatically(bool throwExceptionOnLeftover) {
             Logger.Info("Starting to clean...");

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Automation.ResultFiles;
-using CalculationEngine.Helper;
 using Common;
 using Common.CalcDto;
 using Common.Enums;

@@ -7,7 +7,6 @@ using Automation.ResultFiles;
 using CalculationController.CalcFactories;
 using CalculationController.DtoFactories;
 using CalculationController.Helpers;
-using CalculationEngine.Helper;
 using CalculationEngine.HouseholdElements;
 using CalculationEngine.OnlineDeviceLogging;
 using CalculationEngine.OnlineLogging;
@@ -22,12 +21,11 @@ using Database;
 using Database.Tests;
 using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
 
 namespace CalculationController.Tests.Transportation {
-    [TestFixture]
     public class CalcTransportationFactoryTests : UnitTestBaseClass {
         [NotNull]
         public CalcHouseholdDto MakeSingleFactory([NotNull] WorkingDir wd, [NotNull] DatabaseSetup db)
@@ -70,7 +68,7 @@ namespace CalculationController.Tests.Transportation {
 
             builder.Register(c => new OnlineLoggingData(c.Resolve<DateStampCreator>(), c.Resolve<IInputDataLogger>(),
                     c.Resolve<CalcParameters>()))
-                .As<OnlineLoggingData>().SingleInstance();
+                .As<OnlineLoggingData>().As<IOnlineLoggingData>().SingleInstance();
 
             builder.Register(c => new LogFile(parameters,
                 c.Resolve<FileFactoryAndTracker>())).As<ILogFile>().SingleInstance();
@@ -191,7 +189,7 @@ namespace CalculationController.Tests.Transportation {
                     builder.Register(c => inputlogger).As<IInputDataLogger>().As<InputDataLogger>().SingleInstance();
 
                     builder.Register(c => new OnlineLoggingData(c.Resolve<DateStampCreator>(),
-                            c.Resolve<IInputDataLogger>(), c.Resolve<CalcParameters>())).As<OnlineLoggingData>()
+                            c.Resolve<IInputDataLogger>(), c.Resolve<CalcParameters>())).As<OnlineLoggingData>().As<IOnlineLoggingData>()
                         .SingleInstance();
 
                     builder.Register(c => new LogFile(parameters, c.Resolve<FileFactoryAndTracker>())).As<ILogFile>()

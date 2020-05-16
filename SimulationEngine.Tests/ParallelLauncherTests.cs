@@ -5,7 +5,7 @@ using Automation;
 using Common;
 using Common.Tests;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using SimulationEngineLib;
 using SimulationEngineLib.SettlementCalculation;
 using Xunit;
@@ -13,7 +13,6 @@ using Xunit.Abstractions;
 
 namespace SimulationEngine.Tests
 {
-    [TestFixture]
     public class ParallelLauncherTests : UnitTestBaseClass
     {
         [Fact]

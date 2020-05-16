@@ -6,15 +6,15 @@ using Common.CalcDto;
 using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
+using FluentAssertions;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Common.Tests.SQLResultLogging.InputLoggers {
-    [TestFixture]
     public class ColumnEntryLoggerTests : UnitTestBaseClass
     {
         [Fact]
@@ -43,7 +43,7 @@ namespace Common.Tests.SQLResultLogging.InputLoggers {
                 var s2 = JsonConvert.SerializeObject(res, Formatting.Indented);
                 File.WriteAllText(wd.Combine("original.json"), s1);
                 File.WriteAllText(wd.Combine("deserialized.json"), s2);
-                Assert.AreEqual(s1, s2);
+                s1.Should().Be(s2);
             }
             //wd.CleanUp();
         }

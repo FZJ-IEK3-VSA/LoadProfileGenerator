@@ -45,13 +45,12 @@ using Database.Tables.ModularHouseholds;
 using Database.Tests;
 using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace CalculationController.Tests.CalcFactories {
-    [TestFixture]
     public class CalcManagerFactoryTests:UnitTestBaseClass {
         private static void CalculateOneHousehold([NotNull] string path) {
             if (Directory.Exists(path)) {
@@ -66,7 +65,7 @@ namespace CalculationController.Tests.CalcFactories {
             sim.MyGeneralConfig.ShowSettlingPeriodBool = true;
             //ConfigSetter.SetGlobalTimeParameters(sim.MyGeneralConfig);
 
-            Assert.AreNotEqual(null, sim);
+            sim.Should().NotBeNull();
             var cmf = new CalcManagerFactory();
             CalculationProfiler calculationProfiler = new CalculationProfiler();
             //todo: put in a full house with transportation
@@ -105,7 +104,7 @@ namespace CalculationController.Tests.CalcFactories {
                     var sim = new Simulator(db.ConnectionString);
                     sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.OnlyOverallSum);
 
-                    Assert.AreNotEqual(null, sim);
+                    sim.Should().NotBeNull();
                     sim.MyGeneralConfig.RandomSeed = 10;
 
                     var cmf = new CalcManagerFactory();
@@ -137,7 +136,7 @@ namespace CalculationController.Tests.CalcFactories {
                     sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.OnlyOverallSum);
 
                     //ConfigSetter.SetGlobalTimeParameters(sim.MyGeneralConfig);
-                    Assert.AreNotEqual(null, sim);
+                    sim.Should().NotBeNull();
 
                     var cmf = new CalcManagerFactory();
                     CalculationProfiler calculationProfiler = new CalculationProfiler();
@@ -185,7 +184,7 @@ namespace CalculationController.Tests.CalcFactories {
                     sim.MyGeneralConfig.Enable(CalcOption.TotalsPerDevice);
                     sim.MyGeneralConfig.Enable(CalcOption.MakePDF);
                     sim.MyGeneralConfig.Enable(CalcOption.HouseholdContents);
-                    Assert.AreNotEqual(null, sim);
+                    sim.Should().NotBeNull();
                     var cmf = new CalcManagerFactory();
                     ModularHousehold chs3 = null;
                     foreach (var modularHousehold in sim.ModularHouseholds.MyItems)
@@ -246,7 +245,7 @@ namespace CalculationController.Tests.CalcFactories {
                     }
                     sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
                     sim.MyGeneralConfig.Enable(CalcOption.OverallSum);
-                    Assert.AreNotEqual(null, sim);
+                     sim.Should().NotBeNull();
 
                     var cmf = new CalcManagerFactory();
                     CalculationProfiler calculationProfiler = new CalculationProfiler();
@@ -288,7 +287,7 @@ namespace CalculationController.Tests.CalcFactories {
                         Logger.Info("Light devices:" + light.SubDevices.Count);
                     }
                     sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.OnlyOverallSum);
-                    Assert.AreNotEqual(null, sim);
+                    sim.Should().NotBeNull();
                     var cmf = new CalcManagerFactory();
                     CalculationProfiler calculationProfiler = new CalculationProfiler();
                     CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
@@ -400,7 +399,7 @@ namespace CalculationController.Tests.CalcFactories {
                                 while (!sr1.EndOfStream) {
                                     var s1 = sr1.ReadLine();
                                     var s2 = sr2.ReadLine();
-                                    Assert.AreEqual(s1, s2);
+                                    s1.Should().Be(s2);
                                 }
 
                                 sr1.Close();

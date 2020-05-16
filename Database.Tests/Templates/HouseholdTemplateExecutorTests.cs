@@ -8,14 +8,15 @@ using Common.Tests;
 using Database.Tables.BasicElements;
 using Database.Tables.ModularHouseholds;
 using Database.Templating;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Database.Tests.Templates {
-    [TestFixture]
+
     public class HouseholdTemplateExecutorTests : UnitTestBaseClass
     {
         [Fact]
@@ -45,9 +46,9 @@ namespace Database.Tests.Templates {
             for (var i = 0; i < result.Count; i++) {
                 Logger.Info(result[i].ToString(CultureInfo.InvariantCulture));
             }
-            Assert.AreEqual(counts[0.5], 500);
-            Assert.AreEqual(counts[0.2], 200);
-            Assert.AreEqual(counts[0.3], 300);
+            (500).Should().Be(counts[0.5]);
+            (200).Should().Be(counts[0.2]);
+            (300).Should().Be(counts[0.3]);
         }
 
         [Fact]
@@ -71,7 +72,7 @@ namespace Database.Tests.Templates {
                 {
                     Logger.Info("Range: " + range.Start + " - " + range.End + " : " + range.Probability);
                 }
-                Assert.AreEqual(dbp.Datapoints.Count - 1, result.Count);
+                (result.Count).Should().Be(dbp.Datapoints.Count - 1);
                 db.Cleanup();
             }
         }

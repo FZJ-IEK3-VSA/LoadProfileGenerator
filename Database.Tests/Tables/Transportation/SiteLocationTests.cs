@@ -5,15 +5,16 @@ using Common;
 using Common.Tests;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.Transportation;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Database.Tests.Tables.Transportation
 {
-    [TestFixture]
+
     public class SiteLocationTests : UnitTestBaseClass
     {
         [Fact]
@@ -31,7 +32,7 @@ namespace Database.Tests.Tables.Transportation
                 locs.Add(loc);
                 SiteLocation.LoadFromDatabase(slocs, db.ConnectionString, locs, false);
                 db.Cleanup();
-                Assert.AreEqual(1, slocs.Count);
+                (slocs.Count).Should().Be(1);
             }
         }
 
@@ -57,7 +58,7 @@ namespace Database.Tests.Tables.Transportation
                 Site.LoadFromDatabase(slocs, db.ConnectionString,
                     false, locs);
                 db.Cleanup();
-                Assert.AreEqual(1, slocs.Count);
+                (slocs.Count).Should().Be(1);
             }
         }
 

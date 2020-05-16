@@ -28,7 +28,7 @@ namespace SimulationEngineLib.Calculation {
             }
             catch (Exception ex) {
                 Logger.Exception(ex);
-                if (!SimulationEngineConfig.CatchErrors) {
+                if (!Config.CatchErrors) {
                     throw;
                 }
             }

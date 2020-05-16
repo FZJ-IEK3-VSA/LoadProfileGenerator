@@ -43,11 +43,11 @@
 //using Common.SQLResultLogging;
 //using Common.SQLResultLogging.InputLoggers;
 //using Common.SQLResultLogging.Loggers;
-//using NUnit.Framework;
+//
 
 //namespace Calculation.Tests.ResultProcessing
 //{
-//    [TestFixture]
+//    
 //    public class ActionCarpetPlotTests : TestBasis
 //    {
 //        [Fact]

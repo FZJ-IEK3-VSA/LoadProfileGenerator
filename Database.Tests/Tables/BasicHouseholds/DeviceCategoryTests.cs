@@ -33,12 +33,12 @@ using Common;
 using Common.Tests;
 using Database.Tables.BasicHouseholds;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Database.Tests.Tables.BasicHouseholds {
-    [TestFixture]
+
     public class DeviceCategoryTests : UnitTestBaseClass
     {
         [Fact]

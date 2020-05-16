@@ -1,18 +1,16 @@
-﻿using System.Threading;
-using Automation;
+﻿using Automation;
 using ChartCreator2.OxyCharts;
 using Common;
 using Common.Tests;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
 
 namespace ChartCreator2.Tests.OxyCharts {
-    [TestFixture]
     public class CalculationDurationFlameChartTests : UnitTestBaseClass
     {
-        [Fact][Apartment(ApartmentState.STA)]
+        [StaFact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
         public void RunTest()
         {

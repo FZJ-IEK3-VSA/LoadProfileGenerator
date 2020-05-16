@@ -2,12 +2,11 @@
 using Common;
 using Common.Tests;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
 
 namespace LoadProfileGenerator.Tests {
-    [TestFixture]
     public class ErrorReporterTests : UnitTestBaseClass
     {
         [Fact]

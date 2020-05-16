@@ -31,14 +31,14 @@ using Automation;
 using Common;
 using Common.Tests;
 using Database.Helpers;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Database.Tests.Helpers {
-    [TestFixture]
     public class CalcDegreeDaysTests : UnitTestBaseClass
     {
         [Fact]
@@ -59,15 +59,15 @@ namespace Database.Tests.Helpers {
                     new TimeSpan(1, 0, 0, 0));
                 for (var i = 0; i < temperatures.Length; i++)
                 {
-                    Assert.Less(Math.Abs(ldd[i].AverageTemperature - temperatures[i]), 0.001);
+                    Math.Abs(ldd[i].AverageTemperature - temperatures[i]).Should().BeLessThan(0.001);
                 }
                 foreach (var day in ldd)
                 {
                     sumHeating += day.HeatingAmount;
                     sumPercentages += day.Percentage;
                 }
-                Assert.Less(Math.Abs(10000 - sumHeating), 0.001);
-                Assert.Less(Math.Abs(1 - sumPercentages), 0.001);
+                Math.Abs(10000 - sumHeating).Should().BeLessThan( 0.001);
+                Math.Abs(1 - sumPercentages).Should().BeLessThan( 0.001);
                 db.Cleanup();
             }
         }
@@ -90,7 +90,7 @@ namespace Database.Tests.Helpers {
                     new TimeSpan(1, 0, 0, 0));
                 for (var i = 0; i < temperatures.Length; i++)
                 {
-                    Assert.Less(Math.Abs(ldd[i].AverageTemperature - temperatures[i]), 0.001);
+                    Math.Abs(ldd[i].AverageTemperature - temperatures[i]).Should().BeLessThan( 0.001);
                 }
                 foreach (var day in ldd)
                 {
@@ -101,8 +101,8 @@ namespace Database.Tests.Helpers {
                     sumHeating += day.HeatingAmount;
                     sumPercentages += day.Percentage;
                 }
-                Assert.Less(Math.Abs(10000 - sumHeating), 0.001);
-                Assert.Less(Math.Abs(1 - sumPercentages), 0.001);
+                Math.Abs(10000 - sumHeating).Should().BeLessThan(0.001);
+                Math.Abs(1 - sumPercentages).Should().BeLessThan(0.001);
                 db.Cleanup();
             }
         }
@@ -124,15 +124,15 @@ namespace Database.Tests.Helpers {
                     new TimeSpan(1, 0, 0, 0));
                 for (var i = 0; i < temperatures.Length; i++)
                 {
-                    Assert.Less(Math.Abs(ldd[i].AverageTemperature - temperatures[i]), 0.001);
+                    Math.Abs(ldd[i].AverageTemperature - temperatures[i]).Should().BeLessThan( 0.001);
                 }
                 foreach (var day in ldd)
                 {
                     sumHeating += day.HeatingAmount;
                     sumPercentages += day.Percentage;
                 }
-                Assert.Less(Math.Abs(101 - sumHeating), 100);
-                Assert.Less(Math.Abs(0.01 - sumPercentages), 0.01);
+                Math.Abs(101 - sumHeating).Should().BeLessThan( 100);
+                Math.Abs(0.01 - sumPercentages).Should().BeLessThan(0.01);
                 db.Cleanup();
             }
         }
@@ -154,15 +154,15 @@ namespace Database.Tests.Helpers {
                     new TimeSpan(1, 0, 0, 0));
                 for (var i = 0; i < temperatures.Length; i++)
                 {
-                    Assert.Less(Math.Abs(ldd[i].AverageTemperature - temperatures[i]), 0.001);
+                    Math.Abs(ldd[i].AverageTemperature - temperatures[i]).Should().BeLessThan( 0.001);
                 }
                 foreach (var day in ldd)
                 {
                     sumHeating += day.HeatingAmount;
                     sumPercentages += day.Percentage;
                 }
-                Assert.Less(Math.Abs(30000 - sumHeating), 0.001);
-                Assert.Less(Math.Abs(3 - sumPercentages), 0.001);
+                Math.Abs(30000 - sumHeating).Should().BeLessThan( 0.001);
+                Math.Abs(3 - sumPercentages).Should().BeLessThan( 0.001);
                 db.Cleanup();
             }
         }
@@ -185,16 +185,16 @@ namespace Database.Tests.Helpers {
                     new TimeSpan(1, 0, 0, 0));
                 for (var i = 0; i < temperatures.Length; i++)
                 {
-                    Assert.Less(Math.Abs(ldd[i].AverageTemperature - temperatures[i]), 0.001);
+                    Math.Abs(ldd[i].AverageTemperature - temperatures[i]).Should().BeLessThan( 0.001);
                 }
                 foreach (var day in ldd)
                 {
                     sumHeating += day.HeatingAmount;
                     sumPercentages += day.Percentage;
                 }
-                Assert.Less(Math.Abs(225 - sumHeating), 200);
+                Math.Abs(225 - sumHeating).Should().BeLessThan( 200);
                 const double val = 225.0 / 10000;
-                Assert.Less(Math.Abs(val - sumPercentages), 0.1);
+                Math.Abs(val - sumPercentages).Should().BeLessThan( 0.1);
                 db.Cleanup();
             }
         }

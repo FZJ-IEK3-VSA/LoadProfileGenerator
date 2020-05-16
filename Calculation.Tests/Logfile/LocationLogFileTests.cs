@@ -35,17 +35,17 @@ using Common;
 using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.Loggers;
+using FluentAssertions;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Calculation.Tests.Logfile
 {
-    [TestFixture]
-    public class LocationLogFileTests : TestBasis
+    public class LocationLogFileTests : CalcUnitTestBase
     {
         [Fact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
@@ -74,7 +74,7 @@ namespace Calculation.Tests.Logfile
                 }
                 var lel = new LocationEntryLogger(wd.SqlResultLoggingService);
                 var e = lel.Load(key);
-                Assert.That(e.Count, Is.EqualTo(1));
+                e.Count.Should().Be(1);
                 wd.CleanUp();
             }
         }
@@ -101,7 +101,6 @@ namespace Calculation.Tests.Logfile
                 //llf.WriteEntry(le, new HouseholdKey("HH2"));
                 //llf.WriteEntry(le, new HouseholdKey("HH3"));
                 //llf.Close();
-                Assert.AreEqual(true, true);
                 HouseholdKey key1 = new HouseholdKey("hh1");
                 TimeStep ts = new TimeStep(1, 0, false);
                 LocationEntry le1 = new LocationEntry(key1, "personName", "personGuid".ToStrGuid(), ts, "locname",
@@ -125,7 +124,7 @@ namespace Calculation.Tests.Logfile
                 Logger.Info("count: " + le.Count);
                 string prev = JsonConvert.SerializeObject(le1, Formatting.Indented);
                 string loaded = JsonConvert.SerializeObject(le[0], Formatting.Indented);
-                Assert.That(loaded, Is.EqualTo(prev));
+                loaded.Should().Be(prev);
                 wd.CleanUp();
             }
         }

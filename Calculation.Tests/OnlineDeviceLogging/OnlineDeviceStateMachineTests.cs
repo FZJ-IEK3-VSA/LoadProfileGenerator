@@ -32,21 +32,20 @@ using System.Globalization;
 using Automation;
 using Automation.ResultFiles;
 using CalculationController.DtoFactories;
-using CalculationEngine.Helper;
 using CalculationEngine.HouseholdElements;
 using CalculationEngine.OnlineDeviceLogging;
 using Common;
 using Common.CalcDto;
 using Common.JSON;
 using Common.Tests;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Calculation.Tests.OnlineDeviceLogging {
-    [TestFixture]
     public class OnlineDeviceStateMachineTests : UnitTestBaseClass
     {
         public OnlineDeviceStateMachineTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
@@ -83,25 +82,25 @@ namespace Calculation.Tests.OnlineDeviceLogging {
             var odsm = new OnlineDeviceStateMachine(ts,  clt.ConvertToDto(), "device", key,"affordance",
                 calcParameters, sv);
             calcParameters.SetDummyTimeSteps(0);
-            Assert.That( odsm.CalculateOfficialEnergyUse(),Is.EqualTo(55)); // all
+            odsm.CalculateOfficialEnergyUse().Should().Be(55); // all
             calcParameters.SetDummyTimeSteps(6);
-            Assert.AreEqual(54, odsm.CalculateOfficialEnergyUse()); // not the first
+            odsm.CalculateOfficialEnergyUse().Should().Be(54); // not the first
             //_calcParameters.InternalTimesteps = 20;
             calcParameters.SetDummyTimeSteps(15);
-            Assert.AreEqual(0, odsm.CalculateOfficialEnergyUse()); // none
+            odsm.CalculateOfficialEnergyUse().Should().Be(0); // none
             calcParameters.SetDummyTimeSteps(14);
-            Assert.AreEqual(10, odsm.CalculateOfficialEnergyUse()); // only the last
+             odsm.CalculateOfficialEnergyUse().Should().Be(10); // only the last
             Logger.Info(odsm.CalculateOfficialEnergyUse().ToString(CultureInfo.CurrentCulture));
             startdate = new DateTime(2018, 1, 1);
             enddate = startdate.AddMinutes(10);
             calcParameters.DisableShowSettlingPeriod();
             calcParameters.SetStartDate(startdate).SetEndDate(enddate)
                 .SetDummyTimeSteps(5);
-            Assert.That( odsm.CalculateOfficialEnergyUse(),Is.EqualTo(15)); // only the first 5
+            odsm.CalculateOfficialEnergyUse().Should().Be(15); // only the first 5
             //_calcParameters.InternalTimesteps = 10; // only 5
             calcParameters.SetDummyTimeSteps(9);
             var val = odsm.CalculateOfficialEnergyUse();
-            Assert.AreEqual(5, val); // only #5
+            val.Should().Be(5); // only #5
 
             Logger.Info(odsm.CalculateOfficialEnergyUse().ToString(CultureInfo.CurrentCulture));
         }

@@ -11,16 +11,16 @@ using Common.Tests;
 using Database;
 using Database.Tables.ModularHouseholds;
 using Database.Tests;
+using FluentAssertions;
 using JetBrains.Annotations;
 using LoadProfileGenerator.Presenters.Households;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace LoadProfileGenerator.Tests
 {
-    [TestFixture]
     public class TemplatePersonPresenterTests : UnitTestBaseClass
     {
         [Fact]
@@ -36,7 +36,7 @@ namespace LoadProfileGenerator.Tests
                 template.SaveToDB();
                 template.AddTrait(sim.HouseholdTraits.It[0]);
                 TemplatePersonPresenter.RefreshTree(traitPrios, sim, template);
-                Assert.That(traitPrios.Count > 0);
+                traitPrios.Count.Should().BeGreaterThan(0);
                 db.Cleanup();
             }
         }

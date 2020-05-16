@@ -36,16 +36,17 @@ using Common.Enums;
 using Common.Tests;
 using Database.Tables.Houses;
 using Database.Tables.ModularHouseholds;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 #endregion
 
 namespace Database.Tests.Tables {
-    [TestFixture]
+
     public class SettlementTests : UnitTestBaseClass
     {
         [Fact]
@@ -127,11 +128,11 @@ namespace Database.Tests.Tables {
                 se.AddHousehold(modularHouseholds[0], 10);
                 Settlement.LoadFromDatabase(settlements, db.ConnectionString, temperaturProfiles, geoloc,
                     modularHouseholds, houses, false);
-                Assert.AreEqual(1, settlements.Count);
-                Assert.AreEqual(1, settlements[0].Households.Count);
-                Assert.AreEqual(settlements[0].GeographicLocation, geoloc[0]);
-                Assert.AreEqual(settlements[0].TemperatureProfile, temperaturProfiles[0]);
-                Assert.AreEqual(settlements[0].EnergyIntensityType, EnergyIntensityType.EnergySaving);
+                (settlements.Count).Should().Be(1);
+                (settlements[0].Households.Count).Should().Be(1);
+                (geoloc[0]).Should().Be(settlements[0].GeographicLocation);
+                (temperaturProfiles[0]).Should().Be(settlements[0].TemperatureProfile);
+                (EnergyIntensityType.EnergySaving).Should().Be(settlements[0].EnergyIntensityType);
                 db.Cleanup();
             }
         }

@@ -2,13 +2,13 @@
 using Automation.ResultFiles;
 using Common;
 using Database.Helpers;
-using NUnit.Framework;
+
 using Xunit;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Database.Tests.Helpers
 {
-    [TestFixture]
+
     public class DatabaseVersionCheckerTest
     {
         [Fact]

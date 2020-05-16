@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using Automation;
 using Automation.ResultFiles;
 using ChartCreator2.OxyCharts;
@@ -9,18 +8,18 @@ using Common;
 using Common.Tests;
 using Database;
 using Database.Tests;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace ChartCreator2.Tests.Oxyplot {
-    [TestFixture]
-    [Apartment(ApartmentState.STA)]
+
     public class MakeNRWChartTests : UnitTestBaseClass
     {
-        [Fact]
+        [StaFact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void MakeNRWChartTest()
         {
@@ -66,7 +65,7 @@ namespace ChartCreator2.Tests.Oxyplot {
 
                     var imagefiles = FileFinder.GetRecursiveFiles(new DirectoryInfo(wd.WorkingDirectory),
                         "testchart.*.png");
-                    Assert.GreaterOrEqual(imagefiles.Count, 1);
+                    imagefiles.Count.Should().BeGreaterOrEqualTo(1);
                     db.Cleanup();
                 }
                 wd.CleanUp();

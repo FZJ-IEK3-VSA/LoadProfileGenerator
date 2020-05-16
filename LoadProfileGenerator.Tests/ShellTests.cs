@@ -4,13 +4,12 @@ using Common.Tests;
 using Database;
 using Database.Tests;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
 
 namespace LoadProfileGenerator.Tests
 {
-    [TestFixture]
     public class ShellTests : UnitTestBaseClass
     {
         [Fact]

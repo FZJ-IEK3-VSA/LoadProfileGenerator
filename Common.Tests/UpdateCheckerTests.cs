@@ -1,12 +1,11 @@
 ﻿using Automation;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Common.Tests
 {
-    [TestFixture()]
     public class UpdateCheckerTests : UnitTestBaseClass
     {
         [Fact]

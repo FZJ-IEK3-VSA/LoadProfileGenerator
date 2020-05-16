@@ -6,14 +6,12 @@ using System.Threading;
 using Automation;
 using Common;
 using Common.Tests;
-using NUnit.Framework;
+
 using SimulationEngineLib;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace SimulationEngine.Tests {
-    [TestFixture]
-    [Apartment(ApartmentState.STA)]
     [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     public class SettlementProcessorTests : UnitTestBaseClass
     {
@@ -28,7 +26,7 @@ namespace SimulationEngine.Tests {
             }
         }
 
-        [Fact]
+        [StaFact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void RunTest() {
             using var se = new SimulationEngineTestPreparer(Utili.GetCurrentMethodAndClass());
@@ -43,7 +41,7 @@ namespace SimulationEngine.Tests {
             se.Clean();
         }
 
-        [Fact]
+        [StaFact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
         public void RunQuickTest()
         {

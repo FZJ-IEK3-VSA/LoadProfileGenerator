@@ -34,16 +34,17 @@ using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables.BasicHouseholds;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 #endregion
 
 namespace Database.Tests.Tables {
-    [TestFixture]
+
     public class DeviceCategoryTests : UnitTestBaseClass
     {
         [Fact]
@@ -55,14 +56,14 @@ namespace Database.Tests.Tables {
                 var deviceCategories = new ObservableCollection<DeviceCategory>();
                 var realDevices = new ObservableCollection<RealDevice>();
                 DeviceCategory.LoadFromDatabase(deviceCategories, out var dcnone, db.ConnectionString, realDevices, false);
-                Assert.Greater(deviceCategories.Count, 0);
+                deviceCategories.Count.Should().BeGreaterThan(0);
                 db.ClearTable(DeviceCategory.TableName);
                 var dc = new DeviceCategory("hallo", dcnone.IntID, db.ConnectionString, false, realDevices,
                     Guid.NewGuid().ToStrGuid());
                 dc.SaveToDB();
                 deviceCategories.Clear();
                 DeviceCategory.LoadFromDatabase(deviceCategories, out _, db.ConnectionString, realDevices, false);
-                Assert.AreEqual(deviceCategories.Count, 2);
+                (2).Should().Be(deviceCategories.Count);
                 db.Cleanup();
             }
         }

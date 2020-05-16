@@ -42,14 +42,14 @@ using Common.CalcDto;
 using Common.JSON;
 using Common.SQLResultLogging;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Calculation.Tests {
-    [TestFixture]
-    public class CalcTransformationDeviceTests : TestBasis {
+    public class CalcTransformationDeviceTests : CalcUnitTestBase
+    {
         [Fact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void ProcessOneTimestepTestVariableFactor()
@@ -85,16 +85,16 @@ namespace Calculation.Tests {
             {
                 var ts = new TimeStep(i, calcParameters);
                 var filerows = odap.ProcessOneTimestep(ts);
-                Assert.AreEqual(2, filerows.Count);
-                Assert.AreEqual(1, filerows[0].EnergyEntries.Count);
+                Assert.Equal(2, filerows.Count);
+                Assert.Equal(1, filerows[0].EnergyEntries.Count);
                 var sb = new StringBuilder("row0 before:");
                 sb.Append(filerows[0].EnergyEntries[0]);
                 sb.Append(" row1 before:");
                 sb.Append(filerows[1].EnergyEntries[0]);
-                Assert.AreEqual(resultValues[i], filerows[0].EnergyEntries[0]);
-                Assert.AreEqual(0, filerows[1].EnergyEntries[0]);
+                Assert.Equal(resultValues[i], filerows[0].EnergyEntries[0]);
+                Assert.Equal(0, filerows[1].EnergyEntries[0]);
                 ctd.ProcessOneTimestep(filerows, null);
-                //Assert.AreEqual(resultValuesRow1[i], filerows[1].EnergyEntries[0]);
+                //(filerows[1].EnergyEntries[0]).Should().Be(resultValuesRow1[i]);
                 sb.Append(" row0 after:");
                 sb.Append(filerows[0].EnergyEntries[0]);
                 sb.Append(" row1 after:");
@@ -143,18 +143,18 @@ namespace Calculation.Tests {
             for (var i = 0; i < 10; i++) {
                 var ts = new TimeStep(i, 0, true);
                 var filerows = odap.ProcessOneTimestep(ts);
-                Assert.AreEqual(3, filerows.Count);
-                Assert.AreEqual(1, filerows[0].EnergyEntries.Count);
+                Assert.Equal(3, filerows.Count);
+                Assert.Equal(1, filerows[0].EnergyEntries.Count);
                 var sb = new StringBuilder("row0 before:");
                 sb.Append(filerows[0].EnergyEntries[0]);
                 sb.Append(" row1 before:");
                 sb.Append(filerows[1].EnergyEntries[0]);
-                Assert.AreEqual(resultValues[i], filerows[0].EnergyEntries[0]);
-                Assert.AreEqual(0, filerows[1].EnergyEntries[0]);
-                Assert.AreEqual(0, filerows[2].EnergyEntries[0]);
+                Assert.Equal(resultValues[i], filerows[0].EnergyEntries[0]);
+                Assert.Equal(0, filerows[1].EnergyEntries[0]);
+                Assert.Equal(0, filerows[2].EnergyEntries[0]);
                 ctd.ProcessOneTimestep(filerows, null);
-                Assert.AreEqual(resultValuesRow1[i], filerows[1].EnergyEntries[0]);
-                Assert.AreEqual(resultValuesRow2[i], filerows[2].EnergyEntries[0]);
+                Assert.Equal(resultValuesRow1[i], filerows[1].EnergyEntries[0]);
+                Assert.Equal(resultValuesRow2[i], filerows[2].EnergyEntries[0]);
                 sb.Append(" row0 after:");
                 sb.Append(filerows[0].EnergyEntries[0]);
                 sb.Append(" row1 after:");

@@ -32,14 +32,15 @@ using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables.BasicElements;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Database.Tests.Tables {
-    [TestFixture]
+
     public class DateBasedProfileTests : UnitTestBaseClass
     {
         [Fact]
@@ -52,17 +53,17 @@ namespace Database.Tests.Tables {
                 db.ClearTable(DateProfileDataPoint.TableName);
                 var profiles = new ObservableCollection<DateBasedProfile>();
                 DateBasedProfile.LoadFromDatabase(profiles, db.ConnectionString, false);
-                Assert.AreEqual(0, profiles.Count);
+                profiles.Count.Should().Be(0);
                 var dbp = new DateBasedProfile("tempprofil1", "desc1", db.ConnectionString, Guid.NewGuid().ToStrGuid());
                 dbp.SaveToDB();
                 dbp.AddNewDatePoint(new DateTime(2014, 1, 1), 15);
                 dbp.AddNewDatePoint(new DateTime(2014, 2, 1), 15);
                 dbp.SaveToDB();
                 DateBasedProfile.LoadFromDatabase(profiles, db.ConnectionString, false);
-                Assert.AreEqual(1, profiles.Count);
-                Assert.AreEqual(2, profiles[0].Datapoints.Count);
+                 profiles.Count.Should().Be(1);
+                profiles[0].Datapoints.Count.Should().Be(2);
                 profiles[0].DeleteDatePoint(profiles[0].Datapoints[0]);
-                Assert.AreEqual(1, profiles[0].Datapoints.Count);
+                profiles[0].Datapoints.Count.Should().Be(1);
                 db.Cleanup();
             }
         }

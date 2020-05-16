@@ -38,7 +38,6 @@ using Automation.ResultFiles;
 
 namespace Common {
     public static class Extensions {
-
         [NotNull]
         public static StrGuid ToStrGuid(this Guid myguid)
         {

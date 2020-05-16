@@ -34,16 +34,17 @@ using Common;
 using Common.Tests;
 using Database.Helpers;
 using Database.Tables.BasicHouseholds;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 #endregion
 
 namespace Database.Tests.Tables {
-    [TestFixture]
+
     public class DesireTests : UnitTestBaseClass
     {
         [Fact]
@@ -55,12 +56,12 @@ namespace Database.Tests.Tables {
                 db.ClearTable(Desire.TableName);
                 var cat = new CategoryDBBase<Desire>("Desires");
                 Desire.LoadFromDatabase(cat.MyItems, db.ConnectionString, false);
-                Assert.AreEqual(0, cat.MyItems.Count);
+                (cat.MyItems.Count).Should().Be(0);
                 cat.CreateNewItem(db.ConnectionString);
                 cat.SaveToDB();
                 var desires = new ObservableCollection<Desire>();
                 Desire.LoadFromDatabase(desires, db.ConnectionString, false);
-                Assert.AreEqual(1, desires.Count);
+                (desires.Count).Should().Be(1);
                 db.Cleanup();
             }
         }

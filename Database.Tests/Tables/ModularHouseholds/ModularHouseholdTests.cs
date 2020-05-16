@@ -38,13 +38,13 @@ using Database.Tables.ModularHouseholds;
 using FluentAssertions;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Database.Tests.Tables.ModularHouseholds {
-    [TestFixture]
+
     public class ModularHouseholdTests : UnitTestBaseClass
     {
         [Fact]
@@ -66,7 +66,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
                     newhh.ImportFromJsonTemplate(jsonHH1, sim);
                     var newJson = newhh.GetJson();
                     var s2 = JsonConvert.SerializeObject(newJson, Formatting.Indented);
-                    Assert.AreEqual(jsonHH1String, s2);
+                    (s2).Should().Be(jsonHH1String);
 
                     //
                     //modify the trait entry and make sure it is different
@@ -79,30 +79,30 @@ namespace Database.Tests.Tables.ModularHouseholds {
                         prevcount++;
                     }
 
-                    Assert.AreEqual(jsonHH1.Traits.Count + 1, newhh.Traits.Count);
+                    (newhh.Traits.Count).Should().Be(jsonHH1.Traits.Count + 1);
                     var newJson2 = newhh.GetJson();
                     var newJson2String = JsonConvert.SerializeObject(newJson2, Formatting.Indented);
-                    Assert.AreNotEqual(jsonHH1String, newJson2String);
+                    jsonHH1String.Should().NotBe(newJson2String);
 
                     //import again
                     newhh.ImportFromJsonTemplate(jsonHH1, sim);
                     var newJson3 = newhh.GetJson();
                     var newJson3String = JsonConvert.SerializeObject(newJson3, Formatting.Indented);
-                    Assert.AreEqual(jsonHH1String, newJson3String);
+                    (newJson3String).Should().Be(jsonHH1String);
 
 
                     //modify the persons and make sure it is different
                     newhh.AddPerson(sim.Persons[5], sim.TraitTags[0]);
-                    Assert.AreEqual(jsonHH1.Persons.Count + 1, newhh.Persons.Count);
+                    (newhh.Persons.Count).Should().Be(jsonHH1.Persons.Count + 1);
                     var newJson5 = newhh.GetJson();
                     var newJson5String = JsonConvert.SerializeObject(newJson5, Formatting.Indented);
-                    Assert.AreNotEqual(jsonHH1String, newJson5String);
+                    jsonHH1String.Should().NotBe(newJson5String);
 
                     //import again
                     newhh.ImportFromJsonTemplate(jsonHH1, sim);
                     var newJson6 = newhh.GetJson();
                     var s6 = JsonConvert.SerializeObject(newJson6, Formatting.Indented);
-                    Assert.AreEqual(jsonHH1String, s6);
+                    (s6).Should().Be(jsonHH1String);
 
 
                     db.Cleanup();
@@ -166,7 +166,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
                 int traitsBefore = mhh.Traits.Count;
                 mhh.SwapPersons(mhhPerson, dstPerson, dstTag);
                 int traitsAfter = mhh.Traits.Count;
-                Assert.AreEqual(traitsBefore, traitsAfter);
+                (traitsAfter).Should().Be(traitsBefore);
 
                 db.Cleanup();
             }
@@ -186,7 +186,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
                 int traitsBefore = mhh.Traits.Count;
                 mhh.SwapPersons(mhhPerson, dstPerson, dstTag);
                 int traitsAfter = mhh.Traits.Count;
-                Assert.AreEqual(traitsBefore, traitsAfter);
+                (traitsAfter).Should().Be(traitsBefore);
 
                 db.Cleanup();
             }
@@ -242,7 +242,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
 
                 ModularHousehold.LoadFromDatabase(result, db.ConnectionString, householdTraits, deviceSelections, false,
                     persons, vacations, hhTags, traitTags);
-                Assert.AreEqual(0, result.Count);
+                (result.Count).Should().Be(0);
                 var chh = new ModularHousehold("blub", null, "blub", db.ConnectionString, ds, "src", null, null,
                     EnergyIntensityType.Random, CreationType.ManuallyCreated, Guid.NewGuid().ToStrGuid());
                 chh.SaveToDB();
@@ -251,8 +251,8 @@ namespace Database.Tests.Tables.ModularHouseholds {
                 result.Clear();
                 ModularHousehold.LoadFromDatabase(result, db.ConnectionString, householdTraits, deviceSelections, false,
                     persons, vacations, hhTags, traitTags);
-                Assert.AreEqual(1, result.Count);
-                Assert.AreEqual(1, result[0].Traits.Count);
+                (result.Count).Should().Be(1);
+                (result[0].Traits.Count).Should().Be(1);
                 db.Cleanup();
             }
         }

@@ -1,22 +1,21 @@
 ﻿using System;
 using System.IO;
-using System.Threading;
 using Automation;
 using ChartCreator2.OxyCharts;
 using Common;
 using Common.Tests;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace ChartCreator2.Tests.Oxyplot {
-    [TestFixture]
-    [Apartment(ApartmentState.STA)]
+
     public class DeviceTaggingSetTests : UnitTestBaseClass
     {
-        [Fact]
+        [StaFact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.BrokenTest)]
         public void MakePlotTest()
         {
@@ -45,7 +44,7 @@ namespace ChartCreator2.Tests.Oxyplot {
                 Logger.Info("Simulation Time:" + (simend - start));
                 Logger.Info("Chart Time:" + (DateTime.Now - simend));
                 var imagefiles = FileFinder.GetRecursiveFiles(di, "DeviceTaggingSet.*.png");
-                Assert.GreaterOrEqual(imagefiles.Count, 1);
+                imagefiles.Count.Should().BeGreaterOrEqualTo( 1);
             }
             cs.CleanUp();
             CleanTestBase.RunAutomatically(true);

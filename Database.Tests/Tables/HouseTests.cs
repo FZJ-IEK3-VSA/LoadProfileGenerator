@@ -39,16 +39,17 @@ using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.Houses;
 using Database.Tables.ModularHouseholds;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 #endregion
 
 namespace Database.Tests.Tables {
-    [TestFixture]
+
     public class HouseTests : UnitTestBaseClass
     {
         [Fact]
@@ -100,7 +101,7 @@ namespace Database.Tests.Tables {
                 House.LoadFromDatabase(houses1, db.ConnectionString,
                     temperaturProfiles, geoLocs, houseTypes,
                     modularHouseholds, chargingStationSets, transportationDeviceSets, travelRouteSets, false);
-                Assert.AreEqual(1, houses1.Count);
+                (houses1.Count).Should().Be(1);
                 db.Cleanup();
             }
         }
@@ -151,18 +152,18 @@ namespace Database.Tests.Tables {
                     out var _, loadTypes, out var chargingStationSets);
                 House.LoadFromDatabase(houses, db.ConnectionString, temperaturProfiles, geoLocs, houseTypes,
                     modularHouseholds, chargingStationSets, transportationDeviceSets, travelRouteSets, false);
-                Assert.AreEqual(0, houses.Count);
+                (houses.Count).Should().Be(0);
                 var house = new House("haus1", "blub", null, null, null, db.ConnectionString, EnergyIntensityType.Random,
                     "Testing", CreationType.ManuallyCreated, Guid.NewGuid().ToStrGuid());
                 house.SaveToDB();
                 House.LoadFromDatabase(houses, db.ConnectionString, temperaturProfiles, geoLocs, houseTypes,
                     modularHouseholds, chargingStationSets, transportationDeviceSets, travelRouteSets, false);
-                Assert.AreEqual(1, houses.Count);
+                (houses.Count).Should().Be(1);
                 // ModularHousehold hh = new ModularHousehold("bla", null, "blub", db.ConnectionString, null, "test",null,null, EnergyIntensityType.Random,CreationType.TemplateCreated);
                 //h/h.SaveToDB();
                 //households.Add(hh);
                 var house2 = houses[0];
-                Assert.AreEqual(0, house2.Households.Count);
+                (house2.Households.Count).Should().Be(0);
 
                 house.AddHousehold(modularHouseholds[0], false, null, null, null);
                 house.AddHousehold(modularHouseholds[0], false, null, null, null);
@@ -170,17 +171,17 @@ namespace Database.Tests.Tables {
                 houses.Clear();
                 House.LoadFromDatabase(houses, db.ConnectionString, temperaturProfiles, geoLocs, houseTypes,
                     modularHouseholds, chargingStationSets, transportationDeviceSets, travelRouteSets, false);
-                Assert.AreEqual(1, houses.Count);
+                (houses.Count).Should().Be(1);
                 var house3 = houses[0];
-                Assert.AreEqual(2, house3.Households.Count);
+                (house3.Households.Count).Should().Be(2);
                 house3.DeleteHouseholdFromDB(house3.Households[0]);
                 houses.Clear();
 
                 House.LoadFromDatabase(houses, db.ConnectionString, temperaturProfiles, geoLocs, houseTypes,
                     modularHouseholds, chargingStationSets, transportationDeviceSets, travelRouteSets, false);
-                Assert.AreEqual(1, houses.Count);
+                (houses.Count).Should().Be(1);
                 var house4 = houses[0];
-                Assert.AreEqual(1, house4.Households.Count);
+                (house4.Households.Count).Should().Be(1);
                 db.Cleanup();
             }
         }

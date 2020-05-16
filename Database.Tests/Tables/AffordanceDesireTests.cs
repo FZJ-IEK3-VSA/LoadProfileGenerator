@@ -31,14 +31,15 @@ using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables.BasicHouseholds;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Database.Tests.Tables {
-    [TestFixture]
+
     public class AffordanceDesireTests : UnitTestBaseClass
     {
         [Fact]
@@ -54,7 +55,7 @@ namespace Database.Tests.Tables {
                 db.ClearTable(AffordanceDesire.TableName);
                 affDesires.Clear();
                 AffordanceDesire.LoadFromDatabase(affDesires, db.ConnectionString, desires, false);
-                Assert.AreEqual(0, affDesires.Count);
+                affDesires.Count.Should().Be(0);
                 db.Cleanup();
             }
         }

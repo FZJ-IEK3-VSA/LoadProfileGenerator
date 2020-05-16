@@ -5,11 +5,10 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using Automation;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 
 namespace ReleaseBuilder {
-    [TestFixture]
     public class MakeClassDiagrams {
         private static void Printedges([NotNull] MyClassNode clss, [NotNull] StreamWriter sw) {
             foreach (var subclass in clss.Subclasses) {

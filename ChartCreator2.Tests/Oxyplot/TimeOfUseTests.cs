@@ -1,22 +1,21 @@
 ﻿using System.IO;
-using System.Threading;
 using Automation;
 using ChartCreator2.OxyCharts;
 using Common;
 using Common.Tests;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace ChartCreator2.Tests.Oxyplot {
-    [TestFixture]
+
     public class TimeOfUseTests : UnitTestBaseClass
     {
-        [Fact]
+        [StaFact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
-        [Apartment(ApartmentState.STA)]
         public void MakePlotTest()
         {
             CleanTestBase.RunAutomatically(false);
@@ -37,7 +36,7 @@ namespace ChartCreator2.Tests.Oxyplot {
                 tou.MakePlot(rfe);
                 //OxyCalculationSetup.CopyImage(resultFileEntries[0].FullFileName);
                 var imagefiles = FileFinder.GetRecursiveFiles(di, "TimeOfUseProfiles.*.png");
-                Assert.GreaterOrEqual(imagefiles.Count, 1);
+                imagefiles.Count.Should().BeGreaterOrEqualTo( 1);
             }
             cs.CleanUp();
             CleanTestBase.RunAutomatically(true);

@@ -4,15 +4,16 @@ using Common;
 using Common.Tests;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.Transportation;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Database.Tests.Tables.Transportation
 {
-    [TestFixture]
+
     public class TransportationDeviceSetTests : UnitTestBaseClass
     {
         [Fact]
@@ -50,8 +51,8 @@ namespace Database.Tests.Tables.Transportation
                 ObservableCollection<TransportationDeviceSet> result = new ObservableCollection<TransportationDeviceSet>();
                 TransportationDeviceSet.LoadFromDatabase(result, db.ConnectionString, false, transportationDevices);
                 db.Cleanup();
-                Assert.AreEqual(1, result.Count);
-                Assert.AreEqual(1, result[0].TransportationDeviceSetEntries.Count);
+                (result.Count).Should().Be(1);
+                (result[0].TransportationDeviceSetEntries.Count).Should().Be(1);
             }
         }
         [Fact]

@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using Automation;
+﻿using Automation;
 using Common;
 using Common.Tests;
 using Database;
@@ -7,17 +6,15 @@ using Database.Tables.ModularHouseholds;
 using Database.Tests;
 using JetBrains.Annotations;
 using LoadProfileGenerator.Presenters.SpecialViews;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
 
 namespace LoadProfileGenerator.Tests.Presenters.SpecialViews
 {
-    [TestFixture]
     public class CalculationOutcomesPresenterTests : UnitTestBaseClass
     {
-        [Fact]
-        [Apartment(ApartmentState.STA)]
+        [StaFact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
 
         public void StartCalcOutcomesChart()

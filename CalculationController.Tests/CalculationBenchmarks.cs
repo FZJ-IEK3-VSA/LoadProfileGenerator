@@ -22,14 +22,14 @@ using Database.Tables;
 using Database.Tables.Houses;
 using Database.Tables.Transportation;
 using Database.Tests;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace CalculationController.Tests {
-    [TestFixture]
     public class CalculationBenchmarks: UnitTestBaseClass {
         private static bool ReportCancelFunc()
         {
@@ -68,7 +68,7 @@ namespace CalculationController.Tests {
                     sim.MyGeneralConfig.CSVCharacter = ";";
                     //ChartLocalizer.ShouldTranslate = true;
                     //ConfigSetter.SetGlobalTimeParameters(sim.MyGeneralConfig);
-                    Assert.AreNotEqual(null, sim);
+                    sim.Should().NotBeNull();
 
                     var cmf = new CalcManagerFactory();
                     CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
@@ -125,7 +125,7 @@ namespace CalculationController.Tests {
                     sim.MyGeneralConfig.Enable(CalcOption.ActionsLogfile);
                     sim.MyGeneralConfig.Enable(CalcOption.ActionsEachTimestep);
                     sim.MyGeneralConfig.CSVCharacter = ";";
-                    Assert.AreNotEqual(null, sim);
+                    sim.Should().NotBeNull();
 
                     var cmf = new CalcManagerFactory();
                     CalculationProfiler calculationProfiler = new CalculationProfiler();
@@ -182,7 +182,7 @@ namespace CalculationController.Tests {
                     sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
                     sim.MyGeneralConfig.Enable(CalcOption.BodilyActivityStatistics);
                     sim.MyGeneralConfig.CSVCharacter = ";";
-                    Assert.AreNotEqual(null, sim);
+                    sim.Should().NotBeNull();
 
                     var cmf = new CalcManagerFactory();
                     CalculationProfiler calculationProfiler = new CalculationProfiler();
@@ -297,7 +297,7 @@ namespace CalculationController.Tests {
                 //sim.MyGeneralConfig.Enable(CalcOption.VariableLogFile);
                 sim.MyGeneralConfig.CSVCharacter = ";";
                 sim.MyGeneralConfig.ShowSettlingPeriodBool = true;
-                Assert.AreNotEqual(null, sim);
+                sim.Should().NotBeNull();
 
                 var cmf = new CalcManagerFactory();
                 var house = sim.Houses.CreateNewItem(sim.ConnectionString);
@@ -404,7 +404,7 @@ namespace CalculationController.Tests {
                     var sim = new Simulator(db.ConnectionString);
                     sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
                     //sim.MyGeneralConfig.Enable(CalcOption.LogAllMessages);
-                    Assert.AreNotEqual(null, sim);
+                    sim.Should().NotBeNull();
                     SimIntegrityChecker.Run(sim);
                     CalcManagerFactory.DoIntegrityRun = false;
                     for (var i = 0; i < sim.ModularHouseholds.It.Count; i++)
@@ -454,7 +454,7 @@ namespace CalculationController.Tests {
                 var sim = new Simulator(db.ConnectionString) { MyGeneralConfig = { ExternalTimeResolution = "00:15:00" } };
                 sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
                 sim.MyGeneralConfig.Enable(CalcOption.TotalsPerDevice);
-                Assert.AreNotEqual(null, sim);
+                sim.Should().NotBeNull();
                 SimIntegrityChecker.Run(sim);
                 CalcManagerFactory.DoIntegrityRun = false;
                 for (var i = 0; i < sim.Houses.It.Count; i++)
@@ -497,7 +497,7 @@ namespace CalculationController.Tests {
                 sim.MyGeneralConfig.Enable(CalcOption.OverallSum);
                 sim.MyGeneralConfig.Enable(CalcOption.IndividualSumProfiles);
                 sim.MyGeneralConfig.Enable(CalcOption.SumProfileExternalEntireHouse);
-                Assert.AreNotEqual(null, sim);
+                sim.Should().NotBeNull();
                 SimIntegrityChecker.Run(sim);
                 CalcManagerFactory.DoIntegrityRun = false;
                 using (var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass()))
@@ -571,7 +571,7 @@ namespace CalculationController.Tests {
                         var calcstart = DateTime.Now;
                         sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
                         sim.MyGeneralConfig.Enable(option);
-                        Assert.AreNotEqual(null, sim);
+                        sim.Should().NotBeNull();
 
                         var cmf = new CalcManagerFactory();
                         //CalcDevice.UseRanges = true;
@@ -625,7 +625,7 @@ namespace CalculationController.Tests {
                     sim.MyGeneralConfig.Disable(CalcOption.OverallSum);
                     SimIntegrityChecker.Run(sim);
                     //ConfigSetter.SetGlobalTimeParameters(sim.MyGeneralConfig);
-                    Assert.AreNotEqual(null, sim);
+                    sim.Should().NotBeNull();
 
                     var cmf = new CalcManagerFactory();
                     //CalcDevice.UseRanges = true;
@@ -662,7 +662,7 @@ namespace CalculationController.Tests {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
                 var sim = new Simulator(db.ConnectionString);
-                Assert.IsNotNull(sim);
+                sim.Should().NotBeNull();
                 Logger.Info("Guids created: " + DBBase.GuidCreationCount);
                 if (DBBase.GuidCreationCount > 0)
                 {
@@ -672,7 +672,7 @@ namespace CalculationController.Tests {
                 DBBase.GuidCreationCount = 0;
                 DBBase.GuidsToSave.Clear();
                 var sim2 = new Simulator(db.ConnectionString);
-                Assert.IsNotNull(sim2);
+                sim2.Should().NotBeNull();
             }
             Logger.Info("Guids created try 2: " + DBBase.GuidCreationCount);
         }
@@ -706,7 +706,7 @@ namespace CalculationController.Tests {
                     sim.MyGeneralConfig.Enable(CalcOption.DeviceProfiles);
 
                     //ChartLocalizer.ShouldTranslate = true;
-                    Assert.AreNotEqual(null, sim);
+                     sim.Should().NotBeNull();
                     var cmf = new CalcManagerFactory();
                     //CalcDevice.UseRanges = true;
                     House houseToCalc = sim.Houses.It[0];
@@ -753,7 +753,7 @@ namespace CalculationController.Tests {
 
                     sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.ReasonableWithChartsAndPDF);
 
-                    Assert.AreNotEqual(null, sim);
+                    sim.Should().NotBeNull();
 
                     var cmf = new CalcManagerFactory();
                     //CalcDevice.UseRanges = true;
@@ -807,7 +807,7 @@ namespace CalculationController.Tests {
                     sim.MyGeneralConfig.Enable(CalcOption.TotalsPerLoadtype);
                     //sim.MyGeneralConfig.Enable(CalcOption.ActivationFrequencies);
                     //ChartLocalizer.ShouldTranslate = true;
-                    Assert.AreNotEqual(null, sim);
+                    sim.Should().NotBeNull();
                     var cmf = new CalcManagerFactory();
                     //CalcDevice.UseRanges = true;
                     var house = sim.Houses.FindFirstByName("01, 02", FindMode.Partial);
@@ -855,7 +855,7 @@ namespace CalculationController.Tests {
                         continue;
                     }
                     var totals = tel.Read(entry.HouseholdKey);
-                    Assert.That(totals.Count, Is.GreaterThan(0));
+                    totals.Count.Should().BeGreaterThan(0);
                 }
             }
 
@@ -908,7 +908,7 @@ namespace CalculationController.Tests {
                     sim.MyGeneralConfig.Enable(CalcOption.EnergyCarpetPlot);
                     sim.MyGeneralConfig.Enable(CalcOption.ActivationFrequencies);
                     //ChartLocalizer.ShouldTranslate = true;
-                    Assert.AreNotEqual(null, sim);
+                    sim.Should().NotBeNull();
 
                     var cmf = new CalcManagerFactory();
                     CalculationProfiler calculationProfiler = new CalculationProfiler();
@@ -927,7 +927,7 @@ namespace CalculationController.Tests {
                 Logger.ImportantInfo("Duration:" + (DateTime.Now - start).TotalSeconds + " seconds");
                 var imagefiles = FileFinder.GetRecursiveFiles(new DirectoryInfo(wd1.WorkingDirectory),
                     "EnergyCarpetplot.*.png");
-                Assert.GreaterOrEqual(imagefiles.Count, 0);
+                imagefiles.Count.Should().BeGreaterThan(0);
                 wd1.CleanUp();
             }
             CleanTestBase.RunAutomatically(true);
@@ -954,7 +954,7 @@ namespace CalculationController.Tests {
                     sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
                     sim.MyGeneralConfig.Enable(CalcOption.TotalsPerLoadtype);
                     sim.MyGeneralConfig.CSVCharacter = ";";
-                    Assert.AreNotEqual(null, sim);
+                    sim.Should().NotBeNull();
                     SimIntegrityChecker.Run(sim);
                     CalcManagerFactory.DoIntegrityRun = false;
                     var mhh = sim.ModularHouseholds.FindFirstByName("x CHR08 Single woman, 2 children, with work 47");
@@ -1014,7 +1014,7 @@ namespace CalculationController.Tests {
                     sim.MyGeneralConfig.Enable(CalcOption.TotalsPerLoadtype);
                     sim.MyGeneralConfig.CSVCharacter = ";";
 
-                    Assert.AreNotEqual(null, sim);
+                    sim.Should().NotBeNull();
                     SimIntegrityChecker.Run(sim);
                     CalcManagerFactory.DoIntegrityRun = false;
                     var mhh = sim.Houses[27];
@@ -1080,7 +1080,7 @@ namespace CalculationController.Tests {
                     //sim.MyGeneralConfig.Enable(CalcOption.ActivationFrequencies);
                     //ChartLocalizer.ShouldTranslate = true;
 
-                    Assert.AreNotEqual(null, sim);
+                    sim.Should().NotBeNull();
                     var cmf = new CalcManagerFactory();
                     //CalcDevice.UseRanges = true;
                     var house = sim.Houses.FindFirstByName("01, 02", FindMode.Partial);
@@ -1121,7 +1121,7 @@ namespace CalculationController.Tests {
                     var ti = tel.Read(entry.HouseholdKey);
                     //var totalEntries = ti.First(x => x.HouseholdKey == Constants.TotalsKey);
                     //var others = ti.HouseholdEntries.Where(x => x.HouseholdKey != Constants.TotalsKey).ToList();
-                    Assert.That(ti.Count, Is.GreaterThan(0));
+                    ti.Count.Should().BeGreaterThan(0);
                     //TODO: fix: implement a proper check of the sums vs. the profile sums
                     /*foreach (var totalEntriesLoadTypeEntry in totalEntries.LoadTypeEntries) {
                         var totalSum = totalEntriesLoadTypeEntry.Total;
@@ -1168,7 +1168,7 @@ namespace CalculationController.Tests {
                 sim.MyGeneralConfig.Enable(CalcOption.DeviceProfiles);
                 //sim.MyGeneralConfig.Enable(CalcOption.per);
                 SimIntegrityChecker.Run(sim);
-                Assert.AreNotEqual(null, sim);
+                sim.Should().NotBeNull();
                 int count = 0;
                 for (var index = 0; index < sim.ModularHouseholds.It.Count && index < 5; index++)
                 {

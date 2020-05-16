@@ -36,14 +36,15 @@ using Database.Helpers;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.Houses;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Database.Tests.Tables {
-    [TestFixture]
+
     public class HouseTypeTests : UnitTestBaseClass
     {
         [Fact]
@@ -73,16 +74,16 @@ namespace Database.Tests.Tables {
                 var deviceActionGroups = db.LoadDeviceActionGroups();
                 var deviceActions = db.LoadDeviceActions(timeBasedProfiles,
                     devices, loadTypes, deviceActionGroups);
-                Assert.AreEqual(0, houseTypes.Count);
+                (houseTypes.Count).Should().Be(0);
                 var housetype = new HouseType("haus1", "blub", 1000, 5, 10, loadTypes[0], db.ConnectionString, 1, 1,
                     loadTypes[1], false, 0, false, 0, 1, 100, Guid.NewGuid().ToStrGuid());
                 housetype.SaveToDB();
                 HouseType.LoadFromDatabase(houseTypes, db.ConnectionString, devices, deviceCategories, timeBasedProfiles,
                     timeLimits, loadTypes, trafoDevices, energyStorages, generators, false, locations,
                     deviceActions, deviceActionGroups, variables);
-                Assert.AreEqual(1, houseTypes.Count);
+                (houseTypes.Count).Should().Be(1);
                 var houseType2 = houseTypes[0];
-                Assert.AreEqual(0, houseType2.HouseDevices.Count);
+                (houseType2.HouseDevices.Count).Should().Be(1);
                 var rd = new RealDevice("test", 1, "bla", null, "name", true, false, db.ConnectionString, Guid.NewGuid().ToStrGuid());
                 rd.SaveToDB();
                 devices.Add(rd);
@@ -108,17 +109,17 @@ namespace Database.Tests.Tables {
                 HouseType.LoadFromDatabase(houseTypes, db.ConnectionString, devices, deviceCategories, timeBasedProfiles,
                     timeLimits, loadTypes, trafoDevices, energyStorages, generators, false, locations, deviceActions,
                     deviceActionGroups, variables);
-                Assert.AreEqual(1, houseTypes.Count);
+                (houseTypes.Count).Should().Be(0);
                 var houseType3 = houseTypes[0];
-                Assert.AreEqual(3, houseType3.HouseDevices.Count);
+                (houseType3.HouseDevices.Count).Should().Be(3);
                 houseType3.DeleteDeviceFromDB(rd);
                 houseTypes.Clear();
                 HouseType.LoadFromDatabase(houseTypes, db.ConnectionString, devices, deviceCategories, timeBasedProfiles,
                     timeLimits, loadTypes, trafoDevices, energyStorages, generators, false, locations, deviceActions,
                     deviceActionGroups, variables);
-                Assert.AreEqual(1, houseTypes.Count);
+                (houseTypes.Count).Should().Be(1);
                 var houseType4 = houseTypes[0];
-                Assert.AreEqual(1, houseType4.HouseDevices.Count);
+                (houseType4.HouseDevices.Count).Should().Be(1);
                 db.Cleanup();
             }
         }
@@ -151,7 +152,7 @@ namespace Database.Tests.Tables {
                 HouseType.LoadFromDatabase(houseTypes, db.ConnectionString, devices, deviceCategories, timeBasedProfiles,
                     timeLimits, loadTypes, trafoDevices, energyStorages, generators, false, locations, deviceActions,
                     deviceActionGroups, variables);
-                Assert.AreEqual(0, houseTypes.Count);
+                (houseTypes.Count).Should().Be(0);
                 var housetype = new HouseType("haus1", "blub", 1000, 5, 10, loadTypes[0], db.ConnectionString, 1, 1,
                     loadTypes[1], false, 0, false, 0, 1, 100, Guid.NewGuid().ToStrGuid());
                 housetype.SaveToDB();
@@ -172,15 +173,15 @@ namespace Database.Tests.Tables {
                 HouseType.LoadFromDatabase(houseTypes, db.ConnectionString, devices, deviceCategories, timeBasedProfiles,
                     timeLimits, loadTypes, trafoDevices, energyStorages, generators, false, locations, deviceActions,
                     deviceActionGroups, variables);
-                Assert.AreEqual(1, houseTypes.Count);
+                (houseTypes.Count).Should().Be(1);
                 var house3 = houseTypes[0];
-                Assert.AreEqual(1, house3.HouseDevices.Count);
+                (house3.HouseDevices.Count).Should().Be(1);
                 db.ClearTable(HouseType.TableName);
                 houseTypes.Clear();
                 HouseType.LoadFromDatabase(houseTypes, db.ConnectionString, devices, deviceCategories, timeBasedProfiles,
                     timeLimits, loadTypes, trafoDevices, energyStorages, generators, false, locations, deviceActions,
                     deviceActionGroups, variables);
-                Assert.AreEqual(0, houseTypes.Count);
+                (houseTypes.Count).Should().Be(0);
 
                 db.Cleanup();
             }
@@ -215,7 +216,7 @@ namespace Database.Tests.Tables {
                 HouseType.LoadFromDatabase(houseTypes, db.ConnectionString, devices, deviceCategories, timeBasedProfiles,
                     timeLimits, loadTypes, trafoDevices, energyStorages, generators, false, locations, deviceActions,
                     deviceActionGroups, variables);
-                Assert.AreEqual(0, houseTypes.Count);
+                (houseTypes.Count).Should().Be(0);
                 var housetype = new HouseType("haus1", "blub", 1000, 5, 10, loadTypes[0], db.ConnectionString, 1, 1,
                     loadTypes[1], false, 0, false, 0, 1, 100, Guid.NewGuid().ToStrGuid());
                 housetype.SaveToDB();
@@ -224,26 +225,26 @@ namespace Database.Tests.Tables {
                     timeLimits, loadTypes, trafoDevices, energyStorages, generators, false, locations, deviceActions,
                     deviceActionGroups,
                     variables);
-                Assert.AreEqual(1, houseTypes.Count);
+                (houseTypes.Count).Should().Be(1);
                 var house2 = houseTypes[0];
-                Assert.AreEqual(0, house2.HouseTransformationDevices.Count);
+                (house2.HouseTransformationDevices.Count).Should().Be(0);
                 var es = energyStorages[0];
                 house2.AddEnergyStorage(es);
                 houseTypes.Clear();
                 HouseType.LoadFromDatabase(houseTypes, db.ConnectionString, devices, deviceCategories, timeBasedProfiles,
                     timeLimits, loadTypes, trafoDevices, energyStorages, generators, false, locations, deviceActions,
                     deviceActionGroups, variables);
-                Assert.AreEqual(1, houseTypes.Count);
+                (houseTypes.Count).Should().Be(1);
                 var house3 = houseTypes[0];
-                Assert.AreEqual(1, house3.HouseEnergyStorages.Count);
+                (house3.HouseEnergyStorages.Count).Should().Be(1);
                 house3.DeleteHouseEnergyStorage(house3.HouseEnergyStorages[0]);
                 houseTypes.Clear();
                 HouseType.LoadFromDatabase(houseTypes, db.ConnectionString, devices, deviceCategories, timeBasedProfiles,
                     timeLimits, loadTypes, trafoDevices, energyStorages, generators, false, locations, deviceActions,
                     deviceActionGroups, variables);
-                Assert.AreEqual(1, houseTypes.Count);
+                (houseTypes.Count).Should().Be(1);
                 var house4 = houseTypes[0];
-                Assert.AreEqual(0, house4.HouseEnergyStorages.Count);
+                (house4.HouseEnergyStorages.Count).Should().Be(0);
                 db.Cleanup();
             }
         }
@@ -289,7 +290,7 @@ namespace Database.Tests.Tables {
                 HouseType.LoadFromDatabase(houseTypes, db.ConnectionString, devices, deviceCategories, timeBasedProfiles,
                     timeLimits, loadTypes, trafoDevices, energyStorages, generators, false, locations, deviceActions,
                     deviceActionGroups, variables);
-                Assert.AreEqual(0, houseTypes.Count);
+                (houseTypes.Count).Should().Be(0);
                 var housetype = new HouseType("haus1", "blub", 1000, 5, 10, loadTypes[0], db.ConnectionString, 1, 1,
                     loadTypes[1], false, 0, false, 0, 1, 100, Guid.NewGuid().ToStrGuid());
                 housetype.SaveToDB();
@@ -298,11 +299,11 @@ namespace Database.Tests.Tables {
                 HouseType.LoadFromDatabase(houseTypes, db.ConnectionString, devices, deviceCategories, timeBasedProfiles,
                     timeLimits, loadTypes, trafoDevices, energyStorages, generators, false, locations, deviceActions,
                     deviceActionGroups, variables);
-                Assert.AreEqual(1, houseTypes.Count);
-                Assert.AreEqual(1, houseTypes[0].HouseDevices.Count);
+                (houseTypes.Count).Should().Be(1);
+                (houseTypes[0].HouseDevices.Count).Should().Be(1);
                 var house2 = houseTypes[0];
-                Assert.AreEqual("haus1", house2.Name);
-                Assert.AreEqual("blub", house2.Description);
+                (house2.Name).Should().Be("haus1");
+                (house2.Description).Should().Be("blub");
                 db.Cleanup();
             }
         }
@@ -336,33 +337,33 @@ namespace Database.Tests.Tables {
                 HouseType.LoadFromDatabase(houseTypes, db.ConnectionString, devices, deviceCategories, timeBasedProfiles,
                     timeLimits, loadTypes, trafoDevices, energyStorages, generators, false, locations, deviceActions,
                     deviceActionGroups, variables);
-                Assert.AreEqual(0, houseTypes.Count);
+                (houseTypes.Count).Should().Be(0);
                 var housetype = new HouseType("haus1", "blub", 1000, 5, 10, loadTypes[0], db.ConnectionString, 1, 1,
                     loadTypes[1], false, 0, false, 0, 1, 100, Guid.NewGuid().ToStrGuid());
                 housetype.SaveToDB();
                 HouseType.LoadFromDatabase(houseTypes, db.ConnectionString, devices, deviceCategories, timeBasedProfiles,
                     timeLimits, loadTypes, trafoDevices, energyStorages, generators, false, locations, deviceActions,
                     deviceActionGroups, variables);
-                Assert.AreEqual(1, houseTypes.Count);
+                (houseTypes.Count).Should().Be(1);
                 var house2 = houseTypes[0];
-                Assert.AreEqual(0, house2.HouseTransformationDevices.Count);
+                (house2.HouseTransformationDevices.Count).Should().Be(0);
                 var td = trafoDevices[0];
                 house2.AddTransformationDevice(td);
                 houseTypes.Clear();
                 HouseType.LoadFromDatabase(houseTypes, db.ConnectionString, devices, deviceCategories, timeBasedProfiles,
                     timeLimits, loadTypes, trafoDevices, energyStorages, generators, false, locations, deviceActions,
                     deviceActionGroups, variables);
-                Assert.AreEqual(1, houseTypes.Count);
+                (houseTypes.Count).Should().Be(1);
                 var house3 = houseTypes[0];
-                Assert.AreEqual(1, house3.HouseTransformationDevices.Count);
+                (house3.HouseTransformationDevices.Count).Should().Be(1);
                 house3.DeleteHouseTransformationDeviceFromDB(house3.HouseTransformationDevices[0]);
                 houseTypes.Clear();
                 HouseType.LoadFromDatabase(houseTypes, db.ConnectionString, devices, deviceCategories, timeBasedProfiles,
                     timeLimits, loadTypes, trafoDevices, energyStorages, generators, false, locations, deviceActions,
                     deviceActionGroups, variables);
-                Assert.AreEqual(1, houseTypes.Count);
+                (houseTypes.Count).Should().Be(1);
                 var house4 = houseTypes[0];
-                Assert.AreEqual(0, house4.HouseTransformationDevices.Count);
+                (house4.HouseTransformationDevices.Count).Should().Be(0);
                 db.Cleanup();
             }
         }
@@ -398,7 +399,7 @@ namespace Database.Tests.Tables {
                 HouseType.LoadFromDatabase(houseTypes, db.ConnectionString, devices, deviceCategories, timeBasedProfiles,
                     timeLimits, loadTypes, trafoDevices, energyStorages, generators, false, locations, deviceActions,
                     deviceActionGroups, variables);
-                Assert.GreaterOrEqual(houseTypes.Count, 1);
+                houseTypes.Count.Should().BeGreaterOrEqualTo( 1);
                 db.Cleanup();
             }
         }

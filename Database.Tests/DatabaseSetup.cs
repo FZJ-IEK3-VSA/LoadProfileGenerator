@@ -118,13 +118,15 @@ namespace Database.Tests
                 File.Delete(FileName);
             }
 
-            var sourcePath = GetSourcepath(sourceFileName);
-            File.Copy(sourcePath, FileName);
-            Logger.Info("Working with " + FileName + " copied from " + sourcePath);
+            SourcePath = GetSourcepath(sourceFileName);
+            File.Copy(SourcePath, FileName);
+            Logger.Info("Working with " + FileName + " copied from " + SourcePath);
             Config.IsInUnitTesting = true;
             ConnectionString = "Data Source=" + FileName;
             DatabaseVersionChecker.CheckVersion(ConnectionString);
         }
+
+        public string SourcePath { get; set; }
 
         [JetBrains.Annotations.NotNull]
         public string ConnectionString { get; }

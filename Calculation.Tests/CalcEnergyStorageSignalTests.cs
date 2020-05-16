@@ -35,13 +35,12 @@ using Common;
 using Common.JSON;
 using Common.Tests;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Calculation.Tests
 {
-    [TestFixture]
     public class CalcEnergyStorageSignalTests : UnitTestBaseClass
     {
         public CalcEnergyStorageSignalTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)

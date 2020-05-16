@@ -32,14 +32,15 @@ using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables.BasicElements;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Database.Tests.Tables {
-    [TestFixture]
+
     public class HolidayTests : UnitTestBaseClass
     {
         [Fact]
@@ -57,7 +58,7 @@ namespace Database.Tests.Tables {
                 db.ClearTable(HolidayDate.TableName);
                 db.ClearTable(HolidayProbabilities.TableName);
                 Holiday.LoadFromDatabase(holidays, db.ConnectionString, false);
-                Assert.AreEqual(0, holidays.Count);
+                (holidays.Count).Should().Be(0);
                 // add one and load again
                 var hd = new Holiday("my holiday", "blub", db.ConnectionString, Guid.NewGuid().ToStrGuid());
                 hd.SaveToDB();
@@ -68,7 +69,7 @@ namespace Database.Tests.Tables {
                 hd.SaveToDB();
                 var r = new Random(1);
                 var dts = hd.GetListOfWorkFreeDates(r, "test");
-                Assert.AreEqual(2, dts.Count);
+                (dts.Count).Should().Be(2);
                 Assert.True(dts.ContainsKey(holiday));
                 Assert.True(dts.ContainsKey(holiday.AddDays(1)));
                 db.Cleanup();
@@ -90,20 +91,20 @@ namespace Database.Tests.Tables {
                 db.ClearTable(HolidayDate.TableName);
                 db.ClearTable(HolidayProbabilities.TableName);
                 Holiday.LoadFromDatabase(holidays, db.ConnectionString, false);
-                Assert.AreEqual(0, holidays.Count);
+                (holidays.Count).Should().Be(0);
                 // add one and load again
                 var hd = new Holiday("my holiday", "blub", db.ConnectionString, Guid.NewGuid().ToStrGuid());
                 hd.SaveToDB();
                 hd.ProbMonday.Monday = 5;
                 hd.SaveToDB();
                 Holiday.LoadFromDatabase(holidays, db.ConnectionString, false);
-                Assert.AreEqual(1, holidays.Count);
-                Assert.AreEqual(5, holidays[0].ProbMonday.Monday);
+                (holidays.Count).Should().Be(1);
+                (holidays[0].ProbMonday.Monday).Should().Be(5);
                 // delete the loaded one
                 holidays[0].DeleteFromDB();
                 holidays.Clear();
                 Holiday.LoadFromDatabase(holidays, db.ConnectionString, false);
-                Assert.AreEqual(0, holidays.Count);
+                (holidays.Count).Should().Be(0);
                 db.Cleanup();
             }
         }
@@ -123,17 +124,17 @@ namespace Database.Tests.Tables {
                 db.ClearTable(Holiday.TableName);
                 db.ClearTable(HolidayDate.TableName);
                 Holiday.LoadFromDatabase(holidays, db.ConnectionString, false);
-                Assert.AreEqual(0, holidays.Count);
+                (holidays.Count).Should().Be(0);
                 // add one and load again
                 var hd = new Holiday("my holiday", "blub", db.ConnectionString, Guid.NewGuid().ToStrGuid());
                 hd.SaveToDB();
                 Holiday.LoadFromDatabase(holidays, db.ConnectionString, false);
-                Assert.AreEqual(1, holidays.Count);
+                (holidays.Count).Should().Be(1);
                 // delete the loaded one
                 holidays[0].DeleteFromDB();
                 holidays.Clear();
                 Holiday.LoadFromDatabase(holidays, db.ConnectionString, false);
-                Assert.AreEqual(0, holidays.Count);
+                (holidays.Count).Should().Be(0);
                 db.Cleanup();
             }
         }

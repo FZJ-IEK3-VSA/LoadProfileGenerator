@@ -11,14 +11,15 @@ using Database.Helpers;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.ModularHouseholds;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Database.Tests.Tables.BasicHouseholds {
-    [TestFixture]
+
     public class AffordanceTests : UnitTestBaseClass
     {
         [Fact]
@@ -34,12 +35,12 @@ namespace Database.Tests.Tables.BasicHouseholds {
                     "affordanceCategory", null, "desc", db.ConnectionString, true, true, 0, 99, false,
                     ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToStrGuid(), BodilyActivityLevel.Low);
                 aff.SaveToDB();
-                Assert.AreEqual(0, aff.ExecutedVariables.Count);
+                aff.ExecutedVariables.Count.Should().Be(0);
                 var va = new Variable("var1", "desc", "unit", db.ConnectionString, Guid.NewGuid().ToStrGuid());
                 va.SaveToDB();
                 aff.AddVariableRequirement(1, VariableLocationMode.CurrentLocation, null, VariableCondition.Equal, va,
                     string.Empty);
-                Assert.AreEqual(1, aff.RequiredVariables.Count);
+                aff.RequiredVariables.Count.Should().Be(1);
                 db.Cleanup();
             }
         }
@@ -56,11 +57,11 @@ namespace Database.Tests.Tables.BasicHouseholds {
                     "AffordanceCategory", null, "desc", db.ConnectionString, true, true, 0, 99, false,
                     ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToStrGuid(), BodilyActivityLevel.Low);
                 aff.SaveToDB();
-                Assert.AreEqual(0, aff.AffordanceStandbys.Count);
+                aff.AffordanceStandbys.Count.Should().Be(0);
                 var rd2 = new RealDevice("rd2", 1, string.Empty, null, string.Empty, false, false, db.ConnectionString, Guid.NewGuid().ToStrGuid());
                 rd2.SaveToDB();
                 aff.AddStandby(rd2);
-                Assert.AreEqual(1, aff.AffordanceStandbys.Count);
+                aff.AffordanceStandbys.Count.Should().Be(1);
                 db.Cleanup();
             }
         }
@@ -86,21 +87,21 @@ namespace Database.Tests.Tables.BasicHouseholds {
                     "AffordanceCategory", null, "desc", db.ConnectionString, true, true, 0, 99, false,
                     ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToStrGuid(), BodilyActivityLevel.Low);
                 aff.SaveToDB();
-                Assert.AreEqual(0, aff.AffordanceStandbys.Count);
+                aff.AffordanceStandbys.Count.Should().Be(0);
                 var rd2 = new RealDevice("rd2", 1, string.Empty, null, string.Empty, false, false, db.ConnectionString, Guid.NewGuid().ToStrGuid());
                 rd2.SaveToDB();
                 aff.AddStandby(rd2);
                 aff.SaveToDB();
-                Assert.AreEqual(1, aff.AffordanceStandbys.Count);
+                aff.AffordanceStandbys.Count.Should().Be(1);
                 var sim2 = new Simulator(db.ConnectionString);
                 var loadedAffordance = sim2.Affordances.It[0];
-                Assert.AreEqual(1, loadedAffordance.AffordanceStandbys.Count);
-                Assert.AreEqual("rd2", loadedAffordance.AffordanceStandbys[0].Device?.Name);
+                loadedAffordance.AffordanceStandbys.Count.Should().Be(1);
+                loadedAffordance.AffordanceStandbys[0].Device?.Name.Should().Be("rd2");
                 loadedAffordance.DeleteStandby(loadedAffordance.AffordanceStandbys[0]);
-                Assert.AreEqual(0, loadedAffordance.AffordanceStandbys.Count);
+                loadedAffordance.AffordanceStandbys.Count.Should().Be(0);
                 var sim3 = new Simulator(db.ConnectionString);
                 var affordanceLoaded2 = sim3.Affordances.It[0];
-                Assert.AreEqual(0, affordanceLoaded2.AffordanceStandbys.Count);
+                affordanceLoaded2.AffordanceStandbys.Count.Should().Be(0);
                 db.Cleanup();
             }
         }
@@ -119,12 +120,12 @@ namespace Database.Tests.Tables.BasicHouseholds {
                 var v = new Variable("var1", "desc", "1", db.ConnectionString, Guid.NewGuid().ToStrGuid());
                 v.SaveToDB();
                 aff.SaveToDB();
-                Assert.AreEqual(0, aff.ExecutedVariables.Count);
+                aff.ExecutedVariables.Count.Should().Be(0);
 
                 aff.AddVariableOperation(1, VariableLocationMode.CurrentLocation, null, VariableAction.SetTo, v,
                     string.Empty,
                     VariableExecutionTime.Beginning);
-                Assert.AreEqual(1, aff.ExecutedVariables.Count);
+                aff.ExecutedVariables.Count.Should().Be(1);
                 db.Cleanup();
             }
         }
@@ -151,21 +152,21 @@ namespace Database.Tests.Tables.BasicHouseholds {
                     "affordanceCategory", null, "desc", db.ConnectionString, true, true, 0, 99, false,
                     ActionAfterInterruption.GoBackToOld, false, Guid.NewGuid().ToStrGuid(), BodilyActivityLevel.Low);
                 aff.SaveToDB();
-                Assert.AreEqual(0, aff.ExecutedVariables.Count);
+                aff.ExecutedVariables.Count.Should().Be(0);
                 aff.AddVariableOperation(0, VariableLocationMode.CurrentLocation, null, VariableAction.SetTo, v,
                     string.Empty,
                     VariableExecutionTime.Beginning);
                 aff.SaveToDB();
-                Assert.AreEqual(1, aff.ExecutedVariables.Count);
+                aff.ExecutedVariables.Count.Should().Be(1);
                 var sim2 = new Simulator(db.ConnectionString);
                 var affordanceLoaded = sim2.Affordances.It[0];
-                Assert.AreEqual(1, affordanceLoaded.ExecutedVariables.Count);
-                Assert.AreEqual("var1", affordanceLoaded.ExecutedVariables[0].Name);
+                affordanceLoaded.ExecutedVariables.Count.Should().Be(1);
+                affordanceLoaded.ExecutedVariables[0].Name.Should().Be("var1");
                 affordanceLoaded.DeleteVariableOperation(affordanceLoaded.ExecutedVariables[0]);
-                Assert.AreEqual(0, affordanceLoaded.ExecutedVariables.Count);
+                affordanceLoaded.ExecutedVariables.Count.Should().Be(0);
                 var sim3 = new Simulator(db.ConnectionString);
                 var affordanceLoaded2 = sim3.Affordances.It[0];
-                Assert.AreEqual(0, affordanceLoaded2.ExecutedVariables.Count);
+                affordanceLoaded2.ExecutedVariables.Count.Should().Be(0);
                 db.Cleanup();
             }
         }
@@ -215,9 +216,9 @@ namespace Database.Tests.Tables.BasicHouseholds {
                 {
                     Logger.Info(keyValuePair.Key + ": " + keyValuePair.Value);
                 }
-                Assert.AreEqual(1, res.Count);
+                res.Count.Should().Be(1);
                 var first = res.First();
-                Assert.AreEqual(666 * 2, first.Value);
+                first.Value.Should().Be(666 * 2);
                 db.Cleanup();
             }
         }
@@ -259,9 +260,10 @@ namespace Database.Tests.Tables.BasicHouseholds {
                 {
                     Logger.Info(keyValuePair.Key + ": " + keyValuePair.Value);
                 }
-                Assert.AreEqual(1, res.Count);
+
+                (res.Count).Should().Be(1);
                 var first = res.First();
-                Assert.AreEqual(666 * 2, first.Value);
+                (first.Value).Should().Be(666 * 2);
                 db.Cleanup();
             }
         }
@@ -305,7 +307,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
                 aff.AddDeviceProfile(da, tbp, 0, devices, deviceCategories, lt, 1);
 
                 var ts = aff.CalculateMaximumInternalTimeResolution();
-                Assert.AreEqual(60, ts.TotalSeconds);
+                (ts.TotalSeconds).Should().Be(60);
                 Logger.Info(ts.ToString());
                 db.Cleanup();
             }
@@ -349,7 +351,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
                 aff.AddDeviceProfile(dag, null, 0, devices, deviceCategories, lt, 1);
 
                 var ts = aff.CalculateMaximumInternalTimeResolution();
-                Assert.AreEqual(60, ts.TotalSeconds);
+                (ts.TotalSeconds).Should().Be(60);
                 Logger.Info(ts.ToString());
                 db.Cleanup();
             }
@@ -389,7 +391,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
                 aff.AddDeviceProfile(rd2, tp, 0, devices, deviceCategories, lt, 1);
 
                 var ts = aff.CalculateMaximumInternalTimeResolution();
-                Assert.AreEqual(60, ts.TotalSeconds);
+                (ts.TotalSeconds).Should().Be(60);
                 Logger.Info(ts.ToString());
                 db.Cleanup();
             }
@@ -414,7 +416,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
                 rd2
             };
             var result = aff.IsAffordanceAvailable(allDevices2, deviceActions);
-            Assert.IsFalse(result);
+            (result).Should().BeFalse();
         }
 
         [Fact]
@@ -442,7 +444,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             var dc1 = new DeviceCategory("dc1", 0, string.Empty, false, devices,  Guid.NewGuid().ToStrGuid(),null, true);
             rd1.DeviceCategory = dc1;
             dc1.RefreshSubDevices();
-            Assert.AreEqual(1, dc1.SubDevices.Count);
+            (dc1.SubDevices.Count).Should().Be(1);
             var tbp = new TimeBasedProfile("name", 1, connectionString, TimeProfileType.Absolute, "data source", Guid.NewGuid().ToStrGuid());
             var lt = new VLoadType("lt", string.Empty, "bla", "blub", 1, 1, new TimeSpan(0, 1, 0), 1, connectionString,
                 LoadTypePriority.Mandatory, true, Guid.NewGuid().ToStrGuid());
@@ -458,8 +460,8 @@ namespace Database.Tests.Tables.BasicHouseholds {
                 throw new LPGException("Device action group was null");
             }
             var relevantDeviceActionGroup = da.DeviceActionGroup.GetDeviceActions(deviceActions);
-            Assert.AreEqual(1, relevantDeviceActionGroup.Count);
-            Assert.IsTrue(aff.IsAffordanceAvailable(allDevices3, deviceActions));
+            (relevantDeviceActionGroup.Count).Should().Be(1);
+            (aff.IsAffordanceAvailable(allDevices3, deviceActions)).Should().BeTrue();
         }
 
         [Fact]
@@ -486,7 +488,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             var dc1 = new DeviceCategory("dc1", 0, string.Empty, false, devices, Guid.NewGuid().ToStrGuid(), null, true);
             rd1.DeviceCategory = dc1;
             dc1.RefreshSubDevices();
-            Assert.AreEqual(1, dc1.SubDevices.Count);
+            (dc1.SubDevices.Count).Should().Be(1);
             var connectionString = string.Empty;
             var lt = new VLoadType("lt", string.Empty, "bla", "blub", 1, 1, new TimeSpan(0, 1, 0), 1, connectionString,
                 LoadTypePriority.Mandatory, true, Guid.NewGuid().ToStrGuid());
@@ -503,8 +505,8 @@ namespace Database.Tests.Tables.BasicHouseholds {
                 throw new LPGException("device action group was null");
             }
             var relevantDeviceActionGroup = da.DeviceActionGroup.GetDeviceActions(deviceActions);
-            Assert.AreEqual(1, relevantDeviceActionGroup.Count);
-            Assert.IsTrue(aff.IsAffordanceAvailable(allDevices3, deviceActions));
+            (relevantDeviceActionGroup.Count).Should().Be(1);
+            (aff.IsAffordanceAvailable(allDevices3, deviceActions)).Should().BeTrue();
         }
 
         [Fact]
@@ -529,7 +531,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             var dc1 = new DeviceCategory("dc1", 0, string.Empty, false, devices, Guid.NewGuid().ToStrGuid(), null, true);
             rd1.DeviceCategory = dc1;
             dc1.RefreshSubDevices();
-            Assert.AreEqual(1, dc1.SubDevices.Count);
+            (dc1.SubDevices.Count).Should().Be(1);
             var connectionString = string.Empty;
             var lt = new VLoadType("lt", string.Empty, "bla", "blub", 1, 1, new TimeSpan(0, 1, 0), 1, connectionString,
                 LoadTypePriority.Mandatory, true, Guid.NewGuid().ToStrGuid());
@@ -541,7 +543,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             {
                 da
             };
-            Assert.IsTrue(aff.IsAffordanceAvailable(allDevices3, deviceActions));
+            (aff.IsAffordanceAvailable(allDevices3, deviceActions)).Should().BeTrue();
         }
 
         [Fact]
@@ -566,7 +568,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             var dc1 = new DeviceCategory("dc1", 0, string.Empty, false, devices, Guid.NewGuid().ToStrGuid(), null, true);
             rd1.DeviceCategory = dc1;
             dc1.RefreshSubDevices();
-            Assert.AreEqual(1, dc1.SubDevices.Count);
+            (dc1.SubDevices.Count).Should().Be(1);
             var connectionString = string.Empty;
             var lt = new VLoadType("lt", string.Empty, "bla", "blub", 1, 1, new TimeSpan(0, 1, 0), 1, connectionString,
                 LoadTypePriority.Mandatory, true, Guid.NewGuid().ToStrGuid());
@@ -578,7 +580,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             {
                 rd1
             };
-            Assert.IsTrue(aff.IsAffordanceAvailable(allDevices3, deviceActions));
+            (aff.IsAffordanceAvailable(allDevices3, deviceActions)).Should().BeTrue();
         }
 
         [Fact]
@@ -604,7 +606,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             var dc1 = new DeviceCategory("dc1", 0, string.Empty, false, devices, Guid.NewGuid().ToStrGuid(), null, true);
             rd1.DeviceCategory = dc1;
             dc1.RefreshSubDevices();
-            Assert.AreEqual(1, dc1.SubDevices.Count);
+            (dc1.SubDevices.Count).Should().Be(1);
             var connectionString = string.Empty;
             var lt = new VLoadType("lt", string.Empty, "bla", "blub", 1, 1, new TimeSpan(0, 1, 0), 1, connectionString,
                 LoadTypePriority.Mandatory, true, Guid.NewGuid().ToStrGuid());
@@ -616,7 +618,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             {
                 rd2
             };
-            Assert.IsFalse(aff.IsAffordanceAvailable(allDevices3, deviceActions));
+            (aff.IsAffordanceAvailable(allDevices3, deviceActions)).Should().BeFalse();
         }
 
         [Fact]
@@ -640,7 +642,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             var dc1 = new DeviceCategory("dc1", 0, string.Empty, false, devices, Guid.NewGuid().ToStrGuid(), null, true);
             rd1.DeviceCategory = dc1;
             dc1.RefreshSubDevices();
-            Assert.AreEqual(1, dc1.SubDevices.Count);
+            (dc1.SubDevices.Count).Should().Be(1);
             var connectionString = string.Empty;
             var lt = new VLoadType("lt", string.Empty, "bla", "blub", 1, 1, new TimeSpan(0, 1, 0), 1, connectionString,
                 LoadTypePriority.Mandatory, true, Guid.NewGuid().ToStrGuid());
@@ -652,7 +654,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             {
                 dc1
             };
-            Assert.IsTrue(aff.IsAffordanceAvailable(allDevices3, deviceActions));
+            (aff.IsAffordanceAvailable(allDevices3, deviceActions)).Should().BeTrue();
         }
 
         [Fact]
@@ -676,7 +678,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             var dc1 = new DeviceCategory("dc1", 0, string.Empty, false, devices, Guid.NewGuid().ToStrGuid(), null, true);
             rd1.DeviceCategory = dc1;
             dc1.RefreshSubDevices();
-            Assert.AreEqual(1, dc1.SubDevices.Count);
+            (dc1.SubDevices.Count).Should().Be(1);
             var connectionString = string.Empty;
             var lt = new VLoadType("lt", string.Empty, "bla", "blub", 1, 1, new TimeSpan(0, 1, 0), 1, connectionString,
                 LoadTypePriority.Mandatory, true, Guid.NewGuid().ToStrGuid());
@@ -689,7 +691,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             {
                 rd1
             };
-            Assert.IsTrue(aff.IsAffordanceAvailable(allDevices3, deviceActions));
+            (aff.IsAffordanceAvailable(allDevices3, deviceActions)).Should().BeTrue();
         }
 
         [Fact]
@@ -718,7 +720,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
                 rd2
             };
             var result = aff.IsAffordanceAvailable(allDevices2, deviceActions);
-            Assert.IsFalse(result);
+            (result).Should().BeFalse();
         }
 
         [Fact]
@@ -746,7 +748,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             aff.AffordanceDevices.Add(new AffordanceDevice(rd1, tbp, null, 0, null,
                 new ObservableCollection<RealDevice>(),
                 new ObservableCollection<DeviceCategory>(), "name", lt, string.Empty, 1, Guid.NewGuid().ToStrGuid()));
-            Assert.IsTrue(aff.IsAffordanceAvailable(allDevices1, deviceActions));
+            (aff.IsAffordanceAvailable(allDevices1, deviceActions)).Should().BeTrue();
         }
 
         public AffordanceTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)

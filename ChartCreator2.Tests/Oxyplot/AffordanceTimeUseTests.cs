@@ -1,23 +1,22 @@
 ﻿using System.IO;
-using System.Threading;
 using Automation;
 using Automation.ResultFiles;
 using ChartCreator2.OxyCharts;
 using Common;
 using Common.Tests;
 using Database.Database;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace ChartCreator2.Tests.Oxyplot {
-    [TestFixture]
-    [Apartment(ApartmentState.STA)]
+
     public class AffordanceTimeUseTests : UnitTestBaseClass
     {
-        [Fact]
+        [StaFact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void MakePlotTest()
         {
@@ -41,7 +40,7 @@ namespace ChartCreator2.Tests.Oxyplot {
                 Logger.Debug("finished picture");
                 //OxyCalculationSetup.CopyImage(resultFileEntries[0].FullFileName);
                 var imagefiles = FileFinder.GetRecursiveFiles(di, "AffordanceTimeUse.*.png");
-                Assert.GreaterOrEqual(imagefiles.Count, 2);
+                imagefiles.Count.Should().BeGreaterOrEqualTo( 2);
             }
             Logger.Warning("Open threads for database: " + Connection.ConnectionCount);
             cs.CleanUp();

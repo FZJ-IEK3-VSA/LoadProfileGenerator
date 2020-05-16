@@ -1,23 +1,22 @@
 ﻿using System.IO;
-using System.Threading;
 using Automation;
 using ChartCreator2.OxyCharts;
 using Common;
 using Common.Tests;
 using Database.Database;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace ChartCreator2.Tests.Oxyplot {
-    [TestFixture]
-    [Apartment(ApartmentState.STA)]
+
     [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
     public class ActivityPercentageTests : UnitTestBaseClass
     {
-        [Fact]
+        [StaFact]
         public void MakePlotTest()
         {
             CleanTestBase.RunAutomatically(false);
@@ -38,7 +37,7 @@ namespace ChartCreator2.Tests.Oxyplot {
                 Logger.Info("finished picture");
                 //OxyCalculationSetup.CopyImage(resultFileEntries[0].FullFileName);
                 var imagefiles = FileFinder.GetRecursiveFiles(di, "ActivityPercentage.*.png");
-                Assert.GreaterOrEqual(imagefiles.Count, 2);
+                imagefiles.Count.Should().BeGreaterOrEqualTo( 2);
             }
             Logger.Warning("Leftover connections: " + Connection.ConnectionCount);
             cs.CleanUp();

@@ -39,13 +39,12 @@ using Database;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.ModularHouseholds;
 using Database.Tests;
-using NUnit.Framework;
+using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace IntegrationTests {
-    [TestFixture]
     [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     public class DatabaseMergerTests : UnitTestBaseClass
     {
@@ -183,7 +182,7 @@ namespace IntegrationTests {
                     found = true;
                 }
             }
-            Assert.AreEqual(true, found);
+            found.Should().BeTrue();
         }
 
         [Fact]
@@ -248,12 +247,8 @@ namespace IntegrationTests {
                             nullOldcount++;
                         }
                         var newAction = newActions.First(x => x.Name == oldAction.Name);
-                        if (oldAction.DeviceActionGroup != null)
-                        {
-                            if (oldAction.DeviceActionGroup.Name != newAction.DeviceActionGroup?.Name)
-                            {
-                                Assert.Fail("Missing device category");
-                            }
+                        if (oldAction.DeviceActionGroup != null) {
+                            oldAction.DeviceActionGroup.Name.Should().Be(newAction.DeviceActionGroup?.Name);
                         }
                     }
                     Logger.Info("oldAction total:" + originalSim.DeviceActions.It.Count + " null:" + nullOldcount);
@@ -308,13 +303,10 @@ namespace IntegrationTests {
                     {
                         Logger.Debug("checking: " + oldCategory.Name);
                         var oldCat = (DeviceCategory)oldCategory;
-                        if (!newcats.ContainsKey(oldCat.ShortName))
-                        {
-                            Assert.Fail("Missing category");
-                        }
+                        newcats.ContainsKey(oldCat.ShortName).Should().BeTrue();
                         var newcat = newcats[oldCat.ShortName];
-                        Assert.AreEqual(newcat.FullPath, oldCat.FullPath);
-                        Assert.AreEqual(newcat.ParentCategory?.Name, oldCat.ParentCategory?.Name);
+                        newcat.FullPath.Should().Be(oldCat.FullPath);
+                        newcat.ParentCategory?.Name.Should().Be( oldCat.ParentCategory?.Name);
                     }
                     db.Cleanup();
                 }
@@ -355,12 +347,8 @@ namespace IntegrationTests {
                     {
                         allTimeLimits.Add(timeLimit.CombineCompleteString(), true);
                     }
-                    foreach (var timeLimit in dbm.OldSimulator.TimeLimits.MyItems)
-                    {
-                        if (!allTimeLimits.ContainsKey(timeLimit.CombineCompleteString()))
-                        {
-                            Assert.Fail();
-                        }
+                    foreach (var timeLimit in dbm.OldSimulator.TimeLimits.MyItems) {
+                        allTimeLimits.ContainsKey(timeLimit.CombineCompleteString()).Should().BeTrue();
                     }
                     db.Cleanup();
                 }

@@ -4,15 +4,16 @@ using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables.BasicHouseholds;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Database.Tests.Tables.BasicHouseholds
 {
-    [TestFixture]
+
     public class DeviceActionGroupTests : UnitTestBaseClass
     {
         [Fact]
@@ -43,11 +44,11 @@ namespace Database.Tests.Tables.BasicHouseholds
                 dag.SaveToDB();
                 dags.Clear();
                 DeviceActionGroup.LoadFromDatabase(dags, db.ConnectionString, false);
-                Assert.AreEqual(1, dags.Count);
+                (dags.Count).Should().Be(1);
                 dags[0].DeleteFromDB();
                 dags.Clear();
                 DeviceActionGroup.LoadFromDatabase(dags, db.ConnectionString, false);
-                Assert.AreEqual(0, dags.Count);
+                (dags.Count).Should().Be(0);
                 db.Cleanup();
             }
         }

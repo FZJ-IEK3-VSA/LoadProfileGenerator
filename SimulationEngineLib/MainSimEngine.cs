@@ -9,16 +9,6 @@ namespace SimulationEngineLib
 {
     public static class MainSimEngine
     {
-        private static bool _isUnitTest;
-
-        [UsedImplicitly]
-        public static bool CatchErrors { get; set; } = true;
-
-        public static bool IsUnitTest
-        {
-            get => _isUnitTest;
-            set => _isUnitTest = value;
-        }
 
         [NotNull]
         private static string GetConnectionString()
@@ -41,7 +31,7 @@ namespace SimulationEngineLib
             {
                 ExeName = exename
             };
-            if (!CatchErrors)
+            if (!Config.CatchErrors)
             {
                 try
                 {
@@ -71,7 +61,7 @@ namespace SimulationEngineLib
                 RunOptionProcessing(GetConnectionString(), args, exename);
             }
 
-            if (!CatchErrors)
+            if (!Config.CatchErrors)
             {
                 RunThisOptionProcessing();
                 return;
@@ -112,7 +102,7 @@ namespace SimulationEngineLib
                     Logger.Exception(ex1);
                 }
 
-                if (IsUnitTest)
+                if (Config.IsInUnitTesting)
                 {
                     throw;
                 }

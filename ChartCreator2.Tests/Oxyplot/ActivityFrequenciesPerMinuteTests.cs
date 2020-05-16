@@ -1,23 +1,21 @@
 ﻿//using System.Collections.Generic;
 
 using System.IO;
-using System.Threading;
 using Automation;
 using Automation.ResultFiles;
 using ChartCreator2.OxyCharts;
 using Common;
 using Common.Tests;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace ChartCreator2.Tests.Oxyplot {
-    [TestFixture]
-    [Apartment(ApartmentState.STA)]
     public class ActivityFrequenciesPerMinuteTests : UnitTestBaseClass {
-        [Fact]
+        [StaFact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.LongTest3)]
         public void MakePlotTest()
         {
@@ -40,7 +38,7 @@ namespace ChartCreator2.Tests.Oxyplot {
                 Logger.Info("finished picture");
                 //OxyCalculationSetup.CopyImage(resultFileEntries[0].FullFileName);
                 var imagefiles = FileFinder.GetRecursiveFiles(di, "ActivityFrequenciesPerMinute.*.png");
-                Assert.GreaterOrEqual(imagefiles.Count, 2);
+                imagefiles.Count.Should().BeGreaterOrEqualTo( 2);
             }
             cs.CleanUp();
 

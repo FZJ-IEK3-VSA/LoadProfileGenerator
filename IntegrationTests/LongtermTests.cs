@@ -16,11 +16,12 @@ using Database.DatabaseMerger;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
 using Database.Tests;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace IntegrationTests {
 
@@ -126,7 +127,6 @@ namespace IntegrationTests {
         }*/
     }
 
-    [TestFixture]
     [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     public class LongtermTests : UnitTestBaseClass
     {
@@ -570,7 +570,7 @@ namespace IntegrationTests {
                     dbm.RunFindItems(sourcefilepath, null);
                     dbm.RunImport(null);
                     var timelimits = dbm.ItemsToImport.Count(x => x.Entry.GetType() == typeof(TimeLimit));
-                    Assert.That(timelimits > 0);
+                    timelimits.Should().BeGreaterThan(0);
                     // ReSharper disable once UnusedVariable
 #pragma warning disable S1481 // Unused local variables should be removed
                     var mainSim2 = new Simulator(db.ConnectionString);

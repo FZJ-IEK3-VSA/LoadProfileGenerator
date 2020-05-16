@@ -4,14 +4,15 @@ using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables.Validation;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Database.Tests.Tables.Validation {
-    [TestFixture]
+
     public class CalculationOutcomeTests : UnitTestBaseClass
     {
         [Fact]
@@ -32,9 +33,9 @@ namespace Database.Tests.Tables.Validation {
                 ca.AddAffordanceTimeUse("bla", "blub", 1, 1);
                 var cas = new ObservableCollection<CalculationOutcome>();
                 CalculationOutcome.LoadFromDatabase(cas, db.ConnectionString, false);
-                Assert.AreEqual(1, cas.Count);
-                Assert.AreEqual(1, cas[0].Entries.Count);
-                Assert.AreEqual(1, cas[0].AffordanceTimeUses.Count);
+                (cas.Count).Should().Be(1);
+                (cas[0].Entries.Count).Should().Be(1);
+                (cas[0].AffordanceTimeUses.Count).Should().Be(1);
                 db.Cleanup();
             }
         }
@@ -59,8 +60,8 @@ namespace Database.Tests.Tables.Validation {
 
                 var sim2 = new Simulator(db.ConnectionString);
 
-                Assert.AreEqual(1, sim2.CalculationOutcomes.It.Count);
-                Assert.AreEqual(1, sim2.CalculationOutcomes[0].Entries.Count);
+                (sim2.CalculationOutcomes.It.Count).Should().Be(1);
+                (sim2.CalculationOutcomes[0].Entries.Count).Should().Be(1);
 
                 db.Cleanup();
             }

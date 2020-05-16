@@ -66,8 +66,15 @@ namespace Common.SQLResultLogging.Loggers {
         }
 
         [UsedImplicitly]
-        [NotNull]
-        public StrGuid DeviceGuid => CalcDeviceDto.Guid;
+        [CanBeNull]
+        public StrGuid DeviceGuid {
+            get {
+                if(CalcDeviceDto!= null) {
+                    return CalcDeviceDto?.Guid;
+                }
+                return null;
+            }
+        }
 
         [UsedImplicitly]
         [JsonProperty]

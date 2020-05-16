@@ -11,15 +11,15 @@ using Common.CalcDto;
 using Common.JSON;
 using Common.SQLResultLogging.InputLoggers;
 using Common.Tests;
+using FluentAssertions;
 using JetBrains.Annotations;
 using Moq;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Calculation.Tests.OnlineLogging {
-    [TestFixture]
     public class FileFactoryAndTrackerTests : UnitTestBaseClass
     {
         public FileFactoryAndTrackerTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
@@ -59,7 +59,7 @@ namespace Calculation.Tests.OnlineLogging {
                     //fft.ResultFileList.WriteResultEntries(wd.WorkingDirectory);
                     ResultFileEntryLogger rfel = new ResultFileEntryLogger(wd.SqlResultLoggingService);
                     var rfes = rfel.Load();
-                    Assert.That(rfes.Count, Is.GreaterThan(0));
+                    rfes.Count.Should().BeGreaterThan(0);
                     //ResultFileList.ReadResultEntries(wd.WorkingDirectory);
                     fft.GetResultFileEntry(ResultFileID.Actions, clt.Name, new HouseholdKey("hh1"), cp.MakePersonInformation(), null);
                     fft.Dispose();

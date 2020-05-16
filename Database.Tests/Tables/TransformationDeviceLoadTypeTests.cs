@@ -32,14 +32,15 @@ using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables.Houses;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Database.Tests.Tables {
-    [TestFixture]
+
     public class TransformationDeviceLoadTypeTests : UnitTestBaseClass
     {
         [Fact]
@@ -56,18 +57,18 @@ new ObservableCollection<TransformationDeviceLoadType>();
                 tdlts.Clear();
                 db.ClearTable(TransformationDeviceLoadType.TableName);
                 TransformationDeviceLoadType.LoadFromDatabase(tdlts, db.ConnectionString, loadTypes, false);
-                Assert.AreEqual(0, tdlts.Count);
+                (tdlts.Count).Should().Be(0);
                 // add one and load again
                 var tdlt = new TransformationDeviceLoadType(null, loadTypes[0], 1, 1,
                     db.ConnectionString, loadTypes[0].Name, TransformationFactorType.FixedFactor, Guid.NewGuid().ToStrGuid());
                 tdlt.SaveToDB();
                 TransformationDeviceLoadType.LoadFromDatabase(tdlts, db.ConnectionString, loadTypes, false);
-                Assert.AreEqual(1, tdlts.Count);
+                (tdlts.Count).Should().Be(1);
                 // delete the loaded one
                 tdlts[0].DeleteFromDB();
                 tdlts.Clear();
                 TransformationDeviceLoadType.LoadFromDatabase(tdlts, db.ConnectionString, loadTypes, false);
-                Assert.AreEqual(0, tdlts.Count);
+                (tdlts.Count).Should().Be(0);
                 db.Cleanup();
             }
         }

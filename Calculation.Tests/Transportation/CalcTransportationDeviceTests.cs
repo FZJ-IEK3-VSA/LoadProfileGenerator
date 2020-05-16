@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Automation;
 using Automation.ResultFiles;
 using CalculationController.DtoFactories;
-using CalculationEngine.Helper;
 using CalculationEngine.HouseholdElements;
 using CalculationEngine.OnlineDeviceLogging;
 using CalculationEngine.OnlineLogging;
@@ -14,11 +13,12 @@ using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
 using Common.Tests;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Calculation.Tests.Transportation {
     public class CalcTransportationDeviceTests : UnitTestBaseClass {
@@ -34,13 +34,13 @@ namespace Calculation.Tests.Transportation {
             //CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();
             var internalStepSize = new TimeSpan(0, 1, 0);
             var val = CalcTransportationDevice.CalculateDurationOfTimestepsForDistance(1000, 1, internalStepSize);
-            Assert.That(val, Is.EqualTo(1000 / 60 + 1));
+            val.Should().Be(1000 / 60 + 1);
             var val2 = CalcTransportationDevice.CalculateDurationOfTimestepsForDistance(2000, 1, internalStepSize);
-            Assert.That(val2, Is.EqualTo(2000 / 60 + 1));
+            val2.Should().Be(2000 / 60 + 1);
             val2 = CalcTransportationDevice.CalculateDurationOfTimestepsForDistance(2000, 0.5, internalStepSize);
-            Assert.That(val2, Is.EqualTo(2000 / 60 * 2 + 1));
+            val2.Should().Be(2000 / 60 * 2 + 1);
             val2 = CalcTransportationDevice.CalculateDurationOfTimestepsForDistance(2000, 2, internalStepSize);
-            Assert.That(val2, Is.EqualTo(2000 / 60 / 2 + 1));
+            val2.Should().Be(2000 / 60 / 2 + 1);
         }
 
         [Fact]
@@ -90,7 +90,7 @@ namespace Calculation.Tests.Transportation {
             var end = new TimeStep(11, 0, false);
             ctd.Activate(start, 10, srcSite, dstSite, "myroute", "myperson", start, end);
 
-            Assert.That(ctd.AvailableRangeInMeters, Is.EqualTo(10000));
+            ctd.AvailableRangeInMeters.Should().Be(10000);
             //TODO: fix this and comment out
             //station.IsAvailable = false;
             double prevrange = 0;
@@ -101,11 +101,11 @@ namespace Calculation.Tests.Transportation {
                 var diffRange = prevrange - ctd.AvailableRangeInMeters;
                 Logger.Info("timestep: " + i + " Range: " + ctd.AvailableRangeInMeters + " diff:" + diffRange);
                 prevrange = ctd.AvailableRangeInMeters;
-                Assert.That(ctd.Currentsite, Is.EqualTo(null));
+                ctd.Currentsite.Should().BeNull();
             }
 
             //no charging
-            Assert.That(ctd.AvailableRangeInMeters, Is.EqualTo(10000 - 10 * 60 * 10)); //10m/s = 600m/minute
+            ctd.AvailableRangeInMeters.Should().Be(10000 - 10 * 60 * 10); //10m/s = 600m/minute
             Logger.Info("currentSite:" + ctd.Currentsite?.Name);
 
             //station.IsAvailable = true;
@@ -116,7 +116,7 @@ namespace Calculation.Tests.Transportation {
                 Logger.Info("timestep: " + i + " Range: " + ctd.AvailableRangeInMeters);
             }
 
-            Assert.That(ctd.Currentsite, Is.EqualTo(dstSite));
+            ctd.Currentsite.Should().Be(dstSite);
 
           //  wd.CleanUp(1);
         }

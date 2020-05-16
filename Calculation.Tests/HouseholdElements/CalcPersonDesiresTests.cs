@@ -35,13 +35,12 @@ using Common;
 using Common.JSON;
 using Common.Tests;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Calculation.Tests.HouseholdElements {
-    [TestFixture]
     public class CalcPersonDesiresTests : UnitTestBaseClass
     {
         public CalcPersonDesiresTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
@@ -118,7 +117,7 @@ namespace Calculation.Tests.HouseholdElements {
                         cpd.ApplyAffordanceEffect(satisfactionValues, false, "blub");
                     }
                     Logger.Info(i + ": " + cd1.Value + " ; " + cd2.Value);
-                    Assert.AreNotEqual(cd1.Value, cd2.Value);
+                    Assert.NotEqual(cd1.Value, cd2.Value);
                 }
                 // satisfaction
                 Logger.Info(cd1.Value + " ; " + cd2.Value);
@@ -162,7 +161,7 @@ namespace Calculation.Tests.HouseholdElements {
                         cpd.ApplyAffordanceEffect(satisfactionValues, false, "blub");
                     }
                     Logger.Info(cd1.Value + " ; " + cd2.Value);
-                    Assert.AreEqual(cd1.Value, cd2.Value);
+                    Assert.Equal(cd1.Value, cd2.Value);
                 }
 
                 // satisfaction

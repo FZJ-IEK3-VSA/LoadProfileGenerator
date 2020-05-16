@@ -1,21 +1,18 @@
-﻿using System.Threading;
-using Automation;
+﻿using Automation;
 using CalculationController.Integrity;
 using Common;
 using Common.Tests;
 using Database;
 using Database.Tests;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
 
 namespace LoadProfileGenerator.Tests {
-    [TestFixture]
-    [Apartment(ApartmentState.STA)]
     public class HouseholdTemplateCreatorTests : UnitTestBaseClass
     {
-        [Fact]
+        [StaFact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.LongTest2)]
         public void RunHouseholdTemplateCreatorTest()
         {

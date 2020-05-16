@@ -35,13 +35,12 @@ using Common.JSON;
 using Common.SQLResultLogging.InputLoggers;
 using Common.Tests;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Calculation.Tests.Logfile
 {
-    [TestFixture]
     public class LogFileTests : UnitTestBaseClass
     {
         public LogFileTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)

@@ -32,14 +32,15 @@ using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables.ModularHouseholds;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Database.Tests.Tables.ModularHouseholds {
-    [TestFixture]
+
     public class DeviceSelectionTests : UnitTestBaseClass
     {
         [Fact]
@@ -68,8 +69,8 @@ namespace Database.Tests.Tables.ModularHouseholds {
 
                 ds.AddAction(groups[0], deviceActions[0]);
                 ds.SaveToDB();
-                Assert.AreEqual(1, ds.Items.Count);
-                Assert.AreEqual(1, ds.Actions.Count);
+                (ds.Items.Count).Should().Be(1);
+                (ds.Actions.Count).Should().Be(1);
 
                 // loading test
                 deviceSelections = new ObservableCollection<DeviceSelection>();
@@ -77,18 +78,18 @@ namespace Database.Tests.Tables.ModularHouseholds {
                     deviceActions, groups, false);
 
                 ds = deviceSelections[0];
-                Assert.AreEqual(1, ds.Actions.Count);
-                Assert.AreEqual(1, ds.Items.Count);
+                (ds.Actions.Count).Should().Be(1);
+                (ds.Items.Count).Should().Be(1);
                 ds.DeleteItemFromDB(ds.Items[0]);
                 ds.DeleteActionFromDB(ds.Actions[0]);
-                Assert.AreEqual(0, ds.Items.Count);
-                Assert.AreEqual(0, ds.Actions.Count);
+                (ds.Items.Count).Should().Be(0);
+                (ds.Actions.Count).Should().Be(0);
 
                 // deleting and loading
                 deviceSelections = new ObservableCollection<DeviceSelection>();
                 DeviceSelection.LoadFromDatabase(deviceSelections, db.ConnectionString, deviceCategories, devices,
                     deviceActions, groups, false);
-                Assert.AreEqual(0, ds.Items.Count);
+                (ds.Items.Count).Should().Be(0);
                 ds = deviceSelections[0];
                 ds.DeleteFromDB();
 
@@ -96,7 +97,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
                 deviceSelections = new ObservableCollection<DeviceSelection>();
                 DeviceSelection.LoadFromDatabase(deviceSelections, db.ConnectionString, deviceCategories, devices,
                     deviceActions, groups, false);
-                Assert.AreEqual(0, deviceSelections.Count);
+                (deviceSelections.Count).Should().Be(0);
                 db.Cleanup();
             }
         }

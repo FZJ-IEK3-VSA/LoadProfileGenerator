@@ -11,14 +11,13 @@ using Database;
 using Database.Helpers;
 using Database.Tests;
 using Newtonsoft.Json;
-using NUnit.Framework;
+
 using SimulationEngineLib.SimZukunftProcessor;
 using Xunit;
 using Formatting = Newtonsoft.Json.Formatting;
 
 namespace SimulationEngine.Tests.SimZukunftProcessor
 {
-    [TestFixture]
     public class HouseGeneratorJobTests
     {
 

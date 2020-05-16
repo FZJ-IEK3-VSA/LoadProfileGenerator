@@ -11,13 +11,13 @@ using Database.Tables.Houses;
 using Database.Tables.ModularHouseholds;
 using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Database.Tests.Tables.ModularHouseholds {
-    [TestFixture]
+
     public class HouseholdTemplateTests : UnitTestBaseClass
     {
 
@@ -88,7 +88,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
                 prevcount++;
             }
 
-            Assert.AreEqual(j1.TraitEntries.Count + 1, newhht.Entries.Count);
+            (newhht.Entries.Count).Should().Be(j1.TraitEntries.Count + 1);
             var newJson2 = newhht.GetJson();
             var s3 = JsonConvert.SerializeObject(newJson2, Formatting.Indented);
             Assert.AreNotEqual(s1, s3);
@@ -97,12 +97,12 @@ namespace Database.Tests.Tables.ModularHouseholds {
             newhht.ImportFromJsonTemplate(j1, sim);
             var newJson3 = newhht.GetJson();
             var s4 = JsonConvert.SerializeObject(newJson3, Formatting.Indented);
-            Assert.AreEqual(s1, s4);
+            (s4).Should().Be(s1);
 
 
             //modify the persons and make sure it is different
             newhht.AddPerson(sim.Persons[5],sim.TraitTags[0]);
-            Assert.AreEqual(j1.TemplatePersons.Count + 1, newhht.Persons.Count);
+            (newhht.Persons.Count).Should().Be(j1.TemplatePersons.Count + 1);
             var newJson5 = newhht.GetJson();
             var s5 = JsonConvert.SerializeObject(newJson5, Formatting.Indented);
             Assert.AreNotEqual(s1, s5);
@@ -111,10 +111,10 @@ namespace Database.Tests.Tables.ModularHouseholds {
             newhht.ImportFromJsonTemplate(j1, sim);
             var newJson6 = newhht.GetJson();
             var s6 = JsonConvert.SerializeObject(newJson6, Formatting.Indented);
-            Assert.AreEqual(s1, s6);
+            (s6);
 
 
-            db.Cleanup();
+            db.Cleanup().Should().Be(s1);
             wd.CleanUp();
         }*/
 
@@ -193,13 +193,13 @@ namespace Database.Tests.Tables.ModularHouseholds {
                 hhtemplate.AddPerson(sim.Persons[0], sim.TraitTags[0]);
                 sim.HouseholdTags.CreateNewItem(sim.ConnectionString);
                 hhtemplate.AddTemplateTag(sim.HouseholdTags[0]);
-                Assert.AreEqual(1, sim.HouseholdTemplates.It.Count);
-                Assert.AreEqual(1, hhtemplate.Entries.Count);
+                (sim.HouseholdTemplates.It.Count).Should().Be(1);
+                (hhtemplate.Entries.Count).Should().Be(1);
                 var sim2 = new Simulator(db.ConnectionString);
-                Assert.AreEqual(1, sim2.HouseholdTemplates.It.Count);
-                Assert.AreEqual(1, sim2.HouseholdTemplates[0].Entries.Count);
-                Assert.AreEqual(1, sim2.HouseholdTemplates[0].Persons.Count);
-                Assert.AreEqual(1, sim2.HouseholdTemplates[0].TemplateTags.Count);
+                (sim2.HouseholdTemplates.It.Count).Should().Be(1);
+                (sim2.HouseholdTemplates[0].Entries.Count).Should().Be(1);
+                (sim2.HouseholdTemplates[0].Persons.Count).Should().Be(1);
+                (sim2.HouseholdTemplates[0].TemplateTags.Count).Should().Be(1);
                 db.Cleanup();
             }
         }
@@ -242,7 +242,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
                 HouseholdTemplate.LoadFromDatabase(cat.It, db.ConnectionString, traits, false, persons, traittags,
                     vacations,
                     templateTags, datebasedProfiles);
-                Assert.AreEqual(0, cat.MyItems.Count);
+                (cat.MyItems.Count).Should().Be(0);
 
                 var gen = cat.CreateNewItem(db.ConnectionString);
                 var entry = gen.AddEntry(traittags[0], 0, 10);
@@ -251,9 +251,9 @@ namespace Database.Tests.Tables.ModularHouseholds {
                 var generators = new ObservableCollection<HouseholdTemplate>();
                 HouseholdTemplate.LoadFromDatabase(generators, db.ConnectionString, traits, false, persons, traittags,
                     vacations, templateTags, datebasedProfiles);
-                Assert.AreEqual(1, generators.Count);
-                Assert.AreEqual(1, generators[0].Entries.Count);
-                Assert.AreEqual(1, generators[0].Entries[0].Persons.Count);
+                (generators.Count).Should().Be(1);
+                (generators[0].Entries.Count).Should().Be(1);
+                (generators[0].Entries[0].Persons.Count).Should().Be(1);
 
                 db.Cleanup();
             }
@@ -285,7 +285,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
                     total += entry.TraitCountMax;
                 }
 
-                Assert.That(total, Is.GreaterThanOrEqualTo(chh.Traits.Count));
+                chh.Traits.Count.Should().BeGreaterOrEqualTo(total);
                 db.Cleanup();
             }
         }

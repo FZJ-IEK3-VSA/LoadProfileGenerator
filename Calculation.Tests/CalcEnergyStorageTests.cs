@@ -40,15 +40,15 @@ using Common;
 using Common.CalcDto;
 using Common.JSON;
 using Common.SQLResultLogging;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Calculation.Tests {
-    [TestFixture]
-    public class CalcEnergyStorageTests : TestBasis {
+    public class CalcEnergyStorageTests : CalcUnitTestBase {
         [Fact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void ProcessOneEnergyStorageTimestepTest()
@@ -108,13 +108,13 @@ namespace Calculation.Tests {
                             TimeStep ts = new TimeStep(i, 0, true);
                             var filerows = odap.ProcessOneTimestep(ts);
                             rawRows.Add(filerows[0]);
-                            Assert.AreEqual(1, filerows.Count);
-                            Assert.AreEqual(1, filerows[0].EnergyEntries.Count);
+                            filerows.Count.Should().Be(1);
+                            filerows[0].EnergyEntries.Count.Should().Be(1);
                             var sb = new StringBuilder("row0 before:");
                             sb.Append(filerows[0].EnergyEntries[0]);
                             sb.Append(" : ");
                             //sb.Append(filerows[0].EnergyEntries[1]);
-                            Assert.AreEqual(resultValues[i], filerows[0].EnergyEntries[0]);
+                             filerows[0].EnergyEntries[0].Should().Be(resultValues[i]);
                             for (var j = 0; j < 5; j++)
                             {
                                 ces.ProcessOneTimestep(filerows, ts, null);
@@ -130,7 +130,7 @@ namespace Calculation.Tests {
                             sb.Append(resultValues[i]);
                             Logger.Info(sb.ToString());
                         }
-                        Assert.That(rawRows.Count, Is.EqualTo(10));
+                        rawRows.Count.Should().Be(10);
                     }
                 }
                 wd.CleanUp();

@@ -32,14 +32,15 @@ using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables.BasicHouseholds;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Database.Tests.Tables {
-    [TestFixture]
+
     public class VLoadTypeTests : UnitTestBaseClass
     {
         [Fact]
@@ -48,8 +49,8 @@ namespace Database.Tests.Tables {
             var vlt = new VLoadType("bla", string.Empty, "Watt", "kWh", 1000, 1, new TimeSpan(1, 0, 0), 1,
                 string.Empty, LoadTypePriority.Mandatory, true, Guid.NewGuid().ToStrGuid());
 
-            Assert.AreEqual(10, vlt.ConvertPowerValueWithTime(10000, new TimeSpan(1, 0, 0)));
-            Assert.AreEqual(5, vlt.ConvertPowerValueWithTime(10000, new TimeSpan(0, 30, 0)));
+            vlt.ConvertPowerValueWithTime(10000, new TimeSpan(1, 0, 0)).Should().Be(10);
+            vlt.ConvertPowerValueWithTime(10000, new TimeSpan(0, 30, 0)).Should().Be(5);
         }
 
         [Fact]
@@ -61,19 +62,19 @@ namespace Database.Tests.Tables {
                 db.ClearTable(VLoadType.TableName);
                 var loadts = new ObservableCollection<VLoadType>();
                 VLoadType.LoadFromDatabase(loadts, db.ConnectionString, false);
-                Assert.AreEqual(0, loadts.Count);
+                (loadts.Count).Should().Be(0);
                 var loadType = new VLoadType("loadtype1", "blub", "bla", "blu", 1000, 1, new TimeSpan(1, 0, 0), 1,
                     db.ConnectionString, LoadTypePriority.Mandatory, true, Guid.NewGuid().ToStrGuid());
                 loadType.SaveToDB();
                 VLoadType.LoadFromDatabase(loadts, db.ConnectionString, false);
-                Assert.AreEqual(1, loadts.Count);
+                (loadts.Count).Should().Be(1);
                 var lt = loadts[0];
-                Assert.That(lt.Name, Is.EqualTo("loadtype1"));
-                Assert.AreEqual("blub", lt.Description);
+                lt.Name.Should().Be("loadtype1");
+                (lt.Description).Should().Be("blub");
                 lt.DeleteFromDB();
                 loadts.Clear();
                 VLoadType.LoadFromDatabase(loadts, db.ConnectionString, false);
-                Assert.AreEqual(0, loadts.Count);
+                (loadts.Count).Should().Be(0);
                 db.Cleanup();
             }
         }

@@ -3,18 +3,16 @@ using Automation;
 using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+using Newtonsoft.Json;
 
 namespace Common.Tests.SQLResultLogging.InputLoggers
 {
-    using Newtonsoft.Json;
-
-    [TestFixture()]
-    public class CalcParameterLoggerTests : UnitTestBaseClass
+    public class CalcParameterLoggerTests:UnitTestBaseClass
     {
         [Fact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
@@ -39,8 +37,8 @@ namespace Common.Tests.SQLResultLogging.InputLoggers
 
                 string s1 = JsonConvert.SerializeObject(cp, Formatting.Indented);
                 string s2 = JsonConvert.SerializeObject(cp2, Formatting.Indented);
-                Assert.AreEqual(s1, s2);
-                Assert.IsTrue(cp2.IsSet(CalcOption.ActivationsPerHour));
+                s1.Should().Be(s2);
+                cp2.IsSet(CalcOption.ActivationsPerHour).Should().BeTrue();
                 Assert.NotNull(cp2);
                 wd.CleanUp();
             }

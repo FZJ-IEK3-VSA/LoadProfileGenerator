@@ -33,24 +33,24 @@ using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables.BasicElements;
-using NUnit.Framework;
+using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Database.Tests.Tables {
-    [TestFixture]
+
     [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     public class TemperatureProfileTests : UnitTestBaseClass
     {
         private static void CompareArray([JetBrains.Annotations.NotNull] double[] temparr,[JetBrains.Annotations.NotNull]double[] dstarr) {
-            Assert.AreEqual(temparr.Length, dstarr.Length);
+            (dstarr.Length).Should().Be(temparr.Length);
             for (var i = 0; i < temparr.Length; i++) {
                 Logger.Info(temparr[i] + " -> " + dstarr[i]);
             }
 
             for (var i = 0; i < temparr.Length; i++) {
-                Assert.AreEqual(temparr[i], dstarr[i]);
+                (dstarr[i]).Should().Be(temparr[i]);
             }
         }
 
@@ -159,10 +159,10 @@ namespace Database.Tests.Tables {
                 tp.SaveToDB();
                 TemperatureProfile.LoadFromDatabase(profiles, db.ConnectionString, false);
 
-                Assert.AreEqual(1, profiles.Count);
-                Assert.AreEqual(2, profiles[0].TemperatureValues.Count);
+                (profiles.Count).Should().Be(1);
+                (profiles[0].TemperatureValues.Count).Should().Be(2);
                 profiles[0].DeleteOneTemperatur(profiles[0].TemperatureValues[0]);
-                Assert.AreEqual(1, profiles[0].TemperatureValues.Count);
+                (profiles[0].TemperatureValues.Count).Should().Be(1);
                 db.Cleanup();
             }
         }
@@ -178,9 +178,9 @@ namespace Database.Tests.Tables {
                 new TemperatureValue(new DateTime(2010, 1, 2), 10, -1, null, string.Empty, Guid.NewGuid().ToStrGuid())
             };
             var values = TemperatureProfile.GetTemperatureArray(startdt, endDt, stepsize, temperatureValues);
-            Assert.AreEqual(240, values.Length);
-            Assert.AreEqual(10, values[0]);
-            Assert.AreEqual(10, values[239]);
+            (values.Length).Should().Be(240);
+            (values[0]).Should().Be(10);
+            (values[239]).Should().Be(10);
         }
 
         [Fact]
@@ -197,15 +197,15 @@ namespace Database.Tests.Tables {
                 new TemperatureValue(new DateTime(2010, 1, 4), 7, -1, null, string.Empty,Guid.NewGuid().ToStrGuid())
             };
             var values = TemperatureProfile.GetTemperatureArray(startdt, endDt, stepsize, temperatureValues);
-            Assert.AreEqual(240, values.Length);
-            Assert.AreEqual(10, values[0]);
-            Assert.AreEqual(10, values[23]);
-            Assert.AreEqual(5, values[24]);
-            Assert.AreEqual(5, values[47]);
-            Assert.AreEqual(6, values[48]);
-            Assert.AreEqual(6, values[71]);
-            Assert.AreEqual(7, values[72]);
-            Assert.AreEqual(7, values[239]);
+            (values.Length).Should().Be(240);
+            (values[0]).Should().Be(10);
+            (values[23]).Should().Be(10);
+            (values[24]).Should().Be(5);
+            (values[47]).Should().Be(5);
+            (values[48]).Should().Be(6);
+            (values[71]).Should().Be(6);
+            (values[72]).Should().Be(7);
+            (values[239]).Should().Be(7);
         }
 
         [Fact]
@@ -222,12 +222,12 @@ namespace Database.Tests.Tables {
                 new TemperatureValue(new DateTime(2010, 1, 1, 3, 0, 0), 7, -1, null, string.Empty, Guid.NewGuid().ToStrGuid())
             };
             var values = TemperatureProfile.GetTemperatureArray(startdt, endDt, stepsize, temperatureValues);
-            Assert.AreEqual(240, values.Length);
-            Assert.AreEqual(10, values[0]);
-            Assert.AreEqual(5, values[1]);
-            Assert.AreEqual(6, values[2]);
-            Assert.AreEqual(7, values[3]);
-            Assert.AreEqual(7, values[239]);
+            (values.Length).Should().Be(240);
+            (values[0]).Should().Be(10);
+            (values[1]).Should().Be(5);
+            (values[2]).Should().Be(6);
+            (values[3]).Should().Be(7);
+            (values[239]).Should().Be(7);
         }
 
         public TemperatureProfileTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)

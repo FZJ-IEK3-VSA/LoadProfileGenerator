@@ -1,22 +1,21 @@
 ﻿using System;
 using System.IO;
-using System.Threading;
 using Automation;
 using ChartCreator2.OxyCharts;
 using Common;
 using Common.Tests;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace ChartCreator2.Tests.Oxyplot {
-    [TestFixture]
-    [Apartment(ApartmentState.STA)]
+
     public class WeekdayProfilesTests : UnitTestBaseClass
     {
-        [Fact]
+        [StaFact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.LongTest5)]
         public void MakePlotTest()
         {
@@ -40,7 +39,7 @@ namespace ChartCreator2.Tests.Oxyplot {
                 //OxyCalculationSetup.CopyImage(resultFileEntries[0].FullFileName);
 
                 var imagefiles = FileFinder.GetRecursiveFiles(di, "WeekdayProfiles.*.png");
-                Assert.GreaterOrEqual(imagefiles.Count, 1);
+                imagefiles.Count.Should().BeGreaterOrEqualTo( 1);
             }
             cs.CleanUp();
             CleanTestBase.RunAutomatically(true);

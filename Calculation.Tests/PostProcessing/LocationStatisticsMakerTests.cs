@@ -10,15 +10,15 @@ using Common.SQLResultLogging.InputLoggers;
 using Common.Tests;
 using Database;
 using Database.Tests;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Calculation.Tests.PostProcessing
 {
-    [TestFixture]
     public class LocationStatisticsMakerTests : UnitTestBaseClass
     {
         public LocationStatisticsMakerTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
@@ -35,7 +35,7 @@ namespace Calculation.Tests.PostProcessing
             sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
             sim.MyGeneralConfig.Enable(CalcOption.LocationsFile);
             //ConfigSetter.SetGlobalTimeParameters(sim.MyGeneralConfig);
-            Assert.AreNotEqual(null, sim);
+            sim.Should().NotBeNull();
             sim.MyGeneralConfig.RandomSeed = 10;
             CalcManagerFactory cmf = new CalcManagerFactory();
                 CalculationProfiler calculationProfiler = new CalculationProfiler();

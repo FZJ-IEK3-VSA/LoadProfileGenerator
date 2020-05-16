@@ -8,14 +8,15 @@ using Common;
 using Common.Tests;
 using Database.Tables.Houses;
 using Database.Tables.ModularHouseholds;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Database.Tests.Tables.Houses {
-    [TestFixture]
+
     public class SettlementTemplateTests : UnitTestBaseClass
     {
         [Fact]
@@ -120,7 +121,7 @@ namespace Database.Tests.Tables.Houses {
                 var st = new SettlementTemplate("bla", null, "desc", db.ConnectionString, 100, "TestName",
                     null, null, Guid.NewGuid().ToStrGuid());
                 st.SaveToDB();
-                Assert.AreNotEqual(-1, st.IntID);
+                st.IntID.Should().NotBe(-1);
                 st.AddHouseholdDistribution(10, 100, 0.2, EnergyIntensityType.AsOriginal);
                 st.AddHouseholdTemplate(templates[0]);
                 st.AddHouseSize(10, 100, 0.2);
@@ -128,12 +129,12 @@ namespace Database.Tests.Tables.Houses {
                 st.AddTraitLimit(traits[0], 10);
                 SettlementTemplate.LoadFromDatabase(sts, db.ConnectionString, templates, houseTypes, false, tempprofiles,
                     geolocs, householdTags, traits);
-                Assert.AreEqual(1, sts.Count);
-                Assert.AreEqual(1, sts[0].HouseholdDistributions.Count);
-                Assert.AreEqual(1, sts[0].HouseholdTemplates.Count);
+                (sts.Count).Should().Be(1);
+                (sts[0].HouseholdDistributions.Count).Should().Be(1);
+                (sts[0].HouseholdTemplates.Count).Should().Be(1);
 
-                Assert.AreEqual(1, sts[0].HouseTypes.Count);
-                Assert.AreEqual(1, sts[0].HouseSizes.Count);
+                (sts[0].HouseTypes.Count).Should().Be(1);
+                (sts[0].HouseSizes.Count).Should().Be(1);
                 st = sts[0];
                 st.DeleteHouseholdDistribution(st.HouseholdDistributions[0]);
                 st.DeleteHouseholdTemplate(st.HouseholdTemplates[0]);
@@ -143,12 +144,12 @@ namespace Database.Tests.Tables.Houses {
                 sts.Clear();
                 SettlementTemplate.LoadFromDatabase(sts, db.ConnectionString, templates, houseTypes, false, tempprofiles,
                     geolocs, householdTags, traits);
-                Assert.AreEqual(1, sts.Count);
-                Assert.AreEqual(0, sts[0].HouseholdDistributions.Count);
-                Assert.AreEqual(0, sts[0].HouseholdTemplates.Count);
+                (sts.Count).Should().Be(1);
+                (sts[0].HouseholdDistributions.Count).Should().Be(0);
+                (sts[0].HouseholdTemplates.Count).Should().Be(0);
 
-                Assert.AreEqual(0, sts[0].HouseTypes.Count);
-                Assert.AreEqual(0, sts[0].HouseSizes.Count);
+                (sts[0].HouseTypes.Count).Should().Be(0);
+                (sts[0].HouseSizes.Count).Should().Be(0);
                 db.Cleanup();
             }
         }

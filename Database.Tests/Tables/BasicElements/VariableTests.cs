@@ -3,15 +3,16 @@ using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables.BasicElements;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Database.Tests.Tables.BasicElements
 {
-    [TestFixture]
+
     public class VariableTests : UnitTestBaseClass
     {
         [Fact]
@@ -25,11 +26,11 @@ namespace Database.Tests.Tables.BasicElements
                 t.SaveToDB();
                 ObservableCollection<Variable> allVariables = new ObservableCollection<Variable>();
                 Variable.LoadFromDatabase(allVariables, db.ConnectionString, false);
-                Assert.AreEqual(1, allVariables.Count);
+                allVariables.Count.Should().Be(1);
                 allVariables[0].DeleteFromDB();
                 allVariables.Clear();
                 Variable.LoadFromDatabase(allVariables, db.ConnectionString, false);
-                Assert.AreEqual(0, allVariables.Count);
+                allVariables.Count.Should().Be(1);
                 db.Cleanup();
             }
         }

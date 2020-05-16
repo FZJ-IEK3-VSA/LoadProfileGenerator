@@ -1,13 +1,12 @@
 ﻿using Automation;
 using Common.Tests;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
 using Logger = Common.Logger;
 
 namespace LoadProfileGenerator.Tests {
-    [TestFixture]
     public class DotNetVersionCheckTests : UnitTestBaseClass
     {
         [Fact]

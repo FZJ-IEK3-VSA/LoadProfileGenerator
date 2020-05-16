@@ -33,15 +33,15 @@ using CalculationController.CalcFactories;
 using Common;
 using Common.Tests;
 using Database.Tables.BasicHouseholds;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace CalculationController.Tests.CalcFactories
 {
-    [TestFixture]
     public class CalcLoadTypeFactoryTests : UnitTestBaseClass
     {
         [Fact]
@@ -57,7 +57,7 @@ namespace CalculationController.Tests.CalcFactories
             var ltdict = CalcLoadTypeFactory.MakeLoadTypes(dtoDict);
             var dto = dtoDict.GetLoadtypeDtoByLoadType(vlt);
             var clt = ltdict.GetCalcLoadTypeByLoadtype(dto);
-            Assert.AreEqual(clt.ConversionFactor, 1.0/3600000);
+            clt.ConversionFactor.Should().Be( 1.0/3600000);
         }
 
         public CalcLoadTypeFactoryTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)

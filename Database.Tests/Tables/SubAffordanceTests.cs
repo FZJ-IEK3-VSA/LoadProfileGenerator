@@ -34,16 +34,16 @@ using Common;
 using Common.Tests;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 #endregion
 
 namespace Database.Tests.Tables {
-    [TestFixture]
     public class SubAffordanceTests : UnitTestBaseClass
     {
         [Fact]
@@ -63,7 +63,7 @@ namespace Database.Tests.Tables {
                 db.ClearTable(SubAffordanceVariableOp.TableName);
                 subAffordances.Clear();
                 SubAffordance.LoadFromDatabase(subAffordances, db.ConnectionString, desires, false, locations, variables);
-                Assert.AreEqual(0, subAffordances.Count);
+                subAffordances.Count.Should().Be(0);
                 db.Cleanup();
             }
         }

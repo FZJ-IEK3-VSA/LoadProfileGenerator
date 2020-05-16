@@ -30,7 +30,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Automation.ResultFiles;
-using CalculationEngine.Helper;
 using CalculationEngine.HouseholdElements;
 using Common;
 using Common.CalcDto;

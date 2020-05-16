@@ -10,15 +10,15 @@ using Database.Helpers;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.ModularHouseholds;
 using Database.Tests;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace CalculationController.Tests.Helpers
 {
-    [TestFixture]
     public class DeviceCategoryPickerTests : UnitTestBaseClass
     {
         [Fact]
@@ -46,7 +46,7 @@ namespace CalculationController.Tests.Helpers
             devices.Add(rd);
             RealDevice result3 = dcp.GetOrPickDevice(dc, loc, EnergyIntensityType.EnergyIntensive, devices,
                 deviceActions);
-            Assert.AreEqual(null, result3);
+            result3.Should().BeNull();
 
             Logger.Info("put in a rd, get back rd");
             devices.Clear();
@@ -54,7 +54,7 @@ namespace CalculationController.Tests.Helpers
 
             RealDevice result4 = dcp2.GetOrPickDevice(dc, loc, EnergyIntensityType.EnergyIntensive, devices,
                 deviceActions);
-            Assert.AreEqual(rd, result4);
+            rd.Should().Be(result4);
         }
 
         [Fact]
@@ -76,12 +76,12 @@ namespace CalculationController.Tests.Helpers
             ObservableCollection<DeviceAction> deviceActions = new ObservableCollection<DeviceAction>();
             Logger.Info("put in a rd, get back the same rd");
             RealDevice result = dcp.GetOrPickDevice(rd, loc, EnergyIntensityType.EnergyIntensive, devices, deviceActions);
-            Assert.AreEqual(rd, result);
+            rd.Should().Be( result);
             // put in an dc with one rd, get the rd 1
             Logger.Info("put in a rd, get back null, since the rd is already there as hhdevloc");
             RealDevice result2 = dcp.GetOrPickDevice(dc, loc, EnergyIntensityType.EnergyIntensive, devices,
                 deviceActions);
-            Assert.AreEqual(null, result2);
+            result2.Should().BeNull();
         }
 
 
@@ -114,12 +114,12 @@ namespace CalculationController.Tests.Helpers
             //ObservableCollection<DeviceAction> deviceActions = new ObservableCollection<DeviceAction>();
             //Logger.Info("put in a rd, get back the same rd");
             //RealDevice result = dcp.GetOrPickDevice(rd, loc, EnergyIntensityType.EnergyIntensive, devices, deviceActions);
-            //Assert.AreEqual(rd, result);
+            //(result).Should().Be(rd);
             //// put in an dc with one rd, get the rd 1
             //Logger.Info("put in a rd, get back null, since the rd is already there as hhdevloc");
             //RealDevice result2 = dcp.GetOrPickDevice(dc, loc, EnergyIntensityType.EnergyIntensive, devices,
             //    deviceActions);
-            //Assert.AreEqual(null, result2);
+            //(result2).Should().Be(null);
         }
 
         [Fact]
@@ -156,7 +156,7 @@ namespace CalculationController.Tests.Helpers
                 DeviceAction deviceAction2 = picker.GetAutoDeviceActionFromGroup(dag, otherDevicesAtLocation,
                     EnergyIntensityType.Random, deviceActions, 5);
                 Logger.Info("Device Action  " + i + " " + deviceAction2);
-                Assert.AreEqual(pickedDeviceAction, deviceAction2);
+                pickedDeviceAction.Should().Be(deviceAction2);
             }
         }
 

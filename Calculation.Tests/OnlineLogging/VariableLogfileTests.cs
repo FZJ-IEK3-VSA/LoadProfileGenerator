@@ -11,14 +11,14 @@ using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
 using Common.SQLResultLogging.Loggers;
 using Common.Tests;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Calculation.Tests.OnlineLogging {
-    [TestFixture]
     public class VariableLogfileTests : UnitTestBaseClass
     {
         public VariableLogfileTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
@@ -64,10 +64,9 @@ namespace Calculation.Tests.OnlineLogging {
                     {
                         Logger.Info(entry.Value.ToString(CultureInfo.InvariantCulture));
                     }
-
-                    Assert.That(varEntries[0].Value, Is.EqualTo(1));
-                    Assert.That(varEntries[1].Value, Is.EqualTo(2));
-                    Assert.That(varEntries[2].Value, Is.EqualTo(3));
+                    varEntries[0].Value.Should().Be(1);
+                    varEntries[1].Value.Should().Be(2);
+                    varEntries[2].Value.Should().Be(3);
                 }
                 /*old.
                 cloc.Add();

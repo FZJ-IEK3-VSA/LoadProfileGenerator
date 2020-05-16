@@ -34,15 +34,15 @@ using Common.Tests;
 using Database;
 using Database.Tables.BasicHouseholds;
 using Database.Tests;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace CalculationController.Tests
 {
-    [TestFixture]
     public class IntegrityCheckerTests : UnitTestBaseClass
     {
         [Fact]
@@ -53,7 +53,7 @@ namespace CalculationController.Tests
             using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
                 Simulator sim = new Simulator(db.ConnectionString);
-                Assert.AreNotEqual(null, sim);
+                sim.Should().NotBeNull();
                 Vacation vac = sim.Vacations.CreateNewItem(sim.ConnectionString);
                 vac.AddVacationTime(new DateTime(2017, 1, 1), new DateTime(2017, 2, 1), VacationType.GoAway);
                 vac.AddVacationTime(new DateTime(2017, 2, 1), new DateTime(2017, 2, 15), VacationType.GoAway);
@@ -72,7 +72,7 @@ namespace CalculationController.Tests
             using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
                 Simulator sim = new Simulator(db.ConnectionString) { MyGeneralConfig = { PerformCleanUpChecks = "True" } };
-                Assert.AreNotEqual(null, sim);
+                sim.Should().NotBeNull();
                 DateTime start = DateTime.Now;
                 for (int i = 0; i < runcount; i++)
                 {
@@ -95,7 +95,7 @@ namespace CalculationController.Tests
             using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
                 Simulator sim = new Simulator(db.ConnectionString);
-                Assert.AreNotEqual(null, sim);
+                sim.Should().NotBeNull();
                 foreach (var house in sim.Houses.MyItems)
                 {
                     HouseIntegrityChecker.Run(house, sim);

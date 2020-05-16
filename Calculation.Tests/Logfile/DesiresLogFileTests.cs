@@ -38,15 +38,14 @@ using Common.CalcDto;
 using Common.JSON;
 using Common.SQLResultLogging.InputLoggers;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Calculation.Tests.Logfile
 {
-    [TestFixture]
-    public class DesiresLogFileTests : TestBasis
+    public class DesiresLogFileTests : CalcUnitTestBase
     {
         [Fact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
@@ -86,7 +85,6 @@ namespace Calculation.Tests.Logfile
                     dlf.WriteEntry(de, new HouseholdKey("hh1"));
                     dlf.Dispose();
                 }
-                Assert.AreEqual(true, true);
                 wd.CleanUp();
             }
         }

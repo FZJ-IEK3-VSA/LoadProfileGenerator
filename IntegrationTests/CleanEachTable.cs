@@ -7,13 +7,12 @@ using Database;
 using Database.Database;
 using Database.Tables;
 using Database.Tests;
-using NUnit.Framework;
+
 using Xunit;
 using Logger = Common.Logger;
 
 namespace IntegrationTests
 {
-    [TestFixture]
     public class CleanEachTable
     {
         [Fact]

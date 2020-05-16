@@ -3,16 +3,16 @@ using Automation;
 using Automation.ResultFiles;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
+using FluentAssertions;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Common.Tests.SQLResultLogging.InputLoggers
 {
-    [TestFixture()]
     public class HouseholdKeyLoggerTests : UnitTestBaseClass
     {
         [Fact]
@@ -38,7 +38,7 @@ namespace Common.Tests.SQLResultLogging.InputLoggers
                 var res = ael.Load();
                 var s1 = JsonConvert.SerializeObject(aes, Formatting.Indented);
                 var s2 = JsonConvert.SerializeObject(res, Formatting.Indented);
-                Assert.AreEqual(s1, s2);
+                s1.Should().Be(s2);
                 wd.CleanUp();
             }
         }

@@ -32,7 +32,6 @@ using System.Collections.Generic;
 using Automation;
 using Automation.ResultFiles;
 using CalculationController.DtoFactories;
-using CalculationEngine.Helper;
 using CalculationEngine.HouseholdElements;
 using CalculationEngine.OnlineDeviceLogging;
 using Common;
@@ -40,15 +39,15 @@ using Common.CalcDto;
 using Common.Enums;
 using Common.JSON;
 using Common.Tests;
+using FluentAssertions;
 using JetBrains.Annotations;
 using Moq;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Calculation.Tests {
-    [TestFixture]
     public class CalcAffordanceTests : UnitTestBaseClass
     {
 
@@ -177,7 +176,7 @@ namespace Calculation.Tests {
             var trueCount = 0;
             TimeStep ts1 = new TimeStep(0,0,true);
             var result = aff.IsBusy(ts1,  loc, "name");
-            Assert.IsFalse(result);
+            result.Should().BeFalse();
             const int resultcount = stepcount - 20;
             for (var i = 0; i < resultcount; i++) {
                 for (var j = 0; j < stepcount; j++) {
@@ -195,7 +194,7 @@ namespace Calculation.Tests {
             }
 
             Logger.Info("Truecount: " + trueCount);
-            Assert.That(trueCount, Is.EqualTo(0).Within(10).Percent);
+            trueCount.Should().BeApproximately(0,0.1);
         }
 
         [Fact]
@@ -207,7 +206,7 @@ namespace Calculation.Tests {
             var trueCount = 0;
             TimeStep ts = new TimeStep(0,0,false);
             var result = aff.IsBusy(ts, loc, "name");
-            Assert.IsFalse(result);
+            result.Should().BeFalse();
             const int resultcount = stepcount - 20;
             for (var i = 0; i < resultcount; i++) {
 
@@ -226,7 +225,7 @@ namespace Calculation.Tests {
             }
 
             Logger.Info("Truecount: " + trueCount);
-            Assert.That(trueCount, Is.EqualTo(resultcount).Within(10).Percent);
+            trueCount.Should().BeApproximately(resultcount, 0.1);
         }
 
         [Fact]
@@ -238,7 +237,7 @@ namespace Calculation.Tests {
             var trueCount = 0;
             TimeStep ts = new TimeStep(0, 0, false);
             var result = aff.IsBusy(ts,  loc, "name");
-            Assert.IsFalse(result);
+            result.Should().BeFalse();
             const int resultcount = stepcount - 20;
             for (var i = 0; i < resultcount; i++) {
                 for (var j = 0; j < stepcount; j++) {
@@ -257,7 +256,8 @@ namespace Calculation.Tests {
 
             Logger.Info("Truecount: " + trueCount);
 #pragma warning disable VSD0045 // The operands of a divisive expression are both integers and result in an implicit rounding.
-            Assert.That(trueCount, Is.EqualTo(resultcount / 4).Within(10).Percent);
+
+            trueCount.Should().BeApproximately(resultcount/4,0.1);
 #pragma warning restore VSD0045 // The operands of a divisive expression are both integers and result in an implicit rounding.
         }
 
@@ -270,7 +270,7 @@ namespace Calculation.Tests {
             var trueCount = 0;
             TimeStep ts = new TimeStep(0, 0, false);
             var result = aff.IsBusy(ts, loc, "name");
-            Assert.IsFalse(result);
+            result.Should().BeFalse();
             const int resultcount = stepcount - 20;
             for (var i = 0; i < resultcount; i++) {
                 for (var j = 0; j < stepcount; j++) {
@@ -289,7 +289,7 @@ namespace Calculation.Tests {
 
             Logger.Info("Truecount: " + trueCount);
 #pragma warning disable VSD0045 // The operands of a divisive expression are both integers and result in an implicit rounding.
-            Assert.That(trueCount, Is.EqualTo(resultcount / 2).Within(10).Percent);
+            trueCount.Should().BeApproximately(resultcount,0.1);
 #pragma warning restore VSD0045 // The operands of a divisive expression are both integers and result in an implicit rounding.
         }
 
@@ -302,7 +302,7 @@ namespace Calculation.Tests {
             var trueCount = 0;
             TimeStep ts = new TimeStep(0, 0, false);
             var result = aff.IsBusy(ts, loc, "name");
-            Assert.IsFalse(result);
+            result.Should().BeFalse();
             const int resultcount = stepcount - 20;
             for (var i = 0; i < resultcount; i++) {
                 for (var j = 0; j < stepcount; j++) {
@@ -320,7 +320,7 @@ namespace Calculation.Tests {
             }
 
             Logger.Info("Truecount: " + trueCount);
-            Assert.That(trueCount, Is.EqualTo(resultcount * 0.75).Within(10).Percent);
+            trueCount.Should().BeApproximatelyWithinPercent(resultcount * 0.75, 0.1);
         }
 
         [Fact]
@@ -374,7 +374,7 @@ namespace Calculation.Tests {
             TimeStep ts = new TimeStep(0, 0, false);
             aff.IsBusy(ts,  loc, "name");
             aff.Activate(ts, "blub", loc, out var _);
-            Assert.AreEqual(1, variableRepository.GetValueByGuid(variableGuid));
+             variableRepository.GetValueByGuid(variableGuid).Should().Be(1);
             for (var i = 0; i < 15; i++) {
                 TimeStep ts1 = new TimeStep(i, 0, false);
                 cd.SetIsBusyForTesting(ts1, false, lt);
@@ -382,7 +382,7 @@ namespace Calculation.Tests {
 
             aff.IsBusy(ts, loc, "name");
             aff.Activate(ts, "blub", loc, out var _);
-            Assert.AreEqual(2, variableRepository.GetValueByGuid(variableGuid));
+            variableRepository.GetValueByGuid(variableGuid).Should().Be(2);
         }
 
         [Fact]
@@ -439,7 +439,7 @@ namespace Calculation.Tests {
             aff.IsBusy(ts,  loc, "name");
             //var variableOperator = new VariableOperator();
             aff.Activate(ts, "blub", loc, out var _);
-            Assert.AreEqual(1, calcVariableRepository.GetValueByGuid(variableGuid));
+             calcVariableRepository.GetValueByGuid(variableGuid).Should().Be(1);
         }
 
         [Fact]
@@ -501,7 +501,7 @@ namespace Calculation.Tests {
             aff.IsBusy(ts, loc, "name");
             //var variableOperator = new VariableOperator();
             aff.Activate(ts, "blub", loc, out var _);
-            Assert.AreEqual(-1, crv.GetValueByGuid(variableGuid));
+             crv.GetValueByGuid(variableGuid).Should().Be(-1);
             for (var i = 0; i < 15; i++) {
                 TimeStep ts1 = new TimeStep(i, 0, false);
                 cd.SetIsBusyForTesting(ts1, false, lt);
@@ -509,7 +509,7 @@ namespace Calculation.Tests {
 
             aff.IsBusy(ts,  loc, "name");
             aff.Activate(ts, "blub", loc, out var _);
-            Assert.AreEqual(-2, crv.GetValueByGuid(variableGuid));
+            crv.GetValueByGuid(variableGuid).Should().Be(-1);
         }
 
         [Fact]
@@ -563,15 +563,15 @@ namespace Calculation.Tests {
             aff.AddDeviceTuple(cd, cp, lt, 20, timeStep, 10, 1);
 
             //bool result = aff.IsBusy(0, nr, r, loc);
-            //Assert.IsFalse(result);
+            //(result).Should().BeFalse();
             CheckForBusyness(loc, aff, cd, lt);
             TimeStep ts = new TimeStep(0, 0, false);
             aff.Activate(ts.AddSteps(10), "blub", loc, out var _);
             CheckForBusyness( loc, aff, cd, lt);
-            Assert.IsTrue(aff.IsBusy(ts.AddSteps(1),  loc, "name", false));
-            Assert.IsTrue(aff.IsBusy( ts.AddSteps(19),  loc, "name", false));
-            Assert.IsFalse(aff.IsBusy(ts,  loc, "name", false));
-            Assert.IsFalse(aff.IsBusy(ts.AddSteps(20),  loc, "name", false));
+            aff.IsBusy(ts.AddSteps(1),  loc, "name", false).Should().BeTrue();
+            aff.IsBusy( ts.AddSteps(19),  loc, "name", false).Should().BeTrue();
+            aff.IsBusy(ts,  loc, "name", false).Should().BeFalse();
+            aff.IsBusy(ts.AddSteps(20),  loc, "name", false).Should().BeFalse();
         }
     }
 }

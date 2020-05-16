@@ -28,12 +28,12 @@
 
 #region
 
-using JetBrains.Annotations;
 using System;
+using JetBrains.Annotations;
 
 #endregion
 
-namespace CalculationEngine.Helper
+namespace Common
 {
     /// <summary>
     ///     Normal (aka Gaussian) distribution; See the

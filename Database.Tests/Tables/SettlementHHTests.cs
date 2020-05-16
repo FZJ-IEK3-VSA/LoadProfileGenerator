@@ -35,16 +35,17 @@ using Common;
 using Common.Tests;
 using Database.Tables.Houses;
 using Database.Tables.ModularHouseholds;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 #endregion
 
 namespace Database.Tests.Tables {
-    [TestFixture]
+
     public class SettlementHHTests : UnitTestBaseClass
     {
         [Fact]
@@ -99,7 +100,7 @@ namespace Database.Tests.Tables {
                 // test if it's there
                 SettlementHH.LoadFromDatabase(settlementHhs, db.ConnectionString, modularHouseholds, houses,
                     false);
-                Assert.AreEqual(1, settlementHhs.Count);
+                (settlementHhs.Count).Should().Be(1);
                 db.Cleanup();
             }
         }

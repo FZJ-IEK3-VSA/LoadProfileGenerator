@@ -6,14 +6,14 @@ using Common;
 using Common.Tests;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.Transportation;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace CalculationController.Tests.CalcFactories {
-    [TestFixture]
     public class CalcTransportationFactoryTests : UnitTestBaseClass
     {
         [Fact]
@@ -26,8 +26,10 @@ namespace CalculationController.Tests.CalcFactories {
                 "travelroutesetname");
             locations.Add(new Location("loc1", 1, "", Guid.NewGuid().ToStrGuid()));
             //not sites, one loc
-            void Crashfunction1() => CalcTransportationDtoFactory.CheckReachabilityofLocations(locations, sites, "calchouseholdname", "travelroutesetname");
-            Assert.That(Crashfunction1, Throws.TypeOf<DataIntegrityException>());
+            Action crashFunction1 = ()=>
+                CalcTransportationDtoFactory.CheckReachabilityofLocations(locations, sites, "calchouseholdname", "travelroutesetname");
+
+            crashFunction1.Should().Throw<DataIntegrityException>();
             //two locations in the same site
             locations.Add(new Location("loc2", 2, "", Guid.NewGuid().ToStrGuid()));
             sites.Add(new Site("site1", 1, "", "bla", Guid.NewGuid().ToStrGuid()));
@@ -66,8 +68,8 @@ namespace CalculationController.Tests.CalcFactories {
             Site sitec = new Site("sitec", 2, "", "", Guid.NewGuid().ToStrGuid());
             sites.Add(sitec);
             trs.AddRoute(new TravelRoute(1, "", "Route2", "desc", siteb, sitec, Guid.NewGuid().ToStrGuid(),null), false);
-            void Crashfunction1() => CalcTransportationDtoFactory.CheckRouteCompleteness(trs, sites);
-            Assert.That(Crashfunction1, Throws.TypeOf<DataIntegrityException>());
+            Action  crashfunction1 = () => CalcTransportationDtoFactory.CheckRouteCompleteness(trs, sites);
+            crashfunction1.Should().Throw<DataIntegrityException>();
             //add missing route
             trs.AddRoute(new TravelRoute(1, "", "Route3", "desc", sitea, sitec, Guid.NewGuid().ToStrGuid(),null), false);
             CalcTransportationDtoFactory.CheckRouteCompleteness(trs, sites);

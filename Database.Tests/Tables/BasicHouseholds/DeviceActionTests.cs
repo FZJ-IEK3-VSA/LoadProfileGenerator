@@ -5,15 +5,16 @@ using Common;
 using Common.Tests;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Database.Tests.Tables.BasicHouseholds
 {
-    [TestFixture]
+
     public class DeviceActionTests : UnitTestBaseClass
     {
         [Fact]
@@ -40,14 +41,14 @@ namespace Database.Tests.Tables.BasicHouseholds
                 da.AddDeviceProfile(profiles[0], 1, loadTypes[0], 1);
                 das.Clear();
                 DeviceAction.LoadFromDatabase(das, db.ConnectionString, profiles, devices, loadTypes, dags, false);
-                Assert.AreEqual(1, das.Count);
-                Assert.AreEqual(1, das[0].Profiles.Count);
+                (das.Count).Should().Be(1);
+                (das[0].Profiles.Count).Should().Be(1);
                 das[0].DeleteProfileFromDB(das[0].Profiles[0]);
-                Assert.AreEqual(0, das[0].Profiles.Count);
+                (das[0].Profiles.Count).Should().Be(0);
                 das[0].DeleteFromDB();
                 das.Clear();
                 DeviceAction.LoadFromDatabase(das, db.ConnectionString, profiles, devices, loadTypes, dags, false);
-                Assert.AreEqual(0, das.Count);
+                (das.Count).Should().Be(0);
                 db.Cleanup();
             }
         }

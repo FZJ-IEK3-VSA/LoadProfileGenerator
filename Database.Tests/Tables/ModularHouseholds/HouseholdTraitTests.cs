@@ -40,13 +40,13 @@ using Database.Tables.BasicHouseholds;
 using Database.Tables.ModularHouseholds;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Database.Tests.Tables.ModularHouseholds {
-    [TestFixture]
+
     [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     public class HouseholdTraitTests : UnitTestBaseClass
     {
@@ -190,9 +190,9 @@ namespace Database.Tests.Tables.ModularHouseholds {
                     deviceCategories,
                     timeBasedProfiles, loadTypes, timeLimits, desires, deviceActions, deviceActionGroups, tags, false,
                     variables);
-                Assert.AreEqual(1, hhts.Count);
+                (hhts.Count).Should().Be(1);
                 var hht3 = hhts[0];
-                Assert.AreEqual(1, hht3.Locations[0].AffordanceLocations.Count);
+                (hht3.Locations[0].AffordanceLocations.Count).Should().Be(1);
                 Logger.Info("deleting affordance");
                 hht3.DeleteAffordanceFromDB(hht3.Locations[0].AffordanceLocations[0]);
 
@@ -203,7 +203,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
                     timeBasedProfiles, loadTypes, timeLimits, desires, deviceActions, deviceActionGroups, tags, false,
                     variables);
                 var hht4 = hhts[0];
-                Assert.AreEqual(0, hht4.Locations[0].AffordanceLocations.Count);
+                (hht4.Locations[0].AffordanceLocations.Count).Should().Be(0);
 
                 db.Cleanup();
             }
@@ -258,22 +258,22 @@ namespace Database.Tests.Tables.ModularHouseholds {
                 hht.SaveToDB();
                 hht.AddTrait(hht2);
                 hht.SaveToDB();
-                Assert.AreEqual(1, hht.SubTraits.Count);
+                (hht.SubTraits.Count).Should().Be(1);
                 var hhts = new ObservableCollection<HouseholdTrait>();
                 var tags = db.LoadTraitTags();
                 HouseholdTrait.LoadFromDatabase(hhts, db.ConnectionString, locations, affordances, devices,
                     deviceCategories,
                     timeBasedProfiles, loadTypes, timeLimits, desires, deviceActions, deviceActionGroups, tags, false,
                     variables);
-                Assert.AreEqual(2, hhts.Count);
+                (hhts.Count).Should().Be(2);
                 var hht3 = hhts[0];
-                Assert.AreEqual(1, hht3.MinimumPersonsInCHH);
-                Assert.AreEqual(100, hht3.MaximumPersonsInCHH);
-                Assert.AreEqual(1, hht3.Desires.Count);
-                Assert.AreEqual(1, hht3.SubTraits.Count);
-                Assert.AreEqual("none", hht3.Classification);
-                Assert.AreEqual(1, hht3.Tags.Count);
-                Assert.AreEqual("tag", hht3.Tags[0].Tag.Name);
+                (hht3.MinimumPersonsInCHH).Should().Be(1);
+                (hht3.MaximumPersonsInCHH).Should().Be(100);
+                (hht3.Desires.Count).Should().Be(1);
+                (hht3.SubTraits.Count).Should().Be(1);
+                (hht3.Classification).Should().Be("none");
+                (hht3.Tags.Count).Should().Be(1);
+                (hht3.Tags[0].Tag.Name).Should().Be("tag");
                 foreach (var trait in hhts)
                 {
                     trait.DeleteFromDB();
@@ -284,7 +284,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
                     deviceCategories,
                     timeBasedProfiles, loadTypes, timeLimits, desires, deviceActions, deviceActionGroups, tags, false,
                     variables);
-                Assert.AreEqual(0, hhts.Count);
+                (hhts.Count).Should().Be(0);
                 db.Cleanup();
             }
         }

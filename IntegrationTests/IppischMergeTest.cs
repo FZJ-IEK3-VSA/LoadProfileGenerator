@@ -7,11 +7,10 @@ using Common.Tests;
 using Database;
 using Database.DatabaseMerger;
 using Database.Tests;
-using NUnit.Framework;
+
 using Xunit;
 
 namespace IntegrationTests {
-    [TestFixture]
     public class IppischMergeTest {
         [Fact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]

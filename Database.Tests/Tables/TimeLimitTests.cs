@@ -37,16 +37,17 @@ using Common;
 using Common.Tests;
 using Database.Helpers;
 using Database.Tables.BasicElements;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 #endregion
 
 namespace Database.Tests.Tables {
-    [TestFixture]
+
     public class TimeLimitTests : UnitTestBaseClass
     {
         [Fact]
@@ -85,11 +86,11 @@ namespace Database.Tests.Tables {
                 {
                     if (i < 48)
                     {
-                        Assert.AreEqual(true, br[i]);
+                        (br[i]).Should().Be(true);
                     }
                     else
                     {
-                        Assert.AreEqual(false, br[i]);
+                        (br[i]).Should().Be(false);
                     }
                 }
                 db.Cleanup();
@@ -130,7 +131,7 @@ namespace Database.Tests.Tables {
                 brtotal = brtotal.Or(br2);
                 foreach (bool b in brtotal)
                 {
-                    Assert.AreEqual(true, b);
+                    (b).Should().Be(true);
                 }
                 db.Cleanup();
             }
@@ -158,13 +159,13 @@ namespace Database.Tests.Tables {
                 out _);
             for (var i = 0; i < 24; i++) {
                 Logger.Info("hour: " + i + ":" + br[i]);
-                Assert.AreEqual(true, br[i]);
+                (br[i]).Should().Be(true);
             }
             for (var i = 24; i < br.Length; i++) {
                 if (i % 24 == 0) {
                     Logger.Info("hour: " + i + ":" + br[i]);
                 }
-                Assert.AreEqual(false, br[i]);
+                (br[i]).Should().Be(false);
             }
         }
 
@@ -179,31 +180,31 @@ namespace Database.Tests.Tables {
                 var timeLimits = new ObservableCollection<TimeLimit>();
                 var dateBasedProfiles = db.LoadDateBasedProfiles();
                 TimeLimit.LoadFromDatabase(timeLimits, dateBasedProfiles, db.ConnectionString, false);
-                Assert.AreEqual(0, timeLimits.Count);
+                (timeLimits.Count).Should().Be(0);
                 var dt = new TimeLimit("hey", db.ConnectionString, Guid.NewGuid().ToStrGuid());
                 dt.SaveToDB();
                 TimeLimit.LoadFromDatabase(timeLimits, dateBasedProfiles, db.ConnectionString, false);
-                Assert.AreEqual(1, timeLimits.Count);
+                (timeLimits.Count).Should().Be(1);
                 var dtl = timeLimits[0];
-                Assert.AreEqual("hey", dtl.Name);
+                (dtl.Name).Should().Be("hey");
                 dt.DeleteFromDB();
                 timeLimits.Clear();
                 TimeLimit.LoadFromDatabase(timeLimits, dateBasedProfiles, db.ConnectionString, false);
-                Assert.AreEqual(0, timeLimits.Count);
+                (timeLimits.Count).Should().Be(0);
                 var dt2 = new TimeLimit("hey2", db.ConnectionString, Guid.NewGuid().ToStrGuid());
                 dt2.SaveToDB();
                 var dtbe = dt2.AddTimeLimitEntry(null, dateBasedProfiles);
-                Assert.AreEqual(dtbe, dt2.RootEntry);
+                (dt2.RootEntry).Should().Be(dtbe);
                 var dtbe2 = dt2.AddTimeLimitEntry(dtbe, dateBasedProfiles);
-                Assert.AreEqual(1, dt2.RootEntry?.Subentries.Count);
+                (dt2.RootEntry?.Subentries.Count).Should().Be(1);
                 dt2.SaveToDB();
-                Assert.AreEqual(2, dt2.TimeLimitEntries.Count);
+                (dt2.TimeLimitEntries.Count).Should().Be(2);
                 timeLimits.Clear();
                 TimeLimit.LoadFromDatabase(timeLimits, dateBasedProfiles, db.ConnectionString, false);
-                Assert.AreEqual(2, timeLimits[0].TimeLimitEntries.Count);
-                Assert.AreEqual(dtbe.ToString(), timeLimits[0].RootEntry?.ToString());
-                Assert.AreEqual(1, timeLimits[0].RootEntry?.Subentries.Count);
-                Assert.AreEqual(dtbe2.ToString(), timeLimits[0].RootEntry?.Subentries[0].ToString());
+                (timeLimits[0].TimeLimitEntries.Count).Should().Be(2);
+                (timeLimits[0].RootEntry?.ToString()).Should().Be(dtbe.ToString());
+                (timeLimits[0].RootEntry?.Subentries.Count).Should().Be(1);
+                (timeLimits[0].RootEntry?.Subentries[0].ToString()).Should().Be(dtbe2.ToString());
                 db.Cleanup();
             }
         }
@@ -219,18 +220,18 @@ namespace Database.Tests.Tables {
                 var timeLimits = new ObservableCollection<TimeLimit>();
                 var dateBasedProfiles = db.LoadDateBasedProfiles();
                 TimeLimit.LoadFromDatabase(timeLimits, dateBasedProfiles, db.ConnectionString, false);
-                Assert.AreEqual(0, timeLimits.Count);
+                (timeLimits.Count).Should().Be(0);
                 var dt = new TimeLimit("hey", db.ConnectionString, Guid.NewGuid().ToStrGuid());
                 dt.SaveToDB();
                 TimeLimit.LoadFromDatabase(timeLimits, dateBasedProfiles, db.ConnectionString, false);
-                Assert.AreEqual(1, timeLimits.Count);
+                (timeLimits.Count).Should().Be(1);
                 var dtl = timeLimits[0];
-                Assert.AreEqual("hey", dtl.Name);
-                Assert.AreEqual(0, dtl.TimeLimitEntries.Count);
+                (dtl.Name).Should().Be("hey");
+                (dtl.TimeLimitEntries.Count).Should().Be(0);
                 dt.DeleteFromDB();
                 timeLimits.Clear();
                 TimeLimit.LoadFromDatabase(timeLimits, dateBasedProfiles, db.ConnectionString, false);
-                Assert.AreEqual(0, timeLimits.Count);
+                (timeLimits.Count).Should().Be(0);
                 var dt2 = new TimeLimit("hey2", db.ConnectionString, Guid.NewGuid().ToStrGuid());
                 dt2.SaveToDB();
                 var start = new DateTime(2013, 1, 1);
@@ -239,10 +240,10 @@ namespace Database.Tests.Tables {
                     true, true, 1, 1, 1, 1, 1, 1, 2, true, true, AnyAllTimeLimitCondition.Any, start, end, -1, 0, 0, false,
                     false, false, false, 5, false, dateBasedProfiles, 0, 0, 0);
                 dt2.SaveToDB();
-                Assert.AreEqual(1, dt2.TimeLimitEntries.Count);
+                (dt2.TimeLimitEntries.Count).Should().Be(1);
                 timeLimits.Clear();
                 TimeLimit.LoadFromDatabase(timeLimits, dateBasedProfiles, db.ConnectionString, false);
-                Assert.AreEqual(1, timeLimits[0].TimeLimitEntries.Count);
+                (timeLimits[0].TimeLimitEntries.Count).Should().Be(1);
                 db.Cleanup();
             }
         }

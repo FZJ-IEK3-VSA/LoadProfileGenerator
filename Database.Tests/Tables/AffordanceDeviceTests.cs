@@ -34,14 +34,15 @@ using Common.Enums;
 using Common.Tests;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Database.Tests.Tables {
-    [TestFixture]
+
     public class AffordanceDeviceTests : UnitTestBaseClass
     {
         [Fact]
@@ -63,7 +64,7 @@ namespace Database.Tests.Tables {
                 db.ClearTable(AffordanceDevice.TableName);
                 AffordanceDevice.LoadFromDatabase(affdev, db.ConnectionString, deviceCategories, realDevices,
                     timeBasedProfiles, affordances, loadtypes, deviceActions, deviceActionGroups, false);
-                Assert.AreEqual(0, affdev.Count);
+                affdev.Count.Should().Be(0);
                 var rd = new RealDevice("blub", 1, "1", null, "name", true, false, db.ConnectionString, Guid.NewGuid().ToStrGuid());
                 rd.SaveToDB();
                 realDevices.Add(rd);
@@ -81,8 +82,8 @@ namespace Database.Tests.Tables {
                 newaffdev.SaveToDB();
                 AffordanceDevice.LoadFromDatabase(affdev, db.ConnectionString, deviceCategories, realDevices,
                     timeBasedProfiles, affordances, loadtypes, deviceActions, deviceActionGroups, false);
-                Assert.AreEqual(1, affdev.Count);
-                Assert.AreEqual(loadtypes[0], affdev[0].LoadType);
+                affdev.Count.Should().Be(1);
+                affdev[0].LoadType.Should().Be(loadtypes[0]);
                 db.Cleanup();
             }
         }

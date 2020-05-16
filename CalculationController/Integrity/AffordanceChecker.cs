@@ -6,7 +6,6 @@ using System.Globalization;
 using System.Linq;
 using Automation.ResultFiles;
 using CalculationController.CalcFactories;
-using CalculationEngine.Helper;
 using Common;
 using Common.Enums;
 using Database;

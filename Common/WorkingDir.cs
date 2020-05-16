@@ -43,7 +43,7 @@ namespace Common {
         }
 
         [NotNull]
-        public IInputDataLogger InputDataLogger { get; private set; }
+        public InputDataLogger InputDataLogger { get; private set; }
         [NotNull]
         public SqlResultLoggingService SqlResultLoggingService { get; private  set; }
 

@@ -29,7 +29,6 @@
 using System;
 using Automation;
 using Automation.ResultFiles;
-using CalculationEngine.Helper;
 using CalculationEngine.OnlineDeviceLogging;
 using CalculationEngine.OnlineLogging;
 using Common;

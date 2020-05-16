@@ -6,12 +6,11 @@ using Database;
 using Database.Helpers;
 using Database.Tests;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
 
 namespace ReleaseBuilder.Tables.Houses {
-    [TestFixture]
     public class SettlementTests : UnitTestBaseClass
     {
         [Fact]

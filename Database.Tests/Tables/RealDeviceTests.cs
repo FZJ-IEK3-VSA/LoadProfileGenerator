@@ -35,16 +35,17 @@ using Common;
 using Common.Tests;
 using Database.Helpers;
 using Database.Tables.BasicHouseholds;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 #endregion
 
 namespace Database.Tests.Tables {
-    [TestFixture]
+
     public class RealDeviceTests : UnitTestBaseClass
     {
         [Fact]
@@ -67,19 +68,19 @@ namespace Database.Tests.Tables {
                 alldevices.Clear();
                 RealDevice.LoadFromDatabase(alldevices, deviceCategories, dcnone, db.ConnectionString, loadTypes, profiles,
                     false);
-                Assert.AreEqual(0, alldevices.Count);
+                (alldevices.Count).Should().Be(0);
                 var rd = new RealDevice("bla", 3, "p1", null, "name", true, false, db.ConnectionString, Guid.NewGuid().ToStrGuid());
                 rd.SaveToDB();
                 alldevices.Clear();
                 RealDevice.LoadFromDatabase(alldevices, deviceCategories, dcnone, db.ConnectionString, loadTypes, profiles,
                     false);
-                Assert.AreEqual(1, alldevices.Count);
+                (alldevices.Count).Should().Be(1);
                 var rd2 = new RealDevice("bla2", 3, "p1", null, "name", true, false, db.ConnectionString, Guid.NewGuid().ToStrGuid());
                 rd2.SaveToDB();
                 alldevices.Clear();
                 RealDevice.LoadFromDatabase(alldevices, deviceCategories, dcnone, db.ConnectionString, loadTypes, profiles,
                     false);
-                Assert.AreEqual(2, alldevices.Count);
+                (alldevices.Count).Should().Be(2);
                 db.Cleanup();
             }
         }
@@ -97,12 +98,12 @@ namespace Database.Tests.Tables {
                 var profiles = db.LoadTimeBasedProfiles();
                 var alldevices = db.LoadRealDevices(out var deviceCategories, out var dcNone,
                     out var loadTypes, profiles);
-                Assert.AreEqual(1, alldevices.Count);
+                (alldevices.Count).Should().Be(1);
                 alldevices.Clear();
                 rdcat.DeleteItem(rd);
                 RealDevice.LoadFromDatabase(alldevices, deviceCategories, dcNone, db.ConnectionString, loadTypes, profiles,
                     false);
-                Assert.AreEqual(0, alldevices.Count);
+                (alldevices.Count).Should().Be(0);
                 db.Cleanup();
             }
         }

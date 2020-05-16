@@ -35,14 +35,14 @@ using CalculationEngine.HouseholdElements;
 using Common;
 using Common.CalcDto;
 using Common.Tests;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Calculation.Tests {
-    [TestFixture]
     public class CalcProfileTests : UnitTestBaseClass
     {
         public CalcProfileTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
@@ -60,13 +60,13 @@ namespace Calculation.Tests {
                 "bla");
             var result = cp.CompressExpandDoubleArray(2);
             //List<double> result = CalcProfile.CompressExpandDoubleArray(tmparr, 2);
-            Assert.AreEqual(6, result.StepValues.Count);
-            Assert.AreEqual(1, result.StepValues[0]);
-            Assert.AreEqual(1, result.StepValues[1]);
-            Assert.AreEqual(2, result.StepValues[2]);
-            Assert.AreEqual(2, result.StepValues[3]);
-            Assert.AreEqual(3, result.StepValues[4]);
-            Assert.AreEqual(3, result.StepValues[5]);
+            result.StepValues.Count.Should().Be(6);
+            result.StepValues[0].Should().Be(1);
+            result.StepValues[1].Should().Be(1);
+            result.StepValues[2].Should().Be(2);
+            result.StepValues[3].Should().Be(2);
+            result.StepValues[4].Should().Be(3);
+            result.StepValues[5].Should().Be(3);
         }
 
         [Fact]
@@ -78,12 +78,12 @@ namespace Calculation.Tests {
             var cp = new CalcProfile("bla", Guid.NewGuid().ToStrGuid(), tmparr, ProfileType.Absolute, "bla");
             var result = cp.CompressExpandDoubleArray(1.5);
             //List<double> result = CalcProfile.CompressExpandDoubleArray(tmparr, 1.5);
-            Assert.AreEqual(5, result.StepValues.Count);
-            Assert.AreEqual(1, result.StepValues[0]);
-            Assert.AreEqual(2, result.StepValues[1]);
-            Assert.AreEqual(2, result.StepValues[2]);
-            Assert.AreEqual(3, result.StepValues[3]);
-            Assert.AreEqual(3, result.StepValues[4]);
+            result.StepValues.Count.Should().Be(5);
+            result.StepValues[0].Should().Be(1);
+            result.StepValues[1].Should().Be(2);
+            result.StepValues[2].Should().Be(2);
+            result.StepValues[3].Should().Be(3);
+            result.StepValues[4].Should().Be(3);
         }
 
         [Fact]
@@ -99,22 +99,22 @@ namespace Calculation.Tests {
             foreach (double resultStepValue in result.StepValues) {
                 Logger.Info(resultStepValue.ToString(CultureInfo.InvariantCulture));
             }
-            Assert.AreEqual(15, result.StepValues.Count);
-            Assert.AreEqual(0, result.StepValues[0]);
-            Assert.AreEqual(1, result.StepValues[1]);
-            Assert.AreEqual(1, result.StepValues[2]);
-            Assert.AreEqual(2, result.StepValues[3]);
-            Assert.AreEqual(3, result.StepValues[4]);
-            Assert.AreEqual(3, result.StepValues[5]);
-            Assert.AreEqual(4, result.StepValues[6]);
-            Assert.AreEqual(5, result.StepValues[7]);
-            Assert.AreEqual(5, result.StepValues[8]);
-            Assert.AreEqual(6, result.StepValues[9]);
-            Assert.AreEqual(7, result.StepValues[10]);
-            Assert.AreEqual(7, result.StepValues[11]);
-            Assert.AreEqual(8, result.StepValues[12]);
-            Assert.AreEqual(9, result.StepValues[13]);
-            Assert.AreEqual(9, result.StepValues[14]);
+            result.StepValues.Count.Should().Be(15);
+            result.StepValues[0].Should().Be(0);
+            result.StepValues[1].Should().Be(1);
+            result.StepValues[2].Should().Be(1);
+            result.StepValues[3].Should().Be(2);
+            result.StepValues[4].Should().Be(3);
+            result.StepValues[5].Should().Be(3);
+            result.StepValues[6].Should().Be(4);
+            result.StepValues[7].Should().Be(5);
+            result.StepValues[8].Should().Be(5);
+            result.StepValues[9].Should().Be(6);
+            result.StepValues[10].Should().Be(7);
+            result.StepValues[11].Should().Be(7);
+            result.StepValues[12].Should().Be(8);
+            result.StepValues[13].Should().Be(8);
+            result.StepValues[14].Should().Be(9);
         }
 
         [Fact]
@@ -126,9 +126,9 @@ namespace Calculation.Tests {
                 "bla");
             var result = cp.CompressExpandDoubleArray(0.5);
             //List<double> result = CalcProfile.CompressExpandDoubleArray(tmplist, 0.5);
-            Assert.AreEqual(2, result.StepValues.Count);
-            Assert.AreEqual(2, result.StepValues[0]);
-            Assert.AreEqual(4, result.StepValues[1]);
+            result.StepValues.Count.Should().Be(2);
+            result.StepValues[0].Should().Be(2);
+            result.StepValues[1].Should().Be(4);
         }
 
         [Fact]
@@ -141,10 +141,10 @@ namespace Calculation.Tests {
             var cp = new CalcProfile("bla", Guid.NewGuid().ToStrGuid(), tmparr.ToList(),ProfileType.Absolute,
                 "bla");
             var result = cp.CompressExpandDoubleArray(0.5);
-            Assert.AreEqual(3, result.StepValues.Count);
-            Assert.AreEqual(2, result.StepValues[0]);
-            Assert.AreEqual(4, result.StepValues[1]);
-            Assert.AreEqual(5, result.StepValues[2]);
+            result.StepValues.Count.Should().Be(3);
+            result.StepValues[0].Should().Be(2);
+            result.StepValues[1].Should().Be(4);
+            result.StepValues[2].Should().Be(5);
         }
     }
 }

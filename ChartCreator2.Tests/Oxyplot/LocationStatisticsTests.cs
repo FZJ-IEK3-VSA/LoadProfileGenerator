@@ -1,21 +1,20 @@
 ﻿using System.IO;
-using System.Threading;
 using Automation;
 using ChartCreator2.OxyCharts;
 using Common;
 using Common.Tests;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace ChartCreator2.Tests.Oxyplot {
-    [TestFixture]
-    [Apartment(ApartmentState.STA)]
+
     public class LocationStatisticsTests : UnitTestBaseClass
     {
-        [Fact]
+        [StaFact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
 
         public void MakePlotTest()
@@ -31,7 +30,7 @@ namespace ChartCreator2.Tests.Oxyplot {
                 Logger.Info("Making picture");
                 var di = new DirectoryInfo(cs.DstDir);
                 var files = FileFinder.GetRecursiveFiles(di, "LocationStatistics.HH1.csv");
-                Assert.GreaterOrEqual(files.Count, 1);
+                files.Count.Should().BeGreaterOrEqualTo( 1);
                 CalculationProfiler cp = new CalculationProfiler();
                 ChartCreationParameters ccps = new ChartCreationParameters(300, 4000,
                     2500, false, GlobalConsts.CSVCharacter, new DirectoryInfo(cs.DstDir));
@@ -41,7 +40,7 @@ namespace ChartCreator2.Tests.Oxyplot {
                 Logger.Info("finished picture");
                 //   OxyCalculationSetup.CopyImage(resultFileEntries[0].FullFileName);
                 var imagefiles = FileFinder.GetRecursiveFiles(di, "LocationStatistics.*.png");
-                Assert.GreaterOrEqual(imagefiles.Count, 1);
+                imagefiles.Count.Should().BeGreaterOrEqualTo( 1);
             }
             cs.CleanUp();
             CleanTestBase.RunAutomatically(true);

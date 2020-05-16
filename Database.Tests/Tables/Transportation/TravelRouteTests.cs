@@ -5,15 +5,16 @@ using Common;
 using Common.Tests;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.Transportation;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Database.Tests.Tables.Transportation
 {
-    [TestFixture]
+
     public class TravelRouteTests : UnitTestBaseClass
     {
         [Fact]
@@ -42,12 +43,12 @@ namespace Database.Tests.Tables.Transportation
                 tr.AddStep("name3", td, 100, 10, "key3");
                 tr.AddStep("name2", td, 100, 2, "key2");
                 //test the  sorting of steps while adding based on step number
-                Assert.That(tr.Steps[0].Name, Is.EqualTo("name1"));
-                Assert.That(tr.Steps[1].Name, Is.EqualTo("name2"));
-                Assert.That(tr.Steps[2].Name, Is.EqualTo("name3"));
-                Assert.That(tr.Steps[0].StepKey, Is.EqualTo("key1"));
-                Assert.That(tr.Steps[1].StepKey, Is.EqualTo("key2"));
-                Assert.That(tr.Steps[2].StepKey, Is.EqualTo("key3"));
+                ("name1").Should().Be(tr.Steps[0].Name);
+                ("name2").Should().Be(tr.Steps[1].Name);
+                ("name3").Should().Be(tr.Steps[2].Name);
+                ("key1").Should().Be(tr.Steps[0].StepKey);
+                ("key2").Should().Be(tr.Steps[1].StepKey);
+                ("key3").Should().Be(tr.Steps[2].StepKey);
                 foreach (TravelRouteStep step in tr.Steps)
                 {
                     Logger.Info(step.Name);
@@ -64,14 +65,14 @@ namespace Database.Tests.Tables.Transportation
             };
                 ObservableCollection<TravelRoute> routes = new ObservableCollection<TravelRoute>();
                 TravelRoute.LoadFromDatabase(routes, db.ConnectionString, false, transportationDeviceCategories, sites);
-                Assert.AreEqual(1, routes.Count);
+                (routes.Count).Should().Be(1);
                 tr = routes[0];
-                Assert.That(tr.Steps[0].Name, Is.EqualTo("name1"));
-                Assert.That(tr.Steps[1].Name, Is.EqualTo("name2"));
-                Assert.That(tr.Steps[2].Name, Is.EqualTo("name3"));
-                Assert.That(tr.Steps[0].StepKey, Is.EqualTo("key1"));
-                Assert.That(tr.Steps[1].StepKey, Is.EqualTo("key2"));
-                Assert.That(tr.Steps[2].StepKey, Is.EqualTo("key3"));
+                ("name1").Should().Be(tr.Steps[0].Name);
+                ("name2").Should().Be(tr.Steps[1].Name);
+                ("name3").Should().Be(tr.Steps[2].Name);
+                ("key1").Should().Be(tr.Steps[0].StepKey);
+                ("key2").Should().Be(tr.Steps[1].StepKey);
+                ("key3").Should().Be(tr.Steps[2].StepKey);
                 db.Cleanup();
             }
         }

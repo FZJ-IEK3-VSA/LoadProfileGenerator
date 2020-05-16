@@ -3,14 +3,13 @@ using Common;
 using Database;
 using Database.Tables.ModularHouseholds;
 using Database.Tests;
-using NUnit.Framework;
+using FluentAssertions;
 using SimulationEngineLib.Other;
 using Xunit;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace SimulationEngine.Tests.Other
 {
-    [TestFixture]
     public class HouseholdTemplateExportTester
     {
         [Fact]
@@ -99,7 +98,7 @@ namespace SimulationEngine.Tests.Other
                     JsonDatabaseImporter hti = new JsonDatabaseImporter(db.ConnectionString);
                     hti.Import(htio);
                     Simulator sim2 = new Simulator(db.ConnectionString);
-                    Assert.AreEqual(hhcount, sim2.ModularHouseholds.It.Count);
+                    hhcount.Should().Be(sim2.ModularHouseholds.It.Count);
                 }
             }
         }

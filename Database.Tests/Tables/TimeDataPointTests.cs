@@ -34,16 +34,17 @@ using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables.BasicElements;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 #endregion
 
 namespace Database.Tests.Tables {
-    [TestFixture]
+
     public class TimeDataPointTests : UnitTestBaseClass
     {
         [Fact]
@@ -75,7 +76,7 @@ namespace Database.Tests.Tables {
                 tp.SaveToDB();
                 var datapoints = new ObservableCollection<TimeDataPoint>();
                 TimeDataPoint.LoadFromDatabase(datapoints, db.ConnectionString, false);
-                Assert.AreEqual(datapoints.Count, 2);
+                (2).Should().Be(datapoints.Count);
                 db.Cleanup();
             }
         }
@@ -91,11 +92,11 @@ namespace Database.Tests.Tables {
                 var tp = new TimeDataPoint(new TimeSpan(0, 1, 0),
                     1, null, 1, db.ConnectionString, Guid.NewGuid().ToStrGuid());
                 tp.SaveToDB();
-                Assert.AreEqual(1, tp.Time.TotalMinutes);
+                (tp.Time.TotalMinutes).Should().Be(1);
                 var datapoints = new ObservableCollection<TimeDataPoint>();
                 TimeDataPoint.LoadFromDatabase(datapoints, db.ConnectionString, false);
-                Assert.AreEqual(datapoints.Count, 1);
-                Assert.AreEqual(1, datapoints[0].Time.TotalMinutes);
+                (1).Should().Be(datapoints.Count);
+                (datapoints[0].Time.TotalMinutes).Should().Be(1);
                 db.Cleanup();
             }
         }

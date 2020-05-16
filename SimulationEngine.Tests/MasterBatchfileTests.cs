@@ -9,17 +9,16 @@ using Common.Tests;
 using Database;
 using Database.Tables.Houses;
 using Database.Tests;
-using NUnit.Framework;
+
 using SimulationEngineLib;
 using SimulationEngineLib.Calculation;
 using SimulationEngineLib.SettlementCalculation;
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace SimulationEngine.Tests
 {
-    [TestFixture]
     public class MasterBatchfileTests : UnitTestBaseClass
     {
         [Fact]
@@ -47,8 +46,8 @@ namespace SimulationEngine.Tests
         [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
         public void RunNaturalLightBatch()
         {
-            SimulationEngineConfig.IsUnitTest = true;
-            SimulationEngineConfig.CatchErrors = false;
+            Config.IsInUnitTesting = true;
+            Config.CatchErrors = false;
             SimulationEngineTestPreparer se = new SimulationEngineTestPreparer("RunNaturalLight");
             List<string> arguments = new List<string>
             {
@@ -95,7 +94,7 @@ namespace SimulationEngine.Tests
             {
                 "--Batch-ModularHouseholds"
             };
-            SimulationEngineConfig.IsUnitTest = true;
+            Config.IsInUnitTesting = true;
             MainSimEngine.Run(arguments.ToArray(), "simulationengine.exe");
             DateTime d = DateTime.Now;
             string dstDir = @"x:\Calc\" + d.Year + "." + d.Month + "." + d.Day + ".." + d.Hour + "." + d.Minute;

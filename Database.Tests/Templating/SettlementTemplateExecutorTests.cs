@@ -5,12 +5,11 @@ using Common;
 using Common.Tests;
 using Database.Templating;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Database.Tests.Templating {
-    [TestFixture]
     public class SettlementTemplateExecutorTests : UnitTestBaseClass
     {
         [Fact]

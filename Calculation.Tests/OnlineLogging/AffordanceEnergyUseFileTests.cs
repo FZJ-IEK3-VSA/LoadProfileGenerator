@@ -11,13 +11,12 @@ using Common.SQLResultLogging.InputLoggers;
 using Common.SQLResultLogging.Loggers;
 using Common.Tests;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Calculation.Tests.OnlineLogging
 {
-    [TestFixture]
     public class AffordanceEnergyUseFileTests : UnitTestBaseClass
     {
         public AffordanceEnergyUseFileTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)

@@ -5,14 +5,15 @@ using Common.Tests;
 using Database.Helpers;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.ModularHouseholds;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Database.Tests.Tables.ModularHouseholds {
-    [TestFixture]
+
     public class TemplatePersonTests : UnitTestBaseClass
     {
         [Fact]
@@ -50,12 +51,12 @@ namespace Database.Tests.Tables.ModularHouseholds {
                 var chhs = db.LoadModularHouseholds(traits, selections, persons, vacations, tags, traitTags);
 
                 TemplatePerson.LoadFromDatabase(cat.It, db.ConnectionString, traits, false, chhs, persons);
-                Assert.AreEqual(0, cat.MyItems.Count);
+                (cat.MyItems.Count).Should().Be(0);
                 cat.CreateNewItem(db.ConnectionString);
                 cat.SaveToDB();
                 var templatePerson = new ObservableCollection<TemplatePerson>();
                 TemplatePerson.LoadFromDatabase(templatePerson, db.ConnectionString, traits, false, chhs, persons);
-                Assert.AreEqual(1, templatePerson.Count);
+                (templatePerson.Count).Should().Be(1);
                 db.Cleanup();
             }
         }

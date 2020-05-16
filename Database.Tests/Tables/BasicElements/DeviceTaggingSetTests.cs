@@ -32,14 +32,15 @@ using Automation.ResultFiles;
 using Common;
 using Common.Tests;
 using Database.Tables.BasicElements;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Database.Tests.Tables.BasicElements {
-    [TestFixture]
+
     public class DeviceTaggingSetTests : UnitTestBaseClass
     {
         [Fact]
@@ -73,15 +74,15 @@ namespace Database.Tests.Tables.BasicElements {
                 ats1.AddReferenceEntry(tag, 1, 10, loadTypes[0]);
                 ats.Clear();
                 DeviceTaggingSet.LoadFromDatabase(ats, db.ConnectionString, false, realDevices, loadTypes);
-                Assert.AreEqual(1, ats[0].References.Count);
-                Assert.AreEqual(1, ats[0].References[0].PersonCount);
-                Assert.AreEqual(10, ats[0].References[0].ReferenceValue);
+                ats[0].References.Count.Should().Be(1);
+                ats[0].References[0].PersonCount.Should().Be(1);
+                ats[0].References[0].ReferenceValue.Should().Be(10);
                 ats1 = ats[0];
                 ats1.DeleteTag(ats1.Tags[0]);
                 ats1.DeleteFromDB();
                 ats.Clear();
                 DeviceTaggingSet.LoadFromDatabase(ats, db.ConnectionString, false, realDevices, loadTypes);
-                Assert.AreEqual(0, ats.Count);
+                ats.Count.Should().Be(0);
                 db.Cleanup();
             }
             CleanTestBase.RunAutomatically(true);

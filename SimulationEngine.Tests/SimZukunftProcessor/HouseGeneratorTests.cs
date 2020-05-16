@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
 using Automation;
 using Common.Enums;
-using NUnit.Framework;
+using FluentAssertions;
 using SimulationEngineLib.SimZukunftProcessor;
 using Xunit;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace SimulationEngine.Tests.SimZukunftProcessor
 {
-    [TestFixture]
     public class HouseGeneratorTests
     {
         [Fact]
@@ -32,7 +31,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
                     pc15Male
                 };
                 var success = HouseGenerator.AreOfferedCategoriesEnough(offer, demand);
-                Assert.IsTrue(success);
+                success.Should().BeTrue();
             }
             {
                 List<PersonCategory> offer = new List<PersonCategory>
@@ -40,7 +39,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
                     pc20Male
                 };
                 var success = HouseGenerator.AreOfferedCategoriesEnough(offer, demand);
-                Assert.IsFalse(success);
+                success.Should().BeFalse();
             }
             demand.Clear();
             demand.Add(pc31Male);
@@ -52,7 +51,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
                     pc41Male
                 };
                 var success = HouseGenerator.AreOfferedCategoriesEnough(offer, demand);
-                Assert.IsTrue(success);
+                success.Should().BeTrue();
             }
             {
                 List<PersonCategory> offer = new List<PersonCategory>
@@ -61,7 +60,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
                     pc15Male
                 };
                 var success = HouseGenerator.AreOfferedCategoriesEnough(offer, demand);
-                Assert.IsFalse(success);
+                success.Should().BeFalse();
             }
         }
 

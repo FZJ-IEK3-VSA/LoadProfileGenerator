@@ -19,7 +19,7 @@ namespace Calculation.Tests.HouseholdElements
    //            bool result2 = CalcDevice.HasBusyEntryDuringTimespan(start, end, entries);
                Logger.Info("Test from start " + start + " to " + end + " real result:" + result1 + " quick result " +
                                  result2);
-               Assert.AreEqual(result1, result2);
+               (result2).Should().Be(result1);
            }
 
            private static bool IsbusyCheck(int startidx, int duration, BitArray br)
@@ -36,7 +36,7 @@ namespace Calculation.Tests.HouseholdElements
                BitArray br = new BitArray(2*4*8);
                br[31] = true;
                List<BusyEntry> entrys = CalcDevice.MakeBusyEntries(br);
-               Assert.AreEqual(1, entrys.Count);
+               (entrys.Count).Should().Be(1);
                CompareResults(0, 64, br, entrys);
                CompareResults(0, 32, br, entrys);
                CompareResults(33, 64, br, entrys);
@@ -48,7 +48,7 @@ namespace Calculation.Tests.HouseholdElements
                BitArray br = new BitArray(4*4*8);
                br[32] = true;
                List<BusyEntry> entrys = CalcDevice.MakeBusyEntries(br);
-               Assert.AreEqual(1, entrys.Count);
+               (entrys.Count).Should().Be(1);
                CompareResults(0, 128, br, entrys);
                CompareResults(0, 31, br, entrys);
                CompareResults(16, 40, br, entrys);
@@ -64,7 +64,7 @@ namespace Calculation.Tests.HouseholdElements
 
                br[0] = true;
                List<BusyEntry> entrys = CalcDevice.MakeBusyEntries(br);
-               Assert.AreEqual(1, entrys.Count);
+               (entrys.Count).Should().Be(1);
                CompareResults(0, 128, br, entrys);
                CompareResults(0, 31, br, entrys);
                CompareResults(16, 40, br, entrys);
@@ -79,7 +79,7 @@ namespace Calculation.Tests.HouseholdElements
                BitArray br = new BitArray(4*4*8);
                br[127] = true;
                List<BusyEntry> entrys = CalcDevice.MakeBusyEntries(br);
-               Assert.AreEqual(1, entrys.Count);
+               (entrys.Count).Should().Be(1);
                CompareResults(0, 128, br, entrys);
                CompareResults(0, 31, br, entrys);
                CompareResults(16, 40, br, entrys);
@@ -95,10 +95,10 @@ namespace Calculation.Tests.HouseholdElements
                BitArray br = new BitArray(10);
                br[0] = true;
                List<BusyEntry> entrys = CalcDevice.MakeBusyEntries(br);
-               Assert.AreEqual(1, entrys.Count);
+               (entrys.Count).Should().Be(1);
                BusyEntry be = entrys[0];
-               Assert.AreEqual(0, be.Start);
-               Assert.AreEqual(0, be.End);
+               (be.Start).Should().Be(0);
+               (be.End).Should().Be(0);
                Assert.True(CalcDevice.HasBusyEntryDuringTimespan(0, 1, entrys));
 
                Assert.True(CalcDevice.HasBusyEntryDuringTimespan(0, 10, entrys));
@@ -116,7 +116,7 @@ namespace Calculation.Tests.HouseholdElements
             BitArray br = new BitArray(10);
             br[9] = true;
             List<BusyEntry> entrys = CalcDevice.MakeBusyEntries(br);
-            Assert.AreEqual(1, entrys.Count);
+            (entrys.Count).Should().Be(1);
             CompareResults(0, 9, br, entrys);
         }
 
@@ -126,7 +126,7 @@ namespace Calculation.Tests.HouseholdElements
             BitArray br = new BitArray(10);
             br[9] = true;
             List<BusyEntry> entrys = CalcDevice.MakeBusyEntries(br);
-            Assert.AreEqual(1, entrys.Count);
+            (entrys.Count).Should().Be(1);
             Assert.True(CalcDevice.HasBusyEntryDuringTimespan(9, 1, entrys));
             Assert.True(CalcDevice.HasBusyEntryDuringTimespan(9, 10, entrys));
             for (int i = 0; i < br.Length; i++)
@@ -140,7 +140,7 @@ namespace Calculation.Tests.HouseholdElements
             BitArray br = new BitArray(10);
             br[5] = true;
             List<BusyEntry> entrys = CalcDevice.MakeBusyEntries(br);
-            Assert.AreEqual(1, entrys.Count);
+            (entrys.Count).Should().Be(1);
 
             Assert.False(CalcDevice.HasBusyEntryDuringTimespan(4, 1, entrys));
             Assert.True(CalcDevice.HasBusyEntryDuringTimespan(5, 1, entrys));
@@ -153,7 +153,7 @@ namespace Calculation.Tests.HouseholdElements
             BitArray br = new BitArray(10);
             br[1] = true;
             List<BusyEntry> entrys = CalcDevice.MakeBusyEntries(br);
-            Assert.AreEqual(1, entrys.Count);
+            (entrys.Count).Should().Be(1);
 
             Assert.False(CalcDevice.HasBusyEntryDuringTimespan(0, 1, entrys));
             Assert.True(CalcDevice.HasBusyEntryDuringTimespan(1, 1, entrys));
@@ -167,7 +167,7 @@ namespace Calculation.Tests.HouseholdElements
             br[5] = true;
             List<BusyEntry> entrys = CalcDevice.MakeBusyEntries(br);
 
-            Assert.AreEqual(1, entrys.Count);
+            (entrys.Count).Should().Be(1);
             Assert.True(CalcDevice.HasBusyEntryDuringTimespan(4, 2, entrys));
             Assert.True(CalcDevice.HasBusyEntryDuringTimespan(5, 2, entrys));
             Assert.False(CalcDevice.HasBusyEntryDuringTimespan(6, 2, entrys));
@@ -180,9 +180,9 @@ namespace Calculation.Tests.HouseholdElements
             for (int i = 0; i < 3; i++)
                 br[i] = true;
             List<BusyEntry> entrys = CalcDevice.MakeBusyEntries(br);
-            Assert.AreEqual(1, entrys.Count);
-            Assert.AreEqual(0, entrys[0].Start);
-            Assert.AreEqual(2, entrys[0].End);
+            (entrys.Count).Should().Be(1);
+            (entrys[0].Start).Should().Be(0);
+            (entrys[0].End).Should().Be(2);
 
             Assert.True(CalcDevice.HasBusyEntryDuringTimespan(0, 1, entrys));
             Assert.True(CalcDevice.HasBusyEntryDuringTimespan(0, 2, entrys));
@@ -195,7 +195,7 @@ namespace Calculation.Tests.HouseholdElements
         {
             BitArray br = new BitArray(10);
             List<BusyEntry> entrys = CalcDevice.MakeBusyEntries(br);
-            Assert.AreEqual(0, entrys.Count);
+            (entrys.Count).Should().Be(0);
             for (int i = 0; i < br.Length; i++)
             {
                 Assert.False(CalcDevice.HasBusyEntryDuringTimespan(i, 1, entrys));

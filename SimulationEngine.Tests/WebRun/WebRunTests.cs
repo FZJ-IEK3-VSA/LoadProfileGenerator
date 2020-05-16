@@ -5,21 +5,19 @@ using Common;
 using Common.Tests;
 using Database.Tests;
 using JetBrains.Annotations;
-using NUnit.Framework;
-using SimulationEngineLib;
+
 using Xunit;
 using Xunit.Abstractions;
 
 namespace SimulationEngine.Tests.WebRun
 {
-    [TestFixture]
     public class WebRunTests : UnitTestBaseClass
     {
         [Fact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
         public void RunTest()
         {
-            SimulationEngineConfig.CatchErrors = false;
+            Config.CatchErrors = false;
             WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {

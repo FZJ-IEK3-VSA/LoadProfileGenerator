@@ -1,21 +1,19 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Threading;
 using Automation;
 using Automation.ResultFiles;
 using ChartCreator2.OxyCharts;
 using Common;
 using Common.Tests;
-using NUnit.Framework;
+using FluentAssertions;
 using Xunit;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace ChartCreator2.Tests.Oxyplot {
-    [TestFixture]
-    [Apartment(ApartmentState.STA)]
+
     public class SumProfilesExternalTest {
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        [Fact]
+        [StaFact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.BrokenTest)]
         public void MakePlotTest()
         {
@@ -44,8 +42,8 @@ namespace ChartCreator2.Tests.Oxyplot {
 
                 Logger.Info("finished picture");
                 var imagefiles = FileFinder.GetRecursiveFiles(di, "SumProfiles_1800s.*.png");
-                Assert.GreaterOrEqual(imagefiles.Count, 1);
-                Assert.GreaterOrEqual(fft.ResultFileList.ResultFiles.Count, 1);
+                imagefiles.Count.Should().BeGreaterOrEqualTo( 1);
+                fft.ResultFileList.ResultFiles.Count.Should().BeGreaterOrEqualTo( 1);
             }
             cs.CleanUp();
             CleanTestBase.RunAutomatically(true);

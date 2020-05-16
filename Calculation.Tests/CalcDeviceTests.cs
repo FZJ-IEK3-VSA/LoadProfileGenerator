@@ -39,15 +39,15 @@ using Common.CalcDto;
 using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Calculation.Tests {
-    [TestFixture]
-    public class CalcDeviceTests : TestBasis {
+    public class CalcDeviceTests : CalcUnitTestBase {
         [Fact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void SetTimeprofileTest()
@@ -89,13 +89,13 @@ namespace Calculation.Tests {
                         TimeStep ts1 = new TimeStep(1, calcParameters);
                         cd.SetAllLoadTypesToTimeprofile(cp, ts1, "test", "name1", 1);
                         TimeStep ts = new TimeStep(0, calcParameters);
-                        Assert.AreEqual(false, cd.IsBusyDuringTimespan(ts, 1, 1, clt));
-                        Assert.AreEqual(true, cd.IsBusyDuringTimespan(ts.AddSteps(1), 1, 1, clt));
-                        Assert.AreEqual(true, cd.IsBusyDuringTimespan(ts.AddSteps(2), 1, 1, clt));
-                        Assert.AreEqual(true, cd.IsBusyDuringTimespan(ts.AddSteps(3), 1, 1, clt));
-                        Assert.AreEqual(true, cd.IsBusyDuringTimespan(ts.AddSteps(4), 1, 1, clt));
-                        Assert.AreEqual(true, cd.IsBusyDuringTimespan(ts.AddSteps(5), 1, 1, clt));
-                        Assert.AreEqual(false, cd.IsBusyDuringTimespan(ts.AddSteps(6), 0, 1, clt));
+                        cd.IsBusyDuringTimespan(ts, 1, 1, clt).Should().BeFalse();
+                        cd.IsBusyDuringTimespan(ts.AddSteps(1), 1, 1, clt).Should().BeTrue();
+                        cd.IsBusyDuringTimespan(ts.AddSteps(2), 1, 1, clt).Should().BeTrue();
+                        cd.IsBusyDuringTimespan(ts.AddSteps(3), 1, 1, clt).Should().BeTrue();
+                        cd.IsBusyDuringTimespan(ts.AddSteps(4), 1, 1, clt).Should().BeTrue();
+                        cd.IsBusyDuringTimespan(ts.AddSteps(5), 1, 1, clt).Should().BeTrue();
+                        cd.IsBusyDuringTimespan(ts.AddSteps(6), 0, 1, clt).Should().BeFalse();
                     }
                 }
 

@@ -33,16 +33,17 @@ using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables.BasicHouseholds;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 #endregion
 
 namespace Database.Tests.Tables {
-    [TestFixture]
+
     public class SubAffordanceDesireTests : UnitTestBaseClass
     {
         [Fact]
@@ -55,7 +56,7 @@ namespace Database.Tests.Tables {
                 Desire.LoadFromDatabase(desires, db.ConnectionString, false);
                 var subaffdes = new ObservableCollection<SubAffordanceDesire>();
                 SubAffordanceDesire.LoadFromDatabase(subaffdes, db.ConnectionString, desires, false);
-                Assert.Greater(subaffdes.Count, 5);
+                subaffdes.Count.Should().BeGreaterThan( 5);
                 db.Cleanup();
             }
         }

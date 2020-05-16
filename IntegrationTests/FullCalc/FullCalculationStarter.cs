@@ -9,7 +9,8 @@ using Common.Tests;
 using Database;
 using Database.Helpers;
 using Database.Tests;
-using NUnit.Framework;
+using FluentAssertions;
+
 
 namespace IntegrationTests.FullCalc
 {
@@ -39,7 +40,7 @@ namespace IntegrationTests.FullCalc
                     //CalcParameters
                     //CalcParametersFactory.SetGlobalTimeParameters(sim.MyGeneralConfig);
                     //ConfigSetter.SetGlobalTimeParameters(sim.MyGeneralConfig);
-                    Assert.AreNotEqual(null, sim);
+                    sim.Should().NotBeNull();
 
                     var cmf = new CalcManagerFactory();
                     //CalcDevice.UseRanges = true;

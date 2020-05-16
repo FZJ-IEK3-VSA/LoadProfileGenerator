@@ -32,14 +32,15 @@ using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables.Houses;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Database.Tests.Tables {
-    [TestFixture]
+
     public class TransformationDeviceTests : UnitTestBaseClass
     {
         [Fact]
@@ -59,7 +60,7 @@ namespace Database.Tests.Tables {
                 db.ClearTable(TransformationDeviceCondition.TableName);
                 db.ClearTable(TransformationFactorDatapoint.TableName);
                 TransformationDevice.LoadFromDatabase(tdlts, db.ConnectionString, loadTypes, variables, false);
-                Assert.AreEqual(0, tdlts.Count);
+                (tdlts.Count).Should().Be(0);
                 // add one and load again
                 var tdlt = new TransformationDevice("tdlt", "desc", loadTypes[0], -1000000, 1000000,
                     db.ConnectionString, -100000, 100000, Guid.NewGuid().ToStrGuid());
@@ -69,26 +70,26 @@ namespace Database.Tests.Tables {
                 tdlt.AddDataPoint(2, 1);
 
                 TransformationDevice.LoadFromDatabase(tdlts, db.ConnectionString, loadTypes, variables, false);
-                Assert.AreEqual(1, tdlts.Count);
-                Assert.AreEqual(1, tdlts[0].LoadTypesOut.Count);
-                Assert.AreEqual(1, tdlts[0].Conditions.Count);
-                Assert.AreEqual(1, tdlts[0].FactorDatapoints.Count);
+                (tdlts.Count).Should().Be(1);
+                (tdlts[0].LoadTypesOut.Count).Should().Be(1);
+                (tdlts[0].Conditions.Count).Should().Be(1);
+                (tdlts[0].FactorDatapoints.Count).Should().Be(1);
                 // delete the loaded one
                 tdlts[0].DeleteTransformationLoadtypeFromDB(tdlts[0].LoadTypesOut[0]);
                 tdlts[0].DeleteTransformationDeviceCondition(tdlts[0].Conditions[0]);
                 tdlts[0].DeleteFactorDataPoint(tdlts[0].FactorDatapoints[0]);
-                Assert.AreEqual(0, tdlts[0].LoadTypesOut.Count);
-                Assert.AreEqual(0, tdlts[0].Conditions.Count);
-                Assert.AreEqual(0, tdlts[0].FactorDatapoints.Count);
+                (tdlts[0].LoadTypesOut.Count).Should().Be(0);
+                (tdlts[0].Conditions.Count).Should().Be(0);
+                (tdlts[0].FactorDatapoints.Count).Should().Be(0);
                 tdlts[0].DeleteFromDB();
 
                 tdlts.Clear();
                 TransformationDevice.LoadFromDatabase(tdlts, db.ConnectionString, loadTypes, variables, false);
-                Assert.AreEqual(0, tdlts.Count);
+                (tdlts.Count).Should().Be(0);
                 var tdlt2 =
                     new ObservableCollection<TransformationDeviceLoadType>();
                 TransformationDeviceLoadType.LoadFromDatabase(tdlt2, db.ConnectionString, loadTypes, false);
-                Assert.AreEqual(0, tdlt2.Count);
+                (tdlt2.Count).Should().Be(0);
                 db.Cleanup();
             }
         }

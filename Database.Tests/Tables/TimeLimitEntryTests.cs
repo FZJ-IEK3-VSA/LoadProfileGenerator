@@ -36,14 +36,15 @@ using Common.Tests;
 using Database.Helpers;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Database.Tests.Tables {
-    [TestFixture]
+
     public class TimeLimitEntryTests : UnitTestBaseClass
     {
         [Fact]
@@ -60,7 +61,7 @@ namespace Database.Tests.Tables {
                 TimeLimit.LoadFromDatabase(timeLimits, dateBasedProfiles, db.ConnectionString, false);
                 var geographicLocations = db.LoadGeographicLocations(out _,
                     timeLimits);
-                Assert.AreEqual(0, timeLimits.Count);
+                (timeLimits.Count).Should().Be(0);
                 var dt = new TimeLimit("hey", db.ConnectionString, Guid.NewGuid().ToStrGuid());
                 dt.SaveToDB();
 
@@ -107,7 +108,7 @@ namespace Database.Tests.Tables {
                 TimeLimit.LoadFromDatabase(timeLimits, dateBasedProfiles, db.ConnectionString, false);
                 var geographicLocations = db.LoadGeographicLocations(out var holidays,
                     timeLimits);
-                Assert.AreEqual(0, timeLimits.Count);
+                (timeLimits.Count).Should().Be(0);
                 var startTime = new DateTime(1900, 1, 1, 6, 0, 0);
                 var endTime = new DateTime(1900, 1, 1, 10, 0, 0);
                 var dt = new TimeLimitEntry(null, -1, startTime, endTime, PermissionMode.EveryWorkday, 1, 1, true,
@@ -120,7 +121,7 @@ namespace Database.Tests.Tables {
                 var arrayend = new DateTime(2014, 1, 3, 9, 0, 0);
                 geographicLocations[0].AddHoliday(holidays[0]);
                 geographicLocations[0].AddHoliday(holidays[1]);
-                Assert.Greater(geographicLocations[0].Holidays.Count, 1);
+                geographicLocations[0].Holidays.Count.Should().BeGreaterThan( 1);
                 Logger.Info("Holidays:" + geographicLocations[0].Holidays.Count);
                 var r = new Random();
                 var timeframes = new List<VacationTimeframe>();

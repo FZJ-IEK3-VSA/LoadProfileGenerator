@@ -916,7 +916,7 @@ namespace BrookNovak.Collections
 
 /*
  * 
- * [TestFixture]
+ * 
 public class ExampleTestFixture {
      
     [Fact]

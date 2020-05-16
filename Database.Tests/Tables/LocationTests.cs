@@ -34,16 +34,17 @@ using Common;
 using Common.Tests;
 using Database.Helpers;
 using Database.Tables.BasicHouseholds;
+using FluentAssertions;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 #endregion
 
 namespace Database.Tests.Tables {
-    [TestFixture]
+
     public class LocationTests : UnitTestBaseClass
     {
         [Fact]
@@ -57,15 +58,15 @@ namespace Database.Tests.Tables {
                 var profiles = db.LoadTimeBasedProfiles();
                 var devices = db.LoadRealDevices(out var deviceCategories, out var loadTypes, profiles);
                 Location.LoadFromDatabase(cat.MyItems, db.ConnectionString, devices, deviceCategories, loadTypes, false);
-                Assert.AreEqual(0, cat.MyItems.Count);
+                (cat.MyItems.Count).Should().Be(0);
                 var loc = cat.CreateNewItem(db.ConnectionString);
                 cat.SaveToDB();
                 loc.AddDevice(devices[0]);
                 loc.SaveToDB();
                 var locations = new ObservableCollection<Location>();
                 Location.LoadFromDatabase(locations, db.ConnectionString, devices, deviceCategories, loadTypes, false);
-                Assert.AreEqual(1, locations.Count);
-                Assert.AreEqual(1, locations[0].LocationDevices.Count);
+                (locations.Count).Should().Be(1);
+                (locations[0].LocationDevices.Count).Should().Be(1);
                 db.Cleanup();
             }
         }

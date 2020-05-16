@@ -5,14 +5,13 @@ using CalculationEngine.OnlineDeviceLogging;
 using Common.JSON;
 using Common.Tests;
 using JetBrains.Annotations;
-using NUnit.Framework;
+
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Calculation.Tests.OnlineDeviceLogging
 {
-    [TestFixture]
     public class ProfileActivationEntryTests : UnitTestBaseClass
     {
         public ProfileActivationEntryTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)

@@ -5,7 +5,6 @@ using System.Linq;
 using Automation;
 using Automation.ResultFiles;
 using CalculationController.DtoFactories;
-using CalculationEngine.Helper;
 using CalculationEngine.HouseholdElements;
 using CalculationEngine.OnlineDeviceLogging;
 using CalculationEngine.OnlineLogging;
@@ -16,11 +15,12 @@ using Common.Enums;
 using Common.JSON;
 using Common.SQLResultLogging.InputLoggers;
 using Common.Tests;
+using FluentAssertions;
 using JetBrains.Annotations;
 using Moq;
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace Calculation.Tests.Transportation
 {
@@ -46,7 +46,7 @@ namespace Calculation.Tests.Transportation
                     Assert.NotNull(travelroute);
                     // find if busy
                     var isbusy = abt.IsBusy(ts, srcloc, personname, false);
-                    Assert.IsFalse(isbusy);
+                    isbusy.Should().BeFalse();
                     var affs = dstloc.Affordances.ToList();
 
                     Logger.Info("Activating affordance for time 0");
@@ -82,7 +82,7 @@ namespace Calculation.Tests.Transportation
                     Assert.NotNull(travelroute);
                     // find if busy
                     var isbusy = abt.IsBusy(ts, srcloc, "", false);
-                    Assert.IsFalse(isbusy);
+                    isbusy.Should().BeFalse();
                     var affs = dstloc.Affordances.ToList();
 
                     Logger.Info("Activating affordance for time 0");

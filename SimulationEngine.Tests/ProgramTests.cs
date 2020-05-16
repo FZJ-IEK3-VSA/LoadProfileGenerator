@@ -16,24 +16,23 @@ using Database;
 using Database.DatabaseMerger;
 using Database.Helpers;
 using Database.Tests;
-using NUnit.Framework;
+using FluentAssertions;
 using SimulationEngineLib;
 using Xunit;
 using Xunit.Abstractions;
-using Assert = NUnit.Framework.Assert;
+
 
 namespace SimulationEngine.Tests {
-    [TestFixture]
     [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     public class ProgramTests : UnitTestBaseClass
     {
         [JetBrains.Annotations.NotNull]
         public static WorkingDir SetupDB3([JetBrains.Annotations.NotNull] string name, bool clearTemplatedFirst = false) {
             var srcPath = DatabaseSetup.GetSourcepath(null);
-            SimulationEngineConfig.CatchErrors = false;
+            Config.CatchErrors = false;
             var wd = new WorkingDir(name);
             var dstfullName = Path.Combine(wd.WorkingDirectory, "profilegenerator.db3");
-            SimulationEngineConfig.IsUnitTest = true;
+            Config.IsInUnitTesting = true;
             if (File.Exists("profilegenerator.db3")) {
                 File.Delete("profilegenerator.db3");
             }
@@ -115,7 +114,7 @@ namespace SimulationEngine.Tests {
         [Fact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void ListEnviromentalVariables() {
-            SimulationEngineConfig.CatchErrors = false;
+            Config.CatchErrors = false;
             var dict = Environment.GetEnvironmentVariables();
 #pragma warning disable CS8605 // Unboxing a possibly null value.
             foreach (DictionaryEntry env in dict) {
@@ -176,7 +175,7 @@ namespace SimulationEngine.Tests {
                 "-ModularHouseholds"
             };
             Program.Main(arguments.ToArray());
-            Assert.IsTrue(File.Exists(filename));
+            (File.Exists(filename)).Should().BeTrue();
             wd.CleanUp(1);
         }*/
         /*
@@ -194,7 +193,7 @@ namespace SimulationEngine.Tests {
                 "-Settlements"
             };
             Program.Main(arguments.ToArray());
-            Assert.IsTrue(File.Exists(filename));
+            (File.Exists(filename)).Should().BeTrue();
             wd.CleanUp(1);
         }*/
 
@@ -214,7 +213,7 @@ namespace SimulationEngine.Tests {
         [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
         public void MainTestLaunchParallelModularHouseholds()
         {
-            SimulationEngineConfig.CatchErrors = false;
+            Config.CatchErrors = false;
             var di = new DirectoryInfo(".");
             var fis = di.GetFiles("*.*");
             var oldDir = Directory.GetCurrentDirectory();
@@ -244,7 +243,7 @@ namespace SimulationEngine.Tests {
                 "--Batch-ModularHouseholds"
             };
                 MainSimEngine.Run(arguments.ToArray(), "simulationengine.exe");
-                Assert.IsTrue(File.Exists(filename));
+                File.Exists(filename).Should().BeTrue();
                 arguments.Clear();
                 arguments.Add("--LaunchParallel");
                 arguments.Add("--NumberCores");
@@ -350,7 +349,7 @@ namespace SimulationEngine.Tests {
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void MainTestListSettlements()
         {
-            SimulationEngineConfig.CatchErrors = false;
+            Config.CatchErrors = false;
             using (var wd = SetupDB3(Utili.GetCurrentMethodAndClass()))
             {
                 var arguments = new List<string>
@@ -382,11 +381,11 @@ namespace SimulationEngine.Tests {
         [Fact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void MainTestNoDB3() {
-            SimulationEngineConfig.CatchErrors = false;
+            Config.CatchErrors = false;
             if (File.Exists("profilegenerator.db3")) {
                 File.Delete("profilegenerator.db3");
             }
-            SimulationEngineConfig.IsUnitTest = true;
+            Config.IsInUnitTesting = true;
             var args = Array.Empty<string>();
             Assert.Throws<LPGException>(() => MainSimEngine.Run(args.ToArray(), "simulationengine.exe"));
         }
@@ -400,8 +399,8 @@ namespace SimulationEngine.Tests {
                 Simulator sim = new Simulator(db.ConnectionString);
                 var settlementname = sim.Settlements.It[0].Name.Substring(0, 20);
                 db.Cleanup();
-                SimulationEngineConfig.CatchErrors = false;
-                SimulationEngineConfig.IsUnitTest = true;
+                Config.CatchErrors = false;
+                Config.IsInUnitTesting = true;
                 using var setp = new SimulationEngineTestPreparer(nameof(SettlementToBatchTest));
                 var arguments = new List<string>
             {
