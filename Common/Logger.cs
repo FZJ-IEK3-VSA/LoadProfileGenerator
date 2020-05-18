@@ -35,6 +35,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using Automation;
@@ -52,6 +53,46 @@ namespace Common {
         ImportantInfo,
         Information,
         Debug
+    }
+    public static class UnitTestDetector
+    {
+        public static readonly HashSet<string> UnitTestAttributes = new HashSet<string>
+        {
+            "Microsoft.VisualStudio.TestTools.UnitTesting.TestClassAttribute",
+            "NUnit.Framework.TestFixtureAttribute",
+            "XUnit.FactAttribute"
+        };
+
+        private static bool? _isRunning;
+
+
+        public static bool IsRunningInUnitTest
+        {
+            get {
+                if (_isRunning != null) {
+                    return _isRunning.Value;
+                }
+
+                var stcktrace = new StackTrace().GetFrames();
+                if (stcktrace == null) {
+                    throw new LPGException("stacktrace was null");
+
+                }
+                foreach (var f in stcktrace) {
+                    var g = f.GetMethod().DeclaringType;
+                    if (g == null) {
+                        throw new LPGException("declaringtype was null");
+                    }
+                    if (g.GetCustomAttributes(false).Any(x => UnitTestAttributes.Contains(x.GetType().FullName))) {
+                        _isRunning = true;
+                        return true;
+                    }
+                }
+
+                _isRunning = true;
+                return false;
+            }
+        }
     }
 
     public class Logger {
@@ -306,7 +347,14 @@ namespace Common {
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         private void ReportString([NotNull] string message, Severity severity, bool preserveLinebreaks = false)
         {
-            if (Config.IsInUnitTesting) {
+            if (UnitTestDetector.IsRunningInUnitTest && OutputHelper== null) {
+                throw new LPGException("no output helper even thoug we are in unit testing based on attributes");
+            }
+
+            if (Config.IsInUnitTesting&&OutputHelper ==null) {
+                throw new LPGException("no output helper even thoug we are in unit testing based on config");
+            }
+            if(OutputHelper!= null) {
                 OutputHelper.WriteLine(message);
             }
             else {

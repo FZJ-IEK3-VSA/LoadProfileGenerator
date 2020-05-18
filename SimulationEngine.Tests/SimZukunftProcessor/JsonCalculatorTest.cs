@@ -8,12 +8,14 @@ using System.Linq;
 using Automation;
 using Automation.ResultFiles;
 using Common;
+using Common.Tests;
 using Database;
 using Database.Tests;
 using FluentAssertions;
 using JetBrains.Annotations;
 using SimulationEngineLib.SimZukunftProcessor;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace SimulationEngine.Tests.SimZukunftProcessor
 {
@@ -108,7 +110,8 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
     }
 
 
-    public class JsonCalculatorTest
+    [SuppressMessage("ReSharper", "RedundantNameQualifier")]
+    public class JsonCalculatorTest :UnitTestBaseClass
     {
         [Fact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
@@ -359,5 +362,8 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         //    //wd.CleanUp();
         //}
 
+        public JsonCalculatorTest([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
+        }
     }
 }

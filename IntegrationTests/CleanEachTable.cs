@@ -9,11 +9,12 @@ using Database.Tables;
 using Database.Tests;
 
 using Xunit;
+using Xunit.Abstractions;
 using Logger = Common.Logger;
 
 namespace IntegrationTests
 {
-    public class CleanEachTable
+    public class CleanEachTable :UnitTestBaseClass
     {
         [Fact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.CleanEachTable)]
@@ -46,6 +47,10 @@ namespace IntegrationTests
                 }
             }
             CleanTestBase.RunAutomatically(true);
+        }
+
+        public CleanEachTable([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

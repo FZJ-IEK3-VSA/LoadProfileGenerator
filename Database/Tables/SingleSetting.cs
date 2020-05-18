@@ -128,7 +128,7 @@ namespace Database.Tables {
                         else {
                             cmd.AddParameter("myval", string.Empty);
                         }
-                        cmd.AddParameter("guid",Guid);
+                        cmd.AddParameter("guid",Guid.Value);
                         cmd.ExecuteNonQuery(
                             "INSERT INTO tblSettings (Settingname, Settingvalue, Guid) VALUES (@myname, @myval, @guid);");
                         NeedsUpdate = false;

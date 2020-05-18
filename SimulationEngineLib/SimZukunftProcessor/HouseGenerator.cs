@@ -327,64 +327,76 @@ namespace SimulationEngineLib.SimZukunftProcessor {
                 string houseJobStr = File.ReadAllText(houseJobFile);
                 HouseCreationAndCalculationJob hcj = JsonConvert.DeserializeObject<HouseCreationAndCalculationJob>(houseJobStr);
                 resultDir = hcj.CalcSpec?.OutputDirectory ?? "Results";
-                if (!Directory.Exists(resultDir)) {
+                if (!Directory.Exists(resultDir))
+                {
                     Directory.CreateDirectory(resultDir);
                     Thread.Sleep(100);
                 }
                 string finishedFlagFile = Path.Combine(resultDir, Constants.FinishedFileFlag);
-                if (File.Exists(finishedFlagFile)) {
+                if (File.Exists(finishedFlagFile))
+                {
                     Logger.Info("File already exists: " + finishedFlagFile);
                     Logger.Info("This calculation seems to be finished. Quitting.");
                     return;
                 }
                 string srcDbFile = hcj.PathToDatabase ?? throw new LPGException("No db source path");
-                if (!File.Exists(srcDbFile)) {
+                if (!File.Exists(srcDbFile))
+                {
                     throw new LPGException("Could not found source database file: " + srcDbFile);
                 }
                 //string houseName = AutomationUtili.CleanFileName(hcj.House?.Name ?? "House");
                 string dstDbFile = Path.Combine(resultDir, "profilegenerator.copy.db3");
 
-                File.Copy(srcDbFile,dstDbFile, true);
+                File.Copy(srcDbFile, dstDbFile, true);
                 //File.SetAttributes(dstDbFile, File.GetAttributes(dstDbFile) & ~FileAttributes.ReadOnly);
                 string dstConnectionString = "Data Source=" + dstDbFile;
                 // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-                if (hcj.House == null) {
-                    throw new LPGException("No house was defined");
-                }
-                if (hcj.CalcSpec == null)
-                {
-                    throw new LPGException("No calc spec was defined");
-                }
+
                 Simulator sim = new Simulator(dstConnectionString);
-                var geoloc = FindGeographicLocation(sim, hcj.CalcSpec);
-                var temperatureProfile = FindTemperatureProfile(sim, hcj.CalcSpec);
-                Random rnd = new Random();
-                var newlyCreatedCalcObject =  CreateSingleHouse(hcj,
-                    sim,
-                    geoloc,
-                    temperatureProfile,
-                    rnd);
-                if (newlyCreatedCalcObject == null) {
-                    throw new LPGException("Failed to create a house");
-                }
-                JsonCalculator jc = new JsonCalculator();
-                //hcj.CalcSpec.CalcObject = null;
-                jc.StartHousehold(sim, hcj.CalcSpec,newlyCreatedCalcObject, makeallthecharts);
+                ProcessSingleHouseJob(hcj, makeallthecharts,sim);
             }
             catch (Exception ex) {
                 var rdi = new DirectoryInfo(resultDir);
                 if (!rdi.Exists) {
                     rdi.Create();
                 }
-                using (StreamWriter sw = new StreamWriter( Path.Combine( resultDir, "CalculationExceptions.txt"))) {
+
+                using (StreamWriter sw = new StreamWriter(Path.Combine(resultDir, "CalculationExceptions.txt"))) {
                     sw.WriteLine(ex.Message);
                     sw.WriteLine(ex.StackTrace);
                     sw.WriteLine(ex.ToString());
                     sw.WriteLine(GetAllFootprints(ex));
                     sw.Close();
                 }
+
                 throw;
             }
+        }
+
+        public void ProcessSingleHouseJob([NotNull] HouseCreationAndCalculationJob hcj, Action<CalculationProfiler, string> makeallthecharts, [NotNull] Simulator sim)
+        {
+            if (hcj.House == null)
+            {
+                throw new LPGException("No house was defined");
+            }
+            if (hcj.CalcSpec == null)
+            {
+                throw new LPGException("No calc spec was defined");
+            }
+            var geoloc = FindGeographicLocation(sim, hcj.CalcSpec);
+            var temperatureProfile = FindTemperatureProfile(sim, hcj.CalcSpec);
+            Random rnd = new Random();
+            var newlyCreatedCalcObject =  CreateSingleHouse(hcj,
+                sim,
+                geoloc,
+                temperatureProfile,
+                rnd);
+            if (newlyCreatedCalcObject == null) {
+                throw new LPGException("Failed to create a house");
+            }
+            JsonCalculator jc = new JsonCalculator();
+            //hcj.CalcSpec.CalcObject = null;
+            jc.StartHousehold(sim, hcj.CalcSpec,newlyCreatedCalcObject, makeallthecharts);
         }
         [NotNull]
         public string GetAllFootprints([NotNull] Exception x)

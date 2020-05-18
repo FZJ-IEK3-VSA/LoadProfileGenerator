@@ -12,17 +12,62 @@ using Common.SQLResultLogging.InputLoggers;
 using Common.Tests;
 using Database;
 using Database.Helpers;
+using Database.Tests;
 using FluentAssertions;
 //using iTextSharp.text.pdf;
 using JetBrains.Annotations;
 
 using SimulationEngineLib;
+using SimulationEngineLib.SimZukunftProcessor;
 using Xunit;
 using Xunit.Abstractions;
 
 
 namespace SimulationEngine.Tests
 {
+
+    public class HouseJobCalcPreparer {
+        public static HouseCreationAndCalculationJob PrepareForTesting(Simulator sim)
+        {
+
+        HouseCreationAndCalculationJob hj = new HouseCreationAndCalculationJob();
+            hj.CalcSpec = JsonCalcSpecification.MakeDefaultsForTesting();
+            hj.House = new HouseData(new StrGuid("houseguid"),"HT01",1000,100,"housename");
+            hj.House.Households = new List<HouseholdData>();
+            HouseholdData hhd = new HouseholdData("householdid", false, "householdname", null,
+                null, null, null,
+                HouseholdDataSpecificationType.ByHouseholdName);
+            hhd.HouseholdNameSpecification = new HouseholdNameSpecification("CHR01");
+            return hj;
+        }
+    }
+
+    [SuppressMessage("ReSharper", "RedundantNameQualifier")]
+    public class HjTests : UnitTestBaseClass {
+        [Fact]
+        public void RunSingleHj() {
+            Logger.Get().StartCollectingAllMessages();
+            Logger.Threshold = Severity.Debug;
+            using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
+            {
+                using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+                {
+                    string targetdb = wd.Combine("profilegenerator.db3");
+                    File.Copy(db.FileName, targetdb, true);
+                    Directory.SetCurrentDirectory(wd.WorkingDirectory);
+                    Simulator sim = new Simulator(db.ConnectionString);
+                    HouseGenerator houseGenerator = new HouseGenerator();
+                    var hj = HouseJobCalcPreparer.PrepareForTesting(sim);
+                    houseGenerator.ProcessSingleHouseJob(hj, null,sim);
+                }
+            }
+        }
+
+        public HjTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
+        }
+    }
+
     [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     public class CalculationTests : UnitTestBaseClass
     {

@@ -102,13 +102,13 @@ namespace Automation {
         }
 
         [CanBeNull]
-    public  HouseholdDataPersonSpecification? HouseholdDataPersonSpecification { get; set; }
-    [CanBeNull]
+        public  HouseholdDataPersonSpecification? HouseholdDataPersonSpecification { get; set; }
+        [CanBeNull]
         public HouseholdTemplateSpecification? HouseholdTemplateSpecification { get; set; }
         [CanBeNull]
         public HouseholdNameSpecification? HouseholdNameSpecification { get; set; }
 
-                [NotNull]
+        [NotNull]
         public string UniqueHouseholdId { get; set; }
 
         [NotNull]

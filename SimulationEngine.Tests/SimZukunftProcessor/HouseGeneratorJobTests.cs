@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Automation;
 using Automation.ResultFiles;
@@ -7,6 +8,7 @@ using Common;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
 using Common.SQLResultLogging.Loggers;
+using Common.Tests;
 using Database;
 using Database.Helpers;
 using Database.Tests;
@@ -14,11 +16,13 @@ using Newtonsoft.Json;
 
 using SimulationEngineLib.SimZukunftProcessor;
 using Xunit;
+using Xunit.Abstractions;
 using Formatting = Newtonsoft.Json.Formatting;
 
 namespace SimulationEngine.Tests.SimZukunftProcessor
 {
-    public class HouseGeneratorJobTests
+    [SuppressMessage("ReSharper", "RedundantNameQualifier")]
+    public class HouseGeneratorJobTests :UnitTestBaseClass
     {
 
         [Fact]
@@ -356,5 +360,8 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
             }
         }
 
+        public HouseGeneratorJobTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
+        }
     }
 }

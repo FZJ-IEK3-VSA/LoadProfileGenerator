@@ -24,7 +24,7 @@ namespace Common.Tests {
                 throw new LPGException("PercentageRange<0");
             }
 
-            double actualValue = (double)parent.Subject;
+            double actualValue =(int)parent.Subject;
             double minValue = (double)(target - target * percent);
             double maxValue = (double)(target + target * percent);
 
@@ -86,9 +86,11 @@ namespace Common.Tests {
 
     [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     public class UnitTestBaseClass {
+        public ITestOutputHelper TestOutputHelper { get; }
 
         public UnitTestBaseClass(ITestOutputHelper testOutputHelper)
         {
+            TestOutputHelper = testOutputHelper;
             Logger.Get().SetOutputHelper(testOutputHelper);
         }
 

@@ -396,7 +396,7 @@ namespace Database.Tests {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
                 var sim = new Simulator(db.ConnectionString);
-                sim.Should().BeNull();
+                sim.Should().NotBeNull();
                 db.Cleanup();
             }
         }
@@ -408,7 +408,7 @@ namespace Database.Tests {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
                 var sim = new Simulator(db.ConnectionString);
-                sim.Should().BeNull();
+                sim.Should().NotBeNull();
                 var emptycount = 0;
                 foreach (var realDevice in sim.RealDevices.MyItems)
                 {

@@ -30,7 +30,7 @@ namespace Database.Tests.Tables.BasicElements
                 allVariables[0].DeleteFromDB();
                 allVariables.Clear();
                 Variable.LoadFromDatabase(allVariables, db.ConnectionString, false);
-                allVariables.Count.Should().Be(1);
+                allVariables.Count.Should().Be(0);
                 db.Cleanup();
             }
         }
