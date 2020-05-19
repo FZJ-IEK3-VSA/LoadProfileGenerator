@@ -82,7 +82,7 @@ namespace CalculationEngine.HouseholdElements {
 
         public CalcHousehold([NotNull] string pName, [NotNull] string locationname,
                              [NotNull] string temperatureprofileName, [NotNull] HouseholdKey householdkey,
-                              [NotNull] StrGuid guid,
+                              StrGuid guid,
                              [NotNull] CalcVariableRepository calcVariableRepository,
                              [ItemNotNull] [NotNull] List<CalcLocation> locations,
                              [ItemNotNull] [NotNull] List<CalcPerson> persons,
@@ -120,8 +120,6 @@ namespace CalculationEngine.HouseholdElements {
         [CanBeNull]
         public TransportationHandler TransportationHandler { get; set; }
 
-        [NotNull]
-        [ItemNotNull]
         public List<CalcAutoDev> CollectAutoDevs()
         {
             if (_autoDevs == null) {
@@ -131,8 +129,6 @@ namespace CalculationEngine.HouseholdElements {
             return _autoDevs;
         }
 
-        [NotNull]
-        [ItemNotNull]
         public List<CalcDevice> CollectDevices()
         {
             if (_devices == null) {
@@ -142,8 +138,6 @@ namespace CalculationEngine.HouseholdElements {
             return _devices;
         }
 
-        [NotNull]
-        [ItemNotNull]
         public List<CalcLocation> CollectLocations()
         {
             if (_locations == null) {
@@ -153,8 +147,6 @@ namespace CalculationEngine.HouseholdElements {
             return _locations;
         }
 
-        [NotNull]
-        [ItemNotNull]
         public List<CalcPerson> CollectPersons()
         {
             if (_persons == null) {
@@ -313,12 +305,11 @@ namespace CalculationEngine.HouseholdElements {
             DumpTimeProfiles();
         }
 
-        [NotNull]
         public HouseholdKey HouseholdKey => _householdKey;
 
         //public Dictionary<int, CalcProfile> AllProfiles => _allProfiles;
 
-        public void Init([NotNull] DayLightStatus daylightArray,
+        public void Init(DayLightStatus daylightArray,
                          int simulationSeed)
         {
             _simulationSeed = simulationSeed;
@@ -381,7 +372,7 @@ namespace CalculationEngine.HouseholdElements {
             throw new NotImplementedException();
         }
         */
-        public void RunOneStep([NotNull] TimeStep timestep, DateTime now, bool runProcessing)
+        public void RunOneStep(TimeStep timestep, DateTime now, bool runProcessing)
         {
             if (_locations == null) {
                 throw new LPGException("_locations should not be null");

@@ -32,7 +32,7 @@ namespace Database.Tables.ModularHouseholds {
         [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "basePerson")]
         public TemplatePerson([NotNull] string pName,[CanBeNull] int? id,[NotNull]  string description, [NotNull] string connectionString, int age,
             int averageSicknessDuration, PermittedGender gender, int sickDays,
-            [CanBeNull] ModularHousehold baseHousehold, [CanBeNull] Person basePerson, [NotNull] StrGuid guid) : base(pName, TableName,
+            [CanBeNull] ModularHousehold baseHousehold, [CanBeNull] Person basePerson, StrGuid guid) : base(pName, TableName,
             connectionString, guid)
         {
             ID = id;
@@ -207,7 +207,7 @@ namespace Database.Tables.ModularHouseholds {
             return false;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             message = "";
             return true;
@@ -241,7 +241,7 @@ namespace Database.Tables.ModularHouseholds {
             }
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("Name", Name);
             cmd.AddParameter("Age", _age);
@@ -263,8 +263,7 @@ namespace Database.Tables.ModularHouseholds {
             }
         }
 
-        [NotNull]
-        public override DBBase ImportFromGenericItem([NotNull] DBBase toImport, [NotNull] Simulator dstSim) =>
+        public override DBBase ImportFromGenericItem(DBBase toImport, Simulator dstSim) =>
         ImportFromItem((TemplatePerson)toImport,dstSim);
 
         public override List<UsedIn> CalculateUsedIns(Simulator sim) => throw new NotImplementedException();

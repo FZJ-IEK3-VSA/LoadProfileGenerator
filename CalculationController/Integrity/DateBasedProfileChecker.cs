@@ -1,6 +1,5 @@
 ﻿using Common;
 using Database;
-using JetBrains.Annotations;
 
 namespace CalculationController.Integrity
 {
@@ -9,7 +8,7 @@ namespace CalculationController.Integrity
         public DateBasedProfileChecker(bool performCleanupChecks) : base("Date Based Profile", performCleanupChecks) {
         }
 
-        protected override void Run([NotNull] Simulator sim)
+        protected override void Run(Simulator sim)
         {
             foreach (var profile in sim.DateBasedProfiles.It) {
                 if(profile.Datapoints.Count == 0) {

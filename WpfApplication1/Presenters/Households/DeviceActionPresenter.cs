@@ -62,7 +62,7 @@ namespace LoadProfileGenerator.Presenters.Households {
             Close(false);
         }
 
-        public override bool Equals([CanBeNull] object obj)
+        public override bool Equals(object obj)
         {
             var presenter = obj as DeviceActionPresenter;
             return presenter?.ThisDeviceAction.Equals(_deviceAction) == true;

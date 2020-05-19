@@ -35,7 +35,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
         [JetBrains.Annotations.NotNull]
         private Func<FileFactoryAndTracker, HouseholdKey, CalcParameters, StreamWriter> MakeStreamWriterFunc { get; }
 
-        protected override void PerformActualStep([JetBrains.Annotations.NotNull] IStepParameters parameters)
+        protected override void PerformActualStep(IStepParameters parameters)
         {
             HouseholdStepParameters hhp = (HouseholdStepParameters)parameters;
             var entry = hhp.Key;

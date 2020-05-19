@@ -67,7 +67,7 @@ namespace Database.Tables.Houses {
 
         public House([NotNull] string pName, [CanBeNull] string description, [CanBeNull] TemperatureProfile temperatureProfile, [CanBeNull] GeographicLocation geographicLocation,
                      [CanBeNull] HouseType houseType, [NotNull] string connectionString, EnergyIntensityType energyIntensity, [CanBeNull] string source, CreationType creationType,
-                     [NotNull] StrGuid guid, [CanBeNull] int? pID = null) : base(pName, TableName, connectionString, guid)
+                     StrGuid guid, [CanBeNull] int? pID = null) : base(pName, TableName, connectionString, guid)
         {
             ID = pID;
             TypeDescription = "House";
@@ -137,7 +137,6 @@ namespace Database.Tables.Houses {
             set => SetValueWithNotify(value, ref _temperatureProfile, nameof(TemperatureProfile));
         }
 
-        [NotNull]
         public ObservableCollection<Person> AllPersons {
             get {
                 var persons = new ObservableCollection<Person>();
@@ -173,7 +172,6 @@ namespace Database.Tables.Houses {
             return i;
         }
 
-        [NotNull]
         public List<VLoadType> CollectLoadTypes(ObservableCollection<Affordance> affordances)
         {
             var loadTypes = new List<VLoadType>();
@@ -193,10 +191,8 @@ namespace Database.Tables.Houses {
             return loadTypes;
         }
 
-        [CanBeNull]
         public GeographicLocation DefaultGeographicLocation => GeographicLocation;
 
-        [CanBeNull]
         public TemperatureProfile DefaultTemperatureProfile => TemperatureProfile;
 
         [UsedImplicitly]
@@ -269,8 +265,7 @@ namespace Database.Tables.Houses {
             base.DeleteFromDB();
         }
 
-        [NotNull]
-        public override DBBase ImportFromGenericItem([NotNull] DBBase toImport, [NotNull] Simulator dstSim) => ImportFromItem((House)toImport, dstSim);
+        public override DBBase ImportFromGenericItem(DBBase toImport, Simulator dstSim) => ImportFromItem((House)toImport, dstSim);
         /*
         public void ImportFromExisting(House other)
         {
@@ -354,13 +349,13 @@ namespace Database.Tables.Houses {
 
         public override string ToString() => Name;
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             message = "";
             return true;
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("Name", "@myname", Name);
             if (_description != null) {

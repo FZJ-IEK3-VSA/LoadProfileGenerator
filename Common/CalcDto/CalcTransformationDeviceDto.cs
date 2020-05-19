@@ -17,7 +17,6 @@ namespace Common.CalcDto {
         public double MaxPower { get; }
         [NotNull]
         public HouseholdKey HouseholdKey { get; }
-        [NotNull]
         public StrGuid Guid { get; }
         public double MaxValue { get; }
         public double MinPower { get; }
@@ -30,7 +29,7 @@ namespace Common.CalcDto {
 
         public CalcTransformationDeviceDto([NotNull]string name, int id, double minValue,
                                            double maxValue, double minimumOutputPower, double maximumInputPower, [NotNull]HouseholdKey householdKey,
-                                           [NotNull]StrGuid guid, [NotNull][ItemNotNull] List<CalcTransformationConditionDto> conditions,
+                                           StrGuid guid, [NotNull][ItemNotNull] List<CalcTransformationConditionDto> conditions,
                                            [CanBeNull][ItemNotNull]List<DataPointDto> datapoints, [NotNull][ItemNotNull]List<OutputLoadTypeDto> outputLoadTypes,
                                            [NotNull] CalcLoadTypeDto inputLoadType)
         {

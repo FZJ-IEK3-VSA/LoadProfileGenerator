@@ -53,7 +53,7 @@ namespace Database.Tables.BasicHouseholds {
         private int _sickDays;
 
         public Person([NotNull] string name, int age, [CanBeNull]int? pID, int sickDays, int averageSicknessDuration, PermittedGender gender,
-            [NotNull] string connectionString, [NotNull] string description, [NotNull] StrGuid guid) : base(name, TableName, connectionString, guid)
+            [NotNull] string connectionString, [NotNull] string description, StrGuid guid) : base(name, TableName, connectionString, guid)
         {
             _age = age;
             ID = pID;
@@ -136,13 +136,10 @@ namespace Database.Tables.BasicHouseholds {
             FindNewName(isNameTaken, "New Person "), 20, null, 5, 2, PermittedGender.Male, connectionString,
             "(no description)", System.Guid.NewGuid().ToStrGuid());
 
-        [NotNull]
-        public override DBBase ImportFromGenericItem([NotNull] DBBase toImport, [NotNull] Simulator dstSim) =>
+        public override DBBase ImportFromGenericItem(DBBase toImport, Simulator dstSim) =>
             ImportFromItem((Person)toImport,dstSim);
 
-        [ItemNotNull]
-        [NotNull]
-        public override List<UsedIn> CalculateUsedIns([NotNull] Simulator sim)
+        public override List<UsedIn> CalculateUsedIns(Simulator sim)
         {
             var used = new List<UsedIn>();
             foreach (var chh in sim.ModularHouseholds.It) {
@@ -168,7 +165,7 @@ namespace Database.Tables.BasicHouseholds {
             return p;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             message = "";
             return true;
@@ -183,7 +180,7 @@ namespace Database.Tables.BasicHouseholds {
             result.Sort();
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("Name", "@myname", Name);
             cmd.AddParameter("Age", "@Age", Age);

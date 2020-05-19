@@ -38,7 +38,7 @@ namespace Database.Tables.BasicElements {
         private readonly int _taggingSetID;
         private ColorRGB _carpetPlotColor;
 
-        public AffordanceTag([NotNull] string name, int taggingSetID, [NotNull] string connectionString,[CanBeNull] int? pID, ColorRGB color, [NotNull] StrGuid guid)
+        public AffordanceTag([NotNull] string name, int taggingSetID, [NotNull] string connectionString,[CanBeNull] int? pID, ColorRGB color, StrGuid guid)
             : base(name, pID, TableName, connectionString,  guid)
         {
             _taggingSetID = taggingSetID;
@@ -139,7 +139,7 @@ namespace Database.Tables.BasicElements {
             }
         }
 
-        public override int CompareTo([CanBeNull] object obj)
+        public override int CompareTo(object obj)
         {
             if (!(obj is AffordanceTag other))
             {
@@ -148,7 +148,7 @@ namespace Database.Tables.BasicElements {
             return string.Compare(Name, other.Name, StringComparison.Ordinal);
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             if (_taggingSetID < 0) {
                 message = "Parent Tagging Set was not found";
@@ -165,7 +165,7 @@ namespace Database.Tables.BasicElements {
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("Name", Name);
             cmd.AddParameter("TaggingSetID", TaggingSetID);

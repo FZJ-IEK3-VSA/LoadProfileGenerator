@@ -25,7 +25,7 @@ namespace Common.SQLResultLogging.Loggers {
             return res;
         }
 
-        public override void Run([NotNull] HouseholdKey key, [NotNull] object o)
+        public override void Run(HouseholdKey key, object o)
         {
             var objects = (List<IHouseholdKey>)o;
             var locationEntries = objects.ConvertAll(x => (TransportationEventEntry)x).ToList();

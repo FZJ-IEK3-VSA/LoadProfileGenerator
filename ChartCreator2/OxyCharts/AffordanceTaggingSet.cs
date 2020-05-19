@@ -23,7 +23,7 @@ namespace ChartCreator2.OxyCharts {
         {
         }
 
-        protected override FileProcessingResult MakeOnePlot([JetBrains.Annotations.NotNull] ResultFileEntry rfe)
+        protected override FileProcessingResult MakeOnePlot(ResultFileEntry rfe)
         {
             string plotName = "Affordance Tagging Set " + rfe.HouseholdNumberString;
             Profiler.StartPart(Utili.GetCurrentMethodAndClass());

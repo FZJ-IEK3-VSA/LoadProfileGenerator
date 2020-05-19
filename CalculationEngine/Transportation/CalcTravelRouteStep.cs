@@ -13,7 +13,7 @@ namespace CalculationEngine.Transportation {
 
         public CalcTravelRouteStep([NotNull] string pName,
                                    [NotNull] CalcTransportationDeviceCategory transportationDeviceCategory, int stepNumber, double distanceInM,
-                                   [NotNull] StrGuid guid, [NotNull] [ItemNotNull] List<CalcTransportationDevice> vehiclePool,
+                                   StrGuid guid, [NotNull] [ItemNotNull] List<CalcTransportationDevice> vehiclePool,
                                    CalcRepo calcRepo) : base(pName, guid)
         {
             TransportationDeviceCategory = transportationDeviceCategory;

@@ -13,8 +13,7 @@ namespace ChartCreator2.PDF {
             MyTargetDirectory = TargetDirectory.Reports;
         }
 
-        [JetBrains.Annotations.NotNull]
-        protected override string GetGraphTitle([JetBrains.Annotations.NotNull] string filename) => throw new LPGException("Not implemented on purpose");
+        protected override string GetGraphTitle(string filename) => throw new LPGException("Not implemented on purpose");
 
         public void MakePage([JetBrains.Annotations.NotNull] Document doc, [JetBrains.Annotations.NotNull] string dstdir, bool requireAll, [JetBrains.Annotations.NotNull] Section tocSection) {
             var di =

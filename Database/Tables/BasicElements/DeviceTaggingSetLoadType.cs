@@ -13,7 +13,7 @@ namespace Database.Tables.BasicElements {
         [CanBeNull] private VLoadType _loadType;
 
         public DeviceTaggingSetLoadType([NotNull] string name, int taggingSetID, [CanBeNull] VLoadType loadType,
-            [NotNull] string connectionString, [CanBeNull]int? pID, [NotNull] StrGuid guid) : base(name, pID, TableName,
+            [NotNull] string connectionString, [CanBeNull]int? pID, StrGuid guid) : base(name, pID, TableName,
             connectionString, guid)
         {
             _taggingSetID = taggingSetID;
@@ -39,7 +39,7 @@ namespace Database.Tables.BasicElements {
 
         public override string ToString() => Name;
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             if (_loadType == null) {
                 message = "Loadtype was not found when loading " + TypeDescription;
@@ -50,7 +50,7 @@ namespace Database.Tables.BasicElements {
             return true;
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("DeviceTaggingSetID", _taggingSetID);
             if (_loadType != null) {

@@ -13,11 +13,11 @@ namespace LoadProfileGenerator {
 #pragma warning restore CC0022 // Should dispose object
         }
 
-        public override void Write([CanBeNull]string message) {
+        public override void Write(string message) {
             // needed for interface
         }
 
-        public override void WriteLine([CanBeNull] string message) {
+        public override void WriteLine(string message) {
             _logAction?.Invoke(message);
         }
     }

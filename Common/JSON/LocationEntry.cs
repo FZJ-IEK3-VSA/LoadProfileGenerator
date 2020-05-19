@@ -41,14 +41,12 @@ namespace Common.JSON {
         [JsonProperty]
         public string LocationName { get; private set; }
 
-        [NotNull]
         [JsonProperty]
         public StrGuid LocationGuid { get; private set; }
 
         [NotNull]
         [JsonProperty]
         public  string PersonName { get; private set; }
-        [NotNull]
         [JsonProperty]
         public StrGuid PersonGuid { get; private set; }
         [JsonProperty]
@@ -56,9 +54,9 @@ namespace Common.JSON {
         public TimeStep Timestep { get; private set; }
 
         public LocationEntry([NotNull] HouseholdKey householdKey,
-                             [NotNull] string personName, [NotNull] StrGuid personGuid,
+                             [NotNull] string personName, StrGuid personGuid,
                              [NotNull] TimeStep pTimestep,
-                             [NotNull] string locationName, [NotNull] StrGuid locationGuid
+                             [NotNull] string locationName, StrGuid locationGuid
                              ) {
             HouseholdKey = householdKey;
             PersonName = personName;

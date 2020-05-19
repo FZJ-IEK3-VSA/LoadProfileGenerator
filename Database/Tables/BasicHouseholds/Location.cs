@@ -49,7 +49,7 @@ namespace Database.Tables.BasicHouseholds {
         [ItemNotNull] [NotNull] private readonly ObservableCollection<LocationDevice> _locDevs = new ObservableCollection<LocationDevice>();
 
         public Location([NotNull] string name, [CanBeNull]int? pID, [NotNull] string connectionString,
-                        [NotNull] StrGuid guid) : base(name, TableName, connectionString, guid)
+                        StrGuid guid) : base(name, TableName, connectionString, guid)
         {
             ID = pID;
             AreNumbersOkInNameForIntegrityCheck = true;
@@ -118,14 +118,11 @@ namespace Database.Tables.BasicHouseholds {
             _locDevs.Remove(ld);
         }
 
-        [NotNull]
-        public override DBBase ImportFromGenericItem([NotNull] DBBase toImport, [NotNull] Simulator dstSim)
+        public override DBBase ImportFromGenericItem(DBBase toImport, Simulator dstSim)
             => ImportFromItem((Location)toImport,dstSim);
 
-        [ItemNotNull]
-        [NotNull]
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        public override List<UsedIn> CalculateUsedIns([NotNull] Simulator sim)
+        public override List<UsedIn> CalculateUsedIns(Simulator sim)
         {
             var used = new List<UsedIn>();
             foreach (var housetype in sim.HouseTypes.It) {
@@ -188,7 +185,7 @@ namespace Database.Tables.BasicHouseholds {
             return false;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             message = "";
             return true;
@@ -215,7 +212,7 @@ namespace Database.Tables.BasicHouseholds {
             }
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("Name", "@myname", Name);
         }

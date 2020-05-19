@@ -79,7 +79,7 @@ namespace CalculationEngine.HouseElements {
         public List<OutputLoadType> OutputLoadTypes => _outputLoadTypes;
 
         public void AddCondition([NotNull] string name,
-             [NotNull] CalcVariable variable, double minValue, double maxValue, [NotNull] StrGuid guid) {
+             [NotNull] CalcVariable variable, double minValue, double maxValue, StrGuid guid) {
             var cond =
                 new CalcTransformationCondition(name, variable, minValue, maxValue, guid);
             _conditions.Add(cond);

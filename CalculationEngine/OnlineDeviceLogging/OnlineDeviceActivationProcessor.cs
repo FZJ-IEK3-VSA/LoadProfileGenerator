@@ -115,21 +115,17 @@ namespace CalculationEngine.OnlineDeviceLogging {
             Logger.Info("Initializing the online device activation processor...");
         }
 
-        [NotNull]
         public Dictionary<CalcLoadTypeDto, BinaryWriter> BinaryOutStreams => _binaryOutStreams;
 
-        [NotNull]
         public OnlineEnergyFileColumns Oefc { get; }
 
-        [NotNull]
         public Dictionary<ProfileActivationEntry.ProfileActivationEntryKey, ProfileActivationEntry> ProfileEntries
             => _profileEntries;
 
-        [NotNull]
         public Dictionary<CalcLoadTypeDto, BinaryWriter> SumBinaryOutStreams => _sumBinaryOutStreams;
 
-        public void AddNewStateMachine( [NotNull] TimeStep startTimeStep,
-                                       [NotNull] CalcLoadTypeDto loadType, [NotNull] string affordanceName, [NotNull] string activatorName,
+        public void AddNewStateMachine( TimeStep startTimeStep,
+                                       CalcLoadTypeDto loadType, string affordanceName, string activatorName,
                                              OefcKey oefckey, [NotNull] CalcDeviceDto calcDeviceDto, [NotNull] StepValues sv)
         {
             Oefc.IsDeviceRegistered(loadType, oefckey);
@@ -161,7 +157,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
             }
         }
 
-        public void AddZeroEntryForAutoDev(OefcKey zeKey, [NotNull] TimeStep starttime, int totalDuration) {
+        public void AddZeroEntryForAutoDev(OefcKey zeKey, TimeStep starttime, int totalDuration) {
             var stze = new SetToZeroEntry(starttime, starttime.AddSteps( totalDuration), zeKey);
             _zeroEntries.Add(stze);
         }
@@ -186,9 +182,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
             }
         }
 
-        [NotNull]
-        [ItemNotNull]
-        public List<OnlineEnergyFileRow> ProcessOneTimestep([NotNull] TimeStep timeStep) {
+        public List<OnlineEnergyFileRow> ProcessOneTimestep(TimeStep timeStep) {
             CleanExpiredStateMachines(timeStep, ref _statemachines);
             var fileRows = new List<OnlineEnergyFileRow>();
             var procesedMachines = new List<OnlineDeviceStateMachine>();
@@ -224,7 +218,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
             return fileRows;
         }
 
-        public OefcKey RegisterDevice([NotNull] CalcLoadTypeDto loadType, [NotNull] CalcDeviceDto devicedto)
+        public OefcKey RegisterDevice(CalcLoadTypeDto loadType, CalcDeviceDto devicedto)
         {
             var key= new OefcKey(devicedto, loadType.Guid);
             if(key.LoadtypeGuid != loadType.Guid && key.LoadtypeGuid != "-1".ToStrGuid()) {

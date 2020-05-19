@@ -65,7 +65,7 @@ namespace Database.Tables.ModularHouseholds {
             }
         }
         public class JsonModularHousehold {
-            public JsonModularHousehold([NotNull] string name, [CanBeNull] string description, [NotNull] StrGuid guid, CreationType creationType, [CanBeNull] JsonReference deviceSelection, EnergyIntensityType energyIntensityType, JsonReference vacation)
+            public JsonModularHousehold([NotNull] string name, [CanBeNull] string description, StrGuid guid, CreationType creationType, [CanBeNull] JsonReference deviceSelection, EnergyIntensityType energyIntensityType, JsonReference vacation)
             {
                 Name = name;
                 Description = description;
@@ -91,7 +91,6 @@ namespace Database.Tables.ModularHouseholds {
             [CanBeNull]
             public string Description { get; set; }
 
-            [NotNull]
             public StrGuid Guid { get; set; }
 
             [NotNull]
@@ -112,7 +111,6 @@ namespace Database.Tables.ModularHouseholds {
             public EnergyIntensityType EnergyIntensityType { get; set; }
         }
 
-        [NotNull]
         public JsonModularHousehold GetJson()
         {
             JsonModularHousehold     jec = new JsonModularHousehold(Name,
@@ -256,7 +254,7 @@ namespace Database.Tables.ModularHouseholds {
 
         public ModularHousehold([NotNull] string pName, [CanBeNull] int? id, [NotNull] string description, [NotNull] string connectionString,
             [CanBeNull] DeviceSelection deviceSelection, [NotNull] string source, [CanBeNull] int? generatorID, [CanBeNull] Vacation vacation,
-            EnergyIntensityType energyIntensityType, CreationType creationType, [NotNull] StrGuid guid) : base(pName, TableName,
+            EnergyIntensityType energyIntensityType, CreationType creationType, StrGuid guid) : base(pName, TableName,
             connectionString, guid)
         {
             ID = id;
@@ -277,7 +275,7 @@ namespace Database.Tables.ModularHouseholds {
             get => _creationType;
             set => SetValueWithNotify(value, ref _creationType, nameof(CreationType));
         }
-        public override bool IsValid([NotNull] string filter)
+        public override bool IsValid(string filter)
         {
             if (filter == null)
             {
@@ -349,7 +347,6 @@ namespace Database.Tables.ModularHouseholds {
             set => SetValueWithNotify(value, ref _vacation,false, nameof(Vacation));
         }
 
-        [NotNull]
         public ObservableCollection<Person> AllPersons {
             get {
                 foreach (var modularHouseholdPerson in _persons) {
@@ -376,7 +373,6 @@ namespace Database.Tables.ModularHouseholds {
 
         public int CalculatePersonCount() => _persons.Count;
 
-        [NotNull]
         public List<VLoadType> CollectLoadTypes(ObservableCollection<Affordance> affordances)
         {
             var vLoadTypes = new List<VLoadType>();
@@ -390,9 +386,7 @@ namespace Database.Tables.ModularHouseholds {
             }
             return vLoadTypes;
         }
-        [CanBeNull]
         public GeographicLocation DefaultGeographicLocation => null;
-        [CanBeNull]
         public TemperatureProfile DefaultTemperatureProfile => null;
 
         public EnergyIntensityType EnergyIntensityType {
@@ -629,12 +623,10 @@ namespace Database.Tables.ModularHouseholds {
             return affordances;
         }
 
-        [NotNull]
-        public override DBBase ImportFromGenericItem([NotNull] DBBase toImport, [NotNull] Simulator dstSim)
+        public override DBBase ImportFromGenericItem(DBBase toImport, Simulator dstSim)
             => ImportFromItem((ModularHousehold)toImport,dstSim);
 
-        [NotNull]
-        public override List<UsedIn> CalculateUsedIns([NotNull] Simulator sim)
+        public override List<UsedIn> CalculateUsedIns(Simulator sim)
         {
             var usedIns = new List<UsedIn>();
             foreach (var house in sim.Houses.It) {
@@ -753,7 +745,7 @@ namespace Database.Tables.ModularHouseholds {
             return false;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             message = "";
             return true;
@@ -854,7 +846,7 @@ namespace Database.Tables.ModularHouseholds {
             }
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("Name", "@myname", Name);
             cmd.AddParameter("Description", "@Description", _description);

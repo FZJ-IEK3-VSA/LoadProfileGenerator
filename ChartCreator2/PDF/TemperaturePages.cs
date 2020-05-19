@@ -12,7 +12,6 @@ namespace ChartCreator2.PDF {
             MyTargetDirectory = TargetDirectory.Charts;
         }
 
-        [JetBrains.Annotations.NotNull]
-        protected override string GetGraphTitle([JetBrains.Annotations.NotNull] string filename) => "Temperatures";
+        protected override string GetGraphTitle(string filename) => "Temperatures";
     }
 }

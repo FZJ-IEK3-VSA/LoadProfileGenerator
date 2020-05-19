@@ -13,7 +13,7 @@ namespace Common.JSON
         public AffordanceEnergyUseEntry()
         {
         }
-        public AffordanceEnergyUseEntry([NotNull] HouseholdKey hhkey, [NotNull] StrGuid loadTypeGuid, [NotNull] string affordanceName, [NotNull] string personName, [NotNull] string loadTypeName)
+        public AffordanceEnergyUseEntry([NotNull] HouseholdKey hhkey, StrGuid loadTypeGuid, [NotNull] string affordanceName, [NotNull] string personName, [NotNull] string loadTypeName)
         {
             HouseholdKey = hhkey;
             LoadTypeGuid = loadTypeGuid;
@@ -27,7 +27,7 @@ namespace Common.JSON
         public string LoadTypeName { get; set; }
 
         [NotNull]
-        public static string MakeKey([NotNull] HouseholdKey hhkey, [NotNull] StrGuid loadTypeGuid, [NotNull] string affordanceName, [NotNull] string personName)
+        public static string MakeKey([NotNull] HouseholdKey hhkey, StrGuid loadTypeGuid, [NotNull] string affordanceName, [NotNull] string personName)
         {
             return hhkey.Key + "#" + loadTypeGuid + "#" + affordanceName + "#" + personName;
         }
@@ -36,7 +36,6 @@ namespace Common.JSON
         [JsonIgnore]
         public string DictKey { get; }
 
-        [NotNull]
         [JsonProperty]
         [UsedImplicitly]
         public StrGuid LoadTypeGuid { get; private set; }

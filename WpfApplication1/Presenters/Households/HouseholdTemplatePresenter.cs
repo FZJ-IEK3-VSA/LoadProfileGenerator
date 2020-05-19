@@ -391,7 +391,7 @@ namespace LoadProfileGenerator.Presenters.Households {
             task1.Start();
         }
 
-        public override bool Equals([CanBeNull] object obj)
+        public override bool Equals(object obj)
         {
             return obj is HouseholdTemplatePresenter presenter && presenter.ThisTemplate.Equals(_template);
         }

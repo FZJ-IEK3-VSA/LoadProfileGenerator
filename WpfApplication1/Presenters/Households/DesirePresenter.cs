@@ -136,7 +136,7 @@ namespace LoadProfileGenerator.Presenters.Households
         }
 
         [SuppressMessage("ReSharper", "NotAllowedAnnotation")]
-        public override bool Equals([CanBeNull] object obj)
+        public override bool Equals(object obj)
         {
             var presenter = obj as DesirePresenter;
             return presenter?.ThisDesire.Equals(_desire) == true;

@@ -32,7 +32,7 @@ namespace Database.Tables.Transportation {
 
         public ChargingStationSetEntry([CanBeNull]int? pID, [CanBeNull] VLoadType carChargingLoadtype,  [CanBeNull] TransportationDeviceCategory transportationDeviceCategory,
     int chargingStationSetID, double maxChargingPower, [NotNull] string connectionString,
-            [NotNull] string name, [CanBeNull] Site site, [NotNull] StrGuid guid, [CanBeNull] VLoadType gridChargingLoadtype) : base(name, TableName, connectionString, guid)
+            [NotNull] string name, [CanBeNull] Site site, StrGuid guid, [CanBeNull] VLoadType gridChargingLoadtype) : base(name, TableName, connectionString, guid)
         {
             _site = site;
             TypeDescription = "Site Location";
@@ -82,7 +82,7 @@ namespace Database.Tables.Transportation {
             return locdev;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             if (_carChargingLoadtype == null) {
                 message = "Car Charging Loadtype not found";
@@ -110,7 +110,7 @@ namespace Database.Tables.Transportation {
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
 
             cmd.AddParameter("ChargingStationSetID", ChargingStationSetID);

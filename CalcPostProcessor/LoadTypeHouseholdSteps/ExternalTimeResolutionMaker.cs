@@ -259,7 +259,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             }
         }
 
-        protected override void PerformActualStep([NotNull] IStepParameters parameters)
+        protected override void PerformActualStep(IStepParameters parameters)
         {
             LoadtypeStepParameters p = (LoadtypeStepParameters)parameters;
             var efc = Repository.ReadEnergyFileColumns(Constants.GeneralHouseholdKey);

@@ -1,14 +1,13 @@
 ﻿using System.Linq;
 using Common;
 using Database;
-using JetBrains.Annotations;
 
 namespace CalculationController.Integrity {
     internal class DeviceSelectionChecker : BasicChecker {
         public DeviceSelectionChecker(bool performCleanupChecks) : base("Device Selections", performCleanupChecks) {
         }
 
-        protected override void Run([NotNull] Simulator sim) {
+        protected override void Run(Simulator sim) {
             foreach (var deviceSelection in sim.DeviceSelections.It) {
                 var devices = deviceSelection.Items.Select(x => x.DeviceCategory).ToList();
                 var distinctDevices = devices.Distinct();

@@ -45,7 +45,7 @@ namespace Database.Tables.BasicElements {
         [ItemNotNull] [NotNull] private readonly ObservableCollection<DateProfileDataPoint> _datapoints;
         [NotNull] private string _description;
 
-        public DateBasedProfile([NotNull] string name, [NotNull] string description, [NotNull] string connectionString, [NotNull] StrGuid guid, [CanBeNull] int? pID = null) : base(name, TableName,
+        public DateBasedProfile([NotNull] string name, [NotNull] string description, [NotNull] string connectionString, StrGuid guid, [CanBeNull] int? pID = null) : base(name, TableName,
             connectionString, guid)
         {
             _datapoints = new ObservableCollection<DateProfileDataPoint>();
@@ -81,9 +81,7 @@ namespace Database.Tables.BasicElements {
             return tp;
         }
 
-        [ItemNotNull]
-        [NotNull]
-        public override List<UsedIn> CalculateUsedIns([NotNull] Simulator sim)
+        public override List<UsedIn> CalculateUsedIns(Simulator sim)
         {
             List<UsedIn> usedIns = new List<UsedIn>();
             foreach (var limit in sim.TimeLimits.It) {
@@ -141,8 +139,7 @@ namespace Database.Tables.BasicElements {
         [NotNull]
         public double[] GetValueArray(DateTime startDateTime, DateTime endDateTime, TimeSpan stepsize) => GetValueArray(startDateTime, endDateTime, stepsize, _datapoints);
 
-        [NotNull]
-        public override DBBase ImportFromGenericItem([NotNull] DBBase toImport, [NotNull] Simulator dstSim) => ImportFromItem((DateBasedProfile)toImport, dstSim);
+        public override DBBase ImportFromGenericItem(DBBase toImport, Simulator dstSim) => ImportFromItem((DateBasedProfile)toImport, dstSim);
 
         [NotNull]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "dstSim")]
@@ -248,13 +245,13 @@ namespace Database.Tables.BasicElements {
 
         public override string ToString() => Name + "\t Datapoints:" + _datapoints.Count;
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             message = "";
             return true;
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("Name", "@myname", Name);
             cmd.AddParameter("Description", Description);
@@ -358,7 +355,7 @@ namespace Database.Tables.BasicElements {
                 return Time.CompareTo(other.Time);
             }
 
-            public override bool Equals([CanBeNull] object obj)
+            public override bool Equals(object obj)
             {
                 if (obj == null) {
                     return false;

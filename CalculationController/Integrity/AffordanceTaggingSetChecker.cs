@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using Database;
-using JetBrains.Annotations;
 
 namespace CalculationController.Integrity {
     public class AffordanceTaggingSetChecker : BasicChecker {
@@ -8,7 +7,7 @@ namespace CalculationController.Integrity {
             : base("Affordance Tagging Sets", performCleanupChecks) {
         }
 
-        protected override void Run([NotNull] Simulator sim) {
+        protected override void Run(Simulator sim) {
             foreach (var set in sim.AffordanceTaggingSets.It) {
                 var isrefrehsed = false;
                 foreach (var entry in set.Entries) {

@@ -191,7 +191,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             Close(false);
         }
 
-        public override bool Equals([CanBeNull] object obj)
+        public override bool Equals(object obj)
         {
             var presenter = obj as LoadTypePresenter;
             return presenter?.ThisLoadType.Equals(ThisLoadType) == true;

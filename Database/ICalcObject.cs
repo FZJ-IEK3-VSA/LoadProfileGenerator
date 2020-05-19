@@ -57,7 +57,6 @@ namespace Database
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "int")]
         int IntID { get; }
 
-        [NotNull]
         StrGuid Guid { get; }
         [NotNull]
         string Name { get; }

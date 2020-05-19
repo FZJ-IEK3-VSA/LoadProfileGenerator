@@ -46,7 +46,7 @@ namespace Database.Tables.ModularHouseholds {
 
         public DeviceSelectionItem([CanBeNull]int? pID, [CanBeNull] int? deviceSelectionID, [CanBeNull] DeviceCategory deviceCategory,
             [CanBeNull] RealDevice device,
-            [NotNull] string connectionString, [NotNull] string name, [NotNull] StrGuid guid)
+            [NotNull] string connectionString, [NotNull] string name, StrGuid guid)
             : base(name, TableName, connectionString, guid) {
             ID = pID;
             _deviceCategory = deviceCategory;
@@ -84,7 +84,7 @@ namespace Database.Tables.ModularHouseholds {
             return dsi;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message) {
+        protected override bool IsItemLoadedCorrectly(out string message) {
             if (_device == null) {
                 message = "Device not found";
                 return false;

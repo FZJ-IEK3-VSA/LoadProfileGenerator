@@ -43,7 +43,7 @@ namespace Database.Tables.BasicHouseholds {
         private readonly int _locationID;
 
         public LocationDevice([CanBeNull]int? pID, [CanBeNull] IAssignableDevice adev, int locationID, [NotNull] string connectionString,
-            [NotNull] string name, [NotNull] StrGuid guid)
+            [NotNull] string name, StrGuid guid)
             : base(name, TableName, connectionString, guid)
         {
             TypeDescription = "Location Device";
@@ -117,14 +117,11 @@ namespace Database.Tables.BasicHouseholds {
         }
 
         [UsedImplicitly]
-        [CanBeNull]
         public IAssignableDevice Device => _device;
 
-        [CanBeNull]
         public VLoadType LoadType { get; }
 
         public double Probability => 0;
-        [CanBeNull]
         public TimeBasedProfile TimeProfile => null;
 
         [NotNull]
@@ -152,7 +149,7 @@ namespace Database.Tables.BasicHouseholds {
             return locdev;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             if (_device == null) {
                 message = "Device not found";
@@ -171,7 +168,7 @@ namespace Database.Tables.BasicHouseholds {
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             if (_device != null) {
                 cmd.AddParameter("DeviceID", "@DeviceID", _device.IntID);

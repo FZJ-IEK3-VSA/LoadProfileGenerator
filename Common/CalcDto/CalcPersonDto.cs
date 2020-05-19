@@ -9,7 +9,7 @@ using JetBrains.Annotations;
 namespace Common.CalcDto {
     [Serializable]
     public class CalcPersonDto : IHouseholdKey {
-        public CalcPersonDto([NotNull]string name, [NotNull] StrGuid guid, int age, PermittedGender gender,
+        public CalcPersonDto([NotNull]string name, StrGuid guid, int age, PermittedGender gender,
                              [NotNull]HouseholdKey householdKey, [ItemNotNull] [NotNull]List<DateSpan> sicknessSpans, [NotNull][ItemNotNull] List<DateSpan> vacationSpans, int id,
                              [NotNull] string traitTag, [NotNull] string householdName)
         {
@@ -43,11 +43,10 @@ namespace Common.CalcDto {
         public string HouseholdName { get; }
         [NotNull]
         public string Name { get; }
-        [NotNull]
         public StrGuid Guid { get; }
         public int Age { get; }
         public PermittedGender Gender { get; }
-        [Ignore][NotNull]
+        [Ignore]
         public HouseholdKey HouseholdKey { get; }
         [NotNull][ItemNotNull]
         public List<PersonDesireDto> Desires { get; } = new List<PersonDesireDto>();

@@ -9,8 +9,8 @@ using JetBrains.Annotations;
 namespace CalculationEngine.HouseholdElements
 {
     public class CalcVariable {
-        public CalcVariable([NotNull] string name, [NotNull] StrGuid guid, double value,
-                            [NotNull] string locationName, [NotNull] StrGuid locationGuid, [NotNull] HouseholdKey householdKey)
+        public CalcVariable([NotNull] string name, StrGuid guid, double value,
+                            [NotNull] string locationName, StrGuid locationGuid, [NotNull] HouseholdKey householdKey)
         {
             Name = name;
             Guid = guid;
@@ -23,12 +23,10 @@ namespace CalculationEngine.HouseholdElements
 
         [NotNull]
         public string Name { get; }
-        [NotNull]
         public StrGuid Guid { get; }
         public double Value { get; set; }
         [NotNull]
         public string LocationName { get; }
-        [NotNull]
         public StrGuid LocationGuid { get; }
         [NotNull]
         public HouseholdKey HouseholdKey { get; }
@@ -49,7 +47,7 @@ namespace CalculationEngine.HouseholdElements
         }
 
         public void AddExecutionEntry([NotNull] string name, double value, [NotNull] CalcLocation location, VariableAction variableAction,
-                                      [NotNull] TimeStep timeStep, [NotNull] StrGuid variableGuid)
+                                      [NotNull] TimeStep timeStep, StrGuid variableGuid)
         {
             _variableOperator.AddEntry(name,value,location,variableAction,
                 timeStep,variableGuid);
@@ -60,7 +58,7 @@ namespace CalculationEngine.HouseholdElements
             _variablesByGuid.Add(variable.Guid,variable);
         }
 
-        public double GetValueByGuid([NotNull] StrGuid variableGuid)
+        public double GetValueByGuid(StrGuid variableGuid)
         {
             if (!_variablesByGuid.ContainsKey(variableGuid)) {
                 throw new LPGException("Could not find the variable with the guid:" + variableGuid);
@@ -68,7 +66,7 @@ namespace CalculationEngine.HouseholdElements
             return _variablesByGuid[variableGuid].Value;
         }
 
-        public CalcVariable GetVariableByGuid([NotNull] StrGuid variableGuid)
+        public CalcVariable GetVariableByGuid(StrGuid variableGuid)
         {
             if (!_variablesByGuid.ContainsKey(variableGuid))
             {
@@ -77,17 +75,17 @@ namespace CalculationEngine.HouseholdElements
             return _variablesByGuid[variableGuid];
         }
 
-        public void SetValueByGuid([NotNull] StrGuid variableGuid, double value)
+        public void SetValueByGuid(StrGuid variableGuid, double value)
         {
             _variablesByGuid[variableGuid].Value = value;
         }
 
-        public void AddToValueByGuid([NotNull] StrGuid variableGuid, double value)
+        public void AddToValueByGuid(StrGuid variableGuid, double value)
         {
             _variablesByGuid[variableGuid].Value += value;
         }
 
-        public void SubstractFromValueByGuid([NotNull] StrGuid variableGuid, double value)
+        public void SubstractFromValueByGuid(StrGuid variableGuid, double value)
         {
             _variablesByGuid[variableGuid].Value -= value;
         }
@@ -104,7 +102,7 @@ namespace CalculationEngine.HouseholdElements
             return _variablesByGuid.Values.ToList();
         }
 
-        public bool IsVariableRegistered([NotNull] StrGuid variableGuid)
+        public bool IsVariableRegistered(StrGuid variableGuid)
         {
             return _variablesByGuid.ContainsKey(variableGuid);
         }

@@ -106,7 +106,7 @@ namespace ChartCreator2.OxyCharts {
             Save(plotModel1, plotName, fileName, basisPath);
         }
 
-        protected override FileProcessingResult MakeOnePlot([JetBrains.Annotations.NotNull] ResultFileEntry srcEntry)
+        protected override FileProcessingResult MakeOnePlot(ResultFileEntry srcEntry)
         {
             Profiler.StartPart(Utili.GetCurrentMethodAndClass());
             string plotName = "Sum Profile for " + srcEntry.HouseholdNumberString + " " + srcEntry.LoadTypeInformation?.Name;

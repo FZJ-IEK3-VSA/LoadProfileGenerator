@@ -9,7 +9,7 @@ using MigraDoc.DocumentObjectModel;
 namespace ChartCreator2.PDF {
     [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     internal class PersonPage : IPageCreatorToc {
-        public void MakePage([JetBrains.Annotations.NotNull] Document doc, [JetBrains.Annotations.NotNull] string dstdir, bool requireAll, [ItemNotNull] [JetBrains.Annotations.NotNull] List<string> pngFiles, [JetBrains.Annotations.NotNull] Section tocSection) {
+        public void MakePage(Document doc, string dstdir, bool requireAll, List<string> pngFiles, Section tocSection) {
             var di = new DirectoryInfo(dstdir);
             var files = di.GetFiles("Persons.*.txt");
             if (files.Length == 0) {

@@ -50,7 +50,7 @@ namespace Database.Tables.Houses {
         private readonly int? _settlementID;
 
         public SettlementHH([CanBeNull]int? pID, [CanBeNull] ICalcObject pHH, int count, [CanBeNull] int? settlementID,
-            [NotNull] string connectionString, [NotNull] string householdName, [NotNull] StrGuid guid)
+            [NotNull] string connectionString, [NotNull] string householdName, StrGuid guid)
             : base(householdName, TableName, connectionString, guid) {
             TypeDescription = "Settlement Household";
             ID = pID;
@@ -127,7 +127,7 @@ namespace Database.Tables.Houses {
             return shh;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message) {
+        protected override bool IsItemLoadedCorrectly(out string message) {
             if (_calcObject == null) {
                 message = "Household or house not found";
                 return false;
@@ -153,7 +153,7 @@ namespace Database.Tables.Houses {
             }
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd) {
+        protected override void SetSqlParameters(Command cmd) {
             if (_calcObject != null) {
                 cmd.AddParameter("HouseholdID", _calcObject.IntID);
                 cmd.AddParameter("CalcObjectType", (int) _calcObject.CalcObjectType);

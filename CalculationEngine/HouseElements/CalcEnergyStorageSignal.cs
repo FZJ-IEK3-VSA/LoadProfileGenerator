@@ -48,7 +48,7 @@ namespace CalculationEngine.HouseElements {
         private double _tankLastValue;
 
         public CalcEnergyStorageSignal([NotNull] string pName, double triggerOff, double triggerOn, double value,
-            CalcVariable calcVariable, [NotNull] StrGuid guid) : base(pName,guid) {
+            CalcVariable calcVariable, StrGuid guid) : base(pName,guid) {
             _triggerOffPercent = triggerOff ;
             _triggerOnPercent = triggerOn;
             _value = value;
@@ -96,7 +96,6 @@ namespace CalculationEngine.HouseElements {
             return 0;
         }
 
-        [NotNull]
         public override string ToString() {
             var s = "Signal for " + _calcVariable.Name + " for levels between " + _triggerOnPercent * 100 + "% and " +
                     _triggerOffPercent * 100 + "%";

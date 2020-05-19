@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using JetBrains.Annotations;
 
 namespace Automation
 {
@@ -76,7 +75,7 @@ namespace Automation
             return c;
         }*/
 
-        public override bool Equals([CanBeNull] object obj)
+        public override bool Equals(object obj)
         {
             if (!(obj is ColorRGB))
             {

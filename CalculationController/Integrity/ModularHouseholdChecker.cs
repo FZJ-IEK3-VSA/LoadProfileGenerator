@@ -441,7 +441,7 @@ namespace CalculationController.Integrity {
 
         }
         */
-        protected override void Run([NotNull] Simulator sim)
+        protected override void Run(Simulator sim)
         {
             CheckTags(sim.ModularHouseholds.It, sim.HouseholdTags.It);
             var tagForAll = sim.TraitTags.It.FirstOrDefault(x => x.Name == "Living Pattern / All");

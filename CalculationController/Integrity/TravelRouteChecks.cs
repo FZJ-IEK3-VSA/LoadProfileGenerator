@@ -2,7 +2,6 @@
 using Common;
 using Database;
 using Database.Tables.Transportation;
-using JetBrains.Annotations;
 
 namespace CalculationController.Integrity
 {
@@ -12,7 +11,7 @@ namespace CalculationController.Integrity
         {
         }
 
-        protected override void Run([NotNull] Simulator sim)
+        protected override void Run(Simulator sim)
         {
             foreach (var travelroute in sim.TravelRoutes.It) {
                 if(travelroute.Steps.Count == 0) {

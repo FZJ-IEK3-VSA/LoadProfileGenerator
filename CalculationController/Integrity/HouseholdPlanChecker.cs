@@ -1,13 +1,12 @@
 ﻿using Common;
 using Database;
-using JetBrains.Annotations;
 
 namespace CalculationController.Integrity {
     internal class HouseholdPlanChecker : BasicChecker {
         public HouseholdPlanChecker(bool performCleanupChecks) : base("Household Plans", performCleanupChecks) {
         }
 
-        protected override void Run([NotNull] Simulator sim) {
+        protected override void Run(Simulator sim) {
             foreach (var householdPlan in sim.HouseholdPlans.It) {
                 if (householdPlan.AffordanceTaggingSet == null) {
                     throw new DataIntegrityException(

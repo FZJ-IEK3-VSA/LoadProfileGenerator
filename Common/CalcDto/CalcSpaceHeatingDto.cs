@@ -19,15 +19,13 @@ namespace Common.CalcDto {
         public HouseholdKey HouseholdKey { get; }
         [NotNull]
         public string CalcLocationName { get; }
-        [NotNull]
         public StrGuid CalcLocationGuid { get; }
-        [NotNull]
         public StrGuid Guid { get; }
 
         public CalcSpaceHeatingDto([NotNull]string name, int id, [ItemNotNull] [NotNull]List<CalcDeviceLoadDto> powerUsage,
                                    [ItemNotNull] [NotNull]List<CalcDegreeDayDto> calcDegreeDays,
-                                   [NotNull]HouseholdKey householdKey, [NotNull]string calcLocationName, [NotNull] StrGuid calcLocationGuid,
-                                   [NotNull]StrGuid guid)
+                                   [NotNull]HouseholdKey householdKey, [NotNull]string calcLocationName, StrGuid calcLocationGuid,
+                                   StrGuid guid)
         {
             if (powerUsage.Count != 1) {
                 throw new LPGException("there should be exactly one loadtype for space heating, not more or less.");

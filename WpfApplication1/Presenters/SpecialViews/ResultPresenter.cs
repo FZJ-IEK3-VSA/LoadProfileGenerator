@@ -125,7 +125,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             ApplicationPresenter.CloseTab(this, removeLast);
         }
 
-        public override bool Equals([CanBeNull] object obj)
+        public override bool Equals(object obj)
         {
             return obj is ResultPresenter presenter && presenter._householdname.Equals(_householdname) &&
                    presenter.ResultPath.Equals(ResultPath);

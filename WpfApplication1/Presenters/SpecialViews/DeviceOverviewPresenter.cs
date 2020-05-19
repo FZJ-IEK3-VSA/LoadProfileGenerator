@@ -99,7 +99,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             }
         }
 
-        public override bool Equals([CanBeNull] object obj)
+        public override bool Equals(object obj)
         {
             return obj is DeviceOverviewPresenter presenter && presenter.HeaderString.Equals(HeaderString);
         }

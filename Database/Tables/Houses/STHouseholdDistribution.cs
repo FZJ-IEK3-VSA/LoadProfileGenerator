@@ -19,7 +19,7 @@ namespace Database.Tables.Houses {
         private readonly int _settlementTemplateID;
 
         public STHouseholdDistribution([CanBeNull]int? pID, [NotNull] string connectionString, int minimumNumber, int maximumNumber,
-            double percentOfHouseholds, int settlementTemplateID, [NotNull] string name, EnergyIntensityType energyIntensity, [NotNull] StrGuid guid)
+            double percentOfHouseholds, int settlementTemplateID, [NotNull] string name, EnergyIntensityType energyIntensity, StrGuid guid)
             : base(name, TableName, connectionString, guid)
         {
             TypeDescription = "Settlement Template Household Distribution";
@@ -140,7 +140,7 @@ namespace Database.Tables.Houses {
             return false;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             message = "";
             return true;
@@ -160,7 +160,7 @@ namespace Database.Tables.Houses {
                 ignoreMissingTables);
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("MaximumNumber", _maximumNumber);
             cmd.AddParameter("MinimumNumber", _minimumNumber);

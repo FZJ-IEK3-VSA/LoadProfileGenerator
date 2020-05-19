@@ -340,7 +340,7 @@ namespace LoadProfileGenerator.Presenters.Households {
             Close(false);
         }
 
-        public override bool Equals([CanBeNull] object obj)
+        public override bool Equals(object obj)
         {
             var presenter = obj as ModularHouseholdPresenter;
             return presenter?.ThisModularHousehold.Equals(_modularHousehold) == true;

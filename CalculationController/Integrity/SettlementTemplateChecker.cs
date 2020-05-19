@@ -1,6 +1,5 @@
 ﻿using Common;
 using Database;
-using JetBrains.Annotations;
 
 namespace CalculationController.Integrity {
     internal class SettlementTemplateChecker : BasicChecker {
@@ -8,7 +7,7 @@ namespace CalculationController.Integrity {
             base("Settlement Templates", performCleanupChecks) {
         }
 
-        protected override void Run([NotNull] Simulator sim) {
+        protected override void Run(Simulator sim) {
             foreach (var settemp in sim.SettlementTemplates.It) {
                 if (string.IsNullOrEmpty(settemp.NewName)) {
                     throw new DataIntegrityException(

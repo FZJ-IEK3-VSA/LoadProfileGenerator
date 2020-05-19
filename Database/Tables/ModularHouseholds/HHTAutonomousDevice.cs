@@ -55,7 +55,7 @@ namespace Database.Tables.ModularHouseholds {
             {
             }
 
-            public JsonDto([NotNull] StrGuid guid, JsonReference device, JsonReference location, JsonReference timeLimit, JsonReference timeProfile,
+            public JsonDto(StrGuid guid, JsonReference device, JsonReference location, JsonReference timeLimit, JsonReference timeProfile,
                            decimal standardDeviation, JsonReference variable, VariableCondition variableCondition, double variableValue, JsonReference loadType)
             {
                 Guid = guid;
@@ -111,7 +111,7 @@ namespace Database.Tables.ModularHouseholds {
             [CanBeNull] TimeBasedProfile timeprofile, int householdTraitID, decimal timeStandardDeviation,
             [CanBeNull] VLoadType vLoadType, [CanBeNull] TimeLimit timeLimit, [NotNull] string connectionString, [NotNull] string name,
             [CanBeNull] Location location, double variableValue, VariableCondition variableCondition,
-            [CanBeNull] Variable variable, [NotNull] StrGuid guid) : base(name, TableName, connectionString, guid)
+            [CanBeNull] Variable variable, StrGuid guid) : base(name, TableName, connectionString, guid)
         {
             TypeDescription = "Household Trait Autonomous Device";
             ID = pID;
@@ -149,12 +149,9 @@ namespace Database.Tables.ModularHouseholds {
         [CanBeNull]
         public int? HouseholdTraitID => _householdTraitID;
 
-        [CanBeNull]
         public IAssignableDevice Device => _device;
 
-        [CanBeNull]
         public VLoadType LoadType => _vLoadType;
-        [CanBeNull]
         public Location Location => _location;
 
         [UsedImplicitly]
@@ -168,14 +165,11 @@ namespace Database.Tables.ModularHouseholds {
             }
         }
 
-        [CanBeNull]
         public TimeLimit TimeLimit => _timeLimit ;
 
-        [CanBeNull]
         public TimeBasedProfile TimeProfile => _timeprofile;
 
         public decimal TimeStandardDeviation => _timeStandardDeviation;
-        [CanBeNull]
         public Variable Variable => _variable;
 
         public VariableCondition VariableCondition => _variableCondition;
@@ -254,7 +248,7 @@ namespace Database.Tables.ModularHouseholds {
             return hhad;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             if (_device == null) {
                 message = "Device not found";
@@ -306,7 +300,7 @@ namespace Database.Tables.ModularHouseholds {
             }
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             if (_device != null) {
                 cmd.AddParameter("DeviceID", _device.IntID);

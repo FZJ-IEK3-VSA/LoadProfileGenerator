@@ -41,7 +41,7 @@ namespace Database.Tables.BasicElements {
         [CanBeNull] private readonly Holiday _holiday;
 
         public GeographicLocHoliday([CanBeNull]int? pID, [CanBeNull] Holiday holiday, int geographicLocID, [NotNull] string connectionString,
-            [NotNull] string holidayname, [NotNull] StrGuid guid) : base(holidayname, TableName, connectionString, guid)
+            [NotNull] string holidayname, StrGuid guid) : base(holidayname, TableName, connectionString, guid)
         {
             ID = pID;
             _holiday = holiday;
@@ -82,7 +82,7 @@ namespace Database.Tables.BasicElements {
             return tdlt;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             if (_holiday == null) {
                 message = "Holiday not found.";
@@ -109,7 +109,7 @@ namespace Database.Tables.BasicElements {
             }
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             if (_holiday != null) {
                 cmd.AddParameter("HolidayID", _holiday.IntID);

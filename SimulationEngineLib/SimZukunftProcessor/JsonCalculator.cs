@@ -211,6 +211,9 @@ namespace SimulationEngineLib.SimZukunftProcessor {
                 throw new LPGException("Temperature Profile not found.");
             }
 
+            if (jcs.GeographicLocation == null) {
+                throw new LPGPBadParameterException("No geographic location was set in the calculation request");
+            }
             var geographicLocation = sim.GeographicLocations.FindByJsonReference(jcs.GeographicLocation);
             if (geographicLocation == null) {
                 throw new LPGException("Geographic location not found.");

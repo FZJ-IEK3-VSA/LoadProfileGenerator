@@ -66,7 +66,7 @@ namespace Database.Tables.BasicHouseholds {
         private int _parentID;
 
         public DeviceCategory([NotNull] string pName, int parentID, [NotNull] string connectionString, bool ignoreInRealDeviceViews,
-            [ItemNotNull] [NotNull] ObservableCollection<RealDevice> devices, [NotNull] StrGuid guid,
+            [ItemNotNull] [NotNull] ObservableCollection<RealDevice> devices, StrGuid guid,
                               [CanBeNull]int? pID = null, bool isEmptyconnectionStringOk = false)
             : base(pName, TableName, connectionString, guid)
         {
@@ -314,7 +314,7 @@ namespace Database.Tables.BasicHouseholds {
             return false;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             message = "";
             return true;
@@ -372,7 +372,7 @@ namespace Database.Tables.BasicHouseholds {
             Logger.Get().SafeExecuteWithWait(a);
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("Name", "@myname", ShortName);
             cmd.AddParameter("ParentID", "@ParentID", _parentID);
@@ -437,8 +437,8 @@ namespace Database.Tables.BasicHouseholds {
             return devices;
         }
 
-        public List<Tuple<VLoadType, double>> CalculateAverageEnergyUse([CanBeNull] VLoadType dstLoadType,
-         [CanBeNull][ItemNotNull]   ObservableCollection<DeviceAction> allActions, [CanBeNull]TimeBasedProfile timeProfile, double multiplier,
+        public List<Tuple<VLoadType, double>> CalculateAverageEnergyUse(VLoadType dstLoadType,
+         ObservableCollection<DeviceAction> allActions, TimeBasedProfile timeProfile, double multiplier,
             double probability)
         {
             if (SubDevices.Count == 0) {
@@ -470,12 +470,9 @@ namespace Database.Tables.BasicHouseholds {
 
         #endregion
 
-        [NotNull]
-        public override DBBase ImportFromGenericItem([NotNull] DBBase toImport,  [NotNull] Simulator dstSim)
+        public override DBBase ImportFromGenericItem(DBBase toImport,  Simulator dstSim)
             => ImportFromItem( (DeviceCategory)toImport,dstSim);
 
-        [ItemNotNull]
-        [NotNull]
-        public override List<UsedIn> CalculateUsedIns([NotNull] Simulator sim) => throw new NotImplementedException();
+        public override List<UsedIn> CalculateUsedIns(Simulator sim) => throw new NotImplementedException();
     }
 }

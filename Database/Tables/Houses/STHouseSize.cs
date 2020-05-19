@@ -14,7 +14,7 @@ namespace Database.Tables.Houses {
 
         public STHouseSize([CanBeNull]int? pID, [NotNull] string connectionString, int settlementTemplateID, [NotNull] string name,
                            int minimumSize,
-            int maximumSize, double percentage, [NotNull] StrGuid guid) : base(name, TableName, connectionString, guid)
+            int maximumSize, double percentage, StrGuid guid) : base(name, TableName, connectionString, guid)
         {
             TypeDescription = "Settlement Template House Size";
             ID = pID;
@@ -60,7 +60,7 @@ namespace Database.Tables.Houses {
             return shh;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             message = "";
             return true;
@@ -73,7 +73,7 @@ namespace Database.Tables.Houses {
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("SettlementTemplateID", _settlementTemplateID);
             cmd.AddParameter("MinimumHouseSize", _minimumHouseSize);

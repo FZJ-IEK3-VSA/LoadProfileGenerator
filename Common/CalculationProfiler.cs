@@ -27,7 +27,7 @@ namespace Common {
         [CanBeNull]
         private ProgramPart Current { get; set; }
 
-        public void StartPart([NotNull] string key)
+        public void StartPart(string key)
         {
             //Logger.Info("Starting "+ key);
             if (Current == null) {
@@ -44,7 +44,7 @@ namespace Common {
         }
 
         [SuppressMessage("ReSharper", "UnusedParameter.Global")]
-        public void StopPart([NotNull] string key)
+        public void StopPart(string key)
         {   if (Current == null) {
                 throw new LPGException("Current was null");
             }

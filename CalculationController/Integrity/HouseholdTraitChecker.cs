@@ -460,7 +460,7 @@ namespace CalculationController.Integrity {
                     throw new LPGException("Unknown Assignable Device Type");
             }
         }
-        protected override void Run([NotNull] Simulator sim)
+        protected override void Run(Simulator sim)
         {
             CheckForAffordancesWithoutTraits(sim.HouseholdTraits.It, sim.Affordances.It);
             CheckClassifications(sim.HouseholdTraits.It);

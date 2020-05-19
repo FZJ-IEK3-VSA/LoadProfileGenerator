@@ -35,9 +35,9 @@ namespace LoadProfileGenerator.Controls.Converters {
     public class IntegerConverter : IValueConverter {
         #region IValueConverter Members
 
-        [CanBeNull]
-        public object Convert([CanBeNull] object value, [CanBeNull] Type targetType, [CanBeNull] object parameter,
-            [CanBeNull] CultureInfo culture) {
+        [NotNull]
+        public object Convert(object value, [CanBeNull] Type targetType, object parameter,
+                              [CanBeNull] CultureInfo culture) {
             string result;
             if (value is int d)
             {
@@ -53,9 +53,9 @@ namespace LoadProfileGenerator.Controls.Converters {
             return result;
         }
 
-        [CanBeNull]
-        public object ConvertBack([CanBeNull] object value, [CanBeNull] Type targetType, [CanBeNull] object parameter,
-            [CanBeNull] CultureInfo culture) {
+        [NotNull]
+        public object ConvertBack(object value, [CanBeNull] Type targetType, object parameter,
+                                  [CanBeNull] CultureInfo culture) {
             var b = int.TryParse((string) value, out int  d);
             if (!b) {
                 d = 0;

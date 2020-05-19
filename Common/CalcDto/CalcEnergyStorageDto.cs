@@ -7,7 +7,6 @@ namespace Common.CalcDto {
     public class CalcEnergyStorageDto {
         [NotNull]
         public HouseholdKey HouseholdKey { get; }
-        [NotNull]
         public StrGuid Guid { get; }
         [NotNull]
         public string Name { get; }
@@ -31,7 +30,7 @@ namespace Common.CalcDto {
                                     double maximumStorageRate, double maximumWithdrawRate, double minimumStorageRate,
                                     double minimumWithdrawRate,
                                     double initialFill, double storageCapacity,
-                                    [NotNull]HouseholdKey householdKey, [NotNull] StrGuid guid, [ItemNotNull] [NotNull]List<CalcEnergyStorageSignalDto> signals)
+                                    [NotNull]HouseholdKey householdKey, StrGuid guid, [ItemNotNull] [NotNull]List<CalcEnergyStorageSignalDto> signals)
         {
             Name = name;
             ID = id;

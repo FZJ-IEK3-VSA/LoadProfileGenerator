@@ -191,7 +191,7 @@ namespace LoadProfileGenerator.Presenters.Households {
             _realDevice.DeleteLoad(rdlt);
         }
 
-        public override bool Equals([CanBeNull] object obj)
+        public override bool Equals(object obj)
         {
             var presenter = obj as DevicePresenter;
             return presenter?.ThisDevice.Equals(_realDevice) == true;

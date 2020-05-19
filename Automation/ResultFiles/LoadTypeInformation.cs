@@ -62,7 +62,7 @@ namespace Automation.ResultFiles {
         }
 
         public LoadTypeInformation([NotNull] string name, [NotNull] string unitOfSum, [NotNull] string unitOfPower, double conversionFaktor,
-            bool showInCharts, [NotNull] string fileName, [NotNull] StrGuid guid) {
+            bool showInCharts, [NotNull] string fileName, StrGuid guid) {
             Name = name;
             UnitOfSum = unitOfSum;
             UnitOfPower = unitOfPower;
@@ -81,7 +81,7 @@ namespace Automation.ResultFiles {
         public string? FileName { get; set; }
 
         [NotNull]
-        public StrGuid Guid { get; }
+        public StrGuid? Guid { get; }
 
         // needed for xml deserialize
         [UsedImplicitly]

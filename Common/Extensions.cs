@@ -38,16 +38,14 @@ using Automation.ResultFiles;
 
 namespace Common {
     public static class Extensions {
-        [NotNull]
         public static StrGuid ToStrGuid(this Guid myguid)
         {
-            return new StrGuid(myguid);
+            return StrGuid.FromGuid(myguid);
         }
 
-        [NotNull]
         public static StrGuid ToStrGuid([NotNull] this string myguid)
         {
-            return new StrGuid(myguid);
+            return  StrGuid.FromString(myguid);
         }
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [MethodImpl(MethodImplOptions.NoInlining)]

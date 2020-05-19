@@ -12,13 +12,12 @@ namespace Common.CalcDto {
         public CalcLoadTypeDto LoadType { get; }
         [NotNull]
         public List<double> Values { get; }
-        [NotNull]
         public StrGuid Guid { get; }
         [NotNull]
         public HouseholdKey HouseholdKey { get; }
 
         public CalcGeneratorDto([NotNull]string name, int id, [NotNull]CalcLoadTypeDto loadType,
-                                [NotNull]  List<double> values, [NotNull] HouseholdKey householdKey, [NotNull] StrGuid guid)
+                                [NotNull]  List<double> values, [NotNull] HouseholdKey householdKey, StrGuid guid)
         {
             Name = name;
             ID = id;

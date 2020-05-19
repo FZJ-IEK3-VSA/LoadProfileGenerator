@@ -153,7 +153,7 @@ namespace LoadProfileGenerator.Presenters.Households {
             Close(false);
         }
 
-        public override bool Equals([CanBeNull] object obj)
+        public override bool Equals(object obj)
         {
             var presenter = obj as AffordanceTaggingSetPresenter;
             return presenter?.ThisAffordanceTaggingSet.Equals(_affordanceTaggingSet) == true;

@@ -25,7 +25,7 @@ namespace Database.Tables.Transportation {
             }
         }
         public TransportationDeviceSet([NotNull] string name, [CanBeNull]int? pID, [NotNull] string connectionString, [CanBeNull] string description,
-            [NotNull] StrGuid guid
+            StrGuid guid
             )
             : base(name, TableName, connectionString, guid)
         {
@@ -89,13 +89,13 @@ namespace Database.Tables.Transportation {
                 ignoreMissingTables);
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             message = "";
             return true;
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("Name", Name);
             if(_description != null) {
@@ -140,8 +140,7 @@ namespace Database.Tables.Transportation {
             _transportationDevices.Remove(entry);
         }
 
-        [NotNull]
-        public override DBBase ImportFromGenericItem([NotNull] DBBase toImport, [NotNull] Simulator dstSim)
+        public override DBBase ImportFromGenericItem(DBBase toImport, Simulator dstSim)
             => ImportFromItem((TransportationDeviceSet)toImport,dstSim);
 
         public override List<UsedIn> CalculateUsedIns(Simulator sim) => throw new NotImplementedException();

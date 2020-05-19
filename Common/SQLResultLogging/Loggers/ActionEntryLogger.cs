@@ -14,7 +14,7 @@ namespace Common.SQLResultLogging.Loggers {
         {
         }
 
-        public override void Run([NotNull] HouseholdKey key, [NotNull] object o)
+        public override void Run(HouseholdKey key, object o)
         {
             var objects = (List<IHouseholdKey>)o;
             var actionEntries = objects.ConvertAll(x => (ActionEntry)x).ToList();

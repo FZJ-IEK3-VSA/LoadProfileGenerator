@@ -98,10 +98,9 @@ namespace CalculationController.Helpers {
         }
 
         [SuppressMessage("ReSharper", "SwitchStatementMissingSomeCases")]
-        [NotNull]
-        public DeviceAction GetAutoDeviceActionFromGroup([NotNull] IAssignableDevice dev,
-            [NotNull][ItemNotNull] List<IAssignableDevice> otherDevicesAtLocation, EnergyIntensityType energyIntensity,
-            [NotNull][ItemNotNull] ObservableCollection<DeviceAction> allDeviceActions, int locationID)
+        public DeviceAction GetAutoDeviceActionFromGroup(IAssignableDevice dev,
+                                                         List<IAssignableDevice> otherDevicesAtLocation, EnergyIntensityType energyIntensity,
+                                                         ObservableCollection<DeviceAction> allDeviceActions, int locationID)
         {
             if(dev == null) {
                 throw new LPGException("Device was null");
@@ -145,10 +144,9 @@ namespace CalculationController.Helpers {
         }
 
         [SuppressMessage("ReSharper", "SwitchStatementMissingSomeCases")]
-        [NotNull]
-        public RealDevice GetAutoDeviceDeviceFromDeviceCategoryOrDevice([CanBeNull] IAssignableDevice dev,
-            [NotNull][ItemNotNull] List<IAssignableDevice> alldevices, EnergyIntensityType energyIntensity,
-            [NotNull][ItemNotNull] ObservableCollection<DeviceAction> deviceActions, int locationID)
+        public RealDevice GetAutoDeviceDeviceFromDeviceCategoryOrDevice(IAssignableDevice dev,
+                                                                        List<IAssignableDevice> alldevices, EnergyIntensityType energyIntensity,
+                                                                        ObservableCollection<DeviceAction> deviceActions, int locationID)
         {
             if(dev == null) {
                 throw new LPGException("Device was null");
@@ -186,9 +184,8 @@ namespace CalculationController.Helpers {
             }
         }
 
-        [CanBeNull]
-        public DeviceAction GetDeviceActionFromGroup([NotNull] IAssignableDevice dev, [NotNull][ItemNotNull] IEnumerable<CalcDeviceDto> calcDevices,
-            [NotNull][ItemNotNull] ObservableCollection<DeviceAction> allDeviceActions)
+        public DeviceAction GetDeviceActionFromGroup(IAssignableDevice dev, IEnumerable<CalcDeviceDto> calcDevices,
+            ObservableCollection<DeviceAction> allDeviceActions)
         {
             var deviceActionGroup = (DeviceActionGroup) dev;
             var deviceActions = deviceActionGroup.GetDeviceActions(allDeviceActions);
@@ -208,9 +205,8 @@ namespace CalculationController.Helpers {
 
         // this only checks for an affordance, if the desired device category is fullfilled by the devices
         // this selects a device from the list of previously selected and created devices
-        [CanBeNull]
-        public RealDevice GetDeviceDtoForAffordance([NotNull] IAssignableDevice dev, [NotNull][ItemNotNull] IEnumerable<CalcDeviceDto> calcDevices,
-            int locationID, [NotNull][ItemNotNull] ObservableCollection<DeviceAction> allDeviceActions, List<DeviceCategoryDto> deviceCategories)
+        public RealDevice GetDeviceDtoForAffordance(IAssignableDevice dev, IEnumerable<CalcDeviceDto> calcDevices,
+            int locationID, ObservableCollection<DeviceAction> allDeviceActions, List<DeviceCategoryDto> deviceCategories)
         {
             switch (dev.AssignableDeviceType) {
                 case AssignableDeviceType.Device:
@@ -272,10 +268,9 @@ namespace CalculationController.Helpers {
         }
 
         // this tries to double check if it's a device selection that's already been done
-        [CanBeNull]
-        public RealDevice GetOrPickDevice([NotNull] IAssignableDevice dev, [NotNull] Location devLocation,
-            EnergyIntensityType energyIntensity, [NotNull][ItemNotNull] List<IAssignableDevice> allDevLocations,
-            [NotNull][ItemNotNull] ObservableCollection<DeviceAction> allDeviceActions)
+        public RealDevice GetOrPickDevice(IAssignableDevice dev, Location devLocation,
+            EnergyIntensityType energyIntensity, List<IAssignableDevice> allDevLocations,
+            ObservableCollection<DeviceAction> allDeviceActions)
         {
             // if it's already a device, we are done
             switch (dev.AssignableDeviceType) {
@@ -362,9 +357,8 @@ namespace CalculationController.Helpers {
         }
 
         // the real picking function that selects a device
-        [NotNull]
-        public RealDevice PickDeviceFromCategory([NotNull] DeviceCategory deviceCategory, EnergyIntensityType energyIntensity,
-            [NotNull][ItemNotNull] ObservableCollection<DeviceAction> deviceActions)
+        public RealDevice PickDeviceFromCategory(DeviceCategory deviceCategory, EnergyIntensityType energyIntensity,
+            ObservableCollection<DeviceAction> deviceActions)
         {
             deviceCategory.RefreshSubDevices();
             var rds = deviceCategory.SubDevices;

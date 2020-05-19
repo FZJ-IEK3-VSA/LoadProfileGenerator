@@ -18,7 +18,7 @@ namespace Database.Tables.ModularHouseholds {
 
         public DeviceSelectionDeviceAction([CanBeNull]int? pID, [CanBeNull]int? deviceSelectionID, [CanBeNull] DeviceActionGroup group,
             [CanBeNull] DeviceAction action, [NotNull] string connectionString, [NotNull] string name,
-                                           [NotNull] StrGuid guid) : base(name, TableName,
+                                           StrGuid guid) : base(name, TableName,
             connectionString, guid) {
             ID = pID;
             _deviceActionGroup = group;
@@ -56,7 +56,7 @@ namespace Database.Tables.ModularHouseholds {
             return dsi;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message) {
+        protected override bool IsItemLoadedCorrectly(out string message) {
             if (_deviceAction == null) {
                 message = "Device action not found";
                 return false;

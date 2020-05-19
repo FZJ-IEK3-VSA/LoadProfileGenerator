@@ -10,8 +10,7 @@ namespace LoadProfileGenerator.Presenters.Households {
     public class EnumBooleanConverter : IValueConverter {
         #region IValueConverter Members
 
-        [CanBeNull]
-        public object Convert([CanBeNull] object value, [CanBeNull] Type targetType, [CanBeNull] object parameter,
+        public object Convert(object value, [CanBeNull] Type targetType, object parameter,
             [CanBeNull] CultureInfo culture) {
             if (!(parameter is string parameterString))
             {
@@ -29,8 +28,7 @@ namespace LoadProfileGenerator.Presenters.Households {
             return parameterValue.Equals(value);
         }
 
-        [CanBeNull]
-        public object ConvertBack([CanBeNull] object value, [CanBeNull] Type targetType, [CanBeNull] object parameter,
+        public object ConvertBack(object value, [CanBeNull] Type targetType, object parameter,
             [CanBeNull] CultureInfo culture) {
             if (!(parameter is string parameterString)) {
                 return DependencyProperty.UnsetValue;

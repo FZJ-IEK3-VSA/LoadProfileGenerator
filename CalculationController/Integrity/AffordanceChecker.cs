@@ -538,7 +538,7 @@ namespace CalculationController.Integrity {
             }
         }
 
-        protected override void Run([NotNull] Simulator sim) {
+        protected override void Run(Simulator sim) {
             RunFoodDesireCheck(sim);
             CheckAffordanceStandbysOnTraits(sim.HouseholdTraits.It);
             var affordanceNames = new List<string>();

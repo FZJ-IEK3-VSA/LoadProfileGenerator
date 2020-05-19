@@ -234,7 +234,7 @@ namespace LoadProfileGenerator.Presenters.Households {
             _deviceSelection.DeleteItemFromDB(item);
         }
 
-        public override bool Equals([CanBeNull] object obj)
+        public override bool Equals(object obj)
         {
             var presenter = obj as DeviceSelectionPresenter;
             return presenter?.ThisDeviceSelection.Equals(_deviceSelection) == true;

@@ -47,7 +47,6 @@ namespace CalculationController.Queue {
         [NotNull]
         public string CalcObjectName { get; }
 
-        [ItemNotNull]
         [NotNull]
         //private readonly ObservableCollection<CalculationEntry> _calculationEntries;
 

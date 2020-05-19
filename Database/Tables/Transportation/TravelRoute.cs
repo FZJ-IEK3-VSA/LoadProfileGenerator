@@ -53,7 +53,7 @@ namespace Database.Tables.Transportation {
             }
         }
         public TravelRoute([CanBeNull]int? pID, [NotNull] string connectionString, [NotNull] string name, [CanBeNull] string description, [CanBeNull] Site siteA,
-            [CanBeNull] Site siteB, [NotNull] StrGuid guid, [CanBeNull] string routeKey)
+            [CanBeNull] Site siteB, StrGuid guid, [CanBeNull] string routeKey)
             : base(name, TableName, connectionString, guid)
         {
             TypeDescription = "Travel Route";
@@ -181,7 +181,7 @@ namespace Database.Tables.Transportation {
             return false;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             /*      if (_siteA == null)
                   {
@@ -212,7 +212,7 @@ namespace Database.Tables.Transportation {
             }
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             if (_siteA != null) {
                 cmd.AddParameter("SiteAID", _siteA.IntID);
@@ -242,11 +242,9 @@ namespace Database.Tables.Transportation {
             return sum;
         }
 
-        [NotNull]
-        public override DBBase ImportFromGenericItem([NotNull] DBBase toImport, [NotNull] Simulator dstSim)
+        public override DBBase ImportFromGenericItem(DBBase toImport, Simulator dstSim)
             => ImportFromItem((TravelRoute)toImport,dstSim);
 
-        [NotNull]
         public override List<UsedIn> CalculateUsedIns(Simulator sim) => throw new NotImplementedException();
 
         [NotNull]

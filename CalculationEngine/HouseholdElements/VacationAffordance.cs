@@ -13,7 +13,7 @@ namespace CalculationEngine.HouseholdElements {
     [SuppressMessage("ReSharper", "ConvertToAutoProperty")]
     public class VacationAffordance : CalcAffordanceBase {
         //TODO: figure out if this is still needed
-        public VacationAffordance( [NotNull] StrGuid guid,
+        public VacationAffordance( StrGuid guid,
                                   [ItemNotNull] [NotNull] BitArray isBusy, [NotNull] CalcRepo calcRepo)
             : base(
                 Constants.TakingAVacationString, new CalcLocation("Vacation", System.Guid.NewGuid().ToStrGuid()),
@@ -28,15 +28,11 @@ namespace CalculationEngine.HouseholdElements {
         public override int DefaultPersonProfileLength => 0;
 
         [NotNull]
-        [ItemNotNull]
         public override List<CalcAffordance.DeviceEnergyProfileTuple> Energyprofiles { get; } =
             new List<CalcAffordance.DeviceEnergyProfileTuple>();
 
-        [NotNull]
         public override string SourceTrait { get; } = "Vacation";
 
-        [NotNull]
-        [ItemNotNull]
         public override List<CalcSubAffordance> SubAffordances { get; } = new List<CalcSubAffordance>();
 
         [NotNull]
@@ -51,9 +47,9 @@ namespace CalculationEngine.HouseholdElements {
             return _vacationAffordance;
         }*/
 
-        public override void Activate([NotNull] TimeStep startTime, [NotNull] string activatorName,
-                                      [NotNull] CalcLocation personSourceLocation,
-                                      [NotNull] out ICalcProfile personTimeProfile) =>
+        public override void Activate(TimeStep startTime, string activatorName,
+                                      CalcLocation personSourceLocation,
+                                      out ICalcProfile personTimeProfile) =>
             throw new LPGException("This function should never be called");
 
         [NotNull]
@@ -61,17 +57,15 @@ namespace CalculationEngine.HouseholdElements {
 
         public override bool AreThereDuplicateEnergyProfiles() => false;
 
-        [NotNull]
-        [ItemNotNull]
-        public override List<CalcSubAffordance> CollectSubAffordances([NotNull] TimeStep time,
+        public override List<CalcSubAffordance> CollectSubAffordances(TimeStep time,
                                                                       bool onlyInterrupting,
-                                                                      [NotNull] CalcLocation srcLocation) =>
+                                                                      CalcLocation srcLocation) =>
             new List<CalcSubAffordance>();
 
         //public override ICalcProfile CollectPersonProfile() => throw new LPGException("This function should never be called");
 
-        public override bool IsBusy([NotNull] TimeStep time,
-                                    [NotNull] CalcLocation srcLocation, [NotNull] string calcPersonName,
+        public override bool IsBusy(TimeStep time,
+                                    CalcLocation srcLocation, string calcPersonName,
                                     bool clearDictionaries = true) =>
             throw new LPGException("This function should never be called");
     }

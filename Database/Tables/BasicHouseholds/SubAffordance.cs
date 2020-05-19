@@ -55,7 +55,7 @@ namespace Database.Tables.BasicHouseholds {
         private PermittedGender _permittedGender;
 
         public SubAffordance([NotNull] string pName, [CanBeNull] int? id, PermittedGender permittedGender, [NotNull] string connectionString,
-            bool isInterruptable, bool isInterrupting, int maximumAge, int minimumAge, [NotNull] StrGuid guid) : base(pName, TableName,
+            bool isInterruptable, bool isInterrupting, int maximumAge, int minimumAge, StrGuid guid) : base(pName, TableName,
             connectionString, guid)
         {
             ID = id;
@@ -216,13 +216,10 @@ namespace Database.Tables.BasicHouseholds {
             _subAffordanceVariableOps.Remove(affd);
         }
 
-        [NotNull]
-        public override DBBase ImportFromGenericItem([NotNull] DBBase toImport,  [NotNull] Simulator dstSim)
+        public override DBBase ImportFromGenericItem(DBBase toImport,  Simulator dstSim)
             => ImportFromItem((SubAffordance)toImport,dstSim);
 
-        [ItemNotNull]
-        [NotNull]
-        public override List<UsedIn> CalculateUsedIns([NotNull] Simulator sim)
+        public override List<UsedIn> CalculateUsedIns(Simulator sim)
         {
             var usedins = new List<UsedIn>();
             foreach (var aff in sim.Affordances.It) {
@@ -293,7 +290,7 @@ namespace Database.Tables.BasicHouseholds {
             return false;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             message = "";
             return true;
@@ -329,7 +326,7 @@ namespace Database.Tables.BasicHouseholds {
             }
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("Name", "@myname", Name);
             cmd.AddParameter("MinimumAge", "@MinimumAge", _minimumAge);

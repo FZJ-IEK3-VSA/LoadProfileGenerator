@@ -51,7 +51,7 @@ namespace Database.Tables.Houses {
         private double _scalingFactor;
 
         public Generator([NotNull] string pName, [CanBeNull] string description, [CanBeNull] VLoadType loadType, double scalingFactor,
-            [CanBeNull] DateBasedProfile dateBasedProfile, [NotNull] string connectionString, [NotNull] StrGuid guid, [CanBeNull] int? pID = null)
+            [CanBeNull] DateBasedProfile dateBasedProfile, [NotNull] string connectionString, StrGuid guid, [CanBeNull] int? pID = null)
             : base(pName, TableName, connectionString, guid)
         {
             ID = pID;
@@ -155,7 +155,7 @@ namespace Database.Tables.Houses {
             return gen;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             message = "";
             return true;
@@ -169,7 +169,7 @@ namespace Database.Tables.Houses {
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("Name", "@myname", Name);
             if(_description!=null) {
@@ -186,8 +186,7 @@ namespace Database.Tables.Houses {
         }
 
         public override string ToString() => Name;
-        [NotNull]
-        public override DBBase ImportFromGenericItem([NotNull] DBBase toImport, [NotNull] Simulator dstSim)
+        public override DBBase ImportFromGenericItem(DBBase toImport, Simulator dstSim)
             => ImportFromItem((Generator)toImport,dstSim);
 
         public override List<UsedIn> CalculateUsedIns(Simulator sim) => throw new NotImplementedException();

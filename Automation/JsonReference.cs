@@ -50,11 +50,11 @@ namespace Automation {
         public override int GetHashCode()
         {
             unchecked {
-                return (Name?.GetHashCode()??0 * 397) ^ (Guid?.GetHashCode()??0);
+                return (Name?.GetHashCode()??0 * 397) ^ (Guid.GetHashCode());
             }
         }
 
-        public JsonReference([NotNull] string name, [NotNull] StrGuid guid)
+        public JsonReference([NotNull] string name, StrGuid guid)
         {
             Name = name;
             Guid = guid;
@@ -73,7 +73,6 @@ namespace Automation {
 
         [NotNull]
         public string? Name { get; set; }
-        [NotNull]
         public StrGuid Guid { get; set; }
 
         [NotNull]

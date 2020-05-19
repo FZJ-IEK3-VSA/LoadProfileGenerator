@@ -10,8 +10,8 @@ namespace Common.SQLResultLogging.Loggers {
     using SQLResultLogging;
 
     public class CalcVariableEntry :IHouseholdKey{
-        public CalcVariableEntry([NotNull] string name, [NotNull] StrGuid guid, double value,
-                                 [NotNull] string locationName, [NotNull] StrGuid locationGuid,
+        public CalcVariableEntry([NotNull] string name, StrGuid guid, double value,
+                                 [NotNull] string locationName, StrGuid locationGuid,
                                  [NotNull] HouseholdKey householdKey, [NotNull] TimeStep timeStep)
         {
             Name = name;
@@ -26,14 +26,11 @@ namespace Common.SQLResultLogging.Loggers {
 
         [NotNull]
         public string Name { get; set; }
-        [NotNull]
         public StrGuid Guid { get; set; }
         public double Value { get; set; }
         [NotNull]
         public string LocationName { get; set; }
-        [NotNull]
         public StrGuid LocationGuid { get; set; }
-        [NotNull]
         public HouseholdKey HouseholdKey { get; set; }
 
         [NotNull]
@@ -49,7 +46,7 @@ namespace Common.SQLResultLogging.Loggers {
         {
         }
 
-        public override void Run([NotNull] HouseholdKey key, [NotNull] object o)
+        public override void Run(HouseholdKey key, object o)
         {
             var objects = (List<IHouseholdKey>)o;
             var calcVarEntries = objects.ConvertAll(x => (CalcVariableEntry)x).ToList();

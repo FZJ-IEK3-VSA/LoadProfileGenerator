@@ -387,7 +387,7 @@ namespace CalculationEngine.Transportation {
 
         private void SetTimeprofile([NotNull] CalcProfile calcProfile, [NotNull] TimeStep startidx,
                                     [NotNull] CalcLoadType loadType,
-                                    [NotNull] string affordanceName, [NotNull] string activatingPersonName, [NotNull] StrGuid locationGuid)
+                                    [NotNull] string affordanceName, [NotNull] string activatingPersonName, StrGuid locationGuid)
         {
             CalcDeviceLoad cdl = null;
             foreach (var calcDeviceLoad in _loads) {

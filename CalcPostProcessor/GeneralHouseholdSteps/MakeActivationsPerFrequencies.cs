@@ -73,7 +73,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
             private set;
         } = new Dictionary<string, Dictionary<string, Dictionary<string, int>>>();
 
-        protected override void PerformActualStep([NotNull] IStepParameters parameters)
+        protected override void PerformActualStep(IStepParameters parameters)
         {
             HouseholdStepParameters hhp = (HouseholdStepParameters)parameters;
             var entry = hhp.Key;

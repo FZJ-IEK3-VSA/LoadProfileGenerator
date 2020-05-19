@@ -68,8 +68,6 @@ namespace CalculationEngine.HouseElements {
             HouseholdKey = houseKey;
         }
 
-        [NotNull]
-        [ItemNotNull]
         public List<CalcAutoDev> CollectAutoDevs()
         {
             var autoDevs = new List<CalcAutoDev>();
@@ -84,8 +82,6 @@ namespace CalculationEngine.HouseElements {
             return autoDevs;
         }
 
-        [NotNull]
-        [ItemNotNull]
         public List<CalcDevice> CollectDevices()
         {
             var devices = new List<CalcDevice>();
@@ -100,8 +96,6 @@ namespace CalculationEngine.HouseElements {
             return devices;
         }
 
-        [NotNull]
-        [ItemNotNull]
         public List<CalcLocation> CollectLocations()
         {
             var locations = new List<CalcLocation>();
@@ -116,8 +110,6 @@ namespace CalculationEngine.HouseElements {
             return locations;
         }
 
-        [NotNull]
-        [ItemNotNull]
         public List<CalcPerson> CollectPersons()
         {
             var persons = new List<CalcPerson>();
@@ -188,10 +180,9 @@ namespace CalculationEngine.HouseElements {
             }
         }
 
-        [NotNull]
         public HouseholdKey HouseholdKey { get; }
 
-        public void Init([NotNull] DayLightStatus daylightArray,
+        public void Init(DayLightStatus daylightArray,
                          int simulationSeed)
         {
             //_allProfiles = new Dictionary<int, CalcProfile>();
@@ -214,7 +205,6 @@ namespace CalculationEngine.HouseElements {
             }
         }
 
-        [NotNull]
         public string Name { get; }
 
         [CanBeNull]
@@ -222,7 +212,7 @@ namespace CalculationEngine.HouseElements {
         public List<CalcEnergyStorage> EnergyStorages => _energyStorages;
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        public void RunOneStep([NotNull] TimeStep timestep, DateTime now, bool runProcessing)
+        public void RunOneStep(TimeStep timestep, DateTime now, bool runProcessing)
         {
             /*if (_allProfiles == null) {
                 throw new LPGException("all profiles was null");

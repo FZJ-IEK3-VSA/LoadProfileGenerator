@@ -527,8 +527,8 @@ namespace CalculationController.CalcFactories {
                 double distanceToEnergyFactor = transportationDevice.EnergyToDistanceFactor;
 
                 CalcLoadType chargingLoadType = null;
-                if (transportationDevice.ChargingCalcLoadTypeGuid != null) {
-                    chargingLoadType= _loadTypeDict.GetLoadtypeByGuid(transportationDevice.ChargingCalcLoadTypeGuid);
+                if (transportationDevice.ChargingCalcLoadTypeGuid.HasValue) {
+                    chargingLoadType= _loadTypeDict.GetLoadtypeByGuid(transportationDevice.ChargingCalcLoadTypeGuid.Value);
                 }
                 if (chh.TransportationHandler == null)
                 {

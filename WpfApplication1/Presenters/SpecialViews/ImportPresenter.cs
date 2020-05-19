@@ -61,7 +61,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             ApplicationPresenter.CloseTab(this, removeLast);
         }
 
-        public override bool Equals([CanBeNull] object obj)
+        public override bool Equals(object obj)
         {
             return obj is ImportPresenter presenter && presenter.HeaderString == HeaderString;
         }

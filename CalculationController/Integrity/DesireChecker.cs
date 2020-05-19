@@ -67,7 +67,7 @@ namespace CalculationController.Integrity {
             }
         }
 
-        protected override void Run([NotNull] Simulator sim) {
+        protected override void Run(Simulator sim) {
             CheckDesireNamesForSlash(sim);
             CheckDesireUsage(sim);
         }

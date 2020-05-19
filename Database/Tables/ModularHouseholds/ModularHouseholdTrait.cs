@@ -54,7 +54,7 @@ namespace Database.Tables.ModularHouseholds {
             {
             }
 
-            public JsonModularHouseholdTrait([NotNull] StrGuid guid) => Guid = guid;
+            public JsonModularHouseholdTrait(StrGuid guid) => Guid = guid;
 
             public ModularHouseholdTraitAssignType AssignType { get; set; }
 
@@ -63,7 +63,6 @@ namespace Database.Tables.ModularHouseholds {
 
             [CanBeNull]
             public JsonReference HouseholdTrait { get; set; }
-            [NotNull]
             public StrGuid Guid { get; set; }
 
 
@@ -90,7 +89,6 @@ namespace Database.Tables.ModularHouseholds {
             }
         }
 
-        [NotNull]
         public JsonModularHouseholdTrait GetJson()
         {
             var p = new JsonModularHouseholdTrait(Guid) {DstPerson = DstPerson?.GetJsonReference(), HouseholdTrait = HouseholdTrait.GetJsonReference(), AssignType = AssignType};
@@ -111,7 +109,7 @@ namespace Database.Tables.ModularHouseholds {
 
         public ModularHouseholdTrait([CanBeNull]int? pID, [CanBeNull]int? modularHouseholdID, [NotNull] string name, [NotNull] string connectionString,
             [CanBeNull] HouseholdTrait ht, [CanBeNull] Person dstPerson, ModularHouseholdTraitAssignType assignType,
-                                     [NotNull] StrGuid guid)
+                                     StrGuid guid)
             : base(name, TableName, connectionString, guid) {
             AssignType = assignType;
             _dstPerson = dstPerson;
@@ -214,7 +212,7 @@ namespace Database.Tables.ModularHouseholds {
             return chht;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message) {
+        protected override bool IsItemLoadedCorrectly(out string message) {
             if (_householdTrait == null) {
                 message = "Household trait is missing";
                 return false;
@@ -269,7 +267,7 @@ namespace Database.Tables.ModularHouseholds {
             }
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd) {
+        protected override void SetSqlParameters(Command cmd) {
             if (_modularHouseholdID != null) {
                 cmd.AddParameter("ModularHouseholdID", _modularHouseholdID);
             }

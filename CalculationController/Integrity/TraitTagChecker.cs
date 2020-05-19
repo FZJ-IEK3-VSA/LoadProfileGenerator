@@ -1,13 +1,12 @@
 ﻿using Common;
 using Database;
-using JetBrains.Annotations;
 
 namespace CalculationController.Integrity {
     internal class TraitTagChecker : BasicChecker {
         public TraitTagChecker(bool performCleanupChecks) : base("Trait Tags", performCleanupChecks) {
         }
 
-        protected override void Run([NotNull] Simulator sim) {
+        protected override void Run(Simulator sim) {
             foreach (var tag in sim.TraitTags.It) {
                 if (!tag.Name.Contains(" / ") && PerformCleanupChecks) {
                     throw new DataIntegrityException(

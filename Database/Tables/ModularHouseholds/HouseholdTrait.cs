@@ -176,7 +176,7 @@ namespace Database.Tables.ModularHouseholds {
                               double estimatedTimePerYearInH,
                               EstimateType estimateType,
                               [NotNull] string shortDescription,
-                              [NotNull] StrGuid guid) : base(pName, TableName, connectionString, guid)
+                              StrGuid guid) : base(pName, TableName, connectionString, guid)
         {
             ID = id;
             _locations = new ObservableCollection<HHTLocation>();
@@ -436,7 +436,6 @@ namespace Database.Tables.ModularHouseholds {
             }
         }
 
-        [NotNull]
         public List<Affordance> CollectAffordances(bool onlyRelevant)
         {
             var allAffordances = new List<Affordance>();
@@ -474,7 +473,6 @@ namespace Database.Tables.ModularHouseholds {
             return allAffordances;
         }
 
-        [NotNull]
         public List<IAssignableDevice> CollectStandbyDevices()
         {
             var allDevices = new List<IAssignableDevice>();
@@ -603,8 +601,7 @@ namespace Database.Tables.ModularHouseholds {
             EstimatedTimes = Math.Round(365 / ts.TotalDays, 1);
         }
 
-        [NotNull]
-        public override List<UsedIn> CalculateUsedIns([NotNull] Simulator sim)
+        public override List<UsedIn> CalculateUsedIns(Simulator sim)
         {
             var used = new List<UsedIn>();
             foreach (var chh in sim.ModularHouseholds.It) {
@@ -764,7 +761,7 @@ namespace Database.Tables.ModularHouseholds {
             return traits;
         }*/
 
-        public override int CompareTo([CanBeNull] BasicElement other)
+        public override int CompareTo(BasicElement other)
         {
             if (other is HouseholdTrait trait) {
                 return string.Compare(PrettyName, trait.PrettyName, StringComparison.Ordinal);
@@ -1432,13 +1429,13 @@ namespace Database.Tables.ModularHouseholds {
             return estimatedTime;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             message = "";
             return true;
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("Name", "@myname", Name);
             cmd.AddParameter("Description", _description);

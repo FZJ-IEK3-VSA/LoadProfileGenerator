@@ -7,7 +7,7 @@ namespace Common.CalcDto {
     [Serializable]
     public class CalcLocationDto
     {
-        public CalcLocationDto([NotNull]string name, int id, [NotNull]StrGuid guid)
+        public CalcLocationDto([NotNull]string name, int id, StrGuid guid)
         {
             Name = name;
             ID = id;
@@ -16,7 +16,6 @@ namespace Common.CalcDto {
         [NotNull]
         public string Name { get; }
         public int ID { get; }
-        [NotNull]
         public StrGuid Guid { get; }
         [ItemNotNull]
         [NotNull]

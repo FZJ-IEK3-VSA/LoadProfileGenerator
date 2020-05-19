@@ -33,7 +33,7 @@ namespace Database.Tables.BasicHouseholds {
         public AffordanceDevice([CanBeNull] IAssignableDevice assignableDevice,
             [CanBeNull] TimeBasedProfile timeProfile, [CanBeNull] int? id, decimal timeOffset, [CanBeNull] int? affordanceID,
             [ItemNotNull] [NotNull] ObservableCollection<RealDevice> simdevices, [ItemNotNull] [NotNull] ObservableCollection<DeviceCategory> simdevcategories,
-            [NotNull] string deviceName, [CanBeNull] VLoadType loadType, [NotNull] string connectionString, double probability, [NotNull] StrGuid guid) : base(
+            [NotNull] string deviceName, [CanBeNull] VLoadType loadType, [NotNull] string connectionString, double probability, StrGuid guid) : base(
             deviceName, TableName, connectionString, guid) {
             _assignableDevice = assignableDevice;
             _timeProfile = timeProfile;
@@ -87,16 +87,13 @@ namespace Database.Tables.BasicHouseholds {
         }
 
         [UsedImplicitly]
-        [CanBeNull]
         public IAssignableDevice Device => _assignableDevice;
 
-        [CanBeNull]
         public VLoadType LoadType => _loadType;
 
         public double Probability => _probability;
 
         [UsedImplicitly]
-        [CanBeNull]
         public TimeBasedProfile TimeProfile => _timeProfile;
 
         [NotNull]
@@ -152,7 +149,7 @@ namespace Database.Tables.BasicHouseholds {
             return tup;
         }
 
-        public override int CompareTo([CanBeNull] BasicElement other) {
+        public override int CompareTo(BasicElement other) {
             if (_assignableDevice == null) {
                 return 0;
             }
@@ -163,7 +160,7 @@ namespace Database.Tables.BasicHouseholds {
             return base.CompareTo(other);
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message) {
+        protected override bool IsItemLoadedCorrectly(out string message) {
             if (_assignableDevice == null) {
                 message = "Device not found";
                 return false;
@@ -183,7 +180,7 @@ namespace Database.Tables.BasicHouseholds {
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd) {
+        protected override void SetSqlParameters(Command cmd) {
             if (_affordanceID != null) {
                 cmd.AddParameter("AffordanceID", "@AffordanceID", _affordanceID);
             }

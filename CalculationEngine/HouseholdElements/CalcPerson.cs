@@ -100,8 +100,8 @@ namespace CalculationEngine.HouseholdElements {
         }
 
         //guid for all vacations of this person
-        [NotNull] private readonly StrGuid _vacationAffordanceGuid;
-        [NotNull] private readonly StrGuid _vacationLocationGuid;
+        private readonly StrGuid _vacationAffordanceGuid;
+        private readonly StrGuid _vacationLocationGuid;
         [NotNull]
         private CalcLocation CurrentLocation { get; set; }
 

@@ -8,9 +8,9 @@ namespace Common.SQLResultLogging.InputLoggers
 {
     public class ChargingStationState:IHouseholdKey
     {
-        public ChargingStationState([NotNull] string chargingStationName, [NotNull] StrGuid chargingStationGuid, bool isAvailable,
+        public ChargingStationState([NotNull] string chargingStationName, StrGuid chargingStationGuid, bool isAvailable,
                                     [NotNull] TimeStep timeStep, [NotNull] HouseholdKey householdKey,
-                                    [CanBeNull] string connectedCarName, [CanBeNull] StrGuid connectedCarGuid,
+                                    [CanBeNull] string connectedCarName, [CanBeNull] StrGuid? connectedCarGuid,
                                     double chargingPower)
         {
             ChargingStationName = chargingStationName;
@@ -28,7 +28,6 @@ namespace Common.SQLResultLogging.InputLoggers
         [NotNull]
         [JsonProperty]
         public string ChargingStationName { get; private set; }
-        [NotNull]
         [JsonProperty]
         public StrGuid ChargingStationGuid { get; private set; }
         [JsonProperty]
@@ -40,7 +39,7 @@ namespace Common.SQLResultLogging.InputLoggers
         public string ConnectedCarName { get; private set; }
         [CanBeNull]
         [JsonProperty]
-        public StrGuid ConnectedCarGuid { get; private set; }
+        public StrGuid? ConnectedCarGuid { get; private set; }
         [JsonProperty]
         public double ChargingPower { get; private set; }
     }

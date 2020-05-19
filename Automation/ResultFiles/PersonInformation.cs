@@ -12,7 +12,7 @@ namespace Automation.ResultFiles {
         {
         }
 
-        public PersonInformation([NotNull] string name, [NotNull] StrGuid guid, [NotNull] string traitTag)
+        public PersonInformation([NotNull] string name, StrGuid guid, [NotNull] string traitTag)
         {
             Name = name;
 

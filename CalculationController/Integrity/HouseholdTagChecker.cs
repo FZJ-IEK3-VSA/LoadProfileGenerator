@@ -2,14 +2,13 @@
 using System.Linq;
 using Common;
 using Database;
-using JetBrains.Annotations;
 
 namespace CalculationController.Integrity {
     internal class HouseholdTagChecker : BasicChecker {
         public HouseholdTagChecker(bool performCleanupChecks) : base("Household Tags", performCleanupChecks) {
         }
 
-        protected override void Run([NotNull] Simulator sim) {
+        protected override void Run(Simulator sim) {
             var noClass =
                 sim.HouseholdTags.It.Where(x => string.IsNullOrWhiteSpace(x.Classification)).ToList();
             if (noClass.Count > 0) {

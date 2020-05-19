@@ -18,7 +18,7 @@ namespace Database.Tables.Validation {
         public CalculationOutcome([NotNull] string name, [NotNull] string householdName, [NotNull] string lpgVersion, [NotNull] string temperatureProfile,
             [NotNull] string geographicLocaiton, [NotNull] string errorMessage, [NotNull] string timeResolution, [NotNull] string energyIntensity,
             TimeSpan calculationDuration, DateTime simulationStartTime, DateTime simulationEndtime,
-            [NotNull] string connectionString, int numberOfPersons, int randomSeed, [CanBeNull] int? pID, [NotNull] StrGuid guid) : base(name, TableName,
+            [NotNull] string connectionString, int numberOfPersons, int randomSeed, [CanBeNull] int? pID, StrGuid guid) : base(name, TableName,
             connectionString, guid) {
             Entries = new ObservableCollection<LoadtypeOutcome>();
             AffordanceTimeUses = new ObservableCollection<AffordanceTimeUseOutcome>();
@@ -232,7 +232,7 @@ namespace Database.Tables.Validation {
             return false;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message) {
+        protected override bool IsItemLoadedCorrectly(out string message) {
             message = "";
             return true;
         }
@@ -267,7 +267,7 @@ namespace Database.Tables.Validation {
             }
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd) {
+        protected override void SetSqlParameters(Command cmd) {
             cmd.AddParameter("HouseholdName", HouseholdName);
             cmd.AddParameter("LPGVersion", LPGVersion);
             cmd.AddParameter("TemperatureProfile", TemperatureProfile);
@@ -283,8 +283,7 @@ namespace Database.Tables.Validation {
         }
 
         public override string ToString() => Name;
-        [NotNull]
-        public override DBBase ImportFromGenericItem([NotNull] DBBase toImport, [NotNull] Simulator dstSim)
+        public override DBBase ImportFromGenericItem(DBBase toImport, Simulator dstSim)
             => ImportFromItem((CalculationOutcome)toImport,dstSim);
 
         public override List<UsedIn> CalculateUsedIns(Simulator sim) => throw new NotImplementedException();

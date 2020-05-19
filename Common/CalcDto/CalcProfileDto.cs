@@ -9,7 +9,6 @@ namespace Common.CalcDto {
         [NotNull]
         public string Name { get; }
         public int ID { get; }
-        [NotNull]
         public StrGuid Guid { get; }
         public ProfileType ProfileType { get; }
         [NotNull]
@@ -19,7 +18,7 @@ namespace Common.CalcDto {
         [NotNull]
         public List<CalcTimeDataPointDto> Datapoints { get; } = new List<CalcTimeDataPointDto>();
 
-        public CalcProfileDto([NotNull] string name, int id,  ProfileType profileType, [NotNull] string dataSource, [NotNull] StrGuid guid)
+        public CalcProfileDto([NotNull] string name, int id,  ProfileType profileType, [NotNull] string dataSource, StrGuid guid)
         {
             Name = name;
             ID = id;

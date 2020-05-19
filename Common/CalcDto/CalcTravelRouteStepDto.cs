@@ -10,13 +10,12 @@ namespace Common.CalcDto {
         public CalcTransportationDeviceCategoryDto TransportationDeviceCategory { get; }
         public int StepNumber { get; }
         public double DistanceInM { get; }
-        [NotNull]
         public StrGuid Guid { get; }
 
         public CalcTravelRouteStepDto([NotNull]string name, int id,
                                       [NotNull] CalcTransportationDeviceCategoryDto transportationDeviceCategory, int stepNumber,
                                       double distanceInM,
-                                      [NotNull]StrGuid guid)
+                                      StrGuid guid)
         {
             Name = name;
             ID = id;

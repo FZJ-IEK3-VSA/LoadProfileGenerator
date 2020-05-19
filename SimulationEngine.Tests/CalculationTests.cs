@@ -32,7 +32,7 @@ namespace SimulationEngine.Tests
 
         HouseCreationAndCalculationJob hj = new HouseCreationAndCalculationJob();
             hj.CalcSpec = JsonCalcSpecification.MakeDefaultsForTesting();
-            hj.House = new HouseData(new StrGuid("houseguid"),"HT01",1000,100,"housename");
+            hj.House = new HouseData(StrGuid.FromString("houseguid"),"HT01",1000,100,"housename");
             hj.House.Households = new List<HouseholdData>();
             HouseholdData hhd = new HouseholdData("householdid", false, "householdname", null,
                 null, null, null,

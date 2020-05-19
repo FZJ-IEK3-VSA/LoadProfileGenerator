@@ -208,7 +208,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             Close(false);
         }
 
-        public override bool Equals([CanBeNull] object obj)
+        public override bool Equals(object obj)
         {
             var limitPresenter = obj as TimeLimitPresenter;
             return limitPresenter?.ThisTimeLimit.Equals(ThisTimeLimit) == true;

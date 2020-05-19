@@ -16,7 +16,7 @@ namespace Common.JSON
         {
         }
 
-        public override void Run([NotNull] HouseholdKey key, [NotNull] object o)
+        public override void Run(HouseholdKey key, object o)
         {
             var actionEntries = (List<TransportationDeviceStatisticsEntry>)o;
             //var actionEntries = objects.ConvertAll(x => (TransportationDeviceStatisticsEntry)x).ToList();
@@ -44,14 +44,13 @@ namespace Common.JSON
 
     public class TransportationDeviceStatisticsEntry:IHouseholdKey
         {
-            public TransportationDeviceStatisticsEntry([NotNull] StrGuid transportationDeviceGuid, [NotNull] string transportationDeviceName, [NotNull] HouseholdKey householdKey)
+            public TransportationDeviceStatisticsEntry(StrGuid transportationDeviceGuid, [NotNull] string transportationDeviceName, [NotNull] HouseholdKey householdKey)
             {
                 TransportationDeviceGuid = transportationDeviceGuid;
                 TransportationDeviceName = transportationDeviceName;
                 HouseholdKey = householdKey;
             }
 
-            [NotNull]
             public StrGuid TransportationDeviceGuid { get; }
             [NotNull]
             public string TransportationDeviceName { get; }
@@ -89,7 +88,6 @@ namespace Common.JSON
                 }
             }
 
-            [NotNull]
             public HouseholdKey HouseholdKey { get; }
         }
     }

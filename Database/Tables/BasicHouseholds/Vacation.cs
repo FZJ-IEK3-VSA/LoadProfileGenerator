@@ -19,7 +19,7 @@ namespace Database.Tables.BasicHouseholds {
         private int _minimumAge;
 
         public Vacation([NotNull] string name, [CanBeNull] int? pID, [NotNull] string connectionString, int minimumAge, int maximumAge,
-            CreationType creationType, [NotNull] StrGuid guid) : base(name, TableName, connectionString, guid)
+            CreationType creationType, StrGuid guid) : base(name, TableName, connectionString, guid)
         {
             _creationType = creationType;
             _minimumAge = minimumAge;
@@ -56,7 +56,6 @@ namespace Database.Tables.BasicHouseholds {
             get => _minimumAge;
             set => SetValueWithNotify(value, ref _minimumAge, nameof(MinimumAge));
         }
-        [NotNull]
         public override string PrettyName {
             get {
                 var days = 0;
@@ -142,7 +141,7 @@ namespace Database.Tables.BasicHouseholds {
             return false;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             message = "";
             return true;
@@ -168,7 +167,7 @@ namespace Database.Tables.BasicHouseholds {
             }
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("Name", "@myname", Name);
             cmd.AddParameter("MinimumAge", _minimumAge);
@@ -189,12 +188,9 @@ namespace Database.Tables.BasicHouseholds {
             return timeframes;
         }
 
-        [NotNull]
-        public override DBBase ImportFromGenericItem([NotNull] DBBase toImport,  [NotNull] Simulator dstSim)
+        public override DBBase ImportFromGenericItem(DBBase toImport,  Simulator dstSim)
             => ImportFromItem((Vacation)toImport,  dstSim);
 
-        [NotNull]
-        [ItemNotNull]
         public override List<UsedIn> CalculateUsedIns(Simulator sim) => throw new NotImplementedException();
     }
 }

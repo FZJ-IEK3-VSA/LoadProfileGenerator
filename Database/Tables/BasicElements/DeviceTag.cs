@@ -36,7 +36,7 @@ namespace Database.Tables.BasicElements {
     public class DeviceTag : DBBase, IComparable<DeviceTag> {
         public const string TableName = "tblDeviceTags";
 
-        public DeviceTag([NotNull] string name, int taggingSetID, [NotNull] string connectionString, [CanBeNull]int? pID,[NotNull] StrGuid guid)
+        public DeviceTag([NotNull] string name, int taggingSetID, [NotNull] string connectionString, [CanBeNull]int? pID,StrGuid guid)
             : base(name, pID, TableName, connectionString, guid)
         {
             TaggingSetID = taggingSetID;
@@ -64,7 +64,7 @@ namespace Database.Tables.BasicElements {
             return new DeviceTag(name, taggingSetID, connectionString, tagID, guid);
         }
 
-        public override int CompareTo([CanBeNull] object obj)
+        public override int CompareTo(object obj)
         {
             if (!(obj is DeviceTag other))
             {
@@ -73,7 +73,7 @@ namespace Database.Tables.BasicElements {
             return string.Compare(Name, other.Name, StringComparison.Ordinal);
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             message = "";
             return true;
@@ -86,7 +86,7 @@ namespace Database.Tables.BasicElements {
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("Name", Name);
             cmd.AddParameter("TaggingSetID", TaggingSetID);

@@ -39,7 +39,7 @@ namespace Database.Tables.Houses {
         public const string TableName = "tblEnergyStorageSignals";
 
         public EnergyStorageSignal([CanBeNull]int? pID, int energyStorageID, Variable variable, double triggerLevelOn,
-            double triggerLevelOff, double value, [NotNull] string connectionString, [NotNull] string name, [NotNull] StrGuid guid)
+            double triggerLevelOff, double value, [NotNull] string connectionString, [NotNull] string name, StrGuid guid)
             : base(name, TableName, connectionString, guid)
         {
             Variable = variable;
@@ -83,7 +83,7 @@ namespace Database.Tables.Houses {
             return ess;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             if (Variable == null) {
                 message = "Variable not found";
@@ -100,7 +100,7 @@ namespace Database.Tables.Houses {
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("EnergyStorageID", EnergyStorageID);
             if (Variable != null) {

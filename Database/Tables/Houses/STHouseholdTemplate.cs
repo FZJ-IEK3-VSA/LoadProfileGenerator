@@ -15,7 +15,7 @@ namespace Database.Tables.Houses {
         private readonly int _settlementTemplateID;
 
         public STHouseholdTemplate([CanBeNull]int? pID, [NotNull] string connectionString, int settlementTemplateID, [NotNull] string name,
-            [CanBeNull] HouseholdTemplate householdTemplate, [NotNull] StrGuid guid) : base(name, TableName, connectionString, guid) {
+            [CanBeNull] HouseholdTemplate householdTemplate, StrGuid guid) : base(name, TableName, connectionString, guid) {
             TypeDescription = "Settlement Template Household Templates";
             ID = pID;
             _householdTemplate = householdTemplate;
@@ -44,7 +44,7 @@ namespace Database.Tables.Houses {
             return shh;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message) {
+        protected override bool IsItemLoadedCorrectly(out string message) {
             if (HouseholdTemplate == null) {
                 message = "Household template not found";
                 return false;
@@ -64,7 +64,7 @@ namespace Database.Tables.Houses {
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd) {
+        protected override void SetSqlParameters(Command cmd) {
             if (_householdTemplate != null) {
                 cmd.AddParameter("HouseholdTemplateID", _householdTemplate.IntID);
             }

@@ -13,8 +13,8 @@ namespace Common.CalcDto {
         [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
         public DeviceEnergyProfileTupleDto() { }
 
-        public DeviceEnergyProfileTupleDto([NotNull]string calcDeviceName, [NotNull]StrGuid calcDeviceGuid, [NotNull]  CalcProfileDto ep, [NotNull] string calcLoadTypeName,
-                                           [NotNull] StrGuid calcLoadTypeGuid, decimal timeOffset,
+        public DeviceEnergyProfileTupleDto([NotNull]string calcDeviceName, StrGuid calcDeviceGuid, [NotNull]  CalcProfileDto ep, [NotNull] string calcLoadTypeName,
+                                           StrGuid calcLoadTypeGuid, decimal timeOffset,
                                            TimeSpan stepsize, double multiplier, double probability)
         {
             CalcDeviceName = calcDeviceName;
@@ -39,7 +39,6 @@ namespace Common.CalcDto {
         [NotNull]
         [JsonProperty]
         public string CalcDeviceName { get; private set; }
-        [NotNull]
         [JsonProperty]
         public StrGuid CalcDeviceGuid { get; private set; }
         [NotNull]
@@ -48,7 +47,6 @@ namespace Common.CalcDto {
         [NotNull]
         [JsonProperty]
         public string CalcLoadTypeName { get; private set; }
-        [NotNull]
         [JsonProperty]
         public StrGuid CalcLoadTypeGuid { get; private set; }
 

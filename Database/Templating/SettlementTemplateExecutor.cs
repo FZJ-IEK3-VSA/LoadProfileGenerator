@@ -447,7 +447,7 @@ namespace Database.Templating {
                 return string.Compare(HouseholdList, other.HouseholdList, StringComparison.Ordinal);
             }
 
-            public bool Equals([CanBeNull] HouseEntry other)
+            public bool Equals(HouseEntry other)
             {
                 if (ReferenceEquals(this, other)) {
                     return true;
@@ -455,7 +455,7 @@ namespace Database.Templating {
                 return false;
             }
 
-            public override bool Equals([CanBeNull] object obj)
+            public override bool Equals(object obj)
             {
                 if (obj == null) {
                     return false;

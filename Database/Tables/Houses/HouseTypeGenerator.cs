@@ -40,7 +40,7 @@ namespace Database.Tables.Houses {
         [CanBeNull] private readonly Generator _generator;
 
         public HouseTypeGenerator([CanBeNull]int? pID, int houseID, [CanBeNull] Generator gen, [NotNull] string connectionString,
-            [NotNull] string generatorName, [NotNull] StrGuid guid)
+            [NotNull] string generatorName, StrGuid guid)
             : base(generatorName, TableName, connectionString, guid)
         {
             ID = pID;
@@ -80,7 +80,7 @@ namespace Database.Tables.Houses {
                 guid);
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             if (Generator == null) {
                 message = "Generator not found";
@@ -107,7 +107,7 @@ namespace Database.Tables.Houses {
             }
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("HouseID", "@HouseID", HouseID);
             if (_generator != null) {

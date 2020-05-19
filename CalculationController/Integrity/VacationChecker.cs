@@ -1,14 +1,13 @@
 ﻿using System;
 using Common;
 using Database;
-using JetBrains.Annotations;
 
 namespace CalculationController.Integrity {
     internal class VacationChecker : BasicChecker {
         public VacationChecker(bool performCleanupChecks) : base("Vacations", performCleanupChecks) {
         }
 
-        protected override void Run([NotNull] Simulator sim) {
+        protected override void Run(Simulator sim) {
             foreach (var vacation in sim.Vacations.It) {
                 if (vacation.MinimumAge < 0 || vacation.MaximumAge == 0) {
                     throw new DataIntegrityException(

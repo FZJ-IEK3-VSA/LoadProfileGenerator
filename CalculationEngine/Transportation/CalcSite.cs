@@ -8,7 +8,7 @@ using JetBrains.Annotations;
 
 namespace CalculationEngine.Transportation {
     public class CalcSite : CalcBase {
-        public CalcSite([NotNull] string pName, [NotNull] StrGuid guid, [NotNull] HouseholdKey householdKey) : base(pName, guid)
+        public CalcSite([NotNull] string pName, StrGuid guid, [NotNull] HouseholdKey householdKey) : base(pName, guid)
         {
             _householdKey = householdKey;
         }

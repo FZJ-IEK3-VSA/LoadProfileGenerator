@@ -7,8 +7,8 @@ using JetBrains.Annotations;
 namespace Common.CalcDto {
     public class CalcDeviceLoadDto
     {
-        public CalcDeviceLoadDto([NotNull]string name, int id, [NotNull]string loadTypeName, [NotNull] StrGuid loadTypeGuid,
-                                 double averageYearlyConsumption, double powerStandardDeviation, [NotNull] StrGuid guid,
+        public CalcDeviceLoadDto([NotNull]string name, int id, [NotNull]string loadTypeName, StrGuid loadTypeGuid,
+                                 double averageYearlyConsumption, double powerStandardDeviation, StrGuid guid,
                                  double maxPower)
         {
             Name = name;
@@ -26,13 +26,11 @@ namespace Common.CalcDto {
         public double AverageYearlyConsumption { get; }
 
         public double PowerStandardDeviation { get; }
-        [NotNull]
         public StrGuid Guid { get; }
         public double MaxPower { get; }
         [NotNull]
         public string Name { get; }
         public int ID { get; }
-        [NotNull]
         public StrGuid LoadTypeGuid { get; }
         [NotNull]
         public string LoadTypeName { get; }

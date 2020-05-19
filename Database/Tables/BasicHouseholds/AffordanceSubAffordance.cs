@@ -49,7 +49,7 @@ namespace Database.Tables.BasicHouseholds {
         [CanBeNull] private readonly SubAffordance _subaff;
 
         public AffordanceSubAffordance([CanBeNull]int? pID, [CanBeNull] SubAffordance subaff, decimal delayTime, [NotNull] string name,
-            [NotNull] string connectionString, [CanBeNull]int? affordanceID, [NotNull] StrGuid guid) : base(name, TableName, connectionString, guid) {
+            [NotNull] string connectionString, [CanBeNull]int? affordanceID, StrGuid guid) : base(name, TableName, connectionString, guid) {
             TypeDescription = "Affordance - Subaffordance";
             ID = pID;
             _affordanceID = affordanceID;
@@ -61,7 +61,7 @@ namespace Database.Tables.BasicHouseholds {
         }
 
         public AffordanceSubAffordance([CanBeNull]int? pID, [CanBeNull] SubAffordance subaff, decimal delayTime, [CanBeNull]int? affordanceID,
-            [NotNull] string affordanceName, [NotNull] string connectionString, [NotNull] string subaffname, [NotNull] StrGuid guid)
+            [NotNull] string affordanceName, [NotNull] string connectionString, [NotNull] string subaffname, StrGuid guid)
             : base(subaffname + "(" + affordanceName + ")", TableName, connectionString, guid) {
             if (subaffname == null) {
                 throw new ArgumentNullException(nameof(subaffname));
@@ -133,7 +133,7 @@ namespace Database.Tables.BasicHouseholds {
             return affsubaff;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message) {
+        protected override bool IsItemLoadedCorrectly(out string message) {
             if (_subaff == null) {
                 message = "Subaffordance not found.";
                 return false;
@@ -159,7 +159,7 @@ namespace Database.Tables.BasicHouseholds {
             }
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd) {
+        protected override void SetSqlParameters(Command cmd) {
             if (_affordanceID != null) {
                 cmd.AddParameter("AffID", "@AffID", _affordanceID);
             }

@@ -28,7 +28,7 @@ namespace Database.Tables.BasicHouseholds {
         public AffVariableRequirement(double value, [CanBeNull]int? id, [CanBeNull]int? affordanceID, [NotNull] string connectionString,
             VariableLocationMode variableLocationMode, [CanBeNull] Location location, VariableCondition condition,
             [CanBeNull] Variable variable,
-            [NotNull] string description, [NotNull] string name, [NotNull] StrGuid guid) : base(name, TableName, connectionString, guid) {
+            [NotNull] string description, [NotNull] string name, StrGuid guid) : base(name, TableName, connectionString, guid) {
             _value = value;
             ID = id;
             _affordanceID = affordanceID;
@@ -85,7 +85,7 @@ namespace Database.Tables.BasicHouseholds {
             return tup;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message) {
+        protected override bool IsItemLoadedCorrectly(out string message) {
             if (_variable == null) {
                 message = "Variable not found.";
                 return false;
@@ -102,7 +102,7 @@ namespace Database.Tables.BasicHouseholds {
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd) {
+        protected override void SetSqlParameters(Command cmd) {
             if (_affordanceID != null) {
                 cmd.AddParameter("AffordanceID", _affordanceID);
             }

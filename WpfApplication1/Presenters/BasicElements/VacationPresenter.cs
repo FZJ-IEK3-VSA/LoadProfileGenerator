@@ -45,7 +45,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             Close(false);
         }
 
-        public override bool Equals([CanBeNull] object obj)
+        public override bool Equals(object obj)
         {
             return obj is VacationPresenter presenter && presenter.ThisVacation.Equals(_thisVacation);
         }

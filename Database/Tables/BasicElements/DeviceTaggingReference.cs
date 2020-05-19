@@ -51,7 +51,7 @@ namespace Database.Tables.BasicElements {
         public DeviceTaggingReference([NotNull] string name, int taggingSetID, [CanBeNull] DeviceTag tag, [NotNull] string connectionString,
                                       [CanBeNull]int? pID,
             int personCount, double referenceValue, [CanBeNull] VLoadType loadType,
-            [NotNull] StrGuid guid) : base(name, pID, TableName,
+            StrGuid guid) : base(name, pID, TableName,
             connectionString, guid)
         {
             _taggingSetID = taggingSetID;
@@ -130,7 +130,7 @@ namespace Database.Tables.BasicElements {
                 loadType,guid);
         }
 
-        public override int CompareTo([CanBeNull] object obj)
+        public override int CompareTo(object obj)
         {
             if (!(obj is DeviceTaggingReference other))
             {
@@ -154,7 +154,7 @@ namespace Database.Tables.BasicElements {
             return name;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             if (_tag == null) {
                 message = "Tag not found.";
@@ -178,7 +178,7 @@ namespace Database.Tables.BasicElements {
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("TaggingSetID", _taggingSetID);
             if (_tag != null) {

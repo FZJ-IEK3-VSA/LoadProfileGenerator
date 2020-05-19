@@ -299,7 +299,7 @@ namespace ChartCreator2.OxyCharts {
         [SuppressMessage("ReSharper", "UnusedMemberInSuper.Global")]
         protected abstract FileProcessingResult MakeOnePlot([JetBrains.Annotations.NotNull] ResultFileEntry srcResultFileEntry);
 
-        public FileProcessingResult MakePlot([JetBrains.Annotations.NotNull] ResultFileEntry srcResultFileEntry)
+        public FileProcessingResult MakePlot(ResultFileEntry srcResultFileEntry)
         {
             _calculationProfiler.StartPart(StepName);
             var result = MakeOnePlot(srcResultFileEntry);
@@ -307,13 +307,12 @@ namespace ChartCreator2.OxyCharts {
             return result;
         }
 
-        [JetBrains.Annotations.NotNull]
         public List<ResultFileID> ResultFileIDs { get; }
 
         [NotNull]
         protected ICalculationProfiler Profiler => _calculationProfiler;
 
-        public bool IsEnabled([JetBrains.Annotations.NotNull] ResultFileEntry resultFileEntry)
+        public bool IsEnabled(ResultFileEntry resultFileEntry)
         {
             if (ResultFileIDs.Contains(resultFileEntry.ResultFileID)) {
                 return true;
@@ -325,7 +324,6 @@ namespace ChartCreator2.OxyCharts {
     public abstract class ChartBaseSqlStep : GenericChartBase, ISqlChartMakerStep
     {
         [JetBrains.Annotations.NotNull] private readonly ICalculationProfiler _calculationProfiler;
-        [JetBrains.Annotations.NotNull]
         public List<ResultTableID> ValidResultTableIds { get; }
         [JetBrains.Annotations.NotNull]
         public CalcDataRepository CalcDataRepository { get; }
@@ -347,7 +345,7 @@ namespace ChartCreator2.OxyCharts {
         [SuppressMessage("ReSharper", "UnusedMemberInSuper.Global")]
         protected abstract FileProcessingResult MakeOnePlot([JetBrains.Annotations.NotNull] HouseholdKeyEntry hhkey);
 
-        public FileProcessingResult MakePlot([JetBrains.Annotations.NotNull] HouseholdKeyEntry hhkey)
+        public FileProcessingResult MakePlot(HouseholdKeyEntry hhkey)
         {
             _calculationProfiler.StartPart(StepName);
             var result = MakeOnePlot(hhkey);
@@ -355,7 +353,7 @@ namespace ChartCreator2.OxyCharts {
             return result;
         }
 
-        public bool IsEnabled([JetBrains.Annotations.NotNull] HouseholdKeyEntry householdKey, [JetBrains.Annotations.NotNull] ResultTableDefinition resultTableDefinition)
+        public bool IsEnabled(HouseholdKeyEntry householdKey, ResultTableDefinition resultTableDefinition)
         {
             if (ValidResultTableIds.Contains(resultTableDefinition.ResultTableID))
             {

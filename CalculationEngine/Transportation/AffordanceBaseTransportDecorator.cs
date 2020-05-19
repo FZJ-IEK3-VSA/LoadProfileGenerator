@@ -30,7 +30,7 @@ namespace CalculationEngine.Transportation {
         public AffordanceBaseTransportDecorator([NotNull] ICalcAffordanceBase sourceAffordance,
             [NotNull] CalcSite site, [NotNull] TransportationHandler transportationHandler,
             [NotNull] string name,   [NotNull] HouseholdKey householdkey,
-                                                [NotNull] StrGuid guid, CalcRepo calcRepo)
+                                                StrGuid guid, CalcRepo calcRepo)
             : base(name, guid)
         {
             if (!site.Locations.Contains(sourceAffordance.ParentLocation)) {
@@ -44,7 +44,6 @@ namespace CalculationEngine.Transportation {
             _sourceAffordance = sourceAffordance;
         }
 
-        [NotNull]
         public string PrettyNameForDumping => Name + " (including transportation)";
 
         [NotNull]
@@ -52,8 +51,8 @@ namespace CalculationEngine.Transportation {
 
         //BitArray ICalcAffordanceBase.IsBusyArray { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        public void Activate([NotNull] TimeStep startTime, [NotNull] string activatorName, [NotNull] CalcLocation personSourceLocation,
-            [NotNull] out ICalcProfile personTimeProfile)
+        public void Activate(TimeStep startTime, string activatorName, CalcLocation personSourceLocation,
+            out ICalcProfile personTimeProfile)
         {
             if (_myLastTimeEntry.TimeOfLastEvalulation != startTime) {
                 throw new LPGException("trying to activate without first checking if the affordance is busy is a bug. Please report.");
@@ -108,7 +107,6 @@ namespace CalculationEngine.Transportation {
             }
         }
 
-        [NotNull]
         public string AffCategory => _sourceAffordance.AffCategory;
 
         public ColorRGB AffordanceColor => _sourceAffordance.AffordanceColor;
@@ -121,14 +119,10 @@ namespace CalculationEngine.Transportation {
 
         //public ICalcProfile CollectPersonProfile() => _sourceAffordance.CollectPersonProfile();
 
-        [NotNull]
-        [ItemNotNull]
         public List<CalcSubAffordance> CollectSubAffordances(TimeStep time, bool onlyInterrupting,
-            [NotNull] CalcLocation srcLocation) =>
+                                                             CalcLocation srcLocation) =>
             _sourceAffordance.CollectSubAffordances(time, onlyInterrupting, srcLocation);
 
-        [CanBeNull]
-        [ItemNotNull]
         public List<CalcAffordance.DeviceEnergyProfileTuple> Energyprofiles => _sourceAffordance.Energyprofiles;
 
         private class LastTimeEntry {
@@ -153,7 +147,7 @@ namespace CalculationEngine.Transportation {
         public int DefaultPersonProfileLength => _sourceAffordance.DefaultPersonProfileLength;
 
         public bool IsBusy(TimeStep time,
-                           [NotNull] CalcLocation srcLocation, [NotNull] string calcPersonName,
+                           CalcLocation srcLocation, string calcPersonName,
             bool clearDictionaries = true)
         {
             if (_myLastTimeEntry.TimeOfLastEvalulation != time || _myLastTimeEntry.PersonName != calcPersonName) {
@@ -208,7 +202,6 @@ namespace CalculationEngine.Transportation {
 
         public bool NeedsLight => _sourceAffordance.NeedsLight;
 
-        [NotNull]
         public CalcLocation ParentLocation => _sourceAffordance.ParentLocation;
 
         public PermittedGender PermittedGender => _sourceAffordance.PermittedGender;
@@ -217,25 +210,18 @@ namespace CalculationEngine.Transportation {
 
         public bool RequireAllAffordances => _sourceAffordance.RequireAllAffordances;
 
-        [NotNull]
-        [ItemNotNull]
         public List<CalcDesire> Satisfactionvalues => _sourceAffordance.Satisfactionvalues;
 
-        [NotNull]
         public string SourceTrait => _sourceAffordance.SourceTrait;
 
-        [NotNull]
-        [ItemNotNull]
         public List<CalcSubAffordance> SubAffordances => _sourceAffordance.SubAffordances;
 
-        [CanBeNull]
         public string TimeLimitName => _sourceAffordance.TimeLimitName;
         public bool AreThereDuplicateEnergyProfiles()
         {
             return _sourceAffordance.AreThereDuplicateEnergyProfiles();
         }
 
-        [CanBeNull]
         public string AreDeviceProfilesEmpty()
         {
             return _sourceAffordance.AreDeviceProfilesEmpty();

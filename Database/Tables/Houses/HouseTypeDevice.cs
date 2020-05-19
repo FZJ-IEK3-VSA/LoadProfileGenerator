@@ -66,7 +66,7 @@ namespace Database.Tables.Houses {
             [CanBeNull] TimeLimit timeLimit, double timeStandardDeviation, [CanBeNull] VLoadType loadType,
             [NotNull] string connectionString, [NotNull] string name,
             [CanBeNull] Location loc, double variableValue, VariableCondition variableCondition,
-            [CanBeNull] Variable variable, [NotNull] StrGuid guid)
+            [CanBeNull] Variable variable, StrGuid guid)
             : base(name, TableName, connectionString, guid)
         {
             ID = pID;
@@ -88,11 +88,8 @@ namespace Database.Tables.Houses {
         [UsedImplicitly]
         [CanBeNull]
         public TimeBasedProfile Profile => _profile;
-        [CanBeNull]
         public IAssignableDevice Device => _device;
-        [CanBeNull]
         public VLoadType LoadType => _loadType;
-        [CanBeNull]
         public Location Location => _location;
 
         public override string Name {
@@ -111,16 +108,13 @@ namespace Database.Tables.Houses {
         }
 
         [UsedImplicitly]
-        [CanBeNull]
         public TimeLimit TimeLimit { get; }
 
-        [CanBeNull]
         public TimeBasedProfile TimeProfile => _profile;
 
         [UsedImplicitly]
         public decimal TimeStandardDeviation => (decimal) _timeStandardDeviation;
 
-        [CanBeNull]
         public Variable Variable => _variable;
 
         public VariableCondition VariableCondition => _variableCondition;
@@ -195,7 +189,7 @@ namespace Database.Tables.Houses {
                 variableValue, tc, variable, guid);
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             if (_device == null) {
                 message = "Device not found";
@@ -223,7 +217,7 @@ namespace Database.Tables.Houses {
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             if (TimeLimit != null) {
                 cmd.AddParameter("TimeLimitID", "@TimeLimitID", TimeLimit.IntID);

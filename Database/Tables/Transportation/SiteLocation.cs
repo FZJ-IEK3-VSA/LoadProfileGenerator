@@ -19,7 +19,7 @@ namespace Database.Tables.Transportation {
         [CanBeNull] private readonly Location _location;
 
         public SiteLocation([CanBeNull]int? pID, [CanBeNull] Location location, int siteID, [NotNull] string connectionString,
-            [NotNull] string name, [NotNull] StrGuid guid) : base(name, TableName, connectionString, guid)
+            [NotNull] string name, StrGuid guid) : base(name, TableName, connectionString, guid)
         {
             TypeDescription = "Site Location";
             ID = pID;
@@ -60,7 +60,7 @@ namespace Database.Tables.Transportation {
             return locdev;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             if (_location == null) {
                 message = "Location not found";
@@ -77,7 +77,7 @@ namespace Database.Tables.Transportation {
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("SiteID", SiteID);
             if(_location != null) {

@@ -95,7 +95,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
             Close(false);
         }
 
-        public override bool Equals([CanBeNull] object obj)
+        public override bool Equals(object obj)
         {
             var presenter = obj as EnergyStoragePresenter;
             return presenter?.ThisStorage.Equals(_thisStorage) == true;

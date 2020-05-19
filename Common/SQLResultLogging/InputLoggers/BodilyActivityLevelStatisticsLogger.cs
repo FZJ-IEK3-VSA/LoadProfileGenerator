@@ -17,7 +17,6 @@ namespace Common.SQLResultLogging.InputLoggers
         {}
         public BodilyActivityLevelStatistics([NotNull] HouseholdKey householdKey) => HouseholdKey = householdKey;
 
-        [NotNull]
         public HouseholdKey HouseholdKey { get; set; }
         [NotNull]
         public Dictionary<BodilyActivityLevel, List<double>> ActivityLevels { get; set; } = new Dictionary<BodilyActivityLevel, List<double>>();

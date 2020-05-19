@@ -64,9 +64,9 @@ namespace CalculationEngine.OnlineLogging {
     }
 
     public interface IOnlineLoggingData: IDisposable {
-        void AddActionEntry([NotNull] TimeStep timeStep, [NotNull] StrGuid personGuid, [NotNull] string personName, bool isSick,
+        void AddActionEntry([NotNull] TimeStep timeStep, StrGuid personGuid, [NotNull] string personName, bool isSick,
                             [NotNull] string affordanceName,
-                            [NotNull] StrGuid affordanceGuid, [NotNull] HouseholdKey householdKey,
+                            StrGuid affordanceGuid, [NotNull] HouseholdKey householdKey,
                             [NotNull] string affordanceCategory, BodilyActivityLevel bodilyActivityLevel);
 
         void AddColumnEntry([NotNull] ColumnEntry ce);
@@ -149,10 +149,9 @@ namespace CalculationEngine.OnlineLogging {
             }
         }
 
-        public void AddActionEntry([NotNull] TimeStep timeStep, [NotNull] StrGuid personGuid, [NotNull] string personName,
-                                   bool isSick, [NotNull] string affordanceName, [NotNull] StrGuid affordanceGuid,
-                                   [NotNull] HouseholdKey householdKey, [NotNull]
-                                   string affordanceCategory, BodilyActivityLevel bodilyActivityLevel)
+        public void AddActionEntry(TimeStep timeStep, StrGuid personGuid, string personName,
+                                   bool isSick, string affordanceName, StrGuid affordanceGuid,
+                                   HouseholdKey householdKey, string affordanceCategory, BodilyActivityLevel bodilyActivityLevel)
         {
             if (!timeStep.DisplayThisStep) {
                 return;
@@ -181,16 +180,16 @@ namespace CalculationEngine.OnlineLogging {
             _locationEntries.Add(le);
         }
 
-        public void AddTransportationEvent([NotNull] HouseholdKey householdkey,
-                                           [NotNull] string person, [NotNull] TimeStep timestep,
-                                           [NotNull] string srcSite,
-                                           [NotNull] string dstSite,
-                                           [NotNull] string route,
-                                           [NotNull] string transportationDevice,
+        public void AddTransportationEvent(HouseholdKey householdkey,
+                                           string person, TimeStep timestep,
+                                           string srcSite,
+                                           string dstSite,
+                                           string route,
+                                           string transportationDevice,
                                            int transportationDuration,
                                            int affordanceDuration,
-                                           [NotNull] string affordanceName,
-                                           [NotNull] [ItemNotNull] List<CalcTravelRoute.CalcTravelDeviceUseEvent> travelDeviceUseEvents
+                                           string affordanceName,
+                                           List<CalcTravelRoute.CalcTravelDeviceUseEvent> travelDeviceUseEvents
             )
         {
             if (!_calcParameters.Options.Contains(CalcOption.TransportationStatistics)) {
@@ -230,7 +229,7 @@ namespace CalculationEngine.OnlineLogging {
             }
         }
 
-        public void SaveIfNeeded([NotNull] TimeStep timestep)
+        public void SaveIfNeeded(TimeStep timestep)
         {
             if (timestep.InternalStep % 1000 != 0) {
                 return;
@@ -374,10 +373,8 @@ namespace CalculationEngine.OnlineLogging {
             _energyStorageLogfile?.Dispose();
         }
 
-        [CanBeNull]
         public DesiresLogFile DesiresLogfile => _desiresLogfile;
 
-        [CanBeNull]
         public EnergyStorageLogfile EnergyStorageLogfile => _energyStorageLogfile;
 
 
@@ -399,7 +396,6 @@ namespace CalculationEngine.OnlineLogging {
         //public HashSet<string> HouseholdKeys => _householdKeys;
 
         //[CanBeNull]public LocationsLogFile LocationsLogFile { get; private set; }
-        [CanBeNull]
         public IThoughtsLogFile ThoughtsLogFile1 => _thoughtsLogFile;
     }
 }

@@ -15,7 +15,7 @@ namespace Database.Tables.BasicHouseholds {
         public const string TableName = "tblDeviceActionGroups";
         [NotNull] private string _description;
 
-        public DeviceActionGroup([NotNull] string pName, [NotNull] string connectionString, [NotNull] string description, [NotNull] StrGuid guid, [CanBeNull]int? pID = null)
+        public DeviceActionGroup([NotNull] string pName, [NotNull] string connectionString, [NotNull] string description, StrGuid guid, [CanBeNull]int? pID = null)
             : base(pName, pID, TableName, connectionString, guid) {
             _description = description;
             TypeDescription = "Device Action Group";
@@ -30,8 +30,8 @@ namespace Database.Tables.BasicHouseholds {
 
         public AssignableDeviceType AssignableDeviceType => AssignableDeviceType.DeviceActionGroup;
 
-        public List<Tuple<VLoadType, double>> CalculateAverageEnergyUse([CanBeNull] VLoadType dstLoadType,
-            [CanBeNull][ItemNotNull] ObservableCollection<DeviceAction> allActions, [CanBeNull] TimeBasedProfile timeProfile, double multiplier,
+        public List<Tuple<VLoadType, double>> CalculateAverageEnergyUse(VLoadType dstLoadType,
+            ObservableCollection<DeviceAction> allActions, TimeBasedProfile timeProfile, double multiplier,
             double probability) {
             // time profile is not needed here
             var actions = GetDeviceActions(allActions);
@@ -128,14 +128,11 @@ namespace Database.Tables.BasicHouseholds {
             return da;
         }
 
-        [NotNull]
-        public override DBBase ImportFromGenericItem([NotNull] DBBase toImport, [NotNull] Simulator dstSim)
+        public override DBBase ImportFromGenericItem(DBBase toImport, Simulator dstSim)
             => ImportFromItem((DeviceActionGroup)toImport,dstSim);
 
-        [ItemNotNull]
-        [NotNull]
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        public override List<UsedIn> CalculateUsedIns([NotNull] Simulator sim) {
+        public override List<UsedIn> CalculateUsedIns(Simulator sim) {
             var used = new List<UsedIn>();
             foreach (var deviceAction in sim.DeviceActions.It) {
                 if (deviceAction.DeviceActionGroup == this) {
@@ -189,7 +186,7 @@ namespace Database.Tables.BasicHouseholds {
             return dc;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message) {
+        protected override bool IsItemLoadedCorrectly(out string message) {
             message = "";
             return true;
         }
@@ -201,7 +198,7 @@ namespace Database.Tables.BasicHouseholds {
             result.Sort();
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd) {
+        protected override void SetSqlParameters(Command cmd) {
             cmd.AddParameter("Name", "@myname", Name);
             cmd.AddParameter("Description", _description);
         }

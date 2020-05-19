@@ -28,7 +28,7 @@ namespace ChartCreator2.PDF {
         [JetBrains.Annotations.NotNull]
         protected string SectionTitle { get; set; }
 
-        public void MakePage([JetBrains.Annotations.NotNull] Document doc, [JetBrains.Annotations.NotNull] string dstdir, bool requireAll, [ItemNotNull] [JetBrains.Annotations.NotNull] List<string> pngFiles, [JetBrains.Annotations.NotNull] Section tocSection) {
+        public void MakePage(Document doc, string dstdir, bool requireAll, List<string> pngFiles, Section tocSection) {
             if (MyTargetDirectory == TargetDirectory.Undefined) {
                 throw new LPGException("Undefined Target Directory in " + SectionTitle);
             }

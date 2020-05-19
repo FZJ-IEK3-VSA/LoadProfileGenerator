@@ -15,7 +15,7 @@ namespace Database.Tables.ModularHouseholds {
 
         public class JsonModularHouseholdPerson : IGuidObject
         {
-            public JsonModularHouseholdPerson([NotNull] JsonReference person, [CanBeNull] JsonReference traitTag, [NotNull] StrGuid guid)
+            public JsonModularHouseholdPerson([NotNull] JsonReference person, [CanBeNull] JsonReference traitTag, StrGuid guid)
             {
                 Person = person;
                 TraitTag = traitTag;
@@ -35,11 +35,9 @@ namespace Database.Tables.ModularHouseholds {
 
             [CanBeNull]
             public JsonReference TraitTag { get; set; }
-            [NotNull]
             public StrGuid Guid { get; set; }
 
         }
-        [NotNull]
         public JsonModularHouseholdPerson GetJson()
         {
             var p = new JsonModularHouseholdPerson(Person.GetJsonReference(), TraitTag?.GetJsonReference(), Guid);
@@ -54,7 +52,7 @@ namespace Database.Tables.ModularHouseholds {
         [CanBeNull] private  Person _person;
 
         public ModularHouseholdPerson([CanBeNull]int? pID, [CanBeNull]int? modularHouseholdID, [NotNull] string name, [NotNull] string connectionString,
-            [CanBeNull] Person person,[CanBeNull] TraitTag traitTag, [NotNull] StrGuid guid ) : base(name, TableName, connectionString,
+            [CanBeNull] Person person,[CanBeNull] TraitTag traitTag, StrGuid guid ) : base(name, TableName, connectionString,
             guid) {
             _person = person;
             ID = pID;
@@ -110,7 +108,7 @@ namespace Database.Tables.ModularHouseholds {
             return chht;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message) {
+        protected override bool IsItemLoadedCorrectly(out string message) {
             if (_person == null) {
                 message = "Person not found";
                 return false;
@@ -139,7 +137,7 @@ namespace Database.Tables.ModularHouseholds {
             }
         }
 
-        public void SynchronizeDataFromJson([NotNull] JsonModularHouseholdPerson json, [NotNull] Simulator sim)
+        public void SynchronizeDataFromJson(JsonModularHouseholdPerson json, Simulator sim)
         {
            _person = sim.Persons.FindByGuid(json.Person.Guid);
             if (_person == null)

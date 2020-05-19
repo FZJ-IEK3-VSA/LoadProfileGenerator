@@ -81,7 +81,7 @@ namespace CalculationController.Integrity {
             }
 
         }
-        protected override void Run([NotNull] Simulator sim) {
+        protected override void Run(Simulator sim) {
             foreach (var houseType in sim.HouseTypes.It) {
                 CheckStandbyDevicesHouses(houseType);
                 CheckTrafos(houseType);

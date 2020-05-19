@@ -108,7 +108,7 @@ namespace LoadProfileGenerator.Presenters.Households {
             });
         }
 
-        public override bool Equals([CanBeNull] object obj)
+        public override bool Equals(object obj)
         {
             var presenter = obj as PersonPresenter;
             return presenter?.ThisPerson.Equals(_person) == true;

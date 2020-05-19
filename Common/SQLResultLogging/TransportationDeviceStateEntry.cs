@@ -15,10 +15,9 @@ namespace Common.SQLResultLogging
     }
     public class TransportationDeviceStateEntry:IHouseholdKey
     {
-        [NotNull]
         public HouseholdKey HouseholdKey { get; set; }
         public TransportationDeviceStateEntry([NotNull]string transportationDeviceName,
-                                              [NotNull] StrGuid transportationDeviceGuid, [NotNull] TimeStep timeStep,
+                                              StrGuid transportationDeviceGuid, [NotNull] TimeStep timeStep,
                                               TransportationDeviceState transportationDeviceStateEnum,
                                               double currentSOC, [NotNull] HouseholdKey householdKey,
                                               double currentRange, [CanBeNull] string currentSite,
@@ -48,7 +47,6 @@ namespace Common.SQLResultLogging
 
         [NotNull]
         public string TransportationDeviceName { get; set; }
-        [NotNull]
         public StrGuid TransportationDeviceGuid { get; set; }
         [NotNull]
         public TimeStep TimeStep { get; set; }

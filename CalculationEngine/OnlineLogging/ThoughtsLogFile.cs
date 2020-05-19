@@ -60,7 +60,7 @@ namespace CalculationEngine.OnlineLogging {
             _calcParameters = calcParameters;
         }
 
-        public void WriteEntry([NotNull] ThoughtEntry entry, [NotNull] HouseholdKey householdKey) {
+        public void WriteEntry(ThoughtEntry entry, HouseholdKey householdKey) {
             if (entry.Timestep.ExternalStep < 0 && !_calcParameters.ShowSettlingPeriodTime) {
                 return;
             }

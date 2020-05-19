@@ -43,7 +43,7 @@ namespace Database.Tables.BasicElements {
         private double _wednesday;
 
         public HolidayProbabilities(int holidayID,[CanBeNull] int? pID, DayOfWeek dayOfWeek, double monday, double tuesday,
-            double wednesday, double thursday, double friday, [NotNull] string connectionString, [NotNull] StrGuid guid)
+            double wednesday, double thursday, double friday, [NotNull] string connectionString, StrGuid guid)
             : base(dayOfWeek.ToString(), pID, TableName, connectionString, guid)
         {
             HolidayID = holidayID;
@@ -155,7 +155,7 @@ namespace Database.Tables.BasicElements {
                 connectionString, guid);
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             message = "";
             return true;
@@ -168,7 +168,7 @@ namespace Database.Tables.BasicElements {
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("HolidayID", HolidayID);
             cmd.AddParameter("DayOfWeek", _dayOfWeek);

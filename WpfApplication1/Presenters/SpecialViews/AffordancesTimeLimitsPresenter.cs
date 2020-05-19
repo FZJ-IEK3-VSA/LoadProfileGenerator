@@ -57,7 +57,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             _applicationPresenter.CloseTab(this, removeLast);
         }
 
-        public override bool Equals([CanBeNull] object obj)
+        public override bool Equals(object obj)
         {
             return obj is AffordancesTimeLimitsPresenter presenter && presenter.HeaderString.Equals(HeaderString);
         }

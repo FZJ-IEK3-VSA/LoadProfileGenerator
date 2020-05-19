@@ -40,7 +40,7 @@ namespace LoadProfileGenerator.Views.Transportation {
             Close(false);
         }
 
-        public override bool Equals([CanBeNull] object obj)
+        public override bool Equals(object obj)
         {
             TransportationDevicePresenter presenter = obj as TransportationDevicePresenter;
             return presenter?.ThisTransportationDevice.Equals(_transportationDevice) == true;

@@ -6,7 +6,7 @@ using JetBrains.Annotations;
 
 namespace Common.CalcDto {
     public class CalcSiteDto : IHouseholdKey {
-        public CalcSiteDto([NotNull] string name, int id, [NotNull] StrGuid guid, [NotNull] HouseholdKey householdKey)
+        public CalcSiteDto([NotNull] string name, int id, StrGuid guid, [NotNull] HouseholdKey householdKey)
         {
             Name = name;
             ID = id;
@@ -18,13 +18,11 @@ namespace Common.CalcDto {
         [ItemNotNull]
         public List<CalcChargingStationDto> ChargingStations { get; } = new List<CalcChargingStationDto>();
 
-        [NotNull]
         public StrGuid Guid { get; }
 
         public int ID { get; }
 
         [NotNull]
-        [ItemNotNull]
         public List<StrGuid> LocationGuid { get; } = new List<StrGuid>();
 
         [NotNull]
@@ -34,7 +32,6 @@ namespace Common.CalcDto {
         [NotNull]
         public string Name { get; }
 
-        [NotNull]
         public HouseholdKey HouseholdKey { get; }
 
         public void AddChargingStation([NotNull] CalcLoadTypeDto gridLoadType, [NotNull] CalcTransportationDeviceCategoryDto cat,

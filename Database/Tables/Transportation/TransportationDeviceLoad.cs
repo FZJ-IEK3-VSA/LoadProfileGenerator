@@ -49,7 +49,7 @@ namespace Database.Tables.Transportation {
 
         public TransportationDeviceLoad([NotNull] string name, [CanBeNull] int? transportationDeviceID, double maxPower,
             [CanBeNull] VLoadType loadType,
-             [NotNull] string connectionString,[NotNull] StrGuid guid, [CanBeNull] int? id = null)
+             [NotNull] string connectionString,StrGuid guid, [CanBeNull] int? id = null)
             : base(name, TableName, connectionString, guid) {
             _transportationDeviceID = transportationDeviceID;
             _maxPower = maxPower;
@@ -84,7 +84,7 @@ namespace Database.Tables.Transportation {
             return tup;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message) {
+        protected override bool IsItemLoadedCorrectly(out string message) {
             if (_loadType == null) {
                 message = "Load type not found";
                 return false;
@@ -99,7 +99,7 @@ namespace Database.Tables.Transportation {
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd) {
+        protected override void SetSqlParameters(Command cmd) {
             if (_transportationDeviceID != null) {
                 cmd.AddParameter("TransportationDeviceID", _transportationDeviceID);
             }

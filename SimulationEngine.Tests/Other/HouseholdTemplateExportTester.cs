@@ -1,16 +1,19 @@
 ﻿using Automation;
 using Common;
+using Common.Tests;
 using Database;
 using Database.Tables.ModularHouseholds;
 using Database.Tests;
 using FluentAssertions;
+using JetBrains.Annotations;
 using SimulationEngineLib.Other;
 using Xunit;
+using Xunit.Abstractions;
 
 
 namespace SimulationEngine.Tests.Other
 {
-    public class HouseholdTemplateExportTester
+    public class HouseholdTemplateExportTester : UnitTestBaseClass
     {
         [Fact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
@@ -101,6 +104,10 @@ namespace SimulationEngine.Tests.Other
                     hhcount.Should().Be(sim2.ModularHouseholds.It.Count);
                 }
             }
+        }
+
+        public HouseholdTemplateExportTester([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

@@ -49,7 +49,7 @@ namespace Database.Tables.ModularHouseholds {
 
             }
 
-            public JsonDto(JsonReference desire, decimal decayTime, HealthStatus sicknessdesire, decimal threshold, decimal weight, int minAge, int maxAge, PermittedGender gender, [NotNull] StrGuid guid)
+            public JsonDto(JsonReference desire, decimal decayTime, HealthStatus sicknessdesire, decimal threshold, decimal weight, int minAge, int maxAge, PermittedGender gender, StrGuid guid)
             {
                 Desire = desire;
                 DecayTime = decayTime;
@@ -92,7 +92,7 @@ namespace Database.Tables.ModularHouseholds {
         public HHTDesire([CanBeNull]int? pID, [CanBeNull] int? householdTraitID, decimal decayTime, [CanBeNull] Desire desire,
             HealthStatus sicknessdesire,
             decimal threshold, decimal weight, [NotNull] string connectionString, [NotNull] string name, int minAge, int maxAge,
-            PermittedGender gender, [NotNull] StrGuid guid) : base(name, TableName, connectionString, guid)
+            PermittedGender gender, StrGuid guid) : base(name, TableName, connectionString, guid)
         {
             ID = pID;
             _decayTime = decayTime;
@@ -219,7 +219,7 @@ namespace Database.Tables.ModularHouseholds {
             return 0;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             if (_desire == null) {
                 message = "Desire not found";
@@ -249,7 +249,7 @@ namespace Database.Tables.ModularHouseholds {
             return "(no desire)";
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             if (_desire != null) {
                 cmd.AddParameter("DesireID", Desire.IntID);

@@ -1,6 +1,5 @@
 ﻿using Automation.ResultFiles;
 using Common;
-using JetBrains.Annotations;
 
 namespace CalculationEngine.OnlineLogging {
     public class ConsoleThoughts : IThoughtsLogFile {
@@ -8,7 +7,7 @@ namespace CalculationEngine.OnlineLogging {
             // needs to be here for the interface
         }
 
-        public void WriteEntry([NotNull] ThoughtEntry entry, [NotNull] HouseholdKey householdKey) {
+        public void WriteEntry(ThoughtEntry entry, HouseholdKey householdKey) {
             Logger.Info(entry.Timestep + ":" + householdKey + ":" + entry.Person + ":" + entry.Thought);
         }
     }

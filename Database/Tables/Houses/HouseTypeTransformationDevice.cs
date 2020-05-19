@@ -41,7 +41,7 @@ namespace Database.Tables.Houses {
 
         public HouseTypeTransformationDevice([CanBeNull]int? pID, int houseID, [CanBeNull] TransformationDevice td,
             [NotNull] string connectionString,
-            [NotNull] string tdName, [NotNull] StrGuid guid) : base(tdName, TableName, connectionString, guid)
+            [NotNull] string tdName, StrGuid guid) : base(tdName, TableName, connectionString, guid)
         {
             ID = pID;
             HouseID = houseID;
@@ -82,7 +82,7 @@ namespace Database.Tables.Houses {
             return new HouseTypeTransformationDevice(id, houseID, td, connectionString, tdName, guid);
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             if (_transformationDevice == null) {
                 message = "Transformation device not found";
@@ -110,7 +110,7 @@ namespace Database.Tables.Houses {
             }
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("HouseID", "@HouseID", HouseID);
             if (_transformationDevice != null) {

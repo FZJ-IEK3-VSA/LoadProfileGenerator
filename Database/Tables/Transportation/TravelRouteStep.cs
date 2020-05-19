@@ -19,7 +19,7 @@ namespace Database.Tables.Transportation {
         private readonly int _stepNumber;
 
         public TravelRouteStep([CanBeNull]int? pID, int routeID, [NotNull] string connectionString, [NotNull] string name,
-            [CanBeNull] TransportationDeviceCategory deviceCategory, double distance, int stepNumber, [NotNull] StrGuid guid, [CanBeNull] string stepKey) : base(name, TableName,
+            [CanBeNull] TransportationDeviceCategory deviceCategory, double distance, int stepNumber, StrGuid guid, [CanBeNull] string stepKey) : base(name, TableName,
             connectionString, guid)
         {
             StepKey = stepKey;
@@ -78,7 +78,7 @@ namespace Database.Tables.Transportation {
             return step;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             if (_deviceCategory == null) {
                 message = "Transportation Device not found";
@@ -95,7 +95,7 @@ namespace Database.Tables.Transportation {
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("TravelRouteID", _routeID);
             if (_deviceCategory != null) {

@@ -12,7 +12,6 @@ namespace Common.CalcDto {
         //OefcDeviceType DeviceType { get; }
         //string DeviceCategoryName { get; }
         //string AdditionalName { get; }
-        [NotNull]
         StrGuid Guid { get; }
         //int LocationID { get; }
         //string LocationGuid { get; }

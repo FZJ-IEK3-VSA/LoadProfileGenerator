@@ -47,7 +47,7 @@ namespace Database.Tables.ModularHouseholds {
         [CanBeNull] private Location _location;
 
         public HHTLocation([CanBeNull]int? pID, [CanBeNull] Location ploc, [CanBeNull] int? householdTraitID, [NotNull] string name,
-            [NotNull] string connectionString, [NotNull] StrGuid guid)
+            [NotNull] string connectionString, StrGuid guid)
             : base(name, TableName, connectionString, guid) {
             TypeDescription = "Household Trait Location";
             ID = pID;
@@ -106,7 +106,7 @@ namespace Database.Tables.ModularHouseholds {
             }
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message) {
+        protected override bool IsItemLoadedCorrectly(out string message) {
             if (_location == null) {
                 message = "Location is missing";
                 return false;
@@ -181,7 +181,7 @@ namespace Database.Tables.ModularHouseholds {
         }
 
         public class JsonDto :IGuidObject {
-            public JsonDto(List<HHTAffordance.JsonDto> affordances, JsonReference location, [NotNull] StrGuid guid)
+            public JsonDto(List<HHTAffordance.JsonDto> affordances, JsonReference location, StrGuid guid)
             {
                 Affordances = affordances;
                 Location = location;

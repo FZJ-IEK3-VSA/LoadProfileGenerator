@@ -14,7 +14,7 @@ namespace Database.Tables.ModularHouseholds {
         [CanBeNull]
         private string _classification;
 
-        public HouseholdTag([NotNull] string pName, [NotNull] string connectionString, [CanBeNull] string classification,[NotNull] StrGuid guid, [CanBeNull] int? pID = null)
+        public HouseholdTag([NotNull] string pName, [NotNull] string connectionString, [CanBeNull] string classification,StrGuid guid, [CanBeNull] int? pID = null)
             : base(pName, TableName, connectionString, guid)
         {
             ID = pID;
@@ -46,12 +46,10 @@ namespace Database.Tables.ModularHouseholds {
         public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new HouseholdTag(
             FindNewName(isNameTaken, "New Template Tag "), connectionString, string.Empty, System.Guid.NewGuid().ToStrGuid());
 
-        [NotNull]
-        public override DBBase ImportFromGenericItem([NotNull] DBBase toImport, [NotNull] Simulator dstSim)
+        public override DBBase ImportFromGenericItem(DBBase toImport, Simulator dstSim)
             => ImportFromItem((HouseholdTag)toImport,dstSim);
 
-        [NotNull]
-        public override List<UsedIn> CalculateUsedIns([NotNull] Simulator sim)
+        public override List<UsedIn> CalculateUsedIns(Simulator sim)
         {
             var used = new List<UsedIn>();
 
@@ -76,7 +74,7 @@ namespace Database.Tables.ModularHouseholds {
             return tt;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             message = "";
             return true;
@@ -89,7 +87,7 @@ namespace Database.Tables.ModularHouseholds {
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("Name", Name);
             if(_classification != null) {

@@ -41,7 +41,7 @@ namespace Database.Tables.Houses {
         [CanBeNull] private readonly EnergyStorage _energyStorage;
 
         public HouseTypeEnergyStorage([CanBeNull]int? pID, [NotNull] string name, int houseID, [CanBeNull] EnergyStorage es,
-            [NotNull] string connectionString, [NotNull] StrGuid guid)
+            [NotNull] string connectionString, StrGuid guid)
             : base(name, TableName, connectionString, guid)
         {
             ID = pID;
@@ -74,7 +74,7 @@ namespace Database.Tables.Houses {
             return new HouseTypeEnergyStorage(id, name, houseID, es, connectionString, guid);
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             if (_energyStorage == null) {
                 message = "Energy storage not found";
@@ -109,7 +109,7 @@ namespace Database.Tables.Houses {
             }
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("HouseID", "@HouseID", HouseID);
             if (_energyStorage != null) {

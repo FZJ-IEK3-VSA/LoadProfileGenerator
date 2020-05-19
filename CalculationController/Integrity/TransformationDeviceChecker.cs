@@ -2,7 +2,6 @@
 using Common;
 using Database;
 using Database.Tables.Houses;
-using JetBrains.Annotations;
 
 namespace CalculationController.Integrity {
     internal class TransformationDeviceChecker : BasicChecker {
@@ -10,7 +9,7 @@ namespace CalculationController.Integrity {
             : base("Transformation Devices", performCleanupChecks) {
         }
 
-        protected override void Run([NotNull] Simulator sim) {
+        protected override void Run(Simulator sim) {
             foreach (var device in sim.TransformationDevices.It) {
                 foreach (var condition in device.Conditions) {
                     if (condition.Variable == null) {

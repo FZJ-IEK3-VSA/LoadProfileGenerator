@@ -9,7 +9,6 @@ using JetBrains.Annotations;
 
 namespace Database.Tables.ModularHouseholds {
     public class HHTemplateVacation : DBBase, IJSonSubElement<JsonReference> {
-        [NotNull]
         public StrGuid RelevantGuid => Vacation.Guid;
         public const string TableName = "tblHHTemplateVacations";
         private readonly int _hhTemplateID;
@@ -17,7 +16,7 @@ namespace Database.Tables.ModularHouseholds {
         [CanBeNull] private readonly Vacation _vacation;
 
         public HHTemplateVacation([CanBeNull]int? pID, [CanBeNull] Vacation vacation, int hhTemplateID, [NotNull] string name,
-            [NotNull] string connectionString, [NotNull] StrGuid guid)
+            [NotNull] string connectionString, StrGuid guid)
             : base(name, TableName, connectionString, guid) {
             ID = pID;
             _vacation = vacation;
@@ -46,7 +45,7 @@ namespace Database.Tables.ModularHouseholds {
             return hhp;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message) {
+        protected override bool IsItemLoadedCorrectly(out string message) {
             if (_vacation == null) {
                 message = "Vacation is missing";
                 return false;
@@ -61,7 +60,7 @@ namespace Database.Tables.ModularHouseholds {
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd) {
+        protected override void SetSqlParameters(Command cmd) {
             if (_vacation != null) {
                 cmd.AddParameter("VacationID", _vacation.IntID);
             }

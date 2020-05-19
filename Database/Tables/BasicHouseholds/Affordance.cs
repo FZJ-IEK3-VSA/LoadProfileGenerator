@@ -92,7 +92,7 @@ namespace Database.Tables.BasicHouseholds {
             [CanBeNull] TimeLimit timeLimitLimit, [CanBeNull] string description, [NotNull] string connectionString,
             bool isInterruptable,
             bool isInterrupting, int minimumAge, int maximumAge, bool randomResults,
-            ActionAfterInterruption actionAfterInterruption, bool requireAllDesires, [NotNull] StrGuid guid,
+            ActionAfterInterruption actionAfterInterruption, bool requireAllDesires, StrGuid guid,
             BodilyActivityLevel bodilyActivityLevel) : base(pName, TableName,
             connectionString, guid)
         {
@@ -650,9 +650,7 @@ namespace Database.Tables.BasicHouseholds {
             _requiredVariables.Remove(variableRequirement);
         }
 
-        [ItemNotNull]
-        [NotNull]
-        public override List<UsedIn> CalculateUsedIns([NotNull] Simulator sim)
+        public override List<UsedIn> CalculateUsedIns(Simulator sim)
         {
             var usedIns = new List<UsedIn>();
             foreach (var trait in sim.HouseholdTraits.It) {
@@ -966,11 +964,10 @@ namespace Database.Tables.BasicHouseholds {
         }
 
         public override string ToString() => Name;
-        [NotNull]
-        public override DBBase ImportFromGenericItem([NotNull] DBBase toImport,  [NotNull] Simulator dstSim)
+        public override DBBase ImportFromGenericItem(DBBase toImport,  Simulator dstSim)
             => ImportFromItem((Affordance) toImport,dstSim);
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             message = "";
             return true;
@@ -978,7 +975,7 @@ namespace Database.Tables.BasicHouseholds {
 
         [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalse")]
         [SuppressMessage("ReSharper", "HeuristicUnreachableCode")]
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             if (Name == null) {
                 Name = "(no name)";

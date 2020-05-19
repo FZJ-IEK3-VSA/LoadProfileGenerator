@@ -44,7 +44,7 @@ namespace Database.Tables {
         private CalcOption _option;
         private bool _settingValue;
 
-        public SingleOption(CalcOption option, bool settingValue, [NotNull] string connectionString, [NotNull] StrGuid guid,
+        public SingleOption(CalcOption option, bool settingValue, [NotNull] string connectionString, StrGuid guid,
                             [CanBeNull] int? pID = null)
             : base(option.ToString(), GeneralConfig.TableName, connectionString, guid)
         {
@@ -78,7 +78,7 @@ namespace Database.Tables {
             }
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             message = "";
             return true;
@@ -135,7 +135,7 @@ namespace Database.Tables {
                             con.Open();
                             cmd.AddParameter("myval", _settingValue);
                             cmd.AddParameter("myid", ID);
-                            cmd.AddParameter("guid", Guid.Value);
+                            cmd.AddParameter("guid", Guid.StrVal);
                             cmd.ExecuteNonQuery("UPDATE " + TableName + " SET Value = @myval, Guid=@guid WHERE ID = @myid");
                             NeedsUpdate = false;
                         }
@@ -148,7 +148,7 @@ namespace Database.Tables {
                     using (var cmd = new Command(con)) {
                         cmd.AddParameter("myval", _settingValue);
                         cmd.AddParameter("myid", (int) _option);
-                        cmd.AddParameter("guid", Guid.Value);
+                        cmd.AddParameter("guid", Guid.StrVal);
                         cmd.ExecuteNonQuery("INSERT INTO " + TableName + " (ID, Value, Guid) VALUES (@myid, @myval, @guid)");
                         ID = (int) _option;
                         NeedsUpdate = false;

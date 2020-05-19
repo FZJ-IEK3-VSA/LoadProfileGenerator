@@ -11,13 +11,11 @@ namespace Common.CalcDto {
         public CalcProfileDto CalcProfile { get; }
         [NotNull]
         public string LoadTypeName { get; }
-        [NotNull]
         public StrGuid LoadtypeGuid { get; }
         public double TimeStandardDeviation { get; }
         public double Multiplier { get; }
         [NotNull]
         public string CalclocationName { get; }
-        [NotNull]
         public StrGuid CalcLocationGuid { get; }
         /*[CanBeNull]
         public string VariableName { get; }
@@ -31,13 +29,13 @@ namespace Common.CalcDto {
         [ItemNotNull]
         [NotNull]
         public List<VariableRequirementDto> Requirements { get; }
-        public CalcAutoDevDto([NotNull]string name, [NotNull]CalcProfileDto calcProfile, [NotNull] string loadTypeName, [NotNull]StrGuid loadtypeGuid,
+        public CalcAutoDevDto([NotNull]string name, [NotNull]CalcProfileDto calcProfile, [NotNull] string loadTypeName, StrGuid loadtypeGuid,
                               [ItemNotNull] [NotNull] List<CalcDeviceLoadDto> loads, double timeStandardDeviation,
-                              [NotNull] StrGuid deviceCategoryGuid,
+                              StrGuid deviceCategoryGuid,
                               [NotNull] HouseholdKey householdKey, double multiplier,
-                              [NotNull] string calclocationName, [NotNull] StrGuid calcLocationGuid,
+                              [NotNull] string calclocationName, StrGuid calcLocationGuid,
                              //[CanBeNull] string variableName, double variableValue, VariableCondition variableCondition,
-                              [NotNull] string deviceCategoryFullPath, [NotNull] StrGuid guid, [NotNull]AvailabilityDataReferenceDto busyArr,
+                              [NotNull] string deviceCategoryFullPath, StrGuid guid, [NotNull]AvailabilityDataReferenceDto busyArr,
                               //string variableGuid,
                               [ItemNotNull] [NotNull]List<VariableRequirementDto> requirements,
                              [NotNull] string deviceCategoryName):

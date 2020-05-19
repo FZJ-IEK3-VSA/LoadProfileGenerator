@@ -271,7 +271,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
         }
 
         [SuppressMessage("ReSharper", "HeuristicUnreachableCode")]
-        protected override void PerformActualStep([NotNull] IStepParameters parameters)
+        protected override void PerformActualStep(IStepParameters parameters)
         {
             return;
 

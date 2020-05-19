@@ -8,9 +8,9 @@ namespace LoadProfileGenerator.Controls.Converters {
     public class PreciseNumberConverter : IValueConverter {
         #region IValueConverter Members
 
-        [CanBeNull]
-        public object Convert([CanBeNull] object value, [CanBeNull] Type targetType, [CanBeNull] object parameter,
-            [NotNull] CultureInfo culture) {
+        [NotNull]
+        public object Convert(object value, [CanBeNull] Type targetType, object parameter,
+                              [NotNull] CultureInfo culture) {
             string result;
             if (value is decimal d1) {
                 result = d1.ToString("0.000000", CultureInfo.CurrentCulture);
@@ -29,9 +29,9 @@ namespace LoadProfileGenerator.Controls.Converters {
             return result;
         }
 
-        [CanBeNull]
-        public object ConvertBack([CanBeNull] object value, [CanBeNull] Type targetType, [CanBeNull] object parameter,
-            [NotNull] CultureInfo culture) {
+        [NotNull]
+        public object ConvertBack(object value, [CanBeNull] Type targetType, object parameter,
+                                  [NotNull] CultureInfo culture) {
             if (value == null) {
                 return 0;
             }

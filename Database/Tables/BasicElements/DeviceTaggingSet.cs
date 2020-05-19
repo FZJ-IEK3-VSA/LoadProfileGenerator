@@ -45,7 +45,7 @@ namespace Database.Tables.BasicElements {
 
         public DeviceTaggingSet([NotNull] string name,
                                 [NotNull] string description,
-                                [NotNull] string connectionString, [NotNull] StrGuid guid,
+                                [NotNull] string connectionString, StrGuid guid,
                                 [CanBeNull]int? pID = null) : base(name,
             TableName, connectionString, guid)
         {
@@ -306,7 +306,7 @@ namespace Database.Tables.BasicElements {
             return false;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             message = "";
             return true;
@@ -410,7 +410,7 @@ namespace Database.Tables.BasicElements {
             }
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("Name", "@myname", Name);
             cmd.AddParameter("Description", Description);
@@ -437,12 +437,9 @@ namespace Database.Tables.BasicElements {
                 LoadTypes.Remove(loadType);
     }
 
-        [NotNull]
-        public override DBBase ImportFromGenericItem([NotNull] DBBase toImport, [NotNull] Simulator dstSim)
+        public override DBBase ImportFromGenericItem(DBBase toImport, Simulator dstSim)
             => ImportFromItem((DeviceTaggingSet)toImport, dstSim);
 
-        [ItemNotNull]
-        [NotNull]
-        public override List<UsedIn> CalculateUsedIns([NotNull] Simulator sim) => throw new NotImplementedException();
+        public override List<UsedIn> CalculateUsedIns(Simulator sim) => throw new NotImplementedException();
     }
 }

@@ -8,7 +8,6 @@ using JetBrains.Annotations;
 
 namespace Database.Tables.ModularHouseholds {
     public class HHTemplateTag : DBBase, IJSonSubElement<JsonReference> {
-        [NotNull]
         public StrGuid RelevantGuid => Tag.Guid;
         public const string TableName = "tblHHTemplateTag";
         private readonly int _hhTemplateID;
@@ -16,7 +15,7 @@ namespace Database.Tables.ModularHouseholds {
         [CanBeNull] private readonly HouseholdTag _householdTag;
 
         public HHTemplateTag([CanBeNull]int? pID, [CanBeNull] HouseholdTag householdTag, int hhTemplateID, [NotNull] string name,
-            [NotNull] string connectionString, [NotNull] StrGuid guid)
+            [NotNull] string connectionString, StrGuid guid)
             : base(name, TableName, connectionString, guid) {
             ID = pID;
             _householdTag = householdTag;
@@ -46,7 +45,7 @@ namespace Database.Tables.ModularHouseholds {
             return hhp;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message) {
+        protected override bool IsItemLoadedCorrectly(out string message) {
             if (_householdTag == null) {
                 message = "Household Tag is missing";
                 return false;
@@ -61,7 +60,7 @@ namespace Database.Tables.ModularHouseholds {
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd) {
+        protected override void SetSqlParameters(Command cmd) {
             if (_householdTag != null) {
                 cmd.AddParameter("TemplateTagID", _householdTag.IntID);
             }

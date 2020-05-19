@@ -136,7 +136,6 @@ namespace CalculationEngine.HouseholdElements {
         [NotNull]
         public Dictionary<CalcLoadType, BitArray> IsBusyForLoadType => _isBusyForLoadType;
 
-        [NotNull]
         public StrGuid DeviceCategoryGuid => _calcDeviceDto.DeviceCategoryGuid;
         [NotNull]
         [ItemNotNull]

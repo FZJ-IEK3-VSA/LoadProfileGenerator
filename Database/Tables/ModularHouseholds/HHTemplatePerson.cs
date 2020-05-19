@@ -19,7 +19,7 @@ namespace Database.Tables.ModularHouseholds {
         [CanBeNull] private  Person _person;
 
         public class JsonDto : IGuidObject {
-            public JsonDto([NotNull] StrGuid guid, [CanBeNull] JsonReference personReference,
+            public JsonDto(StrGuid guid, [CanBeNull] JsonReference personReference,
                            [CanBeNull] JsonReference livingPatternTraitTagReference, string name)
             {
                 Guid = guid;
@@ -37,7 +37,6 @@ namespace Database.Tables.ModularHouseholds {
             {
             }
 
-            [NotNull]
             public StrGuid Guid { get; set; }
             [CanBeNull]
             public JsonReference PersonReference { get; set; }
@@ -46,7 +45,7 @@ namespace Database.Tables.ModularHouseholds {
 
             public string Name { get; set; }
         }
-        public void SynchronizeDataFromJson([NotNull] JsonDto jtp, [NotNull] Simulator sim)
+        public void SynchronizeDataFromJson(JsonDto jtp, Simulator sim)
         {
 
             if (Person.Guid != jtp.PersonReference?.Guid) {
@@ -63,7 +62,6 @@ namespace Database.Tables.ModularHouseholds {
             Name = jtp.Name;
         }
 
-        [NotNull]
         public JsonDto GetJson()
         {
             JsonDto jtp = new JsonDto(Guid,  Person.GetJsonReference(), LivingPattern?.GetJsonReference(), Name) ;
@@ -71,7 +69,7 @@ namespace Database.Tables.ModularHouseholds {
         }
 
         public HHTemplatePerson([CanBeNull]int? pID, [CanBeNull] Person pPerson, int hhTemplateID, [NotNull] string name,
-            [NotNull] string connectionString,[CanBeNull] TraitTag livingPattern, [NotNull] StrGuid guid)
+            [NotNull] string connectionString,[CanBeNull] TraitTag livingPattern, StrGuid guid)
             : base(name, TableName, connectionString, guid) {
             ID = pID;
             _person = pPerson;
@@ -114,7 +112,7 @@ namespace Database.Tables.ModularHouseholds {
             return hhp;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message) {
+        protected override bool IsItemLoadedCorrectly(out string message) {
             if (_person == null) {
                 message = "Person is missing";
                 return false;
@@ -129,7 +127,7 @@ namespace Database.Tables.ModularHouseholds {
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd) {
+        protected override void SetSqlParameters(Command cmd) {
             if (_person != null) {
                 cmd.AddParameter("PersonID", _person.IntID);
             }
@@ -141,7 +139,6 @@ namespace Database.Tables.ModularHouseholds {
 
         public override string ToString() => Person.Name;
 
-        [NotNull]
         public StrGuid RelevantGuid => Guid;
 
     }

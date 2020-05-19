@@ -39,7 +39,7 @@ namespace CalculationController.DtoFactories
         }
 
         [NotNull]
-        public CalcVariableDto RegisterVariable([NotNull] Variable variable, [NotNull] string locationName, [NotNull] StrGuid locationGuid,
+        public CalcVariableDto RegisterVariable([NotNull] Variable variable, [NotNull] string locationName, StrGuid locationGuid,
                                                 [NotNull] HouseholdKey householdKey)
         {
             StrGuid variableGuid = Guid.NewGuid().ToStrGuid();
@@ -75,7 +75,7 @@ namespace CalculationController.DtoFactories
         }*/
         [NotNull]
         public CalcVariableDto RegisterVariableIfNotRegistered([NotNull] Variable variable, [NotNull] string locationName,
-                                                               [NotNull] StrGuid locationGuid,
+                                                               StrGuid locationGuid,
                                                                [NotNull] HouseholdKey householdKey)
         {
             string key = MakeKey(variable, locationName, householdKey);

@@ -14,7 +14,7 @@ namespace Database.Tables.Transportation {
         private readonly int _travelRouteSetID;
 
         public TravelRouteSetEntry([CanBeNull]int? pID, int travelRouteSetID, [NotNull] string connectionString, [NotNull] string name,
-            [CanBeNull] TravelRoute travelRoute, [NotNull] StrGuid guid)
+            [CanBeNull] TravelRoute travelRoute, StrGuid guid)
             : base(name, TableName, connectionString, guid)
         {
             TypeDescription = "Travel Route Step";
@@ -47,7 +47,7 @@ namespace Database.Tables.Transportation {
             return step;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             if (_travelRoute == null) {
                 message = "Travel Route not found";
@@ -64,7 +64,7 @@ namespace Database.Tables.Transportation {
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("TravelRouteSetID", _travelRouteSetID);
             //cmd.AddParameter("Name",Name);

@@ -2,32 +2,31 @@
 
 namespace Automation
 {
-    public class StrGuid : IEquatable<StrGuid>, IComparable<StrGuid> {
+    public struct StrGuid : IEquatable<StrGuid>, IComparable<StrGuid> {
         public int CompareTo(StrGuid? other)
         {
-            if (ReferenceEquals(this, other)) {
-                return 0;
-            }
-
-            if (ReferenceEquals(null, other)) {
+            if (!other.HasValue) {
                 return 1;
             }
 
-            return string.Compare(Value, other.Value, StringComparison.Ordinal);
+            return string.Compare(StrVal, other.Value.StrVal, StringComparison.Ordinal);
         }
 
         public bool Equals(StrGuid? other)
         {
-            if (ReferenceEquals(null, other)) {
+            if (!other.HasValue) {
                 return false;
             }
 
-            if (ReferenceEquals(this, other)) {
-                return true;
-            }
-
-            return Value == other.Value;
+            return StrVal == other.Value.StrVal;
         }
+
+        public bool Equals(StrGuid other)
+        {
+            return StrVal == other.StrVal;
+        }
+
+        public int CompareTo(StrGuid other) => throw new NotImplementedException();
 
         public override bool Equals(object? obj)
         {
@@ -35,11 +34,7 @@ namespace Automation
                 return false;
             }
 
-            if (ReferenceEquals(this, obj)) {
-                return true;
-            }
-
-            if (obj.GetType() != this.GetType()) {
+            if (obj.GetType() != GetType()) {
                 return false;
             }
 
@@ -47,12 +42,15 @@ namespace Automation
         }
 
         // ReSharper disable once NonReadonlyMemberInGetHashCode
-        public override int GetHashCode() => Value.GetHashCode();
+        public override int GetHashCode() => StrVal.GetHashCode();
 
-        public static bool operator ==(StrGuid? left, StrGuid? right) => Equals(left, right);
+        public static bool operator ==(StrGuid? left, StrGuid? right)
+        {
+            return Equals(left, right);
+        }
 
         public static bool operator !=(StrGuid? left, StrGuid? right) => !Equals(left, right);
-
+/*
         public StrGuid(string value)
         {
             Value = value;
@@ -68,8 +66,23 @@ namespace Automation
         {
             Value = string.Empty;
         }
-        public string Value { get; set; }
-        public static StrGuid Empty { get; set; } = new StrGuid("");
-        public override string ToString() => Value;
+        */
+        public string StrVal { get; set; }
+        public static StrGuid Empty { get; set; } = new StrGuid(){ StrVal =  ""};
+        public override string ToString() => StrVal;
+
+        public static StrGuid FromString(string guid)
+        {
+            var strguid = new StrGuid();
+            strguid.StrVal = guid;
+            return strguid;
+        }
+
+        public static StrGuid FromGuid(Guid myguid)
+        {
+            var strguid = new StrGuid();
+            strguid.StrVal = myguid.ToString();
+            return strguid;
+        }
     }
 }

@@ -71,7 +71,7 @@ namespace Common {
 
         #endregion
 
-        public virtual bool IsValid([NotNull] string filter)
+        public virtual bool IsValid(string filter)
         {
             if (filter == null) {
                 throw new LPGException("isvalid failed, s = null");

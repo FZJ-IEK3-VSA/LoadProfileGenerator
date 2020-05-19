@@ -60,7 +60,7 @@ namespace Database.Tables.Houses {
                              [CanBeNull] VLoadType loadType, double storageCapacity,
             double initialFill, double minimumStorageRate, double maximumStorageRate,
                              double minimumWithdrawRate,
-            double maximumWithdrawRate, [NotNull] string connectionString,[NotNull] StrGuid guid, [CanBeNull]int? pID = null)
+            double maximumWithdrawRate, [NotNull] string connectionString,StrGuid guid, [CanBeNull]int? pID = null)
             : base(pName, TableName, connectionString, guid)
         {
             ID = pID;
@@ -165,12 +165,10 @@ namespace Database.Tables.Houses {
                 maximumStorageRate, minimumWithdrawRate, maximumWithdrawRate, connectionString,guid, id);
         }
 
-        [NotNull]
-        public override DBBase ImportFromGenericItem([NotNull] DBBase toImport, [NotNull] Simulator dstSim)
+        public override DBBase ImportFromGenericItem(DBBase toImport, Simulator dstSim)
             => ImportFromItem((EnergyStorage)toImport, dstSim);
 
-        [NotNull]
-        public override List<UsedIn> CalculateUsedIns([NotNull] Simulator sim)
+        public override List<UsedIn> CalculateUsedIns(Simulator sim)
         {
             var usedIns = new List<UsedIn>();
             foreach (var type in sim.HouseTypes.It) {
@@ -238,7 +236,7 @@ namespace Database.Tables.Houses {
             return false;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             message = "";
             return true;
@@ -269,7 +267,7 @@ namespace Database.Tables.Houses {
             }
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("Name", "@myname", Name);
             if(_description !=null) {

@@ -84,7 +84,7 @@ namespace CalculationEngine.HouseholdElements {
                               int weight,
                               bool requireAllDesires,
                               [NotNull] string srcTrait,
-                              [NotNull] StrGuid guid,
+                              StrGuid guid,
                               [NotNull] CalcVariableRepository variableRepository,
                               [NotNull] [ItemNotNull] List<DeviceEnergyProfileTuple> energyprofiles,
                               [ItemNotNull] [NotNull] BitArray isBusy, BodilyActivityLevel bodilyActivityLevel,
@@ -130,24 +130,20 @@ namespace CalculationEngine.HouseholdElements {
         public static bool DoubleCheckBusyArray { get; set; }
 
         [NotNull]
-        [ItemNotNull]
         public override List<DeviceEnergyProfileTuple> Energyprofiles { get; }
 
-        [NotNull]
         public override string SourceTrait { get; }
 
         // public int PersonProfileDuration => _personProfile.StepValues.Count;
-        [NotNull]
-        [ItemNotNull]
         public override List<CalcSubAffordance> SubAffordances { get; }
 
         [NotNull]
         public override string TimeLimitName { get; }
 
-        public override void Activate([NotNull] TimeStep startTime,
-                                      [NotNull] string activatorName,
-                                      [NotNull] CalcLocation personSourceLocation,
-                                      [NotNull] out ICalcProfile personTimeProfile)
+        public override void Activate(TimeStep startTime,
+                                      string activatorName,
+                                      CalcLocation personSourceLocation,
+                                      out ICalcProfile personTimeProfile)
         {
             TimeStep timeLastDeviceEnds = startTime.GetAbsoluteStep(0);
 
@@ -228,7 +224,6 @@ namespace CalculationEngine.HouseholdElements {
             Energyprofiles.Add(calctup);
         }
 
-        [CanBeNull]
         public override string AreDeviceProfilesEmpty()
         {
             var areDeviceProfilesEmpty = Energyprofiles
@@ -254,11 +249,9 @@ namespace CalculationEngine.HouseholdElements {
 
         //public override ICalcProfile CollectPersonProfile() => _personProfile;
 
-        [NotNull]
-        [ItemNotNull]
-        public override List<CalcSubAffordance> CollectSubAffordances([NotNull] TimeStep time,
+        public override List<CalcSubAffordance> CollectSubAffordances(TimeStep time,
                                                                       bool onlyInterrupting,
-                                                                      [NotNull] CalcLocation srcLocation)
+                                                                      CalcLocation srcLocation)
         {
             if (SubAffordances.Count == 0) {
                 return new List<CalcSubAffordance>();
@@ -285,9 +278,9 @@ namespace CalculationEngine.HouseholdElements {
             return result;
         }
 
-        public override bool IsBusy([NotNull] TimeStep time,
-                                    [NotNull] CalcLocation srcLocation,
-                                    [NotNull] string calcPersonName,
+        public override bool IsBusy(TimeStep time,
+                                    CalcLocation srcLocation,
+                                    string calcPersonName,
                                     bool clearDictionaries = true)
         {
             if (!_timeFactorsForTimes.ContainsKey(time.InternalStep)) {
@@ -341,7 +334,6 @@ namespace CalculationEngine.HouseholdElements {
             return false;
         }
 
-        [NotNull]
         public override string ToString() => "Affordance:" + Name;
 
         private int HasBeenActiveFor([NotNull] TimeStep currentTime)

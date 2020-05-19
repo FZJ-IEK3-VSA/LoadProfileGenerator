@@ -18,7 +18,7 @@ using Xunit.Abstractions;
 namespace Common.Tests.SQLResultLogging.Loggers
 {
 
-    public class CalcLoadtypeDtoLoggerTest {
+    public class CalcLoadtypeDtoLoggerTest :UnitTestBaseClass {
         [Fact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void RunCalcLoadtypeDtoLoggerTest()
@@ -32,6 +32,10 @@ namespace Common.Tests.SQLResultLogging.Loggers
                 cldtl.Run(Constants.GeneralHouseholdKey, cdlsList);
                 cldtl.Load();
             }
+        }
+
+        public CalcLoadtypeDtoLoggerTest([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 

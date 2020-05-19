@@ -14,7 +14,6 @@ namespace Common.CalcDto {
         public double AverageSpeedInMPerS { get; }
         [NotNull][ItemNotNull]
         public List<CalcDeviceLoadDto> Loads { get; }
-        [NotNull]
         public HouseholdKey HouseholdKey { get; }
         public double FullRangeInMeters { get; }
         public double EnergyToDistanceFactor { get; }
@@ -22,8 +21,7 @@ namespace Common.CalcDto {
         [CanBeNull]
         public string ChargingCalcLoadTypeName { get; }
         [CanBeNull]
-        public StrGuid ChargingCalcLoadTypeGuid { get; }
-        [NotNull]
+        public StrGuid? ChargingCalcLoadTypeGuid { get; }
         public StrGuid Guid { get; }
         public bool IsLimitedToSingleLocation { get; }
 
@@ -32,8 +30,8 @@ namespace Common.CalcDto {
                                            [NotNull] HouseholdKey householdKey, double fullRangeInMeters,
                                            double energyToDistanceFactor,
                                            double maxChargingPower,
-                                           [CanBeNull]string chargingCalcLoadTypeName, [CanBeNull] StrGuid chargingCalcLoadTypeGuid,
-                                           [NotNull]StrGuid guid, bool isLimitedToSingleLocation)
+                                           [CanBeNull]string chargingCalcLoadTypeName, [CanBeNull] StrGuid? chargingCalcLoadTypeGuid,
+                                           StrGuid guid, bool isLimitedToSingleLocation)
         {
             Name = name;
             ID = id;

@@ -13,7 +13,7 @@ namespace LoadProfileGenerator.Views.Transportation {
     {
         [NotNull] public static readonly ValueToBrushConverter Default = new ValueToBrushConverter();
 
-        public object Convert([CanBeNull] object value, [NotNull] Type targetType, [CanBeNull] object parameter, [NotNull] System.Globalization.CultureInfo culture)
+        public object Convert(object value, [NotNull] Type targetType, object parameter, [NotNull] System.Globalization.CultureInfo culture)
         {
             string input = string.Empty;
             try
@@ -40,6 +40,6 @@ namespace LoadProfileGenerator.Views.Transportation {
             }
         }
 
-        public object ConvertBack([CanBeNull] object value, [NotNull] Type targetType, [CanBeNull] object parameter, [NotNull] System.Globalization.CultureInfo culture) => throw new NotSupportedException();
+        public object ConvertBack(object value, [NotNull] Type targetType, object parameter, [NotNull] System.Globalization.CultureInfo culture) => throw new NotSupportedException();
     }
 }

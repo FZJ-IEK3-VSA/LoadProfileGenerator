@@ -150,9 +150,8 @@ namespace CalculationEngine.HouseholdElements {
         [NotNull]
         private readonly string _name;
 
-        [NotNull]
         public StrGuid Guid { get; }
-        protected CalcBase([NotNull] string pName,  [NotNull] StrGuid guid)
+        protected CalcBase([NotNull] string pName,  StrGuid guid)
         {
             _name = pName;
             Guid = guid;

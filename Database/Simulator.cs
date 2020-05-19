@@ -62,7 +62,7 @@ namespace Database {
     {
 
         [CanBeNull]
-        public IAssignableDevice GetAssignableDeviceByGuid([CanBeNull] StrGuid guid)
+        public IAssignableDevice GetAssignableDeviceByGuid([CanBeNull] StrGuid? guid)
         {
             if (guid == null) {
                 return null;

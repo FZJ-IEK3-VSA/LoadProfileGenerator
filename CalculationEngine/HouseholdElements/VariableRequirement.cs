@@ -6,12 +6,11 @@ namespace CalculationEngine.HouseholdElements {
     public class VariableRequirement {
         [NotNull]
         private readonly CalcVariableRepository _repository;
-        [NotNull]
         private readonly StrGuid _variableGuid;
 
-        public VariableRequirement([NotNull] string name, double value, [NotNull] string location, [NotNull] StrGuid locationGuid,
+        public VariableRequirement([NotNull] string name, double value, [NotNull] string location, StrGuid locationGuid,
                                                  VariableCondition variableCondition, [NotNull] CalcVariableRepository repository,
-                                                 [NotNull] StrGuid variableGuid)
+                                                 StrGuid variableGuid)
         {
             _repository = repository;
             _variableGuid = variableGuid;
@@ -24,7 +23,6 @@ namespace CalculationEngine.HouseholdElements {
 
         [NotNull]
         public string CalcLocationName { get; }
-        [NotNull]
         public StrGuid LocationGuid { get; }
 
         [NotNull]

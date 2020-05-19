@@ -35,7 +35,7 @@ namespace Database.Tables.ModularHouseholds {
             int householdTraitID,
         [NotNull]    string connectionString, [NotNull] string hhaffName,[CanBeNull] TimeLimit timeLimit, int weight
             , int startMinusMinutes, int startPlusMinutes, int endMinusMinutes, int endPlusMinutes,
-            [NotNull] StrGuid guid) : base(hhaffName, TableName, connectionString, guid)
+            StrGuid guid) : base(hhaffName, TableName, connectionString, guid)
         {
             _timeLimit = timeLimit;
             _weight = weight;
@@ -140,7 +140,7 @@ namespace Database.Tables.ModularHouseholds {
             return hhdl;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             if (Affordance == null) {
                 message = "Affordance not found";
@@ -163,7 +163,7 @@ namespace Database.Tables.ModularHouseholds {
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             if (Affordance != null) {
                 cmd.AddParameter("AffordanceID", Affordance.IntID);
@@ -214,7 +214,7 @@ namespace Database.Tables.ModularHouseholds {
         }
 
         public class JsonDto {
-            public JsonDto(JsonReference affordance, JsonReference timeLimit, int weight, int startMinusMinutes, int startPlusMinutes, int endMinusMinutes, int endPlusMinutes, [NotNull] StrGuid guid)
+            public JsonDto(JsonReference affordance, JsonReference timeLimit, int weight, int startMinusMinutes, int startPlusMinutes, int endMinusMinutes, int endPlusMinutes, StrGuid guid)
             {
                 Affordance = affordance;
                 TimeLimit = timeLimit;

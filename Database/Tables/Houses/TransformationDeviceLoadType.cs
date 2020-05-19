@@ -48,7 +48,7 @@ namespace Database.Tables.Houses {
 
         public TransformationDeviceLoadType([CanBeNull]int? pID, [CanBeNull] VLoadType loadType, double factor,
             int transformationDeviceID,
-            [NotNull] string connectionString, [NotNull] string loadTypeName, TransformationFactorType factorType ,[NotNull] StrGuid guid)
+            [NotNull] string connectionString, [NotNull] string loadTypeName, TransformationFactorType factorType ,StrGuid guid)
             : base(loadTypeName, TableName, connectionString, guid)
         {
             ID = pID;
@@ -104,7 +104,7 @@ namespace Database.Tables.Houses {
             return tdlt;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             if (_loadType == null) {
                 message = "Load type not found";
@@ -121,7 +121,7 @@ namespace Database.Tables.Houses {
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             if (_loadType != null) {
                 cmd.AddParameter("VLoadTypeID", _loadType.IntID);

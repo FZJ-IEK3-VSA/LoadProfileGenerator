@@ -29,7 +29,7 @@ namespace Common.SQLResultLogging.InputLoggers
     {
     }
 
-    public override void Run([NotNull] HouseholdKey key, [NotNull] object o)
+    public override void Run(HouseholdKey key, object o)
     {
         CalcObjectInformation calcObjectInformation = (CalcObjectInformation)o;
         SaveableEntry se = GetStandardSaveableEntry(key);

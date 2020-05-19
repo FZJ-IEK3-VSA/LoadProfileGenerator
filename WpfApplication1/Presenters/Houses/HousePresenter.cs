@@ -281,7 +281,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
             Close(false);
         }
 
-        public override bool Equals([CanBeNull] object obj)
+        public override bool Equals(object obj)
         {
             var presenter = obj as HousePresenter;
             return presenter?.ThisHouse.Equals(_house) == true;

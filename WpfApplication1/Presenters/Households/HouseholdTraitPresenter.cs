@@ -617,7 +617,7 @@ namespace LoadProfileGenerator.Presenters.Households {
             Close(false);
         }
 
-        public override bool Equals([CanBeNull] object obj)
+        public override bool Equals(object obj)
         {
             var presenter = obj as HouseholdTraitPresenter;
             return presenter?.ThisHouseholdTrait.Equals(_hht) == true;

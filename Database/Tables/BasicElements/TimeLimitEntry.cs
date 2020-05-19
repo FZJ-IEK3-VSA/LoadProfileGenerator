@@ -98,7 +98,7 @@ namespace Database.Tables.BasicElements {
             bool duringNotVacation, bool duringVacationLongerThan, bool duringVacationShorterThan,
             int vacationDurationLimit, bool duringHoliday, [ItemNotNull] [NotNull] ObservableCollection<DateBasedProfile> allDateProfiles,
             [NotNull] string connectionString, int randomizeTimeAmount, double dateProfileMinVariation,
-            double dateProfileMaxVariation, [NotNull] StrGuid guid) : base(startTime + " " + endTime, TableName, connectionString, guid)
+            double dateProfileMaxVariation, StrGuid guid) : base(startTime + " " + endTime, TableName, connectionString, guid)
         {
             ID = id;
             AllDateProfiles = allDateProfiles;
@@ -891,7 +891,7 @@ namespace Database.Tables.BasicElements {
             return false;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             message = "";
             return true;
@@ -1030,7 +1030,7 @@ namespace Database.Tables.BasicElements {
             return true;
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("StartTime", "@StartTime", _startTime);
             cmd.AddParameter("EndTime", "@EndTime", _endTime);

@@ -40,15 +40,13 @@ namespace LoadProfileGenerator.Controls.Converters {
     {
         #region IValueConverter Members
 
-        [CanBeNull]
-        public object Convert([CanBeNull] object value, [CanBeNull] Type targetType, [CanBeNull] object parameter,
+        public object Convert(object value, [CanBeNull] Type targetType, object parameter,
                               [CanBeNull] CultureInfo culture)
         {
             throw new NotImplementedException();
         }
 
-        [CanBeNull]
-        public object ConvertBack([CanBeNull] object value, [CanBeNull] Type targetType, [CanBeNull] object parameter,
+        public object ConvertBack(object value, [CanBeNull] Type targetType, object parameter,
                                   [CanBeNull] CultureInfo culture)
         {
             if (targetType !=typeof(Brush)) {
@@ -68,9 +66,9 @@ namespace LoadProfileGenerator.Controls.Converters {
     public class NumberConverter : IValueConverter {
         #region IValueConverter Members
 
-        [CanBeNull]
-        public object Convert([CanBeNull] object value, [CanBeNull] Type targetType, [CanBeNull] object parameter,
-            [CanBeNull] CultureInfo culture) {
+        [NotNull]
+        public object Convert(object value, [CanBeNull] Type targetType, object parameter,
+                              [CanBeNull] CultureInfo culture) {
             string result;
             if (value is decimal d1) {
                 result = d1.ToString("0.00", CultureInfo.CurrentCulture);
@@ -88,7 +86,7 @@ namespace LoadProfileGenerator.Controls.Converters {
         }
 
         [NotNull]
-        public object ConvertBack([CanBeNull] object value, [CanBeNull] Type targetType, [CanBeNull] object parameter,
+        public object ConvertBack(object value, [CanBeNull] Type targetType, object parameter,
             [CanBeNull] CultureInfo culture) {
             if (value == null) {
                 return 0;

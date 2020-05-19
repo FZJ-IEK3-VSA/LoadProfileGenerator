@@ -29,7 +29,6 @@ namespace Database.Tables.ModularHouseholds {
 
 
     public interface IRelevantGuidProvider {
-        [NotNull]
         StrGuid RelevantGuid { get; }
     }
 
@@ -64,7 +63,7 @@ namespace Database.Tables.ModularHouseholds {
 
         public HouseholdTemplate([NotNull] string pName, [CanBeNull] int? id, [CanBeNull] string description, [NotNull] string connectionString, [CanBeNull] string newName, int count,
                                  [CanBeNull] DateBasedProfile timeProfileForVacations, TemplateVacationType templateVacationType, int minNumberOfVacations, int maxNumberOfVacations,
-                                 int averageVacationDuration, int minTotalVacationDays, int maxTotalVacationDays, [NotNull] StrGuid guid) : base(pName, TableName, connectionString, guid)
+                                 int averageVacationDuration, int minTotalVacationDays, int maxTotalVacationDays, StrGuid guid) : base(pName, TableName, connectionString, guid)
         {
             _templateVacationType = templateVacationType;
             _minNumberOfVacations = minNumberOfVacations;
@@ -158,7 +157,6 @@ namespace Database.Tables.ModularHouseholds {
         [NotNull]
         public ObservableCollection<HHTemplateVacation> Vacations => _vacations;
 
-        [NotNull]
         public JsonDto GetJson()
         {
             JsonDto jec = new JsonDto(Name, Description, NewHHName, Count, TimeProfileForVacations?.GetJsonReference(), TemplateVacationType, MinNumberOfVacations,
@@ -425,8 +423,7 @@ namespace Database.Tables.ModularHouseholds {
             // add mandatory traits
         }
 
-        [NotNull]
-        public override DBBase ImportFromGenericItem([NotNull] DBBase toImport, [NotNull] Simulator dstSim) => ImportFromItem((HouseholdTemplate)toImport, dstSim);
+        public override DBBase ImportFromGenericItem(DBBase toImport, Simulator dstSim) => ImportFromItem((HouseholdTemplate)toImport, dstSim);
 
         [NotNull]
         [UsedImplicitly]
@@ -599,13 +596,13 @@ namespace Database.Tables.ModularHouseholds {
             }
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             message = "";
             return true;
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("Name", Name);
             cmd.AddParameter("Count", _count);
@@ -703,7 +700,7 @@ namespace Database.Tables.ModularHouseholds {
         public class JsonDto {
             public JsonDto([NotNull] string name, [CanBeNull] string description, [CanBeNull] string newHouseholdName, int count, [CanBeNull] JsonReference timeProfileForVacations,
                            TemplateVacationType templateVacationType, int minNumberOfVacations, int maxNumberOfVacations, int averageVacationDuration, int minTotalVacationDays,
-                           int maxTotalVacationDays, [NotNull] StrGuid guid)
+                           int maxTotalVacationDays, StrGuid guid)
             {
                 Name = name;
                 Description = description;
@@ -733,7 +730,6 @@ namespace Database.Tables.ModularHouseholds {
             [CanBeNull]
             public string Description { get; set; }
 
-            [NotNull]
             public StrGuid Guid { get; set; }
 
             [NotNull]

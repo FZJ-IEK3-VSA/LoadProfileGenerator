@@ -128,7 +128,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             Logger.Info("Deleted all data points.");
         }
 
-        public override bool Equals([CanBeNull] object obj)
+        public override bool Equals(object obj)
         {
             return obj is TimeProfilePresenter presenter && presenter.ThisProfile.Equals(_tp);
         }

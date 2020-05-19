@@ -46,7 +46,7 @@ namespace CalculationEngine.HouseholdElements {
 
         [CanBeNull]
         public CalcSite CalcSite { get; set; }
-        public CalcLocation([NotNull] string pName, [NotNull] StrGuid guid) : base(pName, guid) => Devices = new List<CalcDevice>();
+        public CalcLocation([NotNull] string pName, StrGuid guid) : base(pName, guid) => Devices = new List<CalcDevice>();
 
         [NotNull]
         [ItemNotNull]

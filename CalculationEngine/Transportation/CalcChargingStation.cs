@@ -12,7 +12,7 @@ namespace CalculationEngine.Transportation {
 
         public CalcChargingStation([NotNull] CalcTransportationDeviceCategory deviceCategory, [NotNull] CalcLoadType gridChargingLoadType,
                                    double maxChargingPower,
-                                   [NotNull] string chargingStationName, [NotNull] StrGuid chargingStationGuid,
+                                   [NotNull] string chargingStationName, StrGuid chargingStationGuid,
                                    [NotNull] HouseholdKey householdKey,
                                    [NotNull] CalcLoadType carChargingLoadType, CalcRepo calcRepo)
         {
@@ -40,7 +40,6 @@ namespace CalculationEngine.Transportation {
         public double MaxChargingPower { get; }
         [NotNull]
         public string ChargingStationName { get; }
-        [NotNull]
         public StrGuid ChargingStationGuid { get; }
         public bool IsAvailable { get; private set; }
         [CanBeNull] private CalcTransportationDevice _connectedCar;

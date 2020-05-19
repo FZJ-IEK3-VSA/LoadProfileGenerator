@@ -303,7 +303,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
         [UsedImplicitly]
         public SettlementTemplate ThisTemplate => _template;
 
-        public bool Equals([CanBeNull] SettlementTemplatePresenter other) => other?.ThisTemplate.Equals(_template) == true;
+        public bool Equals(SettlementTemplatePresenter other) => other?.ThisTemplate.Equals(_template) == true;
 
         public void AddAllTemplates()
         {
@@ -377,7 +377,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
             RefreshGeneratedSettlements();
         }
 
-        public override bool Equals([CanBeNull] object obj)
+        public override bool Equals(object obj)
         {
             var presenter = obj as SettlementTemplatePresenter;
             return presenter?.ThisTemplate.Equals(_template) == true;

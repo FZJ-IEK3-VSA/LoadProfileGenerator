@@ -54,7 +54,7 @@ namespace Database.Helpers {
         [ItemNotNull] [CanBeNull] public ObservableCollection<T> _PrevFilteredMyItems;
 
         [CanBeNull]
-        public T FindByGuid([CanBeNull] StrGuid guid)
+        public T FindByGuid([CanBeNull] StrGuid? guid)
         {
             if (guid == null) {
                 return null;
@@ -76,7 +76,14 @@ namespace Database.Helpers {
             if (reference.Guid == null) {
                 return null;
             }
-            return It.FirstOrDefault(x => x.Guid == reference.Guid);
+
+            foreach (var x in It) {
+                if (x.Guid == reference.Guid) {
+                    return x;
+                }
+            }
+
+            return null;
         }
         public CategoryDBBase([NotNull] string name) : base(name)
         {
@@ -135,7 +142,7 @@ namespace Database.Helpers {
             list.Add(strToAdd);
         }
 
-        public override void ApplyFilter([CanBeNull] string filterStr)
+        public override void ApplyFilter(string filterStr)
         {
             _filterString = filterStr;
             if (string.IsNullOrWhiteSpace(filterStr)) {
@@ -264,8 +271,6 @@ namespace Database.Helpers {
             return null;
         }
 
-        [ItemNotNull]
-        [NotNull]
         public override List<DBBase> CollectAllDBBaseItems()
         {
             var items = new List<DBBase>();
@@ -396,7 +401,7 @@ namespace Database.Helpers {
         //    return null;
         //}
 
-        public override bool ImportFromExistingElement([NotNull] DBBase item,  [NotNull] Simulator dstSim)
+        public override bool ImportFromExistingElement(DBBase item,  Simulator dstSim)
         {
             if (item == null) {
                 throw new LPGException("Null-Item tried to import an empty item. This is a bug!");

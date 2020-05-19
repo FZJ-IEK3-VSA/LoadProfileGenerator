@@ -37,7 +37,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
             _calcParameters = _repository.CalcParameters;
         }
 
-        protected override void PerformActualStep([NotNull] IStepParameters parameters)
+        protected override void PerformActualStep(IStepParameters parameters)
         {
             HouseholdStepParameters hhp = (HouseholdStepParameters)parameters;
             var entry = hhp.Key;

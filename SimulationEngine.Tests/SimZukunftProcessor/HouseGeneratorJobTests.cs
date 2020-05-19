@@ -323,6 +323,10 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
         private static void StartHouseJob([JetBrains.Annotations.NotNull] HouseCreationAndCalculationJob houseJob, [JetBrains.Annotations.NotNull] WorkingDir wd,string fnSuffix)
         {
             string houseJobFile = wd.Combine("houseJob." + fnSuffix+".json");
+            if(File.Exists(houseJobFile)) {
+                File.Delete(houseJobFile);
+            }
+
             using (StreamWriter sw = new StreamWriter(houseJobFile)) {
                 sw.WriteLine(JsonConvert.SerializeObject(houseJob, Formatting.Indented));
                 sw.Close();

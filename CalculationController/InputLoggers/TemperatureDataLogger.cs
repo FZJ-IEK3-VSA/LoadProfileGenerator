@@ -47,7 +47,7 @@ namespace CalculationController.InputLoggers {
             _calcParameters = calcParameters;
         }
 
-        public override void Run([NotNull] HouseholdKey key, [NotNull] object o)
+        public override void Run(HouseholdKey key, object o)
         {
             TemperatureProfile tp = (TemperatureProfile)o;
             var tempProfile = tp.GetTemperatureArray(_calcParameters.InternalStartTime,

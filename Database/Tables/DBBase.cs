@@ -219,7 +219,7 @@ namespace Database.Tables
 #pragma warning restore CA2235 // Mark all non-serializable fields
         private bool _needsUpdate;
 
-        protected DBBase([NotNull]string pName, [NotNull] string tableName, [NotNull] string connectionString,[NotNull] StrGuid guid):base(pName)
+        protected DBBase([NotNull]string pName, [NotNull] string tableName, [NotNull] string connectionString,StrGuid guid):base(pName)
         {
             _guid = guid;
             if(guid==null) {
@@ -232,7 +232,7 @@ namespace Database.Tables
         }
 
         protected DBBase([NotNull]string pName, [CanBeNull] int? pID, [NotNull] string tableName, [NotNull] string connectionString,
-                         [NotNull] StrGuid guid):base(pName)
+                         StrGuid guid):base(pName)
         {
             _guid = guid;
             if (guid == null)
@@ -267,19 +267,17 @@ namespace Database.Tables
             protected set => _id = value;
         }
 
-        [NotNull] private StrGuid _guid;
-        [NotNull]
+        private StrGuid _guid;
         public StrGuid Guid
         {
             get => _guid;
-            set => SetValueWithNotify(value, ref _guid,true, nameof(Guid));
+            set => SetValueWithNotify(value, ref _guid, nameof(Guid));
         }
 
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "int")]
         [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
         public int IntID => IntegerID();
 
-        [NotNull]
         public override string Name
         {
             get => base.Name;
@@ -580,7 +578,7 @@ namespace Database.Tables
 
         protected abstract bool IsItemLoadedCorrectly([NotNull] out string message);
 
-        public override bool IsValid([NotNull] string filter)
+        public override bool IsValid(string filter)
         {
             if (filter == null)
             {
@@ -693,13 +691,12 @@ namespace Database.Tables
             if (Guid == null) {
                 throw new LPGException("Guid was null");
             }
-            cmd.AddParameter("Guid",  Guid.Value);
+            cmd.AddParameter("Guid",  Guid.StrVal);
         }
 
-        [NotNull] [ItemNotNull] public static readonly HashSet<StrGuid> GuidsToSave = new HashSet<StrGuid>();
+        [NotNull] public static readonly HashSet<StrGuid> GuidsToSave = new HashSet<StrGuid>();
         [NotNull] [ItemNotNull] public static readonly List<string> TypesThatMadeGuids = new List<string>();
         public static int GuidCreationCount { get; set; }
-        [NotNull]
         public static StrGuid GetGuid([NotNull] DataReader dr, bool ignoreMissingFields)
         {
             var oldguid = dr.GetString("Guid", false, "", ignoreMissingFields);
@@ -715,7 +712,7 @@ namespace Database.Tables
 
                 return guid;
             }
-            return new StrGuid(oldguid);
+            return StrGuid.FromString(oldguid);
         }
 
         public virtual void SaveToDB([NotNull] Connection con)
@@ -873,6 +870,18 @@ namespace Database.Tables
         [NotifyPropertyChangedInvocator]
         protected void SetValueWithNotify(CreationType value, ref CreationType dstField,
             [CanBeNull] [CallerMemberName] string propertyName = null)
+        {
+            if (value == dstField)
+            {
+                return;
+            }
+            dstField = value;
+            OnPropertyChanged(propertyName);
+        }
+
+        [NotifyPropertyChangedInvocator]
+        protected void SetValueWithNotify(StrGuid value, ref StrGuid dstField,
+                                          [CanBeNull] [CallerMemberName] string propertyName = null)
         {
             if (value == dstField)
             {

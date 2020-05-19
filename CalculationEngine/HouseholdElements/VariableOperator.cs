@@ -20,7 +20,7 @@ namespace CalculationEngine.HouseholdElements {
         }
 
         public void AddEntry([NotNull] string name, double value, [NotNull] CalcLocation location, VariableAction variableAction,
-            [NotNull] TimeStep timeStep, [NotNull] StrGuid variableGuid)
+            [NotNull] TimeStep timeStep, StrGuid variableGuid)
         {
             var ee = new ExecutionEntry(name, value, location, variableAction,
                 timeStep,variableGuid);
@@ -42,11 +42,10 @@ namespace CalculationEngine.HouseholdElements {
         }
 
         private class ExecutionEntry {
-            [NotNull]
             private readonly StrGuid _variableGuid;
 
             public ExecutionEntry([NotNull] string name, double value, [NotNull] CalcLocation location, VariableAction variableAction,
-                                  [NotNull] TimeStep timeStep, [NotNull] StrGuid variableGuid)
+                                  [NotNull] TimeStep timeStep, StrGuid variableGuid)
             {
                 _variableGuid = variableGuid;
                 Name = name;

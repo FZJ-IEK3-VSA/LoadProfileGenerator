@@ -57,7 +57,7 @@ namespace Database.Tables.BasicElements {
         private int _longMinute;
         private int _longSecond;
 
-        public GeographicLocation([NotNull] string connectionString, [CanBeNull] TimeLimit lightTimeLimit, [NotNull] StrGuid guid) : base("Chemnitz",
+        public GeographicLocation([NotNull] string connectionString, [CanBeNull] TimeLimit lightTimeLimit, StrGuid guid) : base("Chemnitz",
             TableName, connectionString, guid) {
             _lightTimeLimit = lightTimeLimit;
             // dummy loc for unit tests
@@ -75,7 +75,7 @@ namespace Database.Tables.BasicElements {
 
         public GeographicLocation([NotNull] string name, int slathour, int slatMinute, int slatSecond, int slongHour,
             int slongMinute, int slongSecond, [NotNull] string slongDir, [NotNull] string slatDir, [NotNull] string connectionString,
-            [CanBeNull] TimeLimit lightTimeLimit,[NotNull] StrGuid guid,[CanBeNull] int? id = null) : base(name, id, TableName, connectionString, guid) {
+            [CanBeNull] TimeLimit lightTimeLimit,StrGuid guid,[CanBeNull] int? id = null) : base(name, id, TableName, connectionString, guid) {
             _latHour = slathour;
             _latMinute = slatMinute;
             _latSecond = slatSecond;
@@ -325,7 +325,7 @@ namespace Database.Tables.BasicElements {
             return false;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message) {
+        protected override bool IsItemLoadedCorrectly(out string message) {
             message = "";
             return true;
         }
@@ -340,7 +340,7 @@ namespace Database.Tables.BasicElements {
             SetSubitems(new List<DBBase>(result), new List<DBBase>(geoholi), IsCorrectParent, ignoreMissingTables);
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd) {
+        protected override void SetSqlParameters(Command cmd) {
             cmd.AddParameter("Name", "@myname", Name);
             cmd.AddParameter("LatHour", _latHour);
             cmd.AddParameter("latMinute", _latMinute);
@@ -357,12 +357,9 @@ namespace Database.Tables.BasicElements {
             }
         }
 
-        [NotNull]
-        public override DBBase ImportFromGenericItem([NotNull] DBBase toImport, [NotNull] Simulator dstSim)
+        public override DBBase ImportFromGenericItem(DBBase toImport, Simulator dstSim)
             => ImportFromItem((GeographicLocation)toImport,  dstSim);
 
-        [ItemNotNull]
-        [NotNull]
-        public override List<UsedIn> CalculateUsedIns([NotNull] Simulator sim) => throw new NotImplementedException();
+        public override List<UsedIn> CalculateUsedIns(Simulator sim) => throw new NotImplementedException();
     }
 }

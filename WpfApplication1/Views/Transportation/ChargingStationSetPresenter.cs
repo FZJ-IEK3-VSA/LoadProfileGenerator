@@ -136,7 +136,7 @@ namespace LoadProfileGenerator.Views.Transportation {
             Close(false);
         }
 
-        public override bool Equals([CanBeNull] object obj)
+        public override bool Equals(object obj)
         {
             var presenter = obj as ChargingStationSetPresenter;
             return presenter?.ThisChargingStationSet.Equals(ThisChargingStationSet) == true;

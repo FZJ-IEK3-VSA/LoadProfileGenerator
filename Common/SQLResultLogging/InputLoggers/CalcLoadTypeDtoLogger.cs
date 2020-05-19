@@ -14,7 +14,7 @@ namespace Common.SQLResultLogging.InputLoggers
         {
         }
 
-        public override void Run([NotNull] HouseholdKey key,[NotNull] object o)
+        public override void Run(HouseholdKey key,object o)
         {
             if (key != Constants.GeneralHouseholdKey) {
                 throw new LPGException("Trying to save load types not in the general file");

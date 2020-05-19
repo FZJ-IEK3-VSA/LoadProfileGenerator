@@ -73,7 +73,7 @@ namespace Database.Tables.Houses {
             double coolingYearlyTotal, [CanBeNull] VLoadType coolingLoadType, bool adjustYearlyEnergy,
             double referenceDegreeDays,
             bool adjustYearlyCooling, double referenceCoolingHours, int minimumHouseholdCount,
-            int maximumHouseholdCount,[NotNull] StrGuid guid,
+            int maximumHouseholdCount,StrGuid guid,
             [CanBeNull]int? pID = null) : base(pName, TableName, connectionString, guid)
         {
             ID = pID;
@@ -361,8 +361,7 @@ namespace Database.Tables.Houses {
         public override DBBase ImportFromGenericItem(DBBase toImport, Simulator dstSim)
             => ImportFromItem((HouseType)toImport,dstSim);
 
-        [NotNull]
-        public override List<UsedIn> CalculateUsedIns([NotNull] Simulator sim)
+        public override List<UsedIn> CalculateUsedIns(Simulator sim)
         {
             var usedIns = new List<UsedIn>();
             foreach (var house in sim.Houses.It) {
@@ -484,7 +483,7 @@ namespace Database.Tables.Houses {
             return false;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             message = "";
             return true;
@@ -544,7 +543,7 @@ namespace Database.Tables.Houses {
             }
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("Name", "@myname", Name);
             cmd.AddParameter("Description", "@description", _description);

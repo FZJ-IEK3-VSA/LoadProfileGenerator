@@ -11,8 +11,7 @@ namespace ChartCreator2.PDF {
             MyTargetDirectory = TargetDirectory.Charts;
         }
 
-        [JetBrains.Annotations.NotNull]
-        protected override string GetGraphTitle([JetBrains.Annotations.NotNull] string filename) {
+        protected override string GetGraphTitle(string filename) {
             var str = filename.Split('.');
             if (str.Length >3) {
                 var name = str[1] + " - ";

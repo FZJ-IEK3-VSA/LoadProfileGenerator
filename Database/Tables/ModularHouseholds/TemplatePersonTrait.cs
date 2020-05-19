@@ -19,7 +19,7 @@ namespace Database.Tables.ModularHouseholds {
                                    [CanBeNull]int? templatePersonID,
                                    [NotNull] string name,
                                    [NotNull] string connectionString,
-            [CanBeNull] HouseholdTrait trait, [NotNull] StrGuid guid) : base(name, TableName, connectionString, guid) {
+            [CanBeNull] HouseholdTrait trait, StrGuid guid) : base(name, TableName, connectionString, guid) {
             _trait = trait;
             _templatePersonID = templatePersonID;
             ID = pID;
@@ -66,7 +66,7 @@ namespace Database.Tables.ModularHouseholds {
             return chht;
         }
 
-        public override int CompareTo([CanBeNull] BasicElement other) {
+        public override int CompareTo(BasicElement other) {
             if (!(other is TemplatePersonTrait othr))
             {
                 throw new LPGException("Other was null.");
@@ -77,7 +77,7 @@ namespace Database.Tables.ModularHouseholds {
             return 0;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message) {
+        protected override bool IsItemLoadedCorrectly(out string message) {
             if (_trait == null) {
                 message = "Trait not found";
                 return false;

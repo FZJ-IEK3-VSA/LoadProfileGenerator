@@ -455,7 +455,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             _applicationPresenter.CloseTab(this, removeLast);
         }
 
-        public override bool Equals([CanBeNull] object obj) => obj is CalculationPresenter;
+        public override bool Equals(object obj) => obj is CalculationPresenter;
 
         public override int GetHashCode()
         {

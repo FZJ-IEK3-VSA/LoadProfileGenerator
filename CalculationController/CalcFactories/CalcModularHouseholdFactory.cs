@@ -74,7 +74,7 @@ namespace CalculationController.CalcFactories {
         public Dictionary<CalcLocationDto, CalcLocation> LocationDtoDict { get; } = new Dictionary<CalcLocationDto, CalcLocation>();
 
         [NotNull]
-        public CalcLocation GetCalcLocationByGuid([NotNull] StrGuid calcLocationGuid)
+        public CalcLocation GetCalcLocationByGuid(StrGuid calcLocationGuid)
         {
             return LocationDtoDict.Values.First(x => x.Guid == calcLocationGuid);
         }

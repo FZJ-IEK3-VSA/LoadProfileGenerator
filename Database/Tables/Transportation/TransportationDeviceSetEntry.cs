@@ -14,7 +14,7 @@ namespace Database.Tables.Transportation {
 
         public TransportationDeviceSetEntry([CanBeNull]int? pID, int transportationDeviceSetID, [NotNull] string connectionString,
             [NotNull] string name, [CanBeNull] TransportationDevice device,
-                                            [NotNull] StrGuid guid) : base(name, TableName, connectionString, guid)
+                                            StrGuid guid) : base(name, TableName, connectionString, guid)
         {
             TypeDescription = "Transportation Device Set Entry";
             ID = pID;
@@ -48,7 +48,7 @@ namespace Database.Tables.Transportation {
             return setentry;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             if (_transportationDevice == null) {
                 message = "Transportation Device Category not found";
@@ -66,7 +66,7 @@ namespace Database.Tables.Transportation {
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("TransportationDeviceSetID", _transportationDeviceSetID);
             if (_transportationDevice != null) {

@@ -86,7 +86,7 @@ namespace Database.Tables.Houses {
                           [CanBeNull] TemperatureProfile temperatureProfile,
                           [NotNull] string source,
                           CreationType creationType,
-                          [NotNull] StrGuid guid,
+                          StrGuid guid,
                           [CanBeNull] JsonCalcSpecification calcSpecification) : base(pName, TableName, connectionString, guid)
         {
             _calcSpecification = calcSpecification ?? JsonCalcSpecification.MakeDefaultsForProduction();
@@ -374,7 +374,6 @@ namespace Database.Tables.Houses {
         }
 
 
-        [NotNull]
         public ObservableCollection<Person> AllPersons {
             get {
                 var persons = new ObservableCollection<Person>();
@@ -396,7 +395,6 @@ namespace Database.Tables.Houses {
 
         public int CalculatePersonCount() => Citizens;
 
-        [NotNull]
         public List<VLoadType> CollectLoadTypes(ObservableCollection<Affordance> affordances)
         {
             var loadTypes = new List<VLoadType>();
@@ -414,10 +412,8 @@ namespace Database.Tables.Houses {
             return loadTypes;
         }
 
-        [CanBeNull]
         public GeographicLocation DefaultGeographicLocation => GeographicLocation;
 
-        [CanBeNull]
         public TemperatureProfile DefaultTemperatureProfile => TemperatureProfile;
 
         public EnergyIntensityType EnergyIntensityType {
@@ -659,8 +655,7 @@ namespace Database.Tables.Houses {
             SaveToDB();
         }
 
-        [NotNull]
-        public override DBBase ImportFromGenericItem([NotNull] DBBase toImport, [NotNull] Simulator dstSim) =>
+        public override DBBase ImportFromGenericItem(DBBase toImport, Simulator dstSim) =>
             ImportFromItem((Settlement)toImport, dstSim);
 
         [NotNull]
@@ -1009,13 +1004,13 @@ namespace Database.Tables.Houses {
             sw2.Close();
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             message = "";
             return true;
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("Name", "@myname", Name);
             cmd.AddParameter("Character", "@Character", _character);

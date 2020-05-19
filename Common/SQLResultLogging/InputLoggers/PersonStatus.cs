@@ -9,9 +9,9 @@ namespace Common.SQLResultLogging.InputLoggers
     public class PersonStatus: IHouseholdKey
     {
         public PersonStatus([NotNull] HouseholdKey householdKey, [CanBeNull] string personName,
-                            [NotNull] StrGuid personGuid, [NotNull] string locationName,
-                            [NotNull] StrGuid locationGuid, [CanBeNull] string siteName, [CanBeNull] StrGuid siteGuid,
-                            [CanBeNull] string activeAffordance, [CanBeNull] StrGuid activeAffordanceGuid, [NotNull] TimeStep timeStep)
+                            StrGuid personGuid, [NotNull] string locationName,
+                            StrGuid locationGuid, [CanBeNull] string siteName, [CanBeNull] StrGuid? siteGuid,
+                            [CanBeNull] string activeAffordance, [CanBeNull] StrGuid? activeAffordanceGuid, [NotNull] TimeStep timeStep)
         {
             HouseholdKey = householdKey;
             PersonName = personName;
@@ -34,11 +34,10 @@ namespace Common.SQLResultLogging.InputLoggers
         public string PersonName { get; set; }
         [NotNull]
         [JsonProperty]
-        public StrGuid PersonGuid { get; set; }
+        public StrGuid? PersonGuid { get; set; }
         [NotNull]
         [JsonProperty]
         public string LocationName { get; set; }
-        [NotNull]
         [JsonProperty]
         public StrGuid LocationGuid { get; set; }
         [CanBeNull]
@@ -46,12 +45,12 @@ namespace Common.SQLResultLogging.InputLoggers
         public string SiteName { get; set; }
         [CanBeNull]
         [JsonProperty]
-        public StrGuid SiteGuid { get; set; }
+        public StrGuid? SiteGuid { get; set; }
         [CanBeNull]
         [JsonProperty]
         public string ActiveAffordance { get; set; }
         [CanBeNull]
         [JsonProperty]
-        public StrGuid ActiveAffordanceGuid { get; set; }
+        public StrGuid? ActiveAffordanceGuid { get; set; }
     }
 }

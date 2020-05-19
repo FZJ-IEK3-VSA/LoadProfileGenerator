@@ -10,7 +10,7 @@ namespace Database.Tables.Houses {
         private readonly double _referenceValue;
 
         public TransformationFactorDatapoint([CanBeNull]int? pID, double referenceValue, double factor, int transformationDeviceID,
-            [NotNull] string connectionString, [NotNull] StrGuid guid)
+            [NotNull] string connectionString, StrGuid guid)
             : base(referenceValue + " - " + factor, TableName, connectionString, guid)
         {
             ID = pID;
@@ -45,7 +45,7 @@ namespace Database.Tables.Houses {
             return tdlt;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             message = "";
             return true;
@@ -58,7 +58,7 @@ namespace Database.Tables.Houses {
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("ReferenceValue", _referenceValue);
             cmd.AddParameter("Factor", Factor);

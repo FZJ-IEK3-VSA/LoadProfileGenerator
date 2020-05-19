@@ -14,7 +14,7 @@ namespace Database.Tables.ModularHouseholds {
         [CanBeNull] private readonly Person _person;
 
         public HHTemplateEntryPerson([CanBeNull]int? pID, [CanBeNull] Person pPerson, int hhTemplateEntryID, [NotNull] string name,
-            [NotNull] string connectionString, [NotNull] StrGuid guid)
+            [NotNull] string connectionString, StrGuid guid)
             : base(name, TableName, connectionString, guid) {
             ID = pID;
             _person = pPerson;
@@ -45,7 +45,7 @@ namespace Database.Tables.ModularHouseholds {
             return hhp;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message) {
+        protected override bool IsItemLoadedCorrectly(out string message) {
             if (_person == null) {
                 message = "Person not found";
                 return false;
@@ -60,7 +60,7 @@ namespace Database.Tables.ModularHouseholds {
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd) {
+        protected override void SetSqlParameters(Command cmd) {
             if (_person != null) {
                 cmd.AddParameter("PersonID", _person.IntID);
             }

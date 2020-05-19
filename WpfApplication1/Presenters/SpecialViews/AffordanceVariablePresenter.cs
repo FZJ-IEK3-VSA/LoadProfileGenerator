@@ -92,7 +92,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                 removeLast);
         }
 
-        public override bool Equals([CanBeNull] object obj)
+        public override bool Equals(object obj)
         {
             var presenter = obj as AffordanceVariablePresenter;
             return presenter?.HeaderString.Equals(HeaderString) == true;

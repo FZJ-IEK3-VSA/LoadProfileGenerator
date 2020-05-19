@@ -12,7 +12,6 @@ namespace Common.CalcDto {
         [NotNull]
         public string LocName { get; }
 
-        [NotNull]
         public StrGuid LocGuid { get; }
         [NotNull][ItemNotNull]
         public List<CalcDesireDto> Satisfactionvalues { get; }
@@ -33,16 +32,15 @@ namespace Common.CalcDto {
         public int Weight { get; }
         [NotNull]
         public string SourceTrait { get; }
-        [NotNull]
         public StrGuid Guid { get; }
 
-        public CalcSubAffordanceDto([NotNull] string name, int id, [NotNull] string locName, [NotNull] StrGuid locGuid,
+        public CalcSubAffordanceDto([NotNull] string name, int id, [NotNull] string locName, StrGuid locGuid,
                                     [NotNull][ItemNotNull] List<CalcDesireDto> satisfactionvalues,
                                     int miniumAge, int maximumAge, int delaytimesteps, PermittedGender permittedGender,
                                     [NotNull] string affCategory,
                                     bool isInterruptable, bool isInterrupting,
                                     [ItemNotNull][NotNull] List<CalcAffordanceVariableOpDto> variableOps, int weight, [NotNull] string sourceTrait,
-                                    [NotNull] StrGuid guid)
+                                    StrGuid guid)
         {
             Name = name;
             ID = id;

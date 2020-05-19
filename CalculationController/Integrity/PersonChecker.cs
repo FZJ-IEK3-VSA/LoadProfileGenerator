@@ -6,7 +6,6 @@ using Common;
 using Common.Enums;
 using Database;
 using Database.Tables.BasicHouseholds;
-using JetBrains.Annotations;
 
 namespace CalculationController.Integrity {
     internal class PersonChecker : BasicChecker {
@@ -14,7 +13,7 @@ namespace CalculationController.Integrity {
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        protected override void Run([NotNull] Simulator sim) {
+        protected override void Run(Simulator sim) {
             var allnames = new Dictionary<string, string>();
             var errrorPersons = new List<Person>();
             foreach (var person in sim.Persons.It) {

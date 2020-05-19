@@ -12,7 +12,7 @@ namespace Database.Tables.Validation {
         public AffordanceTimeUseOutcome([NotNull] string name, int calculationOutcomeID, [NotNull] string affordanceName,
             double timeInMinutes,
             [NotNull] string personName, int executions,
-            [NotNull] string connectionString,[NotNull] StrGuid guid, [CanBeNull] int? pID = null)
+            [NotNull] string connectionString,StrGuid guid, [CanBeNull] int? pID = null)
             : base(name, pID, TableName, connectionString, guid) {
             _calculationOutcomeID = calculationOutcomeID;
             AffordanceName = affordanceName;
@@ -60,7 +60,7 @@ namespace Database.Tables.Validation {
                 executions, connectionString,guid, id);
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message) {
+        protected override bool IsItemLoadedCorrectly(out string message) {
             if (_calculationOutcomeID < 0) {
                 message = "Calculation outcome not found";
                 return false;
@@ -76,7 +76,7 @@ namespace Database.Tables.Validation {
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd) {
+        protected override void SetSqlParameters(Command cmd) {
             cmd.AddParameter("CalculationOutcomeID", _calculationOutcomeID);
             cmd.AddParameter("PersonName", PersonName);
             cmd.AddParameter("AffordanceName", AffordanceName);

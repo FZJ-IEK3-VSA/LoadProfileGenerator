@@ -55,7 +55,7 @@ namespace CalculationEngine.HouseholdElements {
                                      ActionAfterInterruption actionAfterInterruption, int weight,
                                      bool requireAllAffordances,
                                      CalcAffordanceType calcAffordanceType,
-                                     [NotNull] StrGuid guid,
+                                     StrGuid guid,
                                      [ItemNotNull] [NotNull] BitArray isBusyArray,
                                      BodilyActivityLevel bodilyActivityLevel,[NotNull] CalcRepo calcRepo,
                                      [CanBeNull] CalcSite site = null) : base(pName, guid)
@@ -95,18 +95,16 @@ namespace CalculationEngine.HouseholdElements {
         public BitArray IsBusyArray => _isBusyArray;
 
         [SuppressMessage("ReSharper", "UnusedParameter.Global")]
-        public abstract void Activate([NotNull] TimeStep startTime, [NotNull] string activatorName,
-                                      [NotNull] CalcLocation personSourceLocation,
-                                      [NotNull] out ICalcProfile personTimeProfile);
+        public abstract void Activate(TimeStep startTime, string activatorName,
+                                      CalcLocation personSourceLocation,
+                                      out ICalcProfile personTimeProfile);
 
-        [NotNull]
         public string AffCategory { get; }
 
         public abstract ColorRGB AffordanceColor { get; }
 
         public ActionAfterInterruption AfterInterruption => _actionAfterInterruption;
 
-        [CanBeNull]
         public abstract string AreDeviceProfilesEmpty();
 
         public abstract bool AreThereDuplicateEnergyProfiles();
@@ -115,23 +113,19 @@ namespace CalculationEngine.HouseholdElements {
 
         public CalcAffordanceType CalcAffordanceType { get; }
 
-        [NotNull]
-        [ItemNotNull]
-        public abstract List<CalcSubAffordance> CollectSubAffordances([NotNull] TimeStep time,
+        public abstract List<CalcSubAffordance> CollectSubAffordances(TimeStep time,
                                                                       bool onlyInterrupting,
-                                                                      [NotNull] CalcLocation srcLocation);
+                                                                      CalcLocation srcLocation);
 
         public abstract int DefaultPersonProfileLength { get; }
 
-        [CanBeNull]
-        [ItemNotNull]
         public abstract List<CalcAffordance.DeviceEnergyProfileTuple> Energyprofiles { get; }
 
         //public abstract ICalcProfile CollectPersonProfile();
 
         [SuppressMessage("ReSharper", "UnusedParameter.Global")]
-        public abstract bool IsBusy([NotNull] TimeStep time,
-                                    [NotNull] CalcLocation srcLocation, [NotNull] string calcPersonName,
+        public abstract bool IsBusy(TimeStep time,
+                                    CalcLocation srcLocation, string calcPersonName,
                                     bool clearDictionaries = true);
 
         public bool IsInterruptable { get; }
@@ -144,12 +138,10 @@ namespace CalculationEngine.HouseholdElements {
 
         public bool NeedsLight { get; }
 
-        [NotNull]
         public CalcLocation ParentLocation { get; }
 
         public PermittedGender PermittedGender { get; }
 
-        [NotNull]
         public string PrettyNameForDumping => Name;
 
         //public abstract int PersonProfileDuration { get; }
@@ -158,21 +150,14 @@ namespace CalculationEngine.HouseholdElements {
 
         public bool RequireAllAffordances { get; }
 
-        [NotNull]
-        [ItemNotNull]
         public List<CalcDesire> Satisfactionvalues { get; }
 
-        [CanBeNull]
         public CalcSite Site { get; }
 
-        [NotNull]
         public abstract string SourceTrait { get; }
 
-        [NotNull]
-        [ItemNotNull]
         public abstract List<CalcSubAffordance> SubAffordances { get; }
 
-        [CanBeNull]
         public abstract string TimeLimitName { get; }
 
         public int Weight { get; }

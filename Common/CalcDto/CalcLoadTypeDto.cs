@@ -74,13 +74,12 @@ namespace Common.CalcDto {
         public string UnitOfSum { get; }
         public double ConversionFactor { get; }
         public bool ShowInCharts { get; }
-        [NotNull]
         public StrGuid Guid { get; }
         [NotNull]
         public string FileName { get; }
         public CalcLoadTypeDto([NotNull]string name,  [NotNull]string unitOfPower,
                                [NotNull]string unitOfSum, double conversionFactor,
-                               bool showInCharts, [NotNull] StrGuid guid)
+                               bool showInCharts, StrGuid guid)
         {
             Name = name;
             UnitOfPower = unitOfPower;

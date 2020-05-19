@@ -14,7 +14,7 @@ namespace Database.Tables.Houses {
 
         public STHouseholdDistributionTag([CanBeNull]int? pID, [CanBeNull] HouseholdTag tag, int stHouseholdDistributionID,
             [NotNull] string name,
-            [NotNull] string connectionString, [NotNull] StrGuid guid) : base(name, TableName, connectionString, guid) {
+            [NotNull] string connectionString, StrGuid guid) : base(name, TableName, connectionString, guid) {
             ID = pID;
             _tag = tag;
             _stHouseholdDistributionID = stHouseholdDistributionID;
@@ -43,7 +43,7 @@ namespace Database.Tables.Houses {
             return hhp;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message) {
+        protected override bool IsItemLoadedCorrectly(out string message) {
             if (_tag == null) {
                 message = "Tag not found.";
                 return false;
@@ -58,7 +58,7 @@ namespace Database.Tables.Houses {
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd) {
+        protected override void SetSqlParameters(Command cmd) {
             if (_tag != null) {
                 cmd.AddParameter("TagID", _tag.IntID);
             }

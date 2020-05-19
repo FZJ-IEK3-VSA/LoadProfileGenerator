@@ -22,7 +22,7 @@ namespace ChartCreator2.PDF {
 
         [CanBeNull] private string _version;
 
-        public void MakePage([JetBrains.Annotations.NotNull] Document doc, [JetBrains.Annotations.NotNull] string dstdir, bool requireAll) {
+        public void MakePage(Document doc, string dstdir, bool requireAll) {
             if (!ReadHouseholdName(dstdir)) {
                 if (requireAll) {
                     throw new LPGException("Missing Household Name File");

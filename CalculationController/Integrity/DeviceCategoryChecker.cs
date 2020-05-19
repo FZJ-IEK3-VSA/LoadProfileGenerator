@@ -2,14 +2,13 @@
 using Automation.ResultFiles;
 using Common;
 using Database;
-using JetBrains.Annotations;
 
 namespace CalculationController.Integrity {
     internal class DeviceCategoryChecker : BasicChecker {
         public DeviceCategoryChecker(bool performCleanupChecks) : base("Device Categories", performCleanupChecks) {
         }
 
-        protected override void Run([NotNull] Simulator sim) {
+        protected override void Run(Simulator sim) {
             var categoryShortNames = new List<string>();
             if (sim.DeviceCategories.DeviceCategoryNone == null) {
                 throw new LPGException("Device category none was null.");

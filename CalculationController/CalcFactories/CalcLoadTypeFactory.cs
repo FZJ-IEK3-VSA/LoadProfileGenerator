@@ -54,17 +54,16 @@ namespace CalculationController.CalcFactories {
         [NotNull]
         private Dictionary<CalcLoadTypeDto, CalcLoadType> DtoCalcDict { get; }
 
-        [ItemNotNull]
         [NotNull]
         private readonly HashSet<StrGuid> _guids;
 
         [NotNull]
-        public CalcLoadType GetLoadtypeByGuid([NotNull] StrGuid loadtypeGuid)
+        public CalcLoadType GetLoadtypeByGuid(StrGuid loadtypeGuid)
         {
             return _calcLoadTypes.Single(x => x.Guid == loadtypeGuid);
         }
 
-        public bool SimulateLoadtype([NotNull] StrGuid guid)
+        public bool SimulateLoadtype(StrGuid guid)
         {
             if (_guids.Contains(guid)) {
                 return true;

@@ -51,7 +51,7 @@ namespace Database.Tables.BasicHouseholds {
 
         public AffordanceDesire([CanBeNull]int? pID, [CanBeNull] Desire desire, [CanBeNull] int? affordanceID, decimal satisfactionvalue,
             [ItemNotNull] [NotNull] ObservableCollection<Desire> desires, [NotNull] string name, [NotNull] string connectionString,
-                                [NotNull] StrGuid guid) : base(name, TableName,
+                                StrGuid guid) : base(name, TableName,
             connectionString, guid) {
             desires.CollectionChanged += DesirecollOnCollectionChanged;
             ID = pID;
@@ -95,7 +95,7 @@ namespace Database.Tables.BasicHouseholds {
             return affordanceDesire;
         }
 
-        public override int CompareTo([CanBeNull] BasicElement other) {
+        public override int CompareTo(BasicElement other) {
             var otheraff = other as AffordanceDesire;
             if (otheraff?._desire != null && _desire != null) {
                 return _desire.CompareTo(otheraff._desire);
@@ -112,7 +112,7 @@ namespace Database.Tables.BasicHouseholds {
             }
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message) {
+        protected override bool IsItemLoadedCorrectly(out string message) {
             if (_desire == null) {
                 message = "Desire not found.";
                 return false;
@@ -148,7 +148,7 @@ namespace Database.Tables.BasicHouseholds {
             return "(no desire)";
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd) {
+        protected override void SetSqlParameters(Command cmd) {
             if (AffordanceID != null) {
                 cmd.AddParameter("AffordanceID", "@AffordanceID", AffordanceID);
             }

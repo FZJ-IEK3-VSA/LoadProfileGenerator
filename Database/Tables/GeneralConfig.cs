@@ -464,7 +464,7 @@ namespace Database.Tables {
             Options[option].SaveToDB();
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message) {
+        protected override bool IsItemLoadedCorrectly(out string message) {
             message = "";
             return true;
         }

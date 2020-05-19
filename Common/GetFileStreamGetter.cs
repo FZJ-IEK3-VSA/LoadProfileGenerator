@@ -26,14 +26,12 @@
 
 //-----------------------------------------------------------------------
 
-using JetBrains.Annotations;
 using System.IO;
 
 namespace Common {
     public class GetFileStreamGetter : IGetStreams {
 #pragma warning disable CC0022 // Should dispose object
-        [NotNull]
-        public Stream GetWriterStream([NotNull] string fileName) => new FileStream(fileName, FileMode.Create);
+        public Stream GetWriterStream(string fileName) => new FileStream(fileName, FileMode.Create);
 #pragma warning restore CC0022 // Should dispose object
     }
 }

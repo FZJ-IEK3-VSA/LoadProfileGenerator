@@ -49,7 +49,7 @@ namespace Database.Tables.BasicHouseholds {
         public SubAffordanceDesire([CanBeNull]int? pID, [CanBeNull] Desire desire, [CanBeNull]int? affordanceID, decimal satisfactionvalue,
             [ItemNotNull][NotNull] ObservableCollection<Desire> simdesires, [CanBeNull] Func<SubAffordanceDesire, bool> deleteThis,
             [NotNull] string connectionString,
-            [NotNull] string name, [NotNull] StrGuid guid) : base(name, TableName, connectionString, guid) {
+            [NotNull] string name, StrGuid guid) : base(name, TableName, connectionString, guid) {
             ID = pID;
             _deleteThis = deleteThis;
             _desire = desire;
@@ -92,7 +92,7 @@ namespace Database.Tables.BasicHouseholds {
             return affordanceDesire;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message) {
+        protected override bool IsItemLoadedCorrectly(out string message) {
             if (_desire == null) {
                 message = "Desire not found";
                 return false;
@@ -131,7 +131,7 @@ namespace Database.Tables.BasicHouseholds {
             _deleteThis = deleteThis;
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd) {
+        protected override void SetSqlParameters(Command cmd) {
             if (SubaffordanceID != null) {
                 cmd.AddParameter("SubAffordanceID", "@SubAffordanceID", SubaffordanceID);
             }

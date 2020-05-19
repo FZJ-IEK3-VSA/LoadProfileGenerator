@@ -13,7 +13,7 @@ namespace Database.Tables.ModularHouseholds {
         [CanBeNull] private readonly HouseholdTrait _thisTrait;
 
         public HHTTrait([CanBeNull]int? pID, [CanBeNull] int? parentTraitID, [CanBeNull] HouseholdTrait thisTrait, [NotNull] string connectionString,
-            [NotNull] string name, [NotNull] StrGuid guid)
+            [NotNull] string name, StrGuid guid)
             : base(name, TableName, connectionString, guid)
         {
             ID = pID;
@@ -49,7 +49,7 @@ namespace Database.Tables.ModularHouseholds {
             return hhtsub;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             if (_thisTrait == null) {
                 message = "Trait not found";

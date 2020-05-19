@@ -104,7 +104,7 @@ namespace Database.Tables.BasicElements {
         private TimeType _timeType;
 
         public HouseholdPlanEntry([NotNull] string name, int householdPlanID, [CanBeNull] AffordanceTag tag, [CanBeNull] Person person, double times, double timeCount, TimeType timeType,
-                                  [NotNull] string connectionString, [CanBeNull] int? pID, [CanBeNull] ICalcObject calcObject, [NotNull] StrGuid guid) : base(name, pID, TableName, connectionString,
+                                  [NotNull] string connectionString, [CanBeNull] int? pID, [CanBeNull] ICalcObject calcObject, StrGuid guid) : base(name, pID, TableName, connectionString,
             guid)
         {
             _householdPlanID = householdPlanID;
@@ -497,7 +497,7 @@ namespace Database.Tables.BasicElements {
             return totalEnergyUses;
         }
 
-        public override int CompareTo([CanBeNull] object obj)
+        public override int CompareTo(object obj)
         {
             if (!(obj is AffordanceTaggingEntry other)) {
                 return 0;
@@ -582,7 +582,7 @@ namespace Database.Tables.BasicElements {
 
         public override string ToString() => Name;
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             if (_tag == null) {
                 message = "Tag not found";
@@ -598,7 +598,7 @@ namespace Database.Tables.BasicElements {
             return true;
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("HouseholdPlanID", _householdPlanID);
             if (_tag != null) {

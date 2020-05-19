@@ -15,7 +15,6 @@ namespace Common.CalcDto {
         public int ID { get; }
         [NotNull]
         public string TemperatureprofileName { get; }
-        [NotNull]
         public StrGuid Guid { get; }
         [NotNull][ItemNotNull]
         public List<CalcLocationDto> LocationDtos { get;  }
@@ -40,7 +39,7 @@ namespace Common.CalcDto {
         public string Description { get; }
 
         public CalcHouseholdDto([NotNull]string name, int id,
-                                [NotNull] string temperatureprofileName, [NotNull]HouseholdKey householdkey, [NotNull]StrGuid guid, [NotNull] string geographicLocationName,
+                                [NotNull] string temperatureprofileName, [NotNull]HouseholdKey householdkey, StrGuid guid, [NotNull] string geographicLocationName,
                                 [NotNull]List<DateTime> bridgeDays, [NotNull][ItemNotNull]List<CalcAutoDevDto> autoDevices,
                                 [NotNull][ItemNotNull] List<CalcLocationDto> locationDtos, [NotNull][ItemNotNull]List<CalcPersonDto> persons,[NotNull][ItemNotNull]List<CalcDeviceDto> deviceDtos,
                                 [NotNull][ItemNotNull] List<CalcAffordanceDto> affordances,

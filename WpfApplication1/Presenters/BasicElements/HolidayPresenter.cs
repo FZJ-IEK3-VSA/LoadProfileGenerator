@@ -53,7 +53,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             Close(false);
         }
 
-        public override bool Equals([CanBeNull] object obj) {
+        public override bool Equals(object obj) {
             return obj is HolidayPresenter presenter && presenter.ThisHoliday.Equals(_thisHoliday);
         }
 

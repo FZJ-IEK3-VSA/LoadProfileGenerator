@@ -50,7 +50,7 @@ namespace CalculationEngine.HouseholdElements {
             bool isInterruptable, bool isInterrupting,[NotNull] CalcAffordance parentAffordance,
             [NotNull][ItemNotNull] List<CalcAffordanceVariableOp> variableOps, int weight,
                                  [NotNull] string sourceTrait,
-                                 [NotNull] StrGuid guid, [ItemNotNull] [NotNull] BitArray isBusy,
+                                 StrGuid guid, [ItemNotNull] [NotNull] BitArray isBusy,
             [NotNull] CalcVariableRepository repository, BodilyActivityLevel bodilyActivityLevel, [NotNull] CalcRepo calcRepo)
             : base(
                 pName, loc, satisfactionvalues, miniumAge, maximumAge, permittedGender, false, false, pAffCategory,
@@ -75,8 +75,8 @@ namespace CalculationEngine.HouseholdElements {
 
         private int PersonProfileDuration => _durations;
 
-        public override void Activate([NotNull] TimeStep startTime, [NotNull] string activatorName, [NotNull] CalcLocation personSourceLocation,
-             [NotNull] out ICalcProfile personTimeProfile)
+        public override void Activate(TimeStep startTime, string activatorName, CalcLocation personSourceLocation,
+             out ICalcProfile personTimeProfile)
         {
             for (var i = 0; i < PersonProfileDuration && i + startTime.InternalStep < IsBusyArray.Length; i++) {
                 IsBusyArray[i + startTime.InternalStep] = true;
@@ -103,7 +103,7 @@ namespace CalculationEngine.HouseholdElements {
 
         public override int DefaultPersonProfileLength => PersonProfileDuration;
 
-        public override bool IsBusy([NotNull] TimeStep time, [NotNull] CalcLocation srcLocation, [NotNull] string calcPersonName,
+        public override bool IsBusy(TimeStep time, CalcLocation srcLocation, string calcPersonName,
             bool clearDictionaries = true)
         {
             if (IsBusyArray[time.InternalStep]) {
@@ -112,22 +112,14 @@ namespace CalculationEngine.HouseholdElements {
             return false;
         }
 
-        [NotNull]
-        [ItemNotNull]
-        public override List<CalcSubAffordance> CollectSubAffordances([NotNull] TimeStep time,
+        public override List<CalcSubAffordance> CollectSubAffordances(TimeStep time,
                                                                       bool onlyInterrupting,
-                                                                      [NotNull] CalcLocation srcLocation) => throw new NotImplementedException();
+                                                                      CalcLocation srcLocation) => throw new NotImplementedException();
 
-        [NotNull]
-        [ItemNotNull]
         public override List<CalcSubAffordance> SubAffordances { get; }
-        [CanBeNull]
-        [ItemNotNull]
         public override List<CalcAffordance.DeviceEnergyProfileTuple> Energyprofiles { get; }
         public override ColorRGB AffordanceColor { get; }
-        [NotNull]
         public override string SourceTrait { get; }
-        [CanBeNull]
         public override string TimeLimitName { get; }
         public override bool AreThereDuplicateEnergyProfiles() => false;
 

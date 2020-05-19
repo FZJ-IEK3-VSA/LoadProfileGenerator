@@ -35,7 +35,7 @@ namespace Database.Tables.BasicHouseholds {
         private VacationType _vacationType;
 
         public VacationTime([NotNull] string name, [CanBeNull] int? pID, DateTime start, DateTime end, int vacationID,
-            [NotNull] string connectionString, VacationType vacationType, [NotNull] StrGuid guid)
+            [NotNull] string connectionString, VacationType vacationType, StrGuid guid)
             : base(name, TableName, connectionString, guid)
         {
             _vacationType = vacationType;
@@ -80,7 +80,7 @@ namespace Database.Tables.BasicHouseholds {
             return pd;
         }
 
-        public override int CompareTo([CanBeNull] BasicElement other)
+        public override int CompareTo(BasicElement other)
         {
             if (other is VacationTime pd)
             {
@@ -89,7 +89,7 @@ namespace Database.Tables.BasicHouseholds {
             return base.CompareTo(other);
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             if (_vacationID == null) {
                 message = "Vacation not found";
@@ -106,7 +106,7 @@ namespace Database.Tables.BasicHouseholds {
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             if (_vacationID != null) {
                 cmd.AddParameter("VacationID", _vacationID);

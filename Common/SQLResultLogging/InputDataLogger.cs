@@ -58,9 +58,8 @@ namespace Common.SQLResultLogging {
             }
         }
 
-        public abstract void Run([NotNull] HouseholdKey key, [NotNull] object o);
+        public abstract void Run(HouseholdKey key, object o);
 
-        [NotNull]
         public Type SavingType { get; }
 
         [CanBeNull]
@@ -114,11 +113,11 @@ namespace Common.SQLResultLogging {
         [NotNull]
         private Dictionary<Type, IDataSaverBase> FunctionDB { get; } = new Dictionary<Type, IDataSaverBase>();
 
-        public void Save([NotNull] object o)
+        public void Save(object o)
         {
             Save(Constants.GeneralHouseholdKey,o);
         }
-        public void Save([NotNull] HouseholdKey key, [NotNull] object o)
+        public void Save(HouseholdKey key, object o)
         {
             Type t = o.GetType();
             if (!FunctionDB.ContainsKey(t)) {
@@ -129,7 +128,7 @@ namespace Common.SQLResultLogging {
             dsb.Run(key, o);
         }
 
-        public void SaveList([NotNull] List<IHouseholdKey> objectsWithKey)
+        public void SaveList(List<IHouseholdKey> objectsWithKey)
         {
             if (objectsWithKey.Count == 0) {
                 Logger.Error("While trying to save some results, not a single object was contained in the list");

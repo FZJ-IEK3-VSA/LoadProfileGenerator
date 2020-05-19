@@ -183,7 +183,7 @@ namespace ChartCreator2.OxyCharts {
             Save(plotModel1, plotName, thisname, basisPath, makePng: makePng);
         }
 
-        protected override FileProcessingResult MakeOnePlot([JetBrains.Annotations.NotNull] ResultFileEntry srcEntry)
+        protected override FileProcessingResult MakeOnePlot(ResultFileEntry srcEntry)
         {
             string plotName = "Devices " + srcEntry.HouseholdKey + " " + srcEntry.LoadTypeInformation?.Name;
             Profiler.StartPart(Utili.GetCurrentMethodAndClass());

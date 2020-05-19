@@ -15,11 +15,10 @@ namespace Database.Tables.ModularHouseholds {
     public class HHTemplateEntry : DBBase, IComparable<HHTemplateEntry>, IJSonSubElement<HHTemplateEntry.JsonDto>
     {
 
-        [NotNull]
         public StrGuid RelevantGuid => Guid;
         public class JsonDto : IGuidObject
         {
-            public JsonDto([CanBeNull] JsonReference traitTagReference, [NotNull] StrGuid guid, int traitCountMax, int traitCountMin, string name)
+            public JsonDto([CanBeNull] JsonReference traitTagReference, StrGuid guid, int traitCountMax, int traitCountMin, string name)
             {
                 TraitTagReference = traitTagReference;
                 Guid = guid;
@@ -30,7 +29,6 @@ namespace Database.Tables.ModularHouseholds {
 
             [CanBeNull]
             public JsonReference TraitTagReference { get; set; }
-            [NotNull]
             public StrGuid Guid { get; set; }
 
             [NotNull]
@@ -42,7 +40,6 @@ namespace Database.Tables.ModularHouseholds {
             public int TraitCountMin { get; set; }
             public string Name { get; set; }
         }
-        [NotNull]
         public JsonDto GetJson()
         {
             JsonDto hhte = new JsonDto(TraitTag.GetJsonReference(), Guid,
@@ -66,7 +63,7 @@ namespace Database.Tables.ModularHouseholds {
         private int _traitCountMin;
 
         public HHTemplateEntry([CanBeNull]int? pID, [CanBeNull] int? householdTemplateId, [NotNull] string name, [NotNull] string connectionString,
-            [CanBeNull] TraitTag tag, int traitCountMin, int traitCountMax, [NotNull] StrGuid guid)
+            [CanBeNull] TraitTag tag, int traitCountMin, int traitCountMax, StrGuid guid)
             : base(name, TableName, connectionString, guid)
         {
             _householdTemplateId = householdTemplateId;
@@ -182,7 +179,7 @@ namespace Database.Tables.ModularHouseholds {
             return chht;
         }
 
-        public override int CompareTo([CanBeNull] BasicElement other)
+        public override int CompareTo(BasicElement other)
         {
             if (other is HHTemplateEntry othr)
             {
@@ -192,7 +189,7 @@ namespace Database.Tables.ModularHouseholds {
         }
 
         [SuppressMessage("Microsoft.Naming", "CA1725:ParameterNamesShouldMatchBaseDeclaration", MessageId = "0#")]
-        public override int CompareTo([CanBeNull] object obj)
+        public override int CompareTo(object obj)
         {
             if (obj is HHTemplateEntry othr)
             {
@@ -212,7 +209,7 @@ namespace Database.Tables.ModularHouseholds {
             return false;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             if (_tag == null) {
                 message = "Tag not found";
@@ -242,7 +239,7 @@ namespace Database.Tables.ModularHouseholds {
                 ignoreMissingTables);
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             if (_tag != null) {
                 cmd.AddParameter("TraitTagID", _tag.IntID);
@@ -264,7 +261,7 @@ namespace Database.Tables.ModularHouseholds {
             return "(no name)";
         }
 
-        public void SynchronizeDataFromJson([NotNull] JsonDto jtp, [NotNull] Simulator sim)
+        public void SynchronizeDataFromJson(JsonDto jtp, Simulator sim)
         {
             TraitCountMin = jtp.TraitCountMin;
             TraitCountMax = jtp.TraitCountMax;

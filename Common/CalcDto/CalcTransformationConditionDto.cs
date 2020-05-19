@@ -7,7 +7,6 @@ namespace Common.CalcDto {
         public CalcVariableDto CalcVariableDto { get; }
 
         public double MaxValue { get; }
-        [NotNull]
         public StrGuid Guid { get; }
         public double MinValue { get; }
         [NotNull]
@@ -15,7 +14,7 @@ namespace Common.CalcDto {
         public int ID { get; }
         //todo: split in two conditiontypes with the same interface to avoid the can be null mess
         public CalcTransformationConditionDto([NotNull]string name, int id,
-                                              [NotNull] CalcVariableDto variableDto, double minValue, double maxValue, [NotNull] StrGuid guid
+                                              [NotNull] CalcVariableDto variableDto, double minValue, double maxValue, StrGuid guid
                                               )
         {
             Name = name;

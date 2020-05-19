@@ -67,7 +67,7 @@ namespace Common.SQLResultLogging.Loggers {
 
         [UsedImplicitly]
         [CanBeNull]
-        public StrGuid DeviceGuid {
+        public StrGuid? DeviceGuid {
             get {
                 if(CalcDeviceDto!= null) {
                     return CalcDeviceDto?.Guid;
@@ -90,7 +90,6 @@ namespace Common.SQLResultLogging.Loggers {
         [JsonProperty]
         public string AffordanceName { get;  set; }
 
-        [NotNull]
         [UsedImplicitly]
         [JsonProperty]
         public StrGuid LoadTypeGuid { get;  set; }

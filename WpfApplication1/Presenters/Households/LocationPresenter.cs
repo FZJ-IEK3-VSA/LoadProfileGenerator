@@ -134,7 +134,7 @@ namespace LoadProfileGenerator.Presenters.Households
         }
 
         [SuppressMessage("ReSharper", "NotAllowedAnnotation")]
-        public override bool Equals([CanBeNull] object obj)
+        public override bool Equals(object obj)
         {
             var presenter = obj as LocationPresenter;
             return presenter?.ThisLocation.Equals(_location) == true;

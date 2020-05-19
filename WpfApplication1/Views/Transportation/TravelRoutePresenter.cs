@@ -44,7 +44,7 @@ namespace LoadProfileGenerator.Views.Transportation
             Close(false);
         }
 
-        public override bool Equals([CanBeNull] object obj)
+        public override bool Equals(object obj)
         {
             TravelRoutePresenter presenter = obj as TravelRoutePresenter;
             return presenter?.ThisRoute.Equals(_travelRoute) == true;

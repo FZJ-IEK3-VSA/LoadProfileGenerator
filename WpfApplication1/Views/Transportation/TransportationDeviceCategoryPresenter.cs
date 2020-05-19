@@ -35,7 +35,7 @@ namespace LoadProfileGenerator.Views.Transportation {
             Close(false);
         }
 
-        public override bool Equals([CanBeNull] object obj)
+        public override bool Equals(object obj)
         {
             TransportationDeviceCategoryPresenter presenter = obj as TransportationDeviceCategoryPresenter;
             return presenter?.ThisCategory.Equals(_transportationDeviceCategory) == true;

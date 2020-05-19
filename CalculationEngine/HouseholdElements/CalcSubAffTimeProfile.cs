@@ -50,15 +50,12 @@ namespace CalculationEngine.HouseholdElements {
 
         #region ICalcProfile Members
 
-        [NotNull]
         public List<double> StepValues => _values;
 
         //public string DataSource => "Synthethic calculated from Person Profile";
 
-        [NotNull]
         public string Name { get; }
         public double TimeFactor { get; }
-        [NotNull]
         public string DataSource { get; }
 
         public StrGuid Guid { get; }

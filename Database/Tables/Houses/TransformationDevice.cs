@@ -68,7 +68,7 @@ namespace Database.Tables.Houses {
                                     [NotNull] string connectionString,
                                     double minimumInputPower,
                                     double maximumInputPower,
-                                    [NotNull] StrGuid guid,
+                                    StrGuid guid,
                                     [CanBeNull] int? pID = null) : base(pName, TableName, connectionString, guid)
         {
             _minValue = minValue;
@@ -188,8 +188,7 @@ namespace Database.Tables.Houses {
             tdlt.SaveToDB();
         }
 
-        [NotNull]
-        public override List<UsedIn> CalculateUsedIns([NotNull] Simulator sim)
+        public override List<UsedIn> CalculateUsedIns(Simulator sim)
         {
             var used = new List<UsedIn>();
             foreach (var ht in sim.HouseTypes.It) {
@@ -237,8 +236,7 @@ namespace Database.Tables.Houses {
             _loadTypesOut.Remove(lt);
         }
 
-        [NotNull]
-        public override DBBase ImportFromGenericItem([NotNull] DBBase toImport, [NotNull] Simulator dstSim) =>
+        public override DBBase ImportFromGenericItem(DBBase toImport, Simulator dstSim) =>
             ImportFromItem((TransformationDevice)toImport, dstSim);
 
         [NotNull]
@@ -330,13 +328,13 @@ namespace Database.Tables.Houses {
 
         public override string ToString() => Name;
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             message = "";
             return true;
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("Name", "@myname", Name);
             cmd.AddParameter("Description", "@description", _description);

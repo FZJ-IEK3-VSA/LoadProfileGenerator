@@ -41,7 +41,7 @@ namespace Database.Tables {
         [CanBeNull] private string _settingValue;
 
         public SingleSetting([NotNull] string settingName, [NotNull] string settingValue, [NotNull] string connectionString,
-                             [NotNull] StrGuid guid,
+                             StrGuid guid,
                              [CanBeNull]int? pID = null)
             : base(settingName, GeneralConfig.TableName, connectionString, guid) {
             _settingValue = settingValue;
@@ -61,7 +61,7 @@ namespace Database.Tables {
             }
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message) {
+        protected override bool IsItemLoadedCorrectly(out string message) {
             message = "";
             return true;
         }
@@ -109,7 +109,7 @@ namespace Database.Tables {
                             }
 
                             cmd.AddParameter("myid", ID);
-                            cmd.AddParameter("Guid", Guid.Value);
+                            cmd.AddParameter("Guid", Guid.StrVal);
                             cmd.ExecuteNonQuery(
                                 "UPDATE tblSettings SET Settingname = @myname, Settingvalue = @myval, Guid=@guid WHERE ID = @myid");
                             NeedsUpdate = false;
@@ -128,7 +128,7 @@ namespace Database.Tables {
                         else {
                             cmd.AddParameter("myval", string.Empty);
                         }
-                        cmd.AddParameter("guid",Guid.Value);
+                        cmd.AddParameter("guid",Guid.StrVal);
                         cmd.ExecuteNonQuery(
                             "INSERT INTO tblSettings (Settingname, Settingvalue, Guid) VALUES (@myname, @myval, @guid);");
                         NeedsUpdate = false;

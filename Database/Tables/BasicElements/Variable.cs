@@ -43,7 +43,7 @@ namespace Database.Tables.BasicElements {
         [NotNull] private string _unit;
 
         public Variable([NotNull] string name, [NotNull] string description, [NotNull] string unit, [NotNull] string connectionString,
-                        [NotNull] StrGuid guid,[CanBeNull]int? pID = null)
+                        StrGuid guid,[CanBeNull]int? pID = null)
             : base(name, TableName, connectionString, guid) {
             _description = description;
             _unit = unit;
@@ -83,14 +83,11 @@ namespace Database.Tables.BasicElements {
             FindNewName(isNameTaken, "New Variable "), "(no description)", "(no unit)",
             connectionString, System.Guid.NewGuid().ToStrGuid());
 
-        [NotNull]
-        public override DBBase ImportFromGenericItem([NotNull] DBBase toImport,  [NotNull] Simulator dstSim)
+        public override DBBase ImportFromGenericItem(DBBase toImport,  Simulator dstSim)
             => ImportFromItem((Variable)toImport,  dstSim);
 
-        [ItemNotNull]
-        [NotNull]
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        public override List<UsedIn> CalculateUsedIns([NotNull] Simulator sim) {
+        public override List<UsedIn> CalculateUsedIns(Simulator sim) {
             var usedIns = new List<UsedIn>();
             foreach (var affordance in sim.Affordances.It) {
                 foreach (var operation in affordance.ExecutedVariables) {
@@ -147,7 +144,7 @@ namespace Database.Tables.BasicElements {
             return hd;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message) {
+        protected override bool IsItemLoadedCorrectly(out string message) {
             message = "";
             return true;
         }
@@ -158,7 +155,7 @@ namespace Database.Tables.BasicElements {
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd) {
+        protected override void SetSqlParameters(Command cmd) {
             cmd.AddParameter("Name", "@myname", Name);
             cmd.AddParameter("Description", Description);
             cmd.AddParameter("Unit", _unit);

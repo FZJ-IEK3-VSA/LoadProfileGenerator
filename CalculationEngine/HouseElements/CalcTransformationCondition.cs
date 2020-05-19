@@ -13,7 +13,7 @@ namespace CalculationEngine.HouseElements {
 
         public CalcTransformationCondition([NotNull] string pName,
              [NotNull] CalcVariable calcVariable, double minValue,
-            double maxValue, [NotNull] StrGuid guid) : base(pName, guid) {
+            double maxValue, StrGuid guid) : base(pName, guid) {
             _minValue = minValue;
             _maxValue = maxValue;
             _calcVariable = calcVariable;

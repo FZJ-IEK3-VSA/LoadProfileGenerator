@@ -62,7 +62,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
                 return Device == other.Device && Profile == other.Profile && ProfileSource == other.ProfileSource && LoadType == other.LoadType;
             }
 
-            public override bool Equals([CanBeNull] object obj) {
+            public override bool Equals(object obj) {
                 return obj is ProfileActivationEntryKey other && Equals(other);
             }
 

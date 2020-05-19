@@ -21,7 +21,7 @@ namespace Database.Tables.BasicHouseholds {
 
         public DeviceActionProfile([CanBeNull] TimeBasedProfile timeprofile, [CanBeNull] int? id, decimal timeOffset,
             int deviceActionID,
-            [NotNull] string deviceName, [CanBeNull] VLoadType vLoadType, [NotNull] string connectionString, double multiplier, [NotNull] StrGuid guid)
+            [NotNull] string deviceName, [CanBeNull] VLoadType vLoadType, [NotNull] string connectionString, double multiplier, StrGuid guid)
             : base(deviceName, TableName, connectionString, guid) {
             _deviceActionID = deviceActionID;
             _timeprofile = timeprofile;
@@ -95,7 +95,7 @@ namespace Database.Tables.BasicHouseholds {
             return tup;
         }
 
-        public override int CompareTo([CanBeNull] BasicElement other) {
+        public override int CompareTo(BasicElement other) {
             if (other is DeviceActionProfile otheraff && _vLoadType != null && otheraff._vLoadType != null)
             {
                 return _vLoadType.CompareTo(otheraff._vLoadType);
@@ -103,7 +103,7 @@ namespace Database.Tables.BasicHouseholds {
             return base.CompareTo(other);
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message) {
+        protected override bool IsItemLoadedCorrectly(out string message) {
             if (_timeprofile == null) {
                 message = "Time profile not found.";
                 return false;
@@ -124,7 +124,7 @@ namespace Database.Tables.BasicHouseholds {
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd) {
+        protected override void SetSqlParameters(Command cmd) {
             cmd.AddParameter("DeviceActionID", _deviceActionID);
             if (_timeprofile != null) {
                 cmd.AddParameter("TimeProfileID", _timeprofile.IntID);

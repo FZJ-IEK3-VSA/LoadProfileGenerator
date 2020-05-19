@@ -83,7 +83,7 @@ namespace CalculationController.Integrity {
             }
         }
 
-        protected override void Run([NotNull] Simulator sim) {
+        protected override void Run(Simulator sim) {
             if (!PerformCleanupChecks) {
                 return;
             }

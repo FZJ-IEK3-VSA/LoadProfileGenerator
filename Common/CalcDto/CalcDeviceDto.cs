@@ -24,8 +24,8 @@ namespace Common.CalcDto {
         {
             return (CalcDeviceDto)this.MemberwiseClone();
         }
-        public CalcDeviceDto([NotNull]string name, [NotNull] StrGuid deviceCategoryGuid, [NotNull] HouseholdKey householdKey, OefcDeviceType deviceType,
-                             [NotNull] string deviceCategoryName, [NotNull]string additionalName, [NotNull] StrGuid guid, [NotNull] StrGuid locationGuid,
+        public CalcDeviceDto([NotNull]string name, StrGuid deviceCategoryGuid, [NotNull] HouseholdKey householdKey, OefcDeviceType deviceType,
+                             [NotNull] string deviceCategoryName, [NotNull]string additionalName, StrGuid guid, StrGuid locationGuid,
                              [NotNull]string locationName)
         {
             Name = name;
@@ -40,9 +40,7 @@ namespace Common.CalcDto {
         }
         [NotNull]
         public string Name { get; set; }
-        [NotNull]
         public StrGuid DeviceCategoryGuid { get; set; }
-        [NotNull]
         public HouseholdKey HouseholdKey
         {
             get;
@@ -53,14 +51,10 @@ namespace Common.CalcDto {
         public string DeviceCategoryName { get; set; }
         [NotNull]
         public string AdditionalName { get; set; }
-        [NotNull]
         public StrGuid Guid { get; set; }
-        [NotNull]
         public StrGuid LocationGuid { get; set; }
         [NotNull]
         public string LocationName { get; set; }
-        [ItemNotNull]
-        [NotNull]
         public List<CalcDeviceLoadDto> Loads { get; set; } = new List<CalcDeviceLoadDto>();
 
         public void AddLoads([ItemNotNull] [NotNull]List<CalcDeviceLoadDto> load)

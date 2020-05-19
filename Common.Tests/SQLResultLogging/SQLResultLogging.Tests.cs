@@ -2,11 +2,13 @@
 using Automation;
 using Automation.ResultFiles;
 using Common.SQLResultLogging;
+using JetBrains.Annotations;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Common.Tests.SQLResultLogging
 {
-    public class SqlResultLoggingTest
+    public class SqlResultLoggingTest : UnitTestBaseClass
     {
         /*
         private class TestDataClass  {
@@ -105,6 +107,10 @@ namespace Common.Tests.SQLResultLogging
                 srl.SaveResultEntry(se);
                 wd.CleanUp();
             }
+        }
+
+        public SqlResultLoggingTest([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

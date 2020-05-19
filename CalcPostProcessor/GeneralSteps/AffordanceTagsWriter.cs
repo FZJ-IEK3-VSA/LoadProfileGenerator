@@ -41,7 +41,7 @@ namespace CalcPostProcessor.GeneralSteps
             _fft = fft;
         }
 
-        protected override void PerformActualStep([JetBrains.Annotations.NotNull] IStepParameters parameters)
+        protected override void PerformActualStep(IStepParameters parameters)
         {
             WriteAffordanceTags();
         }

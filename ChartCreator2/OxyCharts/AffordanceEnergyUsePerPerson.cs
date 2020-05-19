@@ -30,7 +30,7 @@ namespace ChartCreator2.OxyCharts {
         {
         }
 
-        protected override FileProcessingResult MakeOnePlot([JetBrains.Annotations.NotNull] HouseholdKeyEntry hhkey)
+        protected override FileProcessingResult MakeOnePlot(HouseholdKeyEntry hhkey)
         {
             CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
             var entries = CalcDataRepository.LoadAffordanceEnergyUses(hhkey.HouseholdKey);

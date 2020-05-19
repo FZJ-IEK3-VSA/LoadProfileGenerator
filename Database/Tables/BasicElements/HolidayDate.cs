@@ -38,7 +38,7 @@ namespace Database.Tables.BasicElements {
         public const string TableName = "tblHolidayDates";
         private DateTime _dateAndTime;
 
-        public HolidayDate(DateTime dt, int holidayID, [NotNull] string connectionString, [CanBeNull] int? pID, [NotNull] StrGuid guid)
+        public HolidayDate(DateTime dt, int holidayID, [NotNull] string connectionString, [CanBeNull] int? pID, StrGuid guid)
             : base(dt.ToLongDateString(), pID, TableName, connectionString, guid)
         {
             _dateAndTime = dt;
@@ -90,7 +90,7 @@ namespace Database.Tables.BasicElements {
             return new HolidayDate(time, holidayID, connectionString, holidayDateID, guid);
         }
 
-        public override int CompareTo([CanBeNull] object obj)
+        public override int CompareTo(object obj)
         {
             if (!(obj is HolidayDate other))
             {
@@ -99,7 +99,7 @@ namespace Database.Tables.BasicElements {
             return _dateAndTime.CompareTo(other._dateAndTime);
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             message = "";
             return true;
@@ -112,7 +112,7 @@ namespace Database.Tables.BasicElements {
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("HolidayID", HolidayID);
             cmd.AddParameter("DateAndTime", DateAndTime);

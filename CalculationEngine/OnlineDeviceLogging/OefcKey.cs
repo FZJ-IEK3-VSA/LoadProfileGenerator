@@ -27,7 +27,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
 
         [NotNull]
         public string FullKey { get; }
-        public OefcKey([NotNull] CalcDeviceDto dto, [CanBeNull] StrGuid loadtypeGuid)
+        public OefcKey([NotNull] CalcDeviceDto dto, StrGuid loadtypeGuid)
         {
             HouseholdKey = dto.HouseholdKey;
             ThisDeviceType =dto.DeviceType;
@@ -81,7 +81,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
             FullKey= MakeKey();
         }
         */
-        public override bool Equals([CanBeNull] object obj) {
+        public override bool Equals(object obj) {
             return obj is OefcKey other && Equals(other);
         }
         [NotNull]
@@ -109,16 +109,13 @@ namespace CalculationEngine.OnlineDeviceLogging {
 
         public static bool operator !=(in OefcKey point1, OefcKey point2) => !point1.Equals(point2);
 
-        [CanBeNull]
         public StrGuid LoadtypeGuid { get; }
 
         [NotNull]
         public string DeviceCategory { get; }
 
-        [NotNull]
         public StrGuid LocationGuid { get; }
 
-        [NotNull]
         public StrGuid DeviceGuid { get; }
         [NotNull]
         public HouseholdKey HouseholdKey { get; }

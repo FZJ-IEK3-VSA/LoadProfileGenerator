@@ -16,7 +16,7 @@ using JetBrains.Annotations;
 namespace CalculationController.DtoFactories
 {
     public class DeviceCategoryDto {
-        public DeviceCategoryDto([NotNull] string fullCategoryName, [NotNull] StrGuid guid)
+        public DeviceCategoryDto([NotNull] string fullCategoryName, StrGuid guid)
         {
             FullCategoryName = fullCategoryName;
             Guid = guid;
@@ -25,7 +25,6 @@ namespace CalculationController.DtoFactories
         [NotNull]
         [UsedImplicitly]
         public string FullCategoryName { get; set; }
-        [NotNull]
         [UsedImplicitly]
         public StrGuid Guid { get; set; }
     }

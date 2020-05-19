@@ -19,7 +19,7 @@ namespace Database.Tables.Houses {
         public TransformationDeviceCondition([CanBeNull]int? pID,
              double minValue, double maxValue,
              int transformationDeviceID, [NotNull] string connectionString, [NotNull] string name,
-                                             [NotNull] StrGuid guid, Variable variable) : base(
+                                             StrGuid guid, Variable variable) : base(
             name, TableName, connectionString, guid)
         {
             ID = pID;
@@ -71,7 +71,7 @@ namespace Database.Tables.Houses {
             return "Value for " + variableName + " between " + _minValue + " and " + _maxValue;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             if (_variable == null) {
                 message = "Variable not found.";
@@ -90,7 +90,7 @@ namespace Database.Tables.Houses {
         }
 
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("TransformationDeviceID", TransformationDeviceID);
             if (_variable != null) {

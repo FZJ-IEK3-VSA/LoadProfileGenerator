@@ -56,7 +56,7 @@ namespace Common.SQLResultLogging.Loggers {
             return Srls.ReadFromJson<PersonStatus>(ResultTableDefinition, hhkey, ExpectedResultCount.OneOrMore);
         }
 
-        public override void Run([NotNull] HouseholdKey key, [NotNull] object o)
+        public override void Run(HouseholdKey key, object o)
         {
             var objects = (List<LogMessageEntry>)o;
             SaveableEntry se = new SaveableEntry(key, ResultTableDefinition);

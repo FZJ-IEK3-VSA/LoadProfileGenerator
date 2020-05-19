@@ -13,7 +13,7 @@ namespace Database.Tables.Houses {
         private readonly int _settlementTemplateID;
 
         public STHouseType([CanBeNull]int? pID, [NotNull] string connectionString, int settlementTemplateID, [NotNull] string name,
-            [CanBeNull] HouseType houseType, [NotNull] StrGuid guid)
+            [CanBeNull] HouseType houseType, StrGuid guid)
             : base(name, TableName, connectionString, guid) {
             TypeDescription = "Settlement Template House Type";
             ID = pID;
@@ -43,7 +43,7 @@ namespace Database.Tables.Houses {
             return shh;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message) {
+        protected override bool IsItemLoadedCorrectly(out string message) {
             if (_houseType == null) {
                 message = "Housetype not found";
                 return false;
@@ -58,7 +58,7 @@ namespace Database.Tables.Houses {
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd) {
+        protected override void SetSqlParameters(Command cmd) {
             if (_houseType != null) {
                 cmd.AddParameter("HouseTypeID", _houseType.IntID);
             }

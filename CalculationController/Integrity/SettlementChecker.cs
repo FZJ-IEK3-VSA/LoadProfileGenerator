@@ -4,14 +4,13 @@ using Common;
 using Common.Enums;
 using Database;
 using Database.Tables.Houses;
-using JetBrains.Annotations;
 
 namespace CalculationController.Integrity {
     internal class SettlementChecker : BasicChecker {
         public SettlementChecker(bool performCleanupChecks) : base("Settlements", performCleanupChecks) {
         }
 
-        protected override void Run([NotNull] Simulator sim) {
+        protected override void Run(Simulator sim) {
             foreach (var settlement in sim.Settlements.It) {
                 if (settlement.Name.ToLower(CultureInfo.CurrentCulture).StartsWith("diss", StringComparison.Ordinal)) {
                     if (settlement.Households.Count != 100) {

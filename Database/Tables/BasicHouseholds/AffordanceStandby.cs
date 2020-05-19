@@ -19,7 +19,7 @@ namespace Database.Tables.BasicHouseholds {
 
         public AffordanceStandby([CanBeNull] IAssignableDevice assignableDevice, [CanBeNull]int? id, [CanBeNull]int? affordanceID,
             [NotNull] string connectionString,
-            [NotNull] string deviceName, [NotNull] StrGuid guid) : base(deviceName, TableName, connectionString, guid) {
+            [NotNull] string deviceName, StrGuid guid) : base(deviceName, TableName, connectionString, guid) {
             _assignableDevice = assignableDevice;
             ID = id;
             _affordanceID = affordanceID;
@@ -57,15 +57,12 @@ namespace Database.Tables.BasicHouseholds {
         }
 
         [UsedImplicitly]
-        [CanBeNull]
         public IAssignableDevice Device => _assignableDevice;
 
-        [CanBeNull]
         public VLoadType LoadType => null;
 
         public double Probability => 0;
 
-        [CanBeNull]
         public TimeBasedProfile TimeProfile => null;
 
         [NotNull]
@@ -112,7 +109,7 @@ namespace Database.Tables.BasicHouseholds {
             return tup;
         }
 
-        public override int CompareTo([CanBeNull] BasicElement other) {
+        public override int CompareTo(BasicElement other) {
             if (_assignableDevice == null) {
                 return 0;
             }
@@ -123,7 +120,7 @@ namespace Database.Tables.BasicHouseholds {
             return base.CompareTo(other);
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message) {
+        protected override bool IsItemLoadedCorrectly(out string message) {
             if (_assignableDevice == null) {
                 message = "Device not found";
                 return false;
@@ -141,7 +138,7 @@ namespace Database.Tables.BasicHouseholds {
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd) {
+        protected override void SetSqlParameters(Command cmd) {
             if (_affordanceID != null) {
                 cmd.AddParameter("AffordanceID", "@AffordanceID", _affordanceID);
             }

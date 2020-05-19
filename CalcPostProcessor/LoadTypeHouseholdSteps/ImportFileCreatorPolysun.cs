@@ -142,7 +142,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             sumfile.Flush();
         }
 
-        protected override void PerformActualStep([NotNull] IStepParameters parameters)
+        protected override void PerformActualStep(IStepParameters parameters)
         {
             LoadtypeStepParameters p = (LoadtypeStepParameters)parameters;
             RunPolysun(p.LoadType, p.EnergyFileRows, _fft, Repository.CalcObjectInformation.CalcObjectName);

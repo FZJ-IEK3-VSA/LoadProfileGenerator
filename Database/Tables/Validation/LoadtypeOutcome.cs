@@ -9,7 +9,7 @@ namespace Database.Tables.Validation {
         private readonly int _calculationOutcomeID;
 
         public LoadtypeOutcome([NotNull] string name, int calculationOutcomeID, [NotNull] string loadTypeName, double value,
-            [NotNull] string connectionString,[NotNull] StrGuid guid, [CanBeNull]int? pID = null) : base(name, pID, TableName, connectionString, guid) {
+            [NotNull] string connectionString,StrGuid guid, [CanBeNull]int? pID = null) : base(name, pID, TableName, connectionString, guid) {
             _calculationOutcomeID = calculationOutcomeID;
             LoadTypeName = loadTypeName;
             Value = value;
@@ -35,7 +35,7 @@ namespace Database.Tables.Validation {
             return new LoadtypeOutcome(name, calcoutcomeID, loadTypeName, value, connectionString,guid, id);
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message) {
+        protected override bool IsItemLoadedCorrectly(out string message) {
             if (_calculationOutcomeID < 0) {
                 message = "Calculation outcome not found";
                 return false;
@@ -50,7 +50,7 @@ namespace Database.Tables.Validation {
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd) {
+        protected override void SetSqlParameters(Command cmd) {
             cmd.AddParameter("CalculationOutcomeID", _calculationOutcomeID);
             if(LoadTypeName != null) {
                 cmd.AddParameter("LoadTypeName", LoadTypeName);

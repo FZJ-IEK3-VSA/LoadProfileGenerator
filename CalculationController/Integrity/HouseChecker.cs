@@ -1,13 +1,12 @@
 ﻿using Common;
 using Database;
-using JetBrains.Annotations;
 
 namespace CalculationController.Integrity {
     internal class HouseChecker : BasicChecker {
         public HouseChecker(bool performCleanupChecks) : base("Houses", performCleanupChecks) {
         }
 
-        protected override void Run([NotNull] Simulator sim) {
+        protected override void Run(Simulator sim) {
             foreach (var house in sim.Houses.It) {
                 if (Config.AllowEmptyHouses) {
                     if (house.Households.Count == 0) {

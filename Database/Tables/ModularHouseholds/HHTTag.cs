@@ -15,7 +15,7 @@ namespace Database.Tables.ModularHouseholds {
 
         [CanBeNull] private readonly TraitTag _tag;
 
-        public HHTTag([CanBeNull]int? pID, [CanBeNull] int? householdTraitID, [CanBeNull] TraitTag tag, [NotNull] string connectionString, [NotNull] string name, [NotNull] StrGuid guid)
+        public HHTTag([CanBeNull]int? pID, [CanBeNull] int? householdTraitID, [CanBeNull] TraitTag tag, [NotNull] string connectionString, [NotNull] string name, StrGuid guid)
             : base(name, TableName, connectionString,guid) {
             _tag = tag;
             ID = pID;
@@ -61,7 +61,7 @@ namespace Database.Tables.ModularHouseholds {
             return hhad;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message) {
+        protected override bool IsItemLoadedCorrectly(out string message) {
             if (_tag == null) {
                 message = "Tag not found";
                 return false;

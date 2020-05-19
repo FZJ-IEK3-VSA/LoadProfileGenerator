@@ -97,7 +97,7 @@ namespace LoadProfileGenerator.Presenters.Households {
             Close(false);
         }
 
-        public override bool Equals([CanBeNull] object obj)
+        public override bool Equals(object obj)
         {
             return obj is DeviceCategoryPresenter presenter && presenter.ThisDeviceCategory.Equals(_deviceCategory);
         }

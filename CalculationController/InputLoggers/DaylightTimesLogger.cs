@@ -51,7 +51,7 @@ namespace CalculationController.InputLoggers
             _dsc = new DateStampCreator(calcParameters);
         }
 
-        public override void Run([NotNull] HouseholdKey key, [NotNull] object o)
+        public override void Run(HouseholdKey key, object o)
         {
             DayLightStatus dayLightStatus = (DayLightStatus)o;
             //List<EveryDayLightTimes> daylights = new List<EveryDayLightTimes>();

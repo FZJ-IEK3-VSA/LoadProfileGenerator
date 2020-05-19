@@ -213,7 +213,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             RefreshFiltered();
         }
 
-        public override bool Equals([CanBeNull] object obj)
+        public override bool Equals(object obj)
         {
             var presenter = obj as CalculationOutcomesPresenter;
             return presenter?.HeaderString.Equals(HeaderString) == true;

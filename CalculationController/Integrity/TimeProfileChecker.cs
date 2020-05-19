@@ -1,14 +1,13 @@
 ﻿using Common;
 using Database;
 using Database.Tables.BasicElements;
-using JetBrains.Annotations;
 
 namespace CalculationController.Integrity {
     internal class TimeProfileChecker : BasicChecker {
         public TimeProfileChecker(bool performCleanupChecks) : base("Time Profile Checker", performCleanupChecks) {
         }
 
-        protected override void Run([NotNull] Simulator sim) {
+        protected override void Run(Simulator sim) {
             foreach (var profile in sim.Timeprofiles.It) {
                 if (profile.DataSource.Length == 0) {
                     throw new DataIntegrityException(

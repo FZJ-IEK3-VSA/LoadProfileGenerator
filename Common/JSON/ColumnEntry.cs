@@ -13,7 +13,7 @@ namespace Common.JSON {
         [NotNull]
         [JsonProperty]
         public CalcDeviceDto CalcDeviceDto { get; set; }
-        public ColumnEntry([NotNull] string name, int dstcolumn, [NotNull] string locationName, [NotNull] StrGuid deviceGuid, [NotNull] HouseholdKey householdKey,
+        public ColumnEntry([NotNull] string name, int dstcolumn, [NotNull] string locationName, StrGuid deviceGuid, [NotNull] HouseholdKey householdKey,
                            [NotNull] CalcLoadTypeDto loadType, [NotNull] string oefckey, [NotNull] string deviceCategory,
                            [NotNull] CalcDeviceDto calcDeviceDto)
         {
@@ -30,11 +30,9 @@ namespace Common.JSON {
         }
         [JsonProperty]
         public int Column { get; private set; }
-        [NotNull]
         [JsonProperty]
         public StrGuid DeviceGuid { get; private set; }
 
-        [NotNull]
         [JsonProperty]
         public HouseholdKey HouseholdKey { get; private set; }
 

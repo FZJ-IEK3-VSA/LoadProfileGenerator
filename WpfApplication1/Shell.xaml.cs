@@ -186,7 +186,7 @@ namespace LoadProfileGenerator {
         private static Simulator Sim { get; set; }
 
         //helper function for the MessageWindowHandler.Mw class to get around the dispatcher issue
-        public MessageBoxResult ShowMessageWindow([NotNull] string txt, [NotNull] string caption,
+        public MessageBoxResult ShowMessageWindow(string txt, string caption,
             MessageBoxButton button,
             MessageBoxImage image, MessageBoxResult defaultresult)
         {

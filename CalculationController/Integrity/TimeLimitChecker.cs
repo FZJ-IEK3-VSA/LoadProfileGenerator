@@ -35,7 +35,7 @@ namespace CalculationController.Integrity {
             }
         }
 
-        protected override void Run([NotNull] Simulator sim) {
+        protected override void Run(Simulator sim) {
             CheckTimeLimits(sim.TimeLimits.It);
             foreach (var devt in sim.TimeLimits.It) {
                 if (devt.TimeLimitEntries.Count == 0) {

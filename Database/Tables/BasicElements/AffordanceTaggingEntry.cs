@@ -44,7 +44,7 @@ namespace Database.Tables.BasicElements {
         [CanBeNull] private AffordanceTag _tag;
 
         public AffordanceTaggingEntry([NotNull] string name, int taggingSetID, [CanBeNull] AffordanceTag tag,
-            [CanBeNull] Affordance affordance, [NotNull] string connectionString,[CanBeNull] int? pID,[NotNull] StrGuid guid)
+            [CanBeNull] Affordance affordance, [NotNull] string connectionString,[CanBeNull] int? pID,StrGuid guid)
             : base(name, pID, TableName,
             connectionString,guid)
         {
@@ -112,7 +112,7 @@ namespace Database.Tables.BasicElements {
                 guid);
         }
 
-        public override int CompareTo([CanBeNull] object obj)
+        public override int CompareTo(object obj)
         {
             if (!(obj is AffordanceTaggingEntry other))
             {
@@ -134,7 +134,7 @@ namespace Database.Tables.BasicElements {
             return name;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             if (_affordance == null) {
                 message = "Affordance was not found.";
@@ -156,7 +156,7 @@ namespace Database.Tables.BasicElements {
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("TaggingSetID", _taggingSetID);
             if (_tag != null) {

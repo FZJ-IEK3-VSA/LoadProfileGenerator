@@ -23,7 +23,7 @@ namespace LoadProfileGenerator
                 _mainwindow = mainwindow;
             }
 
-            public void ShowDataIntegrityMessage([NotNull] DataIntegrityException exception)
+            public void ShowDataIntegrityMessage(DataIntegrityException exception)
             {
                 if (exception == null)
                 {
@@ -36,7 +36,7 @@ namespace LoadProfileGenerator
             }
 
             [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-            public void ShowDebugMessage([NotNull] Exception exception)
+            public void ShowDebugMessage(Exception exception)
             {
                 Thread t = new Thread(() =>
                 {
@@ -81,7 +81,7 @@ namespace LoadProfileGenerator
                     MessageBoxResult.OK);
             }
 
-            public void ShowInfoMessage([NotNull] string message, [NotNull] string caption)
+            public void ShowInfoMessage(string message, string caption)
             {
                 Logger.Info(message);
                 ShowMessageBox(message, caption, MessageBoxButton.OK, MessageBoxImage.Information,
@@ -99,7 +99,7 @@ namespace LoadProfileGenerator
                 return MessageBox.Show(message, caption, button, image, result);
             }
 
-            public LPGMsgBoxResult ShowYesNoMessage([NotNull] string message, [NotNull] string caption)
+            public LPGMsgBoxResult ShowYesNoMessage(string message, string caption)
             {
                 Logger.Warning(message);
                 var result = ShowMessageBox(message, caption, MessageBoxButton.YesNo, MessageBoxImage.Question,

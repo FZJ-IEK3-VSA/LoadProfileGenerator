@@ -49,11 +49,11 @@ namespace CalculationEngine.HouseholdElements {
         // ReSharper disable once NotAccessedField.Local
 #pragma warning disable IDE0052 // Remove unread private members
         //saving this for information purposes
-        [NotNull] private readonly StrGuid _guid;
+        private readonly StrGuid _guid;
 #pragma warning restore IDE0052 // Remove unread private members
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public CalcProfile([NotNull] string name, [NotNull] StrGuid guid, TimeSpan stepSize, ProfileType profileType, [NotNull] string dataSource):base(name)
+        public CalcProfile([NotNull] string name, StrGuid guid, TimeSpan stepSize, ProfileType profileType, [NotNull] string dataSource):base(name)
         {
             _guid = guid;
             _stepSize = stepSize;
@@ -63,7 +63,7 @@ namespace CalculationEngine.HouseholdElements {
             StepValues = new List<double>();
         }
 
-        public CalcProfile([NotNull] string name, [NotNull] StrGuid guid, [NotNull] List<double> newValues,
+        public CalcProfile([NotNull] string name, StrGuid guid, [NotNull] List<double> newValues,
             ProfileType profileType, [NotNull] string dataSource, double timeFactor = 1):base(name)
         {
             _guid = guid;
@@ -321,13 +321,11 @@ namespace CalculationEngine.HouseholdElements {
 
         #region ICalcProfile Members
 
-        [NotNull]
         public List<double> StepValues { get; }
         public double TimeFactor { get; }
 
         public ProfileType ProfileType => _profileType;
 
-        [NotNull]
         public string DataSource { get; }
 
         // ReSharper disable once UnassignedGetOnlyAutoProperty

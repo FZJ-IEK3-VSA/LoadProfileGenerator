@@ -46,7 +46,7 @@ namespace Common.SQLResultLogging.Loggers {
         }
 
         public SingleTimestepActionEntry([NotNull] HouseholdKey householdKey, int timeStep,
-                           DateTime dateTime, [NotNull] StrGuid personGuid, [CanBeNull] StrGuid actionEntryGuid)
+                           DateTime dateTime, StrGuid personGuid, StrGuid actionEntryGuid)
         {
             HouseholdKey = householdKey;
             TimeStep = timeStep;
@@ -61,11 +61,9 @@ namespace Common.SQLResultLogging.Loggers {
         [JsonProperty]
         public DateTime DateTime { get; set; }
 
-        [NotNull]
         [JsonProperty]
         public StrGuid PersonGuid { get; set; }
 
-        [NotNull]
         [JsonProperty]
         public StrGuid ActionEntryGuid { get; set; }
 
@@ -84,8 +82,8 @@ namespace Common.SQLResultLogging.Loggers {
         }
 
         public ActionEntry([NotNull] string category, [NotNull] HouseholdKey householdKey, [NotNull] TimeStep timeStep,
-                           DateTime dateTime, [NotNull] StrGuid personGuid, [NotNull] string personName, bool isSick,
-                           [NotNull] string affordanceName, [NotNull] StrGuid affordanceGuid, int id, BodilyActivityLevel bodilyActivityLevel)
+                           DateTime dateTime, StrGuid personGuid, [NotNull] string personName, bool isSick,
+                           [NotNull] string affordanceName, StrGuid affordanceGuid, int id, BodilyActivityLevel bodilyActivityLevel)
         {
             Category = category;
             HouseholdKey = householdKey;
@@ -102,10 +100,8 @@ namespace Common.SQLResultLogging.Loggers {
         }
 
         [JsonProperty]
-        [NotNull]
         public StrGuid ActionEntryGuid { get; set; }
 
-        [NotNull]
         [JsonProperty]
         public StrGuid AffordanceGuid { get; set; }
 
@@ -128,7 +124,6 @@ namespace Common.SQLResultLogging.Loggers {
         [JsonProperty]
         public bool IsSick { get; set; }
 
-        [NotNull]
         [JsonProperty]
         public StrGuid PersonGuid { get; set; }
 
@@ -144,10 +139,10 @@ namespace Common.SQLResultLogging.Loggers {
         public HouseholdKey HouseholdKey { get; set; }
 
         [NotNull]
-        public static ActionEntry MakeActionEntry([NotNull] TimeStep timeStep, [NotNull] StrGuid personGuid,
+        public static ActionEntry MakeActionEntry([NotNull] TimeStep timeStep, StrGuid personGuid,
                                                   [NotNull] string personName,
                                                   bool isSick, [NotNull] string affordanceName,
-                                                  [NotNull] StrGuid affordanceGuid, [NotNull] HouseholdKey householdKey,
+                                                  StrGuid affordanceGuid, [NotNull] HouseholdKey householdKey,
                                                   [NotNull] string category,
                                                   DateTime timestamp, BodilyActivityLevel bodilyActivityLevel)
         {

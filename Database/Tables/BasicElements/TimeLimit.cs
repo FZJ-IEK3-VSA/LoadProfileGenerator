@@ -49,7 +49,7 @@ namespace Database.Tables.BasicElements {
 
         [CanBeNull] private TimeLimitEntry _rootEntry;
 
-        public TimeLimit([NotNull] string pName, [NotNull] string connectionString,[NotNull] StrGuid guid, [CanBeNull]int? pID = null)
+        public TimeLimit([NotNull] string pName, [NotNull] string connectionString,StrGuid guid, [CanBeNull]int? pID = null)
             : base(pName, TableName, connectionString, guid)
         {
             if (guid == null) {
@@ -224,13 +224,10 @@ namespace Database.Tables.BasicElements {
             parent?.Subentries.Remove(db);
         }
 
-        [NotNull]
-        public override DBBase ImportFromGenericItem([NotNull] DBBase toImport,[NotNull] Simulator dstSim)
+        public override DBBase ImportFromGenericItem(DBBase toImport,Simulator dstSim)
             => ImportFromItem((TimeLimit)toImport,dstSim);
 
-        [ItemNotNull]
-        [NotNull]
-        public override List<UsedIn> CalculateUsedIns([NotNull] Simulator sim)
+        public override List<UsedIn> CalculateUsedIns(Simulator sim)
         {
             var used = new List<UsedIn>();
             foreach (var affordance in sim.Affordances.It) {
@@ -356,13 +353,13 @@ namespace Database.Tables.BasicElements {
             }
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             message = "";
             return true;
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("Name", "@myname", Name);
         }

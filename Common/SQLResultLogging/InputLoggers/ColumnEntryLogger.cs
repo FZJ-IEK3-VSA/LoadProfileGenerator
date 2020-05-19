@@ -25,7 +25,7 @@ namespace Common.SQLResultLogging.InputLoggers {
             return ce;
         }
 
-        public override void Run([NotNull] HouseholdKey key, [NotNull] object o)
+        public override void Run(HouseholdKey key, object o)
         {
             SaveableEntry se = new SaveableEntry(Constants.GeneralHouseholdKey,ResultTableDefinition);
             se.AddField("Name", SqliteDataType.Text);

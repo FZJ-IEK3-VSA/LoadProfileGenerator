@@ -203,7 +203,7 @@ namespace Common.SQLResultLogging {
         //public TotalsInformation TotalInformation { get; set; }
 
         [NotNull]
-        public CalcLoadTypeDto GetLoadTypeInformationByGuid([NotNull] StrGuid guid)
+        public CalcLoadTypeDto GetLoadTypeInformationByGuid(StrGuid guid)
         {
             if (_loadtypes == null)
             {

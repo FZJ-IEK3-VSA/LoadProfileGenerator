@@ -150,7 +150,7 @@ namespace CalculationController.Integrity {
             }
         }
 
-        protected override void Run([NotNull] Simulator sim) {
+        protected override void Run(Simulator sim) {
             CheckAndDeleteEmptyDeviceActionGroups(sim);
             foreach (var deviceActionGroup in sim.DeviceActionGroups.It) {
                 CheckGroupUsage(sim, deviceActionGroup);

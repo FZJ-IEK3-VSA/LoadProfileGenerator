@@ -46,7 +46,7 @@ namespace Database.Tables.BasicElements {
         private readonly DateTime _time;
         private readonly double _value;
 
-        public TemperatureValue(DateTime time, double value, int tempProfileID, [CanBeNull]int? id, [NotNull] string connectionString, [NotNull] StrGuid guid)
+        public TemperatureValue(DateTime time, double value, int tempProfileID, [CanBeNull]int? id, [NotNull] string connectionString, StrGuid guid)
             : base(
                 time.ToShortDateString() + " " + value.ToString(CultureInfo.InvariantCulture), id, TableName,
                 connectionString, guid)
@@ -84,7 +84,7 @@ namespace Database.Tables.BasicElements {
 
         #region IComparable Members
 
-        public override int CompareTo([CanBeNull] object obj)
+        public override int CompareTo(object obj)
         {
             if (!(obj is TemperatureValue other))
             {
@@ -95,7 +95,7 @@ namespace Database.Tables.BasicElements {
 
         #endregion
 
-        public override int CompareTo([CanBeNull] BasicElement other)
+        public override int CompareTo(BasicElement other)
         {
             if (other is TemperatureValue tp) {
                 return _time.CompareTo(tp._time);
@@ -103,7 +103,7 @@ namespace Database.Tables.BasicElements {
             return base.CompareTo(other);
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             message = "";
             return true;
@@ -116,7 +116,7 @@ namespace Database.Tables.BasicElements {
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }
 
-        public override void SaveToDB([NotNull] Connection con)
+        public override void SaveToDB(Connection con)
         {
             if (ID == null) {
                 using (var cmd = new Command(con)) {
@@ -131,7 +131,7 @@ namespace Database.Tables.BasicElements {
             }
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("Date", "@myDate", _time);
             cmd.AddParameter("Temperatur", "@myTemperatur", _value);

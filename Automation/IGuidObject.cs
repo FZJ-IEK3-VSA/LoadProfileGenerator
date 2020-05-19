@@ -1,9 +1,6 @@
-﻿using JetBrains.Annotations;
-
-namespace Automation {
+﻿namespace Automation {
     public interface IGuidObject
     {
-        [NotNull]
         StrGuid Guid { get; }
     }
 }

@@ -6,7 +6,7 @@ using JetBrains.Annotations;
 namespace Automation {
     public class HouseData {
 
-        public HouseData([NotNull] StrGuid houseGuid, string? houseTypeCode, double? targetHeatDemand,
+        public HouseData(StrGuid houseGuid, string? houseTypeCode, double? targetHeatDemand,
                          double? targetCoolingDemand, [NotNull] string name)
         {
             HouseGuid = houseGuid;

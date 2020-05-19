@@ -15,8 +15,7 @@ namespace ChartCreator2.PDF {
             MyTargetDirectory = TargetDirectory.Debugging;
         }
 
-        [JetBrains.Annotations.NotNull]
-        protected override string GetGraphTitle([JetBrains.Annotations.NotNull] string filename) => throw new LPGNotImplementedException();
+        protected override string GetGraphTitle(string filename) => throw new LPGNotImplementedException();
 
         public void MakePage([JetBrains.Annotations.NotNull] Document doc, [JetBrains.Annotations.NotNull] string dstdir, bool requireAll, [JetBrains.Annotations.NotNull] Section tocSection) {
             var di =

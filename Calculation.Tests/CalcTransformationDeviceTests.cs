@@ -41,6 +41,7 @@ using Common;
 using Common.CalcDto;
 using Common.JSON;
 using Common.SQLResultLogging;
+using Common.SQLResultLogging.InputLoggers;
 using JetBrains.Annotations;
 
 using Xunit;
@@ -112,7 +113,11 @@ namespace Calculation.Tests {
             var calcParameters = CalcParametersFactory.MakeGoodDefaults();
             calcParameters.EnableShowSettlingPeriod();
             using var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
+            wd.InputDataLogger.AddSaver(new ColumnEntryLogger(wd.SqlResultLoggingService));
+            wd.InputDataLogger.AddSaver(new ResultFileEntryLogger(wd.SqlResultLoggingService));
+            wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
             using var fft = new FileFactoryAndTracker(wd.WorkingDirectory, "hh1", wd.InputDataLogger);
+            fft.RegisterGeneralHouse();
             using var old = new OnlineLoggingData(new DateStampCreator(calcParameters), wd.InputDataLogger, calcParameters);
             var odap = new OnlineDeviceActivationProcessor(old, calcParameters, fft);
             var clt = new CalcLoadType("clt1", "W", "kWh", 1, true, Guid.NewGuid().ToStrGuid());

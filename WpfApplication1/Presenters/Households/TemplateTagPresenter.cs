@@ -80,7 +80,7 @@ namespace LoadProfileGenerator.Presenters.Households {
             Close(false);
         }
 
-        public override bool Equals([CanBeNull] object obj)
+        public override bool Equals(object obj)
         {
             return obj is TemplateTagPresenter presenter && presenter.ThisTag.Equals(_thisTag);
         }

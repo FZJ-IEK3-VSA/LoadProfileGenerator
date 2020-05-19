@@ -40,12 +40,9 @@ using JetBrains.Annotations;
 
 namespace Database.Tables.BasicElements {
     public class AffordanceTaggingSet : DBBaseElement {
-        [NotNull]
-        public override DBBase ImportFromGenericItem([NotNull] DBBase toImport, [NotNull] Simulator dstSim)
+        public override DBBase ImportFromGenericItem(DBBase toImport, Simulator dstSim)
             => ImportFromItem((AffordanceTaggingSet)toImport, dstSim);
-        [ItemNotNull]
-        [NotNull]
-        public override List<UsedIn> CalculateUsedIns([NotNull] Simulator sim) => throw new NotImplementedException();
+        public override List<UsedIn> CalculateUsedIns(Simulator sim) => throw new NotImplementedException();
 
         public const string TableName = "tblAffTaggingSet";
         [ItemNotNull] [NotNull] private readonly ObservableCollection<AffordanceTaggingEntry> _entries;
@@ -55,7 +52,7 @@ namespace Database.Tables.BasicElements {
         [NotNull] private string _description;
         private bool _makeCharts;
 
-        public AffordanceTaggingSet([NotNull] string name, [NotNull] string description, [NotNull] string connectionString, bool makeCharts, [NotNull] StrGuid guid,
+        public AffordanceTaggingSet([NotNull] string name, [NotNull] string description, [NotNull] string connectionString, bool makeCharts, StrGuid guid,
                                     [CanBeNull]int? pID = null) : base(name, TableName, connectionString, guid)
         {
             _tags = new ObservableCollection<AffordanceTag>();
@@ -317,7 +314,7 @@ namespace Database.Tables.BasicElements {
             return false;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             message = "";
             return true;
@@ -448,7 +445,7 @@ namespace Database.Tables.BasicElements {
             }
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("Name", "@myname", Name);
             cmd.AddParameter("Description", Description);

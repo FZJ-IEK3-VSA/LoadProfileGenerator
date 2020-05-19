@@ -20,7 +20,6 @@ namespace Common.JSON
 
         [NotNull]
         public string TransportationDevice { get; }
-        [NotNull]
         public HouseholdKey HouseholdKey { get; }
         public int NumberOfEvents { get; set; }
         [UsedImplicitly]
@@ -38,7 +37,7 @@ namespace Common.JSON
         {
         }
 
-        public override void Run([NotNull] HouseholdKey key, [NotNull] object o)
+        public override void Run(HouseholdKey key, object o)
         {
             var actionEntries = (List<TransportationDeviceEventStatistics>)o;
             //var actionEntries = objects.ConvertAll(x => (TransportationDeviceStatisticsEntry)x).ToList();

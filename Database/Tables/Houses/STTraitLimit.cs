@@ -15,7 +15,7 @@ namespace Database.Tables.Houses {
         [CanBeNull] private readonly HouseholdTrait _trait;
 
         public STTraitLimit([CanBeNull]int? pID, [NotNull] string connectionString, int settlementTemplateID, [NotNull] string name,
-            [CanBeNull] HouseholdTrait trait, int maximum, [NotNull] StrGuid guid) : base(name, TableName, connectionString, guid) {
+            [CanBeNull] HouseholdTrait trait, int maximum, StrGuid guid) : base(name, TableName, connectionString, guid) {
             TypeDescription = "Settlement Template Household Trait Limit";
             ID = pID;
             _trait = trait;
@@ -62,7 +62,7 @@ namespace Database.Tables.Houses {
             UsedCount = 0;
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message) {
+        protected override bool IsItemLoadedCorrectly(out string message) {
             if (_trait == null) {
                 message = "Trait not found";
                 return false;
@@ -112,7 +112,7 @@ namespace Database.Tables.Houses {
             UsedCount++;
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd) {
+        protected override void SetSqlParameters(Command cmd) {
             if (_trait != null) {
                 cmd.AddParameter("TraitID", _trait.IntID);
             }

@@ -13,17 +13,16 @@ namespace Database.Tables
     }
     public abstract class DBBaseElement : DBBase, IImportFromOtherItem
     {
-        [NotNull]
         public abstract DBBase ImportFromGenericItem(DBBase toImport, Simulator dstSim);
         [ItemNotNull]
         [NotNull]
         public abstract List<UsedIn> CalculateUsedIns([NotNull] Simulator sim);
 
-        protected DBBaseElement([NotNull] string pName, [NotNull] string tableName, [NotNull] string connectionString, [NotNull] StrGuid guid) : base(pName, tableName, connectionString, guid)
+        protected DBBaseElement([NotNull] string pName, [NotNull] string tableName, [NotNull] string connectionString, StrGuid guid) : base(pName, tableName, connectionString, guid)
         {
         }
 
-        protected DBBaseElement([NotNull]string pName,[CanBeNull] int? pID, [NotNull] string tableName, [NotNull] string connectionString, [NotNull] StrGuid guid) : base(pName,pID, tableName, connectionString, guid)
+        protected DBBaseElement([NotNull]string pName,[CanBeNull] int? pID, [NotNull] string tableName, [NotNull] string connectionString, StrGuid guid) : base(pName,pID, tableName, connectionString, guid)
         {
         }
         /*

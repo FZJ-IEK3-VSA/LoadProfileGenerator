@@ -15,7 +15,7 @@ namespace Database.Tables.Transportation {
 
         public TransportationDeviceCategory([NotNull] string name, [CanBeNull] int? pID,
                                             [NotNull] string connectionString, [CanBeNull] string description,
-            bool isLimitedToSingleLocation, [NotNull] StrGuid guid)
+            bool isLimitedToSingleLocation, StrGuid guid)
             : base(name, TableName, connectionString, guid)
         {
             _isLimitedToSingleLocation = isLimitedToSingleLocation;
@@ -62,13 +62,13 @@ namespace Database.Tables.Transportation {
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             message = "";
             return true;
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("Name", Name);
             if(_description!=null) {
@@ -90,8 +90,7 @@ namespace Database.Tables.Transportation {
             return new TransportationDeviceCategory(name, id, connectionString, description, isLimitedToSingleLocation, guid);
         }
 
-        [NotNull]
-        public override DBBase ImportFromGenericItem([NotNull] DBBase toImport, [NotNull] Simulator dstSim)
+        public override DBBase ImportFromGenericItem(DBBase toImport, Simulator dstSim)
             => ImportFromItem((TransportationDeviceCategory)toImport,dstSim);
 
         public override List<UsedIn> CalculateUsedIns(Simulator sim) => throw new NotImplementedException();

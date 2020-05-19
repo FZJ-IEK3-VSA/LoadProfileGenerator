@@ -46,7 +46,7 @@ namespace CalculationEngine.HouseholdElements {
         private readonly CalcLoadTypeDto _dto;
 
         public CalcLoadType([NotNull] string pName, [NotNull] string unitOfPower, [NotNull] string unitOfSum, double conversionFactor,
-            bool showInCharts, [NotNull] StrGuid guid)
+            bool showInCharts, StrGuid guid)
             : base(pName, guid) {
             UnitOfPower = unitOfPower;
             UnitOfSum = unitOfSum;

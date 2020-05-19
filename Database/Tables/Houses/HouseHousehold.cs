@@ -46,7 +46,7 @@ namespace Database.Tables.Houses {
         [CanBeNull] private readonly ICalcObject _household;
 
         public HouseHousehold([CanBeNull]int? pID, int houseID, [CanBeNull] ICalcObject household, [NotNull] string connectionString,
-            [NotNull] string householdName, [NotNull] StrGuid guid, [CanBeNull] TransportationDeviceSet transportationDeviceSet, [CanBeNull] ChargingStationSet chargingStationSet, [CanBeNull] TravelRouteSet travelRouteSet,
+            [NotNull] string householdName, StrGuid guid, [CanBeNull] TransportationDeviceSet transportationDeviceSet, [CanBeNull] ChargingStationSet chargingStationSet, [CanBeNull] TravelRouteSet travelRouteSet,
                               bool enableTransportationModelling) : base(householdName, TableName, connectionString, guid)
         {
             EnableTransportationModelling = enableTransportationModelling;
@@ -132,7 +132,7 @@ namespace Database.Tables.Houses {
             }
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             if (_household == null) {
                 message = "Household not found";
@@ -154,7 +154,7 @@ namespace Database.Tables.Houses {
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("HouseID", HouseID);
             if (_household != null) {

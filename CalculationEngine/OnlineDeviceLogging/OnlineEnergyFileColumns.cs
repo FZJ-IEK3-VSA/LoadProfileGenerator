@@ -63,7 +63,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
             _locationGuid = locationID;
         }
 
-        public override bool Equals([CanBeNull] object obj) {
+        public override bool Equals(object obj) {
             if (obj is null) {
                 return false;
             }
@@ -118,7 +118,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
             => _columnEntriesByLoadTypeByDeviceKey;
 
         public void AddColumnEntry([NotNull] string name, OefcKey key,
-                                   [NotNull] string locationName, [NotNull] CalcLoadTypeDto lt, [NotNull] StrGuid deviceGuid,
+                                   [NotNull] string locationName, [NotNull] CalcLoadTypeDto lt, StrGuid deviceGuid,
             [NotNull] HouseholdKey householdKey, [NotNull] string deviceCategory, [NotNull] CalcDeviceDto calcDeviceDto) {
             if (!ColumnCountByLoadType.ContainsKey(lt)) {
                 ColumnCountByLoadType.Add(lt, 0);

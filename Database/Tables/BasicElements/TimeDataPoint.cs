@@ -44,7 +44,7 @@ namespace Database.Tables.BasicElements {
         private TimeSpan _time;
         private double _value;
 
-        public TimeDataPoint(TimeSpan ts, double pvalue, [CanBeNull]int? pID, int profileID, [NotNull] string connectionString, [NotNull] StrGuid guid)
+        public TimeDataPoint(TimeSpan ts, double pvalue, [CanBeNull]int? pID, int profileID, [NotNull] string connectionString, StrGuid guid)
             : base(ts.ToString(), pID, TableName, connectionString, guid) {
             TypeDescription = "Time Data Point";
             _time = ts;
@@ -52,7 +52,7 @@ namespace Database.Tables.BasicElements {
             ProfileID = profileID;
         }
 
-        public TimeDataPoint(DateTime dbtime, double pvalue, [CanBeNull]int? pID, int profileID, [NotNull] string connectionString, [NotNull] StrGuid guid)
+        public TimeDataPoint(DateTime dbtime, double pvalue, [CanBeNull]int? pID, int profileID, [NotNull] string connectionString, StrGuid guid)
             : base(dbtime.ToString(CultureInfo.InvariantCulture),
                 pID, TableName, connectionString, guid) {
             TypeDescription = "Time Data Point";
@@ -75,7 +75,7 @@ namespace Database.Tables.BasicElements {
             [UsedImplicitly] set => SetValueWithNotify(value, ref _value, nameof(Value));
         }
 
-        public override int CompareTo([CanBeNull] object obj) {
+        public override int CompareTo(object obj) {
             if (!(obj is TimeDataPoint other))
             {
                 return 0;
@@ -83,12 +83,12 @@ namespace Database.Tables.BasicElements {
             return _time.CompareTo(other._time);
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message) {
+        protected override bool IsItemLoadedCorrectly(out string message) {
             message = "";
             return true;
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd) {
+        protected override void SetSqlParameters(Command cmd) {
             cmd.AddParameter("TimeBasedProfileID", "@TimeBasedProfileID", ProfileID);
             cmd.AddParameter("Time", "@Time", DBTime);
             cmd.AddParameter("Value", "@Value", _value);

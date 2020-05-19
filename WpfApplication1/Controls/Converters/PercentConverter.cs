@@ -36,9 +36,9 @@ namespace LoadProfileGenerator.Controls.Converters {
     public class PercentConverter : IValueConverter {
         #region IValueConverter Members
 
-        [CanBeNull]
-        public object Convert([CanBeNull] object value, [CanBeNull] Type targetType, [CanBeNull] object parameter,
-            [CanBeNull] CultureInfo culture) {
+        [NotNull]
+        public object Convert(object value, [CanBeNull] Type targetType, object parameter,
+                              [CanBeNull] CultureInfo culture) {
             string result;
             if (value is decimal d1)
             {
@@ -65,9 +65,9 @@ namespace LoadProfileGenerator.Controls.Converters {
             return result;
         }
 
-        [CanBeNull]
-        public object ConvertBack([CanBeNull] object value, [CanBeNull] Type targetType, [CanBeNull] object parameter,
-            [CanBeNull] CultureInfo culture) {
+        [NotNull]
+        public object ConvertBack(object value, [CanBeNull] Type targetType, object parameter,
+                                  [CanBeNull] CultureInfo culture) {
             if (value == null) {
                 return 0;
             }

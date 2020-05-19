@@ -15,7 +15,7 @@ namespace CalculationController.InputLoggers
         {
         }
 
-        public override void Run([NotNull] HouseholdKey key,[NotNull] object o)
+        public override void Run(HouseholdKey key,object o)
         {
             CalcStartParameterSet csps = (CalcStartParameterSet)o;
             SaveableEntry se = new SaveableEntry(key, ResultTableDefinition);

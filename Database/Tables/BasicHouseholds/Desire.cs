@@ -53,7 +53,7 @@ namespace Database.Tables.BasicHouseholds {
 
         public Desire([NotNull] string pName, decimal pDefaultDecayRate, decimal defaultThreshold, decimal defaultWeight,
             [NotNull] string connectionString, decimal criticalThreshold, bool isSharedDesire, [CanBeNull] int? pID,
-                      [NotNull] string desireCategory, [NotNull] StrGuid guid)
+                      [NotNull] string desireCategory, StrGuid guid)
             : base(pName, TableName, connectionString, guid)
         {
             ID = pID;
@@ -127,13 +127,10 @@ namespace Database.Tables.BasicHouseholds {
             FindNewName(isNameTaken, "New Desire "), 12m, 0.5m, 1,
             connectionString, -1, false, null,"", System.Guid.NewGuid().ToStrGuid());
 
-        [NotNull]
-        public override DBBase ImportFromGenericItem([NotNull] DBBase toImport, [NotNull] Simulator dstSim)
+        public override DBBase ImportFromGenericItem(DBBase toImport, Simulator dstSim)
             => ImportFromItem((Desire)toImport, dstSim);
 
-        [ItemNotNull]
-        [NotNull]
-        public override List<UsedIn> CalculateUsedIns([NotNull] Simulator sim)
+        public override List<UsedIn> CalculateUsedIns(Simulator sim)
         {
             var used = new List<UsedIn>();
 
@@ -181,7 +178,7 @@ namespace Database.Tables.BasicHouseholds {
             item.CriticalThreshold, item.IsSharedDesire, null,
             item.DesireCategory, item.Guid);
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message)
+        protected override bool IsItemLoadedCorrectly(out string message)
         {
             message = "";
             return true;
@@ -194,7 +191,7 @@ namespace Database.Tables.BasicHouseholds {
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd)
+        protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("Name", "@myname", Name);
             cmd.AddParameter("DefaultDecayRate", "@DefaultDecayRate", _defaultDecayRate);

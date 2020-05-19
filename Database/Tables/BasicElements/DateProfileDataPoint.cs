@@ -45,7 +45,7 @@ namespace Database.Tables.BasicElements {
                                     [CanBeNull]int? pID,
                                     int profileID,
                                     [NotNull] string connectionString,
-                                    [NotNull] StrGuid guid)
+                                    StrGuid guid)
             : base(dt.ToString(CultureInfo.InvariantCulture), pID, TableName, connectionString,
                 guid) {
             _dateAndTime = dt;
@@ -99,7 +99,7 @@ namespace Database.Tables.BasicElements {
             return new DateProfileDataPoint(time, value, datapointID, timeBasedProfileID, connectionString,guid);
         }
 
-        public override int CompareTo([CanBeNull] object obj) {
+        public override int CompareTo(object obj) {
             if (!(obj is DateProfileDataPoint other))
             {
                 return 0;
@@ -121,7 +121,7 @@ namespace Database.Tables.BasicElements {
             }
         }
 
-        protected override bool IsItemLoadedCorrectly([NotNull] out string message) {
+        protected override bool IsItemLoadedCorrectly(out string message) {
             message = "";
             return true;
         }
@@ -132,7 +132,7 @@ namespace Database.Tables.BasicElements {
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }
 
-        protected override void SetSqlParameters([NotNull] Command cmd) {
+        protected override void SetSqlParameters(Command cmd) {
             cmd.AddParameter("DateBasedProfileID", ProfileID);
             cmd.AddParameter("DateAndTime", DateAndTime);
             cmd.AddParameter("Value", _value);
