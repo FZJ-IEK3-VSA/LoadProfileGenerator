@@ -387,6 +387,9 @@ namespace Database.Tables.ModularHouseholds {
                 if (!traitcounts.ContainsKey(traitDstPerson)) {
                     traitcounts.Add(traitDstPerson, new Dictionary<TraitTag, int>());
                 }
+                else {
+                    Logger.Info("Missing person " + traitDstPerson + " for importing.");
+                }
 
                 var traitHouseholdTrait = trait.HouseholdTrait;
                 var dic = traitcounts[traitDstPerson];
@@ -395,10 +398,12 @@ namespace Database.Tables.ModularHouseholds {
                 //add all the tags to the trait tag count dictionary
                 foreach (var tag in traitHouseholdTrait.Tags) {
                     if (tag.Name.ToLower().StartsWith("living pattern")) {
+                        Logger.Info("Skipping trait " + tag.Name);
                         continue;
                     }
 
                     if (tag.Name.ToLower().StartsWith("web /")) {
+                        Logger.Info("Skipping trait " + tag.Name);
                         continue;
                     }
 

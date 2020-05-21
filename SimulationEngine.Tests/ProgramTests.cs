@@ -390,63 +390,6 @@ namespace SimulationEngine.Tests {
             Assert.Throws<LPGException>(() => MainSimEngine.Run(args.ToArray(), "simulationengine.exe"));
         }
 
-        [Fact]
-        [Trait(UnitTestCategories.Category,UnitTestCategories.LongTest5)]
-        public void SettlementToBatchTest()
-        {
-            using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
-            {
-                Simulator sim = new Simulator(db.ConnectionString);
-                var settlementname = sim.Settlements.It[0].Name.Substring(0, 20);
-                db.Cleanup();
-                Config.CatchErrors = false;
-                Config.IsInUnitTesting = true;
-                using var setp = new SimulationEngineTestPreparer(nameof(SettlementToBatchTest));
-                var arguments = new List<string>
-            {
-                "Batch",
-                "-SettlementIndex",
-                "0",
-                "-Suffix",
-                "Test",
-                "-OutputFileDefault",
-                "OnlyOverallSum"
-            };
-                MainSimEngine.Run(arguments.ToArray(), "simulationengine.exe");
-                var di = new DirectoryInfo(setp.WorkingDirectory);
-                var fis = di.GetFiles("*.cmd", SearchOption.AllDirectories);
-                string targetname = "Start-" + settlementname + ".Test.cmd";
-                Logger.Info("Targetname: " + targetname);
-                foreach (FileInfo info in fis)
-                {
-                    Logger.Info("File: " + info.Name);
-                }
-                var fi = fis.First(x => x.Name == targetname);
-                string? line;
-                using (var sr = new StreamReader(fi.FullName))
-                {
-                    line = sr.ReadLine();
-                }
-                if (line == null)
-                {
-                    throw new LPGException("Readline failed.");
-                }
-                var arr = line.Split(' ');
-                var args2 = new List<string>();
-                Logger.Info("Line: " + line);
-                for (var i = 1; i < arr.Length; i++)
-                {
-                    args2.Add(arr[i]);
-                }
-                foreach (var arg in args2)
-                {
-                    Logger.Info(arg);
-                }
-                MainSimEngine.Run(args2.ToArray(), "simulationengine.exe");
-                setp.Clean();
-            }
-        }
-
         public ProgramTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }

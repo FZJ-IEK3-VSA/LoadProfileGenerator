@@ -289,7 +289,7 @@ namespace Calculation.Tests {
 
             Logger.Info("Truecount: " + trueCount);
 #pragma warning disable VSD0045 // The operands of a divisive expression are both integers and result in an implicit rounding.
-            trueCount.Should().BeApproximately(resultcount,0.1);
+            trueCount.Should().BeApproximately(resultcount/2,0.1);
 #pragma warning restore VSD0045 // The operands of a divisive expression are both integers and result in an implicit rounding.
         }
 

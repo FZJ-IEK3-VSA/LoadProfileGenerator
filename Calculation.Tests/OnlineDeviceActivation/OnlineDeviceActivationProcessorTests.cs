@@ -210,7 +210,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
 
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.BasicTest)]
-        public void OnlineDeviceActivationProcessorTest()
+        public void OnlineDeviceActivationProcessorArrayTest()
         {
             var rnd = new Random(1);
             var nr = new NormalRandom(0, 1, rnd);
@@ -244,8 +244,8 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                         var valueList = new List<double>(stepValues);
                         var cp = new CalcProfile("myCalcProfile", Guid.NewGuid().ToStrGuid(), valueList, ProfileType.Absolute, "synthetic");
                         var ts1 = new TimeStep(1, 0, false);
-                        var cdl = new CalcDeviceLoad("", 10, clt, 0, 0);
-                        var sv = StepValues.MakeStepValues(cp, 1, RandomValueProfile.MakeStepValues(cp, nr, 0), cdl);
+                        var cdl = new CalcDeviceLoad("", 1, clt, 0, 0);
+                        var sv = StepValues.MakeStepValues(cp, 10, RandomValueProfile.MakeStepValues(cp, nr, 0), cdl);
                         odap.AddNewStateMachine(ts1, clt.ConvertToDto(), "name1", "p1", key, cdd, sv);
                         double[] resultValues = {0, 10.0, 0, 0, 0, 0, 0, 0, 0, 0};
 

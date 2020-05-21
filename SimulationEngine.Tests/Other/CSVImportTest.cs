@@ -2,14 +2,17 @@
 using Automation;
 using Automation.ResultFiles;
 using Common;
+using Common.Tests;
 using Database.Tables.BasicElements;
 using Database.Tests;
+using JetBrains.Annotations;
 using SimulationEngineLib.Other;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace SimulationEngine.Tests.Other
 {
-    public class CSVImportTest
+    public class CSVImportTest:UnitTestBaseClass
     {
         [Fact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
@@ -46,6 +49,10 @@ namespace SimulationEngine.Tests.Other
                 }
             }
 
+        }
+
+        public CSVImportTest([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

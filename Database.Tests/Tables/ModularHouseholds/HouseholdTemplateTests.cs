@@ -266,26 +266,26 @@ namespace Database.Tests.Tables.ModularHouseholds {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
                 var sim = new Simulator(db.ConnectionString);
-                var gen = sim.HouseholdTemplates.CreateNewItem(db.ConnectionString);
-                gen.NewHHName = "hh";
-                var chh =
+                var newHouseholdTemplate = sim.HouseholdTemplates.CreateNewItem(db.ConnectionString);
+                newHouseholdTemplate.NewHHName = "hh";
+                var existingHouseholdTemplate =
                     sim.ModularHouseholds.It.FirstOrDefault(x => x.Name.StartsWith("CHS01", StringComparison.Ordinal));
-                if (chh == null)
+                if (existingHouseholdTemplate == null)
                 {
                     throw new LPGException("Could not find chs01");
                 }
-                gen.ImportExistingModularHouseholds(chh);
+                newHouseholdTemplate.ImportExistingModularHouseholds(existingHouseholdTemplate);
 
-                gen.SaveToDB();
-                gen.GenerateHouseholds(sim, true, new List<STTraitLimit>());
+                newHouseholdTemplate.SaveToDB();
+                newHouseholdTemplate.GenerateHouseholds(sim, true, new List<STTraitLimit>());
                 var total = 0;
-                foreach (var entry in gen.Entries)
+                foreach (var entry in newHouseholdTemplate.Entries)
                 {
                     Logger.Info(entry.PrettyString);
                     total += entry.TraitCountMax;
                 }
 
-                chh.Traits.Count.Should().BeGreaterOrEqualTo(total);
+                total.Should().BeGreaterOrEqualTo(existingHouseholdTemplate.Traits.Count);
                 db.Cleanup();
             }
         }

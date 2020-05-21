@@ -88,7 +88,7 @@ namespace Calculation.Tests {
 
         [Fact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
-        public static void CompressExpandDoubleArrayExpand3ShouldWork()
+        public void CompressExpandDoubleArrayExpand3ShouldWork()
         {
             double[] tmparr = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
             //List<double> tmplist = new List<double>(tmparr);
@@ -113,7 +113,7 @@ namespace Calculation.Tests {
             result.StepValues[10].Should().Be(7);
             result.StepValues[11].Should().Be(7);
             result.StepValues[12].Should().Be(8);
-            result.StepValues[13].Should().Be(8);
+            result.StepValues[13].Should().Be(9);
             result.StepValues[14].Should().Be(9);
         }
 

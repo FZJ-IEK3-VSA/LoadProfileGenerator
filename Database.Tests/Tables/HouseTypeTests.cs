@@ -83,7 +83,7 @@ namespace Database.Tests.Tables {
                     deviceActions, deviceActionGroups, variables);
                 (houseTypes.Count).Should().Be(1);
                 var houseType2 = houseTypes[0];
-                (houseType2.HouseDevices.Count).Should().Be(1);
+                (houseType2.HouseDevices.Count).Should().Be(0);
                 var rd = new RealDevice("test", 1, "bla", null, "name", true, false, db.ConnectionString, Guid.NewGuid().ToStrGuid());
                 rd.SaveToDB();
                 devices.Add(rd);
@@ -109,7 +109,7 @@ namespace Database.Tests.Tables {
                 HouseType.LoadFromDatabase(houseTypes, db.ConnectionString, devices, deviceCategories, timeBasedProfiles,
                     timeLimits, loadTypes, trafoDevices, energyStorages, generators, false, locations, deviceActions,
                     deviceActionGroups, variables);
-                (houseTypes.Count).Should().Be(0);
+                (houseTypes.Count).Should().Be(1);
                 var houseType3 = houseTypes[0];
                 (houseType3.HouseDevices.Count).Should().Be(3);
                 houseType3.DeleteDeviceFromDB(rd);

@@ -9,6 +9,7 @@ using Automation.ResultFiles;
 using JetBrains.Annotations;
 using OfficeOpenXml;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Common.Tests
 {
@@ -174,7 +175,7 @@ namespace Common.Tests
             return rc;
         }
     }
-    public class XlsxDumperTest
+    public class XlsxDumperTest:UnitTestBaseClass
         {
 
             public class MyTst {
@@ -183,7 +184,7 @@ namespace Common.Tests
             }
             [Fact]
             [Trait(UnitTestCategories.Category, UnitTestCategories.BasicTest)]
-        public void RunTest()
+        public void RunXlsDumperBasicTest()
         {
             using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
             {
@@ -199,7 +200,11 @@ namespace Common.Tests
                 XlsxDumper.WriteToXlsx(wd.Combine("t.xlsx"), rc, rc2);
             }
         }
-    }
+
+        public XlsxDumperTest([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
+        }
+        }
 
         public static class XlsxDumper
         {

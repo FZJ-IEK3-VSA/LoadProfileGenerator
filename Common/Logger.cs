@@ -434,11 +434,19 @@ namespace Common {
         public void ThrowAllErrors()
         {
             var sb = new StringBuilder();
+            int i = 1;
             foreach (var logMessage in _errors) {
+                sb.AppendLine();
+                sb.AppendLine("##################################################");
+                sb.AppendLine(i.ToString());
+                sb.AppendLine("##################################################");
+                sb.AppendLine();
+
                 sb.AppendLine(logMessage.Message);
                 if (logMessage.MyStackTrace != null) {
                     sb.AppendLine(logMessage.MyStackTrace.ToString());
                 }
+                sb.AppendLine().AppendLine();
             }
             _errors.Clear();
             throw new LPGException(sb.ToString());

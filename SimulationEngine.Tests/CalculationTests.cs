@@ -348,41 +348,6 @@ namespace SimulationEngine.Tests {
         }
 
 
-        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "RunTime")]
-        [Fact]
-        [Trait(UnitTestCategories.Category, UnitTestCategories.BasicTest)]
-        public void RunTimeAxisTest2NoSettling()
-        {
-            using (var wd = ProgramTests.SetupDB3(Utili.GetCurrentMethodAndClass())) {
-                Config.CatchErrors = false;
-                Config.IsInUnitTesting = true;
-                var startdate = new DateTime(2015, 1, 1);
-                var enddate = new DateTime(2015, 1, 5);
-                var arguments = new List<string> {
-                    "Calculate",
-                    "-CalcObjectType",
-                    "ModularHousehold",
-                    "-CalcObjectNumber",
-                    "2",
-                    "-StartDate",
-                    startdate.ToShortDateString(),
-                    "-EndDate",
-                    enddate.ToShortDateString(),
-                    "-OutputFileDefault",
-                    "Reasonable",
-                    "-OutputDirectory",
-                    "CHH3.RunTimeAxisTest"
-                };
-                MainSimEngine.Run(arguments.ToArray(), "simulationengine.exe");
-
-                //this checks if the pre-calc period is correctly hidden
-                var dt = new DateTime(2015, 1, 1);
-                var dtstr = dt.ToShortDateString() + " " + dt.ToShortTimeString();
-                RunDateTimeOnAllFiles("0", dtstr, 5 * 1440);
-                wd.CleanUp(1);
-            }
-        }
-
 
         [Fact]
         public void TestHouseJobs()
