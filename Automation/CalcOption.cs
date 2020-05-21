@@ -11,7 +11,7 @@
         ActivationsPerHour = 8,
         DaylightTimesList = 9,
         ActivationFrequencies = 10,
-        ActionsLogfile = 11,
+        //ActionsLogfile = 11,
         DeviceProfiles = 12,
         TotalsPerLoadtype = 13,
         HouseholdContents = 14,
@@ -44,6 +44,7 @@
         CalculationFlameChart = 41,
         SumProfileExternalIndividualHouseholdsAsJson = 42,
         JsonSumFiles = 43,
-        BodilyActivityStatistics = 44
+        BodilyActivityStatistics = 44,
+        BasicOverview = 45
     }
 }

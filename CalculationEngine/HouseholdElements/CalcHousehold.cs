@@ -211,7 +211,7 @@ namespace CalculationEngine.HouseholdElements {
 
             using (var sw = _calcRepo.FileFactoryAndTracker.MakeFile<StreamWriter>(
                 "HouseholdContents." + _householdKey + "."  + ".txt",
-                "List of persons, locations, devices and affordances in this household", true, ResultFileID.Dump,
+                "List of persons, locations, devices and affordances in this household", true, ResultFileID.HouseholdContentsDump,
                 _householdKey, TargetDirectory.Root,  _calcRepo.CalcParameters.InternalStepsize)) {
                 sw.WriteLine("Name:" + _name);
                 sw.WriteLine("Location:" + _locationname);

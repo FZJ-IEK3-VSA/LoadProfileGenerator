@@ -131,18 +131,18 @@ namespace Common.JSON {
             }
 
             if (IsSet(CalcOption.ActivationFrequencies)) {
-                Enable(CalcOption.ActionsLogfile);
+                //Enable(CalcOption.ActionsLogfile);
                 Enable(CalcOption.AffordanceEnergyUse);
             }
 
             if (IsSet(CalcOption.HouseholdPlan)) {
                 Enable(CalcOption.ActivationFrequencies);
-                Enable(CalcOption.ActionsLogfile);
+                //Enable(CalcOption.ActionsLogfile);
                 Enable(CalcOption.AffordanceEnergyUse);
             }
 
             if (IsSet(CalcOption.ActivationsPerHour)) {
-                Enable(CalcOption.ActionsLogfile);
+                //Enable(CalcOption.ActionsLogfile);
             }
 
             if (IsSet(CalcOption.TotalsPerDevice)) {
@@ -154,7 +154,7 @@ namespace Common.JSON {
             }
 
             if (IsSet(CalcOption.ActionCarpetPlot)) {
-                Enable(CalcOption.ActionsLogfile);
+                //Enable(CalcOption.ActionsLogfile);
             }
 
             if (IsSet(CalcOption.TimeOfUsePlot)) {
@@ -192,7 +192,7 @@ namespace Common.JSON {
             if (IsSet(CalcOption.HouseholdPlan)) {
                 Enable(CalcOption.ActivationFrequencies);
                 Enable(CalcOption.HouseholdPlan);
-                Enable(CalcOption.ActionsLogfile);
+                //Enable(CalcOption.ActionsLogfile);
             }
             if (IsSet(CalcOption.SumProfileExternalIndividualHouseholdsAsJson))
             {

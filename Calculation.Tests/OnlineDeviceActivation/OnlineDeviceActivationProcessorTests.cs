@@ -105,7 +105,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                 wd.InputDataLogger.AddSaver(new ColumnEntryLogger(wd.SqlResultLoggingService));
                 wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
                 wd.InputDataLogger.AddSaver(new ResultFileEntryLogger(wd.SqlResultLoggingService));
-                calcParameters.Enable(CalcOption.ActionsLogfile);
+                //calcParameters.Enable(CalcOption.ActionsLogfile);
                 calcParameters.Enable(CalcOption.DeviceProfiles);
                 Config.ExtraUnitTestChecking = true;
                 // calcProfile
@@ -219,7 +219,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                 wd.InputDataLogger.AddSaver(new ResultFileEntryLogger(wd.SqlResultLoggingService));
                 wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
                 var calcParameters = CalcParametersFactory.MakeGoodDefaults().EnableShowSettlingPeriod();
-                calcParameters.Enable(CalcOption.ActionsLogfile);
+                //calcParameters.Enable(CalcOption.ActionsLogfile);
                 calcParameters.Enable(CalcOption.DeviceProfiles);
                 calcParameters.Enable(CalcOption.DetailedDatFiles);
                 using (var fft = new FileFactoryAndTracker(wd.WorkingDirectory, "hh1", wd.InputDataLogger)) {

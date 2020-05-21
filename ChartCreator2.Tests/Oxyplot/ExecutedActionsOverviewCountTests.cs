@@ -22,7 +22,7 @@ namespace ChartCreator2.Tests.Oxyplot {
             var cs = new OxyCalculationSetup(Utili.GetCurrentMethodAndClass());
             cs.StartHousehold(1, GlobalConsts.CSVCharacter, configSetter: x =>
             {
-                x.Enable(CalcOption.ActionsLogfile);
+                //x.Enable(CalcOption.ActionsLogfile);
                 x.Enable(CalcOption.ActivationsPerHour);
             });
             using (FileFactoryAndTracker fft = new FileFactoryAndTracker(cs.DstDir, "1", cs.Wd.InputDataLogger))

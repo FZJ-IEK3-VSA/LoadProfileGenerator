@@ -560,7 +560,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             sim.MyGeneralConfig.RandomSeed = -1; // always randomseed
             sim.MyGeneralConfig.ShowSettlingPeriod = "False";
             sim.MyGeneralConfig.Enable(CalcOption.TotalsPerLoadtype);
-            sim.MyGeneralConfig.Enable(CalcOption.ActionsLogfile);
+            //sim.MyGeneralConfig.Enable(CalcOption.ActionsLogfile);
             sim.MyGeneralConfig.Enable(CalcOption.ActionsEachTimestep);
             //sim.MyGeneralConfig.Enable(CalcOption.ac);
             var cs = new CalcStarter(sim);

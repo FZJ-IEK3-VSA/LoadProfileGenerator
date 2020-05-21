@@ -581,7 +581,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                 Logger.Error("Load type priority not suitable for houses ");
                 return;
             }
-            var houseJob = new HouseCreationAndCalculationJob("scenario","year","district");
+            var houseJob = new HouseCreationAndCalculationJob("scenario","year","district", HouseDefinitionType.HouseData);
             House house = (House)SelectedCalcObject;
             HouseData hd = house.MakeHouseData();
             houseJob.House = hd;

@@ -54,7 +54,6 @@ namespace Common {
         public const string SettlementJsonName = "SettlementInformation.json";
         public const double Ebsilon = 0.000000001;
         public const int PermittedGenderNumber = 3;
-        public const string ResultJsonFileName = "ResultEntries.json";
         public const string TakingAVacationString = "taking a vacation";
         [SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flag")]
         public const string FinishedFileFlag = "finished.flag";

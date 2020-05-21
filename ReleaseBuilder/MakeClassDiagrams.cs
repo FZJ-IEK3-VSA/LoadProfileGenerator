@@ -129,7 +129,7 @@ namespace ReleaseBuilder {
             public List<MyClassNode> Subclasses { get; } = new List<MyClassNode>();
         }
 
-        [Trait(UnitTestCategories.Category,"QuickChart")]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.ManualOnly)]
         [Fact]
         public void Run() {
             ProcessAssembly("loadprofilegenerator.exe", @"e:\lpg.gml");

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
+using Automation;
 using Automation.ResultFiles;
 using JetBrains.Annotations;
 using OfficeOpenXml;
@@ -181,7 +182,8 @@ namespace Common.Tests
                 public string MyVal2 { get; } = "blub";
             }
             [Fact]
-            public void RunTest()
+            [Trait(UnitTestCategories.Category, UnitTestCategories.BasicTest)]
+        public void RunTest()
         {
             using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
             {

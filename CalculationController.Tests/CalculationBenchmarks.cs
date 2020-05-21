@@ -122,7 +122,7 @@ namespace CalculationController.Tests {
                     cp.StopPart("SimLoading");
                     cp.StartPart("Calculation");
                     sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.OnlyOverallSum);
-                    sim.MyGeneralConfig.Enable(CalcOption.ActionsLogfile);
+                    //sim.MyGeneralConfig.Enable(CalcOption.ActionsLogfile);
                     sim.MyGeneralConfig.Enable(CalcOption.ActionsEachTimestep);
                     sim.MyGeneralConfig.CSVCharacter = ";";
                     sim.Should().NotBeNull();

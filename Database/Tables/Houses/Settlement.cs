@@ -955,7 +955,8 @@ namespace Database.Tables.Houses {
                 if (StartDate == null) {
                     throw new LPGException("No startdate was set.");
                 }
-                HouseCreationAndCalculationJob housejob = new HouseCreationAndCalculationJob(PrettyName,StartDate.Value.Year.ToString(CultureInfo.InvariantCulture),null);
+                HouseCreationAndCalculationJob housejob = new HouseCreationAndCalculationJob(PrettyName,
+                    StartDate.Value.Year.ToString(CultureInfo.InvariantCulture),null, HouseDefinitionType.HouseData);
                 var calcSettings = new JsonCalcSpecification(_calcSpecification) {
                     GeographicLocation = GeographicLocation?.GetJsonReference(),
                     TemperatureProfile = TemperatureProfile?.GetJsonReference(),

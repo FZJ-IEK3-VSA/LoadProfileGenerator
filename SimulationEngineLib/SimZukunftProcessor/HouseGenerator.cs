@@ -132,7 +132,7 @@ namespace SimulationEngineLib.SimZukunftProcessor {
             HouseData houseData2 = new HouseData(Guid.NewGuid().ToStrGuid(), "HT02", 20000, 10000, "MySecondHouse");
             HouseholdData hhd3 = new HouseholdData(Guid.NewGuid().ToString(), false, "My Third Household, using predefined household",
                 null, null, null, null, HouseholdDataSpecificationType.ByHouseholdName);
-            hhd3.HouseholdNameSpecification = new HouseholdNameSpecification("CHR01");
+            hhd3.HouseholdNameSpecification = new HouseholdNameSpecification(sim.ModularHouseholds[0].GetJsonReference());
             houseData2.Households.Add(hhd3);
             HouseholdData hhd4 = new HouseholdData(Guid.NewGuid().ToString(), false, "My Fourth Household", null, null, null, null, HouseholdDataSpecificationType.ByPersons);
             hhd4.HouseholdDataPersonSpecification = new HouseholdDataPersonSpecification(new List<PersonData>() {
@@ -166,7 +166,7 @@ namespace SimulationEngineLib.SimZukunftProcessor {
             calculationSettings.ChargingStationSet = sim.ChargingStationSets[0].GetJsonReference();
             Logger.Info("--------");
             Logger.Info("Writing example file and additional data file that you might need.");
-            HouseCreationAndCalculationJob hj = new HouseCreationAndCalculationJob("scenario","year","districtname");
+            HouseCreationAndCalculationJob hj = new HouseCreationAndCalculationJob("scenario","year","districtname", HouseDefinitionType.HouseData);
             hj.House = houseData1;
             hj.CalcSpec = calculationSettings;
             hj.CalcSpec.OutputDirectory = "Example1-Results";
@@ -386,17 +386,25 @@ namespace SimulationEngineLib.SimZukunftProcessor {
             var geoloc = FindGeographicLocation(sim, hcj.CalcSpec);
             var temperatureProfile = FindTemperatureProfile(sim, hcj.CalcSpec);
             Random rnd = new Random();
-            var newlyCreatedCalcObject =  CreateSingleHouse(hcj,
-                sim,
-                geoloc,
-                temperatureProfile,
-                rnd);
-            if (newlyCreatedCalcObject == null) {
-                throw new LPGException("Failed to create a house");
+            JsonReference objectToCalc;
+            if (hcj.HouseDefinitionType == HouseDefinitionType.HouseData) {
+                objectToCalc = CreateSingleHouse(hcj, sim, geoloc, temperatureProfile, rnd);
+                if (objectToCalc == null)
+                {
+                    throw new LPGException("Failed to create a house");
+                }
+
+            }
+            else {
+                objectToCalc = hcj.HouseReference?.House;
+                if (objectToCalc == null)
+                {
+                    throw new LPGException("no house reference was set");
+                }
             }
             JsonCalculator jc = new JsonCalculator();
             //hcj.CalcSpec.CalcObject = null;
-            jc.StartHousehold(sim, hcj.CalcSpec,newlyCreatedCalcObject, makeallthecharts);
+            jc.StartHousehold(sim, hcj.CalcSpec,objectToCalc, makeallthecharts);
         }
         [NotNull]
         public string GetAllFootprints([NotNull] Exception x)
@@ -646,7 +654,7 @@ namespace SimulationEngineLib.SimZukunftProcessor {
                     throw new LPGException("No household template name was set for the household " + householdData.Name);
                 case HouseholdDataSpecificationType.ByHouseholdName when householdData.HouseholdNameSpecification == null :
                     throw new LPGException("No household specification was set for the household " + householdData.Name);
-                case HouseholdDataSpecificationType.ByHouseholdName when string.IsNullOrWhiteSpace(householdData.HouseholdNameSpecification.HouseholdName):
+                case HouseholdDataSpecificationType.ByHouseholdName when (householdData.HouseholdNameSpecification?.HouseholdReference == null):
                     throw new LPGException("No household name was set for the household " + householdData.Name);
             }
 
@@ -672,10 +680,10 @@ namespace SimulationEngineLib.SimZukunftProcessor {
 
             }
 
-            var household = sim.ModularHouseholds.FindFirstByName(nameSpec.HouseholdName, FindMode.StartsWith);
+            var household = sim.ModularHouseholds.FindByJsonReference(nameSpec.HouseholdReference);
             if (household == null)
             {
-                throw new LPGException("No household found for the household name " + nameSpec.HouseholdName);
+                throw new LPGException("No household found for the household name " + nameSpec.HouseholdReference?.Name);
             }
 
             var jsonHH = household.GetJson();

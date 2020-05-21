@@ -139,7 +139,7 @@ namespace ReleaseBuilder {
 
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         [Fact]
-        [Trait(UnitTestCategories.Category,"QuickChart")]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.ManualOnly)]
         public void RunTest()
         {
             const string srcpath = @"e:\profilegenerator.db3";

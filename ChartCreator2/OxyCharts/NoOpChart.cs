@@ -41,7 +41,7 @@ namespace ChartCreator2.OxyCharts
                 ResultFileID.DeviceProfileForHouseholds,
                 ResultFileID.DeviceSumsJson,
                 ResultFileID.DeviceTags,
-                ResultFileID.Dump,
+                ResultFileID.HouseholdContentsDump,
                 ResultFileID.DumpTime,
                 ResultFileID.EnergyStorages,
                 ResultFileID.FiveMinuteImportFile,

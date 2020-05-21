@@ -42,6 +42,7 @@ using Common.CalcDto;
 using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
+using FluentAssertions;
 using JetBrains.Annotations;
 
 using Xunit;
@@ -57,7 +58,11 @@ namespace Calculation.Tests {
         {
             var calcParameters = CalcParametersFactory.MakeGoodDefaults();
             using var wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
+            wd.InputDataLogger.AddSaver(new ResultFileEntryLogger(wd.SqlResultLoggingService));
+            wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
+            wd.InputDataLogger.AddSaver(new ColumnEntryLogger(wd.SqlResultLoggingService));
             using var fft = new FileFactoryAndTracker(wd.WorkingDirectory, "name", wd.InputDataLogger);
+            fft.RegisterGeneralHouse();
             using var old = new OnlineLoggingData(new DateStampCreator(calcParameters), wd.InputDataLogger, calcParameters);
             var odap = new OnlineDeviceActivationProcessor(old, calcParameters, fft);
             var clt = new CalcLoadType("clt1", "W", "kWh", 1, true, Guid.NewGuid().ToStrGuid());
@@ -103,7 +108,6 @@ namespace Calculation.Tests {
                 Logger.Info(Utili.GetCurrentMethodAndClass() + " " + sb);
             }
 
-            wd.CleanUp();
         }
 
         [Fact]
@@ -131,8 +135,8 @@ namespace Calculation.Tests {
             var tmplist = new List<double>(timestepValues);
             var cp = new CalcProfile("myCalcProfile", Guid.NewGuid().ToStrGuid(), tmplist, ProfileType.Absolute, "synthetic");
             var ts1 = new TimeStep(1, 0, true);
-            var cdl = new CalcDeviceLoad("",10,clt,0,0);
-            var sv = StepValues.MakeStepValues(cp, 1, RandomValueProfile.MakeStepValues(cp, NormalRandom, 0), cdl);
+            var cdl = new CalcDeviceLoad("",1,clt,0,0);
+            var sv = StepValues.MakeStepValues(cp, 10, RandomValueProfile.MakeStepValues(cp, NormalRandom, 0), cdl);
             odap.AddNewStateMachine(ts1, clt.ConvertToDto(),
                 "name1", "p1", key, cdd, sv);
             double[] resultValues = {0, 10.0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -154,9 +158,9 @@ namespace Calculation.Tests {
                 sb.Append(filerows[0].EnergyEntries[0]);
                 sb.Append(" row1 before:");
                 sb.Append(filerows[1].EnergyEntries[0]);
-                Assert.Equal(resultValues[i], filerows[0].EnergyEntries[0]);
-                Assert.Equal(0, filerows[1].EnergyEntries[0]);
-                Assert.Equal(0, filerows[2].EnergyEntries[0]);
+                resultValues[i].Should().Be(filerows[0].EnergyEntries[0]);
+                filerows[1].EnergyEntries[0].Should().Be(0);
+                filerows[2].EnergyEntries[0].Should().Be(0);
                 ctd.ProcessOneTimestep(filerows, null);
                 Assert.Equal(resultValuesRow1[i], filerows[1].EnergyEntries[0]);
                 Assert.Equal(resultValuesRow2[i], filerows[2].EnergyEntries[0]);
@@ -168,8 +172,6 @@ namespace Calculation.Tests {
                 sb.Append(filerows[2].EnergyEntries[0]);
                 Logger.Info(Utili.GetCurrentMethodAndClass() + " " + sb);
             }
-
-            wd.CleanUp();
         }
 
         public CalcTransformationDeviceTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)

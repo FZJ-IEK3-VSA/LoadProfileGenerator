@@ -272,7 +272,6 @@ namespace Common.SQLResultLogging {
             string dstFileName = GetFilenameForHouseholdKey(entry.HouseholdKey);
             using (System.Data.SQLite.SQLiteConnection conn = new System.Data.SQLite.SQLiteConnection("Data Source=" + dstFileName + ";Version=3")) {
                 //;Synchronous=OFF;Journal Mode=WAL;"
-
                 conn.Open();
                 if (!IsTableCreated(entry)) {
                     MakeTableForListOfFields(entry.Fields, conn, entry.ResultTableDefinition.TableName);

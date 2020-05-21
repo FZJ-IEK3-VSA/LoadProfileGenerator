@@ -18,7 +18,7 @@ namespace Common.Enums {
             CalcOptionDictionary.Add(CalcOption.ActivationsPerHour, "Device Activations per hour statistic");
             CalcOptionDictionary.Add(CalcOption.DaylightTimesList, "Calculated daylight times statistic");
             CalcOptionDictionary.Add(CalcOption.ActivationFrequencies, "Frequency of device activations statistic");
-            CalcOptionDictionary.Add(CalcOption.ActionsLogfile, "Detailed device activation tracking");
+            //CalcOptionDictionary.Add(CalcOption.ActionsLogfile, "Detailed device activation tracking");
             CalcOptionDictionary.Add(CalcOption.DeviceProfiles, "Device Profiles");
             CalcOptionDictionary.Add(CalcOption.TotalsPerLoadtype, "Totals per load type");
             CalcOptionDictionary.Add(CalcOption.HouseholdContents, "Household contents");

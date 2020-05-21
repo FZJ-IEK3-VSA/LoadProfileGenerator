@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using Automation;
@@ -19,6 +18,7 @@ namespace ReleaseBuilder
 {
     public class MakeSampleHouseJobs
     {
+        /*
         private static void CopyAll([NotNull] DirectoryInfo source, [NotNull] DirectoryInfo target)
         {
             Directory.CreateDirectory(target.FullName);
@@ -36,8 +36,9 @@ namespace ReleaseBuilder
                 var nextTargetSubDir = target.CreateSubdirectory(diSourceSubDir.Name);
                 CopyAll(diSourceSubDir, nextTargetSubDir);
             }
-        }
+        }*/
         [Fact]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.BasicTest)]
         public void RunDirectHouseholds()
         {
             using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
@@ -52,16 +53,16 @@ namespace ReleaseBuilder
                     }
                     foreach (var mhh in sim.ModularHouseholds.It)
                     {
-                        HouseCreationAndCalculationJob hj = new HouseCreationAndCalculationJob("Households", "2019", "TK");
+                        HouseCreationAndCalculationJob hj = new HouseCreationAndCalculationJob("Households", "2019", "TK",HouseDefinitionType.HouseData);
                         hj.House = new HouseData(Guid.NewGuid().ToStrGuid(), "HT01", 10000, 10000, "House for " + mhh.Name);
                         hj.House.Households.Add(new HouseholdData(Guid.NewGuid().ToString(),
                             false, mhh.Name, null, null, null, null, HouseholdDataSpecificationType.ByHouseholdName));
-                        hj.House.Households[0].HouseholdNameSpecification = new HouseholdNameSpecification(mhh.Name);
+                        hj.House.Households[0].HouseholdNameSpecification = new HouseholdNameSpecification(mhh.GetJsonReference());
                         SetCalcSpec(hj, sim);
                         string fn = Path.Combine(dir, AutomationUtili.CleanFileName(mhh.Name) + ".json");
                         File.WriteAllText(fn, JsonConvert.SerializeObject(hj, Formatting.Indented));
                     }
-                    CopyAll(new DirectoryInfo(dir), new DirectoryInfo(@"X:\HouseJobs\Blockstrom\DirectHouseholds"));
+                    //CopyAll(new DirectoryInfo(dir), new DirectoryInfo(@"X:\HouseJobs\Blockstrom\DirectHouseholds"));
                 }
             }
         }
@@ -86,7 +87,7 @@ namespace ReleaseBuilder
                     {
                         for (int i = 0; i < 100; i++)
                         {
-                            HouseCreationAndCalculationJob hj = new HouseCreationAndCalculationJob("TemplatedRandomHouseType", "2019", "TK");
+                            HouseCreationAndCalculationJob hj = new HouseCreationAndCalculationJob("TemplatedRandomHouseType", "2019", "TK",HouseDefinitionType.HouseData);
                             string ht = houseTypes[rnd.Next(houseTypes.Count)];
                             Logger.Info(ht);
                             hj.House = new HouseData(Guid.NewGuid().ToStrGuid(), ht, 10000, 10000, "House for " + mhh.Name + " " + i);
@@ -105,7 +106,7 @@ namespace ReleaseBuilder
                             File.WriteAllText(fn, JsonConvert.SerializeObject(hj, Formatting.Indented));
                         }
                     }
-                    CopyAll(new DirectoryInfo(dir), new DirectoryInfo(@"X:\HouseJobs\Blockstrom\TemplatedHouses"));
+                    //CopyAll(new DirectoryInfo(dir), new DirectoryInfo(@"X:\HouseJobs\Blockstrom\TemplatedHouses"));
                 }
             }
         }

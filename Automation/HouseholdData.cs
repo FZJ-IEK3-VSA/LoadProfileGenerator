@@ -65,7 +65,7 @@ namespace Automation {
     }
 
     public class HouseholdNameSpecification {
-        public HouseholdNameSpecification([NotNull] string householdName) => HouseholdName = householdName;
+        public HouseholdNameSpecification([NotNull] JsonReference householdName) => HouseholdReference = householdName;
 
         [Obsolete("only for json")]
         [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
@@ -73,8 +73,7 @@ namespace Automation {
         {
         }
 
-        [NotNull]
-        public string? HouseholdName { get; set; }
+        public JsonReference? HouseholdReference { get; set; }
     }
     public class HouseholdData {
         public HouseholdData([NotNull] string uniqueHouseholdId,

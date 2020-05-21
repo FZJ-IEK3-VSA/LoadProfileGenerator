@@ -59,7 +59,7 @@ namespace Common {
                     l.Add(CalcOption.VariableLogFile);
                     l.Add(CalcOption.ActivationsPerHour);
                     l.Add(CalcOption.ActivationFrequencies);
-                    l.Add(CalcOption.ActionsLogfile);
+                    //l.Add(CalcOption.ActionsLogfile);
                     l.Add(CalcOption.DeviceProfiles);
                     l.Add(CalcOption.TotalsPerLoadtype);
                     l.Add(CalcOption.HouseholdContents);

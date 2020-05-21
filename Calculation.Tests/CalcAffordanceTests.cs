@@ -509,7 +509,7 @@ namespace Calculation.Tests {
 
             aff.IsBusy(ts,  loc, "name");
             aff.Activate(ts, "blub", loc, out var _);
-            crv.GetValueByGuid(variableGuid).Should().Be(-1);
+            crv.GetValueByGuid(variableGuid).Should().Be(-2);
         }
 
         [Fact]

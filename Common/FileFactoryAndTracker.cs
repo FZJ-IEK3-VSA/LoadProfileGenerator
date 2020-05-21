@@ -371,14 +371,11 @@ namespace Common {
                 entry.Stream?.Close();
             }
 
-            if (Config.IsInUnitTesting && !HouseholdRegistry.IsHouseholdRegistered(Constants.GeneralHouseholdKey)) {
-                return;
-            }
-            if (ResultFileList.ResultFiles.All(x => x.Value.ResultFileID != ResultFileID.JsonResultFileList))
-            {
-                RegisterFile(Constants.ResultJsonFileName, "List of all result files with additional information",
-                    false, ResultFileID.JsonResultFileList, Constants.GeneralHouseholdKey, TargetDirectory.Root);
-            }
+            //if (ResultFileList.ResultFiles.All(x => x.Value.ResultFileID != ResultFileID.JsonResultFileList))
+            //{
+            //    RegisterFile(Constants.ResultJsonFileName, "List of all result files with additional information",
+            //        false, ResultFileID.JsonResultFileList, Constants.GeneralHouseholdKey, TargetDirectory.Root);
+            //}
         }
     }
 }

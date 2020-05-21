@@ -65,6 +65,7 @@ namespace CalculationEngine.OnlineLogging {
             _calcParameters = calcParameters;
             _dsc = new DateStampCreator(calcParameters);
             _writeHeader = true;
+            //_makeLogFile = _calcParameters.IsSet(CalcOption.EnergyStorageFile)
         }
         /*
         public EnergyStorageLogfile([NotNull] FileFactoryAndTracker fft, bool displayNegativeTime,

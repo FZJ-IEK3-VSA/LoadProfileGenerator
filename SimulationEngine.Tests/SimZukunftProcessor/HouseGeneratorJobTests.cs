@@ -74,7 +74,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
                 new PersonData(30, Gender.Male)
             };
                     householdData.HouseholdDataPersonSpecification = new HouseholdDataPersonSpecification(persons);
-                    HouseCreationAndCalculationJob houseJob = new HouseCreationAndCalculationJob("present", "2019", "trafokreis");
+                    HouseCreationAndCalculationJob houseJob = new HouseCreationAndCalculationJob("present", "2019", "trafokreis", HouseDefinitionType.HouseData);
                     houseJob.House = houseData;
 
                     MakeAndCalculateHouseJob(houseJob, sim, wd, db);
@@ -104,7 +104,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
                 new PersonData(30, Gender.Male)
             };
                     householdData.HouseholdDataPersonSpecification = new HouseholdDataPersonSpecification(persons);
-                    HouseCreationAndCalculationJob houseJob = new HouseCreationAndCalculationJob("present", "2019", "trafokreis");
+                    HouseCreationAndCalculationJob houseJob = new HouseCreationAndCalculationJob("present", "2019", "trafokreis", HouseDefinitionType.HouseData);
                     houseJob.House = houseData;
 
                     MakeAndCalculateHouseJob(houseJob, sim, wd, db);
@@ -133,7 +133,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
                         HouseholdDataSpecificationType.ByTemplateName);
                     houseData.Households.Add(householdData);
                     householdData.HouseholdTemplateSpecification = new HouseholdTemplateSpecification("CHR01");
-                    HouseCreationAndCalculationJob houseJob = new HouseCreationAndCalculationJob("present", "2019", "trafokreis");
+                    HouseCreationAndCalculationJob houseJob = new HouseCreationAndCalculationJob("present", "2019", "trafokreis", HouseDefinitionType.HouseData);
                     houseJob.House = houseData;
 
                     MakeAndCalculateHouseJob(houseJob, sim, wd, db);
@@ -158,7 +158,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
                     HouseData houseData = new HouseData(Guid.NewGuid().ToStrGuid(),
                         "HT01", 10000, 1000, "HouseGeneratorJobHouse");
                     HouseCreationAndCalculationJob houseJob = new HouseCreationAndCalculationJob(
-                        "present", "2019", "trafokreis");
+                        "present", "2019", "trafokreis", HouseDefinitionType.HouseData);
                     houseJob.House = houseData;
                     var householdData = new HouseholdData(Guid.NewGuid().ToString(), false,
                         "blub", null, null, null, null, HouseholdDataSpecificationType.ByPersons);
@@ -219,7 +219,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
                         //housedata
                         const int targetheatdemand = 10000;
                         HouseData houseData = new HouseData(Guid.NewGuid().ToStrGuid(), htcode, targetheatdemand, 1000, "HouseGeneratorJobHouse");
-                        HouseCreationAndCalculationJob houseJob = new HouseCreationAndCalculationJob("present", "2019", "trafokreis");
+                        HouseCreationAndCalculationJob houseJob = new HouseCreationAndCalculationJob("present", "2019", "trafokreis", HouseDefinitionType.HouseData);
                         houseJob.House = houseData;
 
                         houseJob.CalcSpec = new JsonCalcSpecification
@@ -289,8 +289,8 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
                         "blub", null, null, null, null,
                         HouseholdDataSpecificationType.ByHouseholdName);
                     houseData.Households.Add(householdData);
-                    householdData.HouseholdNameSpecification = new HouseholdNameSpecification("CHR01");
-                    HouseCreationAndCalculationJob houseJob = new HouseCreationAndCalculationJob("present", "2019", "trafokreis");
+                    householdData.HouseholdNameSpecification = new HouseholdNameSpecification(sim.ModularHouseholds[0].GetJsonReference());
+                    HouseCreationAndCalculationJob houseJob = new HouseCreationAndCalculationJob("present", "2019", "trafokreis", HouseDefinitionType.HouseData);
                     houseJob.House = houseData;
 
                     MakeAndCalculateHouseJob(houseJob, sim, wd, db);

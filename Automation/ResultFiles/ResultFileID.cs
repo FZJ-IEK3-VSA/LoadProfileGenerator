@@ -32,7 +32,7 @@ namespace Automation.ResultFiles {
     [SuppressMessage("Microsoft.Design", "CA1008:EnumsShouldHaveZeroValue")]
     public enum ResultFileID {
         Actions = 0,
-        Dump = 1,
+        HouseholdContentsDump = 1,
         ActivationsPerHour = 2,
         ActivationFrequencies = 3,
         Totals = 4,
