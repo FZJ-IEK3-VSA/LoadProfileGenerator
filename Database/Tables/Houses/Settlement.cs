@@ -1071,7 +1071,7 @@ namespace Database.Tables.Houses {
                     jcs = JsonConvert.DeserializeObject<JsonCalcSpecification>(jsonCalcspecStr);
                 }
                 catch (Exception ex) {
-                    Logger.Exception(ex);
+                    Logger.Info("Resetting calculation settings for " +name+ " due to changes from the previous version. Message: " + ex.Message);
                     jcs = JsonCalcSpecification.MakeDefaultsForProduction();
                 }
             }

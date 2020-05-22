@@ -89,7 +89,7 @@ namespace Common {
                     }
                 }
 
-                _isRunning = true;
+                _isRunning = false;
                 return false;
             }
         }
@@ -447,6 +447,7 @@ namespace Common {
                     sb.AppendLine(logMessage.MyStackTrace.ToString());
                 }
                 sb.AppendLine().AppendLine();
+                i++;
             }
             _errors.Clear();
             throw new LPGException(sb.ToString());

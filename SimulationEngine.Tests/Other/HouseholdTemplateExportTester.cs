@@ -1,4 +1,5 @@
-﻿using Automation;
+﻿using System.Linq;
+using Automation;
 using Common;
 using Common.Tests;
 using Database;
@@ -93,6 +94,13 @@ namespace SimulationEngine.Tests.Other
                     foreach (ModularHousehold household in sim1.ModularHouseholds.It)
                     {
                         household.DeleteFromDB();
+                    }
+
+                    foreach (var house in sim1.Houses.It) {
+                        var households = house.Households.ToList();
+                        foreach (var household in households) {
+                            house.DeleteHouseholdFromDB(household);
+                        }
                     }
                     Logger.Info("################################################");
                     Logger.Info("Finished deleting");

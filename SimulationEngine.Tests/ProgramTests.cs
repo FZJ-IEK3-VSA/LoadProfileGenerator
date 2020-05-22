@@ -313,69 +313,69 @@ namespace SimulationEngine.Tests {
             }
         }
 
-        [Fact]
-        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
-        public void MainTestListHouses()
-        {
-            using (var wd = SetupDB3(Utili.GetCurrentMethodAndClass()))
-            {
-                var arguments = new List<string>
-            {
-                "List",
-                "-Houses"
-            };
-                MainSimEngine.Run(arguments.ToArray(), "simulationengine.exe");
-                wd.CleanUp(1);
-            }
-        }
+        //[Fact]
+        //[Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
+        //public void MainTestListHouses()
+        //{
+        //    using (var wd = SetupDB3(Utili.GetCurrentMethodAndClass()))
+        //    {
+        //        var arguments = new List<string>
+        //    {
+        //        "List",
+        //        "-Houses"
+        //    };
+        //        MainSimEngine.Run(arguments.ToArray(), "simulationengine.exe");
+        //        wd.CleanUp(1);
+        //    }
+        //}
 
-        [Fact]
-        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
-        public void MainTestListModularHouseholds()
-        {
-            using (var wd = SetupDB3(Utili.GetCurrentMethodAndClass()))
-            {
-                var arguments = new List<string>
-            {
-                "List",
-                "-ModularHouseholds"
-            };
-                MainSimEngine.Run(arguments.ToArray(), "simulationengine.exe");
-                wd.CleanUp(1);
-            }
-        }
+        //[Fact]
+        //[Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
+        //public void MainTestListModularHouseholds()
+        //{
+        //    using (var wd = SetupDB3(Utili.GetCurrentMethodAndClass()))
+        //    {
+        //        var arguments = new List<string>
+        //    {
+        //        "List",
+        //        "-ModularHouseholds"
+        //    };
+        //        MainSimEngine.Run(arguments.ToArray(), "simulationengine.exe");
+        //        wd.CleanUp(1);
+        //    }
+        //}
 
-        [Fact]
-        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
-        public void MainTestListSettlements()
-        {
-            Config.CatchErrors = false;
-            using (var wd = SetupDB3(Utili.GetCurrentMethodAndClass()))
-            {
-                var arguments = new List<string>
-            {
-                "List",
-                "-Settlements"
-            };
-                MainSimEngine.Run(arguments.ToArray(), "simulationengine.exe");
-                wd.CleanUp(1);
-            }
-        }
+        //[Fact]
+        //[Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
+        //public void MainTestListSettlements()
+        //{
+        //    Config.CatchErrors = false;
+        //    using (var wd = SetupDB3(Utili.GetCurrentMethodAndClass()))
+        //    {
+        //        var arguments = new List<string>
+        //    {
+        //        "List",
+        //        "-Settlements"
+        //    };
+        //        MainSimEngine.Run(arguments.ToArray(), "simulationengine.exe");
+        //        wd.CleanUp(1);
+        //    }
+        //}
 
-        [Fact]
-        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
-        public void MainTestListTemperatureProfiles()
-        {
-            using (var wd = SetupDB3(Utili.GetCurrentMethodAndClass()))
-            {
-                var arguments = new List<string>
-            {
-                "List",
-                "-TemperatureProfiles"
-            };
-                MainSimEngine.Run(arguments.ToArray(), "simulationengine.exe");
-                wd.CleanUp(1);
-            }
+        //[Fact]
+        //[Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
+        //public void MainTestListTemperatureProfiles()
+        //{
+        //    using (var wd = SetupDB3(Utili.GetCurrentMethodAndClass()))
+        //    {
+        //        var arguments = new List<string>
+        //    {
+        //        "List",
+        //        "-TemperatureProfiles"
+        //    };
+        //        MainSimEngine.Run(arguments.ToArray(), "simulationengine.exe");
+        //        wd.CleanUp(1);
+        //    }
         }
 
         [Fact]

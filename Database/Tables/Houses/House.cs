@@ -382,7 +382,7 @@ namespace Database.Tables.Houses {
             cmd.AddParameter("CreationType", (int)_creationType);
         }
 
-        internal void DeleteHouseholdFromDB([NotNull] HouseHousehold hhh)
+        public void DeleteHouseholdFromDB([NotNull] HouseHousehold hhh)
         {
             _houseHouseholds.Remove(hhh);
             hhh.DeleteFromDB();

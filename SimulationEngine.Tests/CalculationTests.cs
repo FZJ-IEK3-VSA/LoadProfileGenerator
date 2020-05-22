@@ -8,6 +8,7 @@ using System.Text;
 using Automation;
 using Automation.ResultFiles;
 using Common;
+using Common.Enums;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
 using Common.Tests;
@@ -16,7 +17,6 @@ using Database.Helpers;
 using Database.Tables.Houses;
 using Database.Tables.ModularHouseholds;
 using Database.Tests;
-using SimulationEngineLib;
 using SimulationEngineLib.SimZukunftProcessor;
 using Xunit;
 using Xunit.Abstractions; //using iTextSharp.text.pdf;
@@ -53,7 +53,7 @@ namespace SimulationEngine.Tests {
             return hj;
         }
 
-        public static HouseCreationAndCalculationJob PrepareNewHouseForHouseholdTesting(Simulator sim, ModularHousehold hh)
+        public static HouseCreationAndCalculationJob PrepareNewHouseForHouseholdTesting(Simulator sim, string guid)
         {
             var hj = new HouseCreationAndCalculationJob();
             hj.CalcSpec = JsonCalcSpecification.MakeDefaultsForTesting();
@@ -67,6 +67,7 @@ namespace SimulationEngine.Tests {
             hj.House.Households = new List<HouseholdData>();
             var hhd = new HouseholdData("householdid", false, "householdname", null, null, null, null,
                 HouseholdDataSpecificationType.ByHouseholdName);
+            var hh = sim.ModularHouseholds.FindByGuid(guid.ToStrGuid());
             hhd.HouseholdNameSpecification = new HouseholdNameSpecification(hh.GetJsonReference());
             hj.House.Households.Add(hhd);
             return hj;
@@ -227,103 +228,102 @@ namespace SimulationEngine.Tests {
             sw.WriteLine("");
         }
 
+        //private static void RunDateTimeOnAllFiles([JetBrains.Annotations.NotNull] string firstTimestep,
+        //                                          [JetBrains.Annotations.NotNull] string firstTimestamp, int targetLineCount)
+        //{
+        //    Config.CatchErrors = false;
+        //    Config.IsInUnitTesting = true;
+        //    var di = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory, "CHH3.RunTimeAxisTest"));
+        //    var reportsDir = new DirectoryInfo(Path.Combine(di.FullName, "Reports"));
+        //    var fis1 = reportsDir.GetFiles("*.csv");
+        //    var resultsDir = new DirectoryInfo(Path.Combine(di.FullName, "Results"));
+        //    var fis2 = resultsDir.GetFiles("*.csv");
+        //    var debugDir = new DirectoryInfo(Path.Combine(di.FullName, "Debugging"));
+        //    var fis3 = debugDir.GetFiles("*.csv");
+        //    var fis = new List<FileInfo>();
+        //    fis.AddRange(fis1);
+        //    fis.AddRange(fis2);
+        //    fis.AddRange(fis3);
+        //    fis.Sort((x, y) => string.Compare(x.Name, y.Name, StringComparison.Ordinal));
+        //    var sumFiles = new List<string> {
+        //        "ActivationsPerHour",
+        //        "ActivityFrequenciesPerMinute",
+        //        "ActivityPercentage",
+        //        "AffordanceEnergyUse",
+        //        "AffordanceTaggingSet",
+        //        "AffordanceTimeUse",
+        //        "DeviceDurationCurves",
+        //        "DeviceSums",
+        //        "DeviceTaggingSet",
+        //        "DurationCurve",
+        //        "ExecutedActionsOverviewCount",
+        //        "HouseholdPlan",
+        //        "LocationStatistics",
+        //        "ImportProfile",
+        //        "TimeOfUseEnergyProfiles",
+        //        "TimeOfUseProfiles",
+        //        "TotalsPerLoadtype",
+        //        "WeekdayProfiles"
+        //    };
+        //    var filesWithVaryingLineCount = new List<string> {
+        //        "Actions.",
+        //        "Locations.",
+        //        "Thoughts."
+        //    };
+        //    var filesToCheck = new List<FileInfo>();
+        //    foreach (var fi in fis) {
+        //        var contains = false;
+        //        foreach (var sumFile in sumFiles) {
+        //            if (fi.Name.ToUpperInvariant().StartsWith(sumFile.ToUpperInvariant(), StringComparison.Ordinal)) {
+        //                contains = true;
+        //            }
+        //        }
 
-        private static void RunDateTimeOnAllFiles([JetBrains.Annotations.NotNull] string firstTimestep,
-                                                  [JetBrains.Annotations.NotNull] string firstTimestamp, int targetLineCount)
-        {
-            Config.CatchErrors = false;
-            Config.IsInUnitTesting = true;
-            var di = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory, "CHH3.RunTimeAxisTest"));
-            var reportsDir = new DirectoryInfo(Path.Combine(di.FullName, "Reports"));
-            var fis1 = reportsDir.GetFiles("*.csv");
-            var resultsDir = new DirectoryInfo(Path.Combine(di.FullName, "Results"));
-            var fis2 = resultsDir.GetFiles("*.csv");
-            var debugDir = new DirectoryInfo(Path.Combine(di.FullName, "Debugging"));
-            var fis3 = debugDir.GetFiles("*.csv");
-            var fis = new List<FileInfo>();
-            fis.AddRange(fis1);
-            fis.AddRange(fis2);
-            fis.AddRange(fis3);
-            fis.Sort((x, y) => string.Compare(x.Name, y.Name, StringComparison.Ordinal));
-            var sumFiles = new List<string> {
-                "ActivationsPerHour",
-                "ActivityFrequenciesPerMinute",
-                "ActivityPercentage",
-                "AffordanceEnergyUse",
-                "AffordanceTaggingSet",
-                "AffordanceTimeUse",
-                "DeviceDurationCurves",
-                "DeviceSums",
-                "DeviceTaggingSet",
-                "DurationCurve",
-                "ExecutedActionsOverviewCount",
-                "HouseholdPlan",
-                "LocationStatistics",
-                "ImportProfile",
-                "TimeOfUseEnergyProfiles",
-                "TimeOfUseProfiles",
-                "TotalsPerLoadtype",
-                "WeekdayProfiles"
-            };
-            var filesWithVaryingLineCount = new List<string> {
-                "Actions.",
-                "Locations.",
-                "Thoughts."
-            };
-            var filesToCheck = new List<FileInfo>();
-            foreach (var fi in fis) {
-                var contains = false;
-                foreach (var sumFile in sumFiles) {
-                    if (fi.Name.ToUpperInvariant().StartsWith(sumFile.ToUpperInvariant(), StringComparison.Ordinal)) {
-                        contains = true;
-                    }
-                }
+        //        if (!contains) {
+        //            filesToCheck.Add(fi);
+        //        }
+        //    }
 
-                if (!contains) {
-                    filesToCheck.Add(fi);
-                }
-            }
+        //    var filesWithLineCounts = new List<Tuple<FileInfo, int>>();
+        //    foreach (var fileInfo in filesToCheck) {
+        //        var linecount = 1;
+        //        using (var sr = new StreamReader(fileInfo.FullName)) {
+        //            sr.ReadLine(); // header
+        //            var firstLine = sr.ReadLine();
 
-            var filesWithLineCounts = new List<Tuple<FileInfo, int>>();
-            foreach (var fileInfo in filesToCheck) {
-                var linecount = 1;
-                using (var sr = new StreamReader(fileInfo.FullName)) {
-                    sr.ReadLine(); // header
-                    var firstLine = sr.ReadLine();
+        //            if (firstLine == null) {
+        //                throw new LPGException("Readline failed");
+        //            }
 
-                    if (firstLine == null) {
-                        throw new LPGException("Readline failed");
-                    }
+        //            var arr = firstLine.Split(';');
+        //            if (arr[0] != firstTimestep) {
+        //                throw new LPGException("File: " + fileInfo.Name + ": First timestep was: " + arr[0] + " instead of " + firstTimestep);
+        //            }
 
-                    var arr = firstLine.Split(';');
-                    if (arr[0] != firstTimestep) {
-                        throw new LPGException("File: " + fileInfo.Name + ": First timestep was: " + arr[0] + " instead of " + firstTimestep);
-                    }
+        //            if (arr[1] != firstTimestamp) {
+        //                throw new LPGException("File: " + fileInfo.Name + ": First timestamp was: " + arr[1] + " instead of " + firstTimestamp);
+        //            }
 
-                    if (arr[1] != firstTimestamp) {
-                        throw new LPGException("File: " + fileInfo.Name + ": First timestamp was: " + arr[1] + " instead of " + firstTimestamp);
-                    }
+        //            while (!sr.EndOfStream) {
+        //                sr.ReadLine();
+        //                linecount++;
+        //            }
 
-                    while (!sr.EndOfStream) {
-                        sr.ReadLine();
-                        linecount++;
-                    }
+        //            if (!filesWithVaryingLineCount.Any(x => fileInfo.Name.StartsWith(x, StringComparison.Ordinal))) {
+        //                if (linecount != targetLineCount) {
+        //                    throw new LPGException("The file " + fileInfo.Name + ": has " + linecount + " lines instead of " + targetLineCount);
+        //                }
+        //            }
+        //        }
 
-                    if (!filesWithVaryingLineCount.Any(x => fileInfo.Name.StartsWith(x, StringComparison.Ordinal))) {
-                        if (linecount != targetLineCount) {
-                            throw new LPGException("The file " + fileInfo.Name + ": has " + linecount + " lines instead of " + targetLineCount);
-                        }
-                    }
-                }
+        //        Logger.Info(fileInfo.Name + ": " + linecount);
+        //        filesWithLineCounts.Add(new Tuple<FileInfo, int>(fileInfo, linecount));
+        //    }
 
-                Logger.Info(fileInfo.Name + ": " + linecount);
-                filesWithLineCounts.Add(new Tuple<FileInfo, int>(fileInfo, linecount));
-            }
-
-            foreach (var pair in filesWithLineCounts) {
-                Logger.Info(pair.Item1.Name + " " + pair.Item2);
-            }
-        }
+        //    foreach (var pair in filesWithLineCounts) {
+        //        Logger.Info(pair.Item1.Name + " " + pair.Item2);
+        //    }
+        //}
 
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.ManualOnly)]
@@ -377,24 +377,23 @@ namespace SimulationEngine.Tests {
         [Fact]
         public void TestHouseHouseholdVariation()
         {
-            const int hhnumer = 0;
             HouseJobTestHelper.RunSingleHouse(sim => {
-                var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,sim.ModularHouseholds[hhnumer]);
+                var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,sim.ModularHouseholds[0].Guid.ToString());
                 if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
                 hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
                 return hj; }, x => {});
         }
 
-        private static void WriteHouseholdTestFunction(StreamWriter sw, int idx)
+        private static void WriteHouseholdTestFunction(StreamWriter sw,ModularHousehold hh, int idx)
         {
             sw.WriteLine("");
             sw.WriteLine("[Fact]");
             sw.WriteLine("[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest7)]");
 
             sw.WriteLine("public void TestHouseholdTest" + idx + "(){");
-            sw.WriteLine("      const int hhnumer = "+idx+";");
+            sw.WriteLine("      const string hhguid = \""+hh.Guid.StrVal +"\";");
             sw.WriteLine("      HouseJobTestHelper.RunSingleHouse(sim => {");
-            sw.WriteLine("      var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,sim.ModularHouseholds[hhnumer]);");
+            sw.WriteLine("      var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid);");
             sw.WriteLine("      if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }");
             sw.WriteLine("      hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;");
             sw.WriteLine("return hj; }, x => {});");
@@ -417,9 +416,13 @@ namespace SimulationEngine.Tests {
             sw.WriteLine("#pragma warning disable 8602");
             sw.WriteLine("namespace SimulationEngine.Tests {");
             sw.WriteLine("public class SystematicHouseholdTests :UnitTestBaseClass {");
-            for (int i = 0; i < sim.ModularHouseholds.It.Count; i++) {
-                WriteHouseholdTestFunction(sw, i);
+            var householdsToTest = sim.ModularHouseholds.It.Where(x => x.CreationType == CreationType.ManuallyCreated).ToList();
+            int idx = 0;
+            foreach (var household in householdsToTest) {
+                WriteHouseholdTestFunction(sw, household,idx++);
+
             }
+
 
             sw.WriteLine(
                     "public SystematicHouseholdTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper) { }");
