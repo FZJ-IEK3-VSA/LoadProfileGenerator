@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -272,46 +271,46 @@ namespace SimulationEngine.Tests {
             }
         }
 
-        [Fact]
-        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
-        public void ProfilesGeoLocs()
-        {
-            using (var wd = SetupDB3(Utili.GetCurrentMethodAndClass()))
-            {
-                var arguments = new List<string>
-            {
-                "Calculate",
-                "-CalcObjectType",
-                "ModularHousehold",
-                "-CalcObjectNumber",
-                "1",
-                "-OutputDirectory",
-                Path.Combine(wd.WorkingDirectory,"Results"),
-                "-LoadtypePriority",
-                "Mandatory",
-                "-SkipExisting",
-                "-MeasureCalculationTimes",
-                "-TemperatureProfileIndex",
-                "0",
-                "-GeographicLocationIndex",
-                "10",
-                "-StartDate",
-                new DateTime(2018,1,1).ToString(CultureInfo.CurrentCulture),
-                "-EndDate",
-                new DateTime(2018,12,31).ToString(CultureInfo.CurrentCulture),
-                "-EnergyIntensityType",
-                "Random",
-                "-ExternalTimeResolution",
-                "00:15",
-                "-OutputFileDefault",
-                "OnlySums",
-                "-CalcOption",
-                "LocationsFile"
-            };
-                MainSimEngine.Run(arguments.ToArray(), "simulationengine.exe");
-                wd.CleanUp(1);
-            }
-        }
+        //[Fact]
+        //[Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
+        //public void ProfilesGeoLocs()
+        //{
+        //    using (var wd = SetupDB3(Utili.GetCurrentMethodAndClass()))
+        //    {
+        //        var arguments = new List<string>
+        //    {
+        //        "Calculate",
+        //        "-CalcObjectType",
+        //        "ModularHousehold",
+        //        "-CalcObjectNumber",
+        //        "1",
+        //        "-OutputDirectory",
+        //        Path.Combine(wd.WorkingDirectory,"Results"),
+        //        "-LoadtypePriority",
+        //        "Mandatory",
+        //        "-SkipExisting",
+        //        "-MeasureCalculationTimes",
+        //        "-TemperatureProfileIndex",
+        //        "0",
+        //        "-GeographicLocationIndex",
+        //        "10",
+        //        "-StartDate",
+        //        new DateTime(2018,1,1).ToString(CultureInfo.CurrentCulture),
+        //        "-EndDate",
+        //        new DateTime(2018,12,31).ToString(CultureInfo.CurrentCulture),
+        //        "-EnergyIntensityType",
+        //        "Random",
+        //        "-ExternalTimeResolution",
+        //        "00:15",
+        //        "-OutputFileDefault",
+        //        "OnlySums",
+        //        "-CalcOption",
+        //        "LocationsFile"
+        //    };
+        //        MainSimEngine.Run(arguments.ToArray(), "simulationengine.exe");
+        //        wd.CleanUp(1);
+        //    }
+        //}
 
         //[Fact]
         //[Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
@@ -376,7 +375,7 @@ namespace SimulationEngine.Tests {
         //        MainSimEngine.Run(arguments.ToArray(), "simulationengine.exe");
         //        wd.CleanUp(1);
         //    }
-        }
+        //}
 
         [Fact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
@@ -394,4 +393,5 @@ namespace SimulationEngine.Tests {
         {
         }
     }
+
 }
