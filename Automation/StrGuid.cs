@@ -26,7 +26,10 @@ namespace Automation
             return StrVal == other.StrVal;
         }
 
-        public int CompareTo(StrGuid other) => throw new NotImplementedException();
+        public int CompareTo(StrGuid other)
+        {
+            return string.Compare(StrVal, other.StrVal, StringComparison.Ordinal);
+        }
 
         public override bool Equals(object? obj)
         {

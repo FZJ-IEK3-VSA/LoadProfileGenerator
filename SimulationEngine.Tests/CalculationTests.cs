@@ -121,6 +121,7 @@ namespace SimulationEngine.Tests {
             filesthatdontneedtoregister.Add("results.general.sqlite-shm");
             filesthatdontneedtoregister.Add("results.hh1.sqlite");
             filesthatdontneedtoregister.Add("results.house.sqlite");
+            filesthatdontneedtoregister.Add("calculationprofiler.json");
             //check if all files are registered
             DirectoryInfo di = new DirectoryInfo(wd);
             var files = di.GetFiles("*.*", SearchOption.AllDirectories);

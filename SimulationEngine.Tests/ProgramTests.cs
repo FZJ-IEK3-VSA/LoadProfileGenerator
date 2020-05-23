@@ -124,21 +124,21 @@ namespace SimulationEngine.Tests {
             }
         }
 
-        [Fact]
-        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
-        public void MainListLoadTypePriorities()
-        {
-            using (var wd = SetupDB3(Utili.GetCurrentMethodAndClass()))
-            {
-                var arguments = new List<string>
-            {
-                "List",
-                "-LoadtypePriorities"
-            };
-                MainSimEngine.Run(arguments.ToArray(), "simulationengine.exe");
-                wd.CleanUp(1);
-            }
-        }
+        //[Fact]
+        //[Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
+        //public void MainListLoadTypePriorities()
+        //{
+        //    using (var wd = SetupDB3(Utili.GetCurrentMethodAndClass()))
+        //    {
+        //        var arguments = new List<string>
+        //    {
+        //        "List",
+        //        "-LoadtypePriorities"
+        //    };
+        //        MainSimEngine.Run(arguments.ToArray(), "simulationengine.exe");
+        //        wd.CleanUp(1);
+        //    }
+        //}
 
         [Fact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
@@ -255,21 +255,21 @@ namespace SimulationEngine.Tests {
             }
         }
 
-        [Fact]
-        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
-        public void MainTestListGeoLocs()
-        {
-            using (var wd = SetupDB3(Utili.GetCurrentMethodAndClass()))
-            {
-                var arguments = new List<string>
-            {
-                "List",
-                "-GeographicLocations"
-            };
-                MainSimEngine.Run(arguments.ToArray(), "simulationengine.exe");
-                wd.CleanUp(1);
-            }
-        }
+        //[Fact]
+        //[Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
+        //public void MainTestListGeoLocs()
+        //{
+        //    using (var wd = SetupDB3(Utili.GetCurrentMethodAndClass()))
+        //    {
+        //        var arguments = new List<string>
+        //    {
+        //        "List",
+        //        "-GeographicLocations"
+        //    };
+        //        MainSimEngine.Run(arguments.ToArray(), "simulationengine.exe");
+        //        wd.CleanUp(1);
+        //    }
+        //}
 
         //[Fact]
         //[Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
