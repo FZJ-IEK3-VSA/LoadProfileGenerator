@@ -33,6 +33,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using Automation;
 using Automation.ResultFiles;
@@ -316,9 +317,40 @@ namespace CalculationEngine.HouseholdElements {
             return startidx.AddSteps(totalDuration);
         }
 
+        private class RandomValueProfileEntry {
+            public RandomValueProfileEntry(TimeStep timeStep, double powerStandardDeviation, RandomValueProfile randomValueProfile)
+            {
+                TimeStep = timeStep;
+                PowerStandardDeviation = powerStandardDeviation;
+                RandomValueProfile = randomValueProfile;
+            }
+
+            public TimeStep TimeStep { get; }
+            public double PowerStandardDeviation { get; }
+            public RandomValueProfile RandomValueProfile { get; }
+
+        }
+
+        private RandomValueProfile GetRandomValueProfile(int count, CalcDeviceLoad cdl, TimeStep timeStep)
+        {
+            var entry = _randomValues.FirstOrDefault(x =>
+                x.TimeStep == timeStep && Math.Abs(x.PowerStandardDeviation - cdl.PowerStandardDeviation) < 0.000000001);
+            if (entry != null) {
+                return entry.RandomValueProfile;
+            }
+            var newrvp = RandomValueProfile.MakeStepValues(count, CalcRepo.NormalRandom,
+                cdl.PowerStandardDeviation);
+            while (_randomValues.Count > 10) {
+                _randomValues.RemoveAt(0);
+            }
+            var rvpe = new RandomValueProfileEntry(timeStep,cdl.PowerStandardDeviation,newrvp);
+            _randomValues.Add(rvpe);
+            return newrvp;
+        }
+        private readonly List<RandomValueProfileEntry> _randomValues = new List<RandomValueProfileEntry>();
         //private Dictionary<string, RandomValueProfile> _randomProfileCache;
         [NotNull]
-        public TimeStep SetTimeprofile([NotNull] CalcProfile calcProfile, [NotNull] TimeStep startidx, [NotNull] CalcLoadType loadType,
+        public TimeStep SetTimeprofile([NotNull] CalcProfile calcProfile, [NotNull] TimeStep startTimeStep, [NotNull] CalcLoadType loadType,
             [NotNull] string affordanceName, [NotNull] string activatingPersonName, double multiplier, bool activateDespiteBeingBusy)
         {
             if (calcProfile.StepValues.Count == 0) {
@@ -340,12 +372,12 @@ namespace CalculationEngine.HouseholdElements {
             var totalDuration = calcProfile.StepValues.Count; //.GetNewLengthAfterCompressExpand(timefactor);
             //calcProfile.CompressExpandDoubleArray(timefactor,allProfiles),
                 var key = _keyByLoad[cdl.LoadType];
-            RandomValueProfile rvp = RandomValueProfile.MakeStepValues(calcProfile,CalcRepo.NormalRandom,
-                cdl.PowerStandardDeviation);
+
+                RandomValueProfile rvp = GetRandomValueProfile(calcProfile.StepValues.Count,cdl,startTimeStep);
                 StepValues sv = StepValues.MakeStepValues(calcProfile,
                     multiplier, rvp, cdl );
                 CalcRepo.Odap.AddNewStateMachine(
-                    startidx,
+                    startTimeStep,
                     cdl.LoadType.ConvertToDto(),
                     affordanceName,
                     activatingPersonName,
@@ -357,13 +389,13 @@ namespace CalculationEngine.HouseholdElements {
                     if (matchingAutoDev._keyByLoad.ContainsKey(cdl.LoadType)) {
                         var zerokey = matchingAutoDev._keyByLoad[cdl.LoadType];
                         CalcRepo.Odap.AddZeroEntryForAutoDev(zerokey,
-                            startidx,
+                            startTimeStep,
                             totalDuration);
                     }
                 }
             }
-            SetBusy(startidx, totalDuration, loadType, activateDespiteBeingBusy);
-            return  startidx.AddSteps(totalDuration);
+            SetBusy(startTimeStep, totalDuration, loadType, activateDespiteBeingBusy);
+            return  startTimeStep.AddSteps(totalDuration);
         }
 
         public override string ToString() => "Device:" + Name;

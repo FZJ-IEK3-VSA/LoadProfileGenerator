@@ -22,7 +22,8 @@ using Database.Tables.Validation;
 using Database.Tests;
 using JetBrains.Annotations;
 using LoadProfileGenerator.Presenters.SpecialViews;
-
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -31,6 +32,7 @@ using Xunit.Abstractions;
 namespace ReleaseBuilder
 {
     [SuppressMessage("ReSharper", "RedundantAssignment")]
+    [TestClass]
     public class ReleaseBuilderTests : UnitTestBaseClass
     {
         private const bool ThrowOnMissingOutcomes = false;
@@ -400,7 +402,7 @@ namespace ReleaseBuilder
                 FindUnusedDevices(sim);
                 //TODO: Add the trait check back
                 //FindUnusedTraits(sim);
-
+                sim.MyGeneralConfig.PerformCleanUpChecks = "false";
                 SimIntegrityChecker.Run(sim);
                 db.Cleanup();
             }
@@ -429,8 +431,10 @@ namespace ReleaseBuilder
             }
         }
 
+
+//        [Test]
         [Fact]
-        [Trait(UnitTestCategories.Category,"ReleaseMaker")]
+  //      [Trait(UnitTestCategories.Category,"ReleaseMaker")]
         [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalse")]
         [SuppressMessage("ReSharper", "HeuristicUnreachableCode")]
         public void MakeRelease()
@@ -622,8 +626,9 @@ namespace ReleaseBuilder
             }
         }
 
-        public ReleaseBuilderTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
-        {
-        }
+ //       public ReleaseBuilderTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper){}
+ public ReleaseBuilderTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+ {
+ }
     }
 }

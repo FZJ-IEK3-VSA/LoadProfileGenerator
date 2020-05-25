@@ -46,23 +46,25 @@ namespace CalculationEngine.OnlineDeviceLogging {
         }
 
         [NotNull]
-        public static RandomValueProfile MakeStepValues([NotNull] CalcProfile srcProfile, [NotNull] NormalRandom nr, double powerStandardDeviation)
+        public static RandomValueProfile MakeStepValues(int stepCount, [NotNull] NormalRandom nr, double powerStandardDeviation)
         {
-
-            var values = new List<double>(srcProfile.StepValues);
+            if (stepCount == 0) {
+                throw new LPGException("stepcount was 0");
+            }
+            var values = new List<double>(new double[stepCount]);
             if (Math.Abs(powerStandardDeviation) > 0.00000001) {
-                for (var i = 0; i < values.Count; i++) {
+                for (var i = 0; i < stepCount; i++) {
                     values[i] = nr.NextDouble(1, powerStandardDeviation);
                 }
             }
             else {
-                for (var i = 0; i < values.Count; i++) {
+                for (var i = 0; i < stepCount; i++) {
                     values[i] = 1;
                 }
             }
-
             return new RandomValueProfile(values);
         }
+
         [NotNull]
         public List<double> Values { get; }
     }

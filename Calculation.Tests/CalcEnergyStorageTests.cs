@@ -81,19 +81,20 @@ namespace Calculation.Tests {
                         var cp = new CalcProfile("myCalcProfile", Guid.NewGuid().ToStrGuid(), timestepValues,
                             ProfileType.Absolute, "synthetic");
                         CalcDeviceLoad cdl1 = new CalcDeviceLoad("", -10, clt, 0, 0);
-                        StepValues sv1 = StepValues.MakeStepValues(cp,  1, RandomValueProfile.MakeStepValues(cp,NormalRandom,0),cdl1);
+                        var rvp = RandomValueProfile.MakeStepValues(cp.StepValues.Count, NormalRandom, 0);
+                        StepValues sv1 = StepValues.MakeStepValues(cp,  1, rvp,cdl1);
                         odap.AddNewStateMachine(new TimeStep(1, 0, true),
                             clt.ConvertToDto(), "name1", "p1", key, cdd, sv1);
                         CalcDeviceLoad cdl2 = new CalcDeviceLoad("", -100, clt, 0, 0);
-                        StepValues sv2 = StepValues.MakeStepValues(cp, 1,RandomValueProfile.MakeStepValues(cp, NormalRandom, 0), cdl2);
+                        StepValues sv2 = StepValues.MakeStepValues(cp, 1,rvp, cdl2);
                         odap.AddNewStateMachine(new TimeStep(3, 0, true),
                              clt.ConvertToDto(),  "name2",  "syn", key, cdd, sv2);
                         CalcDeviceLoad cdl3 = new CalcDeviceLoad("", -10, clt, 0, 0);
-                        StepValues sv3 = StepValues.MakeStepValues(cp,1, RandomValueProfile.MakeStepValues(cp, NormalRandom, 0), cdl3);
+                        StepValues sv3 = StepValues.MakeStepValues(cp,1, rvp, cdl3);
                         odap.AddNewStateMachine(new TimeStep(5, 0, true),
                             clt.ConvertToDto(),  "name3",  "syn", key, cdd, sv3);
                         CalcDeviceLoad cdl4 = new CalcDeviceLoad("", 100, clt, 0, 0);
-                        StepValues sv4 = StepValues.MakeStepValues(cp,  1, RandomValueProfile.MakeStepValues(cp, NormalRandom, 0), cdl4);
+                        StepValues sv4 = StepValues.MakeStepValues(cp,  1, rvp, cdl4);
                         odap.AddNewStateMachine(new TimeStep(7, 0, true),
                             clt.ConvertToDto(),  "name4", "syn", key, cdd, sv4);
                         double[] resultValues = { 0, -10.0, 0, -100, 0, 10, 0, 100, 0, 0 };

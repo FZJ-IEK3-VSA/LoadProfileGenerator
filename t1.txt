@@ -1,197 +1,2056 @@
-C:\Program Files\dotnet\sdk\3.1.300-preview-015135\Sdks\Microsoft.NET.Sdk\targets\Microsoft.NET.Sdk.DefaultItems.targets(349,5): warning NETSDK1107: Microsoft.NET.Sdk.WindowsDesktop is required to build Windows desktop applications. 'UseWpf' and 'UseWindowsForms' are not supported by the current SDK. [C:\Work\LPGDev\WpfApplication1\LoadProfileGenerator.csproj]
-RGBColor.cs(11,19): warning CA1066: Implement IEquatable when overriding Object.Equals [C:\Work\LPGDev\Automation\Automation.csproj]
-StrGuid.cs(5,18): warning CA1036: StrGuid should define operator(s) '<, <=, >, >=' since it implements IComparable. [C:\Work\LPGDev\Automation\Automation.csproj]
-ResultFiles\HouseholdKey.cs(6,18): warning CA1036: HouseholdKey should define operator(s) '<, <=, >, >=' since it implements IComparable. [C:\Work\LPGDev\Automation\Automation.csproj]
-BasicElement.cs(39,18): warning CA1036: BasicElement should define operator(s) '==, !=, <, <=, >, >=' and Equals since it implements IComparable. [C:\Work\LPGDev\Common\Common.csproj]
-CalcDto\CalcLoadTypeDto.cs(8,18): warning CA1036: CalcLoadTypeDto should define operator(s) '<, <=, >, >=' since it implements IComparable. [C:\Work\LPGDev\Common\Common.csproj]
-GeneralHouseholdSteps\ColourGenerator.cs(15,29): warning CA1305: The behavior of 'string.Format(string, object)' could vary based on the current user's locale settings. Replace this call in 'ColourGenerator.NextColour()' with a call to 'string.Format(IFormatProvider, string, params object[])'. [C:\Work\LPGDev\CalcPostProcessor\CalcPostProcessor.csproj]
-Templating\SettlementTemplateExecutor.cs(398,29): warning CA1036: HouseEntry should define operator(s) '==, !=, <, <=, >, >=' since it implements IComparable. [C:\Work\LPGDev\Database\Database.csproj]
-Helpers\CategoryDBBase.cs(54,66): warning CA1051: Do not declare visible instance fields [C:\Work\LPGDev\Database\Database.csproj]
-Tables\ModularHouseholds\HouseholdTrait.cs(51,28): warning CA1066: Implement IEquatable when overriding Object.Equals [C:\Work\LPGDev\Database\Database.csproj]
-Tables\BasicElements\UsedIn.cs(33,18): warning CA1036: UsedIn should define operator(s) '==, !=, <, <=, >, >=' and Equals since it implements IComparable. [C:\Work\LPGDev\Database\Database.csproj]
-Tables\ModularHouseholds\HouseholdTemplate.cs(399,25): warning CA1304: The behavior of 'string.ToLower()' could vary based on the current user's locale settings. Replace this call in 'HouseholdTemplate.ImportExistingModularHouseholds(ModularHousehold)' with a call to 'string.ToLower(CultureInfo)'. [C:\Work\LPGDev\Database\Database.csproj]
-Tables\ModularHouseholds\HouseholdTemplate.cs(403,25): warning CA1304: The behavior of 'string.ToLower()' could vary based on the current user's locale settings. Replace this call in 'HouseholdTemplate.ImportExistingModularHouseholds(ModularHousehold)' with a call to 'string.ToLower(CultureInfo)'. [C:\Work\LPGDev\Database\Database.csproj]
-Test run for C:\Work\LPGDev\Common.Tests\bin\Debug\netcoreapp3.1\Common.Tests.dll(.NETCoreApp,Version=v3.1)
-Microsoft (R) Test Execution Command Line Tool Version 16.6.0
-Copyright (c) Microsoft Corporation.  All rights reserved.
+Project 'Calculation.Tests' has the following package references
+   [netcoreapp3.1]: 
+   Top-level Package                            Requested   Resolved
+   > FluentAssertions.Analyzers                 0.11.4      0.11.4  
+   > JetBrains.Annotations                      2020.1.0    2020.1.0
+   > Microsoft.CodeAnalysis.FxCopAnalyzers      3.0.0       3.0.0   
+   > Microsoft.NET.Test.Sdk                     16.6.1      16.6.1  
+   > Moq                                        4.14.1      4.14.1  
+   > Newtonsoft.Json                            12.0.3      12.0.3  
+   > NullCheckAnalyzer                          1.0.0.3     1.0.0.3 
+   > Roslynator.Analyzers                       2.3.0       2.3.0   
+   > xunit                                      2.4.1       2.4.1   
+   > xunit.runner.visualstudio                  2.4.1       2.4.1   
 
-Starting test execution, please wait...
+   Transitive Package                                                                   Resolved 
+   > Autofac                                                                            5.2.0    
+   > Automation                                                                         1.0.0    
+   > CalcPostProcessor                                                                  1.0.0    
+   > CalculationController                                                              1.0.0    
+   > CalculationEngine                                                                  1.0.0    
+   > Castle.Core                                                                        4.4.0    
+   > Common                                                                             1.0.0    
+   > Common.Tests                                                                       1.0.0    
+   > Database                                                                           1.0.0    
+   > Database.Tests                                                                     1.0.0    
+   > EntityFramework                                                                    6.3.0    
+   > EPPlus                                                                             4.5.3.3  
+   > FluentAssertions                                                                   5.10.3   
+   > Microsoft.CodeAnalysis.VersionCheckAnalyzer                                        3.0.0    
+   > Microsoft.CodeCoverage                                                             16.6.1   
+   > Microsoft.CodeQuality.Analyzers                                                    3.0.0    
+   > Microsoft.CSharp                                                                   4.7.0    
+   > Microsoft.Extensions.Configuration                                                 3.1.0    
+   > Microsoft.Extensions.Configuration.Abstractions                                    3.1.0    
+   > Microsoft.Extensions.Configuration.FileExtensions                                  3.1.0    
+   > Microsoft.Extensions.Configuration.Json                                            3.1.0    
+   > Microsoft.Extensions.FileProviders.Abstractions                                    3.1.0    
+   > Microsoft.Extensions.FileProviders.Physical                                        3.1.0    
+   > Microsoft.Extensions.FileSystemGlobbing                                            3.1.0    
+   > Microsoft.Extensions.Primitives                                                    3.1.0    
+   > Microsoft.NetCore.Analyzers                                                        3.0.0    
+   > Microsoft.NETCore.Platforms                                                        3.1.0    
+   > Microsoft.NETCore.Targets                                                          1.1.3    
+   > Microsoft.NetFramework.Analyzers                                                   3.0.0    
+   > Microsoft.TestPlatform.ObjectModel                                                 16.6.1   
+   > Microsoft.TestPlatform.TestHost                                                    16.6.1   
+   > Microsoft.Win32.Primitives                                                         4.3.0    
+   > Microsoft.Win32.Registry                                                           4.6.0    
+   > Microsoft.Win32.SystemEvents                                                       4.7.0    
+   > NETStandard.Library                                                                1.6.1    
+   > NuGet.Frameworks                                                                   5.0.0    
+   > runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl           4.3.2    
+   > runtime.fedora.23-x64.runtime.native.System.Security.Cryptography.OpenSsl          4.3.2    
+   > runtime.fedora.24-x64.runtime.native.System.Security.Cryptography.OpenSsl          4.3.2    
+   > runtime.native.System                                                              4.3.0    
+   > runtime.native.System.Data.SqlClient.sni                                           4.6.0    
+   > runtime.native.System.IO.Compression                                               4.3.0    
+   > runtime.native.System.Net.Http                                                     4.3.0    
+   > runtime.native.System.Security.Cryptography.Apple                                  4.3.0    
+   > runtime.native.System.Security.Cryptography.OpenSsl                                4.3.2    
+   > runtime.opensuse.13.2-x64.runtime.native.System.Security.Cryptography.OpenSsl      4.3.2    
+   > runtime.opensuse.42.1-x64.runtime.native.System.Security.Cryptography.OpenSsl      4.3.2    
+   > runtime.osx.10.10-x64.runtime.native.System.Security.Cryptography.Apple            4.3.0    
+   > runtime.osx.10.10-x64.runtime.native.System.Security.Cryptography.OpenSsl          4.3.2    
+   > runtime.rhel.7-x64.runtime.native.System.Security.Cryptography.OpenSsl             4.3.2    
+   > runtime.ubuntu.14.04-x64.runtime.native.System.Security.Cryptography.OpenSsl       4.3.2    
+   > runtime.ubuntu.16.04-x64.runtime.native.System.Security.Cryptography.OpenSsl       4.3.2    
+   > runtime.ubuntu.16.10-x64.runtime.native.System.Security.Cryptography.OpenSsl       4.3.2    
+   > runtime.win-arm64.runtime.native.System.Data.SqlClient.sni                         4.4.0    
+   > runtime.win-x64.runtime.native.System.Data.SqlClient.sni                           4.4.0    
+   > runtime.win-x86.runtime.native.System.Data.SqlClient.sni                           4.4.0    
+   > System.AppContext                                                                  4.3.0    
+   > System.Buffers                                                                     4.3.0    
+   > System.CodeDom                                                                     4.6.0    
+   > System.Collections                                                                 4.3.0    
+   > System.Collections.Concurrent                                                      4.3.0    
+   > System.Collections.NonGeneric                                                      4.3.0    
+   > System.Collections.Specialized                                                     4.3.0    
+   > System.ComponentModel                                                              4.3.0    
+   > System.ComponentModel.Annotations                                                  4.6.0    
+   > System.ComponentModel.Primitives                                                   4.3.0    
+   > System.ComponentModel.TypeConverter                                                4.3.0    
+   > System.Configuration.ConfigurationManager                                          4.6.0    
+   > System.Console                                                                     4.3.0    
+   > System.Data.Common                                                                 4.3.0    
+   > System.Data.SqlClient                                                              4.7.0    
+   > System.Data.SQLite                                                                 1.0.112.2
+   > System.Data.SQLite.Core                                                            1.0.112.2
+   > System.Data.SQLite.EF6                                                             1.0.112.2
+   > System.Diagnostics.Debug                                                           4.3.0    
+   > System.Diagnostics.DiagnosticSource                                                4.3.0    
+   > System.Diagnostics.Tools                                                           4.3.0    
+   > System.Diagnostics.TraceSource                                                     4.3.0    
+   > System.Diagnostics.Tracing                                                         4.3.0    
+   > System.Drawing.Common                                                              4.7.0    
+   > System.Dynamic.Runtime                                                             4.3.0    
+   > System.Globalization                                                               4.3.0    
+   > System.Globalization.Calendars                                                     4.3.0    
+   > System.Globalization.Extensions                                                    4.3.0    
+   > System.IO                                                                          4.3.0    
+   > System.IO.Compression                                                              4.3.0    
+   > System.IO.Compression.ZipFile                                                      4.3.0    
+   > System.IO.FileSystem                                                               4.3.0    
+   > System.IO.FileSystem.Primitives                                                    4.3.0    
+   > System.Linq                                                                        4.3.0    
+   > System.Linq.Dynamic.Core                                                           1.1.1    
+   > System.Linq.Expressions                                                            4.3.0    
+   > System.Net.Http                                                                    4.3.0    
+   > System.Net.Primitives                                                              4.3.0    
+   > System.Net.Sockets                                                                 4.3.0    
+   > System.ObjectModel                                                                 4.3.0    
+   > System.Reflection                                                                  4.3.0    
+   > System.Reflection.Emit                                                             4.3.0    
+   > System.Reflection.Emit.ILGeneration                                                4.3.0    
+   > System.Reflection.Emit.Lightweight                                                 4.3.0    
+   > System.Reflection.Extensions                                                       4.3.0    
+   > System.Reflection.Primitives                                                       4.3.0    
+   > System.Reflection.TypeExtensions                                                   4.3.0    
+   > System.Resources.Extensions                                                        4.7.1    
+   > System.Resources.ResourceManager                                                   4.3.0    
+   > System.Runtime                                                                     4.3.1    
+   > System.Runtime.Extensions                                                          4.3.0    
+   > System.Runtime.Handles                                                             4.3.0    
+   > System.Runtime.InteropServices                                                     4.3.0    
+   > System.Runtime.InteropServices.RuntimeInformation                                  4.3.0    
+   > System.Runtime.Numerics                                                            4.3.0    
+   > System.Security.AccessControl                                                      4.6.0    
+   > System.Security.Claims                                                             4.3.0    
+   > System.Security.Cryptography.Algorithms                                            4.3.0    
+   > System.Security.Cryptography.Cng                                                   4.7.0    
+   > System.Security.Cryptography.Csp                                                   4.3.0    
+   > System.Security.Cryptography.Encoding                                              4.3.0    
+   > System.Security.Cryptography.OpenSsl                                               4.3.0    
+   > System.Security.Cryptography.Pkcs                                                  4.7.0    
+   > System.Security.Cryptography.Primitives                                            4.3.0    
+   > System.Security.Cryptography.ProtectedData                                         4.6.0    
+   > System.Security.Cryptography.X509Certificates                                      4.3.2    
+   > System.Security.Permissions                                                        4.6.0    
+   > System.Security.Principal                                                          4.3.0    
+   > System.Security.Principal.Windows                                                  4.6.0    
+   > System.Text.Encoding                                                               4.3.0    
+   > System.Text.Encoding.CodePages                                                     4.7.0    
+   > System.Text.Encoding.Extensions                                                    4.3.0    
+   > System.Text.RegularExpressions                                                     4.3.0    
+   > System.Threading                                                                   4.3.0    
+   > System.Threading.Tasks                                                             4.3.0    
+   > System.Threading.Tasks.Extensions                                                  4.5.1    
+   > System.Threading.Timer                                                             4.3.0    
+   > System.Windows.Extensions                                                          4.6.0    
+   > System.Xml.ReaderWriter                                                            4.3.0    
+   > System.Xml.XDocument                                                               4.3.0    
+   > System.Xml.XmlDocument                                                             4.3.0    
+   > System.Xml.XPath                                                                   4.3.0    
+   > System.Xml.XPath.XmlDocument                                                       4.3.0    
+   > xunit.abstractions                                                                 2.0.3    
+   > xunit.analyzers                                                                    0.10.0   
+   > xunit.assert                                                                       2.4.1    
+   > xunit.core                                                                         2.4.1    
+   > xunit.extensibility.core                                                           2.4.1    
+   > xunit.extensibility.execution                                                      2.4.1    
 
-A total of 1 test files matched the specified pattern.
-CalcFactories\CalcDeviceFactory.cs(166,60): warning CA1801: Parameter householdKey of method MakeCalcDevices is never used. Remove the parameter or use it in the method body. [C:\Work\LPGDev\CalculationController\CalculationController.csproj]
-PDF\ChartPageBase.cs(77,84): warning CA1801: Parameter fileName of method GetDimensions is never used. Remove the parameter or use it in the method body. [C:\Work\LPGDev\ChartCreator2\ChartCreator2.csproj]
-OxyCharts\ChartGenerator.cs(345,67): warning CA1801: Parameter directoryName of method RunAll is never used. Remove the parameter or use it in the method body. [C:\Work\LPGDev\ChartCreator2\ChartCreator2.csproj]
-Other\JsonDatabaseImporter.cs(68,27): warning CA2208: Method Import passes 'JsonDatabaseImportOptions' as the paramName argument to a ArgumentOutOfRangeException constructor. Replace this argument with one of the method's parameter names. Note that the provided parameter name should have the exact casing as declared on the method. [C:\Work\LPGDev\SimulationEngineLib\SimulationEngineLib.csproj]
-Other\JsonDatabaseExporter.cs(55,27): warning CA2208: Method Export passes 'TypesToProcess' as the paramName argument to a ArgumentOutOfRangeException constructor. Replace this argument with one of the method's parameter names. Note that the provided parameter name should have the exact casing as declared on the method. [C:\Work\LPGDev\SimulationEngineLib\SimulationEngineLib.csproj]
-SimZukunftProcessor\HouseGenerationStatistics.cs(44,70): warning CA1801: Parameter districtDefinitionJsonPath of method Run is never used. Remove the parameter or use it in the method body. [C:\Work\LPGDev\SimulationEngineLib\SimulationEngineLib.csproj]
-[xUnit.net 00:00:04.76] Common.Tests: Exception filtering tests: No tests matched the filter because it contains one or more properties that are not valid (Category). Specify filter expression containing valid properties (DisplayName, FullyQualifiedName) and try again.
-No test is available in C:\Work\LPGDev\Common.Tests\bin\Debug\netcoreapp3.1\Common.Tests.dll. Make sure that installed test discoverers & executors, platform & framework version settings are appropriate and try again.
-C:\Program Files\dotnet\sdk\3.1.300-preview-015135\Microsoft.Common.CurrentVersion.targets(2195,5): warning MSB3836: The explicit binding redirect on "System.Threading.Tasks.Extensions, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51" conflicts with an autogenerated binding redirect. Consider removing it from the application configuration file or disabling autogenerated binding redirects. The build will replace it with: "<bindingRedirect oldVersion="0.0.0.0-4.2.0.1" newVersion="4.2.0.1" xmlns="urn:schemas-microsoft-com:asm.v1" />". [C:\Work\LPGDev\CalcPostProcessorTests\CalcPostProcessorTests.csproj]
-C:\Program Files\dotnet\sdk\3.1.300-preview-015135\Microsoft.Common.CurrentVersion.targets(2195,5): warning MSB3836: The explicit binding redirect on "System.Runtime.CompilerServices.Unsafe, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" conflicts with an autogenerated binding redirect. Consider removing it from the application configuration file or disabling autogenerated binding redirects. The build will replace it with: "<bindingRedirect oldVersion="0.0.0.0-4.0.5.0" newVersion="4.0.5.0" xmlns="urn:schemas-microsoft-com:asm.v1" />". [C:\Work\LPGDev\CalcPostProcessorTests\CalcPostProcessorTests.csproj]
+   [net48]: 
+   Top-level Package                            Requested   Resolved
+   > FluentAssertions.Analyzers                 0.11.4      0.11.4  
+   > JetBrains.Annotations                      2020.1.0    2020.1.0
+   > Microsoft.CodeAnalysis.FxCopAnalyzers      3.0.0       3.0.0   
+   > Microsoft.NET.Test.Sdk                     16.6.1      16.6.1  
+   > Moq                                        4.14.1      4.14.1  
+   > Newtonsoft.Json                            12.0.3      12.0.3  
+   > NullCheckAnalyzer                          1.0.0.3     1.0.0.3 
+   > Roslynator.Analyzers                       2.3.0       2.3.0   
+   > xunit                                      2.4.1       2.4.1   
+   > xunit.runner.visualstudio                  2.4.1       2.4.1   
 
-Test run for C:\Work\LPGDev\Common.Tests\bin\Debug\net48\Common.Tests.dll(.NETFramework,Version=v4.8)
-Microsoft (R) Test Execution Command Line Tool Version 16.6.0
-Copyright (c) Microsoft Corporation.  All rights reserved.
+   Transitive Package                                 Resolved 
+   > Autofac                                          5.2.0    
+   > Automation                                       1.0.0    
+   > CalcPostProcessor                                1.0.0    
+   > CalculationController                            1.0.0    
+   > CalculationEngine                                1.0.0    
+   > Castle.Core                                      4.4.0    
+   > Common                                           1.0.0    
+   > Common.Tests                                     1.0.0    
+   > Database                                         1.0.0    
+   > Database.Tests                                   1.0.0    
+   > EntityFramework                                  6.3.0    
+   > EPPlus                                           4.5.3.3  
+   > FluentAssertions                                 5.10.3   
+   > Microsoft.Bcl.AsyncInterfaces                    1.1.0    
+   > Microsoft.CodeAnalysis.VersionCheckAnalyzer      3.0.0    
+   > Microsoft.CodeCoverage                           16.6.1   
+   > Microsoft.CodeQuality.Analyzers                  3.0.0    
+   > Microsoft.CSharp                                 4.7.0    
+   > Microsoft.NetCore.Analyzers                      3.0.0    
+   > Microsoft.NetFramework.Analyzers                 3.0.0    
+   > System.Buffers                                   4.5.1    
+   > System.Data.SQLite                               1.0.112.2
+   > System.Data.SQLite.Core                          1.0.112.2
+   > System.Data.SQLite.EF6                           1.0.112.2
+   > System.Data.SQLite.Linq                          1.0.112.2
+   > System.Linq.Dynamic.Core                         1.1.1    
+   > System.Memory                                    4.5.4    
+   > System.Numerics.Vectors                          4.5.0    
+   > System.Resources.Extensions                      4.7.1    
+   > System.Runtime                                   4.3.1    
+   > System.Runtime.CompilerServices.Unsafe           4.5.3    
+   > System.Threading.Tasks.Extensions                4.5.2    
+   > System.Xml.XDocument                             4.3.0    
+   > xunit.abstractions                               2.0.3    
+   > xunit.analyzers                                  0.10.0   
+   > xunit.assert                                     2.4.1    
+   > xunit.core                                       2.4.1    
+   > xunit.extensibility.core                         2.4.1    
+   > xunit.extensibility.execution                    2.4.1    
 
-Starting test execution, please wait...
+Project 'ChartPDFCreator' has the following package references
+   [net472]: 
+   Top-level Package                            Requested   Resolved
+   > JetBrains.Annotations                      2020.1.0    2020.1.0
+   > Microsoft.CodeAnalysis.FxCopAnalyzers      3.0.0       3.0.0   
+   > Newtonsoft.Json                            12.0.3      12.0.3  
+   > NullCheckAnalyzer                          1.0.0.3     1.0.0.3 
+   > OxyPlot.Core                               2.0.0       2.0.0   
+   > OxyPlot.Pdf                                2.0.0       2.0.0   
+   > Roslynator.Analyzers                       2.3.0       2.3.0   
 
-A total of 1 test files matched the specified pattern.
-C:\Program Files\dotnet\sdk\3.1.300-preview-015135\Microsoft.Common.CurrentVersion.targets(2195,5): warning MSB3836: The explicit binding redirect on "System.Threading.Tasks.Extensions, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51" conflicts with an autogenerated binding redirect. Consider removing it from the application configuration file or disabling autogenerated binding redirects. The build will replace it with: "<bindingRedirect oldVersion="0.0.0.0-4.2.0.1" newVersion="4.2.0.1" xmlns="urn:schemas-microsoft-com:asm.v1" />". [C:\Work\LPGDev\CalculationController.Tests\CalculationController.Tests.csproj]
-C:\Program Files\dotnet\sdk\3.1.300-preview-015135\Microsoft.Common.CurrentVersion.targets(2195,5): warning MSB3836: The explicit binding redirect on "System.Runtime.CompilerServices.Unsafe, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" conflicts with an autogenerated binding redirect. Consider removing it from the application configuration file or disabling autogenerated binding redirects. The build will replace it with: "<bindingRedirect oldVersion="0.0.0.0-4.0.5.0" newVersion="4.0.5.0" xmlns="urn:schemas-microsoft-com:asm.v1" />". [C:\Work\LPGDev\CalculationController.Tests\CalculationController.Tests.csproj]
-Test run for C:\Work\LPGDev\CalculationController.Tests\bin\Debug\net48\CalculationController.Tests.dll(.NETFramework,Version=v4.8)
-Microsoft (R) Test Execution Command Line Tool Version 16.6.0
-Copyright (c) Microsoft Corporation.  All rights reserved.
+   Transitive Package                                 Resolved 
+   > Automation                                       1.0.0    
+   > Common                                           1.0.0    
+   > Microsoft.CodeAnalysis.VersionCheckAnalyzer      3.0.0    
+   > Microsoft.CodeQuality.Analyzers                  3.0.0    
+   > Microsoft.NetCore.Analyzers                      3.0.0    
+   > Microsoft.NetFramework.Analyzers                 3.0.0    
+   > PDFsharp-MigraDoc-gdi                            1.50.5147
+   > System.Data.SQLite.Core                          1.0.112.2
+   > System.Runtime                                   4.3.1    
+   > System.Xml.XDocument                             4.3.0    
+   > xunit.abstractions                               2.0.3    
 
-Starting test execution, please wait...
+Project 'IntegrationTests' has the following package references
+   [netcoreapp3.1]: 
+   Top-level Package                            Requested   Resolved
+   > JetBrains.Annotations                      2020.1.0    2020.1.0
+   > Microsoft.CodeAnalysis.FxCopAnalyzers      3.0.0       3.0.0   
+   > Newtonsoft.Json                            12.0.3      12.0.3  
+   > NullCheckAnalyzer                          1.0.0.3     1.0.0.3 
+   > Roslynator.Analyzers                       2.3.0       2.3.0   
+   > System.Runtime                             4.3.1       4.3.1   
+   > xunit                                      2.4.1       2.4.1   
+   > xunit.runner.visualstudio                  2.4.1       2.4.1   
+   > Xunit.StaFact                              0.3.18      0.3.18  
 
-A total of 1 test files matched the specified pattern.
-No test matches the given testcase filter `Category=FullCalcHouses2` in C:\Work\LPGDev\Common.Tests\bin\Debug\net48\Common.Tests.dll
+   Transitive Package                                                                   Resolved 
+   > Autofac                                                                            5.2.0    
+   > Automation                                                                         1.0.0    
+   > CalcPostProcessor                                                                  1.0.0    
+   > CalculationController                                                              1.0.0    
+   > CalculationEngine                                                                  1.0.0    
+   > Common                                                                             1.0.0    
+   > Common.Tests                                                                       1.0.0    
+   > Database                                                                           1.0.0    
+   > Database.Tests                                                                     1.0.0    
+   > EntityFramework                                                                    6.3.0    
+   > EPPlus                                                                             4.5.3.3  
+   > FluentAssertions                                                                   5.10.3   
+   > FluentAssertions.Analyzers                                                         0.11.4   
+   > Microsoft.CodeAnalysis.VersionCheckAnalyzer                                        3.0.0    
+   > Microsoft.CodeQuality.Analyzers                                                    3.0.0    
+   > Microsoft.CSharp                                                                   4.7.0    
+   > Microsoft.Extensions.Configuration                                                 3.1.0    
+   > Microsoft.Extensions.Configuration.Abstractions                                    3.1.0    
+   > Microsoft.Extensions.Configuration.FileExtensions                                  3.1.0    
+   > Microsoft.Extensions.Configuration.Json                                            3.1.0    
+   > Microsoft.Extensions.FileProviders.Abstractions                                    3.1.0    
+   > Microsoft.Extensions.FileProviders.Physical                                        3.1.0    
+   > Microsoft.Extensions.FileSystemGlobbing                                            3.1.0    
+   > Microsoft.Extensions.Primitives                                                    3.1.0    
+   > Microsoft.NET.Test.Sdk                                                             15.0.0   
+   > Microsoft.NetCore.Analyzers                                                        3.0.0    
+   > Microsoft.NETCore.Platforms                                                        3.1.0    
+   > Microsoft.NETCore.Targets                                                          1.1.3    
+   > Microsoft.NetFramework.Analyzers                                                   3.0.0    
+   > Microsoft.TestPlatform.ObjectModel                                                 15.0.0   
+   > Microsoft.TestPlatform.TestHost                                                    15.0.0   
+   > Microsoft.Win32.Primitives                                                         4.3.0    
+   > Microsoft.Win32.Registry                                                           4.6.0    
+   > Microsoft.Win32.SystemEvents                                                       4.7.0    
+   > NETStandard.Library                                                                1.6.1    
+   > runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl           4.3.2    
+   > runtime.fedora.23-x64.runtime.native.System.Security.Cryptography.OpenSsl          4.3.2    
+   > runtime.fedora.24-x64.runtime.native.System.Security.Cryptography.OpenSsl          4.3.2    
+   > runtime.native.System                                                              4.3.0    
+   > runtime.native.System.Data.SqlClient.sni                                           4.6.0    
+   > runtime.native.System.IO.Compression                                               4.3.0    
+   > runtime.native.System.Net.Http                                                     4.3.0    
+   > runtime.native.System.Security.Cryptography.Apple                                  4.3.0    
+   > runtime.native.System.Security.Cryptography.OpenSsl                                4.3.2    
+   > runtime.opensuse.13.2-x64.runtime.native.System.Security.Cryptography.OpenSsl      4.3.2    
+   > runtime.opensuse.42.1-x64.runtime.native.System.Security.Cryptography.OpenSsl      4.3.2    
+   > runtime.osx.10.10-x64.runtime.native.System.Security.Cryptography.Apple            4.3.0    
+   > runtime.osx.10.10-x64.runtime.native.System.Security.Cryptography.OpenSsl          4.3.2    
+   > runtime.rhel.7-x64.runtime.native.System.Security.Cryptography.OpenSsl             4.3.2    
+   > runtime.ubuntu.14.04-x64.runtime.native.System.Security.Cryptography.OpenSsl       4.3.2    
+   > runtime.ubuntu.16.04-x64.runtime.native.System.Security.Cryptography.OpenSsl       4.3.2    
+   > runtime.ubuntu.16.10-x64.runtime.native.System.Security.Cryptography.OpenSsl       4.3.2    
+   > runtime.win-arm64.runtime.native.System.Data.SqlClient.sni                         4.4.0    
+   > runtime.win-x64.runtime.native.System.Data.SqlClient.sni                           4.4.0    
+   > runtime.win-x86.runtime.native.System.Data.SqlClient.sni                           4.4.0    
+   > System.AppContext                                                                  4.3.0    
+   > System.Buffers                                                                     4.3.0    
+   > System.CodeDom                                                                     4.6.0    
+   > System.Collections                                                                 4.3.0    
+   > System.Collections.Concurrent                                                      4.3.0    
+   > System.Collections.Immutable                                                       1.2.0    
+   > System.Collections.NonGeneric                                                      4.3.0    
+   > System.Collections.Specialized                                                     4.3.0    
+   > System.ComponentModel                                                              4.3.0    
+   > System.ComponentModel.Annotations                                                  4.6.0    
+   > System.ComponentModel.EventBasedAsync                                              4.0.11   
+   > System.ComponentModel.Primitives                                                   4.3.0    
+   > System.ComponentModel.TypeConverter                                                4.3.0    
+   > System.Configuration.ConfigurationManager                                          4.6.0    
+   > System.Console                                                                     4.3.0    
+   > System.Data.Common                                                                 4.3.0    
+   > System.Data.SqlClient                                                              4.7.0    
+   > System.Data.SQLite                                                                 1.0.112.2
+   > System.Data.SQLite.Core                                                            1.0.112.2
+   > System.Data.SQLite.EF6                                                             1.0.112.2
+   > System.Diagnostics.Debug                                                           4.3.0    
+   > System.Diagnostics.DiagnosticSource                                                4.3.0    
+   > System.Diagnostics.Process                                                         4.1.0    
+   > System.Diagnostics.TextWriterTraceListener                                         4.0.0    
+   > System.Diagnostics.Tools                                                           4.3.0    
+   > System.Diagnostics.TraceSource                                                     4.0.0    
+   > System.Diagnostics.Tracing                                                         4.3.0    
+   > System.Drawing.Common                                                              4.7.0    
+   > System.Globalization                                                               4.3.0    
+   > System.Globalization.Calendars                                                     4.3.0    
+   > System.Globalization.Extensions                                                    4.3.0    
+   > System.IO                                                                          4.3.0    
+   > System.IO.Compression                                                              4.3.0    
+   > System.IO.Compression.ZipFile                                                      4.3.0    
+   > System.IO.FileSystem                                                               4.3.0    
+   > System.IO.FileSystem.Primitives                                                    4.3.0    
+   > System.Linq                                                                        4.3.0    
+   > System.Linq.Dynamic.Core                                                           1.1.1    
+   > System.Linq.Expressions                                                            4.3.0    
+   > System.Net.Http                                                                    4.3.0    
+   > System.Net.Primitives                                                              4.3.0    
+   > System.Net.Sockets                                                                 4.3.0    
+   > System.ObjectModel                                                                 4.3.0    
+   > System.Private.DataContractSerialization                                           4.1.1    
+   > System.Reflection                                                                  4.3.0    
+   > System.Reflection.Emit                                                             4.3.0    
+   > System.Reflection.Emit.ILGeneration                                                4.3.0    
+   > System.Reflection.Emit.Lightweight                                                 4.3.0    
+   > System.Reflection.Extensions                                                       4.3.0    
+   > System.Reflection.Metadata                                                         1.3.0    
+   > System.Reflection.Primitives                                                       4.3.0    
+   > System.Reflection.TypeExtensions                                                   4.3.0    
+   > System.Resources.Extensions                                                        4.7.1    
+   > System.Resources.ResourceManager                                                   4.3.0    
+   > System.Runtime.Extensions                                                          4.3.0    
+   > System.Runtime.Handles                                                             4.3.0    
+   > System.Runtime.InteropServices                                                     4.3.0    
+   > System.Runtime.InteropServices.RuntimeInformation                                  4.3.0    
+   > System.Runtime.Loader                                                              4.0.0    
+   > System.Runtime.Numerics                                                            4.3.0    
+   > System.Runtime.Serialization.Json                                                  4.0.2    
+   > System.Runtime.Serialization.Primitives                                            4.1.1    
+   > System.Security.AccessControl                                                      4.6.0    
+   > System.Security.Claims                                                             4.3.0    
+   > System.Security.Cryptography.Algorithms                                            4.3.0    
+   > System.Security.Cryptography.Cng                                                   4.7.0    
+   > System.Security.Cryptography.Csp                                                   4.3.0    
+   > System.Security.Cryptography.Encoding                                              4.3.0    
+   > System.Security.Cryptography.OpenSsl                                               4.3.0    
+   > System.Security.Cryptography.Pkcs                                                  4.7.0    
+   > System.Security.Cryptography.Primitives                                            4.3.0    
+   > System.Security.Cryptography.ProtectedData                                         4.6.0    
+   > System.Security.Cryptography.X509Certificates                                      4.3.2    
+   > System.Security.Permissions                                                        4.6.0    
+   > System.Security.Principal                                                          4.3.0    
+   > System.Security.Principal.Windows                                                  4.6.0    
+   > System.Text.Encoding                                                               4.3.0    
+   > System.Text.Encoding.CodePages                                                     4.7.0    
+   > System.Text.Encoding.Extensions                                                    4.3.0    
+   > System.Text.RegularExpressions                                                     4.3.0    
+   > System.Threading                                                                   4.3.0    
+   > System.Threading.Tasks                                                             4.3.0    
+   > System.Threading.Tasks.Extensions                                                  4.3.0    
+   > System.Threading.Thread                                                            4.0.0    
+   > System.Threading.ThreadPool                                                        4.0.10   
+   > System.Threading.Timer                                                             4.3.0    
+   > System.Windows.Extensions                                                          4.6.0    
+   > System.Xml.ReaderWriter                                                            4.3.0    
+   > System.Xml.XDocument                                                               4.3.0    
+   > System.Xml.XmlDocument                                                             4.3.0    
+   > System.Xml.XmlSerializer                                                           4.0.11   
+   > System.Xml.XPath                                                                   4.3.0    
+   > System.Xml.XPath.XmlDocument                                                       4.3.0    
+   > xunit.abstractions                                                                 2.0.3    
+   > xunit.analyzers                                                                    0.10.0   
+   > xunit.assert                                                                       2.4.1    
+   > xunit.core                                                                         2.4.1    
+   > xunit.extensibility.core                                                           2.4.1    
+   > xunit.extensibility.execution                                                      2.4.1    
 
-Oxyplot\WeekdayProfilesTests.cs(24,22): warning CA2000: Call System.IDisposable.Dispose on object created by 'new OxyCalculationSetup(Utili.GetCurrentMethodAndClass())' before all references to it are out of scope. [C:\Work\LPGDev\ChartCreator2.Tests\ChartCreator2.Tests.csproj]
-PDF\MigraPDFCreatorTests.cs(95,22): warning CA2000: Call System.IDisposable.Dispose on object created by 'new OxyCalculationSetup(Utili.GetCurrentMethodAndClass())' before all references to it are out of scope. [C:\Work\LPGDev\ChartCreator2.Tests\ChartCreator2.Tests.csproj]
-PDF\MigraPDFCreatorTests.cs(23,22): warning CA2000: Call System.IDisposable.Dispose on object created by 'new OxyCalculationSetup(Utili.GetCurrentMethodAndClass())' before all references to it are out of scope. [C:\Work\LPGDev\ChartCreator2.Tests\ChartCreator2.Tests.csproj]
-PDF\MigraPDFCreatorTests.cs(49,22): warning CA2000: Call System.IDisposable.Dispose on object created by 'new OxyCalculationSetup(Utili.GetCurrentMethodAndClass())' before all references to it are out of scope. [C:\Work\LPGDev\ChartCreator2.Tests\ChartCreator2.Tests.csproj]
-Oxyplot\TimeOfUseTests.cs(23,22): warning CA2000: Call System.IDisposable.Dispose on object created by 'new OxyCalculationSetup(Utili.GetCurrentMethodAndClass())' before all references to it are out of scope. [C:\Work\LPGDev\ChartCreator2.Tests\ChartCreator2.Tests.csproj]
-Oxyplot\TemperaturesTests.cs(23,22): warning CA2000: Call System.IDisposable.Dispose on object created by 'new OxyCalculationSetup(Utili.GetCurrentMethodAndClass())' before all references to it are out of scope. [C:\Work\LPGDev\ChartCreator2.Tests\ChartCreator2.Tests.csproj]
-Oxyplot\VariableLogFileChartTests.cs(23,22): warning CA2000: Call System.IDisposable.Dispose on object created by 'new OxyCalculationSetup(Utili.GetCurrentMethodAndClass())' before all references to it are out of scope. [C:\Work\LPGDev\ChartCreator2.Tests\ChartCreator2.Tests.csproj]
-Oxyplot\ActivityFrequenciesPerMinuteTests.cs(25,22): warning CA2000: Call System.IDisposable.Dispose on object created by 'new OxyCalculationSetup(Utili.GetCurrentMethodAndClass())' before all references to it are out of scope. [C:\Work\LPGDev\ChartCreator2.Tests\ChartCreator2.Tests.csproj]
-Oxyplot\LocationStatisticsTests.cs(24,22): warning CA2000: Call System.IDisposable.Dispose on object created by 'new OxyCalculationSetup(Utili.GetCurrentMethodAndClass())' before all references to it are out of scope. [C:\Work\LPGDev\ChartCreator2.Tests\ChartCreator2.Tests.csproj]
-Oxyplot\HouseholdPlanTests.cs(23,22): warning CA2000: Call System.IDisposable.Dispose on object created by 'new OxyCalculationSetup(Utili.GetCurrentMethodAndClass())' before all references to it are out of scope. [C:\Work\LPGDev\ChartCreator2.Tests\ChartCreator2.Tests.csproj]
-Oxyplot\DeviceTaggingSetTests.cs(26,22): warning CA2000: Call System.IDisposable.Dispose on object created by 'new OxyCalculationSetup(Utili.GetCurrentMethodAndClass())' before all references to it are out of scope. [C:\Work\LPGDev\ChartCreator2.Tests\ChartCreator2.Tests.csproj]
-Oxyplot\DeviceSumsTests.cs(24,22): warning CA2000: Call System.IDisposable.Dispose on object created by 'new OxyCalculationSetup(Utili.GetCurrentMethodAndClass())' before all references to it are out of scope. [C:\Work\LPGDev\ChartCreator2.Tests\ChartCreator2.Tests.csproj]
-Oxyplot\ExecutedActionsOverviewCountTests.cs(23,22): warning CA2000: Call System.IDisposable.Dispose on object created by 'new OxyCalculationSetup(Utili.GetCurrentMethodAndClass())' before all references to it are out of scope. [C:\Work\LPGDev\ChartCreator2.Tests\ChartCreator2.Tests.csproj]
-Oxyplot\DurationCurveTests.cs(23,22): warning CA2000: Call System.IDisposable.Dispose on object created by 'new OxyCalculationSetup(Utili.GetCurrentMethodAndClass())' before all references to it are out of scope. [C:\Work\LPGDev\ChartCreator2.Tests\ChartCreator2.Tests.csproj]
-Oxyplot\DeviceProfilesExternalTests.cs(23,22): warning CA2000: Call System.IDisposable.Dispose on object created by 'new OxyCalculationSetup(Utili.GetCurrentMethodAndClass())' before all references to it are out of scope. [C:\Work\LPGDev\ChartCreator2.Tests\ChartCreator2.Tests.csproj]
-Oxyplot\DeviceSumsTests.cs(50,22): warning CA2000: Call System.IDisposable.Dispose on object created by 'new OxyCalculationSetup(Utili.GetCurrentMethodAndClass())' before all references to it are out of scope. [C:\Work\LPGDev\ChartCreator2.Tests\ChartCreator2.Tests.csproj]
-Oxyplot\DeviceProfilesExternalTests.cs(58,22): warning CA2000: Call System.IDisposable.Dispose on object created by 'new OxyCalculationSetup(Utili.GetCurrentMethodAndClass())' before all references to it are out of scope. [C:\Work\LPGDev\ChartCreator2.Tests\ChartCreator2.Tests.csproj]
-Oxyplot\DesiresTests.cs(24,22): warning CA2000: Call System.IDisposable.Dispose on object created by 'new OxyCalculationSetup(Utili.GetCurrentMethodAndClass())' before all references to it are out of scope. [C:\Work\LPGDev\ChartCreator2.Tests\ChartCreator2.Tests.csproj]
-Test run for C:\Work\LPGDev\ChartCreator2.Tests\bin\Debug\net48\ChartCreator2.Tests.dll(.NETFramework,Version=v4.8)
-Oxyplot\DeviceProfilesTests.cs(24,22): warning CA2000: Call System.IDisposable.Dispose on object created by 'new OxyCalculationSetup(Utili.GetCurrentMethodAndClass())' before all references to it are out of scope. [C:\Work\LPGDev\ChartCreator2.Tests\ChartCreator2.Tests.csproj]
-Oxyplot\ChartGeneratorTests.cs(23,22): warning CA2000: Call System.IDisposable.Dispose on object created by 'new OxyCalculationSetup(Utili.GetCurrentMethodAndClass())' before all references to it are out of scope. [C:\Work\LPGDev\ChartCreator2.Tests\ChartCreator2.Tests.csproj]
-Oxyplot\DeviceDurationCurvesTests.cs(24,22): warning CA2000: Call System.IDisposable.Dispose on object created by 'new OxyCalculationSetup(Utili.GetCurrentMethodAndClass())' before all references to it are out of scope. [C:\Work\LPGDev\ChartCreator2.Tests\ChartCreator2.Tests.csproj]
-Oxyplot\AffordanceTimeUseTests.cs(27,22): warning CA2000: Call System.IDisposable.Dispose on object created by 'new OxyCalculationSetup(Utili.GetCurrentMethodAndClass())' before all references to it are out of scope. [C:\Work\LPGDev\ChartCreator2.Tests\ChartCreator2.Tests.csproj]
-Oxyplot\AffordanceEnergyUseTests.cs(24,22): warning CA2000: Call System.IDisposable.Dispose on object created by 'new OxyCalculationSetup(Utili.GetCurrentMethodAndClass())' before all references to it are out of scope. [C:\Work\LPGDev\ChartCreator2.Tests\ChartCreator2.Tests.csproj]
-Oxyplot\AffordanceEnergyUsePerPersonTests.cs(27,22): warning CA2000: Call System.IDisposable.Dispose on object created by 'new OxyCalculationSetup(Utili.GetCurrentMethodAndClass())' before all references to it are out of scope. [C:\Work\LPGDev\ChartCreator2.Tests\ChartCreator2.Tests.csproj]
-Oxyplot\AffordanceTaggingSetTests.cs(26,22): warning CA2000: Call System.IDisposable.Dispose on object created by 'new OxyCalculationSetup(Utili.GetCurrentMethodAndClass())' before all references to it are out of scope. [C:\Work\LPGDev\ChartCreator2.Tests\ChartCreator2.Tests.csproj]
-Oxyplot\ActivityPercentageTests.cs(24,22): warning CA2000: Call System.IDisposable.Dispose on object created by 'new OxyCalculationSetup(Utili.GetCurrentMethodAndClass())' before all references to it are out of scope. [C:\Work\LPGDev\ChartCreator2.Tests\ChartCreator2.Tests.csproj]
-App.xaml.cs(53,33): error CS0115: 'App.OnStartup(StartupEventArgs)': no suitable method found to override [C:\Work\LPGDev\WpfApplication1\LoadProfileGenerator.csproj]
-Microsoft (R) Test Execution Command Line Tool Version 16.6.0
-Copyright (c) Microsoft Corporation.  All rights reserved.
+   [net48]: 
+   Top-level Package                            Requested   Resolved
+   > JetBrains.Annotations                      2020.1.0    2020.1.0
+   > Microsoft.CodeAnalysis.FxCopAnalyzers      3.0.0       3.0.0   
+   > Newtonsoft.Json                            12.0.3      12.0.3  
+   > NullCheckAnalyzer                          1.0.0.3     1.0.0.3 
+   > Roslynator.Analyzers                       2.3.0       2.3.0   
+   > System.Runtime                             4.3.1       4.3.1   
+   > xunit                                      2.4.1       2.4.1   
+   > xunit.runner.visualstudio                  2.4.1       2.4.1   
+   > Xunit.StaFact                              0.3.18      0.3.18  
 
-Starting test execution, please wait...
+   Transitive Package                                 Resolved 
+   > Autofac                                          5.2.0    
+   > Automation                                       1.0.0    
+   > CalcPostProcessor                                1.0.0    
+   > CalculationController                            1.0.0    
+   > CalculationEngine                                1.0.0    
+   > Common                                           1.0.0    
+   > Common.Tests                                     1.0.0    
+   > Database                                         1.0.0    
+   > Database.Tests                                   1.0.0    
+   > EntityFramework                                  6.3.0    
+   > EPPlus                                           4.5.3.3  
+   > FluentAssertions                                 5.10.3   
+   > FluentAssertions.Analyzers                       0.11.4   
+   > Microsoft.Bcl.AsyncInterfaces                    1.1.0    
+   > Microsoft.CodeAnalysis.VersionCheckAnalyzer      3.0.0    
+   > Microsoft.CodeQuality.Analyzers                  3.0.0    
+   > Microsoft.CSharp                                 4.7.0    
+   > Microsoft.NetCore.Analyzers                      3.0.0    
+   > Microsoft.NetFramework.Analyzers                 3.0.0    
+   > System.Buffers                                   4.5.1    
+   > System.Data.SQLite                               1.0.112.2
+   > System.Data.SQLite.Core                          1.0.112.2
+   > System.Data.SQLite.EF6                           1.0.112.2
+   > System.Data.SQLite.Linq                          1.0.112.2
+   > System.Linq.Dynamic.Core                         1.1.1    
+   > System.Memory                                    4.5.4    
+   > System.Numerics.Vectors                          4.5.0    
+   > System.Resources.Extensions                      4.7.1    
+   > System.Runtime.CompilerServices.Unsafe           4.5.3    
+   > System.Threading.Tasks.Extensions                4.5.2    
+   > System.Xml.XDocument                             4.3.0    
+   > xunit.abstractions                               2.0.3    
+   > xunit.analyzers                                  0.10.0   
+   > xunit.assert                                     2.4.1    
+   > xunit.core                                       2.4.1    
+   > xunit.extensibility.core                         2.4.1    
+   > xunit.extensibility.execution                    2.4.1    
 
-A total of 1 test files matched the specified pattern.
-No test matches the given testcase filter `Category=FullCalcHouses2` in C:\Work\LPGDev\CalculationController.Tests\bin\Debug\net48\CalculationController.Tests.dll
+Project 'CalcPostProcessor' has the following package references
+   [netstandard2.0]: 
+   Top-level Package                               Requested   Resolved
+   > Autofac                                       5.2.0       5.2.0   
+   > JetBrains.Annotations                         2020.1.0    2020.1.0
+   > Microsoft.CodeAnalysis.FxCopAnalyzers         3.0.0       3.0.0   
+   > NETStandard.Library                     (A)   [2.0.3, )   2.0.3   
+   > Newtonsoft.Json                               12.0.3      12.0.3  
+   > NullCheckAnalyzer                             1.0.0.3     1.0.0.3 
+   > Roslynator.Analyzers                          2.3.0       2.3.0   
 
-[xUnit.net 00:00:02.94] Skipping: ChartCreator2.Tests (could not find dependent assembly 'System.Runtime, Version=4.1.2')
-No test matches the given testcase filter `Category=FullCalcHouses2` in C:\Work\LPGDev\ChartCreator2.Tests\bin\Debug\net48\ChartCreator2.Tests.dll
+   Transitive Package                                 Resolved 
+   > Automation                                       1.0.0    
+   > Common                                           1.0.0    
+   > Microsoft.Bcl.AsyncInterfaces                    1.1.0    
+   > Microsoft.CodeAnalysis.VersionCheckAnalyzer      3.0.0    
+   > Microsoft.CodeQuality.Analyzers                  3.0.0    
+   > Microsoft.NetCore.Analyzers                      3.0.0    
+   > Microsoft.NETCore.Platforms                      1.1.1    
+   > Microsoft.NETCore.Targets                        1.1.3    
+   > Microsoft.NetFramework.Analyzers                 3.0.0    
+   > System.Collections                               4.3.0    
+   > System.Data.SQLite.Core                          1.0.112.2
+   > System.Diagnostics.Debug                         4.3.0    
+   > System.Diagnostics.Tools                         4.3.0    
+   > System.Globalization                             4.3.0    
+   > System.IO                                        4.3.0    
+   > System.IO.FileSystem                             4.3.0    
+   > System.IO.FileSystem.Primitives                  4.3.0    
+   > System.Reflection                                4.3.0    
+   > System.Reflection.Primitives                     4.3.0    
+   > System.Resources.ResourceManager                 4.3.0    
+   > System.Runtime                                   4.3.1    
+   > System.Runtime.CompilerServices.Unsafe           4.5.2    
+   > System.Runtime.Extensions                        4.3.0    
+   > System.Runtime.Handles                           4.3.0    
+   > System.Runtime.InteropServices                   4.3.0    
+   > System.Text.Encoding                             4.3.0    
+   > System.Text.Encoding.Extensions                  4.3.0    
+   > System.Text.RegularExpressions                   4.3.0    
+   > System.Threading                                 4.3.0    
+   > System.Threading.Tasks                           4.3.0    
+   > System.Threading.Tasks.Extensions                4.5.2    
+   > System.Xml.ReaderWriter                          4.3.0    
+   > System.Xml.XDocument                             4.3.0    
+   > xunit.abstractions                               2.0.3    
 
-Test run for C:\Work\LPGDev\Database.Tests\bin\Debug\netcoreapp3.1\Database.Tests.dll(.NETCoreApp,Version=v3.1)
-Microsoft (R) Test Execution Command Line Tool Version 16.6.0
-Copyright (c) Microsoft Corporation.  All rights reserved.
+Project 'Common' has the following package references
+   [netstandard2.0]: 
+   Top-level Package                                    Requested   Resolved 
+   > JetBrains.Annotations                              2020.1.0    2020.1.0 
+   > Microsoft.CodeAnalysis.FxCopAnalyzers              3.0.0       3.0.0    
+   > Microsoft.NETFramework.ReferenceAssemblies         1.0.0       1.0.0    
+   > NETStandard.Library                          (A)   [2.0.3, )   2.0.3    
+   > Newtonsoft.Json                                    12.0.3      12.0.3   
+   > NullCheckAnalyzer                                  1.0.0.3     1.0.0.3  
+   > Roslynator.Analyzers                               2.3.0       2.3.0    
+   > System.Data.SQLite.Core                            1.0.112.2   1.0.112.2
+   > System.Runtime                                     4.3.1       4.3.1    
+   > System.Xml.XDocument                               4.3.0       4.3.0    
+   > xunit.abstractions                                 2.0.3       2.0.3    
 
-Starting test execution, please wait...
+   Transitive Package                                 Resolved
+   > Automation                                       1.0.0   
+   > Microsoft.CodeAnalysis.VersionCheckAnalyzer      3.0.0   
+   > Microsoft.CodeQuality.Analyzers                  3.0.0   
+   > Microsoft.NetCore.Analyzers                      3.0.0   
+   > Microsoft.NETCore.Platforms                      1.1.1   
+   > Microsoft.NETCore.Targets                        1.1.3   
+   > Microsoft.NetFramework.Analyzers                 3.0.0   
+   > System.Collections                               4.3.0   
+   > System.Diagnostics.Debug                         4.3.0   
+   > System.Diagnostics.Tools                         4.3.0   
+   > System.Globalization                             4.3.0   
+   > System.IO                                        4.3.0   
+   > System.IO.FileSystem                             4.3.0   
+   > System.IO.FileSystem.Primitives                  4.3.0   
+   > System.Reflection                                4.3.0   
+   > System.Reflection.Primitives                     4.3.0   
+   > System.Resources.ResourceManager                 4.3.0   
+   > System.Runtime.Extensions                        4.3.0   
+   > System.Runtime.Handles                           4.3.0   
+   > System.Runtime.InteropServices                   4.3.0   
+   > System.Text.Encoding                             4.3.0   
+   > System.Text.Encoding.Extensions                  4.3.0   
+   > System.Text.RegularExpressions                   4.3.0   
+   > System.Threading                                 4.3.0   
+   > System.Threading.Tasks                           4.3.0   
+   > System.Threading.Tasks.Extensions                4.3.0   
+   > System.Xml.ReaderWriter                          4.3.0   
 
-A total of 1 test files matched the specified pattern.
-Test run for C:\Work\LPGDev\SimulationEngine.Tests\bin\Debug\netcoreapp3.1\SimulationEngine.Tests.dll(.NETCoreApp,Version=v3.1)
-Microsoft (R) Test Execution Command Line Tool Version 16.6.0
-Copyright (c) Microsoft Corporation.  All rights reserved.
+Project 'Database' has the following package references
+   [netstandard2.0]: 
+   Top-level Package                               Requested   Resolved 
+   > JetBrains.Annotations                         2020.1.0    2020.1.0 
+   > Microsoft.CodeAnalysis.FxCopAnalyzers         3.0.0       3.0.0    
+   > Microsoft.CSharp                              4.7.0       4.7.0    
+   > NETStandard.Library                     (A)   [2.0.3, )   2.0.3    
+   > Newtonsoft.Json                               12.0.3      12.0.3   
+   > NullCheckAnalyzer                             1.0.0.3     1.0.0.3  
+   > Roslynator.Analyzers                          2.3.0       2.3.0    
+   > System.Data.SQLite                            1.0.112.2   1.0.112.2
+   > System.Data.SQLite.Core                       1.0.112.2   1.0.112.2
 
-Starting test execution, please wait...
+   Transitive Package                                 Resolved
+   > Automation                                       1.0.0   
+   > Common                                           1.0.0   
+   > Microsoft.CodeAnalysis.VersionCheckAnalyzer      3.0.0   
+   > Microsoft.CodeQuality.Analyzers                  3.0.0   
+   > Microsoft.NetCore.Analyzers                      3.0.0   
+   > Microsoft.NETCore.Platforms                      1.1.1   
+   > Microsoft.NETCore.Targets                        1.1.3   
+   > Microsoft.NetFramework.Analyzers                 3.0.0   
+   > System.Collections                               4.3.0   
+   > System.Diagnostics.Debug                         4.3.0   
+   > System.Diagnostics.Tools                         4.3.0   
+   > System.Globalization                             4.3.0   
+   > System.IO                                        4.3.0   
+   > System.IO.FileSystem                             4.3.0   
+   > System.IO.FileSystem.Primitives                  4.3.0   
+   > System.Reflection                                4.3.0   
+   > System.Reflection.Primitives                     4.3.0   
+   > System.Resources.ResourceManager                 4.3.0   
+   > System.Runtime                                   4.3.1   
+   > System.Runtime.Extensions                        4.3.0   
+   > System.Runtime.Handles                           4.3.0   
+   > System.Runtime.InteropServices                   4.3.0   
+   > System.Text.Encoding                             4.3.0   
+   > System.Text.Encoding.Extensions                  4.3.0   
+   > System.Text.RegularExpressions                   4.3.0   
+   > System.Threading                                 4.3.0   
+   > System.Threading.Tasks                           4.3.0   
+   > System.Threading.Tasks.Extensions                4.3.0   
+   > System.Xml.ReaderWriter                          4.3.0   
+   > System.Xml.XDocument                             4.3.0   
+   > xunit.abstractions                               2.0.3   
 
-A total of 1 test files matched the specified pattern.
-Test run for C:\Work\LPGDev\IntegrationTests\bin\Debug\netcoreapp3.1\IntegrationTests.dll(.NETCoreApp,Version=v3.1)
-Microsoft (R) Test Execution Command Line Tool Version 16.6.0
-Copyright (c) Microsoft Corporation.  All rights reserved.
+Project 'CalculationController' has the following package references
+   [netstandard2.0]: 
+   Top-level Package                               Requested   Resolved
+   > Autofac                                       5.2.0       5.2.0   
+   > JetBrains.Annotations                         2020.1.0    2020.1.0
+   > Microsoft.CodeAnalysis.FxCopAnalyzers         3.0.0       3.0.0   
+   > NETStandard.Library                     (A)   [2.0.3, )   2.0.3   
+   > Newtonsoft.Json                               12.0.3      12.0.3  
+   > NullCheckAnalyzer                             1.0.0.3     1.0.0.3 
+   > Roslynator.Analyzers                          2.3.0       2.3.0   
+   > System.Resources.Extensions                   4.7.1       4.7.1   
 
-Starting test execution, please wait...
+   Transitive Package                                 Resolved 
+   > Automation                                       1.0.0    
+   > CalcPostProcessor                                1.0.0    
+   > CalculationEngine                                1.0.0    
+   > Common                                           1.0.0    
+   > Database                                         1.0.0    
+   > Microsoft.Bcl.AsyncInterfaces                    1.1.0    
+   > Microsoft.CodeAnalysis.VersionCheckAnalyzer      3.0.0    
+   > Microsoft.CodeQuality.Analyzers                  3.0.0    
+   > Microsoft.CSharp                                 4.7.0    
+   > Microsoft.NetCore.Analyzers                      3.0.0    
+   > Microsoft.NETCore.Platforms                      1.1.1    
+   > Microsoft.NETCore.Targets                        1.1.3    
+   > Microsoft.NetFramework.Analyzers                 3.0.0    
+   > System.Buffers                                   4.5.1    
+   > System.Collections                               4.3.0    
+   > System.Data.SQLite                               1.0.112.2
+   > System.Data.SQLite.Core                          1.0.112.2
+   > System.Diagnostics.Debug                         4.3.0    
+   > System.Diagnostics.Tools                         4.3.0    
+   > System.Globalization                             4.3.0    
+   > System.IO                                        4.3.0    
+   > System.IO.FileSystem                             4.3.0    
+   > System.IO.FileSystem.Primitives                  4.3.0    
+   > System.Linq.Dynamic.Core                         1.1.1    
+   > System.Memory                                    4.5.4    
+   > System.Numerics.Vectors                          4.4.0    
+   > System.Reflection                                4.3.0    
+   > System.Reflection.Emit                           4.3.0    
+   > System.Reflection.Emit.ILGeneration              4.3.0    
+   > System.Reflection.Primitives                     4.3.0    
+   > System.Resources.ResourceManager                 4.3.0    
+   > System.Runtime                                   4.3.1    
+   > System.Runtime.CompilerServices.Unsafe           4.5.3    
+   > System.Runtime.Extensions                        4.3.0    
+   > System.Runtime.Handles                           4.3.0    
+   > System.Runtime.InteropServices                   4.3.0    
+   > System.Text.Encoding                             4.3.0    
+   > System.Text.Encoding.Extensions                  4.3.0    
+   > System.Text.RegularExpressions                   4.3.0    
+   > System.Threading                                 4.3.0    
+   > System.Threading.Tasks                           4.3.0    
+   > System.Threading.Tasks.Extensions                4.5.2    
+   > System.Xml.ReaderWriter                          4.3.0    
+   > System.Xml.XDocument                             4.3.0    
+   > xunit.abstractions                               2.0.3    
 
-A total of 1 test files matched the specified pattern.
-[xUnit.net 00:00:03.22] Database.Tests: Exception filtering tests: No tests matched the filter because it contains one or more properties that are not valid (Category). Specify filter expression containing valid properties (DisplayName, FullyQualifiedName) and try again.
-No test is available in C:\Work\LPGDev\Database.Tests\bin\Debug\netcoreapp3.1\Database.Tests.dll. Make sure that installed test discoverers & executors, platform & framework version settings are appropriate and try again.
+Project 'CalculationEngine' has the following package references
+   [netstandard2.0]: 
+   Top-level Package                               Requested   Resolved
+   > JetBrains.Annotations                         2020.1.0    2020.1.0
+   > Microsoft.CodeAnalysis.FxCopAnalyzers         3.0.0       3.0.0   
+   > Microsoft.CSharp                              4.7.0       4.7.0   
+   > NETStandard.Library                     (A)   [2.0.3, )   2.0.3   
+   > Newtonsoft.Json                               12.0.3      12.0.3  
+   > NullCheckAnalyzer                             1.0.0.3     1.0.0.3 
+   > Roslynator.Analyzers                          2.3.0       2.3.0   
+   > System.Linq.Dynamic.Core                      1.1.1       1.1.1   
+   > System.Runtime                                4.3.1       4.3.1   
 
-Test run for C:\Work\LPGDev\Database.Tests\bin\Debug\net48\Database.Tests.dll(.NETFramework,Version=v4.8)
-Microsoft (R) Test Execution Command Line Tool Version 16.6.0
-Copyright (c) Microsoft Corporation.  All rights reserved.
+   Transitive Package                                 Resolved 
+   > Autofac                                          5.2.0    
+   > Automation                                       1.0.0    
+   > CalcPostProcessor                                1.0.0    
+   > Common                                           1.0.0    
+   > Microsoft.Bcl.AsyncInterfaces                    1.1.0    
+   > Microsoft.CodeAnalysis.VersionCheckAnalyzer      3.0.0    
+   > Microsoft.CodeQuality.Analyzers                  3.0.0    
+   > Microsoft.NetCore.Analyzers                      3.0.0    
+   > Microsoft.NETCore.Platforms                      1.1.1    
+   > Microsoft.NETCore.Targets                        1.1.3    
+   > Microsoft.NetFramework.Analyzers                 3.0.0    
+   > System.Collections                               4.3.0    
+   > System.Data.SQLite.Core                          1.0.112.2
+   > System.Diagnostics.Debug                         4.3.0    
+   > System.Diagnostics.Tools                         4.3.0    
+   > System.Globalization                             4.3.0    
+   > System.IO                                        4.3.0    
+   > System.IO.FileSystem                             4.3.0    
+   > System.IO.FileSystem.Primitives                  4.3.0    
+   > System.Reflection                                4.3.0    
+   > System.Reflection.Emit                           4.3.0    
+   > System.Reflection.Emit.ILGeneration              4.3.0    
+   > System.Reflection.Primitives                     4.3.0    
+   > System.Resources.ResourceManager                 4.3.0    
+   > System.Runtime.CompilerServices.Unsafe           4.5.2    
+   > System.Runtime.Extensions                        4.3.0    
+   > System.Runtime.Handles                           4.3.0    
+   > System.Runtime.InteropServices                   4.3.0    
+   > System.Text.Encoding                             4.3.0    
+   > System.Text.Encoding.Extensions                  4.3.0    
+   > System.Text.RegularExpressions                   4.3.0    
+   > System.Threading                                 4.3.0    
+   > System.Threading.Tasks                           4.3.0    
+   > System.Threading.Tasks.Extensions                4.5.2    
+   > System.Xml.ReaderWriter                          4.3.0    
+   > System.Xml.XDocument                             4.3.0    
+   > xunit.abstractions                               2.0.3    
 
-Starting test execution, please wait...
+Project 'ChartCreator2.Tests' has the following package references
+   [net48]: 
+   Top-level Package                            Requested   Resolved
+   > FluentAssertions.Analyzers                 0.11.4      0.11.4  
+   > JetBrains.Annotations                      2020.1.0    2020.1.0
+   > Microsoft.CodeAnalysis.FxCopAnalyzers      3.0.0       3.0.0   
+   > Newtonsoft.Json                            12.0.3      12.0.3  
+   > NullCheckAnalyzer                          1.0.0.3     1.0.0.3 
+   > Roslynator.Analyzers                       2.3.0       2.3.0   
+   > System.Runtime                             4.3.1       4.3.1   
+   > xunit                                      2.4.1       2.4.1   
+   > xunit.runner.visualstudio                  2.4.1       2.4.1   
+   > Xunit.StaFact                              0.3.18      0.3.18  
 
-A total of 1 test files matched the specified pattern.
-[xUnit.net 00:00:02.99] SimulationEngine.Tests: Exception filtering tests: No tests matched the filter because it contains one or more properties that are not valid (Category). Specify filter expression containing valid properties (DisplayName, FullyQualifiedName) and try again.
-No test is available in C:\Work\LPGDev\SimulationEngine.Tests\bin\Debug\netcoreapp3.1\SimulationEngine.Tests.dll. Make sure that installed test discoverers & executors, platform & framework version settings are appropriate and try again.
+   Transitive Package                                 Resolved 
+   > Autofac                                          5.2.0    
+   > Automation                                       1.0.0    
+   > CalcPostProcessor                                1.0.0    
+   > CalculationController                            1.0.0    
+   > CalculationEngine                                1.0.0    
+   > ChartCreator2                                    1.0.0    
+   > ChartPDFCreator                                  1.0.0    
+   > Common                                           1.0.0    
+   > Common.Tests                                     1.0.0    
+   > Database                                         1.0.0    
+   > Database.Tests                                   1.0.0    
+   > EntityFramework                                  6.3.0    
+   > EPPlus                                           4.5.3.3  
+   > FluentAssertions                                 5.10.3   
+   > Microsoft.Bcl.AsyncInterfaces                    1.1.0    
+   > Microsoft.CodeAnalysis.VersionCheckAnalyzer      3.0.0    
+   > Microsoft.CodeQuality.Analyzers                  3.0.0    
+   > Microsoft.CSharp                                 4.7.0    
+   > Microsoft.NetCore.Analyzers                      3.0.0    
+   > Microsoft.NetFramework.Analyzers                 3.0.0    
+   > OxyPlot.Core                                     2.0.0    
+   > OxyPlot.Pdf                                      2.0.0    
+   > OxyPlot.Wpf                                      2.0.0    
+   > PDFsharp-MigraDoc-gdi                            1.50.5147
+   > System.Buffers                                   4.5.1    
+   > System.Data.SQLite                               1.0.112.2
+   > System.Data.SQLite.Core                          1.0.112.2
+   > System.Data.SQLite.EF6                           1.0.112.2
+   > System.Data.SQLite.Linq                          1.0.112.2
+   > System.Linq.Dynamic.Core                         1.1.1    
+   > System.Memory                                    4.5.4    
+   > System.Numerics.Vectors                          4.5.0    
+   > System.Resources.Extensions                      4.7.1    
+   > System.Runtime.CompilerServices.Unsafe           4.5.3    
+   > System.Threading.Tasks.Extensions                4.5.2    
+   > System.Xml.XDocument                             4.3.0    
+   > xunit.abstractions                               2.0.3    
+   > xunit.analyzers                                  0.10.0   
+   > xunit.assert                                     2.4.1    
+   > xunit.core                                       2.4.1    
+   > xunit.extensibility.core                         2.4.1    
+   > xunit.extensibility.execution                    2.4.1    
 
-Test run for C:\Work\LPGDev\SimulationEngine.Tests\bin\Debug\net48\SimulationEngine.Tests.dll(.NETFramework,Version=v4.8)
-Microsoft (R) Test Execution Command Line Tool Version 16.6.0
-Copyright (c) Microsoft Corporation.  All rights reserved.
+Project 'CalculationController.Tests' has the following package references
+   [net48]: 
+   Top-level Package                            Requested   Resolved
+   > FluentAssertions.Analyzers                 0.11.4      0.11.4  
+   > JetBrains.Annotations                      2020.1.0    2020.1.0
+   > Microsoft.CodeAnalysis.FxCopAnalyzers      3.0.0       3.0.0   
+   > Moq                                        4.14.1      4.14.1  
+   > Newtonsoft.Json                            12.0.3      12.0.3  
+   > NullCheckAnalyzer                          1.0.0.3     1.0.0.3 
+   > Roslynator.Analyzers                       2.3.0       2.3.0   
+   > System.Runtime                             4.3.1       4.3.1   
+   > xunit                                      2.4.1       2.4.1   
+   > xunit.runner.visualstudio                  2.4.1       2.4.1   
 
-Starting test execution, please wait...
+   Transitive Package                                 Resolved 
+   > Autofac                                          5.2.0    
+   > Automation                                       1.0.0    
+   > CalcPostProcessor                                1.0.0    
+   > CalculationController                            1.0.0    
+   > CalculationEngine                                1.0.0    
+   > Castle.Core                                      4.4.0    
+   > Common                                           1.0.0    
+   > Common.Tests                                     1.0.0    
+   > Database                                         1.0.0    
+   > Database.Tests                                   1.0.0    
+   > EntityFramework                                  6.3.0    
+   > EPPlus                                           4.5.3.3  
+   > FluentAssertions                                 5.10.3   
+   > Microsoft.Bcl.AsyncInterfaces                    1.1.0    
+   > Microsoft.CodeAnalysis.VersionCheckAnalyzer      3.0.0    
+   > Microsoft.CodeQuality.Analyzers                  3.0.0    
+   > Microsoft.CSharp                                 4.7.0    
+   > Microsoft.NetCore.Analyzers                      3.0.0    
+   > Microsoft.NetFramework.Analyzers                 3.0.0    
+   > System.Buffers                                   4.5.1    
+   > System.Data.SQLite                               1.0.112.2
+   > System.Data.SQLite.Core                          1.0.112.2
+   > System.Data.SQLite.EF6                           1.0.112.2
+   > System.Data.SQLite.Linq                          1.0.112.2
+   > System.Linq.Dynamic.Core                         1.1.1    
+   > System.Memory                                    4.5.4    
+   > System.Numerics.Vectors                          4.5.0    
+   > System.Resources.Extensions                      4.7.1    
+   > System.Runtime.CompilerServices.Unsafe           4.5.3    
+   > System.Threading.Tasks.Extensions                4.5.2    
+   > System.Xml.XDocument                             4.3.0    
+   > xunit.abstractions                               2.0.3    
+   > xunit.analyzers                                  0.10.0   
+   > xunit.assert                                     2.4.1    
+   > xunit.core                                       2.4.1    
+   > xunit.extensibility.core                         2.4.1    
+   > xunit.extensibility.execution                    2.4.1    
 
-A total of 1 test files matched the specified pattern.
-Initializing the logger
-Starting to clean...
-No ramdrive found
-using:c:\work\LPGUnitTest\FullCalculationStarter.StartHouse
-P Logfile path: c:\work\LPGUnitTest\FullCalculationStarter.StartHouse\Log.Unittest.txt, Logging to file: False, Severity: Debug, LogFileIndex: 
-T Logfile path: c:\work\LPGUnitTest\FullCalculationStarter.StartHouse\Log.Unittest.txt, Logging to file: False, Severity: Debug, LogFileIndex: 
-Looking for DB3 file
-Trying V:\Dropbox\LPG\WpfApplication1\
-found V:\Dropbox\LPG\WpfApplication1\
-Full Source Path: V:\Dropbox\LPG\WpfApplication1\profilegenerator-latest.db3
-Date modified:13/05/2020 19:24:06, Size:19697664
-Working with c:\work\LPGUnitTest\profile.UnitTests.FullCalculationStarter.StartHouse.b403e93b-7a81-4692-9f73-2483af11bc8c.db3 copied from V:\Dropbox\LPG\WpfApplication1\profilegenerator-latest.db3
-No test matches the given testcase filter `Category=FullCalcHouses2` in C:\Work\LPGDev\Database.Tests\bin\Debug\net48\Database.Tests.dll
+Project 'Common.Tests' has the following package references
+   [netcoreapp3.1]: 
+   Top-level Package                            Requested   Resolved
+   > EPPlus                                     4.5.3.3     4.5.3.3 
+   > FluentAssertions                           5.10.3      5.10.3  
+   > FluentAssertions.Analyzers                 0.11.4      0.11.4  
+   > JetBrains.Annotations                      2020.1.0    2020.1.0
+   > Microsoft.CodeAnalysis.FxCopAnalyzers      3.0.0       3.0.0   
+   > Newtonsoft.Json                            12.0.3      12.0.3  
+   > NullCheckAnalyzer                          1.0.0.3     1.0.0.3 
+   > Roslynator.Analyzers                       2.3.0       2.3.0   
+   > System.Runtime                             4.3.1       4.3.1   
+   > xunit                                      2.4.1       2.4.1   
+   > xunit.runner.visualstudio                  2.4.1       2.4.1   
 
-[xUnit.net 00:00:02.93] Skipping: SimulationEngine.Tests (could not find dependent assembly 'System.Runtime, Version=4.1.2')
-No test matches the given testcase filter `Category=FullCalcHouses2` in C:\Work\LPGDev\SimulationEngine.Tests\bin\Debug\net48\SimulationEngine.Tests.dll
+   Transitive Package                                                                   Resolved 
+   > Automation                                                                         1.0.0    
+   > Common                                                                             1.0.0    
+   > Microsoft.CodeAnalysis.VersionCheckAnalyzer                                        3.0.0    
+   > Microsoft.CodeQuality.Analyzers                                                    3.0.0    
+   > Microsoft.Extensions.Configuration                                                 3.1.0    
+   > Microsoft.Extensions.Configuration.Abstractions                                    3.1.0    
+   > Microsoft.Extensions.Configuration.FileExtensions                                  3.1.0    
+   > Microsoft.Extensions.Configuration.Json                                            3.1.0    
+   > Microsoft.Extensions.FileProviders.Abstractions                                    3.1.0    
+   > Microsoft.Extensions.FileProviders.Physical                                        3.1.0    
+   > Microsoft.Extensions.FileSystemGlobbing                                            3.1.0    
+   > Microsoft.Extensions.Primitives                                                    3.1.0    
+   > Microsoft.NET.Test.Sdk                                                             15.0.0   
+   > Microsoft.NetCore.Analyzers                                                        3.0.0    
+   > Microsoft.NETCore.Platforms                                                        3.1.0    
+   > Microsoft.NETCore.Targets                                                          1.1.3    
+   > Microsoft.NetFramework.Analyzers                                                   3.0.0    
+   > Microsoft.TestPlatform.ObjectModel                                                 15.0.0   
+   > Microsoft.TestPlatform.TestHost                                                    15.0.0   
+   > Microsoft.Win32.Primitives                                                         4.3.0    
+   > Microsoft.Win32.Registry                                                           4.0.0    
+   > Microsoft.Win32.SystemEvents                                                       4.7.0    
+   > NETStandard.Library                                                                1.6.1    
+   > runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl           4.3.2    
+   > runtime.fedora.23-x64.runtime.native.System.Security.Cryptography.OpenSsl          4.3.2    
+   > runtime.fedora.24-x64.runtime.native.System.Security.Cryptography.OpenSsl          4.3.2    
+   > runtime.native.System                                                              4.3.0    
+   > runtime.native.System.IO.Compression                                               4.3.0    
+   > runtime.native.System.Net.Http                                                     4.3.0    
+   > runtime.native.System.Security.Cryptography.Apple                                  4.3.0    
+   > runtime.native.System.Security.Cryptography.OpenSsl                                4.3.2    
+   > runtime.opensuse.13.2-x64.runtime.native.System.Security.Cryptography.OpenSsl      4.3.2    
+   > runtime.opensuse.42.1-x64.runtime.native.System.Security.Cryptography.OpenSsl      4.3.2    
+   > runtime.osx.10.10-x64.runtime.native.System.Security.Cryptography.Apple            4.3.0    
+   > runtime.osx.10.10-x64.runtime.native.System.Security.Cryptography.OpenSsl          4.3.2    
+   > runtime.rhel.7-x64.runtime.native.System.Security.Cryptography.OpenSsl             4.3.2    
+   > runtime.ubuntu.14.04-x64.runtime.native.System.Security.Cryptography.OpenSsl       4.3.2    
+   > runtime.ubuntu.16.04-x64.runtime.native.System.Security.Cryptography.OpenSsl       4.3.2    
+   > runtime.ubuntu.16.10-x64.runtime.native.System.Security.Cryptography.OpenSsl       4.3.2    
+   > System.AppContext                                                                  4.3.0    
+   > System.Buffers                                                                     4.3.0    
+   > System.Collections                                                                 4.3.0    
+   > System.Collections.Concurrent                                                      4.3.0    
+   > System.Collections.Immutable                                                       1.2.0    
+   > System.Collections.NonGeneric                                                      4.3.0    
+   > System.Collections.Specialized                                                     4.3.0    
+   > System.ComponentModel                                                              4.3.0    
+   > System.ComponentModel.EventBasedAsync                                              4.0.11   
+   > System.ComponentModel.Primitives                                                   4.3.0    
+   > System.ComponentModel.TypeConverter                                                4.3.0    
+   > System.Configuration.ConfigurationManager                                          4.4.0    
+   > System.Console                                                                     4.3.0    
+   > System.Data.Common                                                                 4.3.0    
+   > System.Data.SQLite.Core                                                            1.0.112.2
+   > System.Diagnostics.Debug                                                           4.3.0    
+   > System.Diagnostics.DiagnosticSource                                                4.3.0    
+   > System.Diagnostics.Process                                                         4.1.0    
+   > System.Diagnostics.TextWriterTraceListener                                         4.0.0    
+   > System.Diagnostics.Tools                                                           4.3.0    
+   > System.Diagnostics.TraceSource                                                     4.0.0    
+   > System.Diagnostics.Tracing                                                         4.3.0    
+   > System.Drawing.Common                                                              4.7.0    
+   > System.Globalization                                                               4.3.0    
+   > System.Globalization.Calendars                                                     4.3.0    
+   > System.Globalization.Extensions                                                    4.3.0    
+   > System.IO                                                                          4.3.0    
+   > System.IO.Compression                                                              4.3.0    
+   > System.IO.Compression.ZipFile                                                      4.3.0    
+   > System.IO.FileSystem                                                               4.3.0    
+   > System.IO.FileSystem.Primitives                                                    4.3.0    
+   > System.Linq                                                                        4.3.0    
+   > System.Linq.Expressions                                                            4.3.0    
+   > System.Net.Http                                                                    4.3.0    
+   > System.Net.Primitives                                                              4.3.0    
+   > System.Net.Sockets                                                                 4.3.0    
+   > System.ObjectModel                                                                 4.3.0    
+   > System.Private.DataContractSerialization                                           4.1.1    
+   > System.Reflection                                                                  4.3.0    
+   > System.Reflection.Emit                                                             4.3.0    
+   > System.Reflection.Emit.ILGeneration                                                4.3.0    
+   > System.Reflection.Emit.Lightweight                                                 4.3.0    
+   > System.Reflection.Extensions                                                       4.3.0    
+   > System.Reflection.Metadata                                                         1.3.0    
+   > System.Reflection.Primitives                                                       4.3.0    
+   > System.Reflection.TypeExtensions                                                   4.3.0    
+   > System.Resources.ResourceManager                                                   4.3.0    
+   > System.Runtime.Extensions                                                          4.3.0    
+   > System.Runtime.Handles                                                             4.3.0    
+   > System.Runtime.InteropServices                                                     4.3.0    
+   > System.Runtime.InteropServices.RuntimeInformation                                  4.3.0    
+   > System.Runtime.Loader                                                              4.0.0    
+   > System.Runtime.Numerics                                                            4.3.0    
+   > System.Runtime.Serialization.Json                                                  4.0.2    
+   > System.Runtime.Serialization.Primitives                                            4.1.1    
+   > System.Security.Claims                                                             4.3.0    
+   > System.Security.Cryptography.Algorithms                                            4.3.0    
+   > System.Security.Cryptography.Cng                                                   4.7.0    
+   > System.Security.Cryptography.Csp                                                   4.3.0    
+   > System.Security.Cryptography.Encoding                                              4.3.0    
+   > System.Security.Cryptography.OpenSsl                                               4.3.0    
+   > System.Security.Cryptography.Pkcs                                                  4.7.0    
+   > System.Security.Cryptography.Primitives                                            4.3.0    
+   > System.Security.Cryptography.ProtectedData                                         4.4.0    
+   > System.Security.Cryptography.X509Certificates                                      4.3.2    
+   > System.Security.Principal                                                          4.3.0    
+   > System.Text.Encoding                                                               4.3.0    
+   > System.Text.Encoding.CodePages                                                     4.7.0    
+   > System.Text.Encoding.Extensions                                                    4.3.0    
+   > System.Text.RegularExpressions                                                     4.3.0    
+   > System.Threading                                                                   4.3.0    
+   > System.Threading.Tasks                                                             4.3.0    
+   > System.Threading.Tasks.Extensions                                                  4.3.0    
+   > System.Threading.Thread                                                            4.0.0    
+   > System.Threading.ThreadPool                                                        4.0.10   
+   > System.Threading.Timer                                                             4.3.0    
+   > System.Xml.ReaderWriter                                                            4.3.0    
+   > System.Xml.XDocument                                                               4.3.0    
+   > System.Xml.XmlDocument                                                             4.3.0    
+   > System.Xml.XmlSerializer                                                           4.0.11   
+   > System.Xml.XPath                                                                   4.3.0    
+   > System.Xml.XPath.XmlDocument                                                       4.3.0    
+   > xunit.abstractions                                                                 2.0.3    
+   > xunit.analyzers                                                                    0.10.0   
+   > xunit.assert                                                                       2.4.1    
+   > xunit.core                                                                         2.4.1    
+   > xunit.extensibility.core                                                           2.4.1    
+   > xunit.extensibility.execution                                                      2.4.1    
 
+   [net48]: 
+   Top-level Package                            Requested   Resolved
+   > EPPlus                                     4.5.3.3     4.5.3.3 
+   > FluentAssertions                           5.10.3      5.10.3  
+   > FluentAssertions.Analyzers                 0.11.4      0.11.4  
+   > JetBrains.Annotations                      2020.1.0    2020.1.0
+   > Microsoft.CodeAnalysis.FxCopAnalyzers      3.0.0       3.0.0   
+   > Newtonsoft.Json                            12.0.3      12.0.3  
+   > NullCheckAnalyzer                          1.0.0.3     1.0.0.3 
+   > Roslynator.Analyzers                       2.3.0       2.3.0   
+   > System.Runtime                             4.3.1       4.3.1   
+   > xunit                                      2.4.1       2.4.1   
+   > xunit.runner.visualstudio                  2.4.1       2.4.1   
 
-Test Run Successful.
-Total tests: 1
-     Passed: 1
- Total time: 49,6970 Seconds
-Test run for C:\Work\LPGDev\IntegrationTests\bin\Debug\net48\IntegrationTests.dll(.NETFramework,Version=v4.8)
-Microsoft (R) Test Execution Command Line Tool Version 16.6.0
-Copyright (c) Microsoft Corporation.  All rights reserved.
+   Transitive Package                                 Resolved 
+   > Automation                                       1.0.0    
+   > Common                                           1.0.0    
+   > Microsoft.CodeAnalysis.VersionCheckAnalyzer      3.0.0    
+   > Microsoft.CodeQuality.Analyzers                  3.0.0    
+   > Microsoft.NetCore.Analyzers                      3.0.0    
+   > Microsoft.NetFramework.Analyzers                 3.0.0    
+   > System.Data.SQLite.Core                          1.0.112.2
+   > System.Xml.XDocument                             4.3.0    
+   > xunit.abstractions                               2.0.3    
+   > xunit.analyzers                                  0.10.0   
+   > xunit.assert                                     2.4.1    
+   > xunit.core                                       2.4.1    
+   > xunit.extensibility.core                         2.4.1    
+   > xunit.extensibility.execution                    2.4.1    
 
-Test run for C:\Work\LPGDev\CalcPostProcessorTests\bin\Debug\netcoreapp3.1\CalcPostProcessorTests.dll(.NETCoreApp,Version=v3.1)
-Starting test execution, please wait...
-Microsoft (R) Test Execution Command Line Tool Version 16.6.0
-Copyright (c) Microsoft Corporation.  All rights reserved.
+Project 'ChartCreator2' has the following package references
+   [net48]: 
+   Top-level Package                            Requested   Resolved
+   > Autofac                                    5.2.0       5.2.0   
+   > JetBrains.Annotations                      2020.1.0    2020.1.0
+   > Microsoft.CodeAnalysis.FxCopAnalyzers      3.0.0       3.0.0   
+   > Newtonsoft.Json                            12.0.3      12.0.3  
+   > NullCheckAnalyzer                          1.0.0.3     1.0.0.3 
+   > OxyPlot.Core                               2.0.0       2.0.0   
+   > OxyPlot.Wpf                                2.0.0       2.0.0   
+   > Roslynator.Analyzers                       2.3.0       2.3.0   
 
+   Transitive Package                                 Resolved 
+   > Automation                                       1.0.0    
+   > ChartPDFCreator                                  1.0.0    
+   > Common                                           1.0.0    
+   > Database                                         1.0.0    
+   > EntityFramework                                  6.3.0    
+   > Microsoft.Bcl.AsyncInterfaces                    1.1.0    
+   > Microsoft.CodeAnalysis.VersionCheckAnalyzer      3.0.0    
+   > Microsoft.CodeQuality.Analyzers                  3.0.0    
+   > Microsoft.CSharp                                 4.7.0    
+   > Microsoft.NetCore.Analyzers                      3.0.0    
+   > Microsoft.NetFramework.Analyzers                 3.0.0    
+   > OxyPlot.Pdf                                      2.0.0    
+   > PDFsharp-MigraDoc-gdi                            1.50.5147
+   > System.Data.SQLite                               1.0.112.2
+   > System.Data.SQLite.Core                          1.0.112.2
+   > System.Data.SQLite.EF6                           1.0.112.2
+   > System.Data.SQLite.Linq                          1.0.112.2
+   > System.Runtime                                   4.3.1    
+   > System.Runtime.CompilerServices.Unsafe           4.5.2    
+   > System.Threading.Tasks.Extensions                4.5.2    
+   > System.Xml.XDocument                             4.3.0    
+   > xunit.abstractions                               2.0.3    
 
-A total of 1 test files matched the specified pattern.
-Test run for C:\Work\LPGDev\Calculation.Tests\bin\Debug\netcoreapp3.1\Calculation.Tests.dll(.NETCoreApp,Version=v3.1)
-Starting test execution, please wait...
+Project 'Database.Tests' has the following package references
+   [netcoreapp3.1]: 
+   Top-level Package                            Requested   Resolved
+   > FluentAssertions                           5.10.3      5.10.3  
+   > FluentAssertions.Analyzers                 0.11.4      0.11.4  
+   > JetBrains.Annotations                      2020.1.0    2020.1.0
+   > Microsoft.CodeAnalysis.FxCopAnalyzers      3.0.0       3.0.0   
+   > Newtonsoft.Json                            12.0.3      12.0.3  
+   > NullCheckAnalyzer                          1.0.0.3     1.0.0.3 
+   > Roslynator.Analyzers                       2.3.0       2.3.0   
+   > System.Runtime                             4.3.1       4.3.1   
+   > xunit                                      2.4.1       2.4.1   
+   > xunit.runner.visualstudio                  2.4.1       2.4.1   
 
-A total of 1 test files matched the specified pattern.
-Microsoft (R) Test Execution Command Line Tool Version 16.6.0
-Copyright (c) Microsoft Corporation.  All rights reserved.
+   Transitive Package                                                                   Resolved 
+   > Autofac                                                                            5.2.0    
+   > Automation                                                                         1.0.0    
+   > CalcPostProcessor                                                                  1.0.0    
+   > CalculationController                                                              1.0.0    
+   > CalculationEngine                                                                  1.0.0    
+   > Common                                                                             1.0.0    
+   > Common.Tests                                                                       1.0.0    
+   > Database                                                                           1.0.0    
+   > EntityFramework                                                                    6.3.0    
+   > EPPlus                                                                             4.5.3.3  
+   > Microsoft.CodeAnalysis.VersionCheckAnalyzer                                        3.0.0    
+   > Microsoft.CodeQuality.Analyzers                                                    3.0.0    
+   > Microsoft.CSharp                                                                   4.7.0    
+   > Microsoft.Extensions.Configuration                                                 3.1.0    
+   > Microsoft.Extensions.Configuration.Abstractions                                    3.1.0    
+   > Microsoft.Extensions.Configuration.FileExtensions                                  3.1.0    
+   > Microsoft.Extensions.Configuration.Json                                            3.1.0    
+   > Microsoft.Extensions.FileProviders.Abstractions                                    3.1.0    
+   > Microsoft.Extensions.FileProviders.Physical                                        3.1.0    
+   > Microsoft.Extensions.FileSystemGlobbing                                            3.1.0    
+   > Microsoft.Extensions.Primitives                                                    3.1.0    
+   > Microsoft.NET.Test.Sdk                                                             15.0.0   
+   > Microsoft.NetCore.Analyzers                                                        3.0.0    
+   > Microsoft.NETCore.Platforms                                                        3.1.0    
+   > Microsoft.NETCore.Targets                                                          1.1.3    
+   > Microsoft.NetFramework.Analyzers                                                   3.0.0    
+   > Microsoft.TestPlatform.ObjectModel                                                 15.0.0   
+   > Microsoft.TestPlatform.TestHost                                                    15.0.0   
+   > Microsoft.Win32.Primitives                                                         4.3.0    
+   > Microsoft.Win32.Registry                                                           4.6.0    
+   > Microsoft.Win32.SystemEvents                                                       4.7.0    
+   > NETStandard.Library                                                                1.6.1    
+   > runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl           4.3.2    
+   > runtime.fedora.23-x64.runtime.native.System.Security.Cryptography.OpenSsl          4.3.2    
+   > runtime.fedora.24-x64.runtime.native.System.Security.Cryptography.OpenSsl          4.3.2    
+   > runtime.native.System                                                              4.3.0    
+   > runtime.native.System.Data.SqlClient.sni                                           4.6.0    
+   > runtime.native.System.IO.Compression                                               4.3.0    
+   > runtime.native.System.Net.Http                                                     4.3.0    
+   > runtime.native.System.Security.Cryptography.Apple                                  4.3.0    
+   > runtime.native.System.Security.Cryptography.OpenSsl                                4.3.2    
+   > runtime.opensuse.13.2-x64.runtime.native.System.Security.Cryptography.OpenSsl      4.3.2    
+   > runtime.opensuse.42.1-x64.runtime.native.System.Security.Cryptography.OpenSsl      4.3.2    
+   > runtime.osx.10.10-x64.runtime.native.System.Security.Cryptography.Apple            4.3.0    
+   > runtime.osx.10.10-x64.runtime.native.System.Security.Cryptography.OpenSsl          4.3.2    
+   > runtime.rhel.7-x64.runtime.native.System.Security.Cryptography.OpenSsl             4.3.2    
+   > runtime.ubuntu.14.04-x64.runtime.native.System.Security.Cryptography.OpenSsl       4.3.2    
+   > runtime.ubuntu.16.04-x64.runtime.native.System.Security.Cryptography.OpenSsl       4.3.2    
+   > runtime.ubuntu.16.10-x64.runtime.native.System.Security.Cryptography.OpenSsl       4.3.2    
+   > runtime.win-arm64.runtime.native.System.Data.SqlClient.sni                         4.4.0    
+   > runtime.win-x64.runtime.native.System.Data.SqlClient.sni                           4.4.0    
+   > runtime.win-x86.runtime.native.System.Data.SqlClient.sni                           4.4.0    
+   > System.AppContext                                                                  4.3.0    
+   > System.Buffers                                                                     4.3.0    
+   > System.CodeDom                                                                     4.6.0    
+   > System.Collections                                                                 4.3.0    
+   > System.Collections.Concurrent                                                      4.3.0    
+   > System.Collections.Immutable                                                       1.2.0    
+   > System.Collections.NonGeneric                                                      4.3.0    
+   > System.Collections.Specialized                                                     4.3.0    
+   > System.ComponentModel                                                              4.3.0    
+   > System.ComponentModel.Annotations                                                  4.6.0    
+   > System.ComponentModel.EventBasedAsync                                              4.0.11   
+   > System.ComponentModel.Primitives                                                   4.3.0    
+   > System.ComponentModel.TypeConverter                                                4.3.0    
+   > System.Configuration.ConfigurationManager                                          4.6.0    
+   > System.Console                                                                     4.3.0    
+   > System.Data.Common                                                                 4.3.0    
+   > System.Data.SqlClient                                                              4.7.0    
+   > System.Data.SQLite                                                                 1.0.112.2
+   > System.Data.SQLite.Core                                                            1.0.112.2
+   > System.Data.SQLite.EF6                                                             1.0.112.2
+   > System.Diagnostics.Debug                                                           4.3.0    
+   > System.Diagnostics.DiagnosticSource                                                4.3.0    
+   > System.Diagnostics.Process                                                         4.1.0    
+   > System.Diagnostics.TextWriterTraceListener                                         4.0.0    
+   > System.Diagnostics.Tools                                                           4.3.0    
+   > System.Diagnostics.TraceSource                                                     4.0.0    
+   > System.Diagnostics.Tracing                                                         4.3.0    
+   > System.Drawing.Common                                                              4.7.0    
+   > System.Globalization                                                               4.3.0    
+   > System.Globalization.Calendars                                                     4.3.0    
+   > System.Globalization.Extensions                                                    4.3.0    
+   > System.IO                                                                          4.3.0    
+   > System.IO.Compression                                                              4.3.0    
+   > System.IO.Compression.ZipFile                                                      4.3.0    
+   > System.IO.FileSystem                                                               4.3.0    
+   > System.IO.FileSystem.Primitives                                                    4.3.0    
+   > System.Linq                                                                        4.3.0    
+   > System.Linq.Dynamic.Core                                                           1.1.1    
+   > System.Linq.Expressions                                                            4.3.0    
+   > System.Net.Http                                                                    4.3.0    
+   > System.Net.Primitives                                                              4.3.0    
+   > System.Net.Sockets                                                                 4.3.0    
+   > System.ObjectModel                                                                 4.3.0    
+   > System.Private.DataContractSerialization                                           4.1.1    
+   > System.Reflection                                                                  4.3.0    
+   > System.Reflection.Emit                                                             4.3.0    
+   > System.Reflection.Emit.ILGeneration                                                4.3.0    
+   > System.Reflection.Emit.Lightweight                                                 4.3.0    
+   > System.Reflection.Extensions                                                       4.3.0    
+   > System.Reflection.Metadata                                                         1.3.0    
+   > System.Reflection.Primitives                                                       4.3.0    
+   > System.Reflection.TypeExtensions                                                   4.3.0    
+   > System.Resources.Extensions                                                        4.7.1    
+   > System.Resources.ResourceManager                                                   4.3.0    
+   > System.Runtime.Extensions                                                          4.3.0    
+   > System.Runtime.Handles                                                             4.3.0    
+   > System.Runtime.InteropServices                                                     4.3.0    
+   > System.Runtime.InteropServices.RuntimeInformation                                  4.3.0    
+   > System.Runtime.Loader                                                              4.0.0    
+   > System.Runtime.Numerics                                                            4.3.0    
+   > System.Runtime.Serialization.Json                                                  4.0.2    
+   > System.Runtime.Serialization.Primitives                                            4.1.1    
+   > System.Security.AccessControl                                                      4.6.0    
+   > System.Security.Claims                                                             4.3.0    
+   > System.Security.Cryptography.Algorithms                                            4.3.0    
+   > System.Security.Cryptography.Cng                                                   4.7.0    
+   > System.Security.Cryptography.Csp                                                   4.3.0    
+   > System.Security.Cryptography.Encoding                                              4.3.0    
+   > System.Security.Cryptography.OpenSsl                                               4.3.0    
+   > System.Security.Cryptography.Pkcs                                                  4.7.0    
+   > System.Security.Cryptography.Primitives                                            4.3.0    
+   > System.Security.Cryptography.ProtectedData                                         4.6.0    
+   > System.Security.Cryptography.X509Certificates                                      4.3.2    
+   > System.Security.Permissions                                                        4.6.0    
+   > System.Security.Principal                                                          4.3.0    
+   > System.Security.Principal.Windows                                                  4.6.0    
+   > System.Text.Encoding                                                               4.3.0    
+   > System.Text.Encoding.CodePages                                                     4.7.0    
+   > System.Text.Encoding.Extensions                                                    4.3.0    
+   > System.Text.RegularExpressions                                                     4.3.0    
+   > System.Threading                                                                   4.3.0    
+   > System.Threading.Tasks                                                             4.3.0    
+   > System.Threading.Tasks.Extensions                                                  4.3.0    
+   > System.Threading.Thread                                                            4.0.0    
+   > System.Threading.ThreadPool                                                        4.0.10   
+   > System.Threading.Timer                                                             4.3.0    
+   > System.Windows.Extensions                                                          4.6.0    
+   > System.Xml.ReaderWriter                                                            4.3.0    
+   > System.Xml.XDocument                                                               4.3.0    
+   > System.Xml.XmlDocument                                                             4.3.0    
+   > System.Xml.XmlSerializer                                                           4.0.11   
+   > System.Xml.XPath                                                                   4.3.0    
+   > System.Xml.XPath.XmlDocument                                                       4.3.0    
+   > xunit.abstractions                                                                 2.0.3    
+   > xunit.analyzers                                                                    0.10.0   
+   > xunit.assert                                                                       2.4.1    
+   > xunit.core                                                                         2.4.1    
+   > xunit.extensibility.core                                                           2.4.1    
+   > xunit.extensibility.execution                                                      2.4.1    
 
-Starting test execution, please wait...
+   [net48]: 
+   Top-level Package                            Requested   Resolved
+   > FluentAssertions                           5.10.3      5.10.3  
+   > FluentAssertions.Analyzers                 0.11.4      0.11.4  
+   > JetBrains.Annotations                      2020.1.0    2020.1.0
+   > Microsoft.CodeAnalysis.FxCopAnalyzers      3.0.0       3.0.0   
+   > Newtonsoft.Json                            12.0.3      12.0.3  
+   > NullCheckAnalyzer                          1.0.0.3     1.0.0.3 
+   > Roslynator.Analyzers                       2.3.0       2.3.0   
+   > System.Runtime                             4.3.1       4.3.1   
+   > xunit                                      2.4.1       2.4.1   
+   > xunit.runner.visualstudio                  2.4.1       2.4.1   
 
-A total of 1 test files matched the specified pattern.
-[xUnit.net 00:00:02.32] Skipping: IntegrationTests (could not find dependent assembly 'System.Runtime, Version=4.1.2')
-No test matches the given testcase filter `Category=FullCalcHouses2` in C:\Work\LPGDev\IntegrationTests\bin\Debug\net48\IntegrationTests.dll
+   Transitive Package                                 Resolved 
+   > Autofac                                          5.2.0    
+   > Automation                                       1.0.0    
+   > CalcPostProcessor                                1.0.0    
+   > CalculationController                            1.0.0    
+   > CalculationEngine                                1.0.0    
+   > Common                                           1.0.0    
+   > Common.Tests                                     1.0.0    
+   > Database                                         1.0.0    
+   > EntityFramework                                  6.3.0    
+   > EPPlus                                           4.5.3.3  
+   > Microsoft.Bcl.AsyncInterfaces                    1.1.0    
+   > Microsoft.CodeAnalysis.VersionCheckAnalyzer      3.0.0    
+   > Microsoft.CodeQuality.Analyzers                  3.0.0    
+   > Microsoft.CSharp                                 4.7.0    
+   > Microsoft.NetCore.Analyzers                      3.0.0    
+   > Microsoft.NetFramework.Analyzers                 3.0.0    
+   > System.Buffers                                   4.5.1    
+   > System.Data.SQLite                               1.0.112.2
+   > System.Data.SQLite.Core                          1.0.112.2
+   > System.Data.SQLite.EF6                           1.0.112.2
+   > System.Data.SQLite.Linq                          1.0.112.2
+   > System.Linq.Dynamic.Core                         1.1.1    
+   > System.Memory                                    4.5.4    
+   > System.Numerics.Vectors                          4.5.0    
+   > System.Resources.Extensions                      4.7.1    
+   > System.Runtime.CompilerServices.Unsafe           4.5.3    
+   > System.Threading.Tasks.Extensions                4.5.2    
+   > System.Xml.XDocument                             4.3.0    
+   > xunit.abstractions                               2.0.3    
+   > xunit.analyzers                                  0.10.0   
+   > xunit.assert                                     2.4.1    
+   > xunit.core                                       2.4.1    
+   > xunit.extensibility.core                         2.4.1    
+   > xunit.extensibility.execution                    2.4.1    
 
-No test matches the given testcase filter `Category=FullCalcHouses2` in C:\Work\LPGDev\CalcPostProcessorTests\bin\Debug\netcoreapp3.1\CalcPostProcessorTests.dll
-No test matches the given testcase filter `Category=FullCalcHouses2` in C:\Work\LPGDev\Calculation.Tests\bin\Debug\netcoreapp3.1\Calculation.Tests.dll
+Project 'CalcPostProcessorTests' has the following package references
+   [netcoreapp3.1]: 
+   Top-level Package                            Requested   Resolved
+   > FluentAssertions.Analyzers                 0.11.4      0.11.4  
+   > JetBrains.Annotations                      2020.1.0    2020.1.0
+   > Microsoft.CodeAnalysis.FxCopAnalyzers      3.0.0       3.0.0   
+   > Microsoft.NET.Test.Sdk                     16.6.1      16.6.1  
+   > Moq                                        4.14.1      4.14.1  
+   > Newtonsoft.Json                            12.0.3      12.0.3  
+   > NullCheckAnalyzer                          1.0.0.3     1.0.0.3 
+   > Roslynator.Analyzers                       2.3.0       2.3.0   
+   > System.Runtime                             4.3.1       4.3.1   
+   > xunit                                      2.4.1       2.4.1   
+   > xunit.runner.visualstudio                  2.4.1       2.4.1   
 
+   Transitive Package                                                                   Resolved 
+   > Autofac                                                                            5.2.0    
+   > Automation                                                                         1.0.0    
+   > CalcPostProcessor                                                                  1.0.0    
+   > CalculationController                                                              1.0.0    
+   > CalculationEngine                                                                  1.0.0    
+   > Castle.Core                                                                        4.4.0    
+   > Common                                                                             1.0.0    
+   > Common.Tests                                                                       1.0.0    
+   > Database                                                                           1.0.0    
+   > Database.Tests                                                                     1.0.0    
+   > EntityFramework                                                                    6.3.0    
+   > EPPlus                                                                             4.5.3.3  
+   > FluentAssertions                                                                   5.10.3   
+   > Microsoft.CodeAnalysis.VersionCheckAnalyzer                                        3.0.0    
+   > Microsoft.CodeCoverage                                                             16.6.1   
+   > Microsoft.CodeQuality.Analyzers                                                    3.0.0    
+   > Microsoft.CSharp                                                                   4.7.0    
+   > Microsoft.Extensions.Configuration                                                 3.1.0    
+   > Microsoft.Extensions.Configuration.Abstractions                                    3.1.0    
+   > Microsoft.Extensions.Configuration.FileExtensions                                  3.1.0    
+   > Microsoft.Extensions.Configuration.Json                                            3.1.0    
+   > Microsoft.Extensions.FileProviders.Abstractions                                    3.1.0    
+   > Microsoft.Extensions.FileProviders.Physical                                        3.1.0    
+   > Microsoft.Extensions.FileSystemGlobbing                                            3.1.0    
+   > Microsoft.Extensions.Primitives                                                    3.1.0    
+   > Microsoft.NetCore.Analyzers                                                        3.0.0    
+   > Microsoft.NETCore.Platforms                                                        3.1.0    
+   > Microsoft.NETCore.Targets                                                          1.1.3    
+   > Microsoft.NetFramework.Analyzers                                                   3.0.0    
+   > Microsoft.TestPlatform.ObjectModel                                                 16.6.1   
+   > Microsoft.TestPlatform.TestHost                                                    16.6.1   
+   > Microsoft.Win32.Primitives                                                         4.3.0    
+   > Microsoft.Win32.Registry                                                           4.6.0    
+   > Microsoft.Win32.SystemEvents                                                       4.7.0    
+   > NETStandard.Library                                                                1.6.1    
+   > NuGet.Frameworks                                                                   5.0.0    
+   > runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl           4.3.2    
+   > runtime.fedora.23-x64.runtime.native.System.Security.Cryptography.OpenSsl          4.3.2    
+   > runtime.fedora.24-x64.runtime.native.System.Security.Cryptography.OpenSsl          4.3.2    
+   > runtime.native.System                                                              4.3.0    
+   > runtime.native.System.Data.SqlClient.sni                                           4.6.0    
+   > runtime.native.System.IO.Compression                                               4.3.0    
+   > runtime.native.System.Net.Http                                                     4.3.0    
+   > runtime.native.System.Security.Cryptography.Apple                                  4.3.0    
+   > runtime.native.System.Security.Cryptography.OpenSsl                                4.3.2    
+   > runtime.opensuse.13.2-x64.runtime.native.System.Security.Cryptography.OpenSsl      4.3.2    
+   > runtime.opensuse.42.1-x64.runtime.native.System.Security.Cryptography.OpenSsl      4.3.2    
+   > runtime.osx.10.10-x64.runtime.native.System.Security.Cryptography.Apple            4.3.0    
+   > runtime.osx.10.10-x64.runtime.native.System.Security.Cryptography.OpenSsl          4.3.2    
+   > runtime.rhel.7-x64.runtime.native.System.Security.Cryptography.OpenSsl             4.3.2    
+   > runtime.ubuntu.14.04-x64.runtime.native.System.Security.Cryptography.OpenSsl       4.3.2    
+   > runtime.ubuntu.16.04-x64.runtime.native.System.Security.Cryptography.OpenSsl       4.3.2    
+   > runtime.ubuntu.16.10-x64.runtime.native.System.Security.Cryptography.OpenSsl       4.3.2    
+   > runtime.win-arm64.runtime.native.System.Data.SqlClient.sni                         4.4.0    
+   > runtime.win-x64.runtime.native.System.Data.SqlClient.sni                           4.4.0    
+   > runtime.win-x86.runtime.native.System.Data.SqlClient.sni                           4.4.0    
+   > System.AppContext                                                                  4.3.0    
+   > System.Buffers                                                                     4.3.0    
+   > System.CodeDom                                                                     4.6.0    
+   > System.Collections                                                                 4.3.0    
+   > System.Collections.Concurrent                                                      4.3.0    
+   > System.Collections.NonGeneric                                                      4.3.0    
+   > System.Collections.Specialized                                                     4.3.0    
+   > System.ComponentModel                                                              4.3.0    
+   > System.ComponentModel.Annotations                                                  4.6.0    
+   > System.ComponentModel.Primitives                                                   4.3.0    
+   > System.ComponentModel.TypeConverter                                                4.3.0    
+   > System.Configuration.ConfigurationManager                                          4.6.0    
+   > System.Console                                                                     4.3.0    
+   > System.Data.Common                                                                 4.3.0    
+   > System.Data.SqlClient                                                              4.7.0    
+   > System.Data.SQLite                                                                 1.0.112.2
+   > System.Data.SQLite.Core                                                            1.0.112.2
+   > System.Data.SQLite.EF6                                                             1.0.112.2
+   > System.Diagnostics.Debug                                                           4.3.0    
+   > System.Diagnostics.DiagnosticSource                                                4.3.0    
+   > System.Diagnostics.Tools                                                           4.3.0    
+   > System.Diagnostics.TraceSource                                                     4.3.0    
+   > System.Diagnostics.Tracing                                                         4.3.0    
+   > System.Drawing.Common                                                              4.7.0    
+   > System.Dynamic.Runtime                                                             4.3.0    
+   > System.Globalization                                                               4.3.0    
+   > System.Globalization.Calendars                                                     4.3.0    
+   > System.Globalization.Extensions                                                    4.3.0    
+   > System.IO                                                                          4.3.0    
+   > System.IO.Compression                                                              4.3.0    
+   > System.IO.Compression.ZipFile                                                      4.3.0    
+   > System.IO.FileSystem                                                               4.3.0    
+   > System.IO.FileSystem.Primitives                                                    4.3.0    
+   > System.Linq                                                                        4.3.0    
+   > System.Linq.Dynamic.Core                                                           1.1.1    
+   > System.Linq.Expressions                                                            4.3.0    
+   > System.Net.Http                                                                    4.3.0    
+   > System.Net.Primitives                                                              4.3.0    
+   > System.Net.Sockets                                                                 4.3.0    
+   > System.ObjectModel                                                                 4.3.0    
+   > System.Reflection                                                                  4.3.0    
+   > System.Reflection.Emit                                                             4.3.0    
+   > System.Reflection.Emit.ILGeneration                                                4.3.0    
+   > System.Reflection.Emit.Lightweight                                                 4.3.0    
+   > System.Reflection.Extensions                                                       4.3.0    
+   > System.Reflection.Primitives                                                       4.3.0    
+   > System.Reflection.TypeExtensions                                                   4.3.0    
+   > System.Resources.Extensions                                                        4.7.1    
+   > System.Resources.ResourceManager                                                   4.3.0    
+   > System.Runtime.Extensions                                                          4.3.0    
+   > System.Runtime.Handles                                                             4.3.0    
+   > System.Runtime.InteropServices                                                     4.3.0    
+   > System.Runtime.InteropServices.RuntimeInformation                                  4.3.0    
+   > System.Runtime.Numerics                                                            4.3.0    
+   > System.Security.AccessControl                                                      4.6.0    
+   > System.Security.Claims                                                             4.3.0    
+   > System.Security.Cryptography.Algorithms                                            4.3.0    
+   > System.Security.Cryptography.Cng                                                   4.7.0    
+   > System.Security.Cryptography.Csp                                                   4.3.0    
+   > System.Security.Cryptography.Encoding                                              4.3.0    
+   > System.Security.Cryptography.OpenSsl                                               4.3.0    
+   > System.Security.Cryptography.Pkcs                                                  4.7.0    
+   > System.Security.Cryptography.Primitives                                            4.3.0    
+   > System.Security.Cryptography.ProtectedData                                         4.6.0    
+   > System.Security.Cryptography.X509Certificates                                      4.3.2    
+   > System.Security.Permissions                                                        4.6.0    
+   > System.Security.Principal                                                          4.3.0    
+   > System.Security.Principal.Windows                                                  4.6.0    
+   > System.Text.Encoding                                                               4.3.0    
+   > System.Text.Encoding.CodePages                                                     4.7.0    
+   > System.Text.Encoding.Extensions                                                    4.3.0    
+   > System.Text.RegularExpressions                                                     4.3.0    
+   > System.Threading                                                                   4.3.0    
+   > System.Threading.Tasks                                                             4.3.0    
+   > System.Threading.Tasks.Extensions                                                  4.5.1    
+   > System.Threading.Timer                                                             4.3.0    
+   > System.Windows.Extensions                                                          4.6.0    
+   > System.Xml.ReaderWriter                                                            4.3.0    
+   > System.Xml.XDocument                                                               4.3.0    
+   > System.Xml.XmlDocument                                                             4.3.0    
+   > System.Xml.XPath                                                                   4.3.0    
+   > System.Xml.XPath.XmlDocument                                                       4.3.0    
+   > xunit.abstractions                                                                 2.0.3    
+   > xunit.analyzers                                                                    0.10.0   
+   > xunit.assert                                                                       2.4.1    
+   > xunit.core                                                                         2.4.1    
+   > xunit.extensibility.core                                                           2.4.1    
+   > xunit.extensibility.execution                                                      2.4.1    
 
-Test run for C:\Work\LPGDev\CalcPostProcessorTests\bin\Debug\net48\CalcPostProcessorTests.dll(.NETFramework,Version=v4.8)
-Test run for C:\Work\LPGDev\Calculation.Tests\bin\Debug\net48\Calculation.Tests.dll(.NETFramework,Version=v4.8)
-Microsoft (R) Test Execution Command Line Tool Version 16.6.0
-Copyright (c) Microsoft Corporation.  All rights reserved.
+   [net48]: 
+   Top-level Package                            Requested   Resolved
+   > FluentAssertions.Analyzers                 0.11.4      0.11.4  
+   > JetBrains.Annotations                      2020.1.0    2020.1.0
+   > Microsoft.CodeAnalysis.FxCopAnalyzers      3.0.0       3.0.0   
+   > Microsoft.NET.Test.Sdk                     16.6.1      16.6.1  
+   > Moq                                        4.14.1      4.14.1  
+   > Newtonsoft.Json                            12.0.3      12.0.3  
+   > NullCheckAnalyzer                          1.0.0.3     1.0.0.3 
+   > Roslynator.Analyzers                       2.3.0       2.3.0   
+   > System.Runtime                             4.3.1       4.3.1   
+   > xunit                                      2.4.1       2.4.1   
+   > xunit.runner.visualstudio                  2.4.1       2.4.1   
 
-Microsoft (R) Test Execution Command Line Tool Version 16.6.0
-Copyright (c) Microsoft Corporation.  All rights reserved.
+   Transitive Package                                 Resolved 
+   > Autofac                                          5.2.0    
+   > Automation                                       1.0.0    
+   > CalcPostProcessor                                1.0.0    
+   > CalculationController                            1.0.0    
+   > CalculationEngine                                1.0.0    
+   > Castle.Core                                      4.4.0    
+   > Common                                           1.0.0    
+   > Common.Tests                                     1.0.0    
+   > Database                                         1.0.0    
+   > Database.Tests                                   1.0.0    
+   > EntityFramework                                  6.3.0    
+   > EPPlus                                           4.5.3.3  
+   > FluentAssertions                                 5.10.3   
+   > Microsoft.Bcl.AsyncInterfaces                    1.1.0    
+   > Microsoft.CodeAnalysis.VersionCheckAnalyzer      3.0.0    
+   > Microsoft.CodeCoverage                           16.6.1   
+   > Microsoft.CodeQuality.Analyzers                  3.0.0    
+   > Microsoft.CSharp                                 4.7.0    
+   > Microsoft.NetCore.Analyzers                      3.0.0    
+   > Microsoft.NetFramework.Analyzers                 3.0.0    
+   > System.Buffers                                   4.5.1    
+   > System.Data.SQLite                               1.0.112.2
+   > System.Data.SQLite.Core                          1.0.112.2
+   > System.Data.SQLite.EF6                           1.0.112.2
+   > System.Data.SQLite.Linq                          1.0.112.2
+   > System.Linq.Dynamic.Core                         1.1.1    
+   > System.Memory                                    4.5.4    
+   > System.Numerics.Vectors                          4.5.0    
+   > System.Resources.Extensions                      4.7.1    
+   > System.Runtime.CompilerServices.Unsafe           4.5.3    
+   > System.Threading.Tasks.Extensions                4.5.2    
+   > System.Xml.XDocument                             4.3.0    
+   > xunit.abstractions                               2.0.3    
+   > xunit.analyzers                                  0.10.0   
+   > xunit.assert                                     2.4.1    
+   > xunit.core                                       2.4.1    
+   > xunit.extensibility.core                         2.4.1    
+   > xunit.extensibility.execution                    2.4.1    
 
-Starting test execution, please wait...
-Starting test execution, please wait...
+Project 'Automation' has the following package references
+   [netstandard2.0]: 
+   Top-level Package                               Requested   Resolved
+   > JetBrains.Annotations                         2020.1.0    2020.1.0
+   > Microsoft.CodeAnalysis.FxCopAnalyzers         3.0.0       3.0.0   
+   > NETStandard.Library                     (A)   [2.0.3, )   2.0.3   
+   > Newtonsoft.Json                               12.0.3      12.0.3  
+   > NullCheckAnalyzer                             1.0.0.3     1.0.0.3 
+   > Roslynator.Analyzers                          2.3.0       2.3.0   
 
-A total of 1 test files matched the specified pattern.
+   Transitive Package                                 Resolved
+   > Microsoft.CodeAnalysis.VersionCheckAnalyzer      3.0.0   
+   > Microsoft.CodeQuality.Analyzers                  3.0.0   
+   > Microsoft.NetCore.Analyzers                      3.0.0   
+   > Microsoft.NETCore.Platforms                      1.1.0   
+   > Microsoft.NetFramework.Analyzers                 3.0.0   
 
-A total of 1 test files matched the specified pattern.
-No test matches the given testcase filter `Category=FullCalcHouses2` in C:\Work\LPGDev\CalcPostProcessorTests\bin\Debug\net48\CalcPostProcessorTests.dll
+Project 'SimEngine2' has the following package references
+   [netcoreapp3.1]: 
+   Top-level Package                            Requested   Resolved
+   > Microsoft.CodeAnalysis.FxCopAnalyzers      3.0.0       3.0.0   
+   > NETStandard.Library                        2.0.3       2.0.3   
+   > PowerArgs                                  3.6.0       3.6.0   
+   > Roslynator.Analyzers                       2.3.0       2.3.0   
 
-No test matches the given testcase filter `Category=FullCalcHouses2` in C:\Work\LPGDev\Calculation.Tests\bin\Debug\net48\Calculation.Tests.dll
+   Transitive Package                                                Resolved 
+   > Autofac                                                         5.2.0    
+   > Automation                                                      1.0.0    
+   > CalcPostProcessor                                               1.0.0    
+   > CalculationController                                           1.0.0    
+   > CalculationEngine                                               1.0.0    
+   > Common                                                          1.0.0    
+   > Database                                                        1.0.0    
+   > EntityFramework                                                 6.3.0    
+   > JetBrains.Annotations                                           2020.1.0 
+   > Microsoft.CodeAnalysis.VersionCheckAnalyzer                     3.0.0    
+   > Microsoft.CodeQuality.Analyzers                                 3.0.0    
+   > Microsoft.CSharp                                                4.7.0    
+   > Microsoft.NetCore.Analyzers                                     3.0.0    
+   > Microsoft.NETCore.Platforms                                     3.0.0    
+   > Microsoft.NETCore.Targets                                       1.1.3    
+   > Microsoft.NetFramework.Analyzers                                3.0.0    
+   > Microsoft.Win32.Registry                                        4.6.0    
+   > Microsoft.Win32.SystemEvents                                    4.6.0    
+   > Newtonsoft.Json                                                 12.0.3   
+   > NullCheckAnalyzer                                               1.0.0.3  
+   > runtime.native.System.Data.SqlClient.sni                        4.6.0    
+   > runtime.win-arm64.runtime.native.System.Data.SqlClient.sni      4.4.0    
+   > runtime.win-x64.runtime.native.System.Data.SqlClient.sni        4.4.0    
+   > runtime.win-x86.runtime.native.System.Data.SqlClient.sni        4.4.0    
+   > SimulationEngineLib                                             1.0.0    
+   > System.CodeDom                                                  4.6.0    
+   > System.Collections                                              4.3.0    
+   > System.ComponentModel.Annotations                               4.6.0    
+   > System.Configuration.ConfigurationManager                       4.6.0    
+   > System.Data.SqlClient                                           4.7.0    
+   > System.Data.SQLite                                              1.0.112.2
+   > System.Data.SQLite.Core                                         1.0.112.2
+   > System.Data.SQLite.EF6                                          1.0.112.2
+   > System.Diagnostics.Debug                                        4.3.0    
+   > System.Diagnostics.Tools                                        4.3.0    
+   > System.Drawing.Common                                           4.6.0    
+   > System.Globalization                                            4.3.0    
+   > System.IO                                                       4.3.0    
+   > System.IO.FileSystem                                            4.3.0    
+   > System.IO.FileSystem.Primitives                                 4.3.0    
+   > System.Linq.Dynamic.Core                                        1.1.1    
+   > System.Reflection                                               4.3.0    
+   > System.Reflection.Primitives                                    4.3.0    
+   > System.Resources.Extensions                                     4.7.1    
+   > System.Resources.ResourceManager                                4.3.0    
+   > System.Runtime                                                  4.3.1    
+   > System.Runtime.Extensions                                       4.3.0    
+   > System.Runtime.Handles                                          4.3.0    
+   > System.Runtime.InteropServices                                  4.3.0    
+   > System.Security.AccessControl                                   4.6.0    
+   > System.Security.Cryptography.ProtectedData                      4.6.0    
+   > System.Security.Permissions                                     4.6.0    
+   > System.Security.Principal.Windows                               4.6.0    
+   > System.Text.Encoding                                            4.3.0    
+   > System.Text.Encoding.Extensions                                 4.3.0    
+   > System.Text.RegularExpressions                                  4.3.0    
+   > System.Threading                                                4.3.0    
+   > System.Threading.Tasks                                          4.3.0    
+   > System.Threading.Tasks.Extensions                               4.3.0    
+   > System.Windows.Extensions                                       4.6.0    
+   > System.Xml.ReaderWriter                                         4.3.0    
+   > System.Xml.XDocument                                            4.3.0    
+   > xunit.abstractions                                              2.0.3    
 
+Project 'SimulationEngineLib' has the following package references
+   [netstandard2.0]: 
+   Top-level Package                               Requested   Resolved
+   > JetBrains.Annotations                         2020.1.0    2020.1.0
+   > Microsoft.CodeAnalysis.FxCopAnalyzers         3.0.0       3.0.0   
+   > NETStandard.Library                     (A)   [2.0.3, )   2.0.3   
+   > PowerArgs                                     3.6.0       3.6.0   
+   > Roslynator.Analyzers                          2.3.0       2.3.0   
+
+   Transitive Package                                 Resolved 
+   > Autofac                                          5.2.0    
+   > Automation                                       1.0.0    
+   > CalcPostProcessor                                1.0.0    
+   > CalculationController                            1.0.0    
+   > CalculationEngine                                1.0.0    
+   > Common                                           1.0.0    
+   > Database                                         1.0.0    
+   > Microsoft.Bcl.AsyncInterfaces                    1.1.0    
+   > Microsoft.CodeAnalysis.VersionCheckAnalyzer      3.0.0    
+   > Microsoft.CodeQuality.Analyzers                  3.0.0    
+   > Microsoft.CSharp                                 4.7.0    
+   > Microsoft.NetCore.Analyzers                      3.0.0    
+   > Microsoft.NETCore.Platforms                      1.1.1    
+   > Microsoft.NETCore.Targets                        1.1.3    
+   > Microsoft.NetFramework.Analyzers                 3.0.0    
+   > Newtonsoft.Json                                  12.0.3   
+   > NullCheckAnalyzer                                1.0.0.3  
+   > System.Buffers                                   4.5.1    
+   > System.Collections                               4.3.0    
+   > System.Data.SQLite                               1.0.112.2
+   > System.Data.SQLite.Core                          1.0.112.2
+   > System.Diagnostics.Debug                         4.3.0    
+   > System.Diagnostics.Tools                         4.3.0    
+   > System.Globalization                             4.3.0    
+   > System.IO                                        4.3.0    
+   > System.IO.FileSystem                             4.3.0    
+   > System.IO.FileSystem.Primitives                  4.3.0    
+   > System.Linq.Dynamic.Core                         1.1.1    
+   > System.Memory                                    4.5.4    
+   > System.Numerics.Vectors                          4.4.0    
+   > System.Reflection                                4.3.0    
+   > System.Reflection.Emit                           4.3.0    
+   > System.Reflection.Emit.ILGeneration              4.3.0    
+   > System.Reflection.Primitives                     4.3.0    
+   > System.Resources.Extensions                      4.7.1    
+   > System.Resources.ResourceManager                 4.3.0    
+   > System.Runtime                                   4.3.1    
+   > System.Runtime.CompilerServices.Unsafe           4.5.3    
+   > System.Runtime.Extensions                        4.3.0    
+   > System.Runtime.Handles                           4.3.0    
+   > System.Runtime.InteropServices                   4.3.0    
+   > System.Text.Encoding                             4.3.0    
+   > System.Text.Encoding.Extensions                  4.3.0    
+   > System.Text.RegularExpressions                   4.3.0    
+   > System.Threading                                 4.3.0    
+   > System.Threading.Tasks                           4.3.0    
+   > System.Threading.Tasks.Extensions                4.5.2    
+   > System.Xml.ReaderWriter                          4.3.0    
+   > System.Xml.XDocument                             4.3.0    
+   > xunit.abstractions                               2.0.3    
+
+Project 'SimulationEngine' has the following package references
+   [net48]: 
+   Top-level Package                            Requested   Resolved
+   > JetBrains.Annotations                      2020.1.0    2020.1.0
+   > Microsoft.CodeAnalysis.FxCopAnalyzers      3.0.0       3.0.0   
+   > NETStandard.Library                        2.0.3       2.0.3   
+   > Newtonsoft.Json                            12.0.3      12.0.3  
+   > NullCheckAnalyzer                          1.0.0.3     1.0.0.3 
+   > PowerArgs                                  3.6.0       3.6.0   
+   > Roslynator.Analyzers                       2.3.0       2.3.0   
+
+   Transitive Package                                 Resolved 
+   > Autofac                                          5.2.0    
+   > Automation                                       1.0.0    
+   > CalcPostProcessor                                1.0.0    
+   > CalculationController                            1.0.0    
+   > CalculationEngine                                1.0.0    
+   > ChartCreator2                                    1.0.0    
+   > ChartPDFCreator                                  1.0.0    
+   > Common                                           1.0.0    
+   > Database                                         1.0.0    
+   > EntityFramework                                  6.3.0    
+   > Microsoft.Bcl.AsyncInterfaces                    1.1.0    
+   > Microsoft.CodeAnalysis.VersionCheckAnalyzer      3.0.0    
+   > Microsoft.CodeQuality.Analyzers                  3.0.0    
+   > Microsoft.CSharp                                 4.7.0    
+   > Microsoft.NetCore.Analyzers                      3.0.0    
+   > Microsoft.NETCore.Platforms                      1.1.0    
+   > Microsoft.NetFramework.Analyzers                 3.0.0    
+   > OxyPlot.Core                                     2.0.0    
+   > OxyPlot.Pdf                                      2.0.0    
+   > OxyPlot.Wpf                                      2.0.0    
+   > PDFsharp-MigraDoc-gdi                            1.50.5147
+   > SimulationEngineLib                              1.0.0    
+   > System.Buffers                                   4.5.1    
+   > System.Data.SQLite                               1.0.112.2
+   > System.Data.SQLite.Core                          1.0.112.2
+   > System.Data.SQLite.EF6                           1.0.112.2
+   > System.Data.SQLite.Linq                          1.0.112.2
+   > System.Linq.Dynamic.Core                         1.1.1    
+   > System.Memory                                    4.5.4    
+   > System.Numerics.Vectors                          4.5.0    
+   > System.Resources.Extensions                      4.7.1    
+   > System.Runtime                                   4.3.1    
+   > System.Runtime.CompilerServices.Unsafe           4.5.3    
+   > System.Threading.Tasks.Extensions                4.5.2    
+   > System.Xml.XDocument                             4.3.0    
+   > xunit.abstractions                               2.0.3    
+
+Project 'SimulationEngine.Tests' has the following package references
+   [netcoreapp3.1]: 
+   Top-level Package                            Requested   Resolved 
+   > FluentAssertions.Analyzers                 0.11.4      0.11.4   
+   > JetBrains.Annotations                      2020.1.0    2020.1.0 
+   > Microsoft.CodeAnalysis.FxCopAnalyzers      3.0.0       3.0.0    
+   > Newtonsoft.Json                            12.0.3      12.0.3   
+   > NullCheckAnalyzer                          1.0.0.3     1.0.0.3  
+   > Roslynator.Analyzers                       2.3.0       2.3.0    
+   > System.Data.SQLite                         1.0.112.2   1.0.112.2
+   > System.Runtime                             4.3.1       4.3.1    
+   > xunit                                      2.4.1       2.4.1    
+   > xunit.runner.visualstudio                  2.4.1       2.4.1    
+   > Xunit.StaFact                              0.3.18      0.3.18   
+
+   Transitive Package                                                                   Resolved 
+   > Autofac                                                                            5.2.0    
+   > Automation                                                                         1.0.0    
+   > CalcPostProcessor                                                                  1.0.0    
+   > CalculationController                                                              1.0.0    
+   > CalculationEngine                                                                  1.0.0    
+   > Common                                                                             1.0.0    
+   > Common.Tests                                                                       1.0.0    
+   > Database                                                                           1.0.0    
+   > Database.Tests                                                                     1.0.0    
+   > EntityFramework                                                                    6.3.0    
+   > EPPlus                                                                             4.5.3.3  
+   > FluentAssertions                                                                   5.10.3   
+   > Microsoft.CodeAnalysis.VersionCheckAnalyzer                                        3.0.0    
+   > Microsoft.CodeQuality.Analyzers                                                    3.0.0    
+   > Microsoft.CSharp                                                                   4.7.0    
+   > Microsoft.Extensions.Configuration                                                 3.1.0    
+   > Microsoft.Extensions.Configuration.Abstractions                                    3.1.0    
+   > Microsoft.Extensions.Configuration.FileExtensions                                  3.1.0    
+   > Microsoft.Extensions.Configuration.Json                                            3.1.0    
+   > Microsoft.Extensions.FileProviders.Abstractions                                    3.1.0    
+   > Microsoft.Extensions.FileProviders.Physical                                        3.1.0    
+   > Microsoft.Extensions.FileSystemGlobbing                                            3.1.0    
+   > Microsoft.Extensions.Primitives                                                    3.1.0    
+   > Microsoft.NET.Test.Sdk                                                             15.0.0   
+   > Microsoft.NetCore.Analyzers                                                        3.0.0    
+   > Microsoft.NETCore.Platforms                                                        3.1.0    
+   > Microsoft.NETCore.Targets                                                          1.1.3    
+   > Microsoft.NetFramework.Analyzers                                                   3.0.0    
+   > Microsoft.TestPlatform.ObjectModel                                                 15.0.0   
+   > Microsoft.TestPlatform.TestHost                                                    15.0.0   
+   > Microsoft.Win32.Primitives                                                         4.3.0    
+   > Microsoft.Win32.Registry                                                           4.6.0    
+   > Microsoft.Win32.SystemEvents                                                       4.7.0    
+   > NETStandard.Library                                                                1.6.1    
+   > PowerArgs                                                                          3.6.0    
+   > runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl           4.3.2    
+   > runtime.fedora.23-x64.runtime.native.System.Security.Cryptography.OpenSsl          4.3.2    
+   > runtime.fedora.24-x64.runtime.native.System.Security.Cryptography.OpenSsl          4.3.2    
+   > runtime.native.System                                                              4.3.0    
+   > runtime.native.System.Data.SqlClient.sni                                           4.6.0    
+   > runtime.native.System.IO.Compression                                               4.3.0    
+   > runtime.native.System.Net.Http                                                     4.3.0    
+   > runtime.native.System.Security.Cryptography.Apple                                  4.3.0    
+   > runtime.native.System.Security.Cryptography.OpenSsl                                4.3.2    
+   > runtime.opensuse.13.2-x64.runtime.native.System.Security.Cryptography.OpenSsl      4.3.2    
+   > runtime.opensuse.42.1-x64.runtime.native.System.Security.Cryptography.OpenSsl      4.3.2    
+   > runtime.osx.10.10-x64.runtime.native.System.Security.Cryptography.Apple            4.3.0    
+   > runtime.osx.10.10-x64.runtime.native.System.Security.Cryptography.OpenSsl          4.3.2    
+   > runtime.rhel.7-x64.runtime.native.System.Security.Cryptography.OpenSsl             4.3.2    
+   > runtime.ubuntu.14.04-x64.runtime.native.System.Security.Cryptography.OpenSsl       4.3.2    
+   > runtime.ubuntu.16.04-x64.runtime.native.System.Security.Cryptography.OpenSsl       4.3.2    
+   > runtime.ubuntu.16.10-x64.runtime.native.System.Security.Cryptography.OpenSsl       4.3.2    
+   > runtime.win-arm64.runtime.native.System.Data.SqlClient.sni                         4.4.0    
+   > runtime.win-x64.runtime.native.System.Data.SqlClient.sni                           4.4.0    
+   > runtime.win-x86.runtime.native.System.Data.SqlClient.sni                           4.4.0    
+   > SimulationEngineLib                                                                1.0.0    
+   > System.AppContext                                                                  4.3.0    
+   > System.Buffers                                                                     4.3.0    
+   > System.CodeDom                                                                     4.6.0    
+   > System.Collections                                                                 4.3.0    
+   > System.Collections.Concurrent                                                      4.3.0    
+   > System.Collections.Immutable                                                       1.2.0    
+   > System.Collections.NonGeneric                                                      4.3.0    
+   > System.Collections.Specialized                                                     4.3.0    
+   > System.ComponentModel                                                              4.3.0    
+   > System.ComponentModel.Annotations                                                  4.6.0    
+   > System.ComponentModel.EventBasedAsync                                              4.0.11   
+   > System.ComponentModel.Primitives                                                   4.3.0    
+   > System.ComponentModel.TypeConverter                                                4.3.0    
+   > System.Configuration.ConfigurationManager                                          4.6.0    
+   > System.Console                                                                     4.3.0    
+   > System.Data.Common                                                                 4.3.0    
+   > System.Data.SqlClient                                                              4.7.0    
+   > System.Data.SQLite.Core                                                            1.0.112.2
+   > System.Data.SQLite.EF6                                                             1.0.112.2
+   > System.Diagnostics.Debug                                                           4.3.0    
+   > System.Diagnostics.DiagnosticSource                                                4.3.0    
+   > System.Diagnostics.Process                                                         4.1.0    
+   > System.Diagnostics.TextWriterTraceListener                                         4.0.0    
+   > System.Diagnostics.Tools                                                           4.3.0    
+   > System.Diagnostics.TraceSource                                                     4.0.0    
+   > System.Diagnostics.Tracing                                                         4.3.0    
+   > System.Drawing.Common                                                              4.7.0    
+   > System.Globalization                                                               4.3.0    
+   > System.Globalization.Calendars                                                     4.3.0    
+   > System.Globalization.Extensions                                                    4.3.0    
+   > System.IO                                                                          4.3.0    
+   > System.IO.Compression                                                              4.3.0    
+   > System.IO.Compression.ZipFile                                                      4.3.0    
+   > System.IO.FileSystem                                                               4.3.0    
+   > System.IO.FileSystem.Primitives                                                    4.3.0    
+   > System.Linq                                                                        4.3.0    
+   > System.Linq.Dynamic.Core                                                           1.1.1    
+   > System.Linq.Expressions                                                            4.3.0    
+   > System.Net.Http                                                                    4.3.0    
+   > System.Net.Primitives                                                              4.3.0    
+   > System.Net.Sockets                                                                 4.3.0    
+   > System.ObjectModel                                                                 4.3.0    
+   > System.Private.DataContractSerialization                                           4.1.1    
+   > System.Reflection                                                                  4.3.0    
+   > System.Reflection.Emit                                                             4.3.0    
+   > System.Reflection.Emit.ILGeneration                                                4.3.0    
+   > System.Reflection.Emit.Lightweight                                                 4.3.0    
+   > System.Reflection.Extensions                                                       4.3.0    
+   > System.Reflection.Metadata                                                         1.3.0    
+   > System.Reflection.Primitives                                                       4.3.0    
+   > System.Reflection.TypeExtensions                                                   4.3.0    
+   > System.Resources.Extensions                                                        4.7.1    
+   > System.Resources.ResourceManager                                                   4.3.0    
+   > System.Runtime.Extensions                                                          4.3.0    
+   > System.Runtime.Handles                                                             4.3.0    
+   > System.Runtime.InteropServices                                                     4.3.0    
+   > System.Runtime.InteropServices.RuntimeInformation                                  4.3.0    
+   > System.Runtime.Loader                                                              4.0.0    
+   > System.Runtime.Numerics                                                            4.3.0    
+   > System.Runtime.Serialization.Json                                                  4.0.2    
+   > System.Runtime.Serialization.Primitives                                            4.1.1    
+   > System.Security.AccessControl                                                      4.6.0    
+   > System.Security.Claims                                                             4.3.0    
+   > System.Security.Cryptography.Algorithms                                            4.3.0    
+   > System.Security.Cryptography.Cng                                                   4.7.0    
+   > System.Security.Cryptography.Csp                                                   4.3.0    
+   > System.Security.Cryptography.Encoding                                              4.3.0    
+   > System.Security.Cryptography.OpenSsl                                               4.3.0    
+   > System.Security.Cryptography.Pkcs                                                  4.7.0    
+   > System.Security.Cryptography.Primitives                                            4.3.0    
+   > System.Security.Cryptography.ProtectedData                                         4.6.0    
+   > System.Security.Cryptography.X509Certificates                                      4.3.2    
+   > System.Security.Permissions                                                        4.6.0    
+   > System.Security.Principal                                                          4.3.0    
+   > System.Security.Principal.Windows                                                  4.6.0    
+   > System.Text.Encoding                                                               4.3.0    
+   > System.Text.Encoding.CodePages                                                     4.7.0    
+   > System.Text.Encoding.Extensions                                                    4.3.0    
+   > System.Text.RegularExpressions                                                     4.3.0    
+   > System.Threading                                                                   4.3.0    
+   > System.Threading.Tasks                                                             4.3.0    
+   > System.Threading.Tasks.Extensions                                                  4.3.0    
+   > System.Threading.Thread                                                            4.0.0    
+   > System.Threading.ThreadPool                                                        4.0.10   
+   > System.Threading.Timer                                                             4.3.0    
+   > System.Windows.Extensions                                                          4.6.0    
+   > System.Xml.ReaderWriter                                                            4.3.0    
+   > System.Xml.XDocument                                                               4.3.0    
+   > System.Xml.XmlDocument                                                             4.3.0    
+   > System.Xml.XmlSerializer                                                           4.0.11   
+   > System.Xml.XPath                                                                   4.3.0    
+   > System.Xml.XPath.XmlDocument                                                       4.3.0    
+   > xunit.abstractions                                                                 2.0.3    
+   > xunit.analyzers                                                                    0.10.0   
+   > xunit.assert                                                                       2.4.1    
+   > xunit.core                                                                         2.4.1    
+   > xunit.extensibility.core                                                           2.4.1    
+   > xunit.extensibility.execution                                                      2.4.1    
+
+   [net48]: 
+   Top-level Package                            Requested   Resolved 
+   > FluentAssertions.Analyzers                 0.11.4      0.11.4   
+   > JetBrains.Annotations                      2020.1.0    2020.1.0 
+   > Microsoft.CodeAnalysis.FxCopAnalyzers      3.0.0       3.0.0    
+   > Newtonsoft.Json                            12.0.3      12.0.3   
+   > NullCheckAnalyzer                          1.0.0.3     1.0.0.3  
+   > Roslynator.Analyzers                       2.3.0       2.3.0    
+   > System.Data.SQLite                         1.0.112.2   1.0.112.2
+   > System.Runtime                             4.3.1       4.3.1    
+   > xunit                                      2.4.1       2.4.1    
+   > xunit.runner.visualstudio                  2.4.1       2.4.1    
+   > Xunit.StaFact                              0.3.18      0.3.18   
+
+   Transitive Package                                 Resolved 
+   > Autofac                                          5.2.0    
+   > Automation                                       1.0.0    
+   > CalcPostProcessor                                1.0.0    
+   > CalculationController                            1.0.0    
+   > CalculationEngine                                1.0.0    
+   > Common                                           1.0.0    
+   > Common.Tests                                     1.0.0    
+   > Database                                         1.0.0    
+   > Database.Tests                                   1.0.0    
+   > EntityFramework                                  6.3.0    
+   > EPPlus                                           4.5.3.3  
+   > FluentAssertions                                 5.10.3   
+   > Microsoft.Bcl.AsyncInterfaces                    1.1.0    
+   > Microsoft.CodeAnalysis.VersionCheckAnalyzer      3.0.0    
+   > Microsoft.CodeQuality.Analyzers                  3.0.0    
+   > Microsoft.CSharp                                 4.7.0    
+   > Microsoft.NetCore.Analyzers                      3.0.0    
+   > Microsoft.NetFramework.Analyzers                 3.0.0    
+   > PowerArgs                                        3.6.0    
+   > SimulationEngineLib                              1.0.0    
+   > System.Buffers                                   4.5.1    
+   > System.Data.SQLite.Core                          1.0.112.2
+   > System.Data.SQLite.EF6                           1.0.112.2
+   > System.Data.SQLite.Linq                          1.0.112.2
+   > System.Linq.Dynamic.Core                         1.1.1    
+   > System.Memory                                    4.5.4    
+   > System.Numerics.Vectors                          4.5.0    
+   > System.Resources.Extensions                      4.7.1    
+   > System.Runtime.CompilerServices.Unsafe           4.5.3    
+   > System.Threading.Tasks.Extensions                4.5.2    
+   > System.Xml.XDocument                             4.3.0    
+   > xunit.abstractions                               2.0.3    
+   > xunit.analyzers                                  0.10.0   
+   > xunit.assert                                     2.4.1    
+   > xunit.core                                       2.4.1    
+   > xunit.extensibility.core                         2.4.1    
+   > xunit.extensibility.execution                    2.4.1    
+
+Project 'LoadProfileGenerator' has the following package references
+   [net48]: 
+   Top-level Package                            Requested   Resolved
+   > JetBrains.Annotations                      2020.1.0    2020.1.0
+   > Microsoft.CodeAnalysis.FxCopAnalyzers      3.0.0       3.0.0   
+   > NETStandard.Library                        2.0.3       2.0.3   
+   > Newtonsoft.Json                            12.0.3      12.0.3  
+   > NullCheckAnalyzer                          1.0.0.3     1.0.0.3 
+   > OxyPlot.Wpf                                2.0.0       2.0.0   
+   > Roslynator.Analyzers                       2.3.0       2.3.0   
+
+   Transitive Package                                 Resolved 
+   > Autofac                                          5.2.0    
+   > Automation                                       1.0.0    
+   > CalcPostProcessor                                1.0.0    
+   > CalculationController                            1.0.0    
+   > CalculationEngine                                1.0.0    
+   > ChartCreator2                                    1.0.0    
+   > ChartPDFCreator                                  1.0.0    
+   > Common                                           1.0.0    
+   > Database                                         1.0.0    
+   > EntityFramework                                  6.3.0    
+   > Microsoft.Bcl.AsyncInterfaces                    1.1.0    
+   > Microsoft.CodeAnalysis.VersionCheckAnalyzer      3.0.0    
+   > Microsoft.CodeQuality.Analyzers                  3.0.0    
+   > Microsoft.CSharp                                 4.7.0    
+   > Microsoft.NetCore.Analyzers                      3.0.0    
+   > Microsoft.NETCore.Platforms                      1.1.0    
+   > Microsoft.NetFramework.Analyzers                 3.0.0    
+   > OxyPlot.Core                                     2.0.0    
+   > OxyPlot.Pdf                                      2.0.0    
+   > PDFsharp-MigraDoc-gdi                            1.50.5147
+   > System.Buffers                                   4.5.1    
+   > System.Data.SQLite                               1.0.112.2
+   > System.Data.SQLite.Core                          1.0.112.2
+   > System.Data.SQLite.EF6                           1.0.112.2
+   > System.Data.SQLite.Linq                          1.0.112.2
+   > System.Linq.Dynamic.Core                         1.1.1    
+   > System.Memory                                    4.5.4    
+   > System.Numerics.Vectors                          4.5.0    
+   > System.Resources.Extensions                      4.7.1    
+   > System.Runtime                                   4.3.1    
+   > System.Runtime.CompilerServices.Unsafe           4.5.3    
+   > System.Threading.Tasks.Extensions                4.5.2    
+   > System.Xml.XDocument                             4.3.0    
+   > xunit.abstractions                               2.0.3    
+
+Project 'LoadProfileGenerator.Tests' has the following package references
+   [net48]: 
+   Top-level Package                            Requested   Resolved
+   > FluentAssertions.Analyzers                 0.11.4      0.11.4  
+   > JetBrains.Annotations                      2020.1.0    2020.1.0
+   > Microsoft.CodeAnalysis.FxCopAnalyzers      3.0.0       3.0.0   
+   > Newtonsoft.Json                            12.0.3      12.0.3  
+   > NullCheckAnalyzer                          1.0.0.3     1.0.0.3 
+   > Roslynator.Analyzers                       2.3.0       2.3.0   
+   > System.Runtime                             4.3.1       4.3.1   
+   > xunit                                      2.4.1       2.4.1   
+   > xunit.runner.visualstudio                  2.4.1       2.4.1   
+   > Xunit.StaFact                              0.3.18      0.3.18  
+
+   Transitive Package                                 Resolved 
+   > Autofac                                          5.2.0    
+   > Automation                                       1.0.0    
+   > CalcPostProcessor                                1.0.0    
+   > CalculationController                            1.0.0    
+   > CalculationEngine                                1.0.0    
+   > ChartCreator2                                    1.0.0    
+   > ChartPDFCreator                                  1.0.0    
+   > Common                                           1.0.0    
+   > Common.Tests                                     1.0.0    
+   > Database                                         1.0.0    
+   > Database.Tests                                   1.0.0    
+   > EntityFramework                                  6.3.0    
+   > EPPlus                                           4.5.3.3  
+   > FluentAssertions                                 5.10.3   
+   > LoadProfileGenerator                             1.0.0    
+   > Microsoft.Bcl.AsyncInterfaces                    1.1.0    
+   > Microsoft.CodeAnalysis.VersionCheckAnalyzer      3.0.0    
+   > Microsoft.CodeQuality.Analyzers                  3.0.0    
+   > Microsoft.CSharp                                 4.7.0    
+   > Microsoft.NetCore.Analyzers                      3.0.0    
+   > Microsoft.NETCore.Platforms                      1.1.0    
+   > Microsoft.NetFramework.Analyzers                 3.0.0    
+   > NETStandard.Library                              2.0.3    
+   > OxyPlot.Core                                     2.0.0    
+   > OxyPlot.Pdf                                      2.0.0    
+   > OxyPlot.Wpf                                      2.0.0    
+   > PDFsharp-MigraDoc-gdi                            1.50.5147
+   > System.Buffers                                   4.5.1    
+   > System.Data.SQLite                               1.0.112.2
+   > System.Data.SQLite.Core                          1.0.112.2
+   > System.Data.SQLite.EF6                           1.0.112.2
+   > System.Data.SQLite.Linq                          1.0.112.2
+   > System.Linq.Dynamic.Core                         1.1.1    
+   > System.Memory                                    4.5.4    
+   > System.Numerics.Vectors                          4.5.0    
+   > System.Resources.Extensions                      4.7.1    
+   > System.Runtime.CompilerServices.Unsafe           4.5.3    
+   > System.Threading.Tasks.Extensions                4.5.2    
+   > System.Xml.XDocument                             4.3.0    
+   > xunit.abstractions                               2.0.3    
+   > xunit.analyzers                                  0.10.0   
+   > xunit.assert                                     2.4.1    
+   > xunit.core                                       2.4.1    
+   > xunit.extensibility.core                         2.4.1    
+   > xunit.extensibility.execution                    2.4.1    
+
+Project 'ReleaseBuilder' has the following package references
+   [net48]: 
+   Top-level Package                            Requested   Resolved
+   > JetBrains.Annotations                      2020.1.0    2020.1.0
+   > Microsoft.CodeAnalysis.FxCopAnalyzers      3.0.0       3.0.0   
+   > Newtonsoft.Json                            12.0.3      12.0.3  
+   > NullCheckAnalyzer                          1.0.0.3     1.0.0.3 
+   > Roslynator.Analyzers                       2.3.0       2.3.0   
+   > sqlite                                     3.13.0      3.13.0  
+   > xunit                                      2.4.1       2.4.1   
+   > xunit.runner.visualstudio                  2.4.1       2.4.1   
+
+   Transitive Package                                 Resolved 
+   > Autofac                                          5.2.0    
+   > Automation                                       1.0.0    
+   > CalcPostProcessor                                1.0.0    
+   > CalculationController                            1.0.0    
+   > CalculationEngine                                1.0.0    
+   > ChartCreator2                                    1.0.0    
+   > ChartPDFCreator                                  1.0.0    
+   > Common                                           1.0.0    
+   > Common.Tests                                     1.0.0    
+   > Database                                         1.0.0    
+   > Database.Tests                                   1.0.0    
+   > EntityFramework                                  6.3.0    
+   > EPPlus                                           4.5.3.3  
+   > FluentAssertions                                 5.10.3   
+   > FluentAssertions.Analyzers                       0.11.4   
+   > LoadProfileGenerator                             1.0.0    
+   > Microsoft.Bcl.AsyncInterfaces                    1.1.0    
+   > Microsoft.CodeAnalysis.VersionCheckAnalyzer      3.0.0    
+   > Microsoft.CodeQuality.Analyzers                  3.0.0    
+   > Microsoft.CSharp                                 4.7.0    
+   > Microsoft.NetCore.Analyzers                      3.0.0    
+   > Microsoft.NETCore.Platforms                      1.1.0    
+   > Microsoft.NetFramework.Analyzers                 3.0.0    
+   > NETStandard.Library                              2.0.3    
+   > OxyPlot.Core                                     2.0.0    
+   > OxyPlot.Pdf                                      2.0.0    
+   > OxyPlot.Wpf                                      2.0.0    
+   > PDFsharp-MigraDoc-gdi                            1.50.5147
+   > PowerArgs                                        3.6.0    
+   > SimulationEngine                                 1.0.0    
+   > SimulationEngineLib                              1.0.0    
+   > System.Buffers                                   4.5.1    
+   > System.Data.SQLite                               1.0.112.2
+   > System.Data.SQLite.Core                          1.0.112.2
+   > System.Data.SQLite.EF6                           1.0.112.2
+   > System.Data.SQLite.Linq                          1.0.112.2
+   > System.Linq.Dynamic.Core                         1.1.1    
+   > System.Memory                                    4.5.4    
+   > System.Numerics.Vectors                          4.5.0    
+   > System.Resources.Extensions                      4.7.1    
+   > System.Runtime                                   4.3.1    
+   > System.Runtime.CompilerServices.Unsafe           4.5.3    
+   > System.Threading.Tasks.Extensions                4.5.2    
+   > System.Xml.XDocument                             4.3.0    
+   > xunit.abstractions                               2.0.3    
+   > xunit.analyzers                                  0.10.0   
+   > xunit.assert                                     2.4.1    
+   > xunit.core                                       2.4.1    
+   > xunit.extensibility.core                         2.4.1    
+   > xunit.extensibility.execution                    2.4.1    
+
+(A) : Auto-referenced package.

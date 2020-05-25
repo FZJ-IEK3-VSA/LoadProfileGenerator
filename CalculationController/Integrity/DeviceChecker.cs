@@ -70,6 +70,13 @@ namespace CalculationController.Integrity {
                                                 load.AverageYearlyConsumption);
                                             i = 0;
                                         }
+
+                                        if (mbr == LPGMsgBoxResult.No) {
+                                            List<BasicElement> elements = new List<BasicElement>();
+                                            elements.Add(action);
+                                            elements.Add(device);
+                                            throw new DataIntegrityException("Please fix.",elements);
+                                        }
                                     }
                                 }
                             }
@@ -210,6 +217,34 @@ namespace CalculationController.Integrity {
                 if (PerformCleanupChecks) {
                     ElectricityChecks(device);
                     CheckDeviceActionLoads(sim.DeviceActions.It, device);
+                }
+            }
+            if(PerformCleanupChecks){
+                List<RealDevice> devicesWithMissingLt = new List<RealDevice>();
+                foreach (var device in sim.RealDevices.It) {
+                    RealDeviceLoadType electricityLoad = null;
+                    RealDeviceLoadType innerLoad = null;
+                    foreach (var load in device.Loads) {
+                        if (load.LoadType?.Name == "Electricity") {
+                            electricityLoad = load;
+                        }
+
+                        if (load.LoadType?.Name?.Contains("Inner") == true) {
+                            innerLoad = load;
+                        }
+                    }
+
+                    if (electricityLoad != null && innerLoad == null) {
+                        devicesWithMissingLt.Add(device);
+                    }
+
+                    if (devicesWithMissingLt.Count > 10) {
+                        break;
+                    }
+                }
+
+                if (devicesWithMissingLt.Count > 0) {
+                    throw new DataIntegrityException("Found devices with electricity that don't have inner heat gains set.", devicesWithMissingLt.Select(x=>(BasicElement) x).ToList());
                 }
             }
         }

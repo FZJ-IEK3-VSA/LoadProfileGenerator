@@ -76,7 +76,7 @@ namespace Calculation.Tests {
             var cp = new CalcProfile("myCalcProfile", Guid.NewGuid().ToStrGuid(), timestepValues.ToList(), ProfileType.Absolute, "synthetic");
             var ts1 = new TimeStep(1, 0, true);
             CalcDeviceLoad cdl = new CalcDeviceLoad("",1,clt,0,0);
-            var sv = StepValues.MakeStepValues(cp,  1, RandomValueProfile.MakeStepValues(cp, NormalRandom, 0), cdl);
+            var sv = StepValues.MakeStepValues(cp,  1, RandomValueProfile.MakeStepValues(cp.StepValues.Count, NormalRandom, 0), cdl);
             odap.AddNewStateMachine(ts1, clt.ConvertToDto(),  "name1", "p1",  key, cdd, sv);
             double[] resultValues = { 0, 0, 5, 10.0, 20, 30, 40, 0 };
             //double[] resultValuesRow1 = {0, 0, 5, 10, 200, 3000, 4000, 0};
@@ -136,7 +136,7 @@ namespace Calculation.Tests {
             var cp = new CalcProfile("myCalcProfile", Guid.NewGuid().ToStrGuid(), tmplist, ProfileType.Absolute, "synthetic");
             var ts1 = new TimeStep(1, 0, true);
             var cdl = new CalcDeviceLoad("",1,clt,0,0);
-            var sv = StepValues.MakeStepValues(cp, 10, RandomValueProfile.MakeStepValues(cp, NormalRandom, 0), cdl);
+            var sv = StepValues.MakeStepValues(cp, 10, RandomValueProfile.MakeStepValues(cp.StepValues.Count, NormalRandom, 0), cdl);
             odap.AddNewStateMachine(ts1, clt.ConvertToDto(),
                 "name1", "p1", key, cdd, sv);
             double[] resultValues = {0, 10.0, 0, 0, 0, 0, 0, 0, 0, 0};

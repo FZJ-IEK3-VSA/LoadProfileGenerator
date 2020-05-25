@@ -207,5 +207,18 @@ namespace LoadProfileGenerator.Views.Households {
         private void UserControl_Loaded([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e) => Presenter
             .DeviceCategoryPickerPresenter
             .Select();
+
+        private void BtnAddInnerHeatLoad_Click(object sender, RoutedEventArgs e)
+        {
+            try {
+
+                Presenter.AddInnerHeatLoad();
+            }
+            catch (DataIntegrityException ex) {
+                MessageWindowHandler.Mw.ShowDataIntegrityMessage(ex);
+            }
+
+            
+        }
     }
 }

@@ -111,6 +111,9 @@ namespace LoadProfileGenerator.Views.Households {
             var reac =
                 da.Profiles.FirstOrDefault(x => x.VLoadType?.Name.ToUpperInvariant().Contains("REACTIVE") == true);
 
+            var inner =
+                da.Profiles.FirstOrDefault(x => x.VLoadType?.Name.ToUpperInvariant().StartsWith("INNER") == true);
+
             var placeholder = Presenter.Sim.Timeprofiles.FindFirstByName("placeholder", FindMode.Partial);
 
             // apparent
@@ -147,6 +150,22 @@ namespace LoadProfileGenerator.Views.Households {
                 }
                 else {
                     da.AddDeviceProfile(elec.Timeprofile, elec.TimeOffset, reacLoad, elec.Multiplier * 0.32);
+                }
+            }
+
+            // innner
+            var innerLoad = Presenter.Sim.LoadTypes.FindFirstByName("inner", FindMode.Partial);
+            if (innerLoad == null)
+            {
+                Logger.Error("Could not find the apparent load type. Please fix.");
+                return;
+            }
+
+            if (elec.Timeprofile != null)
+            {
+                if (inner == null)
+                {
+                    da.AddDeviceProfile(elec.Timeprofile, elec.TimeOffset, innerLoad, elec.Multiplier);
                 }
             }
         }

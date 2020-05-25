@@ -37,6 +37,7 @@ using System.Windows.Media;
 using Automation.ResultFiles;
 using Common;
 using Database;
+using Database.Helpers;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
 using JetBrains.Annotations;
@@ -216,6 +217,38 @@ namespace LoadProfileGenerator.Presenters.Households {
         {
             var u = ThisDevice.CalculateUsedIns(Sim);
             _usedIns.SynchronizeWithList(u);
+        }
+
+        public void AddInnerHeatLoad()
+        {
+            RealDeviceLoadType electricityLoad = null;
+            RealDeviceLoadType innerLoad = null;
+            RealDeviceLoadType water = null;
+            foreach (var load in ThisDevice.Loads) {
+                if (load.LoadType?.Name == "Electricity") {
+                    electricityLoad = load;
+                }
+
+                if (load.LoadType?.Name?.Contains("Inner") == true) {
+                    innerLoad = load;
+                }
+                if (load.LoadType?.Name?.ToLower().Contains("water") == true)
+                {
+                    water = load;
+                }
+            }
+
+            if (water != null) {
+                throw  new DataIntegrityException("Devices with water load can not be fixed automatically.");
+            }
+            if (electricityLoad != null && innerLoad == null) {
+                var innerloadtype = Simulator.LoadTypes.FindFirstByName("Inner", FindMode.StartsWith);
+                if (innerloadtype == null) {
+                    throw new LPGException("Could not find load type for inner heat gains");
+                }
+                ThisDevice.AddLoad(innerloadtype,electricityLoad.MaxPower,electricityLoad.StandardDeviation,
+                    0);
+            }
         }
     }
 }

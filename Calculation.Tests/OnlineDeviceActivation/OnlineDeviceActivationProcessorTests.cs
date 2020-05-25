@@ -245,7 +245,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                         var cp = new CalcProfile("myCalcProfile", Guid.NewGuid().ToStrGuid(), valueList, ProfileType.Absolute, "synthetic");
                         var ts1 = new TimeStep(1, 0, false);
                         var cdl = new CalcDeviceLoad("", 1, clt, 0, 0);
-                        var sv = StepValues.MakeStepValues(cp, 10, RandomValueProfile.MakeStepValues(cp, nr, 0), cdl);
+                        var sv = StepValues.MakeStepValues(cp, 10, RandomValueProfile.MakeStepValues(cp.StepValues.Count, nr, 0), cdl);
                         odap.AddNewStateMachine(ts1, clt.ConvertToDto(), "name1", "p1", key, cdd, sv);
                         double[] resultValues = {0, 10.0, 0, 0, 0, 0, 0, 0, 0, 0};
 

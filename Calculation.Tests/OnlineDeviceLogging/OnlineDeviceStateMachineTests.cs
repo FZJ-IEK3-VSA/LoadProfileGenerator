@@ -78,7 +78,7 @@ namespace Calculation.Tests.OnlineDeviceLogging {
             var cp = new CalcProfile("mycalcprofile", Guid.NewGuid().ToStrGuid(), valueList, ProfileType.Absolute, "bla");
             TimeStep ts = new TimeStep(5, 0, false);
             CalcDeviceLoad cdl = new CalcDeviceLoad("",1,clt,0,0);
-            StepValues sv = StepValues.MakeStepValues(cp, 1, RandomValueProfile.MakeStepValues(cp, nr, 0), cdl);
+            StepValues sv = StepValues.MakeStepValues(cp, 1, RandomValueProfile.MakeStepValues(cp.StepValues.Count, nr, 0), cdl);
             var odsm = new OnlineDeviceStateMachine(ts,  clt.ConvertToDto(), "device", key,"affordance",
                 calcParameters, sv);
             calcParameters.SetDummyTimeSteps(0);

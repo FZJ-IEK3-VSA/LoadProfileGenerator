@@ -229,6 +229,9 @@
                             <Button HorizontalAlignment="Left" Style="{StaticResource ButtonStyle}" Click="BtnFixToCosPhi095_Click">
                                 If electrical then set with cos-phi = 0.95
                             </Button>
+                            <Button HorizontalAlignment="Left" Style="{StaticResource ButtonStyle}" Click="BtnAddInnerHeatLoad_Click">
+                                Add Inner Heat Load
+                            </Button>
                         </StackPanel>
                         <Label Target="{Binding ElementName=LstLoads}" Content="Loads for this device" Grid.Row="7"
                                Style="{StaticResource LabelStyle}"  Grid.Column="0"

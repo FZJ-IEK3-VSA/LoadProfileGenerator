@@ -290,7 +290,7 @@ namespace CalculationEngine.Transportation {
                     //if (cp.DataSource != "Synthetic") {
                         //throw new LPGException("wrong data source");
                     //}
-                    var rsv = RandomValueProfile.MakeStepValues(cp, _calcRepo.NormalRandom, cdl.PowerStandardDeviation);
+                    var rsv = RandomValueProfile.MakeStepValues(cp.StepValues.Count, _calcRepo.NormalRandom, cdl.PowerStandardDeviation);
                     var sv = StepValues.MakeStepValues(cp,  1,rsv,cdl);
                     _calcRepo.Odap.AddNewStateMachine( currentTimeStep,
                          dstLoadType.ConvertToDto(),
@@ -413,7 +413,7 @@ namespace CalculationEngine.Transportation {
             //   var totalDuration = calcProfile.GetNewLengthAfterCompressExpand(timefactor);
             //OefcKey key = new OefcKey(_calcDeviceDto.HouseholdKey, OefcDeviceType.Transportation, Guid, "-1", cdl.LoadType.Guid, "Transportation");
             var key = _keysByLocGuidAndLoadtype[locationGuid][cdl.LoadType];
-            var rvp = RandomValueProfile.MakeStepValues(calcProfile, _calcRepo.NormalRandom, 0);
+            var rvp = RandomValueProfile.MakeStepValues(calcProfile.StepValues.Count, _calcRepo.NormalRandom, 0);
             var sv = StepValues.MakeStepValues(calcProfile,  1,rvp,cdl);
             _calcRepo.Odap.AddNewStateMachine(startidx,cdl.LoadType.ConvertToDto(), affordanceName, activatingPersonName,
                  key, _calcDeviceDto,sv);
