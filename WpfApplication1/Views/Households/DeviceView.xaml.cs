@@ -218,7 +218,6 @@ namespace LoadProfileGenerator.Views.Households {
                 MessageWindowHandler.Mw.ShowDataIntegrityMessage(ex);
             }
 
-            
         }
     }
 }
