@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using System.Diagnostics.CodeAnalysis;
+using Autofac;
 using CalcPostProcessor.GeneralHouseholdSteps;
 using CalcPostProcessor.GeneralSteps;
 using CalcPostProcessor.LoadTypeHouseholdSteps;
@@ -9,9 +10,11 @@ using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
 using Common.SQLResultLogging.Loggers;
+using JetBrains.Annotations;
 
 namespace CalcPostProcessor
 {
+    [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     public class PostProcessingManager
     {
         [JetBrains.Annotations.NotNull]
@@ -28,13 +31,26 @@ namespace CalcPostProcessor
         public void Run([JetBrains.Annotations.NotNull] string resultPath)
         {
             _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Post Processing");
+            var container = RegisterEverything(resultPath, _calculationProfiler, _fft);
+            using (var scope = container.BeginLifetimeScope())
+            {
+                Postprocessor ps = scope.Resolve<Postprocessor>();
+                ps.RunPostProcessing();
+            }
+            _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Post Processing");
+        }
+
+        [NotNull]
+        public static  IContainer RegisterEverything(string resultPath, [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler, [JetBrains.Annotations.CanBeNull] IFileFactoryAndTracker fft)
+        {
             var builder = new ContainerBuilder();
             builder.Register(_ => new SqlResultLoggingService(resultPath)).As<SqlResultLoggingService>().SingleInstance();
             //builder.Register(c =>_logFile).As<ILogFile>().SingleInstance();
-            builder.Register(_ => _calculationProfiler).As<ICalculationProfiler>().SingleInstance();
-            builder.Register(_ => _fft).As<FileFactoryAndTracker>().SingleInstance();
+            builder.Register(_ => calculationProfiler).As<ICalculationProfiler>().SingleInstance();
+            builder.Register(_ => fft).As<IFileFactoryAndTracker>().SingleInstance();
             builder.RegisterType<Postprocessor>().As<Postprocessor>().SingleInstance();
             builder.RegisterType<CalcDataRepository>().As<CalcDataRepository>().SingleInstance();
+            builder.RegisterType<OptionDependencyManager>().SingleInstance();
 
             //general processing steps
             builder.RegisterType<AffordanceTagsWriter>().As<IGeneralStep>().SingleInstance();
@@ -79,14 +95,8 @@ namespace CalcPostProcessor
             builder.RegisterType<TransportationDeviceStatisticsLogger>().As<IDataSaverBase>();
             builder.RegisterType<TransportationRouteStatisticsLogger>().As<IDataSaverBase>();
             builder.RegisterType<TransportationDeviceEventStatisticsLogger>().As<IDataSaverBase>();
-
-                        var container = builder.Build();
-            using (var scope = container.BeginLifetimeScope())
-            {
-                Postprocessor ps = scope.Resolve<Postprocessor>();
-                ps.RunPostProcessing();
-            }
-            _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Post Processing");
+            var container = builder.Build();
+            return container;
         }
     }
 }

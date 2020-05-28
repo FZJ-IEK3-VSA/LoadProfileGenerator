@@ -54,7 +54,10 @@ namespace Calculation.Tests.OnlineLogging {
                     var fft = new FileFactoryAndTracker(wd.WorkingDirectory, "testhh", wd.InputDataLogger);
                     fft.RegisterHousehold(new HouseholdKey("hh1"), "test key", HouseholdKeyType.Household, "desc", null, null);
                     fft.RegisterHousehold(Constants.GeneralHouseholdKey, "general key", HouseholdKeyType.General, "desc", null, null);
-                    fft.MakeFile<StreamWriter>("file1", "desc", true, ResultFileID.Actions, new HouseholdKey("hh1"), TargetDirectory.Charts, TimeSpan.FromMinutes(1), clt.ConvertToLoadTypeInformation(),
+                    fft.MakeFile<StreamWriter>("file1", "desc", true, ResultFileID.Actions,
+                        new HouseholdKey("hh1"), TargetDirectory.Charts, TimeSpan.FromMinutes(1),
+                        CalcOption.HouseholdContents,
+                        clt.ConvertToLoadTypeInformation(),
                         cp.MakePersonInformation());
                     //fft.ResultFileList.WriteResultEntries(wd.WorkingDirectory);
                     ResultFileEntryLogger rfel = new ResultFileEntryLogger(wd.SqlResultLoggingService);

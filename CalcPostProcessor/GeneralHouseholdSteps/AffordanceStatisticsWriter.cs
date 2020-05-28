@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Automation;
 using CalcPostProcessor.Steps;
@@ -6,9 +7,11 @@ using Common;
 using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.Loggers;
+using JetBrains.Annotations;
 
 namespace CalcPostProcessor.GeneralHouseholdSteps
 {
+    [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     public class AffordanceStatisticsWriter : HouseholdLoadTypeStepBase
     {
         //private int _maxTime;
@@ -240,5 +243,8 @@ namespace CalcPostProcessor.GeneralHouseholdSteps
             }
             _logger.Save(hsp.Key.HouseholdKey, energyUseEntries.Values.ToList());
         }
+
+        [NotNull]
+        public override List<CalcOption> NeededOptions => new List<CalcOption>();
     }
 }

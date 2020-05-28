@@ -1,4 +1,5 @@
-﻿using Automation.ResultFiles;
+﻿using Automation;
+using Automation.ResultFiles;
 
 namespace Common.SQLResultLogging.InputLoggers {
     using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace Common.SQLResultLogging.InputLoggers {
         [NotNull] private readonly SqlResultLoggingService _srls;
 
         public ColumnEntryLogger([NotNull] SqlResultLoggingService srls) :
-            base(typeof(List<ColumnEntry>), new ResultTableDefinition("ColumnEntry",ResultTableID.BinaryTempFileColumnDescriptions, "Description of the binary columns in the temporary result files"), srls) => _srls = srls;
+            base(typeof(List<ColumnEntry>), new ResultTableDefinition("ColumnEntry",ResultTableID.BinaryTempFileColumnDescriptions, "Description of the binary columns in the temporary result files", CalcOption.BasicOverview), srls) => _srls = srls;
 
         [ItemNotNull]
         [NotNull]

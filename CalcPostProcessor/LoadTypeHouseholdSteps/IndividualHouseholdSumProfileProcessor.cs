@@ -12,10 +12,10 @@ using JetBrains.Annotations;
 
 namespace CalcPostProcessor.LoadTypeHouseholdSteps {
     public class IndividualHouseholdSumProfileProcessor : HouseholdLoadTypeStepBase {
-        [NotNull] private readonly FileFactoryAndTracker _fft;
+        [NotNull] private readonly IFileFactoryAndTracker _fft;
 
         public IndividualHouseholdSumProfileProcessor([NotNull] CalcDataRepository repository,
-                                                      [NotNull] FileFactoryAndTracker fft,
+                                                      [NotNull] IFileFactoryAndTracker fft,
                                                       [NotNull] ICalculationProfiler calculationProfiler) : base(repository,
             AutomationUtili.GetOptionList(CalcOption.IndividualSumProfiles),
             calculationProfiler,
@@ -33,6 +33,9 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             var efc = Repository.ReadEnergyFileColumns(p.Key.HouseholdKey);
             RunIndividualHouseholds(p.LoadType, p.EnergyFileRows, efc, p.Key.HouseholdKey);
         }
+
+        [NotNull]
+        public override List<CalcOption> NeededOptions => new List<CalcOption>();
 
         private void RunIndividualHouseholds([NotNull] CalcLoadTypeDto dstLoadType,
                                              [NotNull] [ItemNotNull] List<OnlineEnergyFileRow> energyFileRows,
@@ -57,7 +60,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                     ResultFileID.SumProfileForHouseholds,
                     key,
                     TargetDirectory.Results,
-                    Repository.CalcParameters.InternalStepsize,
+                    Repository.CalcParameters.InternalStepsize,CalcOption.IndividualSumProfiles,
                     dstLoadType.ConvertToLoadTypeInformation());
                 sumfile.WriteLine(dstLoadType.Name + "." + dsc.GenerateDateStampHeader() + "Sum [" + dstLoadType.UnitOfSum + "]");
             }
@@ -69,7 +72,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                     ResultFileID.DeviceProfileForHouseholds,
                     key,
                     TargetDirectory.Results,
-                    Repository.CalcParameters.InternalStepsize,
+                    Repository.CalcParameters.InternalStepsize,CalcOption.DeviceProfiles,
                     dstLoadType.ConvertToLoadTypeInformation());
                 normalfile.WriteLine(dstLoadType.Name + "." + dsc.GenerateDateStampHeader() + efc.GetTotalHeaderString(dstLoadType, columns));
             }

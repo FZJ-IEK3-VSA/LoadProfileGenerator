@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using OxyPlot;
@@ -180,7 +181,7 @@ namespace ChartCreator2.OxyCharts {
                 count++;
                 plotModel1.Series.Add(columnSeries2);
             }
-            Save(plotModel1, plotName, rfe.FullFileName, Parameters.BaseDirectory);
+            Save(plotModel1, plotName, rfe.FullFileName, Parameters.BaseDirectory, CalcOption.HouseholdContents);
             Profiler.StopPart(Utili.GetCurrentMethodAndClass());
             return FileProcessingResult.ShouldCreateFiles;
         }

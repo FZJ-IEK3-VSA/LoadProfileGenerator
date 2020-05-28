@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using Automation;
 using Automation.ResultFiles;
 using Common.Enums;
 using Common.SQLResultLogging.Loggers;
@@ -27,7 +28,7 @@ namespace Common.SQLResultLogging.InputLoggers
             base(typeof(BodilyActivityLevelStatistics),
             new ResultTableDefinition("BodilyActivityLevelCount",
                 ResultTableID.BodilyActivityLevelCount,
-                "Json with the bodily activity level count per timestep per level"), srls)
+                "Json with the bodily activity level count per timestep per level", CalcOption.BodilyActivityStatistics), srls)
         {
         }
 

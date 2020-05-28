@@ -3,6 +3,7 @@
     public static class UnitTestCategories {
         public const string BasicTest = "BasicTest";
         public const string ManualOnly = "ManualOnly";
+        public const string LongTest8 = "LongTest8";
         public const string LongTest7 = "LongTest7";
         public const string LongTest6 = "LongTest6";
         public const string LongTest5 = "LongTest5";

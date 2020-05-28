@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using OxyPlot;
@@ -172,7 +173,7 @@ namespace ChartCreator2.OxyCharts {
                 }
                 plotModel1.Series.Add(columnSeries2);
             }
-            Save(plotModel1, plotName, rfe.FullFileName, basisPath);
+            Save(plotModel1, plotName, rfe.FullFileName, basisPath, CalcOption.TotalsPerDevice);
             Profiler.StopPart(Utili.GetCurrentMethodAndClass());
         }
     }

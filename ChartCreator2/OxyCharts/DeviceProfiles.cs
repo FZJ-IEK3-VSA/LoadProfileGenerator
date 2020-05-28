@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Common.JSON;
@@ -18,17 +19,19 @@ namespace ChartCreator2.OxyCharts {
     internal class DeviceProfiles : ChartBaseFileStep
     {
         [JetBrains.Annotations.NotNull] private readonly SqlResultLoggingService _srls;
+        private readonly CalcParameters _calcParameters;
 
         public DeviceProfiles([JetBrains.Annotations.NotNull] ChartCreationParameters parameters,
                               [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft,
                               [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler,
-                              [JetBrains.Annotations.NotNull] SqlResultLoggingService srls) : base(parameters, fft,
+                              [JetBrains.Annotations.NotNull] SqlResultLoggingService srls, CalcParameters calcParameters) : base(parameters, fft,
             calculationProfiler, new List<ResultFileID>() { ResultFileID.DeviceProfileCSV
             },
             "Device Profiles", FileProcessingResult.ShouldCreateFiles
         )
         {
             _srls = srls;
+            _calcParameters = calcParameters;
         }
 
         [UsedImplicitly]
@@ -75,7 +78,7 @@ namespace ChartCreator2.OxyCharts {
             var columns = new List<MyColumn>();
             for (var i = 0; i < headers.Count; i++) {
                 var header = headers[i];
-                columns.Add(new MyColumn(header, i, taggingSet, basisPath,FFT));
+                columns.Add(new MyColumn(header, i, taggingSet, basisPath,FFT,_calcParameters ));
             }
             foreach (var valueArr in day.Values) {
                 foreach (var column in columns) {
@@ -89,7 +92,7 @@ namespace ChartCreator2.OxyCharts {
             var tags = columns.Select(x => x.Tag).Distinct().ToList();
             var tagNumber = 0;
             foreach (var tag in tags) {
-                var myc = new MyColumn(tag, tagNumber++, null, basisPath,FFT);
+                var myc = new MyColumn(tag, tagNumber++, null, basisPath,FFT, _calcParameters);
                 newColumns.Add(myc);
             }
             for (var j = 0; j < columns[0].Values.Count; j++) {
@@ -180,7 +183,7 @@ namespace ChartCreator2.OxyCharts {
             }
             var thisname = fileName + "." + taggingSet.Name + "." + day.Day.Year + "." + day.Day.Month + "." +
                            day.Day.Day;
-            Save(plotModel1, plotName, thisname, basisPath, makePng: makePng);
+            Save(plotModel1, plotName, thisname, basisPath,CalcOption.DeviceProfiles,  makePng: makePng);
         }
 
         protected override FileProcessingResult MakeOnePlot(ResultFileEntry srcEntry)
@@ -323,7 +326,7 @@ namespace ChartCreator2.OxyCharts {
         private class MyColumn {
             [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
             public MyColumn([JetBrains.Annotations.NotNull] string name, int column, [CanBeNull] DeviceTaggingSetInformation taggingSet,
-                [JetBrains.Annotations.NotNull] DirectoryInfo basisPath, [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft)
+                [JetBrains.Annotations.NotNull] DirectoryInfo basisPath, [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft, CalcParameters parameters)
             {
                 Tag = "";
                 RawName = name;
@@ -339,12 +342,12 @@ namespace ChartCreator2.OxyCharts {
                         if (taggingSet == null) {
                             throw new LPGException("Tagging set was null");
                         }
-                        if (!taggingSet.TagByDeviceName.ContainsKey(device)) {
+                        if (parameters.IsSet(CalcOption.HouseholdContents) &&  !taggingSet.TagByDeviceName.ContainsKey(device)) {
                             var fileName = Path.Combine(basisPath.FullName, "missingCategories.txt");
                             if (!fft.CheckForFile(ResultFileID.MissingTags, Constants.GeneralHouseholdKey)) {
                                 fft.RegisterFile(fileName, "Devices that are missing device tags", false,
                                     ResultFileID.MissingTags,
-                                    Constants.GeneralHouseholdKey, TargetDirectory.Root);
+                                    Constants.GeneralHouseholdKey, TargetDirectory.Root,CalcOption.HouseholdContents);
                             }
                             taggingSet.TagByDeviceName.Add(device, "Other");
                             using (var sw = new StreamWriter(fileName, true)) {

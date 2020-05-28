@@ -33,6 +33,7 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                             <RowDefinition />
                         </Grid.RowDefinitions>
                         <TextBlock Grid.ColumnSpan="2"
@@ -130,6 +131,13 @@
                                   SelectedValue="{Binding ThisHouse.CreationType}"
                                   SelectedValuePath="Key"
                                   Style="{StaticResource ComboBoxStyle}" />
+                        <!--  Creation Type  -->
+                        
+                        <CheckBox Grid.Row="9"
+                                  Grid.Column="1"
+                                  Content="Enable transportation modelling for this house"
+                                  IsChecked="{Binding ThisHouse.TransportationEnabled}"
+                                  Style="{StaticResource CheckBoxStyle}" />
                     </Grid>
                 </Expander>
 

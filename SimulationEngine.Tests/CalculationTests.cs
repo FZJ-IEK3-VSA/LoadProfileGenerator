@@ -4,9 +4,10 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
+using Autofac;
 using Automation;
 using Automation.ResultFiles;
+using CalcPostProcessor;
 using Common;
 using Common.Enums;
 using Common.SQLResultLogging;
@@ -17,7 +18,7 @@ using Database.Helpers;
 using Database.Tables.Houses;
 using Database.Tables.ModularHouseholds;
 using Database.Tests;
-using SimulationEngineLib.SimZukunftProcessor;
+using SimulationEngineLib.HouseJobProcessor;
 using Xunit;
 using Xunit.Abstractions; //using iTextSharp.text.pdf;
 
@@ -45,7 +46,8 @@ namespace SimulationEngine.Tests {
             hj.CalcSpec.ExternalTimeResolution = "00:15:00";
             hj.House = new HouseData(StrGuid.FromString("houseguid"), "HT01", 1000, 100, "housename");
             hj.House.Households = new List<HouseholdData>();
-            var hhd = new HouseholdData("householdid", false, "householdname", null, null, null, null,
+            var hhd = new HouseholdData("householdid",
+                "householdname", null, null, null, null,
                 HouseholdDataSpecificationType.ByHouseholdName);
             var hh = sim.ModularHouseholds.FindFirstByName("CHR01", FindMode.StartsWith);
             hhd.HouseholdNameSpecification = new HouseholdNameSpecification(hh.GetJsonReference());
@@ -63,9 +65,33 @@ namespace SimulationEngine.Tests {
             hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.NoFiles;
             hj.CalcSpec.DeleteSqlite = false;
             hj.CalcSpec.ExternalTimeResolution = "00:15:00";
+            hj.CalcSpec.EnableTransportation = false;
             hj.House = new HouseData(StrGuid.FromString("houseguid"), "HT01", 1000, 100, "housename");
             hj.House.Households = new List<HouseholdData>();
-            var hhd = new HouseholdData("householdid", false, "householdname", null, null, null, null,
+            var hhd = new HouseholdData("householdid",
+                "householdname", null, null, null, null,
+                HouseholdDataSpecificationType.ByHouseholdName);
+            var hh = sim.ModularHouseholds.FindByGuid(guid.ToStrGuid());
+            hhd.HouseholdNameSpecification = new HouseholdNameSpecification(hh.GetJsonReference());
+            hj.House.Households.Add(hhd);
+            return hj;
+        }
+        public static HouseCreationAndCalculationJob PrepareNewHouseForHouseholdTestingWithTransport(Simulator sim, string guid)
+        {
+            var hj = new HouseCreationAndCalculationJob();
+            hj.CalcSpec = JsonCalcSpecification.MakeDefaultsForTesting();
+            hj.CalcSpec.StartDate = new DateTime(2020, 1, 1);
+            hj.CalcSpec.EndDate = new DateTime(2020, 1, 3);
+            hj.CalcSpec.DeleteDAT = false;
+            hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.NoFiles;
+            hj.CalcSpec.DeleteSqlite = false;
+            hj.CalcSpec.ExternalTimeResolution = "00:15:00";
+            hj.CalcSpec.EnableTransportation = true;
+            hj.House = new HouseData(StrGuid.FromString("houseguid"), "HT01", 1000, 100, "housename");
+            hj.House.Households = new List<HouseholdData>();
+            var hhd = new HouseholdData("householdid",
+                "householdname", sim.ChargingStationSets[0].GetJsonReference(),sim.TransportationDeviceSets[0].GetJsonReference(),
+                sim.TravelRouteSets[0].GetJsonReference(), null,
                 HouseholdDataSpecificationType.ByHouseholdName);
             var hh = sim.ModularHouseholds.FindByGuid(guid.ToStrGuid());
             hhd.HouseholdNameSpecification = new HouseholdNameSpecification(hh.GetJsonReference());
@@ -90,29 +116,70 @@ namespace SimulationEngine.Tests {
     [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     public class HouseJobTestHelper {
         // ReSharper disable once CollectionNeverUpdated.Local
-        private static readonly Dictionary<CalcOption, ResultList> _resultFileIdsByCalcOption = new Dictionary<CalcOption, ResultList>();
 
-        static HouseJobTestHelper()
-        {
-        }
 
         public static void CheckForResultfile(string wd, CalcOption option)
         {
             var srls = new SqlResultLoggingService(wd);
             var rfel = new ResultFileEntryLogger(srls);
             var rfes = rfel.Load();
-            var foundKeys = new List<string>();
+            var foundOptions = new List<CalcOption>();
             //collect all the file keys
 
             foreach (var rfe in rfes) {
                 if (!File.Exists(rfe.FullFileName)) {
                     throw new LPGException("File " + rfe.FullFileName + " was registered, but is not actually present.");
                 }
+                foundOptions.Add(rfe.EnablingCalcOption);
+            }
+            // ReSharper disable once CollectionNeverQueried.Local
+            List<ResultTableDefinition> allTables = new List<ResultTableDefinition>();
+            var hhKeyLogger = new HouseholdKeyLogger(srls);
+            var keys = hhKeyLogger.Load();
+            foreach (var key in keys) {
+                if (!srls.FilenameByHouseholdKey.ContainsKey(key.HouseholdKey)) {
+                    continue;
+                }
+                var fn = srls.FilenameByHouseholdKey[key.HouseholdKey];
+                if (!File.Exists(fn.Filename)) {
+                    continue;
+                }
+                var tables = srls.LoadTables(key.HouseholdKey);
+                allTables.AddRange(tables);
+                foreach (var table in tables)
+                {
+                    foundOptions.Add(table.EnablingOption);
 
-                var rfeKey = "ResultFileID." + rfe.ResultFileID;
-                foundKeys.Add(rfeKey);
+                }
             }
 
+            foundOptions = foundOptions.Distinct().ToList();
+            if (!foundOptions.Contains(option)) {
+                throw new LPGException("Option found that doesn't result in any files");
+            }
+            FileFactoryAndTrackerDummy fftd = new FileFactoryAndTrackerDummy();
+            CalculationProfiler cp = new CalculationProfiler();
+            var container = PostProcessingManager.RegisterEverything(wd, cp, fftd);
+            HashSet<CalcOption> enabledOptions = new HashSet<CalcOption>();
+            enabledOptions.Add(option);
+            using (var scope = container.BeginLifetimeScope())
+            {
+                var odm = scope.Resolve<OptionDependencyManager>();
+                odm.EnableRequiredOptions(enabledOptions);
+            }
+
+            foreach (var enabledOption in enabledOptions) {
+                foundOptions.Remove(enabledOption);
+            }
+
+            if (foundOptions.Contains(CalcOption.BasicOverview)) {
+                foundOptions.Remove(CalcOption.BasicOverview);
+            }
+
+            if (foundOptions.Count > 0) {
+                string s = string.Join("\n", foundOptions.Select(x => x.ToString()));
+                throw new LPGException("found stuff that was not requested:" + s);
+            }
             List<string> filesthatdontneedtoregister = new List<string>();
             filesthatdontneedtoregister.Add("finished.flag");
             filesthatdontneedtoregister.Add("log.commandlinecalculation.txt");
@@ -120,7 +187,11 @@ namespace SimulationEngine.Tests {
             filesthatdontneedtoregister.Add("results.general.sqlite-wal");
             filesthatdontneedtoregister.Add("results.general.sqlite-shm");
             filesthatdontneedtoregister.Add("results.hh1.sqlite");
+            filesthatdontneedtoregister.Add("results.hh1.sqlite-shm");
+            filesthatdontneedtoregister.Add("results.hh1.sqlite-wal");
             filesthatdontneedtoregister.Add("results.house.sqlite");
+            filesthatdontneedtoregister.Add("results.house.sqlite-shm");
+            filesthatdontneedtoregister.Add("results.house.sqlite-wal");
             filesthatdontneedtoregister.Add("calculationprofiler.json");
             //check if all files are registered
             DirectoryInfo di = new DirectoryInfo(wd);
@@ -136,59 +207,50 @@ namespace SimulationEngine.Tests {
             }
 
 
-            var hhKeyLogger = new HouseholdKeyLogger(srls);
-            var keys = hhKeyLogger.Load();
-            foreach (var key in keys) {
-                var tables = srls.LoadTables(key.HouseholdKey);
-                foreach (var table in tables) {
-                    var tblkey = key.KeyType + "???" + table.TableName;
-                    foundKeys.Add(tblkey);
-                }
-            }
 
-            foundKeys = foundKeys.Distinct().ToList();
-            if (_resultFileIdsByCalcOption.ContainsKey(option)) {
-                var rl = _resultFileIdsByCalcOption[option];
-                foreach (var key in rl.ResultKeys) {
-                    if (!foundKeys.Contains(key)) {
-                        throw new LPGException("in the found keys the file " + key + " is missing.");
-                    }
-                }
+            //foundKeys = foundKeys.Distinct().ToList();
+            //if (_resultFileIdsByCalcOption.ContainsKey(option)) {
+            //    var rl = _resultFileIdsByCalcOption[option];
+            //    foreach (var key in rl.ResultKeys) {
+            //        if (!foundKeys.Contains(key)) {
+            //            throw new LPGException("in the found keys the file " + key + " is missing.");
+            //        }
+            //    }
 
-                foreach (var key in foundKeys) {
-                    if (!rl.ResultKeys.Contains(key)) {
-                        throw new LPGException("in the result list keys the file " + key + " is missing.");
-                    }
-                }
-            }
+            //    foreach (var key in foundKeys) {
+            //        if (!rl.ResultKeys.Contains(key)) {
+            //            throw new LPGException("in the result list keys the file " + key + " is missing.");
+            //        }
+            //    }
+            //}
 
-            else {
-                //todo: this needs to be done differently. need to disable as much as possible except the given calc option first.
-                var sb = new StringBuilder();
-                sb.Append("--------------");
-                sb.AppendLine();
-                sb.Append("_resultFileIdsByCalcOption.Add(CalcOption." + option + ",  ResultList.Make(CalcOption.");
-                sb.Append(option).Append(", ");
-                foreach (var key in foundKeys) {
-                    sb.AppendLine();
-                    sb.Append("\"").Append(key).Append("\", ");
-                }
+            //else {
+            //    //todo: this needs to be done differently. need to disable as much as possible except the given calc option first.
+            //    var sb = new StringBuilder();
+            //    sb.Append("--------------");
+            //    sb.AppendLine();
+            //    sb.Append("_resultFileIdsByCalcOption.Add(CalcOption." + option + ",  ResultList.Make(CalcOption.");
+            //    sb.Append(option).Append(", ");
+            //    foreach (var key in foundKeys) {
+            //        sb.AppendLine();
+            //        sb.Append("\"").Append(key).Append("\", ");
+            //    }
 
-                sb.Remove(sb.Length - 2, 2);
-                sb.Append("));");
-                sb.AppendLine();
-                sb.Append("--------------");
-                Logger.Info(sb.ToString());
-                //throw new LPGException(sb.ToString());
-            }
+            //    sb.Remove(sb.Length - 2, 2);
+            //    sb.Append("));");
+            //    sb.AppendLine();
+            //    sb.Append("--------------");
+            //    Logger.Info(sb.ToString());
+            //    //throw new LPGException(sb.ToString());
+            //}
         }
 
         public static void RunSingleHouse(Func<Simulator, HouseCreationAndCalculationJob> makeHj, Action<string> checkResults)
         {
             Logger.Get().StartCollectingAllMessages();
             Logger.Threshold = Severity.Debug;
-            using (var wd = new WorkingDir(Utili.GetCurrentMethodAndClass())) {
-                using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass())) {
+            using (var wd = new WorkingDir(Utili.GetCallingMethodAndClass())) {
+                using (var db = new DatabaseSetup(Utili.GetCallingMethodAndClass())) {
                     wd.SkipCleaning = true;
                     var targetdb = wd.Combine("profilegenerator.db3");
                     File.Copy(db.FileName, targetdb, true);
@@ -361,12 +423,68 @@ namespace SimulationEngine.Tests {
         }
 
         [Fact]
+        public void CheckForCarElectrictyFiles()
+        {
+            HouseCreationAndCalculationJob PrepareHousejob(Simulator sim)
+            {
+                var hj = new HouseCreationAndCalculationJob();
+                hj.CalcSpec = JsonCalcSpecification.MakeDefaultsForTesting();
+                hj.CalcSpec.StartDate = new DateTime(2020, 1, 1);
+                hj.CalcSpec.EndDate = new DateTime(2020, 1, 3);
+                hj.CalcSpec.DeleteDAT = false;
+                hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
+                hj.CalcSpec.DeleteSqlite = false;
+                hj.CalcSpec.ExternalTimeResolution = "00:15:00";
+                hj.CalcSpec.EnableTransportation = true;
+                if(hj.CalcSpec.CalcOptions==null){throw new LPGException("calcoptions was null");}
+                hj.CalcSpec.CalcOptions.Add(CalcOption.TotalsPerLoadtype);
+                hj.House = new HouseData(StrGuid.FromString("houseguid"), "HT01", 1000, 100, "housename");
+                hj.House.Households = new List<HouseholdData>();
+                var chargingstationSet = sim.ChargingStationSets.FindFirstByName("car electricity", FindMode.Partial);
+                var hhd = new HouseholdData("householdid", "householdname", chargingstationSet.GetJsonReference(),
+                    sim.TransportationDeviceSets[0].GetJsonReference(),sim.TravelRouteSets[0].GetJsonReference(), null,
+                    HouseholdDataSpecificationType.ByHouseholdName);
+                var hh = sim.ModularHouseholds.FindFirstByName("CHR01", FindMode.StartsWith);
+                hhd.HouseholdNameSpecification = new HouseholdNameSpecification(hh.GetJsonReference());
+                hj.House.Households.Add(hhd);
+                return hj;
+            }
+
+            void CheckForResultfile(string wd)
+            {
+                SqlResultLoggingService srls = new SqlResultLoggingService(wd);
+                var rfel = new  ResultFileEntryLogger(srls);
+                var rfes = rfel.Load();
+                bool foundcar = false;
+                foreach (var entry in rfes) {
+                    if (entry.LoadTypeInformation?.Name == null) {
+                        continue;
+                    }
+                    if (entry.LoadTypeInformation.Name.Contains("Car Charging Electricity")) {
+                        foundcar = true;
+                    }
+                }
+
+                if (!foundcar) {
+                    throw new LPGException("No car electricity found");
+                }
+                Logger.Info(wd);
+            }
+
+            HouseJobTestHelper.RunSingleHouse(sim => {
+                var hj = PrepareHousejob(sim);
+                return hj;
+            }, x => CheckForResultfile(x));
+        }
+
+        [Fact]
         public void TestHouseJobs1()
         {
             const CalcOption co = CalcOption.ActivationFrequencies;
             HouseJobTestHelper.RunSingleHouse(sim => {
                 var hj = HouseJobCalcPreparer.PrepareNewHouseForOutputFileTesting(sim);
-                if (hj.CalcSpec?.CalcOptions == null) {
+                if (hj.CalcSpec?.CalcOptions == null)
+                {
                     throw new LPGException();
                 }
 
@@ -401,6 +519,23 @@ namespace SimulationEngine.Tests {
             sw.WriteLine("}");
             sw.WriteLine("");
         }
+
+        private static void WriteHouseholdTestFunctionWithTransport(StreamWriter sw, ModularHousehold hh, int idx)
+        {
+            sw.WriteLine("");
+            sw.WriteLine("[Fact]");
+            sw.WriteLine("[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest8)]");
+
+            sw.WriteLine("public void TestHouseholdTest" + idx + "(){");
+            sw.WriteLine("      const string hhguid = \"" + hh.Guid.StrVal + "\";");
+            sw.WriteLine("      HouseJobTestHelper.RunSingleHouse(sim => {");
+            sw.WriteLine("      var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim,hhguid);");
+            sw.WriteLine("      if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }");
+            sw.WriteLine("      hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;");
+            sw.WriteLine("return hj; }, x => {});");
+            sw.WriteLine("}");
+            sw.WriteLine("");
+        }
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.ManualOnly)]
         public void GenerateHouseholdTests()
@@ -424,11 +559,40 @@ namespace SimulationEngine.Tests {
 
             }
 
-
             sw.WriteLine(
                     "public SystematicHouseholdTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper) { }");
                 sw.WriteLine("}}");
                 sw.Close();
+        }
+
+        [Fact]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.ManualOnly)]
+        public void GenerateHouseholdTestsWithTransport()
+        {
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
+            Simulator sim = new Simulator(db.ConnectionString);
+            var sw = new StreamWriter(@"C:\Work\LPGDev\SimulationEngine.Tests\SystematicTransportHouseholdTests.cs");
+            sw.WriteLine("using Automation;");
+            sw.WriteLine("using Automation.ResultFiles;");
+            sw.WriteLine("using Xunit;");
+            sw.WriteLine("using Common.Tests;");
+            sw.WriteLine("using Xunit.Abstractions;");
+            sw.WriteLine("using JetBrains.Annotations;");
+            sw.WriteLine("#pragma warning disable 8602");
+            sw.WriteLine("namespace SimulationEngine.Tests {");
+            sw.WriteLine("public class SystematicTransportHouseholdTests :UnitTestBaseClass {");
+            var householdsToTest = sim.ModularHouseholds.It.Where(x => x.CreationType == CreationType.ManuallyCreated).ToList();
+            int idx = 0;
+            foreach (var household in householdsToTest)
+            {
+                WriteHouseholdTestFunctionWithTransport(sw, household, idx++);
+
+            }
+
+            sw.WriteLine(
+                "public SystematicTransportHouseholdTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper) { }");
+            sw.WriteLine("}}");
+            sw.Close();
         }
     }
 }

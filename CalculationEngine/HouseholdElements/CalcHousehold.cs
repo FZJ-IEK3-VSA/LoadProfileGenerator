@@ -182,7 +182,7 @@ namespace CalculationEngine.HouseholdElements {
             using (var swPerson =
                 _calcRepo.FileFactoryAndTracker.MakeFile<StreamWriter>("Persons." + _householdKey + ".txt",
                     "Overview of the persons", true, ResultFileID.PersonFile, _householdKey, TargetDirectory.Root,
-                    _calcRepo.CalcParameters.InternalStepsize)) {
+                    _calcRepo.CalcParameters.InternalStepsize, CalcOption.HouseholdContents)) {
                 foreach (var calcPerson in _persons) {
                     swPerson.WriteLine(calcPerson.PrettyName);
                 }
@@ -191,7 +191,7 @@ namespace CalculationEngine.HouseholdElements {
             using (var swAff =
                 _calcRepo.FileFactoryAndTracker.MakeFile<StreamWriter>("AffordanceDefinition." + _householdKey + ".txt",
                     "Definition of the Affordances", false, ResultFileID.AffordanceDefinition, _householdKey,
-                    TargetDirectory.Root, _calcRepo.CalcParameters.InternalStepsize)) {
+                    TargetDirectory.Root, _calcRepo.CalcParameters.InternalStepsize, CalcOption.HouseholdContents)) {
                 foreach (var calcLocation in Locations) {
                     swAff.WriteLine(calcLocation.Name + ":");
                     foreach (var affordance in calcLocation.Affordances) {
@@ -212,7 +212,7 @@ namespace CalculationEngine.HouseholdElements {
             using (var sw = _calcRepo.FileFactoryAndTracker.MakeFile<StreamWriter>(
                 "HouseholdContents." + _householdKey + "."  + ".txt",
                 "List of persons, locations, devices and affordances in this household", true, ResultFileID.HouseholdContentsDump,
-                _householdKey, TargetDirectory.Root,  _calcRepo.CalcParameters.InternalStepsize)) {
+                _householdKey, TargetDirectory.Root,  _calcRepo.CalcParameters.InternalStepsize, CalcOption.HouseholdContents)) {
                 sw.WriteLine("Name:" + _name);
                 sw.WriteLine("Location:" + _locationname);
                 sw.WriteLine("Temperatureprofile:" + _temperatureprofileName);
@@ -630,7 +630,7 @@ namespace CalculationEngine.HouseholdElements {
             var swTime = _calcRepo.FileFactoryAndTracker.MakeFile<StreamWriter>(
                 "TimeProfiles." + _householdKey + "."  + ".txt",
                 "List of time profiles used in this household", true, ResultFileID.DumpTime, _householdKey,
-                TargetDirectory.Debugging, _calcRepo.CalcParameters.InternalStepsize);
+                TargetDirectory.Debugging, _calcRepo.CalcParameters.InternalStepsize, CalcOption.TimeProfileFile);
             var c = _calcRepo.CalcParameters.CSVCharacter;
             swTime.WriteLine("Device" + c + "Load Type" + c + "Profile" + c + "Number of Activations");
             if (_calcRepo.Odap == null) {

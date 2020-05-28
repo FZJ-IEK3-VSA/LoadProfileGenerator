@@ -13,8 +13,7 @@ using Database;
 using Database.Helpers;
 using Database.Tests;
 using Newtonsoft.Json;
-
-using SimulationEngineLib.SimZukunftProcessor;
+using SimulationEngineLib.HouseJobProcessor;
 using Xunit;
 using Xunit.Abstractions;
 using Formatting = Newtonsoft.Json.Formatting;
@@ -66,7 +65,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
                     var work = new TransportationDistanceModifier("Work", "Car", 0);
                     var entertainment = new TransportationDistanceModifier("Entertainment", "Car", 12000);
                     List<TransportationDistanceModifier> tdm = new List<TransportationDistanceModifier>() { work, entertainment };
-                    var householdData = new HouseholdData(Guid.NewGuid().ToString(), true,
+                    var householdData = new HouseholdData(Guid.NewGuid().ToString(),
                         "blub", chargingStationSet, transportationDeviceSet,
                         travelRouteSet, tdm, HouseholdDataSpecificationType.ByPersons);
                     houseData.Households.Add(householdData);
@@ -96,7 +95,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
                     //housedata
                     HouseData houseData = new HouseData(Guid.NewGuid().ToStrGuid(),
                         "HT01", 10000, 1000, "HouseGeneratorJobHouse");
-                    var householdData = new HouseholdData(Guid.NewGuid().ToString(), false,
+                    var householdData = new HouseholdData(Guid.NewGuid().ToString(),
                         "blub", null, null, null,
                         null, HouseholdDataSpecificationType.ByPersons);
                     houseData.Households.Add(householdData);
@@ -128,7 +127,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
                     //housedata
                     HouseData houseData = new HouseData(Guid.NewGuid().ToStrGuid(),
                         "HT01", 10000, 1000, "HouseGeneratorJobHouse");
-                    var householdData = new HouseholdData(Guid.NewGuid().ToString(), false,
+                    var householdData = new HouseholdData(Guid.NewGuid().ToString(),
                         "blub", null, null, null, null,
                         HouseholdDataSpecificationType.ByTemplateName);
                     houseData.Households.Add(householdData);
@@ -160,7 +159,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
                     HouseCreationAndCalculationJob houseJob = new HouseCreationAndCalculationJob(
                         "present", "2019", "trafokreis", HouseDefinitionType.HouseData);
                     houseJob.House = houseData;
-                    var householdData = new HouseholdData(Guid.NewGuid().ToString(), false,
+                    var householdData = new HouseholdData(Guid.NewGuid().ToString(),
                         "blub", null, null, null, null, HouseholdDataSpecificationType.ByPersons);
                     houseData.Households.Add(householdData);
                     var persons = new List<PersonData>() {
@@ -285,7 +284,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
                     //housedata
                     HouseData houseData = new HouseData(Guid.NewGuid().ToStrGuid(),
                         "HT01", 10000, 1000, "HouseGeneratorJobHouse");
-                    var householdData = new HouseholdData(Guid.NewGuid().ToString(), false,
+                    var householdData = new HouseholdData(Guid.NewGuid().ToString(),
                         "blub", null, null, null, null,
                         HouseholdDataSpecificationType.ByHouseholdName);
                     houseData.Households.Add(householdData);

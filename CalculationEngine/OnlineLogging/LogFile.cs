@@ -250,7 +250,7 @@ namespace CalculationEngine.OnlineLogging {
 
         public void FinalSaveToDatabase()
         {
-            if (_actionEntries.Count > 0) {
+            if (_actionEntries.Count > 0 && _calcParameters.Options.Contains(CalcOption.ActionEntries)) {
                 _idl.SaveList(_actionEntries.ConvertAll(x => (IHouseholdKey)x));
                 _actionEntries.Clear();
             }
@@ -265,7 +265,7 @@ namespace CalculationEngine.OnlineLogging {
                 _columnEntries.Clear();
             }
 
-            if (_locationEntries.Count > 0) {
+            if (_locationEntries.Count > 0 && _calcParameters.Options.Contains(CalcOption.LocationsEntries)) {
                 _idl.SaveList(_locationEntries.ConvertAll(x => (IHouseholdKey)x));
                 _locationEntries.Clear();
             }

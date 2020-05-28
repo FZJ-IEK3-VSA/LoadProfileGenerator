@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using OxyPlot;
@@ -92,7 +93,7 @@ namespace ChartCreator2.OxyCharts {
                 }
 
                 plotModel1.Series.Add(pieSeries1);
-                Save(plotModel1, plotName, srcResultFileEntry.FullFileName + "." + personname, Parameters.BaseDirectory);
+                Save(plotModel1, plotName, srcResultFileEntry.FullFileName + "." + personname, Parameters.BaseDirectory, CalcOption.ActivationFrequencies);
             }
             Profiler.StopPart(Utili.GetCurrentMethodAndClass());
             return FileProcessingResult.ShouldCreateFiles;

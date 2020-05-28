@@ -44,17 +44,14 @@ namespace CalcPostProcessor.LoadTypeProcessingSteps {
     internal class WeekdayLoadProfileMaker : LoadTypeStepBase
     {
         [NotNull]
-        private readonly CalcParameters _calcParameters;
-        [NotNull]
-        private readonly FileFactoryAndTracker _fft;
+        private readonly IFileFactoryAndTracker _fft;
 
         public WeekdayLoadProfileMaker(
-                                       [NotNull] FileFactoryAndTracker fft,
+                                       [NotNull] IFileFactoryAndTracker fft,
                                        [NotNull] CalcDataRepository repository,
                                        [NotNull] ICalculationProfiler profiler
                                        ):base(repository, AutomationUtili.GetOptionList(CalcOption.WeekdayProfiles),profiler,"Weekday Profiles")
         {
-            _calcParameters = Repository.CalcParameters;
             _fft = fft;
         }
 
@@ -105,15 +102,17 @@ namespace CalcPostProcessor.LoadTypeProcessingSteps {
         }
 
         [NotNull]
-        private  string MakeWriteableString(int timestep) {
+        private  string MakeWriteableString(int timestep)
+        {
+            var calcParameters = Repository.CalcParameters;
             var sb = new StringBuilder();
             sb.Append(timestep);
-            sb.Append(_calcParameters.CSVCharacter);
-            var ts = new TimeSpan(timestep * _calcParameters.InternalStepsize.Ticks);
+            sb.Append(calcParameters.CSVCharacter);
+            var ts = new TimeSpan(timestep * calcParameters.InternalStepsize.Ticks);
             sb.Append(ts.ToString(@"hh\:mm\:ss", Config.CultureInfo));
-            sb.Append(_calcParameters.CSVCharacter + "'");
+            sb.Append(calcParameters.CSVCharacter + "'");
             sb.Append(ts.ToString(@"hh\:mm\:ss", Config.CultureInfo));
-            sb.Append(_calcParameters.CSVCharacter);
+            sb.Append(calcParameters.CSVCharacter);
             return sb.ToString();
         }
 
@@ -122,8 +121,9 @@ namespace CalcPostProcessor.LoadTypeProcessingSteps {
             [NotNull] Dictionary<int, Dictionary<int, Dictionary<int, double>>> dailyValuesbyMonth,
             [NotNull] Dictionary<int, Dictionary<int, double>> dailyValuesbySeason, [NotNull] Dictionary<DayOfWeek, int> dayCount,
             [NotNull] Dictionary<int, int> seasonDayCount) {
-            var curTime = _calcParameters.OfficialStartTime;
-            var curDate = _calcParameters.OfficialStartTime;
+            var calcParameters = Repository.CalcParameters;
+            var curTime = calcParameters.OfficialStartTime;
+            var curDate = calcParameters.OfficialStartTime;
             dayCount.Add(curTime.DayOfWeek, 1);
             if (!seasonDayCount.ContainsKey(GetSeasonID(curTime.Month, (int) curTime.DayOfWeek))) {
                 seasonDayCount.Add(GetSeasonID(curTime.Month, (int) curTime.DayOfWeek), 0);
@@ -133,7 +133,7 @@ namespace CalcPostProcessor.LoadTypeProcessingSteps {
             foreach (var efr in energyFileRows) {
                 var day = (int) curTime.DayOfWeek;
                 var timestep = (int) ((curTime - curDate).TotalSeconds /
-                                      _calcParameters.InternalStepsize.TotalSeconds);
+                                      calcParameters.InternalStepsize.TotalSeconds);
                 if (!dailyValues.ContainsKey(day)) {
                     dailyValues.Add(day, new Dictionary<int, double>());
                 }
@@ -160,7 +160,7 @@ namespace CalcPostProcessor.LoadTypeProcessingSteps {
                     dailyValuesbySeason[GetSeasonID(curTime.Month, day)].Add(timestep, 0);
                 }
                 dailyValuesbySeason[GetSeasonID(curTime.Month, day)][timestep] += sum;
-                curTime += _calcParameters.InternalStepsize;
+                curTime += calcParameters.InternalStepsize;
 
                 if (curDate.Day != curTime.Day) {
                     if (!seasonDayCount.ContainsKey(GetSeasonID(curDate.Month, day))) {
@@ -177,7 +177,8 @@ namespace CalcPostProcessor.LoadTypeProcessingSteps {
         }
 
         private  void Run([NotNull] CalcLoadTypeDto dstLoadType, [NotNull][ItemNotNull] List<OnlineEnergyFileRow> energyFileRows,
-            [NotNull] FileFactoryAndTracker fft) {
+            [NotNull] IFileFactoryAndTracker fft) {
+            var calcParameters = Repository.CalcParameters;
             var dailyValues = new Dictionary<int, Dictionary<int, double>>();
             var dailyValuesbyMonth =
                 new Dictionary<int, Dictionary<int, Dictionary<int, double>>>();
@@ -192,7 +193,7 @@ namespace CalcPostProcessor.LoadTypeProcessingSteps {
             var resultfile = fft.MakeFile<StreamWriter>("WeekdayProfiles." + dstLoadType.Name + ".csv",
                 "Averaged profiles for each weekday for " + dstLoadType.Name, true,
                 ResultFileID.WeekdayLoadProfileID, Constants.GeneralHouseholdKey, TargetDirectory.Reports,
-                _calcParameters.InternalStepsize,
+                calcParameters.InternalStepsize,CalcOption.WeekdayProfiles,
                 dstLoadType.ConvertToLoadTypeInformation());
             var valuecount = WriteNormalPart(dstLoadType, resultfile, dailyValues, dayCount);
             WriteByMonth(resultfile, dailyValuesbyMonth, valuecount);
@@ -203,30 +204,31 @@ namespace CalcPostProcessor.LoadTypeProcessingSteps {
 
         private  void WriteByMonth([NotNull] StreamWriter resultfile,
             [NotNull] Dictionary<int, Dictionary<int, Dictionary<int, double>>> dailyValuesbyMonth, int valuecount) {
+            var calcParameters = Repository.CalcParameters;
             resultfile.WriteLine();
             resultfile.WriteLine("---------------------------------------");
             resultfile.WriteLine("By Month");
             resultfile.WriteLine("---------------------------------------");
             resultfile.WriteLine();
-            var header = "Time" + _calcParameters.CSVCharacter;
+            var header = "Time" + calcParameters.CSVCharacter;
             foreach (var keyValuePair in dailyValuesbyMonth) {
                 var month = keyValuePair.Key;
                 var dailydict = keyValuePair.Value;
                 foreach (var valuePair in dailydict) {
                     var weekday = valuePair.Key;
                     var wd = (DayOfWeek) weekday;
-                    header += "Month " + month + ", weekday" + wd + _calcParameters.CSVCharacter;
+                    header += "Month " + month + ", weekday" + wd + calcParameters.CSVCharacter;
                 }
             }
             resultfile.WriteLine(header);
 
             for (var i = 0; i < valuecount; i++) {
-                var line = i + _calcParameters.CSVCharacter;
+                var line = i + calcParameters.CSVCharacter;
                 foreach (var keyValuePair in dailyValuesbyMonth) {
                     var dailydict = keyValuePair.Value;
                     foreach (var valuePair in dailydict) {
                         var minutedict = valuePair.Value;
-                        line += minutedict[i] + _calcParameters.CSVCharacter;
+                        line += minutedict[i] + calcParameters.CSVCharacter;
                     }
                 }
                 resultfile.WriteLine(line);
@@ -235,28 +237,29 @@ namespace CalcPostProcessor.LoadTypeProcessingSteps {
 
         private  void WriteBySeason([NotNull] StreamWriter resultfile, int valuecount,
             [NotNull] Dictionary<int, Dictionary<int, double>> dailyValuesbySeason, [NotNull] Dictionary<int, int> seasonDayCount) {
+            var calcParameters = Repository.CalcParameters;
             resultfile.WriteLine();
             resultfile.WriteLine("---------------------------------------");
             resultfile.WriteLine("By Season");
             resultfile.WriteLine("---------------------------------------");
             resultfile.WriteLine();
-            var header = "Time" + _calcParameters.CSVCharacter;
+            var header = "Time" + calcParameters.CSVCharacter;
 
             int[] allseasons = {0, 1, 2, 10, 11, 12, 20, 21, 22};
             foreach (var season in allseasons) {
-                header += GetHeaderForSeasonKey(season) + _calcParameters.CSVCharacter;
+                header += GetHeaderForSeasonKey(season) + calcParameters.CSVCharacter;
             }
             resultfile.WriteLine(header);
 
             for (var i = 0; i < valuecount; i++) {
-                var line = i + _calcParameters.CSVCharacter;
+                var line = i + calcParameters.CSVCharacter;
                 foreach (var season in allseasons) {
                     if (dailyValuesbySeason.ContainsKey(season)) {
                         line += dailyValuesbySeason[season][i] / seasonDayCount[season] +
-                                _calcParameters.CSVCharacter;
+                                calcParameters.CSVCharacter;
                     }
                     else {
-                        line += "0" + _calcParameters.CSVCharacter;
+                        line += "0" + calcParameters.CSVCharacter;
                     }
                 }
                 resultfile.WriteLine(line);
@@ -265,13 +268,14 @@ namespace CalcPostProcessor.LoadTypeProcessingSteps {
 
         private  int WriteNormalPart([NotNull] CalcLoadTypeDto dstLoadType, [NotNull] StreamWriter resultfile,
             [NotNull] Dictionary<int, Dictionary<int, double>> dailyValues, [NotNull] Dictionary<DayOfWeek, int> dayCount) {
+            var calcParameters = Repository.CalcParameters;
             var headerdays = string.Empty;
             foreach (DayOfWeek day in Enum.GetValues(typeof(DayOfWeek))) {
                 headerdays += day.ToString();
-                headerdays += _calcParameters.CSVCharacter;
+                headerdays += calcParameters.CSVCharacter;
             }
             resultfile.WriteLine(dstLoadType.Name + ".Time;Calender;Calender for Excel" +
-                                 _calcParameters.CSVCharacter + headerdays);
+                                 calcParameters.CSVCharacter + headerdays);
 
             var valuecount = dailyValues.Values.First().Count;
             for (var i = 0; i < valuecount; i++) {
@@ -282,10 +286,10 @@ namespace CalcPostProcessor.LoadTypeProcessingSteps {
                         value = dailyValues[(int) day][i];
                     }
                     if (dayCount.ContainsKey(day)) {
-                        time += value / dayCount[day] + _calcParameters.CSVCharacter;
+                        time += value / dayCount[day] + calcParameters.CSVCharacter;
                     }
                     else {
-                        time += _calcParameters.CSVCharacter;
+                        time += calcParameters.CSVCharacter;
                     }
                 }
                 resultfile.WriteLine(time);
@@ -298,5 +302,8 @@ namespace CalcPostProcessor.LoadTypeProcessingSteps {
             LoadtypeStepParameters p = (LoadtypeStepParameters)parameters;
             Run(p.LoadType,p.EnergyFileRows,_fft);
         }
+
+        [NotNull]
+        public override List<CalcOption> NeededOptions => new List<CalcOption>();
     }
 }

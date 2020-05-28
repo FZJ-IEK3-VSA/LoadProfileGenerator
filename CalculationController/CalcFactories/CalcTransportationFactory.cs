@@ -74,7 +74,6 @@ namespace CalculationController.CalcFactories {
             transportationDevices = MakeTransportationDevices(selectedDevices, categoriesDict,key);
 
             routes  = MakeTravelRoutes(travelRouteSet, householdSites,categoriesDict, sites,key);
-            mhh.IsTransportationEnabled = true;
         }
 
         [NotNull]

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Automation;
 using Automation.ResultFiles;
 using Common.CalcDto;
 using JetBrains.Annotations;
@@ -10,7 +11,7 @@ namespace Common.SQLResultLogging.InputLoggers
     {
         public const string TableName  = "CalcLoadTypeDto";
         public CalcLoadTypeDtoLogger( [NotNull] SqlResultLoggingService srls): base(typeof(List<CalcLoadTypeDto>),
-            new ResultTableDefinition(TableName,ResultTableID.LoadTypeDefinitions,"All the load types"), srls)
+            new ResultTableDefinition(TableName,ResultTableID.LoadTypeDefinitions,"All the load types", CalcOption.BasicOverview), srls)
         {
         }
 

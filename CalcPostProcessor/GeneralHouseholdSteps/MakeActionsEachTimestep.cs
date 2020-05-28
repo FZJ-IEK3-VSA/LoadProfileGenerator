@@ -5,7 +5,6 @@ using Automation.ResultFiles;
 using CalcPostProcessor.Steps;
 using Common;
 using Common.CalcDto;
-using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.Loggers;
 using JetBrains.Annotations;
@@ -15,8 +14,6 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
 
     public class MakeActionsEachTimestep : HouseholdStepBase
     {
-        [NotNull] private readonly CalcParameters _calcParameters;
-
         [NotNull] private readonly ICalculationProfiler _calculationProfiler;
 
         [NotNull] private readonly IInputDataLogger _inputDataLogger;
@@ -29,14 +26,14 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
             AutomationUtili.GetOptionList(CalcOption.ActionsEachTimestep), calculationProfiler,
             "Make Actions Each Timestep List",0)
         {
-            _calculationProfiler = calculationProfiler;
             _repository = repository;
             _inputDataLogger = inputDataLogger;
-            _calcParameters = _repository.CalcParameters;
+            _calculationProfiler = calculationProfiler;
         }
 
         protected override void PerformActualStep(IStepParameters parameters)
         {
+            var calcParameters = _repository.CalcParameters;
             HouseholdStepParameters hhp = (HouseholdStepParameters)parameters;
             var entry = hhp.Key;
             if (entry.KeyType != HouseholdKeyType.Household)
@@ -49,7 +46,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
 
 
             Logger.Info("Starting to complete list of actions for each person at each time step for statistical analysis...");
-            var displayNegativeTime = _calcParameters.ShowSettlingPeriodTime;
+            var displayNegativeTime = calcParameters.ShowSettlingPeriodTime;
 
             var activitiesPerPerson = ReadActivities(householdKey);
             //var fileIdx = 0;
@@ -71,25 +68,29 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
         }
 
         [NotNull]
+        public override List<CalcOption> NeededOptions => new List<CalcOption>();
+
+        [NotNull]
         [ItemNotNull]
         private List<SingleTimestepActionEntry> MakeTimeArray(bool displayNegativeTime,
                                                 [NotNull] [ItemNotNull] List<ActionEntry> actionsForPerson)
         {
+            var calcParameters = _repository.CalcParameters;
             List<SingleTimestepActionEntry> timestepActionEntries = new List<SingleTimestepActionEntry>();
             DateTime currentTime;
             TimeSpan calculationTimeSpan;
             if (displayNegativeTime)
             {
-                currentTime = _calcParameters.InternalStartTime;
-                calculationTimeSpan = _calcParameters.InternalEndTime -
-                                      _calcParameters.InternalStartTime;
+                currentTime = calcParameters.InternalStartTime;
+                calculationTimeSpan = calcParameters.InternalEndTime -
+                                      calcParameters.InternalStartTime;
             }
             else
             {
-                currentTime = _calcParameters.OfficialStartTime;
-                calculationTimeSpan = _calcParameters.InternalEndTime - _calcParameters.OfficialStartTime;
+                currentTime = calcParameters.OfficialStartTime;
+                calculationTimeSpan = calcParameters.InternalEndTime - calcParameters.OfficialStartTime;
             }
-            var timesteps = (int)(calculationTimeSpan.TotalMinutes / _calcParameters.InternalStepsize.TotalMinutes);
+            var timesteps = (int)(calculationTimeSpan.TotalMinutes / calcParameters.InternalStepsize.TotalMinutes);
             var currentAction = actionsForPerson[0];
             var currentActionIndex = 0;
             for (var timeIdx = 0; timeIdx < timesteps; timeIdx++)
@@ -110,7 +111,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
                     currentAction.HouseholdKey, timeIdx, currentTime,
                     currentAction.PersonGuid, currentAction.ActionEntryGuid);
                 timestepActionEntries.Add(stae);
-                currentTime += _calcParameters.InternalStepsize;
+                currentTime += calcParameters.InternalStepsize;
             }
 
             return timestepActionEntries;

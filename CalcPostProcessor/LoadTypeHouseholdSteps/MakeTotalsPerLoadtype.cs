@@ -49,8 +49,6 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
     {
         [NotNull] private readonly IInputDataLogger _inputDataLogger;
 
-        [NotNull]
-        private readonly CalcParameters _calcParameters;
         //[JetBrains.Annotations.NotNull]private readonly Dictionary<HouseholdKey, StreamWriter> _files;
 
         public MakeTotalsPerLoadtype(
@@ -61,8 +59,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                 "Totals per LoadType")
         {
             _inputDataLogger = inputDataLogger;
-            _calcParameters = Repository.CalcParameters;
-         //   _files = new Dictionary<HouseholdKey, StreamWriter>();
+            //   _files = new Dictionary<HouseholdKey, StreamWriter>();
         }
         /*
         public double CalculateTotal([JetBrains.Annotations.NotNull][ItemNotNull] List<OnlineEnergyFileRow> energyFileRows, [JetBrains.Annotations.NotNull] CalcLoadTypeDto dstLoadType,
@@ -255,8 +252,8 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
         {
             LoadtypeStepParameters p = (LoadtypeStepParameters)parameters;
             var totaldays =
-                (_calcParameters.OfficialEndTime -
-                 _calcParameters.OfficialStartTime).TotalDays;
+                (Repository.CalcParameters.OfficialEndTime -
+                 Repository.CalcParameters.OfficialStartTime).TotalDays;
             Dictionary<CalcLoadTypeDto, double> totalsPerLoadType = new Dictionary<CalcLoadTypeDto, double>();
             //CalculateTotal(energyFileRows, loadType, totalsPerLoadType, Repository.GetPersons(householdKey).Count);
             var efc = Repository.ReadEnergyFileColumns(Constants.GeneralHouseholdKey);
@@ -279,5 +276,8 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             }
             _inputDataLogger.SaveList(totals.ConvertAll(x=> (IHouseholdKey) x));
         }
+
+        [NotNull]
+        public override List<CalcOption> NeededOptions => new List<CalcOption>();
     }
 }

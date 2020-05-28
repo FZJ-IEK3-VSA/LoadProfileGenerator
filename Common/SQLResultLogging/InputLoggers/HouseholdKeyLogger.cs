@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Automation;
 using Automation.ResultFiles;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
@@ -10,7 +11,7 @@ namespace Common.SQLResultLogging.InputLoggers
         private bool _isTableCreated;
         [ItemNotNull] [NotNull] private readonly HashSet<HouseholdKey> _savedKeys = new HashSet<HouseholdKey>();
         public HouseholdKeyLogger([NotNull] SqlResultLoggingService srls):
-            base(typeof(HouseholdKeyEntry),new ResultTableDefinition(TableName,ResultTableID.HouseholdKeys, "All Householdkeys"),srls)
+            base(typeof(HouseholdKeyEntry),new ResultTableDefinition(TableName,ResultTableID.HouseholdKeys, "All Householdkeys", CalcOption.BasicOverview),srls)
         {
         }
 

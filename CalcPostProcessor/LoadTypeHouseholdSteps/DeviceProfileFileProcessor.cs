@@ -41,60 +41,55 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
     public class DeviceProfileFileProcessor: LoadTypeStepBase
     {
         [NotNull]
-        private readonly FileFactoryAndTracker _fft;
-        [NotNull]
-        private readonly CalcParameters _calcParameters;
-        [NotNull]
-        private readonly DateStampCreator _dsc;
+        private readonly IFileFactoryAndTracker _fft;
 
-        public DeviceProfileFileProcessor([NotNull] FileFactoryAndTracker fft,
+        public DeviceProfileFileProcessor([NotNull] IFileFactoryAndTracker fft,
                                           [NotNull] CalcDataRepository repository,
             [NotNull] ICalculationProfiler profiler):base(repository, AutomationUtili.GetOptionList(CalcOption.DeviceProfiles, CalcOption.IndividualSumProfiles),profiler,"Device Profiles")
         {
             _fft = fft;
-            _dsc = new DateStampCreator(Repository.CalcParameters);
-            _calcParameters = Repository.CalcParameters;
         }
 
         private void Run([NotNull] CalcLoadTypeDto dstLoadType, [NotNull][ItemNotNull] List<OnlineEnergyFileRow> energyFileRows,
-              [NotNull] HouseholdKey householdKey, [NotNull] EnergyFileColumns efc)
+              [NotNull] HouseholdKey householdKey, [NotNull] EnergyFileColumns efc, DateStampCreator dsc)
         {
+            var calcParameters = Repository.CalcParameters;
             StreamWriter sumfile = null;
-            if (_calcParameters.IsSet(CalcOption.IndividualSumProfiles)) {
+            if (calcParameters.IsSet(CalcOption.IndividualSumProfiles)) {
                 sumfile = _fft.MakeFile<StreamWriter>("SumProfiles." + dstLoadType.Name + ".csv",
                     "Summed up energy profile for all devices for " + dstLoadType.Name, true,
                     ResultFileID.CSVSumProfile, householdKey, TargetDirectory.Results,
-                    _calcParameters.InternalStepsize,
+                    calcParameters.InternalStepsize,CalcOption.IndividualSumProfiles,
                     dstLoadType.ConvertToLoadTypeInformation());
-                sumfile.WriteLine(dstLoadType.Name + "." + _dsc.GenerateDateStampHeader() + "Sum [" +
+                sumfile.WriteLine(dstLoadType.Name + "." + dsc.GenerateDateStampHeader() + "Sum [" +
                                   dstLoadType.UnitOfSum + "]");
             }
             StreamWriter normalfile = null;
-            if (_calcParameters.IsSet(CalcOption.DeviceProfiles)) {
+            if (calcParameters.IsSet(CalcOption.DeviceProfiles)) {
                 normalfile = _fft.MakeFile<StreamWriter>("DeviceProfiles." + dstLoadType.Name + ".csv",
                     "Energy use by each device in each Timestep for " + dstLoadType.Name, true,
                     ResultFileID.DeviceProfileCSV, householdKey, TargetDirectory.Results,
-                    _calcParameters.InternalStepsize,
+                    calcParameters.InternalStepsize,CalcOption.DeviceProfiles,
                     dstLoadType.ConvertToLoadTypeInformation());
-                normalfile.WriteLine(dstLoadType.Name + "." + _dsc.GenerateDateStampHeader() +
+                normalfile.WriteLine(dstLoadType.Name + "." + dsc.GenerateDateStampHeader() +
                                      efc.GetTotalHeaderString(dstLoadType, null));
             }
-            if (_calcParameters.IsSet(CalcOption.IndividualSumProfiles) ||
-                _calcParameters.IsSet(CalcOption.DeviceProfiles)) {
+            if (calcParameters.IsSet(CalcOption.IndividualSumProfiles) ||
+                calcParameters.IsSet(CalcOption.DeviceProfiles)) {
                 foreach (var efr in energyFileRows) {
                     if(!efr.Timestep.DisplayThisStep) {
                         continue;
                     }
 
-                    var time = _dsc.MakeTimeString(efr.Timestep);
-                    if (_calcParameters.IsSet(CalcOption.DeviceProfiles)) {
-                        var individual = time + efr.GetEnergyEntriesAsString(true, dstLoadType, null,_calcParameters.CSVCharacter);
+                    var time = dsc.MakeTimeString(efr.Timestep);
+                    if (calcParameters.IsSet(CalcOption.DeviceProfiles)) {
+                        var individual = time + efr.GetEnergyEntriesAsString(true, dstLoadType, null,calcParameters.CSVCharacter);
                         if (normalfile == null) {
                             throw new LPGException("File is null, even though it shouldn't be. Please report.");
                         }
                         normalfile.WriteLine(individual);
                     }
-                    if (_calcParameters.IsSet(CalcOption.IndividualSumProfiles)) {
+                    if (calcParameters.IsSet(CalcOption.IndividualSumProfiles)) {
                         var sumstring =
                             time + (efr.SumCached * dstLoadType.ConversionFactor).ToString(Config.CultureInfo);
                         if (sumfile == null) {
@@ -104,7 +99,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                     }
                 }
             }
-            if (_calcParameters.IsSet(CalcOption.DeviceProfiles)) {
+            if (calcParameters.IsSet(CalcOption.DeviceProfiles)) {
                 if (normalfile == null) {
                     throw new LPGException("File is null, even though it shouldn't be. Please report.");
                 }
@@ -115,11 +110,16 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
         protected override void PerformActualStep(IStepParameters parameters)
         {
             LoadtypeStepParameters p = (LoadtypeStepParameters)parameters;
-
+            var dsc = new DateStampCreator(Repository.CalcParameters);
             //TODO: check: is this correcT? only general household profiles?
             Run( p.LoadType,
                 p.EnergyFileRows, Constants.GeneralHouseholdKey,
-                Repository.ReadEnergyFileColumns(Constants.GeneralHouseholdKey));
+                Repository.ReadEnergyFileColumns(Constants.GeneralHouseholdKey), dsc);
         }
+
+        [NotNull]
+        public override List<CalcOption> NeededOptions => new List<CalcOption>() {
+            CalcOption.DetailedDatFiles
+        };
     }
 }

@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using Automation;
 using Automation.ResultFiles;
+using Common.SQLResultLogging.InputLoggers;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 
@@ -45,6 +47,9 @@ namespace Common.SQLResultLogging {
             GetFilenameForHouseholdKey(Constants.GeneralHouseholdKey);
         }
 
+        [NotNull]
+        public Dictionary<HouseholdKey, FileEntry> FilenameByHouseholdKey => _filenameByHouseholdKey;
+
         [ItemNotNull]
         [NotNull]
         public List<DatabaseEntry> LoadDatabases()
@@ -52,7 +57,7 @@ namespace Common.SQLResultLogging {
             List<DatabaseEntry> td = new List<DatabaseEntry>();
             const string sql = "SELECT * FROM DatabaseList";
 
-            string constr = "Data Source=" + _filenameByHouseholdKey[Constants.GeneralHouseholdKey].Filename + ";Version=3";
+            string constr = "Data Source=" + FilenameByHouseholdKey[Constants.GeneralHouseholdKey].Filename + ";Version=3";
             using (System.Data.SQLite.SQLiteConnection conn = new System.Data.SQLite.SQLiteConnection(constr)) {
                 //;Synchronous=OFF;Journal Mode=WAL;
                 conn.Open();
@@ -82,7 +87,7 @@ namespace Common.SQLResultLogging {
             List<ResultTableDefinition> td = new List<ResultTableDefinition>();
             const string sql = "SELECT * FROM TableDescription";
 
-            string constr = "Data Source=" + _filenameByHouseholdKey[dbKey].Filename + ";Version=3";
+            string constr = "Data Source=" + FilenameByHouseholdKey[dbKey].Filename + ";Version=3";
             using (System.Data.SQLite.SQLiteConnection conn = new System.Data.SQLite.SQLiteConnection(constr)) {
                 //;Synchronous=OFF;Journal Mode=WAL;
                 conn.Open();
@@ -94,7 +99,8 @@ namespace Common.SQLResultLogging {
                         string tableName = reader["TableName"].ToString();
                         string description = reader["Description"].ToString();
                         int resultTableid = (int)(long)reader["ResultTableID"];
-                        ResultTableDefinition fe = new ResultTableDefinition(tableName, (ResultTableID)resultTableid, description);
+                        CalcOption enablingOption = (CalcOption)(long)reader["EnablingOption"];
+                        ResultTableDefinition fe = new ResultTableDefinition(tableName, (ResultTableID)resultTableid, description, enablingOption);
                         td.Add(fe);
                     }
                 }
@@ -150,11 +156,11 @@ namespace Common.SQLResultLogging {
             }
 
             string sql = "SELECT json FROM " + rtd.TableName;
-            if (!_filenameByHouseholdKey.ContainsKey(key)) {
+            if (!FilenameByHouseholdKey.ContainsKey(key)) {
                 throw new LPGException("Missing sql file for household key "+ key);
             }
 
-            string constr = "Data Source=" + _filenameByHouseholdKey[key].Filename + ";Version=3";
+            string constr = "Data Source=" + FilenameByHouseholdKey[key].Filename + ";Version=3";
             using (System.Data.SQLite.SQLiteConnection conn = new System.Data.SQLite.SQLiteConnection(constr)) {
                 //;Synchronous=OFF;Journal Mode=WAL;
                 conn.Open();
@@ -278,7 +284,8 @@ namespace Common.SQLResultLogging {
                     Dictionary<string, object> fields = new Dictionary<string, object> {
                         {"TableName", entry.ResultTableDefinition.TableName},
                         {"Description", entry.ResultTableDefinition.Description},
-                        {"ResultTableID", entry.ResultTableDefinition.ResultTableID}
+                        {"ResultTableID", entry.ResultTableDefinition.ResultTableID},
+                        {"EnablingOption", entry.ResultTableDefinition.EnablingOption}
                     };
                     List<Dictionary<string, object>> rows = new List<Dictionary<string, object>> {
                         fields
@@ -333,16 +340,16 @@ namespace Common.SQLResultLogging {
         [JetBrains.Annotations.NotNull]
         private string GetFilenameForHouseholdKey([JetBrains.Annotations.NotNull] HouseholdKey key)
         {
-            if (_filenameByHouseholdKey.ContainsKey(key)) {
-                return _filenameByHouseholdKey[key].Filename;
+            if (FilenameByHouseholdKey.ContainsKey(key)) {
+                return FilenameByHouseholdKey[key].Filename;
             }
 
             bool isMainDatabase = key == Constants.GeneralHouseholdKey;
 
             string newName = Path.Combine(_basePath, "Results." + key + ".sqlite");
-            _filenameByHouseholdKey.Add(key, new FileEntry(newName));
+            FilenameByHouseholdKey.Add(key, new FileEntry(newName));
             FileInfo fi = new FileInfo(newName);
-            _filenameByHouseholdKey[key].DescriptionTableWritten = true;
+            FilenameByHouseholdKey[key].DescriptionTableWritten = true;
             if (fi.Exists && fi.Length > 1000) {
                 return newName;
             }
@@ -353,10 +360,12 @@ namespace Common.SQLResultLogging {
                     FieldDefinition fd1 = new FieldDefinition("TableName", "Text");
                     FieldDefinition fd2 = new FieldDefinition("Description", "Text");
                     FieldDefinition fd3 = new FieldDefinition("ResultTableID", "Integer");
+                    FieldDefinition fd4 = new FieldDefinition("EnablingOption", "Integer");
                     List<FieldDefinition> fields = new List<FieldDefinition> {
                         fd1,
                         fd2,
-                        fd3
+                        fd3,
+                        fd4
                     };
                     MakeTableForListOfFields(fields, dbcon, Constants.TableDescriptionTableName);
                 }
@@ -378,6 +387,10 @@ namespace Common.SQLResultLogging {
 
                 dbcon.Close();
             }
+            ResultFileEntry rfe = new ResultFileEntry("Database", fi, false, ResultFileID.SqliteResultFiles, key.Key,null
+                , CalcOption.BasicOverview);
+            ResultFileEntryLogger rfel = new ResultFileEntryLogger(this);
+                rfel.Run(key,rfe);
 
             /* DatabaseList dbl = new DatabaseList(key.Key, null, newName)
              {
@@ -388,6 +401,7 @@ namespace Common.SQLResultLogging {
             SaveDictionaryToDatabaseNewConnection(row, "DatabaseList", Constants.GeneralHouseholdKey);
             return newName;
         }
+
         /*
         private bool IgnoreThisField([NotNull] string fieldname)
         {
@@ -416,7 +430,7 @@ namespace Common.SQLResultLogging {
         {
             const string sql = "SELECT * FROM DatabaseList";
 
-            string constr = "Data Source=" + _filenameByHouseholdKey[Constants.GeneralHouseholdKey].Filename + ";Version=3";
+            string constr = "Data Source=" + FilenameByHouseholdKey[Constants.GeneralHouseholdKey].Filename + ";Version=3";
             using (System.Data.SQLite.SQLiteConnection conn = new System.Data.SQLite.SQLiteConnection(constr)) {
                 //;Synchronous=OFF;Journal Mode=WAL;
                 conn.Open();
@@ -432,8 +446,8 @@ namespace Common.SQLResultLogging {
                         FileEntry fe = new FileEntry(filename) {
                             DescriptionTableWritten = true
                         };
-                        if (!_filenameByHouseholdKey.ContainsKey(key)) {
-                            _filenameByHouseholdKey.Add(key, fe);
+                        if (!FilenameByHouseholdKey.ContainsKey(key)) {
+                            FilenameByHouseholdKey.Add(key, fe);
                         }
                     }
                 }
@@ -581,6 +595,35 @@ namespace Common.SQLResultLogging {
 
             [NotNull]
             public override string ToString() => Filename;
+        }
+
+        public bool CheckifTableExits(string tableName)
+        {
+            string sql = "SELECT name FROM sqlite_master WHERE type='table' AND name='" + tableName+ "';";
+
+            string constr = "Data Source=" + FilenameByHouseholdKey[Constants.GeneralHouseholdKey].Filename + ";Version=3";
+            int lines = 0;
+            using (System.Data.SQLite.SQLiteConnection conn = new System.Data.SQLite.SQLiteConnection(constr))
+            {
+                //;Synchronous=OFF;Journal Mode=WAL;
+                conn.Open();
+                using (SQLiteCommand cmd = new SQLiteCommand())
+                {
+                    cmd.Connection = conn;
+
+                    cmd.CommandText = sql;
+                    var reader = cmd.ExecuteReader();
+                    while (reader.Read()) {
+                        lines++;
+                    }
+                }
+                conn.Close();
+            }
+            if (lines > 0) {
+                return true;
+            }
+
+            return false;
         }
     }
 

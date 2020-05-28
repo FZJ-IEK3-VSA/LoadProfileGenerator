@@ -165,8 +165,8 @@ namespace Database.Tests.Tables {
                 var house2 = houses[0];
                 (house2.Households.Count).Should().Be(0);
 
-                house.AddHousehold(modularHouseholds[0], false, null, null, null);
-                house.AddHousehold(modularHouseholds[0], false, null, null, null);
+                house.AddHousehold(modularHouseholds[0],  null, null, null);
+                house.AddHousehold(modularHouseholds[0],  null, null, null);
                 house.SaveToDB();
                 houses.Clear();
                 House.LoadFromDatabase(houses, db.ConnectionString, temperaturProfiles, geoLocs, houseTypes,

@@ -1,4 +1,5 @@
 ﻿using System;
+using Automation;
 using Automation.ResultFiles;
 using Common.CalcDto;
 using Common.JSON;
@@ -14,7 +15,7 @@ namespace Common.SQLResultLogging.Loggers {
         [NotNull] private readonly SqlResultLoggingService _srls;
         private const string TableName = "TotalsPerLoadtype";
         public TotalsPerLoadtypeEntryLogger([NotNull] SqlResultLoggingService srls) :
-            base(typeof(TotalsPerLoadtypeEntry), new ResultTableDefinition(TableName, ResultTableID.TotalsPerLoadtype, "Total Per Loadtype Entries"), srls)
+            base(typeof(TotalsPerLoadtypeEntry), new ResultTableDefinition(TableName, ResultTableID.TotalsPerLoadtype, "Total Per Loadtype Entries", CalcOption.TotalsPerLoadtype), srls)
         {
             _srls = srls;
         }
@@ -111,7 +112,7 @@ namespace Common.SQLResultLogging.Loggers {
         private const string TableName = "TotalsPerDevice";
         public TotalsPerDeviceLogger([NotNull] SqlResultLoggingService srls) :
             base(typeof(TotalsPerDeviceEntry), new ResultTableDefinition(
-                TableName, ResultTableID.TotalsPerDevice, "Total Per Device Entries"), srls)
+                TableName, ResultTableID.TotalsPerDevice, "Total Per Device Entries", CalcOption.TotalsPerDevice), srls)
         {
             _srls = srls;
         }
@@ -154,7 +155,7 @@ namespace Common.SQLResultLogging.Loggers {
         [NotNull] private readonly SqlResultLoggingService _srls;
         private const string TableName = "AffordanceTimeUse";
         public PersonAffordanceInformationLogger([NotNull] SqlResultLoggingService srls) :
-            base(typeof(PersonAffordanceInformation), new ResultTableDefinition(TableName, ResultTableID.PersonAffordanceInformation, "Time Use Per Affordance Entries"), srls)
+            base(typeof(PersonAffordanceInformation), new ResultTableDefinition(TableName, ResultTableID.PersonAffordanceInformation, "Time Use Per Affordance Entries", CalcOption.TimeOfUsePlot), srls)
         {
             _srls = srls;
         }

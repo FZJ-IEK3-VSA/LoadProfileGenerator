@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using OxyPlot;
@@ -84,10 +85,10 @@ namespace ChartCreator2.OxyCharts {
                             pmAbsolute.Series.Add(plan);
                             pmAbsolute.Series.Add(actual);
                             Save(pmAbsolute, "Household Plan " + currentSection, srcEntry.FullFileName + "." + currentSection,
-                                Parameters.BaseDirectory);
+                                Parameters.BaseDirectory, CalcOption.HouseholdPlan);
                             pmRelative.Series.Add(relativeSeries);
                             Save(pmRelative, "Household Plan Percentage " + currentSection,
-                                srcEntry.FullFileName + "." + currentSection + ".Percent", Parameters.BaseDirectory);
+                                srcEntry.FullFileName + "." + currentSection + ".Percent", Parameters.BaseDirectory, CalcOption.HouseholdPlan);
                         }
                         currentSection = s.Substring(6, s.Length - 12);
                         var axistitle = "Hours";

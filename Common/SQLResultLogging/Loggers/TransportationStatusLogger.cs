@@ -1,4 +1,5 @@
-﻿using Automation.ResultFiles;
+﻿using Automation;
+using Automation.ResultFiles;
 
 namespace Common.SQLResultLogging.Loggers {
     using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace Common.SQLResultLogging.Loggers {
         private const string TableName = "TransportationStatuses";
 
         public TransportationStatusLogger([NotNull] SqlResultLoggingService srls) : base(typeof(TransportationStatus),
-            new ResultTableDefinition(TableName, ResultTableID.TransportationStatuses, "Transportation Status Messages"),
+            new ResultTableDefinition(TableName, ResultTableID.TransportationStatuses, "Transportation Status Messages", CalcOption.TransportationStatistics ),
             srls)
         {
         }

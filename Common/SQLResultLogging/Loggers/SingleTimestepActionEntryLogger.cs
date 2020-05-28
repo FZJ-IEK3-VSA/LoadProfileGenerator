@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
@@ -11,7 +12,7 @@ namespace Common.SQLResultLogging.Loggers {
         private const string TableName = "ActionsEachTimestep";
         public SingleTimestepActionEntryLogger([NotNull] SqlResultLoggingService srls) :
             base(typeof(SingleTimestepActionEntry), new ResultTableDefinition(TableName,
-                ResultTableID.SingleTimeStepActionEntry, "Selected Action for each time step for each person"), srls)
+                ResultTableID.SingleTimeStepActionEntry, "Selected Action for each time step for each person", CalcOption.ActionsEachTimestep), srls)
         {
             _srls = srls;
         }

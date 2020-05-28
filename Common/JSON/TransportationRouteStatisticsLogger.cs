@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Automation;
 using Automation.ResultFiles;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.Loggers;
@@ -32,7 +33,7 @@ namespace Common.JSON
         private const string TableName = "TransportationRouteStatistics";
         public TransportationRouteStatisticsLogger([NotNull] SqlResultLoggingService srls) :
             base(typeof(List<TransportationRouteStatistics>),
-                new ResultTableDefinition(TableName, ResultTableID.TransportationRouteStatistics, "Statistics about the transportation"), srls)
+                new ResultTableDefinition(TableName, ResultTableID.TransportationRouteStatistics, "Statistics about the transportation", CalcOption.TransportationStatistics), srls)
         {
         }
 

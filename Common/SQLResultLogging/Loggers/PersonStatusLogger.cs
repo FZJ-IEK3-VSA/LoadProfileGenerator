@@ -1,4 +1,5 @@
-﻿using Automation.ResultFiles;
+﻿using Automation;
+using Automation.ResultFiles;
 using Common.SQLResultLogging.InputLoggers;
 
 namespace Common.SQLResultLogging.Loggers {
@@ -12,7 +13,7 @@ namespace Common.SQLResultLogging.Loggers {
         private const string TableName = "PersonStatus";
 
         public PersonStatusLogger([NotNull] SqlResultLoggingService srls) : base(typeof(PersonStatus),
-            new ResultTableDefinition(TableName, ResultTableID.PersonStatus, "The status of each person for each timestep"),
+            new ResultTableDefinition(TableName, ResultTableID.PersonStatus, "The status of each person for each timestep", CalcOption.PersonStatus),
             srls)
         {
         }

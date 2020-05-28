@@ -7,7 +7,6 @@ using Automation.ResultFiles;
 using CalcPostProcessor.Steps;
 using Common;
 using Common.CalcDto;
-using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.Loggers;
 using JetBrains.Annotations;
@@ -16,18 +15,15 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
     public class MakeHouseholdPlanResult : HouseholdStepBase
     {
         [NotNull]
-        private readonly CalcParameters _calcParameters;
-        [NotNull]
-        private readonly FileFactoryAndTracker _fft;
+        private readonly IFileFactoryAndTracker _fft;
 
         public MakeHouseholdPlanResult(
                                        [NotNull] CalcDataRepository repository,
                                        [NotNull] ICalculationProfiler profiler,
-                                       [NotNull] FileFactoryAndTracker fft):base(repository,
+                                       [NotNull] IFileFactoryAndTracker fft):base(repository,
             AutomationUtili.GetOptionList(CalcOption.HouseholdPlan),
             profiler,"Household Plans",0)
         {
-            _calcParameters = Repository.CalcParameters;
             _fft = fft;
         }
 
@@ -52,7 +48,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
         private  void Run(
             [NotNull] Dictionary<StrGuid, Dictionary<string, double>>
                 energyByAffordanceByLoadTypeByHousehold, [NotNull] string householdName, [NotNull][ItemNotNull] List<CalcHouseholdPlanDto> householdPlans,
-            [NotNull] FileFactoryAndTracker fft, [NotNull] HouseholdKey householdKey,
+            [NotNull] IFileFactoryAndTracker fft, [NotNull] HouseholdKey householdKey,
             [NotNull] Dictionary<string, Dictionary<string, Dictionary<string, int>>> affordanceTaggingSetByPersonByTagTimeUse,
             [NotNull] Dictionary<string, Dictionary<string, Dictionary<string, int>>>
                 affordanceTaggingSetByPersonByTagExecutionCount)
@@ -72,8 +68,9 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
                 energyByAffordanceByLoadtype, [NotNull] string householdName, [NotNull][ItemNotNull] List<CalcHouseholdPlanDto> householdPlans,
             [NotNull] HouseholdKey householdKey, [NotNull] Dictionary<Tuple<HouseholdKey, int>, StreamWriter> fileNumberTracker)
         {
-            var simduration = _calcParameters.OfficialEndTime -
-                              _calcParameters.OfficialStartTime;
+            var calcParameters = Repository.CalcParameters;
+            var simduration = calcParameters.OfficialEndTime -
+                              calcParameters.OfficialStartTime;
             var timefactor = 8760 / simduration.TotalHours;
             Dictionary<StrGuid,CalcLoadTypeDto> loadTypeByGuid = new Dictionary<StrGuid, CalcLoadTypeDto>();
             foreach (CalcLoadTypeDto loadType in Repository.LoadTypes) {
@@ -92,7 +89,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
                             var tagEnergyUse =
                                 GetEnergyUsePerTag(calcHouseholdPlan.AffordanceTags, realEnergyUse.Value);
                             sw.WriteLine("----- Consumption for " + lt.Name + " -----");
-                            var c = _calcParameters.CSVCharacter;
+                            var c = calcParameters.CSVCharacter;
                             sw.WriteLine("Tag" + c + "Energy in Simulation [" + lt.UnitOfSum + "]" + c +
                                          "Energy in Simulation for 365d [" + lt.UnitOfSum + "]" + c +
                                          "Planned [" + lt.UnitOfSum + "]");
@@ -140,8 +137,9 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
             [NotNull][ItemNotNull] List<CalcHouseholdPlanDto> householdPlans, [NotNull] HouseholdKey householdKey,
             [NotNull] Dictionary<Tuple<HouseholdKey, int>, StreamWriter> fileNumberTracker)
         {
-            var simduration = _calcParameters.OfficialEndTime -
-                              _calcParameters.OfficialStartTime;
+            var calcParameters = Repository.CalcParameters;
+            var simduration = calcParameters.OfficialEndTime -
+                              calcParameters.OfficialStartTime;
             var timefactor = 8760 / simduration.TotalHours;
             foreach (var calcHouseholdPlan in householdPlans) {
                 if (householdName.StartsWith(calcHouseholdPlan.HouseholdName, StringComparison.Ordinal)) {
@@ -152,7 +150,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
                     foreach (var personTagList in activationsByTagByPerson) {
                         var personName = personTagList.Key;
                         sw.WriteLine("----- Activations for " + personName + " -----");
-                        var c = _calcParameters.CSVCharacter;
+                        var c = calcParameters.CSVCharacter;
 
                         sw.WriteLine("Tag" + c + "Activations in Simulation [h]" + c +
                                      "Activations in Simulation for 365d [h]" + c + "Planned Activations");
@@ -196,12 +194,13 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
             [NotNull]
             Dictionary<string, Dictionary<string, Dictionary<string, int>>> affordanceTaggingSetByPersonByTagTimeUse,
             [NotNull] string householdName, [NotNull] [ItemNotNull] List<CalcHouseholdPlanDto> householdPlans,
-            [NotNull] FileFactoryAndTracker fft,
+            [NotNull] IFileFactoryAndTracker fft,
             [NotNull] HouseholdKey householdKey,
             [NotNull] Dictionary<Tuple<HouseholdKey, int>, StreamWriter> fileNumberTracker)
         {
-            var simduration = _calcParameters.OfficialEndTime -
-                              _calcParameters.OfficialStartTime;
+            var calcParameters = Repository.CalcParameters;
+            var simduration = calcParameters.OfficialEndTime -
+                              calcParameters.OfficialStartTime;
             var timefactor = 8760 / simduration.TotalHours;
             foreach (var calcHouseholdPlan in householdPlans) {
                 if (householdName.StartsWith(calcHouseholdPlan.HouseholdName, StringComparison.Ordinal)) {
@@ -213,7 +212,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
                     var sw = fft.MakeFile<StreamWriter>(fileName,
                         "Comparison of the household plan and the reality", true,
                         ResultFileID.HouseholdPlanTime, householdKey, TargetDirectory.Reports,
-                        _calcParameters.InternalStepsize, null, null,
+                        calcParameters.InternalStepsize,CalcOption.HouseholdPlan, null, null,
                         calcHouseholdPlan.Name + "_" + fileNumber);
 
                     sw.WriteLine("##### Time per Affordance #####");
@@ -224,7 +223,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
                     foreach (var personTagList in timeByTagByPerson) {
                         var personName = personTagList.Key;
                         sw.WriteLine("----- Time Use for " + personName + " -----");
-                        var c = _calcParameters.CSVCharacter;
+                        var c = calcParameters.CSVCharacter;
                         sw.WriteLine("Tag" + c + "Time in Simulation [h]" + c + "Time in Simulation for 365d [h]" + c +
                                      "Planned time");
                         var timePerTag = personTagList.Value;
@@ -299,5 +298,8 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
             }
 #pragma warning restore 162
         }
+
+        [NotNull]
+        public override List<CalcOption> NeededOptions => new List<CalcOption>();
     }
 }

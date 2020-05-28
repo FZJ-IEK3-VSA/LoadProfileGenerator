@@ -585,10 +585,9 @@ namespace Database.Tables.Houses {
             var newname = FindNewName(isNameTaken, "New Settlement ");
             var startDate = new DateTime(DateTime.Now.Year, 1, 1);
             var endDate = new DateTime(DateTime.Now.Year, 12, 31);
-            JsonCalcSpecification jcs = new JsonCalcSpecification(null,
+            JsonCalcSpecification jcs = new JsonCalcSpecification(
                 false,
                 null,
-                false,
                 endDate,
                 null,
                 null,
@@ -597,8 +596,6 @@ namespace Database.Tables.Houses {
                 "Results",
                 false,
                 startDate,
-                null,
-                null,
                 null);
             return new Settlement(newname,
                 null,

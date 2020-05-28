@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using OxyPlot;
@@ -88,7 +89,7 @@ namespace ChartCreator2.OxyCharts {
                 };
                 plotModel1.Annotations.Add(pointAnnotation1);
             }
-            Save(plotModel1, plotName, srcEntry.FullFileName, Parameters.BaseDirectory);
+            Save(plotModel1, plotName, srcEntry.FullFileName, Parameters.BaseDirectory, CalcOption.CriticalViolations);
             Profiler.StopPart(Utili.GetCurrentMethodAndClass());
             return FileProcessingResult.ShouldCreateFiles;
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Automation;
 using Automation.ResultFiles;
 using Common.SQLResultLogging.InputLoggers;
 using JetBrains.Annotations;
@@ -41,7 +42,7 @@ namespace Common.SQLResultLogging.Loggers {
 
         public LogMessageLogger([CanBeNull] SqlResultLoggingService srls, ErrorMessageType errorMessageType) :
             base(typeof(PersonStatus), new ResultTableDefinition(errorMessageType== ErrorMessageType.All? NormalTableName:ErrorTableName, ResultTableID.LogMessages,
-                "All Log Messages from the calculation"), srls)
+                "All Log Messages from the calculation", CalcOption.LogAllMessages), srls)
         {
         }
 

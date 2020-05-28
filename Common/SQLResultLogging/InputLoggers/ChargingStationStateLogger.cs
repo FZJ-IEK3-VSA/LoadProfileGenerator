@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using Common.SQLResultLogging.Loggers;
 using JetBrains.Annotations;
@@ -11,7 +12,7 @@ namespace Common.SQLResultLogging.InputLoggers
         private const string Tablename = "ChargingStationStates";
 
         public ChargingStationStateLogger([NotNull] SqlResultLoggingService srls)
-            : base(typeof(ChargingStationState), new ResultTableDefinition(Tablename,ResultTableID.ChargingeStationState, "State of the charging stations"), srls)
+            : base(typeof(ChargingStationState), new ResultTableDefinition(Tablename,ResultTableID.ChargingeStationState, "State of the charging stations", CalcOption.TransportationStatistics), srls)
         {
         }
 

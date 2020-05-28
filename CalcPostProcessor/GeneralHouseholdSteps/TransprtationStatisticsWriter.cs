@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Automation;
 using CalcPostProcessor.Steps;
@@ -7,8 +8,10 @@ using Common;
 using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.Loggers;
+using JetBrains.Annotations;
 
 namespace CalcPostProcessor.GeneralHouseholdSteps {
+    [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     public class TransportationStatisticsWriter : HouseholdStepBase {
         //private int _maxTime;
         [JetBrains.Annotations.NotNull] private readonly IInputDataLogger _logger;
@@ -27,7 +30,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
                 return;
             }
 
-            if (!Repository.CalcParameters.IsInTranportMode(hsp.Key.HouseholdKey)) {
+            if (!Repository.CalcParameters.TransportationEnabled) {
                 return;
             }
 
@@ -108,5 +111,8 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
             _logger.Save(hsp.Key.HouseholdKey, transportationDevice.Values.ToList());
             _logger.Save(hsp.Key.HouseholdKey, routeStatistics.Values.ToList());
         }
+
+        [NotNull]
+        public override List<CalcOption> NeededOptions => new List<CalcOption>();
     }
 }

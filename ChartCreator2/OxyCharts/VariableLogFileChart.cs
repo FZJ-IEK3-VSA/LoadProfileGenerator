@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using JetBrains.Annotations;
@@ -122,11 +123,11 @@ namespace ChartCreator2.OxyCharts {
             var fi = new FileInfo(srcEntry.FullFileName);
             var plotModel1 = MakeChart(plotName, yaxisLabel, srcEntry.TimeResolution, headers, values, dates, 25000);
             var dstfilename = fi.Name.Insert(fi.Name.Length - 4, ".Short");
-            Save(plotModel1, plotName, srcEntry.FullFileName, Parameters.BaseDirectory, dstfilename);
+            Save(plotModel1, plotName, srcEntry.FullFileName, Parameters.BaseDirectory, CalcOption.VariableLogFile,dstfilename );
 
             plotModel1 = MakeChart(plotName, yaxisLabel, srcEntry.TimeResolution, headers, values, dates, int.MaxValue);
             dstfilename = fi.Name.Insert(fi.Name.Length - 4, ".Full");
-            Save(plotModel1, plotName, srcEntry.FullFileName, Parameters.BaseDirectory, dstfilename);
+            Save(plotModel1, plotName, srcEntry.FullFileName, Parameters.BaseDirectory, CalcOption.VariableLogFile, dstfilename);
             Profiler.StopPart(Utili.GetCurrentMethodAndClass());
             return FileProcessingResult.ShouldCreateFiles;
         }

@@ -85,7 +85,42 @@ namespace Common {
         }
     }
 
-    public class FileFactoryAndTracker: IDisposable {
+    public interface IFileFactoryAndTracker {
+        public T MakeFile<T>([NotNull] string fileName, [NotNull] string description,
+                             bool displayResultFileEntry, ResultFileID rfid1,
+                             [NotNull] HouseholdKey householdKey,
+                             TargetDirectory targetDirectory, TimeSpan timeResolution,
+                             CalcOption enablingOption,
+                             [CanBeNull] LoadTypeInformation lti = null,
+                             [CanBeNull] PersonInformation pi = null,
+                             [CanBeNull] string additionalFileIndex = null);
+
+        public bool CheckForResultFileEntry(ResultFileID rfid, [NotNull] string loadTypeName,
+                                            [NotNull] HouseholdKey householdKey, [CanBeNull] PersonInformation pi,
+                                            [CanBeNull] string additionalFileIndex);
+
+        public ResultFileEntry GetResultFileEntry(ResultFileID rfid, [CanBeNull] string loadTypeName,
+                                                  [NotNull] HouseholdKey householdKey, [CanBeNull] PersonInformation pi,
+                                                  [CanBeNull] string additionalFileIndex);
+    }
+
+    public class FileFactoryAndTrackerDummy : IFileFactoryAndTracker {
+        public T MakeFile<T>(string fileName, string description, bool displayResultFileEntry, ResultFileID rfid1,
+                             HouseholdKey householdKey, TargetDirectory targetDirectory, TimeSpan timeResolution,
+                             CalcOption enablingOption, LoadTypeInformation lti = null, PersonInformation pi = null,
+                             string additionalFileIndex = null) =>
+            throw new NotImplementedException();
+
+        public bool CheckForResultFileEntry(ResultFileID rfid, string loadTypeName, HouseholdKey householdKey, PersonInformation pi,
+                                            string additionalFileIndex) =>
+            throw new NotImplementedException();
+
+        public ResultFileEntry GetResultFileEntry(ResultFileID rfid, string loadTypeName, HouseholdKey householdKey,
+                                                  PersonInformation pi, string additionalFileIndex) =>
+            throw new NotImplementedException();
+    }
+
+    public class FileFactoryAndTracker: IDisposable, IFileFactoryAndTracker {
         [NotNull]
         //public HashSet<HouseholdKey> HouseholdKeys => _householdKeys;
         public HouseholdRegistry HouseholdRegistry { get; } = new HouseholdRegistry();
@@ -158,7 +193,7 @@ namespace Common {
                 HouseholdRegistry.AddSavedEntry(entry);
             }
 
-            var rfel = new ResultFileEntryLogger(srls,true);
+            var rfel = new ResultFileEntryLogger(srls);
             var rfes = rfel.Load();
                 ResultFileList.AddExistingEntries(rfes);
             _inputDataLogger.AddSaver(rfel);
@@ -204,7 +239,7 @@ namespace Common {
         }
 
         public void RegisterFile([NotNull] string fileName, [NotNull] string description, bool displayResultFileEntry, ResultFileID rfid1,
-                                 [NotNull] HouseholdKey householdKey, TargetDirectory targetDirectory,
+                                 [NotNull] HouseholdKey householdKey, TargetDirectory targetDirectory, CalcOption enablingOption,
                                  [CanBeNull] string additionalFileIndex = null)
         {
             if (!HouseholdRegistry.IsHouseholdRegistered(householdKey)) {
@@ -214,7 +249,7 @@ namespace Common {
             string fullFileName = Path.Combine(GetFullPathForTargetdirectry(targetDirectory), fileName);
             FileInfo fi = new FileInfo(fullFileName);
             ResultFileEntry rfe =new ResultFileEntry(description, fi,displayResultFileEntry,rfid1,householdKey.Key,
-                additionalFileIndex);
+                additionalFileIndex,enablingOption);
             _inputDataLogger.Save(rfe);
             ResultFileList.ResultFiles.Add(rfe.HashKey, rfe);
         }
@@ -224,6 +259,7 @@ namespace Common {
                              bool displayResultFileEntry, ResultFileID rfid1,
                              [NotNull] HouseholdKey householdKey,
                              TargetDirectory targetDirectory, TimeSpan timeResolution,
+                             CalcOption enablingOption,
             [CanBeNull] LoadTypeInformation lti = null,
             [CanBeNull] PersonInformation pi = null,
             [CanBeNull] string additionalFileIndex = null)
@@ -261,7 +297,8 @@ namespace Common {
 #pragma warning restore S2930 // "IDisposables" should be disposed
                         var ret = (T) (object) sw;
                         var rfe = new ResultFileEntry(description, fileInfo, displayResultFileEntry, sw,
-                                null, stream, rfid, _calcObjectName, householdKey.Key, lti, pi, additionalFileIndex,timeResolution);
+                                null, stream, rfid, _calcObjectName, householdKey.Key,
+                                lti, pi, additionalFileIndex,timeResolution,enablingOption);
                             ResultFileList.ResultFiles.Add(rfe.HashKey, rfe);
                         _inputDataLogger.Save(rfe);
                         return ret;
@@ -273,7 +310,8 @@ namespace Common {
 #pragma warning restore S2930 // "IDisposables" should be disposed
                         var ret = (T) (object) bw;
                         var rfe = new ResultFileEntry(description, fileInfo, displayResultFileEntry, null, bw,
-                            stream, rfid, _calcObjectName, householdKey.Key, lti, pi, additionalFileIndex, timeResolution);
+                            stream, rfid, _calcObjectName, householdKey.Key, lti, pi,
+                            additionalFileIndex, timeResolution, enablingOption);
                         ResultFileList.ResultFiles.Add(rfe.HashKey, rfe);
                         _inputDataLogger.Save(rfe);
                         return ret;
@@ -282,7 +320,8 @@ namespace Common {
                         var stream = _getStream.GetWriterStream(fileInfo.FullName);
                         var ret = (T) (object) stream;
                         var rfe = new ResultFileEntry(description, fileInfo, displayResultFileEntry, null, null,
-                            stream, rfid, _calcObjectName, householdKey.Key, lti, pi, additionalFileIndex, timeResolution);
+                            stream, rfid, _calcObjectName, householdKey.Key, lti, pi,
+                            additionalFileIndex, timeResolution, enablingOption);
                         ResultFileList.ResultFiles.Add(rfe.HashKey, rfe);
                         _inputDataLogger.Save(rfe);
                         return ret;
@@ -291,7 +330,8 @@ namespace Common {
                         var stream = _getStream.GetWriterStream(fileInfo.FullName);
                         var ret = (T) (object) stream;
                         var rfe = new ResultFileEntry(description,  fileInfo, displayResultFileEntry, null, null,
-                            stream, rfid, _calcObjectName, householdKey.Key, lti, pi, additionalFileIndex, timeResolution);
+                            stream, rfid, _calcObjectName, householdKey.Key, lti, pi,
+                            additionalFileIndex, timeResolution,enablingOption);
                         ResultFileList.ResultFiles.Add(rfe.HashKey, rfe);
                         _inputDataLogger.Save(rfe);
                         return ret;

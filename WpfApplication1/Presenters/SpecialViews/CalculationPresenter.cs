@@ -95,6 +95,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         [CanBeNull] private ChargingStationSet _selectedChargingStationSet;
         [CanBeNull] private TransportationDeviceSet _selectedTransportationDeviceSet;
         [CanBeNull] private TravelRouteSet _selectedTravelRouteSet;
+        private bool _isTransportationEnabled;
 
         public CalculationPresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] CalculateView view) : base(view, "Headerstring", applicationPresenter)
         {
@@ -340,11 +341,22 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                 if (_selectedCalcObject != null) {
                     Sim.MyGeneralConfig.LastSelectedCalcObject = _selectedCalcObject.Name;
                 }
-
                 Sim.MyGeneralConfig.SaveToDB();
                 RecalcForCalcObject();
                 OnPropertyChanged(nameof(SelectedCalcObjectType));
                 OnPropertyChanged(nameof(SelectedCalcObject));
+            }
+        }
+
+        public bool IsTransportationEnabled {
+            get => _isTransportationEnabled;
+            set {
+                if (value == _isTransportationEnabled) {
+                    return;
+                }
+
+                _isTransportationEnabled = value;
+                OnPropertyChanged(nameof(IsTransportationEnabled));
             }
         }
 
@@ -353,6 +365,13 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             get => _selectedCalcObjectType;
             set {
                 _selectedCalcObjectType = value;
+                if (_selectedCalcObjectType == CalcObjectType.House) {
+                    IsTransportationEnabled = false;
+                }
+                else {
+                    IsTransportationEnabled = true;
+                }
+
                 Sim.MyGeneralConfig.LastSelectedCalcType = CalcObjectTypes[value];
                 RefreshCalcObjectList();
             }
@@ -528,7 +547,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
 
             TransportationDeviceSet tds = null;
             TravelRouteSet trs = null;
-            if (EnableTransport) {
+            if (EnableTransport && _selectedCalcObject.CalcObjectType == CalcObjectType.ModularHousehold) {
                 tds = SelectedTransportationDeviceSet;
                 if (tds == null) {
                     Logger.Error("Please select a transportation device set!");
@@ -539,6 +558,26 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                 if (trs == null) {
                     Logger.Error("Please select a travel route set!");
                     return;
+                }
+            }
+
+            if (EnableTransport && _selectedCalcObject.CalcObjectType == CalcObjectType.House) {
+                var house = (House)_selectedCalcObject;
+                foreach (var mhh in house.Households) {
+                    if (mhh.TransportationDeviceSet == null) {
+                        Logger.Error("No transportation device set for household " + mhh.Name);
+                        return;
+                    }
+
+                    if (mhh.ChargingStationSet == null) {
+                        Logger.Error("No charging station set for household " + mhh.Name);
+                        return;
+                    }
+
+                    if (mhh.TravelRouteSet == null) {
+                        Logger.Error("No transportation device set for household " + mhh.Name);
+                        return;
+                    }
                 }
             }
 
@@ -554,7 +593,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                 Sim.MyGeneralConfig.CSVCharacter, Sim.MyGeneralConfig.RandomSeed, Sim.MyGeneralConfig.ExternalStepSize, Sim.MyGeneralConfig.DeleteDatFilesBool,
                 Sim.MyGeneralConfig.WriteExcelColumnBool, Sim.MyGeneralConfig.ShowSettlingPeriodBool, 3,
                 Sim.MyGeneralConfig.RepetitionCount, calculationProfiler, SelectedChargingStationSet,null,
-                Sim.MyGeneralConfig.DeviceProfileHeaderMode,false,resultpath);
+                Sim.MyGeneralConfig.DeviceProfileHeaderMode,false,resultpath,_isTransportationEnabled);
             var cs = new CalcStarter(Sim);
             //_calculationProfiler.Clear();
 #pragma warning disable S2930 // "IDisposables" should be disposed
@@ -601,12 +640,6 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             jcs.OutputDirectory = NameForJsonExportOutputDirectory;
             string databasepath = Sim.ConnectionString.Replace("Data Source=", "");
             houseJob.PathToDatabase = databasepath;
-            jcs.EnableTransportation = EnableTransport;
-            if (EnableTransport) {
-                jcs.ChargingStationSet = SelectedChargingStationSet?.GetJsonReference();
-                jcs.TransportationDeviceSet = SelectedTransportationDeviceSet?.GetJsonReference();
-                jcs.TravelRouteSet = SelectedTravelRouteSet?.GetJsonReference();
-            }
 
             houseJob.CalcSpec = jcs;
             HouseJobSerializer.WriteJsonToFile(resultpath,houseJob);

@@ -166,7 +166,7 @@ namespace ChartCreator2.OxyCharts {
                 }
 
                 var cleanedfullname = Path.Combine(fi.DirectoryName, modifiedName);
-                Save(plotModel1, plotName, cleanedfullname, basisPath);
+                Save(plotModel1, plotName, cleanedfullname, basisPath, CalcOption.HouseholdContents);
             }
             Profiler.StopPart(Utili.GetCurrentMethodAndClass());
         }
@@ -209,7 +209,7 @@ namespace ChartCreator2.OxyCharts {
                 }
 
                 var cleanedfullname = Path.Combine(fi.DirectoryName, modifiedName);
-                Save(plotModel1, plotName, cleanedfullname, basisPath);
+                Save(plotModel1, plotName, cleanedfullname, basisPath, CalcOption.HouseholdContents);
             }
         }
 

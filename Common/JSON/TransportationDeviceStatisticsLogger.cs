@@ -12,7 +12,7 @@ namespace Common.JSON
     {
         private const string TableName = "TransportationDeviceStatistics";
         public TransportationDeviceStatisticsLogger([NotNull] SqlResultLoggingService srls) :
-            base(typeof(List<TransportationDeviceStatisticsEntry>), new ResultTableDefinition(TableName, ResultTableID.TransportationDeviceStatistics, "Statistics about the transportation"), srls)
+            base(typeof(List<TransportationDeviceStatisticsEntry>), new ResultTableDefinition(TableName, ResultTableID.TransportationDeviceStatistics, "Statistics about the transportation", CalcOption.TransportationStatistics), srls)
         {
         }
 

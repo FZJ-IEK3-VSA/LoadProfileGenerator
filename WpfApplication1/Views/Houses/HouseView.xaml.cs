@@ -74,7 +74,8 @@ namespace LoadProfileGenerator.Views.Houses {
                 case CalcObjectType.ModularHousehold: {
                     var hh = (ModularHousehold) CmbModularHouseholds.SelectedItem;
 
-                    Presenter.AddCalcObject(hh,Presenter.SelectedChargingStationSet,Presenter.SelectedTransportationDeviceSet,Presenter.SelectedTravelRouteSet, Presenter.EnableTransportationModelling);
+                    Presenter.AddCalcObject(hh,Presenter.SelectedChargingStationSet,Presenter.SelectedTransportationDeviceSet,
+                        Presenter.SelectedTravelRouteSet);
                 }
                     break;
                 default: throw new LPGException("Forgotten CalcObjectType");

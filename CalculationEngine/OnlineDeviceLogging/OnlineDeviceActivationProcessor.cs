@@ -234,15 +234,15 @@ namespace CalculationEngine.OnlineDeviceLogging {
                     var s = _fft.MakeFile<BinaryWriter>("OnlineDeviceEnergyUsage." + loadType.Name + ".dat",
                         "Binary Device energy usage per device for " + loadType.Name, false,
                         ResultFileID.OnlineDeviceActivationFiles, Constants.GeneralHouseholdKey, TargetDirectory.Temporary,
-                        _calcParameters.InternalStepsize, loadType.ConvertToLoadTypeInformation());
+                        _calcParameters.InternalStepsize,CalcOption.DetailedDatFiles, loadType.ConvertToLoadTypeInformation());
                     _binaryOutStreams.Add(loadType, s);
                 }
-                if (_calcParameters.IsSet(CalcOption.OverallDats) ||
-                    _calcParameters.IsSet(CalcOption.OverallSum)) {
+                if (_calcParameters.IsSet(CalcOption.OverallDats)) {
                     var binaryWriter =
                         _fft.MakeFile<BinaryWriter>("OnlineDeviceEnergyUsage.Sums." + loadType.Name + ".dat",
                             "Binary Device summed energy usage per device for " + loadType.Name, false,
                             ResultFileID.OnlineSumActivationFiles, Constants.GeneralHouseholdKey, TargetDirectory.Temporary, _calcParameters.InternalStepsize,
+                            CalcOption.OverallDats,
                             loadType.ConvertToLoadTypeInformation());
                     _sumBinaryOutStreams.Add(loadType, binaryWriter);
                 }

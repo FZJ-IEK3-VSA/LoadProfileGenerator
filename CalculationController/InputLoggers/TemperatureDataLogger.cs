@@ -40,7 +40,7 @@ namespace CalculationController.InputLoggers {
 
         public TemperatureDataLogger([NotNull] SqlResultLoggingService srls, [NotNull] CalcParameters calcParameters) : base(
             typeof(TemperatureProfile),
-            new ResultTableDefinition("Temperatures", ResultTableID.Temperatures, "Used Temperatures"),
+            new ResultTableDefinition("Temperatures", ResultTableID.Temperatures, "Used Temperatures", CalcOption.TemperatureFile),
             srls)
         {
             _srls = srls;

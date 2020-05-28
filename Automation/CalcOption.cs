@@ -45,6 +45,9 @@
         SumProfileExternalIndividualHouseholdsAsJson = 42,
         JsonSumFiles = 43,
         BodilyActivityStatistics = 44,
-        BasicOverview = 45
+        BasicOverview = 45,
+        DeviceActivations,
+        LocationsEntries,
+        ActionEntries
     }
 }

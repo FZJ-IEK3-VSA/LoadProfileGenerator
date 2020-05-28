@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using Automation;
-using Automation.ResultFiles;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -32,6 +31,7 @@ namespace Common.JSON {
         public int ActualRandomSeed { get; set; }
         public int AffordanceRepetitionCount { get; set; }
 
+        public bool TransportationEnabled { get; set; }
         [NotNull]
         public string CSVCharacter { get; set; } = ";";
 
@@ -44,24 +44,7 @@ namespace Common.JSON {
         public DateTime InternalStartTime { get; set; }
         public TimeSpan InternalStepsize { get; set; }
         public int InternalTimesteps { get; set; }
-        public bool IsInTranportMode([NotNull] HouseholdKey key)
-        {
-            if (!_isInTransportMode.ContainsKey(key)) {
-                return false;
-            }
 
-            return _isInTransportMode[key];
-        }
-
-        public void SetInTransportMode([NotNull] HouseholdKey key, bool value)
-        {
-            if (!value) {
-                return;
-            }
-
-            _isInTransportMode[key] = true;
-        }
-        [NotNull] private readonly Dictionary<HouseholdKey,bool> _isInTransportMode = new Dictionary<HouseholdKey, bool>();
         public LoadTypePriority LoadTypePriority { get; set; } = LoadTypePriority.All;
         [CanBeNull]
         [ItemNotNull]
@@ -82,131 +65,131 @@ namespace Common.JSON {
         public bool WriteExcelColumn { get; set; }
         public bool IgnorePreviousActivitesWhenNeeded { get; set; }
 
-        public void CheckDependenyOnOptions()
-        {
-            if (!Config.ReallyMakeAllFilesIncludingBothSums) {
-                if (IsSet(CalcOption.OverallSum) && IsSet(CalcOption.IndividualSumProfiles)) {
-                    Logger.Error(
-                        "You have both individual and overall sums enabled. This is a waste of time. The overall sum files are just a quicker way of calculating the results when no detailed information is needed. Please only enable one of those.");
-                    Disable(CalcOption.OverallSum);
-                    Enable(CalcOption.OverallDats);
-                }
-            }
+        //public void CheckDependenyOnOptions()
+        //{
+        //    if (!Config.ReallyMakeAllFilesIncludingBothSums) {
+        //        if (IsSet(CalcOption.OverallSum) && IsSet(CalcOption.IndividualSumProfiles)) {
+        //            Logger.Error(
+        //                "You have both individual and overall sums enabled. This is a waste of time. The overall sum files are just a quicker way of calculating the results when no detailed information is needed. Please only enable one of those.");
+        //            Disable(CalcOption.OverallSum);
+        //            Enable(CalcOption.OverallDats);
+        //        }
+        //    }
 
-            // dependencies
-            if (IsSet(CalcOption.OverallSum)) {
-                Enable(CalcOption.OverallDats);
-            }
-            if (IsSet(CalcOption.JsonSumFiles))
-            {
-                Enable(CalcOption.DetailedDatFiles);
-            }
+        //    // dependencies
+        //    if (IsSet(CalcOption.OverallSum)) {
+        //        Enable(CalcOption.OverallDats);
+        //    }
+        //    if (IsSet(CalcOption.JsonSumFiles))
+        //    {
+        //        Enable(CalcOption.DetailedDatFiles);
+        //    }
 
-            if (IsSet(CalcOption.IndividualSumProfiles)) {
-                Enable(CalcOption.DetailedDatFiles);
-            }
+        //    if (IsSet(CalcOption.IndividualSumProfiles)) {
+        //        Enable(CalcOption.DetailedDatFiles);
+        //    }
 
-            if (IsSet(CalcOption.WeekdayProfiles)) {
-                Enable(CalcOption.DetailedDatFiles);
-            }
+        //    if (IsSet(CalcOption.WeekdayProfiles)) {
+        //        Enable(CalcOption.DetailedDatFiles);
+        //    }
 
-            if (IsSet(CalcOption.AffordanceEnergyUse)) {
-                Enable(CalcOption.DetailedDatFiles);
-            }
+        //    if (IsSet(CalcOption.AffordanceEnergyUse)) {
+        //        Enable(CalcOption.DetailedDatFiles);
+        //    }
 
-            if (IsSet(CalcOption.DeviceProfileExternalEntireHouse)) {
-                Enable(CalcOption.DetailedDatFiles);
-            }
-            if (IsSet(CalcOption.DeviceProfileExternalIndividualHouseholds))
-            {
-                Enable(CalcOption.DetailedDatFiles);
-            }
+        //    if (IsSet(CalcOption.DeviceProfileExternalEntireHouse)) {
+        //        Enable(CalcOption.DetailedDatFiles);
+        //    }
+        //    if (IsSet(CalcOption.DeviceProfileExternalIndividualHouseholds))
+        //    {
+        //        Enable(CalcOption.DetailedDatFiles);
+        //    }
 
-            if (IsSet(CalcOption.TotalsPerLoadtype)) {
-                Enable(CalcOption.DetailedDatFiles);
-            }
+        //    if (IsSet(CalcOption.TotalsPerLoadtype)) {
+        //        Enable(CalcOption.DetailedDatFiles);
+        //    }
 
-            if (IsSet(CalcOption.DeviceProfiles)) {
-                Enable(CalcOption.DetailedDatFiles);
-            }
+        //    if (IsSet(CalcOption.DeviceProfiles)) {
+        //        Enable(CalcOption.DetailedDatFiles);
+        //    }
 
-            if (IsSet(CalcOption.ActivationFrequencies)) {
-                //Enable(CalcOption.ActionsLogfile);
-                Enable(CalcOption.AffordanceEnergyUse);
-            }
+        //    if (IsSet(CalcOption.ActivationFrequencies)) {
+        //        //Enable(CalcOption.ActionsLogfile);
+        //        Enable(CalcOption.AffordanceEnergyUse);
+        //    }
 
-            if (IsSet(CalcOption.HouseholdPlan)) {
-                Enable(CalcOption.ActivationFrequencies);
-                //Enable(CalcOption.ActionsLogfile);
-                Enable(CalcOption.AffordanceEnergyUse);
-            }
+        //    if (IsSet(CalcOption.HouseholdPlan)) {
+        //        Enable(CalcOption.ActivationFrequencies);
+        //        //Enable(CalcOption.ActionsLogfile);
+        //        Enable(CalcOption.AffordanceEnergyUse);
+        //    }
 
-            if (IsSet(CalcOption.ActivationsPerHour)) {
-                //Enable(CalcOption.ActionsLogfile);
-            }
+        //    if (IsSet(CalcOption.ActivationsPerHour)) {
+        //        //Enable(CalcOption.ActionsLogfile);
+        //    }
 
-            if (IsSet(CalcOption.TotalsPerDevice)) {
-                Enable(CalcOption.DetailedDatFiles);
-            }
+        //    if (IsSet(CalcOption.TotalsPerDevice)) {
+        //        Enable(CalcOption.DetailedDatFiles);
+        //    }
 
-            if (IsSet(CalcOption.DurationCurve)) {
-                Enable(CalcOption.DetailedDatFiles);
-            }
+        //    if (IsSet(CalcOption.DurationCurve)) {
+        //        Enable(CalcOption.DetailedDatFiles);
+        //    }
 
-            if (IsSet(CalcOption.ActionCarpetPlot)) {
-                //Enable(CalcOption.ActionsLogfile);
-            }
+        //    if (IsSet(CalcOption.ActionCarpetPlot)) {
+        //        //Enable(CalcOption.ActionsLogfile);
+        //    }
 
-            if (IsSet(CalcOption.TimeOfUsePlot)) {
-                Enable(CalcOption.DetailedDatFiles);
-            }
+        //    if (IsSet(CalcOption.TimeOfUsePlot)) {
+        //        Enable(CalcOption.DetailedDatFiles);
+        //    }
 
-            if (IsSet(CalcOption.MakeGraphics)) {
-                //WriteExcelColumn = false;
-            }
+        //    if (IsSet(CalcOption.MakeGraphics)) {
+        //        //WriteExcelColumn = false;
+        //    }
 
-            if (IsSet(CalcOption.PolysunImportFiles)) {
-                Enable(CalcOption.DetailedDatFiles);
-            }
+        //    if (IsSet(CalcOption.PolysunImportFiles)) {
+        //        Enable(CalcOption.DetailedDatFiles);
+        //    }
 
-            if (IsSet(CalcOption.MakePDF)) {
-                Enable(CalcOption.MakeGraphics);
-            }
+        //    if (IsSet(CalcOption.MakePDF)) {
+        //        Enable(CalcOption.MakeGraphics);
+        //    }
 
-            if (IsSet(CalcOption.BodilyActivityStatistics)) {
-                Enable(CalcOption.ActionsEachTimestep);
-            }
-            /*  if (IsSet(CalcOption.SMAImportFiles))
-              {
-                  Enable(CalcOption.DetailedDatFiles);
-              }*/
+        //    if (IsSet(CalcOption.BodilyActivityStatistics)) {
+        //        Enable(CalcOption.ActionsEachTimestep);
+        //    }
+        //    /*  if (IsSet(CalcOption.SMAImportFiles))
+        //      {
+        //          Enable(CalcOption.DetailedDatFiles);
+        //      }*/
 
-            if (IsSet(CalcOption.SumProfileExternalEntireHouse)) {
-                Enable(CalcOption.DetailedDatFiles);
-            }
-            if (IsSet(CalcOption.SumProfileExternalIndividualHouseholds))
-            {
-                Enable(CalcOption.DetailedDatFiles);
-            }
+        //    if (IsSet(CalcOption.SumProfileExternalEntireHouse)) {
+        //        Enable(CalcOption.DetailedDatFiles);
+        //    }
+        //    if (IsSet(CalcOption.SumProfileExternalIndividualHouseholds))
+        //    {
+        //        Enable(CalcOption.DetailedDatFiles);
+        //    }
 
-            if (IsSet(CalcOption.HouseholdPlan)) {
-                Enable(CalcOption.ActivationFrequencies);
-                Enable(CalcOption.HouseholdPlan);
-                //Enable(CalcOption.ActionsLogfile);
-            }
-            if (IsSet(CalcOption.SumProfileExternalIndividualHouseholdsAsJson))
-            {
-                Enable(CalcOption.DetailedDatFiles);
-            }
-            if (!IsSet(CalcOption.DetailedDatFiles) && !IsSet(CalcOption.OverallDats)) {
-                //always enable at least some dat files.
-                Enable(CalcOption.DetailedDatFiles);
-            }
-            if (!IsSet(CalcOption.DetailedDatFiles) && !IsSet(CalcOption.OverallDats)) {
-                throw new LPGException("No dat file generation has been enabled. This is a bug. The workaround is to enable them manually "
-                                       + " by setting the appropriate option (set either DetailedDatFiles or OverallDats), but this should be fixed in the code. Please report.");
-            }
-        }
+        //    if (IsSet(CalcOption.HouseholdPlan)) {
+        //        Enable(CalcOption.ActivationFrequencies);
+        //        Enable(CalcOption.HouseholdPlan);
+        //        //Enable(CalcOption.ActionsLogfile);
+        //    }
+        //    if (IsSet(CalcOption.SumProfileExternalIndividualHouseholdsAsJson))
+        //    {
+        //        Enable(CalcOption.DetailedDatFiles);
+        //    }
+        //    if (!IsSet(CalcOption.DetailedDatFiles) && !IsSet(CalcOption.OverallDats)) {
+        //        //always enable at least some dat files.
+        //        Enable(CalcOption.DetailedDatFiles);
+        //    }
+        //    if (!IsSet(CalcOption.DetailedDatFiles) && !IsSet(CalcOption.OverallDats)) {
+        //        throw new LPGException("No dat file generation has been enabled. This is a bug. The workaround is to enable them manually "
+        //                               + " by setting the appropriate option (set either DetailedDatFiles or OverallDats), but this should be fixed in the code. Please report.");
+        //    }
+        //}
 
         public void CheckSettings()
         {
@@ -260,7 +243,7 @@ namespace Common.JSON {
         {
             if (!Options.Contains(option)) {
                 Options.Add(option);
-                CheckDependenyOnOptions();
+//                CheckDependenyOnOptions();
             }
         }
 
@@ -352,7 +335,7 @@ namespace Common.JSON {
                 }
             }
 
-            CheckDependenyOnOptions();
+//            CheckDependenyOnOptions();
         }
 
         [NotNull]
@@ -409,14 +392,14 @@ namespace Common.JSON {
                 _options.Clear();
             }*/
 
-        private void Disable(CalcOption option)
-        {
-            if (Options.Contains(option)) {
-                Options.Remove(option);
-            }
+        //private void Disable(CalcOption option)
+        //{
+        //    if (Options.Contains(option)) {
+        //        Options.Remove(option);
+        //    }
 
-            //CheckDependenyOnOptions();
-        }
+        //    //CheckDependenyOnOptions();
+        //}
 
         private void InitializeTimeSteps()
         {

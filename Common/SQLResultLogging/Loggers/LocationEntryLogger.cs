@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using Common.JSON;
 using JetBrains.Annotations;
@@ -10,7 +11,7 @@ namespace Common.SQLResultLogging.Loggers {
         private const string TableName = "LocationEntries";
 
         public LocationEntryLogger([NotNull] SqlResultLoggingService srls) :
-            base(typeof(LocationEntry), new ResultTableDefinition(TableName,ResultTableID.LocationEntries, "Location Entries"), srls)
+            base(typeof(LocationEntry), new ResultTableDefinition(TableName,ResultTableID.LocationEntries, "Location Entries", CalcOption.LocationsEntries), srls)
         {
         }
 

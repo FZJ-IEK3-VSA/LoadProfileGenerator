@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Automation;
 using Automation.ResultFiles;
 using Common.CalcDto;
 using JetBrains.Annotations;
@@ -9,7 +10,7 @@ namespace Common.SQLResultLogging.InputLoggers
     public class HouseDtoLogger : DataSaverBase
     {
         public HouseDtoLogger([NotNull] SqlResultLoggingService srls):
-            base(typeof(CalcHouseDto), new ResultTableDefinition("HouseDefinition",ResultTableID.HouseDefinition, "Json Specification of the house"),srls)
+            base(typeof(CalcHouseDto), new ResultTableDefinition("HouseDefinition",ResultTableID.HouseDefinition, "Json Specification of the house", CalcOption.HouseholdContents),srls)
         {
         }
 

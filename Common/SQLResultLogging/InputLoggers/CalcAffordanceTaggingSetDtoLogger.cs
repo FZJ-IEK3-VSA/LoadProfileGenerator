@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Automation;
 using Automation.ResultFiles;
 using Common.CalcDto;
 using JetBrains.Annotations;
@@ -9,7 +10,7 @@ namespace Common.SQLResultLogging.InputLoggers
     public class CalcAffordanceTaggingSetDtoLogger : DataSaverBase {
         private const string TableName = "AffordanceTaggingSets";
         public CalcAffordanceTaggingSetDtoLogger([NotNull] SqlResultLoggingService srls)
-            : base(typeof(List<CalcAffordanceTaggingSetDto>),  new ResultTableDefinition(TableName,ResultTableID.AffordanceTaggingSets, "Json Specification of the Affordances Tagging Sets"), srls)
+            : base(typeof(List<CalcAffordanceTaggingSetDto>),  new ResultTableDefinition(TableName,ResultTableID.AffordanceTaggingSets, "Json Specification of the Affordances Tagging Sets", CalcOption.HouseholdContents), srls)
         {
         }
 

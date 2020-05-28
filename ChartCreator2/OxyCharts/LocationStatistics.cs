@@ -86,7 +86,7 @@ namespace ChartCreator2.OxyCharts {
 
                 plotModel1.Series.Add(pieSeries1);
                 var newfilename = "LocationStatistics." + entry.CleanName;
-                Save(plotModel1, plotName, rfe.FullFileName, Parameters.BaseDirectory, newfilename);
+                Save(plotModel1, plotName, rfe.FullFileName, Parameters.BaseDirectory,CalcOption.LocationsFile, newfilename);
             }
             Profiler.StopPart(Utili.GetCurrentMethodAndClass());
             return FileProcessingResult.ShouldCreateFiles;

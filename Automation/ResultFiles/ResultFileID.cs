@@ -116,5 +116,6 @@ namespace Automation.ResultFiles {
         ExternalSumsForHouseholdsJson = 82,
         JsonSums = 83,
 
+        SqliteResultFiles
     }
 }

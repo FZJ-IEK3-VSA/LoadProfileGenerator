@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using OxyPlot;
@@ -69,7 +70,7 @@ namespace ChartCreator2.OxyCharts {
                 lineSeries1.Points.Add(new DataPoint(j, values[j]));
             }
             plotModel1.Series.Add(lineSeries1);
-            Save(plotModel1, plotName, rfe.FullFileName, Parameters.BaseDirectory);
+            Save(plotModel1, plotName, rfe.FullFileName, Parameters.BaseDirectory,CalcOption.SumProfileExternalIndividualHouseholds);
             Profiler.StopPart(Utili.GetCurrentMethodAndClass());
             return FileProcessingResult.ShouldCreateFiles;
         }

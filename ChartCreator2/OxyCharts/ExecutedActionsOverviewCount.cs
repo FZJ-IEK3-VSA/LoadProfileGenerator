@@ -138,7 +138,7 @@ namespace ChartCreator2.OxyCharts {
                     throw new LPGException("Directory Name was null");
                 }
                 var correctfilename = Path.Combine(fi.DirectoryName, pn + cleanedName + ".png");
-                Save(plotModel1, plotName, correctfilename, Parameters.BaseDirectory);
+                Save(plotModel1, plotName, correctfilename, Parameters.BaseDirectory, CalcOption.ActivationsPerHour);
             }
             Profiler.StopPart(Utili.GetCurrentMethodAndClass());
             return FileProcessingResult.ShouldCreateFiles;

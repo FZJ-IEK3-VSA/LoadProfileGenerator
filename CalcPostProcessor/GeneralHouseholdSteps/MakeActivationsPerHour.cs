@@ -36,25 +36,22 @@ using Automation.ResultFiles;
 using CalcPostProcessor.Steps;
 using Common;
 using Common.CalcDto;
-using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.Loggers;
 using JetBrains.Annotations;
 
 namespace CalcPostProcessor.GeneralHouseholdSteps {
     internal class MakeActivationsPerHour : HouseholdStepBase {
-        [NotNull] private readonly CalcParameters _calcParameters;
 
-        [NotNull] private readonly FileFactoryAndTracker _fft;
+        [NotNull] private readonly IFileFactoryAndTracker _fft;
 
         public MakeActivationsPerHour([NotNull] CalcDataRepository repository,
                                       [NotNull] ICalculationProfiler profiler,
-                                      [NotNull] FileFactoryAndTracker fft) : base(repository,
+                                      [NotNull] IFileFactoryAndTracker fft) : base(repository,
             AutomationUtili.GetOptionList(CalcOption.ActivationsPerHour),
             profiler,
             "Activiations per Hour",0)
         {
-            _calcParameters = Repository.CalcParameters;
             _fft = fft;
         }
 
@@ -69,11 +66,15 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
             BuildActivationsPerHours(_fft, entry.HouseholdKey, Repository.AffordanceTaggingSets, Repository.ReadActionEntries(entry.HouseholdKey));
         }
 
-        private void BuildActivationsPerHours([NotNull] FileFactoryAndTracker fft,
+        [NotNull]
+        public override List<CalcOption> NeededOptions => new List<CalcOption>();
+
+        private void BuildActivationsPerHours([NotNull] IFileFactoryAndTracker fft,
                                               [NotNull] HouseholdKey householdKey,
                                               [NotNull] [ItemNotNull] List<CalcAffordanceTaggingSetDto> taggingSets,
                                               [NotNull] [ItemNotNull] List<ActionEntry> actionEntries)
         {
+            var calcParameters = Repository.CalcParameters;
             var activitiesPerHour = new Dictionary<string, Dictionary<string, int[]>>();
             var activitiesPerWeekday = new Dictionary<string, Dictionary<string, int[]>>();
             foreach (ActionEntry ase in actionEntries) {
@@ -99,13 +100,13 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
                 ResultFileID.ActivationsPerHour,
                 householdKey,
                 TargetDirectory.Reports,
-                _calcParameters.InternalStepsize)) {
+                calcParameters.InternalStepsize, CalcOption.ActivationsPerHour)) {
                 foreach (var person in activitiesPerHour) {
                     sw.WriteLine(person.Key);
                     var s = new StringBuilder();
-                    s.Append("Hour").Append(_calcParameters.CSVCharacter);
+                    s.Append("Hour").Append(calcParameters.CSVCharacter);
                     for (var i = 0; i < 24; i++) {
-                        s.Append(i).Append(_calcParameters.CSVCharacter);
+                        s.Append(i).Append(calcParameters.CSVCharacter);
                     }
 
                     sw.WriteLine(s);
@@ -114,7 +115,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
                         sb.Clear();
                         sb.Append(device.Key);
                         for (var i = 0; i < 24; i++) {
-                            sb.Append(_calcParameters.CSVCharacter);
+                            sb.Append(calcParameters.CSVCharacter);
                             sb.Append(device.Value[i].ToString(CultureInfo.InvariantCulture));
                         }
 
@@ -129,19 +130,19 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
                 ResultFileID.ExecutedActionsOverview,
                 householdKey,
                 TargetDirectory.Reports,
-                _calcParameters.InternalStepsize)) {
+                calcParameters.InternalStepsize, CalcOption.ActivationsPerHour)) {
                 foreach (var person in activitiesPerHour) {
                     sw.WriteLine("-----");
                     sw.WriteLine(person.Key);
                     var header = new StringBuilder();
-                    header.Append("Actions").Append(_calcParameters.CSVCharacter).Append("Times of execution in the simulation period")
-                        .Append(_calcParameters.CSVCharacter);
+                    header.Append("Actions").Append(calcParameters.CSVCharacter).Append("Times of execution in the simulation period")
+                        .Append(calcParameters.CSVCharacter);
                     foreach (var weekday in Enum.GetValues(typeof(DayOfWeek))) {
-                        header.Append(weekday).Append(_calcParameters.CSVCharacter);
+                        header.Append(weekday).Append(calcParameters.CSVCharacter);
                     }
 
                     foreach (var set in taggingSets) {
-                        header.Append(set.Name).Append(_calcParameters.CSVCharacter);
+                        header.Append(set.Name).Append(calcParameters.CSVCharacter);
                     }
 
                     sw.WriteLine(header);
@@ -171,7 +172,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
                     foreach (var allline in alllines) {
                         var builder = new StringBuilder();
                         foreach (var s1 in allline) {
-                            builder.Append(s1).Append(_calcParameters.CSVCharacter);
+                            builder.Append(s1).Append(calcParameters.CSVCharacter);
                         }
 
                         sw.WriteLine(builder);

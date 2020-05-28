@@ -1,6 +1,6 @@
 ﻿using Automation;
 using Automation.ResultFiles;
-using SimulationEngineLib.SimZukunftProcessor;
+using SimulationEngineLib.HouseJobProcessor;
 using Xunit;
 
 namespace SimulationEngine.Tests.SimZukunftProcessor

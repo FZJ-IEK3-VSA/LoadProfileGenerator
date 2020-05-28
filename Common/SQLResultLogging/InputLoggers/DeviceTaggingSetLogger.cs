@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Automation;
 using Automation.ResultFiles;
 using Common.JSON;
 using JetBrains.Annotations;
@@ -9,7 +10,7 @@ namespace Common.SQLResultLogging.InputLoggers
     public class DeviceTaggingSetLogger : DataSaverBase
     {
         public DeviceTaggingSetLogger([NotNull] SqlResultLoggingService srls): base(typeof(List<DeviceTaggingSetInformation>),new ResultTableDefinition(nameof(DeviceTaggingSetInformation),
-            ResultTableID.DeviceTaggingSetInformation, "Device Tagging Sets"),srls)
+            ResultTableID.DeviceTaggingSetInformation, "Device Tagging Sets", CalcOption.HouseholdContents),srls)
         {
         }
 

@@ -46,10 +46,8 @@ namespace Database.Tables.Houses {
         [CanBeNull] private readonly ICalcObject _household;
 
         public HouseHousehold([CanBeNull]int? pID, int houseID, [CanBeNull] ICalcObject household, [NotNull] string connectionString,
-            [NotNull] string householdName, StrGuid guid, [CanBeNull] TransportationDeviceSet transportationDeviceSet, [CanBeNull] ChargingStationSet chargingStationSet, [CanBeNull] TravelRouteSet travelRouteSet,
-                              bool enableTransportationModelling) : base(householdName, TableName, connectionString, guid)
+            [NotNull] string householdName, StrGuid guid, [CanBeNull] TransportationDeviceSet transportationDeviceSet, [CanBeNull] ChargingStationSet chargingStationSet, [CanBeNull] TravelRouteSet travelRouteSet) : base(householdName, TableName, connectionString, guid)
         {
-            EnableTransportationModelling = enableTransportationModelling;
             ID = pID;
             HouseID = houseID;
             _household = household;
@@ -62,7 +60,6 @@ namespace Database.Tables.Houses {
         public ICalcObject CalcObject => _household;
         [CanBeNull]
         public TransportationDeviceSet TransportationDeviceSet {get; set; }
-        public bool EnableTransportationModelling { get; set; }
         [CanBeNull]
         public ChargingStationSet ChargingStationSet { get; set; }
         [CanBeNull]
@@ -106,10 +103,9 @@ namespace Database.Tables.Houses {
 
             int travelrouteSetID = dr.GetIntFromLong("TravelRouteSetID",false, ignoreMissingFields);
             var travelrouteSet = aic.TravelRouteSets.FirstOrDefault(x => x.ID == travelrouteSetID);
-            bool useTransportation = dr.GetBool("UseTransportation", false, false, ignoreMissingFields);
             return new HouseHousehold(id, houseID, calcObject,
                 connectionString, householdname, guid,
-                transportationDeviceSet,chargingStation,travelrouteSet,useTransportation);
+                transportationDeviceSet,chargingStation,travelrouteSet);
         }
 
         [ItemNotNull]
@@ -173,7 +169,6 @@ namespace Database.Tables.Houses {
             {
                 cmd.AddParameter("TravelRouteSetID", TravelRouteSet.IntID);
             }
-            cmd.AddParameter("UseTransportation", EnableTransportationModelling);
         }
 
         public override string ToString() => Name;

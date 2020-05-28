@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using JetBrains.Annotations;
@@ -201,7 +202,7 @@ namespace ChartCreator2.OxyCharts {
             entries.RemoveAt(entries.Count - 1);
 
             var plotModel1 = MakeChart(plotName, entries, Parameters.ShowTitle, srcEntry.LoadTypeInformation);
-            Save(plotModel1, plotName, srcEntry.FullFileName, Parameters.BaseDirectory);
+            Save(plotModel1, plotName, srcEntry.FullFileName, Parameters.BaseDirectory, CalcOption.WeekdayProfiles);
             return FileProcessingResult.ShouldCreateFiles;
         }
 

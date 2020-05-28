@@ -88,7 +88,7 @@ namespace ChartCreator2.PDF {
             if (startpdf) {
                 Process.Start(dstFullName);
             }
-            fft.RegisterFile(filename,"Overview of all results",true,ResultFileID.PDF,Constants.GeneralHouseholdKey,TargetDirectory.Root);
+            fft.RegisterFile(filename,"Overview of all results",true,ResultFileID.PDF,Constants.GeneralHouseholdKey,TargetDirectory.Root, CalcOption.MakePDF);
             _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - PDF Cleanup");
             //return new ResultFileEntry("Overview", filename, dstFullName, true);
         }

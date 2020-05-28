@@ -394,7 +394,6 @@ namespace Database.Tables.ModularHouseholds {
             set => SetValueWithNotify(value, ref _energyIntensityType, nameof(EnergyIntensityType));
         }
 
-        public bool IsTransportationEnabled { get; set; }
 
         public void AddHouseholdTag([NotNull] HouseholdTag householdTag)
         {

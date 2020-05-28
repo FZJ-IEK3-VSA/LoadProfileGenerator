@@ -1,4 +1,5 @@
-﻿using Automation.ResultFiles;
+﻿using Automation;
+using Automation.ResultFiles;
 using CalculationController.Queue;
 using Common.SQLResultLogging;
 using JetBrains.Annotations;
@@ -11,7 +12,7 @@ namespace CalculationController.InputLoggers
     public class CalcStartParameterSetLogger : DataSaverBase
     {
         public CalcStartParameterSetLogger( [NotNull] SqlResultLoggingService srls): base(typeof(CalcStartParameterSet),
-            new ResultTableDefinition("CalcStartParameterSet",ResultTableID.CalcStartParameters, "All the calculation start parameters"), srls)
+            new ResultTableDefinition("CalcStartParameterSet",ResultTableID.CalcStartParameters, "All the calculation start parameters", CalcOption.BasicOverview), srls)
         {
         }
 

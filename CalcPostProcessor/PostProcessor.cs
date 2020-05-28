@@ -31,6 +31,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using CalcPostProcessor.Steps;
 using Common;
@@ -40,9 +41,67 @@ using Common.SQLResultLogging;
 using JetBrains.Annotations;
 
 namespace CalcPostProcessor {
+    public class OptionDependencyManager {
+        Dictionary<CalcOption, List<CalcOption>> _dependencies = new Dictionary<CalcOption, List<CalcOption>>();
+
+        public OptionDependencyManager(
+            [NotNull] [ItemNotNull] ILoadTypeStep[] loadTypePostProcessingSteps,
+            [NotNull] [ItemNotNull] IGeneralStep[] generalPostProcessingSteps,
+            [NotNull] [ItemNotNull] IGeneralHouseholdStep[] generalHouseholdSteps,
+            [NotNull] [ItemNotNull] IHouseholdLoadTypeStep[] householdloadTypePostProcessingSteps,
+            [NotNull] [ItemNotNull] ILoadTypeSumStep[] loadtypeSumPostProcessingSteps
+        )
+        {
+            List<IRequireOptions> allSteps = new List<IRequireOptions>();
+            allSteps.AddRange(loadTypePostProcessingSteps);
+            allSteps.AddRange(generalPostProcessingSteps);
+            allSteps.AddRange(generalHouseholdSteps);
+            allSteps.AddRange(householdloadTypePostProcessingSteps);
+            allSteps.AddRange(loadtypeSumPostProcessingSteps);
+            foreach (var step in allSteps) {
+                foreach (var option in step.Options) {
+                    if (!Dependencies.ContainsKey(option)) {
+                        Dependencies.Add(option, new List<CalcOption>());
+                    }
+
+                    foreach (var neededOption in step.NeededOptions) {
+                        if (!Dependencies[option].Contains(neededOption)) {
+                            Dependencies[option].Add(neededOption);
+                        }
+                    }
+                }
+            }
+
+        }
+
+        public void EnableRequiredOptions(HashSet<CalcOption> options)
+        {
+            int count = 0;
+            foreach (var pair in Dependencies)
+            {
+                if (options.Contains(pair.Key))
+                {
+                    foreach (var requiredOption in pair.Value)
+                    {
+                        if (!options.Contains(requiredOption))
+                        {
+                            options.Add(requiredOption);
+                            count++;
+                        }
+                    }
+                }
+            }
+            if(count > 0){
+                EnableRequiredOptions(options);
+            }
+            Logger.Info("Enabled " + count + " dependencies");
+        }
+        public Dictionary<CalcOption, List<CalcOption>> Dependencies => _dependencies;
+    }
+
     public class Postprocessor {
         [NotNull]
-        private readonly FileFactoryAndTracker _fft;
+        private readonly IFileFactoryAndTracker _fft;
         [NotNull]
         private readonly ICalculationProfiler _calculationProfiler;
         [ItemNotNull]
@@ -69,7 +128,7 @@ namespace CalcPostProcessor {
             [NotNull][ItemNotNull] IGeneralHouseholdStep[] generalHouseholdSteps,
             [NotNull][ItemNotNull] IHouseholdLoadTypeStep[] householdloadTypePostProcessingSteps,
             [NotNull][ItemNotNull] ILoadTypeSumStep[] loadtypeSumPostProcessingSteps,
-            [NotNull] FileFactoryAndTracker fft
+            [NotNull] IFileFactoryAndTracker fft
             )
         {
             _loadTypeSumPostProcessingSteps = loadtypeSumPostProcessingSteps;
@@ -225,15 +284,15 @@ namespace CalcPostProcessor {
             if (_loadTypeSumPostProcessingSteps.Any(x => x.IsEnabled()) ) {
                 _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Calculation of the sums per load type");
                 foreach (var calcLoadType in _repository.LoadTypes) {
-                    if (!_fft.CheckForResultFileEntry(ResultFileID.OnlineSumActivationFiles,
-                        calcLoadType.Name,
-                        Constants.GeneralHouseholdKey,
-                        null,
-                        null)) {
-                        Logger.Info("Skipping post-processing of load type " + calcLoadType.Name +
-                                    " because there was no sum dat file generated for it.");
-                        continue;
-                    }
+                    //if (!_fft.CheckForResultFileEntry(ResultFileID.OnlineSumActivationFiles,
+                    //    calcLoadType.Name,
+                    //    Constants.GeneralHouseholdKey,
+                    //    null,
+                    //    null)) {
+                    //    Logger.Info("Skipping post-processing of load type " + calcLoadType.Name +
+                    //                " because there was no sum dat file generated for it.");
+                    //    continue;
+                    //}
 
                     if (loadTypesForPostProcessing != null && loadTypesForPostProcessing.Count > 0 &&
                         !loadTypesForPostProcessing.Contains(calcLoadType.Name)) {
@@ -262,6 +321,7 @@ namespace CalcPostProcessor {
             }
             _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Calculation of the individual profiles for devices and households");
             // needs to be persistent object to keep the dictionary for all load types
+            int fileCount = 0;
             foreach (var calcLoadType in _repository.LoadTypes) {
                 if (!_fft.CheckForResultFileEntry(ResultFileID.OnlineDeviceActivationFiles, calcLoadType.Name,
                     Constants.GeneralHouseholdKey, null, null)) {
@@ -275,6 +335,7 @@ namespace CalcPostProcessor {
                 }
                 _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - " + calcLoadType.Name);
                 List<OnlineEnergyFileRow> energyFileRows = ReadOnlineEnergyFileRowsIntoMemory(calcLoadType, out var total);
+                fileCount++;
                 if (Config.IsInUnitTesting && Config.ExtraUnitTestChecking) {
                     Logger.Info("Starting total:" + total);
                     CheckTotalsForChange(energyFileRows, total);
@@ -291,6 +352,15 @@ namespace CalcPostProcessor {
                     }
                 }
                 _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - " + calcLoadType.Name);
+            }
+
+            if (fileCount == 0) {
+                var ltp = _loadTypePostProcessingSteps.Where(x => x.IsEnabled()).Select(x=> x.StepName).ToList();
+                var hhltp = _householdloadTypePostProcessingSteps.Where(x => x.IsEnabled()).Select(x => x.StepName)
+                    .ToList();
+                string s1 = string.Join("\n", ltp);
+                string s2 = string.Join("\n", hhltp);
+                throw new LPGException("Not a single file for postprocessing was found, but the following steps were enabled:" + s1 + "\n"+ s2);
             }
             _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Calculation of the individual profiles for devices and households");
             //if (_repository.DeviceSumInformationList.DeviceSums.Count > 0) {

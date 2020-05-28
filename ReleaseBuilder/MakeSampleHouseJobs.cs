@@ -56,7 +56,8 @@ namespace ReleaseBuilder
                         HouseCreationAndCalculationJob hj = new HouseCreationAndCalculationJob("Households", "2019", "TK",HouseDefinitionType.HouseData);
                         hj.House = new HouseData(Guid.NewGuid().ToStrGuid(), "HT01", 10000, 10000, "House for " + mhh.Name);
                         hj.House.Households.Add(new HouseholdData(Guid.NewGuid().ToString(),
-                            false, mhh.Name, null, null, null, null, HouseholdDataSpecificationType.ByHouseholdName));
+                             mhh.Name, null, null,
+                            null, null, HouseholdDataSpecificationType.ByHouseholdName));
                         hj.House.Households[0].HouseholdNameSpecification = new HouseholdNameSpecification(mhh.GetJsonReference());
                         SetCalcSpec(hj, sim);
                         string fn = Path.Combine(dir, AutomationUtili.CleanFileName(mhh.Name) + ".json");
@@ -91,8 +92,7 @@ namespace ReleaseBuilder
                             string ht = houseTypes[rnd.Next(houseTypes.Count)];
                             Logger.Info(ht);
                             hj.House = new HouseData(Guid.NewGuid().ToStrGuid(), ht, 10000, 10000, "House for " + mhh.Name + " " + i);
-                            hj.House.Households.Add(new HouseholdData(Guid.NewGuid().ToString(), false,
-                                mhh.Name, null, null, null,
+                            hj.House.Households.Add(new HouseholdData(Guid.NewGuid().ToString(),mhh.Name, null, null, null,
                                 null, HouseholdDataSpecificationType.ByTemplateName));
                             hj.House.Households[0].HouseholdTemplateSpecification = new HouseholdTemplateSpecification(mhh.Name);
                             SetCalcSpec(hj, sim);

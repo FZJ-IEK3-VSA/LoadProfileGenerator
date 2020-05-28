@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using Common.CalcDto;
 using Common.SQLResultLogging.Loggers;
@@ -11,7 +12,7 @@ namespace Common.SQLResultLogging.InputLoggers
     public class CalcVariableDtoLogger : DataSaverBase
     {
         public CalcVariableDtoLogger([NotNull] SqlResultLoggingService srls)
-            : base(typeof(CalcVariableDto), new ResultTableDefinition("CalcVariableDefinition",ResultTableID.VariableDefinitions, "Json Specification of the Variables"), srls)
+            : base(typeof(CalcVariableDto), new ResultTableDefinition("CalcVariableDefinition",ResultTableID.VariableDefinitions, "Json Specification of the Variables", CalcOption.HouseholdContents), srls)
         {
         }
 

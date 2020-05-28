@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using JetBrains.Annotations;
@@ -93,7 +94,7 @@ namespace ChartCreator2.OxyCharts {
                     plotModel1.Annotations.Add(pointAnnotation1);
                 }
             }
-            Save(plotModel1, plotName, srcEntry.FullFileName, Parameters.BaseDirectory);
+            Save(plotModel1, plotName, srcEntry.FullFileName, Parameters.BaseDirectory, CalcOption.DurationCurve);
             Profiler.StopPart(Utili.GetCurrentMethodAndClass());
             return FileProcessingResult.ShouldCreateFiles;
         }

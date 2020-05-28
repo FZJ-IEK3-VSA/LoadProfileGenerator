@@ -48,21 +48,19 @@ using JetBrains.Annotations;
 
 namespace CalcPostProcessor.LoadTypeHouseholdSteps {
     public class MakeTotalsPerDevice : HouseholdLoadTypeStepBase {
-        [NotNull] private readonly CalcParameters _calcParameters;
 
-        [NotNull] private readonly FileFactoryAndTracker _fft;
+        [NotNull] private readonly IFileFactoryAndTracker _fft;
 
         private readonly IInputDataLogger _inputDataLogger;
 
         public MakeTotalsPerDevice([NotNull] CalcDataRepository repository,
                                    [NotNull] ICalculationProfiler profiler,
-                                   [NotNull] FileFactoryAndTracker fft,
+                                   [NotNull] IFileFactoryAndTracker fft,
                                    IInputDataLogger inputDataLogger) : base(repository,
             AutomationUtili.GetOptionList(CalcOption.TotalsPerDevice),
             profiler,
             "Totals per Device")
         {
-            _calcParameters = Repository.CalcParameters;
             _inputDataLogger = inputDataLogger;
             _fft = fft;
         }
@@ -125,6 +123,9 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
         }
 
         [NotNull]
+        public override List<CalcOption> NeededOptions => new List<CalcOption>();
+
+        [NotNull]
         private Dictionary<CalcLoadTypeDto, Dictionary<StrGuid, double>> GetAverageYearlyConsumptionPerDevice(
             [NotNull] [ItemNotNull] List<ICalcDeviceDto> alldevices)
         {
@@ -181,7 +182,8 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                                      [NotNull] EnergyFileColumns efc,
                                      [NotNull] HouseholdKey key)
         {
-            var dsc = new DateStampCreator(_calcParameters);
+            var calcParameters = Repository.CalcParameters;
+            var dsc = new DateStampCreator(calcParameters);
             if (!efc.ColumnEntriesByColumn.ContainsKey(dstLoadType)) {
                 return;
             }
@@ -225,10 +227,11 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                                                                       [NotNull] OnlineEnergyFileRow sum,
                                                                       int rowlength)
         {
+            var calcParameters = Repository.CalcParameters;
             var sumsPerMonth = new Dictionary<int, OnlineEnergyFileRow>();
             double runningtotal = 0;
             foreach (var efr in energyFileRows) {
-                curDate += _calcParameters.InternalStepsize;
+                curDate += calcParameters.InternalStepsize;
                 sum.AddValues(efr);
                 if (Config.IsInUnitTesting && Config.ExtraUnitTestChecking) {
                     runningtotal += efr.SumFresh();
@@ -249,19 +252,20 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             return sumsPerMonth;
         }
 
-        private void MakeTotalsPerDeviceTaggingSet([NotNull] FileFactoryAndTracker fft,
+        private void MakeTotalsPerDeviceTaggingSet([NotNull] IFileFactoryAndTracker fft,
                                                    [NotNull] CalcLoadTypeDto dstLoadType,
                                                    [ItemNotNull] [NotNull] List<DeviceTaggingSetInformation> deviceTaggingSets,
                                                    [NotNull] Dictionary<string, double> deviceEnergyDict,
                                                    [NotNull] HouseholdKey hhkey)
         {
+            var calcParameters = Repository.CalcParameters;
             using (var file = fft.MakeFile<StreamWriter>("DeviceTaggingSet." + dstLoadType.FileName + "." + hhkey.Key + ".csv",
                 "Summed up energy use into the AffordanceToCategories in the device tagging sets for " + dstLoadType.Name,
                 true,
                 ResultFileID.DeviceTaggingSetFiles,
                 hhkey,
                 TargetDirectory.Reports,
-                _calcParameters.InternalStepsize,
+                calcParameters.InternalStepsize,CalcOption.TotalsPerDevice,
                 dstLoadType.ConvertToLoadTypeInformation())) {
                 foreach (var tagSet in deviceTaggingSets) {
                     file.WriteLine("-----");
@@ -283,9 +287,9 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                         sum += keyValuePair.Value;
                     }
 
-                    file.WriteLine("Tag" + _calcParameters.CSVCharacter + "Energy Used [" + dstLoadType.UnitOfSum + "]" +
-                                   _calcParameters.CSVCharacter + "Percentage" + _calcParameters.CSVCharacter + "Reference Value" +
-                                   _calcParameters.CSVCharacter);
+                    file.WriteLine("Tag" + calcParameters.CSVCharacter + "Energy Used [" + dstLoadType.UnitOfSum + "]" +
+                                   calcParameters.CSVCharacter + "Percentage" + calcParameters.CSVCharacter + "Reference Value" +
+                                   calcParameters.CSVCharacter);
 
                     foreach (var tag in energyUsePerTag) {
                         var referenceValue = string.Empty;
@@ -294,14 +298,14 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                             referenceValue = tagSet.ReferenceValues[key].ToString(Config.CultureInfo);
                         }
 
-                        file.WriteLine(tag.Key + _calcParameters.CSVCharacter + tag.Value * dstLoadType.ConversionFactor +
-                                       _calcParameters.CSVCharacter + (tag.Value / sum).ToString("0.0000", Config.CultureInfo) +
-                                       _calcParameters.CSVCharacter + referenceValue + _calcParameters.CSVCharacter);
+                        file.WriteLine(tag.Key + calcParameters.CSVCharacter + tag.Value * dstLoadType.ConversionFactor +
+                                       calcParameters.CSVCharacter + (tag.Value / sum).ToString("0.0000", Config.CultureInfo) +
+                                       calcParameters.CSVCharacter + referenceValue + calcParameters.CSVCharacter);
                     }
 
                     file.WriteLine();
-                    file.WriteLine("Sum" + _calcParameters.CSVCharacter + sum * dstLoadType.ConversionFactor + _calcParameters.CSVCharacter + "1" +
-                                   _calcParameters.CSVCharacter);
+                    file.WriteLine("Sum" + calcParameters.CSVCharacter + sum * dstLoadType.ConversionFactor + calcParameters.CSVCharacter + "1" +
+                                   calcParameters.CSVCharacter);
                 }
             }
         }
@@ -309,7 +313,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private void Run([NotNull] CalcLoadTypeDto dstLoadType,
                          [NotNull] [ItemNotNull] List<OnlineEnergyFileRow> energyFileRows,
-                         [NotNull] FileFactoryAndTracker fft,
+                         [NotNull] IFileFactoryAndTracker fft,
                          [NotNull] EnergyFileColumns efc,
                          [NotNull] Dictionary<CalcLoadTypeDto, Dictionary<StrGuid, double>> loadTypeTodeviceIDToAverageLookup,
                          [ItemNotNull] [NotNull] List<DeviceTaggingSetInformation> deviceTaggingSets,
@@ -321,11 +325,11 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                 //for this load type for this house there are no column, so nothing to do
                 return;
             }
-
+            var calcParameters = Repository.CalcParameters;
             var rowlength = energyFileRows[0].EnergyEntries.Count;
             var ts = new TimeStep(0, 0, true);
             var sum = new OnlineEnergyFileRow(ts, new List<double>(new double[rowlength]), dstLoadType);
-            var curDate = _calcParameters.OfficialStartTime;
+            var curDate = calcParameters.OfficialStartTime;
             var sumsPerMonth = MakeSumsPerMonth(dstLoadType, energyFileRows, curDate, sum, rowlength);
             /*
             if (Config.IsInUnitTesting && Config.ExtraUnitTestChecking) {
@@ -357,7 +361,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             var builder = new StringBuilder();
             foreach (var calcDeviceTaggingSet in deviceTaggingSets) {
                 if (calcDeviceTaggingSet.LoadTypesForThisSet.Any(x => x.Name == dstLoadType.Name)) {
-                    builder.Append(calcDeviceTaggingSet.Name).Append(_calcParameters.CSVCharacter);
+                    builder.Append(calcDeviceTaggingSet.Name).Append(calcParameters.CSVCharacter);
                 }
             }
 
@@ -368,24 +372,24 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                 ResultFileID.DeviceSums,
                 key,
                 TargetDirectory.Reports,
-                _calcParameters.InternalStepsize,
+                calcParameters.InternalStepsize,CalcOption.TotalsPerDevice,
                 dstLoadType.ConvertToLoadTypeInformation());
-            var calcDuration = _calcParameters.OfficialEndTime - _calcParameters.OfficialStartTime;
+            var calcDuration = calcParameters.OfficialEndTime - calcParameters.OfficialStartTime;
             var amountofYears = calcDuration.TotalDays / 365.0;
             var sb = new StringBuilder();
             sb.Append("Device name");
-            sb.Append(_calcParameters.CSVCharacter);
+            sb.Append(calcParameters.CSVCharacter);
             sb.Append("Usage sum in this simulation [").Append(dstLoadType.UnitOfSum).Append("]");
-            sb.Append(_calcParameters.CSVCharacter);
+            sb.Append(calcParameters.CSVCharacter);
             sb.Append("Usage sum in this simulation linear extrapolated to 1 year [").Append(dstLoadType.UnitOfSum).Append("]");
-            sb.Append(_calcParameters.CSVCharacter);
+            sb.Append(calcParameters.CSVCharacter);
 
             sb.Append("Comparison Value from the device entry [").Append(dstLoadType.UnitOfSum).Append("]");
-            sb.Append(_calcParameters.CSVCharacter);
+            sb.Append(calcParameters.CSVCharacter);
             sb.Append("Percentage of the comparison value [1 = 100%]");
-            sb.Append(_calcParameters.CSVCharacter);
+            sb.Append(calcParameters.CSVCharacter);
             sb.Append("Device Category");
-            sb.Append(_calcParameters.CSVCharacter);
+            sb.Append(calcParameters.CSVCharacter);
             sb.Append(taggingsetHeader);
 
             devicesums.WriteLine(sb);
@@ -397,18 +401,18 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                 var s = string.Empty;
                 s += deviceNamesPerID[keyValuePair.Key];
 
-                s += _calcParameters.CSVCharacter;
+                s += calcParameters.CSVCharacter;
                 s += keyValuePair.Value * dstLoadType.ConversionFactor;
                 devicesum += keyValuePair.Value;
 
                 //deviceSums.AddDeviceSum(deviceNamesPerID[keyValuePair.Key],devicesum,dstLoadType);
 
-                s += _calcParameters.CSVCharacter;
+                s += calcParameters.CSVCharacter;
                 var extrapolatedValue = keyValuePair.Value * dstLoadType.ConversionFactor / amountofYears;
                 s += extrapolatedValue;
                 extrapolatedSum += keyValuePair.Value / amountofYears;
 
-                s += _calcParameters.CSVCharacter;
+                s += calcParameters.CSVCharacter;
                 double defaultvalue = 0;
                 if (loadTypeTodeviceIDToAverageLookup.ContainsKey(dstLoadType)) {
                     if (loadTypeTodeviceIDToAverageLookup[dstLoadType].ContainsKey(keyValuePair.Key)) {
@@ -418,7 +422,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
 
                 s += defaultvalue;
                 comparsionvaluessum += defaultvalue;
-                s += _calcParameters.CSVCharacter;
+                s += calcParameters.CSVCharacter;
                 if (Math.Abs(defaultvalue) > Constants.Ebsilon) {
                     s += extrapolatedValue / defaultvalue;
                 }
@@ -426,7 +430,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                     s += 0;
                 }
 
-                s += _calcParameters.CSVCharacter;
+                s += calcParameters.CSVCharacter;
                 var devicename = deviceNamesPerID[keyValuePair.Key];
                 var deviceCategory = "(no category)";
                 if (deviceNameToCategory.ContainsKey(devicename)) {
@@ -434,16 +438,16 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                 }
 
                 s += deviceCategory;
-                s += _calcParameters.CSVCharacter;
+                s += calcParameters.CSVCharacter;
                 var tags = string.Empty;
                 foreach (var calcDeviceTaggingSet in deviceTaggingSets) {
                     if (calcDeviceTaggingSet.LoadTypesForThisSet.Any(x => x.Name == dstLoadType.Name)) {
                         var deviceName = deviceNamesPerID[keyValuePair.Key];
                         if (calcDeviceTaggingSet.TagByDeviceName.ContainsKey(deviceName)) {
-                            tags += calcDeviceTaggingSet.TagByDeviceName[deviceName] + _calcParameters.CSVCharacter;
+                            tags += calcDeviceTaggingSet.TagByDeviceName[deviceName] + calcParameters.CSVCharacter;
                         }
                         else {
-                            tags += Constants.UnknownTag + _calcParameters.CSVCharacter;
+                            tags += Constants.UnknownTag + calcParameters.CSVCharacter;
                         }
                     }
                 }
@@ -452,39 +456,40 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             }
 
             var sumstr = "Sums";
-            sumstr += _calcParameters.CSVCharacter;
+            sumstr += calcParameters.CSVCharacter;
             sumstr += devicesum * dstLoadType.ConversionFactor;
-            sumstr += _calcParameters.CSVCharacter;
+            sumstr += calcParameters.CSVCharacter;
             sumstr += extrapolatedSum * dstLoadType.ConversionFactor;
-            sumstr += _calcParameters.CSVCharacter;
+            sumstr += calcParameters.CSVCharacter;
             sumstr += comparsionvaluessum;
             devicesums.WriteLine(sumstr);
             devicesums.Flush();
             WriteMonthlyDeviceSums(fft, dstLoadType, sumPerMonthPerDeviceID, deviceNamesPerID, key);
         }
 
-        private void WriteMonthlyDeviceSums([NotNull] FileFactoryAndTracker fft,
+        private void WriteMonthlyDeviceSums([NotNull] IFileFactoryAndTracker fft,
                                             [NotNull] CalcLoadTypeDto dstLoadType,
                                             [NotNull] Dictionary<StrGuid, Dictionary<int, double>> values,
                                             [NotNull] Dictionary<StrGuid, string> deviceNamesPerID,
                                             [NotNull] HouseholdKey key)
         {
+            var calcParameters = Repository.CalcParameters;
             var devicesums = fft.MakeFile<StreamWriter>("DeviceSums_Monthly." + dstLoadType.Name + "." + key.Key + ".csv",
                 "Summed up " + dstLoadType.Name + " use per device per Month",
                 true,
                 ResultFileID.DeviceSumsPerMonth,
                 key,
                 TargetDirectory.Reports,
-                _calcParameters.InternalStepsize,
+                calcParameters.InternalStepsize,CalcOption.TotalsPerDevice,
                 dstLoadType.ConvertToLoadTypeInformation());
 
             var sb = new StringBuilder();
             sb.Append("Device name");
-            sb.Append(_calcParameters.CSVCharacter);
+            sb.Append(calcParameters.CSVCharacter);
             var firstmonth = values.Keys.First();
             foreach (var monthAndValue in values[firstmonth]) {
                 sb.Append(monthAndValue.Key);
-                sb.Append(_calcParameters.CSVCharacter);
+                sb.Append(calcParameters.CSVCharacter);
             }
 
             devicesums.WriteLine(sb);
@@ -493,10 +498,10 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             foreach (var keyValuePair in values) {
                 var s = string.Empty;
                 s += deviceNamesPerID[keyValuePair.Key];
-                s += _calcParameters.CSVCharacter;
+                s += calcParameters.CSVCharacter;
 
                 foreach (var monthValue in keyValuePair.Value) {
-                    s += monthValue.Value * dstLoadType.ConversionFactor + _calcParameters.CSVCharacter;
+                    s += monthValue.Value * dstLoadType.ConversionFactor + calcParameters.CSVCharacter;
                     if (!monthSums.ContainsKey(monthValue.Key)) {
                         monthSums.Add(monthValue.Key, 0);
                     }
@@ -507,9 +512,9 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                 devicesums.WriteLine(s);
             }
 
-            var sumstr = "Sums" + _calcParameters.CSVCharacter;
+            var sumstr = "Sums" + calcParameters.CSVCharacter;
             foreach (var keyValuePair in monthSums) {
-                sumstr += keyValuePair.Value * dstLoadType.ConversionFactor + _calcParameters.CSVCharacter;
+                sumstr += keyValuePair.Value * dstLoadType.ConversionFactor + calcParameters.CSVCharacter;
             }
 
             devicesums.WriteLine(sumstr);

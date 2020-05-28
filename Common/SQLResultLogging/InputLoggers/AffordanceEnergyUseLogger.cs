@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Automation;
 using Automation.ResultFiles;
 using Common.JSON;
 using JetBrains.Annotations;
@@ -10,7 +11,7 @@ namespace Common.SQLResultLogging.InputLoggers
         private const string Tablename = "AffordanceEnergyUses";
 
         public AffordanceEnergyUseLogger([NotNull] SqlResultLoggingService srls)
-            : base(typeof(List<AffordanceEnergyUseEntry>), new ResultTableDefinition(Tablename,ResultTableID.AffordanceEnergyUse,"Json Summaries of all Energy uses"), srls)
+            : base(typeof(List<AffordanceEnergyUseEntry>), new ResultTableDefinition(Tablename,ResultTableID.AffordanceEnergyUse,"Json Summaries of all Energy uses", CalcOption.AffordanceEnergyUse), srls)
         {
         }
 

@@ -7,10 +7,36 @@ namespace CalculationController.Integrity {
         }
 
         protected override void Run(Simulator sim) {
+
             foreach (var house in sim.Houses.It) {
+
                 if (Config.AllowEmptyHouses) {
                     if (house.Households.Count == 0) {
                         throw new DataIntegrityException("The house " + house.PrettyName + " has no households. Please fix.", house);
+                    }
+                }
+
+                bool anyTransport = false;
+                foreach (var household in house.Households) {
+                    if (household.ChargingStationSet != null || household.TravelRouteSet != null ||
+                        household.TransportationDeviceSet != null) {
+                        anyTransport = true;
+                        break;
+                    }
+                }
+                if (anyTransport) {
+                    foreach (var household in house.Households) {
+                        if (household.ChargingStationSet == null) {
+                            throw new DataIntegrityException("The household " + household.Name + " in the house " + house.Name + " has no charging station set.", house) ;
+                        }
+                        if (household.TravelRouteSet == null)
+                        {
+                            throw new DataIntegrityException("The household " + household.Name + " in the house " + house.Name + " has no travel route set.", house);
+                        }
+                        if (household.TransportationDeviceSet == null)
+                        {
+                            throw new DataIntegrityException("The household " + household.Name + " in the house " + house.Name + " has no transportation device set.", house);
+                        }
                     }
                 }
 

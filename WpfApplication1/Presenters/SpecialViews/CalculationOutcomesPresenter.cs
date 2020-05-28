@@ -490,7 +490,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                                             true,
                                             null,
                                             null,
-                                            null);
+                                            null,false);
                                         Logger.Get().SafeExecuteWithWait(Sim.CalculationOutcomes.It.Sort);
                                         Logger.Get().SafeExecuteWithWait(RefreshFiltered);
                                     }
@@ -530,7 +530,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                                                bool deleteEverything,
                                                [CanBeNull] TransportationDeviceSet transportationDeviceSet,
                                                [CanBeNull] TravelRouteSet travelRouteSet,
-                                               [CanBeNull] ChargingStationSet chargingStationSet)
+                                               [CanBeNull] ChargingStationSet chargingStationSet, bool enableTransportation)
         {
             var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             if (sim.CalculationOutcomes.ItemExists(mycalcObject, geographicLocation, temperatureProfile, intensity, version)) {
@@ -598,7 +598,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                     chargingStationSet,
                     null,
                     sim.MyGeneralConfig.DeviceProfileHeaderMode,
-                    false, operatingPath);
+                    false, operatingPath, enableTransportation);
 
                 cs.Start(csps);
                 ChartMaker.MakeChartsAndPDF(calculationProfiler,operatingPath);

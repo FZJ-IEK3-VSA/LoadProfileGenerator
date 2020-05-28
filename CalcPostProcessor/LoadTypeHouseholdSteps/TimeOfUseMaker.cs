@@ -43,39 +43,39 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
     public  class TimeOfUseMaker: LoadTypeStepBase
     {
         [NotNull]
-        private readonly CalcParameters _calcParameters;
-        [NotNull]
-        private readonly FileFactoryAndTracker _fft;
+        private readonly IFileFactoryAndTracker _fft;
 
         public TimeOfUseMaker(
                               [NotNull] CalcDataRepository repository,
                               [NotNull] ICalculationProfiler profiler,
-                              [NotNull] FileFactoryAndTracker fft):base(repository,
+                              [NotNull] IFileFactoryAndTracker fft):base(repository,
             AutomationUtili.GetOptionList(CalcOption.TimeOfUsePlot), profiler, "Time of Use Averages")
         {
-            _calcParameters = Repository.CalcParameters;
             _fft = fft;
         }
 
         [NotNull]
-        private StringBuilder MakeWriteableString(int timestep) {
+        private StringBuilder MakeWriteableString(int timestep)
+        {
+            var calcParameters = Repository.CalcParameters;
             var sb = new StringBuilder();
             sb.Append(timestep);
-            sb.Append(_calcParameters.CSVCharacter);
-            var ts = new TimeSpan(timestep * _calcParameters.InternalStepsize.Ticks);
+            sb.Append(calcParameters.CSVCharacter);
+            var ts = new TimeSpan(timestep * calcParameters.InternalStepsize.Ticks);
             sb.Append(ts.ToString(@"hh\:mm\:ss", Config.CultureInfo));
-            sb.Append(_calcParameters.CSVCharacter);
-            if (_calcParameters.WriteExcelColumn) {
+            sb.Append(calcParameters.CSVCharacter);
+            if (calcParameters.WriteExcelColumn) {
                 sb.Append("'");
                 sb.Append(ts.ToString(@"hh\:mm\:ss", Config.CultureInfo));
-                sb.Append(_calcParameters.CSVCharacter);
+                sb.Append(calcParameters.CSVCharacter);
             }
             return sb;
         }
 
         private  void Run([NotNull] CalcLoadTypeDto dstLoadType, [NotNull][ItemNotNull] List<OnlineEnergyFileRow> energyFileRows,
-            [NotNull] FileFactoryAndTracker fft, [NotNull] EnergyFileColumns efcs) {
-            var comma = _calcParameters.CSVCharacter;
+            [NotNull] IFileFactoryAndTracker fft, [NotNull] EnergyFileColumns efcs) {
+            var calcParameters = Repository.CalcParameters;
+            var comma = calcParameters.CSVCharacter;
             var dailyMinute = new Dictionary<string, double[]>();
             var dailyEnergys = new Dictionary<string, double[]>();
             var dailyEnergysByDay =
@@ -99,8 +99,8 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                 }
             }
 
-            var curTime = _calcParameters.OfficialStartTime;
-            var curDate = _calcParameters.OfficialStartTime;
+            var curTime = calcParameters.OfficialStartTime;
+            var curDate = calcParameters.OfficialStartTime;
             var daycount = 0;
 
             foreach (var efr in energyFileRows) {
@@ -117,7 +117,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                     dailyEnergysByDay[curTime.DayOfWeek][name][timestep] += efr.EnergyEntries[i];
                     dailyEnergys[name][timestep] += efr.EnergyEntries[i];
                 }
-                curTime += _calcParameters.InternalStepsize;
+                curTime += calcParameters.InternalStepsize;
                 if (curDate.Day != curTime.Day) {
                     dayofWeekDaycount[curDate.DayOfWeek]++;
                     curDate = new DateTime(curTime.Year, curTime.Month, curTime.Day);
@@ -127,19 +127,21 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
 
             var resultfileMinute = fft.MakeFile<StreamWriter>("TimeOfUseProfiles." + dstLoadType.Name + ".csv",
                 "Time of Use Profiles for all devices with " + dstLoadType.Name, true,
-                 ResultFileID.TimeOfUse, Constants.GeneralHouseholdKey, TargetDirectory.Reports, _calcParameters.InternalStepsize,
+                 ResultFileID.TimeOfUse, Constants.GeneralHouseholdKey, TargetDirectory.Reports, calcParameters.InternalStepsize,
+                CalcOption.TimeOfUsePlot,
                 dstLoadType.ConvertToLoadTypeInformation());
             var resultfileEnergy = fft.MakeFile<StreamWriter>(
                 "TimeOfUseEnergyProfiles." + dstLoadType.Name + ".csv",
                 "Time of Use Profiles with the power consumption for all devices with " + dstLoadType.Name, true,
-                ResultFileID.TimeOfUseEnergy, Constants.GeneralHouseholdKey, TargetDirectory.Reports, _calcParameters.InternalStepsize,
+                ResultFileID.TimeOfUseEnergy, Constants.GeneralHouseholdKey, TargetDirectory.Reports, calcParameters.InternalStepsize,
+                CalcOption.TimeOfUsePlot,
                 dstLoadType.ConvertToLoadTypeInformation());
             var headerdays = string.Empty;
             foreach (var colEntry in headerNames) {
                 headerdays += colEntry + comma;
             }
             var header = dstLoadType.Name + ".Time" + comma + "Calender" + comma;
-            if (_calcParameters.WriteExcelColumn) {
+            if (calcParameters.WriteExcelColumn) {
                 header += "Calender for Excel" + comma;
             }
             header += headerdays;
@@ -191,5 +193,8 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             var efc = Repository.ReadEnergyFileColumns(Constants.GeneralHouseholdKey);
             Run(p.LoadType, p.EnergyFileRows, _fft, efc);
         }
+
+        [NotNull]
+        public override List<CalcOption> NeededOptions => new List<CalcOption>();
     }
 }

@@ -5,13 +5,13 @@ using Common.SQLResultLogging;
 
 namespace CalcPostProcessor.Steps
 {
-    public interface ILoadTypeStep
+    public interface ILoadTypeStep: IRequireOptions
     {
         void Run([JetBrains.Annotations.NotNull] IStepParameters parameters);
         bool IsEnabled();
     }
 
-    public interface ILoadTypeSumStep
+    public interface ILoadTypeSumStep: IRequireOptions
     {
         void Run([JetBrains.Annotations.NotNull] IStepParameters parameters);
         bool IsEnabled();

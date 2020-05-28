@@ -1,4 +1,5 @@
-﻿using Automation.ResultFiles;
+﻿using Automation;
+using Automation.ResultFiles;
 using Common.JSON;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
@@ -10,7 +11,7 @@ namespace Common.SQLResultLogging.InputLoggers
         public const string TableName = "CalcParameters";
 
         public CalcParameterLogger( [NotNull] SqlResultLoggingService srls): base(typeof(CalcParameters),
-             new ResultTableDefinition(TableName,ResultTableID.CalcParameters, "All the calculation parameters"), srls)
+             new ResultTableDefinition(TableName,ResultTableID.CalcParameters, "All the calculation parameters", CalcOption.BasicOverview), srls)
         {
         }
 

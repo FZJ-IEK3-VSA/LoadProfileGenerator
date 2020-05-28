@@ -44,13 +44,12 @@ using JetBrains.Annotations;
 
 namespace CalcPostProcessor.GeneralHouseholdSteps {
     internal class MakeActivationsPerFrequencies : HouseholdStepBase {
-        [NotNull] private readonly CalcParameters _calcParameters;
 
         [NotNull] private readonly IInputDataLogger _dataLogger;
 
-        [NotNull] private readonly FileFactoryAndTracker _fft;
+        [NotNull] private readonly IFileFactoryAndTracker _fft;
 
-        public MakeActivationsPerFrequencies([NotNull] FileFactoryAndTracker fft,
+        public MakeActivationsPerFrequencies([NotNull] IFileFactoryAndTracker fft,
                                              [NotNull] CalcDataRepository repository,
                                              [NotNull] ICalculationProfiler profiler,
                                              [NotNull] IInputDataLogger logger) : base(repository,
@@ -59,7 +58,6 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
             "Activation Frequency Analysis",0)
         {
             _dataLogger = logger;
-            _calcParameters = Repository.CalcParameters;
             _fft = fft;
         }
 
@@ -84,18 +82,21 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
             BuildActivitiesPerMinute(entry.HouseholdKey, Repository.AffordanceTaggingSets, Repository.GetPersons(entry.HouseholdKey));
         }
 
+        [NotNull]
+        public override List<CalcOption> NeededOptions => new List<CalcOption>();
+
         private void BuildActivitiesPerMinute([NotNull] HouseholdKey householdKey,
                                               [NotNull] [ItemNotNull] List<CalcAffordanceTaggingSetDto> taggingSets,
                                               [NotNull] [ItemNotNull] List<CalcPersonDto> persons)
         {
             int timesteps;
-
-            if (_calcParameters.ShowSettlingPeriodTime) {
-                var ts = _calcParameters.InternalEndTime - _calcParameters.InternalStartTime;
+            var calcParameters = Repository.CalcParameters;
+            if (calcParameters.ShowSettlingPeriodTime) {
+                var ts = calcParameters.InternalEndTime - calcParameters.InternalStartTime;
                 timesteps = (int)ts.TotalMinutes;
             }
             else {
-                var ts = _calcParameters.InternalEndTime - _calcParameters.OfficialStartTime;
+                var ts = calcParameters.InternalEndTime - calcParameters.OfficialStartTime;
                 timesteps = (int)ts.TotalMinutes;
             }
 
@@ -253,21 +254,22 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
         private void MakeActivityFrequenciesFile([NotNull] HouseholdKey householdKey,
                                                  [NotNull] Dictionary<string, Dictionary<string, int[]>> frequencies)
         {
-            if (_calcParameters.IsSet(CalcOption.ActivationFrequencies)) {
+            var calcParameters = Repository.CalcParameters;
+            if (calcParameters.IsSet(CalcOption.ActivationFrequencies)) {
                 using var sw = _fft.MakeFile<StreamWriter>("ActivityFrequenciesPerMinute." + householdKey + ".csv",
                     "Activity frequencies ",
                     true,
                     ResultFileID.ActivationFrequencies,
                     householdKey,
                     TargetDirectory.Reports,
-                    _calcParameters.InternalStepsize);
+                    calcParameters.InternalStepsize, CalcOption.ActivationFrequencies);
                 foreach (var person in frequencies) {
                     sw.WriteLine(person.Key);
 
                     var s = new StringBuilder();
-                    s.Append("Minute").Append(_calcParameters.CSVCharacter);
+                    s.Append("Minute").Append(calcParameters.CSVCharacter);
                     for (var i = 0; i < 1440; i++) {
-                        s.Append(i).Append(_calcParameters.CSVCharacter);
+                        s.Append(i).Append(calcParameters.CSVCharacter);
                     }
 
                     sw.WriteLine(s);
@@ -276,7 +278,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
                         sb.Clear();
                         sb.Append(device.Key);
                         for (var i = 0; i < device.Value.Length; i++) {
-                            sb.Append(_calcParameters.CSVCharacter);
+                            sb.Append(calcParameters.CSVCharacter);
                             sb.Append(device.Value[i].ToString(CultureInfo.InvariantCulture));
                         }
 
@@ -289,18 +291,19 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
         private void MakeActivityPercentageFile([NotNull] HouseholdKey householdKey,
                                                 [NotNull] Dictionary<string, Dictionary<string, int>> categoryMinutes)
         {
-            if (_calcParameters.IsSet(CalcOption.ActivationFrequencies)) {
+            var calcParameters = Repository.CalcParameters;
+            if (calcParameters.IsSet(CalcOption.ActivationFrequencies)) {
                 using (var activityPercentage = _fft.MakeFile<StreamWriter>("ActivityPercentage." + householdKey + ".csv",
                     "Time used by each Person per affordance category ",
                     true,
                     ResultFileID.ActivityPercentages,
                     householdKey,
                     TargetDirectory.Reports,
-                    _calcParameters.InternalStepsize)) {
+                    calcParameters.InternalStepsize, CalcOption.ActivationFrequencies)) {
                     foreach (var person in categoryMinutes) {
                         activityPercentage.WriteLine(person.Key);
-                        activityPercentage.WriteLine("Activity" + _calcParameters.CSVCharacter + "Time Used [" +
-                                                     _calcParameters.InternalStepsize.TotalSeconds + " seconds]" + _calcParameters.CSVCharacter +
+                        activityPercentage.WriteLine("Activity" + calcParameters.CSVCharacter + "Time Used [" +
+                                                     calcParameters.InternalStepsize.TotalSeconds + " seconds]" + calcParameters.CSVCharacter +
                                                      "Percentage");
                         var totalminutes = 0;
                         foreach (var defcategory in person.Value) {
@@ -308,8 +311,8 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
                         }
 
                         foreach (var defcategory in person.Value) {
-                            activityPercentage.WriteLine(defcategory.Key + _calcParameters.CSVCharacter + defcategory.Value +
-                                                         _calcParameters.CSVCharacter +
+                            activityPercentage.WriteLine(defcategory.Key + calcParameters.CSVCharacter + defcategory.Value +
+                                                         calcParameters.CSVCharacter +
                                                          (defcategory.Value / (double)totalminutes).ToString("0.00", Config.CultureInfo));
                         }
                     }
@@ -323,7 +326,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
                                                 [NotNull] [ItemNotNull] List<CalcPersonDto> persons)
         {
             // taggingset,Person, tag, minutes
-
+            var calcParameters = Repository.CalcParameters;
             foreach (var taggingSetDict in affordanceTaggingSets) {
                 var taggingSetName = taggingSetDict.Key;
                 var ts = taggingSets.FirstOrDefault(x => x.Name == taggingSetName);
@@ -338,21 +341,22 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
                     ResultFileID.AffordanceTaggingSetFiles,
                     householdKey,
                     TargetDirectory.Reports,
-                    _calcParameters.InternalStepsize,
+                    calcParameters.InternalStepsize,
+                    CalcOption.ActivationFrequencies,
                     null,
                     null,
                     taggingSetName);
                 var header = new StringBuilder();
-                header.Append("Tag + Time Used [").Append(_calcParameters.InternalStepsize.TotalSeconds).Append(" seconds]")
-                    .Append(_calcParameters.CSVCharacter);
+                header.Append("Tag + Time Used [").Append(calcParameters.InternalStepsize.TotalSeconds).Append(" seconds]")
+                    .Append(calcParameters.CSVCharacter);
                 if (ts.HasReferenceEntries) {
                     foreach (var tagsByPerson in personDictionary) {
-                        header.Append(tagsByPerson.Key).Append(_calcParameters.CSVCharacter).Append("Reference").Append(_calcParameters.CSVCharacter);
+                        header.Append(tagsByPerson.Key).Append(calcParameters.CSVCharacter).Append("Reference").Append(calcParameters.CSVCharacter);
                     }
                 }
                 else {
                     foreach (var tagsByPerson in personDictionary) {
-                        header.Append(tagsByPerson.Key).Append(_calcParameters.CSVCharacter);
+                        header.Append(tagsByPerson.Key).Append(calcParameters.CSVCharacter);
                     }
                 }
 
@@ -378,7 +382,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
                 // build lines
                 foreach (var tag in tags) {
                     var line = new StringBuilder();
-                    line.Append(tag).Append(_calcParameters.CSVCharacter);
+                    line.Append(tag).Append(calcParameters.CSVCharacter);
                     foreach (var tagsByPerson in personDictionary) {
                         var value = 0;
                         if (tagsByPerson.Value.ContainsKey(tag)) {
@@ -389,11 +393,11 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
                             var person = persons.First(x => x.Name == tagsByPerson.Key);
 
                             var refValue = ts.LookupReferenceValue(tag, person.Gender, person.Age);
-                            var referenceSteps = _calcParameters.OfficalTimesteps * refValue;
-                            line.Append(value).Append(_calcParameters.CSVCharacter).Append(referenceSteps).Append(_calcParameters.CSVCharacter);
+                            var referenceSteps = calcParameters.OfficalTimesteps * refValue;
+                            line.Append(value).Append(calcParameters.CSVCharacter).Append(referenceSteps).Append(calcParameters.CSVCharacter);
                         }
                         else {
-                            line.Append(value).Append(_calcParameters.CSVCharacter);
+                            line.Append(value).Append(calcParameters.CSVCharacter);
                         }
                     }
 
@@ -408,6 +412,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
                                                [NotNull] Dictionary<string, Dictionary<string, int[]>> frequencies,
                                                [NotNull] [ItemNotNull] List<CalcAffordanceTaggingSetDto> taggingSets)
         {
+            var calcParameters = Repository.CalcParameters;
             //CSV File
             using (var sw = _fft.MakeFile<StreamWriter>("AffordanceTimeUse." + householdKey + ".csv",
                 "Time used by each Affordance ",
@@ -415,8 +420,9 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
                 ResultFileID.AffordanceTimeUse,
                 householdKey,
                 TargetDirectory.Reports,
-                _calcParameters.InternalStepsize)) {
-                var coma = _calcParameters.CSVCharacter;
+                calcParameters.InternalStepsize,
+                CalcOption.ActivationFrequencies)) {
+                var coma = calcParameters.CSVCharacter;
                 foreach (var person in frequencies) {
                     sw.WriteLine("------");
                     var header = new StringBuilder();
@@ -430,7 +436,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
                     foreach (var affordance in person.Value) {
                         sb.Clear();
                         sb.Append(affordance.Key);
-                        sb.Append(_calcParameters.CSVCharacter);
+                        sb.Append(calcParameters.CSVCharacter);
                         double sum = 0;
                         for (var i = 0; i < affordance.Value.Length; i++) {
                             sum += affordance.Value[i];
@@ -495,15 +501,16 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
 
         private void SetTimeDictionary([NotNull] [ItemNotNull] TimeActionTuple[] times)
         {
-            if (_calcParameters.ShowSettlingPeriodTime) {
-                times[0].DateTime = _calcParameters.InternalStartTime;
+            var calcParameters = Repository.CalcParameters;
+            if (calcParameters.ShowSettlingPeriodTime) {
+                times[0].DateTime = calcParameters.InternalStartTime;
             }
             else {
-                times[0].DateTime = _calcParameters.OfficialStartTime;
+                times[0].DateTime = calcParameters.OfficialStartTime;
             }
 
             for (var i = 1; i < times.Length; i++) {
-                times[i].DateTime = times[i - 1].DateTime + _calcParameters.InternalStepsize;
+                times[i].DateTime = times[i - 1].DateTime + calcParameters.InternalStepsize;
             }
         }
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using Common.CalcDto;
 using Common.SQLResultLogging.Loggers;
@@ -11,7 +12,7 @@ namespace Common.SQLResultLogging.InputLoggers
     public class CalcAutoDevDtoLogger : DataSaverBase
     {
         public CalcAutoDevDtoLogger([NotNull] SqlResultLoggingService srls)
-            : base(typeof(CalcAutoDevDto),  new ResultTableDefinition("AutonomousDeviceDefinitions",ResultTableID.AutonomousDeviceDefinitions, "Json Specification of the autonomous Devices"), srls)
+            : base(typeof(CalcAutoDevDto),  new ResultTableDefinition("AutonomousDeviceDefinitions",ResultTableID.AutonomousDeviceDefinitions, "Json Specification of the autonomous Devices", CalcOption.HouseholdContents), srls)
         {
         }
 

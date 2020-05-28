@@ -32,6 +32,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Common.JSON;
@@ -88,7 +89,7 @@ namespace CalculationEngine.OnlineLogging {
             var thoughts =
                 _fft.MakeFile<StreamWriter>("Thoughts." + householdKey + "." + pi.Name + ".csv",
                     "Thoughts by " + pi.Name, true, ResultFileID.ThoughtsPerPerson, householdKey, TargetDirectory.Reports,
-                    _calcParameters.InternalStepsize,null,pi);
+                    _calcParameters.InternalStepsize, CalcOption.ThoughtsLogfile,null,pi);
             thoughts.WriteLine("Timestep" + _calcParameters.CSVCharacter + "Calender time" +
                                _calcParameters.CSVCharacter + "Weekday" +
                                _calcParameters.CSVCharacter + "Person" +

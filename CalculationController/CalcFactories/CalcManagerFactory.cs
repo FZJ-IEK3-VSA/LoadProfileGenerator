@@ -158,9 +158,17 @@ namespace CalculationController.CalcFactories
                     {
                         throw new LPGException("The type " + csps.CalcTarget.GetType() + " is missing!");
                     }
-                    calcRepo.InputDataLogger.Save(Constants.GeneralHouseholdKey, devicetaggingSets.AllCalcDeviceTaggingSets);
+
+                    if (calcRepo.CalcParameters.Options.Contains(CalcOption.HouseholdContents)) {
+                        calcRepo.InputDataLogger.Save(Constants.GeneralHouseholdKey,
+                            devicetaggingSets.AllCalcDeviceTaggingSets);
+                    }
+
                     CalcObjectInformation coi = new CalcObjectInformation(cot,ch.Name,csps.ResultPath);
-                    calcRepo.InputDataLogger.Save(Constants.GeneralHouseholdKey, coi);
+                    if (calcRepo.CalcParameters.Options.Contains(CalcOption.HouseholdContents)) {
+                        calcRepo.InputDataLogger.Save(Constants.GeneralHouseholdKey, coi);
+                    }
+
                     //this logger doesnt save json, but strings!
                     calcRepo.InputDataLogger.Save(Constants.GeneralHouseholdKey, csps);
                     calcRepo.InputDataLogger.Save(Constants.GeneralHouseholdKey, dtoltdict.GetLoadTypeDtos());
@@ -180,10 +188,12 @@ namespace CalculationController.CalcFactories
         }
 
         [NotNull]
-        private static CalcRepo PrepareCalculation([NotNull] Simulator sim, [NotNull] CalcStartParameterSet csps, [NotNull] ILifetimeScope scope,
-                                                           [NotNull] out CalcLoadTypeDtoDictionary dtoltdict,
-                                                           [NotNull] out DayLightStatus dls,
-                                                           [NotNull] out CalcVariableRepository variableRepository)
+        private static CalcRepo PrepareCalculation([NotNull] Simulator sim, [NotNull] CalcStartParameterSet csps,
+                                                   [NotNull] ILifetimeScope scope,
+                                                   [NotNull] out CalcLoadTypeDtoDictionary dtoltdict,
+                                                   [NotNull] out DayLightStatus dls,
+                                                   [NotNull] out CalcVariableRepository variableRepository
+                                                   )
         {
             CalcRepo calcRepo = scope.Resolve<CalcRepo>();
             var inputDataLogger = scope.Resolve<IInputDataLogger>();
@@ -194,7 +204,10 @@ namespace CalculationController.CalcFactories
 
             var affordanceTaggingSetFactory = scope.Resolve<AffordanceTaggingSetFactory>();
             var affordanceTaggingSets = affordanceTaggingSetFactory.GetAffordanceTaggingSets(sim);
-            inputDataLogger.Save(affordanceTaggingSets);
+            if (calcRepo.CalcParameters.Options.Contains(CalcOption.HouseholdContents)) {
+                inputDataLogger.Save(affordanceTaggingSets);
+            }
+
             calcRepo.FileFactoryAndTracker.RegisterGeneralHouse();
             dls = scope.Resolve<DayLightStatus>();
             if (calcRepo.CalcParameters.Options.Contains(CalcOption.DaylightTimesList)) {
@@ -250,8 +263,11 @@ namespace CalculationController.CalcFactories
             }
 
             var convertedAutoDevList = housedto.AutoDevs.ConvertAll(x => (IHouseholdKey)x).ToList();
-            calcRepo.InputDataLogger.SaveList(convertedAutoDevList);
-            calcRepo.InputDataLogger.Save(Constants.GeneralHouseholdKey, housedto);
+
+            if (calcRepo.CalcParameters.Options.Contains(CalcOption.HouseholdContents)) {
+                calcRepo.InputDataLogger.SaveList(convertedAutoDevList);
+                calcRepo.InputDataLogger.Save(Constants.GeneralHouseholdKey, housedto);
+            }
 
             var chf = scope.Resolve<CalcHouseFactory>();
             RegisterAllDtoVariables(cvrdto, variableRepository);

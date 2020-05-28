@@ -26,10 +26,7 @@
 
 //-----------------------------------------------------------------------
 
-using System;
-using System.Globalization;
 using Automation;
-using Automation.ResultFiles;
 using JetBrains.Annotations;
 
 namespace CalculationEngine.HouseholdElements {
@@ -37,9 +34,9 @@ namespace CalculationEngine.HouseholdElements {
         public CalcDeviceLoad([NotNull] string pName, double value, [NotNull] CalcLoadType loadType,
             double averageYearlyConsumption, double powerStandardDeviation) : base(pName, StrGuid.Empty) {
             Value = value;
-            if (Math.Abs(value) < 0.000001 && loadType.Name.ToLower(CultureInfo.InvariantCulture) != "none") {
-                throw new LPGException("Trying to initialize a calc device load with a max power of 0.");
-            }
+            //if (Math.Abs(value) < 0.000001 && loadType.Name.ToLower(CultureInfo.InvariantCulture) != "none") {
+            //    throw new LPGException("Trying to initialize a calc device load with a max power of 0.");
+            //}
             LoadType = loadType;
             AverageYearlyConsumption = averageYearlyConsumption;
             PowerStandardDeviation = powerStandardDeviation;

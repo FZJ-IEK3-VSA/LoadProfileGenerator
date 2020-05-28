@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using Common.CalcDto;
 using Common.SQLResultLogging.Loggers;
@@ -12,7 +13,7 @@ namespace Common.SQLResultLogging.InputLoggers
         private const string Tablename = "SiteDefinitions";
 
         public CalcSiteDtoLogger([NotNull] SqlResultLoggingService srls)
-            : base(typeof(CalcSiteDto), new ResultTableDefinition(Tablename,ResultTableID.SiteDefinitions, "Json Specification of the Sites"), srls)
+            : base(typeof(CalcSiteDto), new ResultTableDefinition(Tablename,ResultTableID.SiteDefinitions, "Json Specification of the Sites",CalcOption.HouseholdContents ), srls)
         {
         }
 

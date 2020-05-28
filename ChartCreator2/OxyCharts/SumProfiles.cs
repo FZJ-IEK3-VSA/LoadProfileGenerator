@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using OxyPlot;
@@ -73,7 +74,7 @@ namespace ChartCreator2.OxyCharts {
             plotModel1.LegendBackground = OxyColor.FromArgb(200, 255, 255, 255);
             var fi = new FileInfo(fileName);
             var dstFileName = fi.Name.Insert(fi.Name.Length - 4, "MinMax.");
-            Save(plotModel1, plotName, fileName, basisPath, dstFileName);
+            Save(plotModel1, plotName, fileName, basisPath,CalcOption.IndividualSumProfiles, dstFileName);
         }
 
         private void MakeLinePlot([JetBrains.Annotations.NotNull] string fileName, [JetBrains.Annotations.NotNull] string plotName, [JetBrains.Annotations.NotNull] DirectoryInfo basisPath, [JetBrains.Annotations.NotNull] List<double> values,
@@ -103,7 +104,7 @@ namespace ChartCreator2.OxyCharts {
                 lineSeries1.Points.Add(new DataPoint(j, values[j]));
             }
             plotModel1.Series.Add(lineSeries1);
-            Save(plotModel1, plotName, fileName, basisPath);
+            Save(plotModel1, plotName, fileName, basisPath, CalcOption.IndividualSumProfiles);
         }
 
         protected override FileProcessingResult MakeOnePlot(ResultFileEntry srcEntry)

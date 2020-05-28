@@ -1,7 +1,4 @@
-﻿using System;
-using System.Globalization;
-using Automation;
-using Automation.ResultFiles;
+﻿using Automation;
 using JetBrains.Annotations;
 
 namespace Common.CalcDto {
@@ -19,9 +16,10 @@ namespace Common.CalcDto {
             PowerStandardDeviation = powerStandardDeviation;
             Guid = guid;
             MaxPower = maxPower;
-            if (Math.Abs(MaxPower) < 0.000000001 && loadTypeName.ToLower(CultureInfo.InvariantCulture) != "none") {
-                throw new LPGException("Trying to initialize a Device load with a max power of 0. Device Name was " + name + " and load type " + loadTypeName );
-            }
+            //power of 0 is actually ok for air conditioners
+            //if (Math.Abs(MaxPower) < 0.000000001 && loadTypeName.ToLower(CultureInfo.InvariantCulture) != "none") {
+                //throw new LPGException("Trying to initialize a Device load with a max power of 0. Device Name was " + name + " and load type " + loadTypeName );
+            //}
         }
         public double AverageYearlyConsumption { get; }
 

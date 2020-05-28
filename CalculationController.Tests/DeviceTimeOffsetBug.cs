@@ -144,7 +144,7 @@ namespace CalculationController.Tests {
                         sim.MyGeneralConfig.AllEnabledOptions(), new DateTime(2015, 1, 1), new DateTime(2015, 1, 31),
                         new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 1, 0),
                         false, false, false, 3, 3,
-                        calculationProfiler, wd1.WorkingDirectory);
+                        calculationProfiler, wd1.WorkingDirectory,false);
                     var cm = cmf.GetCalcManager(sim, csps, false);
 
                     static bool ReportCancelFunc()

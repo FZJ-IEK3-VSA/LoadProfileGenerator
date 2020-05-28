@@ -31,6 +31,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Automation;
 using Automation.ResultFiles;
 using CalculationEngine.HouseholdElements;
 using Common;
@@ -94,7 +95,7 @@ namespace CalculationEngine.OnlineLogging {
                     _fft.MakeFile<StreamWriter>("Desires." + householdKey + "." + entry.PersonName + ".csv",
                         "Desire values for " + entry.PersonName + " for household #" + householdKey, true,
                         ResultFileID.DesireFiles, householdKey, TargetDirectory.Reports,
-                        _calcParameters.InternalStepsize, null, entry.CPerson.MakePersonInformation()));
+                        _calcParameters.InternalStepsize,CalcOption.DesiresLogfile, null, entry.CPerson.MakePersonInformation()));
                 var header = _dsc.GenerateDateStampHeader();
                 _desireFiles[GetKey(entry, householdKey)].Write(header + "Person");
                 _desireFiles[GetKey(entry, householdKey)].WriteLine(entry.GenerateHeader());

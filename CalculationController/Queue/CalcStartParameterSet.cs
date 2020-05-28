@@ -71,7 +71,7 @@ namespace CalculationController.Queue {
             [NotNull] string csvCharacter,
             int selectedRandomSeed,
             TimeSpan externalTimeResolution, bool deleteDatFiles, bool writeExcelColumn, bool showSettlingPeriod,
-            int settlingDays, int affordanceRepetitionCount, [NotNull] CalculationProfiler calculationProfiler, string resultPath)
+            int settlingDays, int affordanceRepetitionCount, [NotNull] CalculationProfiler calculationProfiler, string resultPath, bool transportationEnabled)
         {
             OfficialSimulationStartTime = officialSimulationStartTime;
             OfficialSimulationEndTime = officialSimulationEndTime;
@@ -100,6 +100,7 @@ namespace CalculationController.Queue {
             DeviceProfileHeaderMode = DeviceProfileHeaderMode.Standard;
             ResultPath = resultPath;
             CalculationStartTime = DateTime.Now;
+            TransportationEnabled = transportationEnabled;
         }
 
         /// <summary>
@@ -127,7 +128,7 @@ namespace CalculationController.Queue {
             [CanBeNull] ChargingStationSet chargingStationSet,
             [CanBeNull][ItemNotNull] List<string> loadTypesToProcess,
             DeviceProfileHeaderMode deviceProfileHeaderMode,
-            bool ignorePreviousActivitiesWhenNeeded, string resultPath)
+            bool ignorePreviousActivitiesWhenNeeded, string resultPath, bool transportationEnabled)
         {
             IgnorePreviousActivitiesWhenNeeded = ignorePreviousActivitiesWhenNeeded;
             ResultPath = resultPath;
@@ -163,6 +164,7 @@ namespace CalculationController.Queue {
             ChargingStationSet = chargingStationSet;
             DeviceProfileHeaderMode = deviceProfileHeaderMode;
             CalculationStartTime = DateTime.Now;
+            TransportationEnabled = transportationEnabled;
         }
 
         public string ResultPath { get; set; }
@@ -234,7 +236,7 @@ namespace CalculationController.Queue {
 
         public bool WriteExcelColumn { get; }
         [CanBeNull]
-        public ChargingStationSet ChargingStationSet { get;  }
+        public ChargingStationSet ChargingStationSet { get; set; }
 
         public bool PreserveLogfileWhileClearingFolder { get; set; }
         [CanBeNull]
@@ -242,5 +244,8 @@ namespace CalculationController.Queue {
         public List<string> LoadTypesToProcess { get; set; }
         public DeviceProfileHeaderMode DeviceProfileHeaderMode { get;  }
         public bool IgnorePreviousActivitiesWhenNeeded { get; set; }
+        public bool TransportationEnabled { get; set; }
+
+        public JsonCalcSpecification CalcSpec { get; set; }
     }
 }

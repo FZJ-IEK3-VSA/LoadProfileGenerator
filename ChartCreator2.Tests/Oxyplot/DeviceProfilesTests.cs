@@ -3,6 +3,7 @@ using System.IO;
 using Automation;
 using ChartCreator2.OxyCharts;
 using Common;
+using Common.SQLResultLogging.InputLoggers;
 using Common.Tests;
 using FluentAssertions;
 using JetBrains.Annotations;
@@ -36,7 +37,8 @@ namespace ChartCreator2.Tests.Oxyplot {
                 CalculationProfiler cp = new CalculationProfiler();
                 ChartCreationParameters ccps = new ChartCreationParameters(300, 4000,
                     2500, false, GlobalConsts.CSVCharacter, new DirectoryInfo(cs.DstDir));
-                var aeupp = new DeviceProfiles(ccps, fft, cp, cs.Wd.SqlResultLoggingService);
+                var calcParameters = new CalcParameterLogger(cs.Wd.SqlResultLoggingService).Load();
+                var aeupp = new DeviceProfiles(ccps, fft, cp, cs.Wd.SqlResultLoggingService,calcParameters);
                 Logger.Info("Making picture");
                 var di = new DirectoryInfo(cs.DstDir);
                 var rfe = cs.GetRfeByFilename("DeviceProfiles.Electricity.csv");

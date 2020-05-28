@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Automation;
 using Automation.ResultFiles;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
@@ -10,7 +11,7 @@ namespace Common.SQLResultLogging.InputLoggers
     public class BridgeDayEntryLogger : DataSaverBase {
         public const string TableName = "BridgeDays";
         public BridgeDayEntryLogger([NotNull] SqlResultLoggingService srls)
-            : base(typeof(BridgeDayEntries),  new ResultTableDefinition(TableName, ResultTableID.BridgeDayEntries,"All the bridge days for this household"), srls)
+            : base(typeof(BridgeDayEntries),  new ResultTableDefinition(TableName, ResultTableID.BridgeDayEntries,"All the bridge days for this household", CalcOption.HouseholdContents), srls)
         {
         }
 

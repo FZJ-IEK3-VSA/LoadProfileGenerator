@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
@@ -10,7 +11,7 @@ namespace Common.SQLResultLogging.Loggers {
         private const string Tablename = "DeviceActivationEntries";
 
         public DeviceActivationEntryLogger([NotNull] SqlResultLoggingService srls) :
-            base(typeof(DeviceActivationEntry),  new ResultTableDefinition(Tablename,ResultTableID.DeviceActivationEntries, "Device Activation Entries"), srls) => _srls = srls;
+            base(typeof(DeviceActivationEntry),  new ResultTableDefinition(Tablename,ResultTableID.DeviceActivationEntries, "Device Activation Entries",CalcOption.DeviceActivations), srls) => _srls = srls;
 
         [ItemNotNull]
         [NotNull]

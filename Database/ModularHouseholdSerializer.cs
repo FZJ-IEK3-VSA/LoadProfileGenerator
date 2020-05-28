@@ -354,7 +354,7 @@ namespace Database {
                 sim.TemperatureProfiles.FindFirstByName(globalOptions.TemperatureProfileName, FindMode.IgnoreCase);
             house.TemperatureProfile = temperatureProfile;
             house.SaveToDB();
-            house.AddHousehold(mhh,false,null,null,null);
+            house.AddHousehold(mhh,null,null,null);
             house.SaveToDB();
             return house;
         }

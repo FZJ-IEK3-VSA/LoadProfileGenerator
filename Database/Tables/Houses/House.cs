@@ -67,7 +67,7 @@ namespace Database.Tables.Houses {
 
         public House([NotNull] string pName, [CanBeNull] string description, [CanBeNull] TemperatureProfile temperatureProfile, [CanBeNull] GeographicLocation geographicLocation,
                      [CanBeNull] HouseType houseType, [NotNull] string connectionString, EnergyIntensityType energyIntensity, [CanBeNull] string source, CreationType creationType,
-                     StrGuid guid, [CanBeNull] int? pID = null) : base(pName, TableName, connectionString, guid)
+                     StrGuid guid,[CanBeNull] int? pID = null) : base(pName, TableName, connectionString, guid)
         {
             ID = pID;
             TypeDescription = "House";
@@ -121,7 +121,6 @@ namespace Database.Tables.Houses {
             get => _houseType;
             set => SetValueWithNotify(value, ref _houseType, false, nameof(HouseType));
         }
-
 
         [CanBeNull]
         [UsedImplicitly]
@@ -205,15 +204,17 @@ namespace Database.Tables.Houses {
             }
         }
 
-        public void AddHousehold([NotNull] ICalcObject hh, bool enableTransportationModelling, [CanBeNull] ChargingStationSet chargingstations, [CanBeNull] TravelRouteSet travelrouteset, [CanBeNull] TransportationDeviceSet transportationDeviceSet)
+        public void AddHousehold([NotNull] ICalcObject hh,
+                                 [CanBeNull] ChargingStationSet chargingstations,
+                                 [CanBeNull] TravelRouteSet travelrouteset, [CanBeNull] TransportationDeviceSet transportationDeviceSet)
         {
             if (hh.ConnectionString != ConnectionString) {
                 throw new LPGException("Adding house from another database. This is a bug! Please report.");
             }
 
             var hd = new HouseHousehold(
-                null, IntID, hh, ConnectionString, hh.Name, System.Guid.NewGuid().ToStrGuid(), transportationDeviceSet, chargingstations, travelrouteset,
-                enableTransportationModelling);
+                null, IntID, hh, ConnectionString, hh.Name,
+                System.Guid.NewGuid().ToStrGuid(), transportationDeviceSet, chargingstations, travelrouteset);
             _houseHouseholds.Add(hd);
             _houseHouseholds.Sort();
             hd.SaveToDB();
@@ -233,8 +234,7 @@ namespace Database.Tables.Houses {
                 {
                     throw new LPGException("Household was null");
                 }
-                var hhd = new HouseholdData(householdName, household.IsTransportationEnabled,
-                    houseHousehold.Name, houseHousehold.ChargingStationSet?.GetJsonReference(),
+                var hhd = new HouseholdData(householdName, houseHousehold.Name, houseHousehold.ChargingStationSet?.GetJsonReference(),
                     houseHousehold.TransportationDeviceSet?.GetJsonReference(),
                     houseHousehold.TravelRouteSet?.GetJsonReference(), null, HouseholdDataSpecificationType.ByHouseholdName);
                 hhd.HouseholdNameSpecification = new HouseholdNameSpecification(household.GetJsonReference());
@@ -333,7 +333,7 @@ namespace Database.Tables.Houses {
                     transportationDevices = GetItemFromListByName(dstSim.TransportationDeviceSets.It, hhh.TravelRouteSet.Name);
                 }
 
-                house.AddHousehold(hh, hhh.EnableTransportationModelling, chargingStations, travelRouteSets, transportationDevices);
+                house.AddHousehold(hh,  chargingStations, travelRouteSets, transportationDevices);
             }
 
             return house;
@@ -430,7 +430,8 @@ namespace Database.Tables.Houses {
             var source = dr.GetString("Source", false, "Manually Created", ignoreMissingFields);
             var creationType = (CreationType)dr.GetIntFromLong("CreationType", false, ignoreMissingFields);
             var guid = GetGuid(dr, ignoreMissingFields);
-            return new House(name, description, tp, geoloc, houseType, connectionString, energyintensity, source, creationType, guid, id);
+            return new House(name, description, tp, geoloc, houseType,
+                connectionString, energyintensity, source, creationType, guid, id);
         }
 
         private static bool IsCorrectParentHouseHousehold([NotNull] DBBase parent, [NotNull] DBBase child)

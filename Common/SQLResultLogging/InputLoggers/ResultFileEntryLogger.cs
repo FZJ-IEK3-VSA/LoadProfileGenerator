@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Automation;
 using Automation.ResultFiles;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
@@ -8,10 +9,12 @@ namespace Common.SQLResultLogging.InputLoggers
     public class ResultFileEntryLogger : DataSaverBase {
         private bool _isTableCreated;
         private const string TableName = "ResultFileEntries";
-        public ResultFileEntryLogger([NotNull] SqlResultLoggingService srls, bool isTableCreated=false): base(typeof(ResultFileEntry),
-            new ResultTableDefinition(TableName,ResultTableID.ResultFileEntries, "Result files"),srls)
+        public ResultFileEntryLogger([NotNull] SqlResultLoggingService srls): base(typeof(ResultFileEntry),
+            new ResultTableDefinition(TableName,ResultTableID.ResultFileEntries, "Result files",CalcOption.BasicOverview),srls)
         {
-            _isTableCreated = isTableCreated;
+            _isTableCreated = srls.CheckifTableExits(TableName);
+
+            //_isTableCreated = isTableCreated;
         }
 
         public override void Run(HouseholdKey key, object o)

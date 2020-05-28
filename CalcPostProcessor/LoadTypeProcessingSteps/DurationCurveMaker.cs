@@ -1,4 +1,6 @@
-﻿//-----------------------------------------------------------------------
+﻿using System.Linq;
+
+//-----------------------------------------------------------------------
 
 // <copyright>
 //
@@ -29,7 +31,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using Automation;
 using Automation.ResultFiles;
@@ -44,21 +45,20 @@ namespace CalcPostProcessor.LoadTypeProcessingSteps {
     public class DurationCurveMaker: LoadTypeStepBase
     {
         [NotNull]
-        private readonly CalcParameters _calcParameters;
-        [NotNull]
-        private readonly FileFactoryAndTracker _fft;
+        private readonly IFileFactoryAndTracker _fft;
 
         public DurationCurveMaker([NotNull] CalcDataRepository repository,
                                   [NotNull] ICalculationProfiler calculationProfiler,
-                                  [NotNull] FileFactoryAndTracker fft)
+                                  [NotNull] IFileFactoryAndTracker fft)
             :base(repository, AutomationUtili.GetOptionList(CalcOption.DurationCurve),calculationProfiler,"Duration Curves")
         {
-            _calcParameters = Repository.CalcParameters;
             _fft = fft;
         }
         private void Run([NotNull] CalcLoadTypeDto dstLoadType, [NotNull][ItemNotNull] List<OnlineEnergyFileRow> energyFileRows,
-                        [NotNull] EnergyFileColumns efc) {
-            var comma = _calcParameters.CSVCharacter;
+                        [NotNull] EnergyFileColumns efc)
+        {
+            var calcParameters = Repository.CalcParameters;
+            var comma = calcParameters.CSVCharacter;
             var entries = new Dictionary<string, List<double>>();
             var sums = new List<double>();
 
@@ -91,7 +91,8 @@ namespace CalcPostProcessor.LoadTypeProcessingSteps {
             // sums
             var sumfile = _fft.MakeFile<StreamWriter>("DurationCurve." + dstLoadType.Name + ".csv",
                 "Summed up household duration curve for " + dstLoadType.Name, true,
-                 ResultFileID.DurationCurveSums, Constants.GeneralHouseholdKey, TargetDirectory.Reports, _calcParameters.InternalStepsize,
+                 ResultFileID.DurationCurveSums, Constants.GeneralHouseholdKey, TargetDirectory.Reports, calcParameters.InternalStepsize,
+                CalcOption.DurationCurve,
                 dstLoadType.ConvertToLoadTypeInformation());
             sumfile.WriteLine("Timestep" + comma + "Time span" + comma + "Sum [" + dstLoadType.UnitOfPower + "]");
             var sumsb = new StringBuilder();
@@ -104,13 +105,14 @@ namespace CalcPostProcessor.LoadTypeProcessingSteps {
                 sumsb.Append(sum);
                 sumfile.WriteLine(sumsb.ToString());
                 timestep++;
-                ts = ts.Add(_calcParameters.InternalStepsize);
+                ts = ts.Add(calcParameters.InternalStepsize);
             }
             sumfile.Close();
             // individual devices
             var normalfile = _fft.MakeFile<StreamWriter>("DeviceDurationCurves." + dstLoadType.Name + ".csv",
                 "Duration curve for each device for " + dstLoadType.Name, true,
-                 ResultFileID.DurationCurveDevices, Constants.GeneralHouseholdKey, TargetDirectory.Reports, _calcParameters.InternalStepsize,
+                 ResultFileID.DurationCurveDevices, Constants.GeneralHouseholdKey, TargetDirectory.Reports, calcParameters.InternalStepsize,
+                CalcOption.DurationCurve,
                 dstLoadType.ConvertToLoadTypeInformation());
 
             var header = string.Empty;
@@ -137,7 +139,7 @@ namespace CalcPostProcessor.LoadTypeProcessingSteps {
                 }
                 normalfile.WriteLine(sb.ToString());
                 timestep++;
-                ts = ts.Add(_calcParameters.InternalStepsize);
+                ts = ts.Add(calcParameters.InternalStepsize);
             }
             normalfile.Close();
         }
@@ -152,5 +154,8 @@ namespace CalcPostProcessor.LoadTypeProcessingSteps {
             }
             Run(p.LoadType,p.EnergyFileRows,efc);
         }
+
+        [NotNull]
+        public override List<CalcOption> NeededOptions => new List<CalcOption>();
     }
 }

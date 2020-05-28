@@ -183,7 +183,7 @@ namespace ChartCreator2.OxyCharts {
                 }
             }
 
-            Save(plotModel1, plotName, "AffordanceEnergyUsePerPerson." + hhkey.HouseholdKey + "." + lti.FileName + ".png", Parameters.BaseDirectory);
+            Save(plotModel1, plotName, "AffordanceEnergyUsePerPerson." + hhkey.HouseholdKey + "." + lti.FileName + ".png", Parameters.BaseDirectory, CalcOption.AffordanceEnergyUse);
         }
 
         private static void PrepareData([ItemNotNull] [JetBrains.Annotations.NotNull] List<AffordanceEnergyUseEntry> filteredEntries,

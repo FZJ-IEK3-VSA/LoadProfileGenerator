@@ -10,20 +10,16 @@ namespace Automation {
         {
         }
         //[CanBeNull] JsonReference calcObject,
-        public JsonCalcSpecification( [CanBeNull] JsonReference? chargingStationSet, bool deleteAllButPDF, [CanBeNull] JsonReference? deviceSelection,
-                                      bool enableTransportation,
+        public JsonCalcSpecification( bool deleteAllButPDF, [CanBeNull] JsonReference? deviceSelection,
                                      [CanBeNull]DateTime? endDate, [CanBeNull] string? externalTimeResolution, [CanBeNull] string? internalTimeResolution,
                                      [CanBeNull] JsonReference? geographicLocation, LoadTypePriority loadTypePriorityEnum,
                                       [CanBeNull] string? outputDirectory, bool showSettlingPeriod,
-                                     [CanBeNull] DateTime? startDate, [CanBeNull] JsonReference? temperatureProfile,
-                                      [CanBeNull] JsonReference? transportationDeviceSet,
-                                     [CanBeNull] JsonReference? travelRouteSet)
+                                     [CanBeNull] DateTime? startDate, [CanBeNull] JsonReference? temperatureProfile
+                                      )
         {
             //CalcObject = calcObject;
-            ChargingStationSet = chargingStationSet;
             DeleteAllButPDF = deleteAllButPDF;
             DeviceSelection = deviceSelection;
-            EnableTransportation = enableTransportation;
             EndDate = endDate;
             ExternalTimeResolution = externalTimeResolution;
             InternalTimeResolution = internalTimeResolution;
@@ -33,8 +29,6 @@ namespace Automation {
             ShowSettlingPeriod = showSettlingPeriod;
             StartDate = startDate;
             TemperatureProfile = temperatureProfile;
-            TransportationDeviceSet = transportationDeviceSet;
-            TravelRouteSet = travelRouteSet;
         }
 
         public JsonCalcSpecification([NotNull] JsonCalcSpecification o)
@@ -63,10 +57,6 @@ namespace Automation {
             ShowSettlingPeriod = o.ShowSettlingPeriod;
             SkipExisting = o.SkipExisting;
             TemperatureProfile = o.TemperatureProfile;
-            EnableTransportation = o.EnableTransportation;
-            TransportationDeviceSet = o.TransportationDeviceSet;
-            TravelRouteSet = o.TravelRouteSet;
-            ChargingStationSet = o.ChargingStationSet;
             InternalTimeResolution = o.InternalTimeResolution;
             LoadtypesForPostprocessing = new List<string>();
             if (o.LoadtypesForPostprocessing != null)
@@ -95,9 +85,6 @@ namespace Automation {
         [JsonProperty(ItemConverterType = typeof(StringEnumConverter))]
         public List<CalcOption>? CalcOptions { get; set; } = new List<CalcOption>();
 
-        [Comment("Guid of the charging station set to use. Only used if the transportation module is enabled and if not calculating a house. Settings in the house for the households will override these settings.")]
-        [CanBeNull]
-        public JsonReference? ChargingStationSet { get; set; }
 
         [Comment("This sets which output files are generated. You need to use one of the defaults. " +
                  "If you want some additional individual output, you can use the calc options list of individual settings to enable additional things.",
@@ -118,9 +105,6 @@ namespace Automation {
                  "this type of device will always be selected.")]
         [CanBeNull]
         public JsonReference? DeviceSelection { get; set; }
-
-        [Comment("Enables the transportation module for calculating for example electromobility.")]
-        public bool EnableTransportation { get; set; }
 
         [Comment(
             "End date of the simulation. Defaults to the 31.12. of the current year if not set. One year maximum.")]
@@ -179,33 +163,26 @@ namespace Automation {
         [CanBeNull]
         public JsonReference? TemperatureProfile { get; set; }
 
-        [CanBeNull]
-        [Comment(
-            "Sets the guid of the transportation device set that should be used. Only used if the transportation module is enabled and if not calculating a house. Settings in the house for the households will override these settings.")]
-        public JsonReference? TransportationDeviceSet { get; set; }
-
-        [CanBeNull]
-        [Comment(
-            "Sets the guid of the travel route set to be used. Only used if the transportation module is enabled and if not calculating a house. Settings in the house for the households will override these settings.")]
-        public JsonReference? TravelRouteSet { get; set; }
         [Comment("This option make the LPG delete all the SQLite result files after the calculation. Only enable this if you really only want the load profiles and no further processing. Default=false")]
         public bool DeleteSqlite { get; set; }
         [Comment("When using household templates, sometimes random households are generated that don't work. With this option you can make the LPG force to simulate at least some of the cases anyway. Default=false")]
         public bool IgnorePreviousActivitiesWhenNeeded { get; [UsedImplicitly] set; }
 
+        public bool EnableTransportation { get; set; }
+
 
         [NotNull]
         public static JsonCalcSpecification MakeDefaultsForTesting()
         {
-            return new JsonCalcSpecification(null,false,null,false,new DateTime(2019,1,1),
-                "00:15:00",null,null,LoadTypePriority.All,null,false,new DateTime(2019,1,1),null,null,null );
+            return new JsonCalcSpecification(false,null,new DateTime(2019,1,1),
+                "00:15:00","00:01:00",null,LoadTypePriority.All,null,false,new DateTime(2019,1,1),null);
         }
 
         [NotNull]
         public static JsonCalcSpecification MakeDefaultsForProduction()
         {
-            return new JsonCalcSpecification( null, false, null, false, new DateTime(2019, 12, 31),
-                null, null, null, LoadTypePriority.All, null, false, new DateTime(2019, 1, 1), null, null, null);
+            return new JsonCalcSpecification( false,  null, new DateTime(2019, 12, 31),
+                null, null, null, LoadTypePriority.All, null, false, new DateTime(2019, 1, 1),null);
         }
     }
 }

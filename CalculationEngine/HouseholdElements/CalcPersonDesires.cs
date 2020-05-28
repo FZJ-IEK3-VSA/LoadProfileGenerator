@@ -215,7 +215,7 @@ namespace CalculationEngine.HouseholdElements {
                         "CriticalThresholdViolations." + householdKey + "." + person + ".csv",
                         "Lists the critical threshold violations for " + person, true,
                         ResultFileID.CriticalThresholdViolations, householdKey,
-                        TargetDirectory.Debugging, _calcRepo.CalcParameters.InternalStepsize,null,person.MakePersonInformation());
+                        TargetDirectory.Debugging, _calcRepo.CalcParameters.InternalStepsize, CalcOption.CriticalViolations, null,person.MakePersonInformation());
                     var header = _dsc.GenerateDateStampHeader();
                     foreach (var calcDesire in Desires) {
                         if (calcDesire.Value.CriticalThreshold > 0) {

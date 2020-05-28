@@ -55,7 +55,6 @@ namespace LoadProfileGenerator.Presenters.Houses {
         [CanBeNull] private ChargingStationSet _selectedChargingStationSet;
         [CanBeNull] private TravelRouteSet _selectedTravelRouteSet;
         [CanBeNull] private TransportationDeviceSet _selectedTransportationDeviceSet;
-        private bool _enableTransportationModelling;
 
         public HousePresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] HouseView view, [NotNull] House house) : base(view,
             "ThisHouse.HeaderString", house, applicationPresenter)
@@ -244,13 +243,6 @@ namespace LoadProfileGenerator.Presenters.Houses {
         [UsedImplicitly]
         public House ThisHouse => _house;
 
-        public bool EnableTransportationModelling {
-            get => _enableTransportationModelling;
-            set {
-                _enableTransportationModelling = value;
-                OnPropertyChanged(nameof(EnableTransportationModelling));
-            }
-        }
 
         [ItemNotNull]
         [NotNull]
@@ -270,9 +262,9 @@ namespace LoadProfileGenerator.Presenters.Houses {
 
         public void AddCalcObject([NotNull] ICalcObject calcObject, [CanBeNull] ChargingStationSet
                                       chargingStationSet, [CanBeNull] TransportationDeviceSet transportationDeviceSet,
-                                  [CanBeNull] TravelRouteSet travelRouteSet, bool useTransportation)
+                                  [CanBeNull] TravelRouteSet travelRouteSet)
         {
-            _house.AddHousehold(calcObject, useTransportation,chargingStationSet, travelRouteSet,transportationDeviceSet );
+            _house.AddHousehold(calcObject, chargingStationSet, travelRouteSet,transportationDeviceSet );
         }
 
         public void Delete()

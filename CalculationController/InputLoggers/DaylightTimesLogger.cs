@@ -1,4 +1,5 @@
-﻿using Automation.ResultFiles;
+﻿using Automation;
+using Automation.ResultFiles;
 
 namespace CalculationController.InputLoggers
 {
@@ -44,7 +45,7 @@ namespace CalculationController.InputLoggers
         private readonly DateStampCreator _dsc;
 
         public DaylightTimesLogger([NotNull] SqlResultLoggingService srls, [NotNull] CalcParameters calcParameters):base(typeof(DayLightStatus),
-           new ResultTableDefinition("DaylightTimes",ResultTableID.DaylightTimes,  "Time of daylight each day"),srls)
+           new ResultTableDefinition("DaylightTimes",ResultTableID.DaylightTimes,  "Time of daylight each day", CalcOption.DaylightTimesList),srls)
         {
             _srls = srls;
             _calcParameters = calcParameters;

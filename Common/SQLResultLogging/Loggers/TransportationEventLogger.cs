@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
@@ -9,7 +10,7 @@ namespace Common.SQLResultLogging.Loggers {
         private const string TableName = "TransportationEvents";
 
         public TransportationEventLogger([NotNull] SqlResultLoggingService srls) :
-            base(typeof(TransportationEventEntry),  new ResultTableDefinition(TableName,ResultTableID.TransportationEvents, "Transportation Events"), srls)
+            base(typeof(TransportationEventEntry),  new ResultTableDefinition(TableName,ResultTableID.TransportationEvents, "Transportation Events", CalcOption.TransportationStatistics), srls)
         {
         }
 

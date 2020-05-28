@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using JetBrains.Annotations;
@@ -24,7 +25,7 @@ namespace ChartCreator2.OxyCharts {
             [JetBrains.Annotations.NotNull] [ItemNotNull] List<Tuple<string, double>> consumption, [ItemNotNull] [JetBrains.Annotations.NotNull] List<ChartTaggingSet> taggingSets) {
             IntervallBarMaker ivbm = new IntervallBarMaker();
             foreach (var chartTaggingSet in taggingSets) {
-                ivbm.MakeIntervalBars( rfe, plotName, basisPath, consumption,chartTaggingSet,chartTaggingSet.Name,false,this);
+                ivbm.MakeIntervalBars( rfe, plotName, basisPath, consumption,chartTaggingSet,chartTaggingSet.Name,false,this, CalcOption.AffordanceEnergyUse);
             }
         }
 

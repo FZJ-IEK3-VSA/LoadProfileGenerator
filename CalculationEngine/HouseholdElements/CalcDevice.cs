@@ -32,7 +32,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.Linq;
 using System.Text;
 using Automation;
@@ -112,11 +111,11 @@ namespace CalculationEngine.HouseholdElements {
                 _deviceLoadsBy.Add(load.LoadType,load);
                 Loads.Add(load);
             }
-            foreach (var load in powerUsage) {
+            /*foreach (var load in powerUsage) {
                 if (Math.Abs(load.Value) < 0.0000001 && load.Name.ToLower(CultureInfo.InvariantCulture) != "none") {
                     throw new LPGException("Trying to run the device " + calcDeviceDto.Name + " with a power load factor for " + load.LoadType.Name + " of 0. This is not going to work.");
                 }
-            }
+            }*/
             if (calcRepo.CalcParameters.InternalTimesteps == 0) {
                 throw new LPGException("Can't run with 0 timesteps");
             }
@@ -334,7 +333,7 @@ namespace CalculationEngine.HouseholdElements {
         private RandomValueProfile GetRandomValueProfile(int count, CalcDeviceLoad cdl, TimeStep timeStep)
         {
             var entry = _randomValues.FirstOrDefault(x =>
-                x.TimeStep == timeStep && Math.Abs(x.PowerStandardDeviation - cdl.PowerStandardDeviation) < 0.000000001);
+                x.TimeStep == timeStep && Math.Abs(x.PowerStandardDeviation - cdl.PowerStandardDeviation) < 0.000000001 && x.RandomValueProfile.Values.Count == count);
             if (entry != null) {
                 return entry.RandomValueProfile;
             }

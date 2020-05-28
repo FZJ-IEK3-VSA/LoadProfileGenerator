@@ -1,4 +1,5 @@
-﻿using Automation.ResultFiles;
+﻿using Automation;
+using Automation.ResultFiles;
 using Common.Enums;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
@@ -25,7 +26,7 @@ namespace Common.SQLResultLogging.InputLoggers
         public const string TableName = "CalcObjectInformation";
         public CalcObjectInformationLogger([NotNull] SqlResultLoggingService srls)
         : base(typeof(CalcObjectInformation),
-            new ResultTableDefinition(TableName,ResultTableID.CalcObjectInformation, "Additional information about the calc object to help with further processing"), srls)
+            new ResultTableDefinition(TableName,ResultTableID.CalcObjectInformation, "Additional information about the calc object to help with further processing", CalcOption.HouseholdContents), srls)
     {
     }
 

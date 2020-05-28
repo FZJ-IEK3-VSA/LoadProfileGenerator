@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using OxyPlot;
@@ -134,7 +135,7 @@ namespace ChartCreator2.OxyCharts {
                 columnSeries2.FillColor = p.Colors[i];
                 plotModel1.Series.Add(columnSeries2);
             }
-            Save(plotModel1, plotName, rfe.FullFileName, Parameters.BaseDirectory);
+            Save(plotModel1, plotName, rfe.FullFileName, Parameters.BaseDirectory, CalcOption.TimeOfUsePlot);
             Profiler.StopPart(Utili.GetCurrentMethodAndClass());
             return FileProcessingResult.ShouldCreateFiles;
         }

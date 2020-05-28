@@ -1,4 +1,5 @@
-﻿using Automation.ResultFiles;
+﻿using Automation;
+using Automation.ResultFiles;
 using Common.CalcDto;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
@@ -8,7 +9,7 @@ namespace Common.SQLResultLogging.InputLoggers
     public class HouseholdDtoLogger : DataSaverBase
     {
         public HouseholdDtoLogger([NotNull] SqlResultLoggingService srls) : base(typeof(CalcHouseholdDto),
-            new ResultTableDefinition("HouseholdDefinitions", ResultTableID.HouseholdDefinitions, "Json Specification of the household"), srls)
+            new ResultTableDefinition("HouseholdDefinitions", ResultTableID.HouseholdDefinitions, "Json Specification of the household", CalcOption.HouseholdContents), srls)
         {
         }
 

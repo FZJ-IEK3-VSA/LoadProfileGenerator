@@ -77,13 +77,12 @@ namespace Automation {
     }
     public class HouseholdData {
         public HouseholdData([NotNull] string uniqueHouseholdId,
-                             bool enableTransportationModelling, [NotNull] string name, [CanBeNull] JsonReference? chargingStationSet,
+                             [NotNull] string name, [CanBeNull] JsonReference? chargingStationSet,
                              [CanBeNull] JsonReference? transportationDeviceSet, [CanBeNull] JsonReference? travelRouteSet,
                              [ItemNotNull][CanBeNull] List<TransportationDistanceModifier>? transportationDistanceModifiers,
                              HouseholdDataSpecificationType householdDataSpecifictionType)
         {
             UniqueHouseholdId = uniqueHouseholdId;
-            EnableTransportationModelling = enableTransportationModelling;
             Name = name;
             ChargingStationSet = chargingStationSet;
             TransportationDeviceSet = transportationDeviceSet;
@@ -114,7 +113,6 @@ namespace Automation {
         public string? Name { get; set; }
 
 
-        public bool EnableTransportationModelling { get; set; }
         [CanBeNull]
         public JsonReference? ChargingStationSet { get; set; }
         [CanBeNull]

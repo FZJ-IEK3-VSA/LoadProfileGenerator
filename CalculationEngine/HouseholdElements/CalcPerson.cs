@@ -508,7 +508,7 @@ namespace CalculationEngine.HouseholdElements {
                 throw new LPGException("Logfile was null.");
             }
 
-            if (_calcRepo.CalcParameters.IsInTranportMode(_calcPerson.HouseholdKey)) {
+            if (_calcRepo.CalcParameters.TransportationEnabled) {
                 if (!(bestaff is AffordanceBaseTransportDecorator)) {
                     throw new LPGException(
                         "Trying to activate a non-transport affordance in a household that has transportation enabled. This is a bug and should never happen. The affordance was: " +
@@ -790,7 +790,7 @@ namespace CalculationEngine.HouseholdElements {
                                               [CanBeNull] AffordanceStatusClass errors, bool checkForRelevance,
                                               [CanBeNull] CalcSite srcSite, bool ignoreAlreadyExecutedActivities)
         {
-            if (_calcRepo.CalcParameters.IsInTranportMode(_calcPerson.HouseholdKey)) {
+            if (_calcRepo.CalcParameters.TransportationEnabled) {
                 if (aff.Site != srcSite && !(aff is AffordanceBaseTransportDecorator)) {
                     //person is not at the right place and can't transport -> not available.
                     return false;

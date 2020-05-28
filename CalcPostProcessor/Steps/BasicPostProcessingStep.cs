@@ -69,7 +69,12 @@ namespace CalcPostProcessor.Steps
         }
     }
 
-    public  abstract class BasicPostProcessingStep
+    public interface IRequireOptions {
+        public List<CalcOption> NeededOptions { get; }
+        List<CalcOption> Options { get; }
+        public string StepName { get; }
+    }
+    public  abstract class BasicPostProcessingStep: IRequireOptions
     {
 
         public int Priority { get; }
@@ -90,15 +95,18 @@ namespace CalcPostProcessor.Steps
             if (!IsEnabled()) {
                 return;
             }
-            _calculationProfiler.StartPart(_stepName);
+            _calculationProfiler.StartPart(StepName);
             PerformActualStep(parameters);
-            _calculationProfiler.StopPart(_stepName);
+            _calculationProfiler.StopPart(StepName);
         }
 
         protected abstract void PerformActualStep([NotNull] IStepParameters parameters);
 
         [NotNull]
         protected CalcDataRepository Repository { get; }
+
+        [NotNull]
+        public List<CalcOption> Options => _options;
 
         [NotNull]
         private readonly ICalculationProfiler _calculationProfiler;
@@ -113,5 +121,10 @@ namespace CalcPostProcessor.Steps
             }
             return false;
         }
+
+        public  abstract List<CalcOption> NeededOptions { get; }
+
+        [NotNull]
+        public string StepName => _stepName;
     }
 }

@@ -135,7 +135,7 @@ namespace CalculationEngine.HouseElements {
                 using (var swHouse =
                     _calcRepo.FileFactoryAndTracker.MakeFile<StreamWriter>("HouseSpec." + Constants.HouseKey.Key + ".txt",
                         "Detailed house description", true, ResultFileID.PersonFile, Constants.HouseKey, TargetDirectory.Root,
-                        _calcRepo.CalcParameters.InternalStepsize)) {
+                        _calcRepo.CalcParameters.InternalStepsize,CalcOption.HouseholdContents)) {
                     swHouse.WriteLine("Space Heating");
                     if (_calcSpaceHeating != null) {
                         swHouse.WriteLine(_calcSpaceHeating.Name);
@@ -326,7 +326,7 @@ namespace CalculationEngine.HouseElements {
                     fileRow.Save(_calcRepo.Odap.BinaryOutStreams[fileRow.LoadType]);
                 }
 
-                if (_calcRepo.CalcParameters.IsSet(CalcOption.OverallDats) || _calcRepo.CalcParameters.IsSet(CalcOption.OverallSum)) {
+                if (_calcRepo.CalcParameters.IsSet(CalcOption.OverallDats)) {
                     fileRow.SaveSum(_calcRepo.Odap.SumBinaryOutStreams[fileRow.LoadType]);
                 }
             }

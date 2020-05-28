@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
+using Automation;
 using JetBrains.Annotations;
 
 namespace Common.SQLResultLogging
@@ -48,11 +50,12 @@ namespace Common.SQLResultLogging
     }
     public class ResultTableDefinition: IEquatable<ResultTableDefinition>
     {
-        public ResultTableDefinition([NotNull] string tableName, ResultTableID resultTableID, [NotNull] string description)
+        public ResultTableDefinition([NotNull] string tableName, ResultTableID resultTableID, [NotNull] string description, CalcOption enablingOption)
         {
             TableName = tableName;
             ResultTableID = resultTableID;
             Description = description;
+            EnablingOption = enablingOption;
         }
 
         public static bool operator ==([CanBeNull] ResultTableDefinition obj1, [CanBeNull] ResultTableDefinition obj2)
@@ -110,6 +113,7 @@ namespace Common.SQLResultLogging
             return Equals((ResultTableDefinition)obj);
         }
 
+        [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
         public override int GetHashCode()
         {
             unchecked {
@@ -120,9 +124,11 @@ namespace Common.SQLResultLogging
         }
 
         [NotNull]
-        public string TableName { get; }
-        public ResultTableID ResultTableID { get; }
+        public string TableName { get; set; }
+        public ResultTableID ResultTableID { get; set; }
         [NotNull]
-        public string Description { get; }
+        public string Description { get; set; }
+
+        public CalcOption EnablingOption { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Automation.ResultFiles;
+﻿using Automation;
+using Automation.ResultFiles;
 
 namespace Common.SQLResultLogging.Loggers {
     using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace Common.SQLResultLogging.Loggers {
     public class ActionEntryLogger : DataSaverBase {
         private const string TableName = "PerformedActions";
         public ActionEntryLogger([NotNull] SqlResultLoggingService srls) :
-            base(typeof(ActionEntry), new ResultTableDefinition(TableName,ResultTableID.PerformedActions, "Action Entries"), srls)
+            base(typeof(ActionEntry), new ResultTableDefinition(TableName,ResultTableID.PerformedActions, "Action Entries", CalcOption.ActionEntries), srls)
         {
         }
 

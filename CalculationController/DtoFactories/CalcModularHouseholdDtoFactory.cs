@@ -99,9 +99,11 @@ namespace CalculationController.DtoFactories
 
                 var personDtos = _calcPersonDtoFactory.MakePersonDtos(mhh.Persons.ToList(), householdKey,
                     mhh.Vacation.VacationTimeframes(), mhh.CollectTraitDesires(), mhh.Name);
-            _calcRepo.InputDataLogger.SaveList(personDtos.ConvertAll(x => (IHouseholdKey)x));
+                if (_calcRepo.CalcParameters.Options.Contains(CalcOption.HouseholdContents)) {
+                    _calcRepo.InputDataLogger.SaveList(personDtos.ConvertAll(x => (IHouseholdKey)x));
+                }
 
-            //mhh.Persons.ToList(),mhh.Vacation.VacationTimeframes(),  sim.MyGeneralConfig.RepetitionCount,householdKey, locs[0],name);
+                //mhh.Persons.ToList(),mhh.Vacation.VacationTimeframes(),  sim.MyGeneralConfig.RepetitionCount,householdKey, locs[0],name);
             //CalcPersonFactory.AddTraitDesires(mhh.CollectTraitDesires(), calcpersons,sim.MyGeneralConfig.TimeStepsPerHour, chh.Name, new Dictionary<Desire, SharedDesireValue>());
             //check if unhungry and unhungry join only have been added both
             //can't check it in the integrity checker, because that would mean having to duplicate the entire
@@ -130,9 +132,11 @@ namespace CalculationController.DtoFactories
 
                 var deviceDtos = _calcDeviceDtoFactory.MakeCalcDevices(locationDtos,
                     deviceLocations, et, householdKey, deviceLocationDtoDict, sim.DeviceActions.It,_ltDict, deviceCategoryDtos);
-                _calcRepo.InputDataLogger.SaveList(deviceDtos.ConvertAll(x => (IHouseholdKey)x));
+                if(_calcRepo.CalcParameters.Options.Contains(CalcOption.HouseholdContents)) {
+                    _calcRepo.InputDataLogger.SaveList(deviceDtos.ConvertAll(x => (IHouseholdKey)x));
+                }
 
-            //autodevs
+                //autodevs
             var autonomousDevices = mhh.CollectAutonomousDevices();
                 if (mhh.Vacation == null)
                 {
@@ -144,7 +148,9 @@ namespace CalculationController.DtoFactories
                     mhh.Name + "###" + householdKey,
                     sim.DeviceActions.It, locationDict,
                     temperatureProfile, geographicLocation,deviceCategoryDtos);
-                _calcRepo.InputDataLogger.SaveList(autoDevDtos.ConvertAll(x=>(IHouseholdKey) x));
+                if (_calcRepo.CalcParameters.Options.Contains(CalcOption.HouseholdContents)) {
+                    _calcRepo.InputDataLogger.SaveList(autoDevDtos.ConvertAll(x => (IHouseholdKey)x));
+                }
 
                 //affordances
                 var affordancesAtLoc =
@@ -164,14 +170,18 @@ namespace CalculationController.DtoFactories
                     sim.MyGeneralConfig.InternalStepSize, mhh.Vacation.VacationTimeframes(),
                     mhh.Name + "###" + householdKey, sim.DeviceActions.MyItems, affordancesAtLoc, locationDict,
                     out List<DateTime> bridgeDays, householdKey, deviceDtos,deviceCategoryDtos);
-                _calcRepo.InputDataLogger.SaveList(allAffordances.ConvertAll(x => (IHouseholdKey)x));
-                _calcRepo.InputDataLogger.SaveList(_calcVariableRepositoryDtoFactory.GetAllVariableDtos().ConvertAll(x => (IHouseholdKey)x));
-            //                SaveVariableDefinitionsDtos(_calcVariableRepositoryDtoFactory.GetAllVariableDtos());
+                if (_calcRepo.CalcParameters.Options.Contains(CalcOption.HouseholdContents)) {
+                    _calcRepo.InputDataLogger.SaveList(allAffordances.ConvertAll(x => (IHouseholdKey)x));
+                    _calcRepo.InputDataLogger.SaveList(_calcVariableRepositoryDtoFactory.GetAllVariableDtos()
+                        .ConvertAll(x => (IHouseholdKey)x));
+                }
+
+                //                SaveVariableDefinitionsDtos(_calcVariableRepositoryDtoFactory.GetAllVariableDtos());
             //CalcVariableRepository variableRepository = _calcVariableRepositoryDtoFactory.GetRepository(householdKey);
             List<CalcSiteDto> sites = null;
             List<CalcTransportationDeviceDto> transportationDevices = null;
             List<CalcTravelRouteDto> routes = null;
-            if (transportationDeviceSet != null && travelRouteSet != null) {
+            if (_calcRepo.CalcParameters.TransportationEnabled) {
                 _transportationDtoFactory.MakeTransportationDtos(sim, mhh, transportationDeviceSet,
                     travelRouteSet,chargingStationSet,
                     out  sites, out  transportationDevices,
@@ -180,16 +190,21 @@ namespace CalculationController.DtoFactories
                 _calcRepo.InputDataLogger.SaveList(transportationDevices.ConvertAll(x => (IHouseholdKey)x));
                 _calcRepo.InputDataLogger.SaveList(routes.ConvertAll(x => (IHouseholdKey)x));
             }
-            _calcRepo.CalcParameters.SetInTransportMode(householdKey, mhh.IsTransportationEnabled);
             var chh = new CalcHouseholdDto(name, mhh.IntID, temperatureProfile.Name,householdKey,  Guid.NewGuid().ToStrGuid(),
                     geographicLocation.Name,
                     bridgeDays,autoDevDtos,locationDtos,personDtos,deviceDtos,
                     allAffordances, mhh.Vacation.VacationTimeframes(),
                     sites,routes,transportationDevices,
                     mhh.Description);
-            BridgeDayEntries bdes = new BridgeDayEntries(householdKey, chh.BridgeDays);
-            _calcRepo.InputDataLogger.Save(householdKey, bdes);
-            _calcRepo.InputDataLogger.Save(householdKey, chh);
+            if (_calcRepo.CalcParameters.Options.Contains(CalcOption.HouseholdContents)) {
+                _calcRepo.InputDataLogger.Save(householdKey, chh);
+            }
+
+            if (_calcRepo.CalcParameters.Options.Contains(CalcOption.HouseholdContents)) {
+                BridgeDayEntries bdes = new BridgeDayEntries(householdKey, chh.BridgeDays);
+                _calcRepo.InputDataLogger.Save(householdKey, bdes);
+            }
+
             return chh;
         }
         /*

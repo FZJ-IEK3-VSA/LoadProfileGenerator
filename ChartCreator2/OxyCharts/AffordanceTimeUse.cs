@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 
@@ -66,7 +67,7 @@ namespace ChartCreator2.OxyCharts {
                 var cts = taggingSets[pair.Key];
 
                 foreach (var set in cts) {
-                    ivm.MakeIntervalBars(srcResultFileEntry, plotName, Parameters.BaseDirectory, pair.Value, set, "." + pair.Key + "." + set.Name,false,this);
+                    ivm.MakeIntervalBars(srcResultFileEntry, plotName, Parameters.BaseDirectory, pair.Value, set, "." + pair.Key + "." + set.Name,false,this,CalcOption.ActivationFrequencies );
                 }
             }
             Profiler.StopPart(Utili.GetCurrentMethodAndClass());

@@ -13,10 +13,10 @@ using Newtonsoft.Json;
 
 namespace CalcPostProcessor.LoadTypeProcessingSteps {
     public class JsonSumProfileProcessor : LoadTypeStepBase {
-        [NotNull] private readonly FileFactoryAndTracker _fft;
+        [NotNull] private readonly IFileFactoryAndTracker _fft;
 
         public JsonSumProfileProcessor([NotNull] CalcDataRepository repository,
-                                       [NotNull] FileFactoryAndTracker fft,
+                                       [NotNull] IFileFactoryAndTracker fft,
                                        [NotNull] ICalculationProfiler calculationProfiler)
             : base(repository, AutomationUtili.GetOptionList(CalcOption.JsonSumFiles), calculationProfiler,
                 "Json Sum Profile Creation") =>
@@ -27,6 +27,9 @@ namespace CalcPostProcessor.LoadTypeProcessingSteps {
             var ltstep = (LoadtypeStepParameters)parameters;
             Run(ltstep.LoadType, ltstep.EnergyFileRows);
         }
+
+        [NotNull]
+        public override List<CalcOption> NeededOptions => new List<CalcOption>();
 
         private void Run([NotNull] CalcLoadTypeDto dstLoadType,
                          [NotNull] [ItemNotNull] List<OnlineEnergyFileRow> energyFileRows)
@@ -49,7 +52,7 @@ namespace CalcPostProcessor.LoadTypeProcessingSteps {
             var sumfile = _fft.MakeFile<StreamWriter>("Sum." + dstLoadType.FileName + ".json",
                 "Summed up energy profile for all devices for " + dstLoadType.Name, true,
                 ResultFileID.JsonSums, Constants.GeneralHouseholdKey, TargetDirectory.Results,
-                calcParameters.InternalStepsize,
+                calcParameters.InternalStepsize,CalcOption.JsonSumFiles,
                 dstLoadType.ConvertToLoadTypeInformation());
             sumfile.Write(JsonConvert.SerializeObject(jrf, Formatting.Indented));
             sumfile.Flush();
@@ -57,10 +60,10 @@ namespace CalcPostProcessor.LoadTypeProcessingSteps {
     }
 
     public class SumProfileProcessor : LoadTypeSumStepBase {
-        [NotNull] private readonly FileFactoryAndTracker _fft;
+        [NotNull] private readonly IFileFactoryAndTracker _fft;
 
         public SumProfileProcessor([NotNull] CalcDataRepository repository,
-                                   [NotNull] FileFactoryAndTracker fft,
+                                   [NotNull] IFileFactoryAndTracker fft,
                                    [NotNull] ICalculationProfiler calculationProfiler)
             : base(repository, AutomationUtili.GetOptionList(CalcOption.OverallSum), calculationProfiler,
                 "Sum Profile Creation") =>
@@ -77,7 +80,7 @@ namespace CalcPostProcessor.LoadTypeProcessingSteps {
             var dstFile = _fft.MakeFile<StreamWriter>("Overall.SumProfiles." + dstLoadType.Name + ".csv",
                 "Overall summed up energy profile for everything in the house/household for " + dstLoadType.Name, true,
                 ResultFileID.OverallSumFile, Constants.GeneralHouseholdKey, TargetDirectory.Results,
-                Repository.CalcParameters.InternalStepsize, dstLoadType.ConvertToLoadTypeInformation());
+                Repository.CalcParameters.InternalStepsize, CalcOption.OverallSum,  dstLoadType.ConvertToLoadTypeInformation());
             dstFile.WriteLine(dstLoadType.Name + "." + dsc.GenerateDateStampHeader() + "Sum [" +
                               dstLoadType.UnitOfSum + "]");
             var srcFile = _fft.GetResultFileEntry(ResultFileID.OnlineSumActivationFiles, dstLoadType.Name,
@@ -107,5 +110,10 @@ namespace CalcPostProcessor.LoadTypeProcessingSteps {
             var ltstep = (LoadtypeSumStepParameters)parameters;
             ProcessSumFile(ltstep.LoadType);
         }
+
+        [NotNull]
+        public override List<CalcOption> NeededOptions => new List<CalcOption>() {
+            CalcOption.OverallDats
+        };
     }
 }

@@ -5,7 +5,7 @@ using Common.SQLResultLogging;
 
 namespace CalcPostProcessor.Steps
 {
-    public interface IGeneralHouseholdStep
+    public interface IGeneralHouseholdStep : IRequireOptions
     {
         void Run([JetBrains.Annotations.NotNull] IStepParameters parameters);
         bool IsEnabled();

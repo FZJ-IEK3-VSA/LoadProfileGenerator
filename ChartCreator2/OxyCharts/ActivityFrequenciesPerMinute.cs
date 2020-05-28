@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using OxyPlot;
@@ -107,7 +108,7 @@ namespace ChartCreator2.OxyCharts {
                     columnSeries2.FillColor = p.Colors[i];
                     plotModel1.Series.Add(columnSeries2);
                 }
-                Save(plotModel1, plotName, srcEntry.FullFileName + "." + personName, Parameters.BaseDirectory);
+                Save(plotModel1, plotName, srcEntry.FullFileName + "." + personName, Parameters.BaseDirectory,CalcOption.ActivationFrequencies);
             }
             Profiler.StopPart(Utili.GetCurrentMethodAndClass());
             return FileProcessingResult.ShouldCreateFiles;

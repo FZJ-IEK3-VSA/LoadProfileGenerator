@@ -40,7 +40,7 @@ namespace LoadProfileGenerator.Tests.Presenters.SpecialViews
                     // Guid g = Guid.NewGuid();
                     CalculationOutcomesPresenter.StartOneCalculation(hh, sim.GeographicLocations[0], sim.TemperatureProfiles[0],
                         EnergyIntensityType.EnergySaving, wd.WorkingDirectory, sim,
-                        false, null, null, null);
+                        false, null, null, null,false);
                     db.Cleanup();
                     wd.CleanUp();
                 }

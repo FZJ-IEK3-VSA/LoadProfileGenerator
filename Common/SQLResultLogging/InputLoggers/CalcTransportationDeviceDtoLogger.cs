@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using Common.CalcDto;
 using Common.SQLResultLogging.Loggers;
@@ -12,7 +13,7 @@ namespace Common.SQLResultLogging.InputLoggers
         private const string Tablename = "TransportationDevices";
 
         public CalcTransportationDeviceDtoLogger([NotNull] SqlResultLoggingService srls)
-            : base(typeof(CalcTransportationDeviceDto), new ResultTableDefinition(Tablename, ResultTableID.TransportationDeviceDefinitions, "Json Specification of the Sites"), srls)
+            : base(typeof(CalcTransportationDeviceDto), new ResultTableDefinition(Tablename, ResultTableID.TransportationDeviceDefinitions, "Json Specification of the transportation devices", CalcOption.HouseholdContents), srls)
         {
         }
 

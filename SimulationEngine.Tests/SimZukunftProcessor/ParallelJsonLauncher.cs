@@ -7,7 +7,7 @@ using Common.JSON;
 using Database;
 using Database.Tables.Houses;
 using Database.Tests;
-using SimulationEngineLib.SimZukunftProcessor;
+using SimulationEngineLib.HouseJobProcessor;
 using Xunit;
 
 namespace SimulationEngine.Tests.SimZukunftProcessor

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using OxyPlot;
@@ -70,7 +71,7 @@ namespace ChartCreator2.OxyCharts {
                 //lineSeries1.Smooth = false;
 
                 plotModel1.Series.Add(lineSeries1);
-                Save(plotModel1, plotName, srcEntry.FullFileName, Parameters.BaseDirectory);
+                Save(plotModel1, plotName, srcEntry.FullFileName, Parameters.BaseDirectory, CalcOption.DurationCurve);
             }
             catch (Exception e) {
                 Logger.Error("Error in Duration Curve Chart: " + e.Message);

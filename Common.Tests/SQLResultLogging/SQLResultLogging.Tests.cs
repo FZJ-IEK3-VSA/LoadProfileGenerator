@@ -99,7 +99,7 @@ namespace Common.Tests.SQLResultLogging
                 wd.ClearDirectory();
                 var srl = new SqlResultLoggingService(wd.WorkingDirectory);
                 var hhkey = new HouseholdKey("hh0");
-                ResultTableDefinition rtd = new ResultTableDefinition("tbl1", ResultTableID.AffordanceDefinitions, "tabledesc");
+                ResultTableDefinition rtd = new ResultTableDefinition("tbl1", ResultTableID.AffordanceDefinitions, "tabledesc", CalcOption.BasicOverview);
                 SaveableEntry se = new SaveableEntry(hhkey, rtd);
                 se.AddField("Name", SqliteDataType.Text);
                 se.AddField("Json", SqliteDataType.Text);

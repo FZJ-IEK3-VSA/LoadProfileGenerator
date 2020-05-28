@@ -6,7 +6,6 @@ using Automation.ResultFiles;
 using CalcPostProcessor.Steps;
 using Common;
 using Common.Enums;
-using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
 using Common.SQLResultLogging.Loggers;
@@ -16,8 +15,6 @@ using JetBrains.Annotations;
 namespace CalcPostProcessor.GeneralHouseholdSteps {
     public class MakeBodilyActivityLevelStatistics : HouseholdStepBase
     {
-        [NotNull] private readonly CalcParameters _calcParameters;
-
         [NotNull] private readonly ICalculationProfiler _calculationProfiler;
 
         [NotNull] private readonly IInputDataLogger _inputDataLogger;
@@ -34,11 +31,11 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
             _calculationProfiler = calculationProfiler;
             _repository = repository;
             _inputDataLogger = inputDataLogger;
-            _calcParameters = _repository.CalcParameters;
         }
 
         protected override void PerformActualStep(IStepParameters parameters)
         {
+            var calcParameters = _repository.CalcParameters;
             HouseholdStepParameters hhp = (HouseholdStepParameters)parameters;
             var entry = hhp.Key;
             if (entry.KeyType != HouseholdKeyType.Household)
@@ -71,7 +68,8 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
             BodilyActivityLevelStatistics bals = new BodilyActivityLevelStatistics(householdKey);
             foreach (BodilyActivityLevel level in Enum.GetValues(typeof(BodilyActivityLevel)))
             {
-                bals.ActivityLevels.Add(level, new List<double>(new double[ _calcParameters.OfficalTimesteps]));
+
+                bals.ActivityLevels.Add(level, new List<double>(new double[ calcParameters.OfficalTimesteps]));
             }
             foreach (var actionEntry in singletimestepEntries)
             {
@@ -83,5 +81,8 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
             _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
 
         }
+
+        [NotNull]
+        public override List<CalcOption> NeededOptions => new List<CalcOption>();
     }
 }

@@ -28,7 +28,7 @@ namespace ChartCreator2.OxyCharts {
                                      [JetBrains.Annotations.NotNull] ChartTaggingSet taggingSet,
                                      [JetBrains.Annotations.NotNull] string newFileNameSuffix,
                                      bool showTitle,
-                                     [JetBrains.Annotations.NotNull] GenericChartBase gcb)
+                                     [JetBrains.Annotations.NotNull] GenericChartBase gcb, CalcOption sourceOption)
         {
             var fontsize = 48;
             if (consumption.Count <= 20)
@@ -216,7 +216,7 @@ namespace ChartCreator2.OxyCharts {
             {
                 plotModel1.Series.Add(pair.Value);
             }
-            gcb.Save(plotModel1, plotName, srcResultFileEntry.FullFileName + newFileNameSuffix, basisPath); // ".interval"
+            gcb.Save(plotModel1, plotName, srcResultFileEntry.FullFileName + newFileNameSuffix, basisPath, sourceOption); // ".interval"
         }
     }
     [SuppressMessage("ReSharper", "RedundantNameQualifier")]
@@ -242,7 +242,9 @@ namespace ChartCreator2.OxyCharts {
         protected ChartCreationParameters Parameters => _parameters;
 
         [JetBrains.Annotations.NotNull] private readonly ChartCreationParameters _parameters;
-        public void Save([JetBrains.Annotations.NotNull] PlotModel plotModel1, [JetBrains.Annotations.NotNull] string plotName, [JetBrains.Annotations.NotNull] string csvFullFileName, [JetBrains.Annotations.NotNull] DirectoryInfo basisPath,
+        public void Save([JetBrains.Annotations.NotNull] PlotModel plotModel1, [JetBrains.Annotations.NotNull] string plotName,
+                         [JetBrains.Annotations.NotNull] string csvFullFileName, [JetBrains.Annotations.NotNull] DirectoryInfo basisPath,
+                         CalcOption enablingOption,
            [CanBeNull] string newDstFileName = null, bool makePng = true)
         {
             if (plotName.Contains("\\") || plotName.Trim().Length == 0 || plotName.Contains("."))
@@ -269,7 +271,8 @@ namespace ChartCreator2.OxyCharts {
                 {
                     throw new LPGException("File already exists?!? " + fi.FullName);
                 }
-                FFT.RegisterFile(fi.Name, "Plot for " + plotName, true, ResultFileID.Chart, Constants.GeneralHouseholdKey, TargetDirectory.Charts, fi.Name);
+                FFT.RegisterFile(fi.Name, "Plot for " + plotName, true, ResultFileID.Chart, Constants.GeneralHouseholdKey, TargetDirectory.Charts,
+                    enablingOption,fi.Name);
                 PngExporter.Export(plotModel1, fi.FullName, _parameters.Width,
                     _parameters.Height, OxyColor.FromArgb(255, 255, 255, 255),
                     _parameters.Dpi);
@@ -278,7 +281,7 @@ namespace ChartCreator2.OxyCharts {
             {
                 var pdfChartName = fi.FullName.Substring(0, fi.FullName.Length - 4);
                 pdfChartName += ".pdf";
-                FFT.RegisterFile(pdfChartName, "PDF Plot for " + plotName, true, ResultFileID.Chart, Constants.GeneralHouseholdKey, TargetDirectory.Charts, pdfChartName);
+                FFT.RegisterFile(pdfChartName, "PDF Plot for " + plotName, true, ResultFileID.Chart, Constants.GeneralHouseholdKey, TargetDirectory.Charts,enablingOption, pdfChartName);
                 OxyPDFCreator.Run(plotModel1, pdfChartName);
             }
         }

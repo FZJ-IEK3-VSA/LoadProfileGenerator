@@ -30,6 +30,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Common.CalcDto;
@@ -129,7 +130,7 @@ namespace CalculationEngine.OnlineLogging {
             if (_writeHeader) {
                 _energyStoragesSw = _fft.MakeFile<StreamWriter>("EnergyStorages.csv", "Energy storage values", true,
                     ResultFileID.EnergyStorages, householdKey, TargetDirectory.Results,
-                    _calcParameters.InternalStepsize);
+                    _calcParameters.InternalStepsize, CalcOption.EnergyStorageFile);
                 _energyStoragesSw.Write(_dsc.GenerateDateStampHeader());
                 _energyStoragesSw.WriteLine(GetHeader());
                 _writeHeader = false;

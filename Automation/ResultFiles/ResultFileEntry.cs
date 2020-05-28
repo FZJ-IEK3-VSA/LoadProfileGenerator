@@ -150,8 +150,9 @@ namespace Automation.ResultFiles {
                                [NotNull] LoadTypeInformation lti,
                                [NotNull] PersonInformation pi,
                                [NotNull] string additionalFileIndex,
-                               TimeSpan timeResolution)
+                               TimeSpan timeResolution, CalcOption enablingOption)
         {
+            EnablingCalcOption = enablingOption;
             TimeResolution = timeResolution;
             Name = name;
             FileName = fileInfo.Name;
@@ -175,12 +176,14 @@ namespace Automation.ResultFiles {
             }
         }
 
-        public ResultFileEntry([NotNull] string name, [NotNull] FileInfo fileInfo, bool displayEntry)
+        public ResultFileEntry([NotNull] string name, [NotNull] FileInfo fileInfo, bool displayEntry, CalcOption enablingOption)
         {
             Name = name;
             FileName = fileInfo.Name;
             FullFileName = fileInfo.FullName;
             DisplayEntry = displayEntry;
+            EnablingCalcOption = enablingOption;
+
             if (FileName == FullFileName) {
                 throw new LPGException("Full filename was same as filename");
             }
@@ -195,7 +198,7 @@ namespace Automation.ResultFiles {
                                bool displayEntry,
                                ResultFileID rfid,
                                [NotNull] string householdKey,
-                               [CanBeNull] string? additionalFileIndex)
+                               [CanBeNull] string? additionalFileIndex, CalcOption enablingOption)
         {
             Name = name;
             FileName = fileinfo.Name;
@@ -204,6 +207,7 @@ namespace Automation.ResultFiles {
             ResultFileID = rfid;
             HouseholdKey = householdKey;
             AdditionalFileIndex = additionalFileIndex;
+            EnablingCalcOption = enablingOption;
             if (FileName == FullFileName) {
                 throw new LPGException("Full filename was same as filename");
             }
@@ -221,6 +225,8 @@ namespace Automation.ResultFiles {
 
         [UsedImplicitly]
         public string? AdditionalFileIndex { get; set; }
+        [UsedImplicitly]
+        public CalcOption EnablingCalcOption { get; set; }
 
         [JsonIgnore]
         [CanBeNull]

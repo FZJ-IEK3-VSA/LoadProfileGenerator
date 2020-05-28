@@ -13,18 +13,16 @@ using JetBrains.Annotations;
 
 namespace CalcPostProcessor.LoadTypeHouseholdSteps {
     public class ImportFileCreatorPolysun : LoadTypeStepBase {
-        [NotNull] private readonly CalcParameters _calcParameters;
 
-        [NotNull] private readonly FileFactoryAndTracker _fft;
+        [NotNull] private readonly IFileFactoryAndTracker _fft;
 
         public ImportFileCreatorPolysun([NotNull] CalcDataRepository repository,
                                         [NotNull] ICalculationProfiler profiler,
-                                        [NotNull] FileFactoryAndTracker fft) : base(repository,
+                                        [NotNull] IFileFactoryAndTracker fft) : base(repository,
             AutomationUtili.GetOptionList(CalcOption.PolysunImportFiles),
             profiler,
             "Polysun Import Files")
         {
-            _calcParameters = Repository.CalcParameters;
             _fft = fft;
         }
         /*
@@ -96,11 +94,12 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
 
         public void RunPolysun([NotNull] CalcLoadTypeDto dstLoadType,
                                [NotNull] [ItemNotNull] List<OnlineEnergyFileRow> energyFileRows,
-                               [NotNull] FileFactoryAndTracker fft,
+                               [NotNull] IFileFactoryAndTracker fft,
                                [NotNull] string housename)
         {
+            var calcParameters = Repository.CalcParameters;
             var fifteenMin = new TimeSpan(0, 15, 0);
-            var externalfactor = (int)(fifteenMin.TotalSeconds / _calcParameters.InternalStepsize.TotalSeconds);
+            var externalfactor = (int)(fifteenMin.TotalSeconds / calcParameters.InternalStepsize.TotalSeconds);
             if (externalfactor == 1) {
                 return;
             }
@@ -112,7 +111,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                 ResultFileID.PolysunImportFile,
                 Constants.GeneralHouseholdKey,
                 TargetDirectory.Results,
-                fifteenMin,
+                fifteenMin,CalcOption.PolysunImportFiles,
                 dstLoadType.ConvertToLoadTypeInformation());
             //var count = energyFileRows[0].EnergyEntries.Count;
             var ts = TimeSpan.Zero;
@@ -133,7 +132,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                 }
 
                 var sumPower = sum * dstLoadType.ConversionFactor; // change to power
-                var normalstr = ts.TotalSeconds + _calcParameters.CSVCharacter + sumPower.ToString("N8", CultureInfo.InvariantCulture);
+                var normalstr = ts.TotalSeconds + calcParameters.CSVCharacter + sumPower.ToString("N8", CultureInfo.InvariantCulture);
                 sumfile.WriteLine(normalstr);
             }
             //  if (timestepcount != energyFileRows.Count) { //this does not consider the hidden time steps
@@ -149,6 +148,9 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             //var efc = Repository.ReadEnergyFileColumns(Constants.GeneralHouseholdKey);
             //RunIndividualHouseholdsPolysun(p.LoadType,p.EnergyFileRows,_fft,efc);
         }
+
+        [NotNull]
+        public override List<CalcOption> NeededOptions => new List<CalcOption>();
 
         private static void WritePolysunHeader([NotNull] StreamWriter sw, [NotNull] string housename, [NotNull] CalcLoadTypeDto loadtype)
         {
