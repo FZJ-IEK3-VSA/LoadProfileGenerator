@@ -48,6 +48,7 @@
         BasicOverview = 45,
         DeviceActivations,
         LocationsEntries,
-        ActionEntries
+        ActionEntries,
+        AffordanceTaggingSets
     }
 }

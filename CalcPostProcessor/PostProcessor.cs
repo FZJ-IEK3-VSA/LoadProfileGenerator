@@ -42,7 +42,7 @@ using JetBrains.Annotations;
 
 namespace CalcPostProcessor {
     public class OptionDependencyManager {
-        Dictionary<CalcOption, List<CalcOption>> _dependencies = new Dictionary<CalcOption, List<CalcOption>>();
+        private readonly Dictionary<CalcOption, List<CalcOption>> _dependencies = new Dictionary<CalcOption, List<CalcOption>>();
 
         public OptionDependencyManager(
             [NotNull] [ItemNotNull] ILoadTypeStep[] loadTypePostProcessingSteps,

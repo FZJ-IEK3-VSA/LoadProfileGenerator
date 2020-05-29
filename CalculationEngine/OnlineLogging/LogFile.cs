@@ -255,7 +255,7 @@ namespace CalculationEngine.OnlineLogging {
                 _actionEntries.Clear();
             }
 
-            if (_affordanceActivationEntries.Count > 0) {
+            if (_affordanceActivationEntries.Count > 0&& _calcParameters.Options.Contains(CalcOption.DeviceActivations)) {
                 _idl.SaveList(_affordanceActivationEntries.ConvertAll(x => (IHouseholdKey)x));
                 _affordanceActivationEntries.Clear();
             }

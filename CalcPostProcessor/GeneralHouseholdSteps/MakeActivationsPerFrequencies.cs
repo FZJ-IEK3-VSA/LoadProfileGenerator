@@ -83,7 +83,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
         }
 
         [NotNull]
-        public override List<CalcOption> NeededOptions => new List<CalcOption>();
+        public override List<CalcOption> NeededOptions => new List<CalcOption>() {CalcOption.ActionEntries, CalcOption.AffordanceTaggingSets, CalcOption.HouseholdContents};
 
         private void BuildActivitiesPerMinute([NotNull] HouseholdKey householdKey,
                                               [NotNull] [ItemNotNull] List<CalcAffordanceTaggingSetDto> taggingSets,

@@ -204,7 +204,7 @@ namespace CalculationController.CalcFactories
 
             var affordanceTaggingSetFactory = scope.Resolve<AffordanceTaggingSetFactory>();
             var affordanceTaggingSets = affordanceTaggingSetFactory.GetAffordanceTaggingSets(sim);
-            if (calcRepo.CalcParameters.Options.Contains(CalcOption.HouseholdContents)) {
+            if (calcRepo.CalcParameters.Options.Contains(CalcOption.AffordanceTaggingSets)) {
                 inputDataLogger.Save(affordanceTaggingSets);
             }
 

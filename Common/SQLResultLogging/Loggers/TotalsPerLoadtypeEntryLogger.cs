@@ -155,7 +155,7 @@ namespace Common.SQLResultLogging.Loggers {
         [NotNull] private readonly SqlResultLoggingService _srls;
         private const string TableName = "AffordanceTimeUse";
         public PersonAffordanceInformationLogger([NotNull] SqlResultLoggingService srls) :
-            base(typeof(PersonAffordanceInformation), new ResultTableDefinition(TableName, ResultTableID.PersonAffordanceInformation, "Time Use Per Affordance Entries", CalcOption.TimeOfUsePlot), srls)
+            base(typeof(PersonAffordanceInformation), new ResultTableDefinition(TableName, ResultTableID.PersonAffordanceInformation, "Time Use Per Affordance Entries", CalcOption.ActivationFrequencies), srls)
         {
             _srls = srls;
         }

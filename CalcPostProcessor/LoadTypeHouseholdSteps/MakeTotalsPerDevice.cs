@@ -123,7 +123,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
         }
 
         [NotNull]
-        public override List<CalcOption> NeededOptions => new List<CalcOption>();
+        public override List<CalcOption> NeededOptions => new List<CalcOption>() {CalcOption.DetailedDatFiles, CalcOption.HouseholdContents, CalcOption.DeviceActivations};
 
         [NotNull]
         private Dictionary<CalcLoadTypeDto, Dictionary<StrGuid, double>> GetAverageYearlyConsumptionPerDevice(

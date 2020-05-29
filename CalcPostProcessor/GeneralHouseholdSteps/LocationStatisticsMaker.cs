@@ -48,7 +48,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
         }
 
         [NotNull]
-        public override List<CalcOption> NeededOptions => new List<CalcOption>();
+        public override List<CalcOption> NeededOptions => new List<CalcOption>() {CalcOption.LocationsEntries};
 
         /// <summary>
         ///     This function gets a new streamwriter from the fft. It's this way to enable easier unit testing.

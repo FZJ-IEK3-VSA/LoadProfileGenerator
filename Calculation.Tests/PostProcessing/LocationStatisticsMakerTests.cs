@@ -27,7 +27,7 @@ namespace Calculation.Tests.PostProcessing
 
         [Fact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
-        public void RunTest()
+        public void RunLocationStatisticsMakerTest()
         {
             using WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             using DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
