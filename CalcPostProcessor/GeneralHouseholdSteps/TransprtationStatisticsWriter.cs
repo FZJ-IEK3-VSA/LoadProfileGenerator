@@ -29,7 +29,10 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
             if (hsp.Key.HouseholdKey == Constants.GeneralHouseholdKey) {
                 return;
             }
-
+            if (hsp.Key.HouseholdKey == Constants.HouseKey)
+            {
+                return;
+            }
             if (!Repository.CalcParameters.TransportationEnabled) {
                 return;
             }

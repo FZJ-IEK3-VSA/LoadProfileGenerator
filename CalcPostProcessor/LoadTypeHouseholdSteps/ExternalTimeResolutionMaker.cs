@@ -172,7 +172,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                         "Summed up energy profile for all devices for " + dstLoadType.Name + " for " + hhname +
                         " for " + externalFileName + "s", true,
                         ResultFileID.ExternalSumsForHouseholds, hhnum,
-                        TargetDirectory.Results, calcParameters.ExternalStepsize, CalcOption.SumProfileExternalEntireHouse,
+                        TargetDirectory.Results, calcParameters.ExternalStepsize, CalcOption.SumProfileExternalIndividualHouseholds,
                         dstLoadType.ConvertToLoadTypeInformation());
                 sumfile.WriteLine(dstLoadType.Name + "." + dsc.GenerateDateStampHeader() +
                                   "Sum [" +
@@ -201,7 +201,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                         "Summed up energy profile for all devices for " + dstLoadType.Name + " for " + hhname +
                         " for " + externalFileName + "s as json", true,
                         ResultFileID.ExternalSumsForHouseholdsJson, hhnum,
-                        TargetDirectory.Results, calcParameters.ExternalStepsize,CalcOption.SumProfileExternalEntireHouse,
+                        TargetDirectory.Results, calcParameters.ExternalStepsize,CalcOption.SumProfileExternalIndividualHouseholdsAsJson,
                         dstLoadType.ConvertToLoadTypeInformation());
             }
 

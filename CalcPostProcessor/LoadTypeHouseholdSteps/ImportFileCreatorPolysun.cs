@@ -150,7 +150,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
         }
 
         [NotNull]
-        public override List<CalcOption> NeededOptions => new List<CalcOption>();
+        public override List<CalcOption> NeededOptions => new List<CalcOption>() {CalcOption.DetailedDatFiles, CalcOption.HouseholdContents};
 
         private static void WritePolysunHeader([NotNull] StreamWriter sw, [NotNull] string housename, [NotNull] CalcLoadTypeDto loadtype)
         {

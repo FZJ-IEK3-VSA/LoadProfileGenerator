@@ -300,6 +300,6 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
         }
 
         [NotNull]
-        public override List<CalcOption> NeededOptions => new List<CalcOption>();
+        public override List<CalcOption> NeededOptions => new List<CalcOption>() {CalcOption.DetailedDatFiles};
     }
 }

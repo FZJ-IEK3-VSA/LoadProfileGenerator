@@ -154,7 +154,18 @@ namespace SimulationEngine.Tests {
             }
 
             foundOptions = foundOptions.Distinct().ToList();
-            if (!foundOptions.Contains(option)) {
+
+            List<CalcOption> optionsThatDontResultInFiles = new List<CalcOption>();
+            optionsThatDontResultInFiles.Add(CalcOption.MakePDF);
+            optionsThatDontResultInFiles.Add(CalcOption.ActionCarpetPlot);
+            optionsThatDontResultInFiles.Add(CalcOption.HouseholdPlan);
+            optionsThatDontResultInFiles.Add(CalcOption.CalculationFlameChart);
+            optionsThatDontResultInFiles.Add(CalcOption.MakeGraphics);
+            optionsThatDontResultInFiles.Add(CalcOption.LogErrorMessages);
+            optionsThatDontResultInFiles.Add(CalcOption.EnergyCarpetPlot);
+            optionsThatDontResultInFiles.Add(CalcOption.DurationCurve);
+            optionsThatDontResultInFiles.Add(CalcOption.TransportationDeviceCarpetPlot);
+            if (!foundOptions.Contains(option) && !optionsThatDontResultInFiles.Contains(option)) {
                 throw new LPGException("Option found that doesn't result in any files");
             }
             FileFactoryAndTrackerDummy fftd = new FileFactoryAndTrackerDummy();
@@ -275,16 +286,17 @@ namespace SimulationEngine.Tests {
         {
         }
 
-        private static void WriteOutputFileFunction(StreamWriter sw, CalcOption option)
+        private static void WriteOutputFileFunction(StreamWriter sw, CalcOption option, ModularHousehold hh)
         {
             sw.WriteLine("");
             sw.WriteLine("[Fact]");
             sw.WriteLine("[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]");
 
             sw.WriteLine("public void TestHouseJobs" + option + "(){");
+            sw.WriteLine("      const string hhguid = \"" + hh.Guid.StrVal + "\";");
             sw.WriteLine("      const CalcOption co = CalcOption." + option + ";");
             sw.WriteLine("      HouseJobTestHelper.RunSingleHouse((sim) => {");
-            sw.WriteLine("      var hj = HouseJobCalcPreparer.PrepareNewHouseForOutputFileTesting(sim);");
+            sw.WriteLine("      var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim, hhguid);");
             sw.WriteLine("      hj.CalcSpec.CalcOptions.Add(co); return hj;");
             sw.WriteLine("      }, (x) => HouseJobTestHelper.CheckForResultfile(x, co));");
             sw.WriteLine("}");
@@ -392,6 +404,8 @@ namespace SimulationEngine.Tests {
         [Trait(UnitTestCategories.Category, UnitTestCategories.ManualOnly)]
         public void GenerateCalcoptionTests()
         {
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
+            Simulator sim = new Simulator(db.ConnectionString);
             var sw = new StreamWriter(@"C:\Work\LPGDev\SimulationEngine.Tests\SystematicCalcOptionTests.cs");
             sw.WriteLine("using Automation;");
             sw.WriteLine("using Xunit;");
@@ -402,7 +416,7 @@ namespace SimulationEngine.Tests {
             sw.WriteLine("namespace SimulationEngine.Tests {");
             sw.WriteLine("public class SystematicCalcOptionTests :UnitTestBaseClass {");
             foreach (CalcOption opt in Enum.GetValues(typeof(CalcOption))) {
-                WriteOutputFileFunction(sw, opt);
+                WriteOutputFileFunction(sw, opt,sim.ModularHouseholds[0]);
             }
 
             sw.WriteLine("public SystematicCalcOptionTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper) { }");

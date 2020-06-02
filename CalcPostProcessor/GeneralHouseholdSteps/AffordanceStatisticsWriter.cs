@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Automation;
+using Automation.ResultFiles;
 using CalcPostProcessor.Steps;
 using Common;
 using Common.JSON;
@@ -222,11 +223,14 @@ namespace CalcPostProcessor.GeneralHouseholdSteps
         protected override void PerformActualStep(IStepParameters parameters)
         {
             HouseholdLoadtypeStepParameters hsp = (HouseholdLoadtypeStepParameters)parameters;
-            if (hsp.Key.HouseholdKey == Constants.GeneralHouseholdKey) {
+            if (hsp.Key.HouseholdKey == Constants.GeneralHouseholdKey || hsp.Key.HouseholdKey == Constants.HouseKey) {
                 return;
             }
 
             var deviceActivations = Repository.LoadDeviceActivations(hsp.Key.HouseholdKey);
+            if (deviceActivations.Count == 0) {
+                throw new LPGException("No device activations were found");
+            }
             Dictionary<string,AffordanceEnergyUseEntry> energyUseEntries = new Dictionary<string, AffordanceEnergyUseEntry>();
             foreach (DeviceActivationEntry ae in deviceActivations) {
                 string key = AffordanceEnergyUseEntry.MakeKey(ae.HouseholdKey, ae.LoadTypeGuid, ae.AffordanceName,
@@ -241,10 +245,14 @@ namespace CalcPostProcessor.GeneralHouseholdSteps
                 aeu.TotalActivationDurationInSteps += ae.DurationInSteps;
                 aeu.NumberOfActivations++;
             }
+
+            if (energyUseEntries.Count == 0) {
+                throw new LPGException("No energy use entries were found.");
+            }
             _logger.Save(hsp.Key.HouseholdKey, energyUseEntries.Values.ToList());
         }
 
         [NotNull]
-        public override List<CalcOption> NeededOptions => new List<CalcOption>();
+        public override List<CalcOption> NeededOptions => new List<CalcOption>() {CalcOption.DetailedDatFiles, CalcOption.DeviceActivations};
     }
 }

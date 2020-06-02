@@ -13,7 +13,8 @@ namespace Common.SQLResultLogging.InputLoggers
         private const string Tablename = "TravelRoutes";
 
         public CalcTravelRouteDtoLogger([NotNull] SqlResultLoggingService srls)
-            : base(typeof(CalcTravelRouteDto), new ResultTableDefinition(Tablename,ResultTableID.TravelRouteDefinitions, "Json Specification of the Travel Routes", CalcOption.HouseholdContents), srls)
+            : base(typeof(CalcTravelRouteDto), new ResultTableDefinition(Tablename,ResultTableID.TravelRouteDefinitions,
+                "Json Specification of the Travel Routes", CalcOption.TransportationStatistics), srls)
         {
         }
 

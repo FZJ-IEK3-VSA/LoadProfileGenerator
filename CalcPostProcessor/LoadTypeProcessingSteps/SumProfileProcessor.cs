@@ -29,7 +29,7 @@ namespace CalcPostProcessor.LoadTypeProcessingSteps {
         }
 
         [NotNull]
-        public override List<CalcOption> NeededOptions => new List<CalcOption>();
+        public override List<CalcOption> NeededOptions => new List<CalcOption>() { CalcOption.DetailedDatFiles};
 
         private void Run([NotNull] CalcLoadTypeDto dstLoadType,
                          [NotNull] [ItemNotNull] List<OnlineEnergyFileRow> energyFileRows)

@@ -13,7 +13,8 @@ namespace Common.SQLResultLogging.InputLoggers
         private const string Tablename = "SiteDefinitions";
 
         public CalcSiteDtoLogger([NotNull] SqlResultLoggingService srls)
-            : base(typeof(CalcSiteDto), new ResultTableDefinition(Tablename,ResultTableID.SiteDefinitions, "Json Specification of the Sites",CalcOption.HouseholdContents ), srls)
+            : base(typeof(CalcSiteDto), new ResultTableDefinition(Tablename,ResultTableID.SiteDefinitions,
+                "Json Specification of the Sites",CalcOption.TransportationStatistics ), srls)
         {
         }
 

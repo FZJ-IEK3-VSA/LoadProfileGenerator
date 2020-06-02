@@ -186,9 +186,11 @@ namespace CalculationController.DtoFactories
                     travelRouteSet,chargingStationSet,
                     out  sites, out  transportationDevices,
                     out routes, locationDtos, householdKey);
-                _calcRepo.InputDataLogger.SaveList(sites.ConvertAll(x => (IHouseholdKey)x));
-                _calcRepo.InputDataLogger.SaveList(transportationDevices.ConvertAll(x => (IHouseholdKey)x));
-                _calcRepo.InputDataLogger.SaveList(routes.ConvertAll(x => (IHouseholdKey)x));
+                if (_calcRepo.CalcParameters.IsSet(CalcOption.TransportationStatistics)) {
+                    _calcRepo.InputDataLogger.SaveList(sites.ConvertAll(x => (IHouseholdKey)x));
+                    _calcRepo.InputDataLogger.SaveList(transportationDevices.ConvertAll(x => (IHouseholdKey)x));
+                    _calcRepo.InputDataLogger.SaveList(routes.ConvertAll(x => (IHouseholdKey)x));
+                }
             }
             var chh = new CalcHouseholdDto(name, mhh.IntID, temperatureProfile.Name,householdKey,  Guid.NewGuid().ToStrGuid(),
                     geographicLocation.Name,
