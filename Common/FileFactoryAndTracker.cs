@@ -246,6 +246,13 @@ namespace Common {
                 throw new LPGException("Forgotten Household Key: " + householdKey);
             }
 
+            if (fileName.Contains("..")) {
+                throw new LPGException("Filename with two dots. This looks bad. Please fix: " + fileName);
+            }
+            if (fileName.Contains("  "))
+            {
+                throw new LPGException("Filename with two spaces. This looks bad. Please fix: " + fileName);
+            }
             string fullFileName = Path.Combine(GetFullPathForTargetdirectry(targetDirectory), fileName);
             FileInfo fi = new FileInfo(fullFileName);
             ResultFileEntry rfe =new ResultFileEntry(description, fi,displayResultFileEntry,rfid1,householdKey.Key,
@@ -269,6 +276,14 @@ namespace Common {
             }
             if (!HouseholdRegistry.IsHouseholdRegistered(householdKey)) {
                 throw new LPGException("Forgotten Household Key: " + householdKey);
+            }
+            if (fileName.Contains(".."))
+            {
+                throw new LPGException("Filename with two dots. This looks bad. Please fix: " + fileName);
+            }
+            if (fileName.Contains("  "))
+            {
+                throw new LPGException("Filename with two spaces. This looks bad. Please fix: " + fileName);
             }
             var rfid = rfid1;
             var cleanFileName = AutomationUtili.CleanFileName(fileName);

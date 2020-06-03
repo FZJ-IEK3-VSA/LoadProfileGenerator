@@ -255,8 +255,8 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
                     {
                         throw new LPGException("Calcoptions was null");
                     }
-                    jcs.CalcOptions.Add(CalcOption.DeviceProfiles);
-                    jcs.CalcOptions.Add(CalcOption.DeviceProfiles);
+                    jcs.CalcOptions.Add(CalcOption.DeviceProfilesIndividualHouseholds);
+                    jcs.CalcOptions.Add(CalcOption.DeviceProfilesIndividualHouseholds);
                     jcs.StartDate = new DateTime(2019, 1, 1);
                     jcs.EndDate = new DateTime(2019, 1, 3);
                     jcs.DefaultForOutputFiles = OutputFileDefault.OnlySums;

@@ -68,7 +68,7 @@ namespace Common.JSON {
         //public void CheckDependenyOnOptions()
         //{
         //    if (!Config.ReallyMakeAllFilesIncludingBothSums) {
-        //        if (IsSet(CalcOption.OverallSum) && IsSet(CalcOption.IndividualSumProfiles)) {
+        //        if (IsSet(CalcOption.OverallSum) && IsSet(CalcOption.HouseSumProfilesFromDetailedDats)) {
         //            Logger.Error(
         //                "You have both individual and overall sums enabled. This is a waste of time. The overall sum files are just a quicker way of calculating the results when no detailed information is needed. Please only enable one of those.");
         //            Disable(CalcOption.OverallSum);
@@ -80,12 +80,12 @@ namespace Common.JSON {
         //    if (IsSet(CalcOption.OverallSum)) {
         //        Enable(CalcOption.OverallDats);
         //    }
-        //    if (IsSet(CalcOption.JsonSumFiles))
+        //    if (IsSet(CalcOption.JsonHouseSumFiles))
         //    {
         //        Enable(CalcOption.DetailedDatFiles);
         //    }
 
-        //    if (IsSet(CalcOption.IndividualSumProfiles)) {
+        //    if (IsSet(CalcOption.HouseSumProfilesFromDetailedDats)) {
         //        Enable(CalcOption.DetailedDatFiles);
         //    }
 

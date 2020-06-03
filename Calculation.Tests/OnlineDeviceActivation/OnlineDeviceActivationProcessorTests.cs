@@ -106,7 +106,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                 wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
                 wd.InputDataLogger.AddSaver(new ResultFileEntryLogger(wd.SqlResultLoggingService));
                 //calcParameters.Enable(CalcOption.ActionsLogfile);
-                calcParameters.Enable(CalcOption.DeviceProfiles);
+                calcParameters.Enable(CalcOption.DeviceProfilesIndividualHouseholds);
                 Config.ExtraUnitTestChecking = true;
                 // calcProfile
                 var profileWith100 = new CalcProfile("calcProfile", Guid.NewGuid().ToStrGuid(), new TimeSpan(0, 1, 0), ProfileType.Absolute, "blub");
@@ -220,7 +220,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                 wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
                 var calcParameters = CalcParametersFactory.MakeGoodDefaults().EnableShowSettlingPeriod();
                 //calcParameters.Enable(CalcOption.ActionsLogfile);
-                calcParameters.Enable(CalcOption.DeviceProfiles);
+                calcParameters.Enable(CalcOption.DeviceProfilesIndividualHouseholds);
                 calcParameters.Enable(CalcOption.DetailedDatFiles);
                 using (var fft = new FileFactoryAndTracker(wd.WorkingDirectory, "hh1", wd.InputDataLogger)) {
                     //SqlResultLoggingService srls = new SqlResultLoggingService(Path.Combine(wd.WorkingDirectory, "results.sqlite"));
@@ -291,8 +291,8 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                 var rnd = new Random(1);
                 var nr = new NormalRandom(0, 1, rnd);
 
-                calcParameters.Enable(CalcOption.IndividualSumProfiles);
-                calcParameters.Enable(CalcOption.DeviceProfiles);
+                calcParameters.Enable(CalcOption.HouseSumProfilesFromDetailedDats);
+                calcParameters.Enable(CalcOption.DeviceProfilesIndividualHouseholds);
                 calcParameters.Enable(CalcOption.TotalsPerDevice);
                 calcParameters.Enable(CalcOption.TotalsPerLoadtype);
                 calcParameters.Enable(CalcOption.DetailedDatFiles);
@@ -432,8 +432,8 @@ namespace Calculation.Tests.OnlineDeviceActivation {
             var rnd = new Random(1);
             var nr = new NormalRandom(0, 1, rnd);
             using (var wd = new WorkingDir(Utili.GetCurrentMethodAndClass())) {
-                calcParameters.Enable(CalcOption.IndividualSumProfiles);
-                calcParameters.Enable(CalcOption.DeviceProfiles);
+                calcParameters.Enable(CalcOption.HouseSumProfilesFromDetailedDats);
+                calcParameters.Enable(CalcOption.DeviceProfilesIndividualHouseholds);
                 calcParameters.Enable(CalcOption.TotalsPerDevice);
                 calcParameters.Enable(CalcOption.TotalsPerLoadtype);
                 calcParameters.Enable(CalcOption.DeviceActivations);
@@ -499,8 +499,8 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                             for (var i = 0; i < 30; i++) {
                                 var ts1 = new TimeStep(i, calcParameters);
                                 var filerows = odap.ProcessOneTimestep(ts1);
-                                Assert.Equal(1, filerows.Count);
-                                Assert.Equal(1, filerows[0].EnergyEntries.Count);
+                                filerows.Count.Should().Be(1);
+                                filerows[0].EnergyEntries.Count.Should().Be(1);
                                 Logger.Info(filerows[0].EnergyEntries[0].ToString(CultureInfo.CurrentCulture));
                                 foreach (var fileRow in filerows) {
                                     fileRow.Save(odap.BinaryOutStreams[fileRow.LoadType]);

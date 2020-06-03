@@ -183,7 +183,7 @@ namespace ChartCreator2.OxyCharts {
             }
             var thisname = fileName + "." + taggingSet.Name + "." + day.Day.Year + "." + day.Day.Month + "." +
                            day.Day.Day;
-            Save(plotModel1, plotName, thisname, basisPath,CalcOption.DeviceProfiles,  makePng: makePng);
+            Save(plotModel1, plotName, thisname, basisPath,CalcOption.DeviceProfilesIndividualHouseholds,  makePng: makePng);
         }
 
         protected override FileProcessingResult MakeOnePlot(ResultFileEntry srcEntry)

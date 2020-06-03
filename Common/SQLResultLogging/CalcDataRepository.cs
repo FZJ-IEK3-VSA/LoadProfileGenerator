@@ -147,11 +147,17 @@ namespace Common.SQLResultLogging {
 
         //public List<CalcLocationDto> CalcLocations { get; }
         //public List<CalcAutoDevDto> AutoDevices { get; }
+        private readonly Dictionary<HouseholdKey, EnergyFileColumns> _previousEfc =
+            new Dictionary<HouseholdKey, EnergyFileColumns>();
         [NotNull]
         public EnergyFileColumns ReadEnergyFileColumns([NotNull] HouseholdKey key)
         {
-            EnergyFileColumns efc = new EnergyFileColumns(_srls, key, CalcParameters);
-            return efc;
+            if (!_previousEfc.ContainsKey(key)) {
+                _previousEfc.Clear();
+                EnergyFileColumns efc = new EnergyFileColumns(_srls, key, CalcParameters);
+                _previousEfc.Add(key,efc);
+            }
+            return _previousEfc[key];
         }
 
         [NotNull]

@@ -20,38 +20,19 @@ using Database.Tables.ModularHouseholds;
 using Database.Tests;
 using SimulationEngineLib.HouseJobProcessor;
 using Xunit;
-using Xunit.Abstractions; //using iTextSharp.text.pdf;
+using Xunit.Abstractions;
+
+//using iTextSharp.text.pdf;
 
 
 namespace SimulationEngine.Tests {
     public static class HouseJobCalcPreparer {
-        public static HouseCreationAndCalculationJob PrepareExistingHouseForTesting(Simulator sim, House house)
+        public static HouseCreationAndCalculationJob PrepareExistingHouseForTesting([JetBrains.Annotations.NotNull] House house)
         {
             var hj = new HouseCreationAndCalculationJob();
             hj.CalcSpec = JsonCalcSpecification.MakeDefaultsForTesting();
             hj.HouseDefinitionType = HouseDefinitionType.HouseName;
             hj.HouseReference = new HouseReference(house.GetJsonReference());
-            return hj;
-        }
-
-        public static HouseCreationAndCalculationJob PrepareNewHouseForOutputFileTesting(Simulator sim)
-        {
-            var hj = new HouseCreationAndCalculationJob();
-            hj.CalcSpec = JsonCalcSpecification.MakeDefaultsForTesting();
-            hj.CalcSpec.StartDate = new DateTime(2020, 1, 1);
-            hj.CalcSpec.EndDate = new DateTime(2020, 1, 3);
-            hj.CalcSpec.DeleteDAT = false;
-            hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.NoFiles;
-            hj.CalcSpec.DeleteSqlite = false;
-            hj.CalcSpec.ExternalTimeResolution = "00:15:00";
-            hj.House = new HouseData(StrGuid.FromString("houseguid"), "HT01", 1000, 100, "housename");
-            hj.House.Households = new List<HouseholdData>();
-            var hhd = new HouseholdData("householdid",
-                "householdname", null, null, null, null,
-                HouseholdDataSpecificationType.ByHouseholdName);
-            var hh = sim.ModularHouseholds.FindFirstByName("CHR01", FindMode.StartsWith);
-            hhd.HouseholdNameSpecification = new HouseholdNameSpecification(hh.GetJsonReference());
-            hj.House.Households.Add(hhd);
             return hj;
         }
 
@@ -76,7 +57,9 @@ namespace SimulationEngine.Tests {
             hj.House.Households.Add(hhd);
             return hj;
         }
-        public static HouseCreationAndCalculationJob PrepareNewHouseForHouseholdTestingWithTransport(Simulator sim, string guid)
+
+        public static HouseCreationAndCalculationJob PrepareNewHouseForHouseholdTestingWithTransport(
+            Simulator sim, string guid)
         {
             var hj = new HouseCreationAndCalculationJob();
             hj.CalcSpec = JsonCalcSpecification.MakeDefaultsForTesting();
@@ -90,10 +73,57 @@ namespace SimulationEngine.Tests {
             hj.House = new HouseData(StrGuid.FromString("houseguid"), "HT01", 1000, 100, "housename");
             hj.House.Households = new List<HouseholdData>();
             var hhd = new HouseholdData("householdid",
-                "householdname", sim.ChargingStationSets[0].GetJsonReference(),sim.TransportationDeviceSets[0].GetJsonReference(),
+                "householdname", sim.ChargingStationSets[0].GetJsonReference(),
+                sim.TransportationDeviceSets[0].GetJsonReference(),
                 sim.TravelRouteSets[0].GetJsonReference(), null,
                 HouseholdDataSpecificationType.ByHouseholdName);
             var hh = sim.ModularHouseholds.FindByGuid(guid.ToStrGuid());
+            hhd.HouseholdNameSpecification = new HouseholdNameSpecification(hh.GetJsonReference());
+            hj.House.Households.Add(hhd);
+            return hj;
+        }
+
+        public static HouseCreationAndCalculationJob PrepareNewHouseForHousetypeTesting(Simulator sim, string guid)
+        {
+            var hj = new HouseCreationAndCalculationJob();
+            hj.CalcSpec = JsonCalcSpecification.MakeDefaultsForTesting();
+            hj.CalcSpec.StartDate = new DateTime(2020, 1, 1);
+            hj.CalcSpec.EndDate = new DateTime(2020, 1, 3);
+            hj.CalcSpec.DeleteDAT = false;
+            hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.NoFiles;
+            hj.CalcSpec.DeleteSqlite = false;
+            hj.CalcSpec.ExternalTimeResolution = "00:15:00";
+            hj.CalcSpec.EnableTransportation = false;
+            var ht = sim.HouseTypes.FindByGuid(guid.ToStrGuid());
+            hj.House = new HouseData(StrGuid.FromString("houseguid"), ht.HouseTypeCode, 1000, 100, "housename");
+            hj.House.Households = new List<HouseholdData>();
+            var hhd = new HouseholdData("householdid",
+                "householdname", sim.ChargingStationSets[0].GetJsonReference(),
+                sim.TransportationDeviceSets[0].GetJsonReference(),
+                sim.TravelRouteSets[0].GetJsonReference(), null,
+                HouseholdDataSpecificationType.ByHouseholdName);
+            var hh = sim.ModularHouseholds[0];
+            hhd.HouseholdNameSpecification = new HouseholdNameSpecification(hh.GetJsonReference());
+            hj.House.Households.Add(hhd);
+            return hj;
+        }
+
+        public static HouseCreationAndCalculationJob PrepareNewHouseForOutputFileTesting(Simulator sim)
+        {
+            var hj = new HouseCreationAndCalculationJob();
+            hj.CalcSpec = JsonCalcSpecification.MakeDefaultsForTesting();
+            hj.CalcSpec.StartDate = new DateTime(2020, 1, 1);
+            hj.CalcSpec.EndDate = new DateTime(2020, 1, 3);
+            hj.CalcSpec.DeleteDAT = false;
+            hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.NoFiles;
+            hj.CalcSpec.DeleteSqlite = false;
+            hj.CalcSpec.ExternalTimeResolution = "00:15:00";
+            hj.House = new HouseData(StrGuid.FromString("houseguid"), "HT01", 1000, 100, "housename");
+            hj.House.Households = new List<HouseholdData>();
+            var hhd = new HouseholdData("householdid",
+                "householdname", null, null, null, null,
+                HouseholdDataSpecificationType.ByHouseholdName);
+            var hh = sim.ModularHouseholds.FindFirstByName("CHR01", FindMode.StartsWith);
             hhd.HouseholdNameSpecification = new HouseholdNameSpecification(hh.GetJsonReference());
             hj.House.Households.Add(hhd);
             return hj;
@@ -114,7 +144,7 @@ namespace SimulationEngine.Tests {
     }
 
     [SuppressMessage("ReSharper", "RedundantNameQualifier")]
-    public class HouseJobTestHelper {
+    public static class HouseJobTestHelper {
         // ReSharper disable once CollectionNeverUpdated.Local
 
 
@@ -128,34 +158,37 @@ namespace SimulationEngine.Tests {
 
             foreach (var rfe in rfes) {
                 if (!File.Exists(rfe.FullFileName)) {
-                    throw new LPGException("File " + rfe.FullFileName + " was registered, but is not actually present.");
+                    throw new LPGException("File " + rfe.FullFileName +
+                                           " was registered, but is not actually present.");
                 }
+
                 foundOptions.Add(rfe.EnablingCalcOption);
             }
+
             // ReSharper disable once CollectionNeverQueried.Local
-            List<ResultTableDefinition> allTables = new List<ResultTableDefinition>();
+            var allTables = new List<ResultTableDefinition>();
             var hhKeyLogger = new HouseholdKeyLogger(srls);
             var keys = hhKeyLogger.Load();
             foreach (var key in keys) {
                 if (!srls.FilenameByHouseholdKey.ContainsKey(key.HouseholdKey)) {
                     continue;
                 }
+
                 var fn = srls.FilenameByHouseholdKey[key.HouseholdKey];
                 if (!File.Exists(fn.Filename)) {
                     continue;
                 }
+
                 var tables = srls.LoadTables(key.HouseholdKey);
                 allTables.AddRange(tables);
-                foreach (var table in tables)
-                {
+                foreach (var table in tables) {
                     foundOptions.Add(table.EnablingOption);
-
                 }
             }
 
             foundOptions = foundOptions.Distinct().ToList();
 
-            List<CalcOption> optionsThatDontResultInFiles = new List<CalcOption>();
+            var optionsThatDontResultInFiles = new List<CalcOption>();
             optionsThatDontResultInFiles.Add(CalcOption.MakePDF);
             optionsThatDontResultInFiles.Add(CalcOption.ActionCarpetPlot);
             optionsThatDontResultInFiles.Add(CalcOption.HouseholdPlan);
@@ -165,16 +198,17 @@ namespace SimulationEngine.Tests {
             optionsThatDontResultInFiles.Add(CalcOption.EnergyCarpetPlot);
             optionsThatDontResultInFiles.Add(CalcOption.DurationCurve);
             optionsThatDontResultInFiles.Add(CalcOption.TransportationDeviceCarpetPlot);
+            optionsThatDontResultInFiles.Add(CalcOption.LocationCarpetPlot);
             if (!foundOptions.Contains(option) && !optionsThatDontResultInFiles.Contains(option)) {
                 throw new LPGException("Option found that doesn't result in any files");
             }
-            FileFactoryAndTrackerDummy fftd = new FileFactoryAndTrackerDummy();
-            CalculationProfiler cp = new CalculationProfiler();
+
+            var fftd = new FileFactoryAndTrackerDummy();
+            var cp = new CalculationProfiler();
             var container = PostProcessingManager.RegisterEverything(wd, cp, fftd);
-            HashSet<CalcOption> enabledOptions = new HashSet<CalcOption>();
+            var enabledOptions = new HashSet<CalcOption>();
             enabledOptions.Add(option);
-            using (var scope = container.BeginLifetimeScope())
-            {
+            using (var scope = container.BeginLifetimeScope()) {
                 var odm = scope.Resolve<OptionDependencyManager>();
                 odm.EnableRequiredOptions(enabledOptions);
             }
@@ -188,10 +222,11 @@ namespace SimulationEngine.Tests {
             }
 
             if (foundOptions.Count > 0) {
-                string s = string.Join("\n", foundOptions.Select(x => x.ToString()));
+                var s = string.Join("\n", foundOptions.Select(x => x.ToString()));
                 throw new LPGException("found stuff that was not requested:" + s);
             }
-            List<string> filesthatdontneedtoregister = new List<string>();
+
+            var filesthatdontneedtoregister = new List<string>();
             filesthatdontneedtoregister.Add("finished.flag");
             filesthatdontneedtoregister.Add("log.commandlinecalculation.txt");
             filesthatdontneedtoregister.Add("results.general.sqlite");
@@ -205,18 +240,18 @@ namespace SimulationEngine.Tests {
             filesthatdontneedtoregister.Add("results.house.sqlite-wal");
             filesthatdontneedtoregister.Add("calculationprofiler.json");
             //check if all files are registered
-            DirectoryInfo di = new DirectoryInfo(wd);
+            var di = new DirectoryInfo(wd);
             var files = di.GetFiles("*.*", SearchOption.AllDirectories);
             var registeredFiles = rfes.Select(x => x.FullFileName).ToList();
             foreach (var file in files) {
                 if (filesthatdontneedtoregister.Contains(file.Name.ToLower(CultureInfo.InvariantCulture))) {
                     continue;
                 }
+
                 if (!registeredFiles.Contains(file.FullName)) {
                     throw new LPGException("Found unregistered file: " + file.FullName);
                 }
             }
-
 
 
             //foundKeys = foundKeys.Distinct().ToList();
@@ -256,7 +291,8 @@ namespace SimulationEngine.Tests {
             //}
         }
 
-        public static void RunSingleHouse(Func<Simulator, HouseCreationAndCalculationJob> makeHj, Action<string> checkResults)
+        public static void RunSingleHouse(Func<Simulator, HouseCreationAndCalculationJob> makeHj,
+                                          Action<string> checkResults)
         {
             Logger.Get().StartCollectingAllMessages();
             Logger.Threshold = Severity.Debug;
@@ -286,21 +322,132 @@ namespace SimulationEngine.Tests {
         {
         }
 
-        private static void WriteOutputFileFunction(StreamWriter sw, CalcOption option, ModularHousehold hh)
+        private static void WriteCalcOptionFunction(StreamWriter sw, CalcOption option, ModularHousehold hh)
         {
             sw.WriteLine("");
             sw.WriteLine("[Fact]");
-            sw.WriteLine("[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]");
+            sw.WriteLine("[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]");
 
             sw.WriteLine("public void TestHouseJobs" + option + "(){");
             sw.WriteLine("      const string hhguid = \"" + hh.Guid.StrVal + "\";");
             sw.WriteLine("      const CalcOption co = CalcOption." + option + ";");
             sw.WriteLine("      HouseJobTestHelper.RunSingleHouse((sim) => {");
-            sw.WriteLine("      var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim, hhguid);");
+            sw.WriteLine(
+                "      var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim, hhguid);");
             sw.WriteLine("      hj.CalcSpec.CalcOptions.Add(co); return hj;");
             sw.WriteLine("      }, (x) => HouseJobTestHelper.CheckForResultfile(x, co));");
             sw.WriteLine("}");
             sw.WriteLine("");
+        }
+
+        private static void WriteHousetypeFunction(StreamWriter sw, HouseType ht, int idx)
+        {
+            sw.WriteLine("");
+            sw.WriteLine("[Fact]");
+            sw.WriteLine("[Trait(UnitTestCategories.Category, UnitTestCategories.HousetypeTests)]");
+
+            sw.WriteLine("public void TestHousetype" + idx + ht.HouseTypeCode + "(){");
+            sw.WriteLine("      const string htguid = \"" + ht.Guid.StrVal + "\";");
+            sw.WriteLine("      HouseJobTestHelper.RunSingleHouse((sim) =>");
+            sw.WriteLine("      HouseJobCalcPreparer.PrepareNewHouseForHousetypeTesting(sim, htguid)");
+            sw.WriteLine("      , (x) => {});");
+            sw.WriteLine("}");
+            sw.WriteLine("");
+        }
+
+        private static void WriteHouseholdTestFunction(StreamWriter sw, ModularHousehold hh, int idx)
+        {
+            sw.WriteLine("");
+            sw.WriteLine("[Fact]");
+            sw.WriteLine("[Trait(UnitTestCategories.Category, UnitTestCategories.HouseholdTest)]");
+
+            sw.WriteLine("public void TestHouseholdTest" + idx + "(){");
+            sw.WriteLine("      const string hhguid = \"" + hh.Guid.StrVal + "\";");
+            sw.WriteLine("      HouseJobTestHelper.RunSingleHouse(sim => {");
+            sw.WriteLine("      var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid);");
+            sw.WriteLine("      if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }");
+            sw.WriteLine("      hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;");
+            sw.WriteLine("return hj; }, x => {});");
+            sw.WriteLine("}");
+            sw.WriteLine("");
+        }
+
+        private static void WriteHouseholdTestFunctionWithTransport(StreamWriter sw, ModularHousehold hh, int idx)
+        {
+            sw.WriteLine("");
+            sw.WriteLine("[Fact]");
+            sw.WriteLine("[Trait(UnitTestCategories.Category, UnitTestCategories.HouseholdsWithTransportation)]");
+
+            sw.WriteLine("public void TestHouseholdTest" + idx + "(){");
+            sw.WriteLine("      const string hhguid = \"" + hh.Guid.StrVal + "\";");
+            sw.WriteLine("      HouseJobTestHelper.RunSingleHouse(sim => {");
+            sw.WriteLine(
+                "      var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim,hhguid);");
+            sw.WriteLine("      if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }");
+            sw.WriteLine("      hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;");
+            sw.WriteLine("return hj; }, x => {});");
+            sw.WriteLine("}");
+            sw.WriteLine("");
+        }
+
+        [Fact]
+        public void CheckForCarElectrictyFiles()
+        {
+            HouseCreationAndCalculationJob PrepareHousejob(Simulator sim)
+            {
+                var hj = new HouseCreationAndCalculationJob();
+                hj.CalcSpec = JsonCalcSpecification.MakeDefaultsForTesting();
+                hj.CalcSpec.StartDate = new DateTime(2020, 1, 1);
+                hj.CalcSpec.EndDate = new DateTime(2020, 1, 3);
+                hj.CalcSpec.DeleteDAT = false;
+                hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
+                hj.CalcSpec.DeleteSqlite = false;
+                hj.CalcSpec.ExternalTimeResolution = "00:15:00";
+                hj.CalcSpec.EnableTransportation = true;
+                if (hj.CalcSpec.CalcOptions == null) {
+                    throw new LPGException("calcoptions was null");
+                }
+
+                hj.CalcSpec.CalcOptions.Add(CalcOption.TotalsPerLoadtype);
+                hj.House = new HouseData(StrGuid.FromString("houseguid"), "HT01", 1000, 100, "housename");
+                hj.House.Households = new List<HouseholdData>();
+                var chargingstationSet = sim.ChargingStationSets.FindFirstByName("car electricity", FindMode.Partial);
+                var hhd = new HouseholdData("householdid", "householdname", chargingstationSet.GetJsonReference(),
+                    sim.TransportationDeviceSets[0].GetJsonReference(), sim.TravelRouteSets[0].GetJsonReference(), null,
+                    HouseholdDataSpecificationType.ByHouseholdName);
+                var hh = sim.ModularHouseholds.FindFirstByName("CHR01", FindMode.StartsWith);
+                hhd.HouseholdNameSpecification = new HouseholdNameSpecification(hh.GetJsonReference());
+                hj.House.Households.Add(hhd);
+                return hj;
+            }
+
+            void CheckForResultfile(string wd)
+            {
+                var srls = new SqlResultLoggingService(wd);
+                var rfel = new ResultFileEntryLogger(srls);
+                var rfes = rfel.Load();
+                var foundcar = false;
+                foreach (var entry in rfes) {
+                    if (entry.LoadTypeInformation?.Name == null) {
+                        continue;
+                    }
+
+                    if (entry.LoadTypeInformation.Name.Contains("Car Charging Electricity")) {
+                        foundcar = true;
+                    }
+                }
+
+                if (!foundcar) {
+                    throw new LPGException("No car electricity found");
+                }
+
+                Logger.Info(wd);
+            }
+
+            HouseJobTestHelper.RunSingleHouse(sim => {
+                var hj = PrepareHousejob(sim);
+                return hj;
+            }, x => CheckForResultfile(x));
         }
 
         //private static void RunDateTimeOnAllFiles([JetBrains.Annotations.NotNull] string firstTimestep,
@@ -404,8 +551,8 @@ namespace SimulationEngine.Tests {
         [Trait(UnitTestCategories.Category, UnitTestCategories.ManualOnly)]
         public void GenerateCalcoptionTests()
         {
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            Simulator sim = new Simulator(db.ConnectionString);
+            using var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
+            var sim = new Simulator(db.ConnectionString);
             var sw = new StreamWriter(@"C:\Work\LPGDev\SimulationEngine.Tests\SystematicCalcOptionTests.cs");
             sw.WriteLine("using Automation;");
             sw.WriteLine("using Xunit;");
@@ -415,15 +562,117 @@ namespace SimulationEngine.Tests {
             sw.WriteLine("#pragma warning disable 8602");
             sw.WriteLine("namespace SimulationEngine.Tests {");
             sw.WriteLine("public class SystematicCalcOptionTests :UnitTestBaseClass {");
+#pragma warning disable CS8605 // Unboxing a possibly null value.
             foreach (CalcOption opt in Enum.GetValues(typeof(CalcOption))) {
-                WriteOutputFileFunction(sw, opt,sim.ModularHouseholds[0]);
+#pragma warning restore CS8605 // Unboxing a possibly null value.
+                WriteCalcOptionFunction(sw, opt, sim.ModularHouseholds[0]);
             }
 
-            sw.WriteLine("public SystematicCalcOptionTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper) { }");
+            sw.WriteLine(
+                "public SystematicCalcOptionTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper) { }");
             sw.WriteLine("}}");
             sw.Close();
         }
 
+        [Fact]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.ManualOnly)]
+        public void GenerateHouseholdTests()
+        {
+            using var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
+            var sim = new Simulator(db.ConnectionString);
+            var sw = new StreamWriter(@"C:\Work\LPGDev\SimulationEngine.Tests\SystematicHouseholdTests.cs");
+            sw.WriteLine("using Automation;");
+            sw.WriteLine("using Automation.ResultFiles;");
+            sw.WriteLine("using Xunit;");
+            sw.WriteLine("using Common.Tests;");
+            sw.WriteLine("using Xunit.Abstractions;");
+            sw.WriteLine("using JetBrains.Annotations;");
+            sw.WriteLine("#pragma warning disable 8602");
+            sw.WriteLine("namespace SimulationEngine.Tests {");
+            sw.WriteLine("public class SystematicHouseholdTests :UnitTestBaseClass {");
+            var householdsToTest = sim.ModularHouseholds.It.Where(x => x.CreationType == CreationType.ManuallyCreated)
+                .ToList();
+            var idx = 0;
+            foreach (var household in householdsToTest) {
+                WriteHouseholdTestFunction(sw, household, idx++);
+            }
+
+            sw.WriteLine(
+                "public SystematicHouseholdTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper) { }");
+            sw.WriteLine("}}");
+            sw.Close();
+        }
+
+        [Fact]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.ManualOnly)]
+        public void GenerateHouseholdTestsWithTransport()
+        {
+            using var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
+            var sim = new Simulator(db.ConnectionString);
+            var sw = new StreamWriter(@"C:\Work\LPGDev\SimulationEngine.Tests\SystematicTransportHouseholdTests.cs");
+            sw.WriteLine("using Automation;");
+            sw.WriteLine("using Automation.ResultFiles;");
+            sw.WriteLine("using Xunit;");
+            sw.WriteLine("using Common.Tests;");
+            sw.WriteLine("using Xunit.Abstractions;");
+            sw.WriteLine("using JetBrains.Annotations;");
+            sw.WriteLine("#pragma warning disable 8602");
+            sw.WriteLine("namespace SimulationEngine.Tests {");
+            sw.WriteLine("public class SystematicTransportHouseholdTests :UnitTestBaseClass {");
+            var householdsToTest = sim.ModularHouseholds.It.Where(x => x.CreationType == CreationType.ManuallyCreated)
+                .ToList();
+            var idx = 0;
+            foreach (var household in householdsToTest) {
+                WriteHouseholdTestFunctionWithTransport(sw, household, idx++);
+            }
+
+            sw.WriteLine(
+                "public SystematicTransportHouseholdTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper) { }");
+            sw.WriteLine("}}");
+            sw.Close();
+        }
+
+        [Fact]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.ManualOnly)]
+        public void GenerateHouseTypeTests()
+        {
+            using var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
+            var sim = new Simulator(db.ConnectionString);
+            var sw = new StreamWriter(@"C:\Work\LPGDev\SimulationEngine.Tests\SystematicHousetypeTests.cs");
+            sw.WriteLine("using Automation;");
+            sw.WriteLine("using Xunit;");
+            sw.WriteLine("using Common.Tests;");
+            sw.WriteLine("using Xunit.Abstractions;");
+            sw.WriteLine("using JetBrains.Annotations;");
+            sw.WriteLine("#pragma warning disable 8602");
+            sw.WriteLine("namespace SimulationEngine.Tests {");
+            sw.WriteLine("public class SystematicHousetypeTests :UnitTestBaseClass {");
+            var housetypeTests = sim.HouseTypes.It.ToList();
+            var idx = 0;
+            foreach (var houeType in housetypeTests) {
+                WriteHousetypeFunction(sw, houeType, idx++);
+            }
+
+            sw.WriteLine(
+                "public SystematicHousetypeTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper) { }");
+            sw.WriteLine("}}");
+            sw.Close();
+        }
+
+        [Fact]
+        public void TestHouseHouseholdVariation()
+        {
+            HouseJobTestHelper.RunSingleHouse(sim => {
+                var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,
+                    sim.ModularHouseholds[0].Guid.ToString());
+                if (hj.CalcSpec?.CalcOptions == null) {
+                    throw new LPGException();
+                }
+
+                hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
+                return hj;
+            }, x => { });
+        }
 
 
         [Fact]
@@ -437,68 +686,12 @@ namespace SimulationEngine.Tests {
         }
 
         [Fact]
-        public void CheckForCarElectrictyFiles()
-        {
-            HouseCreationAndCalculationJob PrepareHousejob(Simulator sim)
-            {
-                var hj = new HouseCreationAndCalculationJob();
-                hj.CalcSpec = JsonCalcSpecification.MakeDefaultsForTesting();
-                hj.CalcSpec.StartDate = new DateTime(2020, 1, 1);
-                hj.CalcSpec.EndDate = new DateTime(2020, 1, 3);
-                hj.CalcSpec.DeleteDAT = false;
-                hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-                hj.CalcSpec.DeleteSqlite = false;
-                hj.CalcSpec.ExternalTimeResolution = "00:15:00";
-                hj.CalcSpec.EnableTransportation = true;
-                if(hj.CalcSpec.CalcOptions==null){throw new LPGException("calcoptions was null");}
-                hj.CalcSpec.CalcOptions.Add(CalcOption.TotalsPerLoadtype);
-                hj.House = new HouseData(StrGuid.FromString("houseguid"), "HT01", 1000, 100, "housename");
-                hj.House.Households = new List<HouseholdData>();
-                var chargingstationSet = sim.ChargingStationSets.FindFirstByName("car electricity", FindMode.Partial);
-                var hhd = new HouseholdData("householdid", "householdname", chargingstationSet.GetJsonReference(),
-                    sim.TransportationDeviceSets[0].GetJsonReference(),sim.TravelRouteSets[0].GetJsonReference(), null,
-                    HouseholdDataSpecificationType.ByHouseholdName);
-                var hh = sim.ModularHouseholds.FindFirstByName("CHR01", FindMode.StartsWith);
-                hhd.HouseholdNameSpecification = new HouseholdNameSpecification(hh.GetJsonReference());
-                hj.House.Households.Add(hhd);
-                return hj;
-            }
-
-            void CheckForResultfile(string wd)
-            {
-                SqlResultLoggingService srls = new SqlResultLoggingService(wd);
-                var rfel = new  ResultFileEntryLogger(srls);
-                var rfes = rfel.Load();
-                bool foundcar = false;
-                foreach (var entry in rfes) {
-                    if (entry.LoadTypeInformation?.Name == null) {
-                        continue;
-                    }
-                    if (entry.LoadTypeInformation.Name.Contains("Car Charging Electricity")) {
-                        foundcar = true;
-                    }
-                }
-
-                if (!foundcar) {
-                    throw new LPGException("No car electricity found");
-                }
-                Logger.Info(wd);
-            }
-
-            HouseJobTestHelper.RunSingleHouse(sim => {
-                var hj = PrepareHousejob(sim);
-                return hj;
-            }, x => CheckForResultfile(x));
-        }
-
-        [Fact]
         public void TestHouseJobs1()
         {
             const CalcOption co = CalcOption.ActivationFrequencies;
             HouseJobTestHelper.RunSingleHouse(sim => {
                 var hj = HouseJobCalcPreparer.PrepareNewHouseForOutputFileTesting(sim);
-                if (hj.CalcSpec?.CalcOptions == null)
-                {
+                if (hj.CalcSpec?.CalcOptions == null) {
                     throw new LPGException();
                 }
 
@@ -507,106 +700,16 @@ namespace SimulationEngine.Tests {
             }, x => HouseJobTestHelper.CheckForResultfile(x, co));
         }
 
-        [Fact]
-        public void TestHouseHouseholdVariation()
-        {
-            HouseJobTestHelper.RunSingleHouse(sim => {
-                var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,sim.ModularHouseholds[0].Guid.ToString());
-                if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
-                hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-                return hj; }, x => {});
-        }
-
-        private static void WriteHouseholdTestFunction(StreamWriter sw,ModularHousehold hh, int idx)
-        {
-            sw.WriteLine("");
-            sw.WriteLine("[Fact]");
-            sw.WriteLine("[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest7)]");
-
-            sw.WriteLine("public void TestHouseholdTest" + idx + "(){");
-            sw.WriteLine("      const string hhguid = \""+hh.Guid.StrVal +"\";");
-            sw.WriteLine("      HouseJobTestHelper.RunSingleHouse(sim => {");
-            sw.WriteLine("      var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid);");
-            sw.WriteLine("      if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }");
-            sw.WriteLine("      hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;");
-            sw.WriteLine("return hj; }, x => {});");
-            sw.WriteLine("}");
-            sw.WriteLine("");
-        }
-
-        private static void WriteHouseholdTestFunctionWithTransport(StreamWriter sw, ModularHousehold hh, int idx)
-        {
-            sw.WriteLine("");
-            sw.WriteLine("[Fact]");
-            sw.WriteLine("[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest8)]");
-
-            sw.WriteLine("public void TestHouseholdTest" + idx + "(){");
-            sw.WriteLine("      const string hhguid = \"" + hh.Guid.StrVal + "\";");
-            sw.WriteLine("      HouseJobTestHelper.RunSingleHouse(sim => {");
-            sw.WriteLine("      var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim,hhguid);");
-            sw.WriteLine("      if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }");
-            sw.WriteLine("      hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;");
-            sw.WriteLine("return hj; }, x => {});");
-            sw.WriteLine("}");
-            sw.WriteLine("");
-        }
-        [Fact]
-        [Trait(UnitTestCategories.Category, UnitTestCategories.ManualOnly)]
-        public void GenerateHouseholdTests()
-        {
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            Simulator sim = new Simulator(db.ConnectionString);
-            var sw = new StreamWriter(@"C:\Work\LPGDev\SimulationEngine.Tests\SystematicHouseholdTests.cs");
-            sw.WriteLine("using Automation;");
-            sw.WriteLine("using Automation.ResultFiles;");
-            sw.WriteLine("using Xunit;");
-            sw.WriteLine("using Common.Tests;");
-            sw.WriteLine("using Xunit.Abstractions;");
-            sw.WriteLine("using JetBrains.Annotations;");
-            sw.WriteLine("#pragma warning disable 8602");
-            sw.WriteLine("namespace SimulationEngine.Tests {");
-            sw.WriteLine("public class SystematicHouseholdTests :UnitTestBaseClass {");
-            var householdsToTest = sim.ModularHouseholds.It.Where(x => x.CreationType == CreationType.ManuallyCreated).ToList();
-            int idx = 0;
-            foreach (var household in householdsToTest) {
-                WriteHouseholdTestFunction(sw, household,idx++);
-
-            }
-
-            sw.WriteLine(
-                    "public SystematicHouseholdTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper) { }");
-                sw.WriteLine("}}");
-                sw.Close();
-        }
 
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.ManualOnly)]
-        public void GenerateHouseholdTestsWithTransport()
+        public void TestHouseTypesHT01()
         {
-            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            Simulator sim = new Simulator(db.ConnectionString);
-            var sw = new StreamWriter(@"C:\Work\LPGDev\SimulationEngine.Tests\SystematicTransportHouseholdTests.cs");
-            sw.WriteLine("using Automation;");
-            sw.WriteLine("using Automation.ResultFiles;");
-            sw.WriteLine("using Xunit;");
-            sw.WriteLine("using Common.Tests;");
-            sw.WriteLine("using Xunit.Abstractions;");
-            sw.WriteLine("using JetBrains.Annotations;");
-            sw.WriteLine("#pragma warning disable 8602");
-            sw.WriteLine("namespace SimulationEngine.Tests {");
-            sw.WriteLine("public class SystematicTransportHouseholdTests :UnitTestBaseClass {");
-            var householdsToTest = sim.ModularHouseholds.It.Where(x => x.CreationType == CreationType.ManuallyCreated).ToList();
-            int idx = 0;
-            foreach (var household in householdsToTest)
-            {
-                WriteHouseholdTestFunctionWithTransport(sw, household, idx++);
-
-            }
-
-            sw.WriteLine(
-                "public SystematicTransportHouseholdTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper) { }");
-            sw.WriteLine("}}");
-            sw.Close();
+            const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
+            const CalcOption co = CalcOption.HouseSumProfilesFromDetailedDats;
+            HouseJobTestHelper.RunSingleHouse(sim =>
+                    HouseJobCalcPreparer.PrepareNewHouseForHousetypeTesting(sim, hhguid),
+                x => HouseJobTestHelper.CheckForResultfile(x, co));
         }
     }
 }

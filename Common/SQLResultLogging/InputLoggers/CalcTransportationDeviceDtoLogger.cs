@@ -13,7 +13,7 @@ namespace Common.SQLResultLogging.InputLoggers
         private const string Tablename = "TransportationDevices";
 
         public CalcTransportationDeviceDtoLogger([NotNull] SqlResultLoggingService srls)
-            : base(typeof(CalcTransportationDeviceDto), new ResultTableDefinition(Tablename, 
+            : base(typeof(CalcTransportationDeviceDto), new ResultTableDefinition(Tablename,
                 ResultTableID.TransportationDeviceDefinitions, "Json Specification of the transportation devices", CalcOption.TransportationStatistics), srls)
         {
         }

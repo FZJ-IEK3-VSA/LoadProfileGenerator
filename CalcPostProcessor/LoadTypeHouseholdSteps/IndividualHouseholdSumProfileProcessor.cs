@@ -5,8 +5,6 @@ using Automation;
 using Automation.ResultFiles;
 using CalcPostProcessor.Steps;
 using Common;
-using Common.CalcDto;
-using Common.JSON;
 using Common.SQLResultLogging;
 using JetBrains.Annotations;
 
@@ -16,99 +14,60 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
 
         public IndividualHouseholdSumProfileProcessor([NotNull] CalcDataRepository repository,
                                                       [NotNull] IFileFactoryAndTracker fft,
-                                                      [NotNull] ICalculationProfiler calculationProfiler) : base(repository,
-            AutomationUtili.GetOptionList(CalcOption.IndividualSumProfiles),
+                                                      [NotNull] ICalculationProfiler calculationProfiler) : base(
+            repository,
+            AutomationUtili.GetOptionList(CalcOption.HouseholdSumProfilesFromDetailedDats),
             calculationProfiler,
             "Individual Household Sum Profiles") =>
             _fft = fft;
 
+        [NotNull]
+        public override List<CalcOption> NeededOptions => new List<CalcOption> {CalcOption.DetailedDatFiles};
+
         protected override void PerformActualStep(IStepParameters parameters)
         {
-            HouseholdLoadtypeStepParameters p = (HouseholdLoadtypeStepParameters)parameters;
+            var p = (HouseholdLoadtypeStepParameters)parameters;
 
             if (p.Key.HouseholdKey == Constants.GeneralHouseholdKey) {
                 return;
             }
 
             var efc = Repository.ReadEnergyFileColumns(p.Key.HouseholdKey);
-            RunIndividualHouseholds(p.LoadType, p.EnergyFileRows, efc, p.Key.HouseholdKey);
-        }
+            var dsc = new DateStampCreator(Repository.CalcParameters);
+            var dstLoadType = p.LoadType;
 
-        [NotNull]
-        public override List<CalcOption> NeededOptions => new List<CalcOption>();
-
-        private void RunIndividualHouseholds([NotNull] CalcLoadTypeDto dstLoadType,
-                                             [NotNull] [ItemNotNull] List<OnlineEnergyFileRow> energyFileRows,
-                                             [NotNull] EnergyFileColumns efc,
-                                             [NotNull] HouseholdKey key)
-        {
-            DateStampCreator dsc = new DateStampCreator(Repository.CalcParameters);
-            //var householdKeys = efc.ColumnEntriesByColumn[dstLoadType].Values.Select(entry => entry.HouseholdKey).Distinct().ToList();
             if (!efc.ColumnCountByLoadType.ContainsKey(dstLoadType)) {
                 return;
             }
 
-            var columns = efc.ColumnEntriesByColumn[dstLoadType].Values.Where(entry => entry.HouseholdKey == key).Select(entry => entry.Column)
+            var columns = efc.ColumnEntriesByColumn[dstLoadType].Values
+                .Where(entry => entry.HouseholdKey == p.Key.HouseholdKey)
+                .Select(entry => entry.Column)
                 .ToList();
-            var hhname = "." + key + ".";
-            StreamWriter sumfile = null;
-            StreamWriter normalfile = null;
-            if (Repository.CalcParameters.IsSet(CalcOption.IndividualSumProfiles)) {
-                sumfile = _fft.MakeFile<StreamWriter>("SumProfiles" + hhname + dstLoadType.Name + ".csv",
-                    "Summed up energy profile for all devices for " + dstLoadType.Name + " for " + hhname,
-                    true,
-                    ResultFileID.SumProfileForHouseholds,
-                    key,
-                    TargetDirectory.Results,
-                    Repository.CalcParameters.InternalStepsize,CalcOption.IndividualSumProfiles,
-                    dstLoadType.ConvertToLoadTypeInformation());
-                sumfile.WriteLine(dstLoadType.Name + "." + dsc.GenerateDateStampHeader() + "Sum [" + dstLoadType.UnitOfSum + "]");
-            }
+            var hhname = "." + p.Key.HouseholdKey + ".";
+            var sumfile = _fft.MakeFile<StreamWriter>("SumProfiles" + hhname + dstLoadType.Name + ".csv",
+                "Summed up energy profile for all devices for " + dstLoadType.Name + " for " + hhname,
+                true,
+                ResultFileID.SumProfileForHouseholds,
+                p.Key.HouseholdKey,
+                TargetDirectory.Results,
+                Repository.CalcParameters.InternalStepsize, CalcOption.HouseSumProfilesFromDetailedDats,
+                dstLoadType.ConvertToLoadTypeInformation());
+            sumfile.WriteLine(dstLoadType.Name + "." + dsc.GenerateDateStampHeader() + "Sum [" + dstLoadType.UnitOfSum +
+                              "]");
 
-            if (Repository.CalcParameters.IsSet(CalcOption.DeviceProfiles)) {
-                normalfile = _fft.MakeFile<StreamWriter>("DeviceProfiles" + hhname + dstLoadType.Name + ".csv",
-                    "Energy use by each device in each Timestep for " + dstLoadType.Name + " for " + hhname,
-                    true,
-                    ResultFileID.DeviceProfileForHouseholds,
-                    key,
-                    TargetDirectory.Results,
-                    Repository.CalcParameters.InternalStepsize,CalcOption.DeviceProfiles,
-                    dstLoadType.ConvertToLoadTypeInformation());
-                normalfile.WriteLine(dstLoadType.Name + "." + dsc.GenerateDateStampHeader() + efc.GetTotalHeaderString(dstLoadType, columns));
-            }
 
-            foreach (var efr in energyFileRows) {
+            foreach (var efr in p.EnergyFileRows) {
                 if (!efr.Timestep.DisplayThisStep) {
                     continue;
                 }
 
                 var time = dsc.MakeTimeString(efr.Timestep);
-                if (Repository.CalcParameters.IsSet(CalcOption.DeviceProfiles)) {
-                    var indidivdual = time + efr.GetEnergyEntriesAsString(true, dstLoadType, columns, Repository.CalcParameters.CSVCharacter);
-                    if (normalfile == null) {
-                        throw new LPGException("File is null, even though it shouldn't be. Please report.");
-                    }
-
-                    normalfile.WriteLine(indidivdual);
-                }
-
-                if (Repository.CalcParameters.IsSet(CalcOption.IndividualSumProfiles)) {
-                    var sumstring = time + efr.GetSumForCertainCols(columns) * dstLoadType.ConversionFactor;
-                    if (sumfile == null) {
-                        throw new LPGException("File is null, even though it shouldn't be. Please report.");
-                    }
-
-                    sumfile.WriteLine(sumstring);
-                }
+                var sumstring = time + efr.GetSumForCertainCols(columns) * dstLoadType.ConversionFactor;
+                sumfile.WriteLine(sumstring);
             }
 
-            if (Repository.CalcParameters.IsSet(CalcOption.DeviceProfiles)) {
-                if (normalfile == null) {
-                    throw new LPGException("File is null, even though it shouldn't be. Please report.");
-                }
-
-                normalfile.Flush();
-            }
+            sumfile.Flush();
         }
     }
 }

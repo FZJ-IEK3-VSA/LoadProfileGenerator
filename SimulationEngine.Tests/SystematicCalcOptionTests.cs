@@ -8,10 +8,10 @@ namespace SimulationEngine.Tests {
 public class SystematicCalcOptionTests :UnitTestBaseClass {
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
-public void TestHouseJobsIndividualSumProfiles(){
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
+public void TestHouseJobsHouseSumProfilesFromDetailedDats(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
-      const CalcOption co = CalcOption.IndividualSumProfiles;
+      const CalcOption co = CalcOption.HouseSumProfilesFromDetailedDats;
       HouseJobTestHelper.RunSingleHouse((sim) => {
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim, hhguid);
       hj.CalcSpec.CalcOptions.Add(co); return hj;
@@ -20,7 +20,7 @@ public void TestHouseJobsIndividualSumProfiles(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsOverallDats(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.OverallDats;
@@ -32,7 +32,7 @@ public void TestHouseJobsOverallDats(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsOverallSum(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.OverallSum;
@@ -44,7 +44,7 @@ public void TestHouseJobsOverallSum(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsDetailedDatFiles(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.DetailedDatFiles;
@@ -56,7 +56,7 @@ public void TestHouseJobsDetailedDatFiles(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsActionCarpetPlot(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.ActionCarpetPlot;
@@ -68,7 +68,7 @@ public void TestHouseJobsActionCarpetPlot(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsEnergyCarpetPlot(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.EnergyCarpetPlot;
@@ -80,7 +80,7 @@ public void TestHouseJobsEnergyCarpetPlot(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsTimeOfUsePlot(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.TimeOfUsePlot;
@@ -92,7 +92,7 @@ public void TestHouseJobsTimeOfUsePlot(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsVariableLogFile(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.VariableLogFile;
@@ -104,7 +104,7 @@ public void TestHouseJobsVariableLogFile(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsActivationsPerHour(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.ActivationsPerHour;
@@ -116,7 +116,7 @@ public void TestHouseJobsActivationsPerHour(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsDaylightTimesList(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.DaylightTimesList;
@@ -128,7 +128,7 @@ public void TestHouseJobsDaylightTimesList(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsActivationFrequencies(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.ActivationFrequencies;
@@ -140,10 +140,10 @@ public void TestHouseJobsActivationFrequencies(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
-public void TestHouseJobsDeviceProfiles(){
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
+public void TestHouseJobsDeviceProfilesIndividualHouseholds(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
-      const CalcOption co = CalcOption.DeviceProfiles;
+      const CalcOption co = CalcOption.DeviceProfilesIndividualHouseholds;
       HouseJobTestHelper.RunSingleHouse((sim) => {
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim, hhguid);
       hj.CalcSpec.CalcOptions.Add(co); return hj;
@@ -152,7 +152,7 @@ public void TestHouseJobsDeviceProfiles(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsTotalsPerLoadtype(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.TotalsPerLoadtype;
@@ -164,7 +164,7 @@ public void TestHouseJobsTotalsPerLoadtype(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsHouseholdContents(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.HouseholdContents;
@@ -176,7 +176,7 @@ public void TestHouseJobsHouseholdContents(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsTemperatureFile(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.TemperatureFile;
@@ -188,7 +188,7 @@ public void TestHouseJobsTemperatureFile(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsTotalsPerDevice(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.TotalsPerDevice;
@@ -200,7 +200,7 @@ public void TestHouseJobsTotalsPerDevice(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsEnergyStorageFile(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.EnergyStorageFile;
@@ -212,7 +212,7 @@ public void TestHouseJobsEnergyStorageFile(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsDurationCurve(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.DurationCurve;
@@ -224,7 +224,7 @@ public void TestHouseJobsDurationCurve(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsDesiresLogfile(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.DesiresLogfile;
@@ -236,7 +236,7 @@ public void TestHouseJobsDesiresLogfile(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsThoughtsLogfile(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.ThoughtsLogfile;
@@ -248,7 +248,7 @@ public void TestHouseJobsThoughtsLogfile(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsPolysunImportFiles(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.PolysunImportFiles;
@@ -260,7 +260,7 @@ public void TestHouseJobsPolysunImportFiles(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsCriticalViolations(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.CriticalViolations;
@@ -272,7 +272,7 @@ public void TestHouseJobsCriticalViolations(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsSumProfileExternalEntireHouse(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.SumProfileExternalEntireHouse;
@@ -284,7 +284,7 @@ public void TestHouseJobsSumProfileExternalEntireHouse(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsSumProfileExternalIndividualHouseholds(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.SumProfileExternalIndividualHouseholds;
@@ -296,7 +296,7 @@ public void TestHouseJobsSumProfileExternalIndividualHouseholds(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsWeekdayProfiles(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.WeekdayProfiles;
@@ -308,7 +308,7 @@ public void TestHouseJobsWeekdayProfiles(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsAffordanceEnergyUse(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.AffordanceEnergyUse;
@@ -320,7 +320,7 @@ public void TestHouseJobsAffordanceEnergyUse(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsTimeProfileFile(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.TimeProfileFile;
@@ -332,7 +332,7 @@ public void TestHouseJobsTimeProfileFile(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsLocationsFile(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.LocationsFile;
@@ -344,7 +344,7 @@ public void TestHouseJobsLocationsFile(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsHouseholdPlan(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.HouseholdPlan;
@@ -356,7 +356,7 @@ public void TestHouseJobsHouseholdPlan(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsDeviceProfileExternalEntireHouse(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.DeviceProfileExternalEntireHouse;
@@ -368,7 +368,7 @@ public void TestHouseJobsDeviceProfileExternalEntireHouse(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsDeviceProfileExternalIndividualHouseholds(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.DeviceProfileExternalIndividualHouseholds;
@@ -380,7 +380,7 @@ public void TestHouseJobsDeviceProfileExternalIndividualHouseholds(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsMakeGraphics(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.MakeGraphics;
@@ -392,7 +392,7 @@ public void TestHouseJobsMakeGraphics(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsMakePDF(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.MakePDF;
@@ -404,7 +404,7 @@ public void TestHouseJobsMakePDF(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsLocationCarpetPlot(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.LocationCarpetPlot;
@@ -416,7 +416,7 @@ public void TestHouseJobsLocationCarpetPlot(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsPersonStatus(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.PersonStatus;
@@ -428,7 +428,7 @@ public void TestHouseJobsPersonStatus(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsTransportationDeviceCarpetPlot(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.TransportationDeviceCarpetPlot;
@@ -440,7 +440,7 @@ public void TestHouseJobsTransportationDeviceCarpetPlot(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsLogErrorMessages(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.LogErrorMessages;
@@ -452,7 +452,7 @@ public void TestHouseJobsLogErrorMessages(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsLogAllMessages(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.LogAllMessages;
@@ -464,7 +464,7 @@ public void TestHouseJobsLogAllMessages(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsTransportationStatistics(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.TransportationStatistics;
@@ -476,7 +476,7 @@ public void TestHouseJobsTransportationStatistics(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsActionsEachTimestep(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.ActionsEachTimestep;
@@ -488,7 +488,7 @@ public void TestHouseJobsActionsEachTimestep(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsCalculationFlameChart(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.CalculationFlameChart;
@@ -500,7 +500,7 @@ public void TestHouseJobsCalculationFlameChart(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsSumProfileExternalIndividualHouseholdsAsJson(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.SumProfileExternalIndividualHouseholdsAsJson;
@@ -512,10 +512,10 @@ public void TestHouseJobsSumProfileExternalIndividualHouseholdsAsJson(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
-public void TestHouseJobsJsonSumFiles(){
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
+public void TestHouseJobsJsonHouseSumFiles(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
-      const CalcOption co = CalcOption.JsonSumFiles;
+      const CalcOption co = CalcOption.JsonHouseSumFiles;
       HouseJobTestHelper.RunSingleHouse((sim) => {
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim, hhguid);
       hj.CalcSpec.CalcOptions.Add(co); return hj;
@@ -524,7 +524,7 @@ public void TestHouseJobsJsonSumFiles(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsBodilyActivityStatistics(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.BodilyActivityStatistics;
@@ -536,7 +536,7 @@ public void TestHouseJobsBodilyActivityStatistics(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsBasicOverview(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.BasicOverview;
@@ -548,7 +548,7 @@ public void TestHouseJobsBasicOverview(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsDeviceActivations(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.DeviceActivations;
@@ -560,7 +560,7 @@ public void TestHouseJobsDeviceActivations(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsLocationsEntries(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.LocationsEntries;
@@ -572,7 +572,7 @@ public void TestHouseJobsLocationsEntries(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsActionEntries(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.ActionEntries;
@@ -584,10 +584,58 @@ public void TestHouseJobsActionEntries(){
 
 
 [Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.LongTest6)]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
 public void TestHouseJobsAffordanceTaggingSets(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.AffordanceTaggingSets;
+      HouseJobTestHelper.RunSingleHouse((sim) => {
+      var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim, hhguid);
+      hj.CalcSpec.CalcOptions.Add(co); return hj;
+      }, (x) => HouseJobTestHelper.CheckForResultfile(x, co));
+}
+
+
+[Fact]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
+public void TestHouseJobsDeviceProfilesHouse(){
+      const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
+      const CalcOption co = CalcOption.DeviceProfilesHouse;
+      HouseJobTestHelper.RunSingleHouse((sim) => {
+      var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim, hhguid);
+      hj.CalcSpec.CalcOptions.Add(co); return hj;
+      }, (x) => HouseJobTestHelper.CheckForResultfile(x, co));
+}
+
+
+[Fact]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
+public void TestHouseJobsHouseholdSumProfilesFromDetailedDats(){
+      const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
+      const CalcOption co = CalcOption.HouseholdSumProfilesFromDetailedDats;
+      HouseJobTestHelper.RunSingleHouse((sim) => {
+      var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim, hhguid);
+      hj.CalcSpec.CalcOptions.Add(co); return hj;
+      }, (x) => HouseJobTestHelper.CheckForResultfile(x, co));
+}
+
+
+[Fact]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
+public void TestHouseJobsJsonHouseholdSumFiles(){
+      const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
+      const CalcOption co = CalcOption.JsonHouseholdSumFiles;
+      HouseJobTestHelper.RunSingleHouse((sim) => {
+      var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim, hhguid);
+      hj.CalcSpec.CalcOptions.Add(co); return hj;
+      }, (x) => HouseJobTestHelper.CheckForResultfile(x, co));
+}
+
+
+[Fact]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
+public void TestHouseJobsJsonDeviceProfilesIndividualHouseholds(){
+      const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
+      const CalcOption co = CalcOption.JsonDeviceProfilesIndividualHouseholds;
       HouseJobTestHelper.RunSingleHouse((sim) => {
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim, hhguid);
       hj.CalcSpec.CalcOptions.Add(co); return hj;

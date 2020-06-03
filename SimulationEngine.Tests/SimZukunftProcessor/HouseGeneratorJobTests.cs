@@ -248,7 +248,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor {
                         TemperatureProfile = sim.TemperatureProfiles[0].GetJsonReference(),
                         OutputDirectory = wd.Combine("Results"),
                         CalcOptions = new List<CalcOption> {
-                            CalcOption.IndividualSumProfiles, CalcOption.DeviceProfiles,
+                            CalcOption.HouseSumProfilesFromDetailedDats, CalcOption.DeviceProfilesIndividualHouseholds,
                             CalcOption.EnergyStorageFile, CalcOption.EnergyCarpetPlot,
                             CalcOption.HouseholdContents
                         }
@@ -304,7 +304,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor {
                             SkipExisting = false,
 
                             CalcOptions = new List<CalcOption> {
-                                CalcOption.IndividualSumProfiles, CalcOption.DeviceProfiles,
+                                CalcOption.HouseSumProfilesFromDetailedDats, CalcOption.DeviceProfilesIndividualHouseholds,
                                 CalcOption.EnergyStorageFile, CalcOption.EnergyCarpetPlot,
                                 CalcOption.HouseholdContents, CalcOption.TotalsPerLoadtype
                             },

@@ -70,10 +70,14 @@ namespace CalcPostProcessor
             //builder.RegisterType<AffordanceStatisticsWriter>().As<IGeneralPostProcessingStep>().SingleInstance();
 
             //loadtypesteps
-            builder.RegisterType<SumProfileProcessor>().As<ILoadTypeSumStep>().SingleInstance();
-            builder.RegisterType<JsonSumProfileProcessor>().As<ILoadTypeStep>().SingleInstance();
+            builder.RegisterType<HouseSumProfileFromOverallDatProcessor>().As<ILoadTypeSumStep>().SingleInstance();
+            builder.RegisterType<HouseJsonSumProfileProcessor>().As<ILoadTypeStep>().SingleInstance();
+            builder.RegisterType<HouseSumProfilesFromDetailedDatsProcessor>().As<ILoadTypeStep>().SingleInstance();
             builder.RegisterType<IndividualHouseholdSumProfileProcessor>().As<IHouseholdLoadTypeStep>().SingleInstance();
-            builder.RegisterType<DeviceProfileFileProcessor>().As<ILoadTypeStep>().SingleInstance();
+            builder.RegisterType<IndividualHouseholdDeviceProfileProcessor>().As<IHouseholdLoadTypeStep>().SingleInstance();
+            builder.RegisterType<IndividualHouseholdJsonSumProfileProcessor>().As<IHouseholdLoadTypeStep>().SingleInstance();
+            builder.RegisterType<IndividualHouseholdDeviceProfileJsonProcessor>().As<IHouseholdLoadTypeStep>().SingleInstance();
+            builder.RegisterType<HouseDeviceProfileFileProcessor>().As<ILoadTypeStep>().SingleInstance();
             //builder.RegisterType<EnergyCarpetPlotMaker>().As<ILoadTypeStep>().SingleInstance();
             builder.RegisterType<ExternalTimeResolutionMaker>().As<ILoadTypeStep>().SingleInstance();
             //builder.RegisterType<ImportFileCreatorSMA>().As<ILoadTypeStep>().SingleInstance();

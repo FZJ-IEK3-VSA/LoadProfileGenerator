@@ -62,7 +62,7 @@ namespace CalculationController.Tests {
                     cp.StopPart("SimLoading");
                     cp.StartPart("Calculation");
                     sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.OnlyOverallSum);
-                    sim.MyGeneralConfig.Enable(CalcOption.JsonSumFiles);
+                    sim.MyGeneralConfig.Enable(CalcOption.JsonHouseSumFiles);
                     //sim.MyGeneralConfig.Enable(CalcOption.ActionCarpetPlot);
                     //sim.MyGeneralConfig.Enable(CalcOption.ActivationFrequencies);
                     sim.MyGeneralConfig.CSVCharacter = ";";
@@ -290,7 +290,7 @@ namespace CalculationController.Tests {
             {
                 var sim = new Simulator(db.ConnectionString);
                 sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.OnlyOverallSum);
-                sim.MyGeneralConfig.Enable(CalcOption.DeviceProfiles);
+                sim.MyGeneralConfig.Enable(CalcOption.DeviceProfilesIndividualHouseholds);
                 sim.MyGeneralConfig.Enable(CalcOption.TotalsPerDevice);
                 sim.MyGeneralConfig.Enable(CalcOption.TotalsPerLoadtype);
                 sim.MyGeneralConfig.Enable(CalcOption.EnergyStorageFile);
@@ -494,7 +494,7 @@ namespace CalculationController.Tests {
                 var sim = new Simulator(db.ConnectionString) { MyGeneralConfig = { ExternalTimeResolution = "00:15:00" } };
                 sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
                 sim.MyGeneralConfig.Enable(CalcOption.OverallSum);
-                sim.MyGeneralConfig.Enable(CalcOption.IndividualSumProfiles);
+                sim.MyGeneralConfig.Enable(CalcOption.HouseSumProfilesFromDetailedDats);
                 sim.MyGeneralConfig.Enable(CalcOption.SumProfileExternalEntireHouse);
                 sim.Should().NotBeNull();
                 SimIntegrityChecker.Run(sim);
@@ -700,9 +700,9 @@ namespace CalculationController.Tests {
 
                     sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
                     sim.MyGeneralConfig.Disable(CalcOption.OverallSum);
-                    sim.MyGeneralConfig.Enable(CalcOption.IndividualSumProfiles);
+                    sim.MyGeneralConfig.Enable(CalcOption.HouseSumProfilesFromDetailedDats);
                     sim.MyGeneralConfig.Enable(CalcOption.MakeGraphics);
-                    sim.MyGeneralConfig.Enable(CalcOption.DeviceProfiles);
+                    sim.MyGeneralConfig.Enable(CalcOption.DeviceProfilesIndividualHouseholds);
 
                     //ChartLocalizer.ShouldTranslate = true;
                      sim.Should().NotBeNull();
@@ -1075,7 +1075,7 @@ namespace CalculationController.Tests {
 
                     sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
                     sim.MyGeneralConfig.Enable(CalcOption.TotalsPerLoadtype);
-                    sim.MyGeneralConfig.Enable(CalcOption.DeviceProfiles);
+                    sim.MyGeneralConfig.Enable(CalcOption.DeviceProfilesIndividualHouseholds);
                     //sim.MyGeneralConfig.Enable(CalcOption.ActivationFrequencies);
                     //ChartLocalizer.ShouldTranslate = true;
 
@@ -1164,7 +1164,7 @@ namespace CalculationController.Tests {
                 sim.MyGeneralConfig.Enable(CalcOption.DeviceProfileExternalEntireHouse);
                 sim.MyGeneralConfig.Enable(CalcOption.ActivationFrequencies);
                 sim.MyGeneralConfig.Enable(CalcOption.TransportationStatistics);
-                sim.MyGeneralConfig.Enable(CalcOption.DeviceProfiles);
+                sim.MyGeneralConfig.Enable(CalcOption.DeviceProfilesIndividualHouseholds);
                 //sim.MyGeneralConfig.Enable(CalcOption.per);
                 SimIntegrityChecker.Run(sim);
                 sim.Should().NotBeNull();

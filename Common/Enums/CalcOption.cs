@@ -9,7 +9,7 @@ namespace Common.Enums {
         static CalcOptionHelper()
         {
             CalcOptionDictionary = new Dictionary<CalcOption, string>();
-            CalcOptionDictionary.Add(CalcOption.IndividualSumProfiles, "Individual sum profile files");
+            CalcOptionDictionary.Add(CalcOption.HouseSumProfilesFromDetailedDats, "Individual sum profile files");
             CalcOptionDictionary.Add(CalcOption.OverallSum, "Overall sum profile file");
             CalcOptionDictionary.Add(CalcOption.ActionCarpetPlot, "Action carpet plots");
             CalcOptionDictionary.Add(CalcOption.EnergyCarpetPlot, "Energy carpet plots");
@@ -19,7 +19,7 @@ namespace Common.Enums {
             CalcOptionDictionary.Add(CalcOption.DaylightTimesList, "Calculated daylight times statistic");
             CalcOptionDictionary.Add(CalcOption.ActivationFrequencies, "Frequency of device activations statistic");
             //CalcOptionDictionary.Add(CalcOption.ActionsLogfile, "Detailed device activation tracking");
-            CalcOptionDictionary.Add(CalcOption.DeviceProfiles, "Device Profiles");
+            CalcOptionDictionary.Add(CalcOption.DeviceProfilesIndividualHouseholds, "Device Profiles");
             CalcOptionDictionary.Add(CalcOption.TotalsPerLoadtype, "Totals per load type");
             CalcOptionDictionary.Add(CalcOption.HouseholdContents, "Household contents");
             CalcOptionDictionary.Add(CalcOption.TemperatureFile, "Temperature file");
@@ -47,7 +47,7 @@ namespace Common.Enums {
             CalcOptionDictionary.Add(CalcOption.TransportationDeviceCarpetPlot, "Transportation device carpet plot");
             CalcOptionDictionary.Add(CalcOption.PersonStatus, "Person Status");
             CalcOptionDictionary.Add(CalcOption.LocationCarpetPlot, "Location carpet plots");
-            CalcOptionDictionary.Add(CalcOption.JsonSumFiles, "Json overall sum Profiles");
+            CalcOptionDictionary.Add(CalcOption.JsonHouseSumFiles, "Json overall sum Profiles");
         }
 
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]

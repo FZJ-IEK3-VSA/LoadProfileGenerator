@@ -204,7 +204,7 @@ namespace CalcPostProcessor {
             if (repository.CalcParameters.IsSet(CalcOption.OverallSum)) {
                 _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Overall Sum File");
                 foreach (var calcLoadType in repository.LoadTypes) {
-                    DeviceProfileFileProcessor dpfp = new DeviceProfileFileProcessor(_fft, repository.CalcParameters);
+                    HouseDeviceProfileFileProcessor dpfp = new HouseDeviceProfileFileProcessor(_fft, repository.CalcParameters);
                     dpfp.ProcessSumFile(calcLoadType);
                 }
                 LogProcessingProgress(ref now, ref step,

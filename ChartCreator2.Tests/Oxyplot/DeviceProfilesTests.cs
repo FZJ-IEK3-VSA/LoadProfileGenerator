@@ -25,7 +25,7 @@ namespace ChartCreator2.Tests.Oxyplot {
             cs.StartHousehold(2, GlobalConsts.CSVCharacter, LoadTypePriority.Mandatory,
                 configSetter: x =>
                 {
-                    x.Enable(CalcOption.DeviceProfiles);
+                    x.Enable(CalcOption.DeviceProfilesIndividualHouseholds);
                     x.Enable(CalcOption.HouseholdContents);
                     x.SelectedEnergyIntensity = EnergyIntensityType.EnergySavingPreferMeasured;
                     x.EndDateDateTime = new DateTime(2012, 12, 31);

@@ -20,7 +20,7 @@ namespace ChartCreator2.Tests.Oxyplot {
             using var cs = new OxyCalculationSetup(Utili.GetCurrentMethodAndClass());
             cs.StartHousehold(1, GlobalConsts.CSVCharacter,
                 LoadTypePriority.Mandatory,
-                configSetter: x => x.Enable(CalcOption.IndividualSumProfiles));
+                configSetter: x => x.Enable(CalcOption.HouseSumProfilesFromDetailedDats));
             using (var fft = cs.GetFileTracker())
             {
                 //FileFactoryAndTracker fft = new FileFactoryAndTracker(cs.DstDir, "1", cs.Wd.InputDataLogger);

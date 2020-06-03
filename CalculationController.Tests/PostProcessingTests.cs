@@ -109,8 +109,8 @@ namespace CalculationController.Tests
                     Config.ExtraUnitTestChecking = true;
                     sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
                     sim.MyGeneralConfig.WriteExcelColumn = "False";
-                    sim.MyGeneralConfig.Enable(CalcOption.DeviceProfiles);
-                    sim.MyGeneralConfig.Enable(CalcOption.IndividualSumProfiles);
+                    sim.MyGeneralConfig.Enable(CalcOption.DeviceProfilesIndividualHouseholds);
+                    sim.MyGeneralConfig.Enable(CalcOption.HouseSumProfilesFromDetailedDats);
                     sim.MyGeneralConfig.Enable(CalcOption.DeviceProfileExternalEntireHouse);
                     sim.MyGeneralConfig.Enable(CalcOption.SumProfileExternalEntireHouse);
                     sim.MyGeneralConfig.Enable(CalcOption.SumProfileExternalIndividualHouseholds);
@@ -332,7 +332,7 @@ namespace CalculationController.Tests
         [Fact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void RunOnlyDevice() {
-            RunTest(x => x.Enable(CalcOption.DeviceProfiles), GetCurrentMethod());
+            RunTest(x => x.Enable(CalcOption.DeviceProfilesIndividualHouseholds), GetCurrentMethod());
         }
 
         [Fact]

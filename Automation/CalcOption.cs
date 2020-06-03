@@ -1,6 +1,6 @@
 ﻿namespace Automation {
     public enum CalcOption {
-        IndividualSumProfiles = 0,
+        HouseSumProfilesFromDetailedDats = 0,
         OverallDats = 1,
         OverallSum = 2,
         DetailedDatFiles = 3,
@@ -12,7 +12,7 @@
         DaylightTimesList = 9,
         ActivationFrequencies = 10,
         //ActionsLogfile = 11,
-        DeviceProfiles = 12,
+        DeviceProfilesIndividualHouseholds = 12,
         TotalsPerLoadtype = 13,
         HouseholdContents = 14,
         TemperatureFile = 15,
@@ -43,12 +43,16 @@
         ActionsEachTimestep = 40,
         CalculationFlameChart = 41,
         SumProfileExternalIndividualHouseholdsAsJson = 42,
-        JsonSumFiles = 43,
+        JsonHouseSumFiles = 43,
         BodilyActivityStatistics = 44,
         BasicOverview = 45,
         DeviceActivations,
         LocationsEntries,
         ActionEntries,
-        AffordanceTaggingSets
+        AffordanceTaggingSets,
+        DeviceProfilesHouse,
+        HouseholdSumProfilesFromDetailedDats,
+        JsonHouseholdSumFiles,
+        JsonDeviceProfilesIndividualHouseholds
     }
 }

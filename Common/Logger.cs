@@ -438,7 +438,7 @@ namespace Common {
             foreach (var logMessage in _errors) {
                 sb.AppendLine();
                 sb.AppendLine("##################################################");
-                sb.AppendLine(i.ToString());
+                sb.AppendLine(i.ToString(CultureInfo.CurrentCulture));
                 sb.AppendLine("##################################################");
                 sb.AppendLine();
 

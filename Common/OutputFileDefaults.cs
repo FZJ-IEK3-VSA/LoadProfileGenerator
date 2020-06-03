@@ -45,7 +45,7 @@ namespace Common {
                     l.Add(CalcOption.OverallSum);
                     break;
                 case OutputFileDefault.OnlySums:
-                    l.Add(CalcOption.IndividualSumProfiles);
+                    l.Add(CalcOption.HouseSumProfilesFromDetailedDats);
                     break;
                 case OutputFileDefault.ReasonableWithCharts:
                     l.AddRange(GetOptionsForDefault(OutputFileDefault.Reasonable));
@@ -53,14 +53,14 @@ namespace Common {
                     break;
                 case OutputFileDefault.Reasonable:
                     l.Add(CalcOption.ActionCarpetPlot);
-                    l.Add(CalcOption.IndividualSumProfiles);
+                    l.Add(CalcOption.HouseSumProfilesFromDetailedDats);
                     l.Add(CalcOption.EnergyCarpetPlot);
                     l.Add(CalcOption.TimeOfUsePlot);
                     l.Add(CalcOption.VariableLogFile);
                     l.Add(CalcOption.ActivationsPerHour);
                     l.Add(CalcOption.ActivationFrequencies);
                     //l.Add(CalcOption.ActionsLogfile);
-                    l.Add(CalcOption.DeviceProfiles);
+                    l.Add(CalcOption.DeviceProfilesIndividualHouseholds);
                     l.Add(CalcOption.TotalsPerLoadtype);
                     l.Add(CalcOption.HouseholdContents);
                     l.Add(CalcOption.TotalsPerDevice);
@@ -80,10 +80,10 @@ namespace Common {
                     l.Add(CalcOption.TransportationDeviceCarpetPlot);
                     break;
                 case OutputFileDefault.OnlyDeviceProfiles:
-                    l.Add(CalcOption.IndividualSumProfiles);
+                    l.Add(CalcOption.HouseSumProfilesFromDetailedDats);
                     l.Add(CalcOption.SumProfileExternalEntireHouse);
                     l.Add(CalcOption.SumProfileExternalIndividualHouseholds);
-                    l.Add(CalcOption.DeviceProfiles);
+                    l.Add(CalcOption.DeviceProfilesIndividualHouseholds);
                     l.Add(CalcOption.DeviceProfileExternalEntireHouse);
                     l.Add(CalcOption.DeviceProfileExternalIndividualHouseholds);
                     l.Add(CalcOption.LogErrorMessages);
@@ -94,12 +94,12 @@ namespace Common {
                     l.Add(CalcOption.MakePDF);
                     break;
                 case OutputFileDefault.ForSettlementCalculations:
-                    l.Add(CalcOption.IndividualSumProfiles);
+                    l.Add(CalcOption.HouseSumProfilesFromDetailedDats);
                     l.Add(CalcOption.TotalsPerLoadtype);
                     l.Add(CalcOption.HouseholdContents);
                     l.Add(CalcOption.TotalsPerDevice);
                     l.Add(CalcOption.ActivationFrequencies);
-                    l.Add(CalcOption.DeviceProfiles);
+                    l.Add(CalcOption.DeviceProfilesIndividualHouseholds);
                     l.Add(CalcOption.SumProfileExternalEntireHouse);
                     l.Add(CalcOption.SumProfileExternalIndividualHouseholds);
                     l.Add(CalcOption.LogErrorMessages);

@@ -152,7 +152,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
                 throw new LPGException("error");
             }
 
-            calculationSettings.CalcOptions.Add(CalcOption.IndividualSumProfiles);
+            calculationSettings.CalcOptions.Add(CalcOption.HouseSumProfilesFromDetailedDats);
             //calculationSettings.CalcOptions.Add(CalcOption.OverallSum.ToString());
             calculationSettings.CalcOptions.Add(CalcOption.SumProfileExternalEntireHouse);
             calculationSettings.CalcOptions.Add(CalcOption.SumProfileExternalIndividualHouseholds);

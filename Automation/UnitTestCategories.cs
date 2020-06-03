@@ -3,9 +3,10 @@
     public static class UnitTestCategories {
         public const string BasicTest = "BasicTest";
         public const string ManualOnly = "ManualOnly";
-        public const string LongTest8 = "LongTest8";
-        public const string LongTest7 = "LongTest7";
-        public const string LongTest6 = "LongTest6";
+        public const string HouseholdsWithTransportation = "HouseholdsWithTransportation";
+        public const string HouseholdTest = "HouseholdTest";
+        public const string HousetypeTests = "HousetypeTests";
+        public const string CalcOptionTests = "CalcOptionTests";
         public const string LongTest5 = "LongTest5";
         public const string LongTest4 = "LongTest4";
         public const string LongTest3 = "LongTest3";

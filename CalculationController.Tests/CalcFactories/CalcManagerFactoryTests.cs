@@ -61,7 +61,7 @@ namespace CalculationController.Tests.CalcFactories {
             var sim = new Simulator(db.ConnectionString);
             Config.IsInUnitTesting = true;
             sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.Reasonable);
-            sim.MyGeneralConfig.Enable(CalcOption.DeviceProfiles);
+            sim.MyGeneralConfig.Enable(CalcOption.DeviceProfilesIndividualHouseholds);
             sim.MyGeneralConfig.ShowSettlingPeriodBool = true;
             //ConfigSetter.SetGlobalTimeParameters(sim.MyGeneralConfig);
 

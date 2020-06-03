@@ -151,6 +151,11 @@ namespace Common.JSON {
             return colSum;
         }
 
+        public double GetValueForSingleCols(int column)
+        {
+            return _energyEntries[column];
+        }
+
         [NotNull]
         public static OnlineEnergyFileRow Read([NotNull] BinaryReader br, [NotNull] CalcLoadTypeDto lt,
                                                [NotNull] CalcParameters parameters) {

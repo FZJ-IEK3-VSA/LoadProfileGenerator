@@ -78,7 +78,8 @@ namespace ChartCreator2.OxyCharts
                 ResultFileID.DeviceSumsPerMonth,
                 ResultFileID.ExternalSumsForHouseholds,
                 ResultFileID.ExternalSumsForHouseholdsJson,
-                ResultFileID.JsonSums
+                ResultFileID.JsonHouseSums,
+                ResultFileID.JsonHouseholdSums
             };
 
             return l;

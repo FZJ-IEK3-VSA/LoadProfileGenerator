@@ -114,8 +114,9 @@ namespace Automation.ResultFiles {
         TransportationStatistics = 80,
         Sqlite = 81,
         ExternalSumsForHouseholdsJson = 82,
-        JsonSums = 83,
-
-        SqliteResultFiles
+        JsonHouseSums = 83,
+        JsonHouseholdSums = 84,
+        SqliteResultFiles = 85,
+        JsonDeviceProfiles = 86
     }
 }

@@ -91,8 +91,8 @@ namespace Calculation.Tests {
             {
                 var ts = new TimeStep(i, calcParameters);
                 var filerows = odap.ProcessOneTimestep(ts);
-                Assert.Equal(2, filerows.Count);
-                Assert.Equal(1, filerows[0].EnergyEntries.Count);
+                filerows.Count.Should().Be(2);
+                filerows[0].EnergyEntries.Count.Should().Be(1);
                 var sb = new StringBuilder("row0 before:");
                 sb.Append(filerows[0].EnergyEntries[0]);
                 sb.Append(" row1 before:");
@@ -152,8 +152,8 @@ namespace Calculation.Tests {
             for (var i = 0; i < 10; i++) {
                 var ts = new TimeStep(i, 0, true);
                 var filerows = odap.ProcessOneTimestep(ts);
-                Assert.Equal(3, filerows.Count);
-                Assert.Equal(1, filerows[0].EnergyEntries.Count);
+                filerows.Count.Should().Be(3);
+                filerows[0].EnergyEntries.Count.Should().Be(1);
                 var sb = new StringBuilder("row0 before:");
                 sb.Append(filerows[0].EnergyEntries[0]);
                 sb.Append(" row1 before:");

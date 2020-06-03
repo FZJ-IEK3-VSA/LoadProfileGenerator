@@ -147,7 +147,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
             _statemachines.Add(dsm);
 
             // log the affordance energy use.
-            if (_calcParameters.IsSet(CalcOption.AffordanceEnergyUse) || _calcParameters.IsSet(CalcOption.TotalsPerDevice)) {
+            if (_calcParameters.IsSet(CalcOption.DeviceActivations)) {
                 double totalPowerSum = dsm.CalculateOfficialEnergyUse();
                 double totalEnergysum = loadType.ConversionFactor * totalPowerSum;
                 var entry = new DeviceActivationEntry( dsm.AffordanceName,

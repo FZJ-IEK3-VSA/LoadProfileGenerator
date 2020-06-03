@@ -28,8 +28,8 @@ namespace ChartCreator2.Tests.Oxyplot {
                 configSetter: x =>
                 {
                     x.Enable(CalcOption.AffordanceEnergyUse);
-                    x.Enable(CalcOption.IndividualSumProfiles);
-                    x.Enable(CalcOption.DeviceProfiles);
+                    x.Enable(CalcOption.HouseSumProfilesFromDetailedDats);
+                    x.Enable(CalcOption.DeviceProfilesIndividualHouseholds);
                 });
             if (rep == null)
             {

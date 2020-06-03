@@ -64,7 +64,6 @@ namespace Database.Tables
             return mySet;
         }
     }
-    [Serializable]
     public abstract class DBBase : BasicElement, INotifyPropertyChanged
     {
         public void CheckIfAllPropertiesWereCovered<T>(List<string> checkedProperties, [NotNull] T obj)
