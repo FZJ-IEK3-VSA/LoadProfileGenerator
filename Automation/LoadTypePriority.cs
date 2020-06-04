@@ -5,7 +5,7 @@
         Mandatory,
         RecommendedForHouseholds,
         RecommendedForHouses,
-        Optional,
+        OptionalLoadtypes,
         All
     }
 }

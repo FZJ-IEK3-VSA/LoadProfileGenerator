@@ -8,7 +8,7 @@ using Common.CalcDto;
 using Common.SQLResultLogging;
 using JetBrains.Annotations;
 
-namespace CalcPostProcessor.LoadTypeHouseholdSteps {
+namespace CalcPostProcessor.LoadTypeProcessingSteps {
     public class HouseSumProfilesFromDetailedDatsProcessor : LoadTypeStepBase
     {
         [NotNull]

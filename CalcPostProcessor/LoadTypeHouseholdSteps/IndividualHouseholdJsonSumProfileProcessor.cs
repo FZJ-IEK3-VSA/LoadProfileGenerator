@@ -44,7 +44,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                 .Where(entry => entry.HouseholdKey == p.Key.HouseholdKey)
                 .Select(entry => entry.Column)
                 .ToList();
-            var hhname = "." + p.Key.HouseholdKey + ".";
+            var hhname = "." + p.Key.HouseholdKey ;
             var calcParameters = Repository.CalcParameters;
             var jrf = new JsonSumProfile("Sum profile", calcParameters.InternalStepsize,
                 calcParameters.OfficialStartTime, dstLoadType.Name, dstLoadType.UnitOfSum, dstLoadType.ConvertToLoadTypeInformation());

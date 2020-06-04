@@ -88,7 +88,7 @@ namespace Automation {
             TransportationDeviceSet = transportationDeviceSet;
             TravelRouteSet = travelRouteSet;
             TransportationDistanceModifiers = transportationDistanceModifiers;
-            HouseholdDataSpecifictionType = householdDataSpecifictionType;
+            HouseholdDataSpecificationType = householdDataSpecifictionType;
         }
 
         [Obsolete("For json only")]
@@ -124,6 +124,6 @@ namespace Automation {
         [ItemNotNull]
         public List<TransportationDistanceModifier>? TransportationDistanceModifiers { get; set; }
         [JsonConverter(typeof(StringEnumConverter))]
-        public HouseholdDataSpecificationType HouseholdDataSpecifictionType { get; set; }
+        public HouseholdDataSpecificationType HouseholdDataSpecificationType { get; set; }
     }
 }

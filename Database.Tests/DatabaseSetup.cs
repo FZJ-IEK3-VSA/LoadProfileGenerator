@@ -39,7 +39,6 @@ using System.Threading;
 using Automation.ResultFiles;
 using Common;
 using Database.Database;
-using Database.Helpers;
 using Database.Tables;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
@@ -123,7 +122,7 @@ namespace Database.Tests
             Logger.Info("Working with " + FileName + " copied from " + SourcePath);
             Config.IsInUnitTesting = true;
             ConnectionString = "Data Source=" + FileName;
-            DatabaseVersionChecker.CheckVersion(ConnectionString);
+            //DatabaseVersionChecker.CheckVersion(ConnectionString);
         }
 
         public string SourcePath { get; set; }

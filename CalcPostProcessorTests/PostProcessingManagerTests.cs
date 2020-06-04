@@ -36,7 +36,7 @@ namespace CalcPostProcessorTests {
                         EnergyIntensityType.EnergySaving,
                         false,
                         null,
-                        LoadTypePriority.Optional,
+                        LoadTypePriority.OptionalLoadtypes,
                         null,
                         null,
                         null,

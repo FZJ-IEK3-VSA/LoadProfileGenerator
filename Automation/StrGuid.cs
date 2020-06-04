@@ -2,7 +2,7 @@
 
 namespace Automation
 {
-    public struct StrGuid : IEquatable<StrGuid>, IComparable<StrGuid> {
+    public struct StrGuid : IEquatable<StrGuid>, IComparable<StrGuid>, IComparable {
         public int CompareTo(StrGuid? other)
         {
             if (!other.HasValue) {
@@ -20,6 +20,23 @@ namespace Automation
 
             return StrVal == other.Value.StrVal;
         }
+
+        public int CompareTo(object? obj)
+        {
+            if (ReferenceEquals(null, obj)) {
+                return 1;
+            }
+
+            return obj is StrGuid other ? CompareTo(other) : throw new ArgumentException($"Object must be of type {nameof(StrGuid)}");
+        }
+
+        public static bool operator <(StrGuid left, StrGuid right) => left.CompareTo(right) < 0;
+
+        public static bool operator >(StrGuid left, StrGuid right) => left.CompareTo(right) > 0;
+
+        public static bool operator <=(StrGuid left, StrGuid right) => left.CompareTo(right) <= 0;
+
+        public static bool operator >=(StrGuid left, StrGuid right) => left.CompareTo(right) >= 0;
 
         public bool Equals(StrGuid other)
         {

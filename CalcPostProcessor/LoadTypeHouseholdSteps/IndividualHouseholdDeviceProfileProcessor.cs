@@ -41,9 +41,8 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             var columns = efc.ColumnEntriesByColumn[p.LoadType].Values.Where(entry => entry.HouseholdKey == key).Select(entry => entry.Column)
                 .ToList();
             var hhname = "." + key + ".";
-            StreamWriter normalfile = null;
 
-            normalfile = _fft.MakeFile<StreamWriter>("DeviceProfiles" + hhname + p.LoadType.Name + ".csv",
+            var normalfile = _fft.MakeFile<StreamWriter>("DeviceProfiles" + hhname + p.LoadType.Name + ".csv",
                 "Energy use by each device in each Timestep for " + p.LoadType.Name + " for " + hhname,
                 true,
                 ResultFileID.DeviceProfileForHouseholds,
@@ -62,11 +61,6 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
 
                 var time = dsc.MakeTimeString(efr.Timestep);
                 var indidivdual = time + efr.GetEnergyEntriesAsString(true, p.LoadType, columns, Repository.CalcParameters.CSVCharacter);
-                if (normalfile == null)
-                {
-                    throw new LPGException("File is null, even though it shouldn't be. Please report.");
-                }
-
                 normalfile.WriteLine(indidivdual);
 
             }

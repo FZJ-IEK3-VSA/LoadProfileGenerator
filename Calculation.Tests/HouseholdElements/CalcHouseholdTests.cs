@@ -35,10 +35,11 @@ namespace Calculation.HouseholdElements.Tests {
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void DumpHouseholdContentsToTextTest()
         {
-            using (var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass()))
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
-                using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
-                {
+                using (var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass()))
+            {
+                
                     var sim = new Simulator(db.ConnectionString)
                     {
                         MyGeneralConfig = {
@@ -78,9 +79,11 @@ namespace Calculation.HouseholdElements.Tests {
                     CalcManager.ExitCalcFunction = true;
                     cm.CalcObject.DumpHouseholdContentsToText();
                     cm.Dispose();
+                    
                     db.Cleanup();
+                    wd1.CleanUp();
                 }
-                wd1.CleanUp();
+                
             }
         }
     }

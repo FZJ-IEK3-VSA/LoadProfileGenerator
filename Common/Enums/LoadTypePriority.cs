@@ -10,7 +10,7 @@ namespace Common.Enums {
                 {LoadTypePriority.Mandatory, "Mandatory"},
                 {LoadTypePriority.RecommendedForHouseholds, "Recommended for households"},
                 {LoadTypePriority.RecommendedForHouses, "Recommended for households and houses"},
-                {LoadTypePriority.Optional, "Optional"},
+                {LoadTypePriority.OptionalLoadtypes, "Optional"},
                 {LoadTypePriority.All, "All"}
             };
 
@@ -20,7 +20,7 @@ namespace Common.Enums {
                 {LoadTypePriority.Mandatory, "Mandatory"},
                 {LoadTypePriority.RecommendedForHouseholds, "Recommended for households"},
                 {LoadTypePriority.RecommendedForHouses, "Recommended for households and houses"},
-                {LoadTypePriority.Optional, "Optional"}
+                {LoadTypePriority.OptionalLoadtypes, "Optional"}
             };
     }
 }

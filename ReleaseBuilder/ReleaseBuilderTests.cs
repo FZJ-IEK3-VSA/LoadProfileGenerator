@@ -95,7 +95,7 @@ namespace ReleaseBuilder
             }
         }
 
-        private void Copy([NotNull] string src, [NotNull] string dst, [NotNull] string filename,  [CanBeNull] string dstfilename = null)
+        private void Copy([NotNull] string src, [NotNull] string dst, [NotNull] string filename,  string? dstfilename = null)
         {
             if (File.Exists(Path.Combine(dst, filename)))
             {
@@ -173,20 +173,133 @@ namespace ReleaseBuilder
             Copy(src, dst, "JetBrains.Annotations.dll");
             Copy(src, dst, "System.Data.SQLite.EF6.dll");
             Copy(src, dst, "System.Data.SQLite.Linq.dll");
+            Copy(src, dst, "Microsoft.Bcl.AsyncInterfaces.dll");
+            Copy(src, dst, "Humanizer.dll");
+
             Copy(src, dst, "EPPlus.dll");
+            Copy(src, dst, "System.Collections.Immutable.dll");
+            Copy(src, dst, "System.Composition.AttributedModel.dll");
+            Copy(src, dst, "System.Composition.Convention.dll");
+            Copy(src, dst, "System.Composition.Hosting.dll");
+            Copy(src, dst, "System.Composition.Runtime.dll");
+            Copy(src, dst, "System.Composition.TypedParts.dll");
+            Copy(src, dst, "System.Reflection.Metadata.dll");
+            Copy(src, dst, "System.Text.Encoding.CodePages.dll");
+            Copy(src, dst, "System.Threading.Tasks.Extensions.dll");
+            Copy(src, dst, "xunit.abstractions.dll");
             //string src64 = Path.Combine(src, "x64");
             //Copy(src64, dst, "sqlite3.dll");
             DirectoryInfo di = new DirectoryInfo(src);
             var fis = di.GetFiles("*.dll", SearchOption.AllDirectories);
-            List<string> filesToIgnore = new List<string> {"Common.Tests.dll", "Database.Tests.dll", "nunit.framework.dll", "ReleaseBuilder.dll", "FluentAssertions.dll" };
-
+            List<string> filesToIgnore = new List<string> {
+                "Common.Tests.dll", "Database.Tests.dll", "nunit.framework.dll", "ReleaseBuilder.dll", "FluentAssertions.dll",
+                "Microsoft.VisualStudio.CodeCoverage.Shim.dll", "Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll",
+                "Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll",
+                "Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll",
+                "Microsoft.VisualStudio.TestPlatform.TestFramework.dll",
+                "Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll",
+                "Microsoft.CodeAnalysis.CSharp.dll",
+"Microsoft.CodeAnalysis.CSharp.Workspaces.dll",
+"Microsoft.CodeAnalysis.dll",
+"Microsoft.CodeAnalysis.VisualBasic.dll",
+"Microsoft.CodeAnalysis.VisualBasic.Workspaces.dll",
+"Microsoft.CodeAnalysis.Workspaces.dll",
+"xunit.assert.dll",
+"xunit.core.dll",
+"xunit.execution.desktop.dll",
+"xunit.runner.reporters.net452.dll",
+"xunit.runner.utility.net452.dll",
+"xunit.runner.visualstudio.testadapter.dll",
+"Microsoft.CodeAnalysis.CSharp.resources.dll",
+"Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
+"Microsoft.CodeAnalysis.resources.dll",
+"Microsoft.CodeAnalysis.VisualBasic.resources.dll",
+"Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll",
+"Microsoft.CodeAnalysis.Workspaces.resources.dll",
+"Microsoft.CodeAnalysis.CSharp.resources.dll",
+"Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
+"Microsoft.CodeAnalysis.resources.dll",
+"Microsoft.CodeAnalysis.VisualBasic.resources.dll",
+"Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll",
+"Microsoft.CodeAnalysis.Workspaces.resources.dll",
+"Microsoft.CodeAnalysis.CSharp.resources.dll",
+"Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
+"Microsoft.CodeAnalysis.resources.dll",
+"Microsoft.CodeAnalysis.VisualBasic.resources.dll",
+"Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll",
+"Microsoft.CodeAnalysis.Workspaces.resources.dll",
+"Microsoft.CodeAnalysis.CSharp.resources.dll",
+"Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
+"Microsoft.CodeAnalysis.resources.dll",
+"Microsoft.CodeAnalysis.VisualBasic.resources.dll",
+"Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll",
+"Microsoft.CodeAnalysis.Workspaces.resources.dll",
+"Microsoft.CodeAnalysis.CSharp.resources.dll",
+"Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
+"Microsoft.CodeAnalysis.resources.dll",
+"Microsoft.CodeAnalysis.VisualBasic.resources.dll",
+"Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll",
+"Microsoft.CodeAnalysis.Workspaces.resources.dll",
+"Microsoft.CodeAnalysis.CSharp.resources.dll",
+"Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
+"Microsoft.CodeAnalysis.resources.dll",
+"Microsoft.CodeAnalysis.VisualBasic.resources.dll",
+"Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll",
+"Microsoft.CodeAnalysis.Workspaces.resources.dll",
+"Microsoft.CodeAnalysis.CSharp.resources.dll",
+"Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
+"Microsoft.CodeAnalysis.resources.dll",
+"Microsoft.CodeAnalysis.VisualBasic.resources.dll",
+"Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll",
+"Microsoft.CodeAnalysis.Workspaces.resources.dll",
+"Microsoft.CodeAnalysis.CSharp.resources.dll",
+"Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
+"Microsoft.CodeAnalysis.resources.dll",
+"Microsoft.CodeAnalysis.VisualBasic.resources.dll",
+"Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll",
+"Microsoft.CodeAnalysis.Workspaces.resources.dll",
+"Microsoft.CodeAnalysis.CSharp.resources.dll",
+"Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
+"Microsoft.CodeAnalysis.resources.dll",
+"Microsoft.CodeAnalysis.VisualBasic.resources.dll",
+"Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll",
+"Microsoft.CodeAnalysis.Workspaces.resources.dll",
+"Microsoft.CodeAnalysis.CSharp.resources.dll",
+"Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
+"Microsoft.CodeAnalysis.resources.dll",
+"Microsoft.CodeAnalysis.VisualBasic.resources.dll",
+"Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll",
+"Microsoft.CodeAnalysis.Workspaces.resources.dll",
+"Microsoft.CodeAnalysis.CSharp.resources.dll",
+"Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
+"Microsoft.CodeAnalysis.resources.dll",
+"Microsoft.CodeAnalysis.VisualBasic.resources.dll",
+"Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll",
+"Microsoft.CodeAnalysis.Workspaces.resources.dll",
+"Microsoft.CodeAnalysis.CSharp.resources.dll",
+"Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
+"Microsoft.CodeAnalysis.resources.dll",
+"Microsoft.CodeAnalysis.VisualBasic.resources.dll",
+"Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll",
+"Microsoft.CodeAnalysis.Workspaces.resources.dll",
+"Microsoft.CodeAnalysis.CSharp.resources.dll",
+"Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
+"Microsoft.CodeAnalysis.resources.dll",
+"Microsoft.CodeAnalysis.VisualBasic.resources.dll",
+"Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll"
+            };
+            var filesToComplain = new List<string>();
             foreach (var fi in fis) {
                 if (filesToIgnore.Contains(fi.Name)) {
                     continue;
                 }
                 if (!_programFiles.Contains(fi.Name)) {
-                    throw new LPGException("Forgotten DLL:" + fi.Name);
+                    filesToComplain.Add(fi.Name);
                 }
+            }
+
+            if (filesToComplain.Count > 0) {
+                throw new LPGException("Forgotten Files:" + string.Join("\",\n",filesToComplain));
             }
             //Copy(src, dst, "netstandard.dll");
         }
@@ -446,7 +559,7 @@ namespace ReleaseBuilder
             var releasename = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             releasename = releasename.Substring(0, 5);
             var dst = @"v:\Dropbox\LPGReleases\releases" + releasename;
-            const string src = @"C:\Work\LPGDev\ReleaseBuilder\bin\Debug\net472";
+            const string src = @"C:\Work\LPGDev\ReleaseBuilder\bin\Debug\net48";
             //const string srcsim = @"v:\Dropbox\LPG\SimulationEngine\bin\x64\Debug";
 
             if (Directory.Exists(dst))
@@ -460,13 +573,12 @@ namespace ReleaseBuilder
                     Logger.Info(ex.Message);
                 }
             }
-
-            Thread.Sleep(100);
             Directory.CreateDirectory(dst);
+            Thread.Sleep(100);
+            CopyFiles(src, dst);
             Thread.Sleep(100);
             // CopyFiles(src, dst);
             ReleaseCheck(filename);
-            CopyFiles(src, dst);
             //CopyFilesSimulationEngine(srcsim, dst);
             using (var db = new DatabaseSetup("Release", filename))
             {

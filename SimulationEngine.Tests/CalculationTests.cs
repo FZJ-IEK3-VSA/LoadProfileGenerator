@@ -199,8 +199,10 @@ namespace SimulationEngine.Tests {
             optionsThatDontResultInFiles.Add(CalcOption.DurationCurve);
             optionsThatDontResultInFiles.Add(CalcOption.TransportationDeviceCarpetPlot);
             optionsThatDontResultInFiles.Add(CalcOption.LocationCarpetPlot);
-            if (!foundOptions.Contains(option) && !optionsThatDontResultInFiles.Contains(option)) {
-                throw new LPGException("Option found that doesn't result in any files");
+            if (!optionsThatDontResultInFiles.Contains(option)) {
+                if (!foundOptions.Contains(option)) {
+                    throw new LPGException("Option found that doesn't result in any files");
+                }
             }
 
             var fftd = new FileFactoryAndTrackerDummy();
@@ -393,7 +395,7 @@ namespace SimulationEngine.Tests {
         [Fact]
         public void CheckForCarElectrictyFiles()
         {
-            HouseCreationAndCalculationJob PrepareHousejob(Simulator sim)
+            static HouseCreationAndCalculationJob PrepareHousejob(Simulator sim)
             {
                 var hj = new HouseCreationAndCalculationJob();
                 hj.CalcSpec = JsonCalcSpecification.MakeDefaultsForTesting();
@@ -421,33 +423,33 @@ namespace SimulationEngine.Tests {
                 return hj;
             }
 
-            void CheckForResultfile(string wd)
-            {
-                var srls = new SqlResultLoggingService(wd);
-                var rfel = new ResultFileEntryLogger(srls);
-                var rfes = rfel.Load();
-                var foundcar = false;
-                foreach (var entry in rfes) {
-                    if (entry.LoadTypeInformation?.Name == null) {
-                        continue;
-                    }
-
-                    if (entry.LoadTypeInformation.Name.Contains("Car Charging Electricity")) {
-                        foundcar = true;
-                    }
-                }
-
-                if (!foundcar) {
-                    throw new LPGException("No car electricity found");
-                }
-
-                Logger.Info(wd);
-            }
-
             HouseJobTestHelper.RunSingleHouse(sim => {
                 var hj = PrepareHousejob(sim);
                 return hj;
             }, x => CheckForResultfile(x));
+        }
+
+        private static void CheckForResultfile(string wd)
+        {
+            var srls = new SqlResultLoggingService(wd);
+            var rfel = new ResultFileEntryLogger(srls);
+            var rfes = rfel.Load();
+            var foundcar = false;
+            foreach (var entry in rfes) {
+                if (entry.LoadTypeInformation?.Name == null) {
+                    continue;
+                }
+
+                if (entry.LoadTypeInformation.Name.Contains("Car Charging Electricity")) {
+                    foundcar = true;
+                }
+            }
+
+            if (!foundcar) {
+                throw new LPGException("No car electricity found");
+            }
+
+            Logger.Info(wd);
         }
 
         //private static void RunDateTimeOnAllFiles([JetBrains.Annotations.NotNull] string firstTimestep,

@@ -51,7 +51,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                 ResultFileID.SumProfileForHouseholds,
                 p.Key.HouseholdKey,
                 TargetDirectory.Results,
-                Repository.CalcParameters.InternalStepsize, CalcOption.HouseSumProfilesFromDetailedDats,
+                Repository.CalcParameters.InternalStepsize, CalcOption.HouseholdSumProfilesFromDetailedDats,
                 dstLoadType.ConvertToLoadTypeInformation());
             sumfile.WriteLine(dstLoadType.Name + "." + dsc.GenerateDateStampHeader() + "Sum [" + dstLoadType.UnitOfSum +
                               "]");

@@ -29,7 +29,9 @@ namespace Automation
             LoadTypeInformation = loadTypeInformation;
         }
         [Obsolete("only for json")]
+#pragma warning disable 8618
         public JsonDeviceProfiles()
+#pragma warning restore 8618
         {
         }
 
@@ -54,7 +56,9 @@ namespace Automation
             LoadTypeInformation = loadTypeInformation;
         }
         [Obsolete("only for json")]
+#pragma warning disable 8618
         public JsonSumProfile()
+#pragma warning restore 8618
         {
         }
 

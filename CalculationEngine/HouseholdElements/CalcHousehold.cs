@@ -210,7 +210,7 @@ namespace CalculationEngine.HouseholdElements {
             }
 
             using (var sw = _calcRepo.FileFactoryAndTracker.MakeFile<StreamWriter>(
-                "HouseholdContents." + _householdKey + "."  + ".txt",
+                "HouseholdContents." + _householdKey + ".txt",
                 "List of persons, locations, devices and affordances in this household", true, ResultFileID.HouseholdContentsDump,
                 _householdKey, TargetDirectory.Root,  _calcRepo.CalcParameters.InternalStepsize, CalcOption.HouseholdContents)) {
                 sw.WriteLine("Name:" + _name);
@@ -628,7 +628,7 @@ namespace CalculationEngine.HouseholdElements {
             }
 
             var swTime = _calcRepo.FileFactoryAndTracker.MakeFile<StreamWriter>(
-                "TimeProfiles." + _householdKey + "."  + ".txt",
+                "TimeProfiles." + _householdKey +  ".txt",
                 "List of time profiles used in this household", true, ResultFileID.DumpTime, _householdKey,
                 TargetDirectory.Debugging, _calcRepo.CalcParameters.InternalStepsize, CalcOption.TimeProfileFile);
             var c = _calcRepo.CalcParameters.CSVCharacter;

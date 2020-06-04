@@ -637,7 +637,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
             }
 
             // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
-            switch (householdData.HouseholdDataSpecifictionType) {
+            switch (householdData.HouseholdDataSpecificationType) {
                 case HouseholdDataSpecificationType.ByPersons when householdData.HouseholdDataPersonSpecification == null:
                     throw new LPGException("No person specification was set for the household " + householdData.Name);
                 case HouseholdDataSpecificationType.ByPersons when householdData.HouseholdDataPersonSpecification.Persons.Count == 0:
@@ -652,7 +652,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
                     throw new LPGException("No household name was set for the household " + householdData.Name);
             }
 
-            switch (householdData.HouseholdDataSpecifictionType) {
+            switch (householdData.HouseholdDataSpecificationType) {
                 case HouseholdDataSpecificationType.ByPersons:
                     return MakeHouseholdBaseOnPersonSpec(sim, householdData, r);
                 case HouseholdDataSpecificationType.ByTemplateName:

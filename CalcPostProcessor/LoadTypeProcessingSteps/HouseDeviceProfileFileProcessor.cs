@@ -35,7 +35,7 @@ using Common;
 using Common.SQLResultLogging;
 using JetBrains.Annotations;
 
-namespace CalcPostProcessor.LoadTypeHouseholdSteps {
+namespace CalcPostProcessor.LoadTypeProcessingSteps {
     public class HouseDeviceProfileFileProcessor: LoadTypeStepBase
     {
         [NotNull]
