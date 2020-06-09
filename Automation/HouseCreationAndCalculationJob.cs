@@ -47,7 +47,7 @@ namespace Automation {
         public JsonCalcSpecification? CalcSpec { get; set; }
 
         public HouseDefinitionType HouseDefinitionType { get; set; }
-        public HouseReference? HouseReference { get; set; }
+        public HouseReference? HouseRef { get; set; }
         public string? Scenario { get; set; }
         public string? Year { get; set; }
         public string? DistrictName { get; set; }

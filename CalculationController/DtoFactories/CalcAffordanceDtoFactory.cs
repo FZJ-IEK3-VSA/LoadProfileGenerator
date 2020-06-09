@@ -126,7 +126,7 @@ namespace CalculationController.DtoFactories
                     holidayKey, bridgeDays, aff, out var availabilityDataReference);
 
                 //make the affordance
-                Logger.Info("Converting the time limit to a bitarray for the affordance " + aff.Affordance.Name);
+                Logger.Debug("Converting the time limit to a bitarray for the affordance " + aff.Affordance.Name);
                 //caff.IsBusyArray = tmparr;
                 string timeLimitName = "";
 

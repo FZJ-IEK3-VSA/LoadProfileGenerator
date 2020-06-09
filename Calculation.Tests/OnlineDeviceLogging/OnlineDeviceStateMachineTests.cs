@@ -80,7 +80,7 @@ namespace Calculation.Tests.OnlineDeviceLogging {
             CalcDeviceLoad cdl = new CalcDeviceLoad("",1,clt,0,0);
             StepValues sv = StepValues.MakeStepValues(cp, 1, RandomValueProfile.MakeStepValues(cp.StepValues.Count, nr, 0), cdl);
             var odsm = new OnlineDeviceStateMachine(ts,  clt.ConvertToDto(), "device", key,"affordance",
-                calcParameters, sv);
+                calcParameters, sv,0);
             calcParameters.SetDummyTimeSteps(0);
             odsm.CalculateOfficialEnergyUse().Should().Be(55); // all
             calcParameters.SetDummyTimeSteps(6);

@@ -1,3 +1,4 @@
+using System;
 using Automation;
 using Automation.ResultFiles;
 using Xunit;
@@ -15,7 +16,10 @@ public void TestHouseholdTest0(){
       HouseJobTestHelper.RunSingleHouse(sim => {
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim,hhguid);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
-      hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
+
+      hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.NoFiles;
+      hj.CalcSpec.CalcOptions.Add(CalcOption.HouseholdSumProfilesFromDetailedDats);
+          hj.CalcSpec.EndDate = new DateTime(2020,1,31);
 return hj; }, x => {});
 }
 

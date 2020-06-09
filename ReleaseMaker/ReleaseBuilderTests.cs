@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -11,7 +12,6 @@ using Automation;
 using Automation.ResultFiles;
 using CalculationController.Integrity;
 using Common;
-using Common.Tests;
 using Database;
 using Database.Database;
 using Database.Helpers;
@@ -22,17 +22,13 @@ using Database.Tables.Validation;
 using Database.Tests;
 using JetBrains.Annotations;
 using LoadProfileGenerator.Presenters.SpecialViews;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Xunit;
-using Xunit.Abstractions;
 
 #pragma warning disable 162
 
-namespace ReleaseBuilder
+namespace ReleaseMaker
 {
     [SuppressMessage("ReSharper", "RedundantAssignment")]
-    [TestClass]
-    public class ReleaseBuilderTests : UnitTestBaseClass
+    public class ReleaseBuilderTests
     {
         private const bool ThrowOnMissingOutcomes = false;
         private const bool ThrowOnUnusedDesires = true;
@@ -114,7 +110,198 @@ namespace ReleaseBuilder
 
         [ItemNotNull] [NotNull] private readonly List<string> _programFiles = new List<string>();
 
-        private void CopyFiles([NotNull] string src, [NotNull] string dst)
+//        private void CopyFiles([NotNull] string src, [NotNull] string dst)
+//        {
+//            Copy(src, dst, "Autofac.dll");
+//            Copy(src, dst, "Automation.dll");
+//            Copy(src, dst, "CalcPostProcessor.dll");
+//            Copy(src, dst, "CalculationController.dll");
+//            Copy(src, dst, "CalculationEngine.dll");
+//            Copy(src, dst, "ChartCreator2.dll");
+//            Copy(src, dst, "ChartPDFCreator.dll");
+//            Copy(src, dst, "Common.dll");
+//            Copy(src, dst, "Database.dll");
+//            Copy(src, dst, "SimulationEngineLib.dll");
+//            Copy(src, dst, "System.Buffers.dll");
+//            Copy(src, dst, "System.Linq.Dynamic.Core.dll");
+//            Copy(src, dst, "System.Memory.dll");
+//            Copy(src, dst, "System.Numerics.Vectors.dll");
+//            Copy(src, dst, "System.Resources.Extensions.dll");
+//            Copy(src, dst, "System.Runtime.CompilerServices.Unsafe.dll");
+//            //Copy(src, dst, "MigraDoc.DocumentObjectModel-wpf.dll");
+//            //Copy(src, dst, "MigraDoc.DocumentObjectModel.dll");
+//            //Copy(src, dst, "MigraDoc.Rendering-wpf.dll");
+//            //Copy(src, dst, "MigraDoc.Rendering.dll");
+//            //Copy(src, dst, "MigraDoc.RtfRendering.dll");
+
+//            //Copy(desrc, dst, "MigraDoc.DocumentObjectModel.resources.dll");
+//            //
+//            Copy(src, dst, "MigraDoc.DocumentObjectModel-gdi.dll");
+//            string desrc = Path.Combine(src, "de");
+//            Copy(desrc, dst, "MigraDoc.DocumentObjectModel-gdi.resources.dll");
+//            Copy(desrc, dst, "MigraDoc.Rendering-gdi.resources.dll");
+//            Copy(desrc, dst, "MigraDoc.RtfRendering-gdi.resources.dll");
+//            Copy(desrc, dst, "PdfSharp-gdi.resources.dll");
+//            Copy(desrc, dst, "PdfSharp.Charting-gdi.resources.dll");
+//            Copy(src, dst, "MigraDoc.Rendering-gdi.dll");
+//            Copy(src, dst, "MigraDoc.RtfRendering-gdi.dll");
+//            Copy(src, dst, "PdfSharp-gdi.dll");
+//            Copy(src, dst, "PdfSharp.Charting-gdi.dll");
+//            //Copy(desrc, dst, "PdfSharp.Charting.resources.dll");
+//            //Copy(src, dst, "PdfSharp.Charting.dll");
+//            //Copy(desrc, dst, "PdfSharp.resources.dll");
+//            //Copy(src, dst, "PdfSharp.dll");
+//            Copy(src, dst, "Newtonsoft.Json.dll");
+//            Copy(src, dst, "OxyPlot.dll");
+//            Copy(src, dst, "OxyPlot.Pdf.dll");
+//            Copy(src, dst, "OxyPlot.Wpf.dll");
+//            //Copy(src, dst, "PdfSharp-wpf.dll");
+//            //Copy(src, dst, "PdfSharp.Charting-wpf.dll");
+//            //Copy(src, dst, "SettlementProcessing.dll");
+//            Copy(src, dst, "SQLite.Interop.dll");
+//            //Copy(src, dst, "sqlite3.dll");
+//            Copy(src, dst, "System.Data.SQLite.dll");
+//            Copy(src, dst, "LoadProfileGenerator.exe");
+//            Copy(src, dst, "SimulationEngine.exe");
+//            Copy(src, dst, "PowerArgs.dll");
+//            Copy(src, dst, "EntityFramework.dll");
+//            Copy(src, dst, "EntityFramework.SqlServer.dll");
+//            Copy(src, dst, "JetBrains.Annotations.dll");
+//            Copy(src, dst, "System.Data.SQLite.EF6.dll");
+//            Copy(src, dst, "System.Data.SQLite.Linq.dll");
+//            Copy(src, dst, "Microsoft.Bcl.AsyncInterfaces.dll");
+//            //Copy(src, dst, "Humanizer.dll");
+
+//            Copy(src, dst, "EPPlus.dll");
+//            //Copy(src, dst, "System.Collections.Immutable.dll");
+//            //Copy(src, dst, "System.Composition.AttributedModel.dll");
+//            Copy(src, dst, "System.Composition.Convention.dll");
+//            Copy(src, dst, "System.Composition.Hosting.dll");
+//            Copy(src, dst, "System.Composition.Runtime.dll");
+//            Copy(src, dst, "System.Composition.TypedParts.dll");
+//            Copy(src, dst, "System.Reflection.Metadata.dll");
+//            Copy(src, dst, "System.Text.Encoding.CodePages.dll");
+//            Copy(src, dst, "System.Threading.Tasks.Extensions.dll");
+//            Copy(src, dst, "xunit.abstractions.dll");
+//            //string src64 = Path.Combine(src, "x64");
+//            //Copy(src64, dst, "sqlite3.dll");
+//            DirectoryInfo di = new DirectoryInfo(src);
+//            var fis = di.GetFiles("*.dll", SearchOption.AllDirectories);
+//            List<string> filesToIgnore = new List<string> {
+//                "Common.Tests.dll", "Database.Tests.dll", "nunit.framework.dll", "ReleaseBuilder.dll", "FluentAssertions.dll",
+//                "Microsoft.VisualStudio.CodeCoverage.Shim.dll", "Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll",
+//                "Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll",
+//                "Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll",
+//                "Microsoft.VisualStudio.TestPlatform.TestFramework.dll",
+//                "Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll",
+//                "Microsoft.CodeAnalysis.CSharp.dll",
+//"Microsoft.CodeAnalysis.CSharp.Workspaces.dll",
+//"Microsoft.CodeAnalysis.dll",
+//"Microsoft.CodeAnalysis.VisualBasic.dll",
+//"Microsoft.CodeAnalysis.VisualBasic.Workspaces.dll",
+//"Microsoft.CodeAnalysis.Workspaces.dll",
+//"xunit.assert.dll",
+//"xunit.core.dll",
+//"xunit.execution.desktop.dll",
+//"xunit.runner.reporters.net452.dll",
+//"xunit.runner.utility.net452.dll",
+//"xunit.runner.visualstudio.testadapter.dll",
+//"Microsoft.CodeAnalysis.CSharp.resources.dll",
+//"Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
+//"Microsoft.CodeAnalysis.resources.dll",
+//"Microsoft.CodeAnalysis.VisualBasic.resources.dll",
+//"Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll",
+//"Microsoft.CodeAnalysis.Workspaces.resources.dll",
+//"Microsoft.CodeAnalysis.CSharp.resources.dll",
+//"Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
+//"Microsoft.CodeAnalysis.resources.dll",
+//"Microsoft.CodeAnalysis.VisualBasic.resources.dll",
+//"Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll",
+//"Microsoft.CodeAnalysis.Workspaces.resources.dll",
+//"Microsoft.CodeAnalysis.CSharp.resources.dll",
+//"Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
+//"Microsoft.CodeAnalysis.resources.dll",
+//"Microsoft.CodeAnalysis.VisualBasic.resources.dll",
+//"Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll",
+//"Microsoft.CodeAnalysis.Workspaces.resources.dll",
+//"Microsoft.CodeAnalysis.CSharp.resources.dll",
+//"Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
+//"Microsoft.CodeAnalysis.resources.dll",
+//"Microsoft.CodeAnalysis.VisualBasic.resources.dll",
+//"Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll",
+//"Microsoft.CodeAnalysis.Workspaces.resources.dll",
+//"Microsoft.CodeAnalysis.CSharp.resources.dll",
+//"Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
+//"Microsoft.CodeAnalysis.resources.dll",
+//"Microsoft.CodeAnalysis.VisualBasic.resources.dll",
+//"Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll",
+//"Microsoft.CodeAnalysis.Workspaces.resources.dll",
+//"Microsoft.CodeAnalysis.CSharp.resources.dll",
+//"Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
+//"Microsoft.CodeAnalysis.resources.dll",
+//"Microsoft.CodeAnalysis.VisualBasic.resources.dll",
+//"Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll",
+//"Microsoft.CodeAnalysis.Workspaces.resources.dll",
+//"Microsoft.CodeAnalysis.CSharp.resources.dll",
+//"Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
+//"Microsoft.CodeAnalysis.resources.dll",
+//"Microsoft.CodeAnalysis.VisualBasic.resources.dll",
+//"Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll",
+//"Microsoft.CodeAnalysis.Workspaces.resources.dll",
+//"Microsoft.CodeAnalysis.CSharp.resources.dll",
+//"Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
+//"Microsoft.CodeAnalysis.resources.dll",
+//"Microsoft.CodeAnalysis.VisualBasic.resources.dll",
+//"Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll",
+//"Microsoft.CodeAnalysis.Workspaces.resources.dll",
+//"Microsoft.CodeAnalysis.CSharp.resources.dll",
+//"Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
+//"Microsoft.CodeAnalysis.resources.dll",
+//"Microsoft.CodeAnalysis.VisualBasic.resources.dll",
+//"Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll",
+//"Microsoft.CodeAnalysis.Workspaces.resources.dll",
+//"Microsoft.CodeAnalysis.CSharp.resources.dll",
+//"Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
+//"Microsoft.CodeAnalysis.resources.dll",
+//"Microsoft.CodeAnalysis.VisualBasic.resources.dll",
+//"Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll",
+//"Microsoft.CodeAnalysis.Workspaces.resources.dll",
+//"Microsoft.CodeAnalysis.CSharp.resources.dll",
+//"Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
+//"Microsoft.CodeAnalysis.resources.dll",
+//"Microsoft.CodeAnalysis.VisualBasic.resources.dll",
+//"Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll",
+//"Microsoft.CodeAnalysis.Workspaces.resources.dll",
+//"Microsoft.CodeAnalysis.CSharp.resources.dll",
+//"Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
+//"Microsoft.CodeAnalysis.resources.dll",
+//"Microsoft.CodeAnalysis.VisualBasic.resources.dll",
+//"Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll",
+//"Microsoft.CodeAnalysis.Workspaces.resources.dll",
+//"Microsoft.CodeAnalysis.CSharp.resources.dll",
+//"Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
+//"Microsoft.CodeAnalysis.resources.dll",
+//"Microsoft.CodeAnalysis.VisualBasic.resources.dll",
+//"Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll"
+//            };
+//            var filesToComplain = new List<string>();
+//            foreach (var fi in fis) {
+//                if (filesToIgnore.Contains(fi.Name)) {
+//                    continue;
+//                }
+//                if (!_programFiles.Contains(fi.Name)) {
+//                    filesToComplain.Add(fi.Name);
+//                }
+//            }
+
+//            if (filesToComplain.Count > 0) {
+//                throw new LPGException("Forgotten Files:" + string.Join("\",\n",filesToComplain));
+//            }
+//            //Copy(src, dst, "netstandard.dll");
+//        }
+
+
+        private void CopyLpgFiles([NotNull] string src, [NotNull] string dst)
         {
             Copy(src, dst, "Autofac.dll");
             Copy(src, dst, "Automation.dll");
@@ -125,7 +312,7 @@ namespace ReleaseBuilder
             Copy(src, dst, "ChartPDFCreator.dll");
             Copy(src, dst, "Common.dll");
             Copy(src, dst, "Database.dll");
-            Copy(src, dst, "SimulationEngineLib.dll");
+            //Copy(src, dst, "SimulationEngineLib.dll");
             Copy(src, dst, "System.Buffers.dll");
             Copy(src, dst, "System.Linq.Dynamic.Core.dll");
             Copy(src, dst, "System.Memory.dll");
@@ -166,6 +353,109 @@ namespace ReleaseBuilder
             //Copy(src, dst, "sqlite3.dll");
             Copy(src, dst, "System.Data.SQLite.dll");
             Copy(src, dst, "LoadProfileGenerator.exe");
+            Copy(src, dst, "LoadProfileGenerator.exe.config");
+            //Copy(src, dst, "SimulationEngine.exe");
+            //Copy(src, dst, "PowerArgs.dll");
+            Copy(src, dst, "EntityFramework.dll");
+            Copy(src, dst, "EntityFramework.SqlServer.dll");
+            Copy(src, dst, "JetBrains.Annotations.dll");
+            Copy(src, dst, "System.Data.SQLite.EF6.dll");
+            Copy(src, dst, "System.Data.SQLite.Linq.dll");
+            Copy(src, dst, "Microsoft.Bcl.AsyncInterfaces.dll");
+            //Copy(src, dst, "Humanizer.dll");
+
+            //Copy(src, dst, "EPPlus.dll");
+            //Copy(src, dst, "System.Collections.Immutable.dll");
+            //Copy(src, dst, "System.Composition.AttributedModel.dll");
+            //Copy(src, dst, "System.Composition.Convention.dll");
+            //Copy(src, dst, "System.Composition.Hosting.dll");
+            //Copy(src, dst, "System.Composition.Runtime.dll");
+            //Copy(src, dst, "System.Composition.TypedParts.dll");
+            //Copy(src, dst, "System.Reflection.Metadata.dll");
+            //Copy(src, dst, "System.Text.Encoding.CodePages.dll");
+            Copy(src, dst, "System.Threading.Tasks.Extensions.dll");
+            Copy(src, dst, "xunit.abstractions.dll");
+            //string src64 = Path.Combine(src, "x64");
+            //Copy(src64, dst, "sqlite3.dll");
+            DirectoryInfo di = new DirectoryInfo(src);
+            var fis = di.GetFiles("*.dll", SearchOption.AllDirectories);
+            List<string> filesToIgnore = new List<string> {
+                "Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll",
+                "Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll",
+                "Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll"
+            };
+            var filesToComplain = new List<string>();
+            foreach (var fi in fis)
+            {
+                if (filesToIgnore.Contains(fi.Name))
+                {
+                    continue;
+                }
+                if (!_programFiles.Contains(fi.Name))
+                {
+                    filesToComplain.Add(fi.Name);
+                }
+            }
+
+            if (filesToComplain.Count > 0)
+            {
+                throw new LPGException("Forgotten Files:" + string.Join("\",\n", filesToComplain));
+            }
+            //Copy(src, dst, "netstandard.dll");
+        }
+
+        private void CopySimEngineFiles([NotNull] string src, [NotNull] string dst)
+        {
+            Copy(src, dst, "Autofac.dll");
+            Copy(src, dst, "Automation.dll");
+            Copy(src, dst, "CalcPostProcessor.dll");
+            Copy(src, dst, "CalculationController.dll");
+            Copy(src, dst, "CalculationEngine.dll");
+            Copy(src, dst, "ChartCreator2.dll");
+            Copy(src, dst, "ChartPDFCreator.dll");
+            Copy(src, dst, "Common.dll");
+            Copy(src, dst, "Database.dll");
+            Copy(src, dst, "SimulationEngineLib.dll");
+            Copy(src, dst, "System.Buffers.dll");
+            Copy(src, dst, "SimulationEngine.exe.config");
+            Copy(src, dst, "System.Linq.Dynamic.Core.dll");
+            Copy(src, dst, "System.Memory.dll");
+            Copy(src, dst, "System.Numerics.Vectors.dll");
+            Copy(src, dst, "System.Resources.Extensions.dll");
+            Copy(src, dst, "System.Runtime.CompilerServices.Unsafe.dll");
+            //Copy(src, dst, "MigraDoc.DocumentObjectModel-wpf.dll");
+            //Copy(src, dst, "MigraDoc.DocumentObjectModel.dll");
+            //Copy(src, dst, "MigraDoc.Rendering-wpf.dll");
+            //Copy(src, dst, "MigraDoc.Rendering.dll");
+            //Copy(src, dst, "MigraDoc.RtfRendering.dll");
+
+            //Copy(desrc, dst, "MigraDoc.DocumentObjectModel.resources.dll");
+            //
+            Copy(src, dst, "MigraDoc.DocumentObjectModel-gdi.dll");
+            string desrc = Path.Combine(src, "de");
+            Copy(desrc, dst, "MigraDoc.DocumentObjectModel-gdi.resources.dll");
+            Copy(desrc, dst, "MigraDoc.Rendering-gdi.resources.dll");
+            Copy(desrc, dst, "MigraDoc.RtfRendering-gdi.resources.dll");
+            Copy(desrc, dst, "PdfSharp-gdi.resources.dll");
+            Copy(desrc, dst, "PdfSharp.Charting-gdi.resources.dll");
+            Copy(src, dst, "MigraDoc.Rendering-gdi.dll");
+            Copy(src, dst, "MigraDoc.RtfRendering-gdi.dll");
+            Copy(src, dst, "PdfSharp-gdi.dll");
+            Copy(src, dst, "PdfSharp.Charting-gdi.dll");
+            //Copy(desrc, dst, "PdfSharp.Charting.resources.dll");
+            //Copy(src, dst, "PdfSharp.Charting.dll");
+            //Copy(desrc, dst, "PdfSharp.resources.dll");
+            //Copy(src, dst, "PdfSharp.dll");
+            Copy(src, dst, "Newtonsoft.Json.dll");
+            Copy(src, dst, "OxyPlot.dll");
+            Copy(src, dst, "OxyPlot.Pdf.dll");
+            Copy(src, dst, "OxyPlot.Wpf.dll");
+            //Copy(src, dst, "PdfSharp-wpf.dll");
+            //Copy(src, dst, "PdfSharp.Charting-wpf.dll");
+            //Copy(src, dst, "SettlementProcessing.dll");
+            Copy(src, dst, "SQLite.Interop.dll");
+            //Copy(src, dst, "sqlite3.dll");
+            Copy(src, dst, "System.Data.SQLite.dll");
             Copy(src, dst, "SimulationEngine.exe");
             Copy(src, dst, "PowerArgs.dll");
             Copy(src, dst, "EntityFramework.dll");
@@ -174,132 +464,35 @@ namespace ReleaseBuilder
             Copy(src, dst, "System.Data.SQLite.EF6.dll");
             Copy(src, dst, "System.Data.SQLite.Linq.dll");
             Copy(src, dst, "Microsoft.Bcl.AsyncInterfaces.dll");
-            Copy(src, dst, "Humanizer.dll");
+            //Copy(src, dst, "Humanizer.dll");
 
-            Copy(src, dst, "EPPlus.dll");
-            Copy(src, dst, "System.Collections.Immutable.dll");
-            Copy(src, dst, "System.Composition.AttributedModel.dll");
-            Copy(src, dst, "System.Composition.Convention.dll");
-            Copy(src, dst, "System.Composition.Hosting.dll");
-            Copy(src, dst, "System.Composition.Runtime.dll");
-            Copy(src, dst, "System.Composition.TypedParts.dll");
-            Copy(src, dst, "System.Reflection.Metadata.dll");
-            Copy(src, dst, "System.Text.Encoding.CodePages.dll");
+            //Copy(src, dst, "EPPlus.dll");
+            //Copy(src, dst, "System.Collections.Immutable.dll");
+            //Copy(src, dst, "System.Composition.AttributedModel.dll");
+            //Copy(src, dst, "System.Composition.Convention.dll");
+            //Copy(src, dst, "System.Composition.Hosting.dll");
+            //Copy(src, dst, "System.Composition.Runtime.dll");
+            //Copy(src, dst, "System.Composition.TypedParts.dll");
+            //Copy(src, dst, "System.Reflection.Metadata.dll");
+            //Copy(src, dst, "System.Text.Encoding.CodePages.dll");
             Copy(src, dst, "System.Threading.Tasks.Extensions.dll");
             Copy(src, dst, "xunit.abstractions.dll");
             //string src64 = Path.Combine(src, "x64");
             //Copy(src64, dst, "sqlite3.dll");
             DirectoryInfo di = new DirectoryInfo(src);
             var fis = di.GetFiles("*.dll", SearchOption.AllDirectories);
-            List<string> filesToIgnore = new List<string> {
-                "Common.Tests.dll", "Database.Tests.dll", "nunit.framework.dll", "ReleaseBuilder.dll", "FluentAssertions.dll",
-                "Microsoft.VisualStudio.CodeCoverage.Shim.dll", "Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll",
-                "Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll",
-                "Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll",
-                "Microsoft.VisualStudio.TestPlatform.TestFramework.dll",
-                "Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll",
-                "Microsoft.CodeAnalysis.CSharp.dll",
-"Microsoft.CodeAnalysis.CSharp.Workspaces.dll",
-"Microsoft.CodeAnalysis.dll",
-"Microsoft.CodeAnalysis.VisualBasic.dll",
-"Microsoft.CodeAnalysis.VisualBasic.Workspaces.dll",
-"Microsoft.CodeAnalysis.Workspaces.dll",
-"xunit.assert.dll",
-"xunit.core.dll",
-"xunit.execution.desktop.dll",
-"xunit.runner.reporters.net452.dll",
-"xunit.runner.utility.net452.dll",
-"xunit.runner.visualstudio.testadapter.dll",
-"Microsoft.CodeAnalysis.CSharp.resources.dll",
-"Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
-"Microsoft.CodeAnalysis.resources.dll",
-"Microsoft.CodeAnalysis.VisualBasic.resources.dll",
-"Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll",
-"Microsoft.CodeAnalysis.Workspaces.resources.dll",
-"Microsoft.CodeAnalysis.CSharp.resources.dll",
-"Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
-"Microsoft.CodeAnalysis.resources.dll",
-"Microsoft.CodeAnalysis.VisualBasic.resources.dll",
-"Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll",
-"Microsoft.CodeAnalysis.Workspaces.resources.dll",
-"Microsoft.CodeAnalysis.CSharp.resources.dll",
-"Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
-"Microsoft.CodeAnalysis.resources.dll",
-"Microsoft.CodeAnalysis.VisualBasic.resources.dll",
-"Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll",
-"Microsoft.CodeAnalysis.Workspaces.resources.dll",
-"Microsoft.CodeAnalysis.CSharp.resources.dll",
-"Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
-"Microsoft.CodeAnalysis.resources.dll",
-"Microsoft.CodeAnalysis.VisualBasic.resources.dll",
-"Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll",
-"Microsoft.CodeAnalysis.Workspaces.resources.dll",
-"Microsoft.CodeAnalysis.CSharp.resources.dll",
-"Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
-"Microsoft.CodeAnalysis.resources.dll",
-"Microsoft.CodeAnalysis.VisualBasic.resources.dll",
-"Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll",
-"Microsoft.CodeAnalysis.Workspaces.resources.dll",
-"Microsoft.CodeAnalysis.CSharp.resources.dll",
-"Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
-"Microsoft.CodeAnalysis.resources.dll",
-"Microsoft.CodeAnalysis.VisualBasic.resources.dll",
-"Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll",
-"Microsoft.CodeAnalysis.Workspaces.resources.dll",
-"Microsoft.CodeAnalysis.CSharp.resources.dll",
-"Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
-"Microsoft.CodeAnalysis.resources.dll",
-"Microsoft.CodeAnalysis.VisualBasic.resources.dll",
-"Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll",
-"Microsoft.CodeAnalysis.Workspaces.resources.dll",
-"Microsoft.CodeAnalysis.CSharp.resources.dll",
-"Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
-"Microsoft.CodeAnalysis.resources.dll",
-"Microsoft.CodeAnalysis.VisualBasic.resources.dll",
-"Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll",
-"Microsoft.CodeAnalysis.Workspaces.resources.dll",
-"Microsoft.CodeAnalysis.CSharp.resources.dll",
-"Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
-"Microsoft.CodeAnalysis.resources.dll",
-"Microsoft.CodeAnalysis.VisualBasic.resources.dll",
-"Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll",
-"Microsoft.CodeAnalysis.Workspaces.resources.dll",
-"Microsoft.CodeAnalysis.CSharp.resources.dll",
-"Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
-"Microsoft.CodeAnalysis.resources.dll",
-"Microsoft.CodeAnalysis.VisualBasic.resources.dll",
-"Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll",
-"Microsoft.CodeAnalysis.Workspaces.resources.dll",
-"Microsoft.CodeAnalysis.CSharp.resources.dll",
-"Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
-"Microsoft.CodeAnalysis.resources.dll",
-"Microsoft.CodeAnalysis.VisualBasic.resources.dll",
-"Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll",
-"Microsoft.CodeAnalysis.Workspaces.resources.dll",
-"Microsoft.CodeAnalysis.CSharp.resources.dll",
-"Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
-"Microsoft.CodeAnalysis.resources.dll",
-"Microsoft.CodeAnalysis.VisualBasic.resources.dll",
-"Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll",
-"Microsoft.CodeAnalysis.Workspaces.resources.dll",
-"Microsoft.CodeAnalysis.CSharp.resources.dll",
-"Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
-"Microsoft.CodeAnalysis.resources.dll",
-"Microsoft.CodeAnalysis.VisualBasic.resources.dll",
-"Microsoft.CodeAnalysis.VisualBasic.Workspaces.resources.dll"
-            };
             var filesToComplain = new List<string>();
-            foreach (var fi in fis) {
-                if (filesToIgnore.Contains(fi.Name)) {
-                    continue;
-                }
-                if (!_programFiles.Contains(fi.Name)) {
+            foreach (var fi in fis)
+            {
+                if (!_programFiles.Contains(fi.Name))
+                {
                     filesToComplain.Add(fi.Name);
                 }
             }
 
-            if (filesToComplain.Count > 0) {
-                throw new LPGException("Forgotten Files:" + string.Join("\",\n",filesToComplain));
+            if (filesToComplain.Count > 0)
+            {
+                throw new LPGException("Forgotten Files:" + string.Join("\",\n", filesToComplain));
             }
             //Copy(src, dst, "netstandard.dll");
         }
@@ -521,8 +714,6 @@ namespace ReleaseBuilder
             CheckForCalculationOutcomeCompleteness();
         }
 
-        [Fact]
-        [Trait(UnitTestCategories.Category,"BasicTest")]
         [SuppressMessage("ReSharper", "HeuristicUnreachableCode")]
         public void CheckForCalculationOutcomeCompleteness()
         {
@@ -545,8 +736,7 @@ namespace ReleaseBuilder
 
 
 //        [Test]
-        [Fact]
-        //[TestMethod]
+        //[Fact]
         //      [Trait(UnitTestCategories.Category,"ReleaseMaker")]
         [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalse")]
         [SuppressMessage("ReSharper", "HeuristicUnreachableCode")]
@@ -554,13 +744,14 @@ namespace ReleaseBuilder
         {
             const string filename = "profilegenerator-latest.db3";
             const bool cleanDatabase = true;
-            const bool makeZipAndSetup = true;
+            const bool makeZipAndSetup = false;
             const bool cleanCalcOutcomes = true;
 
             var releasename = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             releasename = releasename.Substring(0, 5);
+            Logger.Info("Release name: " + releasename);
+            //return;
             var dst = @"v:\Dropbox\LPGReleases\releases" + releasename;
-            const string src = @"C:\Work\LPGDev\ReleaseBuilder\bin\Debug\net48";
             //const string srcsim = @"v:\Dropbox\LPG\SimulationEngine\bin\x64\Debug";
 
             if (Directory.Exists(dst))
@@ -573,10 +764,16 @@ namespace ReleaseBuilder
                 {
                     Logger.Info(ex.Message);
                 }
+                Thread.Sleep(250);
             }
             Directory.CreateDirectory(dst);
-            Thread.Sleep(100);
-            CopyFiles(src, dst);
+            Thread.Sleep(250);
+            const string srclpg = @"C:\Work\LPGDev\WpfApplication1\bin\Debug\net48";
+
+            CopyLpgFiles(srclpg, dst);
+            const string srcsim = @"C:\Work\LPGDev\SimulationEngine\bin\Debug\net48";
+            CopySimEngineFiles(srcsim, dst);
+
             Thread.Sleep(100);
             // CopyFiles(src, dst);
             ReleaseCheck(filename);
@@ -739,8 +936,5 @@ namespace ReleaseBuilder
         }
 
  //       public ReleaseBuilderTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper){}
- public ReleaseBuilderTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
- {
- }
     }
 }

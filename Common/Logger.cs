@@ -347,11 +347,11 @@ namespace Common {
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         private void ReportString([NotNull] string message, Severity severity, bool preserveLinebreaks = false)
         {
-            if (UnitTestDetector.IsRunningInUnitTest && OutputHelper== null) {
+            if (UnitTestDetector.IsRunningInUnitTest && OutputHelper== null && !Config.OutputToConsole) {
                 throw new LPGException("no output helper even thoug we are in unit testing based on attributes");
             }
 
-            if (Config.IsInUnitTesting&&OutputHelper ==null) {
+            if (Config.IsInUnitTesting&&OutputHelper == null && !Config.OutputToConsole) {
                 throw new LPGException("no output helper even thoug we are in unit testing based on config");
             }
             if(OutputHelper!= null) {

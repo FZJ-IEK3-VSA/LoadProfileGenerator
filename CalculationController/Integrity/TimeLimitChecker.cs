@@ -52,11 +52,12 @@ namespace CalculationController.Integrity {
                 }
             }
 
-            foreach (var devt in sim.TimeLimits.It)
-            {
-                var uses = devt.CalculateUsedIns(sim);
-                if (uses.Count ==0) {
-                    Logger.Warning("Unused time limit: " + devt.PrettyName);
+            if (PerformCleanupChecks) {
+                foreach (var devt in sim.TimeLimits.It) {
+                    var uses = devt.CalculateUsedIns(sim);
+                    if (uses.Count == 0) {
+                        Logger.Warning("Unused time limit: " + devt.PrettyName);
+                    }
                 }
             }
         }

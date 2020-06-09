@@ -237,7 +237,7 @@ namespace Database.Tables.Houses {
                 var hhd = new HouseholdData(householdName, houseHousehold.Name, houseHousehold.ChargingStationSet?.GetJsonReference(),
                     houseHousehold.TransportationDeviceSet?.GetJsonReference(),
                     houseHousehold.TravelRouteSet?.GetJsonReference(), null, HouseholdDataSpecificationType.ByHouseholdName);
-                hhd.HouseholdNameSpecification = new HouseholdNameSpecification(household.GetJsonReference());
+                hhd.HouseholdNameSpec = new HouseholdNameSpecification(household.GetJsonReference());
                 hd.Households.Add(hhd);
                 householdIdx++;
             }

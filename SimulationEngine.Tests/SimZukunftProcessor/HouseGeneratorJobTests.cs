@@ -103,7 +103,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor {
                         "blub", null, null, null, null,
                         HouseholdDataSpecificationType.ByHouseholdName);
                     houseData.Households.Add(householdData);
-                    householdData.HouseholdNameSpecification =
+                    householdData.HouseholdNameSpec =
                         new HouseholdNameSpecification(sim.ModularHouseholds[0].GetJsonReference());
                     HouseCreationAndCalculationJob houseJob =
                         new HouseCreationAndCalculationJob("present", "2019", "trafokreis",
@@ -134,7 +134,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor {
                     var persons = new List<PersonData> {
                         new PersonData(30, Gender.Male)
                     };
-                    householdData.HouseholdDataPersonSpecification = new HouseholdDataPersonSpecification(persons);
+                    householdData.HouseholdDataPersonSpec = new HouseholdDataPersonSpecification(persons);
                     HouseCreationAndCalculationJob houseJob =
                         new HouseCreationAndCalculationJob("present", "2019", "trafokreis",
                             HouseDefinitionType.HouseData);
@@ -176,7 +176,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor {
                     var persons = new List<PersonData> {
                         new PersonData(30, Gender.Male)
                     };
-                    householdData.HouseholdDataPersonSpecification = new HouseholdDataPersonSpecification(persons);
+                    householdData.HouseholdDataPersonSpec = new HouseholdDataPersonSpecification(persons);
                     HouseCreationAndCalculationJob houseJob =
                         new HouseCreationAndCalculationJob("present", "2019", "trafokreis",
                             HouseDefinitionType.HouseData);
@@ -203,7 +203,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor {
                         "blub", null, null, null, null,
                         HouseholdDataSpecificationType.ByTemplateName);
                     houseData.Households.Add(householdData);
-                    householdData.HouseholdTemplateSpecification = new HouseholdTemplateSpecification("CHR01");
+                    householdData.HouseholdTemplateSpec = new HouseholdTemplateSpecification("CHR01");
                     HouseCreationAndCalculationJob houseJob =
                         new HouseCreationAndCalculationJob("present", "2019", "trafokreis",
                             HouseDefinitionType.HouseData);
@@ -237,7 +237,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor {
                     var persons = new List<PersonData> {
                         new PersonData(30, Gender.Male)
                     };
-                    householdData.HouseholdDataPersonSpecification = new HouseholdDataPersonSpecification(persons);
+                    householdData.HouseholdDataPersonSpec = new HouseholdDataPersonSpecification(persons);
                     houseJob.CalcSpec = new JsonCalcSpecification {
                         DefaultForOutputFiles = OutputFileDefault.NoFiles,
                         StartDate = new DateTime(2017, 1, 1),

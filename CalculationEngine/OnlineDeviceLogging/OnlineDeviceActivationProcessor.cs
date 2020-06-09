@@ -26,7 +26,6 @@
 
 //-----------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -96,12 +95,13 @@ namespace CalculationEngine.OnlineDeviceLogging {
                 new Dictionary<ProfileActivationEntry.ProfileActivationEntryKey, ProfileActivationEntry>();
         [NotNull]
         private readonly Dictionary<CalcLoadTypeDto, BinaryWriter> _sumBinaryOutStreams;
+
         [ItemNotNull]
         [NotNull]
         private readonly List<SetToZeroEntry> _zeroEntries = new List<SetToZeroEntry>();
-        [ItemNotNull]
-        [NotNull]
-        private List<OnlineDeviceStateMachine> _statemachines = new List<OnlineDeviceStateMachine>();
+        //[ItemNotNull]
+        //[NotNull]
+        //private List<OnlineDeviceStateMachine> _statemachines = new List<OnlineDeviceStateMachine>();
 
         public OnlineDeviceActivationProcessor(IOnlineLoggingData old, [NotNull] CalcParameters calcParameters, [NotNull] FileFactoryAndTracker fft)
         {
@@ -122,6 +122,10 @@ namespace CalculationEngine.OnlineDeviceLogging {
         public Dictionary<ProfileActivationEntry.ProfileActivationEntryKey, ProfileActivationEntry> ProfileEntries
             => _profileEntries;
 
+        [NotNull]
+        public Dictionary<CalcLoadTypeDto, List<OnlineDeviceStateMachine>> StateMachinesByLoadtype => _stateMachinesByLoadtype;
+
+        [NotNull] private readonly Dictionary<CalcLoadTypeDto, List<OnlineDeviceStateMachine>> _stateMachinesByLoadtype = new Dictionary<CalcLoadTypeDto, List<OnlineDeviceStateMachine>>();
         public Dictionary<CalcLoadTypeDto, BinaryWriter> SumBinaryOutStreams => _sumBinaryOutStreams;
 
         public void AddNewStateMachine( TimeStep startTimeStep,
@@ -142,10 +146,11 @@ namespace CalculationEngine.OnlineDeviceLogging {
             }
             _profileEntries[key].ActivationCount++;
             // do the device activiation
+            var columnNumber = Oefc.GetColumnNumber(loadType, oefckey);
             var dsm = new OnlineDeviceStateMachine( startTimeStep,
-                 loadType, calcDeviceDto.Name, oefckey, affordanceName, _calcParameters, sv);
-            _statemachines.Add(dsm);
-
+                 loadType, calcDeviceDto.Name, oefckey, affordanceName, _calcParameters, sv, columnNumber);
+            //_statemachines.Add(dsm);
+            _stateMachinesByLoadtype[loadType].Add(dsm);
             // log the affordance energy use.
             if (_calcParameters.IsSet(CalcOption.DeviceActivations)) {
                 double totalPowerSum = dsm.CalculateOfficialEnergyUse();
@@ -162,15 +167,14 @@ namespace CalculationEngine.OnlineDeviceLogging {
             _zeroEntries.Add(stze);
         }
 
-        private static void CleanExpiredStateMachines([NotNull] TimeStep timestep, [NotNull][ItemNotNull] ref List<OnlineDeviceStateMachine> statemachines) {
+        private static void CleanExpiredStateMachines([NotNull] TimeStep timestep,[NotNull] Dictionary<CalcLoadTypeDto, List<OnlineDeviceStateMachine>> statemachines) {
             // alte state machines entsorgen
-            var newstatemachinelist = new List<OnlineDeviceStateMachine>();
-            foreach (var machine in statemachines) {
-                if (!machine.IsExpired(timestep)) {
-                    newstatemachinelist.Add(machine);
+            foreach (KeyValuePair<CalcLoadTypeDto, List<OnlineDeviceStateMachine>> pair in statemachines) {
+                var todelete = pair.Value.Where(x => x.IsExpired(timestep)).ToList();
+                foreach (var machine in todelete) {
+                    pair.Value.Remove(machine);
                 }
             }
-            statemachines = newstatemachinelist;
         }
 
         private void CleanZeroValueEntries([NotNull] TimeStep currentTime)
@@ -183,37 +187,43 @@ namespace CalculationEngine.OnlineDeviceLogging {
         }
 
         public List<OnlineEnergyFileRow> ProcessOneTimestep(TimeStep timeStep) {
-            CleanExpiredStateMachines(timeStep, ref _statemachines);
+            CleanExpiredStateMachines(timeStep, _stateMachinesByLoadtype);
             var fileRows = new List<OnlineEnergyFileRow>();
-            var procesedMachines = new List<OnlineDeviceStateMachine>();
-            foreach (OnlineDeviceStateMachine stateMachine in _statemachines) {
-                if (!_loadTypeDict.ContainsKey(stateMachine.LoadType)) {
-                    throw new LPGException("Found a state machine for a load type that does not exist: " + stateMachine.DeviceKey + ": " + stateMachine.LoadType);
+            //var procesedMachines = new Dictionary<CalcLoadTypeDto, List< OnlineDeviceStateMachine>>();
+            //foreach (OnlineDeviceStateMachine stateMachine in _statemachines) {
+            //    if (!_loadTypeDict.ContainsKey(stateMachine.LoadType)) {
+            //        throw new LPGException("Found a state machine for a load type that does not exist: " + stateMachine.OefcKey + ": " + stateMachine.LoadType);
+            //    }
+            //}
+            //foreach (var loadType in _loadTypeDict.Keys) {
+            //    var columnEntriesDeviceKey = Oefc.ColumnEntriesByLoadTypeByDeviceKey[loadType];
+            //    foreach (var machine in _statemachines) {
+            //        if (columnEntriesDeviceKey.ContainsKey(machine.OefcKey)) {
+            //            procesedMachines[loadType].Add( machine);
+            //        }
+            //    }
+            //}
+
+            foreach (var pair in _stateMachinesByLoadtype) {
+                //if (procesedMachines[pair.Key].Count != pair.Value) {
+
+                //}
+                var energyvalues = new List<double>(new double[Oefc.ColumnCountByLoadType[pair.Key]]);
+                foreach (var machine in pair.Value) {
+                    energyvalues[machine.ColumnNumber] +=
+                        machine.GetEnergyValueForTimeStep(timeStep,  _zeroEntries);
                 }
-            }
-            foreach (var loadType in _loadTypeDict.Keys) {
-                var energyvalues = new List<double>(new double[Oefc.ColumnCountByLoadType[loadType]]);
-                var columnEntriesDeviceKey = Oefc.ColumnEntriesByLoadTypeByDeviceKey[loadType];
-                foreach (var machine in _statemachines) {
-                    if (columnEntriesDeviceKey.ContainsKey(machine.DeviceKey)) {
-                        energyvalues[Oefc.GetColumnNumber(loadType, machine.DeviceKey)] +=
-                            machine.GetEnergyValueForTimeStep(timeStep, loadType, _zeroEntries);
-                        if (Config.ExtraUnitTestChecking) {
-                            procesedMachines.Add(machine);
-                        }
-                    }
-                }
-                var fileRow = new OnlineEnergyFileRow(timeStep, energyvalues, loadType);
+                var fileRow = new OnlineEnergyFileRow(timeStep, energyvalues, pair.Key);
                 fileRows.Add(fileRow);
             }
-            if (Config.ExtraUnitTestChecking) {
+            /*if (Config.ExtraUnitTestChecking) {
                 if (procesedMachines.Count != _statemachines.Count) {
                     var nonprocessed =
                         _statemachines.Where(x => !procesedMachines.Contains(x)).ToList();
                     throw new LPGException("Not all machines were processed! Processed:" + procesedMachines.Count +
                                            " Total:" + _statemachines.Count + Environment.NewLine + nonprocessed);
                 }
-            }
+            }*/
             CleanZeroValueEntries(timeStep);
             return fileRows;
         }
@@ -230,6 +240,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
 
             if (!_loadTypeDict.ContainsKey(loadType)) {
                 _loadTypeDict.Add(loadType, 1);
+                _stateMachinesByLoadtype.Add(loadType,new List<OnlineDeviceStateMachine>());
                 if (_calcParameters.IsSet(CalcOption.DetailedDatFiles)) {
                     var s = _fft.MakeFile<BinaryWriter>("OnlineDeviceEnergyUsage." + loadType.Name + ".dat",
                         "Binary Device energy usage per device for " + loadType.Name, false,

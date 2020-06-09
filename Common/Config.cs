@@ -76,6 +76,7 @@ namespace Common {
         public static bool SkipFreeSpaceCheckForCalculation { get; set; }
         public static bool AllowEmptyHouses { get; set; }
         public static bool CatchErrors { get; set; }
+        public static bool OutputToConsole { get; set; }
 
         public static void InitConfig([NotNull] string startpath) {
             if (_config != null) {

@@ -6,19 +6,15 @@ using System.Reflection;
 using Automation;
 using Automation.ResultFiles;
 using Common;
-using Common.Tests;
 using Database;
 using Database.Tables;
 using Database.Tests;
 using JetBrains.Annotations;
-using Xunit;
-using Xunit.Abstractions;
 
-namespace ReleaseBuilder
+namespace ReleaseMaker
 {
-    public class PythonBindingGenerator: UnitTestBaseClass
+    public class PythonBindingGenerator
     {
-        [Fact]
         public void MakePythonData()
         {
             using DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
@@ -43,7 +39,7 @@ namespace ReleaseBuilder
                 sw.Close();
         }
 
-        private static void WriteJsonRefs(List<DBBase> items, StreamWriter sw, string classname)
+        private static void WriteJsonRefs([NotNull] List<DBBase> items, [NotNull] StreamWriter sw, string classname)
         {
             sw.WriteLine();
             sw.WriteLine("# noinspection PyPep8,PyUnusedLocal");
@@ -54,7 +50,7 @@ namespace ReleaseBuilder
             sw.WriteLine();
         }
 
-        private static void WriteNames(List<DBBase> items, StreamWriter sw, string classname)
+        private static void WriteNames([NotNull] List<DBBase> items, [NotNull] StreamWriter sw, string classname)
         {
             sw.WriteLine();
             sw.WriteLine("# noinspection PyPep8,PyUnusedLocal");
@@ -69,7 +65,8 @@ namespace ReleaseBuilder
             sw.WriteLine();
         }
 
-        private static string CleanPythonName(string name)
+        [NotNull]
+        private static string CleanPythonName([NotNull] string name)
         {
             string s1= name.Replace(" ",
                     "_")
@@ -93,7 +90,6 @@ namespace ReleaseBuilder
             return s1;
         }
 
-        [Fact]
         public void MakePythonBindings()
         {
 
@@ -141,7 +137,7 @@ namespace ReleaseBuilder
         }
 
 
-        private static void WriteClass<T>(StreamWriter sw, List<string> encounteredTypes, List<string> writtenTypes)
+        private static void WriteClass<T>([NotNull] StreamWriter sw, List<string> encounteredTypes, [NotNull] List<string> writtenTypes)
         {
             sw.WriteLine();
             sw.WriteLine("# noinspection PyPep8Naming, PyUnusedLocal");
@@ -171,9 +167,13 @@ namespace ReleaseBuilder
             }
         }
 
-        private static string GetPropLine(PropertyInfo info, List<string> encounteredTypes, out string typename)
+        [NotNull]
+        private static string GetPropLine([NotNull] PropertyInfo info, [NotNull] List<string> encounteredTypes, [NotNull] out string typename)
         {
             string fulltypename = info.PropertyType.FullName;
+            if (fulltypename == null) {
+                throw new LPGException();
+            }
             string shorttypename = info.PropertyType.Name;
             if (info.PropertyType.IsGenericType)
             {
@@ -194,7 +194,10 @@ namespace ReleaseBuilder
                     encounteredTypes.Add(fulltypename);
                 }
             }
-
+            if (fulltypename == null)
+            {
+                throw new LPGException();
+            }
             if (fulltypename.StartsWith("System.Collections.Generic.List`1[[System.String,")) {
                 typename = "List[str]";
                 return info.Name +  ": List[str] = field(default_factory=list)";
@@ -293,7 +296,7 @@ namespace ReleaseBuilder
             throw new LPGException("unknown type: \n" + fulltypename);
         }
 
-        private static void WriteEnum<T>(StreamWriter sw, List<string> writtenTypes) {
+        private static void WriteEnum<T>([NotNull] StreamWriter sw, [NotNull] List<string> writtenTypes) {
             sw.WriteLine();
             var myclass = typeof(T).Name;
             writtenTypes.Add(typeof(T).FullName);
@@ -305,9 +308,6 @@ namespace ReleaseBuilder
             sw.WriteLine();
         }
 
-        public PythonBindingGenerator([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
-        {
-        }
     }
 }
 

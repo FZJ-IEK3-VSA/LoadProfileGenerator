@@ -120,7 +120,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
                 null, new List<TransportationDistanceModifier>(), HouseholdDataSpecificationType.ByPersons);
             HouseholdDataPersonSpecification personSpec = new HouseholdDataPersonSpecification(new List<PersonData>() {
             new PersonData(25, Gender.Male)  });
-            hhd1.HouseholdDataPersonSpecification = personSpec;
+            hhd1.HouseholdDataPersonSpec = personSpec;
             houseData1.Households.Add(hhd1);
             HouseholdData hhd2 = new HouseholdData(Guid.NewGuid().ToString(),
                 "My Second Household (with transportation, template defined by name )",
@@ -128,16 +128,16 @@ namespace SimulationEngineLib.HouseJobProcessor {
                 sim.TransportationDeviceSets[0].GetJsonReference(),
                 sim.TravelRouteSets[0].GetJsonReference(),
                 null, HouseholdDataSpecificationType.ByTemplateName);
-            hhd2.HouseholdTemplateSpecification = new HouseholdTemplateSpecification("CHR01");
+            hhd2.HouseholdTemplateSpec = new HouseholdTemplateSpecification("CHR01");
             houseData1.Households.Add(hhd2);
             HouseData houseData2 = new HouseData(Guid.NewGuid().ToStrGuid(), "HT02", 20000, 10000, "MySecondHouse");
             HouseholdData hhd3 = new HouseholdData(Guid.NewGuid().ToString(),
                 "My Third Household, using predefined household",
                 null, null, null, null, HouseholdDataSpecificationType.ByHouseholdName);
-            hhd3.HouseholdNameSpecification = new HouseholdNameSpecification(sim.ModularHouseholds[0].GetJsonReference());
+            hhd3.HouseholdNameSpec = new HouseholdNameSpecification(sim.ModularHouseholds[0].GetJsonReference());
             houseData2.Households.Add(hhd3);
             HouseholdData hhd4 = new HouseholdData(Guid.NewGuid().ToString(), "My Fourth Household", null, null, null, null, HouseholdDataSpecificationType.ByPersons);
-            hhd4.HouseholdDataPersonSpecification = new HouseholdDataPersonSpecification(new List<PersonData>() {
+            hhd4.HouseholdDataPersonSpec = new HouseholdDataPersonSpecification(new List<PersonData>() {
                 new PersonData(75, Gender.Male),
                 new PersonData(74, Gender.Female)
             });
@@ -335,8 +335,15 @@ namespace SimulationEngineLib.HouseJobProcessor {
                 if (File.Exists(finishedFlagFile))
                 {
                     Logger.Info("File already exists: " + finishedFlagFile);
-                    Logger.Info("This calculation seems to be finished. Quitting.");
-                    return;
+                    string filecontent = File.ReadAllText(finishedFlagFile);
+                    if (filecontent == houseJobStr) {
+                        Logger.Info("This calculation seems to be finished. Quitting.");
+                        return;
+                    }
+                    else {
+                        Logger.Info("There is a previous calculation in the result directory but it used different parameters. Cleaning and recalculating.");
+                    }
+
                 }
                 string srcDbFile = hcj.PathToDatabase ?? throw new LPGException("No db source path");
                 if (!File.Exists(srcDbFile))
@@ -353,6 +360,19 @@ namespace SimulationEngineLib.HouseJobProcessor {
 
                 Simulator sim = new Simulator(dstConnectionString);
                 ProcessSingleHouseJob(hcj, makeallthecharts,sim);
+                if (Logger.Get().Errors.Count == 0)
+                {
+                    using (var sw = new StreamWriter(finishedFlagFile))
+                    {
+                        sw.WriteLine(houseJobStr);
+                    }
+                }
+                else {
+                    Logger.Info("Didn't mark the calculation as finished, since there were the following errors:");
+                    foreach (var logMessage in Logger.Get().Errors) {
+                        Logger.Info("Error: " + logMessage.Message);
+                    }
+                }
             }
             catch (Exception ex) {
                 var rdi = new DirectoryInfo(resultDir);
@@ -395,7 +415,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
 
             }
             else {
-                objectToCalc = hcj.HouseReference?.House;
+                objectToCalc = hcj.HouseRef?.House;
                 if (objectToCalc == null)
                 {
                     throw new LPGException("no house reference was set");
@@ -637,22 +657,22 @@ namespace SimulationEngineLib.HouseJobProcessor {
             }
 
             // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
-            switch (householdData.HouseholdDataSpecificationType) {
-                case HouseholdDataSpecificationType.ByPersons when householdData.HouseholdDataPersonSpecification == null:
+            switch (householdData.HouseholdDataSpecification) {
+                case HouseholdDataSpecificationType.ByPersons when householdData.HouseholdDataPersonSpec == null:
                     throw new LPGException("No person specification was set for the household " + householdData.Name);
-                case HouseholdDataSpecificationType.ByPersons when householdData.HouseholdDataPersonSpecification.Persons.Count == 0:
+                case HouseholdDataSpecificationType.ByPersons when householdData.HouseholdDataPersonSpec.Persons.Count == 0:
                     throw new LPGException("No persons were defined for the household " + householdData.Name);
-                case HouseholdDataSpecificationType.ByTemplateName when householdData.HouseholdTemplateSpecification == null :
+                case HouseholdDataSpecificationType.ByTemplateName when householdData.HouseholdTemplateSpec == null :
                     throw new LPGException("No household template specification was set for the household " + householdData.Name);
-                case HouseholdDataSpecificationType.ByTemplateName when string.IsNullOrWhiteSpace(householdData.HouseholdTemplateSpecification.HouseholdTemplateName):
+                case HouseholdDataSpecificationType.ByTemplateName when string.IsNullOrWhiteSpace(householdData.HouseholdTemplateSpec.HouseholdTemplateName):
                     throw new LPGException("No household template name was set for the household " + householdData.Name);
-                case HouseholdDataSpecificationType.ByHouseholdName when householdData.HouseholdNameSpecification == null :
+                case HouseholdDataSpecificationType.ByHouseholdName when householdData.HouseholdNameSpec == null :
                     throw new LPGException("No household specification was set for the household " + householdData.Name);
-                case HouseholdDataSpecificationType.ByHouseholdName when (householdData.HouseholdNameSpecification?.HouseholdReference == null):
+                case HouseholdDataSpecificationType.ByHouseholdName when (householdData.HouseholdNameSpec?.HouseholdReference == null):
                     throw new LPGException("No household name was set for the household " + householdData.Name);
             }
 
-            switch (householdData.HouseholdDataSpecificationType) {
+            switch (householdData.HouseholdDataSpecification) {
                 case HouseholdDataSpecificationType.ByPersons:
                     return MakeHouseholdBaseOnPersonSpec(sim, householdData, r);
                 case HouseholdDataSpecificationType.ByTemplateName:
@@ -667,7 +687,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
         [NotNull]
         private static ModularHousehold MakeHouseholdBaseOnHouseholdName([NotNull] Simulator sim, [NotNull] HouseholdData householdData)
         {
-            HouseholdNameSpecification nameSpec = householdData.HouseholdNameSpecification;
+            HouseholdNameSpecification nameSpec = householdData.HouseholdNameSpec;
             if (nameSpec == null)
             {
                 throw new LPGCommandlineException("Household name specification was null");
@@ -691,7 +711,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
         [NotNull]
         private static ModularHousehold MakeHouseholdBaseOnTemplateSpec([NotNull] Simulator sim, [NotNull] HouseholdData householdData)
         {
-            HouseholdTemplateSpecification templateSpec = householdData.HouseholdTemplateSpecification;
+            HouseholdTemplateSpecification templateSpec = householdData.HouseholdTemplateSpec;
             if (templateSpec == null)
             {
                 throw new LPGCommandlineException("Household template specification was null");
@@ -718,7 +738,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
         [NotNull]
         private static ModularHousehold MakeHouseholdBaseOnPersonSpec([NotNull] Simulator sim, [NotNull] HouseholdData householdData, [NotNull] Random r)
         {
-            HouseholdDataPersonSpecification personSpec = householdData.HouseholdDataPersonSpecification;
+            HouseholdDataPersonSpecification personSpec = householdData.HouseholdDataPersonSpec;
             if (personSpec == null) {
                 throw new LPGCommandlineException("Person specification was null");
 
@@ -755,14 +775,14 @@ namespace SimulationEngineLib.HouseJobProcessor {
                     s += cat + Environment.NewLine;
                 }
 
-                Logger.Error(s);
+                Logger.Warning(s);
                 //throw new LPGException(s);
                 if (templatesWithCorrectPersonCounts.Count > 0) {
-                    Logger.Error("Using a random template with the same number of people.");
+                    Logger.Warning("Using a random template with the same number of people.");
                     selectedHouseholdTemplates = templatesWithCorrectPersonCounts;
                 }
                 else {
-                    Logger.Error("No household found with " + personSpec.Persons.Count + ", using a random template.");
+                    Logger.Warning("No household found with " + personSpec.Persons.Count + ", using a random template.");
                     selectedHouseholdTemplates = sim.HouseholdTemplates.It.ToList();
                 }
             }

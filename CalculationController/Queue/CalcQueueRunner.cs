@@ -127,15 +127,15 @@ namespace CalculationController.Queue {
                     GC.WaitForPendingFinalizers();
                     GC.Collect();
 #pragma warning restore S1215 // "GC.Collect" should not be called
-                    if (Logger.Get().Errors.Count == 0) {
-                        string finishedFile = Path.Combine(csps.ResultPath, Constants.FinishedFileFlag);
-                        TimeSpan duration = DateTime.Now - csps.CalculationStartTime;
-                        using (var sw = new StreamWriter(finishedFile)) {
-                            sw.WriteLine("Finished at " + DateTime.Now);
-                            sw.WriteLine("Duration in seconds:");
-                            sw.WriteLine(duration.TotalSeconds);
-                        }
-                    }
+                    //if (Logger.Get().Errors.Count == 0) {
+                    //    string finishedFile = Path.Combine(csps.ResultPath, Constants.FinishedFileFlag);
+                    //    TimeSpan duration = DateTime.Now - csps.CalculationStartTime;
+                    //    using (var sw = new StreamWriter(finishedFile)) {
+                    //        sw.WriteLine("Finished at " + DateTime.Now);
+                    //        sw.WriteLine("Duration in seconds:");
+                    //        sw.WriteLine(duration.TotalSeconds);
+                    //    }
+                    //}
                 }
             }
 

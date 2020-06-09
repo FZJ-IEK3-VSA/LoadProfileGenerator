@@ -38,6 +38,7 @@ using Common.Tests;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.ModularHouseholds;
+using FluentAssertions;
 using JetBrains.Annotations;
 
 using Xunit;
@@ -84,13 +85,13 @@ namespace CalculationController.Tests.CalcFactories {
                     ModularHouseholdTrait.ModularHouseholdTraitAssignType.Age, null, hhtDesire, hht));
             //var sharedDesireValues = new Dictionary<Desire, SharedDesireValue>();
             var cpersons = cpf.MakePersonDtos(persons, key, hhVacations, hhtDesires, "hhname");
-            Assert.Equal(1, cpersons.Count);
+             cpersons.Count.Should().Be(1);
             var cp = cpersons[0];
             //CalcPersonFactory.AddTraitDesires(hhtDesires, cpersons, 1, "name", sharedDesireValues);
-            Assert.Equal(1, cp.Desires.Count);
-            Assert.Equal(1, cp.Desires.Count);
-            Assert.Equal(p.PrettyName, cp.Name);
-            Assert.Equal(p.Age, cp.Age);
+             cp.Desires.Count.Should().Be(1);
+            cp.Desires.Count.Should().Be(1);
+            p.PrettyName.Should().Be(cp.Name);
+            p.Age.Should().Be(cp.Age);
             // id 1 for the dictionary
             Assert.Equal(d.PrettyName, cp.Desires[0].Name);
         }

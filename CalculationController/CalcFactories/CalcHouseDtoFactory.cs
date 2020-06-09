@@ -545,7 +545,7 @@ namespace CalculationController.CalcFactories {
                 busyarr.SetAll(false);
 
                 if (hhautodev.TimeLimit != null) {
-                    Logger.Info("Determining the permitted times for each autonomous device. Device: " + hhautodev.Name);
+                    Logger.Debug("Determining the permitted times for each autonomous device. Device: " + hhautodev.Name);
                     if (hhautodev.TimeLimit.RootEntry == null) {
                         throw new LPGException(" was null");
                     }

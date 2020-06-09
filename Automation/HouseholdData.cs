@@ -88,7 +88,7 @@ namespace Automation {
             TransportationDeviceSet = transportationDeviceSet;
             TravelRouteSet = travelRouteSet;
             TransportationDistanceModifiers = transportationDistanceModifiers;
-            HouseholdDataSpecificationType = householdDataSpecifictionType;
+            HouseholdDataSpecification = householdDataSpecifictionType;
         }
 
         [Obsolete("For json only")]
@@ -100,11 +100,11 @@ namespace Automation {
         }
 
         [CanBeNull]
-        public  HouseholdDataPersonSpecification? HouseholdDataPersonSpecification { get; set; }
+        public  HouseholdDataPersonSpecification? HouseholdDataPersonSpec { get; set; }
         [CanBeNull]
-        public HouseholdTemplateSpecification? HouseholdTemplateSpecification { get; set; }
+        public HouseholdTemplateSpecification? HouseholdTemplateSpec { get; set; }
         [CanBeNull]
-        public HouseholdNameSpecification? HouseholdNameSpecification { get; set; }
+        public HouseholdNameSpecification? HouseholdNameSpec { get; set; }
 
         [NotNull]
         public string UniqueHouseholdId { get; set; }
@@ -124,6 +124,6 @@ namespace Automation {
         [ItemNotNull]
         public List<TransportationDistanceModifier>? TransportationDistanceModifiers { get; set; }
         [JsonConverter(typeof(StringEnumConverter))]
-        public HouseholdDataSpecificationType HouseholdDataSpecificationType { get; set; }
+        public HouseholdDataSpecificationType HouseholdDataSpecification { get; set; }
     }
 }

@@ -109,17 +109,21 @@ namespace CalculationEngine.OnlineDeviceLogging {
         public OnlineDeviceStateMachine( [NotNull] TimeStep startTimeStep,
               [NotNull] CalcLoadTypeDto loadType,
             [NotNull] string deviceName, OefcKey deviceKey, [NotNull] string affordanceName, [NotNull] CalcParameters calcParameters,
-                                         [NotNull] StepValues stepValues) {
+                                         [NotNull] StepValues stepValues, int columnNumber) {
             //_zek = new ZeroEntryKey(deviceKey.HouseholdKey, deviceKey.ThisDeviceType,deviceKey.DeviceGuid,deviceKey.LocationGuid);
             _deviceName = deviceName;
             _calcParameters = calcParameters;
-            DeviceKey = deviceKey;
+            OefcKey = deviceKey;
             LoadType = loadType;
+            if (loadType == null) {
+                throw new LPGException("loadtype for an osm was null");
+            }
             _startTimeStep = startTimeStep;
             // time profile einladen, zeitlich variieren, normalverteilt variieren und dann als stepvalues speichern
           ////    throw new LPGException("power usage factor was 0. this is a bug. Device " + deviceName + ", Loadtype " + loadType);
             //}
             StepValues = stepValues;
+            ColumnNumber = columnNumber;
             AffordanceName = affordanceName;
             HouseholdKey = deviceKey.HouseholdKey;
         }
@@ -127,7 +131,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
         [NotNull]
         public string AffordanceName { get; }
 
-        public OefcKey DeviceKey { get; }
+        public OefcKey OefcKey { get; }
 
         [NotNull]
         public HouseholdKey HouseholdKey { get; }
@@ -137,6 +141,8 @@ namespace CalculationEngine.OnlineDeviceLogging {
 
         [NotNull]
         public StepValues StepValues { get; }
+
+        public int ColumnNumber { get; }
 
         public double CalculateOfficialEnergyUse() {
             var settlingsteps = _calcParameters.DummyCalcSteps;
@@ -167,15 +173,9 @@ namespace CalculationEngine.OnlineDeviceLogging {
             return sum1;
         }
 
-        public double GetEnergyValueForTimeStep([NotNull] TimeStep timestep, [NotNull] CalcLoadTypeDto lt, [NotNull][ItemNotNull] List<SetToZeroEntry> zeroEntries) {
-            if (lt == null) {
-                throw new LPGException("Loadtype should never be null");
-            }
-            if (lt != LoadType) {
-                return 0;
-            }
+        public double GetEnergyValueForTimeStep([NotNull] TimeStep timestep, [NotNull][ItemNotNull] List<SetToZeroEntry> zeroEntries) {
             foreach (var setToZeroEntry in zeroEntries) {
-                if (setToZeroEntry.Key == DeviceKey) {
+                if (setToZeroEntry.Key == OefcKey) {
                     if (timestep >= setToZeroEntry.StartTime && timestep < setToZeroEntry.EndTime) {
                         return 0;
                     }

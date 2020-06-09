@@ -10,11 +10,10 @@ using Database.Helpers;
 using Database.Tests;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
-
-using Xunit;
+using Formatting = Newtonsoft.Json.Formatting;
 using Logger = Common.Logger;
 
-namespace ReleaseBuilder
+namespace ReleaseMaker
 {
     public class MakeSampleHouseJobs
     {
@@ -37,8 +36,6 @@ namespace ReleaseBuilder
                 CopyAll(diSourceSubDir, nextTargetSubDir);
             }
         }*/
-        [Fact]
-        [Trait(UnitTestCategories.Category, UnitTestCategories.BasicTest)]
         public void RunDirectHouseholds()
         {
             using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
@@ -68,7 +65,6 @@ namespace ReleaseBuilder
             }
         }
 
-        [Fact]
         public void RunHouseholdTemplate()
         {
             using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))

@@ -524,7 +524,7 @@ namespace CalculationController.Helpers {
                         throw new LPGException("Unknown EnergyIntensityType");
                 }
             }
-            Logger.Info(
+            Logger.Debug(
                 "Picked " + pickedDevice.Name + " from " + deviceActions.Count + " device actions in the group.");
             if(pickedDevice == null) {
                 throw new LPGException("Picked device was null");

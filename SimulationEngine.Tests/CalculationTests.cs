@@ -18,6 +18,7 @@ using Database.Helpers;
 using Database.Tables.Houses;
 using Database.Tables.ModularHouseholds;
 using Database.Tests;
+using Newtonsoft.Json;
 using SimulationEngineLib.HouseJobProcessor;
 using Xunit;
 using Xunit.Abstractions;
@@ -32,7 +33,7 @@ namespace SimulationEngine.Tests {
             var hj = new HouseCreationAndCalculationJob();
             hj.CalcSpec = JsonCalcSpecification.MakeDefaultsForTesting();
             hj.HouseDefinitionType = HouseDefinitionType.HouseName;
-            hj.HouseReference = new HouseReference(house.GetJsonReference());
+            hj.HouseRef = new HouseReference(house.GetJsonReference());
             return hj;
         }
 
@@ -53,7 +54,7 @@ namespace SimulationEngine.Tests {
                 "householdname", null, null, null, null,
                 HouseholdDataSpecificationType.ByHouseholdName);
             var hh = sim.ModularHouseholds.FindByGuid(guid.ToStrGuid());
-            hhd.HouseholdNameSpecification = new HouseholdNameSpecification(hh.GetJsonReference());
+            hhd.HouseholdNameSpec = new HouseholdNameSpecification(hh.GetJsonReference());
             hj.House.Households.Add(hhd);
             return hj;
         }
@@ -78,7 +79,7 @@ namespace SimulationEngine.Tests {
                 sim.TravelRouteSets[0].GetJsonReference(), null,
                 HouseholdDataSpecificationType.ByHouseholdName);
             var hh = sim.ModularHouseholds.FindByGuid(guid.ToStrGuid());
-            hhd.HouseholdNameSpecification = new HouseholdNameSpecification(hh.GetJsonReference());
+            hhd.HouseholdNameSpec = new HouseholdNameSpecification(hh.GetJsonReference());
             hj.House.Households.Add(hhd);
             return hj;
         }
@@ -103,7 +104,7 @@ namespace SimulationEngine.Tests {
                 sim.TravelRouteSets[0].GetJsonReference(), null,
                 HouseholdDataSpecificationType.ByHouseholdName);
             var hh = sim.ModularHouseholds[0];
-            hhd.HouseholdNameSpecification = new HouseholdNameSpecification(hh.GetJsonReference());
+            hhd.HouseholdNameSpec = new HouseholdNameSpecification(hh.GetJsonReference());
             hj.House.Households.Add(hhd);
             return hj;
         }
@@ -124,7 +125,7 @@ namespace SimulationEngine.Tests {
                 "householdname", null, null, null, null,
                 HouseholdDataSpecificationType.ByHouseholdName);
             var hh = sim.ModularHouseholds.FindFirstByName("CHR01", FindMode.StartsWith);
-            hhd.HouseholdNameSpecification = new HouseholdNameSpecification(hh.GetJsonReference());
+            hhd.HouseholdNameSpec = new HouseholdNameSpecification(hh.GetJsonReference());
             hj.House.Households.Add(hhd);
             return hj;
         }
@@ -418,7 +419,7 @@ namespace SimulationEngine.Tests {
                     sim.TransportationDeviceSets[0].GetJsonReference(), sim.TravelRouteSets[0].GetJsonReference(), null,
                     HouseholdDataSpecificationType.ByHouseholdName);
                 var hh = sim.ModularHouseholds.FindFirstByName("CHR01", FindMode.StartsWith);
-                hhd.HouseholdNameSpecification = new HouseholdNameSpecification(hh.GetJsonReference());
+                hhd.HouseholdNameSpec = new HouseholdNameSpecification(hh.GetJsonReference());
                 hj.House.Households.Add(hhd);
                 return hj;
             }
@@ -678,13 +679,15 @@ namespace SimulationEngine.Tests {
 
 
         [Fact]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.ManualOnly)]
         public void TestHouseJobs()
         {
             HouseJobTestHelper.RunSingleHouse(sim => {
-                var hj = HouseJobCalcPreparer.PrepareNewHouseForOutputFileTesting(sim);
+                var str = File.ReadAllText(@"C:\Work\utsp\LPG\calcspec.json");
+                HouseCreationAndCalculationJob hj = JsonConvert.DeserializeObject<HouseCreationAndCalculationJob>(str);
                 //hj.CalcSpec.CalcOptions.Add(CalcOption.ActionsLogfile);
                 return hj;
-            }, x => HouseJobTestHelper.CheckForResultfile(x, CalcOption.BasicOverview));
+            }, x => { });
         }
 
         [Fact]
