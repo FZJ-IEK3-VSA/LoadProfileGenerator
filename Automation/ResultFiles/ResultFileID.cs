@@ -117,6 +117,11 @@ namespace Automation.ResultFiles {
         JsonHouseSums = 83,
         JsonHouseholdSums = 84,
         SqliteResultFiles = 85,
-        JsonDeviceProfiles = 86
+        JsonDeviceProfiles = 86,
+        JsonTransportSoc,
+        JsonTransportDrivingDistance,
+        JsonTransportDeviceState,
+        JsonTransportDeviceLocation,
+        BodilyActivityJsons
     }
 }

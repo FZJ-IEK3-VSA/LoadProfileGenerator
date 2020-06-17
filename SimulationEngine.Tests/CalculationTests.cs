@@ -394,6 +394,7 @@ namespace SimulationEngine.Tests {
         }
 
         [Fact]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.ManualOnly)]
         public void CheckForCarElectrictyFiles()
         {
             static HouseCreationAndCalculationJob PrepareHousejob(Simulator sim)
@@ -663,6 +664,7 @@ namespace SimulationEngine.Tests {
         }
 
         [Fact]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.ManualOnly)]
         public void TestHouseHouseholdVariation()
         {
             HouseJobTestHelper.RunSingleHouse(sim => {

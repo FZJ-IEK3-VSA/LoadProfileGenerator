@@ -61,6 +61,7 @@ namespace Common {
 
         [NotNull]
         public static HouseholdKey GeneralHouseholdKey { get; } = new HouseholdKey("General");
+
         [NotNull]
         public static HouseholdKey HouseKey { get; } = new HouseholdKey( "House");
 

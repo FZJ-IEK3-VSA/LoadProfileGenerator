@@ -642,5 +642,17 @@ public void TestHouseJobsJsonDeviceProfilesIndividualHouseholds(){
       }, (x) => HouseJobTestHelper.CheckForResultfile(x, co));
 }
 
+
+[Fact]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
+public void TestHouseJobsTansportationDeviceJsons(){
+      const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
+      const CalcOption co = CalcOption.TansportationDeviceJsons;
+      HouseJobTestHelper.RunSingleHouse((sim) => {
+      var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim, hhguid);
+      hj.CalcSpec.CalcOptions.Add(co); return hj;
+      }, (x) => HouseJobTestHelper.CheckForResultfile(x, co));
+}
+
 public SystematicCalcOptionTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper) { }
 }}

@@ -47,7 +47,8 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             var hhname = "." + p.Key.HouseholdKey ;
             var calcParameters = Repository.CalcParameters;
             var jrf = new JsonSumProfile("Sum profile", calcParameters.InternalStepsize,
-                calcParameters.OfficialStartTime, dstLoadType.Name, dstLoadType.UnitOfSum, dstLoadType.ConvertToLoadTypeInformation());
+                calcParameters.OfficialStartTime, dstLoadType.Name, dstLoadType.UnitOfSum,
+                dstLoadType.ConvertToLoadTypeInformation(),p.Key);
             foreach (var efr in p.EnergyFileRows)
             {
                 if (!efr.Timestep.DisplayThisStep)

@@ -37,9 +37,11 @@ namespace CalcPostProcessor.LoadTypeProcessingSteps {
             if (!calcParameters.IsSet(CalcOption.JsonHouseSumFiles)) {
                 return;
             }
-
+            var he = new HouseholdKeyEntry(Constants.GeneralHouseholdKey,"Sum of the entire House",HouseholdKeyType.General,
+                "Sum",Repository.CalcObjectInformation.CalcObjectName,"");
             var jrf = new JsonSumProfile("Sum profile", calcParameters.InternalStepsize,
-                calcParameters.OfficialStartTime, dstLoadType.Name, dstLoadType.UnitOfSum, dstLoadType.ConvertToLoadTypeInformation());
+                calcParameters.OfficialStartTime, dstLoadType.Name, dstLoadType.UnitOfSum,
+                dstLoadType.ConvertToLoadTypeInformation(), he);
             foreach (var efr in energyFileRows) {
                 if (!efr.Timestep.DisplayThisStep) {
                     continue;

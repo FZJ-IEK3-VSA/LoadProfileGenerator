@@ -194,7 +194,7 @@ namespace CalculationEngine.Transportation {
 
         public bool IsInterrupting => _sourceAffordance.IsInterrupting;
 
-        public BodilyActivityLevel BodilyActivityLevel => BodilyActivityLevel.Outside;
+        public BodilyActivityLevel BodilyActivityLevel => _sourceAffordance.BodilyActivityLevel;
 
         public int MaximumAge => _sourceAffordance.MaximumAge;
 

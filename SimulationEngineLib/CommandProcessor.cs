@@ -67,6 +67,16 @@ namespace SimulationEngineLib {
         }
 
         [ArgActionMethod]
+        [ArgDescription("Creates python files that will help you use call the LPG from Python")]
+        [ArgExample("simulationengine.exe CreatePythonBindings",
+            "How to create the python bindings:")]
+        [UsedImplicitly]
+        public void CreatePythonBindings()
+        {
+            PythonGenerator.MakeFullPythonBindings(ConnectionString, "lpgpythonbindings.py", @"lpgdata.py");
+        }
+
+        [ArgActionMethod]
         [ArgDescription("Reads a house data definitions in Json-Format to create new house and calculates the result." )]
         [ArgExample("simulationengine.exe ProcessHouseJob -JsonPath c:\\work\\myhousejob.json",
             "How to calculate a house:")]

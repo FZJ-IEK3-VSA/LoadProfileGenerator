@@ -83,7 +83,6 @@
     <Compile Include="MakeSampleHouseJobs.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PythonBindingGenerator.cs" />
     <Compile Include="ReleaseBuilderTests.cs" />
     <Compile Include="StatisticsPrinter.cs" />
   </ItemGroup>

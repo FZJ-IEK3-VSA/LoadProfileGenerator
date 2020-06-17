@@ -22,7 +22,7 @@ namespace Common.SQLResultLogging
                                               double currentSOC, [NotNull] HouseholdKey householdKey,
                                               double currentRange, [CanBeNull] string currentSite,
                                               [CanBeNull] string currentUser,
-            [NotNull] string dateTime)
+            [NotNull] string dateTime, double movedDistanceInMeters)
         {
             TransportationDeviceName = transportationDeviceName;
             TransportationDeviceGuid = transportationDeviceGuid;
@@ -35,6 +35,7 @@ namespace Common.SQLResultLogging
             CurrentSite = currentSite;
             CurrentUser = currentUser;
             DateTime = dateTime;
+            MovedDistanceInMeters = movedDistanceInMeters;
         }
 
         [CanBeNull]
@@ -44,6 +45,8 @@ namespace Common.SQLResultLogging
 
         [NotNull]
         public string DateTime { get; }
+
+        public double MovedDistanceInMeters { get; set; }
 
         [NotNull]
         public string TransportationDeviceName { get; set; }

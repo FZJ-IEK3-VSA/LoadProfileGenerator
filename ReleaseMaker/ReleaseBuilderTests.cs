@@ -105,6 +105,7 @@ namespace ReleaseMaker
             {
                 File.Copy(Path.Combine(src, filename), Path.Combine(dst, dstfilename));
             }
+            Logger.Info("Copied " + filename);
             _programFiles.Add(filename);
         }
 
@@ -746,7 +747,7 @@ namespace ReleaseMaker
             const bool cleanDatabase = true;
             const bool makeZipAndSetup = false;
             const bool cleanCalcOutcomes = true;
-
+            Logger.Info("### Starting Release");
             var releasename = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             releasename = releasename.Substring(0, 5);
             Logger.Info("Release name: " + releasename);
@@ -769,13 +770,13 @@ namespace ReleaseMaker
             Directory.CreateDirectory(dst);
             Thread.Sleep(250);
             const string srclpg = @"C:\Work\LPGDev\WpfApplication1\bin\Debug\net48";
-
+            Logger.Info("### Copying lpg files");
             CopyLpgFiles(srclpg, dst);
             const string srcsim = @"C:\Work\LPGDev\SimulationEngine\bin\Debug\net48";
             CopySimEngineFiles(srcsim, dst);
-
-            Thread.Sleep(100);
+            Logger.Info("### Finished copying lpg files");
             // CopyFiles(src, dst);
+            Logger.Info("### Performing release checks");
             ReleaseCheck(filename);
             //CopyFilesSimulationEngine(srcsim, dst);
             using (var db = new DatabaseSetup("Release", filename))
@@ -786,12 +787,15 @@ namespace ReleaseMaker
                 {
 #pragma warning restore S2583 // Conditionally executed blocks should be reachable
                     //DeleteOldCalcOutcomes(db);
+                    Logger.Info("### cleaning database");
                     DissStuffDatabaseCleaner.Run(db.FileName);
                 }
                 if (cleanCalcOutcomes)
                 {
+                    Logger.Info("### cleaning calc outcomes");
                     CalculationOutcome.ClearTable(db.ConnectionString);
                 }
+                Logger.Info("### integrity check");
                 var sim = new Simulator(db.ConnectionString);
                 sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.ReasonableWithChartsAndPDF);
                 sim.MyGeneralConfig.PerformCleanUpChecks = "True";
@@ -805,6 +809,7 @@ namespace ReleaseMaker
                 sim.MyGeneralConfig.PerformCleanUpChecks = "False";
                 sim.MyGeneralConfig.CSVCharacter = ";";
                 var forgottenUpdates = false;
+                Logger.Info("### updating estimates");
                 foreach (var trait in sim.HouseholdTraits.It)
                 {
                     switch (trait.Name)
@@ -837,6 +842,7 @@ namespace ReleaseMaker
 #pragma warning disable S2583 // Conditions should not unconditionally evaluate to "true" or to "false"
                 if (cleanDatabase)
                 {
+                    Logger.Info("### deleting all templated items");
 #pragma warning restore S2583 // Conditions should not unconditionally evaluate to "true" or to "false" {
                     var templatedItems = sim.FindAndDeleteAllTemplated();
                     if (templatedItems > 0)
@@ -848,7 +854,7 @@ namespace ReleaseMaker
                 File.Copy(db.FileName, Path.Combine(dst, "profilegenerator.db3"));
             }
             Thread.Sleep(1000);
-
+            Logger.Info("### Finished copying all files");
             //CopyFilesSimulationEngine(srcsim, dst);
             if (makeZipAndSetup)
             {

@@ -29,7 +29,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using Automation.ResultFiles;
 using CalculationController.CalcFactories;
 using CalculationController.DtoFactories;

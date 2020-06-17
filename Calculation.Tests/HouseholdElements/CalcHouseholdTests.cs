@@ -48,7 +48,7 @@ namespace Calculation.HouseholdElements.Tests {
                     sim.MyGeneralConfig.Enable(CalcOption.TotalsPerDevice);
                     sim.MyGeneralConfig.CSVCharacter = ";";
                     //ConfigSetter.SetGlobalTimeParameters(sim.MyGeneralConfig);
-                    sim.Should().BeNull();
+                    sim.Should().NotBeNull();
                     SimIntegrityChecker.Run(sim);
                     CalcManagerFactory.DoIntegrityRun = false;
 

@@ -50,7 +50,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
             Logger.Info("Starting to complete list of heat gains by human activity at each time step...");
 
             var singletimestepEntries = _repository.ReadSingleTimestepActionEntries(householdKey)
-                .OrderBy(x => x.TimeStep).ThenBy(x => x.PersonGuid)
+                .OrderBy(x => x.TimeStep)
                 .ToList();
             if (singletimestepEntries.Count == 0) {
                 throw new LPGException("No file for actions each time step found");

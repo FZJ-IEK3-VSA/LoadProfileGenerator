@@ -15,7 +15,6 @@ namespace CalculationEngine.Transportation {
     public class CalcTransportationDevice : CalcBase {
 
         [CanBeNull] private readonly CalcLoadType _chargingCalcLoadType1;
-        private readonly double _currentSOC;
         [NotNull] private readonly DateStampCreator _dsc;
 
         private readonly double _energyToDistanceFactor;
@@ -63,7 +62,6 @@ namespace CalculationEngine.Transportation {
             _availableRangeInMeters = fullRangeInMeters;
             Category = category;
             AverageSpeedInMPerS = averageSpeedInMPerS;
-            _currentSOC = 100;
             _calcDeviceDto = calcDeviceDto;
             _calcRepo = calcRepo;
             if (_calcRepo.CalcParameters.InternalTimesteps == 0) {
@@ -183,6 +181,8 @@ namespace CalculationEngine.Transportation {
             return (int)Math.Ceiling(numberOfTimesteps);
         }
 
+        public double CurrentSoc => _availableRangeInMeters / _fullRangeInMeters;
+
         public void DriveAndCharge([NotNull] TimeStep currentTimeStep)
         {
             AdjustCurrentsiteByTimestep(currentTimeStep);
@@ -195,8 +195,8 @@ namespace CalculationEngine.Transportation {
                 DisconnectCar();
                 _calcRepo.OnlineLoggingData.AddTransportationDeviceState(new TransportationDeviceStateEntry(
                     Name, Guid, currentTimeStep, TransportationDeviceState.Undefined,
-                    _currentSOC, _calcDeviceDto.HouseholdKey, _availableRangeInMeters, _currentSite?.Name,
-                    _lastUsingPerson, _dsc.MakeDateStringFromTimeStep(currentTimeStep)));
+                    CurrentSoc, _calcDeviceDto.HouseholdKey, _availableRangeInMeters, _currentSite?.Name,
+                    _lastUsingPerson, _dsc.MakeDateStringFromTimeStep(currentTimeStep),0));
                 return;
             }
 
@@ -216,9 +216,9 @@ namespace CalculationEngine.Transportation {
                 }
                 _calcRepo.OnlineLoggingData.AddTransportationDeviceState(new TransportationDeviceStateEntry(
                     Name, Guid, currentTimeStep, TransportationDeviceState.Driving,
-                    _currentSOC, _calcDeviceDto.HouseholdKey, _availableRangeInMeters,
+                    CurrentSoc, _calcDeviceDto.HouseholdKey, _availableRangeInMeters,
                     _currentSite?.Name,
-                    _lastUsingPerson, _dsc.MakeDateStringFromTimeStep(currentTimeStep)));
+                    _lastUsingPerson, _dsc.MakeDateStringFromTimeStep(currentTimeStep),distancePerTimestep));
                 return;
             }
 
@@ -226,9 +226,9 @@ namespace CalculationEngine.Transportation {
             if (_availableRangeInMeters >= _fullRangeInMeters) {
                 _calcRepo.OnlineLoggingData.AddTransportationDeviceState(new TransportationDeviceStateEntry(
                     Name, Guid, currentTimeStep, TransportationDeviceState.ParkingAndFullyCharged,
-                    _currentSOC, _calcDeviceDto.HouseholdKey, _availableRangeInMeters, _currentSite?.Name,
+                    CurrentSoc, _calcDeviceDto.HouseholdKey, _availableRangeInMeters, _currentSite?.Name,
                     null
-                    , _dsc.MakeDateStringFromTimeStep(currentTimeStep)));
+                    , _dsc.MakeDateStringFromTimeStep(currentTimeStep),0));
                 DisconnectCar();
                 //TODO: different disconnect strategies
                 return;
@@ -244,8 +244,8 @@ namespace CalculationEngine.Transportation {
                     if (chargingStations.All(x => !x.IsAvailable) && _lastChargingStation == null) {
                         _calcRepo.OnlineLoggingData.AddTransportationDeviceState(new TransportationDeviceStateEntry(
                             Name, Guid, currentTimeStep, TransportationDeviceState.ParkingAndWaitingForCharging,
-                            _currentSOC, _calcDeviceDto.HouseholdKey, _availableRangeInMeters, _currentSite.Name,
-                            null, _dsc.MakeDateStringFromTimeStep(currentTimeStep)));
+                            CurrentSoc, _calcDeviceDto.HouseholdKey, _availableRangeInMeters, _currentSite.Name,
+                            null, _dsc.MakeDateStringFromTimeStep(currentTimeStep),0));
                         DisconnectCar();
                         return;
                     }
@@ -268,8 +268,8 @@ namespace CalculationEngine.Transportation {
 
                     _calcRepo.OnlineLoggingData.AddTransportationDeviceState(new TransportationDeviceStateEntry(
                         Name, Guid, currentTimeStep, TransportationDeviceState.ParkingAndCharging,
-                        _currentSOC, _calcDeviceDto.HouseholdKey, _availableRangeInMeters, _currentSite.Name,
-                        null, _dsc.MakeDateStringFromTimeStep(currentTimeStep)));
+                        CurrentSoc, _calcDeviceDto.HouseholdKey, _availableRangeInMeters, _currentSite.Name,
+                        null, _dsc.MakeDateStringFromTimeStep(currentTimeStep),0));
                     double maxChargingPower = Math.Min(_maxChargingPower, chargingStation.MaxChargingPower);
 
                     List<double> chargingProfile = new List<double> {
@@ -312,8 +312,8 @@ namespace CalculationEngine.Transportation {
             DisconnectCar();
             _calcRepo.OnlineLoggingData.AddTransportationDeviceState(new TransportationDeviceStateEntry(
                 Name, Guid, currentTimeStep, TransportationDeviceState.ParkingAndNoChargingAvailableHere,
-                _currentSOC, _calcDeviceDto.HouseholdKey, _availableRangeInMeters, _currentSite?.Name, null
-                , _dsc.MakeDateStringFromTimeStep(currentTimeStep)));
+                CurrentSoc, _calcDeviceDto.HouseholdKey, _availableRangeInMeters, _currentSite?.Name, null
+                , _dsc.MakeDateStringFromTimeStep(currentTimeStep),0));
         }
 
         public bool IsBusy([NotNull] TimeStep startTimeStep, int durationInTimesteps)

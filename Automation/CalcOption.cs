@@ -53,6 +53,7 @@
         DeviceProfilesHouse,
         HouseholdSumProfilesFromDetailedDats,
         JsonHouseholdSumFiles,
-        JsonDeviceProfilesIndividualHouseholds
+        JsonDeviceProfilesIndividualHouseholds,
+        TansportationDeviceJsons,
     }
 }

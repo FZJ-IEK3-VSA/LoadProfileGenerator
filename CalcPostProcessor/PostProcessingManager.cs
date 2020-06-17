@@ -58,12 +58,14 @@ namespace CalcPostProcessor
             //general household steps
             builder.RegisterType<MakeActivationsPerFrequencies>().As<IGeneralHouseholdStep>().SingleInstance();
             builder.RegisterType<MakeActivationsPerHour>().As<IGeneralHouseholdStep>().SingleInstance();
+            builder.RegisterType<BodilyActivityLevelsStatistics>().As<IGeneralHouseholdStep>().SingleInstance();
             builder.RegisterType<MakeHouseholdPlanResult>().As<IGeneralHouseholdStep>().SingleInstance();
             builder.RegisterType<MakeBodilyActivityLevelStatistics>().As<IGeneralHouseholdStep>().SingleInstance();
             //builder.RegisterType<ActionCarpetPlot>().As<IGeneralHouseholdStep>().SingleInstance();
             builder.RegisterType<MakeActionsEachTimestep>().As<IGeneralHouseholdStep>().SingleInstance();
             builder.RegisterType<LocationStatisticsMaker>().As<IGeneralHouseholdStep>().SingleInstance();
             builder.RegisterType<AffordanceStatisticsWriter>().As<IHouseholdLoadTypeStep>().SingleInstance();
+            builder.RegisterType<TransportationDeviceJson>().As<IGeneralHouseholdStep>().SingleInstance();
             //builder.RegisterType<LocationCarpetPlot>().As<IGeneralHouseholdStep>().SingleInstance();
             //builder.RegisterType<TransportationDeviceCarpetPlot>().As<IGeneralHouseholdStep>().SingleInstance();
             builder.RegisterType<TransportationStatisticsWriter>().As<IGeneralHouseholdStep>().SingleInstance();

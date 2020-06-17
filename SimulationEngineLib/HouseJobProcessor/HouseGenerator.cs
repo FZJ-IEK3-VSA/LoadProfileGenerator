@@ -323,7 +323,8 @@ namespace SimulationEngineLib.HouseJobProcessor {
         {
             string resultDir = "Results";
             try {
-                string houseJobStr = File.ReadAllText(houseJobFile);
+                char[] charsToTrim = { '\n', ' ' };
+                string houseJobStr = File.ReadAllText(houseJobFile).Trim(charsToTrim);
                 HouseCreationAndCalculationJob hcj = JsonConvert.DeserializeObject<HouseCreationAndCalculationJob>(houseJobStr);
                 resultDir = hcj.CalcSpec?.OutputDirectory ?? "Results";
                 if (!Directory.Exists(resultDir))
@@ -335,15 +336,22 @@ namespace SimulationEngineLib.HouseJobProcessor {
                 if (File.Exists(finishedFlagFile))
                 {
                     Logger.Info("File already exists: " + finishedFlagFile);
-                    string filecontent = File.ReadAllText(finishedFlagFile);
+                    string filecontent = File.ReadAllText(finishedFlagFile).Trim(charsToTrim);
                     if (filecontent == houseJobStr) {
                         Logger.Info("This calculation seems to be finished. Quitting.");
                         return;
                     }
-                    else {
-                        Logger.Info("There is a previous calculation in the result directory but it used different parameters. Cleaning and recalculating.");
-                    }
+                    Logger.Info("There is a previous calculation in the result directory but it used different parameters. Cleaning and recalculating.");
+                    var prevarr = houseJobStr.Split('\n');
+                    var newarr = filecontent.Split('\n');
 
+                    for (int i = 0; i < newarr.Length && i < prevarr.Length; i++) {
+                        if (prevarr[i] != newarr[i]) {
+                            Logger.Info("Line: " + i);
+                            Logger.Info("Prev: " + prevarr[i]);
+                            Logger.Info("New : " + newarr[i]);
+                        }
+                    }
                 }
                 string srcDbFile = hcj.PathToDatabase ?? throw new LPGException("No db source path");
                 if (!File.Exists(srcDbFile))
@@ -364,7 +372,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
                 {
                     using (var sw = new StreamWriter(finishedFlagFile))
                     {
-                        sw.WriteLine(houseJobStr);
+                        sw.Write(houseJobStr);
                     }
                 }
                 else {
