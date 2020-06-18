@@ -375,7 +375,7 @@ namespace ChartCreator2.OxyCharts {
             var householdKeys = _repository.HouseholdKeys;
             foreach (var db in databases) {
                 var tables = _srls.LoadTables(db.Key);
-                var hhentry = householdKeys.Single(x => x.HouseholdKey == db.Key);
+                var hhentry = householdKeys.Single(x => x.HHKey == db.Key);
                 foreach (var table in tables) {
                     foreach (ISqlChartMakerStep chartMakerStep in _sqlChartMakerSteps) {
                         if (chartMakerStep.IsEnabled(hhentry, table)) {

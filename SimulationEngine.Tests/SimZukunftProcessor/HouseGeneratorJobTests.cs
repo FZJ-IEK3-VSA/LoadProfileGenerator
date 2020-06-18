@@ -320,8 +320,8 @@ namespace SimulationEngine.Tests.SimZukunftProcessor {
                                 continue;
                             }
 
-                            Logger.Info(entry.HouseholdKey.ToString());
-                            var res = tel.Read(entry.HouseholdKey);
+                            Logger.Info(entry.HHKey.ToString());
+                            var res = tel.Read(entry.HHKey);
                             foreach (var totalsEntry in res) {
                                 Logger.Info(totalsEntry.Loadtype + ": " + totalsEntry.Value);
                                 if (totalsEntry.Loadtype.Name == "Space Heating") {

@@ -76,7 +76,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             //{
             //return;
             //}
-            var deviceActivationEntries = Repository.LoadDeviceActivations(p.Key.HouseholdKey);
+            var deviceActivationEntries = Repository.LoadDeviceActivations(p.Key.HHKey);
 
             var deviceEnergyDict = new Dictionary<string, double>();
             foreach (var activationEntry in deviceActivationEntries) {
@@ -97,8 +97,8 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             var avgYearlyDict = new Dictionary<CalcLoadTypeDto, Dictionary<StrGuid, double>>();
             if (p.Key.KeyType != HouseholdKeyType.House) {
                 avgYearlyDict = GetAverageYearlyConsumptionPerDevice(
-                    Repository.LoadDevices(p.Key.HouseholdKey).ConvertAll(x => (ICalcDeviceDto)x));
-                var devices = Repository.LoadDevices(p.Key.HouseholdKey);
+                    Repository.LoadDevices(p.Key.HHKey).ConvertAll(x => (ICalcDeviceDto)x));
+                var devices = Repository.LoadDevices(p.Key.HHKey);
                 foreach (var device in devices) {
                     if (deviceNameToCategory.ContainsKey(device.Name)) {
                         continue;
@@ -108,8 +108,8 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                 }
             }
 
-            var efc = Repository.ReadEnergyFileColumns(p.Key.HouseholdKey);
-            MakeSumsForJson(p.LoadType, p.EnergyFileRows, efc, p.Key.HouseholdKey);
+            var efc = Repository.ReadEnergyFileColumns(p.Key.HHKey);
+            MakeSumsForJson(p.LoadType, p.EnergyFileRows, efc, p.Key.HHKey);
             Run(p.LoadType,
                 p.EnergyFileRows,
                 _fft,
@@ -118,7 +118,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                 deviceTaggingSetInformations,
                 deviceNameToCategory,
                 deviceEnergyDict,
-                p.Key.HouseholdKey);
+                p.Key.HHKey);
             //Repository.DeviceSumInformationList,
         }
 

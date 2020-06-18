@@ -24,11 +24,11 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
         {
             HouseholdLoadtypeStepParameters p = (HouseholdLoadtypeStepParameters)parameters;
 
-            if (p.Key.HouseholdKey == Constants.GeneralHouseholdKey) {
+            if (p.Key.HHKey == Constants.GeneralHouseholdKey) {
                 return;
             }
 
-            var efc = Repository.ReadEnergyFileColumns(p.Key.HouseholdKey);
+            var efc = Repository.ReadEnergyFileColumns(p.Key.HHKey);
 
             DateStampCreator dsc = new DateStampCreator(Repository.CalcParameters);
             //var householdKeys = efc.ColumnEntriesByColumn[dstLoadType].Values.Select(entry => entry.HouseholdKey).Distinct().ToList();
@@ -37,7 +37,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                 return;
             }
 
-            var key = p.Key.HouseholdKey;
+            var key = p.Key.HHKey;
             var columns = efc.ColumnEntriesByColumn[p.LoadType].Values.Where(entry => entry.HouseholdKey == key).Select(entry => entry.Column)
                 .ToList();
             var hhname = "." + key + ".";

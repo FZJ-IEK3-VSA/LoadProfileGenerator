@@ -44,7 +44,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
                 return;
             }
 
-            Run(_fft, entry.HouseholdKey);
+            Run(_fft, entry.HHKey);
         }
 
         [NotNull]

@@ -96,7 +96,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps
                 return;
             }
 
-            var hhkey = hhp.Key.HouseholdKey;
+            var hhkey = hhp.Key.HHKey;
 
             ReadActivities(hhkey, out var statebyDevice, out var siteByDevice,
                 out var socByDevice, out var drivingDistanceByDevice);

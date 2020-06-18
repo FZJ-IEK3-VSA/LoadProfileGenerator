@@ -24,11 +24,11 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
         protected override void PerformActualStep([NotNull] IStepParameters parameters)
         {
             HouseholdLoadtypeStepParameters p = (HouseholdLoadtypeStepParameters)parameters;
-            if (p.Key.HouseholdKey == Constants.GeneralHouseholdKey) {
+            if (p.Key.HHKey == Constants.GeneralHouseholdKey) {
                 return;
             }
             var dstLoadType = p.LoadType;
-            var efc = Repository.ReadEnergyFileColumns(p.Key.HouseholdKey);
+            var efc = Repository.ReadEnergyFileColumns(p.Key.HHKey);
             if (!efc.ColumnCountByLoadType.ContainsKey(dstLoadType))
             {
                 return;
@@ -39,7 +39,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                 return;
             }
             var calcParameters = Repository.CalcParameters;
-            var key = p.Key.HouseholdKey;
+            var key = p.Key.HHKey;
             var columns = efc.ColumnEntriesByColumn[p.LoadType].Values.Where(entry => entry.HouseholdKey == key).Select(entry => entry.Column)
                 .ToList();
             var hhname = "." + key ;
@@ -61,7 +61,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
 
             var sumfile = _fft.MakeFile<StreamWriter>("DeviceProfiles." + dstLoadType.FileName + hhname + ".json",
                 "Summed up energy profile for all devices for " + dstLoadType.Name + " as JSON file", true,
-                ResultFileID.JsonDeviceProfiles, p.Key.HouseholdKey, TargetDirectory.Results,
+                ResultFileID.JsonDeviceProfiles, p.Key.HHKey, TargetDirectory.Results,
                 calcParameters.InternalStepsize, CalcOption.JsonDeviceProfilesIndividualHouseholds,
                 dstLoadType.ConvertToLoadTypeInformation());
             sumfile.Write(JsonConvert.SerializeObject(jrf, Formatting.Indented));

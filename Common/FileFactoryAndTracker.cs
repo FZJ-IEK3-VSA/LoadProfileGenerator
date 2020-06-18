@@ -75,12 +75,12 @@ namespace Common {
 
         public void AddSavedEntry([NotNull] HouseholdKeyEntry entry)
         {
-            if (_householdKeys.Contains(entry.HouseholdKey))
+            if (_householdKeys.Contains(entry.HHKey))
             {
-                throw new LPGException("Key was already registered: " + entry.HouseholdKey);
+                throw new LPGException("Key was already registered: " + entry.HHKey);
             }
 
-            _householdKeys.Add(entry.HouseholdKey);
+            _householdKeys.Add(entry.HHKey);
             //_householdEntries.Add(entry);
         }
     }

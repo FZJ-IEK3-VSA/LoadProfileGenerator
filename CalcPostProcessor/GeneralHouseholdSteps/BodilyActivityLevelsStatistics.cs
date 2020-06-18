@@ -42,7 +42,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
                 return;
             }
 
-            var householdKey = entry.HouseholdKey;
+            var householdKey = entry.HHKey;
             _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
 
 

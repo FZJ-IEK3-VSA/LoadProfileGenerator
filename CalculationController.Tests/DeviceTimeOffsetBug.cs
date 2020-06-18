@@ -35,7 +35,7 @@ namespace CalculationController.Tests {
             if (hhkeys.Count != 2) {
                 throw new LPGException("Unknown key");
             }
-            var selectedKey = hhkeys[1].HouseholdKey;
+            var selectedKey = hhkeys[1].HHKey;
             //SingleTimestepActionEntryLogger stael = new SingleTimestepActionEntryLogger(srls);
             ActionEntryLogger ael = new ActionEntryLogger(srls);
            // var actionEachStep = stael.Read(selectedKey);

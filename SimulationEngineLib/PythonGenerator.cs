@@ -334,7 +334,7 @@ namespace SimulationEngineLib
                         typename = "bool";
                         return info.Name + ": bool = False";
                     case "System.TimeSpan":
-                        typename = "bool";
+                        typename = "str";
                         return info.Name + ": str = \"00:01:00\"";
 
                     //"System.Nullable`1[[Automation.StrGuid, Automation, Version=9.6.0.0, Culture=neutral, PublicKeyToken=null]]'"

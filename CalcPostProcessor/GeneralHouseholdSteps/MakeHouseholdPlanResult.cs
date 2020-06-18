@@ -279,7 +279,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
 #pragma warning disable 162
             foreach (var key in Repository.HouseholdKeys) {
 #pragma warning restore S1135 // Track uses of "TODO" tags
-                var activations = Repository.LoadDeviceActivations(key.HouseholdKey);
+                var activations = Repository.LoadDeviceActivations(key.HHKey);
                 Dictionary<StrGuid, Dictionary<string, double>> energyusePerAffordanceByLoadtype = new Dictionary<StrGuid, Dictionary<string, double>>();
                 foreach (DeviceActivationEntry activationEntry in activations) {
                     if (!energyusePerAffordanceByLoadtype.ContainsKey(activationEntry.LoadTypeGuid)) {
@@ -293,7 +293,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
                     energyusePerAffordanceByLoadtype[activationEntry.LoadTypeGuid][activationEntry.AffordanceName] += activationEntry.TotalEnergySum;
                 }
                 Run(energyusePerAffordanceByLoadtype, Repository.CalcObjectInformation.CalcObjectName,
-                    new List<CalcHouseholdPlanDto>() , _fft,key.HouseholdKey, MakeActivationsPerFrequencies.AffordanceTaggingSetByPersonByTag,
+                    new List<CalcHouseholdPlanDto>() , _fft,key.HHKey, MakeActivationsPerFrequencies.AffordanceTaggingSetByPersonByTag,
                     MakeActivationsPerFrequencies.AffordanceTaggingSetByPersonByTagExecutioncount);
             }
 #pragma warning restore 162

@@ -79,7 +79,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
                 return;
             }
 
-            BuildActivitiesPerMinute(entry.HouseholdKey, Repository.AffordanceTaggingSets, Repository.GetPersons(entry.HouseholdKey));
+            BuildActivitiesPerMinute(entry.HHKey, Repository.AffordanceTaggingSets, Repository.GetPersons(entry.HHKey));
         }
 
         [NotNull]

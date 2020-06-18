@@ -27,6 +27,81 @@ using LoadProfileGenerator.Presenters.SpecialViews;
 
 namespace ReleaseMaker
 {
+    public class CopierBase {
+        protected static void Copy(List<string> programFiles, [NotNull] string src, [NotNull] string dst, [NotNull] string filename, string? dstfilename = null)
+        {
+            if (File.Exists(Path.Combine(dst, filename)))
+            {
+                File.Delete(Path.Combine(dst, filename));
+            }
+            if (dstfilename == null)
+            {
+                File.Copy(Path.Combine(src, filename), Path.Combine(dst, filename));
+            }
+            else
+            {
+                File.Copy(Path.Combine(src, filename), Path.Combine(dst, dstfilename));
+            }
+            Logger.Info("Copied " + filename);
+            programFiles.Add(filename);
+        }
+        protected static void CheckIfFilesAreCompletelyCopied(string src, List<string> programFiles)
+        {
+            DirectoryInfo di = new DirectoryInfo(src);
+            var fis = di.GetFiles("*.*", SearchOption.AllDirectories);
+            if (fis.Length == 0) {
+                throw new Exception("Not a single file in " + src);
+            }
+            var filesToComplain = new List<string>();
+            var filesToIgnore = new List<string>();
+            filesToIgnore.Add("calcspec.json");
+            filesToIgnore.Add("Log.CommandlineCalculation.txt");
+            foreach (var fi in fis)
+            {
+                if (fi.Name.EndsWith(".pdb"))
+                {
+                    continue;
+                }
+
+                if (fi.Name.EndsWith(".db3"))
+                {
+                    continue;
+                }
+
+                if (fi.Name.EndsWith(".dat"))
+                {
+                    continue;
+                }
+
+                if (fi.Name.EndsWith(".sqlite"))
+                {
+                    continue;
+                }
+
+                if (filesToIgnore.Contains(fi.Name))
+                {
+                    continue;
+                }
+
+                if (!programFiles.Contains(fi.Name))
+                {
+                    filesToComplain.Add(fi.Name);
+                }
+            }
+
+            if (filesToComplain.Count > 0)
+            {
+                string s1 = "";
+                foreach (var fn in filesToComplain)
+                {
+                    s1 += "Copy(programFiles, src, dst, \"" + fn + "\");\n";
+                }
+
+                throw new LPGException("Forgotten Files in " + Utili.GetCallingMethodAndClass() + " :\n" + s1);
+            }
+        }
+    }
+
     [SuppressMessage("ReSharper", "RedundantAssignment")]
     public class ReleaseBuilderTests
     {
@@ -91,101 +166,82 @@ namespace ReleaseMaker
             }
         }
 
-        private void Copy([NotNull] string src, [NotNull] string dst, [NotNull] string filename,  string? dstfilename = null)
-        {
-            if (File.Exists(Path.Combine(dst, filename)))
-            {
-                File.Delete(Path.Combine(dst, filename));
-            }
-            if (dstfilename == null)
-            {
-                File.Copy(Path.Combine(src, filename), Path.Combine(dst, filename));
-            }
-            else
-            {
-                File.Copy(Path.Combine(src, filename), Path.Combine(dst, dstfilename));
-            }
-            Logger.Info("Copied " + filename);
-            _programFiles.Add(filename);
-        }
-
-        [ItemNotNull] [NotNull] private readonly List<string> _programFiles = new List<string>();
 
 //        private void CopyFiles([NotNull] string src, [NotNull] string dst)
 //        {
-//            Copy(src, dst, "Autofac.dll");
-//            Copy(src, dst, "Automation.dll");
-//            Copy(src, dst, "CalcPostProcessor.dll");
-//            Copy(src, dst, "CalculationController.dll");
-//            Copy(src, dst, "CalculationEngine.dll");
-//            Copy(src, dst, "ChartCreator2.dll");
-//            Copy(src, dst, "ChartPDFCreator.dll");
-//            Copy(src, dst, "Common.dll");
-//            Copy(src, dst, "Database.dll");
-//            Copy(src, dst, "SimulationEngineLib.dll");
-//            Copy(src, dst, "System.Buffers.dll");
-//            Copy(src, dst, "System.Linq.Dynamic.Core.dll");
-//            Copy(src, dst, "System.Memory.dll");
-//            Copy(src, dst, "System.Numerics.Vectors.dll");
-//            Copy(src, dst, "System.Resources.Extensions.dll");
-//            Copy(src, dst, "System.Runtime.CompilerServices.Unsafe.dll");
-//            //Copy(src, dst, "MigraDoc.DocumentObjectModel-wpf.dll");
-//            //Copy(src, dst, "MigraDoc.DocumentObjectModel.dll");
-//            //Copy(src, dst, "MigraDoc.Rendering-wpf.dll");
-//            //Copy(src, dst, "MigraDoc.Rendering.dll");
-//            //Copy(src, dst, "MigraDoc.RtfRendering.dll");
+//            Copy(programFiles, src, dst, "Autofac.dll");
+//            Copy(programFiles, src, dst, "Automation.dll");
+//            Copy(programFiles, src, dst, "CalcPostProcessor.dll");
+//            Copy(programFiles, src, dst, "CalculationController.dll");
+//            Copy(programFiles, src, dst, "CalculationEngine.dll");
+//            Copy(programFiles, src, dst, "ChartCreator2.dll");
+//            Copy(programFiles, src, dst, "ChartPDFCreator.dll");
+//            Copy(programFiles, src, dst, "Common.dll");
+//            Copy(programFiles, src, dst, "Database.dll");
+//            Copy(programFiles, src, dst, "SimulationEngineLib.dll");
+//            Copy(programFiles, src, dst, "System.Buffers.dll");
+//            Copy(programFiles, src, dst, "System.Linq.Dynamic.Core.dll");
+//            Copy(programFiles, src, dst, "System.Memory.dll");
+//            Copy(programFiles, src, dst, "System.Numerics.Vectors.dll");
+//            Copy(programFiles, src, dst, "System.Resources.Extensions.dll");
+//            Copy(programFiles, src, dst, "System.Runtime.CompilerServices.Unsafe.dll");
+//            //Copy(programFiles, src, dst, "MigraDoc.DocumentObjectModel-wpf.dll");
+//            //Copy(programFiles, src, dst, "MigraDoc.DocumentObjectModel.dll");
+//            //Copy(programFiles, src, dst, "MigraDoc.Rendering-wpf.dll");
+//            //Copy(programFiles, src, dst, "MigraDoc.Rendering.dll");
+//            //Copy(programFiles, src, dst, "MigraDoc.RtfRendering.dll");
 
 //            //Copy(desrc, dst, "MigraDoc.DocumentObjectModel.resources.dll");
 //            //
-//            Copy(src, dst, "MigraDoc.DocumentObjectModel-gdi.dll");
+//            Copy(programFiles, src, dst, "MigraDoc.DocumentObjectModel-gdi.dll");
 //            string desrc = Path.Combine(src, "de");
 //            Copy(desrc, dst, "MigraDoc.DocumentObjectModel-gdi.resources.dll");
 //            Copy(desrc, dst, "MigraDoc.Rendering-gdi.resources.dll");
 //            Copy(desrc, dst, "MigraDoc.RtfRendering-gdi.resources.dll");
 //            Copy(desrc, dst, "PdfSharp-gdi.resources.dll");
 //            Copy(desrc, dst, "PdfSharp.Charting-gdi.resources.dll");
-//            Copy(src, dst, "MigraDoc.Rendering-gdi.dll");
-//            Copy(src, dst, "MigraDoc.RtfRendering-gdi.dll");
-//            Copy(src, dst, "PdfSharp-gdi.dll");
-//            Copy(src, dst, "PdfSharp.Charting-gdi.dll");
+//            Copy(programFiles, src, dst, "MigraDoc.Rendering-gdi.dll");
+//            Copy(programFiles, src, dst, "MigraDoc.RtfRendering-gdi.dll");
+//            Copy(programFiles, src, dst, "PdfSharp-gdi.dll");
+//            Copy(programFiles, src, dst, "PdfSharp.Charting-gdi.dll");
 //            //Copy(desrc, dst, "PdfSharp.Charting.resources.dll");
-//            //Copy(src, dst, "PdfSharp.Charting.dll");
+//            //Copy(programFiles, src, dst, "PdfSharp.Charting.dll");
 //            //Copy(desrc, dst, "PdfSharp.resources.dll");
-//            //Copy(src, dst, "PdfSharp.dll");
-//            Copy(src, dst, "Newtonsoft.Json.dll");
-//            Copy(src, dst, "OxyPlot.dll");
-//            Copy(src, dst, "OxyPlot.Pdf.dll");
-//            Copy(src, dst, "OxyPlot.Wpf.dll");
-//            //Copy(src, dst, "PdfSharp-wpf.dll");
-//            //Copy(src, dst, "PdfSharp.Charting-wpf.dll");
-//            //Copy(src, dst, "SettlementProcessing.dll");
-//            Copy(src, dst, "SQLite.Interop.dll");
-//            //Copy(src, dst, "sqlite3.dll");
-//            Copy(src, dst, "System.Data.SQLite.dll");
-//            Copy(src, dst, "LoadProfileGenerator.exe");
-//            Copy(src, dst, "SimulationEngine.exe");
-//            Copy(src, dst, "PowerArgs.dll");
-//            Copy(src, dst, "EntityFramework.dll");
-//            Copy(src, dst, "EntityFramework.SqlServer.dll");
-//            Copy(src, dst, "JetBrains.Annotations.dll");
-//            Copy(src, dst, "System.Data.SQLite.EF6.dll");
-//            Copy(src, dst, "System.Data.SQLite.Linq.dll");
-//            Copy(src, dst, "Microsoft.Bcl.AsyncInterfaces.dll");
-//            //Copy(src, dst, "Humanizer.dll");
+//            //Copy(programFiles, src, dst, "PdfSharp.dll");
+//            Copy(programFiles, src, dst, "Newtonsoft.Json.dll");
+//            Copy(programFiles, src, dst, "OxyPlot.dll");
+//            Copy(programFiles, src, dst, "OxyPlot.Pdf.dll");
+//            Copy(programFiles, src, dst, "OxyPlot.Wpf.dll");
+//            //Copy(programFiles, src, dst, "PdfSharp-wpf.dll");
+//            //Copy(programFiles, src, dst, "PdfSharp.Charting-wpf.dll");
+//            //Copy(programFiles, src, dst, "SettlementProcessing.dll");
+//            Copy(programFiles, src, dst, "SQLite.Interop.dll");
+//            //Copy(programFiles, src, dst, "sqlite3.dll");
+//            Copy(programFiles, src, dst, "System.Data.SQLite.dll");
+//            Copy(programFiles, src, dst, "LoadProfileGenerator.exe");
+//            Copy(programFiles, src, dst, "SimulationEngine.exe");
+//            Copy(programFiles, src, dst, "PowerArgs.dll");
+//            Copy(programFiles, src, dst, "EntityFramework.dll");
+//            Copy(programFiles, src, dst, "EntityFramework.SqlServer.dll");
+//            Copy(programFiles, src, dst, "JetBrains.Annotations.dll");
+//            Copy(programFiles, src, dst, "System.Data.SQLite.EF6.dll");
+//            Copy(programFiles, src, dst, "System.Data.SQLite.Linq.dll");
+//            Copy(programFiles, src, dst, "Microsoft.Bcl.AsyncInterfaces.dll");
+//            //Copy(programFiles, src, dst, "Humanizer.dll");
 
-//            Copy(src, dst, "EPPlus.dll");
-//            //Copy(src, dst, "System.Collections.Immutable.dll");
-//            //Copy(src, dst, "System.Composition.AttributedModel.dll");
-//            Copy(src, dst, "System.Composition.Convention.dll");
-//            Copy(src, dst, "System.Composition.Hosting.dll");
-//            Copy(src, dst, "System.Composition.Runtime.dll");
-//            Copy(src, dst, "System.Composition.TypedParts.dll");
-//            Copy(src, dst, "System.Reflection.Metadata.dll");
-//            Copy(src, dst, "System.Text.Encoding.CodePages.dll");
-//            Copy(src, dst, "System.Threading.Tasks.Extensions.dll");
-//            Copy(src, dst, "xunit.abstractions.dll");
+//            Copy(programFiles, src, dst, "EPPlus.dll");
+//            //Copy(programFiles, src, dst, "System.Collections.Immutable.dll");
+//            //Copy(programFiles, src, dst, "System.Composition.AttributedModel.dll");
+//            Copy(programFiles, src, dst, "System.Composition.Convention.dll");
+//            Copy(programFiles, src, dst, "System.Composition.Hosting.dll");
+//            Copy(programFiles, src, dst, "System.Composition.Runtime.dll");
+//            Copy(programFiles, src, dst, "System.Composition.TypedParts.dll");
+//            Copy(programFiles, src, dst, "System.Reflection.Metadata.dll");
+//            Copy(programFiles, src, dst, "System.Text.Encoding.CodePages.dll");
+//            Copy(programFiles, src, dst, "System.Threading.Tasks.Extensions.dll");
+//            Copy(programFiles, src, dst, "xunit.abstractions.dll");
 //            //string src64 = Path.Combine(src, "x64");
-//            //Copy(src64, dst, "sqlite3.dll");
+//            //Copy(programFiles, src64, dst, "sqlite3.dll");
 //            DirectoryInfo di = new DirectoryInfo(src);
 //            var fis = di.GetFiles("*.dll", SearchOption.AllDirectories);
 //            List<string> filesToIgnore = new List<string> {
@@ -290,7 +346,7 @@ namespace ReleaseMaker
 //                if (filesToIgnore.Contains(fi.Name)) {
 //                    continue;
 //                }
-//                if (!_programFiles.Contains(fi.Name)) {
+//                if (!programFiles.Contains(fi.Name)) {
 //                    filesToComplain.Add(fi.Name);
 //                }
 //            }
@@ -298,205 +354,9 @@ namespace ReleaseMaker
 //            if (filesToComplain.Count > 0) {
 //                throw new LPGException("Forgotten Files:" + string.Join("\",\n",filesToComplain));
 //            }
-//            //Copy(src, dst, "netstandard.dll");
+//            //Copy(programFiles, src, dst, "netstandard.dll");
 //        }
 
-
-        private void CopyLpgFiles([NotNull] string src, [NotNull] string dst)
-        {
-            Copy(src, dst, "Autofac.dll");
-            Copy(src, dst, "Automation.dll");
-            Copy(src, dst, "CalcPostProcessor.dll");
-            Copy(src, dst, "CalculationController.dll");
-            Copy(src, dst, "CalculationEngine.dll");
-            Copy(src, dst, "ChartCreator2.dll");
-            Copy(src, dst, "ChartPDFCreator.dll");
-            Copy(src, dst, "Common.dll");
-            Copy(src, dst, "Database.dll");
-            //Copy(src, dst, "SimulationEngineLib.dll");
-            Copy(src, dst, "System.Buffers.dll");
-            Copy(src, dst, "System.Linq.Dynamic.Core.dll");
-            Copy(src, dst, "System.Memory.dll");
-            Copy(src, dst, "System.Numerics.Vectors.dll");
-            Copy(src, dst, "System.Resources.Extensions.dll");
-            Copy(src, dst, "System.Runtime.CompilerServices.Unsafe.dll");
-            //Copy(src, dst, "MigraDoc.DocumentObjectModel-wpf.dll");
-            //Copy(src, dst, "MigraDoc.DocumentObjectModel.dll");
-            //Copy(src, dst, "MigraDoc.Rendering-wpf.dll");
-            //Copy(src, dst, "MigraDoc.Rendering.dll");
-            //Copy(src, dst, "MigraDoc.RtfRendering.dll");
-
-            //Copy(desrc, dst, "MigraDoc.DocumentObjectModel.resources.dll");
-            //
-            Copy(src, dst, "MigraDoc.DocumentObjectModel-gdi.dll");
-            string desrc = Path.Combine(src, "de");
-            Copy(desrc, dst, "MigraDoc.DocumentObjectModel-gdi.resources.dll");
-            Copy(desrc, dst, "MigraDoc.Rendering-gdi.resources.dll");
-            Copy(desrc, dst, "MigraDoc.RtfRendering-gdi.resources.dll");
-            Copy(desrc, dst, "PdfSharp-gdi.resources.dll");
-            Copy(desrc, dst, "PdfSharp.Charting-gdi.resources.dll");
-            Copy(src, dst, "MigraDoc.Rendering-gdi.dll");
-            Copy(src, dst, "MigraDoc.RtfRendering-gdi.dll");
-            Copy(src, dst, "PdfSharp-gdi.dll");
-            Copy(src, dst, "PdfSharp.Charting-gdi.dll");
-            //Copy(desrc, dst, "PdfSharp.Charting.resources.dll");
-            //Copy(src, dst, "PdfSharp.Charting.dll");
-            //Copy(desrc, dst, "PdfSharp.resources.dll");
-            //Copy(src, dst, "PdfSharp.dll");
-            Copy(src, dst, "Newtonsoft.Json.dll");
-            Copy(src, dst, "OxyPlot.dll");
-            Copy(src, dst, "OxyPlot.Pdf.dll");
-            Copy(src, dst, "OxyPlot.Wpf.dll");
-            //Copy(src, dst, "PdfSharp-wpf.dll");
-            //Copy(src, dst, "PdfSharp.Charting-wpf.dll");
-            //Copy(src, dst, "SettlementProcessing.dll");
-            Copy(src, dst, "SQLite.Interop.dll");
-            //Copy(src, dst, "sqlite3.dll");
-            Copy(src, dst, "System.Data.SQLite.dll");
-            Copy(src, dst, "LoadProfileGenerator.exe");
-            Copy(src, dst, "LoadProfileGenerator.exe.config");
-            //Copy(src, dst, "SimulationEngine.exe");
-            //Copy(src, dst, "PowerArgs.dll");
-            Copy(src, dst, "EntityFramework.dll");
-            Copy(src, dst, "EntityFramework.SqlServer.dll");
-            Copy(src, dst, "JetBrains.Annotations.dll");
-            Copy(src, dst, "System.Data.SQLite.EF6.dll");
-            Copy(src, dst, "System.Data.SQLite.Linq.dll");
-            Copy(src, dst, "Microsoft.Bcl.AsyncInterfaces.dll");
-            //Copy(src, dst, "Humanizer.dll");
-
-            //Copy(src, dst, "EPPlus.dll");
-            //Copy(src, dst, "System.Collections.Immutable.dll");
-            //Copy(src, dst, "System.Composition.AttributedModel.dll");
-            //Copy(src, dst, "System.Composition.Convention.dll");
-            //Copy(src, dst, "System.Composition.Hosting.dll");
-            //Copy(src, dst, "System.Composition.Runtime.dll");
-            //Copy(src, dst, "System.Composition.TypedParts.dll");
-            //Copy(src, dst, "System.Reflection.Metadata.dll");
-            //Copy(src, dst, "System.Text.Encoding.CodePages.dll");
-            Copy(src, dst, "System.Threading.Tasks.Extensions.dll");
-            Copy(src, dst, "xunit.abstractions.dll");
-            //string src64 = Path.Combine(src, "x64");
-            //Copy(src64, dst, "sqlite3.dll");
-            DirectoryInfo di = new DirectoryInfo(src);
-            var fis = di.GetFiles("*.dll", SearchOption.AllDirectories);
-            List<string> filesToIgnore = new List<string> {
-                "Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll",
-                "Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll",
-                "Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll"
-            };
-            var filesToComplain = new List<string>();
-            foreach (var fi in fis)
-            {
-                if (filesToIgnore.Contains(fi.Name))
-                {
-                    continue;
-                }
-                if (!_programFiles.Contains(fi.Name))
-                {
-                    filesToComplain.Add(fi.Name);
-                }
-            }
-
-            if (filesToComplain.Count > 0)
-            {
-                throw new LPGException("Forgotten Files:" + string.Join("\",\n", filesToComplain));
-            }
-            //Copy(src, dst, "netstandard.dll");
-        }
-
-        private void CopySimEngineFiles([NotNull] string src, [NotNull] string dst)
-        {
-            Copy(src, dst, "Autofac.dll");
-            Copy(src, dst, "Automation.dll");
-            Copy(src, dst, "CalcPostProcessor.dll");
-            Copy(src, dst, "CalculationController.dll");
-            Copy(src, dst, "CalculationEngine.dll");
-            Copy(src, dst, "ChartCreator2.dll");
-            Copy(src, dst, "ChartPDFCreator.dll");
-            Copy(src, dst, "Common.dll");
-            Copy(src, dst, "Database.dll");
-            Copy(src, dst, "SimulationEngineLib.dll");
-            Copy(src, dst, "System.Buffers.dll");
-            Copy(src, dst, "SimulationEngine.exe.config");
-            Copy(src, dst, "System.Linq.Dynamic.Core.dll");
-            Copy(src, dst, "System.Memory.dll");
-            Copy(src, dst, "System.Numerics.Vectors.dll");
-            Copy(src, dst, "System.Resources.Extensions.dll");
-            Copy(src, dst, "System.Runtime.CompilerServices.Unsafe.dll");
-            //Copy(src, dst, "MigraDoc.DocumentObjectModel-wpf.dll");
-            //Copy(src, dst, "MigraDoc.DocumentObjectModel.dll");
-            //Copy(src, dst, "MigraDoc.Rendering-wpf.dll");
-            //Copy(src, dst, "MigraDoc.Rendering.dll");
-            //Copy(src, dst, "MigraDoc.RtfRendering.dll");
-
-            //Copy(desrc, dst, "MigraDoc.DocumentObjectModel.resources.dll");
-            //
-            Copy(src, dst, "MigraDoc.DocumentObjectModel-gdi.dll");
-            string desrc = Path.Combine(src, "de");
-            Copy(desrc, dst, "MigraDoc.DocumentObjectModel-gdi.resources.dll");
-            Copy(desrc, dst, "MigraDoc.Rendering-gdi.resources.dll");
-            Copy(desrc, dst, "MigraDoc.RtfRendering-gdi.resources.dll");
-            Copy(desrc, dst, "PdfSharp-gdi.resources.dll");
-            Copy(desrc, dst, "PdfSharp.Charting-gdi.resources.dll");
-            Copy(src, dst, "MigraDoc.Rendering-gdi.dll");
-            Copy(src, dst, "MigraDoc.RtfRendering-gdi.dll");
-            Copy(src, dst, "PdfSharp-gdi.dll");
-            Copy(src, dst, "PdfSharp.Charting-gdi.dll");
-            //Copy(desrc, dst, "PdfSharp.Charting.resources.dll");
-            //Copy(src, dst, "PdfSharp.Charting.dll");
-            //Copy(desrc, dst, "PdfSharp.resources.dll");
-            //Copy(src, dst, "PdfSharp.dll");
-            Copy(src, dst, "Newtonsoft.Json.dll");
-            Copy(src, dst, "OxyPlot.dll");
-            Copy(src, dst, "OxyPlot.Pdf.dll");
-            Copy(src, dst, "OxyPlot.Wpf.dll");
-            //Copy(src, dst, "PdfSharp-wpf.dll");
-            //Copy(src, dst, "PdfSharp.Charting-wpf.dll");
-            //Copy(src, dst, "SettlementProcessing.dll");
-            Copy(src, dst, "SQLite.Interop.dll");
-            //Copy(src, dst, "sqlite3.dll");
-            Copy(src, dst, "System.Data.SQLite.dll");
-            Copy(src, dst, "SimulationEngine.exe");
-            Copy(src, dst, "PowerArgs.dll");
-            Copy(src, dst, "EntityFramework.dll");
-            Copy(src, dst, "EntityFramework.SqlServer.dll");
-            Copy(src, dst, "JetBrains.Annotations.dll");
-            Copy(src, dst, "System.Data.SQLite.EF6.dll");
-            Copy(src, dst, "System.Data.SQLite.Linq.dll");
-            Copy(src, dst, "Microsoft.Bcl.AsyncInterfaces.dll");
-            //Copy(src, dst, "Humanizer.dll");
-
-            //Copy(src, dst, "EPPlus.dll");
-            //Copy(src, dst, "System.Collections.Immutable.dll");
-            //Copy(src, dst, "System.Composition.AttributedModel.dll");
-            //Copy(src, dst, "System.Composition.Convention.dll");
-            //Copy(src, dst, "System.Composition.Hosting.dll");
-            //Copy(src, dst, "System.Composition.Runtime.dll");
-            //Copy(src, dst, "System.Composition.TypedParts.dll");
-            //Copy(src, dst, "System.Reflection.Metadata.dll");
-            //Copy(src, dst, "System.Text.Encoding.CodePages.dll");
-            Copy(src, dst, "System.Threading.Tasks.Extensions.dll");
-            Copy(src, dst, "xunit.abstractions.dll");
-            //string src64 = Path.Combine(src, "x64");
-            //Copy(src64, dst, "sqlite3.dll");
-            DirectoryInfo di = new DirectoryInfo(src);
-            var fis = di.GetFiles("*.dll", SearchOption.AllDirectories);
-            var filesToComplain = new List<string>();
-            foreach (var fi in fis)
-            {
-                if (!_programFiles.Contains(fi.Name))
-                {
-                    filesToComplain.Add(fi.Name);
-                }
-            }
-
-            if (filesToComplain.Count > 0)
-            {
-                throw new LPGException("Forgotten Files:" + string.Join("\",\n", filesToComplain));
-            }
-            //Copy(src, dst, "netstandard.dll");
-        }
 
         /* 
          * //TODO: Fix all unused traits
@@ -745,35 +605,30 @@ namespace ReleaseMaker
         {
             const string filename = "profilegenerator-latest.db3";
             const bool cleanDatabase = true;
-            const bool makeZipAndSetup = false;
+            const bool makeZipAndSetup = true;
             const bool cleanCalcOutcomes = true;
             Logger.Info("### Starting Release");
             var releasename = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             releasename = releasename.Substring(0, 5);
             Logger.Info("Release name: " + releasename);
             //return;
-            var dst = @"v:\Dropbox\LPGReleases\releases" + releasename;
+            var dstWin = @"v:\Dropbox\LPGReleases\releases" + releasename + "\\net48";
+            var dstLinux = @"v:\Dropbox\LPGReleases\releases" + releasename + "\\linux";
+            var dstWinCore = @"v:\Dropbox\LPGReleases\releases" + releasename + "\\netCore";
             //const string srcsim = @"v:\Dropbox\LPG\SimulationEngine\bin\x64\Debug";
 
-            if (Directory.Exists(dst))
-            {
-                try
-                {
-                    Directory.Delete(dst, true);
-                }
-                catch (Exception ex)
-                {
-                    Logger.Info(ex.Message);
-                }
-                Thread.Sleep(250);
-            }
-            Directory.CreateDirectory(dst);
-            Thread.Sleep(250);
+            PrepareDirectory(dstWin);
+            PrepareDirectory(dstLinux);
+            PrepareDirectory(dstWinCore);
             const string srclpg = @"C:\Work\LPGDev\WpfApplication1\bin\Debug\net48";
-            Logger.Info("### Copying lpg files");
-            CopyLpgFiles(srclpg, dst);
+            Logger.Info("### Copying win lpg files");
+            var filesForSetup = WinLpgCopier.CopyLpgFiles(srclpg, dstWin);
             const string srcsim = @"C:\Work\LPGDev\SimulationEngine\bin\Debug\net48";
-            CopySimEngineFiles(srcsim, dst);
+            SimEngineCopier.CopySimEngineFiles(srcsim, dstWin);
+            const string srcsim2 = @"C:\Work\LPGDev\SimEngine2\bin\Release\netcoreapp3.1\win10-x64";
+            SimEngine2Copier.CopySimEngine2Files(srcsim2, dstWinCore);
+            const string srcsimLinux = @"C:\Work\LPGDev\SimEngine2\bin\Release\netcoreapp3.1\linux-x64";
+            LinuxFileCopier.CopySimEngineLinuxFiles(srcsimLinux, dstLinux);
             Logger.Info("### Finished copying lpg files");
             // CopyFiles(src, dst);
             Logger.Info("### Performing release checks");
@@ -851,19 +706,47 @@ namespace ReleaseMaker
                     }
                 }
 
-                File.Copy(db.FileName, Path.Combine(dst, "profilegenerator.db3"));
+                File.Copy(db.FileName, Path.Combine(dstWin, "profilegenerator.db3"));
+                File.Copy(db.FileName, Path.Combine(dstWinCore, "profilegenerator.db3"));
+                File.Copy(db.FileName, Path.Combine(dstLinux, "profilegenerator.db3"));
             }
             Thread.Sleep(1000);
             Logger.Info("### Finished copying all files");
             //CopyFilesSimulationEngine(srcsim, dst);
             if (makeZipAndSetup)
             {
-                MakeZipFile(releasename, dst);
-                MakeSetup(dst, releasename);
+                List<FileInfo> fileForUpload = new List<FileInfo>();
+                fileForUpload.Add(MakeZipFile(releasename, dstWin));
+                fileForUpload.Add(MakeZipFile(releasename +"_core", dstWinCore));
+                fileForUpload.Add(MakeZipFile(releasename + "_linux", dstLinux));
+                fileForUpload.Add(MakeSetup(dstWin, releasename,filesForSetup));
+                var dstUpload = @"v:\Dropbox\LPGReleases\releases" + releasename + "\\upload";
+                PrepareDirectory(dstUpload);
+                foreach (FileInfo fi in fileForUpload) {
+                    string dstName = Path.Combine(dstUpload, fi.Name);
+                    fi.CopyTo(dstName,true);
+                }
             }
         }
 
-        private void MakeSetup([NotNull] string dst, [NotNull] string releaseName)
+        private static void PrepareDirectory(string dstWin)
+        {
+            if (Directory.Exists(dstWin)) {
+                try {
+                    Directory.Delete(dstWin, true);
+                }
+                catch (Exception ex) {
+                    Logger.Info(ex.Message);
+                }
+
+                Thread.Sleep(250);
+            }
+
+            Directory.CreateDirectory(dstWin);
+            Thread.Sleep(250);
+        }
+
+        private static FileInfo MakeSetup([NotNull] string dst, [NotNull] string releaseName, List<string> programFiles)
         {
 //make iss
             string dstFileName = dst + "\\lpgsetup.iss";
@@ -886,7 +769,7 @@ namespace ReleaseMaker
                 }
 
                 //insert the files
-                foreach (var programFile in _programFiles) {
+                foreach (var programFile in programFiles) {
                     sw.WriteLine("Source: \"" + programFile + "\"; DestDir: \"{app}\"");
                 }
 
@@ -925,9 +808,10 @@ namespace ReleaseMaker
             if (fi.Exists) {
                 fi.MoveTo(newsetupFileName);
             }
+            return new FileInfo(newsetupFileName);
         }
 
-        private static void MakeZipFile([NotNull] string releaseName, [NotNull] string dst)
+        private static FileInfo MakeZipFile([NotNull] string releaseName, [NotNull] string dst)
         {
             using (var process = new Process()) {
                 // Configure the process using the StartInfo properties.
@@ -939,6 +823,7 @@ namespace ReleaseMaker
                 process.Start();
                 process.WaitForExit(); // Waits here for the process to exit.
             }
+            return new FileInfo( Path.Combine( dst, "LPG"+releaseName + ".zip"));
         }
 
  //       public ReleaseBuilderTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper){}

@@ -171,16 +171,16 @@ namespace SimulationEngine.Tests {
             var hhKeyLogger = new HouseholdKeyLogger(srls);
             var keys = hhKeyLogger.Load();
             foreach (var key in keys) {
-                if (!srls.FilenameByHouseholdKey.ContainsKey(key.HouseholdKey)) {
+                if (!srls.FilenameByHouseholdKey.ContainsKey(key.HHKey)) {
                     continue;
                 }
 
-                var fn = srls.FilenameByHouseholdKey[key.HouseholdKey];
+                var fn = srls.FilenameByHouseholdKey[key.HHKey];
                 if (!File.Exists(fn.Filename)) {
                     continue;
                 }
 
-                var tables = srls.LoadTables(key.HouseholdKey);
+                var tables = srls.LoadTables(key.HHKey);
                 allTables.AddRange(tables);
                 foreach (var table in tables) {
                     foundOptions.Add(table.EnablingOption);

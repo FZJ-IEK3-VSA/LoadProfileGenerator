@@ -21,13 +21,13 @@ namespace Automation
 
     public class JsonDeviceProfiles
     {
-        public JsonDeviceProfiles(TimeSpan timeResolution, DateTime startTime, string loadTypeName, string unit, LoadTypeInformation loadTypeInformation)
+        public JsonDeviceProfiles(TimeSpan timeResolution, DateTime startTime, string loadTypeName, string unit, LoadTypeInformation loadTypeDefinition)
         {
             TimeResolution = timeResolution;
             StartTime = startTime;
             LoadTypeName = loadTypeName;
             Unit = unit;
-            LoadTypeInformation = loadTypeInformation;
+            LoadTypeDefinition = loadTypeDefinition;
         }
         [Obsolete("only for json")]
 #pragma warning disable 8618
@@ -42,19 +42,19 @@ namespace Automation
 
         public string? LoadTypeName { get; set; }
 
-        public LoadTypeInformation LoadTypeInformation { get; set; }
+        public LoadTypeInformation LoadTypeDefinition { get; set; }
         public string? Unit { get; set; }
     }
     public class JsonSumProfile
     {
-        public JsonSumProfile(string name, TimeSpan timeResolution, DateTime startTime, string loadTypeName, string unit, LoadTypeInformation? loadTypeInformation, [NotNull] HouseholdKeyEntry houseKey)
+        public JsonSumProfile(string name, TimeSpan timeResolution, DateTime startTime, string loadTypeName, string unit, LoadTypeInformation? loadTypeDefinition, [NotNull] HouseholdKeyEntry houseKey)
         {
             Name = name;
             TimeResolution = timeResolution;
             StartTime = startTime;
             LoadTypeName = loadTypeName;
             Unit = unit;
-            LoadTypeInformation = loadTypeInformation;
+            LoadTypeDefinition = loadTypeDefinition;
             HouseKey = houseKey;
         }
         [Obsolete("only for json")]
@@ -71,7 +71,7 @@ namespace Automation
 
         public string? LoadTypeName { get; set; }
 
-        public LoadTypeInformation? LoadTypeInformation { get; set; }
+        public LoadTypeInformation? LoadTypeDefinition { get; set; }
         public string? Unit { get; set; }
 
         public HouseholdKeyEntry HouseKey { get; set; }
@@ -79,14 +79,14 @@ namespace Automation
 
     public class JsonEnumProfile
     {
-        public JsonEnumProfile(string name, TimeSpan timeResolution, DateTime startTime, string loadTypeName, string unit, LoadTypeInformation? loadTypeInformation, HouseholdKeyEntry houseKey)
+        public JsonEnumProfile(string name, TimeSpan timeResolution, DateTime startTime, string loadTypeName, string unit, LoadTypeInformation? loadTypeDefinition, HouseholdKeyEntry houseKey)
         {
             Name = name;
             TimeResolution = timeResolution;
             StartTime = startTime;
             LoadTypeName = loadTypeName;
             Unit = unit;
-            LoadTypeInformation = loadTypeInformation;
+            LoadTypeDefinition = loadTypeDefinition;
             HouseKey = houseKey;
         }
         [Obsolete("only for json")]
@@ -103,7 +103,7 @@ namespace Automation
 
         public string? LoadTypeName { get; set; }
 
-        public LoadTypeInformation? LoadTypeInformation { get; set; }
+        public LoadTypeInformation? LoadTypeDefinition { get; set; }
         public string? Unit { get; set; }
 
         public HouseholdKeyEntry HouseKey { get; set; }

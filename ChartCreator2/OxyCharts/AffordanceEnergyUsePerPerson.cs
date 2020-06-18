@@ -33,7 +33,7 @@ namespace ChartCreator2.OxyCharts {
         protected override FileProcessingResult MakeOnePlot(HouseholdKeyEntry hhkey)
         {
             CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
-            var entries = CalcDataRepository.LoadAffordanceEnergyUses(hhkey.HouseholdKey);
+            var entries = CalcDataRepository.LoadAffordanceEnergyUses(hhkey.HHKey);
             var usedLoadtypes = entries.Select(x => x.LoadTypeGuid).Distinct().ToList();
             var loadTypeInfos = CalcDataRepository.LoadTypes;
             foreach (StrGuid loadtypeGuid in usedLoadtypes) {
@@ -54,7 +54,7 @@ namespace ChartCreator2.OxyCharts {
                                [ItemNotNull] [JetBrains.Annotations.NotNull] List<string> persons,
                                [JetBrains.Annotations.NotNull] CalcLoadTypeDto lti)
         {
-            string plotName = "Affordance Energy Use Per Person " + hhkey.HouseholdKey.Key + " " + lti.Name;
+            string plotName = "Affordance Energy Use Per Person " + hhkey.HHKey.Key + " " + lti.Name;
             var plotModel1 = new PlotModel {
                 // general
                 LegendBorderThickness = 0,
@@ -183,7 +183,7 @@ namespace ChartCreator2.OxyCharts {
                 }
             }
 
-            Save(plotModel1, plotName, "AffordanceEnergyUsePerPerson." + hhkey.HouseholdKey + "." + lti.FileName + ".png", Parameters.BaseDirectory, CalcOption.AffordanceEnergyUse);
+            Save(plotModel1, plotName, "AffordanceEnergyUsePerPerson." + hhkey.HHKey + "." + lti.FileName + ".png", Parameters.BaseDirectory, CalcOption.AffordanceEnergyUse);
         }
 
         private static void PrepareData([ItemNotNull] [JetBrains.Annotations.NotNull] List<AffordanceEnergyUseEntry> filteredEntries,

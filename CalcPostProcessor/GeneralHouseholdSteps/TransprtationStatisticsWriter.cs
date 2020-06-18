@@ -26,10 +26,10 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
         protected override void PerformActualStep(IStepParameters parameters)
         {
             var hsp = (HouseholdStepParameters)parameters;
-            if (hsp.Key.HouseholdKey == Constants.GeneralHouseholdKey) {
+            if (hsp.Key.HHKey == Constants.GeneralHouseholdKey) {
                 return;
             }
-            if (hsp.Key.HouseholdKey == Constants.HouseKey)
+            if (hsp.Key.HHKey == Constants.HouseKey)
             {
                 return;
             }
@@ -37,7 +37,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
                 return;
             }
 
-            var deviceActivations = Repository.LoadTransportationDeviceStates(hsp.Key.HouseholdKey);
+            var deviceActivations = Repository.LoadTransportationDeviceStates(hsp.Key.HHKey);
             var devices = deviceActivations.Select(x => x.TransportationDeviceGuid).Distinct().ToList();
             List<TransportationDeviceStatisticsEntry> statistics = new List<TransportationDeviceStatisticsEntry>();
             foreach (var device in devices) {
@@ -45,7 +45,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
                     deviceActivations.Where(x => x.TransportationDeviceGuid == device).ToList();
                 TransportationDeviceStatisticsEntry e = new TransportationDeviceStatisticsEntry(device,
                     activations[0].TransportationDeviceName,
-                    hsp.Key.HouseholdKey);
+                    hsp.Key.HHKey);
                 statistics.Add(e);
                 e.ProcessOneState(activations[0]);
                 for (int i = 1; i < activations.Count; i++) {
@@ -63,7 +63,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
                 }
             }
 
-            var transportationEvents = Repository.LoadTransportationEvents(hsp.Key.HouseholdKey);
+            var transportationEvents = Repository.LoadTransportationEvents(hsp.Key.HHKey);
             Dictionary<string, TransportationDeviceEventStatistics> transportationDevice =
                 new Dictionary<string, TransportationDeviceEventStatistics>();
             Dictionary<string, TransportationRouteStatistics> routeStatistics =
@@ -77,7 +77,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
                     }
                     else {
                         transportationDeviceStatistics =
-                            new TransportationDeviceEventStatistics(hsp.Key.HouseholdKey, deviceKey);
+                            new TransportationDeviceEventStatistics(hsp.Key.HHKey, deviceKey);
                         transportationDevice.Add(deviceKey, transportationDeviceStatistics);
                     }
 
@@ -101,7 +101,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
                 }
                 else {
                     singleRouteStatistics =
-                        new TransportationRouteStatistics(hsp.Key.HouseholdKey, entry.TransportationDevice, routeKey);
+                        new TransportationRouteStatistics(hsp.Key.HHKey, entry.TransportationDevice, routeKey);
                     routeStatistics.Add(routeKey, singleRouteStatistics);
                 }
 
@@ -110,9 +110,9 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
                 singleRouteStatistics.NumberOfEvents++;
             }
 
-            _logger.Save(hsp.Key.HouseholdKey, statistics);
-            _logger.Save(hsp.Key.HouseholdKey, transportationDevice.Values.ToList());
-            _logger.Save(hsp.Key.HouseholdKey, routeStatistics.Values.ToList());
+            _logger.Save(hsp.Key.HHKey, statistics);
+            _logger.Save(hsp.Key.HHKey, transportationDevice.Values.ToList());
+            _logger.Save(hsp.Key.HHKey, routeStatistics.Values.ToList());
         }
 
         [NotNull]

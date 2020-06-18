@@ -264,7 +264,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                     continue;
                 }
 
-                HouseholdKey key = entry.HouseholdKey;
+                HouseholdKey key = entry.HHKey;
                 int personscount = 0;
                 if (entry.KeyType == HouseholdKeyType.Household)
                 {

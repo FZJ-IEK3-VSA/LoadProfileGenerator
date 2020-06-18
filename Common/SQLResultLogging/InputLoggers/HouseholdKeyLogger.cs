@@ -19,13 +19,13 @@ namespace Common.SQLResultLogging.InputLoggers
         {
             var hh = (HouseholdKeyEntry)o;
             //check for duplicates
-            if (!_savedKeys.Add(hh.HouseholdKey)) {
+            if (!_savedKeys.Add(hh.HHKey)) {
                 return;
                 //throw new LPGException("Householdkey already existed");
             }
             if (!_isTableCreated) {
                 SaveableEntry se = GetStandardSaveableEntry(key);
-                    se.AddRow(RowBuilder.Start("Name", hh.HouseholdKey)
+                    se.AddRow(RowBuilder.Start("Name", hh.HHKey)
                         .Add("Json", JsonConvert.SerializeObject(hh, Formatting.Indented)).ToDictionary());
                     if (Srls == null)
                     {
@@ -36,7 +36,7 @@ namespace Common.SQLResultLogging.InputLoggers
                 return;
             }
 
-            var dict = RowBuilder.Start("Name", hh.HouseholdKey)
+            var dict = RowBuilder.Start("Name", hh.HHKey)
                 .Add("Json", JsonConvert.SerializeObject(hh, Formatting.Indented)).ToDictionary();
             if (Srls == null)
             {

@@ -845,7 +845,7 @@ namespace CalculationController.Tests {
                 var keys = keyLogger.Load();
                 foreach (HouseholdKeyEntry entry in keys)
                 {
-                    if (entry.HouseholdKey == Constants.GeneralHouseholdKey)
+                    if (entry.HHKey == Constants.GeneralHouseholdKey)
                     {
                         continue;
                     }
@@ -853,7 +853,7 @@ namespace CalculationController.Tests {
                     {
                         continue;
                     }
-                    var totals = tel.Read(entry.HouseholdKey);
+                    var totals = tel.Read(entry.HHKey);
                     totals.Count.Should().BeGreaterThan(0);
                 }
             }
@@ -1117,7 +1117,7 @@ namespace CalculationController.Tests {
                         continue;
                     }
 
-                    var ti = tel.Read(entry.HouseholdKey);
+                    var ti = tel.Read(entry.HHKey);
                     //var totalEntries = ti.First(x => x.HouseholdKey == Constants.TotalsKey);
                     //var others = ti.HouseholdEntries.Where(x => x.HouseholdKey != Constants.TotalsKey).ToList();
                     ti.Count.Should().BeGreaterThan(0);

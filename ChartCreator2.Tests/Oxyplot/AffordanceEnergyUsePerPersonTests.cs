@@ -47,7 +47,7 @@ namespace ChartCreator2.Tests.Oxyplot {
                 var di = new DirectoryInfo(cs.DstDir);
                 //var rfe = cs.GetRfeByFilename("AffordanceEnergyUsePerPerson.HH1.Electricity.csv");
                 var keys = rep.HouseholdKeys;
-                rep.FindTableByKey(ResultTableID.AffordanceEnergyUse, keys[1].HouseholdKey);
+                rep.FindTableByKey(ResultTableID.AffordanceEnergyUse, keys[1].HHKey);
                 affordanceEnergyUsePerPerson.MakePlot(keys[1]);
                 Logger.Info("finished picture");
                 //OxyCalculationSetup.CopyImage(resultFileEntries[0].FullFileName);

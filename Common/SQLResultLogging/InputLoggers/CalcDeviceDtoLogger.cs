@@ -55,7 +55,7 @@ namespace Common.SQLResultLogging.InputLoggers
 
             var alldevices = new List<CalcDeviceDto>();
             foreach (var key in keys) {
-                alldevices.AddRange(Srls.ReadFromJson<CalcDeviceDto>(ResultTableDefinition, key.HouseholdKey, ExpectedResultCount.OneOrMore));
+                alldevices.AddRange(Srls.ReadFromJson<CalcDeviceDto>(ResultTableDefinition, key.HHKey, ExpectedResultCount.OneOrMore));
             }
 
             return alldevices;

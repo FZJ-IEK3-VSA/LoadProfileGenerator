@@ -4,11 +4,11 @@ using Newtonsoft.Json.Converters;
 
 namespace Automation.ResultFiles {
     public class HouseholdKeyEntry {
-        public HouseholdKeyEntry([NotNull] HouseholdKey householdKey, [NotNull] string householdName, HouseholdKeyType type,
+        public HouseholdKeyEntry([NotNull] HouseholdKey hhKey, [NotNull] string householdName, HouseholdKeyType type,
                                  [NotNull] string householdDescription, [CanBeNull] string? houseName,
                                  [CanBeNull] string? houseDescription)
         {
-            HouseholdKey = householdKey;
+            HHKey = hhKey;
             HouseholdName = householdName;
             KeyType = type;
             HouseholdDescription = householdDescription;
@@ -24,7 +24,7 @@ namespace Automation.ResultFiles {
 
         [NotNull]
         [JsonProperty]
-        public HouseholdKey HouseholdKey { get; private set; }
+        public HouseholdKey HHKey { get; private set; }
 
         [NotNull]
         [JsonProperty]
@@ -37,6 +37,6 @@ namespace Automation.ResultFiles {
         public HouseholdKeyType KeyType { get; private set; }
 
         [NotNull]
-        public override string ToString() => HouseholdKey.Key + " " + HouseholdName + " (" + KeyType + ")";
+        public override string ToString() => HHKey.Key + " " + HouseholdName + " (" + KeyType + ")";
     }
 }

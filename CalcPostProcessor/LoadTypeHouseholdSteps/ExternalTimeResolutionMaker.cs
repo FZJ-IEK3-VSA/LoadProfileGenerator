@@ -265,7 +265,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             var efc = Repository.ReadEnergyFileColumns(Constants.GeneralHouseholdKey);
             Run(p.LoadType, p.EnergyFileRows, efc);
             foreach (HouseholdKeyEntry key in Repository.HouseholdKeys) {
-                RunIndividualHouseholds(p.LoadType, p.EnergyFileRows, efc, key.HouseholdKey);
+                RunIndividualHouseholds(p.LoadType, p.EnergyFileRows, efc, key.HHKey);
             }
         }
 

@@ -704,7 +704,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             ActionEntryLogger ael = new ActionEntryLogger(srls);
             foreach (var householdKeyEntry in keys) {
                 if (householdKeyEntry.KeyType == HouseholdKeyType.Household) {
-                    var totalsEntries = tel.Read(householdKeyEntry.HouseholdKey);
+                    var totalsEntries = tel.Read(householdKeyEntry.HHKey);
                     if (totalsEntries.Count == 0) {
                         throw new LPGException();
                     }
@@ -717,7 +717,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                         }
                     }
 
-                    var timeUseDict = ReadResult(stael, householdKeyEntry.HouseholdKey, ael);
+                    var timeUseDict = ReadResult(stael, householdKeyEntry.HHKey, ael);
                     foreach (var personDict in timeUseDict) {
                         foreach (var pair in personDict.Value) {
                             calculationOutcome.AddAffordanceTimeUse(pair.Key, personDict.Key, pair.Value.Minutes, pair.Value.Executions);

@@ -28,11 +28,11 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
         {
             var p = (HouseholdLoadtypeStepParameters)parameters;
 
-            if (p.Key.HouseholdKey == Constants.GeneralHouseholdKey) {
+            if (p.Key.HHKey == Constants.GeneralHouseholdKey) {
                 return;
             }
 
-            var efc = Repository.ReadEnergyFileColumns(p.Key.HouseholdKey);
+            var efc = Repository.ReadEnergyFileColumns(p.Key.HHKey);
             var dsc = new DateStampCreator(Repository.CalcParameters);
             var dstLoadType = p.LoadType;
 
@@ -41,15 +41,15 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             }
 
             var columns = efc.ColumnEntriesByColumn[dstLoadType].Values
-                .Where(entry => entry.HouseholdKey == p.Key.HouseholdKey)
+                .Where(entry => entry.HouseholdKey == p.Key.HHKey)
                 .Select(entry => entry.Column)
                 .ToList();
-            var hhname = "." + p.Key.HouseholdKey + ".";
+            var hhname = "." + p.Key.HHKey + ".";
             var sumfile = _fft.MakeFile<StreamWriter>("SumProfiles" + hhname + dstLoadType.Name + ".csv",
                 "Summed up energy profile for all devices for " + dstLoadType.Name + " for " + hhname,
                 true,
                 ResultFileID.SumProfileForHouseholds,
-                p.Key.HouseholdKey,
+                p.Key.HHKey,
                 TargetDirectory.Results,
                 Repository.CalcParameters.InternalStepsize, CalcOption.HouseholdSumProfilesFromDetailedDats,
                 dstLoadType.ConvertToLoadTypeInformation());

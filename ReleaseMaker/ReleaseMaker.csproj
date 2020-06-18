@@ -79,12 +79,16 @@
     <Compile Include="DatabaseAutoincrementCheck.cs" />
     <Compile Include="DissStuffDatabaseCleaner.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="LinuxFileCopier.cs" />
     <Compile Include="MakeClassDiagrams.cs" />
     <Compile Include="MakeSampleHouseJobs.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReleaseBuilderTests.cs" />
+    <Compile Include="SimEngine2Copier.cs" />
+    <Compile Include="SimEngineCopier.cs" />
     <Compile Include="StatisticsPrinter.cs" />
+    <Compile Include="WinLpgCopier.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

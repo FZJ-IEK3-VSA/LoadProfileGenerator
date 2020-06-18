@@ -223,11 +223,11 @@ namespace CalcPostProcessor.GeneralHouseholdSteps
         protected override void PerformActualStep(IStepParameters parameters)
         {
             HouseholdLoadtypeStepParameters hsp = (HouseholdLoadtypeStepParameters)parameters;
-            if (hsp.Key.HouseholdKey == Constants.GeneralHouseholdKey || hsp.Key.HouseholdKey == Constants.HouseKey) {
+            if (hsp.Key.HHKey == Constants.GeneralHouseholdKey || hsp.Key.HHKey == Constants.HouseKey) {
                 return;
             }
 
-            var deviceActivations = Repository.LoadDeviceActivations(hsp.Key.HouseholdKey);
+            var deviceActivations = Repository.LoadDeviceActivations(hsp.Key.HHKey);
             if (deviceActivations.Count == 0) {
                 throw new LPGException("No device activations were found");
             }
@@ -249,7 +249,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps
             if (energyUseEntries.Count == 0) {
                 throw new LPGException("No energy use entries were found.");
             }
-            _logger.Save(hsp.Key.HouseholdKey, energyUseEntries.Values.ToList());
+            _logger.Save(hsp.Key.HHKey, energyUseEntries.Values.ToList());
         }
 
         [NotNull]
