@@ -4,20 +4,17 @@
 
 This repository contains the full source code for the LoadProfileGenerator. 
 
+Binaries are available at https://www.loadprofilegenerator.de
+
 ## Contributions
 
 Contributions are highly welcome. Feel free to send me pull requests.
 
 ## Plans
 
-- Port the simulation engine to Linux
-- Increase scriptability
 - Improve electromobility
-- Go from a full data base load on start to lazy loading of only needed components
-- Fix the semi-broken charting engine that partially fell victim to the v8.0 rewrite.
-- Bugfixing
-- Clean up a lot of legacy cruft that grew over the years
-
+- Speed improvements
+- International profiles
 
 ## License
 
@@ -33,12 +30,6 @@ If not, see <https://opensource.org/licenses/MIT>
 <a href="http://www.fz-juelich.de/iek/iek-3/EN/Forschung/_Process-and-System-Analysis/_node.html"><img src="http://fz-juelich.de/SharedDocs/Bilder/IEK/IEK-3/Abteilungen2015/VSA_DepartmentPicture_2017.jpg?__blob=normal" alt="Abteilung VSA"></a>
 
 We are the [Process and Systems Analysis](http://www.fz-juelich.de/iek/iek-3/EN/Forschung/_Process-and-System-Analysis/_node.html) department at the [Institute of Energy and Climate Research: Techno-economic Systems Analysis (IEK-3)](http://www.fz-juelich.de/iek/iek-3/EN/Home/home_node.html) belonging to the Forschungszentrum Jülich. Our interdisciplinary department's research is focusing on energy-related process and systems analyses. Data searches and system simulations are used to determine energy and mass balances, as well as to evaluate performance, emissions and costs of energy systems. The results are used for performing comparative assessment studies between the various systems. Our current priorities include the development of energy strategies, in accordance with the German Federal Government’s greenhouse gas reduction targets, by designing new infrastructures for sustainable and secure energy supply chains and by conducting cost analysis studies for integrating new technologies into future energy market frameworks.
-
-## Acknowledgment
-
-This work was supported by the Helmholtz Association under the Joint Initiative ["Energy System 2050 – A Contribution of the Research Field Energy"](https://www.helmholtz.de/en/research/energy/energy_system_2050/).
-
-<a href="https://www.helmholtz.de/en/"><img src="https://www.helmholtz.de/fileadmin/user_upload/05_aktuelles/Marke_Design/logos/HG_LOGO_S_ENG_RGB.jpg" alt="Helmholtz Logo" width="200px" style="float:right"></a>
 
 
 # Acknowledgements
