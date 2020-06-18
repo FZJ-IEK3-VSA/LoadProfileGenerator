@@ -1,4 +1,5 @@
-﻿using Automation;
+﻿using System.Collections;
+using Automation;
 using Automation.ResultFiles;
 using CalculationEngine.HouseholdElements;
 using Common;
@@ -14,7 +15,7 @@ namespace CalculationEngine.Transportation {
                                    double maxChargingPower,
                                    [NotNull] string chargingStationName, StrGuid chargingStationGuid,
                                    [NotNull] HouseholdKey householdKey,
-                                   [NotNull] CalcLoadType carChargingLoadType, CalcRepo calcRepo)
+                                   [NotNull] CalcLoadType carChargingLoadType, CalcRepo calcRepo, BitArray timeLimit)
         {
             _householdKey = householdKey;
             _calcRepo = calcRepo;
