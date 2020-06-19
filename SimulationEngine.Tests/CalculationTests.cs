@@ -65,7 +65,7 @@ namespace SimulationEngine.Tests {
             var hj = new HouseCreationAndCalculationJob();
             hj.CalcSpec = JsonCalcSpecification.MakeDefaultsForTesting();
             hj.CalcSpec.StartDate = new DateTime(2020, 1, 1);
-            hj.CalcSpec.EndDate = new DateTime(2020, 1, 3);
+            hj.CalcSpec.EndDate = new DateTime(2020, 7, 1);
             hj.CalcSpec.DeleteDAT = false;
             hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.NoFiles;
             hj.CalcSpec.DeleteSqlite = false;
@@ -692,6 +692,69 @@ namespace SimulationEngine.Tests {
             }, x => { });
         }
 
+        [Fact]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.ManualOnly)]
+        public void MakeJsonForKenish()
+        {
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
+            Simulator sim = new Simulator(db.ConnectionString);
+            var hj = MakeKenishHouseJob(sim);
+            hj.CalcSpec.OutputDirectory = "TestingData1";
+            File.WriteAllText("Testingdata1.json", JsonConvert.SerializeObject(hj, Formatting.Indented));
+            var hj2 = MakeKenishHouseJob(sim);
+            hj.CalcSpec.OutputDirectory = "TestingData2";
+            hj2.CalcSpec.InternalTimeResolution = "00:30:00";
+            File.WriteAllText("TestingData2.json", JsonConvert.SerializeObject(hj, Formatting.Indented));
+            hj.CalcSpec.OutputDirectory = "TestingData3";
+            hj.CalcSpec.EndDate = new DateTime(2020, 12, 31);
+            File.WriteAllText("TestingData3.json", JsonConvert.SerializeObject(hj, Formatting.Indented));
+            hj.CalcSpec.OutputDirectory = "TestingData4";
+            hj2.CalcSpec.InternalTimeResolution = "00:30:00";
+            hj.CalcSpec.EndDate = new DateTime(2020, 12, 31);
+            File.WriteAllText("TestingData4.json", JsonConvert.SerializeObject(hj, Formatting.Indented));
+        }
+
+        private HouseCreationAndCalculationJob MakeKenishHouseJob(Simulator sim){
+            var hj = new HouseCreationAndCalculationJob();
+            hj.CalcSpec = JsonCalcSpecification.MakeDefaultsForTesting();
+            hj.CalcSpec.StartDate = new DateTime(2020, 1, 1);
+            hj.CalcSpec.EndDate = new DateTime(2020, 1, 3);
+            hj.CalcSpec.DeleteDAT = false;
+            hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
+            hj.CalcSpec.DeleteSqlite = false;
+            hj.CalcSpec.ExternalTimeResolution = "00:15:00";
+            hj.CalcSpec.EnableTransportation = true;
+            hj.CalcSpec.GeographicLocation = sim.GeographicLocations.FindFirstByName("Berlin", FindMode.Partial).GetJsonReference();
+            hj.CalcSpec.DeleteDAT = true;
+            hj.CalcSpec.CalcOptions.Add(CalcOption.TransportationStatistics);
+            hj.CalcSpec.CalcOptions.Add(CalcOption.BodilyActivityStatistics);
+            hj.CalcSpec.CalcOptions.Add(CalcOption.JsonHouseholdSumFiles);
+            hj.CalcSpec.CalcOptions.Add(CalcOption.JsonDeviceProfilesIndividualHouseholds);
+            hj.CalcSpec.CalcOptions.Add(CalcOption.JsonHouseSumFiles);
+            hj.CalcSpec.CalcOptions.Add(CalcOption.SumProfileExternalIndividualHouseholdsAsJson);
+            hj.CalcSpec.CalcOptions.Add(CalcOption.TansportationDeviceJsons);
+            hj.House = new HouseData(StrGuid.FromString("houseguid"), "HT01", 1000, 100, "housename");
+            hj.House.Households = new List<HouseholdData>();
+            var hhd = new HouseholdData("householdid",
+                "householdname", sim.ChargingStationSets[0].GetJsonReference(),
+                sim.TransportationDeviceSets[0].GetJsonReference(),
+                sim.TravelRouteSets[0].GetJsonReference(), null,
+                HouseholdDataSpecificationType.ByHouseholdName);
+            var hh = sim.ModularHouseholds[0];
+            hhd.HouseholdNameSpec = new HouseholdNameSpecification(hh.GetJsonReference());
+            hj.House.Households.Add(hhd);
+
+            var hhd2 = new HouseholdData("householdid",
+                "householdname", sim.ChargingStationSets[1].GetJsonReference(),
+                sim.TransportationDeviceSets[1].GetJsonReference(),
+                sim.TravelRouteSets[1].GetJsonReference(), null,
+                HouseholdDataSpecificationType.ByHouseholdName);
+            var hh2 = sim.ModularHouseholds[1];
+            hhd2.HouseholdNameSpec = new HouseholdNameSpecification(hh2.GetJsonReference());
+            hj.House.Households.Add(hhd);
+            return hj;
+
+        }
         [Fact]
         public void TestHouseJobs1()
         {

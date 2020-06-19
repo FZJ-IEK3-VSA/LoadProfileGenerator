@@ -7,6 +7,7 @@ using Database.Tables.BasicHouseholds;
 using Database.Tables.ModularHouseholds;
 using Database.Tables.Transportation;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -477,8 +478,10 @@ namespace CalculationController.CalcFactories {
                     var gridLt = ltDict.GetLoadtypeByGuid(chargingStation.GridChargingLoadType.Guid);
                     var carLt = ltDict.GetLoadtypeByGuid(chargingStation.CarChargingLoadType.Guid);
                     var cat = th.GetCategory(chargingStation.DeviceCategory);
+                    BitArray isBusy = new BitArray(_calcRepo.CalcParameters.InternalTimesteps);
+                    //todo: implement this fully
                     calcSite.AddChargingStation(gridLt,cat,chargingStation.MaxChargingPower,
-                        carLt, _calcRepo);
+                        carLt, _calcRepo, isBusy);
                 }
             }
             return sites;

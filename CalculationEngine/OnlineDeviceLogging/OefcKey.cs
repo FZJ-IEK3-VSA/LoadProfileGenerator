@@ -91,7 +91,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
                    ThisDeviceType + "#" +
                    DeviceGuid + "#" +
                    LocationGuid + "#" +
-                   LoadtypeGuid;
+                   LoadtypeGuid + "#" + DeviceCategory;
         }
         [NotNull]
         public override string ToString()
@@ -102,7 +102,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public bool Equals(OefcKey other)
         {
-            return _hashCode == other._hashCode && FullKey == other.FullKey && Equals(LoadtypeGuid, other.LoadtypeGuid) && DeviceCategory == other.DeviceCategory && LocationGuid.Equals(other.LocationGuid) && DeviceGuid.Equals(other.DeviceGuid) && HouseholdKey.Equals(other.HouseholdKey) && ThisDeviceType == other.ThisDeviceType;
+            return FullKey.Equals(other.FullKey);
         }
 
         public static bool operator ==(in OefcKey point1, OefcKey point2) => point1.Equals(point2);

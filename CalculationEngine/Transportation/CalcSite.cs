@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Automation;
 using Automation.ResultFiles;
@@ -96,13 +97,13 @@ namespace CalculationEngine.Transportation {
                                        [NotNull] CalcTransportationDeviceCategory cat,
                                        double chargingDeviceMaxChargingPower,
                                        [NotNull] CalcLoadType carChargingLoadType,
-                                       CalcRepo calcRepo)
+                                       CalcRepo calcRepo, BitArray isBusy)
         {
             string name = Name + " - Charging station " + (ChargingDevices.Count + 1);
 
             CalcChargingStation station = new CalcChargingStation(cat,
                 gridchargingLoadType, chargingDeviceMaxChargingPower,name,
-                System.Guid.NewGuid().ToStrGuid(),_householdKey, carChargingLoadType, calcRepo);
+                System.Guid.NewGuid().ToStrGuid(),_householdKey, carChargingLoadType, calcRepo, isBusy);
             ChargingDevices.Add(station);
         }
     }

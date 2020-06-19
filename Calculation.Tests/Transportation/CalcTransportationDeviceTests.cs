@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Automation;
 using Automation.ResultFiles;
@@ -72,8 +73,9 @@ namespace Calculation.Tests.Transportation {
                 onlineLoggingData: old);
             var srcSite = new CalcSite("srcsite", Guid.NewGuid().ToStrGuid(), key);
             var dstSite = new CalcSite("dstSite", Guid.NewGuid().ToStrGuid(), key);
+            var isavailable = new BitArray(calcRepo.CalcParameters.InternalTimesteps);
             var station = new CalcChargingStation(category, chargingCalcLoadType, 500, "stationname", "stationguid".ToStrGuid(),
-                key, chargingCalcLoadType, calcRepo);
+                key, chargingCalcLoadType, calcRepo,isavailable);
             dstSite.ChargingDevices.Add(station);
             var calcSites = new List<CalcSite> {
                 srcSite,

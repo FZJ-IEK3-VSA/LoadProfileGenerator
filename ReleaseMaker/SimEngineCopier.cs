@@ -51,6 +51,8 @@ namespace ReleaseMaker {
             Copy(programFiles, src, dst, "Microsoft.Bcl.AsyncInterfaces.dll");
             Copy(programFiles, src, dst, "System.Threading.Tasks.Extensions.dll");
             Copy(programFiles, src, dst, "xunit.abstractions.dll");
+            Copy(programFiles, src, dst, "System.ValueTuple.dll");
+            Copy(programFiles, src, dst, "Utf8Json.dll");
             CheckIfFilesAreCompletelyCopied(src, programFiles);
         }
     }

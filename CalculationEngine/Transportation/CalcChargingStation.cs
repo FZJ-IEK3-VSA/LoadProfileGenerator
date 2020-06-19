@@ -15,7 +15,7 @@ namespace CalculationEngine.Transportation {
                                    double maxChargingPower,
                                    [NotNull] string chargingStationName, StrGuid chargingStationGuid,
                                    [NotNull] HouseholdKey householdKey,
-                                   [NotNull] CalcLoadType carChargingLoadType, CalcRepo calcRepo, BitArray timeLimit)
+                                   [NotNull] CalcLoadType carChargingLoadType, CalcRepo calcRepo, BitArray isBusyArray)
         {
             _householdKey = householdKey;
             _calcRepo = calcRepo;

@@ -45,6 +45,9 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             var hhname = "." + key ;
             var jrf = new JsonDeviceProfiles( calcParameters.InternalStepsize,
                 calcParameters.OfficialStartTime, dstLoadType.Name, dstLoadType.UnitOfSum, dstLoadType.ConvertToLoadTypeInformation());
+            //if (columns.Count == 0&& p.Key.KeyType == HouseholdKeyType.Household) {
+            //    throw new LPGException("Found a household without a single device: " );
+            //}
             foreach (int i in columns) {
                 var ce = efc.ColumnEntriesByColumn[dstLoadType][i];
                 SingleDeviceProfile sdp = new SingleDeviceProfile(ce.Name);
@@ -57,14 +60,16 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                     sdp.Values.Add(efr.GetValueForSingleCols(i));
 
                 }
+                jrf.DeviceProfiles.Add(sdp);
             }
 
-            var sumfile = _fft.MakeFile<StreamWriter>("DeviceProfiles." + dstLoadType.FileName + hhname + ".json",
+            var sumfile = _fft.MakeFile<FileStream>("DeviceProfiles." + dstLoadType.FileName + hhname + ".json",
                 "Summed up energy profile for all devices for " + dstLoadType.Name + " as JSON file", true,
                 ResultFileID.JsonDeviceProfiles, p.Key.HHKey, TargetDirectory.Results,
                 calcParameters.InternalStepsize, CalcOption.JsonDeviceProfilesIndividualHouseholds,
                 dstLoadType.ConvertToLoadTypeInformation());
-            sumfile.Write(JsonConvert.SerializeObject(jrf, Formatting.Indented));
+            Utf8Json.JsonSerializer.Serialize<JsonDeviceProfiles>(sumfile, jrf);
+// sumfile.Write(JsonConvert.SerializeObject(jrf, Formatting.Indented));
             sumfile.Flush();
         }
 

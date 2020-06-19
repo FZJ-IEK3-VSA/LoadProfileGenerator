@@ -10,6 +10,7 @@ namespace ReleaseMaker {
         {
             List<string> programFiles = new List<string>();
             Copy(programFiles, src, dst, "Autofac.dll");
+            Copy(programFiles, src, dst, "Autofac.dll");
             Copy(programFiles, src, dst, "Automation.dll");
             Copy(programFiles, src, dst, "CalcPostProcessor.dll");
             Copy(programFiles, src, dst, "CalculationController.dll");
@@ -83,30 +84,10 @@ namespace ReleaseMaker {
             Copy(programFiles, src, dst, "xunit.abstractions.dll");
             //string src64 = Path.Combine(src, "x64");
             //Copy(programFiles, src64, dst, "sqlite3.dll");
-            DirectoryInfo di = new DirectoryInfo(src);
-            var fis = di.GetFiles("*.dll", SearchOption.AllDirectories);
-            List<string> filesToIgnore = new List<string> {
-                "Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll",
-                "Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll",
-                "Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll"
-            };
-            var filesToComplain = new List<string>();
-            foreach (var fi in fis)
-            {
-                if (filesToIgnore.Contains(fi.Name))
-                {
-                    continue;
-                }
-                if (!programFiles.Contains(fi.Name))
-                {
-                    filesToComplain.Add(fi.Name);
-                }
-            }
+            Copy(programFiles, src, dst, "System.ValueTuple.dll");
+            Copy(programFiles, src, dst, "Utf8Json.dll");
 
-            if (filesToComplain.Count > 0)
-            {
-                throw new LPGException("Forgotten Files:" + string.Join("\",\n", filesToComplain));
-            }
+            CheckIfFilesAreCompletelyCopied(src, programFiles);
 
             return programFiles;
             //Copy(programFiles, src, dst, "netstandard.dll");

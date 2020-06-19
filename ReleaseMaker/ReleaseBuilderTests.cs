@@ -54,6 +54,9 @@ namespace ReleaseMaker
             }
             var filesToComplain = new List<string>();
             var filesToIgnore = new List<string>();
+            filesToIgnore.Add("Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll");
+            filesToIgnore.Add("Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll");
+            filesToIgnore.Add("Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll");
             filesToIgnore.Add("calcspec.json");
             filesToIgnore.Add("Log.CommandlineCalculation.txt");
             foreach (var fi in fis)
