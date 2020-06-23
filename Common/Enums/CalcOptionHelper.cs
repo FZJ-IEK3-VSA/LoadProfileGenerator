@@ -48,6 +48,19 @@ namespace Common.Enums {
             CalcOptionDictionary.Add(CalcOption.PersonStatus, "Person Status");
             CalcOptionDictionary.Add(CalcOption.LocationCarpetPlot, "Location carpet plots");
             CalcOptionDictionary.Add(CalcOption.JsonHouseSumFiles, "Json overall sum Profiles");
+            CalcOptionDictionary.Add(CalcOption.ActionsEachTimestep, "List of the actions of the residents in each timestep");
+            CalcOptionDictionary.Add(CalcOption.SumProfileExternalIndividualHouseholdsAsJson, "Sum profiles of individual households at external time resolution as Json");
+            CalcOptionDictionary.Add(CalcOption.BodilyActivityStatistics, "Statistics about the bodily activity level");
+            CalcOptionDictionary.Add(CalcOption.BasicOverview, "Basic overview of the household definition");
+            CalcOptionDictionary.Add(CalcOption.DeviceActivations, "List of all device activiations");
+            CalcOptionDictionary.Add(CalcOption.LocationsEntries, "List of the location of each person at each time step");
+            CalcOptionDictionary.Add(CalcOption.ActionEntries, "List of performed actions");
+            CalcOptionDictionary.Add(CalcOption.AffordanceTaggingSets, "Affordance tagging sets");
+            CalcOptionDictionary.Add(CalcOption.DeviceProfilesHouse, "Device profiles for the entire house");
+            CalcOptionDictionary.Add(CalcOption.HouseholdSumProfilesFromDetailedDats, "Household sum profiles");
+            CalcOptionDictionary.Add(CalcOption.JsonHouseholdSumFiles, "Household sum profiles as json");
+            CalcOptionDictionary.Add(CalcOption.JsonDeviceProfilesIndividualHouseholds, "Device profiles for individual households as json");
+            CalcOptionDictionary.Add(CalcOption.TansportationDeviceJsons, "Jsons for more detailed transportation device modelling.");
         }
 
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
