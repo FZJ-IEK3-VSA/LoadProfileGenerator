@@ -39,6 +39,7 @@ namespace Common
         LPGMsgBoxResult ShowYesNoMessage([NotNull] string message, [NotNull] string caption);
         void ShowDataIntegrityMessage([NotNull] DataIntegrityException exception);
         void ShowInfoMessage([NotNull] string message, [NotNull] string caption);
+        void ShowErrorMessage([NotNull] string message, [NotNull] string caption);
         void ShowDebugMessage([NotNull] Exception exception);
     }
 

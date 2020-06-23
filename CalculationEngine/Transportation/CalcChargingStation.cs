@@ -15,6 +15,8 @@ namespace CalculationEngine.Transportation {
                                    double maxChargingPower,
                                    [NotNull] string chargingStationName, StrGuid chargingStationGuid,
                                    [NotNull] HouseholdKey householdKey,
+                                   // ReSharper disable once UnusedParameter.Local
+                                   //todo: put in isbusy
                                    [NotNull] CalcLoadType carChargingLoadType, CalcRepo calcRepo, BitArray isBusyArray)
         {
             _householdKey = householdKey;

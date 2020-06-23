@@ -50,7 +50,15 @@ namespace Common {
         [NotNull]
         public string WorkingDirectory => _lastDirectory;
 
-        public bool SkipCleaning { get; set; } = false;
+        public bool SkipCleaning {
+            get {
+                if (Environment.MachineName.ToLower() != "i5home") {
+                    throw new LPGException("trying to skip cleaning on a non-dev-pc");
+                }
+                return _skipCleaning;
+            }
+            set => _skipCleaning = value;
+        }
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public void ClearDirectory()
@@ -66,6 +74,8 @@ namespace Common {
         }
 
         private bool _isClean;
+        private bool _skipCleaning;
+
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public void CleanUp(int numberOfFilesToTolerate = 0, bool throwAllErrors = true) {
             if (_isClean) {

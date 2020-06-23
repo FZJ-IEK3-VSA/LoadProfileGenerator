@@ -19,7 +19,6 @@ namespace ReleaseMaker {
             Copy(programFiles, src, dst, "SimulationEngineLib.dll");
             Copy(programFiles, src, dst, "System.Buffers.dll");
             Copy(programFiles, src, dst, "SimulationEngine.exe.config");
-            Copy(programFiles, src, dst, "System.Linq.Dynamic.Core.dll");
             Copy(programFiles, src, dst, "System.Memory.dll");
             Copy(programFiles, src, dst, "System.Numerics.Vectors.dll");
             Copy(programFiles, src, dst, "System.Resources.Extensions.dll");

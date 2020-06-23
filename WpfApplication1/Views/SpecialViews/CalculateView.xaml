@@ -321,8 +321,9 @@
                             Grid.Column="1"
                             Grid.ColumnSpan="2"
                             Content="Enable transportation calculations "
-                            IsChecked="{Binding EnableTransport}"
-                            Style="{StaticResource CheckBoxStyle}" />
+                            IsChecked="{Binding CalculateTransportation}"
+                            Style="{StaticResource CheckBoxStyle}"
+                             />
                         <TextBlock
                             Grid.Row="18"
                             Grid.Column="1"
@@ -346,7 +347,8 @@
                             DisplayMemberPath="PrettyName"
                             ItemsSource="{Binding TransportationDeviceSets}"
                             SelectedValue="{Binding SelectedTransportationDeviceSet}"
-                            Style="{StaticResource ComboBoxStyle}" />
+                            Style="{StaticResource ComboBoxStyle}"
+                            IsEnabled="{Binding IsTransportationSettingsEnabled}"/>
                         <Label
                             Grid.Row="21"
                             Grid.Column="0"
@@ -362,7 +364,8 @@
                             DisplayMemberPath="PrettyName"
                             ItemsSource="{Binding TravelRouteSets}"
                             SelectedValue="{Binding SelectedTravelRouteSet}"
-                            Style="{StaticResource ComboBoxStyle}" />
+                            Style="{StaticResource ComboBoxStyle}"
+                            IsEnabled="{Binding IsTransportationSettingsEnabled}"/>
                         <Label
                             Grid.Row="22"
                             Grid.Column="0"
@@ -378,7 +381,8 @@
                             DisplayMemberPath="PrettyName"
                             ItemsSource="{Binding ChargingStationSets}"
                             SelectedValue="{Binding SelectedChargingStationSet}"
-                            Style="{StaticResource ComboBoxStyle}" />
+                            Style="{StaticResource ComboBoxStyle}"
+                            IsEnabled="{Binding IsTransportationSettingsEnabled}"/>
                         <StackPanel
                             Grid.Row="25"
                             Grid.RowSpan="2"

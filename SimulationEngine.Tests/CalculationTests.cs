@@ -301,7 +301,6 @@ namespace SimulationEngine.Tests {
             Logger.Threshold = Severity.Debug;
             using (var wd = new WorkingDir(Utili.GetCallingMethodAndClass())) {
                 using (var db = new DatabaseSetup(Utili.GetCallingMethodAndClass())) {
-                    wd.SkipCleaning = true;
                     var targetdb = wd.Combine("profilegenerator.db3");
                     File.Copy(db.FileName, targetdb, true);
                     Directory.SetCurrentDirectory(wd.WorkingDirectory);
@@ -698,23 +697,49 @@ namespace SimulationEngine.Tests {
         {
             DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Simulator sim = new Simulator(db.ConnectionString);
-            var hj = MakeKenishHouseJob(sim);
+            {
+                var hj = MakeKenishHouseJob(sim);
+            if (hj.CalcSpec == null) {
+                throw new LPGException("was null");
+            }
+
             hj.CalcSpec.OutputDirectory = "TestingData1";
             File.WriteAllText("Testingdata1.json", JsonConvert.SerializeObject(hj, Formatting.Indented));
-            var hj2 = MakeKenishHouseJob(sim);
-            hj.CalcSpec.OutputDirectory = "TestingData2";
-            hj2.CalcSpec.InternalTimeResolution = "00:30:00";
-            File.WriteAllText("TestingData2.json", JsonConvert.SerializeObject(hj, Formatting.Indented));
-            hj.CalcSpec.OutputDirectory = "TestingData3";
-            hj.CalcSpec.EndDate = new DateTime(2020, 12, 31);
-            File.WriteAllText("TestingData3.json", JsonConvert.SerializeObject(hj, Formatting.Indented));
-            hj.CalcSpec.OutputDirectory = "TestingData4";
-            hj2.CalcSpec.InternalTimeResolution = "00:30:00";
-            hj.CalcSpec.EndDate = new DateTime(2020, 12, 31);
-            File.WriteAllText("TestingData4.json", JsonConvert.SerializeObject(hj, Formatting.Indented));
         }
 
-        private HouseCreationAndCalculationJob MakeKenishHouseJob(Simulator sim){
+            {
+                var hj2 = MakeKenishHouseJob(sim);
+                if (hj2.CalcSpec == null) {
+                    throw new LPGException("was null");
+                }
+                hj2.CalcSpec.OutputDirectory = "TestingData2";
+                hj2.CalcSpec.InternalTimeResolution = "00:30:00";
+                File.WriteAllText("TestingData2.json", JsonConvert.SerializeObject(hj2, Formatting.Indented));
+            }
+            {
+                var hj3 = MakeKenishHouseJob(sim);
+                if (hj3.CalcSpec == null)
+                {
+                    throw new LPGException("was null");
+                }
+                hj3.CalcSpec.OutputDirectory = "TestingData3";
+                hj3.CalcSpec.EndDate = new DateTime(2020, 12, 31);
+                File.WriteAllText("TestingData3.json", JsonConvert.SerializeObject(hj3, Formatting.Indented));
+            }
+            {
+                var hj4 = MakeKenishHouseJob(sim);
+                if (hj4.CalcSpec == null)
+                {
+                    throw new LPGException("was null");
+                }
+                hj4.CalcSpec.OutputDirectory = "TestingData4";
+                hj4.CalcSpec.InternalTimeResolution = "00:30:00";
+                hj4.CalcSpec.EndDate = new DateTime(2020, 12, 31);
+                File.WriteAllText("TestingData4.json", JsonConvert.SerializeObject(hj4, Formatting.Indented));
+            }
+        }
+
+        private static HouseCreationAndCalculationJob MakeKenishHouseJob(Simulator sim){
             var hj = new HouseCreationAndCalculationJob();
             hj.CalcSpec = JsonCalcSpecification.MakeDefaultsForTesting();
             hj.CalcSpec.StartDate = new DateTime(2020, 1, 1);
@@ -726,6 +751,9 @@ namespace SimulationEngine.Tests {
             hj.CalcSpec.EnableTransportation = true;
             hj.CalcSpec.GeographicLocation = sim.GeographicLocations.FindFirstByName("Berlin", FindMode.Partial).GetJsonReference();
             hj.CalcSpec.DeleteDAT = true;
+            if (hj.CalcSpec.CalcOptions == null) {
+                throw new LPGException("was null");
+            }
             hj.CalcSpec.CalcOptions.Add(CalcOption.TransportationStatistics);
             hj.CalcSpec.CalcOptions.Add(CalcOption.BodilyActivityStatistics);
             hj.CalcSpec.CalcOptions.Add(CalcOption.JsonHouseholdSumFiles);

@@ -58,15 +58,15 @@ namespace CalculationController.DtoFactories
             {
                 if (csps.ChargingStationSet == null)
                 {
-                    throw new LPGException("Trying to set transportation options on a household without charging station set. That won't work.");
+                    throw new LPGException("No charging station set, but transportation enabled. That won't work.");
                 }
                 if (csps.TransportationDeviceSet == null)
                 {
-                    throw new LPGException("Trying to set transportation options on a household without transportation device set. That won't work.");
+                    throw new LPGException("No transportation device set, but transportation enabled. That won't work.");
                 }
-                if (csps.TravelRouteSet != null)
+                if (csps.TravelRouteSet == null)
                 {
-                    throw new LPGException("trying to set transportation options on a house. that won't work.");
+                    throw new LPGException("No travel route set, but transportation enabled. That won't work.");
                 }
             }
             cp.CheckSettings();

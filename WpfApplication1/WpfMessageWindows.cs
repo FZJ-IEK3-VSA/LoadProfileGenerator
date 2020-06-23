@@ -35,6 +35,13 @@ namespace LoadProfileGenerator
                     MessageBoxResult.OK);
             }
 
+            public void ShowErrorMessage(string message, string caption)
+            {
+                Logger.Error(message);
+                ShowMessageBox(message, caption, MessageBoxButton.OK, MessageBoxImage.Error,
+                MessageBoxResult.OK);
+        }
+
             [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
             public void ShowDebugMessage(Exception exception)
             {

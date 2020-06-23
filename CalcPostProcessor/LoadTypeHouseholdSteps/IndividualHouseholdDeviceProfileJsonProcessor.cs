@@ -7,7 +7,6 @@ using CalcPostProcessor.Steps;
 using Common;
 using Common.SQLResultLogging;
 using JetBrains.Annotations;
-using Newtonsoft.Json;
 
 namespace CalcPostProcessor.LoadTypeHouseholdSteps {
     public class IndividualHouseholdDeviceProfileJsonProcessor : HouseholdLoadTypeStepBase {
@@ -68,7 +67,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                 ResultFileID.JsonDeviceProfiles, p.Key.HHKey, TargetDirectory.Results,
                 calcParameters.InternalStepsize, CalcOption.JsonDeviceProfilesIndividualHouseholds,
                 dstLoadType.ConvertToLoadTypeInformation());
-            Utf8Json.JsonSerializer.Serialize<JsonDeviceProfiles>(sumfile, jrf);
+            Utf8Json.JsonSerializer.Serialize(sumfile, jrf);
 // sumfile.Write(JsonConvert.SerializeObject(jrf, Formatting.Indented));
             sumfile.Flush();
         }

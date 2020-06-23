@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using Automation.ResultFiles;
 using JetBrains.Annotations;
 
 namespace ReleaseMaker {
@@ -21,7 +20,6 @@ namespace ReleaseMaker {
             Copy(programFiles, src, dst, "Database.dll");
             //Copy(programFiles, src, dst, "SimulationEngineLib.dll");
             Copy(programFiles, src, dst, "System.Buffers.dll");
-            Copy(programFiles, src, dst, "System.Linq.Dynamic.Core.dll");
             Copy(programFiles, src, dst, "System.Memory.dll");
             Copy(programFiles, src, dst, "System.Numerics.Vectors.dll");
             Copy(programFiles, src, dst, "System.Resources.Extensions.dll");

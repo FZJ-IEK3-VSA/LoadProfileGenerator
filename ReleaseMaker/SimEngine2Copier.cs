@@ -146,7 +146,6 @@ namespace ReleaseMaker {
             Copy(programFiles, src, dst, "System.IO.Pipes.dll");
             Copy(programFiles, src, dst, "System.IO.UnmanagedMemoryStream.dll");
             Copy(programFiles, src, dst, "System.Linq.dll");
-            Copy(programFiles, src, dst, "System.Linq.Dynamic.Core.dll");
             Copy(programFiles, src, dst, "System.Linq.Expressions.dll");
             Copy(programFiles, src, dst, "System.Linq.Parallel.dll");
             Copy(programFiles, src, dst, "System.Linq.Queryable.dll");
@@ -398,7 +397,6 @@ namespace ReleaseMaker {
             Copy(programFiles, src, dst, "System.IO.Pipes.dll");
             Copy(programFiles, src, dst, "System.IO.UnmanagedMemoryStream.dll");
             Copy(programFiles, src, dst, "System.Linq.dll");
-            Copy(programFiles, src, dst, "System.Linq.Dynamic.Core.dll");
             Copy(programFiles, src, dst, "System.Linq.Expressions.dll");
             Copy(programFiles, src, dst, "System.Linq.Parallel.dll");
             Copy(programFiles, src, dst, "System.Linq.Queryable.dll");
