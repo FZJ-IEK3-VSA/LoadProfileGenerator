@@ -18,6 +18,7 @@ namespace LoadProfileGenerator.Views.Transportation {
         [CanBeNull] private DataTable _connectionCountTable;
         [CanBeNull] private DataTable _distanceTable;
         [NotNull] private ModularHousehold _modularHousehold;
+        private TravelRoute _selectedTravelRoute;
 
         public TravelRouteSetPresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] TravelRouteSetView view,
                                        [NotNull] TravelRouteSet routeSet) : base(view, "ThisRouteSet.Name", routeSet,
@@ -91,6 +92,19 @@ namespace LoadProfileGenerator.Views.Transportation {
         [NotNull]
         [UsedImplicitly]
         public TravelRouteSet ThisRouteSet { get; }
+
+        public TravelRoute SelectedTravelRoute
+        {
+            get => _selectedTravelRoute;
+            set {
+                if (Equals(value, _selectedTravelRoute)) {
+                    return;
+                }
+
+                _selectedTravelRoute = value;
+                OnPropertyChanged(nameof(SelectedTravelRoute));
+            }
+        }
 
         [ItemNotNull]
         [NotNull]
@@ -354,6 +368,55 @@ namespace LoadProfileGenerator.Views.Transportation {
                     return;
                 }
             }
+        }
+
+        public void MakeCopy()
+        {
+            var newSet = TravelRouteSet.ImportFromItem(ThisRouteSet, ApplicationPresenter.Simulator ?? throw new LPGException("Simulator not set"));
+            var trs = ApplicationPresenter.Simulator.TravelRouteSets;
+            string basename = ThisRouteSet.Name + "(Copy)";
+            string name = basename;
+            int i = 1;
+            while ( trs.IsNameTaken(name))
+            {
+                name = name + " " + i++;
+            }
+            newSet.Name = name;
+            newSet.SaveToDB();
+            ApplicationPresenter.OpenItem(newSet);
+
+
+        }
+
+        public void RemoveWorkplaceRoutes()
+        {
+            var todelete = ThisRouteSet.TravelRoutes.Where(x => x.TravelRoute.Name.ToLower().Contains("workplace")).ToList();
+            foreach (var entry in todelete) {
+                ThisRouteSet.DeleteEntry(entry);
+            }
+            Logger.Info("Completed deleting " + todelete.Count + " entries.");
+        }
+
+        public void AddDistanceMatchingWorkplaceRoutes()
+        {
+            List<TravelRoute> usedRoutes = ThisRouteSet.TravelRoutes.Select(x => x.TravelRoute ).ToList();
+            var newRoutes = Sim.TravelRoutes.It.Where(x => !usedRoutes.Contains(x)&& x.Name.ToLower().Contains("workplace")).ToList();
+            var arr = ThisRouteSet.Name.Split(' ');
+            var kmstr = arr.FirstOrDefault(x => x.EndsWith("km"));
+            if (kmstr == null)
+            {
+                Logger.Error("No distance declaration found in the name");
+                return;
+            }
+            newRoutes = newRoutes.Where(x => x.Name.Contains(kmstr)).ToList();
+            foreach (var route in newRoutes) {
+                ThisRouteSet.AddRoute(route);
+            }
+            newRoutes.Sort();
+            AvailableTravelRoutes.SynchronizeWithList(newRoutes);
+
+            usedRoutes.Sort();
+            UsedTravelRoutes.SynchronizeWithList(usedRoutes);
         }
     }
 }

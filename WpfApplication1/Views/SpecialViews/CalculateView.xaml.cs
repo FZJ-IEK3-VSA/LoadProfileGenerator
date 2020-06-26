@@ -106,8 +106,8 @@ namespace LoadProfileGenerator.Views.SpecialViews {
             var result = ofd.ShowDialog();
             if (result == true) {
                 var filename = ofd.FileName;
-                Presenter.WriteCalculationJsonSpecForCommandLine(filename);
-                MessageWindowHandler.Mw.ShowInfoMessage("Finished writing " + filename, "Success!");
+                string s = Presenter.WriteCalculationJsonSpecForCommandLine(filename);
+                MessageWindowHandler.Mw.ShowInfoMessage(s, "Export");
             }
         }
     }

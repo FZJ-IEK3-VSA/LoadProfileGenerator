@@ -99,5 +99,22 @@ namespace LoadProfileGenerator.Views.Transportation {
         {
             Presenter.FindMissingRoutesForAllHouseholds();
         }
+
+        private void BtnMakeCopy(object sender, RoutedEventArgs e)
+        {
+            Presenter.MakeCopy();
+        }
+
+        private void BtnRemoveWorkplaceRoutes(object sender, RoutedEventArgs e)
+        {
+            Presenter.RemoveWorkplaceRoutes();
+            Presenter.RefreshRoutes();
+        }
+
+        private void BtnAddDistanceWorkplaceRoute(object sender, RoutedEventArgs e)
+        {
+            Presenter.AddDistanceMatchingWorkplaceRoutes();
+            Presenter.RefreshRoutes();
+        }
     }
 }

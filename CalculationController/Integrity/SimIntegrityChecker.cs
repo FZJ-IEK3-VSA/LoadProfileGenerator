@@ -108,6 +108,7 @@ namespace CalculationController.Integrity {
                 new HouseTypeChecker(isCleanupCheck),
                 new TimeLimitChecker(isCleanupCheck),
                 new TravelRouteChecks(isCleanupCheck),
+                new TravelRouteSetChecks(isCleanupCheck),
                 new SiteChecker(isCleanupCheck)
             };
             return checkers;

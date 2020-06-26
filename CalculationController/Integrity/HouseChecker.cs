@@ -52,6 +52,25 @@ namespace CalculationController.Integrity {
                     throw new DataIntegrityException(
                         "The house " + house.PrettyName + " has no temperature profile. Please fix.", house);
                 }
+
+                if (PerformCleanupChecks) {
+                    foreach (var household in house.Households) {
+                        if (household.ChargingStationSet == null) {
+                            throw new DataIntegrityException(
+                                "The household " + household.Name + " in the house " + house.Name + " has no charging station set.", house);
+                        }
+
+                        if (household.TravelRouteSet == null) {
+                            throw new DataIntegrityException(
+                                "The household " + household.Name + " in the house " + house.Name + " has no travel route set.", house);
+                        }
+
+                        if (household.TransportationDeviceSet == null) {
+                            throw new DataIntegrityException(
+                                "The household " + household.Name + " in the house " + house.Name + " has no transportation device set.", house);
+                        }
+                    }
+                }
             }
         }
     }

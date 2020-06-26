@@ -70,7 +70,13 @@
                                  Grid.Column="1"
                                  Style="{StaticResource TextBoxStyle}"
                                  Text="{Binding ThisRouteSet.Description}" />
-
+                        <Button 
+                                Grid.Row="3"
+                                Grid.Column="1"
+                                Click="BtnMakeCopy"
+                                Style="{StaticResource ButtonStyle}">
+                            Make a Copy
+                        </Button>
 
 
                     </Grid>
@@ -115,9 +121,7 @@
                                   Grid.Row="1"
                                   Grid.Column="1"
                                   ItemsSource="{Binding AvailableTravelRoutes}"
-                                  SelectedItem="{Binding ElementName=LstSteps,
-                                                         Path=SelectedItem,
-                                                         Mode=OneWay}"
+                                  SelectedItem="{Binding SelectedTravelRoute}"
                                   Style="{StaticResource ComboBoxStyle}" />
 
                         <StackPanel Grid.Row="10"
@@ -138,6 +142,16 @@
                                     Style="{StaticResource ButtonStyle}">
                                 Refresh available routes
                             </Button>
+                            <Button HorizontalAlignment="Left"
+                                    Click="BtnRemoveWorkplaceRoutes"
+                                    Style="{StaticResource ButtonStyle}">
+                                Remove all workplace routes
+                            </Button>
+                            <Button HorizontalAlignment="Left"
+                                    Click="BtnAddDistanceWorkplaceRoute"
+                                    Style="{StaticResource ButtonStyle}">
+                                Add distance appropriate workplace routes
+                            </Button>
 
                         </StackPanel>
                         <Label Grid.Row="11"
@@ -152,7 +166,6 @@
                                   MinHeight="150"
                                   ItemsSource="{Binding UsedTravelRoutes}"
                                   Style="{StaticResource ListViewStyle}"
-                                  
                                   MouseDoubleClick="LstSteps_OnMouseDoubleClick"
                                   >
                             <ListView.View>

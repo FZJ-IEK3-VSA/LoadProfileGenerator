@@ -433,7 +433,7 @@ namespace Database.Tables
         }
 
         [NotNull]
-        protected static string FindNewName([NotNull] Func<string, bool> isNameTaken, [NotNull] string basename)
+        public static string FindNewName([NotNull] Func<string, bool> isNameTaken, [NotNull] string basename)
         {
             var i = 1;
             while (isNameTaken(basename + i))

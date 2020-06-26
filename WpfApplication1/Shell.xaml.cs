@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+﻿ //-----------------------------------------------------------------------
 
 // <copyright>
 //
@@ -136,6 +136,7 @@ namespace LoadProfileGenerator {
             InitializeComponent();
             DataContext = new ApplicationPresenter(this, Sim, this.Dispatcher);
             _version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            Config.LPGVersion = _version;
             MessageWindowHandler.SetMainWindow(new WpfMsgWindows(this));
             FindDefaultDB3File();
 

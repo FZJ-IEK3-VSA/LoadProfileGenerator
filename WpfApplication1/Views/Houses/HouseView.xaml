@@ -133,11 +133,6 @@
                                   Style="{StaticResource ComboBoxStyle}" />
                         <!--  Creation Type  -->
                         
-                        <CheckBox Grid.Row="9"
-                                  Grid.Column="1"
-                                  Content="Enable transportation modelling for this house"
-                                  IsChecked="{Binding ThisHouse.TransportationEnabled}"
-                                  Style="{StaticResource CheckBoxStyle}" />
                     </Grid>
                 </Expander>
 
@@ -211,11 +206,6 @@
                                                          Mode=OneWay}"
                                   Style="{StaticResource ComboBoxStyle}"
                                   Visibility="{Binding IsModularHouseholdVisible}" />
-                        <CheckBox Grid.Row="4"
-                                  Grid.Column="1"
-                                  Content="Enable transportation modelling for this house"
-                                  IsChecked="{Binding EnableTransportationModelling}"
-                                  Style="{StaticResource CheckBoxStyle}" />
                         <Label Grid.Row="5"
                                Grid.Column="0"
                                Content="Transportation Device Set"
@@ -264,10 +254,6 @@
                                 Remove household
                             </Button>
                         </StackPanel>
-                        <Label Grid.Row="12"
-                               Grid.Column="0"
-                               Content="Households"
-                               Style="{StaticResource LabelStyle}" />
                         <Label Grid.Row="13"
                                Grid.Column="1"
                                HorizontalAlignment="Left"
@@ -287,7 +273,6 @@
                             <ListView.View>
                                 <GridView>
                                     <GridViewColumn Width="Auto" Header="Household" />
-                                    <GridViewColumn Width="Auto" Header="Enable Transportation" DisplayMemberBinding="{Binding EnableTransportationModelling}" />
                                     <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding TransportationDeviceSet.PrettyName}" Header="Transportation Device Set" />
                                     <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding TravelRouteSet.PrettyName}" Header="Travel Route Set" />
                                     <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding ChargingStationSet.PrettyName}" Header="Charging Station Set" />

@@ -1,10 +1,46 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Common;
 using Database;
 using Database.Tables.Transportation;
 
 namespace CalculationController.Integrity
 {
+    public class TravelRouteSetChecks : BasicChecker {
+        public TravelRouteSetChecks(bool performCleanupChecks) : base("Travel Route Set Checks", performCleanupChecks)
+        {
+        }
+
+        protected override void Run(Simulator sim)
+        {
+            if (!PerformCleanupChecks) {
+                return;
+            }
+            foreach (var routeSet in sim.TravelRouteSets.It) {
+                var arr = routeSet.Name.Split(' ');
+                var kmstr = arr.FirstOrDefault(x => x.EndsWith("km"));
+                if (kmstr == null) {
+                    throw new DataIntegrityException("No distance declaration in the name of the route set " + routeSet.Name, routeSet);
+                }
+                //var kmstr2 = kmstr.Replace("km", "");
+                //bool success = int.TryParse(kmstr2, out int km);
+                //if(!success) {
+                    //continue;
+                //}
+
+                foreach (var route in routeSet.TravelRoutes) {
+                    if (!route.TravelRoute.Name.ToLower().Contains("workplace")) {
+                        continue;
+                    }
+
+                    if (!route.TravelRoute.Name.Contains(" " +kmstr)) {
+                        throw new DataIntegrityException("Workplace route " + route.TravelRoute.PrettyName + " in the route set " + routeSet.Name + " does not match the distance from the name which should be " + kmstr, routeSet  );
+                    }
+                }
+            }
+        }
+    }
+
     public class TravelRouteChecks : BasicChecker
     {
         public TravelRouteChecks(bool performCleanupChecks) : base("Travel Route Checks", performCleanupChecks)

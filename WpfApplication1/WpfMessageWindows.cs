@@ -63,13 +63,14 @@ namespace LoadProfileGenerator
                 {
                     throw new LPGException("ShowDebugMessage Exception == null");
                 }
-                var errormessage = "An error occured. The error message is: " + Environment.NewLine + Environment.NewLine;
+                var errormessage = "An error occured.  The error message is: " + Environment.NewLine + Environment.NewLine;
                 errormessage = errormessage + Environment.NewLine + exception.Message + Environment.NewLine + Environment.NewLine;
                 if (exception.InnerException != null)
                 {
                     errormessage = errormessage + exception.InnerException.Message + Environment.NewLine + Environment.NewLine;
                 }
-                errormessage = errormessage + exception.StackTrace + Environment.NewLine + Environment.NewLine;
+
+                errormessage += "The LPG version is " + Config.LPGVersion + "." + Environment.NewLine;
                 errormessage = errormessage + "The error was logged to the file errorlog.txt. " +
                                "Please send that file to the author of the program to support further development." + Environment.NewLine + Environment.NewLine;
                 try

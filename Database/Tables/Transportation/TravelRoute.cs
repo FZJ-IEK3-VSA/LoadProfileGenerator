@@ -115,6 +115,7 @@ namespace Database.Tables.Transportation {
                 step.SaveToDB();
                 _steps.Sort();
             }
+            OnPropertyChanged(nameof(PrettyName));
         }
 
 
@@ -146,6 +147,7 @@ namespace Database.Tables.Transportation {
         {
             step.DeleteFromDB();
             _steps.Remove(step);
+            OnPropertyChanged(nameof(PrettyName));
         }
 
         [NotNull]

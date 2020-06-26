@@ -14,11 +14,11 @@ cd C:\Work\LPGDev\ReleaseMaker
 "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\msbuild.exe" ReleaseMaker.csproj -t:rebuild  -v:m
 
 cd C:\Work\LPGDev\ReleaseMaker\bin\Debug
-rem rmdir /S /Q V:\Dropbox\LPGReleases\releases9.7.0
+rem rmdir /S /Q V:\Dropbox\LPGReleases\releases9.8.0
 releasemaker
 pause
-robocopy V:\Dropbox\LPGReleases\releases9.7.0\net48 C:\Work\utsp\LPG_9.7.0_win /E /R:0 /W:0 /MIR
-robocopy V:\Dropbox\LPGReleases\releases9.7.0\linux C:\Work\utsp\LPG_9.7.0_linux /E /R:0 /W:0 /MIR
+robocopy V:\Dropbox\LPGReleases\releases9.8.0\net48 C:\Work\utsp\LPG_9.7.0_win /E /R:0 /W:0 /MIR
+robocopy V:\Dropbox\LPGReleases\releases9.8.0\linux C:\Work\utsp\LPG_9.7.0_linux /E /R:0 /W:0 /MIR
 cd ..
 cd ..
 cd ..

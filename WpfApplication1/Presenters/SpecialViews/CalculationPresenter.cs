@@ -604,21 +604,25 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             task1.Start();
         }
 
-        public void WriteCalculationJsonSpecForCommandLine([NotNull] string resultpath)
+        [NotNull]
+        public string WriteCalculationJsonSpecForCommandLine([NotNull] string resultpath)
         {
             if (SelectedCalcObject == null) {
-                Logger.Error("Nothing selected to calculate");
-                return;
+                const string s = "Nothing selected to calculate";
+                Logger.Error(s);
+                return s;
             }
 
             if (SelectedCalcObject.CalcObjectType != CalcObjectType.House) {
-                Logger.Error("Only the json calculation only works for houses");
-                return;
+                const string s = "The json calculation only works for houses";
+                Logger.Error(s);
+                return s;
             }
 
             if (SelectedCalcObject.CalcObjectType == CalcObjectType.House && Sim.MyGeneralConfig.SelectedLoadTypePriority < LoadTypePriority.RecommendedForHouses) {
-                Logger.Error("Load type priority not suitable for houses ");
-                return;
+                const string s = "Load type priority not suitable for houses ";
+                Logger.Error(s);
+                return s;
             }
             var houseJob = new HouseCreationAndCalculationJob("scenario","year","district", HouseDefinitionType.HouseData);
             House house = (House)SelectedCalcObject;
@@ -643,6 +647,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
 
             houseJob.CalcSpec = jcs;
             HouseJobSerializer.WriteJsonToFile(resultpath,houseJob);
+            return "Successfully written to " + resultpath;
         }
 
         private void AddSingleTimespan(int min, int second)

@@ -41,19 +41,19 @@ namespace CalculationController.DtoFactories
             cp.DeviceProfileHeaderMode = csps.DeviceProfileHeaderMode;
             cp.IgnorePreviousActivitesWhenNeeded = csps.IgnorePreviousActivitiesWhenNeeded;
             cp.TransportationEnabled = csps.TransportationEnabled;
-            if (cp.TransportationEnabled && csps.CalcTarget.CalcObjectType == CalcObjectType.House) {
-                if (csps.ChargingStationSet != null) {
-                    throw new LPGException("trying to set transportation options on a house. that won't work.");
-                }
-                if (csps.TransportationDeviceSet != null)
-                {
-                    throw new LPGException("trying to set transportation options on a house. that won't work.");
-                }
-                if (csps.TravelRouteSet != null)
-                {
-                    throw new LPGException("trying to set transportation options on a house. that won't work.");
-                }
-            }
+            //if (cp.TransportationEnabled && csps.CalcTarget.CalcObjectType == CalcObjectType.House) {
+            //    if (csps.ChargingStationSet != null) {
+            //        throw new LPGException("trying to set transportation options on a house. that won't work.");
+            //    }
+            //    if (csps.TransportationDeviceSet != null)
+            //    {
+            //        throw new LPGException("trying to set transportation options on a house. that won't work.");
+            //    }
+            //    if (csps.TravelRouteSet != null)
+            //    {
+            //        throw new LPGException("trying to set transportation options on a house. that won't work.");
+            //    }
+            //}
             if (cp.TransportationEnabled && csps.CalcTarget.CalcObjectType == CalcObjectType.ModularHousehold)
             {
                 if (csps.ChargingStationSet == null)
