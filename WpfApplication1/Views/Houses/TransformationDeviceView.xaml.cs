@@ -229,5 +229,9 @@ namespace LoadProfileGenerator.Views.Houses {
             Presenter.RefreshConversionHelper();
         }
 #pragma warning restore S110 // Inheritance tree of classes should not be too deep
+        private void BtnMakeACopy(object sender, RoutedEventArgs e)
+        {
+            Presenter.MakeACopy();
+        }
     }
 }

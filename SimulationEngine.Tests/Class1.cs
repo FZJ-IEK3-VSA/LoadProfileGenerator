@@ -1,14 +1,42 @@
 ﻿using System;
+using System.Collections.Generic;
 using Automation;
+using Automation.ResultFiles;
 using Common;
 using Common.Tests;
 using JetBrains.Annotations;
-
+using PowerArgs;
+using SimulationEngineLib;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace SimulationEngine.Tests
 {
+    public class CommandlineParsingTests {
+        [Fact]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.BasicTest)]
+        public void Run()
+        {
+
+            Config.IsInHeadless = true;
+            var definition = new CommandLineArgumentsDefinition(typeof(CommandProcessor));
+            var l = new List<string>();
+            //l.Add("processhousejob");
+            //l.Add("-j");
+            //l.Add("h.json");
+            l.Add("CreatePythonBindings");
+            string[] args = l.ToArray();
+// Args.InvokeAction(definition, args);
+            var parsed = Args.Parse(definition, args);
+
+            if (parsed.ActionArgsProperty.Name == null) {
+                string s = string.Join(" ", args);
+
+                throw new LPGException("Invalid arguments: " + s + ". No action was identified.");
+
+            }
+        }
+    }
     public class CalculationOptionProcessorTests : UnitTestBaseClass
     {
         [Fact]

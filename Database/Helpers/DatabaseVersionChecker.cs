@@ -27,7 +27,7 @@ namespace Database.Helpers {
                         var subsub = dr.GetIntFromLong("SubSub");
                         var index = dr.GetString("Index");
                         fullVersion = main + "." + sub + "." + subsub + "." + index;
-                        Logger.Info("Successfully read version: " + fullVersion);
+                        Logger.Info("Successfully read database version: " + fullVersion + ". This is compatible. Program version is " + Config.LPGVersion);
                     }
                 }
             }

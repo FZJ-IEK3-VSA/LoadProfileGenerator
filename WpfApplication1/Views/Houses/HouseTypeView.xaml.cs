@@ -244,5 +244,9 @@ namespace LoadProfileGenerator.Views.Houses {
             }
         }
 #pragma warning restore CC0068 // Unused Method
+        private void BtnMakeACopy(object sender, RoutedEventArgs e)
+        {
+            Presenter.MakeACopy();
+        }
     }
 }

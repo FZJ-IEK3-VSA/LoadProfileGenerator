@@ -31,23 +31,28 @@ namespace SimulationEngineLib
             {
                 ExeName = exename
             };
-            if (!Config.CatchErrors)
-            {
-                try
-                {
-                    var parsed = Args.ParseAction(definition, args);
-                    if (parsed.ActionArgs == null)
-                    {
-                        throw new LPGException("Invalid args: ");
-                    }
-                }
-                catch (ArgException ex)
-                {
-                    throw new LPGException("Invalid args: " + ex.Message);
-                }
-            }
+            //if (!Config.CatchErrors)
+            //{
+            //    try
+            //    {
+            //        /* var parsed = Args.ParseAction(definition, args);
 
-            Args.InvokeAction(definition, args);
+            //         // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+            //         if (parsed.ActionArgsProperty.Name == null)
+            //         {
+            //             string s = string.Join(" ", args);
+            //             throw new LPGException("Invalid arguments: " + s + ". No action was identified.");
+            //         }*/
+            //        Args.InvokeAction(definition, args);
+            //    }
+            //    catch (ArgException ex)
+            //    {
+            //        throw new LPGException("Invalid arguments entered: " + ex.Message);
+            //    }
+            //}
+            //else {
+                Args.InvokeAction(definition, args);
+            //}
         }
 
         public static void Run([NotNull] string[] args, string exename)

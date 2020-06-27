@@ -21,7 +21,7 @@ namespace SimulationEngineLib
                 //sw.WriteLine("from dataclasses import dataclass, field");
                 //sw.WriteLine("from dataclasses_json import dataclass_json  # type: ignore");
                 //sw.WriteLine("from typing import List, Optional, Any");
-                sw.WriteLine("from lpgadapter import *");
+                sw.WriteLine("from lpgpythonbindings import *");
                 //sw.WriteLine("from enum import Enum");
                 sw.WriteLine();
                 WriteNames(sim.LoadTypes.It.Select(x => (DBBase)x).ToList(), sw, "LoadTypes");

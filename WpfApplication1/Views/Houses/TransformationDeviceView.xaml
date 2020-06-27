@@ -58,7 +58,10 @@
                                  Grid.Column="1"
                                  Style="{StaticResource TextBoxStyle}"
                                  Text="{Binding ThisTrafo.Description}" />
-
+                        <Button Click="BtnMakeACopy" Style="{StaticResource ButtonStyle}" 
+                                Grid.Row="3" Grid.Column="1">
+                            MakeACopy
+                        </Button>
                     </Grid>
                 </Expander>
 

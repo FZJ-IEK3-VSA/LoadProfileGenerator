@@ -3,6 +3,7 @@ using System.Linq;
 using Common;
 using Database;
 using Database.Tables.Transportation;
+using JetBrains.Annotations;
 
 namespace CalculationController.Integrity
 {
@@ -35,6 +36,41 @@ namespace CalculationController.Integrity
 
                     if (!route.TravelRoute.Name.Contains(" " +kmstr)) {
                         throw new DataIntegrityException("Workplace route " + route.TravelRoute.PrettyName + " in the route set " + routeSet.Name + " does not match the distance from the name which should be " + kmstr, routeSet  );
+                    }
+                }
+
+                var sites = routeSet.TravelRoutes.Select(x => x.TravelRoute.SiteA).ToList();
+                var sitesB = routeSet.TravelRoutes.Select(x => x.TravelRoute.SiteA).ToList();
+                sites.AddRange(sitesB);
+                sites = sites.Distinct().ToList();
+                var hh = sim.ModularHouseholds[0];
+                var sitelocs = sites.SelectMany(x => x.Locations).ToList();
+                var locsAtSites = sitelocs.Select(x => x.Location).Distinct().ToList();
+                foreach (var loc in hh.CollectLocations()) {
+                    if (!locsAtSites.Contains(loc)) {
+                        throw new DataIntegrityException("The location " + loc.PrettyName  + " in the household " + hh.PrettyName + "  at travel route set  " +  routeSet.Name + " is not covered by any site. Add a route with this site.", routeSet );
+                    }
+                }
+                CheckRouteCompleteness(routeSet,sites);
+            }
+
+        }
+
+        public void CheckRouteCompleteness([NotNull] TravelRouteSet travelRouteSet, [NotNull] [ItemNotNull] List<Site> sites)
+        {
+            //figure out if every site is connected to every other site
+            foreach (Site siteA in sites) {
+                foreach (Site siteB in sites) {
+                    if (siteB == siteA) {
+                        continue;
+                    }
+
+                    var tr = travelRouteSet.TravelRoutes.FirstOrDefault(x =>
+                        x.TravelRoute.SiteA == siteA && x.TravelRoute.SiteB == siteB || x.TravelRoute.SiteA == siteB && x.TravelRoute.SiteB == siteA);
+                    if (tr == null) {
+                        throw new DataIntegrityException("There seems to be no route from " + siteA.PrettyName + " to " + siteB.PrettyName +
+                                                         " in the travel route set " + travelRouteSet.PrettyName +
+                                                         ". Every site needs to be connected to every other site, since the LPG has no routing functionality yet. Please fix.");
                     }
                 }
             }

@@ -12,6 +12,7 @@ using SimulationEngineLib.Other;
 namespace SimulationEngineLib {
     [ArgExceptionBehavior(ArgExceptionPolicy.StandardExceptionHandling)]
     [ArgDescription("The simulation engine command line interface for the generation of new load profiles.")]
+    [TabCompletion]
     //[ArgExample("SimulationEngine  ProgressSettlement -Directory c:\\work -SettlementNumber 1 -SettlementCheck", "", Title = "Check a ")]
     public class CommandProcessor {
 
@@ -60,6 +61,7 @@ namespace SimulationEngineLib {
         [ArgDescription("Creates an example for house jobs which is the best way to automate the LPG for the calculation of large settlements.")]
         [ArgExample("simulationengine.exe CreateExampleHouseJob",
             "How to prepare districts for calculations.:")]
+        [ArgShortcut("PEHJ")]
         [UsedImplicitly]
         public void CreateExampleHouseJob()
         {
@@ -70,6 +72,7 @@ namespace SimulationEngineLib {
         [ArgDescription("Creates python files that will help you use call the LPG from Python")]
         [ArgExample("simulationengine.exe CreatePythonBindings",
             "How to create the python bindings:")]
+        [ArgShortcut("cpy")]
         [UsedImplicitly]
         public void CreatePythonBindings()
         {

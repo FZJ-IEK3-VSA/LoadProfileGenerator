@@ -330,5 +330,15 @@ namespace LoadProfileGenerator.Presenters.Houses {
                 Refresh();
             }
         }
+
+        public void MakeACopy()
+        {
+            var newht = (HouseType) HouseType.ImportFromItem(ThisHouseType, Sim);
+            newht.Name = newht.Name + " (Copy)";
+            newht.SaveToDB();
+            Sim.HouseTypes.It.Add(newht);
+            ApplicationPresenter.OpenItem(newht);
+
+        }
     }
 }

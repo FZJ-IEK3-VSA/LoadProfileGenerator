@@ -51,13 +51,14 @@ namespace Common {
         public string WorkingDirectory => _lastDirectory;
 
         public bool SkipCleaning {
-            get {
-                if (Environment.MachineName.ToLower() != "i5home") {
+            get => _skipCleaning;
+            set {
+                if (value == true && Environment.MachineName.ToLower() != "i5home")
+                {
                     throw new LPGException("trying to skip cleaning on a non-dev-pc");
                 }
-                return _skipCleaning;
+                _skipCleaning = value;
             }
-            set => _skipCleaning = value;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]

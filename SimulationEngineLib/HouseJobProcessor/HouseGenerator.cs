@@ -677,7 +677,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
                 case HouseholdDataSpecificationType.ByHouseholdName when householdData.HouseholdNameSpec == null :
                     throw new LPGException("No household specification was set for the household " + householdData.Name);
                 case HouseholdDataSpecificationType.ByHouseholdName when (householdData.HouseholdNameSpec?.HouseholdReference == null):
-                    throw new LPGException("No household name was set for the household " + householdData.Name);
+                    throw new LPGException("No household reference was set for the household " + householdData.Name + ". So no household to calculate could be identified.");
             }
 
             switch (householdData.HouseholdDataSpecification) {

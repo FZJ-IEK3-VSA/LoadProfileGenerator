@@ -31,6 +31,7 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
+                            <RowDefinition />
                         </Grid.RowDefinitions>
                         <TextBlock Grid.ColumnSpan="2"
                                    Style="{StaticResource TextBlockStyle}"
@@ -80,6 +81,10 @@
                                  Grid.Column="1"
                                  Style="{StaticResource TextBoxStyle}"
                                  Text="{Binding ThisHouseType.MaximumHouseholdCount}" />
+                        <Button Click="BtnMakeACopy" Style="{StaticResource ButtonStyle}" 
+                                Grid.Row="5" Grid.Column="1">
+                            MakeACopy
+                        </Button>
                     </Grid>
                 </Expander>
 

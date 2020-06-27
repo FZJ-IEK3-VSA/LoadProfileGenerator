@@ -214,5 +214,14 @@ namespace LoadProfileGenerator.Presenters.Houses {
         {
             ThisTrafo.DeleteTransformationLoadtypeFromDB(tdlt);
         }
+
+        public void MakeACopy()
+        {
+            var newht = TransformationDevice.ImportFromItem(ThisTrafo, Sim);
+            newht.Name = newht.Name + " (Copy)";
+            newht.SaveToDB();
+            Sim.TransformationDevices.It.Add(newht);
+            ApplicationPresenter.OpenItem(newht);
+        }
     }
 }

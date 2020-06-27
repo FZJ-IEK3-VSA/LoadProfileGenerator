@@ -283,10 +283,10 @@ namespace Database.Tables.Houses {
 
             foreach (var datapoint in toImport._factorDatapoints) {
                     td.AddDataPoint(datapoint.ReferenceValue, datapoint.Factor);
-                }
+            }
 
-                td.SaveToDB();
-                return td;
+            td.SaveToDB();
+            return td;
         }
 
         public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<TransformationDevice> result,
