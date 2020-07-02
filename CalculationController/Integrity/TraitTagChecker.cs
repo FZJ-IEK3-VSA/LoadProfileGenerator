@@ -7,7 +7,7 @@ namespace CalculationController.Integrity {
         }
 
         protected override void Run(Simulator sim) {
-            foreach (var tag in sim.TraitTags.It) {
+            foreach (var tag in sim.TraitTags.Items) {
                 if (!tag.Name.Contains(" / ") && PerformCleanupChecks) {
                     throw new DataIntegrityException(
                         "The trait tag " + tag.Name + " has no slash ('/'). Please delete or fix.", tag);

@@ -55,7 +55,7 @@ namespace Database.Helpers {
         public void RefreshAllAffordanceCategory() {
             var afflist = new List<string>();
 
-            foreach (var aff in MyItems) {
+            foreach (var aff in Items) {
                 AddUniqueStringToList(AllAffordanceCategories, aff.AffCategory);
                 afflist.Add(aff.AffCategory);
             }

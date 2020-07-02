@@ -14,24 +14,24 @@ namespace ReleaseMaker
             using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
                 Simulator sim = new Simulator(db.ConnectionString);
-                Print("Desires", sim.Desires.It.Count);
-                Print("Persons", sim.Persons.It.Count);
-                Print("Devices", sim.RealDevices.It.Count);
-                Print("Device Categories", sim.DeviceCategories.It.Count);
-                Print("Device Actions", sim.DeviceActions.It.Count);
-                Print("Device Action Groups", sim.DeviceActionGroups.It.Count);
-                Print("Time Profiles (für Geräte)", sim.Timeprofiles.It.Count);
-                Print("Time Limits", sim.TimeLimits.It.Count);
-                Print("Subaffordances", sim.SubAffordances.It.Count);
-                Print("Affordances", sim.Affordances.It.Count);
-                Print("Locations", sim.Locations.It.Count);
-                Print("Trait Tags", sim.TraitTags.It.Count);
-                Print("Household Traits", sim.HouseholdTraits.It.Count);
-                int hhcount = sim.ModularHouseholds.It.Count(x => x.GeneratorID == null);
+                Print("Desires", sim.Desires.Items.Count);
+                Print("Persons", sim.Persons.Items.Count);
+                Print("Devices", sim.RealDevices.Items.Count);
+                Print("Device Categories", sim.DeviceCategories.Items.Count);
+                Print("Device Actions", sim.DeviceActions.Items.Count);
+                Print("Device Action Groups", sim.DeviceActionGroups.Items.Count);
+                Print("Time Profiles (für Geräte)", sim.Timeprofiles.Items.Count);
+                Print("Time Limits", sim.TimeLimits.Items.Count);
+                Print("Subaffordances", sim.SubAffordances.Items.Count);
+                Print("Affordances", sim.Affordances.Items.Count);
+                Print("Locations", sim.Locations.Items.Count);
+                Print("Trait Tags", sim.TraitTags.Items.Count);
+                Print("Household Traits", sim.HouseholdTraits.Items.Count);
+                int hhcount = sim.ModularHouseholds.Items.Count(x => x.GeneratorID == null);
                 Print("Modular Households", hhcount);
-                Print("House Types", sim.HouseTypes.It.Count);
+                Print("House Types", sim.HouseTypes.Items.Count);
 
-                int housecount = sim.Houses.It.Count(x => x.Source != null && !x.Source.ToLower(CultureInfo.CurrentCulture)
+                int housecount = sim.Houses.Items.Count(x => x.Source != null && !x.Source.ToLower(CultureInfo.CurrentCulture)
                                                               .Contains("generated"));
                 Print("Houses", housecount);
             }

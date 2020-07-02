@@ -271,8 +271,7 @@ namespace CalculationEngine.HouseholdElements {
                 sw.WriteLine(Environment.NewLine + Environment.NewLine + "Autonomous Devices:");
                 var devicenames = new List<string>();
                 foreach (var dev in _autoDevs) {
-                    devicenames.Add(dev.Name + " @ " + dev.Location + ", load type " + dev.LoadType.Name +
-                                    ", profile " + dev.CalcProfile.Name);
+                    devicenames.Add(dev.Name + " @ " + dev.Location);
                 }
 
                 devicenames.Sort();
@@ -436,7 +435,7 @@ namespace CalculationEngine.HouseholdElements {
             }
 
             foreach (var calcAutoDev in _autoDevs) {
-                if (!calcAutoDev.IsBusyDuringTimespan(timestep, 1, 1, calcAutoDev.LoadType)) {
+                if (!calcAutoDev.IsAutodevBusyDuringTimespan(timestep, 1, 1)) {
                     calcAutoDev.Activate(timestep);
                 }
             }

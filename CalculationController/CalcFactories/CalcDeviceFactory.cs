@@ -67,32 +67,42 @@ namespace CalculationController.CalcFactories {
         {
             var autodevs = new List<CalcAutoDev>(autoDevices.Count);
             foreach (var autoDevDto in autoDevices) {
-                if (_loadTypeDictionary.SimulateLoadtype(autoDevDto.LoadtypeGuid)) {
-                    var deviceLoads = MakeCalcDeviceLoads(autoDevDto, _loadTypeDictionary);
-                    CalcProfile cp = MakeCalcProfile(autoDevDto.CalcProfile, _calcRepo.CalcParameters);
 
-                    var loadtype= _loadTypeDictionary.GetLoadtypeByGuid(autoDevDto.LoadtypeGuid);
-                    CalcLocation calcLocation = locationDict.GetCalcLocationByGuid(autoDevDto.CalcLocationGuid);
-                    List<VariableRequirement> requirements = new List<VariableRequirement>();
-                    foreach(var req in  autoDevDto.Requirements)
-                    {
-                        VariableRequirement vreq = new VariableRequirement(req.Name,
-                            req.Value,req.CalcLocationName,req.LocationGuid,
-                            req.VariableCondition,_calcVariableRepository,req.VariableGuid);
-                        requirements.Add(vreq);
+                List<CalcAutoDevProfile> cadps = new List<CalcAutoDevProfile>();
+                foreach (var devProfileDto in autoDevDto.CalcProfiles) {
+                    if (!_loadTypeDictionary.SimulateLoadtype(devProfileDto.LoadtypeGuid)) {
+                        var loadtype = _loadTypeDictionary.GetLoadtypeByGuid(devProfileDto.LoadtypeGuid);
+                        CalcProfile cp = MakeCalcProfile(devProfileDto.Profile, _calcRepo.CalcParameters);
+                        CalcAutoDevProfile cadp = new CalcAutoDevProfile(cp, loadtype, 1);
+                        cadps.Add(cadp);
                     }
-
-                    autoDevDto.AdditionalName = " (autonomous)";
-                    var cautodev = new CalcAutoDev( cp,loadtype,
-                        deviceLoads,autoDevDto.TimeStandardDeviation,
-                              1,calcLocation,
-                          requirements, autoDevDto,_calcRepo);
-                    var busyarr = _availabilityDtoRepository.GetByGuid(autoDevDto.BusyArr.Guid);
-                    cautodev.ApplyBitArry(busyarr, loadtype);
-                    autodevs.Add(cautodev);
                 }
-            }
 
+                if (cadps.Count == 0) {
+                    continue;
+                }
+                var deviceLoads = MakeCalcDeviceLoads(autoDevDto, _loadTypeDictionary);
+                CalcLocation calcLocation = locationDict.GetCalcLocationByGuid(autoDevDto.CalcLocationGuid);
+                List<VariableRequirement> requirements = new List<VariableRequirement>();
+                foreach(var req in  autoDevDto.Requirements)
+                {
+                    VariableRequirement vreq = new VariableRequirement(req.Name,
+                        req.Value,req.CalcLocationName,req.LocationGuid,
+                        req.VariableCondition,_calcVariableRepository,req.VariableGuid);
+                    requirements.Add(vreq);
+                }
+
+                autoDevDto.AdditionalName = " (autonomous)";
+                var cautodev = new CalcAutoDev(cadps,
+                    deviceLoads,autoDevDto.TimeStandardDeviation,
+                          calcLocation,
+                      requirements, autoDevDto,_calcRepo);
+                var busyarr = _availabilityDtoRepository.GetByGuid(autoDevDto.BusyArr.Guid);
+                foreach (var cadp in cadps) {
+                    cautodev.ApplyBitArry(busyarr, cadp.LoadType);
+                }
+                autodevs.Add(cautodev);
+            }
             return autodevs;
         }
 

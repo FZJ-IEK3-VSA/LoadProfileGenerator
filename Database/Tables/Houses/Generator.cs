@@ -145,8 +145,8 @@ namespace Database.Tables.Houses {
         [UsedImplicitly]
         public static Generator ImportFromItem([NotNull] Generator toImport, [NotNull] Simulator dstSim)
         {
-            var vlt = GetItemFromListByName(dstSim.LoadTypes.MyItems, toImport.LoadType?.Name);
-            var prof = GetItemFromListByName(dstSim.DateBasedProfiles.MyItems,
+            var vlt = GetItemFromListByName(dstSim.LoadTypes.Items, toImport.LoadType?.Name);
+            var prof = GetItemFromListByName(dstSim.DateBasedProfiles.Items,
                 toImport.DateBasedProfile?.Name);
 
             var gen = new Generator(toImport.Name, toImport.Description, vlt, toImport.ScalingFactor, prof,

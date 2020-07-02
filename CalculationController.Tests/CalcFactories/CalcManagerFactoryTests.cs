@@ -141,7 +141,7 @@ namespace CalculationController.Tests.CalcFactories {
                     var cmf = new CalcManagerFactory();
                     CalculationProfiler calculationProfiler = new CalculationProfiler();
                     CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
-                        sim.TemperatureProfiles[0], sim.Houses[sim.Houses.MyItems.Count - 1], EnergyIntensityType.Random, false,
+                        sim.TemperatureProfiles[0], sim.Houses[sim.Houses.Items.Count - 1], EnergyIntensityType.Random, false,
                          null, LoadTypePriority.RecommendedForHouses, null, null, null, sim.MyGeneralConfig.AllEnabledOptions(),
                             new DateTime(2015, 1, 15), new DateTime(2015, 1, 18), new TimeSpan(0, 1, 0), ";", -1, new TimeSpan(0, 1, 0), false, false, false, 3, 3,
                         calculationProfiler, wd.WorkingDirectory,false);
@@ -167,7 +167,7 @@ namespace CalculationController.Tests.CalcFactories {
                     var sim = new Simulator(db.ConnectionString);
                     sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.ReasonableWithChartsAndPDF);
                     DeviceCategory light = null;
-                    foreach (var deviceCategory in sim.DeviceCategories.MyItems)
+                    foreach (var deviceCategory in sim.DeviceCategories.Items)
                     {
                         deviceCategory.RefreshSubDevices();
                         if (deviceCategory.Name.Contains("Light"))
@@ -187,7 +187,7 @@ namespace CalculationController.Tests.CalcFactories {
                     sim.Should().NotBeNull();
                     var cmf = new CalcManagerFactory();
                     ModularHousehold chs3 = null;
-                    foreach (var modularHousehold in sim.ModularHouseholds.MyItems)
+                    foreach (var modularHousehold in sim.ModularHouseholds.Items)
                     {
                         if (modularHousehold.Name.StartsWith("CHS01", StringComparison.Ordinal))
                         {
@@ -231,7 +231,7 @@ namespace CalculationController.Tests.CalcFactories {
                 {
                     var sim = new Simulator(db.ConnectionString);
                     DeviceCategory light = null;
-                    foreach (var deviceCategory in sim.DeviceCategories.MyItems)
+                    foreach (var deviceCategory in sim.DeviceCategories.Items)
                     {
                         deviceCategory.RefreshSubDevices();
                         if (deviceCategory.Name.Contains("Light"))
@@ -274,7 +274,7 @@ namespace CalculationController.Tests.CalcFactories {
                 {
                     var sim = new Simulator(db.ConnectionString);
                     DeviceCategory light = null;
-                    foreach (var deviceCategory in sim.DeviceCategories.MyItems)
+                    foreach (var deviceCategory in sim.DeviceCategories.Items)
                     {
                         deviceCategory.RefreshSubDevices();
                         if (deviceCategory.Name.Contains("Light"))

@@ -162,14 +162,19 @@ namespace CalculationController.CalcFactories {
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         [NotNull]
         [ItemNotNull]
-        private List<CalcAutoDev> MakeCalcAutoDevsFromHouse([NotNull] CalcHouseDto house,
+        private List<CalcAutoDev> MakeCalcAutoDevsFromHouse([NotNull] CalcHouseDto houseDto,
                                                             [NotNull] [ItemNotNull] List<CalcLocation> houseLocations)
         {
-            var autodevs = new List<CalcAutoDev>(house.AutoDevs.Count);
+            var autodevs = new List<CalcAutoDev>(houseDto.AutoDevs.Count);
             // zur kategorien zuordnung
-            foreach (var hhautodev in house.AutoDevs) {
-                CalcProfile calcProfile = CalcDeviceFactory.MakeCalcProfile(hhautodev.CalcProfile,_calcRepo.CalcParameters);
-                CalcLoadType clt = _ltDict.GetLoadtypeByGuid(hhautodev.LoadtypeGuid);
+            foreach (var hhautodev in houseDto.AutoDevs) {
+                List<CalcAutoDevProfile> cadps = new List<CalcAutoDevProfile>();
+                foreach (CalcAutoDevProfileDto profile in hhautodev.CalcProfiles) {
+                    CalcProfile calcProfile = CalcDeviceFactory.MakeCalcProfile(profile.Profile, _calcRepo.CalcParameters);
+                    CalcLoadType clt = _ltDict.GetLoadtypeByGuid(profile.LoadtypeGuid);
+                    CalcAutoDevProfile  cadp = new CalcAutoDevProfile(calcProfile, clt, profile.Multiplier);
+                    cadps.Add(cadp);
+                }
                 List<CalcDeviceLoad> loads = new List<CalcDeviceLoad>();
                 foreach (CalcDeviceLoadDto loadDto in hhautodev.Loads) {
                     CalcDeviceLoad load = new CalcDeviceLoad(loadDto.Name,
@@ -194,18 +199,21 @@ namespace CalculationController.CalcFactories {
 
                 CalcLocation houseLocation = houseLocations.Single(x => x.Guid == hhautodev.CalcLocationGuid);
                 var cautodev = new CalcAutoDev(
-                    calcProfile,
-                    clt,
+                    cadps,
                     loads,
                     hhautodev.TimeStandardDeviation,
-                    hhautodev.Multiplier,
                     houseLocation,
                     requirements, hhautodev,_calcRepo);
                 var busyarr = _availabilityDtoRepository.GetByGuid(hhautodev.BusyArr.Guid);
-                cautodev.ApplyBitArry(busyarr, _ltDict.GetLoadtypeByGuid(hhautodev.LoadtypeGuid));
+                foreach (var profile in cadps) {
+                    cautodev.ApplyBitArry(busyarr, _ltDict.GetLoadtypeByGuid(profile.LoadType.Guid));
+                }
                 autodevs.Add(cautodev);
             }
 
+            if (autodevs.Count != houseDto.AutoDevs.Count) {
+                throw new LPGException("Additional autonomous devices found.");
+            }
             return autodevs;
         }
 

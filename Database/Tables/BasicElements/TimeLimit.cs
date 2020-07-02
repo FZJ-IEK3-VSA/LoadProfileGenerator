@@ -230,13 +230,13 @@ namespace Database.Tables.BasicElements {
         public override List<UsedIn> CalculateUsedIns(Simulator sim)
         {
             var used = new List<UsedIn>();
-            foreach (var affordance in sim.Affordances.It) {
+            foreach (var affordance in sim.Affordances.Items) {
                 if (affordance.TimeLimit == this) {
                     used.Add(new UsedIn(affordance, "Affordance"));
                 }
             }
 
-            foreach (var hh in sim.HouseholdTraits.It) {
+            foreach (var hh in sim.HouseholdTraits.Items) {
                 foreach (var autodev in hh.Autodevs) {
                     if (autodev.TimeLimit == this) {
                         used.Add(new UsedIn(hh, "Household Trait"));
@@ -252,7 +252,7 @@ namespace Database.Tables.BasicElements {
                 }
             }
 
-            foreach (var hh in sim.HouseTypes.It) {
+            foreach (var hh in sim.HouseTypes.Items) {
                 foreach (var autodev in hh.HouseDevices) {
                     if (autodev.TimeLimit == this) {
                         used.Add(new UsedIn(hh, "Housetype"));
@@ -260,7 +260,7 @@ namespace Database.Tables.BasicElements {
                 }
             }
 
-            foreach (var geoloc in sim.GeographicLocations.It) {
+            foreach (var geoloc in sim.GeographicLocations.Items) {
                 if (geoloc.LightTimeLimit == this) {
                     used.Add(new UsedIn(geoloc, "Geographic Location"));
                 }
@@ -281,7 +281,7 @@ namespace Database.Tables.BasicElements {
                 throw new LPGException("Rootentry was null");
             }
 
-            dt.RootEntry = RecursiveImport(dt, toImport.RootEntry, null, dstSim.DateBasedProfiles.MyItems);
+            dt.RootEntry = RecursiveImport(dt, toImport.RootEntry, null, dstSim.DateBasedProfiles.Items);
             dt.SaveToDB();
             return dt;
         }

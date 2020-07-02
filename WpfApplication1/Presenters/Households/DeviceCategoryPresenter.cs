@@ -63,7 +63,7 @@ namespace LoadProfileGenerator.Presenters.Households {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<DeviceCategory> AllDeviceCategories => Sim.DeviceCategories.MyItems;
+        public ObservableCollection<DeviceCategory> AllDeviceCategories => Sim.DeviceCategories.Items;
 
         [NotNull]
         [UsedImplicitly]
@@ -117,10 +117,10 @@ namespace LoadProfileGenerator.Presenters.Households {
         {
             var usedIn =
                 _deviceCategory.GetHouseholdsForDeviceCategory(
-                    Sim.Affordances.MyItems,
-                    Sim.Locations.MyItems,
-                    Sim.HouseholdTraits.MyItems,
-                    Sim.HouseTypes.MyItems);
+                    Sim.Affordances.Items,
+                    Sim.Locations.Items,
+                    Sim.HouseholdTraits.Items,
+                    Sim.HouseTypes.Items);
             _usedIns.Clear();
             foreach (var dui in usedIn) {
                 _usedIns.Add(dui);

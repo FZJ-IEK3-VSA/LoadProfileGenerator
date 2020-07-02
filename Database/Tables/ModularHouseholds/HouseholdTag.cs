@@ -53,7 +53,7 @@ namespace Database.Tables.ModularHouseholds {
         {
             var used = new List<UsedIn>();
 
-            foreach (var t in sim.HouseholdTemplates.It) {
+            foreach (var t in sim.HouseholdTemplates.Items) {
                 foreach (var hhtTag in t.TemplateTags) {
                     if (hhtTag.Tag == this) {
                         used.Add(new UsedIn(t, "Household Template"));

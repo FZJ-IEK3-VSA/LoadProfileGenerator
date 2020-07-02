@@ -117,7 +117,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
 
         private void Resort()
         {
-            var mydevices = new List<RealDevice>(Sim.RealDevices.MyItems);
+            var mydevices = new List<RealDevice>(Sim.RealDevices.Items);
             mydevices.Sort(Comparison);
             _devices.Clear();
             foreach (var rd in mydevices) {

@@ -203,7 +203,7 @@ namespace Database.Tables.BasicHouseholds {
         [SuppressMessage("Performance", "CC0039:Don't concatenate strings in loops", Justification = "<Pending>")]
         public override List<UsedIn> CalculateUsedIns(Simulator sim) {
             var used = new List<UsedIn>();
-            foreach (var affordance in sim.Affordances.It) {
+            foreach (var affordance in sim.Affordances.Items) {
                 foreach (var affordanceDevice in affordance.AffordanceDevices) {
                     if (affordanceDevice.Device == this) {
                         used.Add(new UsedIn(affordance, "Affordance"));
@@ -216,14 +216,14 @@ namespace Database.Tables.BasicHouseholds {
                 }
             }
 
-            foreach (var hht in sim.HouseholdTraits.It) {
+            foreach (var hht in sim.HouseholdTraits.Items) {
                 foreach (var hhtloc in hht.Autodevs) {
                     if (hhtloc.Device == this) {
                         used.Add(new UsedIn(hht, "Household Trait"));
                     }
                 }
             }
-            foreach (var housetype in sim.HouseTypes.It) {
+            foreach (var housetype in sim.HouseTypes.Items) {
                 foreach (var hhdev in housetype.HouseDevices) {
                     if (hhdev.Device == this) {
                         used.Add(new UsedIn(housetype, "House Type"));
@@ -246,17 +246,17 @@ namespace Database.Tables.BasicHouseholds {
         [NotNull]
         [UsedImplicitly]
         public static DeviceAction ImportFromItem([NotNull] DeviceAction toImport,  [NotNull] Simulator dstSim) {
-            var rd = GetItemFromListByName(dstSim.RealDevices.MyItems, toImport.Device?.Name);
+            var rd = GetItemFromListByName(dstSim.RealDevices.Items, toImport.Device?.Name);
             DeviceActionGroup group = null;
             if (toImport.DeviceActionGroup != null) {
-                group = GetItemFromListByName(dstSim.DeviceActionGroups.MyItems, toImport.DeviceActionGroup.Name);
+                group = GetItemFromListByName(dstSim.DeviceActionGroups.Items, toImport.DeviceActionGroup.Name);
             }
             var da = new DeviceAction(toImport.Name, null, toImport.Description, dstSim.ConnectionString, group, rd, System.Guid.NewGuid().ToStrGuid());
             da.SaveToDB();
 
             foreach (var daProfile in toImport.Profiles) {
-                var tp = GetItemFromListByName(dstSim.Timeprofiles.MyItems, daProfile.Timeprofile?.Name);
-                var vlt = GetItemFromListByName(dstSim.LoadTypes.MyItems, daProfile.VLoadType?.Name);
+                var tp = GetItemFromListByName(dstSim.Timeprofiles.Items, daProfile.Timeprofile?.Name);
+                var vlt = GetItemFromListByName(dstSim.LoadTypes.Items, daProfile.VLoadType?.Name);
                 if (tp == null) {
                     Logger.Error("Could not find a time profile while importing. Skipping");
                     continue;

@@ -10,7 +10,7 @@ namespace CalculationController.Integrity {
 
         protected override void Run(Simulator sim) {
             var noClass =
-                sim.HouseholdTags.It.Where(x => string.IsNullOrWhiteSpace(x.Classification)).ToList();
+                sim.HouseholdTags.Items.Where(x => string.IsNullOrWhiteSpace(x.Classification)).ToList();
             if (noClass.Count > 0) {
                 var be = new List<BasicElement>();
                 be.AddRange(noClass);

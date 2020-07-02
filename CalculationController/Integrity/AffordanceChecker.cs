@@ -475,10 +475,10 @@ namespace CalculationController.Integrity {
             if (!PerformCleanupChecks) {
                 return;
             }
-            var foodDesires = sim.Desires.It.Where(x => x.Name.StartsWith("food / ", StringComparison.OrdinalIgnoreCase)).ToList();
-            var unhungry = sim.Desires.It.First(x => x.Name.ToLower(CultureInfo.InvariantCulture).Contains("hungry"));
+            var foodDesires = sim.Desires.Items.Where(x => x.Name.StartsWith("food / ", StringComparison.OrdinalIgnoreCase)).ToList();
+            var unhungry = sim.Desires.Items.First(x => x.Name.ToLower(CultureInfo.InvariantCulture).Contains("hungry"));
             //check if the unhungry afforances have proper desires
-            var unhungryaffordances = sim.Affordances.It.Where(x => x.AffordanceDesires.Any(z => z.Desire == unhungry))
+            var unhungryaffordances = sim.Affordances.Items.Where(x => x.AffordanceDesires.Any(z => z.Desire == unhungry))
                 .ToList();
             foreach (Affordance affordance in unhungryaffordances) {
                 if (affordance.AffordanceDesires.Count != 2) {
@@ -492,7 +492,7 @@ namespace CalculationController.Integrity {
             }
             //check the food affordances
             foreach (var foodDesire in foodDesires) {
-                var affordances = sim.Affordances.It.Where(x => x.AffordanceDesires.Any(y => y.Desire == foodDesire))
+                var affordances = sim.Affordances.Items.Where(x => x.AffordanceDesires.Any(y => y.Desire == foodDesire))
                     .ToList();
                 if (affordances.Count != 1) {
                     throw new DataIntegrityException("Not exactly one affordance for the food desire " + foodDesire.Name, foodDesire);
@@ -540,28 +540,28 @@ namespace CalculationController.Integrity {
 
         protected override void Run(Simulator sim) {
             RunFoodDesireCheck(sim);
-            CheckAffordanceStandbysOnTraits(sim.HouseholdTraits.It);
+            CheckAffordanceStandbysOnTraits(sim.HouseholdTraits.Items);
             var affordanceNames = new List<string>();
             Random rnd = new Random();
-            foreach (var affordance in sim.Affordances.It) {
+            foreach (var affordance in sim.Affordances.Items) {
                 CheckGeneralAffordanceSettings(affordance);
                 CheckPersonTimeProfiles(affordance);
-                CheckValidLoadtypes(affordance, sim.RealDevices.It);
+                CheckValidLoadtypes(affordance, sim.RealDevices.Items);
                 CheckRequirements(affordance);
                 CheckAges(affordance);
                 CheckAffordanceDesires(affordance);
-                CheckAffordancesForStandbyDevices(affordance, sim.DeviceActions.It);
+                CheckAffordancesForStandbyDevices(affordance, sim.DeviceActions.Items);
                 if (affordanceNames.Contains(affordance.Name.ToUpperInvariant())) {
                     throw new DataIntegrityException("There are two affordances with the name " + affordance.Name +
                                                      ". This is not allowed.");
                 }
                 affordanceNames.Add(affordance.Name.ToUpperInvariant());
                 CheckAffordanceDevices(affordance);
-                CheckOverlappingDeviceProfiles(affordance, sim.DeviceActions.It,rnd);
+                CheckOverlappingDeviceProfiles(affordance, sim.DeviceActions.Items,rnd);
             }
 
             List<Affordance> broken = new List<Affordance>();
-            foreach (var affordance in sim.Affordances.It) {
+            foreach (var affordance in sim.Affordances.Items) {
                 if (PerformCleanupChecks && affordance.BodilyActivityLevel == BodilyActivityLevel.Unknown)
                 {
                     broken.Add(affordance);

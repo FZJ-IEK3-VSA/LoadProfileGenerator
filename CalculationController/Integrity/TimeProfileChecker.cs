@@ -8,7 +8,7 @@ namespace CalculationController.Integrity {
         }
 
         protected override void Run(Simulator sim) {
-            foreach (var profile in sim.Timeprofiles.It) {
+            foreach (var profile in sim.Timeprofiles.Items) {
                 if (profile.DataSource.Length == 0) {
                     throw new DataIntegrityException(
                         "The time profile " + profile.Name + " has no data source entered.", profile);

@@ -37,7 +37,7 @@ namespace CalculationController.Tests
                 HouseholdKey myKey = new HouseholdKey("blub");
                 var start = new DateTime(2019, 12, 27);
                 var end = new DateTime(2020, 12, 31);
-                var ltdict = CalcLoadTypeDtoFactory.MakeLoadTypes(sim.LoadTypes.It, new TimeSpan(0, 1, 0), LoadTypePriority.All);
+                var ltdict = CalcLoadTypeDtoFactory.MakeLoadTypes(sim.LoadTypes.Items, new TimeSpan(0, 1, 0), LoadTypePriority.All);
                 var spaceheating = CalcHouseDtoFactory.CreateSpaceHeatingObject(house, tempProfile, myKey, out var _, start, end, ltdict);
                 if (spaceheating == null)
                 {

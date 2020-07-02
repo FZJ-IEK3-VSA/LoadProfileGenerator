@@ -653,7 +653,7 @@ namespace Database.Tables.BasicHouseholds {
         public override List<UsedIn> CalculateUsedIns(Simulator sim)
         {
             var usedIns = new List<UsedIn>();
-            foreach (var trait in sim.HouseholdTraits.It) {
+            foreach (var trait in sim.HouseholdTraits.Items) {
                 foreach (var hhtLocation in trait.Locations) {
                     if (hhtLocation.AffordanceLocations.Any(x => x.Affordance == this)) {
                         usedIns.Add(new UsedIn(trait, "Household Trait"));
@@ -668,10 +668,10 @@ namespace Database.Tables.BasicHouseholds {
         [NotNull]
         public static Affordance ImportFromItem([NotNull] Affordance toImport, [NotNull] Simulator dstSim)
         {
-            var tp = GetItemFromListByName(dstSim.Timeprofiles.MyItems, toImport.PersonProfile?.Name);
+            var tp = GetItemFromListByName(dstSim.Timeprofiles.Items, toImport.PersonProfile?.Name);
             TimeLimit timeLimit = null;
             if (toImport.TimeLimit != null) {
-                timeLimit = GetItemFromListByName(dstSim.TimeLimits.MyItems, toImport.TimeLimit.Name);
+                timeLimit = GetItemFromListByName(dstSim.TimeLimits.Items, toImport.TimeLimit.Name);
                 if (timeLimit != null) {
                     if (timeLimit.ConnectionString != dstSim.ConnectionString) {
                         throw new LPGException("imported for the wrong db!");
@@ -691,7 +691,7 @@ namespace Database.Tables.BasicHouseholds {
             aff.SaveToDB();
 
             foreach (var affordanceDesire in toImport.AffordanceDesires) {
-                var des = GetItemFromListByName(dstSim.Desires.MyItems, affordanceDesire.Desire.Name);
+                var des = GetItemFromListByName(dstSim.Desires.Items, affordanceDesire.Desire.Name);
                 if (des == null) {
                     throw new LPGException("item not found");
                 }
@@ -700,22 +700,22 @@ namespace Database.Tables.BasicHouseholds {
                     throw new LPGException("imported for the wrong db!");
                 }
 
-                aff.AddDesire(des, affordanceDesire.SatisfactionValue, dstSim.Desires.MyItems);
+                aff.AddDesire(des, affordanceDesire.SatisfactionValue, dstSim.Desires.Items);
             }
 
             foreach (var affordanceDevice in toImport.AffordanceDevices) {
-                var iad = GetAssignableDeviceFromListByName(dstSim.RealDevices.MyItems,
-                    dstSim.DeviceCategories.MyItems, dstSim.DeviceActions.It, dstSim.DeviceActionGroups.It,
+                var iad = GetAssignableDeviceFromListByName(dstSim.RealDevices.Items,
+                    dstSim.DeviceCategories.Items, dstSim.DeviceActions.Items, dstSim.DeviceActionGroups.Items,
                     affordanceDevice.Device);
                 TimeBasedProfile affordanceTimeProfile = null;
                 if (affordanceDevice.TimeProfile != null) {
                     affordanceTimeProfile =
-                        GetItemFromListByName(dstSim.Timeprofiles.MyItems, affordanceDevice.TimeProfile.Name);
+                        GetItemFromListByName(dstSim.Timeprofiles.Items, affordanceDevice.TimeProfile.Name);
                 }
 
                 VLoadType vlt = null;
                 if (affordanceDevice.LoadType != null) {
-                    vlt = GetItemFromListByName(dstSim.LoadTypes.MyItems, affordanceDevice.LoadType.Name);
+                    vlt = GetItemFromListByName(dstSim.LoadTypes.Items, affordanceDevice.LoadType.Name);
                 }
 
                 if (iad.ConnectionString != dstSim.ConnectionString) {
@@ -731,12 +731,12 @@ namespace Database.Tables.BasicHouseholds {
                 }
 
                 aff.AddDeviceProfile(iad, affordanceTimeProfile, affordanceDevice.TimeOffset,
-                    dstSim.RealDevices.MyItems, dstSim.DeviceCategories.MyItems, vlt, affordanceDevice.Probability);
+                    dstSim.RealDevices.Items, dstSim.DeviceCategories.Items, vlt, affordanceDevice.Probability);
             }
 
             foreach (var affordanceSubAffordance in toImport.SubAffordances) {
                 var subAffordance =
-                    GetItemFromListByName(dstSim.SubAffordances.MyItems, affordanceSubAffordance.SubAffordance.Name);
+                    GetItemFromListByName(dstSim.SubAffordances.Items, affordanceSubAffordance.SubAffordance.Name);
                 if (subAffordance.ConnectionString != dstSim.ConnectionString) {
                     throw new LPGException("imported for the wrong db!");
                 }
@@ -745,8 +745,8 @@ namespace Database.Tables.BasicHouseholds {
             }
 
             foreach (var standby in toImport.AffordanceStandbys) {
-                var iad = GetAssignableDeviceFromListByName(dstSim.RealDevices.MyItems,
-                    dstSim.DeviceCategories.MyItems, dstSim.DeviceActions.It, dstSim.DeviceActionGroups.It,
+                var iad = GetAssignableDeviceFromListByName(dstSim.RealDevices.Items,
+                    dstSim.DeviceCategories.Items, dstSim.DeviceActions.Items, dstSim.DeviceActionGroups.Items,
                     standby.Device);
                 aff.AddStandby(iad);
             }
@@ -754,12 +754,12 @@ namespace Database.Tables.BasicHouseholds {
             foreach (var affVariableOperation in toImport.ExecutedVariables) {
                 Location loc = null;
                 if (affVariableOperation.Location != null) {
-                    loc = GetItemFromListByName(dstSim.Locations.It, affVariableOperation.Location.Name);
+                    loc = GetItemFromListByName(dstSim.Locations.Items, affVariableOperation.Location.Name);
                 }
 
                 Variable variable = null;
                 if (affVariableOperation.Variable != null) {
-                    variable = GetItemFromListByName(dstSim.Variables.It, affVariableOperation.Variable.Name);
+                    variable = GetItemFromListByName(dstSim.Variables.Items, affVariableOperation.Variable.Name);
                 }
 
                 aff.AddVariableOperation(affVariableOperation.Value, affVariableOperation.LocationMode, loc,
@@ -770,7 +770,7 @@ namespace Database.Tables.BasicHouseholds {
             foreach (var variableRequirement in toImport.RequiredVariables) {
                 Location loc = null;
                 if (variableRequirement.Location != null) {
-                    loc = GetItemFromListByName(dstSim.Locations.It, variableRequirement.Location.Name);
+                    loc = GetItemFromListByName(dstSim.Locations.Items, variableRequirement.Location.Name);
                 }
 
                 Variable variable = null;

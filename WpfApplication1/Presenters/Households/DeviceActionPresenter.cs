@@ -25,12 +25,12 @@ namespace LoadProfileGenerator.Presenters.Households {
         [NotNull]
         [UsedImplicitly]
         public ObservableCollection<DeviceActionGroup> DeviceActionGroups
-            => Sim.DeviceActionGroups.MyItems;
+            => Sim.DeviceActionGroups.Items;
 
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<RealDevice> Devices => Sim.RealDevices.MyItems;
+        public ObservableCollection<RealDevice> Devices => Sim.RealDevices.Items;
 
         [NotNull]
         [ItemNotNull]
@@ -40,7 +40,7 @@ namespace LoadProfileGenerator.Presenters.Households {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<VLoadType> LoadTypes => Sim.LoadTypes.MyItems;
+        public ObservableCollection<VLoadType> LoadTypes => Sim.LoadTypes.Items;
 
         [NotNull]
         public DeviceAction ThisDeviceAction => _deviceAction;
@@ -49,7 +49,7 @@ namespace LoadProfileGenerator.Presenters.Households {
         [NotNull]
         [UsedImplicitly]
         public ObservableCollection<TimeBasedProfile> Timeprofiles
-            => Sim.Timeprofiles.MyItems;
+            => Sim.Timeprofiles.Items;
 
         [ItemNotNull]
         [NotNull]
@@ -102,7 +102,7 @@ namespace LoadProfileGenerator.Presenters.Households {
         {
             EstimateEntries.Clear();
             var estimates = ThisDeviceAction.CalculateAverageEnergyUse(null,
-                Sim.DeviceActions.It, null, 1, 1);
+                Sim.DeviceActions.Items, null, 1, 1);
             foreach (var estimate in estimates) {
                 var entry = new EstimateEntry(estimate.Item1.PrettyName,
                     estimate.Item2.ToString(CultureInfo.CurrentCulture) + " " + estimate.Item1.UnitOfSum);

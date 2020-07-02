@@ -63,7 +63,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<RealDevice> AllDevices => Sim.RealDevices.MyItems;
+        public ObservableCollection<RealDevice> AllDevices => Sim.RealDevices.Items;
 
         [ItemNotNull]
         [NotNull]
@@ -74,34 +74,34 @@ namespace LoadProfileGenerator.Presenters.Houses {
         [NotNull]
         [UsedImplicitly]
         public ObservableCollection<DeviceCategory> DeviceCategories
-            => Sim.DeviceCategories.MyItems;
+            => Sim.DeviceCategories.Items;
 
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<RealDevice> Devices => Sim.RealDevices.MyItems;
+        public ObservableCollection<RealDevice> Devices => Sim.RealDevices.Items;
 
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
         public ObservableCollection<EnergyStorage> EnergyStorages
-            => Sim.EnergyStorages.MyItems;
+            => Sim.EnergyStorages.Items;
 
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<Generator> Generators => Sim.Generators.MyItems;
+        public ObservableCollection<Generator> Generators => Sim.Generators.Items;
 
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
         public ObservableCollection<GeographicLocation> GeographicLocations
-            => Sim.GeographicLocations.MyItems;
+            => Sim.GeographicLocations.Items;
 
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<Location> Locations => Sim.Locations.MyItems;
+        public ObservableCollection<Location> Locations => Sim.Locations.Items;
 
         [UsedImplicitly]
         public double ResultingCoolingEnergyUse => GetDegreeHoursCoolingTotal();
@@ -155,13 +155,13 @@ namespace LoadProfileGenerator.Presenters.Houses {
         [NotNull]
         [UsedImplicitly]
         public ObservableCollection<TemperatureProfile> TemperatureProfiles
-            => Sim.TemperatureProfiles.MyItems;
+            => Sim.TemperatureProfiles.Items;
 
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
         public ObservableCollection<TemperatureProfile> TemperaturProfiles
-            => Sim.TemperatureProfiles.MyItems;
+            => Sim.TemperatureProfiles.Items;
 
         [CanBeNull]
         [UsedImplicitly]
@@ -180,19 +180,19 @@ namespace LoadProfileGenerator.Presenters.Houses {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<TimeLimit> TimeLimits => Sim.TimeLimits.MyItems;
+        public ObservableCollection<TimeLimit> TimeLimits => Sim.TimeLimits.Items;
 
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
         public ObservableCollection<TimeBasedProfile> Timeprofiles
-            => Sim.Timeprofiles.MyItems;
+            => Sim.Timeprofiles.Items;
 
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
         public ObservableCollection<TransformationDevice> TransformationDevices
-            => Sim.TransformationDevices.MyItems;
+            => Sim.TransformationDevices.Items;
 
         [ItemNotNull]
         [NotNull]
@@ -202,7 +202,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<VLoadType> VLoadTypes => Sim.LoadTypes.MyItems;
+        public ObservableCollection<VLoadType> VLoadTypes => Sim.LoadTypes.Items;
 
         public void Delete()
         {
@@ -336,7 +336,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
             var newht = (HouseType) HouseType.ImportFromItem(ThisHouseType, Sim);
             newht.Name = newht.Name + " (Copy)";
             newht.SaveToDB();
-            Sim.HouseTypes.It.Add(newht);
+            Sim.HouseTypes.Items.Add(newht);
             ApplicationPresenter.OpenItem(newht);
 
         }

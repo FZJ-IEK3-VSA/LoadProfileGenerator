@@ -58,13 +58,13 @@ namespace SimulationEngineLib.Calculation {
             List<DBBase> items;
             switch (type) {
                 case CalcObjectType.ModularHousehold:
-                    items = new List<DBBase>(sim.ModularHouseholds.It);
+                    items = new List<DBBase>(sim.ModularHouseholds.Items);
                     break;
                 case CalcObjectType.House:
-                    items = new List<DBBase>(sim.Houses.It);
+                    items = new List<DBBase>(sim.Houses.Items);
                     break;
                 case CalcObjectType.Settlement:
-                    items = new List<DBBase>(sim.Settlements.It);
+                    items = new List<DBBase>(sim.Settlements.Items);
                     break;
                 default: throw new LPGException("Unknown type");
             }
@@ -81,10 +81,10 @@ namespace SimulationEngineLib.Calculation {
             List<DBBase> items;
             switch (type) {
                 case "TemperatureProfiles":
-                    items = new List<DBBase>(sim.TemperatureProfiles.It);
+                    items = new List<DBBase>(sim.TemperatureProfiles.Items);
                     break;
                 case "GeographicLocations":
-                    items = new List<DBBase>(sim.GeographicLocations.It);
+                    items = new List<DBBase>(sim.GeographicLocations.Items);
                     break;
                 default:
                     Logger.Error("Found a bug!");
@@ -109,7 +109,7 @@ namespace SimulationEngineLib.Calculation {
                 var odf =  value;
                 var s = "[" + (int) value + "] " + LoadTypePriorityHelper.LoadTypePriorityDictionaryAll[odf] +
                         Environment.NewLine+"\t(";
-                var lts = sim.LoadTypes.It.Where(x => x.Priority == odf);
+                var lts = sim.LoadTypes.Items.Where(x => x.Priority == odf);
                 foreach (var vLoadType in lts) {
                     s += vLoadType.Name + ", ";
                 }

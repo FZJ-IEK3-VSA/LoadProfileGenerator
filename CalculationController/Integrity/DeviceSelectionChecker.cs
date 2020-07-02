@@ -8,7 +8,7 @@ namespace CalculationController.Integrity {
         }
 
         protected override void Run(Simulator sim) {
-            foreach (var deviceSelection in sim.DeviceSelections.It) {
+            foreach (var deviceSelection in sim.DeviceSelections.Items) {
                 var devices = deviceSelection.Items.Select(x => x.DeviceCategory).ToList();
                 var distinctDevices = devices.Distinct();
                 if (devices.Count != distinctDevices.Count()) {

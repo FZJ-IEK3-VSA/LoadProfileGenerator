@@ -1,5 +1,4 @@
 ﻿//-----------------------------------------------------------------------
-
 // <copyright>
 //
 // Copyright (c) TU Chemnitz, Prof. Technische Thermodynamik
@@ -150,12 +149,12 @@ namespace LoadProfileGenerator.Presenters.Houses {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<GeographicLocation> GeographicLocations => Sim.GeographicLocations.MyItems;
+        public ObservableCollection<GeographicLocation> GeographicLocations => Sim.GeographicLocations.Items;
 
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<House> Houses => Sim.Houses.MyItems;
+        public ObservableCollection<House> Houses => Sim.Houses.Items;
 
         [CanBeNull]
         [UsedImplicitly]
@@ -204,7 +203,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<ModularHousehold> ModularHouseholds => Sim.ModularHouseholds.MyItems;
+        public ObservableCollection<ModularHousehold> ModularHouseholds => Sim.ModularHouseholds.Items;
 
 
         [ItemNotNull]
@@ -274,7 +273,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<TemperatureProfile> TemperatureProfiles => Sim.TemperatureProfiles.MyItems;
+        public ObservableCollection<TemperatureProfile> TemperatureProfiles => Sim.TemperatureProfiles.Items;
 
         [NotNull]
         [UsedImplicitly]
@@ -440,7 +439,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
 
         public void RefreshLoadTypeList()
         {
-            foreach (var lt in Sim.LoadTypes.It) {
+            foreach (var lt in Sim.LoadTypes.Items) {
                 bool enabled = ThisSettlement.EnabledLoadtypes.Contains(lt.Name);
 
                 LoadTypeSelection lts = new LoadTypeSelection(RefreshSettlementLoadTypeList, lt, enabled);

@@ -63,17 +63,17 @@ namespace LoadProfileGenerator.Presenters.Households {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<Location> AllLocations => Sim.Locations.It;
+        public ObservableCollection<Location> AllLocations => Sim.Locations.Items;
 
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<Variable> AllVariables => Sim.Variables.It;
+        public ObservableCollection<Variable> AllVariables => Sim.Variables.Items;
 
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<Desire> Desires => Sim.Desires.MyItems;
+        public ObservableCollection<Desire> Desires => Sim.Desires.Items;
 
         [ItemNotNull]
         [NotNull]
@@ -92,7 +92,7 @@ namespace LoadProfileGenerator.Presenters.Households {
         [NotNull]
         [UsedImplicitly]
         public ObservableCollection<TimeBasedProfile> Timeprofiles
-            => Sim.Timeprofiles.MyItems;
+            => Sim.Timeprofiles.Items;
 
         [ItemNotNull]
         [NotNull]
@@ -101,7 +101,7 @@ namespace LoadProfileGenerator.Presenters.Households {
 
         public void AddDesire([NotNull] Desire d, decimal satisfactionvalue)
         {
-            _subaff.AddDesire(d, satisfactionvalue, Sim.Desires.MyItems);
+            _subaff.AddDesire(d, satisfactionvalue, Sim.Desires.Items);
         }
 
         public void Delete()

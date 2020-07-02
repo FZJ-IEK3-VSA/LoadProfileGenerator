@@ -47,12 +47,12 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<GeographicLocation> GeoLocs => Sim.GeographicLocations.It;
+        public ObservableCollection<GeographicLocation> GeoLocs => Sim.GeographicLocations.Items;
 
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<Holiday> Holidays => Sim.Holidays.MyItems;
+        public ObservableCollection<Holiday> Holidays => Sim.Holidays.Items;
 
         [CanBeNull]
         [UsedImplicitly]
@@ -73,7 +73,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<TimeLimit> TimeLimits => Sim.TimeLimits.MyItems;
+        public ObservableCollection<TimeLimit> TimeLimits => Sim.TimeLimits.Items;
 
         public override void Close(bool saveToDB, bool removeLast = false) {
             if (saveToDB) {

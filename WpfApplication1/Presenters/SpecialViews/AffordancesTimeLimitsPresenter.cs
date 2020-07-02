@@ -46,7 +46,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         [NotNull]
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         [UsedImplicitly]
-        public ObservableCollection<Affordance> Affordances => Sim.Affordances.MyItems;
+        public ObservableCollection<Affordance> Affordances => Sim.Affordances.Items;
 
         [NotNull]
         [UsedImplicitly]

@@ -39,14 +39,14 @@ namespace Database.Tests.Tables.ModularHouseholds {
 
                     //check import
                     List<HouseholdTemplate.JsonDto> dto1 = new List<HouseholdTemplate.JsonDto>();
-                    foreach (var template in sim1.HouseholdTemplates.It)
+                    foreach (var template in sim1.HouseholdTemplates.Items)
                     {
                         dto1.Add(template.GetJson());
                     }
 
                     sim2.HouseholdTemplates.DeleteItem(sim2.HouseholdTemplates[0]);
                     HouseholdTemplate.ImportObjectFromJson(sim2, dto1);
-                    sim2.HouseholdTemplates.It.Sort();
+                    sim2.HouseholdTemplates.Items.Sort();
                     sim1.HouseholdTemplates[0].Should().BeEquivalentTo(sim2.HouseholdTemplates[0], o => o
                         .Using<IRelevantGuidProvider>(x => x.Subject.RelevantGuid.Should().BeEquivalentTo(x.Expectation.RelevantGuid)).WhenTypeIs<IRelevantGuidProvider>()
                                 .Excluding(x => x.SelectedMemberPath.EndsWith("ConnectionString", StringComparison.OrdinalIgnoreCase)
@@ -193,10 +193,10 @@ namespace Database.Tests.Tables.ModularHouseholds {
                 hhtemplate.AddPerson(sim.Persons[0], sim.TraitTags[0]);
                 sim.HouseholdTags.CreateNewItem(sim.ConnectionString);
                 hhtemplate.AddTemplateTag(sim.HouseholdTags[0]);
-                (sim.HouseholdTemplates.It.Count).Should().Be(1);
+                (sim.HouseholdTemplates.Items.Count).Should().Be(1);
                 (hhtemplate.Entries.Count).Should().Be(1);
                 var sim2 = new Simulator(db.ConnectionString);
-                (sim2.HouseholdTemplates.It.Count).Should().Be(1);
+                (sim2.HouseholdTemplates.Items.Count).Should().Be(1);
                 (sim2.HouseholdTemplates[0].Entries.Count).Should().Be(1);
                 (sim2.HouseholdTemplates[0].Persons.Count).Should().Be(1);
                 (sim2.HouseholdTemplates[0].TemplateTags.Count).Should().Be(1);
@@ -239,10 +239,10 @@ namespace Database.Tests.Tables.ModularHouseholds {
                 var vacations = db.LoadVacations();
                 var templateTags = db.LoadHouseholdTags();
                 var datebasedProfiles = db.LoadDateBasedProfiles();
-                HouseholdTemplate.LoadFromDatabase(cat.It, db.ConnectionString, traits, false, persons, traittags,
+                HouseholdTemplate.LoadFromDatabase(cat.Items, db.ConnectionString, traits, false, persons, traittags,
                     vacations,
                     templateTags, datebasedProfiles);
-                (cat.MyItems.Count).Should().Be(0);
+                (cat.Items.Count).Should().Be(0);
 
                 var gen = cat.CreateNewItem(db.ConnectionString);
                 var entry = gen.AddEntry(traittags[0], 0, 10);
@@ -269,7 +269,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
                 var newHouseholdTemplate = sim.HouseholdTemplates.CreateNewItem(db.ConnectionString);
                 newHouseholdTemplate.NewHHName = "hh";
                 var existingHouseholdTemplate =
-                    sim.ModularHouseholds.It.FirstOrDefault(x => x.Name.StartsWith("CHS01", StringComparison.Ordinal));
+                    sim.ModularHouseholds.Items.FirstOrDefault(x => x.Name.StartsWith("CHS01", StringComparison.Ordinal));
                 if (existingHouseholdTemplate == null)
                 {
                     throw new LPGException("Could not find chs01");

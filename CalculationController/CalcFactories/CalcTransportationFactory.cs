@@ -133,7 +133,7 @@ namespace CalculationController.CalcFactories {
         {
             Dictionary<TransportationDeviceCategory, CalcTransportationDeviceCategoryDto> categoriesDict =
                 new Dictionary<TransportationDeviceCategory, CalcTransportationDeviceCategoryDto>();
-            foreach (TransportationDeviceCategory category in sim.TransportationDeviceCategories.It) {
+            foreach (TransportationDeviceCategory category in sim.TransportationDeviceCategories.Items) {
                 CalcTransportationDeviceCategoryDto ctdc = new CalcTransportationDeviceCategoryDto(category.Name,
                     category.IntID, category.IsLimitedToSingleLocation, Guid.NewGuid().ToStrGuid());
                 categoriesDict.Add(category, ctdc);

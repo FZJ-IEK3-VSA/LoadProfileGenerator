@@ -36,7 +36,7 @@ namespace LoadProfileGenerator.Tests.Presenters.SpecialViews
                 using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
                 {
                     Simulator sim = new Simulator(db.ConnectionString);
-                    ModularHousehold hh = sim.ModularHouseholds.It[0];
+                    ModularHousehold hh = sim.ModularHouseholds.Items[0];
                     // Guid g = Guid.NewGuid();
                     CalculationOutcomesPresenter.StartOneCalculation(hh, sim.GeographicLocations[0], sim.TemperatureProfiles[0],
                         EnergyIntensityType.EnergySaving, wd.WorkingDirectory, sim,

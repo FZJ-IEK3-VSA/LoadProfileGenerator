@@ -63,7 +63,7 @@ namespace Database.Tests.Tables.Transportation {
                     db1.ClearTable(TransportationDevice.TableName);
                     var srcSim = new Simulator(db2.ConnectionString);
                     var dstSim = new Simulator(db1.ConnectionString);
-                    foreach (var device in srcSim.TransportationDevices.It)
+                    foreach (var device in srcSim.TransportationDevices.Items)
                     {
                         TransportationDevice.ImportFromItem(device, dstSim);
                     }

@@ -406,9 +406,9 @@ namespace ReleaseMaker
         private static void FindUnusedAffordance([NotNull] Simulator sim)
         {
             var notFoundAffordances = new List<Affordance>();
-            var affordances = new List<Affordance>(sim.Affordances.MyItems);
-            var householdTraits = new List<HouseholdTrait>(sim.HouseholdTraits.MyItems);
-            sim.DeviceCategories.MyItems.ToList().ForEach(dc => dc.RefreshSubDevices());
+            var affordances = new List<Affordance>(sim.Affordances.Items);
+            var householdTraits = new List<HouseholdTrait>(sim.HouseholdTraits.Items);
+            sim.DeviceCategories.Items.ToList().ForEach(dc => dc.RefreshSubDevices());
             // collect all household trait desires
             var hhtdesires = new Dictionary<HouseholdTrait, List<Desire>>();
             foreach (var householdTrait in householdTraits)
@@ -425,7 +425,7 @@ namespace ReleaseMaker
             foreach (var affordance in affordances)
             {
                 var found = false;
-                foreach (var householdTrait in sim.HouseholdTraits.MyItems)
+                foreach (var householdTrait in sim.HouseholdTraits.Items)
                 {
                     if (!found)
                     {
@@ -470,7 +470,7 @@ namespace ReleaseMaker
         {
             var desires = new List<Desire>();
             // collect all household trait desires
-            foreach (var householdTrait in sim.HouseholdTraits.MyItems)
+            foreach (var householdTrait in sim.HouseholdTraits.Items)
             {
                 foreach (var desire in householdTrait.Desires)
                 {
@@ -481,7 +481,7 @@ namespace ReleaseMaker
                 }
             }
             var unusedDesires = new List<Desire>();
-            foreach (var desire in sim.Desires.MyItems)
+            foreach (var desire in sim.Desires.Items)
             {
                 if (!desires.Contains(desire))
                 {
@@ -503,29 +503,29 @@ namespace ReleaseMaker
         private static void FindUnusedDevices([NotNull] Simulator sim)
         {
             var usedDevices = new List<IAssignableDevice>();
-            foreach (var affordance in sim.Affordances.MyItems)
+            foreach (var affordance in sim.Affordances.Items)
             {
                 foreach (var affordanceDevice in affordance.AffordanceDevices)
                 {
                     usedDevices.Add(affordanceDevice.Device);
                 }
             }
-            foreach (var location in sim.Locations.MyItems)
+            foreach (var location in sim.Locations.Items)
             {
                 foreach (var locdev in location.LocationDevices)
                 {
                     usedDevices.Add(locdev.Device);
                 }
             }
-            foreach (var action in sim.DeviceActions.It)
+            foreach (var action in sim.DeviceActions.Items)
             {
                 usedDevices.Add(action.Device);
             }
-            foreach (var dev in sim.RealDevices.It)
+            foreach (var dev in sim.RealDevices.Items)
             {
                 usedDevices.Add(dev.DeviceCategory);
             }
-            foreach (var hht in sim.HouseholdTraits.MyItems)
+            foreach (var hht in sim.HouseholdTraits.Items)
             {
                 foreach (var autodev in hht.Autodevs)
                 {
@@ -534,7 +534,7 @@ namespace ReleaseMaker
             }
             var devices = new List<IAssignableDevice>();
             devices.Clear();
-            foreach (var rd in sim.RealDevices.MyItems)
+            foreach (var rd in sim.RealDevices.Items)
             {
                 var found = usedDevices.Contains(rd) || usedDevices.Contains(rd.DeviceCategory);
                 if (!found)
@@ -542,7 +542,7 @@ namespace ReleaseMaker
                     devices.Add(rd);
                 }
             }
-            foreach (var dc in sim.DeviceCategories.MyItems)
+            foreach (var dc in sim.DeviceCategories.Items)
             {
                 if (!usedDevices.Contains(dc) && dc.SubDevices.Count > 0)
                 {
@@ -667,7 +667,7 @@ namespace ReleaseMaker
                 sim.MyGeneralConfig.CSVCharacter = ";";
                 var forgottenUpdates = false;
                 Logger.Info("### updating estimates");
-                foreach (var trait in sim.HouseholdTraits.It)
+                foreach (var trait in sim.HouseholdTraits.Items)
                 {
                     switch (trait.Name)
                     {

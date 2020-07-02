@@ -69,18 +69,18 @@ namespace Database.Tests.Tables.ModularHouseholds {
 
                     //check import
                     List<HouseholdTrait.JsonDto> dto1 = new List<HouseholdTrait.JsonDto>();
-                    foreach (var trait in sim1.HouseholdTraits.It)
+                    foreach (var trait in sim1.HouseholdTraits.Items)
                     {
                         dto1.Add(trait.GetJson());
                     }
 
                     sim2.HouseholdTraits.DeleteItem(sim2.HouseholdTraits[0]);
                     var result = HouseholdTrait.ImportObjectFromJson(sim2, dto1);
-                    if (sim1.HouseholdTraits.It.Count != sim2.HouseholdTraits.It.Count)
+                    if (sim1.HouseholdTraits.Items.Count != sim2.HouseholdTraits.Items.Count)
                     {
                         throw new LPGException("count not equal");
                     }
-                    sim2.HouseholdTraits.It.Sort();
+                    sim2.HouseholdTraits.Items.Sort();
                     sim1.HouseholdTraits[0].Should().BeEquivalentTo(result[0], o => o.IgnoringCyclicReferences()
                         .Using<IRelevantGuidProvider>(x => x.Subject.RelevantGuid.Should().BeEquivalentTo(x.Expectation.RelevantGuid)).WhenTypeIs<IRelevantGuidProvider>()
                         .Excluding(x => IsInvalidMember(x)
@@ -130,7 +130,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
                 Simulator sim = new Simulator(db.ConnectionString);
-                for (int i = 0; i < sim.HouseholdTraits.It.Count && i < 3; i++)
+                for (int i = 0; i < sim.HouseholdTraits.Items.Count && i < 3; i++)
                 {
                     Logger.Info("Importing trait from #" + i);
                     var newTrait = sim.HouseholdTraits.CreateNewItem(db.ConnectionString);

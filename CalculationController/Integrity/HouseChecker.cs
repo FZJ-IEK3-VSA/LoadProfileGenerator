@@ -8,7 +8,7 @@ namespace CalculationController.Integrity {
 
         protected override void Run(Simulator sim) {
 
-            foreach (var house in sim.Houses.It) {
+            foreach (var house in sim.Houses.Items) {
 
                 if (Config.AllowEmptyHouses) {
                     if (house.Households.Count == 0) {

@@ -49,7 +49,7 @@ namespace CalculationController.Tests.Transportation {
 
             var mhh = sim.ModularHouseholds[0];
             var r = new Random(1);
-            var ltdtoDict = CalcLoadTypeDtoFactory.MakeLoadTypes(sim.LoadTypes.It, new TimeSpan(0, 1, 0),
+            var ltdtoDict = CalcLoadTypeDtoFactory.MakeLoadTypes(sim.LoadTypes.Items, new TimeSpan(0, 1, 0),
                 LoadTypePriority.RecommendedForHouseholds);
             var ltdict = CalcLoadTypeFactory.MakeLoadTypes(ltdtoDict);
             var parameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(2018, 1, 1)
@@ -119,7 +119,6 @@ namespace CalculationController.Tests.Transportation {
                     css);
                 fft.Dispose();
                 db.Cleanup();
-                wd.CleanUp();
                 return dtohh;
             }
         }
@@ -138,6 +137,23 @@ namespace CalculationController.Tests.Transportation {
             var devices1 = dto1.DeviceDtos.Select(x => x.Name).ToList();
             var devices2 = dto2.DeviceDtos.Select(x => x.Name).ToList();
             devices1.Should().BeEquivalentTo(devices2);
+        }
+
+
+        [Fact]
+        [SuppressMessage("ReSharper", "UnusedVariable")]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.BasicTest)]
+        public void DuplicateDevicesFromFactoryTest()
+        {
+            var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass() + "1");
+            using var db1 = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
+            var dto1 = MakeSingleFactory(wd1, db1);
+            var devices1 = dto1.AutoDevices.Select(x => x).ToList();
+            RowCollection rc = new RowCollection("devices");
+            foreach (var device in devices1) {
+                rc.Add(XlsRowBuilder.GetAllProperties(device));
+            }
+            XlsxDumper.WriteToXlsx(wd1.Combine("devices.xlsx"),rc);
         }
 
         [Fact]
@@ -170,7 +186,7 @@ namespace CalculationController.Tests.Transportation {
                     var mhh = sim.ModularHouseholds[0];
                     var r = new Random(1);
                     var dcp = new DeviceCategoryPicker(r, null);
-                    var ltdtoDict = CalcLoadTypeDtoFactory.MakeLoadTypes(sim.LoadTypes.It, new TimeSpan(0, 1, 0),
+                    var ltdtoDict = CalcLoadTypeDtoFactory.MakeLoadTypes(sim.LoadTypes.Items, new TimeSpan(0, 1, 0),
                         LoadTypePriority.RecommendedForHouseholds);
                     var ltdict = CalcLoadTypeFactory.MakeLoadTypes(ltdtoDict);
                     //var picker = new DeviceCategoryPicker(r,null);

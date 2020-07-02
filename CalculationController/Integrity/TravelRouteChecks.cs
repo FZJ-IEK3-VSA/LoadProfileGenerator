@@ -17,7 +17,7 @@ namespace CalculationController.Integrity
             if (!PerformCleanupChecks) {
                 return;
             }
-            foreach (var routeSet in sim.TravelRouteSets.It) {
+            foreach (var routeSet in sim.TravelRouteSets.Items) {
                 var arr = routeSet.Name.Split(' ');
                 var kmstr = arr.FirstOrDefault(x => x.EndsWith("km"));
                 if (kmstr == null) {
@@ -85,7 +85,7 @@ namespace CalculationController.Integrity
 
         protected override void Run(Simulator sim)
         {
-            foreach (var travelroute in sim.TravelRoutes.It) {
+            foreach (var travelroute in sim.TravelRoutes.Items) {
                 if(travelroute.Steps.Count == 0) {
                     throw new DataIntegrityException("The travel route " + travelroute.PrettyName + " has no steps. Please fix.",travelroute);
                 }
@@ -106,8 +106,8 @@ namespace CalculationController.Integrity
                 }
             }
 
-            foreach (TravelRoute one in sim.TravelRoutes.It) {
-                foreach (TravelRoute two in sim.TravelRoutes.It) {
+            foreach (TravelRoute one in sim.TravelRoutes.Items) {
+                foreach (TravelRoute two in sim.TravelRoutes.Items) {
                     if (one == two) {
                         continue;
                     }

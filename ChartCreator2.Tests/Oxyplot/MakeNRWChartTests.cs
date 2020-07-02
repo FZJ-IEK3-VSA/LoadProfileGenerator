@@ -29,7 +29,7 @@ namespace ChartCreator2.Tests.Oxyplot {
                 using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
                 {
                     var sim = new Simulator(db.ConnectionString);
-                    var versions = sim.CalculationOutcomes.It.Select(x => x.LPGVersion).Distinct().ToList();
+                    var versions = sim.CalculationOutcomes.Items.Select(x => x.LPGVersion).Distinct().ToList();
                     versions.Sort();
                     var dstversion = versions.Last();
                     //ChartLocalizer.ShouldTranslate = false;
@@ -51,7 +51,7 @@ namespace ChartCreator2.Tests.Oxyplot {
                     {
                         var v = version;
                         var versionEntries =
-                            sim.CalculationOutcomes.It.Where(x => x.LPGVersion == v).ToList();
+                            sim.CalculationOutcomes.Items.Where(x => x.LPGVersion == v).ToList();
                         if (versionEntries.Count == 0)
                         {
                             throw new LPGException("No Entries Found");

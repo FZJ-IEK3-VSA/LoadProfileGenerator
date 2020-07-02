@@ -294,14 +294,14 @@ namespace Database.Tables.BasicElements {
         public static GeographicLocation ImportFromItem([NotNull] GeographicLocation toImport, [NotNull] Simulator dstSim) {
             TimeLimit dt = null;
             if (toImport.LightTimeLimit != null) {
-                dt = GetItemFromListByName(dstSim.TimeLimits.MyItems, toImport.LightTimeLimit.Name);
+                dt = GetItemFromListByName(dstSim.TimeLimits.Items, toImport.LightTimeLimit.Name);
             }
             var geoloc = new GeographicLocation(toImport.Name, toImport._latHour, toImport.LatMinute,
                 toImport.LatSecond, toImport.LongHour, toImport.LongMinute, toImport.LongSecond, toImport.LongDirection,
                 toImport.LatDirection,dstSim.ConnectionString, dt, toImport.Guid);
             geoloc.SaveToDB();
             foreach (var geographicLocHoliday in toImport.Holidays) {
-                var holiday = GetItemFromListByName(dstSim.Holidays.MyItems, geographicLocHoliday.Holiday.Name);
+                var holiday = GetItemFromListByName(dstSim.Holidays.Items, geographicLocHoliday.Holiday.Name);
                 if (holiday == null) {
                     throw new LPGException("holiday could not be found.");
                 }

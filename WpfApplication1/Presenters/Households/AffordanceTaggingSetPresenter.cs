@@ -69,7 +69,7 @@ namespace LoadProfileGenerator.Presenters.Households {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<Affordance> Affordances => Sim.Affordances.MyItems;
+        public ObservableCollection<Affordance> Affordances => Sim.Affordances.Items;
 
         [ItemNotNull]
         [NotNull]
@@ -83,7 +83,7 @@ namespace LoadProfileGenerator.Presenters.Households {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<VLoadType> LoadTypes => Sim.LoadTypes.It;
+        public ObservableCollection<VLoadType> LoadTypes => Sim.LoadTypes.Items;
 
         [ItemNotNull]
         [NotNull]
@@ -208,7 +208,7 @@ namespace LoadProfileGenerator.Presenters.Households {
 
         public void RemoveOldAffordanceTags()
         {
-            ThisAffordanceTaggingSet.RemoveAllOldEntries(Sim.Affordances.It);
+            ThisAffordanceTaggingSet.RemoveAllOldEntries(Sim.Affordances.Items);
         }
 
         [NotNull]

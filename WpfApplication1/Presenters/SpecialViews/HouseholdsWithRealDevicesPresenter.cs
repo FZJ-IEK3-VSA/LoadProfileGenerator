@@ -78,7 +78,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         public void Refresh()
         {
             _selectedAffordances.Clear();
-            var houses = Sim.HouseTypes.MyItems;
+            var houses = Sim.HouseTypes.Items;
             foreach (var house in houses) {
                 foreach (var hhAutonomousDevice in house.HouseDevices) {
                     if (hhAutonomousDevice.Device?.AssignableDeviceType == AssignableDeviceType.Device) {

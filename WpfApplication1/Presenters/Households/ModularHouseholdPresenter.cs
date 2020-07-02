@@ -96,12 +96,12 @@ namespace LoadProfileGenerator.Presenters.Households {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<HouseholdTag> AllTags => Sim.HouseholdTags.It;
+        public ObservableCollection<HouseholdTag> AllTags => Sim.HouseholdTags.Items;
 
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<TraitTag> AllTraitTags => Sim.TraitTags.It;
+        public ObservableCollection<TraitTag> AllTraitTags => Sim.TraitTags.Items;
 
         [ItemNotNull]
         [NotNull]
@@ -116,7 +116,7 @@ namespace LoadProfileGenerator.Presenters.Households {
         [NotNull]
         [UsedImplicitly]
         public ObservableCollection<DeviceSelection> DeviceSelections
-            => Sim.DeviceSelections.MyItems;
+            => Sim.DeviceSelections.Items;
 
         [ItemNotNull]
         [NotNull]
@@ -170,7 +170,7 @@ namespace LoadProfileGenerator.Presenters.Households {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<Person> Persons => Sim.Persons.MyItems;
+        public ObservableCollection<Person> Persons => Sim.Persons.Items;
 
         [UsedImplicitly]
         public ModularHouseholdTrait.ModularHouseholdTraitAssignType SelectedAssigningType {
@@ -281,7 +281,7 @@ namespace LoadProfileGenerator.Presenters.Households {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<Vacation> Vacations => Sim.Vacations.It;
+        public ObservableCollection<Vacation> Vacations => Sim.Vacations.Items;
 
         public void AddHouseholdTrait([NotNull] HouseholdTrait trait,
             ModularHouseholdTrait.ModularHouseholdTraitAssignType modularHouseholdTraitAssignType,
@@ -331,7 +331,7 @@ namespace LoadProfileGenerator.Presenters.Households {
             newChh.Name = name;
             newChh.ImportModularHousehold(ThisModularHousehold);
             ApplicationPresenter.OpenItem(newChh);
-            Sim.ModularHouseholds.It.Sort();
+            Sim.ModularHouseholds.Items.Sort();
         }
 
         public void Delete()
@@ -348,7 +348,7 @@ namespace LoadProfileGenerator.Presenters.Households {
 
         public void FilterTraits([CanBeNull] string text, [CanBeNull] TraitTag selectedTag)
         {
-            var sourceList = new List<HouseholdTrait>(Sim.HouseholdTraits.It);
+            var sourceList = new List<HouseholdTrait>(Sim.HouseholdTraits.Items);
             if (ShowOnlySuitableTraits && SelectedPerson != null) {
                 sourceList = sourceList.Where(x => x.IsValidForPerson(SelectedPerson)).ToList();
             }
@@ -410,7 +410,7 @@ namespace LoadProfileGenerator.Presenters.Households {
         [UsedImplicitly]
         public void RefreshLivingPatterns()
         {
-            var list = Sim.TraitTags.It
+            var list = Sim.TraitTags.Items
                 .Where(x => x.Name.StartsWith("Living Pattern", StringComparison.InvariantCulture)).ToList();
             LivingPatternTags.SynchronizeWithList(list);
         }

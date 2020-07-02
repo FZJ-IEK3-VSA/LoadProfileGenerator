@@ -7,7 +7,7 @@ namespace CalculationController.Integrity {
         }
 
         protected override void Run(Simulator sim) {
-            foreach (var subaff in sim.SubAffordances.It) {
+            foreach (var subaff in sim.SubAffordances.Items) {
                 foreach (var des1 in subaff.SubAffordanceDesires) {
                     if (des1.SatisfactionValue <= 0 || des1.SatisfactionValue > 1) {
                         throw new DataIntegrityException(

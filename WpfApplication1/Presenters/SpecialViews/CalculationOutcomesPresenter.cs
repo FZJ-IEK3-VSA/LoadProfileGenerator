@@ -90,7 +90,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<CalculationOutcome> Entries => _outcomes.MyItems;
+        public ObservableCollection<CalculationOutcome> Entries => _outcomes.Items;
 
         [ItemNotNull]
         [NotNull]
@@ -172,7 +172,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             var temperatureProfile = sim.TemperatureProfiles[0];
 
             var co = new List<ICalcObject>();
-            for (var i = 0; i < sim.ModularHouseholds.It.Count; i++) {
+            for (var i = 0; i < sim.ModularHouseholds.Items.Count; i++) {
                 if (sim.ModularHouseholds[i].GeneratorID == null) {
                     co.Add(sim.ModularHouseholds[i]);
                 }
@@ -244,7 +244,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                     h += "TemperatureProfile;"; // 10
                     var columns = new Dictionary<string, int>();
                     var column = 0;
-                    foreach (var outcome in _outcomes.It) {
+                    foreach (var outcome in _outcomes.Items) {
                         foreach (var entry in outcome.Entries) {
                             if (entry.LoadTypeName != null) {
                                 if (!columns.ContainsKey(entry.LoadTypeName)) {
@@ -266,7 +266,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
 
                     sw.WriteLine(h);
                     var arr = new string[11 + column * 3];
-                    foreach (var outcome in _outcomes.It) {
+                    foreach (var outcome in _outcomes.Items) {
                         var col = 0;
                         arr[col++] = outcome.HouseholdName;
                         arr[col++] = outcome.EnergyIntensity;
@@ -315,7 +315,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         public void FindDuplicates()
         {
             var outcomes = new List<CalculationOutcome>();
-            foreach (var outcome in _outcomes.It) {
+            foreach (var outcome in _outcomes.Items) {
                 var count = Sim.CalculationOutcomes.CountItems(outcome.HouseholdName,
                     outcome.GeographicLocationName,
                     outcome.TemperatureProfile,
@@ -360,8 +360,8 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
 
             CalculationProfiler profiler = new CalculationProfiler();
             //make Version Comparison Charts
-            var versions = sim.CalculationOutcomes.It.Select(x => x.LPGVersion).Distinct().ToList();
-            var energyIntensities = sim.CalculationOutcomes.It.Select(x => x.EnergyIntensity).Distinct().ToList();
+            var versions = sim.CalculationOutcomes.Items.Select(x => x.LPGVersion).Distinct().ToList();
+            var energyIntensities = sim.CalculationOutcomes.Items.Select(x => x.EnergyIntensity).Distinct().ToList();
             foreach (var energyIntensity in energyIntensities) {
                 var seriesEntries = new List<MakeNRWChart.SeriesEntry>();
                 var offset = 0.1;
@@ -375,7 +375,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
 
                 var pngname = Path.Combine(dstPath, "NRWScatter." + energyIntensity + ".png");
                 var mnc = new MakeNRWChart(150, 1000, 1600, profiler);
-                mnc.MakeScatterChart(sim.CalculationOutcomes.It.ToList(), pngname, seriesEntries);
+                mnc.MakeScatterChart(sim.CalculationOutcomes.Items.ToList(), pngname, seriesEntries);
                 Logger.Info("Finished creating the file " + pngname);
             }
 
@@ -392,7 +392,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
 
                 var pngname = Path.Combine(dstPath, "NRWScatter." + version + ".png");
                 var mnc = new MakeNRWChart(150, 1000, 1600, profiler);
-                mnc.MakeScatterChart(sim.CalculationOutcomes.It.ToList(), pngname, seriesEntries);
+                mnc.MakeScatterChart(sim.CalculationOutcomes.Items.ToList(), pngname, seriesEntries);
                 Logger.Info("Finished creating the file " + pngname);
             }
         }
@@ -452,7 +452,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                 var temperatureProfile = Sim.TemperatureProfiles[0];
 
                 var co = new List<ICalcObject>();
-                for (var i = 0; i < Sim.ModularHouseholds.It.Count; i++) {
+                for (var i = 0; i < Sim.ModularHouseholds.Items.Count; i++) {
                     if (Sim.ModularHouseholds[i].GeneratorID == null) {
                         co.Add(Sim.ModularHouseholds[i]);
                     }
@@ -491,7 +491,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                                             null,
                                             null,
                                             null,false);
-                                        Logger.Get().SafeExecuteWithWait(Sim.CalculationOutcomes.It.Sort);
+                                        Logger.Get().SafeExecuteWithWait(Sim.CalculationOutcomes.Items.Sort);
                                         Logger.Get().SafeExecuteWithWait(RefreshFiltered);
                                     }
                                     else {
@@ -727,7 +727,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             }
 
             calculationOutcome.SaveToDB();
-            Logger.Get().SafeExecuteWithWait(() => sim.CalculationOutcomes.It.Add(calculationOutcome));
+            Logger.Get().SafeExecuteWithWait(() => sim.CalculationOutcomes.Items.Add(calculationOutcome));
         }
 
         private void RefreshFiltered()

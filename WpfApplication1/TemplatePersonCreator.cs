@@ -15,14 +15,14 @@ namespace LoadProfileGenerator {
         public static void CreateTemplatePersons([NotNull] Simulator sim)
         {
             Logger.Info("Starting the creation of the templated persons");
-            var tps = sim.TemplatePersons.It.ToList();
+            var tps = sim.TemplatePersons.Items.ToList();
             foreach (var tpperson in tps) {
                 sim.TemplatePersons.DeleteItem(tpperson);
             }
 
             var tp = 1;
             var allPersons = new List<PersonEntry>();
-            foreach (var simPerson in sim.Persons.It) {
+            foreach (var simPerson in sim.Persons.Items) {
                 allPersons.Add(new PersonEntry(simPerson));
             }
 
@@ -39,12 +39,12 @@ namespace LoadProfileGenerator {
                 tpPerson.Gender = person.Gender;
                 tpPerson.Age = person.Age;
                 tpPerson.SickDays = person.SickDays;
-                var mhh = sim.ModularHouseholds.It.First(x => x.Persons.Any(y => y.Person == person));
+                var mhh = sim.ModularHouseholds.Items.First(x => x.Persons.Any(y => y.Person == person));
                 tpPerson.BaseHousehold = mhh;
                 tpPerson.BasePerson = personEntry.Person;
                 tpPerson.SaveToDB();
                 var chh =
-                    sim.ModularHouseholds.It.First(x => x.Persons.Select(y => y.Person).Any(z => z == person));
+                    sim.ModularHouseholds.Items.First(x => x.Persons.Select(y => y.Person).Any(z => z == person));
 
                 Logger.Info("Found " + chh.PrettyName);
                 var traits = chh.Traits.Where(x => x.DstPerson == person).ToList();
@@ -62,7 +62,7 @@ namespace LoadProfileGenerator {
         {
             var allhh = new List<ModularHousehold>();
             Logger.Info("Starting sync");
-            foreach (var templatePerson in sim.TemplatePersons.It) {
+            foreach (var templatePerson in sim.TemplatePersons.Items) {
                 var personCode = templatePerson.Name.Substring(0, 4);
                 if (!personCode.StartsWith("TP", StringComparison.Ordinal)) {
                     Logger.Warning("Ignoring " + templatePerson.Name + " because name doesn't start with TP");
@@ -70,7 +70,7 @@ namespace LoadProfileGenerator {
                 }
 
                 // Person
-                var p = sim.Persons.It.FirstOrDefault(x => x.Name == templatePerson.Name);
+                var p = sim.Persons.Items.FirstOrDefault(x => x.Name == templatePerson.Name);
                 if (p == null) {
                     Logger.Info("Creating person " + templatePerson.Name);
                     p = sim.Persons.CreateNewItem(sim.ConnectionString);
@@ -86,7 +86,7 @@ namespace LoadProfileGenerator {
                 p.Description = "Created to test the template person " + templatePerson.Name;
                 p.SaveToDB();
                 // modular Household
-                var chh = sim.ModularHouseholds.It.FirstOrDefault(x => x.Name == templatePerson.Name);
+                var chh = sim.ModularHouseholds.Items.FirstOrDefault(x => x.Name == templatePerson.Name);
                 if (chh == null) {
                     Logger.Info("Creating modular household  " + templatePerson.Name);
                     chh = sim.ModularHouseholds.CreateNewItem(sim.ConnectionString);

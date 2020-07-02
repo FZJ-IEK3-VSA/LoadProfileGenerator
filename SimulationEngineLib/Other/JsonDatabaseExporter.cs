@@ -36,17 +36,17 @@ namespace SimulationEngineLib.Other {
             switch (calcDirectoryOptions.ProcessingType) {
                 case TypesToProcess.HouseholdTemplates:
                     ExportStuff<HouseholdTemplate.JsonDto,HouseholdTemplate>(jsonFileName,
-                        sim.HouseholdTemplates.It.ToList());
+                        sim.HouseholdTemplates.Items.ToList());
                     break;
                 case TypesToProcess.ModularHouseholds:
                     ExportStuff<ModularHousehold.JsonModularHousehold, ModularHousehold>(jsonFileName,
-                        sim.ModularHouseholds.It.ToList());
+                        sim.ModularHouseholds.Items.ToList());
                     break;
                 case TypesToProcess.None:
                     throw new LPGException("You need to set a type that you want to process");
                 case TypesToProcess.HouseholdTraits:
                     ExportStuff<HouseholdTrait.JsonDto, HouseholdTrait>(jsonFileName,
-                        sim.HouseholdTraits.It.ToList());
+                        sim.HouseholdTraits.Items.ToList());
                     break;
                 case TypesToProcess.HouseholdTraitsWithDeviceCategories:
                     ExportHHTsWithDeviceCategories(jsonFileName, sim);
@@ -88,11 +88,11 @@ namespace SimulationEngineLib.Other {
         {
             List<HouseholdTraitJtoForDeviceCategoryExport> hhtj = new List<HouseholdTraitJtoForDeviceCategoryExport>();
 
-            foreach (var trait in sim.HouseholdTraits.It) {
+            foreach (var trait in sim.HouseholdTraits.Items) {
                 HouseholdTraitJtoForDeviceCategoryExport htj = new HouseholdTraitJtoForDeviceCategoryExport(trait.Name);
                 hhtj.Add(htj);
                 foreach (var autodev in trait.Autodevs) {
-                    var rds = autodev.Device?.GetRealDevices(sim.DeviceActions.It);
+                    var rds = autodev.Device?.GetRealDevices(sim.DeviceActions.Items);
                     if (rds != null) {
                         foreach (var realDevice in rds) {
                             htj.AddDevice(realDevice);
@@ -105,7 +105,7 @@ namespace SimulationEngineLib.Other {
                         var affdevs = affloc.Affordance?.AffordanceDevices;
                         if (affdevs != null) {
                             foreach (var affdev in affdevs) {
-                                var rds = affdev.Device?.GetRealDevices(sim.DeviceActions.It);
+                                var rds = affdev.Device?.GetRealDevices(sim.DeviceActions.Items);
                                 if (rds != null) {
                                     foreach (var realDevice in rds) {
                                         htj.AddDevice(realDevice);

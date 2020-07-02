@@ -68,12 +68,12 @@ namespace LoadProfileGenerator.Presenters.Households {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<VLoadType> AllLoadTypes => Sim.LoadTypes.It;
+        public ObservableCollection<VLoadType> AllLoadTypes => Sim.LoadTypes.Items;
 
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<RealDevice> Devices => Sim.RealDevices.MyItems;
+        public ObservableCollection<RealDevice> Devices => Sim.RealDevices.Items;
 
         [ItemNotNull]
         [NotNull]

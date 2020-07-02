@@ -119,14 +119,14 @@ namespace Database.Tables.ModularHouseholds {
         {
             var used = new List<UsedIn>();
 
-            foreach (var t in sim.HouseholdTraits.It) {
+            foreach (var t in sim.HouseholdTraits.Items) {
                 foreach (var hhtTag in t.Tags) {
                     if (hhtTag.Tag == this) {
                         used.Add(new UsedIn(t, "Household Trait"));
                     }
                 }
             }
-            foreach (ModularHousehold mhh in sim.ModularHouseholds.It) {
+            foreach (ModularHousehold mhh in sim.ModularHouseholds.Items) {
                 foreach (ModularHouseholdPerson mhhPerson in mhh.Persons) {
                     if (mhhPerson.TraitTag == this) {
                         used.Add(new UsedIn(mhh,"Person Description"));

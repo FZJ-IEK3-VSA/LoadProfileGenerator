@@ -7,7 +7,7 @@ namespace CalculationController.Integrity {
         }
 
         protected override void Run(Simulator sim) {
-            foreach (var generator in sim.Generators.It) {
+            foreach (var generator in sim.Generators.Items) {
                 if (generator.DateBasedProfile == null) {
                     throw new DataIntegrityException("The generator " + generator.Name +
                                                      " is missing a date based profile.");

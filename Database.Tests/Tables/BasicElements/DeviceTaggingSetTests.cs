@@ -96,7 +96,7 @@ namespace Database.Tests.Tables.BasicElements {
             {
                 var sim = new Simulator(db.ConnectionString);
                 db.Cleanup();
-                foreach (var tagset in sim.DeviceTaggingSets.MyItems)
+                foreach (var tagset in sim.DeviceTaggingSets.Items)
                 {
                     foreach (var deviceTaggingEntry in tagset.Entries)
                     {

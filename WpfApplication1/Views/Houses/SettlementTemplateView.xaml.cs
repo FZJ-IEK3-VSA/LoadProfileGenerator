@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using Common;
 using Database.Tables.Houses;
 using JetBrains.Annotations;
@@ -291,5 +292,97 @@ namespace LoadProfileGenerator.Views.Houses
         }
 
         private void MakeCopy_OnClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e) => Presenter.MakeCopy();
+
+        private void BtnAddTransportationDeviceSet(object sender, RoutedEventArgs e)
+        {
+            if (Presenter.TransportationDeviceSetSelection == null)
+            {
+                return;
+            }
+            Presenter.ThisTemplate.AddTransportationDeviceSet(Presenter.TransportationDeviceSetSelection);
+        }
+
+        private void BtnRemoveTransportationDeviceSet(object sender, RoutedEventArgs e)
+        {
+            if (LstTransportationDeviceSets.SelectedItem == null)
+            {
+                return;
+            }
+            var sths = (STTransportationDeviceSet)LstTransportationDeviceSets.SelectedItem;
+            Presenter.ThisTemplate.DeleteTransportationDeviceSet(sths);
+        }
+
+        private void BtnAddAllTransportationDeviceSets(object sender, RoutedEventArgs e)
+        {
+            foreach (var deviceSet in Presenter.TransportationDeviceSets) {
+                Presenter.ThisTemplate.AddTransportationDeviceSet(deviceSet);
+            }
+        }
+
+        private void BtnAddChargingStationSet(object sender, RoutedEventArgs e)
+        {
+            if (Presenter.ChargingStationSelection == null)
+            {
+                return;
+            }
+            Presenter.ThisTemplate.AddChargingStationSet(Presenter.ChargingStationSelection);
+        }
+
+        private void BtnRemoveChargingStationSet(object sender, RoutedEventArgs e)
+        {
+            if (LstChargingStationSets.SelectedItem == null)
+            {
+                return;
+            }
+            var sths = (STChargingStationSet)LstChargingStationSets.SelectedItem;
+            Presenter.ThisTemplate.DeleteChargingStation(sths);
+        }
+
+        private void BtnAddAllChargingStationSets(object sender, RoutedEventArgs e)
+        {
+            foreach (var chargingStationSet in Presenter.ChargingStationSets)
+            {
+                Presenter.ThisTemplate.AddChargingStationSet(chargingStationSet);
+            }
+        }
+
+        private void BtnAddTravelRouteSet(object sender, RoutedEventArgs e)
+        {
+
+            if (Presenter.TravelRouteSetSelection == null)
+            {
+                return;
+            }
+            Presenter.ThisTemplate.AddTravelRouteSet(Presenter.TravelRouteSetSelection);
+        }
+
+        private void BtnRemoveTravelRouteSet(object sender, RoutedEventArgs e)
+        {
+            if (LstTravelRouteSets.SelectedItem == null)
+            {
+                return;
+            }
+            var sths = (STTravelRouteSet)LstTravelRouteSets.SelectedItem;
+            Presenter.ThisTemplate.DeleteTravelRouteSet(sths);
+        }
+
+
+        private void BtnAddAllTravelRouteSets(object sender, RoutedEventArgs e)
+        {
+            foreach (var travelRouteSet in Presenter.TravelRouteSets)
+            {
+                Presenter.ThisTemplate.AddTravelRouteSet(travelRouteSet);
+            }
+        }
+
+        private void LstGeneratedHouses_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (LstGeneratedHouses.SelectedItem == null) {
+                return;
+            }
+
+            var house = (House)LstGeneratedHouses.SelectedItem;
+            Presenter.ApplicationPresenter.OpenItem(house);
+        }
     }
 }

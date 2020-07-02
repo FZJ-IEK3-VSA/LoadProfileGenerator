@@ -84,19 +84,19 @@ namespace Database.Tables.BasicElements {
         public override List<UsedIn> CalculateUsedIns(Simulator sim)
         {
             List<UsedIn> usedIns = new List<UsedIn>();
-            foreach (var limit in sim.TimeLimits.It) {
+            foreach (var limit in sim.TimeLimits.Items) {
                 if (limit.TimeLimitEntries.Any(x => x.DateBasedProfile == this)) {
                     usedIns.Add(new UsedIn(limit, "Time Limit"));
                 }
             }
 
-            foreach (Generator generator in sim.Generators.It) {
+            foreach (Generator generator in sim.Generators.Items) {
                 if (generator.DateBasedProfile == this) {
                     usedIns.Add(new UsedIn(generator, "Generator"));
                 }
             }
 
-            foreach (HouseholdTemplate template in sim.HouseholdTemplates.It) {
+            foreach (HouseholdTemplate template in sim.HouseholdTemplates.Items) {
                 if (template.TimeProfileForVacations == this) {
                     usedIns.Add(new UsedIn(template, "Household Template"));
                 }

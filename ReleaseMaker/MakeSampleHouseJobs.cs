@@ -48,7 +48,7 @@ namespace ReleaseMaker
                     {
                         Directory.CreateDirectory(dir);
                     }
-                    foreach (var mhh in sim.ModularHouseholds.It)
+                    foreach (var mhh in sim.ModularHouseholds.Items)
                     {
                         HouseCreationAndCalculationJob hj = new HouseCreationAndCalculationJob("Households", "2019", "TK",HouseDefinitionType.HouseData);
                         hj.House = new HouseData(Guid.NewGuid().ToStrGuid(), "HT01", 10000, 10000, "House for " + mhh.Name);
@@ -79,8 +79,8 @@ namespace ReleaseMaker
                     }
                     Random rnd = new Random();
 
-                    List<string> houseTypes = sim.HouseTypes.It.Select(x => x.Name.Substring(0, x.Name.IndexOf(" ", StringComparison.Ordinal))).ToList();
-                    foreach (var mhh in sim.HouseholdTemplates.It)
+                    List<string> houseTypes = sim.HouseTypes.Items.Select(x => x.Name.Substring(0, x.Name.IndexOf(" ", StringComparison.Ordinal))).ToList();
+                    foreach (var mhh in sim.HouseholdTemplates.Items)
                     {
                         for (int i = 0; i < 100; i++)
                         {

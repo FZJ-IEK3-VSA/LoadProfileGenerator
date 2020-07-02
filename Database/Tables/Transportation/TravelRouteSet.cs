@@ -104,10 +104,10 @@ namespace Database.Tables.Transportation {
             [NotNull] Simulator dstSim)
         {
             var loc = new TravelRouteSet(toImport.Name, null,dstSim.ConnectionString, toImport.Description, toImport.Guid);
-            dstSim.TravelRouteSets.It.Add(loc);
+            dstSim.TravelRouteSets.Items.Add(loc);
             loc.SaveToDB();
             foreach (var routeEntry in toImport.TravelRoutes) {
-                var dstroute = GetItemFromListByName(dstSim.TravelRoutes.MyItems,
+                var dstroute = GetItemFromListByName(dstSim.TravelRoutes.Items,
                     routeEntry.TravelRoute.Name);
                 if (dstroute == null) {
                     Logger.Error("Travel Route not found, skipping.");

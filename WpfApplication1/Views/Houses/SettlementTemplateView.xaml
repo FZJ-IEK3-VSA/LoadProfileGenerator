@@ -4,7 +4,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             d:DesignHeight="3000"
+             d:DesignHeight="5000"
              d:DesignWidth="800"
              mc:Ignorable="d">
     <Grid>
@@ -648,7 +648,188 @@
                         </ListView>
                     </Grid>
                 </Expander>
+                <Expander IsExpanded="true" Style="{StaticResource ExpanderStyle}">
+                    <Expander.Header>
+                        <Border Style="{StaticResource GroupBoxHeader}">
+                            <TextBlock Text="Transportation" />
+                        </Border>
+                    </Expander.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="5*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.ColumnSpan="2"
+                                   Style="{StaticResource TextBlockStyle}"
+                                   TextWrapping="WrapWithOverflow">
+                            Select here which transportation device set, travel route sets and charging station sets should be assigned to the households. A simple random picking algorithm will be used, so all 
+                            entries will be used roughly in similar numbers. If you want to change the distribution, you can edit the generated JSON files, either manually 
+                            or for example with a Python script. Note that the transportation modeling will only be enabled if you set the check mark in the calculation options below.
+                        </TextBlock>
+                        <Label Grid.Row="1"
+                               Grid.Column="0"
+                               Content="Transportation Device Sets"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=CmbTransportationDeviceSets}" />
+                        <ComboBox x:Name="CmbTransportationDeviceSets"
+                                  Grid.Row="1"
+                                  Grid.Column="1"
+                                  ItemsSource="{Binding TransportationDeviceSets}"
+                                  SelectedItem="{Binding TransportationDeviceSetSelection}"
+                                  Style="{StaticResource ComboBoxStyle}" />
 
+                        <StackPanel Grid.Row="2"
+                                    Grid.Column="1"
+                                    Orientation="Horizontal">
+                            <Button HorizontalAlignment="Right"
+                                    Click="BtnAddTransportationDeviceSet"
+                                    Style="{StaticResource ButtonStyle}">
+                                Add Transportation Device Set
+                            </Button>
+                            <Button HorizontalAlignment="Left"
+                                    Click="BtnRemoveTransportationDeviceSet"
+                                    Style="{StaticResource ButtonStyle}">
+                                Remove Transportation Device Set
+                            </Button>
+                            <Button HorizontalAlignment="Left"
+                                    Click="BtnAddAllTransportationDeviceSets"
+                                    Style="{StaticResource ButtonStyle}">
+                                Add all Transportation Device Sets
+                            </Button>
+                        </StackPanel>
+                        <ListView Name="LstTransportationDeviceSets"
+                                  Grid.Row="3"
+                                  Grid.Column="0"
+                                  Grid.ColumnSpan="2"
+                                  MinHeight="150"
+                                  MaxHeight="300"
+                                  ItemsSource="{Binding ThisTemplate.TransportationDeviceSets}"
+                                  Style="{StaticResource ListViewStyle}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding TransportationDeviceSet.PrettyName}"
+                                                    Header="Name" />
+                                </GridView>
+                            </ListView.View>
+
+                        </ListView>
+                        <Label Grid.Row="6"
+                               Grid.Column="0"
+                               Content="Travel Route Sets"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=CmbTravelRouteSets}" />
+                        <ComboBox x:Name="CmbTravelRouteSets"
+                                  Grid.Row="6"
+                                  Grid.Column="1"
+                                  ItemsSource="{Binding TravelRouteSets}"
+                                  SelectedItem="{Binding TravelRouteSetSelection}"
+                                  Style="{StaticResource ComboBoxStyle}" />
+
+                        <StackPanel Grid.Row="7"
+                                    Grid.Column="1"
+                                    Orientation="Horizontal">
+                            <Button HorizontalAlignment="Right"
+                                    Click="BtnAddTravelRouteSet"
+                                    Style="{StaticResource ButtonStyle}">
+                                Add Travel Route Set
+                            </Button>
+                            <Button HorizontalAlignment="Left"
+                                    Click="BtnRemoveTravelRouteSet"
+                                    Style="{StaticResource ButtonStyle}">
+                                Remove Travel Route Set
+                            </Button>
+                            <Button HorizontalAlignment="Left"
+                                    Click="BtnAddAllTravelRouteSets"
+                                    Style="{StaticResource ButtonStyle}">
+                                Add all Travel Route Sets
+                            </Button>
+                        </StackPanel>
+                        <ListView Name="LstTravelRouteSets"
+                                  Grid.Row="8"
+                                  Grid.Column="0"
+                                  Grid.ColumnSpan="2"
+                                  MinHeight="150"
+                                  MaxHeight="300"
+                                  ItemsSource="{Binding ThisTemplate.TravelRouteSets}"
+                                  Style="{StaticResource ListViewStyle}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding TravelRouteSet.PrettyName}"
+                                                    Header="Name" />
+                                </GridView>
+                            </ListView.View>
+
+                        </ListView>
+
+
+                        <Label Grid.Row="10"
+                               Grid.Column="0"
+                               Content="Charging Station Sets"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=CmbChargingStationSets}" />
+                        <ComboBox x:Name="CmbChargingStationSets"
+                                  Grid.Row="10"
+                                  Grid.Column="1"
+                                  ItemsSource="{Binding ChargingStationSets}"
+                                  SelectedItem="{Binding ChargingStationSelection}"
+                                  Style="{StaticResource ComboBoxStyle}" />
+
+                        <StackPanel Grid.Row="11"
+                                    Grid.Column="1"
+                                    Orientation="Horizontal">
+                            <Button HorizontalAlignment="Right"
+                                    Click="BtnAddChargingStationSet"
+                                    Style="{StaticResource ButtonStyle}">
+                                Add ChargingStationSets
+                            </Button>
+                            <Button HorizontalAlignment="Left"
+                                    Click="BtnRemoveChargingStationSet"
+                                    Style="{StaticResource ButtonStyle}">
+                                Remove Charging Station Set
+                            </Button>
+                            <Button HorizontalAlignment="Left"
+                                    Click="BtnAddAllChargingStationSets"
+                                    Style="{StaticResource ButtonStyle}">
+                                Add all Charging Station Sets
+                            </Button>
+                        </StackPanel>
+                        <ListView Name="LstChargingStationSets"
+                                  Grid.Row="12"
+                                  Grid.Column="0"
+                                  Grid.ColumnSpan="2"
+                                  MinHeight="150"
+                                  MaxHeight="300"
+                                  ItemsSource="{Binding ThisTemplate.ChargingStationSets}"
+                                  Style="{StaticResource ListViewStyle}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding ChargingStationSet.PrettyName}"
+                                                    Header="Name" />
+                                </GridView>
+                            </ListView.View>
+
+                        </ListView>
+
+                    </Grid>
+                </Expander>
                 <Expander IsExpanded="true" Style="{StaticResource ExpanderStyle}">
                     <Expander.Header>
                         <Border Style="{StaticResource GroupBoxHeader}">
@@ -765,7 +946,7 @@
                                   Grid.ColumnSpan="2"
                                   MinHeight="150"
                                   ItemsSource="{Binding GeneratedHouses}"
-                                  Style="{StaticResource ListViewStyle}">
+                                  Style="{StaticResource ListViewStyle}" MouseDoubleClick="LstGeneratedHouses_OnMouseDoubleClick">
                             <ListView.View>
                                 <GridView>
                                     <GridViewColumn Width="Auto"

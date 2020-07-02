@@ -67,14 +67,14 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             _dtv = view;
             ThisTimeLimit = timeLimit;
 
-            _previewGeographicLocation = Sim.GeographicLocations.MyItems[0];
-            _previewTemperatureProfile = Sim.TemperatureProfiles.MyItems[0];
-            if (Sim.ModularHouseholds.It.Count > 0) {
-                _household = Sim.ModularHouseholds.MyItems[0];
+            _previewGeographicLocation = Sim.GeographicLocations.Items[0];
+            _previewTemperatureProfile = Sim.TemperatureProfiles.Items[0];
+            if (Sim.ModularHouseholds.Items.Count > 0) {
+                _household = Sim.ModularHouseholds.Items[0];
             }
             MakeCalculatingImage();
             if (ThisTimeLimit.RootEntry == null) {
-                ThisTimeLimit.AddTimeLimitEntry(null, Sim.DateBasedProfiles.MyItems);
+                ThisTimeLimit.AddTimeLimitEntry(null, Sim.DateBasedProfiles.Items);
             }
             RefreshAllPermissionLines();
 
@@ -106,7 +106,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
         [NotNull]
         [UsedImplicitly]
         public ObservableCollection<GeographicLocation> GeographicLocations
-            => Sim.GeographicLocations.MyItems;
+            => Sim.GeographicLocations.Items;
 
         public double ImageHeight {
             get => _imageHeight;
@@ -120,7 +120,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
         [NotNull]
         [UsedImplicitly]
         public ObservableCollection<ModularHousehold> ModularHouseholds
-            => Sim.ModularHouseholds.MyItems;
+            => Sim.ModularHouseholds.Items;
 
         [NotNull]
         [UsedImplicitly]
@@ -160,14 +160,14 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
         [NotNull]
         [UsedImplicitly]
         public ObservableCollection<TemperatureProfile> TemperaturProfiles
-            => Sim.TemperatureProfiles.MyItems;
+            => Sim.TemperatureProfiles.Items;
         [NotNull]
         public TimeLimit ThisTimeLimit { get; }
 
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<TimeLimit> TimeLimits => Sim.TimeLimits.MyItems;
+        public ObservableCollection<TimeLimit> TimeLimits => Sim.TimeLimits.Items;
 
         [CanBeNull]
         [UsedImplicitly]
@@ -180,7 +180,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
 
         public void AddSubentry([NotNull] TimeLimitEntry parentEntry)
         {
-            ThisTimeLimit.AddTimeLimitEntry(parentEntry, parentEntry, Sim.DateBasedProfiles.MyItems);
+            ThisTimeLimit.AddTimeLimitEntry(parentEntry, parentEntry, Sim.DateBasedProfiles.Items);
             RefreshAllPermissionLines();
             _dtv.SetOneRow(ThisTimeLimit.RootEntry);
         }
@@ -198,7 +198,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             var newtimelimit = Sim.TimeLimits.CreateNewItem(Sim.ConnectionString);
             newtimelimit.Name = ThisTimeLimit.Name + " (Copy)";
 
-            newtimelimit.ImportFromOtherTimeLimit(ThisTimeLimit, Sim.DateBasedProfiles.It);
+            newtimelimit.ImportFromOtherTimeLimit(ThisTimeLimit, Sim.DateBasedProfiles.Items);
             ApplicationPresenter.OpenItem(newtimelimit);
         }
 
@@ -229,7 +229,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             if (SelectedTimeLimit == null) {
                 return;
             }
-            ThisTimeLimit.ImportFromOtherTimeLimit(SelectedTimeLimit, Sim.DateBasedProfiles.MyItems);
+            ThisTimeLimit.ImportFromOtherTimeLimit(SelectedTimeLimit, Sim.DateBasedProfiles.Items);
         }
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]

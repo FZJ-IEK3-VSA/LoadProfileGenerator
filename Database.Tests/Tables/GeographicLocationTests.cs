@@ -84,7 +84,7 @@ namespace Database.Tests.Tables {
             {
                 Simulator sim = new Simulator(db.ConnectionString);
                 var pars = CalcParametersFactory.MakeGoodDefaults();
-                foreach (GeographicLocation location in sim.GeographicLocations.It)
+                foreach (GeographicLocation location in sim.GeographicLocations.Items)
                 {
                     Logger.Info("Calculating " + location.PrettyName);
                     SunriseTimes st = new SunriseTimes(location);

@@ -26,12 +26,12 @@ namespace IntegrationTests {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
                 var mainSim = new Simulator(db.ConnectionString);
-                var hhNames = mainSim.ModularHouseholds.It.Select(x => x.Name).ToList();
+                var hhNames = mainSim.ModularHouseholds.Items.Select(x => x.Name).ToList();
                 var dbm = new DatabaseMerger(mainSim);
 
                 dbm.RunFindItems(importPath, null);
                 dbm.RunImport(null);
-                var newHHs = mainSim.ModularHouseholds.It.Where(x => !hhNames.Contains(x.Name)).ToList();
+                var newHHs = mainSim.ModularHouseholds.Items.Where(x => !hhNames.Contains(x.Name)).ToList();
                 foreach (var newHH in newHHs)
                 {
                     if (newHH.Persons.Count == 0)

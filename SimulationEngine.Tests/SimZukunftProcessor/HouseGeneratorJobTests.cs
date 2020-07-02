@@ -269,7 +269,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor {
                 Simulator sim = new Simulator(db.ConnectionString);
                 using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass())) {
                     var count = 0;
-                    foreach (var houseType in sim.HouseTypes.It) {
+                    foreach (var houseType in sim.HouseTypes.Items) {
                         count++;
                         if (count < 22) {
                             continue;

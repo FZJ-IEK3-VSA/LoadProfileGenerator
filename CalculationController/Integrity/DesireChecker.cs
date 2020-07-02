@@ -16,7 +16,7 @@ namespace CalculationController.Integrity {
             {
                 var count = 0;
                 var elements = new List<BasicElement>();
-                foreach (var desire in sim.Desires.It) {
+                foreach (var desire in sim.Desires.Items) {
                     if (!desire.Name.Contains(" / ")) {
                         elements.Add(desire);
                         count++;
@@ -37,18 +37,18 @@ namespace CalculationController.Integrity {
                 return;
             }
             var useddesires = new List<Desire>();
-            foreach (var affordance in sim.Affordances.It) {
+            foreach (var affordance in sim.Affordances.Items) {
                 foreach (var desire in affordance.AffordanceDesires) {
                     useddesires.Add(desire.Desire);
                 }
             }
-            foreach (var subaff in sim.SubAffordances.It) {
+            foreach (var subaff in sim.SubAffordances.Items) {
                 foreach (var desire in subaff.SubAffordanceDesires) {
                     useddesires.Add(desire.Desire);
                 }
             }
 
-            for (var i = 0; i < sim.Desires.It.Count; i++) {
+            for (var i = 0; i < sim.Desires.Items.Count; i++) {
                 var desire = sim.Desires[i];
                 if (!useddesires.Contains(desire)) {
                     var mbr =

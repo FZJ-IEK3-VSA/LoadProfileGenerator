@@ -13,9 +13,9 @@ namespace CalculationController.Integrity {
 
         private static void CheckClassifications([NotNull] Simulator sim) {
             var generalTagClassifications =
-                sim.HouseholdTags.It.Where(x => !string.IsNullOrWhiteSpace(x.Classification))
+                sim.HouseholdTags.Items.Where(x => !string.IsNullOrWhiteSpace(x.Classification))
                     .Select(x => x.Classification).Distinct().ToList();
-            foreach (var householdTemplate in sim.HouseholdTemplates.It) {
+            foreach (var householdTemplate in sim.HouseholdTemplates.Items) {
                 var tagclasses = new List<string>();
                 foreach (var hhTemplateTag in householdTemplate.TemplateTags) {
                     if (tagclasses.Contains(hhTemplateTag.Tag.Classification)) {
@@ -35,7 +35,7 @@ namespace CalculationController.Integrity {
         }
 
         private void CheckGeneralTemplates([NotNull] Simulator sim) {
-            foreach (var hhg in sim.HouseholdTemplates.It) {
+            foreach (var hhg in sim.HouseholdTemplates.Items) {
                 var ages = hhg.Persons.Select(x => x.Person.Age).ToList();
                 if (ages.Count == 0) {
                     throw new DataIntegrityException("No persons were defined. This is not going to work.");

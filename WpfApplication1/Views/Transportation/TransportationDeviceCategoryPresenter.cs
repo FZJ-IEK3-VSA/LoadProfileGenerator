@@ -19,7 +19,7 @@ namespace LoadProfileGenerator.Views.Transportation {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<Location> Locations => Sim.Locations.MyItems;
+        public ObservableCollection<Location> Locations => Sim.Locations.Items;
 
         [NotNull]
         public TransportationDeviceCategory ThisCategory => _transportationDeviceCategory;

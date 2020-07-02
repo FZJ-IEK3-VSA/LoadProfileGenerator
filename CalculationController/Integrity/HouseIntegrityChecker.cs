@@ -58,7 +58,7 @@ namespace CalculationController.Integrity {
                                                      " has no load type selected. This makes calculation impossible.");
                 }
             }
-            CheckEnergyStorages(sim.EnergyStorages.MyItems);
+            CheckEnergyStorages(sim.EnergyStorages.Items);
 
         }
     }

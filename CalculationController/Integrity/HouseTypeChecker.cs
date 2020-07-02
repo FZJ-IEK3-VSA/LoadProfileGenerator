@@ -82,7 +82,7 @@ namespace CalculationController.Integrity {
 
         }
         protected override void Run(Simulator sim) {
-            foreach (var houseType in sim.HouseTypes.It) {
+            foreach (var houseType in sim.HouseTypes.Items) {
                 CheckStandbyDevicesHouses(houseType);
                 CheckTrafos(houseType);
                 if (houseType.MinimumHouseholdCount == 0 || houseType.MaximumHouseholdCount == 0) {
@@ -93,7 +93,7 @@ namespace CalculationController.Integrity {
             }
 
             if (sim.MyGeneralConfig.PerformCleanUpChecksBool) {
-                foreach (var houseType in sim.HouseTypes.It) {
+                foreach (var houseType in sim.HouseTypes.Items) {
                     PerformBalanceChecks(houseType,sim);
                 }
             }

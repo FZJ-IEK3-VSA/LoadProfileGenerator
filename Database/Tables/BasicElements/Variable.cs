@@ -89,7 +89,7 @@ namespace Database.Tables.BasicElements {
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         public override List<UsedIn> CalculateUsedIns(Simulator sim) {
             var usedIns = new List<UsedIn>();
-            foreach (var affordance in sim.Affordances.It) {
+            foreach (var affordance in sim.Affordances.Items) {
                 foreach (var operation in affordance.ExecutedVariables) {
                     if (operation.Variable == this) {
                         var ui = new UsedIn(affordance, "Affordance Operation", operation.ToString());
@@ -103,7 +103,7 @@ namespace Database.Tables.BasicElements {
                     }
                 }
             }
-            foreach (var subAffordance in sim.SubAffordances.It) {
+            foreach (var subAffordance in sim.SubAffordances.Items) {
                 foreach (var variableOp in subAffordance.SubAffordanceVariableOps) {
                     if (variableOp.Variable == this) {
                         var ui = new UsedIn(subAffordance, "Subaffordance Operation", variableOp.ToString());
@@ -111,14 +111,14 @@ namespace Database.Tables.BasicElements {
                     }
                 }
             }
-            foreach (var trait in sim.HouseholdTraits.It) {
+            foreach (var trait in sim.HouseholdTraits.Items) {
                 foreach (var autodev in trait.Autodevs) {
                     if (autodev.Variable == this) {
                         usedIns.Add(new UsedIn(trait, "Household Trait Autonomous Device", autodev.Device?.Name ?? "no name"));
                     }
                 }
             }
-            foreach (var ht in sim.HouseTypes.It) {
+            foreach (var ht in sim.HouseTypes.Items) {
                 foreach (var autodev in ht.HouseDevices) {
                     if (autodev.Variable == this) {
                         string name = autodev.Device?.Name;

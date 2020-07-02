@@ -1,4 +1,5 @@
-﻿//-----------------------------------------------------------------------
+﻿using Common;
+//-----------------------------------------------------------------------
 
 // <copyright>
 //
@@ -32,7 +33,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Automation.ResultFiles;
-using Common;
 using Database.Tables.BasicHouseholds;
 using JetBrains.Annotations;
 using LoadProfileGenerator.Presenters.BasicElements;
@@ -55,7 +55,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             SortByOptions.Add("By Name");
             SortByOptions.Add("By Category");
             SortBy = "By Name";
-            var myAffordances = new List<Affordance>(Sim.Affordances.MyItems);
+            var myAffordances = new List<Affordance>(Sim.Affordances.Items);
             myAffordances.Sort(Comparison);
             _affordances.Clear();
             foreach (var myAffordance in myAffordances) {

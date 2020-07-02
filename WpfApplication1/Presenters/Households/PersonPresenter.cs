@@ -54,7 +54,7 @@ namespace LoadProfileGenerator.Presenters.Households {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<Desire> Desires => Sim.Desires.MyItems;
+        public ObservableCollection<Desire> Desires => Sim.Desires.Items;
 
         [NotNull]
         [UsedImplicitly]
@@ -68,7 +68,7 @@ namespace LoadProfileGenerator.Presenters.Households {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<Person> Persons => Sim.Persons.MyItems;
+        public ObservableCollection<Person> Persons => Sim.Persons.Items;
 
         [UsedImplicitly]
         public PermittedGender SelectedGender {

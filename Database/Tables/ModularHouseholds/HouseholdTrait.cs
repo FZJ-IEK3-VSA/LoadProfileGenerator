@@ -604,7 +604,7 @@ namespace Database.Tables.ModularHouseholds {
         public override List<UsedIn> CalculateUsedIns(Simulator sim)
         {
             var used = new List<UsedIn>();
-            foreach (var chh in sim.ModularHouseholds.It) {
+            foreach (var chh in sim.ModularHouseholds.Items) {
                 foreach (var trait in chh.Traits) {
                     if (trait.HouseholdTrait == this) {
                         if (trait.AssignType == ModularHouseholdTrait.ModularHouseholdTraitAssignType.Name && trait.DstPerson != null) {
@@ -965,34 +965,34 @@ namespace Database.Tables.ModularHouseholds {
                 item.Guid);
             hh.SaveToDB();
             foreach (var autodev in item.Autodevs) {
-                var iad = GetAssignableDeviceFromListByName(dstSim.RealDevices.MyItems,
-                    dstSim.DeviceCategories.MyItems,
-                    dstSim.DeviceActions.It,
-                    dstSim.DeviceActionGroups.It,
+                var iad = GetAssignableDeviceFromListByName(dstSim.RealDevices.Items,
+                    dstSim.DeviceCategories.Items,
+                    dstSim.DeviceActions.Items,
+                    dstSim.DeviceActionGroups.Items,
                     autodev.Device);
                 TimeBasedProfile tbp = null;
                 if (autodev.TimeProfile != null) {
-                    tbp = GetItemFromListByName(dstSim.Timeprofiles.MyItems, autodev.TimeProfile.Name);
+                    tbp = GetItemFromListByName(dstSim.Timeprofiles.Items, autodev.TimeProfile.Name);
                 }
 
                 VLoadType vlt = null;
                 if (autodev.LoadType != null) {
-                    vlt = GetItemFromListByName(dstSim.LoadTypes.MyItems, autodev.LoadType.Name);
+                    vlt = GetItemFromListByName(dstSim.LoadTypes.Items, autodev.LoadType.Name);
                 }
 
                 TimeLimit dt = null;
                 if (autodev.TimeLimit != null) {
-                    dt = GetItemFromListByName(dstSim.TimeLimits.MyItems, autodev.TimeLimit.Name);
+                    dt = GetItemFromListByName(dstSim.TimeLimits.Items, autodev.TimeLimit.Name);
                 }
 
                 Location loc = null;
                 if (autodev.Location != null) {
-                    loc = GetItemFromListByName(dstSim.Locations.MyItems, autodev.Location.Name);
+                    loc = GetItemFromListByName(dstSim.Locations.Items, autodev.Location.Name);
                 }
 
                 Variable variable = null;
                 if (autodev.Variable != null) {
-                    variable = GetItemFromListByName(dstSim.Variables.It, autodev.Variable.Name);
+                    variable = GetItemFromListByName(dstSim.Variables.Items, autodev.Variable.Name);
                 }
 
                 if (iad != null) {
@@ -1009,13 +1009,13 @@ namespace Database.Tables.ModularHouseholds {
             }
 
             foreach (var hhLocation in item.Locations) {
-                var l = GetItemFromListByName(dstSim.Locations.MyItems, hhLocation.Location.Name);
+                var l = GetItemFromListByName(dstSim.Locations.Items, hhLocation.Location.Name);
                 if (l != null) {
                     var hhl = hh.AddLocation(l);
 
                     foreach (var affloc in hhLocation.AffordanceLocations) {
-                        var aff = GetItemFromListByName(dstSim.Affordances.It, affloc.Affordance?.Name);
-                        var timeLimit = GetItemFromListByName(dstSim.TimeLimits.It, affloc.TimeLimit?.Name);
+                        var aff = GetItemFromListByName(dstSim.Affordances.Items, affloc.Affordance?.Name);
+                        var timeLimit = GetItemFromListByName(dstSim.TimeLimits.Items, affloc.TimeLimit?.Name);
                         if (aff != null) {
                             hh.AddAffordanceToLocation(hhl,
                                 aff,
@@ -1031,7 +1031,7 @@ namespace Database.Tables.ModularHouseholds {
             }
 
             foreach (var hhtDesire in item.Desires) {
-                var newDesire = GetItemFromListByName(dstSim.Desires.MyItems, hhtDesire.Desire.Name);
+                var newDesire = GetItemFromListByName(dstSim.Desires.Items, hhtDesire.Desire.Name);
                 if (newDesire != null) {
                     hh.AddDesire(newDesire,
                         hhtDesire.DecayTime,
@@ -1045,14 +1045,14 @@ namespace Database.Tables.ModularHouseholds {
             }
 
             foreach (var hhttag in item.Tags) {
-                var tag = GetItemFromListByName(dstSim.TraitTags.MyItems, hhttag.Tag.Name);
+                var tag = GetItemFromListByName(dstSim.TraitTags.Items, hhttag.Tag.Name);
                 if (tag != null) {
                     hh.AddTag(tag);
                 }
             }
 
             foreach (var subtrait in item.SubTraits) {
-                var trait = GetItemFromListByName(dstSim.HouseholdTraits.MyItems, subtrait.ThisTrait.Name);
+                var trait = GetItemFromListByName(dstSim.HouseholdTraits.Items, subtrait.ThisTrait.Name);
                 if (trait != null) {
                     hh.AddTrait(trait);
                 }
@@ -1244,7 +1244,7 @@ namespace Database.Tables.ModularHouseholds {
                 trait.ImportFromJsonObject(jsonTrait, sim);
             }
 
-            sim.HouseholdTraits.It.Sort((x, y) => string.Compare(x.Name, y.Name, StringComparison.Ordinal));
+            sim.HouseholdTraits.Items.Sort((x, y) => string.Compare(x.Name, y.Name, StringComparison.Ordinal));
             return newTraits;
         }
 

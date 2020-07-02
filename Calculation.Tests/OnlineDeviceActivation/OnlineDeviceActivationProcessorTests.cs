@@ -155,7 +155,9 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                                 var key = new HouseholdKey("HH1");
                                 var cddauto = new CalcDeviceDto("devicename", devCatGuid, key, OefcDeviceType.Device, "device category",
                                     " (autonomous)", Guid.NewGuid().ToStrGuid(), cloc.Guid, cloc.Name);
-                                var autodev = new CalcAutoDev(profileWith100, clt, loads, 0, 1, cloc, requirements, cddauto, calcRepo);
+                                var cadp = new CalcAutoDevProfile(profileWith100,clt, 1);
+                                var cadps = new List<CalcAutoDevProfile>() {cadp};
+                                var autodev = new CalcAutoDev(cadps, loads, 0,  cloc, requirements, cddauto, calcRepo);
                                 var cdd = new CalcDeviceDto("devicename", devCatGuid, key, OefcDeviceType.Device, "device category", "",
                                     Guid.NewGuid().ToStrGuid(), cloc.Guid, cloc.Name);
                                 var device = new CalcDevice(loads, cloc, cdd, calcRepo);

@@ -267,7 +267,7 @@ namespace Database.Tables.BasicHouseholds {
         [UsedImplicitly]
         public static DeviceCategory ImportFromItem([NotNull] DeviceCategory toImport,[NotNull] Simulator dstSim)
         {
-            var dc2 = GetItemFromListByName(dstSim.DeviceCategories.MyItems, toImport.ParentCategory?.Name);
+            var dc2 = GetItemFromListByName(dstSim.DeviceCategories.Items, toImport.ParentCategory?.Name);
             var parentID = -1;
             if (dc2 != null) {
                 parentID = dc2.IntID;
@@ -279,7 +279,7 @@ namespace Database.Tables.BasicHouseholds {
                 }
             }
             var dc = new DeviceCategory(toImport.ShortName, parentID, dstSim.ConnectionString,
-                toImport.IgnoreInRealDeviceViews, dstSim.RealDevices.MyItems, toImport.Guid)
+                toImport.IgnoreInRealDeviceViews, dstSim.RealDevices.Items, toImport.Guid)
             {
                 ParentCategory = dc2
             };

@@ -60,7 +60,7 @@ namespace Database.Tests.Tables.Validation {
 
                 var sim2 = new Simulator(db.ConnectionString);
 
-                (sim2.CalculationOutcomes.It.Count).Should().Be(1);
+                (sim2.CalculationOutcomes.Items.Count).Should().Be(1);
                 (sim2.CalculationOutcomes[0].Entries.Count).Should().Be(1);
 
                 db.Cleanup();

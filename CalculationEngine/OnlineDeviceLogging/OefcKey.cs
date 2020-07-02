@@ -27,6 +27,8 @@ namespace CalculationEngine.OnlineDeviceLogging {
 
         [NotNull]
         public string FullKey { get; }
+        public string DeviceName { get; }
+        public string LocationName { get; }
         public OefcKey([NotNull] CalcDeviceDto dto, StrGuid loadtypeGuid)
         {
             HouseholdKey = dto.HouseholdKey;
@@ -35,6 +37,8 @@ namespace CalculationEngine.OnlineDeviceLogging {
             LocationGuid = dto.LocationGuid;
             LoadtypeGuid = loadtypeGuid;
             DeviceCategory = dto.DeviceCategoryName;
+            DeviceName = dto.Name;
+            LocationName = dto.LocationName;
             unchecked
             {
                 _hashCode = LocationGuid.GetHashCode();

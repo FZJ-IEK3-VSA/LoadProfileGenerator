@@ -23,8 +23,8 @@ namespace Database.Tests.Tables.ModularHouseholds {
             {
                 db.ClearTable(TraitTag.TableName);
                 var cat = new CategoryDBBase<TraitTag>("Household Trait Tags");
-                TraitTag.LoadFromDatabase(cat.It, db.ConnectionString, false);
-                (cat.MyItems.Count).Should().Be(0);
+                TraitTag.LoadFromDatabase(cat.Items, db.ConnectionString, false);
+                (cat.Items.Count).Should().Be(0);
                 cat.CreateNewItem(db.ConnectionString);
                 cat.SaveToDB();
                 var tags = new ObservableCollection<TraitTag>();

@@ -84,12 +84,12 @@ namespace CalculationController.DtoFactories
                 var deviceLocationDtoDict = new Dictionary<CalcLocationDto, List<IAssignableDevice>>();
                 locationDict = new LocationDtoDict();
                 List<DeviceCategoryDto> deviceCategoryDtos = new List<DeviceCategoryDto>();
-                foreach (var deviceCategory in sim.DeviceCategories.It) {
+                foreach (var deviceCategory in sim.DeviceCategories.Items) {
                     deviceCategoryDtos.Add(new DeviceCategoryDto(deviceCategory.FullPath,Guid.NewGuid().ToStrGuid()));
                 }
                 var locationDtos = _calcLocationDtoFactory.MakeCalcLocations(locations,
                     householdKey,
-                    et, deviceLocationDtoDict, sim.DeviceActions.It, locationDict,deviceCategoryDtos);
+                    et, deviceLocationDtoDict, sim.DeviceActions.Items, locationDict,deviceCategoryDtos);
                 // persons
 
                 if (mhh.Vacation == null)
@@ -131,7 +131,7 @@ namespace CalculationController.DtoFactories
                 }
 
                 var deviceDtos = _calcDeviceDtoFactory.MakeCalcDevices(locationDtos,
-                    deviceLocations, et, householdKey, deviceLocationDtoDict, sim.DeviceActions.It,_ltDict, deviceCategoryDtos);
+                    deviceLocations, et, householdKey, deviceLocationDtoDict, sim.DeviceActions.Items,_ltDict, deviceCategoryDtos);
                 if(_calcRepo.CalcParameters.Options.Contains(CalcOption.HouseholdContents)) {
                     _calcRepo.InputDataLogger.SaveList(deviceDtos.ConvertAll(x => (IHouseholdKey)x));
                 }
@@ -146,7 +146,7 @@ namespace CalculationController.DtoFactories
                 var autoDevDtos = _calcDeviceDtoFactory.MakeCalcAutoDevDtos(autonomousDevices,
                     energyIntensity, householdKey, mhh.Vacation.VacationTimeframes(),
                     mhh.Name + "###" + householdKey,
-                    sim.DeviceActions.It, locationDict,
+                    sim.DeviceActions.Items, locationDict,
                     temperatureProfile, geographicLocation,deviceCategoryDtos);
                 if (_calcRepo.CalcParameters.Options.Contains(CalcOption.HouseholdContents)) {
                     _calcRepo.InputDataLogger.SaveList(autoDevDtos.ConvertAll(x => (IHouseholdKey)x));
@@ -168,7 +168,7 @@ namespace CalculationController.DtoFactories
                     _ltDict,
                     geographicLocation, _random, sim.MyGeneralConfig.TimeStepsPerHour,
                     sim.MyGeneralConfig.InternalStepSize, mhh.Vacation.VacationTimeframes(),
-                    mhh.Name + "###" + householdKey, sim.DeviceActions.MyItems, affordancesAtLoc, locationDict,
+                    mhh.Name + "###" + householdKey, sim.DeviceActions.Items, affordancesAtLoc, locationDict,
                     out List<DateTime> bridgeDays, householdKey, deviceDtos,deviceCategoryDtos);
                 if (_calcRepo.CalcParameters.Options.Contains(CalcOption.HouseholdContents)) {
                     _calcRepo.InputDataLogger.SaveList(allAffordances.ConvertAll(x => (IHouseholdKey)x));

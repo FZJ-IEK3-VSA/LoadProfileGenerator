@@ -222,7 +222,7 @@ namespace Database.Tables.BasicHouseholds {
         public override List<UsedIn> CalculateUsedIns(Simulator sim)
         {
             var usedins = new List<UsedIn>();
-            foreach (var aff in sim.Affordances.It) {
+            foreach (var aff in sim.Affordances.Items) {
                 foreach (var subaff in aff.SubAffordances) {
                     if (subaff.SubAffordance == this) {
                         usedins.Add(new UsedIn(aff, "Subaffordance"));
@@ -241,21 +241,21 @@ namespace Database.Tables.BasicHouseholds {
                 item.IsInterruptable, item.IsInterrupting, item.MaximumAge, item.MinimumAge,item.Guid);
             subaff.SaveToDB();
             foreach (var affordanceDesire in item.SubAffordanceDesires) {
-                var d = GetItemFromListByName(dstSim.Desires.MyItems, affordanceDesire.Desire?.Name);
+                var d = GetItemFromListByName(dstSim.Desires.Items, affordanceDesire.Desire?.Name);
                 if (d == null) {
                     Logger.Error("Could not find a desire while importing. Skipping.");
                     continue;
                 }
-                subaff.AddDesire(d, affordanceDesire.SatisfactionValue, dstSim.Desires.MyItems);
+                subaff.AddDesire(d, affordanceDesire.SatisfactionValue, dstSim.Desires.Items);
             }
             foreach (var op in item.SubAffordanceVariableOps) {
                 Location loc = null;
                 if (op.Location != null) {
-                    loc = GetItemFromListByName(dstSim.Locations.It, op.Location.Name);
+                    loc = GetItemFromListByName(dstSim.Locations.Items, op.Location.Name);
                 }
                 Variable va = null;
                 if (op.Variable != null) {
-                    va = GetItemFromListByName(dstSim.Variables.It, op.Variable.Name);
+                    va = GetItemFromListByName(dstSim.Variables.Items, op.Variable.Name);
                 }
 
                 if (va == null) {

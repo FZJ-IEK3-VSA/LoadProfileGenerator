@@ -99,7 +99,7 @@ namespace CalculationController.Tests.Helpers
                     Location loc = new Location("bla", -1, string.Empty, Guid.NewGuid().ToStrGuid());
                     List<IAssignableDevice> devices = new List<IAssignableDevice>();
                     devices.Add(sim.RealDevices[0]);
-                    dcp.GetOrPickDevice(sim.DeviceActionGroups[1], loc, EnergyIntensityType.Random, devices, sim.DeviceActions.It);
+                    dcp.GetOrPickDevice(sim.DeviceActionGroups[1], loc, EnergyIntensityType.Random, devices, sim.DeviceActions.Items);
                 }
             }
             //ObservableCollection<RealDevice> allDevices = new ObservableCollection<RealDevice>();

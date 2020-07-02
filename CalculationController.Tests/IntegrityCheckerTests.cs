@@ -96,7 +96,7 @@ namespace CalculationController.Tests
             {
                 Simulator sim = new Simulator(db.ConnectionString);
                 sim.Should().NotBeNull();
-                foreach (var house in sim.Houses.MyItems)
+                foreach (var house in sim.Houses.Items)
                 {
                     HouseIntegrityChecker.Run(house, sim);
                 }

@@ -64,10 +64,10 @@ namespace Database.Tests {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
                 var sim = new Simulator(db.ConnectionString);
-                var count = sim.Affordances.MyItems.Count;
-                sim.Affordances.DeleteItem(sim.Affordances.MyItems[0]);
+                var count = sim.Affordances.Items.Count;
+                sim.Affordances.DeleteItem(sim.Affordances.Items[0]);
                 var sim2 = new Simulator(db.ConnectionString);
-                sim2.Affordances.MyItems.Count.Should().Be(count - 1);
+                sim2.Affordances.Items.Count.Should().Be(count - 1);
                 db.Cleanup();
             }
         }
@@ -124,10 +124,10 @@ namespace Database.Tests {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
                 var sim = new Simulator(db.ConnectionString);
-                var count = sim.DateBasedProfiles.MyItems.Count;
-                sim.DateBasedProfiles.DeleteItem(sim.DateBasedProfiles.MyItems[0]);
+                var count = sim.DateBasedProfiles.Items.Count;
+                sim.DateBasedProfiles.DeleteItem(sim.DateBasedProfiles.Items[0]);
                 var sim2 = new Simulator(db.ConnectionString);
-                sim2.DateBasedProfiles.MyItems.Count.Should().Be(count-1);
+                sim2.DateBasedProfiles.Items.Count.Should().Be(count-1);
                 db.Cleanup();
             }
         }
@@ -139,10 +139,10 @@ namespace Database.Tests {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
                 var sim = new Simulator(db.ConnectionString);
-                var count = sim.Desires.MyItems.Count;
-                sim.Desires.DeleteItem(sim.Desires.MyItems[0]);
+                var count = sim.Desires.Items.Count;
+                sim.Desires.DeleteItem(sim.Desires.Items[0]);
                 var sim2 = new Simulator(db.ConnectionString);
-                sim2.Desires.MyItems.Count.Should().Be(count-1);
+                sim2.Desires.Items.Count.Should().Be(count-1);
                 db.Cleanup();
             }
         }
@@ -155,17 +155,17 @@ namespace Database.Tests {
             {
                 // load to check if everything is ok
                 var sim0 = new Simulator(db.ConnectionString);
-                if (sim0.Persons.It.Count == 0)
+                if (sim0.Persons.Items.Count == 0)
                 {
                     throw new LPGException("0 persons!?");
                 }
                 // load for deleting one
                 var sim = new Simulator(db.ConnectionString);
-                var count = sim.DeviceCategories.MyItems.Count;
-                sim.DeviceCategories.DeleteItem(sim.DeviceCategories.MyItems[sim.DeviceCategories.MyItems.Count - 1]);
+                var count = sim.DeviceCategories.Items.Count;
+                sim.DeviceCategories.DeleteItem(sim.DeviceCategories.Items[sim.DeviceCategories.Items.Count - 1]);
                 // load again to double check
                 var sim2 = new Simulator(db.ConnectionString);
-                sim2.DeviceCategories.MyItems.Count.Should().Be(count - 1);
+                sim2.DeviceCategories.Items.Count.Should().Be(count - 1);
                 db.Cleanup();
             }
         }
@@ -177,10 +177,10 @@ namespace Database.Tests {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
                 var sim = new Simulator(db.ConnectionString);
-                var count = sim.EnergyStorages.MyItems.Count;
-                sim.EnergyStorages.DeleteItem(sim.EnergyStorages.MyItems[0]);
+                var count = sim.EnergyStorages.Items.Count;
+                sim.EnergyStorages.DeleteItem(sim.EnergyStorages.Items[0]);
                 var sim2 = new Simulator(db.ConnectionString);
-                sim2.EnergyStorages.MyItems.Count.Should().Be(count-1);
+                sim2.EnergyStorages.Items.Count.Should().Be(count-1);
                 db.Cleanup();
             }
         }
@@ -192,10 +192,10 @@ namespace Database.Tests {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
                 var sim = new Simulator(db.ConnectionString);
-                var count = sim.Generators.MyItems.Count;
-                sim.Generators.DeleteItem(sim.Generators.MyItems[0]);
+                var count = sim.Generators.Items.Count;
+                sim.Generators.DeleteItem(sim.Generators.Items[0]);
                 var sim2 = new Simulator(db.ConnectionString);
-                sim2.Generators.MyItems.Count.Should().Be(count - 1);
+                sim2.Generators.Items.Count.Should().Be(count - 1);
                 db.Cleanup();
             }
         }
@@ -207,10 +207,10 @@ namespace Database.Tests {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
                 var sim = new Simulator(db.ConnectionString);
-                var count = sim.GeographicLocations.MyItems.Count;
-                sim.GeographicLocations.DeleteItem(sim.GeographicLocations.MyItems[0]);
+                var count = sim.GeographicLocations.Items.Count;
+                sim.GeographicLocations.DeleteItem(sim.GeographicLocations.Items[0]);
                 var sim2 = new Simulator(db.ConnectionString);
-                sim2.GeographicLocations.MyItems.Count.Should().Be(count - 1);
+                sim2.GeographicLocations.Items.Count.Should().Be(count - 1);
                 db.Cleanup();
             }
         }
@@ -222,10 +222,10 @@ namespace Database.Tests {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
                 var sim = new Simulator(db.ConnectionString);
-                var count = sim.Holidays.MyItems.Count;
-                sim.Holidays.DeleteItem(sim.Holidays.MyItems[0]);
+                var count = sim.Holidays.Items.Count;
+                sim.Holidays.DeleteItem(sim.Holidays.Items[0]);
                 var sim2 = new Simulator(db.ConnectionString);
-                sim2.Holidays.MyItems.Count.Should().Be(count - 1);
+                sim2.Holidays.Items.Count.Should().Be(count - 1);
                 db.Cleanup();
             }
         }
@@ -237,10 +237,10 @@ namespace Database.Tests {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
                 var sim = new Simulator(db.ConnectionString);
-                var count = sim.ModularHouseholds.MyItems.Count;
-                sim.ModularHouseholds.DeleteItem(sim.ModularHouseholds.MyItems[0]);
+                var count = sim.ModularHouseholds.Items.Count;
+                sim.ModularHouseholds.DeleteItem(sim.ModularHouseholds.Items[0]);
                 var sim2 = new Simulator(db.ConnectionString);
-                sim2.ModularHouseholds.MyItems.Count.Should().Be(count - 1);
+                sim2.ModularHouseholds.Items.Count.Should().Be(count - 1);
                 db.Cleanup();
             }
         }
@@ -252,10 +252,10 @@ namespace Database.Tests {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
                 var sim = new Simulator(db.ConnectionString);
-                var count = sim.HouseholdTraits.MyItems.Count;
-                sim.HouseholdTraits.DeleteItem(sim.HouseholdTraits.MyItems[0]);
+                var count = sim.HouseholdTraits.Items.Count;
+                sim.HouseholdTraits.DeleteItem(sim.HouseholdTraits.Items[0]);
                 var sim2 = new Simulator(db.ConnectionString);
-                sim2.HouseholdTraits.MyItems.Count.Should().Be(count - 1);
+                sim2.HouseholdTraits.Items.Count.Should().Be(count - 1);
                 db.Cleanup();
             }
         }
@@ -267,10 +267,10 @@ namespace Database.Tests {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
                 var sim = new Simulator(db.ConnectionString);
-                var count = sim.Houses.MyItems.Count;
-                sim.Houses.DeleteItem(sim.Houses.MyItems[0]);
+                var count = sim.Houses.Items.Count;
+                sim.Houses.DeleteItem(sim.Houses.Items[0]);
                 var sim2 = new Simulator(db.ConnectionString);
-                sim2.Houses.MyItems.Count.Should().Be(count - 1);
+                sim2.Houses.Items.Count.Should().Be(count - 1);
                 db.Cleanup();
             }
         }
@@ -282,12 +282,12 @@ namespace Database.Tests {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
                 var sim = new Simulator(db.ConnectionString);
-                var count = sim.LoadTypes.MyItems.Count;
-                sim.LoadTypes.DeleteItem(sim.LoadTypes.MyItems[0]);
-                sim.LoadTypes.DeleteItem(sim.LoadTypes.MyItems[1]);
-                sim.LoadTypes.DeleteItem(sim.LoadTypes.MyItems[2]);
+                var count = sim.LoadTypes.Items.Count;
+                sim.LoadTypes.DeleteItem(sim.LoadTypes.Items[0]);
+                sim.LoadTypes.DeleteItem(sim.LoadTypes.Items[1]);
+                sim.LoadTypes.DeleteItem(sim.LoadTypes.Items[2]);
                 var sim2 = new Simulator(db.ConnectionString);
-                sim2.LoadTypes.MyItems.Count.Should().Be(count - 3);
+                sim2.LoadTypes.Items.Count.Should().Be(count - 3);
                 db.Cleanup();
             }
         }
@@ -299,13 +299,13 @@ namespace Database.Tests {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
                 var sim = new Simulator(db.ConnectionString); // load once to clear problems
-                foreach (var plan in sim.HouseholdPlans.It)
+                foreach (var plan in sim.HouseholdPlans.Items)
                 {
                     plan.Refresh(null);
                 }
                 DBBase.NeedsUpdateAllowed = false;
                 var sim2 = new Simulator(db.ConnectionString); // load again and see if it fails
-                foreach (var plan in sim2.HouseholdPlans.It)
+                foreach (var plan in sim2.HouseholdPlans.Items)
                 {
                     plan.Refresh(null);
                 }
@@ -321,10 +321,10 @@ namespace Database.Tests {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
                 var sim = new Simulator(db.ConnectionString);
-                var locationscount = sim.Locations.MyItems.Count;
-                sim.Locations.DeleteItem(sim.Locations.MyItems[0]);
+                var locationscount = sim.Locations.Items.Count;
+                sim.Locations.DeleteItem(sim.Locations.Items[0]);
                 var sim2 = new Simulator(db.ConnectionString);
-                sim2.Locations.MyItems.Count.Should().Be(locationscount - 1);
+                sim2.Locations.Items.Count.Should().Be(locationscount - 1);
                 db.Cleanup();
             }
         }
@@ -336,10 +336,10 @@ namespace Database.Tests {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
                 var sim = new Simulator(db.ConnectionString);
-                var personcount = sim.Persons.MyItems.Count;
-                sim.Persons.DeleteItem(sim.Persons.MyItems[0]);
+                var personcount = sim.Persons.Items.Count;
+                sim.Persons.DeleteItem(sim.Persons.Items[0]);
                 var sim2 = new Simulator(db.ConnectionString);
-                sim2.Persons.MyItems.Count.Should().Be(personcount - 1);
+                sim2.Persons.Items.Count.Should().Be(personcount - 1);
                 db.Cleanup();
             }
         }
@@ -351,10 +351,10 @@ namespace Database.Tests {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
                 var sim = new Simulator(db.ConnectionString);
-                var count = sim.RealDevices.MyItems.Count;
-                sim.RealDevices.DeleteItem(sim.RealDevices.MyItems[0]);
+                var count = sim.RealDevices.Items.Count;
+                sim.RealDevices.DeleteItem(sim.RealDevices.Items[0]);
                 var sim2 = new Simulator(db.ConnectionString);
-                sim2.RealDevices.MyItems.Count.Should().Be(count - 1);
+                sim2.RealDevices.Items.Count.Should().Be(count - 1);
                 db.Cleanup();
             }
         }
@@ -366,10 +366,10 @@ namespace Database.Tests {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
                 var sim = new Simulator(db.ConnectionString);
-                var count = sim.Settlements.MyItems.Count;
-                sim.Settlements.DeleteItem(sim.Settlements.MyItems[0]);
+                var count = sim.Settlements.Items.Count;
+                sim.Settlements.DeleteItem(sim.Settlements.Items[0]);
                 var sim2 = new Simulator(db.ConnectionString);
-                sim2.Settlements.MyItems.Count.Should().Be(count - 1);
+                sim2.Settlements.Items.Count.Should().Be(count - 1);
                 db.Cleanup();
             }
         }
@@ -381,10 +381,10 @@ namespace Database.Tests {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
                 var sim = new Simulator(db.ConnectionString);
-                var count = sim.TemperatureProfiles.MyItems.Count;
-                sim.TemperatureProfiles.DeleteItem(sim.TemperatureProfiles.MyItems[0]);
+                var count = sim.TemperatureProfiles.Items.Count;
+                sim.TemperatureProfiles.DeleteItem(sim.TemperatureProfiles.Items[0]);
                 var sim2 = new Simulator(db.ConnectionString);
-                sim2.TemperatureProfiles.MyItems.Count.Should().Be(count - 1);
+                sim2.TemperatureProfiles.Items.Count.Should().Be(count - 1);
                 db.Cleanup();
             }
         }
@@ -410,7 +410,7 @@ namespace Database.Tests {
                 var sim = new Simulator(db.ConnectionString);
                 sim.Should().NotBeNull();
                 var emptycount = 0;
-                foreach (var realDevice in sim.RealDevices.MyItems)
+                foreach (var realDevice in sim.RealDevices.Items)
                 {
                     if (realDevice.Loads.Count == 0)
                     {
@@ -435,10 +435,10 @@ namespace Database.Tests {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
                 var sim = new Simulator(db.ConnectionString);
-                var count = sim.TimeLimits.MyItems.Count;
-                sim.TimeLimits.DeleteItem(sim.TimeLimits.MyItems[0]);
+                var count = sim.TimeLimits.Items.Count;
+                sim.TimeLimits.DeleteItem(sim.TimeLimits.Items[0]);
                 var sim2 = new Simulator(db.ConnectionString);
-                sim2.TimeLimits.MyItems.Count.Should().Be(count - 1);
+                sim2.TimeLimits.Items.Count.Should().Be(count - 1);
                 db.Cleanup();
             }
         }
@@ -450,10 +450,10 @@ namespace Database.Tests {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
                 var sim = new Simulator(db.ConnectionString);
-                var count = sim.Timeprofiles.MyItems.Count;
-                sim.Timeprofiles.DeleteItem(sim.Timeprofiles.MyItems[0]);
+                var count = sim.Timeprofiles.Items.Count;
+                sim.Timeprofiles.DeleteItem(sim.Timeprofiles.Items[0]);
                 var sim2 = new Simulator(db.ConnectionString);
-                sim2.Timeprofiles.MyItems.Count.Should().Be(count - 1);
+                sim2.Timeprofiles.Items.Count.Should().Be(count - 1);
                 db.Cleanup();
             }
         }
@@ -465,10 +465,10 @@ namespace Database.Tests {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
                 var sim = new Simulator(db.ConnectionString);
-                var count = sim.TransformationDevices.MyItems.Count;
-                sim.TransformationDevices.DeleteItem(sim.TransformationDevices.MyItems[0]);
+                var count = sim.TransformationDevices.Items.Count;
+                sim.TransformationDevices.DeleteItem(sim.TransformationDevices.Items[0]);
                 var sim2 = new Simulator(db.ConnectionString);
-                sim2.TransformationDevices.MyItems.Count.Should().Be(count - 1);
+                sim2.TransformationDevices.Items.Count.Should().Be(count - 1);
                 db.Cleanup();
             }
         }

@@ -87,7 +87,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
         {
             var s = "Are you sure you want to delete the element:"+ Environment.NewLine + headerstring + "?";
             var affordances = new Dictionary<Affordance, bool>();
-            foreach (var aff in Sim.Affordances.MyItems) {
+            foreach (var aff in Sim.Affordances.Items) {
                 foreach (var affordanceDevice in aff.AffordanceDevices) {
                     if (affordanceDevice.TimeProfile == _tp && !affordances.ContainsKey(aff)) {
                         affordances.Add(aff, true);

@@ -219,14 +219,14 @@ namespace Database.Tables.BasicElements {
         public override List<UsedIn> CalculateUsedIns(Simulator sim)
         {
             var result = new List<UsedIn>();
-            foreach (var action in sim.DeviceActions.It) {
+            foreach (var action in sim.DeviceActions.Items) {
                 foreach (var profile in action.Profiles) {
                     if (profile.Timeprofile == this) {
                         result.Add(new UsedIn(action, "Device Action - " + action.Name));
                     }
                 }
             }
-            foreach (var affordance in sim.Affordances.It) {
+            foreach (var affordance in sim.Affordances.Items) {
                 foreach (var affordanceDevice in affordance.AffordanceDevices) {
                     if (affordanceDevice.TimeProfile == this) {
                         result.Add(new UsedIn(affordance, "Affordance - " + affordanceDevice.Name));
@@ -236,7 +236,7 @@ namespace Database.Tables.BasicElements {
                     result.Add(new UsedIn(affordance, "Affordance - Person Profile"));
                 }
             }
-            foreach (var hht in sim.HouseholdTraits.It) {
+            foreach (var hht in sim.HouseholdTraits.Items) {
                 foreach (var dev in hht.Autodevs) {
                     if (dev.TimeProfile == this) {
                         result.Add(new UsedIn(hht, "Household Trait - " + dev.Name));

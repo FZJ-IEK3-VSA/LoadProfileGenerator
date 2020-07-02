@@ -152,22 +152,22 @@ namespace LoadProfileGenerator.Controls.Usercontrols {
         [UsedImplicitly]
         [ItemNotNull]
         [CanBeNull]
-        public ObservableCollection<DeviceActionGroup> DeviceActionGroups => _sim?.DeviceActionGroups.MyItems;
+        public ObservableCollection<DeviceActionGroup> DeviceActionGroups => _sim?.DeviceActionGroups.Items;
 
         [ItemNotNull]
         [UsedImplicitly]
         [CanBeNull]
-        public ObservableCollection<DeviceAction> DeviceActions => _sim?.DeviceActions.MyItems;
+        public ObservableCollection<DeviceAction> DeviceActions => _sim?.DeviceActions.Items;
 
         [UsedImplicitly]
         [CanBeNull]
         [ItemNotNull]
-        public ObservableCollection<DeviceCategory> DeviceCategories => _sim?.DeviceCategories.MyItems;
+        public ObservableCollection<DeviceCategory> DeviceCategories => _sim?.DeviceCategories.Items;
 
         [ItemNotNull]
         [UsedImplicitly]
         [CanBeNull]
-        public ObservableCollection<RealDevice> Devices => _sim?.RealDevices.MyItems;
+        public ObservableCollection<RealDevice> Devices => _sim?.RealDevices.Items;
 
         [NotNull]
         [ItemNotNull]
@@ -210,7 +210,7 @@ namespace LoadProfileGenerator.Controls.Usercontrols {
         [ItemCanBeNull]
         [UsedImplicitly]
         [CanBeNull]
-        public ObservableCollection<VLoadType> LoadTypes => _sim?.LoadTypes.MyItems;
+        public ObservableCollection<VLoadType> LoadTypes => _sim?.LoadTypes.Items;
 
         [CanBeNull]
         [UsedImplicitly]
@@ -443,7 +443,7 @@ namespace LoadProfileGenerator.Controls.Usercontrols {
         [ItemNotNull]
         [UsedImplicitly]
         [CanBeNull]
-        public ObservableCollection<TimeLimit> TimeLimits => _sim?.TimeLimits.MyItems;
+        public ObservableCollection<TimeLimit> TimeLimits => _sim?.TimeLimits.Items;
 
         [UsedImplicitly]
         public decimal TimeOffset {
@@ -454,7 +454,7 @@ namespace LoadProfileGenerator.Controls.Usercontrols {
         [ItemNotNull]
         [UsedImplicitly]
         [CanBeNull]
-        public ObservableCollection<TimeBasedProfile> Timeprofiles => _sim?.Timeprofiles.MyItems;
+        public ObservableCollection<TimeBasedProfile> Timeprofiles => _sim?.Timeprofiles.Items;
 
         [UsedImplicitly]
         public bool UseLoadType {
@@ -570,7 +570,7 @@ namespace LoadProfileGenerator.Controls.Usercontrols {
         [ItemNotNull]
         [UsedImplicitly]
         [CanBeNull]
-        public ObservableCollection<Variable> Variables => _sim?.Variables.MyItems;
+        public ObservableCollection<Variable> Variables => _sim?.Variables.Items;
 
         [UsedImplicitly]
         public double VariableValue {

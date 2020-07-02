@@ -221,7 +221,7 @@ namespace CalculationController.Tests {
                 using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
                 {
                     Simulator sim = new Simulator(db.ConnectionString);
-                    int housetypecount = sim.HouseTypes.It.Count;
+                    int housetypecount = sim.HouseTypes.Items.Count;
                     Logger.Threshold = Severity.Error;
                     for (int i = 0; i < housetypecount && i < 2; i++)
                     {
@@ -406,9 +406,9 @@ namespace CalculationController.Tests {
                     sim.Should().NotBeNull();
                     SimIntegrityChecker.Run(sim);
                     CalcManagerFactory.DoIntegrityRun = false;
-                    for (var i = 0; i < sim.ModularHouseholds.It.Count; i++)
+                    for (var i = 0; i < sim.ModularHouseholds.Items.Count; i++)
                     {
-                        if (sim.ModularHouseholds.It[i].CreationType != CreationType.ManuallyCreated)
+                        if (sim.ModularHouseholds.Items[i].CreationType != CreationType.ManuallyCreated)
                         {
                             continue;
                         }
@@ -456,9 +456,9 @@ namespace CalculationController.Tests {
                 sim.Should().NotBeNull();
                 SimIntegrityChecker.Run(sim);
                 CalcManagerFactory.DoIntegrityRun = false;
-                for (var i = 0; i < sim.Houses.It.Count; i++)
+                for (var i = 0; i < sim.Houses.Items.Count; i++)
                 {
-                    if (sim.Houses.It[i].CreationType != CreationType.ManuallyCreated)
+                    if (sim.Houses.Items[i].CreationType != CreationType.ManuallyCreated)
                     {
                         continue;
                     }
@@ -579,7 +579,7 @@ namespace CalculationController.Tests {
                         {
                             throw new LPGException("geoloc not found");
                         }
-                        var chh = sim.ModularHouseholds.It[0];
+                        var chh = sim.ModularHouseholds.Items[0];
                         CalculationProfiler calculationProfiler = new CalculationProfiler();
                         CalcStartParameterSet csps = new CalcStartParameterSet(geoloc,
                             sim.TemperatureProfiles[0], chh, EnergyIntensityType.Random,
@@ -634,7 +634,7 @@ namespace CalculationController.Tests {
                         throw new LPGException("Geoloc was null");
                     }
                     var chh =
-                        sim.ModularHouseholds.It.First(x => x.Name.StartsWith("CHR20", StringComparison.Ordinal));
+                        sim.ModularHouseholds.Items.First(x => x.Name.StartsWith("CHR20", StringComparison.Ordinal));
                     CalculationProfiler calculationProfiler = new CalculationProfiler();
                     CalcStartParameterSet csps = new CalcStartParameterSet(geoloc,
                         sim.TemperatureProfiles[0], chh, EnergyIntensityType.Random,
@@ -708,7 +708,7 @@ namespace CalculationController.Tests {
                      sim.Should().NotBeNull();
                     var cmf = new CalcManagerFactory();
                     //CalcDevice.UseRanges = true;
-                    House houseToCalc = sim.Houses.It[0];
+                    House houseToCalc = sim.Houses.Items[0];
                     CalculationProfiler calculationProfiler = new CalculationProfiler();
                     CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
                         sim.TemperatureProfiles[0], houseToCalc, EnergyIntensityType.Random,
@@ -1169,9 +1169,9 @@ namespace CalculationController.Tests {
                 SimIntegrityChecker.Run(sim);
                 sim.Should().NotBeNull();
                 int count = 0;
-                for (var index = 0; index < sim.ModularHouseholds.It.Count && index < 5; index++)
+                for (var index = 0; index < sim.ModularHouseholds.Items.Count && index < 5; index++)
                 {
-                    var modularHousehold = sim.ModularHouseholds.It[index];
+                    var modularHousehold = sim.ModularHouseholds.Items[index];
                     count++;
                     Logger.Info("Processing household " + count);
                     //              if(count<490) {//for skipping the first 50 for debugging
@@ -1191,7 +1191,7 @@ namespace CalculationController.Tests {
 
                         //TransportationDeviceSet transportationDeviceSet = null;
                         //TravelRouteSet travelRouteSet = null;
-                        TransportationDeviceSet transportationDeviceSet = sim.TransportationDeviceSets.It[0];
+                        TransportationDeviceSet transportationDeviceSet = sim.TransportationDeviceSets.Items[0];
                         TravelRouteSet travelRouteSet = sim.TravelRouteSets[0];
                         ChargingStationSet chargingStationSet = sim.ChargingStationSets[0];
                         CalculationProfiler calculationProfiler = new CalculationProfiler();

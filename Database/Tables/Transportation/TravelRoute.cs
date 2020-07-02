@@ -154,14 +154,14 @@ namespace Database.Tables.Transportation {
         [UsedImplicitly]
         public static TravelRoute ImportFromItem([NotNull] TravelRoute toImport, [NotNull] Simulator dstSim)
         {
-            Site a = GetItemFromListByName(dstSim.Sites.It, toImport.SiteA?.Name);
-            Site b = GetItemFromListByName(dstSim.Sites.It, toImport.SiteB?.Name);
+            Site a = GetItemFromListByName(dstSim.Sites.Items, toImport.SiteA?.Name);
+            Site b = GetItemFromListByName(dstSim.Sites.Items, toImport.SiteB?.Name);
 
             var route = new TravelRoute(null, dstSim.ConnectionString,
                 toImport.Name, toImport.Description, a, b, toImport.Guid, toImport.RouteKey);
             route.SaveToDB();
             foreach (var step in toImport._steps) {
-                var td = GetItemFromListByName(dstSim.TransportationDeviceCategories.It,
+                var td = GetItemFromListByName(dstSim.TransportationDeviceCategories.Items,
                     step.TransportationDeviceCategory.Name);
                 if (td == null) {
                     Logger.Error("Could not find a transportation device category while importing. Skipping.");

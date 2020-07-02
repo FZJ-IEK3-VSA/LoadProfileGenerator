@@ -569,11 +569,11 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             }
 
             var sett = Simulator.Settlements.CreateNewItem(Simulator.ConnectionString);
-            foreach (var household in Simulator.ModularHouseholds.MyItems) {
+            foreach (var household in Simulator.ModularHouseholds.Items) {
                 sett.AddHousehold(household, 1);
             }
 
-            foreach (var household in Simulator.Houses.MyItems) {
+            foreach (var household in Simulator.Houses.Items) {
                 sett.AddHousehold(household, 1);
             }
 

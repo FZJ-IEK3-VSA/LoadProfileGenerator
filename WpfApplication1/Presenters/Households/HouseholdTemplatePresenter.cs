@@ -30,7 +30,7 @@ namespace LoadProfileGenerator.Presenters.Households {
         [UsedImplicitly]
         public void RefreshLivingPatterns()
         {
-            var list = Sim.TraitTags.It
+            var list = Sim.TraitTags.Items
                 .Where(x => x.Name.StartsWith("Living Pattern", StringComparison.InvariantCulture)).ToList();
             LivingPatternTags.SynchronizeWithList(list);
         }
@@ -67,7 +67,7 @@ namespace LoadProfileGenerator.Presenters.Households {
         internal void RefreshHouseholds()
         {
             var chhs =
-                Sim.ModularHouseholds.It.Where(x => x.GeneratorID == ThisTemplate.IntID).ToList();
+                Sim.ModularHouseholds.Items.Where(x => x.GeneratorID == ThisTemplate.IntID).ToList();
             _generatedHouseholds.SynchronizeWithList(chhs);
         }
 
@@ -129,33 +129,33 @@ namespace LoadProfileGenerator.Presenters.Households {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<DateBasedProfile> AllDateBasedProfiles => Sim.DateBasedProfiles.It;
+        public ObservableCollection<DateBasedProfile> AllDateBasedProfiles => Sim.DateBasedProfiles.Items;
 
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
         public ObservableCollection<ModularHousehold> AllModularHouseholds
-            => Sim.ModularHouseholds.It;
+            => Sim.ModularHouseholds.Items;
 
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<Person> AllPersons => Sim.Persons.It;
+        public ObservableCollection<Person> AllPersons => Sim.Persons.Items;
 
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<TraitTag> AllTags => Sim.TraitTags.It;
+        public ObservableCollection<TraitTag> AllTags => Sim.TraitTags.Items;
 
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<HouseholdTag> AllTemplateTags => Sim.HouseholdTags.It;
+        public ObservableCollection<HouseholdTag> AllTemplateTags => Sim.HouseholdTags.Items;
 
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<Vacation> AllVacations => Sim.Vacations.It;
+        public ObservableCollection<Vacation> AllVacations => Sim.Vacations.Items;
 
         [ItemNotNull]
         [NotNull]

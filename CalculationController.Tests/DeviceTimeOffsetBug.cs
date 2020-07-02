@@ -134,7 +134,7 @@ namespace CalculationController.Tests {
                         throw new LPGException("Geoloc was null");
                     }
                     var chh =
-                        sim.ModularHouseholds.It.First(x => x.Name.StartsWith("CHR09", StringComparison.Ordinal));
+                        sim.ModularHouseholds.Items.First(x => x.Name.StartsWith("CHR09", StringComparison.Ordinal));
                     CalculationProfiler calculationProfiler = new CalculationProfiler();
 
                     CalcStartParameterSet csps = new CalcStartParameterSet(geoloc,

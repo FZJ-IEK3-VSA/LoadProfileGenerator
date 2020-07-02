@@ -65,7 +65,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<RealDevice> AllDevices => Sim.RealDevices.MyItems;
+        public ObservableCollection<RealDevice> AllDevices => Sim.RealDevices.Items;
 
         [NotNull]
         [UsedImplicitly]
@@ -79,12 +79,12 @@ namespace LoadProfileGenerator.Presenters.Houses {
         [NotNull]
         [UsedImplicitly]
         public ObservableCollection<DeviceCategory> DeviceCategories => Sim.DeviceCategories
-            .MyItems;
+            .Items;
 
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<ChargingStationSet> ChargingStationSets => Sim.ChargingStationSets.MyItems;
+        public ObservableCollection<ChargingStationSet> ChargingStationSets => Sim.ChargingStationSets.Items;
 
         [CanBeNull]
         [UsedImplicitly]
@@ -104,7 +104,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<TravelRouteSet> TravelRouteSets => Sim.TravelRouteSets.MyItems;
+        public ObservableCollection<TravelRouteSet> TravelRouteSets => Sim.TravelRouteSets.Items;
 
         [CanBeNull]
         [UsedImplicitly]
@@ -126,7 +126,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<TransportationDeviceSet> TransportationDeviceSets => Sim.TransportationDeviceSets.MyItems;
+        public ObservableCollection<TransportationDeviceSet> TransportationDeviceSets => Sim.TransportationDeviceSets.Items;
 
         [CanBeNull]
         [UsedImplicitly]
@@ -164,12 +164,12 @@ namespace LoadProfileGenerator.Presenters.Houses {
         [NotNull]
         [UsedImplicitly]
         public ObservableCollection<GeographicLocation> GeographicLocations => Sim
-            .GeographicLocations.MyItems;
+            .GeographicLocations.Items;
 
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<HouseType> HouseTypes => Sim.HouseTypes.MyItems;
+        public ObservableCollection<HouseType> HouseTypes => Sim.HouseTypes.Items;
 
         [UsedImplicitly]
         public Visibility IsModularHouseholdVisible {
@@ -185,7 +185,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
         [NotNull]
         [UsedImplicitly]
         public ObservableCollection<ModularHousehold> ModularHouseholds => Sim
-            .ModularHouseholds.MyItems;
+            .ModularHouseholds.Items;
 
         [CanBeNull]
         [UsedImplicitly]
@@ -237,7 +237,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
         [NotNull]
         [UsedImplicitly]
         public ObservableCollection<TemperatureProfile> TemperatureProfiles => Sim
-            .TemperatureProfiles.MyItems;
+            .TemperatureProfiles.Items;
 
         [NotNull]
         [UsedImplicitly]
@@ -247,18 +247,18 @@ namespace LoadProfileGenerator.Presenters.Houses {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<TimeLimit> TimeLimits => Sim.TimeLimits.MyItems;
+        public ObservableCollection<TimeLimit> TimeLimits => Sim.TimeLimits.Items;
 
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
         public ObservableCollection<TimeBasedProfile> Timeprofiles => Sim.Timeprofiles
-            .MyItems;
+            .Items;
 
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<VLoadType> VLoadTypes => Sim.LoadTypes.MyItems;
+        public ObservableCollection<VLoadType> VLoadTypes => Sim.LoadTypes.Items;
 
         public void AddCalcObject([NotNull] ICalcObject calcObject, [CanBeNull] ChargingStationSet
                                       chargingStationSet, [CanBeNull] TransportationDeviceSet transportationDeviceSet,

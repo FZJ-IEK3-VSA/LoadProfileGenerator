@@ -8,7 +8,7 @@ namespace CalculationController.Integrity {
         }
 
         protected override void Run(Simulator sim) {
-            foreach (var settemp in sim.SettlementTemplates.It) {
+            foreach (var settemp in sim.SettlementTemplates.Items) {
                 if (string.IsNullOrEmpty(settemp.NewName)) {
                     throw new DataIntegrityException(
                         "The settlement template " + settemp.Name + " has no name for the new settlements. Please fix.",
@@ -38,6 +38,24 @@ namespace CalculationController.Integrity {
                     throw new DataIntegrityException(
                         "The settlement template " + settemp.Name + " has no house types defined. Please fix.",
                         settemp);
+                }
+
+                if (PerformCleanupChecks) {
+                    if (settemp.HouseholdTemplates.Count == 0) {
+                        throw new DataIntegrityException("The settlement template " + settemp.Name + " has no household templates.", settemp);
+                    }
+                    if (settemp.ChargingStationSets.Count == 0)
+                    {
+                        throw new DataIntegrityException("Can't have a settlement with 0 charging stations.", settemp);
+                    }
+                    if (settemp.TransportationDeviceSets.Count == 0)
+                    {
+                        throw new DataIntegrityException("Can't have a settlement template with 0 transportation device sets.", settemp);
+                    }
+                    if (settemp.TravelRouteSets.Count == 0)
+                    {
+                        throw new DataIntegrityException("Can't have a settlement with 0 travel route sets.", settemp);
+                    }
                 }
             }
         }

@@ -38,7 +38,7 @@ using JetBrains.Annotations;
 namespace Database.Helpers {
     public class CategorySettlement : CategoryDBBase<Settlement> {
         public CategorySettlement() : base("Settlements") {
-            foreach (var settlement in MyItems) {
+            foreach (var settlement in Items) {
                 settlement.PropertyChanged += SettlementOnPropertyChanged;
             }
         }

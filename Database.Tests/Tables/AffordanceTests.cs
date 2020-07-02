@@ -83,9 +83,9 @@ namespace Database.Tests.Tables {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
                 Simulator sim = new Simulator(db.ConnectionString);
-                foreach (var aff in sim.Affordances.It)
+                foreach (var aff in sim.Affordances.Items)
                 {
-                    aff.CalculateAverageEnergyUse(sim.DeviceActions.It);
+                    aff.CalculateAverageEnergyUse(sim.DeviceActions.Items);
                 }
 
                 db.Cleanup();

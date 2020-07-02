@@ -28,7 +28,7 @@ namespace DatabaseIO.Tables.BasicHouseholds.Tests
             {
                 Simulator sim = new Simulator(db.ConnectionString);
                 var newDevice = sim.RealDevices.CreateNewItem(sim.ConnectionString);
-                newDevice.ImportFromOtherDevice(sim.RealDevices.It[0]);
+                newDevice.ImportFromOtherDevice(sim.RealDevices.Items[0]);
                 // ReSharper disable once AssignNullToNotNullAttribute
                 newDevice.ImportFromOtherDevice(null);
                 newDevice.SaveToDB();

@@ -9,6 +9,7 @@ using Common;
 using Database.Database;
 using Database.Tables.BasicElements;
 using Database.Tables.ModularHouseholds;
+using Database.Tables.Transportation;
 using Database.Templating;
 using JetBrains.Annotations;
 
@@ -26,6 +27,9 @@ namespace Database.Tables.Houses {
 
         [ItemNotNull] [NotNull] private readonly ObservableCollection<STHouseSize> _houseSizes = new ObservableCollection<STHouseSize>();
         [ItemNotNull] [NotNull] private readonly ObservableCollection<STHouseType> _houseTypes = new ObservableCollection<STHouseType>();
+        [ItemNotNull] [NotNull] private readonly ObservableCollection<STChargingStationSet> _chargingStationSets = new ObservableCollection<STChargingStationSet>();
+        [ItemNotNull] [NotNull] private readonly ObservableCollection<STTravelRouteSet> _travelRouteSets = new ObservableCollection<STTravelRouteSet>();
+        [ItemNotNull] [NotNull] private readonly ObservableCollection<STTransportationDeviceSet> _transportationDeviceSets = new ObservableCollection<STTransportationDeviceSet>();
 
         [ItemNotNull] [NotNull] private readonly ObservableCollection<STTraitLimit> _traitLimits = new ObservableCollection<STTraitLimit>();
         [CanBeNull] private string _description;
@@ -113,6 +117,17 @@ namespace Database.Tables.Houses {
 
         [ItemNotNull]
         [NotNull]
+        public ObservableCollection<STChargingStationSet> ChargingStationSets => _chargingStationSets;
+
+        [ItemNotNull]
+        [NotNull]
+        public ObservableCollection<STTravelRouteSet> TravelRouteSets => _travelRouteSets;
+        [ItemNotNull]
+        [NotNull]
+        public ObservableCollection<STTransportationDeviceSet> TransportationDeviceSets => _transportationDeviceSets;
+
+        [ItemNotNull]
+        [NotNull]
         public ObservableCollection<STHouseType> HouseTypes => _houseTypes;
 
         [NotNull]
@@ -183,6 +198,38 @@ namespace Database.Tables.Houses {
             var sthhd = new STHouseholdTemplate(null, ConnectionString, IntID, hht.Name, hht, System.Guid.NewGuid().ToStrGuid());
             _householdTemplates.Add(sthhd);
             _householdTemplates.Sort();
+            sthhd.SaveToDB();
+        }
+
+        public void AddChargingStationSet([NotNull] ChargingStationSet chargingStationSet)
+        {
+            foreach (var css in _chargingStationSets)
+            {
+                if (css.ChargingStationSet== chargingStationSet)
+                {
+                    return;
+                }
+            }
+            var sthhd = new STChargingStationSet(null, ConnectionString, IntID, chargingStationSet.Name,
+                chargingStationSet, System.Guid.NewGuid().ToStrGuid());
+            _chargingStationSets.Add(sthhd);
+            _chargingStationSets.Sort();
+            sthhd.SaveToDB();
+        }
+
+        public void AddTravelRouteSet([NotNull] TravelRouteSet travelRouteSet)
+        {
+            foreach (var trs in _travelRouteSets)
+            {
+                if (trs.TravelRouteSet == travelRouteSet)
+                {
+                    return;
+                }
+            }
+            var sthhd = new STTravelRouteSet(null, ConnectionString, IntID, travelRouteSet.Name,
+                travelRouteSet, System.Guid.NewGuid().ToStrGuid());
+            _travelRouteSets.Add(sthhd);
+            _travelRouteSets.Sort();
             sthhd.SaveToDB();
         }
 
@@ -273,6 +320,11 @@ namespace Database.Tables.Houses {
                 var housesize = TraitLimits[0];
                 DeleteTraitLimit(housesize);
             }
+            while (ChargingStationSets.Count > 0)
+            {
+                var chargingStation = ChargingStationSets[0];
+                DeleteChargingStation(chargingStation);
+            }
             base.DeleteFromDB();
         }
 
@@ -305,6 +357,18 @@ namespace Database.Tables.Houses {
         {
             stl.DeleteFromDB();
             _traitLimits.Remove(stl);
+
+        }
+
+        public void DeleteChargingStation([NotNull] STChargingStationSet stl)
+            {
+                stl.DeleteFromDB();
+                _chargingStationSets.Remove(stl);
+            }
+        public void DeleteTravelRouteSet([NotNull] STTravelRouteSet stl)
+        {
+            stl.DeleteFromDB();
+            _travelRouteSets.Remove(stl);
         }
 
         public void GenerateSettlementPreview([NotNull] Simulator sim)
@@ -356,11 +420,11 @@ namespace Database.Tables.Houses {
         {
             TemperatureProfile temperatureProfile = null;
             if (item.TemperatureProfile != null) {
-                temperatureProfile = GetItemFromListByName(dstsim.TemperatureProfiles.It, item.TemperatureProfile.Name);
+                temperatureProfile = GetItemFromListByName(dstsim.TemperatureProfiles.Items, item.TemperatureProfile.Name);
             }
             GeographicLocation geoloc = null;
             if (item.GeographicLocation != null) {
-                geoloc = GetItemFromListByName(dstsim.GeographicLocations.It, item.GeographicLocation.Name);
+                geoloc = GetItemFromListByName(dstsim.GeographicLocations.Items, item.GeographicLocation.Name);
             }
             var st = new SettlementTemplate(item.Name, null, item.Description, dstsim.ConnectionString,
                 item.DesiredHHCount, item.NewName, temperatureProfile, geoloc, item.Guid);
@@ -369,7 +433,7 @@ namespace Database.Tables.Houses {
                 var hhd = st.AddHouseholdDistribution(hhdist.MinimumNumber, hhdist.MaximumNumber,
                     hhdist.PercentOfHouseholds, hhdist.EnergyIntensity);
                 foreach (var tag in hhdist.Tags) {
-                    var hhtag = GetItemFromListByName(dstsim.HouseholdTags.It, tag.Tag?.Name);
+                    var hhtag = GetItemFromListByName(dstsim.HouseholdTags.Items, tag.Tag?.Name);
                     if (hhtag == null) {
                         Logger.Error("While importing a settlement template, could not find a household tag. Skipping");
                         continue;
@@ -384,7 +448,7 @@ namespace Database.Tables.Houses {
 
             foreach (var stHouseholdTemplate in item.HouseholdTemplates) {
                 var hht =
-                    GetItemFromListByName(dstsim.HouseholdTemplates.It, stHouseholdTemplate.HouseholdTemplate?.Name);
+                    GetItemFromListByName(dstsim.HouseholdTemplates.Items, stHouseholdTemplate.HouseholdTemplate?.Name);
                 if (hht == null) {
                     Logger.Error(
                         "While importing a settlement template, could not find a household template. Skipping");
@@ -394,7 +458,7 @@ namespace Database.Tables.Houses {
             }
 
             foreach (var houseTypes in item.HouseTypes) {
-                var hht = GetItemFromListByName(dstsim.HouseTypes.It, houseTypes.HouseType?.Name);
+                var hht = GetItemFromListByName(dstsim.HouseTypes.Items, houseTypes.HouseType?.Name);
                 if (hht == null) {
                     Logger.Error("While importing a settlement template, could not find a house type. Skipping");
                     continue;
@@ -402,7 +466,7 @@ namespace Database.Tables.Houses {
                 st.AddHouseType(hht);
             }
             foreach (var limit in item.TraitLimits) {
-                var trait = GetItemFromListByName(dstsim.HouseholdTraits.It, limit.Trait?.Name);
+                var trait = GetItemFromListByName(dstsim.HouseholdTraits.Items, limit.Trait?.Name);
                 if (trait == null) {
                     Logger.Error("While importing a settlement template, could not find a trait. Skipping");
                     continue;
@@ -468,6 +532,42 @@ namespace Database.Tables.Houses {
             return false;
         }
 
+        private static bool IsCorrectParentTravelRouteSet([NotNull] DBBase parent, [NotNull] DBBase child)
+        {
+            var travelRouteSet = (STTravelRouteSet)child;
+            if (parent.ID == travelRouteSet.SettlementTemplateID)
+            {
+                var settlement = (SettlementTemplate)parent;
+                settlement._travelRouteSets.Add(travelRouteSet);
+                return true;
+            }
+            return false;
+        }
+
+        private static bool IsCorrectParentTransportationDeviceSet([NotNull] DBBase parent, [NotNull] DBBase child)
+        {
+            var transportationDeviceSet = (STTransportationDeviceSet)child;
+            if (parent.ID == transportationDeviceSet.SettlementTemplateID)
+            {
+                var settlement = (SettlementTemplate)parent;
+                settlement._transportationDeviceSets.Add(transportationDeviceSet);
+                return true;
+            }
+            return false;
+        }
+
+        private static bool IsCorrectParentChargingStationSet([NotNull] DBBase parent, [NotNull] DBBase child)
+        {
+            var chargingStation = (STChargingStationSet)child;
+            if (parent.ID == chargingStation.SettlementTemplateID)
+            {
+                var settlement = (SettlementTemplate)parent;
+                settlement._chargingStationSets.Add(chargingStation);
+                return true;
+            }
+            return false;
+        }
+
         public bool IsHouseGeneratedByThis([NotNull] House house)
         {
             if (house.Source == null) {
@@ -495,7 +595,10 @@ namespace Database.Tables.Houses {
             [ItemNotNull] [NotNull] ObservableCollection<HouseholdTemplate> householdTemplates, [ItemNotNull] [NotNull] ObservableCollection<HouseType> houseTypes,
             bool ignoreMissingTables, [ItemNotNull] [NotNull] ObservableCollection<TemperatureProfile> temperaturProfile,
             [ItemNotNull] [NotNull] ObservableCollection<GeographicLocation> geographicLocation, [ItemNotNull] [NotNull] ObservableCollection<HouseholdTag> tags,
-            [ItemNotNull] [NotNull] ObservableCollection<HouseholdTrait> traits)
+            [ItemNotNull] [NotNull] ObservableCollection<HouseholdTrait> traits,
+            [ItemNotNull][NotNull] ObservableCollection<ChargingStationSet> chargingStationSets,
+            [ItemNotNull][NotNull] ObservableCollection<TravelRouteSet> travelRouteSets,
+            [ItemNotNull][NotNull] ObservableCollection<TransportationDeviceSet> transportationDeviceSets)
         {
             var aic = new AllItemCollections(temperatureProfiles: temperaturProfile,
                 geographicLocations: geographicLocation);
@@ -527,6 +630,21 @@ namespace Database.Tables.Houses {
             var stTraitLimits = new ObservableCollection<STTraitLimit>();
             STTraitLimit.LoadFromDatabase(stTraitLimits, connectionString, ignoreMissingTables, traits);
             SetSubitems(new List<DBBase>(result), new List<DBBase>(stTraitLimits), IsCorrectParentTraitLimit,
+                ignoreMissingTables);
+
+            var stChargingStationSets = new ObservableCollection<STChargingStationSet>();
+            STChargingStationSet.LoadFromDatabase(stChargingStationSets, connectionString, ignoreMissingTables, chargingStationSets);
+            SetSubitems(new List<DBBase>(result), new List<DBBase>(stChargingStationSets), IsCorrectParentChargingStationSet,
+                ignoreMissingTables);
+
+            var stTravelRouteSets = new ObservableCollection<STTravelRouteSet>();
+            STTravelRouteSet.LoadFromDatabase(stTravelRouteSets, connectionString, ignoreMissingTables, travelRouteSets);
+            SetSubitems(new List<DBBase>(result), new List<DBBase>(stTravelRouteSets), IsCorrectParentTravelRouteSet,
+                ignoreMissingTables);
+
+            var stTransportationDeviceSets = new ObservableCollection<STTransportationDeviceSet>();
+            STTransportationDeviceSet.LoadFromDatabase(stTransportationDeviceSets, connectionString, ignoreMissingTables, transportationDeviceSets);
+            SetSubitems(new List<DBBase>(result), new List<DBBase>(stTransportationDeviceSets), IsCorrectParentTransportationDeviceSet,
                 ignoreMissingTables);
 
             // sort
@@ -585,5 +703,27 @@ namespace Database.Tables.Houses {
             => ImportFromItem((SettlementTemplate)toImport, dstSim);
 
         public override List<UsedIn> CalculateUsedIns(Simulator sim) => throw new NotImplementedException();
+
+        public void AddTransportationDeviceSet([NotNull] TransportationDeviceSet transportationDeviceSet)
+        {
+            foreach (var trs in _transportationDeviceSets)
+            {
+                if (trs.TransportationDeviceSet == transportationDeviceSet)
+                {
+                    return;
+                }
+            }
+            var sthhd = new STTransportationDeviceSet(null, ConnectionString, IntID, transportationDeviceSet.Name,
+                transportationDeviceSet, System.Guid.NewGuid().ToStrGuid());
+            _transportationDeviceSets.Add(sthhd);
+            _transportationDeviceSets.Sort();
+            sthhd.SaveToDB();
+        }
+
+        public void DeleteTransportationDeviceSet([NotNull] STTransportationDeviceSet sths)
+        {
+            sths.DeleteFromDB();
+            _transportationDeviceSets.Remove(sths);
+        }
     }
 }

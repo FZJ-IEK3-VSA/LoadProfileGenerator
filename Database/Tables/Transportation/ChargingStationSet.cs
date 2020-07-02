@@ -91,11 +91,11 @@ namespace Database.Tables.Transportation
 
             foreach (var chargingStation in toImport._chargingStations)
             {
-                var carloadtype = GetItemFromListByName(dstSim.LoadTypes.It, chargingStation.CarChargingLoadType?.Name);
-                var gridloadtype = GetItemFromListByName(dstSim.LoadTypes.It, chargingStation.GridChargingLoadType?.Name);
-                var transportaitonDeviceCategory = GetItemFromListByName(dstSim.TransportationDeviceCategories.It,
+                var carloadtype = GetItemFromListByName(dstSim.LoadTypes.Items, chargingStation.CarChargingLoadType?.Name);
+                var gridloadtype = GetItemFromListByName(dstSim.LoadTypes.Items, chargingStation.GridChargingLoadType?.Name);
+                var transportaitonDeviceCategory = GetItemFromListByName(dstSim.TransportationDeviceCategories.Items,
                     chargingStation.TransportationDeviceCategory?.Name);
-                var site = GetItemFromListByName(dstSim.Sites.It, chargingStation.Site?.Name);
+                var site = GetItemFromListByName(dstSim.Sites.Items, chargingStation.Site?.Name);
                 chargingStationSet.AddChargingStation(transportaitonDeviceCategory, carloadtype, chargingStation.MaxChargingPower,site, gridloadtype);
             }
 

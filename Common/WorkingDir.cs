@@ -53,7 +53,7 @@ namespace Common {
         public bool SkipCleaning {
             get => _skipCleaning;
             set {
-                if (value == true && Environment.MachineName.ToLower() != "i5home")
+                if (value && Environment.MachineName.ToLower() != "i5home")
                 {
                     throw new LPGException("trying to skip cleaning on a non-dev-pc");
                 }

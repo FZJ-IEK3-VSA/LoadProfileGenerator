@@ -39,6 +39,7 @@ using Common.Enums;
 using Database.Tables.BasicElements;
 using Database.Tables.Houses;
 using Database.Tables.ModularHouseholds;
+using Database.Tables.Transportation;
 using JetBrains.Annotations;
 using LoadProfileGenerator.Presenters.BasicElements;
 using LoadProfileGenerator.Views.Houses;
@@ -74,15 +75,18 @@ namespace LoadProfileGenerator.Presenters.Houses {
         [CanBeNull] private HouseholdTrait _limitHouseholdTrait;
 
         private int _limitMaximum;
+        private TransportationDeviceSet _transportationDeviceSetSelection;
+        private TravelRouteSet _travelRouteSetSelection;
+        private ChargingStationSet _chargingStationSelection;
 
         public SettlementTemplatePresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] SettlementTemplateView view,
-            [NotNull] SettlementTemplate template) : base(view, "ThisTemplate.HeaderString", template, applicationPresenter)
+                                           [NotNull] SettlementTemplate template) : base(view, "ThisTemplate.HeaderString", template, applicationPresenter)
         {
             _hhdIntensity = new EnergyIntensityConverter.EnergyIntensityForDisplay(EnergyIntensityType.EnergyIntensive,"Energy Intensive");
             _template = template;
             RefreshGeneratedSettlements();
             RefreshGeneratedHouses();
-            foreach (var tag in Sim.HouseholdTags.It) {
+            foreach (var tag in Sim.HouseholdTags.Items) {
                 var te = new TagEntry(tag, false);
                 AllTags.Add(te);
             }
@@ -119,7 +123,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<GeographicLocation> GeographicLocations => Sim.GeographicLocations.It;
+        public ObservableCollection<GeographicLocation> GeographicLocations => Sim.GeographicLocations.Items;
 
         [NotNull]
         public EnergyIntensityConverter.EnergyIntensityForDisplay HHDIntensity {
@@ -169,7 +173,63 @@ namespace LoadProfileGenerator.Presenters.Houses {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<HouseholdTemplate> HouseholdTemplates => Sim.HouseholdTemplates.MyItems;
+        public ObservableCollection<HouseholdTemplate> HouseholdTemplates => Sim.HouseholdTemplates.Items;
+
+        [ItemNotNull]
+        [NotNull]
+        [UsedImplicitly]
+        public ObservableCollection<ChargingStationSet> ChargingStationSets => Sim.ChargingStationSets.Items;
+
+        [ItemNotNull]
+        [NotNull]
+        [UsedImplicitly]
+        public ObservableCollection<TravelRouteSet> TravelRouteSets => Sim.TravelRouteSets.Items;
+
+        [ItemNotNull]
+        [NotNull]
+        [UsedImplicitly]
+        public ObservableCollection<TransportationDeviceSet> TransportationDeviceSets => Sim.TransportationDeviceSets.Items;
+
+        [CanBeNull]
+        [UsedImplicitly]
+        public TransportationDeviceSet TransportationDeviceSetSelection
+        {
+            get => _transportationDeviceSetSelection;
+            set {
+                if (Equals(value, _transportationDeviceSetSelection)) {
+                    return;
+                }
+
+                _transportationDeviceSetSelection = value;
+                OnPropertyChanged(nameof(TransportationDeviceSetSelection));
+            }
+        }
+        [CanBeNull]
+        [UsedImplicitly]
+        public TravelRouteSet TravelRouteSetSelection {
+            get => _travelRouteSetSelection;
+            set {
+                if (Equals(value, _travelRouteSetSelection)) {
+                    return;
+                }
+
+                _travelRouteSetSelection = value;
+                OnPropertyChanged(nameof(TravelRouteSetSelection));
+            }
+        }
+        [CanBeNull]
+        [UsedImplicitly]
+        public ChargingStationSet ChargingStationSelection {
+            get => _chargingStationSelection;
+            set {
+                if (Equals(value, _chargingStationSelection)) {
+                    return;
+                }
+
+                _chargingStationSelection = value;
+                OnPropertyChanged(nameof(ChargingStationSelection));
+            }
+        }
 
         [CanBeNull]
         public HouseholdTemplate HouseholdTemplateSelection {
@@ -210,7 +270,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<HouseType> HouseTypes => Sim.HouseTypes.MyItems;
+        public ObservableCollection<HouseType> HouseTypes => Sim.HouseTypes.Items;
 
         public int HSDMaximum {
             get => _hsdMaximum;
@@ -297,7 +357,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<TemperatureProfile> TemperatureProfiles => Sim.TemperatureProfiles.MyItems;
+        public ObservableCollection<TemperatureProfile> TemperatureProfiles => Sim.TemperatureProfiles.Items;
 
         [NotNull]
         [UsedImplicitly]
@@ -307,14 +367,14 @@ namespace LoadProfileGenerator.Presenters.Houses {
 
         public void AddAllTemplates()
         {
-            foreach (var template in Sim.HouseholdTemplates.It) {
+            foreach (var template in Sim.HouseholdTemplates.Items) {
                 _template.AddHouseholdTemplate(template);
             }
         }
 
         public void AddManyHousetypes()
         {
-            foreach (var houseType in Sim.HouseTypes.It) {
+            foreach (var houseType in Sim.HouseTypes.Items) {
                 if (houseType.MinimumHouseholdCount >= _housetypeMinimumSize &&
                     houseType.MaximumHouseholdCount <= _housetypeMaximumSize) {
                     _template.AddHouseType(houseType);
@@ -410,7 +470,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
         {
             Logger.Info("Refreshing houses...");
             var houses = new List<House>();
-            foreach (var house in Sim.Houses.It) {
+            foreach (var house in Sim.Houses.Items) {
                 if (_template.IsHouseGeneratedByThis(house)) {
                     houses.Add(house);
                 }
@@ -422,7 +482,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
         {
             Logger.Info("Refreshing settlements...");
             var settlements = new List<Settlement>();
-            foreach (var sett in Sim.Settlements.It) {
+            foreach (var sett in Sim.Settlements.Items) {
                 if (_template.IsSettlementGeneratedByThis(sett)) {
                     settlements.Add(sett);
                 }
@@ -434,10 +494,10 @@ namespace LoadProfileGenerator.Presenters.Houses {
         {
             var filteredTraits = new List<HouseholdTrait>();
             if (string.IsNullOrWhiteSpace(LimitFilter)) {
-                filteredTraits.AddRange(Sim.HouseholdTraits.It);
+                filteredTraits.AddRange(Sim.HouseholdTraits.Items);
             }
             else {
-                filteredTraits = Sim.HouseholdTraits.It
+                filteredTraits = Sim.HouseholdTraits.Items
                     .Where(x => x.PrettyName.ToUpperInvariant().Contains(LimitFilter.ToUpperInvariant()))
                     .ToList();
             }

@@ -87,8 +87,8 @@ namespace CalculationController.Integrity {
             if (!PerformCleanupChecks) {
                 return;
             }
-            CheckUses(sim.Locations.It, sim.HouseholdTraits.It, sim.HouseTypes.It);
-            foreach (var location in sim.Locations.It) {
+            CheckUses(sim.Locations.Items, sim.HouseholdTraits.Items, sim.HouseTypes.Items);
+            foreach (var location in sim.Locations.Items) {
                 CheckForDuplicateDevices(location);
                 CheckDevicesAtLocation(location);
             }

@@ -84,6 +84,7 @@ namespace SimulationEngine.Tests {
             return hj;
         }
 
+
         public static HouseCreationAndCalculationJob PrepareNewHouseForHousetypeTesting(Simulator sim, string guid)
         {
             var hj = new HouseCreationAndCalculationJob();
@@ -294,12 +295,13 @@ namespace SimulationEngine.Tests {
             //}
         }
 
-        public static void RunSingleHouse(Func<Simulator, HouseCreationAndCalculationJob> makeHj,
-                                          Action<string> checkResults)
+        public static void RunSingleHouse(Func<Simulator, HouseCreationAndCalculationJob> makeHj, Action<string> checkResults,
+                                          bool skipcleaning = false)
         {
             Logger.Get().StartCollectingAllMessages();
             Logger.Threshold = Severity.Debug;
             using (var wd = new WorkingDir(Utili.GetCallingMethodAndClass())) {
+                wd.SkipCleaning = skipcleaning;
                 using (var db = new DatabaseSetup(Utili.GetCallingMethodAndClass())) {
                     var targetdb = wd.Combine("profilegenerator.db3");
                     File.Copy(db.FileName, targetdb, true);
@@ -593,7 +595,7 @@ namespace SimulationEngine.Tests {
             sw.WriteLine("#pragma warning disable 8602");
             sw.WriteLine("namespace SimulationEngine.Tests {");
             sw.WriteLine("public class SystematicHouseholdTests :UnitTestBaseClass {");
-            var householdsToTest = sim.ModularHouseholds.It.Where(x => x.CreationType == CreationType.ManuallyCreated)
+            var householdsToTest = sim.ModularHouseholds.Items.Where(x => x.CreationType == CreationType.ManuallyCreated)
                 .ToList();
             var idx = 0;
             foreach (var household in householdsToTest) {
@@ -622,7 +624,7 @@ namespace SimulationEngine.Tests {
             sw.WriteLine("#pragma warning disable 8602");
             sw.WriteLine("namespace SimulationEngine.Tests {");
             sw.WriteLine("public class SystematicTransportHouseholdTests :UnitTestBaseClass {");
-            var householdsToTest = sim.ModularHouseholds.It.Where(x => x.CreationType == CreationType.ManuallyCreated)
+            var householdsToTest = sim.ModularHouseholds.Items.Where(x => x.CreationType == CreationType.ManuallyCreated)
                 .ToList();
             var idx = 0;
             foreach (var household in householdsToTest) {
@@ -650,7 +652,7 @@ namespace SimulationEngine.Tests {
             sw.WriteLine("#pragma warning disable 8602");
             sw.WriteLine("namespace SimulationEngine.Tests {");
             sw.WriteLine("public class SystematicHousetypeTests :UnitTestBaseClass {");
-            var housetypeTests = sim.HouseTypes.It.ToList();
+            var housetypeTests = sim.HouseTypes.Items.ToList();
             var idx = 0;
             foreach (var houeType in housetypeTests) {
                 WriteHousetypeFunction(sw, houeType, idx++);
@@ -684,7 +686,7 @@ namespace SimulationEngine.Tests {
         public void TestHouseJobs()
         {
             HouseJobTestHelper.RunSingleHouse(sim => {
-                var str = File.ReadAllText(@"C:\Work\utsp\LPG\calcspec.json");
+                var str = File.ReadAllText(@"C:\Work\fzj\pylpg\LPG_9.9.0_win\calcspec.json");
                 HouseCreationAndCalculationJob hj = JsonConvert.DeserializeObject<HouseCreationAndCalculationJob>(str);
                 //hj.CalcSpec.CalcOptions.Add(CalcOption.ActionsLogfile);
                 return hj;
@@ -808,6 +810,48 @@ namespace SimulationEngine.Tests {
             HouseJobTestHelper.RunSingleHouse(sim =>
                     HouseJobCalcPreparer.PrepareNewHouseForHousetypeTesting(sim, hhguid),
                 x => HouseJobTestHelper.CheckForResultfile(x, co));
+        }
+        [Fact]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
+        public void TestHouseJobsJsonDeviceProfilesIndividualHouseholds()
+        {
+            static void CheckElec(string wd)
+            {
+                DirectoryInfo di = new DirectoryInfo(wd);
+                var fis = di.GetFiles("*.*", SearchOption.AllDirectories);
+                foreach (var fi in fis) {
+                    Logger.Info(fi.FullName);
+                    if (fi.Name == "DeviceProfiles.Electricity.HH1.json") {
+                        string s = File.ReadAllText(fi.FullName);
+                        var dso =  JsonConvert.DeserializeObject<JsonDeviceProfiles>(s);
+                        var deviceNames = dso.DeviceProfiles.Select(x => x.Name).ToList();
+                        RowCollection rc = new RowCollection("Devices");
+                        foreach (var singleDeviceProfile in dso.DeviceProfiles) {
+                            Logger.Info(singleDeviceProfile.Name + ": " + singleDeviceProfile.Values.Sum());
+                            XlsRowBuilder rb = XlsRowBuilder.Start("Name" ,singleDeviceProfile.Name );
+                            rb.Add("Sum", singleDeviceProfile.Values.Sum());
+                            rc.Add(rb);
+                        }
+                        XlsxDumper.WriteToXlsx(@"c:\work\devices.xlsx",rc);
+                        var distinct = deviceNames.Distinct().ToList();
+                        if (distinct.Count != deviceNames.Count) {
+                            throw new LPGException("counts don't match:" + distinct.Count + " - " + deviceNames.Count);
+                        }
+                    }
+                }
+            }
+            const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
+            const CalcOption co = CalcOption.JsonDeviceProfilesIndividualHouseholds;
+            HouseJobTestHelper.RunSingleHouse((sim) => {
+                var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim, hhguid);
+                if (hj.CalcSpec?.CalcOptions == null) {
+                    throw new LPGException("errr");
+                }
+                hj.CalcSpec.CalcOptions.Add(co);
+                hj.CalcSpec.CalcOptions.Add(CalcOption.HouseholdContents);
+                hj.CalcSpec.EndDate = new DateTime(2020,1,3);
+                return hj;
+            }, (x) => CheckElec(x),true);
         }
     }
 }

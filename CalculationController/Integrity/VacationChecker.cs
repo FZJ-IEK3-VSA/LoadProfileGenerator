@@ -8,7 +8,7 @@ namespace CalculationController.Integrity {
         }
 
         protected override void Run(Simulator sim) {
-            foreach (var vacation in sim.Vacations.It) {
+            foreach (var vacation in sim.Vacations.Items) {
                 if (vacation.MinimumAge < 0 || vacation.MaximumAge == 0) {
                     throw new DataIntegrityException(
                         "The vacation " + vacation.PrettyName +

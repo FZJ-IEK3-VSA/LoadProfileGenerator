@@ -171,7 +171,7 @@ namespace LoadProfileGenerator {
             //Dictionary<string, string> dict = GoodNames();
             //List<HouseholdTrait> missingtraits = new List<HouseholdTrait>();
 
-            foreach (var pe in sim.Persons.It) {
+            foreach (var pe in sim.Persons.Items) {
                 var simPerson = pe;
                 if (simPerson.Description == "(no description)") {
                     simPerson.Description = string.Empty;
@@ -179,7 +179,7 @@ namespace LoadProfileGenerator {
 
                 var desc = simPerson.Gender + "/" + simPerson.Age + ", ";
 
-                var chh = sim.ModularHouseholds.It.First(x => x.PurePersons.Contains(simPerson));
+                var chh = sim.ModularHouseholds.Items.First(x => x.PurePersons.Contains(simPerson));
                 var traits = chh.Traits.Where(x => x.DstPerson == simPerson)
                     .Select(x => x.HouseholdTrait).ToList();
                 var importantTraits = new List<HouseholdTrait>();

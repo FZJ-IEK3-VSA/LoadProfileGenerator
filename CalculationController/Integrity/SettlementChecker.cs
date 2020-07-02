@@ -11,7 +11,7 @@ namespace CalculationController.Integrity {
         }
 
         protected override void Run(Simulator sim) {
-            foreach (var settlement in sim.Settlements.It) {
+            foreach (var settlement in sim.Settlements.Items) {
                 if (settlement.Name.ToLower(CultureInfo.CurrentCulture).StartsWith("diss", StringComparison.Ordinal)) {
                     if (settlement.Households.Count != 100) {
                         throw new DataIntegrityException(
@@ -40,7 +40,7 @@ namespace CalculationController.Integrity {
                     }
                 }
 
-                foreach (var settlement1 in sim.Settlements.It) {
+                foreach (var settlement1 in sim.Settlements.Items) {
                     if (settlement != settlement1 && settlement.Name == settlement1.Name) {
                         throw new DataIntegrityException("The settlement " + settlement.Name +
                                                          " seems to exist twice. This is not right.");

@@ -165,12 +165,12 @@ namespace Database.Tables.ModularHouseholds {
         public static DBBase ImportFromItem([NotNull] TemplatePerson item,  [NotNull] Simulator dstSim)
         {
             if (item.BaseHousehold != null) {
-                GetItemFromListByName(dstSim.ModularHouseholds.It, item.BaseHousehold.Name);
+                GetItemFromListByName(dstSim.ModularHouseholds.Items, item.BaseHousehold.Name);
             }
 
             Person basePerson = null;
             if (item.BasePerson != null) {
-                basePerson = GetItemFromListByName(dstSim.Persons.It, item.BasePerson.Name);
+                basePerson = GetItemFromListByName(dstSim.Persons.Items, item.BasePerson.Name);
             }
             var templatePerson = new TemplatePerson(item.Name, null, item.Description,dstSim.ConnectionString,
                 item.Age, item.AverageSicknessDuration, item.Gender,
@@ -178,7 +178,7 @@ namespace Database.Tables.ModularHouseholds {
             templatePerson.SaveToDB();
             foreach (var entry in item.Traits) {
                 {
-                    var trait = GetItemFromListByName(dstSim.HouseholdTraits.It, entry.Trait.Name);
+                    var trait = GetItemFromListByName(dstSim.HouseholdTraits.Items, entry.Trait.Name);
                     if (trait == null) {
                         Logger.Error("While importing, could not find trait. Skipping.");
                         continue;

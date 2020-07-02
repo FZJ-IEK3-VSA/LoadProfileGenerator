@@ -115,8 +115,8 @@ namespace ChartCreator2.Tests.Oxyplot
             Logger.Info("External time resolution is: " + sim.MyGeneralConfig.ExternalTimeResolution);
 
             var cs = new CalcStarter(sim);
-            Logger.Info("Number of modular households:" + sim.ModularHouseholds.MyItems.Count);
-            if (sim.ModularHouseholds.MyItems.Count <= householdNumber)
+            Logger.Info("Number of modular households:" + sim.ModularHouseholds.Items.Count);
+            if (sim.ModularHouseholds.Items.Count <= householdNumber)
             {
                 return null;
             }
@@ -130,7 +130,7 @@ namespace ChartCreator2.Tests.Oxyplot
             CalculationProfiler calculationProfiler = new CalculationProfiler();
             if (useHouse)
             {
-                var house = sim.Houses.It[householdNumber];
+                var house = sim.Houses.Items[householdNumber];
 
                 Logger.Info("CHH Device selection:" + house.Name);
 

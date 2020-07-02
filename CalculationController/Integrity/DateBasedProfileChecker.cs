@@ -10,7 +10,7 @@ namespace CalculationController.Integrity
 
         protected override void Run(Simulator sim)
         {
-            foreach (var profile in sim.DateBasedProfiles.It) {
+            foreach (var profile in sim.DateBasedProfiles.Items) {
                 if(profile.Datapoints.Count == 0) {
                     throw new DataIntegrityException("The date based profile " + profile.PrettyName + " seems to be empty. " +
                                                      "Please fix.",profile);

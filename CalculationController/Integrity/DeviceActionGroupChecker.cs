@@ -16,9 +16,9 @@ namespace CalculationController.Integrity {
 
         private static void CheckAndDeleteEmptyDeviceActionGroups([NotNull] Simulator sim) {
             // do both checks here to avoid doing the getdeviceactions twice
-            for (var index = 0; index < sim.DeviceActionGroups.It.Count; index++) {
+            for (var index = 0; index < sim.DeviceActionGroups.Items.Count; index++) {
                 var actionGroup = sim.DeviceActionGroups[index];
-                var actions = actionGroup.GetDeviceActions(sim.DeviceActions.It);
+                var actions = actionGroup.GetDeviceActions(sim.DeviceActions.Items);
                 if (actions.Count > 0) {
                     if (actions[0].Device == null)
                     {
@@ -152,9 +152,9 @@ namespace CalculationController.Integrity {
 
         protected override void Run(Simulator sim) {
             CheckAndDeleteEmptyDeviceActionGroups(sim);
-            foreach (var deviceActionGroup in sim.DeviceActionGroups.It) {
+            foreach (var deviceActionGroup in sim.DeviceActionGroups.Items) {
                 CheckGroupUsage(sim, deviceActionGroup);
-                CheckDeviceActionsAllInSameCategory(deviceActionGroup, sim.DeviceActions.It, sim);
+                CheckDeviceActionsAllInSameCategory(deviceActionGroup, sim.DeviceActions.Items, sim);
             }
         }
     }

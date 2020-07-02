@@ -95,50 +95,62 @@ namespace CalculationController.DtoFactories
 
                 switch (hhautodev.Device.AssignableDeviceType) {
                     case AssignableDeviceType.Device:
-                    case AssignableDeviceType.DeviceCategory:
+                    case AssignableDeviceType.DeviceCategory: {
                         if (hhautodev.LoadType == null || hhautodev.TimeProfile == null) {
                             throw new LPGException("load type was null");
                         }
 
                         if (_loadTypeDictionary.SimulateLoadtype(hhautodev.LoadType)) {
                             var profile = GetCalcProfileDto(hhautodev.TimeProfile);
-                            var rd = _picker.GetAutoDeviceDeviceFromDeviceCategoryOrDevice(
-                                hhautodev.Device, allAutonomousDevices, energyIntensity, deviceActions,
-                                hhautodev.Location.IntID);
+                            var rd = _picker.GetAutoDeviceDeviceFromDeviceCategoryOrDevice(hhautodev.Device, allAutonomousDevices, energyIntensity,
+                                deviceActions, hhautodev.Location.IntID);
                             var cdl = MakeCalcDeviceLoads(rd, _loadTypeDictionary);
                             var ltdto = _loadTypeDictionary.GetLoadtypeDtoByLoadType(hhautodev.LoadType);
                             List<VariableRequirementDto> requirementDtos = new List<VariableRequirementDto>();
                             if (hhautodev.Variable != null) {
-                                var    myVariable =
-                                        _calcVariableRepositoryDtoFactory.RegisterVariableIfNotRegistered(hhautodev.Variable,
-                                            hhautodev.Location, householdKey, locationDict);
-                                VariableRequirementDto req = new VariableRequirementDto(hhautodev.Variable.Name,
-                                    hhautodev.VariableValue, calcLocation.Name, calcLocation.Guid,
-                                    hhautodev.VariableCondition, myVariable.Guid);
+                                var myVariable = _calcVariableRepositoryDtoFactory.RegisterVariableIfNotRegistered(hhautodev.Variable,
+                                    hhautodev.Location, householdKey, locationDict);
+                                VariableRequirementDto req = new VariableRequirementDto(hhautodev.Variable.Name, hhautodev.VariableValue,
+                                    calcLocation.Name, calcLocation.Guid, hhautodev.VariableCondition, myVariable.Guid);
                                 requirementDtos.Add(req);
                             }
-                            if (rd.DeviceCategory== null)
-                            {
+
+                            if (rd.DeviceCategory == null) {
                                 throw new LPGException("Device category was null");
                             }
 
-                            var deviceCategoryDto =
-                                deviceCategoryDtos.Single(x => x.FullCategoryName == rd.DeviceCategory.FullPath);
-                            var cautodev = new CalcAutoDevDto(rd.Name, profile,
-                                ltdto.Name, ltdto.Guid, cdl,
-                                (double)hhautodev.TimeStandardDeviation,
-                                deviceCategoryDto.Guid,  householdKey, 1, calcLocation.Name, calcLocation.Guid,
-                                deviceCategoryDto.FullCategoryName,  Guid.NewGuid().ToStrGuid(),
+                            var deviceCategoryDto = deviceCategoryDtos.Single(x => x.FullCategoryName == rd.DeviceCategory.FullPath);
+                            CalcAutoDevProfileDto cadp = new CalcAutoDevProfileDto(profile, ltdto.Name, ltdto.Guid, 1);
+                            var cadps = new List<CalcAutoDevProfileDto>();
+                            cadps.Add(cadp);
+                            var cautodev = new CalcAutoDevDto(rd.Name, cadps, cdl, (double)hhautodev.TimeStandardDeviation, deviceCategoryDto.Guid,
+                                householdKey,  calcLocation.Name, calcLocation.Guid, deviceCategoryDto.FullCategoryName, Guid.NewGuid().ToStrGuid(),
                                 timeprofilereference, requirementDtos, deviceCategoryDto.FullCategoryName);
                             autodevs.Add(cautodev);
                         }
-
+                    }
                         break;
                     case AssignableDeviceType.DeviceAction:
-                    case AssignableDeviceType.DeviceActionGroup:
-                        var deviceAction = _picker.GetAutoDeviceActionFromGroup(hhautodev.Device,
-                            allAutonomousDevices, energyIntensity, deviceActions, hhautodev.Location.IntID);
+                    case AssignableDeviceType.DeviceActionGroup: {
+                        var deviceAction = _picker.GetAutoDeviceActionFromGroup(hhautodev.Device, allAutonomousDevices, energyIntensity,
+                            deviceActions, hhautodev.Location.IntID);
 
+                        List<VariableRequirementDto> requirementDtos = new List<VariableRequirementDto>();
+                        if (hhautodev.Variable != null) {
+                            var myVariable = _calcVariableRepositoryDtoFactory.RegisterVariableIfNotRegistered(hhautodev.Variable, hhautodev.Location,
+                                householdKey, locationDict);
+                            VariableRequirementDto req = new VariableRequirementDto(hhautodev.Variable?.Name, hhautodev.VariableValue,
+                                calcLocation.Name, calcLocation.Guid, hhautodev.VariableCondition, myVariable.Guid);
+                            requirementDtos.Add(req);
+                        }
+
+                        if (deviceAction.Device?.DeviceCategory == null) {
+                            throw new LPGException("device category was null");
+                        }
+
+                        var deviceCategoryDto = deviceCategoryDtos.Single(x => x.FullCategoryName == deviceAction.Device.DeviceCategory.FullPath);
+                        var cdaps = new List<CalcAutoDevProfileDto>();
+                        var cdl = MakeCalcDeviceLoads(deviceAction.Device, _loadTypeDictionary);
                         foreach (var actionProfile in deviceAction.Profiles) {
                             if (actionProfile.VLoadType == null) {
                                 throw new DataIntegrityException("Vloadtype  was null");
@@ -150,41 +162,22 @@ namespace CalculationController.DtoFactories
 
                             if (_loadTypeDictionary.SimulateLoadtype(actionProfile.VLoadType)) {
                                 var profile = GetCalcProfileDto(actionProfile.Timeprofile);
-                                if (deviceAction.Device== null)
-                                {
+                                if (deviceAction.Device == null) {
                                     throw new LPGException("Device was null");
                                 }
-                                var cdl = MakeCalcDeviceLoads(deviceAction.Device, _loadTypeDictionary);
+
                                 var lt = _loadTypeDictionary.GetLoadtypeDtoByLoadType(actionProfile.VLoadType);
-                                List<VariableRequirementDto> requirementDtos = new List<VariableRequirementDto>();
-                                if (hhautodev.Variable != null)
-                                {
-                                    var myVariable =
-                                        _calcVariableRepositoryDtoFactory.RegisterVariableIfNotRegistered(hhautodev.Variable,
-                                            hhautodev.Location, householdKey, locationDict);
-                                    VariableRequirementDto req = new VariableRequirementDto(hhautodev.Variable?.Name,
-                                        hhautodev.VariableValue, calcLocation.Name, calcLocation.Guid,
-                                        hhautodev.VariableCondition, myVariable.Guid);
-                                    requirementDtos.Add(req);
-                                }
-                                if (deviceAction.Device.DeviceCategory == null)
-                                {
-                                    throw new LPGException("device category was null");
-                                }
-                                var deviceCategoryDto =
-                                    deviceCategoryDtos.Single(x => x.FullCategoryName == deviceAction.Device.DeviceCategory.FullPath);
-                                var cautodev = new CalcAutoDevDto(deviceAction.Device.Name,
-                                    profile,lt.Name,lt.Guid, cdl,
-                                    (double) hhautodev.TimeStandardDeviation,
-                                    deviceCategoryDto.Guid,
-                                    householdKey, actionProfile.Multiplier, calcLocation.Name,calcLocation.Guid,
-                                    deviceAction.Device.DeviceCategory.FullPath, Guid.NewGuid().ToStrGuid(),
-                                    timeprofilereference, requirementDtos,
-                                    deviceCategoryDto.FullCategoryName);
-                                autodevs.Add(cautodev);
+                                var cdap = new CalcAutoDevProfileDto(profile, lt.Name, lt.Guid, actionProfile.Multiplier);
+                                cdaps.Add(cdap);
                             }
                         }
 
+                        var cautodev = new CalcAutoDevDto(deviceAction.Device.Name, cdaps, cdl, (double)hhautodev.TimeStandardDeviation,
+                                deviceCategoryDto.Guid, householdKey, calcLocation.Name, calcLocation.Guid,
+                                deviceAction.Device.DeviceCategory.FullPath, Guid.NewGuid().ToStrGuid(), timeprofilereference, requirementDtos,
+                                deviceCategoryDto.FullCategoryName);
+                            autodevs.Add(cautodev);
+                    }
                         break;
                     default:
                         throw new LPGException("Forgotten AssignableDeviceType. Please Report!");

@@ -94,7 +94,7 @@ namespace Database.Tables.Transportation {
             var site = new Site(toImport.Name, null, dstSim.ConnectionString, toImport.Description, toImport.Guid);
             site.SaveToDB();
             foreach (var siteloc in toImport._siteLocations) {
-                var loc = GetItemFromListByName(dstSim.Locations.MyItems, siteloc.Location.Name);
+                var loc = GetItemFromListByName(dstSim.Locations.Items, siteloc.Location.Name);
                 if (loc == null) {
                     Logger.Error("While importing, could not find a location. Skipping.");
                     continue;
@@ -164,18 +164,18 @@ namespace Database.Tables.Transportation {
         public override List<UsedIn> CalculateUsedIns(Simulator sim)
         {
             List<UsedIn> uis = new List<UsedIn>();
-            var routes = sim.TravelRoutes.It.Where(x => x.SiteA == this || x.SiteB == this).ToList();
+            var routes = sim.TravelRoutes.Items.Where(x => x.SiteA == this || x.SiteB == this).ToList();
             foreach (var route in routes) {
                 uis.Add(new UsedIn(route,"Route"));
             }
 
-            var routesets = sim.TravelRouteSets.It.Where(x => x.TravelRoutes.Any(y => routes.Contains(y.TravelRoute)));
+            var routesets = sim.TravelRouteSets.Items.Where(x => x.TravelRoutes.Any(y => routes.Contains(y.TravelRoute)));
             foreach (var routeset in routesets)
             {
                 uis.Add(new UsedIn(routeset, "Route Set"));
             }
 
-            foreach (var chargingStationSet in sim.ChargingStationSets.It) {
+            foreach (var chargingStationSet in sim.ChargingStationSets.Items) {
                 if (chargingStationSet.ChargingStations.Any(x => x.Site == this)) {
                     uis.Add(new UsedIn(chargingStationSet,"Charging Station Set"));
                 }

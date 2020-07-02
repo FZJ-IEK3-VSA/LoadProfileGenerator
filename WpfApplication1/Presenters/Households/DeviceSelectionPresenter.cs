@@ -76,7 +76,7 @@ namespace LoadProfileGenerator.Presenters.Households {
                 }
                 var s = "Weighted Device Energy Use: " + SelectedDeviceAction.CalculateWeightedEnergyUse();
                 var lts =
-                    SelectedDeviceAction.CalculateAverageEnergyUse(null, Sim.DeviceActions.It, null, 1, 1);
+                    SelectedDeviceAction.CalculateAverageEnergyUse(null, Sim.DeviceActions.Items, null, 1, 1);
                 foreach (var lt in lts) {
                     s += "; " + lt.Item1.Name + ": " + lt.Item2.ToString("N2", CultureInfo.CurrentCulture) + " " +
                          lt.Item1.UnitOfSum;
@@ -99,7 +99,7 @@ namespace LoadProfileGenerator.Presenters.Households {
                     return null;
                 }
                 return new ObservableCollection<DeviceAction>(
-                    _selectedDeviceActionGroup.GetDeviceActions(Sim.DeviceActions.It));
+                    _selectedDeviceActionGroup.GetDeviceActions(Sim.DeviceActions.Items));
             }
         }
 
@@ -116,7 +116,7 @@ namespace LoadProfileGenerator.Presenters.Households {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<ModularHousehold> ModularHouseholds => Sim.ModularHouseholds.MyItems;
+        public ObservableCollection<ModularHousehold> ModularHouseholds => Sim.ModularHouseholds.Items;
 
         [CanBeNull]
         [UsedImplicitly]
@@ -155,7 +155,7 @@ namespace LoadProfileGenerator.Presenters.Households {
                 }
 
                 var actions =
-                    _selectedDeviceActionGroup.GetDeviceActions(Sim.DeviceActions.It);
+                    _selectedDeviceActionGroup.GetDeviceActions(Sim.DeviceActions.Items);
                 if (actions.Count > 0) {
                     SelectedDeviceAction = actions[0];
                 }
@@ -300,8 +300,8 @@ namespace LoadProfileGenerator.Presenters.Households {
                 }
                     break;
                 case SelectionSource.All:
-                    DeviceCategories = Sim.DeviceCategories.MyItems;
-                    DeviceActionGroups = Sim.DeviceActionGroups.MyItems;
+                    DeviceCategories = Sim.DeviceCategories.Items;
+                    DeviceActionGroups = Sim.DeviceActionGroups.Items;
                     break;
                 default: throw new LPGException("Forgotten Selection Source. Please report.");
             }

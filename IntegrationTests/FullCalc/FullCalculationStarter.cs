@@ -50,7 +50,7 @@ namespace IntegrationTests.FullCalc
                         throw new LPGException("Geoloc was null");
                     }
                     var house1 =
-                        sim.Houses.It[house];
+                        sim.Houses.Items[house];
                     CalculationProfiler calculationProfiler = new CalculationProfiler();
                     CalcStartParameterSet csps = new CalcStartParameterSet(geoloc,
                         sim.TemperatureProfiles[0], house1, EnergyIntensityType.Random, false,

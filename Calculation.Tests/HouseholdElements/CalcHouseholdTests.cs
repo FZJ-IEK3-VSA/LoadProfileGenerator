@@ -123,7 +123,9 @@ namespace Calculation.Tests.HouseholdElements {
                 var requirements = new List<VariableRequirement>();
                 var cdd4 = new CalcDeviceDto("cdevice1", devCategoryGuid, new HouseholdKey("HH1"), OefcDeviceType.Device, "category", "",
                     Guid.NewGuid().ToStrGuid(), cloc1.Guid, cloc1.Name);
-                var cadLoc1 = new CalcAutoDev(cp, clt, cdevload, 0, 1, cloc1, requirements, cdd4, calcRepo);
+                var cadp = new CalcAutoDevProfile(cp, clt, 1);
+                var cadps = new List<CalcAutoDevProfile>() { cadp };
+                var cadLoc1 = new CalcAutoDev(cadps, cdevload, 0,  cloc1, requirements, cdd4, calcRepo);
                 var autodevs = new List<CalcAutoDev> {
                     cadLoc1
                 };

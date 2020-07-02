@@ -60,7 +60,7 @@ namespace Database.Helpers {
                 return null;
             }
 
-            return It.FirstOrDefault(x => x.Guid == guid);
+            return Items.FirstOrDefault(x => x.Guid == guid);
         }
 
         [CanBeNull]
@@ -77,7 +77,7 @@ namespace Database.Helpers {
                 return null;
             }
 
-            foreach (var x in It) {
+            foreach (var x in Items) {
                 if (x.Guid == reference.Guid) {
                     return x;
                 }
@@ -85,11 +85,11 @@ namespace Database.Helpers {
 
             return null;
         }
-        public CategoryDBBase([NotNull] string name) : base(name)
+        public CategoryDBBase([NotNull] string name) : base(name, new ObservableCollection<T>())
         {
-            MyItems = new ObservableCollection<T>();
+            //Items = new ObservableCollection<T>();
             _functionsToCallOnPropertyChanged = new List<Func<string, bool>>();
-            MyItems.CollectionChanged += OnObservableCollectionChanged;
+            Items.CollectionChanged += OnObservableCollectionChanged;
             var type = typeof(T);
             var info = type.GetMethod("ImportFromItem");
             if (!type.IsSubclassOf(typeof(DBBaseElement))) {
@@ -106,11 +106,11 @@ namespace Database.Helpers {
                 throw new LPGException("Type " + type + " is missing the CreateNewItem-Function. This is a bug!");
             }
 
-            foreach (var myItem in MyItems) {
+            foreach (var myItem in Items) {
                 _filteredMyItems.Add(myItem);
             }
 
-            MyItems.CollectionChanged += MyItemsOnCollectionChanged;
+            Items.CollectionChanged += MyItemsOnCollectionChanged;
         }
 
         [ItemNotNull]
@@ -120,8 +120,8 @@ namespace Database.Helpers {
 
         private void AddItemToList([NotNull] T item)
         {
-            MyItems.Add(item);
-            MyItems.Sort();
+            Items.Add(item);
+            Items.Sort();
         }
 
         protected static void AddUniqueStringToList([ItemNotNull] [NotNull] ObservableCollection<string> list,
@@ -146,17 +146,17 @@ namespace Database.Helpers {
         {
             _filterString = filterStr;
             if (string.IsNullOrWhiteSpace(filterStr)) {
-                _filteredMyItems = MyItems;
-                if (_PrevFilteredMyItems != MyItems) {
+                _filteredMyItems = Items;
+                if (_PrevFilteredMyItems != Items) {
                     OnPropertyChanged(nameof(FilteredItems));
                 }
 
-                _PrevFilteredMyItems = MyItems;
+                _PrevFilteredMyItems = Items;
                 return;
             }
 
             var foundItems2 = new ObservableCollection<T>();
-            foreach (var myItem in MyItems) {
+            foreach (var myItem in Items) {
                 if (myItem.IsValid(filterStr)) {
                     foundItems2.Add(myItem);
                 }
@@ -171,7 +171,7 @@ namespace Database.Helpers {
         // public because of dynamic call
         public void SaveEverything()
         {
-            var items = MyItems.ToList();
+            var items = Items.ToList();
             foreach (var item in items) {
                 item.SaveToDB();
             }
@@ -183,7 +183,7 @@ namespace Database.Helpers {
         {
             var count = 0;
             // fix names
-            var items = MyItems.ToList();
+            var items = Items.ToList();
             foreach (var item in items) {
                 if(item==null) {
                     throw new LPGException("Item was null");
@@ -210,7 +210,7 @@ namespace Database.Helpers {
             while (repeat) {
                 var hs = new HashSet<string>();
                 T itemToChange = null;
-                foreach (var item in MyItems) {
+                foreach (var item in Items) {
                     if (hs.Contains(item.Name.ToUpperInvariant())) {
                         itemToChange = item;
                         break;
@@ -244,14 +244,14 @@ namespace Database.Helpers {
         [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public object CheckForNumbersInNames()
         {
-            if (MyItems.Count == 0) {
+            if (Items.Count == 0) {
                 return null;
             }
 
-            if (MyItems[0].AreNumbersOkInNameForIntegrityCheck) {
+            if (Items[0].AreNumbersOkInNameForIntegrityCheck) {
                 return null;
             }
-            foreach (var item in MyItems) {
+            foreach (var item in Items) {
                 var name = item.Name;
                 if (string.IsNullOrEmpty(name)) {
                     throw new DataIntegrityException("Name was null or empty. Please fix", item);
@@ -274,7 +274,7 @@ namespace Database.Helpers {
         public override List<DBBase> CollectAllDBBaseItems()
         {
             var items = new List<DBBase>();
-            foreach (var myItem in MyItems) {
+            foreach (var myItem in Items) {
                 DBBase db = myItem;
                 items.Add(db);
             }
@@ -305,20 +305,20 @@ namespace Database.Helpers {
         public void DeleteItem([NotNull] T db)
         {
             db.DeleteFromDB();
-            Logger.Get().SafeExecuteWithWait(() => MyItems.Remove(db));
+            Logger.Get().SafeExecuteWithWait(() => Items.Remove(db));
         }
 
         public void DeleteItemNoWait([NotNull] T db)
         {
             db.DeleteFromDB();
-            Logger.Get().SafeExecute(() => MyItems.Remove(db));
+            Logger.Get().SafeExecute(() => Items.Remove(db));
         }
 
         [UsedImplicitly]
         [NotNull]
         public T SafeFindByName([NotNull] string name, FindMode findMode = FindMode.Exact)
         {
-            foreach (var myItem in MyItems)
+            foreach (var myItem in Items)
             {
                 if (myItem.Name == name)
                 {
@@ -327,7 +327,7 @@ namespace Database.Helpers {
             }
             if (findMode == FindMode.IgnoreCase)
             {
-                foreach (var myItem in MyItems)
+                foreach (var myItem in Items)
                 {
                     if (string.Equals(myItem.Name.ToUpperInvariant(), name.ToUpperInvariant(),
                         StringComparison.CurrentCulture))
@@ -338,7 +338,7 @@ namespace Database.Helpers {
             }
             if (findMode == FindMode.Partial)
             {
-                foreach (var myItem in MyItems)
+                foreach (var myItem in Items)
                 {
                     if (myItem.Name.ToUpperInvariant().Contains(name.ToUpperInvariant()))
                     {
@@ -358,7 +358,7 @@ namespace Database.Helpers {
             }
             //no matter which mode, if anything matches exactly, then return that.
             //this prevents errors where partial matches would return something wrong
-            foreach (var myItem in MyItems) {
+            foreach (var myItem in Items) {
                 if (myItem.Name == nameRaw) {
                     return myItem;
                 }
@@ -366,7 +366,7 @@ namespace Database.Helpers {
 
             string nameUpper = nameRaw.ToUpperInvariant();
             if (findMode == FindMode.IgnoreCase) {
-                foreach (var myItem in MyItems) {
+                foreach (var myItem in Items) {
                     if (string.Equals(myItem.Name.ToUpperInvariant(), nameUpper,
                         StringComparison.CurrentCulture)) {
                         return myItem;
@@ -374,7 +374,7 @@ namespace Database.Helpers {
                 }
             }else
             if (findMode == FindMode.Partial) {
-                foreach (var myItem in MyItems) {
+                foreach (var myItem in Items) {
                     if (myItem.Name.ToUpperInvariant().Contains(nameUpper)) {
                         return myItem;
                     }
@@ -382,7 +382,7 @@ namespace Database.Helpers {
             }else
             if (findMode == FindMode.StartsWith)
             {
-                foreach (var myItem in MyItems)
+                foreach (var myItem in Items)
                 {
                     if (myItem.Name.ToUpperInvariant().StartsWith(nameUpper))
                     {
@@ -428,7 +428,7 @@ namespace Database.Helpers {
 
         public bool IsNameTaken([NotNull] string newname)
         {
-            return MyItems.Any(item => item.Name == newname);
+            return Items.Any(item => item.Name == newname);
         }
 
         private void MyItemsOnCollectionChanged([NotNull] object sender,
@@ -462,12 +462,12 @@ namespace Database.Helpers {
             if (propertyChangedEventArgs.PropertyName != "Name") {
                 return;
             }
-            Logger.Get().SafeExecuteWithWait(MyItems.Sort);
+            Logger.Get().SafeExecuteWithWait(Items.Sort);
         }
 
         public void SaveToDB()
         {
-            foreach (var item in MyItems) {
+            foreach (var item in Items) {
                 item.SaveToDB();
             }
         }

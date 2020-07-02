@@ -41,7 +41,7 @@ namespace IntegrationTests
 
                         db.ClearTable(table);
                         var oldSim = new Simulator(db.ConnectionString); // need to load it for testing
-                        Logger.Info(oldSim.ModularHouseholds.It.Count.ToString(CultureInfo.InvariantCulture));
+                        Logger.Info(oldSim.ModularHouseholds.Items.Count.ToString(CultureInfo.InvariantCulture));
                         db.Cleanup();
                     }
                 }

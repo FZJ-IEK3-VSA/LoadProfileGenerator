@@ -18,7 +18,7 @@ namespace LoadProfileGenerator.Views.Transportation {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<TransportationDevice> AllTransportationDevices => Sim.TransportationDevices.MyItems;
+        public ObservableCollection<TransportationDevice> AllTransportationDevices => Sim.TransportationDevices.Items;
 
         [NotNull]
         [UsedImplicitly]

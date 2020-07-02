@@ -30,7 +30,7 @@ namespace Database.Tests {
 
                     var sim = new Simulator(db.ConnectionString) { MyGeneralConfig = { PerformCleanUpChecks = "true" } };
                     Logger.Info("First hh");
-                    for (var i = 0; i < sim.ModularHouseholds.It.Count && i < 5; i++)
+                    for (var i = 0; i < sim.ModularHouseholds.Items.Count && i < 5; i++)
                     {
                         var mhh = sim.ModularHouseholds[i];
                         Logger.Info("exporting and importing " + mhh.Name);

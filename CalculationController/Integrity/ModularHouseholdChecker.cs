@@ -443,12 +443,12 @@ namespace CalculationController.Integrity {
         */
         protected override void Run(Simulator sim)
         {
-            CheckTags(sim.ModularHouseholds.It, sim.HouseholdTags.It);
-            var tagForAll = sim.TraitTags.It.FirstOrDefault(x => x.Name == "Living Pattern / All");
+            CheckTags(sim.ModularHouseholds.Items, sim.HouseholdTags.Items);
+            var tagForAll = sim.TraitTags.Items.FirstOrDefault(x => x.Name == "Living Pattern / All");
             if (tagForAll == null) {
                 throw new LPGException("The trait tag Living Pattern / All was not found.");
             }
-            foreach (var modularHousehold in sim.ModularHouseholds.It) {
+            foreach (var modularHousehold in sim.ModularHouseholds.Items) {
                 GeneralChecks(modularHousehold);
                 CheckModularHouseholdsMinimum(modularHousehold);
                 CheckCleanupNames(modularHousehold);

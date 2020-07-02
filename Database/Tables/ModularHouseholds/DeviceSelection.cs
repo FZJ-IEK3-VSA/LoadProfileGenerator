@@ -160,16 +160,16 @@ namespace Database.Tables.ModularHouseholds {
                 otherDeviceSelection.Description, dstSim.ConnectionString,otherDeviceSelection.Guid);
             deviceSelection.SaveToDB();
             foreach (var item in otherDeviceSelection._selectionItems) {
-                var rd = GetItemFromListByName(dstSim.RealDevices.MyItems, item.Device.Name);
-                var dc = GetItemFromListByName(dstSim.DeviceCategories.MyItems, item.DeviceCategory.Name);
+                var rd = GetItemFromListByName(dstSim.RealDevices.Items, item.Device.Name);
+                var dc = GetItemFromListByName(dstSim.DeviceCategories.Items, item.DeviceCategory.Name);
                 if (rd == null || dc == null) {
                     throw new LPGException("Device selection import failed!");
                 }
                 deviceSelection.AddItem(dc, rd);
             }
             foreach (var item in otherDeviceSelection.Actions) {
-                var da = GetItemFromListByName(dstSim.DeviceActions.MyItems, item.DeviceAction.Name);
-                var dag = GetItemFromListByName(dstSim.DeviceActionGroups.MyItems,
+                var da = GetItemFromListByName(dstSim.DeviceActions.Items, item.DeviceAction.Name);
+                var dag = GetItemFromListByName(dstSim.DeviceActionGroups.Items,
                     item.DeviceActionGroup.Name);
                 if (da == null || dag == null) {
                     throw new LPGException("Device selection import failed!");

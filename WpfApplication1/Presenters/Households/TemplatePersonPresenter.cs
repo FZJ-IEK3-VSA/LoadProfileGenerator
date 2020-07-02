@@ -68,12 +68,12 @@ namespace LoadProfileGenerator.Presenters.Households {
         [NotNull]
         [UsedImplicitly]
         public ObservableCollection<ModularHousehold> ModularHouseholds
-            => Sim.ModularHouseholds.It;
+            => Sim.ModularHouseholds.Items;
 
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<Person> Persons => Sim.Persons.It;
+        public ObservableCollection<Person> Persons => Sim.Persons.Items;
 
         [NotNull]
         [UsedImplicitly]
@@ -134,11 +134,11 @@ namespace LoadProfileGenerator.Presenters.Households {
         {
             List<HouseholdTrait> traits;
             if (_selectedPriority == TraitPriority.All) {
-                traits = Sim.HouseholdTraits.It.ToList();
+                traits = Sim.HouseholdTraits.Items.ToList();
             }
             else {
                 traits =
-                    Sim.HouseholdTraits.It.Where(
+                    Sim.HouseholdTraits.Items.Where(
                         x => x.Tags.Any(y => y.Tag.TraitPriority == _selectedPriority)).ToList();
             }
             FilteredTraits.SynchronizeWithList(traits);
@@ -164,12 +164,12 @@ namespace LoadProfileGenerator.Presenters.Households {
             [NotNull] TemplatePerson thisTemplate)
         {
             traitPrios.Clear();
-            var prios = sim.TraitTags.It.Select(x => x.TraitPriority).Distinct().ToList();
+            var prios = sim.TraitTags.Items.Select(x => x.TraitPriority).Distinct().ToList();
             foreach (var traitPriority in prios) {
                 var traitPrio =
                     new TraitPrio(TraitPriorityHelper.TraitPriorityDictionaryEnumDictionaryComplete[traitPriority]);
                 traitPrios.Add(traitPrio);
-                var traitTags = sim.TraitTags.It.Where(x => x.TraitPriority == traitPriority).ToList();
+                var traitTags = sim.TraitTags.Items.Where(x => x.TraitPriority == traitPriority).ToList();
                 foreach (var traitTag in traitTags) {
                     var traitCat = new TraitCategory(traitTag.Name);
                     var traits =

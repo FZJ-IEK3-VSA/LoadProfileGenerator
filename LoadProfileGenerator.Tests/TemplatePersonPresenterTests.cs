@@ -34,7 +34,7 @@ namespace LoadProfileGenerator.Tests
                     new ObservableCollection<TemplatePersonPresenter.TraitPrio>();
                 TemplatePerson template = sim.TemplatePersons.CreateNewItem(db.ConnectionString);
                 template.SaveToDB();
-                template.AddTrait(sim.HouseholdTraits.It[0]);
+                template.AddTrait(sim.HouseholdTraits.Items[0]);
                 TemplatePersonPresenter.RefreshTree(traitPrios, sim, template);
                 traitPrios.Count.Should().BeGreaterThan(0);
                 db.Cleanup();

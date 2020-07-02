@@ -7,21 +7,21 @@ namespace CalculationController.Integrity {
         }
 
         protected override void Run(Simulator sim) {
-            foreach (var set in sim.DeviceTaggingSets.It) {
+            foreach (var set in sim.DeviceTaggingSets.Items) {
                 var isrefrehsed = false;
                 foreach (var entry in set.Entries) {
                     if (entry.Device == null) {
-                        set.RefreshDevices(sim.RealDevices.It);
+                        set.RefreshDevices(sim.RealDevices.Items);
                         isrefrehsed = true;
                         break;
                     }
                 }
                 if (!isrefrehsed) {
-                    foreach (var affordance in sim.RealDevices.It) {
+                    foreach (var affordance in sim.RealDevices.Items) {
                         var entry =
                             set.Entries.FirstOrDefault(myentry => myentry.Device?.Name == affordance.Name);
                         if (entry == null) {
-                            set.RefreshDevices(sim.RealDevices.It);
+                            set.RefreshDevices(sim.RealDevices.Items);
                             break;
                         }
                     }

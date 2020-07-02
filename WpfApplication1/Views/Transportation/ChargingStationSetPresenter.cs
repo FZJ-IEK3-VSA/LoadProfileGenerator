@@ -30,12 +30,12 @@ namespace LoadProfileGenerator.Views.Transportation {
         [NotNull]
         [UsedImplicitly]
         public ObservableCollection<ModularHousehold> AllHouseholds =>
-            Sim.ModularHouseholds.MyItems;
+            Sim.ModularHouseholds.Items;
 
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<TravelRouteSet> AllTravelRouteSets => Sim.TravelRouteSets.It;
+        public ObservableCollection<TravelRouteSet> AllTravelRouteSets => Sim.TravelRouteSets.Items;
 
         [ItemNotNull]
         [NotNull]
@@ -125,10 +125,10 @@ namespace LoadProfileGenerator.Views.Transportation {
         [NotNull]
         [ItemNotNull]
         [UsedImplicitly]
-        public ObservableCollection<VLoadType> LoadTypes => Sim.LoadTypes.It;
+        public ObservableCollection<VLoadType> LoadTypes => Sim.LoadTypes.Items;
         [NotNull]
         [ItemNotNull]
-        public ObservableCollection<TransportationDeviceCategory> TransportationDeviceCategories => Sim.TransportationDeviceCategories.It;
+        public ObservableCollection<TransportationDeviceCategory> TransportationDeviceCategories => Sim.TransportationDeviceCategories.Items;
 
         public void Delete()
         {

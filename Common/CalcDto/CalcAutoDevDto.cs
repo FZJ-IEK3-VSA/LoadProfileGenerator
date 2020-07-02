@@ -5,15 +5,26 @@ using Common.JSON;
 using JetBrains.Annotations;
 
 namespace Common.CalcDto {
-    public class CalcAutoDevDto : CalcDeviceDto
-    {
-        [NotNull]
-        public CalcProfileDto CalcProfile { get; }
+
+    public class CalcAutoDevProfileDto {
+        public CalcAutoDevProfileDto(CalcProfileDto profile, [NotNull] string loadTypeName, StrGuid loadtypeGuid, double multiplier)
+        {
+            Profile = profile;
+            LoadTypeName = loadTypeName;
+            LoadtypeGuid = loadtypeGuid;
+            Multiplier = multiplier;
+        }
         [NotNull]
         public string LoadTypeName { get; }
         public StrGuid LoadtypeGuid { get; }
-        public double TimeStandardDeviation { get; }
         public double Multiplier { get; }
+        public CalcProfileDto Profile { get; set; }
+    }
+    public class CalcAutoDevDto : CalcDeviceDto
+    {
+        [NotNull]
+        public List<CalcAutoDevProfileDto> CalcProfiles { get; }
+        public double TimeStandardDeviation { get; }
         [NotNull]
         public string CalclocationName { get; }
         public StrGuid CalcLocationGuid { get; }
@@ -26,13 +37,17 @@ namespace Common.CalcDto {
         public string DeviceCategoryFullPath { get; }
         [NotNull]
         public AvailabilityDataReferenceDto BusyArr { get; }
+
+        [NotNull]
+        public override string ToString() => CalclocationName + " - " + Name;
+
         [ItemNotNull]
         [NotNull]
         public List<VariableRequirementDto> Requirements { get; }
-        public CalcAutoDevDto([NotNull]string name, [NotNull]CalcProfileDto calcProfile, [NotNull] string loadTypeName, StrGuid loadtypeGuid,
+        public CalcAutoDevDto([NotNull]string name, [NotNull] List<CalcAutoDevProfileDto> profiles,
                               [ItemNotNull] [NotNull] List<CalcDeviceLoadDto> loads, double timeStandardDeviation,
                               StrGuid deviceCategoryGuid,
-                              [NotNull] HouseholdKey householdKey, double multiplier,
+                              [NotNull] HouseholdKey householdKey,
                               [NotNull] string calclocationName, StrGuid calcLocationGuid,
                              //[CanBeNull] string variableName, double variableValue, VariableCondition variableCondition,
                               [NotNull] string deviceCategoryFullPath, StrGuid guid, [NotNull]AvailabilityDataReferenceDto busyArr,
@@ -42,14 +57,11 @@ namespace Common.CalcDto {
             base(name,deviceCategoryGuid,householdKey,OefcDeviceType.AutonomousDevice,
                 deviceCategoryName,"",guid,calcLocationGuid,calclocationName)
         {
-            CalcProfile = calcProfile;
-            LoadTypeName = loadTypeName;
-            LoadtypeGuid = loadtypeGuid;
+            CalcProfiles = profiles;
             Loads = loads;
             TimeStandardDeviation = timeStandardDeviation;
             DeviceCategoryGuid = deviceCategoryGuid;
             HouseholdKey = householdKey;
-            Multiplier = multiplier;
             CalclocationName = calclocationName;
             CalcLocationGuid = calcLocationGuid;
             //VariableName = variableName;

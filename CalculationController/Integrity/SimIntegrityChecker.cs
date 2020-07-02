@@ -140,7 +140,7 @@ namespace CalculationController.Integrity {
             LogProgress(ref start, ref step, "Basic Name Check");
             CheckSimCategorys(sim, cleanupCheck);
             LogProgress(ref start, ref step, "Device Category Refresh");
-            RefreshSubdevicesInDeviceCategories(sim.DeviceCategories.MyItems);
+            RefreshSubdevicesInDeviceCategories(sim.DeviceCategories.Items);
 
             var checkers = GetAllCheckers(cleanupCheck);
             foreach (var basicChecker in checkers) {

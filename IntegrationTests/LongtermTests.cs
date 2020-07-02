@@ -297,8 +297,8 @@ namespace IntegrationTests {
 
             dbm.RunFindItems(fi.FullName, null);
             dbm.RunImport(null);
-            foreach (var oldAff in oldSim.Affordances.MyItems) {
-                foreach (var newAff in mainSim.Affordances.MyItems) {
+            foreach (var oldAff in oldSim.Affordances.Items) {
+                foreach (var newAff in mainSim.Affordances.Items) {
                     if (newAff.Name == oldAff.Name) {
                         foreach (var oldDes in oldAff.AffordanceDesires) {
                             var foundDesire = false;
@@ -314,10 +314,10 @@ namespace IntegrationTests {
                     }
                 }
             }
-            foreach (var hhg in oldSim.HouseholdTemplates.It) {
+            foreach (var hhg in oldSim.HouseholdTemplates.Items) {
                 Logger.Info("HHG 1:" + hhg.Name + " " + hhg.Entries.Count);
             }
-            foreach (var hhg in mainSim.HouseholdTemplates.It) {
+            foreach (var hhg in mainSim.HouseholdTemplates.Items) {
                 Logger.Info("HHG 2:" + hhg.Name + " " + hhg.Entries.Count);
             }
             if (checkrowcounts && srctablerowcounts != null) {
@@ -350,10 +350,10 @@ namespace IntegrationTests {
             // load again to see if anything gets deleted on loading
             Logger.Threshold = Severity.Debug;
             var oldSim2 = new Simulator(db.ConnectionString);
-            foreach (var hhg in oldSim2.HouseholdTemplates.It) {
+            foreach (var hhg in oldSim2.HouseholdTemplates.Items) {
                 Logger.Info("HHG 3:" + hhg.Name + " " + hhg.Entries.Count);
             }
-            foreach (var hhg in mainSim.HouseholdTemplates.It) {
+            foreach (var hhg in mainSim.HouseholdTemplates.Items) {
                 Logger.Info("HHG 4:" + hhg.Name + " " + hhg.Entries.Count);
             }
             if (checkrowcounts) {

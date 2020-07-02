@@ -64,7 +64,7 @@ namespace Database.Tables.Transportation {
                 toImport.Description, toImport.Guid);
             loc.SaveToDB();
             foreach (TransportationDeviceSetEntry entry in toImport.TransportationDeviceSetEntries) {
-                var dstdev = GetItemFromListByName(dstSim.TransportationDevices.It, entry.Name);
+                var dstdev = GetItemFromListByName(dstSim.TransportationDevices.Items, entry.Name);
                 if (dstdev == null)
                 {
                     throw new LPGException("Device was null");

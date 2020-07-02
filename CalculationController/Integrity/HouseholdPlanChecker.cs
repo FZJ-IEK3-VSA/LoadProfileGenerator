@@ -7,7 +7,7 @@ namespace CalculationController.Integrity {
         }
 
         protected override void Run(Simulator sim) {
-            foreach (var householdPlan in sim.HouseholdPlans.It) {
+            foreach (var householdPlan in sim.HouseholdPlans.Items) {
                 if (householdPlan.AffordanceTaggingSet == null) {
                     throw new DataIntegrityException(
                         "The household plan " + householdPlan.Name +

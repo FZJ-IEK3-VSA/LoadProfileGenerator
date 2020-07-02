@@ -390,7 +390,7 @@ namespace LoadProfileGenerator.Views.Households {
                     var minEndTime = new Dictionary<VLoadType, double>();
                     var maxEndTime = new Dictionary<VLoadType, double>();
                     var dag = (DeviceActionGroup) affordanceDevice.Device;
-                    foreach (var device in dag.GetDeviceActions(sim.DeviceActions.It)) {
+                    foreach (var device in dag.GetDeviceActions(sim.DeviceActions.Items)) {
                         foreach (var actionProfile in device.Profiles) {
                             var start = (double) actionProfile.TimeOffset + (double) affordanceDevice.TimeOffset;
                             if (!minStartTime.ContainsKey(actionProfile.VLoadType)) {

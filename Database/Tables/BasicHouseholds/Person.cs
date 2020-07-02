@@ -142,7 +142,7 @@ namespace Database.Tables.BasicHouseholds {
         public override List<UsedIn> CalculateUsedIns(Simulator sim)
         {
             var used = new List<UsedIn>();
-            foreach (var chh in sim.ModularHouseholds.It) {
+            foreach (var chh in sim.ModularHouseholds.Items) {
                 foreach (var person in chh.Persons) {
                     if (person.Person == this) {
                         used.Add(new UsedIn(chh, "Modular Household"));

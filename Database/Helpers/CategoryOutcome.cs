@@ -50,7 +50,7 @@ namespace Database.Helpers {
         public int CountItems([NotNull] string mycalcObject, [NotNull] string geoloc, [NotNull] string temperaturProfile, [NotNull] string intensity,
             [NotNull] string lpgVersion) {
             var count = 0;
-            foreach (var co in MyItems) {
+            foreach (var co in Items) {
                 if (co.HouseholdName == mycalcObject && co.GeographicLocationName == geoloc &&
                     co.TemperatureProfile == temperaturProfile && co.EnergyIntensity == intensity &&
                     co.LPGVersion == lpgVersion) {
@@ -63,7 +63,7 @@ namespace Database.Helpers {
         public bool ItemExists([NotNull] ICalcObject mycalcObject, [NotNull] GeographicLocation geoloc,
             [NotNull] TemperatureProfile temperatureProfile,
             EnergyIntensityType intensity, [NotNull] string lpgVersion) {
-            foreach (var co in MyItems) {
+            foreach (var co in Items) {
                 if (co.HouseholdName == mycalcObject.Name && co.GeographicLocationName == geoloc.Name &&
                     co.TemperatureProfile == temperatureProfile.Name && co.EnergyIntensity == intensity.ToString() &&
                     co.LPGVersion == lpgVersion) {

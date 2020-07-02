@@ -287,7 +287,7 @@ namespace Database.Tables.Houses {
         {
             TemperatureProfile tp = null;
             if (item.TemperatureProfile != null) {
-                tp = GetItemFromListByName(dstSim.TemperatureProfiles.MyItems, item.TemperatureProfile.Name);
+                tp = GetItemFromListByName(dstSim.TemperatureProfiles.Items, item.TemperatureProfile.Name);
             }
 
             if (tp != null && tp.ConnectionString != dstSim.ConnectionString) {
@@ -296,12 +296,12 @@ namespace Database.Tables.Houses {
 
             GeographicLocation geographic = null;
             if (item.GeographicLocation != null) {
-                geographic = GetItemFromListByName(dstSim.GeographicLocations.MyItems, item.GeographicLocation.Name);
+                geographic = GetItemFromListByName(dstSim.GeographicLocations.Items, item.GeographicLocation.Name);
             }
 
             HouseType ht = null;
             if (item.HouseType != null) {
-                ht = GetItemFromListByName(dstSim.HouseTypes.MyItems, item.HouseType.Name);
+                ht = GetItemFromListByName(dstSim.HouseTypes.Items, item.HouseType.Name);
             }
 
             var house = new House(item.Name, item.Description, tp, geographic, ht, dstSim.ConnectionString, EnergyIntensityType.Random, item._source, item._creationType,
@@ -312,7 +312,7 @@ namespace Database.Tables.Houses {
                     continue;
                 }
 
-                var hh = GetICalcObjectFromList(dstSim.ModularHouseholds.MyItems, null, null, hhh.CalcObject);
+                var hh = GetICalcObjectFromList(dstSim.ModularHouseholds.Items, null, null, hhh.CalcObject);
                 if (hh == null) {
                     Logger.Error("While importing a settlement, a house was null. Skipping.");
                     continue;
@@ -320,17 +320,17 @@ namespace Database.Tables.Houses {
 
                 ChargingStationSet chargingStations = null;
                 if (hhh.ChargingStationSet != null) {
-                    chargingStations = GetItemFromListByName(dstSim.ChargingStationSets.It, hhh.ChargingStationSet.Name);
+                    chargingStations = GetItemFromListByName(dstSim.ChargingStationSets.Items, hhh.ChargingStationSet.Name);
                 }
 
                 TravelRouteSet travelRouteSets = null;
                 if (hhh.TravelRouteSet != null) {
-                    travelRouteSets = GetItemFromListByName(dstSim.TravelRouteSets.It, hhh.TravelRouteSet.Name);
+                    travelRouteSets = GetItemFromListByName(dstSim.TravelRouteSets.Items, hhh.TravelRouteSet.Name);
                 }
 
                 TransportationDeviceSet transportationDevices = null;
                 if (hhh.TravelRouteSet != null) {
-                    transportationDevices = GetItemFromListByName(dstSim.TransportationDeviceSets.It, hhh.TravelRouteSet.Name);
+                    transportationDevices = GetItemFromListByName(dstSim.TransportationDeviceSets.Items, hhh.TravelRouteSet.Name);
                 }
 
                 house.AddHousehold(hh,  chargingStations, travelRouteSets, transportationDevices);

@@ -128,19 +128,22 @@ namespace CalculationController.Queue {
                 var cqr = new CalcQueueRunner();
                 cqr.Start(csps,  _sim);
             }
+            catch (DataIntegrityException e)
+            {
+                Logger.Error("DataIntegrityException:" + Environment.NewLine + e.Message);
+                CalcQueueRunner.CloseLogfilesAfterError();
+                if (!Config.IsInUnitTesting && !Config.IsInHeadless)
+                {
+                    MessageWindowHandler.Mw.ShowDataIntegrityMessage(e);
+                    csps.ReportCancelFunc?.Invoke();
+                }
+            }
             catch (Exception e) {
                 Logger.Exception(e);
                 CalcQueueRunner.CloseLogfilesAfterError();
                 if (!Config.IsInUnitTesting && !Config.IsInHeadless) {
                     csps.ReportCancelFunc?.Invoke();
-                    if (e is DataIntegrityException exception)
-                    {
-                        MessageWindowHandler.Mw.ShowDataIntegrityMessage(exception);
-                    }
-                    else
-                    {
-                        MessageWindowHandler.Mw.ShowDebugMessage(e);
-                    }
+                    MessageWindowHandler.Mw.ShowDebugMessage(e);
                 }
                 else {
                     throw;

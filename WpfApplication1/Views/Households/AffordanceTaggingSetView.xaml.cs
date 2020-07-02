@@ -55,7 +55,7 @@ namespace LoadProfileGenerator.Views.Households {
 
         private void BtnAddAffordancesClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e) {
             Presenter.ThisAffordanceTaggingSet.RefreshAffordances(
-                Presenter.Sim.Affordances.MyItems);
+                Presenter.Sim.Affordances.Items);
             LstEntries.ResizeColummns();
         }
 

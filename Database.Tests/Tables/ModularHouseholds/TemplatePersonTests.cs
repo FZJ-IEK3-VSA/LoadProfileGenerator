@@ -50,8 +50,8 @@ namespace Database.Tests.Tables.ModularHouseholds {
                 var tags = db.LoadHouseholdTags();
                 var chhs = db.LoadModularHouseholds(traits, selections, persons, vacations, tags, traitTags);
 
-                TemplatePerson.LoadFromDatabase(cat.It, db.ConnectionString, traits, false, chhs, persons);
-                (cat.MyItems.Count).Should().Be(0);
+                TemplatePerson.LoadFromDatabase(cat.Items, db.ConnectionString, traits, false, chhs, persons);
+                (cat.Items.Count).Should().Be(0);
                 cat.CreateNewItem(db.ConnectionString);
                 cat.SaveToDB();
                 var templatePerson = new ObservableCollection<TemplatePerson>();

@@ -24,15 +24,15 @@ namespace SimulationEngineLib
                 sw.WriteLine("from lpgpythonbindings import *");
                 //sw.WriteLine("from enum import Enum");
                 sw.WriteLine();
-                WriteNames(sim.LoadTypes.It.Select(x => (DBBase)x).ToList(), sw, "LoadTypes");
-                WriteNames(sim.HouseTypes.It.Select(x => (DBBase)x).ToList(), sw, "HouseTypes");
-                WriteJsonRefs(sim.ModularHouseholds.It.Select(x => (DBBase)x).ToList(), sw, "Households");
-                WriteJsonRefs(sim.GeographicLocations.It.Select(x => (DBBase)x).ToList(), sw, "GeographicLocations");
-                WriteJsonRefs(sim.TemperatureProfiles.It.Select(x => (DBBase)x).ToList(), sw, "TemperatureProfiles");
-                WriteJsonRefs(sim.TransportationDeviceSets.It.Select(x => (DBBase)x).ToList(), sw, "TransportationDeviceSets");
-                WriteJsonRefs(sim.ChargingStationSets.It.Select(x => (DBBase)x).ToList(), sw, "ChargingStationSets");
-                WriteJsonRefs(sim.TravelRouteSets.It.Select(x => (DBBase)x).ToList(), sw, "TravelRouteSets");
-                WriteJsonRefs(sim.Houses.It.Select(x => (DBBase)x).ToList(), sw, "Houses");
+                WriteNames(sim.LoadTypes.Items.Select(x => (DBBase)x).ToList(), sw, "LoadTypes");
+                WriteNames(sim.HouseTypes.Items.Select(x => (DBBase)x).ToList(), sw, "HouseTypes");
+                WriteJsonRefs(sim.ModularHouseholds.Items.Select(x => (DBBase)x).ToList(), sw, "Households");
+                WriteJsonRefs(sim.GeographicLocations.Items.Select(x => (DBBase)x).ToList(), sw, "GeographicLocations");
+                WriteJsonRefs(sim.TemperatureProfiles.Items.Select(x => (DBBase)x).ToList(), sw, "TemperatureProfiles");
+                WriteJsonRefs(sim.TransportationDeviceSets.Items.Select(x => (DBBase)x).ToList(), sw, "TransportationDeviceSets");
+                WriteJsonRefs(sim.ChargingStationSets.Items.Select(x => (DBBase)x).ToList(), sw, "ChargingStationSets");
+                WriteJsonRefs(sim.TravelRouteSets.Items.Select(x => (DBBase)x).ToList(), sw, "TravelRouteSets");
+                WriteJsonRefs(sim.Houses.Items.Select(x => (DBBase)x).ToList(), sw, "Houses");
                 sw.Close();
             }
 

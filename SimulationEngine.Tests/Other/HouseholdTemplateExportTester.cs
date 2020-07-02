@@ -90,13 +90,13 @@ namespace SimulationEngine.Tests.Other
                     hteo.ProcessingType = TypesToProcess.ModularHouseholds;
                     hte.Export(hteo);
                     Simulator sim1 = new Simulator(db.ConnectionString);
-                    int hhcount = sim1.ModularHouseholds.It.Count;
-                    foreach (ModularHousehold household in sim1.ModularHouseholds.It)
+                    int hhcount = sim1.ModularHouseholds.Items.Count;
+                    foreach (ModularHousehold household in sim1.ModularHouseholds.Items)
                     {
                         household.DeleteFromDB();
                     }
 
-                    foreach (var house in sim1.Houses.It) {
+                    foreach (var house in sim1.Houses.Items) {
                         var households = house.Households.ToList();
                         foreach (var household in households) {
                             house.DeleteHouseholdFromDB(household);
@@ -109,7 +109,7 @@ namespace SimulationEngine.Tests.Other
                     JsonDatabaseImporter hti = new JsonDatabaseImporter(db.ConnectionString);
                     hti.Import(htio);
                     Simulator sim2 = new Simulator(db.ConnectionString);
-                    hhcount.Should().Be(sim2.ModularHouseholds.It.Count);
+                    hhcount.Should().Be(sim2.ModularHouseholds.Items.Count);
                 }
             }
         }

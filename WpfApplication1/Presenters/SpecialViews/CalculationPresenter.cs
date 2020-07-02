@@ -131,7 +131,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                 _selectedTransportationDeviceSet = Sim.TransportationDeviceSets.FindFirstByName(cfg.LastSelectedTransportationDeviceSet) ?? Sim.TransportationDeviceSets[0];
             }
             else {
-                _selectedTransportationDeviceSet = Sim.TransportationDeviceSets.It[0];
+                _selectedTransportationDeviceSet = Sim.TransportationDeviceSets.Items[0];
             }
         }
 
@@ -147,7 +147,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<ChargingStationSet> ChargingStationSets => Sim.ChargingStationSets.MyItems;
+        public ObservableCollection<ChargingStationSet> ChargingStationSets => Sim.ChargingStationSets.Items;
 
         [ItemNotNull]
         [NotNull]
@@ -221,7 +221,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             get {
                 var id = Sim.MyGeneralConfig.GeographicLocation;
                 if (id != -1) {
-                    foreach (var geoloc in Sim.GeographicLocations.MyItems) {
+                    foreach (var geoloc in Sim.GeographicLocations.Items) {
                         if (geoloc.IntID == id) {
                             return geoloc;
                         }
@@ -243,7 +243,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<GeographicLocation> GeographicLocations => Sim.GeographicLocations.MyItems;
+        public ObservableCollection<GeographicLocation> GeographicLocations => Sim.GeographicLocations.Items;
 
         [NotNull]
         [UsedImplicitly]
@@ -398,7 +398,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             get {
                 var id = Sim.MyGeneralConfig.SelectedTemperatureProfile;
                 if (id != -1) {
-                    foreach (var temperaturProfile in Sim.TemperatureProfiles.MyItems) {
+                    foreach (var temperaturProfile in Sim.TemperatureProfiles.Items) {
                         if (temperaturProfile.IntID == id) {
                             return temperaturProfile;
                         }
@@ -453,7 +453,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<TemperatureProfile> TemperatureProfiles => Sim.TemperatureProfiles.MyItems;
+        public ObservableCollection<TemperatureProfile> TemperatureProfiles => Sim.TemperatureProfiles.Items;
 
         [NotNull]
         [UsedImplicitly]
@@ -462,12 +462,12 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<TransportationDeviceSet> TransportationDeviceSets => Sim.TransportationDeviceSets.MyItems;
+        public ObservableCollection<TransportationDeviceSet> TransportationDeviceSets => Sim.TransportationDeviceSets.Items;
 
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<TravelRouteSet> TravelRouteSets => Sim.TravelRouteSets.MyItems;
+        public ObservableCollection<TravelRouteSet> TravelRouteSets => Sim.TravelRouteSets.Items;
 
         public override void Close(bool saveToDB, bool removeLast = false)
         {
@@ -697,13 +697,13 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         {
             switch (_selectedCalcObjectType) {
                 case CalcObjectType.ModularHousehold:
-                    CalcObjects.SynchronizeWithList(Sim.ModularHouseholds.MyItems.Cast<ICalcObject>().ToList());
+                    CalcObjects.SynchronizeWithList(Sim.ModularHouseholds.Items.Cast<ICalcObject>().ToList());
                     break;
                 case CalcObjectType.House:
-                    CalcObjects.SynchronizeWithList(Sim.Houses.MyItems.Cast<ICalcObject>().ToList());
+                    CalcObjects.SynchronizeWithList(Sim.Houses.Items.Cast<ICalcObject>().ToList());
                     break;
                 case CalcObjectType.Settlement:
-                    CalcObjects.SynchronizeWithList(Sim.Settlements.MyItems.Cast<ICalcObject>().ToList());
+                    CalcObjects.SynchronizeWithList(Sim.Settlements.Items.Cast<ICalcObject>().ToList());
                     break;
                 default:
                     throw new LPGNotImplementedException("Missing Calc Object Type");

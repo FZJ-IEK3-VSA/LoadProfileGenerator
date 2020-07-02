@@ -22,7 +22,7 @@ namespace CalculationController.Helpers
         public List<CalcAffordanceTaggingSetDto> GetAffordanceTaggingSets([NotNull] Simulator sim)
         {
             var calcSets = new List<CalcAffordanceTaggingSetDto>();
-            foreach (var affordanceTaggingSet in sim.AffordanceTaggingSets.MyItems)
+            foreach (var affordanceTaggingSet in sim.AffordanceTaggingSets.Items)
             {
                 var calcset = new CalcAffordanceTaggingSetDto(affordanceTaggingSet.Name,
                     affordanceTaggingSet.MakeCharts);

@@ -68,7 +68,7 @@ namespace LoadProfileGenerator.Presenters.Households
         {
             get
             {
-                var list = Sim.Desires.It.Select(x => x.DesireCategory).Distinct().ToList();
+                var list = Sim.Desires.Items.Select(x => x.DesireCategory).Distinct().ToList();
                 _allDesireCategories.SynchronizeWithList(list);
                 return _allDesireCategories;
             }

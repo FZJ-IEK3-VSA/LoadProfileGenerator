@@ -117,7 +117,7 @@ namespace LoadProfileGenerator.Presenters.Households {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<VLoadType> AllLoadTypes => Sim.LoadTypes.MyItems;
+        public ObservableCollection<VLoadType> AllLoadTypes => Sim.LoadTypes.Items;
 
         [NotNull]
         [UsedImplicitly]
@@ -165,29 +165,29 @@ namespace LoadProfileGenerator.Presenters.Households {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<Desire> Desires => Sim.Desires.MyItems;
+        public ObservableCollection<Desire> Desires => Sim.Desires.Items;
 
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
         public ObservableCollection<DeviceActionGroup> DeviceActionGroups
-            => Sim.DeviceActionGroups.MyItems;
+            => Sim.DeviceActionGroups.Items;
 
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<DeviceAction> DeviceActions => Sim.DeviceActions.MyItems;
+        public ObservableCollection<DeviceAction> DeviceActions => Sim.DeviceActions.Items;
 
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
         public ObservableCollection<DeviceCategory> DeviceCategories
-            => Sim.DeviceCategories.MyItems;
+            => Sim.DeviceCategories.Items;
 
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<RealDevice> Devices => Sim.RealDevices.MyItems;
+        public ObservableCollection<RealDevice> Devices => Sim.RealDevices.Items;
 
         [ItemNotNull]
         [NotNull]
@@ -233,12 +233,12 @@ namespace LoadProfileGenerator.Presenters.Households {
         [NotNull]
         [UsedImplicitly]
         public ObservableCollection<HouseholdTrait> HouseholdTraits
-            => Sim.HouseholdTraits.MyItems;
+            => Sim.HouseholdTraits.Items;
 
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<Location> Locations => Sim.Locations.MyItems;
+        public ObservableCollection<Location> Locations => Sim.Locations.Items;
 
         [ItemNotNull]
         [NotNull]
@@ -274,7 +274,7 @@ namespace LoadProfileGenerator.Presenters.Households {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<Person> Persons => Sim.Persons.MyItems;
+        public ObservableCollection<Person> Persons => Sim.Persons.Items;
 
         [NotNull]
         [UsedImplicitly]
@@ -527,7 +527,7 @@ namespace LoadProfileGenerator.Presenters.Households {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<TraitTag> Tags => Sim.TraitTags.It;
+        public ObservableCollection<TraitTag> Tags => Sim.TraitTags.Items;
 
         [NotNull]
         public HouseholdTrait ThisHouseholdTrait => _hht;
@@ -535,13 +535,13 @@ namespace LoadProfileGenerator.Presenters.Households {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<TimeLimit> TimeLimits => Sim.TimeLimits.MyItems;
+        public ObservableCollection<TimeLimit> TimeLimits => Sim.TimeLimits.Items;
 
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
         public ObservableCollection<TimeBasedProfile> Timeprofiles
-            => Sim.Timeprofiles.MyItems;
+            => Sim.Timeprofiles.Items;
 
         [NotNull]
         [UsedImplicitly]
@@ -550,7 +550,7 @@ namespace LoadProfileGenerator.Presenters.Households {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<HouseholdTrait> Traits => Sim.HouseholdTraits.MyItems;
+        public ObservableCollection<HouseholdTrait> Traits => Sim.HouseholdTraits.Items;
 
         public void AddAffordanceToLocation()
         {
@@ -608,7 +608,7 @@ namespace LoadProfileGenerator.Presenters.Households {
         {
             var newTrait = ThisHouseholdTrait.MakeCopy(Sim);
             ApplicationPresenter.OpenItem(newTrait);
-            Sim.HouseholdTraits.It.Sort();
+            Sim.HouseholdTraits.Items.Sort();
         }
 
         public void Delete()
@@ -646,7 +646,7 @@ namespace LoadProfileGenerator.Presenters.Households {
 
         public void RefreshClassifications()
         {
-            foreach (var trait in Sim.HouseholdTraits.It) {
+            foreach (var trait in Sim.HouseholdTraits.Items) {
                 if (!_classifications.Contains(trait.Classification)) {
                     _classifications.Add(trait.Classification);
                 }
@@ -663,7 +663,7 @@ namespace LoadProfileGenerator.Presenters.Households {
                 }
             }
 
-            foreach (var affordance in Sim.Affordances.MyItems) {
+            foreach (var affordance in Sim.Affordances.Items) {
                 foreach (var affordanceDesire in affordance.AffordanceDesires) {
                     if (alldesires.ContainsKey(affordanceDesire.Desire)) {
                         _relevantAffordances.Add(affordance);
@@ -673,7 +673,7 @@ namespace LoadProfileGenerator.Presenters.Households {
             }
 
             if (HideAffordancesOnAllLocations) {
-                Sim.DeviceCategories.MyItems.ToList().ForEach(dc => dc.RefreshSubDevices());
+                Sim.DeviceCategories.Items.ToList().ForEach(dc => dc.RefreshSubDevices());
                 foreach (var hhLocation in _hht.Locations) {
                     foreach (var aff in hhLocation.AffordanceLocations) {
                         if (_relevantAffordances.Contains(aff.Affordance)) {

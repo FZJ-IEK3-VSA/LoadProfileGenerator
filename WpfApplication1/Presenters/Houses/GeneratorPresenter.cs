@@ -48,7 +48,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
         [NotNull]
         [UsedImplicitly]
         public ObservableCollection<DateBasedProfile> DateBasedProfiles
-            => Sim.DateBasedProfiles.MyItems;
+            => Sim.DateBasedProfiles.Items;
 
         [CanBeNull]
         [UsedImplicitly]
@@ -78,7 +78,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<VLoadType> VLoadTypes => Sim.LoadTypes.MyItems;
+        public ObservableCollection<VLoadType> VLoadTypes => Sim.LoadTypes.Items;
 
         public void Delete()
         {

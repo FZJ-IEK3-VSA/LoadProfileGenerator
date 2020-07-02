@@ -80,7 +80,7 @@ namespace LoadProfileGenerator.Presenters.Households {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<RealDevice> Devices => Sim.RealDevices.MyItems;
+        public ObservableCollection<RealDevice> Devices => Sim.RealDevices.Items;
 
         [NotNull]
         [UsedImplicitly]
@@ -126,7 +126,7 @@ namespace LoadProfileGenerator.Presenters.Households {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<VLoadType> LoadTypes => Sim.LoadTypes.MyItems;
+        public ObservableCollection<VLoadType> LoadTypes => Sim.LoadTypes.Items;
 
         [CanBeNull]
         [UsedImplicitly]
@@ -148,7 +148,7 @@ namespace LoadProfileGenerator.Presenters.Households {
         [NotNull]
         [UsedImplicitly]
         public ObservableCollection<TimeBasedProfile> TimeProfiles
-            => Sim.Timeprofiles.MyItems;
+            => Sim.Timeprofiles.Items;
 
         [NotNull]
         [UsedImplicitly]

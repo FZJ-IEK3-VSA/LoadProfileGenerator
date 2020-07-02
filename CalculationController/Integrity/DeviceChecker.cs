@@ -210,18 +210,18 @@ namespace CalculationController.Integrity {
         }
 
         protected override void Run(Simulator sim) {
-            CheckForUnusedDevices(sim.RealDevices.It, sim.Affordances.It, sim.DeviceActions.It, sim.Locations.It,
-                sim.HouseholdTraits.It, sim.HouseTypes.It);
-            foreach (var device in sim.RealDevices.It) {
+            CheckForUnusedDevices(sim.RealDevices.Items, sim.Affordances.Items, sim.DeviceActions.Items, sim.Locations.Items,
+                sim.HouseholdTraits.Items, sim.HouseTypes.Items);
+            foreach (var device in sim.RealDevices.Items) {
                 BasicChecks(device);
                 if (PerformCleanupChecks) {
                     ElectricityChecks(device);
-                    CheckDeviceActionLoads(sim.DeviceActions.It, device);
+                    CheckDeviceActionLoads(sim.DeviceActions.Items, device);
                 }
             }
             if(PerformCleanupChecks){
                 List<RealDevice> devicesWithMissingLt = new List<RealDevice>();
-                foreach (var device in sim.RealDevices.It) {
+                foreach (var device in sim.RealDevices.Items) {
                     RealDeviceLoadType electricityLoad = null;
                     RealDeviceLoadType innerLoad = null;
                     foreach (var load in device.Loads) {

@@ -628,12 +628,12 @@ namespace Database.Tables.ModularHouseholds {
         public override List<UsedIn> CalculateUsedIns(Simulator sim)
         {
             var usedIns = new List<UsedIn>();
-            foreach (var house in sim.Houses.It) {
+            foreach (var house in sim.Houses.Items) {
                 if (house.Households.Any(x => x.CalcObject == this)) {
                     usedIns.Add(new UsedIn(house, "House"));
                 }
             }
-            foreach (var settlement in sim.Settlements.It) {
+            foreach (var settlement in sim.Settlements.Items) {
                 if (settlement.Households.Any(x => x.CalcObject == this)) {
                     usedIns.Add(new UsedIn(settlement, "Settlement"));
                 }
@@ -648,19 +648,19 @@ namespace Database.Tables.ModularHouseholds {
             DeviceSelection ds = null;
             Vacation vac = null;
             if (item._deviceSelection != null) {
-                ds = GetItemFromListByName(dstSim.DeviceSelections.MyItems, item._deviceSelection.Name);
+                ds = GetItemFromListByName(dstSim.DeviceSelections.Items, item._deviceSelection.Name);
             }
             if (item._vacation != null) {
-                vac = GetItemFromListByName(dstSim.Vacations.MyItems, item._vacation.Name);
+                vac = GetItemFromListByName(dstSim.Vacations.Items, item._vacation.Name);
             }
             var chh = new ModularHousehold(item.Name, null, item.Description, dstSim.ConnectionString, ds,
                 item.Source, item.GeneratorID, vac, item.EnergyIntensityType, item._creationType, item.Guid);
             chh.SaveToDB();
             foreach (var trait in item.Traits) {
                 var newtrait =
-                    GetItemFromListByName(dstSim.HouseholdTraits.MyItems, trait.HouseholdTrait.Name);
+                    GetItemFromListByName(dstSim.HouseholdTraits.Items, trait.HouseholdTrait.Name);
                 if (trait.DstPerson != null && newtrait != null) {
-                    var p = GetItemFromListByName(dstSim.Persons.MyItems, trait.DstPerson.Name);
+                    var p = GetItemFromListByName(dstSim.Persons.Items, trait.DstPerson.Name);
                     if (p == null) {
                         Logger.Error("While importing, could not find a person. Skipping.");
                         continue;
@@ -669,16 +669,16 @@ namespace Database.Tables.ModularHouseholds {
                 }
             }
             foreach (var modularHouseholdPerson in item.Persons) {
-                var p = GetItemFromListByName(dstSim.Persons.It, modularHouseholdPerson.Person.Name);
+                var p = GetItemFromListByName(dstSim.Persons.Items, modularHouseholdPerson.Person.Name);
                 if (p == null) {
                     Logger.Error("While importing, could not find a person. Skipping.");
                     continue;
                 }
-                var tag = GetItemFromListByName(dstSim.TraitTags.It, modularHouseholdPerson.TraitTag?.Name);
+                var tag = GetItemFromListByName(dstSim.TraitTags.Items, modularHouseholdPerson.TraitTag?.Name);
                 chh.AddPerson(p, tag);
             }
             foreach (var householdTag in item.ModularHouseholdTags) {
-                var tag = GetItemFromListByName(dstSim.HouseholdTags.It, householdTag.Tag.Name);
+                var tag = GetItemFromListByName(dstSim.HouseholdTags.Items, householdTag.Tag.Name);
                 if (tag == null) {
                     Logger.Error("While importing, could not find a tag. Skipping.");
                     continue;

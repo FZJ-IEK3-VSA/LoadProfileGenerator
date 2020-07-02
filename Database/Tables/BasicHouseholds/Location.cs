@@ -125,7 +125,7 @@ namespace Database.Tables.BasicHouseholds {
         public override List<UsedIn> CalculateUsedIns(Simulator sim)
         {
             var used = new List<UsedIn>();
-            foreach (var housetype in sim.HouseTypes.It) {
+            foreach (var housetype in sim.HouseTypes.Items) {
                 foreach (var houseTypeDevice in housetype.HouseDevices) {
                     if (houseTypeDevice.Location == this) {
                         used.Add(new UsedIn(housetype, "House Type - Autonomous - " + houseTypeDevice.Name));
@@ -133,7 +133,7 @@ namespace Database.Tables.BasicHouseholds {
                 }
             }
 
-            foreach (var householdTrait in sim.HouseholdTraits.It) {
+            foreach (var householdTrait in sim.HouseholdTraits.Items) {
                 foreach (var hhtLocation in householdTrait.Locations) {
                     if (hhtLocation.Location == this) {
                         var affs = string.Empty;
@@ -162,8 +162,8 @@ namespace Database.Tables.BasicHouseholds {
             var loc = new Location(toImport.Name, null, dstSim.ConnectionString, toImport.Guid);
             loc.SaveToDB();
             foreach (var locationDevice in toImport.LocationDevices) {
-                var iad = GetAssignableDeviceFromListByName(dstSim.RealDevices.MyItems,
-                    dstSim.DeviceCategories.MyItems, dstSim.DeviceActions.MyItems, dstSim.DeviceActionGroups.MyItems,
+                var iad = GetAssignableDeviceFromListByName(dstSim.RealDevices.Items,
+                    dstSim.DeviceCategories.Items, dstSim.DeviceActions.Items, dstSim.DeviceActionGroups.Items,
                     locationDevice.Device);
                 if (iad == null) {
                     Logger.Error("Could not find the device when importing. Skipping.");

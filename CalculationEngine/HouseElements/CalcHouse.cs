@@ -254,7 +254,7 @@ namespace CalculationEngine.HouseElements {
             }
 
             foreach (var calcAutoDev in _autoDevs) {
-                if (!calcAutoDev.IsBusyDuringTimespan(timestep, 1, 1, calcAutoDev.LoadType)) {
+                if (!calcAutoDev.IsAutodevBusyDuringTimespan(timestep, 1, 1)) {
                     calcAutoDev.Activate(timestep);
                 }
             }

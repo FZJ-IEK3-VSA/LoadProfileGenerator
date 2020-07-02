@@ -134,21 +134,21 @@ namespace Database.Tables.BasicHouseholds {
         {
             var used = new List<UsedIn>();
 
-            foreach (var t in sim.HouseholdTraits.It) {
+            foreach (var t in sim.HouseholdTraits.Items) {
                 foreach (var traitDesire in t.Desires) {
                     if (traitDesire.Desire == this) {
                         used.Add(new UsedIn(t, "Household Trait", traitDesire.MakeDescription()));
                     }
                 }
             }
-            foreach (var affordance in sim.Affordances.It) {
+            foreach (var affordance in sim.Affordances.Items) {
                 foreach (var affdes in affordance.AffordanceDesires) {
                     if (affdes.Desire == this) {
                         used.Add(new UsedIn(affordance, "Affordance", affdes.MakeDescription()));
                     }
                 }
             }
-            foreach (var subaff in sim.SubAffordances.It) {
+            foreach (var subaff in sim.SubAffordances.Items) {
                 foreach (var affdes in subaff.SubAffordanceDesires) {
                     if (affdes.Desire == this) {
                         used.Add(new UsedIn(subaff, "Subaffordance", affdes.MakeDescription()));

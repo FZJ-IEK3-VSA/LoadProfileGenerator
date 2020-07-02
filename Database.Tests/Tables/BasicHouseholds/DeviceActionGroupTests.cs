@@ -25,7 +25,7 @@ namespace Database.Tests.Tables.BasicHouseholds
             {
                 Logger.Threshold = Severity.Error;
                 Simulator sim = new Simulator(db.ConnectionString);
-                sim.DeviceActionGroups.It[0].DeleteFromDB();
+                sim.DeviceActionGroups.Items[0].DeleteFromDB();
                 db.Cleanup();
             }
         }

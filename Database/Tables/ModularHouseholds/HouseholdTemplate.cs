@@ -436,7 +436,7 @@ namespace Database.Tables.ModularHouseholds {
         {
             DateBasedProfile dbp = null;
             if (item.TimeProfileForVacations != null) {
-                dbp = GetItemFromListByName(dstSim.DateBasedProfiles.It, item.TimeProfileForVacations.Name);
+                dbp = GetItemFromListByName(dstSim.DateBasedProfiles.Items, item.TimeProfileForVacations.Name);
             }
 
             var hhg = new HouseholdTemplate(item.Name, null, item.Description, dstSim.ConnectionString, item.NewHHName, item.Count, dbp, item.TemplateVacationType, item.MinNumberOfVacations,
@@ -444,7 +444,7 @@ namespace Database.Tables.ModularHouseholds {
             hhg.SaveToDB();
             foreach (var entry in item.Entries) {
                 {
-                    var tag = GetItemFromListByName(dstSim.TraitTags.It, entry.TraitTag.Name);
+                    var tag = GetItemFromListByName(dstSim.TraitTags.Items, entry.TraitTag.Name);
                     if (tag == null) {
                         Logger.Error("Found a missing tag. Skipping.");
                         continue;
@@ -453,7 +453,7 @@ namespace Database.Tables.ModularHouseholds {
                     var newEntry = new HHTemplateEntry(null, hhg.IntID, "no name", dstSim.ConnectionString, tag, entry.TraitCountMin, entry.TraitCountMax, entry.Guid);
                     newEntry.SaveToDB();
                     foreach (var person in entry.Persons) {
-                        var p = GetItemFromListByName(dstSim.Persons.It, person.Person.Name);
+                        var p = GetItemFromListByName(dstSim.Persons.Items, person.Person.Name);
                         if (p == null) {
                             Logger.Error("Found a missing person. Skipping.");
                             continue;
@@ -467,7 +467,7 @@ namespace Database.Tables.ModularHouseholds {
             }
 
             foreach (var person in item.Persons) {
-                var p = GetItemFromListByName(dstSim.Persons.It, person.Person.Name);
+                var p = GetItemFromListByName(dstSim.Persons.Items, person.Person.Name);
 
                 if (p == null) {
                     Logger.Error("Found a missing person. Skipping.");
@@ -476,14 +476,14 @@ namespace Database.Tables.ModularHouseholds {
 
                 TraitTag traittag = null;
                 if (person.LivingPattern != null) {
-                    traittag = GetItemFromListByName(dstSim.TraitTags.It, person.LivingPattern.Name);
+                    traittag = GetItemFromListByName(dstSim.TraitTags.Items, person.LivingPattern.Name);
                 }
 
                 hhg.AddPerson(p, traittag);
             }
 
             foreach (var vacation in item.Vacations) {
-                var p = GetItemFromListByName(dstSim.Vacations.It, vacation.Name);
+                var p = GetItemFromListByName(dstSim.Vacations.Items, vacation.Name);
                 if (p == null) {
                     Logger.Error("Found a missing Vacation. Skipping.");
                     continue;
@@ -493,7 +493,7 @@ namespace Database.Tables.ModularHouseholds {
             }
 
             foreach (var hhTemplateTag in item.TemplateTags) {
-                var tag = GetItemFromListByName(dstSim.HouseholdTags.It, hhTemplateTag.Tag.Name);
+                var tag = GetItemFromListByName(dstSim.HouseholdTags.Items, hhTemplateTag.Tag.Name);
                 if (tag == null) {
                     Logger.Error("Found a missing tag. Skipping.");
                     continue;
@@ -510,7 +510,7 @@ namespace Database.Tables.ModularHouseholds {
         {
             DateBasedProfile dbp = null;
             if (jsonTemplate.TimeProfileForVacations != null) {
-                dbp = GetItemFromListByJsonReference(sim.DateBasedProfiles.It, jsonTemplate.TimeProfileForVacations);
+                dbp = GetItemFromListByJsonReference(sim.DateBasedProfiles.Items, jsonTemplate.TimeProfileForVacations);
             }
 
             Name = jsonTemplate.Name;

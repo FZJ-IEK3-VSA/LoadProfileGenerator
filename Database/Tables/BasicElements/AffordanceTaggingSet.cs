@@ -230,7 +230,7 @@ namespace Database.Tables.BasicElements {
             }
             foreach (var ate in toImport._entries) {
                 if (ate.Affordance != null) {
-                    var aff = GetItemFromListByName(dstSim.Affordances.MyItems, ate.Affordance.Name);
+                    var aff = GetItemFromListByName(dstSim.Affordances.Items, ate.Affordance.Name);
                     if (aff == null) {
                         Logger.Error("The affordance " + ate.Affordance.Name + " was not found for import. Skipping.");
                         continue;
@@ -257,7 +257,7 @@ namespace Database.Tables.BasicElements {
                 {
                     throw new LPGException("Loadtype was null");
                 }
-                VLoadType lt = GetItemFromListByName(dstSim.LoadTypes.It, taggingSetLoadType.LoadType.Name);
+                VLoadType lt = GetItemFromListByName(dstSim.LoadTypes.Items, taggingSetLoadType.LoadType.Name);
                 if (lt != null) {
                     hd.AddNewLoadType(lt);
                 }

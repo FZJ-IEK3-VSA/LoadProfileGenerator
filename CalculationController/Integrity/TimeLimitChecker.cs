@@ -36,8 +36,8 @@ namespace CalculationController.Integrity {
         }
 
         protected override void Run(Simulator sim) {
-            CheckTimeLimits(sim.TimeLimits.It);
-            foreach (var devt in sim.TimeLimits.It) {
+            CheckTimeLimits(sim.TimeLimits.Items);
+            foreach (var devt in sim.TimeLimits.Items) {
                 if (devt.TimeLimitEntries.Count == 0) {
                     throw new DataIntegrityException("The time limit " + devt.PrettyName +
                                                      " has not a single limit set. Please fix.");
@@ -53,7 +53,7 @@ namespace CalculationController.Integrity {
             }
 
             if (PerformCleanupChecks) {
-                foreach (var devt in sim.TimeLimits.It) {
+                foreach (var devt in sim.TimeLimits.Items) {
                     var uses = devt.CalculateUsedIns(sim);
                     if (uses.Count == 0) {
                         Logger.Warning("Unused time limit: " + devt.PrettyName);

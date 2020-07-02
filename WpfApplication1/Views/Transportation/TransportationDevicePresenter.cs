@@ -19,7 +19,7 @@ namespace LoadProfileGenerator.Views.Transportation {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<VLoadType> AllLoadTypes => Sim.LoadTypes.MyItems;
+        public ObservableCollection<VLoadType> AllLoadTypes => Sim.LoadTypes.Items;
 
         [NotNull]
         public TransportationDevice ThisTransportationDevice => _transportationDevice;
@@ -27,7 +27,7 @@ namespace LoadProfileGenerator.Views.Transportation {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<TransportationDeviceCategory> TransportationDeviceCategories => Sim.TransportationDeviceCategories.It;
+        public ObservableCollection<TransportationDeviceCategory> TransportationDeviceCategories => Sim.TransportationDeviceCategories.Items;
 
         [ItemNotNull]
         [NotNull]

@@ -20,9 +20,9 @@ namespace LoadProfileGenerator.Tests {
             {
                 var sim = new Simulator(db.ConnectionString);
                 var hhtc = new HouseholdTemplateCreator(sim);
-                while (sim.HouseholdTemplates.It.Count > 0)
+                while (sim.HouseholdTemplates.Items.Count > 0)
                 {
-                    sim.HouseholdTemplates.DeleteItem(sim.HouseholdTemplates.It[0]);
+                    sim.HouseholdTemplates.DeleteItem(sim.HouseholdTemplates.Items[0]);
                 }
 
                 hhtc.Run(false, sim);

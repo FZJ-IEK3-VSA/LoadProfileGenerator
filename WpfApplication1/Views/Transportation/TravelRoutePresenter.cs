@@ -21,7 +21,7 @@ namespace LoadProfileGenerator.Views.Transportation
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<Site> Sites => Sim.Sites.MyItems;
+        public ObservableCollection<Site> Sites => Sim.Sites.Items;
 
         [NotNull]
         [UsedImplicitly]
@@ -31,7 +31,7 @@ namespace LoadProfileGenerator.Views.Transportation
         [NotNull]
         [UsedImplicitly]
         public ObservableCollection<TransportationDeviceCategory> TransportationDeviceCategories => Sim
-            .TransportationDeviceCategories.It;
+            .TransportationDeviceCategories.Items;
 
         [ItemNotNull]
         [NotNull]

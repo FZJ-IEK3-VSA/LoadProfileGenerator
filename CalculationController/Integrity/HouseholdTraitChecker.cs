@@ -80,7 +80,7 @@ namespace CalculationController.Integrity {
                 return;
             }
             foreach (var autodev in householdTrait.Autodevs) {
-                var tps = GetTimeProfile(autodev, sim.DeviceActions.It);
+                var tps = GetTimeProfile(autodev, sim.DeviceActions.Items);
                 var profilesWithZero = new List<TimeBasedProfile>();
                 foreach (var profile in tps) {
                     var lasttdp = profile.ObservableDatapoints[profile.ObservableDatapoints.Count - 1];
@@ -462,11 +462,11 @@ namespace CalculationController.Integrity {
         }
         protected override void Run(Simulator sim)
         {
-            CheckForAffordancesWithoutTraits(sim.HouseholdTraits.It, sim.Affordances.It);
-            CheckClassifications(sim.HouseholdTraits.It);
-            CleanTraitNames(sim.HouseholdTraits.It);
+            CheckForAffordancesWithoutTraits(sim.HouseholdTraits.Items, sim.Affordances.Items);
+            CheckClassifications(sim.HouseholdTraits.Items);
+            CleanTraitNames(sim.HouseholdTraits.Items);
             //var notusedCount = 0;
-            foreach (var householdTrait in sim.HouseholdTraits.It) {
+            foreach (var householdTrait in sim.HouseholdTraits.Items) {
                 CheckAutoDevTimeProfileForZero1(sim, householdTrait);
                 CheckSleepDesire(householdTrait);
                 CheckPersonCounts(householdTrait);

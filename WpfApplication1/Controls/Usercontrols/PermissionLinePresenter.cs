@@ -94,7 +94,7 @@ namespace LoadProfileGenerator.Controls.Usercontrols {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<DateBasedProfile> DateBasedProfiles => _sim.DateBasedProfiles.MyItems;
+        public ObservableCollection<DateBasedProfile> DateBasedProfiles => _sim.DateBasedProfiles.Items;
 
         [NotNull]
         public TimeLimitEntry Entry { get; }

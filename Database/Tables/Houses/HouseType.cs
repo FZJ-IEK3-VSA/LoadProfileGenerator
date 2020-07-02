@@ -364,7 +364,7 @@ namespace Database.Tables.Houses {
         public override List<UsedIn> CalculateUsedIns(Simulator sim)
         {
             var usedIns = new List<UsedIn>();
-            foreach (var house in sim.Houses.It) {
+            foreach (var house in sim.Houses.Items) {
                 if(house.HouseType == this) {
                     usedIns.Add(new UsedIn(house, "House"));
                 }
@@ -378,11 +378,11 @@ namespace Database.Tables.Houses {
         {
             VLoadType heatingvlt = null;
             if (item.HeatingLoadType != null) {
-                heatingvlt = GetItemFromListByName(dstSim.LoadTypes.MyItems, item.HeatingLoadType.Name);
+                heatingvlt = GetItemFromListByName(dstSim.LoadTypes.Items, item.HeatingLoadType.Name);
             }
             VLoadType coolingVlt = null;
             if (item.CoolingLoadType != null) {
-                coolingVlt = GetItemFromListByName(dstSim.LoadTypes.MyItems, item.CoolingLoadType.Name);
+                coolingVlt = GetItemFromListByName(dstSim.LoadTypes.Items, item.CoolingLoadType.Name);
             }
             var houseType = new HouseType(item.Name, item.Description, item.HeatingYearlyTotal,
                 item.HeatingTemperature, item.RoomTemperature, heatingvlt,dstSim.ConnectionString, item.CoolingTemperature,
@@ -391,46 +391,46 @@ namespace Database.Tables.Houses {
                 item.MaximumHouseholdCount, item.Guid);
             houseType.SaveToDB();
             foreach (var houseDevice in item.HouseDevices) {
-                var iad = GetAssignableDeviceFromListByName(dstSim.RealDevices.MyItems,
-                    dstSim.DeviceCategories.MyItems, dstSim.DeviceActions.It, dstSim.DeviceActionGroups.It,
+                var iad = GetAssignableDeviceFromListByName(dstSim.RealDevices.Items,
+                    dstSim.DeviceCategories.Items, dstSim.DeviceActions.Items, dstSim.DeviceActionGroups.Items,
                     houseDevice.Device);
 
                 TimeBasedProfile tbp = null;
                 if (houseDevice.Profile != null) {
-                    tbp = GetItemFromListByName(dstSim.Timeprofiles.MyItems, houseDevice.Profile.Name);
+                    tbp = GetItemFromListByName(dstSim.Timeprofiles.Items, houseDevice.Profile.Name);
                 }
                 VLoadType vlt = null;
                 if (houseDevice.LoadType != null) {
-                    vlt = GetItemFromListByName(dstSim.LoadTypes.MyItems, houseDevice.LoadType.Name);
+                    vlt = GetItemFromListByName(dstSim.LoadTypes.Items, houseDevice.LoadType.Name);
                 }
 
                 TimeLimit dt = null;
                 if (houseDevice.TimeLimit != null) {
-                    dt = GetItemFromListByName(dstSim.TimeLimits.MyItems, houseDevice.TimeLimit.Name);
+                    dt = GetItemFromListByName(dstSim.TimeLimits.Items, houseDevice.TimeLimit.Name);
                 }
 
                 Location loc = null;
                 if (houseDevice.Location != null) {
-                    loc = GetItemFromListByName(dstSim.Locations.MyItems, houseDevice.Location.Name);
+                    loc = GetItemFromListByName(dstSim.Locations.Items, houseDevice.Location.Name);
                 }
                 Variable variable = null;
                 if (houseDevice.Variable != null) {
-                    variable = GetItemFromListByName(dstSim.Variables.It, houseDevice.Variable.Name);
+                    variable = GetItemFromListByName(dstSim.Variables.Items, houseDevice.Variable.Name);
                 }
                 houseType.AddHouseTypeDevice(iad, dt, tbp, (double) houseDevice.TimeStandardDeviation, vlt, loc,
                     houseDevice.VariableValue, houseDevice.VariableCondition, variable);
             }
             foreach (var houseEnergyStorage in item.HouseEnergyStorages) {
-                var es = GetItemFromListByName(dstSim.EnergyStorages.MyItems,
+                var es = GetItemFromListByName(dstSim.EnergyStorages.Items,
                     houseEnergyStorage.EnergyStorage.Name);
                 houseType.AddEnergyStorage(es);
             }
             foreach (var generator in item.HouseGenerators) {
-                var gen = GetItemFromListByName(dstSim.Generators.MyItems, generator.Generator.Name);
+                var gen = GetItemFromListByName(dstSim.Generators.Items, generator.Generator.Name);
                 houseType.AddGenerator(gen);
             }
             foreach (var houseTransformationDevice in item.HouseTransformationDevices) {
-                var trafo = GetItemFromListByName(dstSim.TransformationDevices.MyItems,
+                var trafo = GetItemFromListByName(dstSim.TransformationDevices.Items,
                     houseTransformationDevice.TransformationDevice.Name);
                 houseType.AddTransformationDevice(trafo);
             }

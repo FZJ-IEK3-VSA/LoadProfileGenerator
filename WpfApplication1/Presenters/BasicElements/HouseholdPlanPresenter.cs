@@ -53,14 +53,14 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
 
             _householdPlan = householdPlan;
             foreach (var entry in _householdPlan.Entries) {
-                entry.AllDeviceActions = Sim.DeviceActions.It;
+                entry.AllDeviceActions = Sim.DeviceActions.Items;
             }
 
-            foreach (var dc in Sim.DeviceCategories.MyItems) {
+            foreach (var dc in Sim.DeviceCategories.Items) {
                 dc.RefreshSubDevices();
             }
 
-            _householdPlan.RefreshTagCategories(Sim.Affordances.It);
+            _householdPlan.RefreshTagCategories(Sim.Affordances.Items);
 
             SortByOptions.Add("By Name");
             SortByOptions.Add("By Person");
@@ -95,7 +95,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
         [NotNull]
         [UsedImplicitly]
         public ObservableCollection<AffordanceTaggingSet> AffordanceTaggingSets
-            => Sim.AffordanceTaggingSets.MyItems;
+            => Sim.AffordanceTaggingSets.Items;
 
         [ItemNotNull]
         [NotNull]
@@ -168,7 +168,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
         [NotNull]
         [UsedImplicitly]
         public ObservableCollection<ModularHousehold> ModularHouseholds
-            => Sim.ModularHouseholds.MyItems;
+            => Sim.ModularHouseholds.Items;
 
         [ItemNotNull]
         [NotNull]
@@ -394,7 +394,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
 
                 timePerPerson[tags.Person] += tags.TotalTime.TotalSeconds;
                 var individualuses =
-                    tags.CollectTotalEnergyUses(Sim.DeviceActions.MyItems);
+                    tags.CollectTotalEnergyUses(Sim.DeviceActions.Items);
                 foreach (var energyUse in individualuses) {
                     if (!energyPerLoadtype.ContainsKey(energyUse.Key)) {
                         energyPerLoadtype.Add(energyUse.Key, 0);
@@ -521,7 +521,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
 
         private void RefreshAlTraits()
         {
-            foreach (var trait in Sim.HouseholdTraits.It) {
+            foreach (var trait in Sim.HouseholdTraits.Items) {
                 if (trait.CollectAffordances(true).Count == 0) {
                     if (!ALTraits.Contains(trait)) {
                         ALTraits.Add(trait);
@@ -538,7 +538,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             Logger.Debug("Refresh:" + _refreshCount);
             for (var index = 0; index < _householdPlan.Entries.Count; index++) {
                 var entry = _householdPlan.Entries[index];
-                entry.AllTraits = Sim.HouseholdTraits.It;
+                entry.AllTraits = Sim.HouseholdTraits.Items;
                 entry.Assignments = _personAssignments;
                 if (_householdPlan.CalcObject != null) {
                     entry.RefreshAllRelevantTraits((ModularHousehold) _householdPlan.CalcObject, refreshDropdowns);

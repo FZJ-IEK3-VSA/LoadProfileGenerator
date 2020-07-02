@@ -25,7 +25,7 @@ namespace Database {
 
             foreach (var smhh in simpleHHs) {
                 var name = globalOptions.HouseholdName + " - " + smhh.Name;
-                var oldMhh = sim.ModularHouseholds.It.FirstOrDefault(x => x.Name == name);
+                var oldMhh = sim.ModularHouseholds.Items.FirstOrDefault(x => x.Name == name);
                 if (oldMhh != null) {
                     sim.ModularHouseholds.DeleteItem(oldMhh);
                     Logger.Warning("Deleted the previously created household with the name " + name);
@@ -38,11 +38,11 @@ namespace Database {
                 Logger.Info("Created a household named: " + mhh.Name);
 
                 mhh.Description = globalOptions.Description?? "";
-                mhh.DeviceSelection = sim.DeviceSelections.It.First(x => x.PrettyName == globalOptions.DeviceSelection);
-                mhh.Vacation = sim.Vacations.It.FirstOrDefault(x => x.PrettyName == smhh.Vacation);
+                mhh.DeviceSelection = sim.DeviceSelections.Items.First(x => x.PrettyName == globalOptions.DeviceSelection);
+                mhh.Vacation = sim.Vacations.Items.FirstOrDefault(x => x.PrettyName == smhh.Vacation);
                 mhh.SaveToDB();
                 foreach (var tagName in globalOptions.Tags) {
-                    var tag = sim.HouseholdTags.It.FirstOrDefault(x => x.PrettyName == tagName);
+                    var tag = sim.HouseholdTags.Items.FirstOrDefault(x => x.PrettyName == tagName);
                     if (tag == null) {
                         throw new LPGException("Could not recognize Tag: " + tagName);
                     }
@@ -55,7 +55,7 @@ namespace Database {
                 foreach (SimplePerson sp in smhh.Persons.Values) {
                     if (sp.Traits.Count > 0) {
                         var personName = sp.Name + " - " + smhh.Name;
-                        var oldPerson = sim.Persons.It.FirstOrDefault(x => x.Name == personName);
+                        var oldPerson = sim.Persons.Items.FirstOrDefault(x => x.Name == personName);
                         if (oldPerson != null) {
                             sim.Persons.DeleteItem(oldPerson);
                             Logger.Warning("Deleted the previously created person with the name " + personName);
@@ -77,9 +77,9 @@ namespace Database {
                         mhh.AddPerson(p,tag);
 
                         foreach (var traitName in sp.Traits) {
-                            var trait = sim.HouseholdTraits.It.FirstOrDefault(x => x.PrettyName == traitName);
+                            var trait = sim.HouseholdTraits.Items.FirstOrDefault(x => x.PrettyName == traitName);
                             if (trait == null) {
-                                trait = sim.HouseholdTraits.It.FirstOrDefault(x => x.PrettyNameOld == traitName);
+                                trait = sim.HouseholdTraits.Items.FirstOrDefault(x => x.PrettyNameOld == traitName);
                             }
                             if (trait == null) {
                                 throw new LPGException("Could not find a trait with the name: " + traitName);
@@ -102,7 +102,7 @@ namespace Database {
             // now make the settlement for the modular household testing
             Logger.Info("Creating a settlement");
             var settlementName = "Test settlement for imported " + globalOptions.HouseholdName;
-            var oldSett = sim.Settlements.It.FirstOrDefault(x => x.Name == settlementName);
+            var oldSett = sim.Settlements.Items.FirstOrDefault(x => x.Name == settlementName);
             if (oldSett != null) {
                 sim.Settlements.DeleteItem(oldSett);
                 Logger.Warning("Deleted old settlement " + settlementName);
@@ -117,7 +117,7 @@ namespace Database {
             // make the settlement for the house testing
             Logger.Info("Creating a settlement for the houses");
             var houseSettlementName = "Test settlement for imported houses for " + globalOptions.HouseholdName;
-            var oldHouseSett = sim.Settlements.It.FirstOrDefault(x => x.Name == houseSettlementName);
+            var oldHouseSett = sim.Settlements.Items.FirstOrDefault(x => x.Name == houseSettlementName);
             if (oldHouseSett != null) {
                 sim.Settlements.DeleteItem(oldHouseSett);
                 Logger.Warning("Deleted old house settlement " + houseSettlementName);
@@ -160,8 +160,8 @@ namespace Database {
             sb.Append("Description").Append(csv).AppendLine(mhh.Description);
             sb.Append("DeviceSelection").Append(csv).AppendLine(mhh.DeviceSelection?.PrettyName);
             sb.Append("EnergyIntensity").Append(csv).Append(mhh.EnergyIntensityType).AppendLine();
-            sb.Append("Geographic Location").Append(csv).AppendLine(sim.GeographicLocations.It[0].Name);
-            sb.Append("Temperature Profile").Append(csv).AppendLine(sim.TemperatureProfiles.It[0].Name);
+            sb.Append("Geographic Location").Append(csv).AppendLine(sim.GeographicLocations.Items[0].Name);
+            sb.Append("Temperature Profile").Append(csv).AppendLine(sim.TemperatureProfiles.Items[0].Name);
 
             var s = "";
             foreach (var tag in mhh.ModularHouseholdTags) {
@@ -202,7 +202,7 @@ namespace Database {
             sb.AppendLine();
             sb.AppendLine();
             sb.Append("%%%%%%").Append(csv).AppendLine("Unused traits (listed here to make it easier to copy them to a person and fill in)");
-            foreach (var trait in sim.HouseholdTraits.It) {
+            foreach (var trait in sim.HouseholdTraits.Items) {
                 if (!usedTraits.Contains(trait.PrettyName)) {
                     sb.AppendLine(trait.PrettyName);
                 }

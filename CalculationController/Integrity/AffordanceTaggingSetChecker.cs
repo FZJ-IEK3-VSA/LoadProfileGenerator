@@ -8,21 +8,21 @@ namespace CalculationController.Integrity {
         }
 
         protected override void Run(Simulator sim) {
-            foreach (var set in sim.AffordanceTaggingSets.It) {
+            foreach (var set in sim.AffordanceTaggingSets.Items) {
                 var isrefrehsed = false;
                 foreach (var entry in set.Entries) {
                     if (entry.Affordance == null) {
-                        set.RefreshAffordances(sim.Affordances.It);
+                        set.RefreshAffordances(sim.Affordances.Items);
                         isrefrehsed = true;
                         break;
                     }
                 }
                 if (!isrefrehsed) {
-                    foreach (var affordance in sim.Affordances.It) {
+                    foreach (var affordance in sim.Affordances.Items) {
                         var entry =
                             set.Entries.FirstOrDefault(myentry => myentry.Affordance?.Name == affordance.Name);
                         if (entry == null) {
-                            set.RefreshAffordances(sim.Affordances.It);
+                            set.RefreshAffordances(sim.Affordances.Items);
                             break;
                         }
                     }

@@ -85,8 +85,8 @@ namespace LoadProfileGenerator.Views.Households {
                         return;
                     }
                     aff.AddDeviceProfile(da.Device, deviceActionProfile.Timeprofile, affordanceDevice.TimeOffset,
-                        Presenter.Sim.RealDevices.It,
-                        Presenter.Sim.DeviceCategories.It, deviceActionProfile.VLoadType,
+                        Presenter.Sim.RealDevices.Items,
+                        Presenter.Sim.DeviceCategories.Items, deviceActionProfile.VLoadType,
                         affordanceDevice.Probability);
                 }
 

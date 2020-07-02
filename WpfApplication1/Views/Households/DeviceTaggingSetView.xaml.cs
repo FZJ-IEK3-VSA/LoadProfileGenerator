@@ -121,7 +121,7 @@ namespace LoadProfileGenerator.Views.Households {
 
         private void BtnRefreshClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
         {
-            Presenter.ThisDeviceTaggingSet.RefreshDevices(Presenter.Sim.RealDevices.MyItems);
+            Presenter.ThisDeviceTaggingSet.RefreshDevices(Presenter.Sim.RealDevices.Items);
             LstEntries.ResizeColummns();
         }
 

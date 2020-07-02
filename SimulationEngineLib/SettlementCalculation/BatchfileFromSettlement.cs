@@ -24,12 +24,12 @@ namespace SimulationEngineLib.SettlementCalculation {
                 options += " -DeleteDAT ";
             }
             if (settlement.TemperatureProfile != null) {
-                var temperatureIndex = sim.TemperatureProfiles.It.IndexOf(settlement.TemperatureProfile);
+                var temperatureIndex = sim.TemperatureProfiles.Items.IndexOf(settlement.TemperatureProfile);
                 options += " -TemperatureProfileIndex " + temperatureIndex;
             }
             if (settlement.GeographicLocation != null) {
                 if (bo.GeographicLocationIndex == null) {
-                    var locindex = sim.GeographicLocations.It.IndexOf(settlement.GeographicLocation);
+                    var locindex = sim.GeographicLocations.Items.IndexOf(settlement.GeographicLocation);
                     options += " -GeographicLocationIndex " + locindex;
                 }
                 else {
@@ -182,12 +182,12 @@ namespace SimulationEngineLib.SettlementCalculation {
                                         GetCalcObjectName(settlementHH.Name);
                         var calcobject = string.Empty;
                         if (settlementHH.CalcObjectType == CalcObjectType.ModularHousehold) {
-                            var hhindex = sim.ModularHouseholds.It.IndexOf((ModularHousehold) settlementHH.CalcObject);
+                            var hhindex = sim.ModularHouseholds.Items.IndexOf((ModularHousehold) settlementHH.CalcObject);
                             calcobject = "-CalcObjectType ModularHousehold  -CalcObjectNumber " + hhindex +
                                          " -OutputDirectory " + outputDir;
                         }
                         if (settlementHH.CalcObjectType == CalcObjectType.House) {
-                            var hhindex = sim.Houses.It.IndexOf((House) settlementHH.CalcObject);
+                            var hhindex = sim.Houses.Items.IndexOf((House) settlementHH.CalcObject);
                             calcobject = "-CalcObjectType House  -CalcObjectNumber " + hhindex + " -OutputDirectory " +
                                          outputDir + " -LoadtypePriority RecommendedForHouses ";
                         }
@@ -202,7 +202,7 @@ namespace SimulationEngineLib.SettlementCalculation {
                 sw.Close();
             }
 
-            var settlementIndex = sim.Settlements.It.IndexOf(settlement);
+            var settlementIndex = sim.Settlements.Items.IndexOf(settlement);
              MakeSettlementJson(settlement,sim,bo,new DirectoryInfo(".").FullName);
 
             Logger.Info("Finished writing to " + filename);

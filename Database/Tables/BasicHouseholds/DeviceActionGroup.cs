@@ -134,7 +134,7 @@ namespace Database.Tables.BasicHouseholds {
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         public override List<UsedIn> CalculateUsedIns(Simulator sim) {
             var used = new List<UsedIn>();
-            foreach (var deviceAction in sim.DeviceActions.It) {
+            foreach (var deviceAction in sim.DeviceActions.Items) {
                 if (deviceAction.DeviceActionGroup == this) {
                     List<TimeSpan?> timespans = deviceAction.Profiles.Select(x => x.Timeprofile?.Duration).ToList();
                     var information = string.Empty;
@@ -146,7 +146,7 @@ namespace Database.Tables.BasicHouseholds {
                     used.Add(new UsedIn(deviceAction, "Device Action", information));
                 }
             }
-            foreach (var affordance in sim.Affordances.It) {
+            foreach (var affordance in sim.Affordances.Items) {
                 foreach (var affordanceDevice in affordance.AffordanceDevices) {
                     if (affordanceDevice.Device == this) {
                         used.Add(new UsedIn(affordance, "Affordance"));
@@ -159,14 +159,14 @@ namespace Database.Tables.BasicHouseholds {
                 }
             }
 
-            foreach (var hht in sim.HouseholdTraits.It) {
+            foreach (var hht in sim.HouseholdTraits.Items) {
                 foreach (var autodev in hht.Autodevs) {
                     if (autodev.Device == this) {
                         used.Add(new UsedIn(hht, "Autonomous device in Trait"));
                     }
                 }
             }
-            foreach (var housetype in sim.HouseTypes.It) {
+            foreach (var housetype in sim.HouseTypes.Items) {
                 foreach (var hhdev in housetype.HouseDevices) {
                     if (hhdev.Device == this) {
                         used.Add(new UsedIn(housetype, "House Type"));

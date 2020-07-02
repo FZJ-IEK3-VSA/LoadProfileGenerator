@@ -32,44 +32,46 @@ using Common.CalcDto;
 using JetBrains.Annotations;
 
 namespace CalculationEngine.HouseholdElements {
+    public class CalcAutoDevProfile {
+        public CalcAutoDevProfile(CalcProfile profile, CalcLoadType loadType, double multiplier)
+        {
+            Profile = profile;
+            LoadType = loadType;
+            Multiplier = multiplier;
+        }
+
+        public CalcProfile Profile { get; }
+        public CalcLoadType LoadType { get; }
+        public double Multiplier { get; }
+    }
+
     public class CalcAutoDev : CalcDevice {
         [NotNull]
         private readonly CalcLocation _calcLocation;
-        [NotNull]
-        private readonly CalcProfile _calcProfile;
-        private readonly double _multiplier;
         //private readonly double _setVariableValue;
+        [NotNull] private readonly List<CalcAutoDevProfile> _calcProfiles;
         private readonly double _timeStandardDeviation;
         [ItemNotNull]
         [NotNull]
         private readonly List<VariableRequirement> _requirements = new List<VariableRequirement>();
         [NotNull] private TimeStep _earliestNextStart;
 
-        public CalcAutoDev( [NotNull] CalcProfile pCalcProfile, [NotNull] CalcLoadType loadType,
+        public CalcAutoDev( [NotNull]List<CalcAutoDevProfile> pCalcProfiles,
             [NotNull][ItemNotNull] List<CalcDeviceLoad> loads, double timeStandardDeviation,
-              double multiplier,
             [NotNull] CalcLocation calclocation,
                            [NotNull][ItemNotNull] List<VariableRequirement> requirements, [NotNull] CalcDeviceDto autoDevDto, [NotNull] CalcRepo calcRepo)
             : base(
                   loads, calclocation,    autoDevDto, calcRepo)
         {
             _earliestNextStart = new TimeStep(-1,0,true);
-            _calcProfile = pCalcProfile;
-            LoadType = loadType;
+            _calcProfiles = pCalcProfiles;
             _timeStandardDeviation = timeStandardDeviation;
-            _multiplier = multiplier;
             _calcLocation = calclocation;
             if (requirements.Count > 0) // initialize the whole variable thing
             {
                 _requirements.AddRange(requirements);
             }
         }
-
-        [NotNull]
-        public CalcProfile CalcProfile => _calcProfile;
-
-        [NotNull]
-        public CalcLoadType LoadType { get; }
 
         [NotNull]
         public string Location => _calcLocation.Name;
@@ -90,9 +92,11 @@ namespace CalculationEngine.HouseholdElements {
                     timefactor = CalcRepo.NormalRandom.NextDouble(1, _timeStandardDeviation);
                 }
 
-                CalcProfile adjustedProfile = _calcProfile.CompressExpandDoubleArray(timefactor);
-                _earliestNextStart = SetTimeprofile(adjustedProfile, time, LoadType,
-                    "(autonomous)", "(autonomous)", _multiplier, true);
+                foreach (var cprof in _calcProfiles) {
+                    CalcProfile adjustedProfile = cprof.Profile.CompressExpandDoubleArray(timefactor);
+                    _earliestNextStart = SetTimeprofile(adjustedProfile, time, cprof.LoadType,
+                        "(autonomous)", "(autonomous)", cprof.Multiplier, true);
+                }
             }
         }
 
@@ -108,6 +112,17 @@ namespace CalculationEngine.HouseholdElements {
                 }
             }
             return true;
+        }
+
+        public bool IsAutodevBusyDuringTimespan(TimeStep timestep, int duration, int timefactor)
+        {
+
+            foreach (var autoDevLoad in _calcProfiles) {
+                if (IsBusyDuringTimespan(timestep, duration, timefactor, autoDevLoad.LoadType)) {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

@@ -80,12 +80,12 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             _selectedTimeLimits.Clear();
             var usedTimeLimits = new Dictionary<TimeLimit, bool>();
 
-            foreach (var affordance in Sim.Affordances.MyItems) {
+            foreach (var affordance in Sim.Affordances.Items) {
                 if (affordance.TimeLimit != null && !usedTimeLimits.ContainsKey(affordance.TimeLimit)) {
                     usedTimeLimits.Add(affordance.TimeLimit, true);
                 }
             }
-            foreach (var household in Sim.HouseholdTraits.MyItems) {
+            foreach (var household in Sim.HouseholdTraits.Items) {
                 foreach (var hhAutonomousDevice in household.Autodevs) {
                     if (hhAutonomousDevice.TimeLimit != null &&
                         !usedTimeLimits.ContainsKey(hhAutonomousDevice.TimeLimit)) {
@@ -93,7 +93,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                     }
                 }
             }
-            foreach (var timeLimit in Sim.TimeLimits.MyItems) {
+            foreach (var timeLimit in Sim.TimeLimits.Items) {
                 if (!usedTimeLimits.ContainsKey(timeLimit)) {
                     _selectedTimeLimits.Add(timeLimit);
                 }

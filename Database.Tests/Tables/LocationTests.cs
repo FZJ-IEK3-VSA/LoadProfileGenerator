@@ -57,8 +57,8 @@ namespace Database.Tests.Tables {
                 var cat = new CategoryDBBase<Location>("Locations");
                 var profiles = db.LoadTimeBasedProfiles();
                 var devices = db.LoadRealDevices(out var deviceCategories, out var loadTypes, profiles);
-                Location.LoadFromDatabase(cat.MyItems, db.ConnectionString, devices, deviceCategories, loadTypes, false);
-                (cat.MyItems.Count).Should().Be(0);
+                Location.LoadFromDatabase(cat.Items, db.ConnectionString, devices, deviceCategories, loadTypes, false);
+                (cat.Items.Count).Should().Be(0);
                 var loc = cat.CreateNewItem(db.ConnectionString);
                 cat.SaveToDB();
                 loc.AddDevice(devices[0]);

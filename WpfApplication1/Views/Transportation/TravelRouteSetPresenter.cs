@@ -34,7 +34,7 @@ namespace LoadProfileGenerator.Views.Transportation {
         [NotNull]
         [UsedImplicitly]
         public ObservableCollection<ModularHousehold> AllHouseholds =>
-            Sim.ModularHouseholds.MyItems;
+            Sim.ModularHouseholds.Items;
 
         [ItemNotNull]
         [NotNull]
@@ -87,7 +87,7 @@ namespace LoadProfileGenerator.Views.Transportation {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<Site> Sites => Sim.Sites.MyItems;
+        public ObservableCollection<Site> Sites => Sim.Sites.Items;
 
         [NotNull]
         [UsedImplicitly]
@@ -339,7 +339,7 @@ namespace LoadProfileGenerator.Views.Transportation {
         public void RefreshRoutes()
         {
             List<TravelRoute> usedRoutes = ThisRouteSet.TravelRoutes.Select(x => x.TravelRoute).ToList();
-            var newRoutes = Sim.TravelRoutes.It.Where(x => !usedRoutes.Contains(x)).ToList();
+            var newRoutes = Sim.TravelRoutes.Items.Where(x => !usedRoutes.Contains(x)).ToList();
             newRoutes.Sort();
             AvailableTravelRoutes.SynchronizeWithList(newRoutes);
 
@@ -360,7 +360,7 @@ namespace LoadProfileGenerator.Views.Transportation {
 
         public void FindMissingRoutesForAllHouseholds()
         {
-            foreach (var household in Sim.ModularHouseholds.It) {
+            foreach (var household in Sim.ModularHouseholds.Items) {
                 var arr = RefreshMatrix(household, ThisRouteSet, out _);
                  if (arr == null)
                 {
@@ -400,7 +400,7 @@ namespace LoadProfileGenerator.Views.Transportation {
         public void AddDistanceMatchingWorkplaceRoutes()
         {
             List<TravelRoute> usedRoutes = ThisRouteSet.TravelRoutes.Select(x => x.TravelRoute ).ToList();
-            var newRoutes = Sim.TravelRoutes.It.Where(x => !usedRoutes.Contains(x)&& x.Name.ToLower().Contains("workplace")).ToList();
+            var newRoutes = Sim.TravelRoutes.Items.Where(x => !usedRoutes.Contains(x)&& x.Name.ToLower().Contains("workplace")).ToList();
             var arr = ThisRouteSet.Name.Split(' ');
             var kmstr = arr.FirstOrDefault(x => x.EndsWith("km"));
             if (kmstr == null)

@@ -95,8 +95,10 @@ namespace Calculation.Tests.HouseholdElements {
                 CalcDeviceDto cdd = new CalcDeviceDto("autodevnamename", deviceCategoryGuid,key,
                     OefcDeviceType.AutonomousDevice, "device category","", Guid.NewGuid().ToStrGuid(),
                     location.Guid,location.Name);
-                var cad = new CalcAutoDev( profile, cloadtype, loads,
-                    0.8,   1, location,
+                CalcAutoDevProfile cadp = new CalcAutoDevProfile(profile,cloadtype, 1);
+                var cadps = new List<CalcAutoDevProfile>(){cadp};
+                var cad = new CalcAutoDev(cadps, loads,
+                    0.8,   location,
                      requirements, cdd, calcRepo);
                 for (var i = 0; i < 100; i++) {
                     TimeStep ts  =new TimeStep(i, calculationParameters);

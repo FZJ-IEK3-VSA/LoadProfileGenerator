@@ -329,11 +329,11 @@ namespace LoadProfileGenerator {
         public static void UpdateVacationsInHouseholdTemplates1([NotNull] Simulator sim)
         {
             var forFamiliesWithChildren =
-                sim.DateBasedProfiles.It.First(x => x.Name == "School Holidays Saxony, Germany, 2015, 1 = vacation");
+                sim.DateBasedProfiles.Items.First(x => x.Name == "School Holidays Saxony, Germany, 2015, 1 = vacation");
             var noChildren =
-                sim.DateBasedProfiles.It.First(x => x.Name == "School Holidays Saxony, Germany, 2015, 1 = no vacation");
+                sim.DateBasedProfiles.Items.First(x => x.Name == "School Holidays Saxony, Germany, 2015, 1 = no vacation");
 
-            foreach (var template in sim.HouseholdTemplates.It) {
+            foreach (var template in sim.HouseholdTemplates.Items) {
                 template.TemplateVacationType = TemplateVacationType.RandomlyGenerated;
                 template.MinNumberOfVacations = 1;
                 template.MaxNumberOfVacations = 3;
@@ -1053,9 +1053,9 @@ namespace LoadProfileGenerator {
                         "Delete Household Templates?");
                 if (result == LPGMsgBoxResult.Yes) {
                     var i = 1;
-                    while (Sim.HouseholdTemplates.It.Count > 0) {
-                        Logger.Warning("Deleting template " + i + ": " + Sim.HouseholdTemplates.It[0]);
-                        Sim.HouseholdTemplates.DeleteItem(Sim.HouseholdTemplates.It[0]);
+                    while (Sim.HouseholdTemplates.Items.Count > 0) {
+                        Logger.Warning("Deleting template " + i + ": " + Sim.HouseholdTemplates.Items[0]);
+                        Sim.HouseholdTemplates.DeleteItem(Sim.HouseholdTemplates.Items[0]);
                         i++;
                     }
                 }

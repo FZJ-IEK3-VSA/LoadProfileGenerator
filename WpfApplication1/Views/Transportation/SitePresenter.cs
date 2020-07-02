@@ -23,17 +23,17 @@ namespace LoadProfileGenerator.Views.Transportation
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<Location> Locations => Sim.Locations.MyItems;
+        public ObservableCollection<Location> Locations => Sim.Locations.Items;
 
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<VLoadType> LoadTypes => Sim.LoadTypes.MyItems;
+        public ObservableCollection<VLoadType> LoadTypes => Sim.LoadTypes.Items;
 
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<TransportationDeviceCategory> TransportationDeviceCategories => Sim.TransportationDeviceCategories.MyItems;
+        public ObservableCollection<TransportationDeviceCategory> TransportationDeviceCategories => Sim.TransportationDeviceCategories.Items;
 
         [NotNull]
         public Site ThisSite => _site;

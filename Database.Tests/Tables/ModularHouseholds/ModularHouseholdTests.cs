@@ -159,10 +159,10 @@ namespace Database.Tests.Tables.ModularHouseholds {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
                 Simulator sim = new Simulator(db.ConnectionString);
-                ModularHousehold mhh = sim.ModularHouseholds.It[0];
+                ModularHousehold mhh = sim.ModularHouseholds.Items[0];
                 ModularHouseholdPerson mhhPerson = mhh.Persons[0];
-                Person dstPerson = sim.Persons.It[10];
-                TraitTag dstTag = sim.TraitTags.It[10];
+                Person dstPerson = sim.Persons.Items[10];
+                TraitTag dstTag = sim.TraitTags.Items[10];
                 int traitsBefore = mhh.Traits.Count;
                 mhh.SwapPersons(mhhPerson, dstPerson, dstTag);
                 int traitsAfter = mhh.Traits.Count;
@@ -179,10 +179,10 @@ namespace Database.Tests.Tables.ModularHouseholds {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
                 Simulator sim = new Simulator(db.ConnectionString);
-                ModularHousehold mhh = sim.ModularHouseholds.It[0];
+                ModularHousehold mhh = sim.ModularHouseholds.Items[0];
                 ModularHouseholdPerson mhhPerson = mhh.Persons[0];
                 Person dstPerson = mhhPerson.Person;
-                TraitTag dstTag = sim.TraitTags.It[10];
+                TraitTag dstTag = sim.TraitTags.Items[10];
                 int traitsBefore = mhh.Traits.Count;
                 mhh.SwapPersons(mhhPerson, dstPerson, dstTag);
                 int traitsAfter = mhh.Traits.Count;
@@ -200,7 +200,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
                 Simulator sim = new Simulator(db.ConnectionString);
-                ModularHousehold mhh = sim.ModularHouseholds.It[0];
+                ModularHousehold mhh = sim.ModularHouseholds.Items[0];
                 var modjson = mhh.GetJson();
                 var newhh = sim.ModularHouseholds.CreateNewItem(sim.ConnectionString);
                 newhh.ImportFromJsonTemplate(modjson, sim);

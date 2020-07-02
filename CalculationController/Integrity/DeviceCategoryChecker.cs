@@ -19,7 +19,7 @@ namespace CalculationController.Integrity {
                     "There are devices with the device category none: " + none.SubDevices[0] + ". Please fix.",
                     none.SubDevices[0]);
             }
-            foreach (var category in sim.DeviceCategories.It) {
+            foreach (var category in sim.DeviceCategories.Items) {
                 if (categoryShortNames.Contains(category.ShortName.ToUpperInvariant())) {
                     throw new DataIntegrityException(
                         "There are two device AffordanceToCategories with the name " + category.ShortName +

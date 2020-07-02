@@ -55,8 +55,8 @@ namespace Database.Tests.Tables {
             {
                 db.ClearTable(Desire.TableName);
                 var cat = new CategoryDBBase<Desire>("Desires");
-                Desire.LoadFromDatabase(cat.MyItems, db.ConnectionString, false);
-                (cat.MyItems.Count).Should().Be(0);
+                Desire.LoadFromDatabase(cat.Items, db.ConnectionString, false);
+                (cat.Items.Count).Should().Be(0);
                 cat.CreateNewItem(db.ConnectionString);
                 cat.SaveToDB();
                 var desires = new ObservableCollection<Desire>();

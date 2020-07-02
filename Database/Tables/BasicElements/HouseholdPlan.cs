@@ -133,21 +133,21 @@ namespace Database.Tables.BasicElements {
         {
             ICalcObject calcObject = null;
             if (toImport.CalcObject != null) {
-                calcObject = GetICalcObjectFromList(dstSim.ModularHouseholds.MyItems, null, null, toImport.CalcObject);
+                calcObject = GetICalcObjectFromList(dstSim.ModularHouseholds.Items, null, null, toImport.CalcObject);
             }
             if (toImport.AffordanceTaggingSet == null)
             {
                 throw new LPGException("Affordance tagging set was null");
             }
             var dsttaggingSet =
-                GetItemFromListByName(dstSim.AffordanceTaggingSets.MyItems, toImport.AffordanceTaggingSet.Name);
+                GetItemFromListByName(dstSim.AffordanceTaggingSets.Items, toImport.AffordanceTaggingSet.Name);
             var hd = new HouseholdPlan(toImport.Name, dsttaggingSet, calcObject, toImport.Description,
                 dstSim.ConnectionString,toImport.Guid);
             hd.SaveToDB();
 
             foreach (var hpe in toImport._entries) {
                 if (hpe.Person != null && hpe.Tag != null) {
-                    var dstPerson = GetItemFromListByName(dstSim.Persons.MyItems, hpe.Person.Name);
+                    var dstPerson = GetItemFromListByName(dstSim.Persons.Items, hpe.Person.Name);
                     AffordanceTag tag = null;
                     if (dsttaggingSet != null) {
                         tag = GetItemFromListByName(dsttaggingSet.Tags, hpe.Tag.Name);

@@ -180,18 +180,18 @@ namespace Database.Tables.BasicHouseholds {
         public override List<UsedIn> CalculateUsedIns(Simulator sim)
         {
             var usedIns = new List<UsedIn>();
-            foreach (var device in sim.RealDevices.It) {
+            foreach (var device in sim.RealDevices.Items) {
                 if (device.Loads.Any(x => x.LoadType == this)) {
                     usedIns.Add(new UsedIn(device, "Device"));
                 }
             }
-            foreach (var trafo in sim.TransformationDevices.It) {
+            foreach (var trafo in sim.TransformationDevices.Items) {
                 if (trafo.LoadTypeIn == this || trafo.LoadTypesOut.Any(x => x.VLoadType == this)) {
                     usedIns.Add(new UsedIn(trafo, "Transformation Device"));
                 }
             }
 
-            foreach (var aff in sim.Affordances.It) {
+            foreach (var aff in sim.Affordances.Items) {
                 foreach (AffordanceDevice device in aff.AffordanceDevices) {
                     if (device.LoadType == this) {
                         usedIns.Add(new UsedIn(aff,aff.TypeDescription));

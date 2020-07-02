@@ -55,7 +55,7 @@ namespace LoadProfileGenerator
         [ItemNotNull]
         [UsedImplicitly]
         [CanBeNull]
-        public ObservableCollection<DeviceCategory> DeviceCategories => _app.Simulator?.DeviceCategories.It;
+        public ObservableCollection<DeviceCategory> DeviceCategories => _app.Simulator?.DeviceCategories.Items;
 
         [UsedImplicitly]
         [CanBeNull]
@@ -67,7 +67,7 @@ namespace LoadProfileGenerator
         [ItemNotNull]
         [UsedImplicitly]
         [CanBeNull]
-        public ObservableCollection<VLoadType> LoadTypes => _app.Simulator?.LoadTypes.It;
+        public ObservableCollection<VLoadType> LoadTypes => _app.Simulator?.LoadTypes.Items;
 
         [UsedImplicitly]
         [CanBeNull]
@@ -76,7 +76,7 @@ namespace LoadProfileGenerator
         [ItemNotNull]
         [UsedImplicitly]
         [CanBeNull]
-        public ObservableCollection<Location> Locations => _app.Simulator?.Locations.It;
+        public ObservableCollection<Location> Locations => _app.Simulator?.Locations.Items;
 
         [UsedImplicitly]
         [CanBeNull]
@@ -105,12 +105,12 @@ namespace LoadProfileGenerator
         [UsedImplicitly]
         [CanBeNull]
         [ItemNotNull]
-        public ObservableCollection<TimeLimit> TimeLimits => _app.Simulator?.TimeLimits.It;
+        public ObservableCollection<TimeLimit> TimeLimits => _app.Simulator?.TimeLimits.Items;
 
         [UsedImplicitly]
         [ItemNotNull]
         [CanBeNull]
-        public ObservableCollection<TimeBasedProfile> TimeProfiles => _app.Simulator?.Timeprofiles.It;
+        public ObservableCollection<TimeBasedProfile> TimeProfiles => _app.Simulator?.Timeprofiles.Items;
 
         [UsedImplicitly]
         [NotNull]
@@ -129,7 +129,7 @@ namespace LoadProfileGenerator
         [UsedImplicitly]
         [ItemNotNull]
         [CanBeNull]
-        public ObservableCollection<TraitTag> TraitTags => _app.Simulator?.TraitTags.It;
+        public ObservableCollection<TraitTag> TraitTags => _app.Simulator?.TraitTags.Items;
 
         private void CreateClick([CanBeNull]object sender, [CanBeNull] RoutedEventArgs e)
         {
@@ -233,13 +233,13 @@ namespace LoadProfileGenerator
             device.AddLoad(loadType, 1, 0, 0);
             device.SaveToDB();
 
-            aff.AddDeviceProfile(device, timeprofile, 0, sim.RealDevices.It, sim.DeviceCategories.It, loadType, 1);
+            aff.AddDeviceProfile(device, timeprofile, 0, sim.RealDevices.Items, sim.DeviceCategories.Items, loadType, 1);
             var desire = sim.Desires.CreateNewItem(sim.ConnectionString);
             desire.DefaultDecayRate = (decimal)desireDecay;
             desire.DefaultWeight = (decimal)desireWeight;
             desire.Name = desirename;
             desire.SaveToDB();
-            aff.AddDesire(desire, 1, sim.Desires.It);
+            aff.AddDesire(desire, 1, sim.Desires.Items);
             if (loc.LocationDevices.Count > 0)
             {
                 aff.NeedsLight = true;

@@ -20,11 +20,11 @@ namespace Database.Tests.Tables.BasicElements {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
                 var sim = new Simulator(db.ConnectionString);
-                foreach (var dc in sim.DeviceCategories.MyItems)
+                foreach (var dc in sim.DeviceCategories.Items)
                 {
                     dc.RefreshSubDevices();
                 }
-                foreach (var hhp in sim.HouseholdPlans.MyItems)
+                foreach (var hhp in sim.HouseholdPlans.Items)
                 {
                     hhp.Refresh(null);
                     Logger.Info("---------------");

@@ -242,14 +242,14 @@ namespace Database.Templating {
                                              [NotNull] ModularHousehold chh)
         {
             // find the living pattern all tag for speed
-            var allTag = sim.TraitTags.It.First(x => x.Name == "Living Pattern / All");
+            var allTag = sim.TraitTags.Items.First(x => x.Name == "Living Pattern / All");
             if (allTag == null) {
                 throw new LPGException("The tag Living Pattern / All was not found.");
             }
 
             //add the traits
             foreach (var entry in template.Entries) {
-                var potentialTraits = sim.HouseholdTraits.It.Where(t =>
+                var potentialTraits = sim.HouseholdTraits.Items.Where(t =>
                     t.Tags.Any(tag => tag.Tag == entry.TraitTag) && numberofPersons >= t.MinimumPersonsInCHH &&
                     numberofPersons <= t.MaximumPersonsInCHH).ToList();
                 if (potentialTraits.Count == 0) {
@@ -367,7 +367,7 @@ namespace Database.Templating {
                     string[] components = livingpattern?.Name.Split('/');
                     if (components?.Length == 3) {
                         string basename = livingpattern.Name.Substring(0, livingpattern.Name.Length - components[2].Length);
-                        List<TraitTag> possibleTags = sim.TraitTags.It
+                        List<TraitTag> possibleTags = sim.TraitTags.Items
                             .Where(x => x.Name.StartsWith(basename, StringComparison.InvariantCultureIgnoreCase)).ToList();
                         if (possibleTags.Count > 1) {
                             livingpattern = possibleTags[r.Next(possibleTags.Count)];

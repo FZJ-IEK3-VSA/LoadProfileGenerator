@@ -213,7 +213,7 @@ namespace Database.Tables.BasicElements {
             hd.SaveToDB();
             foreach (var ate in toImport.Entries) {
                 if (ate.Device != null) {
-                    var rd = GetItemFromListByName(dstSim.RealDevices.MyItems, ate.Device.Name);
+                    var rd = GetItemFromListByName(dstSim.RealDevices.Items, ate.Device.Name);
                     if (ate.Tag== null)
                     {
                         throw new LPGException("Tag was null");
@@ -236,7 +236,7 @@ namespace Database.Tables.BasicElements {
                     throw new LPGException("Tag was null");
                 }
                 var tag = GetItemFromListByName(hd.Tags, deviceTaggingReference.Tag.Name);
-                var lt = GetItemFromListByName(dstSim.LoadTypes.It, deviceTaggingReference.LoadType.Name);
+                var lt = GetItemFromListByName(dstSim.LoadTypes.Items, deviceTaggingReference.LoadType.Name);
                 if (tag == null) {
                     Logger.Error("Tag was null while importing. Skipping.");
                     continue;
@@ -249,7 +249,7 @@ namespace Database.Tables.BasicElements {
                     lt);
             }
             foreach (DeviceTaggingSetLoadType loadType in toImport.LoadTypes) {
-                var lt = GetItemFromListByName(dstSim.LoadTypes.It, loadType.Name);
+                var lt = GetItemFromListByName(dstSim.LoadTypes.Items, loadType.Name);
                 if (lt != null) {
                     hd.AddLoadType(lt);
                 }

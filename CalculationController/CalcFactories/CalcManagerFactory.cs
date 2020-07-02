@@ -323,7 +323,7 @@ namespace CalculationController.CalcFactories
             builder.RegisterType<CalcManager>().As<CalcManager>().SingleInstance();
             builder.RegisterType<AffordanceTaggingSetFactory>().As<AffordanceTaggingSetFactory>().SingleInstance();
             builder.Register(x =>
-                    CalcLoadTypeDtoFactory.MakeLoadTypes(sim.LoadTypes.It, calcParameters.InternalStepsize,
+                    CalcLoadTypeDtoFactory.MakeLoadTypes(sim.LoadTypes.Items, calcParameters.InternalStepsize,
                         csps.LoadTypePriority))
                 .As<CalcLoadTypeDtoDictionary>().SingleInstance();
             builder.Register(x => CalcLoadTypeFactory.MakeLoadTypes(x.Resolve<CalcLoadTypeDtoDictionary>()))

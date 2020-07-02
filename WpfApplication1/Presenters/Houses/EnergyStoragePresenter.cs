@@ -82,12 +82,12 @@ namespace LoadProfileGenerator.Presenters.Houses {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<VLoadType> VLoadTypes => Sim.LoadTypes.MyItems;
+        public ObservableCollection<VLoadType> VLoadTypes => Sim.LoadTypes.Items;
 
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<Variable> Variables => Sim.Variables.MyItems;
+        public ObservableCollection<Variable> Variables => Sim.Variables.Items;
 
         public void Delete()
         {

@@ -171,7 +171,7 @@ namespace Database.Tables.Houses {
         public override List<UsedIn> CalculateUsedIns(Simulator sim)
         {
             var usedIns = new List<UsedIn>();
-            foreach (var type in sim.HouseTypes.It) {
+            foreach (var type in sim.HouseTypes.Items) {
                 if (type.HouseEnergyStorages.Any(x => x.EnergyStorage == this)) {
                     var ui = new UsedIn(type, type.TypeDescription, "");
                     usedIns.Add(ui);
@@ -207,7 +207,7 @@ namespace Database.Tables.Houses {
                 throw new LPGException("Load type was null");
             }
 
-            var vlt = GetItemFromListByName(dstSim.LoadTypes.MyItems, toImport.LoadType.Name);
+            var vlt = GetItemFromListByName(dstSim.LoadTypes.Items, toImport.LoadType.Name);
             var es = new EnergyStorage(toImport.Name, toImport.Description, vlt, toImport.StorageCapacity,
                 toImport.InitialFill, toImport.MinimumStorageRate, toImport.MaximumStorageRate,
                 toImport.MinimumWithdrawRate, toImport.MaximumWithdrawRate,
@@ -217,7 +217,7 @@ namespace Database.Tables.Houses {
                 if(signal.Variable ==null) {
                     continue;
                 }
-                var vlt2 = GetItemFromListByName(dstSim.Variables.MyItems, signal.Variable.Name);
+                var vlt2 = GetItemFromListByName(dstSim.Variables.Items, signal.Variable.Name);
                 if (vlt2 != null) {
                     es.AddSignal(vlt2, signal.TriggerLevelOn, signal.TriggerLevelOff, signal.Value);
                 }

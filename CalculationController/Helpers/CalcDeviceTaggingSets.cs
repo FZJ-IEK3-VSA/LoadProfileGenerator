@@ -26,7 +26,7 @@ namespace CalculationController.Helpers {
             {
                 AllCalcDeviceTaggingSets = new List<DeviceTaggingSetInformation>()
             };
-            foreach (var deviceTaggingSet in sim.DeviceTaggingSets.MyItems) {
+            foreach (var deviceTaggingSet in sim.DeviceTaggingSets.Items) {
                 var calcset = new DeviceTaggingSetInformation(deviceTaggingSet.Name);
                 foreach (var entry in deviceTaggingSet.Entries) {
                     if (entry.Device == null) {

@@ -159,7 +159,7 @@ namespace Database.Tables.Transportation {
                 toImport._chargingLoadType, toImport.Guid);
             loc.SaveToDB();
             foreach (var load in toImport.Loads) {
-                VLoadType dstlt =GetItemFromListByName(dstSim.LoadTypes.MyItems, load.LoadType?.Name);
+                VLoadType dstlt =GetItemFromListByName(dstSim.LoadTypes.Items, load.LoadType?.Name);
                 if (dstlt== null)
                 {
                     throw new LPGException("load type was null");

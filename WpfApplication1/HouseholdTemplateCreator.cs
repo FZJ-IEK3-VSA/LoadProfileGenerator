@@ -20,7 +20,7 @@ namespace LoadProfileGenerator {
         public void Run(bool multithread, [NotNull] Simulator sim)
         {
             var basicHouseholds =
-                _sim.ModularHouseholds.It.Where(x => !x.Name.StartsWith("x ", StringComparison.Ordinal)).ToList();
+                _sim.ModularHouseholds.Items.Where(x => !x.Name.StartsWith("x ", StringComparison.Ordinal)).ToList();
             var pbw = new ProgressbarWindow("Creating templates", "Template Creation",
                 basicHouseholds.Count);
             pbw.Show();
@@ -29,12 +29,12 @@ namespace LoadProfileGenerator {
             {
                 try
                 {
-                    var toDelete = _sim.HouseholdTemplates.It.Where(x => x.Persons.Any(y => y.LivingPattern == null))
+                    var toDelete = _sim.HouseholdTemplates.Items.Where(x => x.Persons.Any(y => y.LivingPattern == null))
                         .ToList();
-                    var toDelete2 = _sim.HouseholdTemplates.It
+                    var toDelete2 = _sim.HouseholdTemplates.Items
                         .Where(x => x.Entries.Any(y =>
                             y.TraitTag.Name.StartsWith("Living Pattern", StringComparison.CurrentCulture))).ToList();
-                    var toDelete3 = _sim.HouseholdTemplates.It
+                    var toDelete3 = _sim.HouseholdTemplates.Items
                         .Where(x => x.Entries.Any(y =>
                             y.TraitTag.Name.StartsWith("Web / ", StringComparison.CurrentCulture))).ToList();
                     toDelete.AddRange(toDelete2);
@@ -123,9 +123,9 @@ namespace LoadProfileGenerator {
         {
             template.TemplateVacationType = TemplateVacationType.RandomlyGenerated;
             var forFamiliesWithChildren =
-                sim.DateBasedProfiles.It.First(x => x.Name == "School Holidays Saxony, Germany, 2015, 1 = vacation");
+                sim.DateBasedProfiles.Items.First(x => x.Name == "School Holidays Saxony, Germany, 2015, 1 = vacation");
             var noChildren =
-                sim.DateBasedProfiles.It.First(x => x.Name == "School Holidays Saxony, Germany, 2015, 1 = no vacation");
+                sim.DateBasedProfiles.Items.First(x => x.Name == "School Holidays Saxony, Germany, 2015, 1 = no vacation");
 
             template.TemplateVacationType = TemplateVacationType.RandomlyGenerated;
             template.MinNumberOfVacations = rnd.Next(2) + 1;

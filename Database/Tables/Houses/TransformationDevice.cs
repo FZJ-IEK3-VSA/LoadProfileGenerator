@@ -191,7 +191,7 @@ namespace Database.Tables.Houses {
         public override List<UsedIn> CalculateUsedIns(Simulator sim)
         {
             var used = new List<UsedIn>();
-            foreach (var ht in sim.HouseTypes.It) {
+            foreach (var ht in sim.HouseTypes.Items) {
                 foreach (var device in ht.HouseTransformationDevices) {
                     if (device.TransformationDevice == this) {
                         used.Add(new UsedIn(ht, "House Type"));
@@ -245,7 +245,7 @@ namespace Database.Tables.Houses {
         {
             VLoadType vlt = null;
             if (toImport.LoadTypeIn != null) {
-                vlt = GetItemFromListByName(dstSim.LoadTypes.MyItems, toImport.LoadTypeIn.Name);
+                vlt = GetItemFromListByName(dstSim.LoadTypes.Items, toImport.LoadTypeIn.Name);
             }
 
             var td = new TransformationDevice(toImport.Name,
@@ -259,7 +259,7 @@ namespace Database.Tables.Houses {
                 toImport.Guid);
             td.SaveToDB();
             foreach (var deviceLoadType in toImport.LoadTypesOut) {
-                var vlt2 = GetItemFromListByName(dstSim.LoadTypes.MyItems, deviceLoadType.VLoadType?.Name);
+                var vlt2 = GetItemFromListByName(dstSim.LoadTypes.Items, deviceLoadType.VLoadType?.Name);
                 if (vlt2 == null) {
                     Logger.Error("Could not find a load type for import. Skipping");
                     continue;
@@ -273,7 +273,7 @@ namespace Database.Tables.Houses {
                     continue;
                 }
 
-                var variable = GetItemFromListByName(dstSim.Variables.MyItems, srccondition.Variable.Name);
+                var variable = GetItemFromListByName(dstSim.Variables.Items, srccondition.Variable.Name);
                 if (variable == null) {
                     continue;
                 }

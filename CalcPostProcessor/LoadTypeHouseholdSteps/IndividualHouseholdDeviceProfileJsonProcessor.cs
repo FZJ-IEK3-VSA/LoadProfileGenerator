@@ -43,13 +43,14 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                 .ToList();
             var hhname = "." + key ;
             var jrf = new JsonDeviceProfiles( calcParameters.InternalStepsize,
-                calcParameters.OfficialStartTime, dstLoadType.Name, dstLoadType.UnitOfSum, dstLoadType.ConvertToLoadTypeInformation());
+                calcParameters.OfficialStartTime, dstLoadType.Name, dstLoadType.UnitOfSum,
+                dstLoadType.ConvertToLoadTypeInformation());
             //if (columns.Count == 0&& p.Key.KeyType == HouseholdKeyType.Household) {
             //    throw new LPGException("Found a household without a single device: " );
             //}
             foreach (int i in columns) {
                 var ce = efc.ColumnEntriesByColumn[dstLoadType][i];
-                SingleDeviceProfile sdp = new SingleDeviceProfile(ce.Name);
+                SingleDeviceProfile sdp = new SingleDeviceProfile(ce.Name + " - " + ce.LocationName + " - " + ce.DeviceGuid);
                 foreach (var efr in p.EnergyFileRows)
                 {
                     if (!efr.Timestep.DisplayThisStep)

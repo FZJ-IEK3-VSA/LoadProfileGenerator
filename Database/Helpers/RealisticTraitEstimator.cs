@@ -11,14 +11,14 @@ namespace Database.Helpers {
     internal static class RealisticTraitEstimator {
         public static void Run([NotNull] Simulator sim) {
             var allEntries = new List<TimeConsumptionEntry>();
-            foreach (var outcome in sim.CalculationOutcomes.It) {
+            foreach (var outcome in sim.CalculationOutcomes.Items) {
                 foreach (var afftime in outcome.AffordanceTimeUses) {
                     var tce = new TimeConsumptionEntry(afftime.AffordanceName, afftime.PersonName,
                         afftime.TimeInMinutes, afftime.Executions);
                     allEntries.Add(tce);
                 }
             }
-            foreach (var trait in sim.HouseholdTraits.It) {
+            foreach (var trait in sim.HouseholdTraits.Items) {
                 trait.EstimateType = EstimateType.Theoretical;
                 trait.EstimatedTimePerYearInH = 0;
                 trait.EstimatedTimeCount2 = 0;
@@ -26,7 +26,7 @@ namespace Database.Helpers {
                 trait.EstimatedDuration2InMinutes = 0;
                 trait.EstimatedTimeType2 = TimeType.Day;
                 var persons = new List<Person>();
-                foreach (var household in sim.ModularHouseholds.It) {
+                foreach (var household in sim.ModularHouseholds.Items) {
                     foreach (var householdTrait in household.Traits) {
                         if (householdTrait.HouseholdTrait == trait) {
                             persons.Add(householdTrait.DstPerson);

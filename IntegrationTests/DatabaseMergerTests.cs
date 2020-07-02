@@ -177,7 +177,7 @@ namespace IntegrationTests {
         public void RunTest171() {
             TestImport("profilegenerator171.db3", out var sim);
             var found = false;
-            foreach (var householdTrait in sim.HouseholdTraits.MyItems) {
+            foreach (var householdTrait in sim.HouseholdTraits.Items) {
                 if (householdTrait.Name == "import test") {
                     found = true;
                 }
@@ -238,9 +238,9 @@ namespace IntegrationTests {
                         dbBase.Import = true;
                     }
                     dbm.RunImport(null);
-                    var newActions = mainSim.DeviceActions.It;
+                    var newActions = mainSim.DeviceActions.Items;
                     var nullOldcount = 0;
-                    foreach (var oldAction in originalSim.DeviceActions.It)
+                    foreach (var oldAction in originalSim.DeviceActions.Items)
                     {
                         if (oldAction.DeviceActionGroup == null)
                         {
@@ -251,7 +251,7 @@ namespace IntegrationTests {
                             oldAction.DeviceActionGroup.Name.Should().Be(newAction.DeviceActionGroup?.Name);
                         }
                     }
-                    Logger.Info("oldAction total:" + originalSim.DeviceActions.It.Count + " null:" + nullOldcount);
+                    Logger.Info("oldAction total:" + originalSim.DeviceActions.Items.Count + " null:" + nullOldcount);
                     dbOriginal.Cleanup();
                     db.Cleanup();
                 }
@@ -343,11 +343,11 @@ namespace IntegrationTests {
                     }
                     dbm.RunImport(null);
                     var allTimeLimits = new Dictionary<string, bool>();
-                    foreach (var timeLimit in mainSim.TimeLimits.MyItems)
+                    foreach (var timeLimit in mainSim.TimeLimits.Items)
                     {
                         allTimeLimits.Add(timeLimit.CombineCompleteString(), true);
                     }
-                    foreach (var timeLimit in dbm.OldSimulator.TimeLimits.MyItems) {
+                    foreach (var timeLimit in dbm.OldSimulator.TimeLimits.Items) {
                         allTimeLimits.ContainsKey(timeLimit.CombineCompleteString()).Should().BeTrue();
                     }
                     db.Cleanup();

@@ -661,12 +661,12 @@ namespace Database.Tables.Houses {
         {
             GeographicLocation geoloc = null;
             if (item.GeographicLocation != null) {
-                geoloc = GetItemFromListByName(dstsim.GeographicLocations.MyItems, item.GeographicLocation.Name);
+                geoloc = GetItemFromListByName(dstsim.GeographicLocations.Items, item.GeographicLocation.Name);
             }
 
             TemperatureProfile temperatureProfile = null;
             if (item.TemperatureProfile != null) {
-                temperatureProfile = GetItemFromListByName(dstsim.TemperatureProfiles.MyItems, item.TemperatureProfile.Name);
+                temperatureProfile = GetItemFromListByName(dstsim.TemperatureProfiles.Items, item.TemperatureProfile.Name);
             }
 
             var settlement = new Settlement(item.Name,
@@ -686,7 +686,7 @@ namespace Database.Tables.Houses {
             settlement.SaveToDB();
             foreach (var settlementHH in item.Households) {
                 if (settlementHH.CalcObject != null) {
-                    var hh = GetICalcObjectFromList(dstsim.ModularHouseholds.MyItems, dstsim.Houses.MyItems, null, settlementHH.CalcObject);
+                    var hh = GetICalcObjectFromList(dstsim.ModularHouseholds.Items, dstsim.Houses.Items, null, settlementHH.CalcObject);
                     if (hh == null) {
                         Logger.Error("While importing a settlement, could not find a house. Skipping.");
                         continue;

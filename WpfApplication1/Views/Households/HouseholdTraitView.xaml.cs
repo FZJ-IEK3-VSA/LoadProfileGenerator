@@ -184,7 +184,7 @@ namespace LoadProfileGenerator.Views.Households {
             }
 
             var desires = new List<Desire>();
-            foreach (var desire in Presenter.Sim.Desires.It) {
+            foreach (var desire in Presenter.Sim.Desires.Items) {
                 if (desire.Name.Contains(Presenter.SelectedDesire.Name) && desire.Name.Contains("/")) {
                     desires.Add(desire);
                 }

@@ -39,8 +39,9 @@ using JetBrains.Annotations;
 
 namespace Database.Helpers {
     public class Category<T> : BasicCategory {
+        [NotNull] private readonly ObservableCollection<T> _items;
         public Category([NotNull] string name, [ItemNotNull] [NotNull] ObservableCollection<T> items)
-            : base(name) => MyItems = items;
+            : base(name) => _items = items;
 
         [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")] //this is the constructor for categories
         public Category([NotNull] string name)
@@ -49,19 +50,14 @@ namespace Database.Helpers {
 
         [UsedImplicitly]
         [NotNull][ItemNotNull]
-        public ObservableCollection<T> It => MyItems;
+        public ObservableCollection<T> Items => _items;
 
         [NotNull]
         [UsedImplicitly]
         public T this[int index] {
-            get => MyItems[index];
-            set => MyItems[index] = value;
+            get => _items[index];
+            set => _items[index] = value;
         }
-
-        [UsedImplicitly]
-        [NotNull]
-        [ItemNotNull]
-        public ObservableCollection<T> MyItems { get; protected set; }
 
         public override List<DBBase> CollectAllDBBaseItems() => throw new LPGNotImplementedException();
     }

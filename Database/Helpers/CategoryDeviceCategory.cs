@@ -68,7 +68,7 @@ namespace Database.Helpers {
             while (repeat) {
                 var hs = new HashSet<string>();
                 DeviceCategory itemToChange = null;
-                foreach (var item in MyItems) {
+                foreach (var item in Items) {
                     if (hs.Contains(item.ShortName)) {
                         itemToChange = item;
                         break;
@@ -96,7 +96,7 @@ namespace Database.Helpers {
 
         public void RefreshRootCategories() {
             var newRoot = new List<DeviceCategory>();
-            foreach (var category in MyItems) {
+            foreach (var category in Items) {
                 if (category.IsRootCategory) {
                     newRoot.Add(category);
                 }

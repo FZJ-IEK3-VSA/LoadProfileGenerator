@@ -96,7 +96,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
         [NotNull]
         [UsedImplicitly]
         public ObservableCollection<EnergyStorage> EnergyStorages
-            => Sim.EnergyStorages.MyItems;
+            => Sim.EnergyStorages.Items;
 
         [UsedImplicitly]
         public double ExampleConversionFactor {
@@ -137,12 +137,12 @@ namespace LoadProfileGenerator.Presenters.Houses {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<VLoadType> VLoadTypes => Sim.LoadTypes.MyItems;
+        public ObservableCollection<VLoadType> VLoadTypes => Sim.LoadTypes.Items;
 
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<Variable> Variables => Sim.Variables.MyItems;
+        public ObservableCollection<Variable> Variables => Sim.Variables.Items;
 
 
         public void AddOutputLoadType([NotNull] VLoadType selectedLoadType, double factor, TransformationFactorType factorType)
@@ -220,7 +220,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
             var newht = TransformationDevice.ImportFromItem(ThisTrafo, Sim);
             newht.Name = newht.Name + " (Copy)";
             newht.SaveToDB();
-            Sim.TransformationDevices.It.Add(newht);
+            Sim.TransformationDevices.Items.Add(newht);
             ApplicationPresenter.OpenItem(newht);
         }
     }

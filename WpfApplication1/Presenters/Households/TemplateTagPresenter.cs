@@ -98,7 +98,7 @@ namespace LoadProfileGenerator.Presenters.Households {
         public void RefreshClassifications()
         {
             var classifications =
-                Sim.HouseholdTags.It.Where(x => !string.IsNullOrWhiteSpace(x.Classification))
+                Sim.HouseholdTags.Items.Where(x => !string.IsNullOrWhiteSpace(x.Classification))
                     .Select(x => x.Classification)
                     .Distinct()
                     .ToList();

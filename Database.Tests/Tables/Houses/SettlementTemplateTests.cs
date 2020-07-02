@@ -7,7 +7,6 @@ using CalculationController.Integrity;
 using Common;
 using Common.Tests;
 using Database.Tables.Houses;
-using Database.Tables.ModularHouseholds;
 using FluentAssertions;
 using JetBrains.Annotations;
 
@@ -42,7 +41,7 @@ namespace Database.Tests.Tables.Houses {
                 st.AddHouseholdDistribution(1, 1, 0.95, EnergyIntensityType.EnergyIntensive);
                 st.AddHouseholdDistribution(1, 2, 0.05, EnergyIntensityType.EnergySaving);
                 st.AddHouseType(sim.HouseTypes[0]);
-                foreach (var template in sim.HouseholdTemplates.It)
+                foreach (var template in sim.HouseholdTemplates.Items)
                 {
                     st.AddHouseholdTemplate(template);
                 }
@@ -59,11 +58,9 @@ namespace Database.Tests.Tables.Houses {
                     var j = 1;
                     foreach (var calcObject in housePreviewEntry.Households)
                     {
-                        Logger.Info("#" + j++ + " Persons: " + calcObject.CalculatePersonCount() + ", " +
-                                    calcObject.Name + ", " + calcObject.EnergyIntensityType);
-                        if (calcObject is ModularHousehold chh)
-                        {
-                            foreach (var trait in chh.Traits)
+                        Logger.Info("#" + j++ + " Persons: " + calcObject.Household.CalculatePersonCount() + ", " +
+                                    calcObject.Household.Name + ", " + calcObject.Household.EnergyIntensityType);
+                            foreach (var trait in calcObject.Household.Traits)
                             {
                                 var name = trait.HouseholdTrait.Name;
                                 if (!traitCounts.ContainsKey(name))
@@ -75,7 +72,6 @@ namespace Database.Tests.Tables.Houses {
                                     traitCounts[name] += 1;
                                 }
                             }
-                        }
                     }
                 }
                 st.CreateSettlementFromPreview(sim);
@@ -112,6 +108,9 @@ namespace Database.Tests.Tables.Houses {
                 var tempprofiles = db.LoadTemperatureProfiles();
                 var geolocs = db.LoadGeographicLocations(out _, timeLimits);
                 var householdTags = db.LoadHouseholdTags();
+                db.LoadTransportation(allLocations, out var transportationDeviceSets,
+                    out var travelRouteSets, out _,out _,
+                    loadTypes,out var chargingStationSets);
                 db.ClearTable(SettlementTemplate.TableName);
                 db.ClearTable(STHouseholdDistribution.TableName);
                 db.ClearTable(STHouseholdTemplate.TableName);
@@ -128,7 +127,7 @@ namespace Database.Tests.Tables.Houses {
                 st.AddHouseType(houseTypes[0]);
                 st.AddTraitLimit(traits[0], 10);
                 SettlementTemplate.LoadFromDatabase(sts, db.ConnectionString, templates, houseTypes, false, tempprofiles,
-                    geolocs, householdTags, traits);
+                    geolocs, householdTags, traits,chargingStationSets,travelRouteSets,transportationDeviceSets);
                 (sts.Count).Should().Be(1);
                 (sts[0].HouseholdDistributions.Count).Should().Be(1);
                 (sts[0].HouseholdTemplates.Count).Should().Be(1);
@@ -142,8 +141,10 @@ namespace Database.Tests.Tables.Houses {
                 st.DeleteHouseSize(st.HouseSizes[0]);
                 st.DeleteTraitLimit(st.TraitLimits[0]);
                 sts.Clear();
-                SettlementTemplate.LoadFromDatabase(sts, db.ConnectionString, templates, houseTypes, false, tempprofiles,
-                    geolocs, householdTags, traits);
+                SettlementTemplate.LoadFromDatabase(sts, db.ConnectionString,
+                    templates, houseTypes, false, tempprofiles,
+                    geolocs, householdTags, traits,
+                    chargingStationSets,travelRouteSets,transportationDeviceSets);
                 (sts.Count).Should().Be(1);
                 (sts[0].HouseholdDistributions.Count).Should().Be(0);
                 (sts[0].HouseholdTemplates.Count).Should().Be(0);

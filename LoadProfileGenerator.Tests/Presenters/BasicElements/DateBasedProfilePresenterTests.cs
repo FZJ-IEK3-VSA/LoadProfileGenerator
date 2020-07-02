@@ -33,7 +33,7 @@ namespace LoadProfileGenerator.Tests.Presenters.BasicElements {
                 {
                     try
                     {
-                        var dbp = sim.DateBasedProfiles.It.First();
+                        var dbp = sim.DateBasedProfiles.Items.First();
                         var ap = new ApplicationPresenter(null, sim, null);
                         var dp = new DateBasedProfilePresenter(ap, null, dbp);
                         dbp.Should().Be(dp.ThisProfile);

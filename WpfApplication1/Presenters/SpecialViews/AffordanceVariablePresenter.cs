@@ -112,7 +112,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         public void Refresh()
         {
             var entries = new List<VariableEntry>();
-            var affordances = Sim.Affordances.MyItems;
+            var affordances = Sim.Affordances.Items;
             foreach (var affordance in affordances) {
                 foreach (var operation in affordance.ExecutedVariables) {
                     var locationName = operation.Location?.Name;
@@ -139,7 +139,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                 }
             }
 
-            foreach (var subAffordance in Sim.SubAffordances.It) {
+            foreach (var subAffordance in Sim.SubAffordances.Items) {
                 foreach (var variableOp in subAffordance.SubAffordanceVariableOps) {
                     var locationName = variableOp.Location?.Name;
                     if (locationName == null) {
@@ -160,7 +160,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                 }
             }
 
-            foreach (var houseType in Sim.HouseTypes.It) {
+            foreach (var houseType in Sim.HouseTypes.Items) {
                 foreach (var dev in houseType.HouseDevices) {
                     if (dev.Variable != null) {
                         string desc = dev.Device?.Name;
@@ -181,7 +181,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                 }
             }
 
-            foreach (var hh in Sim.HouseholdTraits.It) {
+            foreach (var hh in Sim.HouseholdTraits.Items) {
                 foreach (var dev in hh.Autodevs) {
                     if (dev.Variable != null && dev.Location != null && dev.Device != null) {
                         var ve = new VariableEntry(hh, "Household Trait Device", dev.Device.Name,

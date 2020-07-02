@@ -40,7 +40,7 @@ using Database.Tables.Houses;
 using JetBrains.Annotations;
 
 namespace CalculationController.Queue {
-    internal class CalcQueueRunner {
+    internal class CalcQueueRunner{
         [ItemNotNull]
         [NotNull]
         private static readonly List<CalcManager> _calcManagers = new List<CalcManager>();
@@ -186,24 +186,12 @@ namespace CalculationController.Queue {
         [SuppressMessage("ReSharper", "ReplaceWithSingleAssignment.False")]
         [SuppressMessage("ReSharper", "ConvertIfToOrExpression")]
         public void Start([NotNull] CalcStartParameterSet csps, [NotNull] Simulator sim) {
-            try {
                 var forceRandom = false;
                 if (csps.CalcTarget.GetType() == typeof(Settlement)) {
                     forceRandom = true;
                 }
                 SaveRun(forceRandom,  sim,csps);
-            }
-            catch (DataIntegrityException e) {
-                Logger.Error("DataIntegrityException:"+ Environment.NewLine + e.Message);
-                CloseLogfilesAfterError();
-                if (!Config.IsInUnitTesting && !Config.IsInHeadless) {
-                    MessageWindowHandler.Mw.ShowDataIntegrityMessage(e);
-                    csps.ReportCancelFunc?.Invoke();
-                }
-                else {
-                    throw;
-                }
-            }
         }
+
     }
 }

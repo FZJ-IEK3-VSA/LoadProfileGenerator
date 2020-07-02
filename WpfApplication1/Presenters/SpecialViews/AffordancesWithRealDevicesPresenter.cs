@@ -81,7 +81,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         public void Refresh()
         {
             _selectedAffordances.Clear();
-            var affordances = Sim.Affordances.MyItems;
+            var affordances = Sim.Affordances.Items;
             foreach (var affordance in affordances) {
                 foreach (var device in affordance.AffordanceDevices) {
                     if (device.Device?.AssignableDeviceType == AssignableDeviceType.Device) {

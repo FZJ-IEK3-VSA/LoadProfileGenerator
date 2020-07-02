@@ -103,7 +103,7 @@ namespace Database.Tests.Tables.BasicElements {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
                 var sim = new Simulator(db.ConnectionString);
-                foreach (var affordanceTaggingSet in sim.AffordanceTaggingSets.MyItems)
+                foreach (var affordanceTaggingSet in sim.AffordanceTaggingSets.Items)
                 {
                     foreach (var affordanceTaggingEntry in affordanceTaggingSet.Entries)
                     {
@@ -129,12 +129,12 @@ namespace Database.Tests.Tables.BasicElements {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
                 var sim = new Simulator(db.ConnectionString);
-                foreach (var affordanceTaggingSet in sim.AffordanceTaggingSets.MyItems)
+                foreach (var affordanceTaggingSet in sim.AffordanceTaggingSets.Items)
                 {
                     Logger.Info(affordanceTaggingSet.Name);
                     if (affordanceTaggingSet.Name.ToUpperInvariant().Contains("PLANNING"))
                     {
-                        affordanceTaggingSet.RemoveAllOldEntries(sim.Affordances.It);
+                        affordanceTaggingSet.RemoveAllOldEntries(sim.Affordances.Items);
                     }
                 }
                 db.Cleanup();

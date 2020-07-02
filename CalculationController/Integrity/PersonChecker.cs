@@ -16,7 +16,7 @@ namespace CalculationController.Integrity {
         protected override void Run(Simulator sim) {
             var allnames = new Dictionary<string, string>();
             var errrorPersons = new List<Person>();
-            foreach (var person in sim.Persons.It) {
+            foreach (var person in sim.Persons.Items) {
                 if (PerformCleanupChecks) {
                     var usedIns = person.CalculateUsedIns(sim);
                     if(usedIns.Count == 0) {
@@ -54,12 +54,12 @@ namespace CalculationController.Integrity {
             }
             if (PerformCleanupChecks) {
                 var usedPersons = new List<Person>();
-                foreach (var household in sim.ModularHouseholds.It) {
+                foreach (var household in sim.ModularHouseholds.Items) {
                     foreach (var person in household.Persons) {
                         usedPersons.Add(person.Person);
                     }
                 }
-                foreach (var person in sim.Persons.It) {
+                foreach (var person in sim.Persons.Items) {
                     if (!usedPersons.Contains(person)) {
                         throw new DataIntegrityException(
                             "The Person " + person.Name + " is not in any household. Please fix.", person);

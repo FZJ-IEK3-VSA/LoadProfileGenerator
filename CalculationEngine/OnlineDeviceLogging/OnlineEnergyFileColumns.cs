@@ -103,9 +103,17 @@ namespace CalculationEngine.OnlineDeviceLogging {
         [NotNull]
         private readonly Dictionary<CalcLoadTypeDto, Dictionary<int, ColumnEntry>> _columnEntriesByColumn;
         //[NotNull] public Dictionary<CalcLoadTypeDto, Dictionary<int, ColumnEntry>> ColumnEntriesByColumn => _columnEntriesByColumn;
-
+        //private readonly Dictionary<string, string> _registeredDevices = new Dictionary<string, string>();
         public bool IsDeviceRegistered([NotNull] CalcLoadTypeDto loadtype, OefcKey key)
         {
+            //var tmpkey = key.HouseholdKey + "#" + key.LocationGuid + "#" + key.DeviceName;
+          //  if (!_registeredDevices.ContainsKey(tmpkey)) {
+                //_registeredDevices.Add(tmpkey, key.DeviceGuid.StrVal);
+            //}
+            //if (  key.DeviceGuid.StrVal != _registeredDevices[tmpkey]) {
+//                throw new LPGException("device registered twice: " + tmpkey);
+  //          }
+
             if (_columnEntriesByLoadTypeByDeviceKey.ContainsKey(loadtype) &&
                 ColumnEntriesByLoadTypeByDeviceKey[loadtype].ContainsKey(key)) {
                 return true;

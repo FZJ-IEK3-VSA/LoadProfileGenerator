@@ -92,7 +92,7 @@ namespace LoadProfileGenerator.Presenters.Households {
         [UsedImplicitly]
         [ItemNotNull]
         [NotNull]
-        public ObservableCollection<Affordance> Affordances => Sim.Affordances.MyItems;
+        public ObservableCollection<Affordance> Affordances => Sim.Affordances.Items;
 
         [UsedImplicitly]
         [NotNull]
@@ -112,12 +112,12 @@ namespace LoadProfileGenerator.Presenters.Households {
         [UsedImplicitly]
         [ItemNotNull]
         [NotNull]
-        public ObservableCollection<Location> AllLocations => Sim.Locations.It;
+        public ObservableCollection<Location> AllLocations => Sim.Locations.Items;
 
         [UsedImplicitly]
         [ItemNotNull]
         [NotNull]
-        public ObservableCollection<Variable> AllVariables => Sim.Variables.It;
+        public ObservableCollection<Variable> AllVariables => Sim.Variables.Items;
 
         [UsedImplicitly]
         [ItemNotNull]
@@ -127,18 +127,18 @@ namespace LoadProfileGenerator.Presenters.Households {
         [UsedImplicitly]
         [ItemNotNull]
         [NotNull]
-        public ObservableCollection<Desire> Desires => Sim.Desires.MyItems;
+        public ObservableCollection<Desire> Desires => Sim.Desires.Items;
 
         [UsedImplicitly]
         [ItemNotNull]
         [NotNull]
         public ObservableCollection<DeviceCategory> DeviceCategories
-            => Sim.DeviceCategories.MyItems;
+            => Sim.DeviceCategories.Items;
 
         [UsedImplicitly]
         [ItemNotNull]
         [NotNull]
-        public ObservableCollection<RealDevice> Devices => Sim.RealDevices.MyItems;
+        public ObservableCollection<RealDevice> Devices => Sim.RealDevices.Items;
 
         [UsedImplicitly]
         public DateTime Endtime {
@@ -166,7 +166,7 @@ namespace LoadProfileGenerator.Presenters.Households {
         [ItemNotNull]
         [NotNull]
         public ObservableCollection<GeographicLocation> GeographicLocations
-            => Sim.GeographicLocations.MyItems;
+            => Sim.GeographicLocations.Items;
 
         [UsedImplicitly]
         [NotNull]
@@ -189,7 +189,7 @@ namespace LoadProfileGenerator.Presenters.Households {
         [UsedImplicitly]
         [ItemNotNull]
         [NotNull]
-        public ObservableCollection<VLoadType> MyVLoadTypes => Sim.LoadTypes.MyItems;
+        public ObservableCollection<VLoadType> MyVLoadTypes => Sim.LoadTypes.Items;
 
         [UsedImplicitly]
         [CanBeNull]
@@ -247,13 +247,13 @@ namespace LoadProfileGenerator.Presenters.Households {
         [ItemNotNull]
         [NotNull]
         public ObservableCollection<SubAffordance> SubAffordances
-            => Sim.SubAffordances.MyItems;
+            => Sim.SubAffordances.Items;
 
         [UsedImplicitly]
         [ItemNotNull]
         [NotNull]
         public ObservableCollection<TemperatureProfile> TemperaturProfiles
-            => Sim.TemperatureProfiles.MyItems;
+            => Sim.TemperatureProfiles.Items;
 
         [NotNull]
         public Affordance ThisAffordance => _aff;
@@ -261,13 +261,13 @@ namespace LoadProfileGenerator.Presenters.Households {
         [UsedImplicitly]
         [ItemNotNull]
         [NotNull]
-        public ObservableCollection<TimeLimit> TimeLimits => Sim.TimeLimits.MyItems;
+        public ObservableCollection<TimeLimit> TimeLimits => Sim.TimeLimits.Items;
 
         [UsedImplicitly]
         [ItemNotNull]
         [NotNull]
         public ObservableCollection<TimeBasedProfile> Timeprofiles
-            => Sim.Timeprofiles.MyItems;
+            => Sim.Timeprofiles.Items;
 
         [UsedImplicitly]
         [ItemNotNull]
@@ -276,7 +276,7 @@ namespace LoadProfileGenerator.Presenters.Households {
 
         public void AddDesire([NotNull] Desire d, decimal satisfactionvalue)
         {
-            _aff.AddDesire(d, satisfactionvalue, Sim.Desires.MyItems);
+            _aff.AddDesire(d, satisfactionvalue, Sim.Desires.Items);
             _aff.SaveToDB();
         }
 
@@ -284,8 +284,8 @@ namespace LoadProfileGenerator.Presenters.Households {
             decimal timeoffset,
             [CanBeNull] VLoadType vLoadType, double probability)
         {
-            _aff.AddDeviceProfile(pdev, tp, timeoffset, Sim.RealDevices.MyItems,
-                Sim.DeviceCategories.MyItems, vLoadType, probability);
+            _aff.AddDeviceProfile(pdev, tp, timeoffset, Sim.RealDevices.Items,
+                Sim.DeviceCategories.Items, vLoadType, probability);
             _aff.SaveToDB();
         }
 
@@ -310,7 +310,7 @@ namespace LoadProfileGenerator.Presenters.Households {
             subaff.Name = "Sub-Affordance for " + _aff.Name;
             subaff.SaveToDB();
             foreach (var desire in _aff.AffordanceDesires) {
-                subaff.AddDesire(desire.Desire, 1, Sim.Desires.It);
+                subaff.AddDesire(desire.Desire, 1, Sim.Desires.Items);
             }
 
             subaff.MinimumAge = _aff.MinimumAge;
@@ -387,14 +387,14 @@ namespace LoadProfileGenerator.Presenters.Households {
             }
 
             ThisAffordance.ImportFromOtherAffordance(SelectedImportAffordance,
-                Sim.Desires.MyItems, Sim.RealDevices.MyItems,
-                Sim.DeviceCategories.MyItems);
+                Sim.Desires.Items, Sim.RealDevices.Items,
+                Sim.DeviceCategories.Items);
         }
 
         public void MakeAffordanceCopy()
         {
             var aff = Sim.Affordances.CreateNewItem(Sim.ConnectionString);
-            aff.ImportFromOtherAffordance(_aff, Sim.Desires.It, Sim.RealDevices.It, Sim.DeviceCategories.It);
+            aff.ImportFromOtherAffordance(_aff, Sim.Desires.Items, Sim.RealDevices.Items, Sim.DeviceCategories.Items);
             aff.SaveToDB();
             ApplicationPresenter.OpenItem(aff);
         }

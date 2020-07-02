@@ -82,10 +82,10 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         public void Refresh()
         {
             _selectedAffordances.Clear();
-            var affordances = Sim.Affordances.MyItems;
+            var affordances = Sim.Affordances.Items;
             foreach (var affordance in affordances) {
                 var found = false;
-                foreach (var householdTrait in Sim.HouseholdTraits.MyItems) {
+                foreach (var householdTrait in Sim.HouseholdTraits.Items) {
                     if (!found) {
                         foreach (var hhLocation in householdTrait.Locations) {
                             if (hhLocation.AffordanceLocations.Any(x => x.Affordance == affordance)) {

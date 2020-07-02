@@ -23,7 +23,7 @@ namespace ReleaseMaker {
             Config.ShowDeleteMessages = false;
             var i = 0;
             const int interval = 100;
-            var comHHToDelete = sim.ModularHouseholds.It.Where(x => x.Name.StartsWith("x ", StringComparison.Ordinal)).ToList();
+            var comHHToDelete = sim.ModularHouseholds.Items.Where(x => x.Name.StartsWith("x ", StringComparison.Ordinal)).ToList();
             Logger.Info("Modular households to be deleted: " + comHHToDelete.Count);
 
             foreach (var modularHousehold in comHHToDelete) {
@@ -35,7 +35,7 @@ namespace ReleaseMaker {
             }
 
             i = 0;
-            var houseToDelete = sim.Houses.It.Where(x => x.Name.StartsWith("(", StringComparison.Ordinal) || x.Name.Contains("Diss")).ToList();
+            var houseToDelete = sim.Houses.Items.Where(x => x.Name.StartsWith("(", StringComparison.Ordinal) || x.Name.Contains("Diss")).ToList();
             Logger.Info("houses to be deleted: " + houseToDelete.Count);
             foreach (var house in houseToDelete) {
                 sim.Houses.DeleteItem(house);
@@ -46,7 +46,7 @@ namespace ReleaseMaker {
             }
 
             i = 0;
-            var vacationsToDelete = sim.Vacations.It.Where(x => x.Name.StartsWith("Diss", StringComparison.Ordinal)).ToList();
+            var vacationsToDelete = sim.Vacations.Items.Where(x => x.Name.StartsWith("Diss", StringComparison.Ordinal)).ToList();
             Logger.Info("vacations to be deleted: " + vacationsToDelete.Count);
             foreach (var vaca in vacationsToDelete) {
                 sim.Vacations.DeleteItem(vaca);
@@ -57,8 +57,8 @@ namespace ReleaseMaker {
             }
 
             i = 0;
-            var settlementsToDelete = sim.Settlements.It.Where(x => x.Name.StartsWith("Dis", StringComparison.Ordinal)).ToList();
-            var settlementsToDelete2 = sim.Settlements.It.Where(x => x.HouseholdCount == 0).ToList();
+            var settlementsToDelete = sim.Settlements.Items.Where(x => x.Name.StartsWith("Dis", StringComparison.Ordinal)).ToList();
+            var settlementsToDelete2 = sim.Settlements.Items.Where(x => x.HouseholdCount == 0).ToList();
             settlementsToDelete.AddRange(settlementsToDelete2);
             Logger.Info("settlements to be deleted: " + settlementsToDelete.Count);
             foreach (var vaca in settlementsToDelete) {
@@ -70,7 +70,7 @@ namespace ReleaseMaker {
             }
 
             i = 0;
-            var settlementsTempsToDelete = sim.SettlementTemplates.It.Where(x => x.Name.StartsWith("Diss", StringComparison.Ordinal)).ToList();
+            var settlementsTempsToDelete = sim.SettlementTemplates.Items.Where(x => x.Name.StartsWith("Diss", StringComparison.Ordinal)).ToList();
             Logger.Info("settlement templates to delete:" + settlementsTempsToDelete.Count);
             foreach (var vaca in settlementsTempsToDelete) {
                 sim.SettlementTemplates.DeleteItem(vaca);
@@ -81,7 +81,7 @@ namespace ReleaseMaker {
             }
 
             i = 0;
-            var datebased = sim.DateBasedProfiles.It.Where(x =>
+            var datebased = sim.DateBasedProfiles.Items.Where(x =>
                 x.Name.StartsWith("Chemnitz, Germany, Total Solar Radition 2013 15 min resolution", StringComparison.Ordinal)).ToList();
             Logger.Info("date based to delete:" + datebased.Count);
             var radiation = sim.DateBasedProfiles.FindFirstByName("Chemnitz, Germany, Total Solar Radiation");

@@ -94,13 +94,13 @@ namespace Database.Tests.Tables.BasicHouseholds {
                 aff.SaveToDB();
                 aff.AffordanceStandbys.Count.Should().Be(1);
                 var sim2 = new Simulator(db.ConnectionString);
-                var loadedAffordance = sim2.Affordances.It[0];
+                var loadedAffordance = sim2.Affordances.Items[0];
                 loadedAffordance.AffordanceStandbys.Count.Should().Be(1);
                 loadedAffordance.AffordanceStandbys[0].Device?.Name.Should().Be("rd2");
                 loadedAffordance.DeleteStandby(loadedAffordance.AffordanceStandbys[0]);
                 loadedAffordance.AffordanceStandbys.Count.Should().Be(0);
                 var sim3 = new Simulator(db.ConnectionString);
-                var affordanceLoaded2 = sim3.Affordances.It[0];
+                var affordanceLoaded2 = sim3.Affordances.Items[0];
                 affordanceLoaded2.AffordanceStandbys.Count.Should().Be(0);
                 db.Cleanup();
             }
@@ -159,13 +159,13 @@ namespace Database.Tests.Tables.BasicHouseholds {
                 aff.SaveToDB();
                 aff.ExecutedVariables.Count.Should().Be(1);
                 var sim2 = new Simulator(db.ConnectionString);
-                var affordanceLoaded = sim2.Affordances.It[0];
+                var affordanceLoaded = sim2.Affordances.Items[0];
                 affordanceLoaded.ExecutedVariables.Count.Should().Be(1);
                 affordanceLoaded.ExecutedVariables[0].Name.Should().Be("var1");
                 affordanceLoaded.DeleteVariableOperation(affordanceLoaded.ExecutedVariables[0]);
                 affordanceLoaded.ExecutedVariables.Count.Should().Be(0);
                 var sim3 = new Simulator(db.ConnectionString);
-                var affordanceLoaded2 = sim3.Affordances.It[0];
+                var affordanceLoaded2 = sim3.Affordances.Items[0];
                 affordanceLoaded2.ExecutedVariables.Count.Should().Be(0);
                 db.Cleanup();
             }

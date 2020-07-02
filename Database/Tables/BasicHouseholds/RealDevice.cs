@@ -270,7 +270,7 @@ namespace Database.Tables.BasicHouseholds {
         public override List<UsedIn> CalculateUsedIns(Simulator sim)
         {
             List<UsedIn> usedIns = new List<UsedIn>();
-            foreach (var affordance in sim.Affordances.It) {
+            foreach (var affordance in sim.Affordances.Items) {
                 foreach (var dev in affordance.AffordanceDevices) {
                     if (dev.Device == this) {
                         usedIns.Add(new UsedIn(affordance,
@@ -284,7 +284,7 @@ namespace Database.Tables.BasicHouseholds {
                     }
                 }
             }
-            foreach (var trait in sim.HouseholdTraits.It) {
+            foreach (var trait in sim.HouseholdTraits.Items) {
                 foreach (var autodev in trait.Autodevs) {
                     if (autodev.Device == this) {
                         usedIns.Add(new UsedIn(trait, "Trait autonomous device"));
@@ -296,7 +296,7 @@ namespace Database.Tables.BasicHouseholds {
                 }
             }
 
-            foreach (var ht in sim.HouseTypes.It) {
+            foreach (var ht in sim.HouseTypes.Items) {
                 foreach (var autodev in ht.HouseDevices) {
                     if (autodev.Device == this) {
                         usedIns.Add(new UsedIn(ht, "Housetype autonomous device"));
@@ -307,7 +307,7 @@ namespace Database.Tables.BasicHouseholds {
                     }
                 }
             }
-            foreach (var da in sim.DeviceActions.It) {
+            foreach (var da in sim.DeviceActions.Items) {
                 if (da.Device == this) {
                     usedIns.Add(new UsedIn(da, "Device Action"));
                     var list = da.CalculateUsedIns(sim);
@@ -333,13 +333,13 @@ namespace Database.Tables.BasicHouseholds {
         [UsedImplicitly]
         public static DBBase ImportFromItem([NotNull] RealDevice item,[NotNull] Simulator dstSim)
         {
-            var dstdc = GetItemFromListByName(dstSim.DeviceCategories.MyItems, item.DeviceCategory?.Name);
+            var dstdc = GetItemFromListByName(dstSim.DeviceCategories.Items, item.DeviceCategory?.Name);
             var rd = new RealDevice(item.Name, item.Year, item.Picture, dstdc, item.Description,
                 item.ForceAllLoadTypesToBeSet, item.IsStandbyDevice,
                 dstSim.ConnectionString, item.Guid);
             rd.SaveToDB();
             foreach (var rdlt in item.Loads) {
-                var newlt = GetItemFromListByName(dstSim.LoadTypes.MyItems, rdlt.LoadType?.Name);
+                var newlt = GetItemFromListByName(dstSim.LoadTypes.Items, rdlt.LoadType?.Name);
                 if (newlt == null) {
                     Logger.Error("Could not find a load type while importing. Skipping");
                     continue;

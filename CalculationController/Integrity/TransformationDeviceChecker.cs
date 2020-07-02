@@ -10,7 +10,7 @@ namespace CalculationController.Integrity {
         }
 
         protected override void Run(Simulator sim) {
-            foreach (var device in sim.TransformationDevices.It) {
+            foreach (var device in sim.TransformationDevices.Items) {
                 foreach (var condition in device.Conditions) {
                     if (condition.Variable == null) {
                         throw new DataIntegrityException("One condition on the transformation device " +
@@ -52,7 +52,7 @@ namespace CalculationController.Integrity {
             }
 
 
-            foreach (var storage in sim.EnergyStorages.It) {
+            foreach (var storage in sim.EnergyStorages.Items) {
                 if (storage.LoadType == null) {
                         throw new DataIntegrityException("Energy storage is missing a load type", storage);
                 }
