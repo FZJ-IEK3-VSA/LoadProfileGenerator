@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 
 namespace ReleaseMaker {
     public class SimEngineCopier : CopierBase {
-        public static void CopySimEngineFiles([NotNull] string src, [NotNull] string dst)
+        public static List<string> CopySimEngineFiles([NotNull] string src, [NotNull] string dst)
         {
             List<string> programFiles = new List<string>();
             Copy(programFiles, src, dst, "Autofac.dll");
@@ -53,6 +53,7 @@ namespace ReleaseMaker {
             Copy(programFiles, src, dst, "System.ValueTuple.dll");
             Copy(programFiles, src, dst, "Utf8Json.dll");
             CheckIfFilesAreCompletelyCopied(src, programFiles);
+            return programFiles;
         }
     }
 }

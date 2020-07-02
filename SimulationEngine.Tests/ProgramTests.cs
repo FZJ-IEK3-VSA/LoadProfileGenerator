@@ -25,6 +25,9 @@ namespace SimulationEngine.Tests {
     [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     public class ProgramTests : UnitTestBaseClass
     {
+
+        
+
         [JetBrains.Annotations.NotNull]
         public static WorkingDir SetupDB3([JetBrains.Annotations.NotNull] string name, bool clearTemplatedFirst = false) {
             var srcPath = DatabaseSetup.GetSourcepath(null);
@@ -389,6 +392,18 @@ namespace SimulationEngine.Tests {
             Assert.Throws<LPGException>(() => MainSimEngine.Run(args.ToArray(), "simulationengine.exe"));
         }
 
+        [Fact]
+        public void TestClearTemplated()
+        {
+            var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
+            Simulator sim = new Simulator(db.ConnectionString);
+            var res1 = sim.FindAndDeleteAllTemplated();
+            var res2 = sim.FindAndDeleteAllTemplated();
+            if (res2 != 0)
+            {
+                throw new LPGException("Found templated");
+            }
+        }
         public ProgramTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }

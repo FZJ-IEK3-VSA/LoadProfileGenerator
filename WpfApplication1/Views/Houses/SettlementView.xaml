@@ -527,6 +527,7 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
@@ -652,13 +653,13 @@
                         </TextBlock>
                         <!--  delete dat files  -->
                         <CheckBox
-                            Grid.Row="8"
+                            Grid.Row="9"
                             Grid.Column="1"
-                            Content="Delete DAT-Files"
-                            IsChecked="{Binding ThisSettlement.DeleteDatFiles}"
+                            Content="Enable Transprotation"
+                            IsChecked="{Binding ThisSettlement.EnableTransportation}"
                             Style="{StaticResource CheckBoxStyle}" />
                         <TextBlock
-                            Grid.Row="9"
+                            Grid.Row="10"
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
                             Style="{StaticResource TextBlockStyle}">
@@ -666,28 +667,28 @@
                             districtprocessor.exe, which is currently under development. So unless you are doing active LPG development, check this option.
                         </TextBlock>
                         <Label
-                            Grid.Row="10"
+                            Grid.Row="11"
                             Grid.Column="0"
                             Content="Internal time resolution"
                             Style="{StaticResource LabelStyle}"
                             Target="{Binding ElementName=CmbInternalTimeResolution}" />
                         <ComboBox
                             Name="CmbInternalTimeResolution"
-                            Grid.Row="10"
+                            Grid.Row="11"
                             Grid.Column="1"
                             IsEditable="True"
                             ItemsSource="{Binding DefaultTimeSteps}"
                             Style="{StaticResource ComboBoxStyle}"
                             Text="{Binding InternalTimeResolution}" />
                         <Label
-                            Grid.Row="11"
+                            Grid.Row="12"
                             Grid.Column="0"
                             Content="External time resolution"
                             Style="{StaticResource LabelStyle}"
                             Target="{Binding ElementName=CmbExternalTimeResolution}" />
                         <ComboBox
                             Name="CmbExternalTimeResolution"
-                            Grid.Row="11"
+                            Grid.Row="12"
                             Grid.Column="1"
                             IsEditable="True"
                             ItemsSource="{Binding ExternalTimeSteps}"
@@ -697,14 +698,14 @@
 
                         <!--  Energy Intensity  -->
                         <Label
-                            Grid.Row="12"
+                            Grid.Row="13"
                             Grid.Column="0"
                             Content="Energy Intensity"
                             Style="{StaticResource LabelStyle}"
                             Target="{Binding ElementName=CmbEnergyIntensity}" />
                         <ComboBox
                             Name="CmbEnergyIntensity"
-                            Grid.Row="12"
+                            Grid.Row="13"
                             Grid.Column="1"
                             ItemsSource="{Binding EnergyIntensities}"
                             SelectedItem="{Binding Path=EnergyIntensity}"
@@ -712,21 +713,21 @@
                         <!--  select result files  -->
 
                         <TextBlock
-                            Grid.Row="14"
+                            Grid.Row="15"
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
                             Style="{StaticResource TextBlockStyle}">
                             <Run Text="Here you can disable the creation of some of the result files to speed up the processing. If the number of choices confuse you, go with one of the presets." />
                         </TextBlock>
                         <Label
-                            Grid.Row="15"
+                            Grid.Row="16"
                             Grid.Column="0"
                             Content="Presets"
                             Style="{StaticResource LabelStyle}"
                             Target="{Binding ElementName=CmbOptionPresets}" />
                         <ComboBox
                             Name="CmbOptionPresets"
-                            Grid.Row="15"
+                            Grid.Row="16"
                             Grid.Column="1"
                             DisplayMemberPath="Value"
                             ItemsSource="{Binding OutputFileDefaults}"
@@ -735,14 +736,14 @@
                             Style="{StaticResource ComboBoxStyle}" />
 
                         <Button
-                            Grid.Row="16"
+                            Grid.Row="17"
                             Grid.Column="1"
                             Click="ApplyOptionDefaultClick"
                             Style="{StaticResource ButtonStyle}">
                             apply preset and overwrite current selection
                         </Button>
                         <Grid
-                            Grid.Row="17"
+                            Grid.Row="18"
                             Grid.Column="0"
                             Grid.ColumnSpan="2">
                             <Grid.ColumnDefinitions>
@@ -796,14 +797,14 @@
                                 Content=" - " />
                         </Grid>
                         <TextBlock
-                            Grid.Row="18"
+                            Grid.Row="19"
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
                             Style="{StaticResource TextBlockStyle}">
                             <Run Text="Sometimes people only want electricity or only warm water for the entire settlement. Here you can select which load type result files should actually be generated.  If you don't select anything, then everything will be processed." />
                         </TextBlock>
                         <StackPanel
-                            Grid.Row="19"
+                            Grid.Row="20"
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
                             HorizontalAlignment="Center"
@@ -817,7 +818,7 @@
                         </StackPanel>
                         <ListView
                             x:Name="LstLoadTypeFilter"
-                            Grid.Row="20"
+                            Grid.Row="21"
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
                             MinHeight="150"
@@ -840,7 +841,7 @@
                             </ListView.View>
                         </ListView>
                         <StackPanel
-                            Grid.Row="34"
+                            Grid.Row="35"
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
                             HorizontalAlignment="Center"

@@ -14,7 +14,7 @@ namespace Automation {
                                      [CanBeNull]DateTime? endDate, [CanBeNull] string? externalTimeResolution, [CanBeNull] string? internalTimeResolution,
                                      [CanBeNull] JsonReference? geographicLocation, LoadTypePriority loadTypePriorityEnum,
                                       [CanBeNull] string? outputDirectory, bool showSettlingPeriod,
-                                     [CanBeNull] DateTime? startDate, [CanBeNull] JsonReference? temperatureProfile
+                                     [CanBeNull] DateTime? startDate, [CanBeNull] JsonReference? temperatureProfile, bool enableTransportation
                                       )
         {
             //CalcObject = calcObject;
@@ -29,6 +29,7 @@ namespace Automation {
             ShowSettlingPeriod = showSettlingPeriod;
             StartDate = startDate;
             TemperatureProfile = temperatureProfile;
+            EnableTransportation = enableTransportation;
         }
 
         public JsonCalcSpecification([NotNull] JsonCalcSpecification o)
@@ -64,6 +65,7 @@ namespace Automation {
                 LoadtypesForPostprocessing.AddRange(o.LoadtypesForPostprocessing);
             }
             DeleteSqlite = o.DeleteSqlite;
+            EnableTransportation = o.EnableTransportation;
         }
 
         [Comment(
@@ -175,14 +177,14 @@ namespace Automation {
         public static JsonCalcSpecification MakeDefaultsForTesting()
         {
             return new JsonCalcSpecification(false,null,new DateTime(2019,1,1),
-                "00:15:00","00:01:00",null,LoadTypePriority.All,null,false,new DateTime(2019,1,1),null);
+                "00:15:00","00:01:00",null,LoadTypePriority.All,null,false,new DateTime(2019,1,1),null,false);
         }
 
         [NotNull]
         public static JsonCalcSpecification MakeDefaultsForProduction()
         {
             return new JsonCalcSpecification( false,  null, new DateTime(2019, 12, 31),
-                null, null, null, LoadTypePriority.All, null, false, new DateTime(2019, 1, 1),null);
+                null, null, null, LoadTypePriority.All, null, false, new DateTime(2019, 1, 1),null, true);
         }
     }
 }

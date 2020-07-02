@@ -1,4 +1,19 @@
-﻿/*using System.IO;
+﻿
+using Automation;
+using FluentAssertions;
+using Xunit;
+
+public class JsonCalcSpecTests {
+    [Fact]
+    public void CheckCopy()
+    {
+        JsonCalcSpecification jc = JsonCalcSpecification.MakeDefaultsForTesting();
+        jc.EnableTransportation = true;
+        var jc2 = new JsonCalcSpecification(jc);
+        jc.Should().BeEquivalentTo(jc2);
+    }
+}
+/*using System.IO;
 
 
 namespace Common.Tests

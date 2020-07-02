@@ -197,6 +197,22 @@ namespace Database.Tables.Houses {
             }
         }
 
+        public bool EnableTransportation
+        {
+            get => _calcSpecification.EnableTransportation;
+            [UsedImplicitly]
+            set
+            {
+                if (_calcSpecification.EnableTransportation == value)
+                {
+                    return;
+                }
+
+                _calcSpecification.EnableTransportation = value;
+                OnPropertyChanged(nameof(EnableTransportation));
+            }
+        }
+
         [NotNull]
         [UsedImplicitly]
         public string Description {
@@ -596,7 +612,7 @@ namespace Database.Tables.Houses {
                 "Results",
                 false,
                 startDate,
-                null);
+                null, true);
             return new Settlement(newname,
                 null,
                 string.Empty,
@@ -1132,8 +1148,38 @@ namespace Database.Tables.Houses {
             }
         }
 
-        public class AgeEntry : INotifyPropertyChanged, IComparable {
+        public class AgeEntry : INotifyPropertyChanged, IComparable, IEquatable<AgeEntry> {
             private int _count;
+
+            public bool Equals(AgeEntry other)
+            {
+                if (ReferenceEquals(null, other)) {
+                    return false;
+                }
+
+                if (ReferenceEquals(this, other)) {
+                    return true;
+                }
+
+                return _count == other._count && MaxAge == other.MaxAge && MinAge == other.MinAge;
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj)) {
+                    return false;
+                }
+
+                if (ReferenceEquals(this, obj)) {
+                    return true;
+                }
+
+                if (obj.GetType() != this.GetType()) {
+                    return false;
+                }
+
+                return Equals((AgeEntry)obj);
+            }
 
             public AgeEntry(int minAge, int maxAge)
             {
@@ -1182,24 +1228,14 @@ namespace Database.Tables.Houses {
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
 
-            public override bool Equals(object obj)
-            {
-                if (ReferenceEquals(this, obj))
-                {
-                    return true;
-                }
-
-                if (ReferenceEquals(obj, null))
-                {
-                    return false;
-                }
-
-                throw new NotImplementedException();
-            }
-
             public override int GetHashCode()
             {
-                throw new NotImplementedException();
+                unchecked {
+                    var hashCode = _count;
+                    hashCode = (hashCode * 397) ^ MaxAge;
+                    hashCode = (hashCode * 397) ^ MinAge;
+                    return hashCode;
+                }
             }
 
             public static bool operator ==([CanBeNull] AgeEntry left, [CanBeNull] AgeEntry right)

@@ -626,7 +626,8 @@ namespace ReleaseMaker
             Logger.Info("### Copying win lpg files");
             var filesForSetup = WinLpgCopier.CopyLpgFiles(srclpg, dstWin);
             const string srcsim = @"C:\Work\LPGDev\SimulationEngine\bin\Debug\net48";
-            SimEngineCopier.CopySimEngineFiles(srcsim, dstWin);
+            var filesForSetup2 = SimEngineCopier.CopySimEngineFiles(srcsim, dstWin);
+
             const string srcsim2 = @"C:\Work\LPGDev\SimEngine2\bin\Release\netcoreapp3.1\win10-x64";
             SimEngine2Copier.CopySimEngine2Files(srcsim2, dstWinCore);
             const string srcsimLinux = @"C:\Work\LPGDev\SimEngine2\bin\Release\netcoreapp3.1\linux-x64";
@@ -701,6 +702,7 @@ namespace ReleaseMaker
                 {
                     Logger.Info("### deleting all templated items");
 #pragma warning restore S2583 // Conditions should not unconditionally evaluate to "true" or to "false" {
+                    sim.FindAndDeleteAllTemplated();
                     var templatedItems = sim.FindAndDeleteAllTemplated();
                     if (templatedItems > 0)
                     {
@@ -721,7 +723,12 @@ namespace ReleaseMaker
                 fileForUpload.Add(MakeZipFile(releasename, dstWin));
                 fileForUpload.Add(MakeZipFile(releasename +"_core", dstWinCore));
                 fileForUpload.Add(MakeZipFile(releasename + "_linux", dstLinux));
-                fileForUpload.Add(MakeSetup(dstWin, releasename,filesForSetup));
+
+                var allSetupFiles = filesForSetup.ToList();
+                allSetupFiles.AddRange(filesForSetup2);
+                allSetupFiles = allSetupFiles.Distinct().ToList();
+
+                fileForUpload.Add(MakeSetup(dstWin, releasename, allSetupFiles));
                 var dstUpload = @"v:\Dropbox\LPGReleases\releases" + releasename + "\\upload";
                 PrepareDirectory(dstUpload);
                 foreach (FileInfo fi in fileForUpload) {
