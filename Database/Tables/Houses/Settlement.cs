@@ -1231,6 +1231,7 @@ namespace Database.Tables.Houses {
             public override int GetHashCode()
             {
                 unchecked {
+                    // ReSharper disable once NonReadonlyMemberInGetHashCode
                     var hashCode = _count;
                     hashCode = (hashCode * 397) ^ MaxAge;
                     hashCode = (hashCode * 397) ^ MinAge;

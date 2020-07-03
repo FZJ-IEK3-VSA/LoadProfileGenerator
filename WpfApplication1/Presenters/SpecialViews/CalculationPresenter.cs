@@ -660,14 +660,23 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
 
         private void RecalcDstPath()
         {
-            DstPath = Path.Combine(GConfig.DestinationPath, AutomationUtili.CleanFileName(_selectedCalcObject?.Name ?? ""));
+            string s1 =  Path.Combine(GConfig.DestinationPath, AutomationUtili.CleanFileName(_selectedCalcObject?.Name ?? ""));
             if (!CalculateTransportation) {
+                DstPath = s1;
                 return;
             }
 
-            string s = " (" + SelectedTravelRouteSet + ", " + SelectedTransportationDeviceSet + ", " + SelectedChargingStationSet + ")";
-            s = AutomationUtili.CleanFileName(s);
-            DstPath += s;
+            if (SelectedCalcObjectType == CalcObjectType.ModularHousehold) {
+                string s = " (" + SelectedTravelRouteSet + ", " + SelectedTransportationDeviceSet + ", " +
+                           SelectedChargingStationSet + ")";
+                s = AutomationUtili.CleanFileName(s);
+                DstPath += s1 + s;
+            }
+            else {
+                string s = " (with transportation)";
+                s = AutomationUtili.CleanFileName(s);
+                DstPath += s1 + s;
+            }
         }
 
         private void RecalcForCalcObject()

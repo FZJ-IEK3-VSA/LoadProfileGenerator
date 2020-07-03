@@ -41,7 +41,7 @@ namespace Database.Tests.Tables.Validation {
         }
 
         [Fact]
-        [Trait(UnitTestCategories.Category,UnitTestCategories.LongTest1)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.LongTest4)]
         public void CalculationOutcomeTest2()
         {
             Config.ShowDeleteMessages = false;

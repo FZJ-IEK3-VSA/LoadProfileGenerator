@@ -1267,7 +1267,11 @@
                     Click="DeleteAllHouseholdTemplates_OnClick"
                     Header="Deletes all household templates"
                     IsEnabled="{Binding IsMenuEnabled}" />
-
+                <MenuItem
+                    Name="Placeworkaroundactivityinallhouseholds"
+                    Click="PutWorkaroundInAllHouseholds"
+                    Header="Place workaround activity in all households"
+                    IsEnabled="{Binding IsMenuEnabled}" />
                 <MenuItem
                     Name="ThrowTestException"
                     Click="ThrowTestException_OnClick"

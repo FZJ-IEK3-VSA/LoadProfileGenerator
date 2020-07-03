@@ -1447,5 +1447,24 @@ namespace LoadProfileGenerator {
 
             Application.Current.Shutdown();
         }
+
+        private void PutWorkaroundInAllHouseholds(object sender, RoutedEventArgs e)
+        {
+            var alltrait = Sim.HouseholdTraits.Items.Where(x => x.Name == "Activity Deficit Workaround").ToList();
+            if (alltrait.Count != 1) {
+                throw new LPGException("didn't find the workaround trait. found " + alltrait.Count+  " traits");
+            }
+
+            var selectedtrait = alltrait[0];
+            foreach (var household in Sim.ModularHouseholds.Items) {
+                foreach (var person in household.AllPersons) {
+                    var persontraits = household.Traits.Where(x => x.DstPerson == person).ToList();
+                    if (persontraits.All(x => x.HouseholdTrait != selectedtrait)) {
+                        household.AddTrait(selectedtrait, ModularHouseholdTrait.ModularHouseholdTraitAssignType.Name, person);
+                        household.SaveToDB();
+                    }
+                }
+            }
+        }
     }
 }

@@ -113,6 +113,8 @@ namespace Database.Helpers {
             Items.CollectionChanged += MyItemsOnCollectionChanged;
         }
 
+        public int Count => Items.Count;
+
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]

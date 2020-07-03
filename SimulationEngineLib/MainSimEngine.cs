@@ -51,7 +51,10 @@ namespace SimulationEngineLib
             //    }
             //}
             //else {
-                Args.InvokeAction(definition, args);
+            if (args.Length == 0) {
+                args = new[] {"--help"};
+            }
+            Args.InvokeAction(definition, args);
             //}
         }
 

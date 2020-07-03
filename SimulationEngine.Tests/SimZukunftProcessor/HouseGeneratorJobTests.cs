@@ -38,7 +38,9 @@ namespace SimulationEngine.Tests.SimZukunftProcessor {
                                          ?.GetJsonReference() ??
                                      throw new LPGException("No Berlin in the DB"),
                 TemperatureProfile = sim.TemperatureProfiles[0].GetJsonReference(),
-                OutputDirectory = wd.Combine("Results")
+                OutputDirectory = wd.Combine("Results"),
+                EnableTransportation = false
+
             };
             var dstDir = wd.Combine("profilegenerator.db3");
             File.Copy(db.FileName, dstDir, true);
@@ -100,7 +102,9 @@ namespace SimulationEngine.Tests.SimZukunftProcessor {
                     HouseData houseData = new HouseData(Guid.NewGuid().ToStrGuid(),
                         "HT01", 10000, 1000, "HouseGeneratorJobHouse");
                     var householdData = new HouseholdData(Guid.NewGuid().ToString(),
-                        "blub", null, null, null, null,
+                        "blub", sim.ChargingStationSets[0].GetJsonReference(),
+                        sim.TransportationDeviceSets[0].GetJsonReference(),
+                        sim.TravelRouteSets[0].GetJsonReference(), null,
                         HouseholdDataSpecificationType.ByHouseholdName);
                     houseData.Households.Add(householdData);
                     householdData.HouseholdNameSpec =
@@ -128,7 +132,9 @@ namespace SimulationEngine.Tests.SimZukunftProcessor {
                     HouseData houseData = new HouseData(Guid.NewGuid().ToStrGuid(),
                         "HT01", 10000, 1000, "HouseGeneratorJobHouse");
                     var householdData = new HouseholdData(Guid.NewGuid().ToString(),
-                        "blub", null, null, null,
+                        "blub", sim.ChargingStationSets[0].GetJsonReference(),
+                        sim.TransportationDeviceSets[0].GetJsonReference(),
+                        sim.TravelRouteSets[0].GetJsonReference(),
                         null, HouseholdDataSpecificationType.ByPersons);
                     houseData.Households.Add(householdData);
                     var persons = new List<PersonData> {
@@ -200,7 +206,9 @@ namespace SimulationEngine.Tests.SimZukunftProcessor {
                     HouseData houseData = new HouseData(Guid.NewGuid().ToStrGuid(),
                         "HT01", 10000, 1000, "HouseGeneratorJobHouse");
                     var householdData = new HouseholdData(Guid.NewGuid().ToString(),
-                        "blub", null, null, null, null,
+                        "blub", sim.ChargingStationSets[0].GetJsonReference(),
+                        sim.TransportationDeviceSets[0].GetJsonReference(),
+                        sim.TravelRouteSets[0].GetJsonReference(),  null,
                         HouseholdDataSpecificationType.ByTemplateName);
                     houseData.Households.Add(householdData);
                     householdData.HouseholdTemplateSpec = new HouseholdTemplateSpecification("CHR01");
@@ -232,7 +240,11 @@ namespace SimulationEngine.Tests.SimZukunftProcessor {
                         "present", "2019", "trafokreis", HouseDefinitionType.HouseData);
                     houseJob.House = houseData;
                     var householdData = new HouseholdData(Guid.NewGuid().ToString(),
-                        "blub", null, null, null, null, HouseholdDataSpecificationType.ByPersons);
+                        "blub", 
+                        sim.ChargingStationSets[0].GetJsonReference(),
+                        sim.TransportationDeviceSets[0].GetJsonReference(),
+                        sim.TravelRouteSets[0].GetJsonReference(),
+                        null, HouseholdDataSpecificationType.ByPersons);
                     houseData.Households.Add(householdData);
                     var persons = new List<PersonData> {
                         new PersonData(30, Gender.Male)
@@ -260,7 +272,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor {
 
 
         [Fact]
-        [Trait(UnitTestCategories.Category, UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.LongTest3)]
         public void HouseJobForHouseTypes()
         {
             //setup
@@ -291,7 +303,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor {
                         HouseCreationAndCalculationJob houseJob = new HouseCreationAndCalculationJob("present", "2019",
                             "trafokreis", HouseDefinitionType.HouseData);
                         houseJob.House = houseData;
-
+                        houseJob.PathToDatabase = db.FileName;
                         houseJob.CalcSpec = new JsonCalcSpecification {
                             DefaultForOutputFiles = OutputFileDefault.Reasonable,
                             StartDate = new DateTime(2017, 1, 1),

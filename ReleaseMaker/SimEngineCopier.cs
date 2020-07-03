@@ -4,6 +4,7 @@ using JetBrains.Annotations;
 
 namespace ReleaseMaker {
     public class SimEngineCopier : CopierBase {
+        [NotNull]
         public static List<string> CopySimEngineFiles([NotNull] string src, [NotNull] string dst)
         {
             List<string> programFiles = new List<string>();

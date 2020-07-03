@@ -30,6 +30,7 @@
 
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Automation;
 using Common;
 using Common.Enums;
@@ -84,7 +85,12 @@ namespace Database.Tests.Tables {
                 using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
                 {
                     Simulator sim = new Simulator(db.ConnectionString);
-                    Settlement sett = sim.Settlements[1];
+                    int idx = 0;
+                    while (sim.Settlements[idx].Households.Any(x => x.CalcObjectType != CalcObjectType.House)) {
+                        idx++;
+                    }
+
+                    Settlement sett = sim.Settlements[idx];
 
                     sett.WriteJsonCalculationSpecs(wd.WorkingDirectory, @"V:\Dropbox\LPGReleases\releases8.6.0\simulationengine.exe");
                 }

@@ -51,7 +51,9 @@ namespace SimulationEngine.Tests {
             hj.House = new HouseData(StrGuid.FromString("houseguid"), "HT01", 1000, 100, "housename");
             hj.House.Households = new List<HouseholdData>();
             var hhd = new HouseholdData("householdid",
-                "householdname", null, null, null, null,
+                "householdname", sim.ChargingStationSets[0].GetJsonReference(),
+                sim.TransportationDeviceSets[0].GetJsonReference(),
+                sim.TravelRouteSets[0].GetJsonReference(), null,
                 HouseholdDataSpecificationType.ByHouseholdName);
             var hh = sim.ModularHouseholds.FindByGuid(guid.ToStrGuid());
             hhd.HouseholdNameSpec = new HouseholdNameSpecification(hh.GetJsonReference());
@@ -851,7 +853,7 @@ namespace SimulationEngine.Tests {
                 hj.CalcSpec.CalcOptions.Add(CalcOption.HouseholdContents);
                 hj.CalcSpec.EndDate = new DateTime(2020,1,3);
                 return hj;
-            }, (x) => CheckElec(x),true);
+            }, (x) => CheckElec(x));
         }
     }
 }

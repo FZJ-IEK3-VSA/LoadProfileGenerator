@@ -12,7 +12,6 @@ using SimulationEngineLib.Other;
 namespace SimulationEngineLib {
     [ArgExceptionBehavior(ArgExceptionPolicy.StandardExceptionHandling)]
     [ArgDescription("The simulation engine command line interface for the generation of new load profiles.")]
-    [TabCompletion]
     //[ArgExample("SimulationEngine  ProgressSettlement -Directory c:\\work -SettlementNumber 1 -SettlementCheck", "", Title = "Check a ")]
     public class CommandProcessor {
 

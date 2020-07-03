@@ -41,6 +41,9 @@ namespace Database.Tests.Tables.Houses {
                 st.AddHouseholdDistribution(1, 1, 0.95, EnergyIntensityType.EnergyIntensive);
                 st.AddHouseholdDistribution(1, 2, 0.05, EnergyIntensityType.EnergySaving);
                 st.AddHouseType(sim.HouseTypes[0]);
+                st.AddChargingStationSet(sim.ChargingStationSets[0]);
+                st.AddTransportationDeviceSet(sim.TransportationDeviceSets[0]);
+                st.AddTravelRouteSet(sim.TravelRouteSets[0]);
                 foreach (var template in sim.HouseholdTemplates.Items)
                 {
                     st.AddHouseholdTemplate(template);
