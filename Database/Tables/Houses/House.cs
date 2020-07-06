@@ -205,13 +205,16 @@ namespace Database.Tables.Houses {
         }
 
         public void AddHousehold([NotNull] ICalcObject hh,
-                                 [CanBeNull] ChargingStationSet chargingstations,
-                                 [CanBeNull] TravelRouteSet travelrouteset, [CanBeNull] TransportationDeviceSet transportationDeviceSet)
+                                 [NotNull] ChargingStationSet chargingstations,
+                                 [NotNull] TravelRouteSet travelrouteset, [NotNull] TransportationDeviceSet transportationDeviceSet)
         {
             if (hh.ConnectionString != ConnectionString) {
                 throw new LPGException("Adding house from another database. This is a bug! Please report.");
             }
 
+            if (chargingstations == null) {
+                throw new LPGException("No charging station was set.");
+            }
             var hd = new HouseHousehold(
                 null, IntID, hh, ConnectionString, hh.Name,
                 System.Guid.NewGuid().ToStrGuid(), transportationDeviceSet, chargingstations, travelrouteset);
@@ -318,22 +321,33 @@ namespace Database.Tables.Houses {
                     continue;
                 }
 
-                ChargingStationSet chargingStations = null;
+                ChargingStationSet chargingStation = null;
                 if (hhh.ChargingStationSet != null) {
-                    chargingStations = GetItemFromListByName(dstSim.ChargingStationSets.Items, hhh.ChargingStationSet.Name);
+                    chargingStation = GetItemFromListByName(dstSim.ChargingStationSets.Items, hhh.ChargingStationSet.Name);
+                }
+                if (chargingStation == null)
+                {
+                    chargingStation = dstSim.ChargingStationSets[0];
                 }
 
-                TravelRouteSet travelRouteSets = null;
+                TravelRouteSet routeSet = null;
                 if (hhh.TravelRouteSet != null) {
-                    travelRouteSets = GetItemFromListByName(dstSim.TravelRouteSets.Items, hhh.TravelRouteSet.Name);
+                    routeSet = GetItemFromListByName(dstSim.TravelRouteSets.Items, hhh.TravelRouteSet.Name);
+                }
+                if(routeSet==null){
+                    routeSet = dstSim.TravelRouteSets[0];
                 }
 
-                TransportationDeviceSet transportationDevices = null;
+                TransportationDeviceSet transportationDeviceSet = null;
                 if (hhh.TravelRouteSet != null) {
-                    transportationDevices = GetItemFromListByName(dstSim.TransportationDeviceSets.Items, hhh.TravelRouteSet.Name);
+                    transportationDeviceSet = GetItemFromListByName(dstSim.TransportationDeviceSets.Items, hhh.TravelRouteSet.Name);
                 }
 
-                house.AddHousehold(hh,  chargingStations, travelRouteSets, transportationDevices);
+                if (transportationDeviceSet == null) {
+                    transportationDeviceSet = dstSim.TransportationDeviceSets[0];
+                }
+
+                house.AddHousehold(hh,  chargingStation, routeSet, transportationDeviceSet);
             }
 
             return house;

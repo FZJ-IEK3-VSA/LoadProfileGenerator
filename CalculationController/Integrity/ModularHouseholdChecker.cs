@@ -262,7 +262,7 @@ namespace CalculationController.Integrity {
                 var classifications = new Dictionary<string,HouseholdTrait>();
                 foreach (var trait in chh.Traits) {
                     if (trait.DstPerson == person.Person) {
-                        if (classifications.ContainsKey(trait.HouseholdTrait.Classification)) {
+                        if (classifications.ContainsKey(trait.HouseholdTrait.Classification)&&!trait.HouseholdTrait.Classification.ToLower().Contains("resting")) {
                             string traits = Environment.NewLine +   classifications[trait.HouseholdTrait.Classification].PrettyName;
                             traits += Environment.NewLine + trait.HouseholdTrait.PrettyName;
                             throw new DataIntegrityException(
@@ -271,7 +271,10 @@ namespace CalculationController.Integrity {
                                 trait.HouseholdTrait.Classification +
                                 ". Please fix:" + traits, chh);
                         }
-                        classifications.Add(trait.HouseholdTrait.Classification, trait.HouseholdTrait);
+
+                        if (!trait.HouseholdTrait.Classification.ToLower().Contains("resting")) {
+                            classifications.Add(trait.HouseholdTrait.Classification, trait.HouseholdTrait);
+                        }
                     }
                 }
             }

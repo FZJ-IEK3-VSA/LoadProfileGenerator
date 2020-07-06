@@ -6,7 +6,6 @@ using Automation.ResultFiles;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using FluentAssertions.Numeric;
-using JetBrains.Annotations;
 
 using Xunit.Abstractions;
 
@@ -96,14 +95,6 @@ namespace Common.Tests {
 
         //private bool _skipEndCleaning;
 
-        [SuppressMessage("ReSharper", "UnusedMember.Global")]
-        public void SkipEndCleaning([CanBeNull] WorkingDir wd)
-        {
-          //  _skipEndCleaning = true;
-            if (wd != null) {
-                wd.SkipCleaning = true;
-            }
-        }
 
         [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "SetUp")]
         protected void SetUp()

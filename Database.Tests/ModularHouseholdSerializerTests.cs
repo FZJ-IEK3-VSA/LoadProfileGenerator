@@ -27,7 +27,7 @@ namespace Database.Tests {
                 using (var wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
                 {
                     Directory.SetCurrentDirectory(wd.WorkingDirectory);
-
+                    wd.SkipCleaning = true;
                     var sim = new Simulator(db.ConnectionString) { MyGeneralConfig = { PerformCleanUpChecks = "true" } };
                     Logger.Info("First hh");
                     for (var i = 0; i < sim.ModularHouseholds.Items.Count && i < 5; i++)
@@ -52,7 +52,7 @@ namespace Database.Tests {
                     Logger.Info("finished");
                     Directory.SetCurrentDirectory(wd.PreviousCurrentDir);
                     db.Cleanup();
-                    wd.CleanUp(1);
+// wd.CleanUp(1);
                 }
             }
         }

@@ -367,7 +367,7 @@ namespace SimulationEngine.Tests {
             sw.WriteLine("[Fact]");
             sw.WriteLine("[Trait(UnitTestCategories.Category, UnitTestCategories.HouseholdTest)]");
 
-            sw.WriteLine("public void TestHouseholdTest" + idx + "(){");
+            sw.WriteLine("public void TestBasicHousehold" + idx + "(){");
             sw.WriteLine("      const string hhguid = \"" + hh.Guid.StrVal + "\";");
             sw.WriteLine("      HouseJobTestHelper.RunSingleHouse(sim => {");
             sw.WriteLine("      var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid);");
@@ -384,7 +384,7 @@ namespace SimulationEngine.Tests {
             sw.WriteLine("[Fact]");
             sw.WriteLine("[Trait(UnitTestCategories.Category, UnitTestCategories.HouseholdsWithTransportation)]");
 
-            sw.WriteLine("public void TestHouseholdTest" + idx + "(){");
+            sw.WriteLine("public void TestHouseholdWithTransport" + idx + "(){");
             sw.WriteLine("      const string hhguid = \"" + hh.Guid.StrVal + "\";");
             sw.WriteLine("      HouseJobTestHelper.RunSingleHouse(sim => {");
             sw.WriteLine(
@@ -583,7 +583,7 @@ namespace SimulationEngine.Tests {
 
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.ManualOnly)]
-        public void GenerateHouseholdTests()
+        public void GenerateSystematicHouseholdTests()
         {
             using var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
@@ -612,7 +612,7 @@ namespace SimulationEngine.Tests {
 
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.ManualOnly)]
-        public void GenerateHouseholdTestsWithTransport()
+        public void GenerateSystematicHouseholdTestsWithTransport()
         {
             using var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
@@ -829,9 +829,8 @@ namespace SimulationEngine.Tests {
                         var deviceNames = dso.DeviceProfiles.Select(x => x.Name).ToList();
                         RowCollection rc = new RowCollection("Devices");
                         foreach (var singleDeviceProfile in dso.DeviceProfiles) {
-                            Logger.Info(singleDeviceProfile.Name + ": " + singleDeviceProfile.Values.Sum());
                             XlsRowBuilder rb = XlsRowBuilder.Start("Name" ,singleDeviceProfile.Name );
-                            rb.Add("Sum", singleDeviceProfile.Values.Sum());
+                            //rb.Add("Sum", singleDeviceProfile.Values.Sum());
                             rc.Add(rb);
                         }
                         XlsxDumper.WriteToXlsx(@"c:\work\devices.xlsx",rc);

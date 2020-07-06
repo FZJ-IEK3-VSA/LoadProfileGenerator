@@ -162,7 +162,9 @@ namespace Database {
             sb.Append("EnergyIntensity").Append(csv).Append(mhh.EnergyIntensityType).AppendLine();
             sb.Append("Geographic Location").Append(csv).AppendLine(sim.GeographicLocations.Items[0].Name);
             sb.Append("Temperature Profile").Append(csv).AppendLine(sim.TemperatureProfiles.Items[0].Name);
-
+            sb.Append("Charging Station Set").Append(csv).AppendLine(sim.ChargingStationSets.Items[0].Name);
+            sb.Append("Travel Route Set").Append(csv).AppendLine(sim.TravelRouteSets.Items[0].Name);
+            sb.Append("Transportation Device Set").Append(csv).AppendLine(sim.TransportationDeviceSets.Items[0].Name);
             var s = "";
             foreach (var tag in mhh.ModularHouseholdTags) {
                 s += tag + csv;
@@ -354,7 +356,21 @@ namespace Database {
                 sim.TemperatureProfiles.FindFirstByName(globalOptions.TemperatureProfileName, FindMode.IgnoreCase);
             house.TemperatureProfile = temperatureProfile;
             house.SaveToDB();
-            house.AddHousehold(mhh,null,null,null);
+            var chargingStationSet = sim.ChargingStationSets.FindFirstByName(globalOptions.ChargingStationSet,FindMode.Partial);
+            var travelRouteSet = sim.TravelRouteSets.FindFirstByName(globalOptions.TravelRouteSet, FindMode.Partial);
+            var transportationDeviceSet = sim.TransportationDeviceSets.FindFirstByName(globalOptions.TransportationDeviceSet, FindMode.Partial);
+            if (chargingStationSet == null) {
+                throw new LPGException("Could not find the charging station set with the name " + globalOptions.ChargingStationSet);
+            }
+            if (travelRouteSet == null)
+            {
+                throw new LPGException("Could not find the travel route set with the name " + globalOptions.TravelRouteSet);
+            }
+            if (transportationDeviceSet == null)
+            {
+                throw new LPGException("Could not find the transportation device set with the name " + globalOptions.TransportationDeviceSet);
+            }
+            house.AddHousehold(mhh, chargingStationSet, travelRouteSet, transportationDeviceSet);
             house.SaveToDB();
             return house;
         }
@@ -426,6 +442,15 @@ namespace Database {
                     break;
                 case "Temperature Profile":
                     go.TemperatureProfileName = s[1];
+                    break;
+                case "Charging Station Set":
+                    go.ChargingStationSet = s[1];
+                    break;
+                case "Travel Route Set":
+                    go.TravelRouteSet = s[1];
+                    break;
+                case "Transportation Device Set":
+                    go.TransportationDeviceSet = s[1];
                     break;
                 case "Tags":
                     for (var i = 1; i < s.Length; i++) {
@@ -548,6 +573,10 @@ namespace Database {
             public List<string> Tags { get; } = new List<string>();
             [CanBeNull]
             public string TemperatureProfileName { get; set; }
+
+            public string ChargingStationSet { get; set; }
+            public string TransportationDeviceSet { get; set; }
+            public string TravelRouteSet { get; set; }
         }
 
         private class SimpleModularHousehold {

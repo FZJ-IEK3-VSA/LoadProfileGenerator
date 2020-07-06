@@ -7,15 +7,19 @@ namespace Automation
 {
 
     public class SingleDeviceProfile {
-        public SingleDeviceProfile(string? name) => Name = name;
+        public SingleDeviceProfile(string? name, string? guid)
+        {
+            Name = name;
+            Guid = guid;
+        }
+
         [Obsolete("json only")]
         public SingleDeviceProfile()
         {
-
         }
 
         public string? Name { get; set; }
-        public List<double> Values { get; set; } = new List<double>();
+        public string? Guid { get; set; }
 
     }
 

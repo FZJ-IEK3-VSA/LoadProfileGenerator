@@ -240,7 +240,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor {
                         "present", "2019", "trafokreis", HouseDefinitionType.HouseData);
                     houseJob.House = houseData;
                     var householdData = new HouseholdData(Guid.NewGuid().ToString(),
-                        "blub", 
+                        "blub",
                         sim.ChargingStationSets[0].GetJsonReference(),
                         sim.TransportationDeviceSets[0].GetJsonReference(),
                         sim.TravelRouteSets[0].GetJsonReference(),

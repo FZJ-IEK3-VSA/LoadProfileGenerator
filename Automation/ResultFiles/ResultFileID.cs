@@ -122,6 +122,7 @@ namespace Automation.ResultFiles {
         JsonTransportDrivingDistance,
         JsonTransportDeviceState,
         JsonTransportDeviceLocation,
-        BodilyActivityJsons
+        BodilyActivityJsons,
+        JsonDeviceProfilesCsv
     }
 }

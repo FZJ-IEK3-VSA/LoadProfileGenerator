@@ -162,7 +162,7 @@ namespace CalculationController.Tests {
             CalculationProfiler cp = new CalculationProfiler();
             cp.StartPart(Utili.GetCurrentMethodAndClass());
             using (var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass())) {
-                SkipEndCleaning(wd1);
+                wd1.SkipCleaning = true;
                 var start = DateTime.Now;
 
                 Logger.Threshold = Severity.Error;

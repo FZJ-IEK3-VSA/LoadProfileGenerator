@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using Automation;
 using Automation.ResultFiles;
 using CalcPostProcessor.Steps;
@@ -48,29 +49,39 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             //if (columns.Count == 0&& p.Key.KeyType == HouseholdKeyType.Household) {
             //    throw new LPGException("Found a household without a single device: " );
             //}
-            foreach (int i in columns) {
+            string header = "";
+            foreach (int i in columns)
+            {
                 var ce = efc.ColumnEntriesByColumn[dstLoadType][i];
-                SingleDeviceProfile sdp = new SingleDeviceProfile(ce.Name + " - " + ce.LocationName + " - " + ce.DeviceGuid);
-                foreach (var efr in p.EnergyFileRows)
-                {
-                    if (!efr.Timestep.DisplayThisStep)
-                    {
-                        continue;
-                    }
-                    sdp.Values.Add(efr.GetValueForSingleCols(i));
-
-                }
+                SingleDeviceProfile sdp = new SingleDeviceProfile(ce.Name + " - " + ce.LocationName + " - " + ce.DeviceGuid,ce.DeviceGuid.StrVal);
                 jrf.DeviceProfiles.Add(sdp);
+                header += ce.DeviceGuid + ",";
             }
-
-            var sumfile = _fft.MakeFile<FileStream>("DeviceProfiles." + dstLoadType.FileName + hhname + ".json",
+            int colLength = efc.ColumnEntriesByColumn[dstLoadType].Count;
+            var deviceProfilecsv = _fft.MakeFile<StreamWriter>("DeviceProfiles." + dstLoadType.FileName + hhname + ".csv",
+                "Device profiles " + dstLoadType.Name + " as CSV file", true,
+                ResultFileID.JsonDeviceProfilesCsv, p.Key.HHKey, TargetDirectory.Results,
+                calcParameters.InternalStepsize, CalcOption.JsonDeviceProfilesIndividualHouseholds,
+                dstLoadType.ConvertToLoadTypeInformation());
+            deviceProfilecsv.WriteLine(header);
+            foreach (var efr in p.EnergyFileRows)
+            {
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < colLength; i++) {
+                    double val = efr.GetValueForSingleCols(i);
+                    sb.Append(val).Append(",");
+                }
+                deviceProfilecsv.WriteLine(sb.ToString());
+            }
+            deviceProfilecsv.Flush();
+            var deviceProfilejson = _fft.MakeFile<FileStream>("DeviceProfiles." + dstLoadType.FileName + hhname + ".json",
                 "Summed up energy profile for all devices for " + dstLoadType.Name + " as JSON file", true,
                 ResultFileID.JsonDeviceProfiles, p.Key.HHKey, TargetDirectory.Results,
                 calcParameters.InternalStepsize, CalcOption.JsonDeviceProfilesIndividualHouseholds,
                 dstLoadType.ConvertToLoadTypeInformation());
-            Utf8Json.JsonSerializer.Serialize(sumfile, jrf);
-// sumfile.Write(JsonConvert.SerializeObject(jrf, Formatting.Indented));
-            sumfile.Flush();
+            Utf8Json.JsonSerializer.Serialize(deviceProfilejson, jrf);
+            // sumfile.Write(JsonConvert.SerializeObject(jrf, Formatting.Indented));
+            deviceProfilejson.Flush();
         }
 
         [NotNull]

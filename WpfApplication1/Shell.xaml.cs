@@ -1450,6 +1450,9 @@ namespace LoadProfileGenerator {
 
         private void PutWorkaroundInAllHouseholds(object sender, RoutedEventArgs e)
         {
+            if (Sim == null) {
+                throw new LPGException("no simulator");
+            }
             var alltrait = Sim.HouseholdTraits.Items.Where(x => x.Name == "Activity Deficit Workaround").ToList();
             if (alltrait.Count != 1) {
                 throw new LPGException("didn't find the workaround trait. found " + alltrait.Count+  " traits");
