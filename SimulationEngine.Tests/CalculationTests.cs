@@ -702,48 +702,48 @@ namespace SimulationEngine.Tests {
             DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Simulator sim = new Simulator(db.ConnectionString);
             {
-                var hj = MakeKenishHouseJob(sim);
+                var hj = MakeKenishHouseJob(sim,1);
             if (hj.CalcSpec == null) {
                 throw new LPGException("was null");
             }
 
-            hj.CalcSpec.OutputDirectory = "TestingData1";
+            //hj.CalcSpec.OutputDirectory = "TestingData1";
             File.WriteAllText("Testingdata1.json", JsonConvert.SerializeObject(hj, Formatting.Indented));
         }
 
             {
-                var hj2 = MakeKenishHouseJob(sim);
+                var hj2 = MakeKenishHouseJob(sim,2);
                 if (hj2.CalcSpec == null) {
                     throw new LPGException("was null");
                 }
-                hj2.CalcSpec.OutputDirectory = "TestingData2";
+               // hj2.CalcSpec.OutputDirectory = "TestingData2";
                 hj2.CalcSpec.InternalTimeResolution = "00:30:00";
                 File.WriteAllText("TestingData2.json", JsonConvert.SerializeObject(hj2, Formatting.Indented));
             }
             {
-                var hj3 = MakeKenishHouseJob(sim);
+                var hj3 = MakeKenishHouseJob(sim,3);
                 if (hj3.CalcSpec == null)
                 {
                     throw new LPGException("was null");
                 }
-                hj3.CalcSpec.OutputDirectory = "TestingData3";
+              //  hj3.CalcSpec.OutputDirectory = "TestingData3";
                 hj3.CalcSpec.EndDate = new DateTime(2020, 12, 31);
                 File.WriteAllText("TestingData3.json", JsonConvert.SerializeObject(hj3, Formatting.Indented));
             }
             {
-                var hj4 = MakeKenishHouseJob(sim);
+                var hj4 = MakeKenishHouseJob(sim,4);
                 if (hj4.CalcSpec == null)
                 {
                     throw new LPGException("was null");
                 }
-                hj4.CalcSpec.OutputDirectory = "TestingData4";
+               // hj4.CalcSpec.OutputDirectory = "TestingData4";
                 hj4.CalcSpec.InternalTimeResolution = "00:30:00";
                 hj4.CalcSpec.EndDate = new DateTime(2020, 12, 31);
                 File.WriteAllText("TestingData4.json", JsonConvert.SerializeObject(hj4, Formatting.Indented));
             }
         }
 
-        private static HouseCreationAndCalculationJob MakeKenishHouseJob(Simulator sim){
+        private static HouseCreationAndCalculationJob MakeKenishHouseJob(Simulator sim, int idx){
             var hj = new HouseCreationAndCalculationJob();
             hj.CalcSpec = JsonCalcSpecification.MakeDefaultsForTesting();
             hj.CalcSpec.StartDate = new DateTime(2020, 1, 1);
@@ -755,6 +755,7 @@ namespace SimulationEngine.Tests {
             hj.CalcSpec.EnableTransportation = true;
             hj.CalcSpec.GeographicLocation = sim.GeographicLocations.FindFirstByName("Berlin", FindMode.Partial).GetJsonReference();
             hj.CalcSpec.DeleteDAT = true;
+            hj.CalcSpec.OutputDirectory = @"f:\forkenish\TestingData" + idx;
             if (hj.CalcSpec.CalcOptions == null) {
                 throw new LPGException("was null");
             }
@@ -852,7 +853,7 @@ namespace SimulationEngine.Tests {
                 hj.CalcSpec.CalcOptions.Add(CalcOption.HouseholdContents);
                 hj.CalcSpec.EndDate = new DateTime(2020,1,3);
                 return hj;
-            }, (x) => CheckElec(x));
+            }, (x) => CheckElec(x),false);
         }
     }
 }
