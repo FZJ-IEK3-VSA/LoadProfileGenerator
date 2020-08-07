@@ -61,6 +61,7 @@ namespace Common.Enums {
             CalcOptionDictionary.Add(CalcOption.JsonHouseholdSumFiles, "Household sum profiles as json");
             CalcOptionDictionary.Add(CalcOption.JsonDeviceProfilesIndividualHouseholds, "Device profiles for individual households as json");
             CalcOptionDictionary.Add(CalcOption.TansportationDeviceJsons, "Jsons for more detailed transportation device modelling.");
+            CalcOptionDictionary.Add(CalcOption.DeviceTaggingSets, "Device Tagging Sets");
         }
 
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
