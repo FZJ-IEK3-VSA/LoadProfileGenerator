@@ -55,5 +55,6 @@
         JsonHouseholdSumFiles,
         JsonDeviceProfilesIndividualHouseholds,
         TansportationDeviceJsons,
+        DeviceTaggingSets
     }
 }

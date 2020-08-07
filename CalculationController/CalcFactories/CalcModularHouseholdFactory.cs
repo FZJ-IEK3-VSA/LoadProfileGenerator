@@ -175,6 +175,9 @@ namespace CalculationController.CalcFactories {
 
                 chh.SetDevices(calcDevices);
                 chh.SetAutoDevs(autodevs);
+                //if (chh.AutoDevs.Count != householdDto.AutoDevices.Count) {
+                    //throw new LPGException("Missing autonomous devices. This is a bug. Please report.");
+                //}
                 //chh.BridgeDays = householdDto.BridgeDays;
                 _caf.SetAllAffordaces(householdDto.Affordances, dtoCalcLocationDict,
                     _calcVariableRepository, calcDevices);

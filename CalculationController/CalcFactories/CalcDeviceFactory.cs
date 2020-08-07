@@ -70,7 +70,7 @@ namespace CalculationController.CalcFactories {
 
                 List<CalcAutoDevProfile> cadps = new List<CalcAutoDevProfile>();
                 foreach (var devProfileDto in autoDevDto.CalcProfiles) {
-                    if (!_loadTypeDictionary.SimulateLoadtype(devProfileDto.LoadtypeGuid)) {
+                    if (_loadTypeDictionary.SimulateLoadtype(devProfileDto.LoadtypeGuid)) {
                         var loadtype = _loadTypeDictionary.GetLoadtypeByGuid(devProfileDto.LoadtypeGuid);
                         CalcProfile cp = MakeCalcProfile(devProfileDto.Profile, _calcRepo.CalcParameters);
                         CalcAutoDevProfile cadp = new CalcAutoDevProfile(cp, loadtype, 1);

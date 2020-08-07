@@ -95,28 +95,26 @@ namespace SimulationEngine.Tests.SimZukunftProcessor {
         {
             //setup
             Logger.Get().StartCollectingAllMessages();
-            using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass())) {
-                Simulator sim = new Simulator(db.ConnectionString);
-                using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass())) {
-                    //housedata
-                    HouseData houseData = new HouseData(Guid.NewGuid().ToStrGuid(),
-                        "HT01", 10000, 1000, "HouseGeneratorJobHouse");
-                    var householdData = new HouseholdData(Guid.NewGuid().ToString(),
-                        "blub", sim.ChargingStationSets[0].GetJsonReference(),
-                        sim.TransportationDeviceSets[0].GetJsonReference(),
-                        sim.TravelRouteSets[0].GetJsonReference(), null,
-                        HouseholdDataSpecificationType.ByHouseholdName);
-                    houseData.Households.Add(householdData);
-                    householdData.HouseholdNameSpec =
-                        new HouseholdNameSpecification(sim.ModularHouseholds[0].GetJsonReference());
-                    HouseCreationAndCalculationJob houseJob =
-                        new HouseCreationAndCalculationJob("present", "2019", "trafokreis",
-                            HouseDefinitionType.HouseData);
-                    houseJob.House = houseData;
+            using DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
+            Simulator sim = new Simulator(db.ConnectionString);
+            using WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
+            //housedata
+            HouseData houseData = new HouseData(Guid.NewGuid().ToStrGuid(),
+                "HT01", 10000, 1000, "HouseGeneratorJobHouse");
+            var householdData = new HouseholdData(Guid.NewGuid().ToString(),
+                "blub", sim.ChargingStationSets[0].GetJsonReference(),
+                sim.TransportationDeviceSets[0].GetJsonReference(),
+                sim.TravelRouteSets[0].GetJsonReference(), null,
+                HouseholdDataSpecificationType.ByHouseholdName);
+            houseData.Households.Add(householdData);
+            householdData.HouseholdNameSpec =
+                new HouseholdNameSpecification(sim.ModularHouseholds[0].GetJsonReference());
+            HouseCreationAndCalculationJob houseJob =
+                new HouseCreationAndCalculationJob("present", "2019", "trafokreis",
+                    HouseDefinitionType.HouseData);
+            houseJob.House = houseData;
 
-                    MakeAndCalculateHouseJob(houseJob, sim, wd, db);
-                }
-            }
+            MakeAndCalculateHouseJob(houseJob, sim, wd, db);
         }
 
         [Fact]
@@ -199,26 +197,25 @@ namespace SimulationEngine.Tests.SimZukunftProcessor {
         {
             //setup
             Logger.Get().StartCollectingAllMessages();
-            using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass())) {
-                Simulator sim = new Simulator(db.ConnectionString);
-                using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass())) {
-                    //housedata
-                    HouseData houseData = new HouseData(Guid.NewGuid().ToStrGuid(),
-                        "HT01", 10000, 1000, "HouseGeneratorJobHouse");
-                    var householdData = new HouseholdData(Guid.NewGuid().ToString(),
-                        "blub", sim.ChargingStationSets[0].GetJsonReference(),
-                        sim.TransportationDeviceSets[0].GetJsonReference(),
-                        sim.TravelRouteSets[0].GetJsonReference(),  null,
-                        HouseholdDataSpecificationType.ByTemplateName);
-                    houseData.Households.Add(householdData);
-                    householdData.HouseholdTemplateSpec = new HouseholdTemplateSpecification("CHR01");
-                    HouseCreationAndCalculationJob houseJob =
-                        new HouseCreationAndCalculationJob("present", "2019", "trafokreis",
-                            HouseDefinitionType.HouseData);
-                    houseJob.House = houseData;
+            using DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
+            Simulator sim = new Simulator(db.ConnectionString);
+            using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass())) {
+                //housedata
+                HouseData houseData = new HouseData(Guid.NewGuid().ToStrGuid(),
+                    "HT01", 10000, 1000, "HouseGeneratorJobHouse");
+                var householdData = new HouseholdData(Guid.NewGuid().ToString(),
+                    "blub", sim.ChargingStationSets[0].GetJsonReference(),
+                    sim.TransportationDeviceSets[0].GetJsonReference(),
+                    sim.TravelRouteSets[0].GetJsonReference(),  null,
+                    HouseholdDataSpecificationType.ByTemplateName);
+                houseData.Households.Add(householdData);
+                householdData.HouseholdTemplateSpec = new HouseholdTemplateSpecification("CHR01");
+                HouseCreationAndCalculationJob houseJob =
+                    new HouseCreationAndCalculationJob("present", "2019", "trafokreis",
+                        HouseDefinitionType.HouseData);
+                houseJob.House = houseData;
 
-                    MakeAndCalculateHouseJob(houseJob, sim, wd, db);
-                }
+                MakeAndCalculateHouseJob(houseJob, sim, wd, db);
             }
         }
 

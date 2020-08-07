@@ -8,6 +8,7 @@ using CalcPostProcessor.Steps;
 using Common;
 using Common.SQLResultLogging;
 using JetBrains.Annotations;
+using Newtonsoft.Json;
 
 namespace CalcPostProcessor.LoadTypeHouseholdSteps {
     public class IndividualHouseholdDeviceProfileJsonProcessor : HouseholdLoadTypeStepBase {
@@ -43,6 +44,8 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             var columns = efc.ColumnEntriesByColumn[p.LoadType].Values.Where(entry => entry.HouseholdKey == key).Select(entry => entry.Column)
                 .ToList();
             var hhname = "." + key ;
+            var taggingSets = Repository.GetDeviceTaggingSets();
+            taggingSets = taggingSets.Where(x => x.LoadTypesForThisSet.Any(y => y.Name == p.LoadType.Name)).ToList();
             var jrf = new JsonDeviceProfiles( calcParameters.InternalStepsize,
                 calcParameters.OfficialStartTime, dstLoadType.Name, dstLoadType.UnitOfSum,
                 dstLoadType.ConvertToLoadTypeInformation());
@@ -53,7 +56,14 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             foreach (int i in columns)
             {
                 var ce = efc.ColumnEntriesByColumn[dstLoadType][i];
-                SingleDeviceProfile sdp = new SingleDeviceProfile(ce.Name + " - " + ce.LocationName + " - " + ce.DeviceGuid,ce.DeviceGuid.StrVal);
+                Dictionary<string, string> tagsBySet = new Dictionary<string, string>();
+                foreach (var set in taggingSets) {
+                    if (set.TagByDeviceName.ContainsKey(ce.Name)) {
+                        tagsBySet.Add(set.Name, set.TagByDeviceName[ce.Name]);
+                    }
+                }
+                SingleDeviceProfile sdp = new SingleDeviceProfile(ce.Name + " - " + ce.LocationName + " - " + ce.DeviceGuid,ce.DeviceGuid.StrVal,
+                    tagsBySet, ce.CalcDeviceDto.DeviceType.ToString());
                 jrf.DeviceProfiles.Add(sdp);
                 header += ce.DeviceGuid + ",";
             }
@@ -74,18 +84,18 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                 deviceProfilecsv.WriteLine(sb.ToString());
             }
             deviceProfilecsv.Flush();
-            var deviceProfilejson = _fft.MakeFile<FileStream>("DeviceProfiles." + dstLoadType.FileName + hhname + ".json",
+            var deviceProfilejson = _fft.MakeFile<StreamWriter>("DeviceProfiles." + dstLoadType.FileName + hhname + ".json",
                 "Summed up energy profile for all devices for " + dstLoadType.Name + " as JSON file", true,
                 ResultFileID.JsonDeviceProfiles, p.Key.HHKey, TargetDirectory.Results,
                 calcParameters.InternalStepsize, CalcOption.JsonDeviceProfilesIndividualHouseholds,
                 dstLoadType.ConvertToLoadTypeInformation());
-            Utf8Json.JsonSerializer.Serialize(deviceProfilejson, jrf);
+            deviceProfilejson.WriteLine(JsonConvert.SerializeObject( jrf,Formatting.Indented));
             // sumfile.Write(JsonConvert.SerializeObject(jrf, Formatting.Indented));
             deviceProfilejson.Flush();
         }
 
         [NotNull]
-        public override List<CalcOption> NeededOptions => new List<CalcOption>() {CalcOption.DetailedDatFiles};
+        public override List<CalcOption> NeededOptions => new List<CalcOption>() {CalcOption.DetailedDatFiles, CalcOption.DeviceTaggingSets};
 
     }
 }

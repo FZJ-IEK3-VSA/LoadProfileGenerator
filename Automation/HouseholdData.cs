@@ -48,6 +48,9 @@ namespace Automation {
         [NotNull]
         [ItemNotNull]
         public List<PersonData> Persons { get; set; } = new List<PersonData>();
+
+        [ItemNotNull]
+        public List<string>? HouseholdTags { get; set; } = new List<string>();
     }
 
     public class HouseholdTemplateSpecification

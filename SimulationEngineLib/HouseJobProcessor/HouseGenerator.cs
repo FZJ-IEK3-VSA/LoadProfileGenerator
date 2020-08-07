@@ -483,16 +483,26 @@ namespace SimulationEngineLib.HouseJobProcessor {
                 var hhs = MakeHousehold(sim, householdData, r);
 
                 var chargingStationSet = sim.ChargingStationSets.FindByJsonReference(householdData.ChargingStationSet);
+                if (chargingStationSet == null) {
+                    throw new LPGPBadParameterException("Could not find charging station set.");
+                }
                 var travelrouteset = sim.TravelRouteSets.FindByJsonReference(householdData.TravelRouteSet);
+                if (travelrouteset == null)
+                {
+                    throw new LPGPBadParameterException("Could not find travel route set.");
+                }
                 var transportationDeviceSet = sim.TransportationDeviceSets.FindByJsonReference(householdData.TransportationDeviceSet);
-                if (householdData.TransportationDistanceModifiers != null &&  travelrouteset != null && householdData.TransportationDistanceModifiers.Count > 0
+                if (householdData.TransportationDistanceModifiers != null  && householdData.TransportationDistanceModifiers.Count > 0
                     ) {
                     Logger.Info("Settings new travel distances for " + hhs.Name + " " + "");
                     travelrouteset = AdjustTravelDistancesBasedOnModifiers(travelrouteset, sim, house,
                         householdData, householdidx++);
                     Logger.Info("Name of the new travel route set to be used is " + travelrouteset.Name);
                 }
-
+                if (transportationDeviceSet == null)
+                {
+                    throw new LPGPBadParameterException("Could not find transportation device set.");
+                }
                 house.AddHousehold(hhs,  chargingStationSet, travelrouteset, transportationDeviceSet);
 
                 //createdHouseholds.Add(hhs);
@@ -751,8 +761,16 @@ namespace SimulationEngineLib.HouseJobProcessor {
                 throw new LPGCommandlineException("Person specification was null");
 
             }
+
+            var templatesWithCorrectTags = sim.HouseholdTemplates.Items.ToList();
+            if (personSpec.HouseholdTags!= null && personSpec.HouseholdTags.Count > 0) {
+                foreach (var tag in personSpec.HouseholdTags) {
+                    //this does an AND filtering
+                    templatesWithCorrectTags = templatesWithCorrectTags.Where(x => x.TemplateTags.Any(y => y.Tag.Classification == tag)).ToList();
+                }
+            }
             List<HouseholdTemplate> templatesWithCorrectPersonCounts =
-                sim.HouseholdTemplates.Items.Where(x => x.Persons.Count == personSpec.Persons.Count).ToList();
+                templatesWithCorrectTags.Where(x => x.Persons.Count == personSpec.Persons.Count).ToList();
 
             //make demanded person profile
             List<PersonCategory> demandedPersonCategories = new List<PersonCategory>();

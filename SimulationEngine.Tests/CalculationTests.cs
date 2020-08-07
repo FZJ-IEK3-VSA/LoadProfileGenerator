@@ -12,6 +12,7 @@ using Common;
 using Common.Enums;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
+using Common.SQLResultLogging.Loggers;
 using Common.Tests;
 using Database;
 using Database.Helpers;
@@ -301,7 +302,7 @@ namespace SimulationEngine.Tests {
                                           bool skipcleaning = false)
         {
             Logger.Get().StartCollectingAllMessages();
-            Logger.Threshold = Severity.Debug;
+            //Logger.Threshold = Severity.Debug;
             using (var wd = new WorkingDir(Utili.GetCallingMethodAndClass())) {
                 wd.SkipCleaning = skipcleaning;
                 using (var db = new DatabaseSetup(Utili.GetCallingMethodAndClass())) {
@@ -322,10 +323,96 @@ namespace SimulationEngine.Tests {
         }
     }
 
+
     [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     public class CalculationTests : UnitTestBaseClass {
         public CalculationTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
+        }
+
+        [Fact]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
+        public void TestIfAllAutonomousDevicesAreInTheResultFiles()
+        {
+            void CheckResults(string path)
+            {
+
+                var srls = new SqlResultLoggingService(path);
+                var keyLogger = new HouseholdKeyLogger(srls);
+                var keys = keyLogger.Load();
+                var hhkey = keys.Single(x => x.KeyType == HouseholdKeyType.Household).HHKey;
+                var hhdtoLogger = new HouseholdDtoLogger(srls);
+                var hhdto = hhdtoLogger.Load(hhkey);
+                Logger.Warning("found " + hhdto.AutoDevices.Count + " autonomous devices");
+                //check device dtos
+                var deviceDefinitionLogger = new CalcDeviceDtoLogger(srls);
+                var deviceDtos = deviceDefinitionLogger.Load(hhkey);
+                var deviceNames = deviceDtos.Select(x => x.Name).ToList();
+                foreach (var hhdevdto in hhdto.DeviceDtos) {
+                    if(!deviceNames.Contains(hhdevdto.Name))
+                    {
+                        throw new LPGException("Missing device");
+                    }
+                }
+                //autodevs
+                var autodevlogger = new CalcAutoDevDtoLogger(srls);
+                var autoDevDtos = autodevlogger.Load(hhkey);
+                var autoDeviceNames = autoDevDtos.Select(x => x.Name).ToList();
+                foreach (var autodevdto in hhdto.AutoDevices)
+                {
+                    if (!autoDeviceNames.Contains(autodevdto.Name))
+                    {
+                        throw new LPGException("Missing auto device");
+                    }
+                }
+                //device activations
+
+                var deviceActivaitonLogger = new DeviceActivationEntryLogger(srls);
+                var deviceActivations = deviceActivaitonLogger.Read(hhkey);
+                var activatedDevices = deviceActivations.Select(x => 
+                    x.DeviceName).Distinct();
+                foreach (var deviceName in deviceNames) {
+                    if (!activatedDevices.Contains(deviceName)) {
+                        Logger.Warning("Device " + deviceName+ " was never activated");
+                    }
+                }
+
+                int neverActivatedAutoDevs = 0;
+                foreach (var deviceName in autoDeviceNames)
+                {
+                    if (!activatedDevices.Contains(deviceName))
+                    {
+                        Logger.Warning("Auto Device " + deviceName + " was never activated");
+                        neverActivatedAutoDevs++;
+                    }
+                }
+
+                if (neverActivatedAutoDevs == autoDeviceNames.Count) {
+                    throw new LPGException("Not a single autodev was ever activated");
+                }
+            }
+            const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
+            const CalcOption co = CalcOption.JsonDeviceProfilesIndividualHouseholds;
+            Logger.Threshold = Severity.Warning;
+            HouseJobTestHelper.RunSingleHouse((sim) => {
+                var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim, hhguid);
+                //hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.All;
+                if(hj.CalcSpec == null) {
+                    throw new LPGException("was null");
+                }
+
+                hj.CalcSpec.StartDate = new DateTime(2020, 1, 1);
+                hj.CalcSpec.EndDate = new DateTime(2020,3,31);
+                if (hj.CalcSpec.CalcOptions == null) {
+                    throw new LPGException("was null");
+                }
+
+                hj.CalcSpec.CalcOptions.Add(co);
+                hj.CalcSpec.CalcOptions.Add(CalcOption.HouseholdContents);
+                hj.CalcSpec.CalcOptions.Add(CalcOption.DeviceActivations);
+
+                return hj;
+            }, CheckResults, true);
         }
 
         private static void WriteCalcOptionFunction(StreamWriter sw, CalcOption option, ModularHousehold hh)
@@ -853,7 +940,7 @@ namespace SimulationEngine.Tests {
                 hj.CalcSpec.CalcOptions.Add(CalcOption.HouseholdContents);
                 hj.CalcSpec.EndDate = new DateTime(2020,1,3);
                 return hj;
-            }, (x) => CheckElec(x),false);
+            }, (x) => CheckElec(x));
         }
     }
 }

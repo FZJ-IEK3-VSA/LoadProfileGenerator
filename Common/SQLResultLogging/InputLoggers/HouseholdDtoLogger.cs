@@ -1,4 +1,5 @@
-﻿using Automation;
+﻿using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using Common.CalcDto;
 using JetBrains.Annotations;
@@ -24,6 +25,16 @@ namespace Common.SQLResultLogging.InputLoggers
                 throw new LPGException("Data Logger was null.");
             }
             Srls.SaveResultEntry(se);
+        }
+
+        public CalcHouseholdDto Load([NotNull] HouseholdKey key)
+        {
+            if (Srls == null)
+            {
+                throw new LPGException("Data Logger was null.");
+            }
+            var allhhs= Srls.ReadFromJson<CalcHouseholdDto>(ResultTableDefinition, key, ExpectedResultCount.OneOrMore);
+            return allhhs.Single(x => x.HouseholdKey == key);
         }
     }
 }

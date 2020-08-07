@@ -21,7 +21,7 @@ using Database;
 using Database.Tests;
 using FluentAssertions;
 using JetBrains.Annotations;
-
+using Newtonsoft.Json;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -137,6 +137,28 @@ namespace CalculationController.Tests.Transportation {
             var devices1 = dto1.DeviceDtos.Select(x => x.Name).ToList();
             var devices2 = dto2.DeviceDtos.Select(x => x.Name).ToList();
             devices1.Should().BeEquivalentTo(devices2);
+        }
+
+        [Fact]
+        [SuppressMessage("ReSharper", "UnusedVariable")]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.BasicTest)]
+        public void TestSavingAndLoadingHouseholdDto()
+        {
+            using var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass() + "1");
+            using var db1 = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
+            var dto1 = MakeSingleFactory(wd1, db1);
+            HouseholdDtoLogger hdl = new HouseholdDtoLogger(wd1.SqlResultLoggingService);
+            HouseholdKeyLogger hkl = new HouseholdKeyLogger(wd1.SqlResultLoggingService);
+            var json = JsonConvert.SerializeObject(dto1, Formatting.Indented);
+             var keys = hkl.Load();
+             foreach (var key in keys) {
+                 if (key.KeyType != HouseholdKeyType.Household) {
+                     continue;
+                 }
+
+                 var loadeddto = hdl.Load(key.HHKey);
+                 loadeddto.Should().BeEquivalentTo(dto1);
+             }
         }
 
 

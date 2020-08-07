@@ -507,7 +507,7 @@ public void TestHouseJobsSumProfileExternalIndividualHouseholdsAsJson(){
       HouseJobTestHelper.RunSingleHouse((sim) => {
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim, hhguid);
       hj.CalcSpec.CalcOptions.Add(co); return hj;
-      }, (x) => HouseJobTestHelper.CheckForResultfile(x, co));
+      }, (x) => HouseJobTestHelper.CheckForResultfile(x, co),true);
 }
 
 
@@ -638,6 +638,7 @@ public void TestHouseJobsJsonDeviceProfilesIndividualHouseholds(){
       const CalcOption co = CalcOption.JsonDeviceProfilesIndividualHouseholds;
       HouseJobTestHelper.RunSingleHouse((sim) => {
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim, hhguid);
+      //hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.All;
       hj.CalcSpec.CalcOptions.Add(co); return hj;
       }, (x) => HouseJobTestHelper.CheckForResultfile(x, co),true);
 }

@@ -159,7 +159,7 @@ namespace CalculationController.CalcFactories
                         throw new LPGException("The type " + csps.CalcTarget.GetType() + " is missing!");
                     }
 
-                    if (calcRepo.CalcParameters.Options.Contains(CalcOption.HouseholdContents)) {
+                    if (calcRepo.CalcParameters.Options.Contains(CalcOption.DeviceTaggingSets)) {
                         calcRepo.InputDataLogger.Save(Constants.GeneralHouseholdKey,
                             devicetaggingSets.AllCalcDeviceTaggingSets);
                     }

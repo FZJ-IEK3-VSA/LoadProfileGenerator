@@ -114,7 +114,7 @@
       <Name>Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\Database.Tests\Database.Tests.csproj">
-      <Project>{b0a80b62-afab-4651-9e56-864bde71c0f3}</Project>
+      <Project>{B0A80B62-AFAB-4651-9E56-864BDE71C0F3}</Project>
       <Name>Database.Tests</Name>
     </ProjectReference>
     <ProjectReference Include="..\Database\Database.csproj">

@@ -306,6 +306,8 @@ namespace CalculationEngine.HouseholdElements {
 
         public HouseholdKey HouseholdKey => _householdKey;
 
+        public List<CalcAutoDev> AutoDevs => _autoDevs;
+
         //public Dictionary<int, CalcProfile> AllProfiles => _allProfiles;
 
         public void Init(DayLightStatus daylightArray,

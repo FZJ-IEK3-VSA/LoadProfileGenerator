@@ -354,13 +354,15 @@ namespace Common {
             if (Config.IsInUnitTesting&&OutputHelper == null && !Config.OutputToConsole) {
                 throw new LPGException("no output helper even thoug we are in unit testing based on config");
             }
-            if(OutputHelper!= null) {
-                OutputHelper.WriteLine(message);
+            if (severity <= Threshold)
+            {
+                if (OutputHelper!= null) {
+                    OutputHelper.WriteLine(message);
+                }
+                else {
+                    Console.WriteLine(message);
+                }
             }
-            else {
-                Console.WriteLine(message);
-            }
-
             if (LogToFile) {
                 try {
                     var logfilename = GetFilename(severity, true);

@@ -33,7 +33,8 @@ namespace SimulationEngineLib
                 WriteJsonRefs(sim.ChargingStationSets.Items.Select(x => (DBBase)x).ToList(), sw, "ChargingStationSets");
                 WriteJsonRefs(sim.TravelRouteSets.Items.Select(x => (DBBase)x).ToList(), sw, "TravelRouteSets");
                 WriteJsonRefs(sim.Houses.Items.Select(x => (DBBase)x).ToList(), sw, "Houses");
-                sw.Close();
+                WriteNames(sim.HouseholdTags.Items.Select(x => (DBBase)x).ToList(), sw, "HouseholdTags");
+            sw.Close();
             }
 
             private static void WriteJsonRefs([NotNull] List<DBBase> items, [NotNull] StreamWriter sw, string classname)
@@ -88,6 +89,17 @@ namespace SimulationEngineLib
                     s1 = s1.Replace("__", "_");
                 }
 
+                while (char.IsDigit(s1[0]) && s1.Length > 0) {
+                    s1 = s1.Substring(1);
+                }
+
+                while (s1[0] == '_' && s1.Length > 0)
+                {
+                    s1 = s1.Substring(1);
+                }
+            if (s1.Length == 0) {
+                    throw new LPGException("Completely annihilated name:" + name);
+                }
                 return s1;
             }
 

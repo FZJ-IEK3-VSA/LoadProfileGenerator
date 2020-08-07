@@ -24,7 +24,7 @@ namespace Common {
             _lastDirectory= InitializeWorkingDirectory(testname, useRamdisk);
             Logger.Get().ClearOldErrors();
             Logger.SetLogFilePath( Path.Combine(_lastDirectory, "Log.Unittest.txt"));
-            Logger.Threshold = Severity.Debug;
+            //Logger.Threshold = Severity.Debug;
             InitializeDataLogging();
             GC.Collect();
             GC.WaitForPendingFinalizers();

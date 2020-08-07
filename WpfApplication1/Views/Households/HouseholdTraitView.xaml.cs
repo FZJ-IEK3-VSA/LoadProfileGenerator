@@ -57,7 +57,7 @@ namespace LoadProfileGenerator.Views.Households {
         }
 
         [NotNull]
-        private HouseholdTraitPresenter Presenter => (HouseholdTraitPresenter) DataContext;
+        private HouseholdTraitPresenter Presenter => (HouseholdTraitPresenter)DataContext;
 
         private void AddNewTagClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
         {
@@ -87,7 +87,7 @@ namespace LoadProfileGenerator.Views.Households {
                 return;
             }
 
-            Presenter.AddLocation((Location) CmbLocations.SelectedItem);
+            Presenter.AddLocation((Location)CmbLocations.SelectedItem);
         }
 
         private void BtnAddNewAffordanceClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
@@ -101,7 +101,7 @@ namespace LoadProfileGenerator.Views.Households {
             }
 
             Presenter.AddAffordanceToLocation();
-            var hhl = (HHTLocation) CmbNewAffLocation.SelectedItem;
+            var hhl = (HHTLocation)CmbNewAffLocation.SelectedItem;
             TreeNewAffordances.SelectItem(hhl, true);
         }
 
@@ -122,22 +122,22 @@ namespace LoadProfileGenerator.Views.Households {
                 return;
             }
 
-            var d = (Desire) CmbDesires.SelectedItem;
-            var healthString = (string) CmbHealthStatus.SelectedItem;
+            var d = (Desire)CmbDesires.SelectedItem;
+            var healthString = (string)CmbHealthStatus.SelectedItem;
             var weight = Utili.ConvertToDecimalWithMessage(TxtWeight.Text);
             var decayTime = Utili.ConvertToDecimalWithMessage(TxtDecayRate.Text);
             var threshold = Utili.ConvertToDecimalWithMessage(TxtThreshold.Text);
             var minAge = Utili.ConvertToIntWithMessage(TxtMinAge.Text);
             var maxAge = Utili.ConvertToIntWithMessage(TxtMaxAge.Text);
             threshold /= 100;
-            var gender = (PermittedGender) CmbPermittedGender.SelectedItem;
+            var gender = (PermittedGender)CmbPermittedGender.SelectedItem;
             Presenter.AddDesire(d, decayTime, healthString, threshold, weight, minAge, maxAge, gender);
         }
 
         private void BtnAddTagClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
         {
             if (CmbTags.SelectedItem != null) {
-                var tag = (TraitTag) CmbTags.SelectedItem;
+                var tag = (TraitTag)CmbTags.SelectedItem;
                 Presenter.AddTag(tag);
 
                 HHTTags.ResizeColummns();
@@ -151,7 +151,7 @@ namespace LoadProfileGenerator.Views.Households {
                 return;
             }
 
-            var trait = (HouseholdTrait) CmbTraits.SelectedItem;
+            var trait = (HouseholdTrait)CmbTraits.SelectedItem;
             Presenter.ThisHouseholdTrait.AddTrait(trait);
             LstTraits.ResizeColummns();
         }
@@ -162,12 +162,9 @@ namespace LoadProfileGenerator.Views.Households {
                 return;
             }
 
-            if (
-                MessageWindowHandler.Mw.ShowYesNoMessage(
-                    "This will import everything from the household trait " +
-                    Presenter.SelectedImportHouseholdTrait.Name +
-                    ". If this household trait isn't empty, this will most likely result in quite a mess. Are you sure?",
-                    "Sure?") ==
+            if (MessageWindowHandler.Mw.ShowYesNoMessage(
+                    "This will import everything from the household trait " + Presenter.SelectedImportHouseholdTrait.Name +
+                    ". If this household trait isn't empty, this will most likely result in quite a mess. Are you sure?", "Sure?") ==
                 LPGMsgBoxResult.No) {
                 return;
             }
@@ -210,8 +207,8 @@ namespace LoadProfileGenerator.Views.Households {
             LstHealthyDesires.ResizeColummns();
         }
 
-        private void BtnRefreshAffordanceForAddingClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
-            => Presenter.RefreshRelevantAffordancesForAdding();
+        private void BtnRefreshAffordanceForAddingClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e) =>
+            Presenter.RefreshRelevantAffordancesForAdding();
 
         private void BtnRefreshHouseholds_Click([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e) =>
             Presenter.RefreshUses();
@@ -222,7 +219,7 @@ namespace LoadProfileGenerator.Views.Households {
                 return;
             }
 
-            Presenter.RemoveLocation((HHTLocation) HHTLocations.SelectedItem);
+            Presenter.RemoveLocation((HHTLocation)HHTLocations.SelectedItem);
         }
 
         private void BtnRemoveNewAffordanceClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
@@ -245,14 +242,14 @@ namespace LoadProfileGenerator.Views.Households {
                 return;
             }
 
-            var hhtDesire = (HHTDesire) LstHealthyDesires.SelectedItem;
+            var hhtDesire = (HHTDesire)LstHealthyDesires.SelectedItem;
             Presenter.RemoveDesire(hhtDesire);
         }
 
         private void BtnRemoveTagClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
         {
             if (HHTTags.SelectedItem != null) {
-                var tag = (HHTTag) HHTTags.SelectedItem;
+                var tag = (HHTTag)HHTTags.SelectedItem;
                 Presenter.ThisHouseholdTrait.DeleteHHTTag(tag);
             }
         }
@@ -263,12 +260,12 @@ namespace LoadProfileGenerator.Views.Households {
                 return;
             }
 
-            var trait = (HHTTrait) LstTraits.SelectedItem;
+            var trait = (HHTTrait)LstTraits.SelectedItem;
             Presenter.ThisHouseholdTrait.DeleteHHTTrait(trait);
         }
 
-        private void BtnShowOtherPossibleDesireClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
-            => Presenter.ShowOtherPossibleDesires();
+        private void BtnShowOtherPossibleDesireClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e) =>
+            Presenter.ShowOtherPossibleDesires();
 
         private void BtnSwapLocationClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
         {
@@ -280,15 +277,13 @@ namespace LoadProfileGenerator.Views.Households {
                 return;
             }
 
-            var newlocation = (Location) CmbLocations.SelectedItem;
-            var hhtLocation = (HHTLocation) HHTLocations.SelectedItem;
+            var newlocation = (Location)CmbLocations.SelectedItem;
+            var hhtLocation = (HHTLocation)HHTLocations.SelectedItem;
             var newhhtl = Presenter.AddLocation(newlocation);
             foreach (var affordance in hhtLocation.AffordanceLocations) {
                 if (affordance.Affordance != null) {
-                    Presenter.ThisHouseholdTrait.AddAffordanceToLocation(newhhtl, affordance.Affordance,
-                        affordance.TimeLimit,
-                        affordance.Weight, Presenter.StartMinusTime, Presenter.StartPlusTime, Presenter.EndMinusTime,
-                        Presenter.EndPlusTime);
+                    Presenter.ThisHouseholdTrait.AddAffordanceToLocation(newhhtl, affordance.Affordance, affordance.TimeLimit, affordance.Weight,
+                        Presenter.StartMinusTime, Presenter.StartPlusTime, Presenter.EndMinusTime, Presenter.EndPlusTime);
                 }
             }
 
@@ -296,9 +291,8 @@ namespace LoadProfileGenerator.Views.Households {
             var olddevs = Presenter.ThisHouseholdTrait.Autodevs.ToList();
             foreach (var autodev in olddevs) {
                 if (autodev.Location == hhtLocation.Location && autodev.Device != null) {
-                    Presenter.ThisHouseholdTrait.AddAutomousDevice(autodev.Device, autodev.TimeProfile,
-                        autodev.TimeStandardDeviation, autodev.LoadType, autodev.TimeLimit, newlocation,
-                        autodev.VariableValue, autodev.VariableCondition, autodev.Variable);
+                    Presenter.ThisHouseholdTrait.AddAutomousDevice(autodev.Device, autodev.TimeProfile, autodev.TimeStandardDeviation,
+                        autodev.LoadType, autodev.TimeLimit, newlocation, autodev.VariableValue, autodev.VariableCondition, autodev.Variable);
                     Presenter.ThisHouseholdTrait.DeleteHHTAutonomousDeviceFromDB(autodev);
                 }
             }
@@ -312,7 +306,7 @@ namespace LoadProfileGenerator.Views.Households {
 
             var sim = Presenter.Sim;
             var uses = Presenter.ThisHouseholdTrait.CalculateUsedIns(sim);
-            var replacement = (HouseholdTrait) CmbReplacementTrait.SelectedItem;
+            var replacement = (HouseholdTrait)CmbReplacementTrait.SelectedItem;
             var count = 0;
             foreach (var usedIn in uses) {
                 if (usedIn.Item is ModularHousehold chh) {
@@ -344,8 +338,7 @@ namespace LoadProfileGenerator.Views.Households {
 
         private void CloseClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e) => Presenter.Close(true);
 
-        private void CmbClassification_OnLostFocus([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
-            => Presenter.RefreshClassifications();
+        private void CmbClassification_OnLostFocus([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e) => Presenter.RefreshClassifications();
 
         private void CmbTags_OnKeyUp([CanBeNull] object sender, [CanBeNull] KeyEventArgs e)
         {
@@ -354,17 +347,16 @@ namespace LoadProfileGenerator.Views.Households {
             }
 
             if (e.Key == Key.Enter && CmbTags.SelectedItem != null) {
-                var tag = (TraitTag) CmbTags.SelectedItem;
+                var tag = (TraitTag)CmbTags.SelectedItem;
                 Presenter.AddTag(tag);
                 HHTTags.ResizeColummns();
             }
         }
 
-        private void Delete_Click([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
-            => Presenter.AskDeleteQuestion(Presenter.ThisHouseholdTrait.HeaderString, Presenter.Delete);
+        private void Delete_Click([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e) =>
+            Presenter.AskDeleteQuestion(Presenter.ThisHouseholdTrait.HeaderString, Presenter.Delete);
 
-        private void DeviceSelectorControl_OnOnAddedDevice([CanBeNull] object sender,
-            [CanBeNull] DeviceSelectorControl.DeviceAddedEventArgs e)
+        private void DeviceSelectorControl_OnOnAddedDevice([CanBeNull] object sender, [CanBeNull] DeviceSelectorControl.DeviceAddedEventArgs e)
         {
             if (!CheckCombobox(AutoDevs.AssignableDevice, "Device")) {
                 return;
@@ -378,8 +370,7 @@ namespace LoadProfileGenerator.Views.Households {
                 return;
             }
 
-            if (AutoDevs.SelectedDeviceType == AssignableDeviceType.Device ||
-                AutoDevs.SelectedDeviceType == AssignableDeviceType.DeviceCategory) {
+            if (AutoDevs.SelectedDeviceType == AssignableDeviceType.Device || AutoDevs.SelectedDeviceType == AssignableDeviceType.DeviceCategory) {
                 if (!CheckCombobox(AutoDevs.TimeBasedProfile, "TimeBasedProfile")) {
                     return;
                 }
@@ -390,14 +381,14 @@ namespace LoadProfileGenerator.Views.Households {
             }
 
             var adev = AutoDevs.AssignableDevice;
-            if(adev == null) {
+            if (adev == null) {
                 throw new LPGException("Bug: adev should never be null");
             }
 
             var tp = AutoDevs.TimeBasedProfile;
             var timeStandardDeviation = AutoDevs.TimeDeviation;
             var vlt = AutoDevs.LoadType;
-            var loc = (Location) AutoDevs.Location;
+            var loc = (Location)AutoDevs.Location;
             var timeLimit = AutoDevs.TimeLimit;
             if (timeLimit == null) {
                 Logger.Error("Time Limit was null, not adding");
@@ -410,8 +401,8 @@ namespace LoadProfileGenerator.Views.Households {
             Presenter.AddAutoDev(adev, tp, timeStandardDeviation, vlt, timeLimit, loc, variableValue, tc, variable);
         }
 
-        private void EstimateButton_OnClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
-            => Presenter.ThisHouseholdTrait.CalculateEstimatedTimes();
+        private void EstimateButton_OnClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e) =>
+            Presenter.ThisHouseholdTrait.CalculateEstimatedTimes();
 
         private void HHTTags_OnMouseDoubleClick([CanBeNull] object sender, [CanBeNull] MouseButtonEventArgs e)
         {
@@ -419,7 +410,7 @@ namespace LoadProfileGenerator.Views.Households {
                 return;
             }
 
-            var tag = (HHTTag) HHTTags.SelectedItem;
+            var tag = (HHTTag)HHTTags.SelectedItem;
             Presenter.ApplicationPresenter.OpenItem(tag.Tag);
         }
 
@@ -429,18 +420,17 @@ namespace LoadProfileGenerator.Views.Households {
                 return;
             }
 
-            var hhtDesire = (HHTDesire) LstHealthyDesires.SelectedItem;
+            var hhtDesire = (HHTDesire)LstHealthyDesires.SelectedItem;
             Presenter.ApplicationPresenter.OpenItem(hhtDesire.Desire);
         }
 
-        private void LstHealthyDesires_OnSelectionChanged([CanBeNull] object sender,
-            [CanBeNull] SelectionChangedEventArgs e)
+        private void LstHealthyDesires_OnSelectionChanged([CanBeNull] object sender, [CanBeNull] SelectionChangedEventArgs e)
         {
             if (LstHealthyDesires.SelectedItem == null) {
                 return;
             }
 
-            var hhtd = (HHTDesire) LstHealthyDesires.SelectedItem;
+            var hhtd = (HHTDesire)LstHealthyDesires.SelectedItem;
             Presenter.SelectedDecayRate = hhtd.DecayTime;
             Presenter.SelectedDesire = hhtd.Desire;
             Presenter.SelectedHealthStatus = hhtd.HealthStatus;
@@ -458,7 +448,7 @@ namespace LoadProfileGenerator.Views.Households {
             }
 
             var o = LstTraitUsedBy.SelectedItem;
-            var ui = (UsedIn) o;
+            var ui = (UsedIn)o;
 
             Presenter.ApplicationPresenter.OpenItem(ui.Item);
         }
@@ -466,12 +456,10 @@ namespace LoadProfileGenerator.Views.Households {
         private void MakeTraitCopyOnClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e) =>
             Presenter.CreateNewTrait();
 
-        private void TreeNewAffordances_OnMouseDoubleClick([CanBeNull] object sender,
-            [CanBeNull] MouseButtonEventArgs e)
-            => Presenter.ApplicationPresenter.OpenItem(Presenter.SelectedAffordance);
+        private void TreeNewAffordances_OnMouseDoubleClick([CanBeNull] object sender, [CanBeNull] MouseButtonEventArgs e) =>
+            Presenter.ApplicationPresenter.OpenItem(Presenter.SelectedAffordance);
 
-        private void TreeNewAffordancesSelectedItemChanged([CanBeNull] object sender,
-            [CanBeNull] RoutedPropertyChangedEventArgs<object> e)
+        private void TreeNewAffordancesSelectedItemChanged([CanBeNull] object sender, [CanBeNull] RoutedPropertyChangedEventArgs<object> e)
         {
             if (e == null) {
                 return;
@@ -516,13 +504,15 @@ namespace LoadProfileGenerator.Views.Households {
 #pragma warning disable CC0068 // Unused Method
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         private void AutoDevs_Loaded([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
-            => AutoDevs.Simulator = Presenter.ApplicationPresenter.Simulator;
+        {
+            AutoDevs.Simulator = Presenter.ApplicationPresenter.Simulator;
+            AutoDevs.OpenItem = Presenter.ApplicationPresenter.OpenItem;
+        }
 
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         private void AutoDevs_OnOnRemovedDevice([NotNull] object sender, [NotNull] DeviceSelectorControl.DeviceRemovedEventArgs e)
         {
-            if (!(e.ItemToRemove is HHTAutonomousDevice ad))
-            {
+            if (!(e.ItemToRemove is HHTAutonomousDevice ad)) {
                 Logger.Error("Could not remove autonomous device.");
                 return;
             }

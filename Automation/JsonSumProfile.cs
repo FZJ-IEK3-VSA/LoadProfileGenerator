@@ -7,20 +7,25 @@ namespace Automation
 {
 
     public class SingleDeviceProfile {
-        public SingleDeviceProfile(string? name, string? guid)
+        public SingleDeviceProfile(string? name, string? guid, Dictionary<string, string> tagsBySet, string deviceType)
         {
             Name = name;
             Guid = guid;
+            TagsBySet = tagsBySet;
+            DeviceType = deviceType;
         }
 
         [Obsolete("json only")]
+#pragma warning disable 8618
         public SingleDeviceProfile()
+#pragma warning restore 8618
         {
         }
 
         public string? Name { get; set; }
         public string? Guid { get; set; }
-
+        public Dictionary<string, string>? TagsBySet { get; set; }
+        public string DeviceType { get; set; }
     }
 
     public class JsonDeviceProfiles
