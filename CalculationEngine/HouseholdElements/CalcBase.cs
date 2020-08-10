@@ -45,6 +45,8 @@ namespace CalculationEngine.HouseholdElements {
     }*/
 
     public class CalcRepo: IDisposable {
+        [CanBeNull]
+        public CalcVariableRepository CalcVariableRepository { get; }
         //public HumanHeatGainSpecification HumanHeatGainSpecification { get; }
 
         [NotNull]
@@ -53,7 +55,7 @@ namespace CalculationEngine.HouseholdElements {
         [NotNull]
         public static CalcRepo Make([NotNull] CalcParameters calcParameters, [NotNull] IInputDataLogger idl,
                                     [NotNull] string resultPath, [NotNull] string calcObjectName,
-                                    CalculationProfiler calculationProfiler)
+                                    CalculationProfiler calculationProfiler, CalcVariableRepository calcVariableRepository)
         {
 
             DateStampCreator dsc = new DateStampCreator(calcParameters);
@@ -81,8 +83,10 @@ namespace CalculationEngine.HouseholdElements {
                         [CanBeNull] IInputDataLogger inputDataLogger=null,
                         [CanBeNull] CalculationProfiler calculationProfiler=null,
             [CanBeNull] FileFactoryAndTracker fft =null,
-                        [CanBeNull] DateStampCreator dsc = null)
+                        [CanBeNull] DateStampCreator dsc = null,
+             [CanBeNull] CalcVariableRepository calcVariableRepository = null)
         {
+            CalcVariableRepository = calcVariableRepository;
             _dateStampCreator = dsc;
             _fft = fft;
             _odap = odap;

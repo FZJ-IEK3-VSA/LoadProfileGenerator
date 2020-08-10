@@ -38,6 +38,7 @@ namespace CalculationController.DtoFactories
             cp.SetLoadTypePriority(csps.LoadTypePriority);
             cp.SetSettlingDays(csps.SettlingDays);
             cp.SetAffordanceRepetitionCount(csps.AffordanceRepetitionCount);
+            cp.EnableIdlemode = csps.EnableIdlemode;
             cp.DeviceProfileHeaderMode = csps.DeviceProfileHeaderMode;
             cp.IgnorePreviousActivitesWhenNeeded = csps.IgnorePreviousActivitiesWhenNeeded;
             cp.TransportationEnabled = csps.TransportationEnabled;

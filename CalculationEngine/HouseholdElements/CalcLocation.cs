@@ -72,6 +72,10 @@ namespace CalculationEngine.HouseholdElements {
         [ItemNotNull]
         public List<CalcDevice> LightDevices { get; } = new List<CalcDevice>();
 
+        public Dictionary<CalcPerson, ICalcAffordanceBase> IdleAffs {
+            get;
+        } = new Dictionary<CalcPerson, ICalcAffordanceBase>();
+
         public void AddAffordance([NotNull] CalcAffordance aff)
         {
             if(_isTransportationEnabled) {

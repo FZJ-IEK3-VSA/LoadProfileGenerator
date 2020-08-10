@@ -65,7 +65,8 @@ namespace Calculation.Tests.Logfile
                     fft.RegisterHousehold(Constants.GeneralHouseholdKey, "general", HouseholdKeyType.General, "desc", null, null);
                     //SqlResultLoggingService srls = new SqlResultLoggingService(wd.WorkingDirectory);
                     CalculationProfiler profiler = new CalculationProfiler();
-                    CalcRepo calcRepo = CalcRepo.Make(calcParameters, wd.InputDataLogger, wd.WorkingDirectory, "name", profiler);
+                    CalcRepo calcRepo = CalcRepo.Make(calcParameters, wd.InputDataLogger,
+                        wd.WorkingDirectory, "name", profiler,null);
                     DesiresLogFile dlf = new DesiresLogFile(fft, calcParameters);
                     CalcDesire cd1 = new CalcDesire("desire1", 1, 0.5m, 12, 1, 1, 60, -1, null, "", "");
 

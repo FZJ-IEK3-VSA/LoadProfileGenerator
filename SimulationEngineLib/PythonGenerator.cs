@@ -257,10 +257,22 @@ namespace SimulationEngineLib
                     typename = "List[float]";
                     return info.Name + ": List[float] = field(default_factory=list)";
                 }
-                if (fulltypename.StartsWith("System.Collections.Generic.List`1[[Automation.SingleDeviceProfile"))
+
+                if (fulltypename.StartsWith("System.Collections.Generic.List`1[[System.Double,"))
                 {
-                    typename = "List[SingleDeviceProfile]";
+                    typename = "List[float]";
+                    return info.Name + ": List[float] = field(default_factory=list)";
+                }
+
+                if (fulltypename.StartsWith("System.Collections.Generic.List`1[[Automation.SingleDeviceProfile,"))
+                {
+                    typename = "List[float]";
                     return info.Name + ": List[SingleDeviceProfile] = field(default_factory=list)";
+                }
+            if (fulltypename.StartsWith("System.Collections.Generic.Dictionary`2[[System.String,") && fulltypename.Contains("],[System.String"))
+                {
+                    typename = "Dict[str,str]";
+                    return info.Name + ": Dict[str,str] = field(default_factory=dict)";
                 }
             switch (fulltypename)
                 {

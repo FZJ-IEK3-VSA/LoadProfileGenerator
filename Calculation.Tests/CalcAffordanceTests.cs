@@ -129,7 +129,7 @@ namespace Calculation.Tests {
             Logger.Info("------------");
             TimeStep ts1 = new TimeStep(0,0,true);
             Logger.Info("aff.isbusy 0: " + aff.IsBusy(ts1,  loc, "person", false));
-            var prevstate = false;
+            var prevstate = BusynessType.NotBusy;
             for (var i = 0; i < 100; i++) {
                 TimeStep ts2 = new TimeStep(i, 0,true);
                 if (aff.IsBusy(ts2, loc, "person", false) != prevstate) {
@@ -140,24 +140,24 @@ namespace Calculation.Tests {
 
             Logger.Info("aff.isbusy 100: " + aff.IsBusyArray[100]);
 
-            prevstate = false;
+            var prevstate1 = false;
             Logger.Info("aff.isbusyarray 0:   " + aff.IsBusyArray[0]);
             for (var i = 0; i < 100; i++) {
-                if (aff.IsBusyArray[i] != prevstate) {
-                    prevstate = aff.IsBusyArray[i];
+                if (aff.IsBusyArray[i] != prevstate1) {
+                    prevstate1 = aff.IsBusyArray[i];
                     Logger.Info("aff.isbusyarray: " + i + ": " + prevstate);
                 }
             }
 
             Logger.Info("aff.isbusyarray 100: " + aff.IsBusyArray[100]);
 
-            prevstate = false;
+            prevstate1 = false;
             TimeStep ts3 = new TimeStep(0, 0,false);
             Logger.Info("cd.isbusyarray 0:   " + cd.GetIsBusyForTesting(ts3, lt));
             for (var i = 0; i < 100; i++) {
                 TimeStep ts4 = new TimeStep(i, 0, false);
-                if (cd.GetIsBusyForTesting(ts4, lt) != prevstate) {
-                    prevstate = cd.GetIsBusyForTesting(ts4, lt);
+                if (cd.GetIsBusyForTesting(ts4, lt) != prevstate1) {
+                    prevstate1 = cd.GetIsBusyForTesting(ts4, lt);
                     Logger.Info("cd.isbusyarray: " + i + ": " + prevstate);
                 }
             }
@@ -176,7 +176,7 @@ namespace Calculation.Tests {
             var trueCount = 0;
             TimeStep ts1 = new TimeStep(0,0,true);
             var result = aff.IsBusy(ts1,  loc, "name");
-            result.Should().BeFalse();
+            result.Should().Be(BusynessType.NotBusy);
             const int resultcount = stepcount - 20;
             for (var i = 0; i < resultcount; i++) {
                 for (var j = 0; j < stepcount; j++) {
@@ -206,7 +206,7 @@ namespace Calculation.Tests {
             var trueCount = 0;
             TimeStep ts = new TimeStep(0,0,false);
             var result = aff.IsBusy(ts, loc, "name");
-            result.Should().BeFalse();
+            result.Should().Be(BusynessType.NotBusy);
             const int resultcount = stepcount - 20;
             for (var i = 0; i < resultcount; i++) {
 
@@ -237,7 +237,7 @@ namespace Calculation.Tests {
             var trueCount = 0;
             TimeStep ts = new TimeStep(0, 0, false);
             var result = aff.IsBusy(ts,  loc, "name");
-            result.Should().BeFalse();
+            result.Should().Be(BusynessType.NotBusy);
             const int resultcount = stepcount - 20;
             for (var i = 0; i < resultcount; i++) {
                 for (var j = 0; j < stepcount; j++) {
@@ -270,7 +270,7 @@ namespace Calculation.Tests {
             var trueCount = 0;
             TimeStep ts = new TimeStep(0, 0, false);
             var result = aff.IsBusy(ts, loc, "name");
-            result.Should().BeFalse();
+            result.Should().Be(BusynessType.NotBusy);
             const int resultcount = stepcount - 20;
             for (var i = 0; i < resultcount; i++) {
                 for (var j = 0; j < stepcount; j++) {
@@ -302,7 +302,7 @@ namespace Calculation.Tests {
             var trueCount = 0;
             TimeStep ts = new TimeStep(0, 0, false);
             var result = aff.IsBusy(ts, loc, "name");
-            result.Should().BeFalse();
+            result.Should().Be(BusynessType.NotBusy);
             const int resultcount = stepcount - 20;
             for (var i = 0; i < resultcount; i++) {
                 for (var j = 0; j < stepcount; j++) {
@@ -568,10 +568,10 @@ namespace Calculation.Tests {
             TimeStep ts = new TimeStep(0, 0, false);
             aff.Activate(ts.AddSteps(10), "blub", loc, out var _);
             CheckForBusyness( loc, aff, cd, lt);
-            aff.IsBusy(ts.AddSteps(1),  loc, "name", false).Should().BeTrue();
-            aff.IsBusy( ts.AddSteps(19),  loc, "name", false).Should().BeTrue();
-            aff.IsBusy(ts,  loc, "name", false).Should().BeFalse();
-            aff.IsBusy(ts.AddSteps(20),  loc, "name", false).Should().BeFalse();
+            aff.IsBusy(ts.AddSteps(1),  loc, "name", false).Should().NotBe(BusynessType.NotBusy);
+            aff.IsBusy( ts.AddSteps(19),  loc, "name", false).Should().NotBe(BusynessType.NotBusy);
+            aff.IsBusy(ts,  loc, "name", false).Should().NotBe(BusynessType.NotBusy);
+            aff.IsBusy(ts.AddSteps(20),  loc, "name", false).Should().NotBe(BusynessType.NotBusy);
         }
     }
 }

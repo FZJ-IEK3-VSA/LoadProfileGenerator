@@ -97,6 +97,11 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         [CanBeNull] private TravelRouteSet _selectedTravelRouteSet;
         private bool _isTransportationSettingsEnabled;
 
+        public bool EnableIdleMode {
+            get => Sim.MyGeneralConfig.EnableIdlemodeBool;
+
+            set => Sim.MyGeneralConfig.EnableIdlemodeBool = value;
+        }
         public CalculationPresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] CalculateView view) : base(view, "Headerstring", applicationPresenter)
         {
             CalcObjects = new ObservableCollection<ICalcObject>();
@@ -593,7 +598,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                 Sim.MyGeneralConfig.CSVCharacter, Sim.MyGeneralConfig.RandomSeed, Sim.MyGeneralConfig.ExternalStepSize, Sim.MyGeneralConfig.DeleteDatFilesBool,
                 Sim.MyGeneralConfig.WriteExcelColumnBool, Sim.MyGeneralConfig.ShowSettlingPeriodBool, 3,
                 Sim.MyGeneralConfig.RepetitionCount, calculationProfiler, SelectedChargingStationSet,null,
-                Sim.MyGeneralConfig.DeviceProfileHeaderMode,false,resultpath,_calculateTransportation);
+                Sim.MyGeneralConfig.DeviceProfileHeaderMode,false,resultpath,_calculateTransportation, Sim.MyGeneralConfig.EnableIdlemodeBool);
             var cs = new CalcStarter(Sim);
             //_calculationProfiler.Clear();
 #pragma warning disable S2930 // "IDisposables" should be disposed

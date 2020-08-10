@@ -273,8 +273,8 @@
                             Grid.Row="13"
                             Grid.Column="1"
                             Grid.ColumnSpan="2"
-                            Content="Resume calculation if it is a settlement calculation"
-                            IsChecked="{Binding ResumeSettlement}"
+                            Content="Enable hardcore idle mode that will make the calculation succeed no matter how little the residents have to do."
+                            IsChecked="{Binding EnableIdleMode}"
                             Style="{StaticResource CheckBoxStyle}" />
                         <Label
                             Grid.Row="14"

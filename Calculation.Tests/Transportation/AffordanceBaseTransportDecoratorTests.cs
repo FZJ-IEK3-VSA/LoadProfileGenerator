@@ -46,7 +46,7 @@ namespace Calculation.Tests.Transportation
                     Assert.NotNull(travelroute);
                     // find if busy
                     var isbusy = abt.IsBusy(ts, srcloc, personname, false);
-                    isbusy.Should().BeFalse();
+                    isbusy.Should().Be(BusynessType.NotBusy);
                     var affs = dstloc.Affordances.ToList();
 
                     Logger.Info("Activating affordance for time 0");
@@ -82,7 +82,7 @@ namespace Calculation.Tests.Transportation
                     Assert.NotNull(travelroute);
                     // find if busy
                     var isbusy = abt.IsBusy(ts, srcloc, "", false);
-                    isbusy.Should().BeFalse();
+                    isbusy.Should().Be(BusynessType.NotBusy);
                     var affs = dstloc.Affordances.ToList();
 
                     Logger.Info("Activating affordance for time 0");

@@ -306,6 +306,7 @@ namespace CalculationEngine.HouseholdElements {
 
         public HouseholdKey HouseholdKey => _householdKey;
 
+        [CanBeNull]
         public List<CalcAutoDev> AutoDevs => _autoDevs;
 
         //public Dictionary<int, CalcProfile> AllProfiles => _allProfiles;

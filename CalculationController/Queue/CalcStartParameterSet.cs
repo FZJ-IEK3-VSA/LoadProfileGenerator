@@ -71,7 +71,8 @@ namespace CalculationController.Queue {
             [NotNull] string csvCharacter,
             int selectedRandomSeed,
             TimeSpan externalTimeResolution, bool deleteDatFiles, bool writeExcelColumn, bool showSettlingPeriod,
-            int settlingDays, int affordanceRepetitionCount, [NotNull] CalculationProfiler calculationProfiler, string resultPath, bool transportationEnabled)
+            int settlingDays, int affordanceRepetitionCount, [NotNull] CalculationProfiler calculationProfiler, string resultPath,
+            bool transportationEnabled, bool enableIdlemode)
         {
             OfficialSimulationStartTime = officialSimulationStartTime;
             OfficialSimulationEndTime = officialSimulationEndTime;
@@ -101,6 +102,7 @@ namespace CalculationController.Queue {
             ResultPath = resultPath;
             CalculationStartTime = DateTime.Now;
             TransportationEnabled = transportationEnabled;
+            EnableIdlemode = enableIdlemode;
         }
 
         /// <summary>
@@ -128,7 +130,7 @@ namespace CalculationController.Queue {
             [CanBeNull] ChargingStationSet chargingStationSet,
             [CanBeNull][ItemNotNull] List<string> loadTypesToProcess,
             DeviceProfileHeaderMode deviceProfileHeaderMode,
-            bool ignorePreviousActivitiesWhenNeeded, string resultPath, bool transportationEnabled)
+            bool ignorePreviousActivitiesWhenNeeded, string resultPath, bool transportationEnabled, bool enableIdlemode)
         {
             IgnorePreviousActivitiesWhenNeeded = ignorePreviousActivitiesWhenNeeded;
             ResultPath = resultPath;
@@ -165,6 +167,7 @@ namespace CalculationController.Queue {
             DeviceProfileHeaderMode = deviceProfileHeaderMode;
             CalculationStartTime = DateTime.Now;
             TransportationEnabled = transportationEnabled;
+            EnableIdlemode = enableIdlemode;
         }
 
         public string ResultPath { get; set; }
@@ -245,6 +248,7 @@ namespace CalculationController.Queue {
         public DeviceProfileHeaderMode DeviceProfileHeaderMode { get;  }
         public bool IgnorePreviousActivitiesWhenNeeded { get; set; }
         public bool TransportationEnabled { get; set; }
+        public bool EnableIdlemode { get; }
 
         public JsonCalcSpecification CalcSpec { get; set; }
     }

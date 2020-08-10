@@ -8,6 +8,14 @@ using JetBrains.Annotations;
 
 namespace CalculationEngine.HouseholdElements
 {
+    public enum BusynessType {
+        NotBusy,
+        Occupied,
+        NoTransportation,
+        VariableRequirementsNotMet,
+        BeyondTimeLimit,
+        NoRoute
+    }
     public interface ICalcAffordanceBase
     {
         [NotNull]
@@ -41,7 +49,7 @@ namespace CalculationEngine.HouseholdElements
             [NotNull] out ICalcProfile personTimeProfile);
         //ICalcProfile CollectPersonProfile();
         int DefaultPersonProfileLength { get; }
-        bool IsBusy([NotNull] TimeStep time, [NotNull] CalcLocation srcLocation, [NotNull] string calcPersonName, bool clearDictionaries = true);
+        BusynessType IsBusy([NotNull] TimeStep time, [NotNull] CalcLocation srcLocation, [NotNull] string calcPersonName, bool clearDictionaries = true);
 
         [NotNull]
         [ItemNotNull]

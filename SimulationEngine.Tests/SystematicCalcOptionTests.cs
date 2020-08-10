@@ -507,7 +507,7 @@ public void TestHouseJobsSumProfileExternalIndividualHouseholdsAsJson(){
       HouseJobTestHelper.RunSingleHouse((sim) => {
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim, hhguid);
       hj.CalcSpec.CalcOptions.Add(co); return hj;
-      }, (x) => HouseJobTestHelper.CheckForResultfile(x, co),true);
+      }, (x) => HouseJobTestHelper.CheckForResultfile(x, co));
 }
 
 
@@ -638,9 +638,8 @@ public void TestHouseJobsJsonDeviceProfilesIndividualHouseholds(){
       const CalcOption co = CalcOption.JsonDeviceProfilesIndividualHouseholds;
       HouseJobTestHelper.RunSingleHouse((sim) => {
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim, hhguid);
-      //hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.All;
       hj.CalcSpec.CalcOptions.Add(co); return hj;
-      }, (x) => HouseJobTestHelper.CheckForResultfile(x, co),true);
+      }, (x) => HouseJobTestHelper.CheckForResultfile(x, co));
 }
 
 
@@ -649,6 +648,18 @@ public void TestHouseJobsJsonDeviceProfilesIndividualHouseholds(){
 public void TestHouseJobsTansportationDeviceJsons(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.TansportationDeviceJsons;
+      HouseJobTestHelper.RunSingleHouse((sim) => {
+      var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim, hhguid);
+      hj.CalcSpec.CalcOptions.Add(co); return hj;
+      }, (x) => HouseJobTestHelper.CheckForResultfile(x, co));
+}
+
+
+[Fact]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
+public void TestHouseJobsDeviceTaggingSets(){
+      const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
+      const CalcOption co = CalcOption.DeviceTaggingSets;
       HouseJobTestHelper.RunSingleHouse((sim) => {
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim, hhguid);
       hj.CalcSpec.CalcOptions.Add(co); return hj;

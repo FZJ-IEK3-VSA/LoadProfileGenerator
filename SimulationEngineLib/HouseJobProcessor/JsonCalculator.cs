@@ -116,6 +116,9 @@ namespace SimulationEngineLib.HouseJobProcessor {
             if (jcs.OutputDirectory == null)
             {
                 jcs.OutputDirectory = AutomationUtili.CleanFileName(calcObject.Name) + " - " + calcObject;
+                if (jcs.OutputDirectory.Length > 50) {
+                    jcs.OutputDirectory = jcs.OutputDirectory.Substring(0, 50);
+                }
             }
             _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
             if (calcObjectReference == null) {
@@ -273,7 +276,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
                 null,
                 jcs.LoadtypesForPostprocessing,
                 sim.MyGeneralConfig.DeviceProfileHeaderMode,
-                jcs.IgnorePreviousActivitiesWhenNeeded, jcs.OutputDirectory,jcs.EnableTransportation);
+                jcs.IgnorePreviousActivitiesWhenNeeded, jcs.OutputDirectory,jcs.EnableTransportation, jcs.EnableIdlemode);
             calcStartParameterSet.PreserveLogfileWhileClearingFolder = true;
             cs.Start(calcStartParameterSet);
             if (jcs.CalcOptions != null && jcs.CalcOptions.Contains(CalcOption.CalculationFlameChart))

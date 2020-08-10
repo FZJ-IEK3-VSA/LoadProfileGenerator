@@ -124,7 +124,7 @@ namespace CalculationEngine.HouseholdElements {
         //public abstract ICalcProfile CollectPersonProfile();
 
         [SuppressMessage("ReSharper", "UnusedParameter.Global")]
-        public abstract bool IsBusy(TimeStep time,
+        public abstract BusynessType IsBusy(TimeStep time,
                                     CalcLocation srcLocation, string calcPersonName,
                                     bool clearDictionaries = true);
 

@@ -104,5 +104,12 @@ namespace Automation
             strguid.StrVal = myguid.ToString();
             return strguid;
         }
+
+        public static StrGuid New()
+        {
+            var g= new StrGuid();
+            g.StrVal = Guid.NewGuid().ToString();
+            return g;
+        }
     }
 }

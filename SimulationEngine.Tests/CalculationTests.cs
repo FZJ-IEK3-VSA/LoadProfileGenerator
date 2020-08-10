@@ -68,7 +68,7 @@ namespace SimulationEngine.Tests {
             var hj = new HouseCreationAndCalculationJob();
             hj.CalcSpec = JsonCalcSpecification.MakeDefaultsForTesting();
             hj.CalcSpec.StartDate = new DateTime(2020, 1, 1);
-            hj.CalcSpec.EndDate = new DateTime(2020, 7, 1);
+            hj.CalcSpec.EndDate = new DateTime(2020, 3, 1);
             hj.CalcSpec.DeleteDAT = false;
             hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.NoFiles;
             hj.CalcSpec.DeleteSqlite = false;
@@ -334,7 +334,7 @@ namespace SimulationEngine.Tests {
         [Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
         public void TestIfAllAutonomousDevicesAreInTheResultFiles()
         {
-            void CheckResults(string path)
+            static void CheckResults(string path)
             {
 
                 var srls = new SqlResultLoggingService(path);
@@ -369,7 +369,7 @@ namespace SimulationEngine.Tests {
 
                 var deviceActivaitonLogger = new DeviceActivationEntryLogger(srls);
                 var deviceActivations = deviceActivaitonLogger.Read(hhkey);
-                var activatedDevices = deviceActivations.Select(x => 
+                var activatedDevices = deviceActivations.Select(x =>
                     x.DeviceName).Distinct();
                 foreach (var deviceName in deviceNames) {
                     if (!activatedDevices.Contains(deviceName)) {
@@ -412,7 +412,7 @@ namespace SimulationEngine.Tests {
                 hj.CalcSpec.CalcOptions.Add(CalcOption.DeviceActivations);
 
                 return hj;
-            }, CheckResults, true);
+            }, CheckResults);
         }
 
         private static void WriteCalcOptionFunction(StreamWriter sw, CalcOption option, ModularHousehold hh)

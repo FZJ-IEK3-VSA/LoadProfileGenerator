@@ -598,7 +598,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                     chargingStationSet,
                     null,
                     sim.MyGeneralConfig.DeviceProfileHeaderMode,
-                    false, operatingPath, enableTransportation);
+                    false, operatingPath, enableTransportation, sim.MyGeneralConfig.EnableIdlemodeBool);
 
                 cs.Start(csps);
                 ChartMaker.MakeChartsAndPDF(calculationProfiler,operatingPath);

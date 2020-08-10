@@ -167,10 +167,12 @@ namespace Automation {
 
         [Comment("This option make the LPG delete all the SQLite result files after the calculation. Only enable this if you really only want the load profiles and no further processing. Default=false")]
         public bool DeleteSqlite { get; set; }
-        [Comment("When using household templates, sometimes random households are generated that don't work. With this option you can make the LPG force to simulate at least some of the cases anyway. Default=false")]
+        [Comment("When using household templates, sometimes random households are generated that don't work. With this option you can force the LPG to simulate at least some of the cases anyway. Default=false")]
         public bool IgnorePreviousActivitiesWhenNeeded { get; [UsedImplicitly] set; }
 
         public bool EnableTransportation { get; set; }
+        [Comment("When using household templates, sometimes random households are generated that don't work. With this option you can force the LPG force to simulate all cases, no matter how messed up the definition is. Basically this enables a special activity \"Idle\" that always gets activated whenever the person can't find something to do. Default=false")]
+        public bool EnableIdlemode { get; set; }
 
 
         [NotNull]

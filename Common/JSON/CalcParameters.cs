@@ -64,6 +64,7 @@ namespace Common.JSON {
         public int UserSelectedRandomSeed { get; set; }
         public bool WriteExcelColumn { get; set; }
         public bool IgnorePreviousActivitesWhenNeeded { get; set; }
+        public bool EnableIdlemode { get; set; }
 
         //public void CheckDependenyOnOptions()
         //{

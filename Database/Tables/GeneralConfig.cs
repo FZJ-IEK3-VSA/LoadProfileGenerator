@@ -418,7 +418,21 @@ namespace Database.Tables {
             set => UpdateValue(nameof(WriteExcelColumn), value);
         }
 
-        public bool WriteExcelColumnBool => WriteExcelColumn == "TRUE";
+        public bool WriteExcelColumnBool => WriteExcelColumn.ToUpper() == "TRUE";
+
+
+        [NotNull]
+        [UsedImplicitly]
+        public string EnableIdlemode
+        {
+            get => _settings[nameof(EnableIdlemode)].SettingValue;
+            set => UpdateValue(nameof(EnableIdlemode), value);
+        }
+
+        public bool EnableIdlemodeBool {
+            get => EnableIdlemode.ToUpper() == "TRUE";
+            set => EnableIdlemode = value.ToString().ToUpper();
+        }
 
         [NotNull]
         public List<CalcOption> AllEnabledOptions() {
@@ -504,6 +518,7 @@ namespace Database.Tables {
             gc.CheckExistence(nameof(WriteExcelColumn), "True", ignoreMissing);
 
             gc.CheckExistence(nameof(PerformCleanUpChecks), "True", ignoreMissing);
+            gc.CheckExistence(nameof(EnableIdlemode), "True", ignoreMissing);
 
             gc.CheckExistence(nameof(LastSelectedTransportationSetting), "", ignoreMissing);
             gc.CheckExistence(nameof(LastSelectedTransportationDeviceSet), "", ignoreMissing);

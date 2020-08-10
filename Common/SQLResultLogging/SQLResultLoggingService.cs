@@ -354,7 +354,15 @@ namespace Common.SQLResultLogging {
                 return newName;
             }
 
-            using (SQLiteConnection dbcon = new SQLiteConnection(MakeconnectionString(newName))) {
+            if (fi.FullName.Length > 260) {
+                throw new LPGException("Filename length > 260. This is a Windows limitation.");
+            }
+
+            if (fi.Directory?.Exists != true) {
+                throw new LPGException("Directory does not exist.");
+            }
+            string connectionString = MakeconnectionString(fi.FullName);
+            using (SQLiteConnection dbcon = new SQLiteConnection(connectionString)) {
                 dbcon.Open();
                 {
                     FieldDefinition fd1 = new FieldDefinition("TableName", "Text");

@@ -30,6 +30,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Automation;
+using Automation.ResultFiles;
 using CalculationEngine.HouseholdElements;
 using Common;
 using Common.CalcDto;
@@ -57,7 +59,7 @@ namespace CalculationController.CalcFactories {
         [NotNull]
         [ItemNotNull]
         public List<CalcPerson> MakeCalcPersons([NotNull] [ItemNotNull] List<CalcPersonDto> persons,
-                                                [NotNull] CalcLocation startLocation,
+                                                [NotNull] List<CalcLocation> locations,
                                                 [NotNull] string householdName)
         {
             var calcPersons = new List<CalcPerson>();
@@ -65,8 +67,11 @@ namespace CalculationController.CalcFactories {
             foreach (var hhPerson in persons) {
                 var isSick = SetBitArrayWithDateSpans(hhPerson.SicknessSpans);
                 var vacationTimes = SetBitArrayWithDateSpans(hhPerson.VacationSpans);
-
-                var cp = new CalcPerson(hhPerson, startLocation,  isSick, vacationTimes,_calcRepo);
+                var startlocation = locations.FirstOrDefault(x => x.Name.Contains("Living"));
+                if (startlocation == null) {
+                    startlocation = locations[0];
+                }
+                var cp = new CalcPerson(hhPerson, startlocation,  isSick, vacationTimes,_calcRepo);
                 /* repetitionCount, _random,hhPerson.Person.Age, hhPerson.Person.Gender, _logFile,
                  householdKey, startLocation, traitTagName, householdName, _calcParameters, isSick,
                  Guid.NewGuid().ToStrGuid());*/
@@ -77,6 +82,17 @@ namespace CalculationController.CalcFactories {
 
 
                 calcPersons.Add(cp);
+                foreach (var loc in locations) {
+                    CalcProfile prof = new CalcProfile("Idle", StrGuid.New(), CalcProfile.MakeListwithValue1AndCustomDuration(1),
+                        ProfileType.Relative, "Synthetic");
+                    CalcAffordance idleAff = new CalcAffordance("Idleness for " + cp.Name + " at " + loc.Name,prof
+                        , loc, false, new List<CalcDesire>(), 0, 99, PermittedGender.All,
+                        false, 0, new ColorRGB(128, 128, 128), "Idle", false, false, new List<CalcAffordanceVariableOp>(),
+                        new List<VariableRequirement>(), ActionAfterInterruption.LookForNew, "No Limit", 1, false, "Idle",
+                        StrGuid.New(), _calcRepo.CalcVariableRepository?? throw new LPGException("No variable repository initialized."), new List<CalcAffordance.DeviceEnergyProfileTuple>(),
+                        new BitArray(_calcRepo.CalcParameters.InternalTimesteps), BodilyActivityLevel.Low, _calcRepo);
+                    loc.IdleAffs.Add(cp, idleAff);
+                }
             }
 
             return calcPersons;

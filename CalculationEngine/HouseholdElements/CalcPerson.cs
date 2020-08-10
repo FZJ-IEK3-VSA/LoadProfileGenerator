@@ -576,7 +576,6 @@ namespace CalculationEngine.HouseholdElements {
         private ICalcAffordanceBase FindBestAffordance([NotNull] TimeStep time,
                                                        [NotNull][ItemNotNull] List<CalcPerson> persons, int simulationSeed)
         {
-            var asc = new AffordanceStatusClass();
             var allAffs = IsSick[time.InternalStep] ? _sicknessPotentialAffs : _normalPotentialAffs;
 
             if (_calcRepo.Rnd == null) {
@@ -584,17 +583,17 @@ namespace CalculationEngine.HouseholdElements {
             }
 
             var allAffordances =
-                NewGetAllViableAffordancesAndSubs(time, asc, false,  allAffs, false);
+                NewGetAllViableAffordancesAndSubs(time, null, false,  allAffs, false);
             if(allAffordances.Count == 0 && (time.ExternalStep < 0 || _calcRepo.CalcParameters.IgnorePreviousActivitesWhenNeeded))
             {
                 allAffordances =
-                    NewGetAllViableAffordancesAndSubs(time, asc,  false, allAffs, true);
+                    NewGetAllViableAffordancesAndSubs(time, null,  false, allAffs, true);
             }
             allAffordances.Sort((x, y) => string.Compare(x.Name, y.Name, StringComparison.Ordinal));
             //no affordances, so search again for the error messages
             if (allAffordances.Count == 0) {
-                var status = new AffordanceStatusClass();
 
+                var status = new AffordanceStatusClass();
                 NewGetAllViableAffordancesAndSubs(time, status,  false,  allAffs, false);
                 var ts = new TimeSpan(0, 0, 0,
                     (int)_calcRepo.CalcParameters.InternalStepsize.TotalSeconds * time.InternalStep);
@@ -603,15 +602,16 @@ namespace CalculationEngine.HouseholdElements {
                         " not a single affordance was available for " + Name +
                         " in the household " + _calcPerson.HouseholdName + "." + Environment.NewLine +
                         "Since the people in this simulation can't do nothing, calculation can not continue." +
-                        " The simulation seed was " + simulationSeed + ". " + Name + " was ";
+                        " The simulation seed was " + simulationSeed + ". " + Environment.NewLine + Name + " was ";
                 if (IsSick[time.InternalStep]) {
-                    s += " sick at the time.";
+                    s += " sick at the time."+ Environment.NewLine;
                 }
                 else {
-                    s += " not sick at the time.";
+                    s += " not sick at the time."+ Environment.NewLine;
                 }
 
-                s += "The setting for the number of required unique affordances in a row was set to " + _calcRepo.CalcParameters.AffordanceRepetitionCount + ". ";
+                s += _calcPerson.Name + " was at " + CurrentLocation.Name + "." + Environment.NewLine;
+                s += "The setting for the number of required unique affordances in a row was set to " + _calcRepo.CalcParameters.AffordanceRepetitionCount + "." + Environment.NewLine;
                 if (status.Reasons.Count > 0) {
                     s += " The status of each affordance is as follows:" + Environment.NewLine;
                     foreach (var reason in status.Reasons) {
@@ -631,7 +631,13 @@ namespace CalculationEngine.HouseholdElements {
 
                     s += Environment.NewLine + calcPerson.Name + ": " + name;
                 }
-
+                if (_calcRepo.CalcParameters.EnableIdlemode)
+                {
+                    var idleaff = CurrentLocation.IdleAffs[this];
+                    idleaff.IsBusy(time, CurrentLocation, Name);
+                    //Logger.Info(s);
+                    return idleaff;
+                }
                 throw new DataIntegrityException(s);
             }
 
@@ -805,9 +811,10 @@ namespace CalculationEngine.HouseholdElements {
                 return false;
             }
 
-            if (aff.IsBusy(timeStep, CurrentLocation, Name)) {
+            var busynessResult = aff.IsBusy(timeStep, CurrentLocation, Name);
+            if (busynessResult != BusynessType.NotBusy) {
                 if (errors != null) {
-                    errors.Reasons.Add(new AffordanceStatusTuple(aff, "Affordance is busy."));
+                    errors.Reasons.Add(new AffordanceStatusTuple(aff, "Affordance is busy:" + busynessResult.ToString()));
                 }
 
                 return false;

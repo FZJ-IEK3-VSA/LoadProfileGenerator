@@ -103,13 +103,13 @@ namespace CalculationEngine.HouseholdElements {
 
         public override int DefaultPersonProfileLength => PersonProfileDuration;
 
-        public override bool IsBusy(TimeStep time, CalcLocation srcLocation, string calcPersonName,
+        public override BusynessType IsBusy(TimeStep time, CalcLocation srcLocation, string calcPersonName,
             bool clearDictionaries = true)
         {
             if (IsBusyArray[time.InternalStep]) {
-                return true;
+                return BusynessType.Occupied;
             }
-            return false;
+            return BusynessType.NotBusy;
         }
 
         public override List<CalcSubAffordance> CollectSubAffordances(TimeStep time,

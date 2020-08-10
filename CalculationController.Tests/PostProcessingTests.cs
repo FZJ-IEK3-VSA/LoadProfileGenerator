@@ -66,7 +66,7 @@ namespace CalculationController.Tests
                         false,  null, LoadTypePriority.All, null, null, null,
                         sim.MyGeneralConfig.AllEnabledOptions(), new DateTime(2018, 1, 1), new DateTime(2018, 1, 2), new TimeSpan(0, 1, 0),
                         ";", 5, new TimeSpan(0, 10, 0), false, false, false, 3, 3,
-                        calculationProfiler, wd1.WorkingDirectory,false);
+                        calculationProfiler, wd1.WorkingDirectory,false,false);
                     var cm = cmf.GetCalcManager(sim,  csps, false);
 
                     static bool ReportCancelFunc()
@@ -125,7 +125,7 @@ namespace CalculationController.Tests
                         sim.TemperatureProfiles[0], sim.ModularHouseholds[0], EnergyIntensityType.Random,
                         false,  null, LoadTypePriority.All, null, null, null, sim.MyGeneralConfig.AllEnabledOptions(),
                         new DateTime(2013, 1, 1), new DateTime(2013, 1, 2), new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 10, 0), false, false, false, 3, 3,
-                        calculationProfiler, wd1.WorkingDirectory,false);
+                        calculationProfiler, wd1.WorkingDirectory,false,false);
                     var cm = cmf.GetCalcManager(sim, csps, false);
                     cm.Run(ReportCancelFunc);
                     Logger.ImportantInfo("Duration:" + (DateTime.Now - start).TotalSeconds + " seconds");

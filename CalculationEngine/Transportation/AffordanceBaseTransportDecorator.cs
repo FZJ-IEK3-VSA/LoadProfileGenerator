@@ -146,7 +146,7 @@ namespace CalculationEngine.Transportation {
 
         public int DefaultPersonProfileLength => _sourceAffordance.DefaultPersonProfileLength;
 
-        public bool IsBusy(TimeStep time,
+        public BusynessType IsBusy(TimeStep time,
                            CalcLocation srcLocation, string calcPersonName,
             bool clearDictionaries = true)
         {
@@ -164,7 +164,7 @@ namespace CalculationEngine.Transportation {
             }
 
             if (route == null) {
-                return true;
+                return BusynessType.NoRoute;
             }
 
             // ReSharper disable once PossibleInvalidOperationException
@@ -176,9 +176,9 @@ namespace CalculationEngine.Transportation {
             TimeStep dstStartTime = time.AddSteps(travelDurationN.Value);
             if (dstStartTime.InternalStep > _calcRepo.CalcParameters.InternalTimesteps) {
                 //if the end of the activity is after the simulation, everything is ok.
-                return false;
+                return BusynessType.NotBusy;
             }
-            bool result = _sourceAffordance.IsBusy(dstStartTime, srcLocation, calcPersonName,
+            var result = _sourceAffordance.IsBusy(dstStartTime, srcLocation, calcPersonName,
                 clearDictionaries);
             _calcRepo.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(
                 time,

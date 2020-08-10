@@ -489,14 +489,14 @@ namespace CalculationController.CalcFactories {
 
         private void SetAffordances([NotNull] CalcHousehold chh)
         {
+            if (chh.TransportationHandler == null)
+            {
+                throw new LPGException("no transportation handler");
+            }
+
             foreach (CalcLocation location in chh.Locations) {
                 foreach (var aff in location.PureAffordances) {
                     //replace with affordance decorator
-                    if (chh.TransportationHandler == null)
-                    {
-                        throw new LPGException("no transportation handler");
-                    }
-
                     var sites = chh.TransportationHandler.CalcSites.Where(x => x.Locations.Contains(location)).ToList();
                     if (sites.Count == 0)
                     {
@@ -511,6 +511,26 @@ namespace CalculationController.CalcFactories {
                         aff, sites[0], chh.TransportationHandler, aff.Name,
                         chh.HouseholdKey, Guid.NewGuid().ToStrGuid(), _calcRepo);
                     location.AddTransportationAffordance(abtd);
+                }
+
+                var persons = location.IdleAffs.Keys.ToList();
+                foreach (var person in persons) {
+                    var sites = chh.TransportationHandler.CalcSites.Where(x => x.Locations.Contains(location)).ToList();
+                    if (sites.Count == 0)
+                    {
+                        throw new DataIntegrityException("No calc site has the location " + location.Name + ". To make the transportation work, every site needs one location.");
+                    }
+
+                    if (sites.Count > 1)
+                    {
+                        throw new DataIntegrityException("More than one calc site has the location " + location.Name);
+                    }
+
+                    var aff = location.IdleAffs[person];
+                    AffordanceBaseTransportDecorator abtd = new AffordanceBaseTransportDecorator(
+                        aff, sites[0], chh.TransportationHandler, aff.Name,
+                        chh.HouseholdKey, Guid.NewGuid().ToStrGuid(), _calcRepo);
+                    location.IdleAffs[person] = abtd;
                 }
             }
         }

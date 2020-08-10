@@ -121,6 +121,7 @@ namespace Common.JSON {
         public StringBuilder GetEnergyEntriesAsString(bool useUnitConverter, [NotNull] CalcLoadTypeDto dstLoadType,
             [CanBeNull] List<int> usedColumns, [NotNull] string csvChar) {
             var sb = new StringBuilder();
+
             for (var i = 0; i < _energyEntries.Count; i++) {
                 if (usedColumns == null || usedColumns.Count == 0 || usedColumns.Contains(i)) {
                     var d = _energyEntries[i];

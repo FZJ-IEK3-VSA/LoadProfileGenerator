@@ -64,7 +64,7 @@ namespace CalculationEngine.HouseholdElements {
 
         //public override ICalcProfile CollectPersonProfile() => throw new LPGException("This function should never be called");
 
-        public override bool IsBusy(TimeStep time,
+        public override BusynessType IsBusy(TimeStep time,
                                     CalcLocation srcLocation, string calcPersonName,
                                     bool clearDictionaries = true) =>
             throw new LPGException("This function should never be called");

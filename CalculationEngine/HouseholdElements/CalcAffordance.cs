@@ -268,7 +268,7 @@ namespace CalculationEngine.HouseholdElements {
                     var delaytimesteps = calcSubAffordance.Delaytimesteps;
                     var hasbeenactivefor = HasBeenActiveFor(time);
                     var issubaffbusy = calcSubAffordance.IsBusy(time, srcLocation, "name");
-                    if (delaytimesteps < hasbeenactivefor && !issubaffbusy) {
+                    if (delaytimesteps < hasbeenactivefor && issubaffbusy == BusynessType.NotBusy) {
                         calcSubAffordance.SetDurations(RemainingActiveTime(time));
                         result.Add(calcSubAffordance);
                     }
@@ -278,7 +278,7 @@ namespace CalculationEngine.HouseholdElements {
             return result;
         }
 
-        public override bool IsBusy(TimeStep time,
+        public override BusynessType IsBusy(TimeStep time,
                                     CalcLocation srcLocation,
                                     string calcPersonName,
                                     bool clearDictionaries = true)
@@ -307,17 +307,17 @@ namespace CalculationEngine.HouseholdElements {
             if (_variableRequirements.Count > 0) {
                 foreach (var requirement in _variableRequirements) {
                     if (!requirement.IsMet()) {
-                        return true; // return is busy right now and not available.
+                        return BusynessType.VariableRequirementsNotMet; // return is busy right now and not available.
                     }
                 }
             }
 
             if (time.InternalStep >= IsBusyArray.Length) {
-                return false;
+                return BusynessType.BeyondTimeLimit;
             }
 
             if (IsBusyArray[time.InternalStep]) {
-                return true;
+                return BusynessType.Occupied;
             }
 
             foreach (var dpt in Energyprofiles) {
@@ -326,12 +326,12 @@ namespace CalculationEngine.HouseholdElements {
                         dpt.TimeProfile.StepValues.Count,
                         _timeFactorsForTimes[time.InternalStep],
                         dpt.LoadType)) {
-                        return true;
+                        return BusynessType.Occupied;
                     }
                 }
             }
 
-            return false;
+            return BusynessType.NotBusy;
         }
 
         public override string ToString() => "Affordance:" + Name;
