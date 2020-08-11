@@ -99,6 +99,8 @@ namespace CalculationEngine.OnlineDeviceLogging {
         [ItemNotNull]
         [NotNull]
         private readonly List<SetToZeroEntry> _zeroEntries = new List<SetToZeroEntry>();
+
+        private readonly HashSet<StrGuid> _savedDevices = new HashSet<StrGuid>();
         //[ItemNotNull]
         //[NotNull]
         //private List<OnlineDeviceStateMachine> _statemachines = new List<OnlineDeviceStateMachine>();
@@ -158,6 +160,10 @@ namespace CalculationEngine.OnlineDeviceLogging {
                 var entry = new DeviceActivationEntry( dsm.AffordanceName,
                     dsm.LoadType,totalEnergysum , activatorName,sv.Values.Count,
                     startTimeStep, calcDeviceDto); // dsm.StepValues.ToArray(),
+                if (!_savedDevices.Contains(calcDeviceDto.Guid)) {
+                    _old.RegisterDeviceArchiveDto(new CalcDeviceArchiveDto( calcDeviceDto));
+                    _savedDevices.Add(calcDeviceDto.Guid);
+                }
                 _old.RegisterDeviceActivation(entry);
             }
         }

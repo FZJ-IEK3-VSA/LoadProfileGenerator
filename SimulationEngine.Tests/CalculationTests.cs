@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
@@ -12,13 +13,13 @@ using Common;
 using Common.Enums;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
-using Common.SQLResultLogging.Loggers;
 using Common.Tests;
 using Database;
 using Database.Helpers;
 using Database.Tables.Houses;
 using Database.Tables.ModularHouseholds;
 using Database.Tests;
+using FluentAssertions;
 using Newtonsoft.Json;
 using SimulationEngineLib.HouseJobProcessor;
 using Xunit;
@@ -68,7 +69,7 @@ namespace SimulationEngine.Tests {
             var hj = new HouseCreationAndCalculationJob();
             hj.CalcSpec = JsonCalcSpecification.MakeDefaultsForTesting();
             hj.CalcSpec.StartDate = new DateTime(2020, 1, 1);
-            hj.CalcSpec.EndDate = new DateTime(2020, 3, 1);
+            hj.CalcSpec.EndDate = new DateTime(2020, 12, 31);
             hj.CalcSpec.DeleteDAT = false;
             hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.NoFiles;
             hj.CalcSpec.DeleteSqlite = false;
@@ -155,6 +156,10 @@ namespace SimulationEngine.Tests {
 
         public static void CheckForResultfile(string wd, CalcOption option)
         {
+
+             var peakWorkingSet = Process.GetCurrentProcess().PeakWorkingSet64;
+             const long memoryCap = 1024 * 1024 * 2000;
+            peakWorkingSet.Should().BeLessThan(memoryCap);
             var srls = new SqlResultLoggingService(wd);
             var rfel = new ResultFileEntryLogger(srls);
             var rfes = rfel.Load();
@@ -367,10 +372,12 @@ namespace SimulationEngine.Tests {
                 }
                 //device activations
 
-                var deviceActivaitonLogger = new DeviceActivationEntryLogger(srls);
-                var deviceActivations = deviceActivaitonLogger.Read(hhkey);
-                var activatedDevices = deviceActivations.Select(x =>
-                    x.DeviceName).Distinct();
+                //var deviceActivaitonLogger = new DeviceActivationEntryLogger(srls);
+                //var deviceActivations = deviceActivaitonLogger.Read(hhkey);
+                var deviceArchiveLogger = new CalcDeviceArchiveDtoLogger(srls);
+                var devices = deviceArchiveLogger.Load(hhkey);
+                var activatedDevices = devices.Select(x => x.Device.Name).Distinct().ToList();
+                //var activatedDevices = deviceActivations.Select(x => x.DeviceName).Distinct();
                 foreach (var deviceName in deviceNames) {
                     if (!activatedDevices.Contains(deviceName)) {
                         Logger.Warning("Device " + deviceName+ " was never activated");
@@ -786,6 +793,7 @@ namespace SimulationEngine.Tests {
         [Trait(UnitTestCategories.Category, UnitTestCategories.ManualOnly)]
         public void MakeJsonForKenish()
         {
+            const string basepath = @"C:\Work\forKenish_v3";
             DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Simulator sim = new Simulator(db.ConnectionString);
             {
@@ -795,7 +803,7 @@ namespace SimulationEngine.Tests {
             }
 
             //hj.CalcSpec.OutputDirectory = "TestingData1";
-            File.WriteAllText("Testingdata1.json", JsonConvert.SerializeObject(hj, Formatting.Indented));
+            File.WriteAllText(Path.Combine(basepath,"Testingdata1.json"), JsonConvert.SerializeObject(hj, Formatting.Indented));
         }
 
             {
@@ -805,7 +813,7 @@ namespace SimulationEngine.Tests {
                 }
                // hj2.CalcSpec.OutputDirectory = "TestingData2";
                 hj2.CalcSpec.InternalTimeResolution = "00:30:00";
-                File.WriteAllText("TestingData2.json", JsonConvert.SerializeObject(hj2, Formatting.Indented));
+                File.WriteAllText(Path.Combine(basepath, "TestingData2.json"), JsonConvert.SerializeObject(hj2, Formatting.Indented));
             }
             {
                 var hj3 = MakeKenishHouseJob(sim,3);
@@ -815,7 +823,7 @@ namespace SimulationEngine.Tests {
                 }
               //  hj3.CalcSpec.OutputDirectory = "TestingData3";
                 hj3.CalcSpec.EndDate = new DateTime(2020, 12, 31);
-                File.WriteAllText("TestingData3.json", JsonConvert.SerializeObject(hj3, Formatting.Indented));
+                File.WriteAllText(Path.Combine(basepath, "TestingData3.json"), JsonConvert.SerializeObject(hj3, Formatting.Indented));
             }
             {
                 var hj4 = MakeKenishHouseJob(sim,4);
@@ -826,7 +834,7 @@ namespace SimulationEngine.Tests {
                // hj4.CalcSpec.OutputDirectory = "TestingData4";
                 hj4.CalcSpec.InternalTimeResolution = "00:30:00";
                 hj4.CalcSpec.EndDate = new DateTime(2020, 12, 31);
-                File.WriteAllText("TestingData4.json", JsonConvert.SerializeObject(hj4, Formatting.Indented));
+                File.WriteAllText(Path.Combine(basepath, "TestingData4.json"), JsonConvert.SerializeObject(hj4, Formatting.Indented));
             }
         }
 
@@ -842,7 +850,7 @@ namespace SimulationEngine.Tests {
             hj.CalcSpec.EnableTransportation = true;
             hj.CalcSpec.GeographicLocation = sim.GeographicLocations.FindFirstByName("Berlin", FindMode.Partial).GetJsonReference();
             hj.CalcSpec.DeleteDAT = true;
-            hj.CalcSpec.OutputDirectory = @"f:\forkenish\TestingData" + idx;
+            hj.CalcSpec.OutputDirectory = @"TestingData_" + idx;
             if (hj.CalcSpec.CalcOptions == null) {
                 throw new LPGException("was null");
             }
@@ -941,6 +949,38 @@ namespace SimulationEngine.Tests {
                 hj.CalcSpec.EndDate = new DateTime(2020,1,3);
                 return hj;
             }, (x) => CheckElec(x));
+        }
+    }
+
+    public class HouseholdDefinitionExporter {
+        [Fact]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.ManualOnly)]
+        public void ExportAllHouseholdDefinition()
+        {
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
+            Simulator sim = new Simulator(db.ConnectionString);
+            Dictionary<string, HouseholdDataPersonSpecification> hhs  = new Dictionary<string, HouseholdDataPersonSpecification>();
+            foreach (var mhh in sim.ModularHouseholds.Items) {
+                HouseholdDataPersonSpecification hhps = new HouseholdDataPersonSpecification(new List<PersonData>());
+                hhs.Add(mhh.Name,hhps);
+                foreach (var person in mhh.Persons) {
+                    var pd = new PersonData(person.Person.Age, person.Person.Gender != PermittedGender.Male ? Gender.Female : Gender.Male);
+                    pd.PersonTags.Add(person.TraitTag.Name);
+                    hhps.Persons.Add(pd);
+                }
+
+                if (hhps.HouseholdTags == null) {
+                    throw new LPGException("was null");
+                }
+
+                foreach (var tag in mhh.ModularHouseholdTags) {
+                        hhps.HouseholdTags.Add(tag.Tag.Name);
+                }
+            }
+
+            var str = JsonConvert.SerializeObject(hhs);
+            File.WriteAllText(@"AllHouseholds.json",str);
+
         }
     }
 }

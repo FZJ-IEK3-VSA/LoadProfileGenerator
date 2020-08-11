@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading;
@@ -79,6 +80,8 @@ namespace Common {
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public void CleanUp(int numberOfFilesToTolerate = 0, bool throwAllErrors = true) {
+            var peakWorkingSet = Process.GetCurrentProcess().PeakWorkingSet64;
+            Logger.Info("Peak workingset was : " + peakWorkingSet / 1024/1024 + " mb");
             if (_isClean) {
                 return;
             }

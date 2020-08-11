@@ -378,6 +378,7 @@ namespace CalculationController.CalcFactories
             builder.RegisterType<ActionEntryLogger>().As<IDataSaverBase>();
             builder.RegisterType<CalcPersonDtoLogger>().As<IDataSaverBase>();
             builder.RegisterType<CalcDeviceDtoLogger>().As<IDataSaverBase>();
+            builder.RegisterType<CalcDeviceArchiveDtoLogger>().As<IDataSaverBase>();
             builder.RegisterType<CalcAutoDevDtoLogger>().As<IDataSaverBase>();
             builder.RegisterType<CalcVariableDtoLogger>().As<IDataSaverBase>();
             builder.RegisterType<HouseholdKeyLogger>().As<IDataSaverBase>();

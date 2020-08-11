@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Automation;
 using Automation.ResultFiles;
 using CalcPostProcessor.Steps;
@@ -49,12 +48,6 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
 
             Logger.Info("Starting to complete list of heat gains by human activity at each time step...");
 
-            var singletimestepEntries = _repository.ReadSingleTimestepActionEntries(householdKey)
-                .OrderBy(x => x.TimeStep)
-                .ToList();
-            if (singletimestepEntries.Count == 0) {
-                throw new LPGException("No file for actions each time step found");
-            }
             var actionEntries = _repository.ReadActionEntries(householdKey);
             if (actionEntries.Count == 0) {
                 throw new LPGException("");
@@ -71,6 +64,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
 
                 bals.ActivityLevels.Add(level, new List<double>(new double[ calcParameters.OfficalTimesteps]));
             }
+            var singletimestepEntries = _repository.ReadSingleTimestepActionEntries(householdKey);
             foreach (var actionEntry in singletimestepEntries)
             {
                 var ae = actionEntryDict[actionEntry.ActionEntryGuid];

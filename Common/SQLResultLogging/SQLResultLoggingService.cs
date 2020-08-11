@@ -143,7 +143,50 @@ namespace Common.SQLResultLogging {
                 conn.Close();
             }
         }
+        [ItemNotNull]
+        [NotNull]
+        public IEnumerable<T> ReadFromJsonAsEnumerable<T>([NotNull] ResultTableDefinition rtd, [NotNull] HouseholdKey key)
+        {
+            if (!_isFileNameDictLoaded)
+            {
+                LoadFileNameDict();
+            }
 
+            string sql = "SELECT json FROM " + rtd.TableName;
+            if (!FilenameByHouseholdKey.ContainsKey(key))
+            {
+                throw new LPGException("Missing sql file for household key " + key);
+            }
+
+            string constr = "Data Source=" + FilenameByHouseholdKey[key].Filename + ";Version=3";
+            using (System.Data.SQLite.SQLiteConnection conn = new System.Data.SQLite.SQLiteConnection(constr))
+            {
+                //;Synchronous=OFF;Journal Mode=WAL;
+                conn.Open();
+                using (SQLiteCommand cmd = new SQLiteCommand())
+                {
+                    cmd.Connection = conn;
+                    /*
+                    List<string> tables = new List<string>();
+                    cmd.CommandText = "SELECT name FROM sqlite_master WHERE type='table';";
+                    using (var reader2 = cmd.ExecuteReader()) {
+                        while (reader2.Read())
+                        {
+                            tables.Add(reader2[0].ToString());
+                        }
+                    }*/
+
+                    cmd.CommandText = sql;
+                    var reader = cmd.ExecuteReader();
+                    while (reader.Read()) {
+                        string s = reader[0].ToString();
+                        T re = JsonConvert.DeserializeObject<T>(s);
+                        yield return re;
+                    }
+                    conn.Close();
+                }
+            }
+        }
 
 
         [ItemNotNull]
@@ -175,29 +218,30 @@ namespace Common.SQLResultLogging {
                             tables.Add(reader2[0].ToString());
                         }
                     }*/
-
+                    List<T> resultsObjects = new List<T>();
                     cmd.CommandText = sql;
-                    List<string> results = new List<string>();
                     var reader = cmd.ExecuteReader();
                     while (reader.Read()) {
-                        results.Add(reader[0].ToString());
+                        string s = reader[0].ToString();
+                        T re = JsonConvert.DeserializeObject<T>(s);
+                        resultsObjects.Add(re);
                     }
 
                     switch (expectedResult) {
                         case ExpectedResultCount.One:
-                            if (results.Count != 1) {
+                            if (resultsObjects.Count != 1) {
                                 throw new DataIntegrityException("Not exactly one result");
                             }
 
                             break;
                         case ExpectedResultCount.Many:
-                            if (results.Count < 2) {
+                            if (resultsObjects.Count < 2) {
                                 throw new DataIntegrityException("Not many results");
                             }
 
                             break;
                         case ExpectedResultCount.OneOrMore:
-                            if (results.Count < 1) {
+                            if (resultsObjects.Count < 1) {
                                 throw new DataIntegrityException("Not one or more results");
                             }
 
@@ -205,13 +249,6 @@ namespace Common.SQLResultLogging {
                         default:
                             throw new ArgumentOutOfRangeException(nameof(expectedResult), expectedResult, null);
                     }
-
-                    List<T> resultsObjects = new List<T>();
-                    foreach (string s in results) {
-                        T re = JsonConvert.DeserializeObject<T>(s);
-                        resultsObjects.Add(re);
-                    }
-
                     conn.Close();
                     return resultsObjects;
                 }

@@ -15,7 +15,7 @@ cd C:\Work\LPGDev\ReleaseMaker
 
 cd C:\Work\LPGDev\ReleaseMaker\bin\Debug
 releasemaker
-
+pause
 v:
 cd V:\Dropbox\LPGReleases\releases9.9.0\net48
 simulationengine cpy

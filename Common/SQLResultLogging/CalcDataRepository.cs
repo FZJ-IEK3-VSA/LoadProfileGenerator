@@ -283,10 +283,17 @@ namespace Common.SQLResultLogging {
         }
 
         [NotNull]
-        public List<SingleTimestepActionEntry> ReadSingleTimestepActionEntries([NotNull] HouseholdKey key)
+        public IEnumerable<SingleTimestepActionEntry> ReadSingleTimestepActionEntries([NotNull] HouseholdKey key)
         {
             SingleTimestepActionEntryLogger stael = new SingleTimestepActionEntryLogger(_srls);
             return stael.Read(key);
+        }
+
+        [NotNull]
+        public List<CalcDeviceArchiveDto> LoadDeviceArchiveEntries([NotNull] HouseholdKey key)
+        {
+            var cpl = new CalcDeviceArchiveDtoLogger(_srls);
+            return cpl.Load(key);
         }
     }
 }

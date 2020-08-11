@@ -322,7 +322,7 @@ namespace ReleaseMaker {
             Copy(programFiles, src, dst, "Microsoft.Win32.Registry.dll");
             Copy(programFiles, src, dst, "Microsoft.Win32.SystemEvents.dll");
             Copy(programFiles, src, dst, "mscordaccore.dll");
-            Copy(programFiles, src, dst, "mscordaccore_amd64_amd64_4.700.20.6602.dll");
+            Copy(programFiles, src, dst, "mscordaccore_amd64_amd64_4.700.20.26901.dll");
             Copy(programFiles, src, dst, "mscordbi.dll");
             Copy(programFiles, src, dst, "mscorlib.dll");
             Copy(programFiles, src, dst, "mscorrc.debug.dll");

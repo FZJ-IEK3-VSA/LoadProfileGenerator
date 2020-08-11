@@ -77,18 +77,19 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             //return;
             //}
             var deviceActivationEntries = Repository.LoadDeviceActivations(p.Key.HHKey);
-
+            var deviceArchive = Repository.LoadDeviceArchiveEntries(p.Key.HHKey);
             var deviceEnergyDict = new Dictionary<string, double>();
             foreach (var activationEntry in deviceActivationEntries) {
                 if (activationEntry.LoadTypeGuid != p.LoadType.Guid) {
                     continue;
                 }
 
-                if (!deviceEnergyDict.ContainsKey(activationEntry.DeviceName)) {
-                    deviceEnergyDict.Add(activationEntry.DeviceName, 0);
+                var deviceName = deviceArchive.Single(x => x.Device.Guid == activationEntry.DeviceGuid).Device.Name;
+                if (!deviceEnergyDict.ContainsKey(deviceName)) {
+                    deviceEnergyDict.Add(deviceName, 0);
                 }
 
-                deviceEnergyDict[activationEntry.DeviceName] += activationEntry.TotalEnergySum;
+                deviceEnergyDict[deviceName] += activationEntry.TotalEnergySum;
             }
 
             var deviceTaggingSetInformations = Repository.GetDeviceTaggingSets();

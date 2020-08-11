@@ -9,6 +9,14 @@ using JetBrains.Annotations;
 namespace Common.CalcDto {
     using JSON;
 
+    public class CalcDeviceArchiveDto : IHouseholdKey
+    {
+        public CalcDeviceArchiveDto(CalcDeviceDto device) => Device = device;
+
+        public CalcDeviceDto Device { get; set; }
+        public HouseholdKey HouseholdKey => Device.HouseholdKey;
+    }
+
     [Serializable]
     public class CalcDeviceDto : ICalcDeviceDto, IHouseholdKey
     {

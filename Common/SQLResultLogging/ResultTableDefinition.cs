@@ -46,7 +46,8 @@ namespace Common.SQLResultLogging
         PersonAffordanceInformation,
         SingleTimeStepActionEntry,
         TotalsPerDevice,
-        BodilyActivityLevelCount
+        BodilyActivityLevelCount,
+        DeviceArchive
     }
     public class ResultTableDefinition: IEquatable<ResultTableDefinition>
     {

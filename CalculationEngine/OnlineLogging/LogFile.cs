@@ -34,6 +34,7 @@ using Automation;
 using Automation.ResultFiles;
 using CalculationEngine.Transportation;
 using Common;
+using Common.CalcDto;
 using Common.Enums;
 using Common.JSON;
 using Common.SQLResultLogging;
@@ -89,6 +90,7 @@ namespace CalculationEngine.OnlineLogging {
         void FinalSaveToDatabase();
         void SaveIfNeeded([NotNull] TimeStep timestep);
         void RegisterDeviceActivation([NotNull] DeviceActivationEntry affordanceActivationEntry);
+        void RegisterDeviceArchiveDto([NotNull] CalcDeviceArchiveDto deviceDto);
         void AddPersonStatus([NotNull] PersonStatus ps);
         void AddTransportationDeviceState([NotNull] TransportationDeviceStateEntry tdse);
         void AddChargingStationState([NotNull] ChargingStationState state);
@@ -98,7 +100,8 @@ namespace CalculationEngine.OnlineLogging {
     public class OnlineLoggingData : IOnlineLoggingData {
         [NotNull] [ItemNotNull] private readonly List<ActionEntry> _actionEntries = new List<ActionEntry>();
 
-        [NotNull] [ItemNotNull] private readonly List<DeviceActivationEntry> _affordanceActivationEntries;
+        [NotNull] [ItemNotNull] private readonly List<DeviceActivationEntry> _deviceActivationEntries;
+        [NotNull] [ItemNotNull] private readonly List<CalcDeviceArchiveDto> _deviceEntries;
 
         [ItemNotNull] [NotNull] private readonly List<ColumnEntry> _columnEntries;
 
@@ -124,8 +127,8 @@ namespace CalculationEngine.OnlineLogging {
             _calcParameters = calcParameters;
             _columnEntries = new List<ColumnEntry>();
             _lists.Add(_columnEntries);
-            _affordanceActivationEntries = new List<DeviceActivationEntry>();
-            _lists.Add(_affordanceActivationEntries);
+            _deviceActivationEntries = new List<DeviceActivationEntry>();
+            _lists.Add(_deviceActivationEntries);
             _transportationStatuses = new List<TransportationStatus>();
             _lists.Add(_transportationStatuses);
             _transportationDeviceState = new List<TransportationDeviceStateEntry>();
@@ -140,6 +143,8 @@ namespace CalculationEngine.OnlineLogging {
             _lists.Add(_chargingStationStates);
             _variableEntries = new List<CalcVariableEntry>();
             _lists.Add(_variableEntries);
+            _deviceEntries = new List<CalcDeviceArchiveDto>();
+            _lists.Add(_deviceEntries);
         }
 
         public void AddTransportationDeviceState(TransportationDeviceStateEntry tdse)
@@ -165,6 +170,11 @@ namespace CalculationEngine.OnlineLogging {
         public void AddColumnEntry(ColumnEntry ce)
         {
             _columnEntries.Add(ce);
+        }
+
+        public void RegisterDeviceArchiveDto(CalcDeviceArchiveDto deviceDto)
+        {
+            _deviceEntries.Add(deviceDto);
         }
 
         public void AddPersonStatus(PersonStatus ps)
@@ -255,9 +265,9 @@ namespace CalculationEngine.OnlineLogging {
                 _actionEntries.Clear();
             }
 
-            if (_affordanceActivationEntries.Count > 0&& _calcParameters.Options.Contains(CalcOption.DeviceActivations)) {
-                _idl.SaveList(_affordanceActivationEntries.ConvertAll(x => (IHouseholdKey)x));
-                _affordanceActivationEntries.Clear();
+            if (_deviceActivationEntries.Count > 0&& _calcParameters.Options.Contains(CalcOption.DeviceActivations)) {
+                _idl.SaveList(_deviceActivationEntries.ConvertAll(x => (IHouseholdKey)x));
+                _deviceActivationEntries.Clear();
             }
 
             if (_columnEntries.Count > 0) {
@@ -300,11 +310,16 @@ namespace CalculationEngine.OnlineLogging {
                 _idl.SaveList(_variableEntries.ConvertAll(x => (IHouseholdKey)x));
                 _variableEntries.Clear();
             }
+
+            if (_deviceEntries.Count > 0) {
+                _idl.SaveList(_deviceEntries.ConvertAll(x => (IHouseholdKey)x));
+                _deviceEntries.Clear();
+            }
         }
 
         public void RegisterDeviceActivation(DeviceActivationEntry affordanceActivationEntry)
         {
-            _affordanceActivationEntries.Add(affordanceActivationEntry);
+            _deviceActivationEntries.Add(affordanceActivationEntry);
         }
 
         public void AddChargingStationState(ChargingStationState state)

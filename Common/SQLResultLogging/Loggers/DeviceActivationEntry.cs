@@ -61,29 +61,26 @@ namespace Common.SQLResultLogging.Loggers {
             TotalEnergySum = value;
             ActivatorName = activatorName;
             Timestep = timestep;
-            CalcDeviceDto = calcDeviceDto;
+            DeviceGuid = calcDeviceDto.Guid;
             DurationInSteps = durationInSteps;
+            HouseholdKey = calcDeviceDto.HouseholdKey;
         }
 
         [UsedImplicitly]
         [CanBeNull]
         public StrGuid? DeviceGuid {
-            get {
-                if(CalcDeviceDto!= null) {
-                    return CalcDeviceDto?.Guid;
-                }
-                return null;
-            }
+            get;
+            set;
         }
+
 
         [UsedImplicitly]
         [JsonProperty]
         public TimeStep Timestep { get;  set; }
 
-        public CalcDeviceDto CalcDeviceDto { get;  set; }
-
-        [UsedImplicitly]
-        public HouseholdKey HouseholdKey => CalcDeviceDto.HouseholdKey;
+        //public CalcDeviceDto CalcDeviceDto { get;  set; }
+//[UsedImplicitly]
+        //public HouseholdKey HouseholdKey => CalcDeviceDto.HouseholdKey;
 
         [NotNull]
         [UsedImplicitly]
@@ -113,12 +110,11 @@ namespace Common.SQLResultLogging.Loggers {
         [JsonProperty]
         public string ActivatorName { get;  set; }
 
-        [NotNull]
-        [UsedImplicitly]
-        public string DeviceName => CalcDeviceDto.Name;
 
         [UsedImplicitly]
         [JsonProperty]
         public int DurationInSteps { get;  set; }
+
+        public HouseholdKey HouseholdKey { get; set; }
     }
 }

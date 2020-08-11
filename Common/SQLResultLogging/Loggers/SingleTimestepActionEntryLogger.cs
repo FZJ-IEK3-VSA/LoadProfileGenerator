@@ -45,10 +45,10 @@ namespace Common.SQLResultLogging.Loggers {
 
         [ItemNotNull]
         [NotNull]
-        public List<SingleTimestepActionEntry> Read([NotNull] HouseholdKey key)
+        public IEnumerable<SingleTimestepActionEntry> Read([NotNull] HouseholdKey key)
         {
             var res =
-                _srls.ReadFromJson<SingleTimestepActionEntry>(ResultTableDefinition, key, ExpectedResultCount.OneOrMore);
+                _srls.ReadFromJsonAsEnumerable<SingleTimestepActionEntry>(ResultTableDefinition, key);
             return res;
         }
     }

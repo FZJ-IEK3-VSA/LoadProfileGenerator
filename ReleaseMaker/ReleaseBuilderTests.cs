@@ -421,7 +421,7 @@ namespace ReleaseMaker
             const bool cleanCalcOutcomes = true;
             Logger.Info("### Starting Release");
             var releasename = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            releasename = releasename.Substring(0, 5);
+            releasename = releasename.Substring(0, 6);
             Logger.Info("Release name: " + releasename);
             //return;
             var dstWin = @"v:\Dropbox\LPGReleases\releases" + releasename + "\\net48";
