@@ -570,8 +570,8 @@ namespace Calculation.Tests {
             CheckForBusyness( loc, aff, cd, lt);
             aff.IsBusy(ts.AddSteps(1),  loc, "name", false).Should().NotBe(BusynessType.NotBusy);
             aff.IsBusy( ts.AddSteps(19),  loc, "name", false).Should().NotBe(BusynessType.NotBusy);
-            aff.IsBusy(ts,  loc, "name", false).Should().NotBe(BusynessType.NotBusy);
-            aff.IsBusy(ts.AddSteps(20),  loc, "name", false).Should().NotBe(BusynessType.NotBusy);
+            aff.IsBusy(ts,  loc, "name", false).Should().Be(BusynessType.NotBusy);
+            aff.IsBusy(ts.AddSteps(20),  loc, "name", false).Should().Be(BusynessType.NotBusy);
         }
     }
 }

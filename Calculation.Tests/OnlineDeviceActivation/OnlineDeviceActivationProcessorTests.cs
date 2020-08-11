@@ -284,6 +284,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                 wd.InputDataLogger.AddSaver(new CalcLoadTypeDtoLogger(wd.SqlResultLoggingService));
                 wd.InputDataLogger.AddSaver(new CalcPersonDtoLogger(wd.SqlResultLoggingService));
                 wd.InputDataLogger.AddSaver(new DeviceTaggingSetLogger(wd.SqlResultLoggingService));
+                wd.InputDataLogger.AddSaver(new CalcDeviceArchiveDtoLogger(wd.SqlResultLoggingService));
                 var calculationProfiler = new CalculationProfiler();
 
                 var startdate = new DateTime(2018, 1, 1);
@@ -450,6 +451,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                 wd.InputDataLogger.AddSaver(new DeviceActivationEntryLogger(wd.SqlResultLoggingService));
                 wd.InputDataLogger.AddSaver(new CalcPersonDtoLogger(wd.SqlResultLoggingService));
                 wd.InputDataLogger.AddSaver(new DeviceTaggingSetLogger(wd.SqlResultLoggingService));
+                wd.InputDataLogger.AddSaver(new CalcDeviceArchiveDtoLogger(wd.SqlResultLoggingService));
                 wd.InputDataLogger.Save(calcParameters);
                 using (var fft = new FileFactoryAndTracker(wd.WorkingDirectory, "hh1", wd.InputDataLogger)) {
                     fft.RegisterHousehold(Constants.GeneralHouseholdKey, "general", HouseholdKeyType.General, "desc", null, null);
