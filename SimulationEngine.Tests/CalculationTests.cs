@@ -29,6 +29,11 @@ using Xunit.Abstractions;
 
 
 namespace SimulationEngine.Tests {
+    public enum TestDuration {
+        OneMonth,
+        ThreeMonths,
+        TwelveMonths
+    }
     public static class HouseJobCalcPreparer {
         public static HouseCreationAndCalculationJob PrepareExistingHouseForTesting([JetBrains.Annotations.NotNull] House house)
         {
@@ -39,13 +44,14 @@ namespace SimulationEngine.Tests {
             return hj;
         }
 
-        public static HouseCreationAndCalculationJob PrepareNewHouseForHouseholdTesting(Simulator sim, string guid)
+        public static HouseCreationAndCalculationJob PrepareNewHouseForHouseholdTesting(Simulator sim, string guid, TestDuration duration)
         {
             var hj = new HouseCreationAndCalculationJob();
             hj.CalcSpec = JsonCalcSpecification.MakeDefaultsForTesting();
             hj.CalcSpec.StartDate = new DateTime(2020, 1, 1);
-            hj.CalcSpec.EndDate = new DateTime(2020, 1, 3);
-            hj.CalcSpec.DeleteDAT = false;
+            SetEndDate(duration, hj);
+
+    hj.CalcSpec.DeleteDAT = false;
             hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.NoFiles;
             hj.CalcSpec.DeleteSqlite = false;
             hj.CalcSpec.ExternalTimeResolution = "00:15:00";
@@ -63,13 +69,29 @@ namespace SimulationEngine.Tests {
             return hj;
         }
 
+        private static void SetEndDate(TestDuration duration, HouseCreationAndCalculationJob hj)
+        {
+            if (duration == TestDuration.OneMonth) {
+                hj.CalcSpec.EndDate = new DateTime(2020, 2, 1);
+            }
+            else if (duration == TestDuration.ThreeMonths) {
+                hj.CalcSpec.EndDate = new DateTime(2020, 4, 1);
+            }
+            else if (duration == TestDuration.TwelveMonths) {
+                hj.CalcSpec.EndDate = new DateTime(2020, 12, 31);
+            }
+            else {
+                throw new LPGException("Unkown duration");
+            }
+        }
+
         public static HouseCreationAndCalculationJob PrepareNewHouseForHouseholdTestingWithTransport(
-            Simulator sim, string guid)
+            Simulator sim, string guid, TestDuration duration)
         {
             var hj = new HouseCreationAndCalculationJob();
             hj.CalcSpec = JsonCalcSpecification.MakeDefaultsForTesting();
             hj.CalcSpec.StartDate = new DateTime(2020, 1, 1);
-            hj.CalcSpec.EndDate = new DateTime(2020, 12, 31);
+            SetEndDate(duration, hj);
             hj.CalcSpec.DeleteDAT = false;
             hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.NoFiles;
             hj.CalcSpec.DeleteSqlite = false;
@@ -402,7 +424,7 @@ namespace SimulationEngine.Tests {
             const CalcOption co = CalcOption.JsonDeviceProfilesIndividualHouseholds;
             Logger.Threshold = Severity.Warning;
             HouseJobTestHelper.RunSingleHouse((sim) => {
-                var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim, hhguid);
+                var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim, hhguid, TestDuration.OneMonth);
                 //hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.All;
                 if(hj.CalcSpec == null) {
                     throw new LPGException("was null");
@@ -433,7 +455,7 @@ namespace SimulationEngine.Tests {
             sw.WriteLine("      const CalcOption co = CalcOption." + option + ";");
             sw.WriteLine("      HouseJobTestHelper.RunSingleHouse((sim) => {");
             sw.WriteLine(
-                "      var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim, hhguid);");
+                "      var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim, hhguid,TestDuration.TwelveMonths);");
             sw.WriteLine("      hj.CalcSpec.CalcOptions.Add(co); return hj;");
             sw.WriteLine("      }, (x) => HouseJobTestHelper.CheckForResultfile(x, co));");
             sw.WriteLine("}");
@@ -464,7 +486,7 @@ namespace SimulationEngine.Tests {
             sw.WriteLine("public void TestBasicHousehold" + idx + "(){");
             sw.WriteLine("      const string hhguid = \"" + hh.Guid.StrVal + "\";");
             sw.WriteLine("      HouseJobTestHelper.RunSingleHouse(sim => {");
-            sw.WriteLine("      var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid);");
+            sw.WriteLine("      var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);");
             sw.WriteLine("      if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }");
             sw.WriteLine("      hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;");
             sw.WriteLine("return hj; }, x => {});");
@@ -482,7 +504,7 @@ namespace SimulationEngine.Tests {
             sw.WriteLine("      const string hhguid = \"" + hh.Guid.StrVal + "\";");
             sw.WriteLine("      HouseJobTestHelper.RunSingleHouse(sim => {");
             sw.WriteLine(
-                "      var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim,hhguid);");
+                "      var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim,hhguid,TestDuration.ThreeMonths);");
             sw.WriteLine("      if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }");
             sw.WriteLine("      hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;");
             sw.WriteLine("return hj; }, x => {});");
@@ -766,7 +788,7 @@ namespace SimulationEngine.Tests {
         {
             HouseJobTestHelper.RunSingleHouse(sim => {
                 var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,
-                    sim.ModularHouseholds[0].Guid.ToString());
+                    sim.ModularHouseholds[0].Guid.ToString(), TestDuration.OneMonth);
                 if (hj.CalcSpec?.CalcOptions == null) {
                     throw new LPGException();
                 }
@@ -940,7 +962,7 @@ namespace SimulationEngine.Tests {
             const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
             const CalcOption co = CalcOption.JsonDeviceProfilesIndividualHouseholds;
             HouseJobTestHelper.RunSingleHouse((sim) => {
-                var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim, hhguid);
+                var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim, hhguid,TestDuration.ThreeMonths);
                 if (hj.CalcSpec?.CalcOptions == null) {
                     throw new LPGException("errr");
                 }
