@@ -106,9 +106,9 @@ namespace LoadProfileGenerator {
                 //TODO: add traittag to template person
                 ModularHouseholdPerson mhhperson =
                     templatePerson.BaseHousehold.Persons.FirstOrDefault(x => x.Person == templatePerson.BasePerson);
-                TraitTag tt = null;
+                LivingPatternTag tt = null;
                 if (mhhperson != null) {
-                    tt = mhhperson.TraitTag;
+                    tt = mhhperson.LivingPatternTag;
                 }
                 else {
                     Logger.Error("no tag");

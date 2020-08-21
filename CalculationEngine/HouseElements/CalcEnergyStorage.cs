@@ -40,7 +40,7 @@ namespace CalculationEngine.HouseElements {
     public class CalcEnergyStorage : CalcBase {
         private readonly OefcKey _devProcessorKey;
 
-        [CanBeNull] private readonly EnergyStorageLogfile _elf;
+        private readonly EnergyStorageLogfile? _elf;
 
         [NotNull] private readonly EnergyStorageHeaderEntry _headerEntry;
 
@@ -60,14 +60,14 @@ namespace CalculationEngine.HouseElements {
 
         private readonly double _storageCapacity;
         private double _currentFillLevel;
-        [CanBeNull] private TimeStep _currentTimeStep;
+        private TimeStep? _currentTimeStep;
         private double _previousDelta;
 
         public CalcEnergyStorage(  [NotNull] IOnlineDeviceActivationProcessor odap,
                                  [NotNull] CalcLoadTypeDto loadType,
                                  double maximumStorageRate, double maximumWithdrawRate, double minimumStorageRate,
                                  double minimumWithdrawRate,
-                                 double initialFill, double storageCapacity, [CanBeNull] EnergyStorageLogfile elf,
+                                 double initialFill, double storageCapacity, EnergyStorageLogfile? elf,
                                    [NotNull] CalcDeviceDto deviceDto)
             : base(deviceDto.Name,deviceDto.Guid)
         {
@@ -105,7 +105,7 @@ namespace CalculationEngine.HouseElements {
         }
 
         public bool ProcessOneTimestep([NotNull] [ItemNotNull] List<OnlineEnergyFileRow> fileRows, [NotNull] TimeStep timeStep,
-                                       [CanBeNull] [ItemNotNull] List<string> log)
+                                       [ItemNotNull] List<string>? log)
         {
             if (timeStep != _currentTimeStep) {
                 _currentTimeStep = timeStep;
@@ -183,9 +183,8 @@ namespace CalculationEngine.HouseElements {
             return madeChanges;
         }
 
-        [CanBeNull]
-        private static OnlineEnergyFileRow GetRowForLoadType([NotNull] CalcLoadTypeDto lt,
-                                                             [NotNull] [ItemNotNull] List<OnlineEnergyFileRow> fileRows)
+        private static OnlineEnergyFileRow? GetRowForLoadType([NotNull] CalcLoadTypeDto lt,
+                                                              [NotNull] [ItemNotNull] List<OnlineEnergyFileRow> fileRows)
         {
             foreach (var onlineEnergyFileRow in fileRows) {
                 if (onlineEnergyFileRow.LoadType == lt) {

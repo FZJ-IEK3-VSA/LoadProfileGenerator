@@ -12,7 +12,6 @@
 
   <ItemGroup>
     <PackageReference Include="NETStandard.Library" Version="2.0.3" />
-    <PackageReference Include="PowerArgs" Version="3.6.0" />
     <PackageReference Include="Roslynator.Analyzers" Version="2.3.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -21,10 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Automation\Automation.csproj" />
-    <ProjectReference Include="..\CalculationController\CalculationController.csproj" />
-    <ProjectReference Include="..\CalculationEngine\CalculationEngine.csproj" />
-    <ProjectReference Include="..\Database\Database.csproj" />
     <ProjectReference Include="..\SimulationEngineLib\SimulationEngineLib.csproj" />
   </ItemGroup>
 

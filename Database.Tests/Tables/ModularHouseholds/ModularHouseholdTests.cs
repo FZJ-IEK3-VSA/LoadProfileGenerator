@@ -92,7 +92,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
 
 
                     //modify the persons and make sure it is different
-                    newhh.AddPerson(sim.Persons[5], sim.TraitTags[0]);
+                    newhh.AddPerson(sim.Persons[5], sim.LivingPatternTags[0]);
                     (newhh.Persons.Count).Should().Be(jsonHH1.Persons.Count + 1);
                     var newJson5 = newhh.GetJson();
                     var newJson5String = JsonConvert.SerializeObject(newJson5, Formatting.Indented);
@@ -162,7 +162,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
                 ModularHousehold mhh = sim.ModularHouseholds.Items[0];
                 ModularHouseholdPerson mhhPerson = mhh.Persons[0];
                 Person dstPerson = sim.Persons.Items[10];
-                TraitTag dstTag = sim.TraitTags.Items[10];
+                LivingPatternTag dstTag = sim.LivingPatternTags.Items[10];
                 int traitsBefore = mhh.Traits.Count;
                 mhh.SwapPersons(mhhPerson, dstPerson, dstTag);
                 int traitsAfter = mhh.Traits.Count;
@@ -182,7 +182,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
                 ModularHousehold mhh = sim.ModularHouseholds.Items[0];
                 ModularHouseholdPerson mhhPerson = mhh.Persons[0];
                 Person dstPerson = mhhPerson.Person;
-                TraitTag dstTag = sim.TraitTags.Items[10];
+                var dstTag = sim.LivingPatternTags.Items[10];
                 int traitsBefore = mhh.Traits.Count;
                 mhh.SwapPersons(mhhPerson, dstPerson, dstTag);
                 int traitsAfter = mhh.Traits.Count;
@@ -239,9 +239,9 @@ namespace Database.Tests.Tables.ModularHouseholds {
                 var vacations = db.LoadVacations();
                 var hhTags = db.LoadHouseholdTags();
                 var traitTags = db.LoadTraitTags();
-
+                var lpTags = db.LoadLivingPatternTags();
                 ModularHousehold.LoadFromDatabase(result, db.ConnectionString, householdTraits, deviceSelections, false,
-                    persons, vacations, hhTags, traitTags);
+                    persons, vacations, hhTags, traitTags, lpTags);
                 (result.Count).Should().Be(0);
                 var chh = new ModularHousehold("blub", null, "blub", db.ConnectionString, ds, "src", null, null,
                     EnergyIntensityType.Random, CreationType.ManuallyCreated, Guid.NewGuid().ToStrGuid());
@@ -250,7 +250,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
                 chh.SaveToDB();
                 result.Clear();
                 ModularHousehold.LoadFromDatabase(result, db.ConnectionString, householdTraits, deviceSelections, false,
-                    persons, vacations, hhTags, traitTags);
+                    persons, vacations, hhTags, traitTags, lpTags);
                 (result.Count).Should().Be(1);
                 (result[0].Traits.Count).Should().Be(1);
                 db.Cleanup();

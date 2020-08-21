@@ -12,7 +12,7 @@ namespace Common.SQLResultLogging.InputLoggers
     public class CalcAffordanceDtoLogger : DataSaverBase
     {
         public CalcAffordanceDtoLogger([NotNull] SqlResultLoggingService srls)
-            : base(typeof(CalcAffordanceDto), new ResultTableDefinition( "AffordanceDefinitions",ResultTableID.AffordanceDefinitions, "Json Specification of the Affordances", CalcOption.HouseholdContents), srls)
+            : base(typeof(CalcAffordanceDto), new ResultTableDefinition( "AffordanceDefinitions",ResultTableID.AffordanceDefinitions, "Json Specification of the Affordances", CalcOption.AffordanceDefinitions), srls)
         {
         }
 

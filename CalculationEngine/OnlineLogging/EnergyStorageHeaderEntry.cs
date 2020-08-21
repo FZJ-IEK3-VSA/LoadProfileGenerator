@@ -8,7 +8,7 @@ namespace CalculationEngine.OnlineLogging {
         private readonly string _loadType;
         [NotNull]
         private readonly string _name;
-        [CanBeNull] private string _signals;
+        private string? _signals;
 
         public EnergyStorageHeaderEntry([NotNull] string name, [NotNull] string capacity, [NotNull] string loadType) {
             _name = name;

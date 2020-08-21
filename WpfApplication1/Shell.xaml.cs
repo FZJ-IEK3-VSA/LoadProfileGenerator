@@ -27,6 +27,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -1448,24 +1449,74 @@ namespace LoadProfileGenerator {
             Application.Current.Shutdown();
         }
 
-        private void PutWorkaroundInAllHouseholds(object sender, RoutedEventArgs e)
-        {
-            if (Sim == null) {
-                throw new LPGException("no simulator");
-            }
-            var alltrait = Sim.HouseholdTraits.Items.Where(x => x.Name == "Activity Deficit Workaround").ToList();
-            if (alltrait.Count != 1) {
-                throw new LPGException("didn't find the workaround trait. found " + alltrait.Count+  " traits");
-            }
 
-            var selectedtrait = alltrait[0];
-            foreach (var household in Sim.ModularHouseholds.Items) {
-                foreach (var person in household.AllPersons) {
-                    var persontraits = household.Traits.Where(x => x.DstPerson == person).ToList();
-                    if (persontraits.All(x => x.HouseholdTrait != selectedtrait)) {
-                        household.AddTrait(selectedtrait, ModularHouseholdTrait.ModularHouseholdTraitAssignType.Name, person);
-                        household.SaveToDB();
+        private void AddLivingPatternTag_Click(object sender, RoutedEventArgs e)
+        {
+                try
+                {
+                    var d = Presenter.AddLivingPatternTag();
+                    MyGlobalTree.SelectItem(d, false);
+                }
+                catch (Exception ex)
+                {
+                    MessageWindowHandler.Mw.ShowDebugMessage(ex);
+                }
+        }
+
+        private void BtnCopyLivingPatterns(object sender, RoutedEventArgs e)
+        {
+            //RunLivingPatternCopy(Sim??throw new LPGException("was null"));
+            //ConvertAllPersonTagsToLivingPatternTags(Sim ?? throw new LPGException("was null"));
+        }
+
+        public static void RunLivingPatternCopy([NotNull] Simulator sim)
+        {
+            foreach (var tag in sim.TraitTags.Items) {
+                if (tag.Name.StartsWith("Living Pattern")) {
+                    var newtag= sim.LivingPatternTags.CreateNewItem(sim.ConnectionString);
+                    newtag.Name = tag.Name;
+                    newtag.SaveToDB();
+                }
+            }
+        }
+
+        //public static void ConvertAllPersonTagsToLivingPatternTags([NotNull] Simulator sim)
+        //{
+        //    foreach (var household in sim.ModularHouseholds.Items) {
+        //        foreach (var person in household.Persons) {
+        //            var srcTag = sim.LivingPatternTags.FindFirstByNameNotNull(person.TraitTag?.Name);
+        //            person.LivingPatternTag = srcTag;
+        //            person.SaveToDB();
+        //        }
+        //    }
+
+        //    foreach (var template in sim.HouseholdTemplates.Items) {
+        //        foreach (var person in template.Persons)
+        //        {
+        //            var srcTag = sim.LivingPatternTags.FindFirstByNameNotNull(person.LivingPatternTag?.Name);
+        //            person.LivingPatternTag = srcTag;
+        //            person.SaveToDB();
+        //        }
+        //        template.SaveToDB();
+        //    }
+        //}
+
+        public static void ConvertAllTraitTagsToLivingPatternTags([NotNull] Simulator sim)
+        {
+
+            foreach (var trait in sim.HouseholdTraits.Items) {
+                var tagstoremove = new List<HHTTag>();
+                foreach (var tag in trait.Tags) {
+                    if (tag.Tag.Name.StartsWith("Living Pattern")) {
+                        var lpTag = sim.LivingPatternTags.Items.Single(x => x.Name == tag.Tag.Name);
+                        Logger.Info("Converting tag " + tag.Tag.Name);
+                        trait.AddLivingPatternTag(lpTag);
+                        tagstoremove.Add(tag);
                     }
+                }
+
+                foreach (var tag in tagstoremove) {
+                    trait.DeleteHHTTag(tag);
                 }
             }
         }

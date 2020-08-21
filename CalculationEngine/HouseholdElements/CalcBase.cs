@@ -45,8 +45,7 @@ namespace CalculationEngine.HouseholdElements {
     }*/
 
     public class CalcRepo: IDisposable {
-        [CanBeNull]
-        public CalcVariableRepository CalcVariableRepository { get; }
+        public CalcVariableRepository? CalcVariableRepository { get; }
         //public HumanHeatGainSpecification HumanHeatGainSpecification { get; }
 
         [NotNull]
@@ -55,7 +54,7 @@ namespace CalculationEngine.HouseholdElements {
         [NotNull]
         public static CalcRepo Make([NotNull] CalcParameters calcParameters, [NotNull] IInputDataLogger idl,
                                     [NotNull] string resultPath, [NotNull] string calcObjectName,
-                                    CalculationProfiler calculationProfiler, CalcVariableRepository calcVariableRepository)
+                                    CalculationProfiler calculationProfiler)
         {
 
             DateStampCreator dsc = new DateStampCreator(calcParameters);
@@ -70,21 +69,21 @@ namespace CalculationEngine.HouseholdElements {
                 idl,calculationProfiler,fft,dsc);
             return cr;
         }
-        [CanBeNull] private readonly FileFactoryAndTracker _fft;
+        private readonly FileFactoryAndTracker? _fft;
 
         public CalcRepo(
-                        [CanBeNull] IOnlineDeviceActivationProcessor odap = null,
-                        [CanBeNull] Random rnd = null,
-                        [CanBeNull]CalcParameters calcParameters= null,
-                        [CanBeNull] IOnlineLoggingData onlineLoggingData= null,
-                        [CanBeNull] NormalRandom normalRandom= null,
-                        [CanBeNull] ILogFile lf = null,
-                        [CanBeNull] SqlResultLoggingService srls= null,
-                        [CanBeNull] IInputDataLogger inputDataLogger=null,
-                        [CanBeNull] CalculationProfiler calculationProfiler=null,
-            [CanBeNull] FileFactoryAndTracker fft =null,
-                        [CanBeNull] DateStampCreator dsc = null,
-             [CanBeNull] CalcVariableRepository calcVariableRepository = null)
+                        IOnlineDeviceActivationProcessor? odap = null,
+                        Random? rnd = null,
+                        CalcParameters? calcParameters= null,
+                        IOnlineLoggingData? onlineLoggingData= null,
+                        NormalRandom? normalRandom= null,
+                        ILogFile? lf = null,
+                        SqlResultLoggingService? srls= null,
+                        IInputDataLogger? inputDataLogger=null,
+                        CalculationProfiler? calculationProfiler=null,
+            FileFactoryAndTracker? fft =null,
+                        DateStampCreator? dsc = null,
+             CalcVariableRepository? calcVariableRepository = null)
         {
             CalcVariableRepository = calcVariableRepository;
             _dateStampCreator = dsc;
@@ -99,18 +98,17 @@ namespace CalculationEngine.HouseholdElements {
             _inputDataLogger = inputDataLogger;
             _calculationProfiler = calculationProfiler;
         }
-        [CanBeNull]
-        private readonly ILogFile _lf;
+        private readonly ILogFile? _lf;
 
-        [NotNull] private readonly IOnlineDeviceActivationProcessor _odap;
-        [NotNull] private readonly Random _rnd;
-        private readonly CalcParameters _calcParameters;
-        [CanBeNull] private readonly IOnlineLoggingData _onlineLoggingData;
-        private readonly NormalRandom _normalRandom;
-        [NotNull] private readonly SqlResultLoggingService _srls;
-        private readonly IInputDataLogger _inputDataLogger;
-        [NotNull] private readonly CalculationProfiler _calculationProfiler;
-        private readonly DateStampCreator _dateStampCreator;
+        private readonly IOnlineDeviceActivationProcessor? _odap;
+        private readonly Random? _rnd;
+        private readonly CalcParameters? _calcParameters;
+        private readonly IOnlineLoggingData? _onlineLoggingData;
+        private readonly NormalRandom? _normalRandom;
+        private readonly SqlResultLoggingService? _srls;
+        private readonly IInputDataLogger? _inputDataLogger;
+        private readonly CalculationProfiler? _calculationProfiler;
+        private readonly DateStampCreator? _dateStampCreator;
 
         [NotNull]
         public IOnlineDeviceActivationProcessor Odap => _odap ?? throw new LPGException("no odap");

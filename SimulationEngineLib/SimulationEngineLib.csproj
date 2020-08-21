@@ -23,12 +23,12 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Automation\Automation.csproj" />
     <ProjectReference Include="..\CalculationController\CalculationController.csproj" />
+    <ProjectReference Include="..\ChartCreator2\ChartCreator2.csproj" />
     <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\Database\Database.csproj" />
   </ItemGroup>

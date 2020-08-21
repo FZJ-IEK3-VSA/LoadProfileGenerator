@@ -1086,6 +1086,11 @@
                     Header="Add a Household Trait Tag"
                     IsEnabled="{Binding IsMenuEnabled}" />
                 <MenuItem
+                    Name="AddLivingPatternTag"
+                    Click="AddLivingPatternTag_Click"
+                    Header="Add a Living Pattern Tag"
+                    IsEnabled="{Binding IsMenuEnabled}" />
+                <MenuItem
                     Name="AddHouseholdTrait"
                     Click="AddHouseholdTrait_Click"
                     Header="Add a Household Trait"
@@ -1268,9 +1273,9 @@
                     Header="Deletes all household templates"
                     IsEnabled="{Binding IsMenuEnabled}" />
                 <MenuItem
-                    Name="Placeworkaroundactivityinallhouseholds"
-                    Click="PutWorkaroundInAllHouseholds"
-                    Header="Place workaround activity in all households"
+                    Name="CopyLivingPatterns"
+                    Click="BtnCopyLivingPatterns"
+                    Header="Copy Living Patterns"
                     IsEnabled="{Binding IsMenuEnabled}" />
                 <MenuItem
                     Name="ThrowTestException"

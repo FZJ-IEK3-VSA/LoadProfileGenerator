@@ -6,9 +6,11 @@ using Automation;
 using Automation.ResultFiles;
 using Common;
 using OxyPlot;
-using OxyPlot.Axes;
+using OxyPlot.Legends;
 using OxyPlot.Series;
-
+using CategoryAxis = OxyPlot.Axes.CategoryAxis;
+using LinearAxis = OxyPlot.Axes.LinearAxis;
+using BarSeries = OxyPlot.Series.BarSeries;
 namespace ChartCreator2.OxyCharts {
     internal class HouseholdPlan : ChartBaseFileStep
     {
@@ -23,16 +25,17 @@ namespace ChartCreator2.OxyCharts {
         }
 
         [JetBrains.Annotations.NotNull]
-        private PlotModel MakePlot([JetBrains.Annotations.NotNull] string title, [JetBrains.Annotations.NotNull] out CategoryAxis cate, [JetBrains.Annotations.NotNull] string axistitle) {
-            var plotModel1 = new PlotModel
-            {
+        private PlotModel MakePlot([JetBrains.Annotations.NotNull] string title, [JetBrains.Annotations.NotNull] out CategoryAxis cate, [JetBrains.Annotations.NotNull] string axistitle)
+        {
+            var plotModel1 = new PlotModel();
+            var l = new Legend();
+            plotModel1.Legends.Add(l);
                 // general
-                LegendBorderThickness = 0,
-                LegendOrientation = LegendOrientation.Horizontal,
-                LegendPlacement = LegendPlacement.Outside,
-                LegendPosition = LegendPosition.BottomCenter,
-                PlotMargins = new OxyThickness(double.NaN, double.NaN, double.NaN, 200)
-            };
+                l.LegendBorderThickness = 0;
+                l.LegendOrientation = LegendOrientation.Horizontal;
+                l.LegendPlacement = LegendPlacement.Outside;
+                l.LegendPosition = LegendPosition.BottomCenter;
+                plotModel1.PlotMargins = new OxyThickness(double.NaN, double.NaN, double.NaN, 200);
             if (Parameters.ShowTitle) {
                 plotModel1.Title = title;
             }
@@ -65,9 +68,9 @@ namespace ChartCreator2.OxyCharts {
             }
             using (var sr = new StreamReader(srcEntry.FullFileName)) {
                 var currentSection = string.Empty;
-                ColumnSeries plan = null;
-                ColumnSeries actual = null;
-                ColumnSeries relativeSeries = null;
+                BarSeries plan = null;
+                BarSeries actual = null;
+                BarSeries relativeSeries = null;
                 PlotModel pmAbsolute = null;
                 PlotModel pmRelative = null;
                 CategoryAxis cate = null;
@@ -98,19 +101,19 @@ namespace ChartCreator2.OxyCharts {
                         pmAbsolute = MakePlot(currentSection, out cate, axistitle);
                         pmRelative = MakePlot(currentSection, out cateRel, "Percent [%]");
 
-                        plan = new ColumnSeries
+                        plan = new BarSeries
                         {
                             Title = "Planned",
                             IsStacked = false,
                             StrokeThickness = 1
                         };
-                        actual = new ColumnSeries
+                        actual = new BarSeries
                         {
                             Title = "Actual",
                             IsStacked = false,
                             StrokeThickness = 1
                         };
-                        relativeSeries = new ColumnSeries
+                        relativeSeries = new BarSeries
                         {
                             IsStacked = false,
                             StrokeThickness = 1
@@ -131,9 +134,9 @@ namespace ChartCreator2.OxyCharts {
                             }
                             cate.Labels.Add(cols[0]);
                             cateRel.Labels.Add(cols[0]);
-                            plan.Items.Add(new ColumnItem(values[2]));
-                            actual.Items.Add(new ColumnItem(values[1]));
-                            relativeSeries.Items.Add(new ColumnItem(values[3]));
+                            plan.Items.Add(new BarItem(values[2]));
+                            actual.Items.Add(new BarItem(values[1]));
+                            relativeSeries.Items.Add(new BarItem(values[3]));
                         }
                     }
                 }

@@ -292,7 +292,7 @@ namespace LoadProfileGenerator.Presenters.Households {
             FilterTraits(FilterText, SelectedFilterTag);
         }
 
-        public void AddPerson([NotNull] Person person, [NotNull] TraitTag tag)
+        public void AddPerson([NotNull] Person person, [NotNull] LivingPatternTag tag)
         {
             _modularHousehold.AddPerson(person, tag);
         }
@@ -441,7 +441,7 @@ namespace LoadProfileGenerator.Presenters.Households {
             _modularHousehold.RemovePerson(chp);
         }
 
-        public void SwapPersons([NotNull] ModularHouseholdPerson srcPerson, [NotNull] Person dstPerson, [NotNull] TraitTag tag)
+        public void SwapPersons([NotNull] ModularHouseholdPerson srcPerson, [NotNull] Person dstPerson, [NotNull] LivingPatternTag tag)
         {
             _modularHousehold.SwapPersons(srcPerson, dstPerson, tag);
             FilterTraits(FilterText, SelectedFilterTag);

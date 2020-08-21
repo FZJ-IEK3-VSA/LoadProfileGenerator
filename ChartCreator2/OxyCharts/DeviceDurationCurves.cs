@@ -149,6 +149,7 @@ namespace ChartCreator2.OxyCharts {
             [JetBrains.Annotations.NotNull]
             public List<double> Values { get; } = new List<double>();
 
+            [JetBrains.Annotations.NotNull]
             public override string ToString() => Name + " Sum:" + Sum + " Max:" + Values.Max();
         }
     }

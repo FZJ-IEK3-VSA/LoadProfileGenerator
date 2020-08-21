@@ -47,6 +47,7 @@ using LoadProfileGenerator.Controls.Usercontrols;
 using LoadProfileGenerator.Presenters.Households;
 using OxyPlot;
 using OxyPlot.Axes;
+using OxyPlot.Legends;
 using OxyPlot.Series;
 using OxyPlot.Wpf;
 using CategoryAxis = OxyPlot.Axes.CategoryAxis;
@@ -342,9 +343,11 @@ namespace LoadProfileGenerator.Views.Households {
             }
 
             _plot.Series.Clear();
-            _plot.LegendPlacement = LegendPlacement.Outside;
-            _plot.LegendPosition = LegendPosition.BottomCenter;
-            _plot.LegendOrientation = LegendOrientation.Horizontal;
+            var l = new Legend();
+            _plot.Legends.Add(l);
+            l.LegendPlacement = LegendPlacement.Outside;
+            l.LegendPosition = LegendPosition.BottomCenter;
+            l.LegendOrientation = LegendOrientation.Horizontal;
             _categoryAxis.Labels.Clear();
             _categoryAxis.Labels.Add("Person Profile");
             var personSeries = new IntervalBarSeries {

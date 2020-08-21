@@ -319,7 +319,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
             return geoloc;
         }
 
-        public void ProcessSingleHouseJob([NotNull] string houseJobFile, Action<CalculationProfiler, string> makeallthecharts)
+        public void ProcessSingleHouseJob([NotNull] string houseJobFile)
         {
             string resultDir = "Results";
             try {
@@ -367,7 +367,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
                 // ReSharper disable once ConditionIsAlwaysTrueOrFalse
 
                 Simulator sim = new Simulator(dstConnectionString);
-                ProcessSingleHouseJob(hcj, makeallthecharts,sim);
+                ProcessSingleHouseJob(hcj, sim);
                 if (Logger.Get().Errors.Count == 0)
                 {
                     using (var sw = new StreamWriter(finishedFlagFile))
@@ -400,7 +400,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
             }
         }
 
-        public void ProcessSingleHouseJob([NotNull] HouseCreationAndCalculationJob hcj, Action<CalculationProfiler, string> makeallthecharts, [NotNull] Simulator sim)
+        public void ProcessSingleHouseJob([NotNull] HouseCreationAndCalculationJob hcj,  [NotNull] Simulator sim)
         {
             if (hcj.House == null)
             {
@@ -431,7 +431,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
             }
             JsonCalculator jc = new JsonCalculator();
             //hcj.CalcSpec.CalcObject = null;
-            jc.StartHousehold(sim, hcj.CalcSpec,objectToCalc, makeallthecharts);
+            jc.StartHousehold(sim, hcj.CalcSpec,objectToCalc);
         }
         [NotNull]
         public string GetAllFootprints([NotNull] Exception x)
@@ -828,13 +828,13 @@ namespace SimulationEngineLib.HouseJobProcessor {
             return hhs[0];
         }
 
-        public static void ProcessHouseJob([NotNull] HouseJobProcessingOptions args, Action<CalculationProfiler,string> makeallthecharts)
+        public static void ProcessHouseJob([NotNull] HouseJobProcessingOptions args)
         {
             HouseGenerator hg = new HouseGenerator();
             if (args.JsonPath == null) {
                 throw new LPGCommandlineException("Path to the house job file was not set. This won't work.");
             }
-            hg.ProcessSingleHouseJob(args.JsonPath,makeallthecharts);
+            hg.ProcessSingleHouseJob(args.JsonPath);
         }
     }
 }

@@ -16,7 +16,6 @@ namespace SimulationEngineLib {
     public class CommandProcessor {
 
         public static Action<DirectoryInfo, CalculationProfiler> MakeFlameChart { get; set; }
-        public static Action<CalculationProfiler,string> Makeallthecharts { get; set; }
         [NotNull]
         [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
 #pragma warning disable CA1044 // Properties should not be write only
@@ -86,7 +85,7 @@ namespace SimulationEngineLib {
         [UsedImplicitly]
         public void ProcessHouseJob([NotNull] HouseJobProcessingOptions args)
         {
-            HouseGenerator.ProcessHouseJob(args, Makeallthecharts);
+            HouseGenerator.ProcessHouseJob(args);
         }
 
         [ArgActionMethod]

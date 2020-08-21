@@ -123,7 +123,7 @@ namespace CalculationEngine.HouseElements {
             }
         }
 
-        public bool ProcessOneTimestep([NotNull][ItemNotNull] List<OnlineEnergyFileRow> fileRows, [CanBeNull][ItemNotNull] List<string> log) {
+        public bool ProcessOneTimestep([NotNull][ItemNotNull] List<OnlineEnergyFileRow> fileRows, [ItemNotNull] List<string>? log) {
             var madeChanges = false;
             var conditionsValid = true;
             foreach (var condition in _conditions) {

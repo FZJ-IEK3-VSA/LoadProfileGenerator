@@ -16,8 +16,7 @@ namespace CalculationEngine.Transportation {
     public class AffordanceBaseTransportDecorator : CalcBase, ICalcAffordanceBase {
         [NotNull]
         private readonly ICalcAffordanceBase _sourceAffordance;
-        [NotNull]
-        private readonly TransportationHandler _transportationHandler;
+        private readonly TransportationHandler? _transportationHandler;
         [NotNull]
         private readonly HouseholdKey _householdkey;
 
@@ -154,12 +153,18 @@ namespace CalculationEngine.Transportation {
                 _myLastTimeEntry = new LastTimeEntry(calcPersonName,time);
             }
 
-            CalcTravelRoute route;
+            CalcTravelRoute? route;
             if (_myLastTimeEntry.PreviouslySelectedRoutes.ContainsKey(srcLocation)) {
                 route = _myLastTimeEntry.PreviouslySelectedRoutes[srcLocation];
             }
             else {
+                if (_transportationHandler == null) {
+                    throw new LPGException("was null");
+                }
                 route = _transportationHandler.GetTravelRouteFromSrcLoc(srcLocation, Site,time,calcPersonName, _calcRepo);
+                if (route == null) {
+                    throw new LPGException("route was null");
+                }
                 _myLastTimeEntry.PreviouslySelectedRoutes.Add(srcLocation, route);
             }
 
@@ -167,8 +172,12 @@ namespace CalculationEngine.Transportation {
                 return BusynessType.NoRoute;
             }
 
+            if (_transportationHandler == null) {
+                throw new LPGException("was null");
+            }
             // ReSharper disable once PossibleInvalidOperationException
-            int? travelDurationN =(int) route.GetDuration(time, calcPersonName,  _transportationHandler.AllMoveableDevices);
+            int? travelDurationN = route.GetDuration(time, calcPersonName,
+                _transportationHandler.AllMoveableDevices);
             if (travelDurationN == null) {
                 throw new LPGException("Bug: couldn't calculate travel duration for route.");
             }
@@ -216,13 +225,13 @@ namespace CalculationEngine.Transportation {
 
         public List<CalcSubAffordance> SubAffordances => _sourceAffordance.SubAffordances;
 
-        public string TimeLimitName => _sourceAffordance.TimeLimitName;
+        public string? TimeLimitName => _sourceAffordance.TimeLimitName;
         public bool AreThereDuplicateEnergyProfiles()
         {
             return _sourceAffordance.AreThereDuplicateEnergyProfiles();
         }
 
-        public string AreDeviceProfilesEmpty()
+        public string? AreDeviceProfilesEmpty()
         {
             return _sourceAffordance.AreDeviceProfilesEmpty();
         }

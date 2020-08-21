@@ -58,7 +58,7 @@ namespace CalculationEngine.HouseholdElements {
                                      StrGuid guid,
                                      [ItemNotNull] [NotNull] BitArray isBusyArray,
                                      BodilyActivityLevel bodilyActivityLevel,[NotNull] CalcRepo calcRepo,
-                                     [CanBeNull] CalcSite site = null) : base(pName, guid)
+                                     CalcSite? site = null) : base(pName, guid)
         {
             CalcAffordanceType = calcAffordanceType;
             BodilyActivityLevel = bodilyActivityLevel;
@@ -105,7 +105,7 @@ namespace CalculationEngine.HouseholdElements {
 
         public ActionAfterInterruption AfterInterruption => _actionAfterInterruption;
 
-        public abstract string AreDeviceProfilesEmpty();
+        public abstract string? AreDeviceProfilesEmpty();
 
         public abstract bool AreThereDuplicateEnergyProfiles();
 
@@ -152,13 +152,13 @@ namespace CalculationEngine.HouseholdElements {
 
         public List<CalcDesire> Satisfactionvalues { get; }
 
-        public CalcSite Site { get; }
+        public CalcSite? Site { get; }
 
         public abstract string SourceTrait { get; }
 
         public abstract List<CalcSubAffordance> SubAffordances { get; }
 
-        public abstract string TimeLimitName { get; }
+        public abstract string? TimeLimitName { get; }
 
         public int Weight { get; }
     }

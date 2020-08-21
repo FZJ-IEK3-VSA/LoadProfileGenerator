@@ -75,7 +75,7 @@ namespace CalculationController.CalcFactories {
         [SuppressMessage("Microsoft.Reliability", "CA2000:Objekte verwerfen, bevor Bereich verloren geht")]
         [SuppressMessage("ReSharper", "SwitchStatementMissingSomeCases")]
         [NotNull]
-        public CalcHouse MakeCalcHouse([NotNull] CalcHouseDto calcHouseDto, CalcRepo calcRepo)
+        public CalcHouse MakeCalcHouse([NotNull] CalcHouseDto calcHouseDto, [NotNull] CalcRepo calcRepo)
         {
             HouseholdKey houseKey = Constants.HouseKey;
             var calchouse = new CalcHouse(calcHouseDto.HouseName, calcHouseDto.HouseKey, calcRepo);

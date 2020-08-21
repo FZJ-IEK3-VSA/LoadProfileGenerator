@@ -12,6 +12,7 @@ using JetBrains.Annotations;
 using OxyPlot;
 using OxyPlot.Annotations;
 using OxyPlot.Axes;
+using OxyPlot.Legends;
 using OxyPlot.Series;
 
 namespace ChartCreator2.OxyCharts {
@@ -55,19 +56,20 @@ namespace ChartCreator2.OxyCharts {
                                [JetBrains.Annotations.NotNull] CalcLoadTypeDto lti)
         {
             string plotName = "Affordance Energy Use Per Person " + hhkey.HHKey.Key + " " + lti.Name;
-            var plotModel1 = new PlotModel {
+            var plotModel1 = new PlotModel();
+            var l = new Legend();
+            plotModel1.Legends.Add(l);
                 // general
-                LegendBorderThickness = 0,
-                LegendOrientation = LegendOrientation.Horizontal,
-                LegendPlacement = LegendPlacement.Outside,
-                LegendPosition = LegendPosition.BottomCenter,
-                LegendMargin = 10,
-                LegendItemAlignment = HorizontalAlignment.Left
-            };
+                l.LegendBorderThickness = 0;
+                l.LegendOrientation = LegendOrientation.Horizontal;
+                l.LegendPlacement = LegendPlacement.Outside;
+                l.LegendPosition = LegendPosition.BottomCenter;
+                l.LegendMargin = 10;
+                l.LegendItemAlignment = HorizontalAlignment.Left;
             var labelfontsize = 14;
             if (Config.MakePDFCharts) {
                 plotModel1.DefaultFontSize = Parameters.PDFFontSize;
-                plotModel1.LegendFontSize = 16;
+                l.LegendFontSize = 16;
                 labelfontsize = 18;
             }
 

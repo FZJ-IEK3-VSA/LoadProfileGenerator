@@ -4,12 +4,15 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using Automation;
-using ChartPDFCreator;
 using Common;
 using JetBrains.Annotations;
 using OxyPlot;
-using OxyPlot.Axes;
+using OxyPlot.Legends;
 using OxyPlot.Series;
+using BarSeries = OxyPlot.Series.BarSeries;
+using CategoryAxis = OxyPlot.Axes.CategoryAxis;
+using LinearAxis = OxyPlot.Axes.LinearAxis;
+using LineSeries = OxyPlot.Series.LineSeries;
 
 namespace ChartCreator2.SettlementMergePlots {
     [SuppressMessage("ReSharper", "RedundantNameQualifier")]
@@ -32,7 +35,7 @@ namespace ChartCreator2.SettlementMergePlots {
             }
             for (var i = 0; i < affNames.Count; i++) {
                 var tag = affNames[i];
-                var columnSeries2 = new ColumnSeries
+                var columnSeries2 = new BarSeries
                 {
                     IsStacked = true,
                     StackGroup = "1",
@@ -46,10 +49,10 @@ namespace ChartCreator2.SettlementMergePlots {
                     var te =
                         entries.FirstOrDefault(x => x.AffordanceName == tag && x.HouseholdName == householdName);
                     if (te != null) {
-                        columnSeries2.Items.Add(new ColumnItem(te.Value));
+                        columnSeries2.Items.Add(new BarItem(te.Value));
                     }
                     else {
-                        columnSeries2.Items.Add(new ColumnItem(0));
+                        columnSeries2.Items.Add(new BarItem(0));
                     }
                 }
                 plotModel1.Series.Add(columnSeries2);
@@ -65,8 +68,10 @@ namespace ChartCreator2.SettlementMergePlots {
             }
             foreach (var affordanceName in affNames) {
                 var plotModel2 = MakePlotmodel(householdNames, "Anteil am Gesamtverbrauch in Prozent");
-                plotModel2.LegendFontSize = Fontsize;
-                var columnSeries2 = new ColumnSeries
+                var legend = new Legend();
+                plotModel2.Legends.Add(legend);
+                legend.LegendFontSize = Fontsize;
+                var columnSeries2 = new BarSeries
                 {
                     IsStacked = true,
                     StackGroup = "1",
@@ -92,10 +97,10 @@ namespace ChartCreator2.SettlementMergePlots {
                             x => x.AffordanceName == affordanceName && x.HouseholdName == householdName);
 
                     if (te != null) {
-                        columnSeries2.Items.Add(new ColumnItem(te.Value / hhSums[householdName] * 100));
+                        columnSeries2.Items.Add(new BarItem(te.Value / hhSums[householdName] * 100));
                     }
                     else {
-                        columnSeries2.Items.Add(new ColumnItem(0));
+                        columnSeries2.Items.Add(new BarItem(0));
                     }
                 }
                 plotModel2.Series.Add(columnSeries2);
@@ -107,17 +112,20 @@ namespace ChartCreator2.SettlementMergePlots {
         }
 
         [JetBrains.Annotations.NotNull]
-        private static PlotModel MakePlotmodel([ItemNotNull] [JetBrains.Annotations.NotNull] List<string> householdNames, [JetBrains.Annotations.NotNull] string yaxislabel) {
-            var plotModel1 = new PlotModel
-            {
+        private static PlotModel MakePlotmodel([ItemNotNull] [JetBrains.Annotations.NotNull] List<string> householdNames, [JetBrains.Annotations.NotNull] string yaxislabel)
+        {
+            var plotModel1 = new PlotModel {
                 DefaultFontSize = Fontsize,
-                LegendFontSize = 10,
-                LegendBorderThickness = 0,
-                LegendOrientation = LegendOrientation.Horizontal,
-                LegendPlacement = LegendPlacement.Outside,
-                LegendPosition = LegendPosition.BottomCenter,
-                LegendSymbolMargin = 20
             };
+            var l = new Legend();
+            plotModel1.Legends.Add(l);
+
+            l.LegendFontSize = 10;
+            l.LegendBorderThickness = 0;
+            l.LegendOrientation = LegendOrientation.Horizontal;
+            l.LegendPlacement = LegendPlacement.Outside;
+            l.LegendPosition = LegendPosition.BottomCenter;
+            l.LegendSymbolMargin = 20;
 
             var categoryAxis1 = new CategoryAxis
             {

@@ -43,12 +43,12 @@ namespace CalculationController.Integrity {
                 return;
             }
             foreach (var mhhPerson in mhh.Persons) {
-                if (mhhPerson.TraitTag == null) {
+                if (mhhPerson.LivingPatternTag == null) {
                     continue;
                 }
                 var traits = mhh.Traits.Where(x => x.DstPerson == mhhPerson.Person).ToList();
 
-                if (mhhPerson.TraitTag.Name.ToLower(CultureInfo.InvariantCulture).Contains("school")) {
+                if (mhhPerson.LivingPatternTag.Name.ToLower(CultureInfo.InvariantCulture).Contains("school")) {
                     //this is a school child
                     if (!traits.Any(x => x.PrettyName.ToLower(CultureInfo.InvariantCulture).Contains("school"))) {
                         throw new DataIntegrityException(
@@ -57,7 +57,7 @@ namespace CalculationController.Integrity {
                             mhh);
                     }
                 }
-                if (mhhPerson.TraitTag.Name.ToLower(CultureInfo.InvariantCulture).Contains("worker")) {
+                if (mhhPerson.LivingPatternTag.Name.ToLower(CultureInfo.InvariantCulture).Contains("worker")) {
                     //this is an office worker
                     if (!traits.Any(x => x.PrettyName.ToLower(CultureInfo.InvariantCulture).Contains("work"))) {
                         throw new DataIntegrityException(
@@ -71,16 +71,16 @@ namespace CalculationController.Integrity {
 
         [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalse")]
         [SuppressMessage("ReSharper", "HeuristicUnreachableCode")]
-        private void CheckLivingPatternTraits([NotNull] ModularHousehold mhh, [NotNull] TraitTag tagForAll)
+        private void CheckLivingPatternTraits([NotNull] ModularHousehold mhh, [NotNull] LivingPatternTag tagForAll)
         {
             if (!PerformCleanupChecks) {
                 return;
             }
 
             foreach (var mhhPerson in mhh.Persons) {
-                if (mhhPerson.TraitTag == null) {
+                if (mhhPerson.LivingPatternTag == null) {
                     throw new DataIntegrityException(
-                        "The person " + mhhPerson.Person.PrettyName + " has no trait tag set.", mhh);
+                        "The person " + mhhPerson.Person.PrettyName + " has no living pattern tag set.", mhh);
                 }
                 var traitsWithMissingTags = new List<HouseholdTrait>();
                 var personTraits = mhh.Traits.Where(x => x.DstPerson == mhhPerson.Person).ToList();
@@ -88,11 +88,11 @@ namespace CalculationController.Integrity {
                     if (personTrait.HouseholdTrait == null) {
                         throw new DataIntegrityException("HouseholdTrait was null");
                     }
-                    if (personTrait.HouseholdTrait.Tags.Any(x => x.Tag == tagForAll)) {
+                    if (personTrait.HouseholdTrait.LivingPatternTags.Any(x => x.Tag == tagForAll)) {
                         //all is good since this trait was for everything
                         continue;
                     }
-                    if (personTrait.HouseholdTrait.Tags.Any(x => mhhPerson.TraitTag.Name.StartsWith(x.Name))) {
+                    if (personTrait.HouseholdTrait.LivingPatternTags.Any(x => mhhPerson.LivingPatternTag.Name.StartsWith(x.Name))) {
                         //the person will have the most specific tag, the traits can be more generic
                         continue;
                     }
@@ -105,7 +105,7 @@ namespace CalculationController.Integrity {
                     };
                     elementsToOpen.AddRange(traitsWithMissingTags);
                     throw new DataIntegrityException(
-                        "The opened traits have no matching trait tag for " + mhhPerson.TraitTag, elementsToOpen);
+                        "The opened traits have no matching trait tag for " + mhhPerson.LivingPatternTag, elementsToOpen);
                 }
             }
         }
@@ -371,8 +371,8 @@ namespace CalculationController.Integrity {
             if (allPersons.Count == 0) {
                 throw new DataException("The household " + chh.Name + " has no persons!");
             }
-            var minAge = allPersons.Select(x => x.Age).Min();
-            var maxAge = allPersons.Select(x => x.Age).Max();
+            var minAge = allPersons.Min(x => x.Age);
+            var maxAge = allPersons.Max(x => x.Age);
             if (chh.Vacation.MinimumAge > minAge || chh.Vacation.MaximumAge < maxAge) {
                 throw new DataIntegrityException(
                     "The vacation " + chh.Vacation.PrettyName + " cannot be used in the household template " +
@@ -447,7 +447,7 @@ namespace CalculationController.Integrity {
         protected override void Run(Simulator sim)
         {
             CheckTags(sim.ModularHouseholds.Items, sim.HouseholdTags.Items);
-            var tagForAll = sim.TraitTags.Items.FirstOrDefault(x => x.Name == "Living Pattern / All");
+            var tagForAll = sim.LivingPatternTags.Items.FirstOrDefault(x => x.Name == "Living Pattern / All");
             if (tagForAll == null) {
                 throw new LPGException("The trait tag Living Pattern / All was not found.");
             }

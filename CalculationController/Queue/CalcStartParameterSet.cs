@@ -130,7 +130,8 @@ namespace CalculationController.Queue {
             [CanBeNull] ChargingStationSet chargingStationSet,
             [CanBeNull][ItemNotNull] List<string> loadTypesToProcess,
             DeviceProfileHeaderMode deviceProfileHeaderMode,
-            bool ignorePreviousActivitiesWhenNeeded, string resultPath, bool transportationEnabled, bool enableIdlemode)
+            bool ignorePreviousActivitiesWhenNeeded, string resultPath, bool transportationEnabled, bool enableIdlemode
+            )
         {
             IgnorePreviousActivitiesWhenNeeded = ignorePreviousActivitiesWhenNeeded;
             ResultPath = resultPath;
@@ -251,5 +252,7 @@ namespace CalculationController.Queue {
         public bool EnableIdlemode { get; }
 
         public JsonCalcSpecification CalcSpec { get; set; }
+
+
     }
 }

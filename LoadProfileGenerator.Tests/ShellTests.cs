@@ -23,7 +23,26 @@ namespace LoadProfileGenerator.Tests
                 db.Cleanup();
             }
         }
+        [Fact]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.BasicTest)]
+        public void UpdateLivingPattern()
+        {
+            using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass())) {
+                Simulator sim = new Simulator(db.ConnectionString);
+                Shell.ConvertAllTraitTagsToLivingPatternTags(sim);
+            }
+        }
 
+        //[Fact]
+        //[Trait(UnitTestCategories.Category, UnitTestCategories.BasicTest)]
+        //public void UpdatePersonTags()
+        //{
+        //    using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+        //    {
+        //        Simulator sim = new Simulator(db.ConnectionString);
+        //        Shell.ConvertAllPersonTagsToLivingPatternTags(sim);
+        //    }
+        //}
         public ShellTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }

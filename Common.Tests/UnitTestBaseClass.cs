@@ -24,8 +24,8 @@ namespace Common.Tests {
             }
 
             double actualValue =(int)parent.Subject;
-            double minValue = (double)(target - target * percent);
-            double maxValue = (double)(target + target * percent);
+            double minValue = target - target * percent;
+            double maxValue = target + target * percent;
 
             FailIfValueOutsideBounds(minValue <= actualValue && actualValue <= maxValue, minValue, maxValue, actualValue, because, becauseArgs);
 
@@ -45,8 +45,8 @@ namespace Common.Tests {
             }
 
             double actualValue = (double)parent.Subject;
-            double minValue = (double)(target - target * percent);
-            double maxValue = (double)(target + target * percent);
+            double minValue = target - target * percent;
+            double maxValue = target + target * percent;
 
             FailIfValueOutsideBounds(minValue <= actualValue && actualValue <= maxValue, minValue, maxValue, actualValue, because, becauseArgs);
 

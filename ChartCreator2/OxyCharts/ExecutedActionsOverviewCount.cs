@@ -7,6 +7,7 @@ using Automation.ResultFiles;
 using Common;
 using OxyPlot;
 using OxyPlot.Axes;
+using OxyPlot.Legends;
 using OxyPlot.Series;
 
 namespace ChartCreator2.OxyCharts {
@@ -68,14 +69,14 @@ namespace ChartCreator2.OxyCharts {
                 mylist.Sort(Comparison);
             }
             foreach (var pair in consumption) {
-                var plotModel1 = new PlotModel
-                {
+                var plotModel1 = new PlotModel();
+                var l = new Legend();
+                plotModel1.Legends.Add(l);
                     // general
-                    LegendBorderThickness = 0,
-                    LegendOrientation = LegendOrientation.Horizontal,
-                    LegendPlacement = LegendPlacement.Outside,
-                    LegendPosition = LegendPosition.BottomCenter
-                };
+                    l.LegendBorderThickness = 0;
+                    l.LegendOrientation = LegendOrientation.Horizontal;
+                    l.LegendPlacement = LegendPlacement.Outside;
+                    l.LegendPosition = LegendPosition.BottomCenter;
                 var personName = pair.Key;
                 if (Parameters.ShowTitle) {
                     plotModel1.Title = plotName + " " + personName;
@@ -113,7 +114,7 @@ namespace ChartCreator2.OxyCharts {
                     p = OxyPalettes.Hue64;
                 }
 
-                var columnSeries2 = new ColumnSeries
+                var columnSeries2 = new BarSeries
                 {
                     StrokeThickness = 0,
                     Title = "Actions"
@@ -124,7 +125,7 @@ namespace ChartCreator2.OxyCharts {
                         label = label.Substring(0, 40);
                     }
                     cate.Labels.Add(label);
-                    var ci = new ColumnItem(pair.Value[i].Item2)
+                    var ci = new BarItem(pair.Value[i].Item2)
                     {
                         Color = p.Colors[i]
                     };

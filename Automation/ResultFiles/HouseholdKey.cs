@@ -11,7 +11,7 @@ namespace Automation.ResultFiles {
         {
             Key = key;
         }
-        public static bool operator ==([CanBeNull] HouseholdKey k1, [CanBeNull] HouseholdKey k2)
+        public static bool operator ==(HouseholdKey? k1, HouseholdKey? k2)
         {
             if (ReferenceEquals(k1, k2))
             {
@@ -37,7 +37,7 @@ namespace Automation.ResultFiles {
             return !(k1 == k2);
         }
 
-        public int CompareTo([CanBeNull] HouseholdKey other)
+        public int CompareTo(HouseholdKey? other)
         {
             if (ReferenceEquals(this, other)) {
                 return 0;
@@ -50,7 +50,7 @@ namespace Automation.ResultFiles {
             return string.Compare(Key, other.Key, StringComparison.Ordinal);
         }
 
-        public bool Equals(HouseholdKey other)
+        public bool Equals(HouseholdKey? other)
         {
             if (other is null) {
                 return false;
@@ -63,7 +63,7 @@ namespace Automation.ResultFiles {
             return string.Equals(Key, other.Key, StringComparison.Ordinal);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is null) {
                 return false;

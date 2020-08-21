@@ -7,9 +7,12 @@ using Automation;
 using Automation.ResultFiles;
 using Common;
 using OxyPlot;
-using OxyPlot.Annotations;
-using OxyPlot.Axes;
+using OxyPlot.Legends;
 using OxyPlot.Series;
+using BarSeries = OxyPlot.Series.BarSeries;
+using CategoryAxis = OxyPlot.Axes.CategoryAxis;
+using LinearAxis = OxyPlot.Axes.LinearAxis;
+using RectangleAnnotation = OxyPlot.Annotations.RectangleAnnotation;
 
 namespace ChartCreator2.OxyCharts {
     internal class AffordanceTaggingSet : ChartBaseFileStep
@@ -64,21 +67,23 @@ namespace ChartCreator2.OxyCharts {
                     }
                 }
             }
-            var plotModel1 = new PlotModel
-            {
-                // general
-                LegendBorderThickness = 0,
-                LegendOrientation = LegendOrientation.Horizontal,
-                LegendPlacement = LegendPlacement.Outside,
-                LegendPosition = LegendPosition.BottomCenter,
-                LegendSymbolMargin = 20
-            };
+
+            var plotModel1 = new PlotModel();
+            Legend l = new Legend();
+            plotModel1.Legends.Add(l);
+
+            // general
+            l.LegendBorderThickness = 0;
+            l.LegendOrientation = LegendOrientation.Horizontal;
+            l.LegendPlacement = LegendPlacement.Outside;
+            l.LegendPosition = LegendPosition.BottomCenter;
+            l.LegendSymbolMargin = 20;
             var labelFontSize = 11;
             var pngOffset = 0.1;
             // in the pdfs the vertical text gets moved a little. this is the offset in the png to counter that.
             if (Config.MakePDFCharts) {
                 plotModel1.DefaultFontSize = Parameters.PDFFontSize;
-                plotModel1.LegendFontSize = Parameters.PDFFontSize;
+                l.LegendFontSize = Parameters.PDFFontSize;
                 labelFontSize = 16;
                 pngOffset = 0;
             }
@@ -120,19 +125,19 @@ namespace ChartCreator2.OxyCharts {
             var count = 0;
             foreach (var keyValuePair in consumption) {
                 // main columns
-                var columnSeries2 = new ColumnSeries
+                var columnSeries2 = new BarSeries
                 {
                     IsStacked = true,
                     StackGroup = "1",
                     StrokeThickness = 0.5,
-                    StrokeColor = OxyColors.White,
+                    StrokeColor =OxyColors.White,
                     Title = ChartLocalizer.Get().GetTranslation(keyValuePair.Key),
                     LabelPlacement = LabelPlacement.Middle
                 };
                 var col = 0;
                 foreach (var minutes in keyValuePair.Value) {
                     var d = minutes / colheight * 100;
-                    var ci = new ColumnItem(d);
+                    var ci = new BarItem(d);
                     columnSeries2.Items.Add(ci);
 
                     if (d > 15) {

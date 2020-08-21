@@ -460,13 +460,41 @@ namespace CalculationController.Integrity {
                     throw new LPGException("Unknown Assignable Device Type");
             }
         }
+
+        //public void CheckWorkFromHome(HouseholdTrait trait, TraitTag wfhTag)
+        //{
+        //    if (PerformCleanupChecks) {
+        //        bool foundWfh = false;
+        //        foreach (var tag in trait.LivingPatternTags) {
+        //            if (!tag.Name.Contains("Living Pattern / Stay Home")) {
+        //                foreach (var tag1 in trait.Tags) {
+        //                    if (tag1.Name.Contains("Living Pattern / Work From Home")) {
+        //                        foundWfh = true;
+        //                    }
+        //                }
+        //            }
+
+        //        }
+        //        /*
+        //        if (!foundWfh) {
+        //            var result = MessageWindowHandler.Mw.ShowYesNoMessage("Add " + wfhTag.Name + " to " + trait.Name + "?","Yes/No");
+        //            if (result == LPGMsgBoxResult.Yes) {
+        //                trait.AddTag(wfhTag);
+        //                trait.SaveToDB();
+        //            }
+        //        }*/
+        //    }
+        //}
+
         protected override void Run(Simulator sim)
         {
             CheckForAffordancesWithoutTraits(sim.HouseholdTraits.Items, sim.Affordances.Items);
             CheckClassifications(sim.HouseholdTraits.Items);
             CleanTraitNames(sim.HouseholdTraits.Items);
+            //var wfhPattern = sim.TraitTags.FindFirstByNameNotNull("Living Pattern / Work From Home");
             //var notusedCount = 0;
             foreach (var householdTrait in sim.HouseholdTraits.Items) {
+               // CheckWorkFromHome(householdTrait, wfhPattern);
                 CheckAutoDevTimeProfileForZero1(sim, householdTrait);
                 CheckSleepDesire(householdTrait);
                 CheckPersonCounts(householdTrait);

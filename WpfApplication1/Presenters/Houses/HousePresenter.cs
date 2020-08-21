@@ -260,9 +260,9 @@ namespace LoadProfileGenerator.Presenters.Houses {
         [UsedImplicitly]
         public ObservableCollection<VLoadType> VLoadTypes => Sim.LoadTypes.Items;
 
-        public void AddCalcObject([NotNull] ICalcObject calcObject, [CanBeNull] ChargingStationSet
-                                      chargingStationSet, [CanBeNull] TransportationDeviceSet transportationDeviceSet,
-                                  [CanBeNull] TravelRouteSet travelRouteSet)
+        public void AddCalcObject([NotNull] ICalcObject calcObject, [NotNull] ChargingStationSet
+                                      chargingStationSet, [NotNull] TransportationDeviceSet transportationDeviceSet,
+                                  [NotNull] TravelRouteSet travelRouteSet)
         {
             _house.AddHousehold(calcObject, chargingStationSet, travelRouteSet,transportationDeviceSet );
         }

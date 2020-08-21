@@ -242,7 +242,7 @@ namespace Database.Templating {
                                              [NotNull] ModularHousehold chh)
         {
             // find the living pattern all tag for speed
-            var allTag = sim.TraitTags.Items.First(x => x.Name == "Living Pattern / All");
+            var allTag = sim.LivingPatternTags.Items.First(x => x.Name == "Living Pattern / All");
             if (allTag == null) {
                 throw new LPGException("The tag Living Pattern / All was not found.");
             }
@@ -267,7 +267,7 @@ namespace Database.Templating {
                 for (var j = 0; j < numberofTraits; j++) {
                     var personnumber = rnd.Next(entry.Persons.Count);
                     var person = entry.Persons[personnumber].Person;
-                    var dstLivingPattern = chh.Persons.First(x => x.Person == person).TraitTag;
+                    var dstLivingPattern = chh.Persons.First(x => x.Person == person).LivingPatternTag;
                     if (dstLivingPattern == null) {
                         throw new LPGException("The living pattern was not set.");
                     }
@@ -275,7 +275,7 @@ namespace Database.Templating {
                     //filter out the wrong living patterns
                     //needs to use the startWith
                     var filteredTraits = potentialTraits.Where(x =>
-                        x.Tags.Any(y => dstLivingPattern.Name.StartsWith(y.Name)) || x.Tags.Any(y => y.Tag == allTag) ||
+                        x.Tags.Any(y => dstLivingPattern.Name.StartsWith(y.Name)) || x.LivingPatternTags.Any(y => y.Tag == allTag) ||
                         !x.Tags.Any(y => y.Name.StartsWith("Living Pattern"))).ToList();
                     if (filteredTraits.Count == 0) {
                         throw new DataIntegrityException("Not a single trait found for entry " + entry.TraitTag.Name +
@@ -363,11 +363,11 @@ namespace Database.Templating {
 
                 //TODO: fix this
                 foreach (var person in template.Persons) {
-                    TraitTag livingpattern = person.LivingPattern;
+                    var livingpattern = person.LivingPatternTag;
                     string[] components = livingpattern?.Name.Split('/');
                     if (components?.Length == 3) {
                         string basename = livingpattern.Name.Substring(0, livingpattern.Name.Length - components[2].Length);
-                        List<TraitTag> possibleTags = sim.TraitTags.Items
+                        List<LivingPatternTag> possibleTags = sim.LivingPatternTags.Items
                             .Where(x => x.Name.StartsWith(basename, StringComparison.InvariantCultureIgnoreCase)).ToList();
                         if (possibleTags.Count > 1) {
                             livingpattern = possibleTags[r.Next(possibleTags.Count)];

@@ -63,7 +63,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
             _locationGuid = locationID;
         }
 
-        public override bool Equals(object obj) {
+        public override bool Equals(object? obj) {
             if (obj is null) {
                 return false;
             }

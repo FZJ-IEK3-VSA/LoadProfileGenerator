@@ -92,6 +92,7 @@ namespace Database.Tables.Houses {
         public VLoadType LoadType => _loadType;
         public Location Location => _location;
 
+        [NotNull]
         public override string Name {
             get {
                 if (_device != null && Profile != null) {

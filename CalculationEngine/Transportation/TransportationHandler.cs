@@ -32,10 +32,9 @@ namespace CalculationEngine.Transportation {
         [ItemNotNull]
         public List<CalcTransportationDeviceCategory> DeviceCategories { get;  } = new List<CalcTransportationDeviceCategory>();
 
-        [CanBeNull]
-        public CalcTravelRoute GetTravelRouteFromSrcLoc([NotNull] CalcLocation srcLocation,
-                                                        [NotNull] CalcSite dstSite, [NotNull] TimeStep startTimeStep,
-                                                        [NotNull] string personName, CalcRepo calcRepo)
+        public CalcTravelRoute? GetTravelRouteFromSrcLoc([NotNull] CalcLocation srcLocation,
+                                                         [NotNull] CalcSite dstSite, [NotNull] TimeStep startTimeStep,
+                                                         [NotNull] string personName, CalcRepo calcRepo)
         {
             CalcSite srcSite = LocationSiteLookup[srcLocation];
             if (srcSite == dstSite) {
@@ -50,7 +49,7 @@ namespace CalculationEngine.Transportation {
 
             //check if the route is busy by calculating the duration. If busy, duration will be null
             int? dur = null;
-            CalcTravelRoute ctr = null;
+            CalcTravelRoute? ctr = null;
             while (dur== null && possibleRoutes.Count > 0) {
                 ctr = possibleRoutes[calcRepo.Rnd.Next(possibleRoutes.Count)];
                 possibleRoutes.Remove(ctr);

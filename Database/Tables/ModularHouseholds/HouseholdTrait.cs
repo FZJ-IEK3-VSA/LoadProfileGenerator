@@ -138,6 +138,7 @@ namespace Database.Tables.ModularHouseholds {
         [NotNull] [ItemNotNull] private readonly ObservableCollection<HHTLocation> _locations;
         [ItemNotNull] [NotNull] private readonly ObservableCollection<HHTTrait> _subTraits;
         [ItemNotNull] [NotNull] private readonly ObservableCollection<HHTTag> _tags;
+        [ItemNotNull] [NotNull] private readonly ObservableCollection<HHTLivingPatternTag> _livingPatternTags;
 
         [CanBeNull] private string _cachedPrettyName;
 
@@ -184,6 +185,7 @@ namespace Database.Tables.ModularHouseholds {
             _desires = new ObservableCollection<HHTDesire>();
             _subTraits = new ObservableCollection<HHTTrait>();
             _tags = new ObservableCollection<HHTTag>();
+            _livingPatternTags = new ObservableCollection<HHTLivingPatternTag>();
             TypeDescription = "Household Trait";
             AreNumbersOkInNameForIntegrityCheck = true;
             _description = description;
@@ -418,6 +420,13 @@ namespace Database.Tables.ModularHouseholds {
         [ItemNotNull]
         public ObservableCollection<HHTTag> Tags => _tags;
 
+
+
+        [NotNull]
+        [ItemNotNull]
+        public ObservableCollection<HHTLivingPatternTag> LivingPatternTags => _livingPatternTags;
+
+
         [NotNull]
         public string WebName {
             get {
@@ -546,6 +555,28 @@ namespace Database.Tables.ModularHouseholds {
             _tags.Sort();
             hhttag.SaveToDB();
             return hhttag;
+        }
+
+        [CanBeNull]
+        public HHTLivingPatternTag AddLivingPatternTag([NotNull] LivingPatternTag tag)
+        {
+            if (_livingPatternTags.Any(x => x.Tag == tag))
+            {
+                return null;
+            }
+
+            var hhttag = new HHTLivingPatternTag(null, IntID, tag, ConnectionString, tag.Name, System.Guid.NewGuid().ToStrGuid());
+            _livingPatternTags.Add(hhttag);
+            _livingPatternTags.Sort();
+            hhttag.SaveToDB();
+            return hhttag;
+        }
+
+        [CanBeNull]
+        public HHTLivingPatternTag AddLivingPatternTagFromJto(JsonReference json, [NotNull] Simulator sim)
+        {
+            var tag = sim.LivingPatternTags.FindByJsonReference(json) ?? throw new LPGException("Could not find living pattern tag " + json);
+            return AddLivingPatternTag(tag);
         }
 
         [CanBeNull]
@@ -1161,6 +1192,7 @@ namespace Database.Tables.ModularHouseholds {
             SynchronizeListWithCreation(Locations, json.Locations, AddLocationFromJto, sim);
             SynchronizeListWithCreation(Desires, json.Desires, AddDesireFromJto, sim);
             SynchronizeListWithCreation(Tags, json.Tags, AddTagFromJto, sim);
+            SynchronizeListWithCreation(LivingPatternTags, json.LivingPatternTags, AddLivingPatternTagFromJto, sim);
             SaveToDB();
         }
 
@@ -1210,6 +1242,10 @@ namespace Database.Tables.ModularHouseholds {
 
             foreach (var tag in selectedImportHousehold._tags) {
                 AddTag(tag.Tag);
+            }
+            foreach (var tag in selectedImportHousehold._livingPatternTags)
+            {
+                AddLivingPatternTag(tag.Tag);
             }
 
             foreach (var hhtDesire in selectedImportHousehold.Desires) {
@@ -1292,6 +1328,7 @@ namespace Database.Tables.ModularHouseholds {
                                             [ItemNotNull] [NotNull] ObservableCollection<DeviceAction> deviceActions,
                                             [ItemNotNull] [NotNull] ObservableCollection<DeviceActionGroup> groups,
                                             [ItemNotNull] [NotNull] ObservableCollection<TraitTag> traittags,
+                                            [ItemNotNull][NotNull] ObservableCollection<LivingPatternTag> allLivingPatternTags,
                                             bool ignoreMissingTables,
                                             [ItemNotNull] [NotNull] ObservableCollection<Variable> variables)
         {
@@ -1345,6 +1382,11 @@ namespace Database.Tables.ModularHouseholds {
             var hhttags = new ObservableCollection<HHTTag>();
             HHTTag.LoadFromDatabase(hhttags, connectionString, ignoreMissingTables, traittags);
             SetSubitems(new List<DBBase>(result), new List<DBBase>(hhttags), IsCorrectHHTTagParent, ignoreMissingTables);
+
+            // living pattern Tags
+            var livingpatternTags  = new ObservableCollection<HHTLivingPatternTag>();
+            HHTLivingPatternTag.LoadFromDatabase(livingpatternTags, connectionString, ignoreMissingTables, allLivingPatternTags);
+            SetSubitems(new List<DBBase>(result), new List<DBBase>(livingpatternTags), IsCorrectHHTLivingPatternTagParent, ignoreMissingTables);
 
             // sort
             foreach (var hh in result) {
@@ -1414,6 +1456,10 @@ namespace Database.Tables.ModularHouseholds {
 
             foreach (HHTDesire desire in _desires) {
                 desire.SaveToDB();
+            }
+            foreach (var lptag in _livingPatternTags)
+            {
+                lptag.SaveToDB();
             }
         }
 
@@ -1623,12 +1669,17 @@ namespace Database.Tables.ModularHouseholds {
             _locations.Remove(hhl);
         }
 
-        internal void DeleteHHTTag([NotNull] HHTTag tag)
+        public void DeleteHHTTag([NotNull] HHTTag tag)
         {
             tag.DeleteFromDB();
             _tags.Remove(tag);
         }
 
+        public void DeleteHHTLivingPatternTag([NotNull] HHTLivingPatternTag tag)
+        {
+            tag.DeleteFromDB();
+            _livingPatternTags.Remove(tag);
+        }
         internal void DeleteHHTTrait([NotNull] HHTTrait hhtrait)
         {
             hhtrait.DeleteFromDB();
@@ -1791,6 +1842,18 @@ namespace Database.Tables.ModularHouseholds {
 
             return false;
         }
+        private static bool IsCorrectHHTLivingPatternTagParent([NotNull] DBBase parent, [NotNull] DBBase child)
+        {
+            var hd = (HHTLivingPatternTag)child;
+            if (parent.ID == hd.HouseholdTraitID)
+            {
+                var hh = (HouseholdTrait)parent;
+                hh.LivingPatternTags.Add(hd);
+                return true;
+            }
+
+            return false;
+        }
 
         private static bool IsCorrectHHTTraitParent([NotNull] DBBase parent, [NotNull] DBBase child)
         {
@@ -1894,6 +1957,7 @@ namespace Database.Tables.ModularHouseholds {
             public List<JsonReference> SubTraits { get; set; } = new List<JsonReference>();
 
             public List<JsonReference> Tags { get; set; } = new List<JsonReference>();
+            public List<JsonReference> LivingPatternTags { get; set; } = new List<JsonReference>();
         }
     }
 }

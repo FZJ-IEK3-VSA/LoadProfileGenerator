@@ -140,7 +140,7 @@ namespace CalculationEngine.Transportation
             var deviceAtSrc = allTransportationDevices.Where(x => x.Currentsite == SiteA).ToList();
             foreach (CalcTravelRouteStep step in Steps) {
                 bool success = step.CalculateDurationInTimestepsAndPickDevice(slidingTimeStep,
-                    out CalcTransportationDevice pickedDevice,
+                    out CalcTransportationDevice? pickedDevice,
                     out int? durationForPickedDeviceInTimesteps,
                     _vehiclePool,
                     _locationUnlimitedDevices, deviceAtSrc);

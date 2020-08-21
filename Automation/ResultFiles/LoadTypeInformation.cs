@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 namespace Automation.ResultFiles {
     public class LoadTypeInformation : IEquatable<LoadTypeInformation> {
         // needed for xml deserialize
-        public bool Equals(LoadTypeInformation other)
+        public bool Equals(LoadTypeInformation? other)
         {
             if (other is null) {
                 return false;
@@ -18,7 +18,7 @@ namespace Automation.ResultFiles {
             return ConversionFaktor.Equals(other.ConversionFaktor) && FileName == other.FileName && Guid == other.Guid && Name == other.Name && ShowInCharts == other.ShowInCharts && UnitOfPower == other.UnitOfPower && UnitOfSum == other.UnitOfSum;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is null) {
                 return false;

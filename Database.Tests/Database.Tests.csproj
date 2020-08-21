@@ -11,6 +11,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DatabaseMerger\**" />
+    <EmbeddedResource Remove="DatabaseMerger\**" />
+    <EntityDeploy Remove="DatabaseMerger\**" />
+    <None Remove="DatabaseMerger\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="5.10.3" />
     <PackageReference Include="FluentAssertions.Analyzers" Version="0.11.4" />
     <PackageReference Include="JetBrains.Annotations" Version="2020.1.0" />
@@ -35,10 +42,6 @@
     <ProjectReference Include="..\CalculationEngine\CalculationEngine.csproj" />
     <ProjectReference Include="..\Common.Tests\Common.Tests.csproj" />
     <ProjectReference Include="..\Database\Database.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="DatabaseMerger\" />
   </ItemGroup>
 
 </Project>

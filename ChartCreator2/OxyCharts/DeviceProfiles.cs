@@ -12,6 +12,7 @@ using Common.SQLResultLogging;
 using JetBrains.Annotations;
 using OxyPlot;
 using OxyPlot.Axes;
+using OxyPlot.Legends;
 using OxyPlot.Series;
 
 namespace ChartCreator2.OxyCharts {
@@ -111,21 +112,20 @@ namespace ChartCreator2.OxyCharts {
                 column.Sum = column.Values.Sum();
             }
             newColumns.Sort((x, y) => y.Sum.CompareTo(x.Sum));
-            var plotModel1 = new PlotModel
-            {
+            var plotModel1 = new PlotModel();
+            var l = new Legend();
+            plotModel1.Legends.Add(l);
                 // general
-                LegendBorderThickness = 0,
-                LegendOrientation = LegendOrientation.Horizontal,
-                LegendPlacement = LegendPlacement.Outside,
-
-                LegendPosition = LegendPosition.BottomCenter
-            };
+            l.LegendBorderThickness = 0;
+             l.LegendOrientation = LegendOrientation.Horizontal;
+             l.LegendPlacement = LegendPlacement.Outside;
+             l.LegendPosition = LegendPosition.BottomCenter;
             if (Config.MakePDFCharts) {
-                plotModel1.LegendFontSize =Parameters.PDFFontSize;
+                l.LegendFontSize =Parameters.PDFFontSize;
                 plotModel1.DefaultFontSize = Parameters.PDFFontSize;
             }
             if (Config.SpecialChartFontSize != null) {
-                plotModel1.LegendFontSize = Config.SpecialChartFontSize.Value;
+                l.LegendFontSize = Config.SpecialChartFontSize.Value;
                 plotModel1.DefaultFontSize = Config.SpecialChartFontSize.Value;
             }
             if (Parameters.ShowTitle) {
@@ -379,6 +379,7 @@ namespace ChartCreator2.OxyCharts {
             [JetBrains.Annotations.NotNull]
             public List<double> Values { get; } = new List<double>();
 
+            [JetBrains.Annotations.NotNull]
             public override string ToString() => "Tag: " + Tag + " Name: " + RawName;
         }
     }

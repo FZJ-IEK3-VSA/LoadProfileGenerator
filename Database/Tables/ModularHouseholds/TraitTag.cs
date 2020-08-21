@@ -8,15 +8,18 @@ using Database.Database;
 using Database.Tables.BasicElements;
 using JetBrains.Annotations;
 
-namespace Database.Tables.ModularHouseholds {
+namespace Database.Tables.ModularHouseholds
+{
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
-    public enum TraitLimitType {
+    public enum TraitLimitType
+    {
         NoLimit,
         OnePerPerson,
         OnePerHousehold
     }
 
-    public enum TraitPriority {
+    public enum TraitPriority
+    {
         Mandatory,
         Recommended,
         Optional,
@@ -24,7 +27,8 @@ namespace Database.Tables.ModularHouseholds {
         All
     }
 
-    public static class TraitPriorityHelper {
+    public static class TraitPriorityHelper
+    {
 #pragma warning disable S3887 // Mutable, non-private fields should not be "readonly"
         //public static Dictionary<TraitPriority, string> TraitPriorityDictionaryEnumDictionary { get; }=
         //    new Dictionary<TraitPriority, string> {
@@ -34,7 +38,8 @@ namespace Database.Tables.ModularHouseholds {
         //    };
 #pragma warning restore S3887 // Mutable, non-private fields should not be "readonly"
 
-        [NotNull] [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
+        [NotNull]
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
 #pragma warning disable S3887 // Mutable, non-private fields should not be "readonly"
 #pragma warning disable S2386 // Mutable fields should not be "public static"
         public static readonly Dictionary<TraitPriority, string> TraitPriorityDictionaryEnumDictionaryComplete =
@@ -49,7 +54,8 @@ namespace Database.Tables.ModularHouseholds {
 #pragma warning restore S2386 // Mutable fields should not be "public static"
 #pragma warning restore S3887 // Mutable, non-private fields should not be "readonly"
 
-        [NotNull] [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
+        [NotNull]
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
 #pragma warning disable S3887 // Mutable, non-private fields should not be "readonly"
 #pragma warning disable S2386 // Mutable fields should not be "public static"
         public static readonly Dictionary<TraitPriority, string> TraitPriorityDictionaryEnumDictionaryWithAll =
@@ -64,12 +70,13 @@ namespace Database.Tables.ModularHouseholds {
 #pragma warning restore S3887 // Mutable, non-private fields should not be "readonly"
     }
 
-    public class TraitTag : DBBaseElement {
+    public class TraitTag : DBBaseElement
+    {
         public const string TableName = "tblTraitTags";
         private TraitLimitType _traitLimitType;
         private TraitPriority _traitPriority;
         public TraitTag([NotNull] string pName, [NotNull] string connectionString, TraitLimitType traitLimitType, TraitPriority tp,
-                        StrGuid guid, [CanBeNull]int? pID = null)
+                        StrGuid guid, [CanBeNull] int? pID = null)
             : base(pName, TableName, connectionString, guid)
         {
             ID = pID;
@@ -79,13 +86,15 @@ namespace Database.Tables.ModularHouseholds {
         }
 
         [UsedImplicitly]
-        public TraitLimitType TraitLimitType {
+        public TraitLimitType TraitLimitType
+        {
             get => _traitLimitType;
             set => SetValueWithNotify(value, ref _traitLimitType, nameof(TraitLimitType));
         }
 
         [UsedImplicitly]
-        public TraitPriority TraitPriority {
+        public TraitPriority TraitPriority
+        {
             get => _traitPriority;
             set => SetValueWithNotify(value, ref _traitPriority, nameof(TraitPriority));
         }
@@ -94,15 +103,15 @@ namespace Database.Tables.ModularHouseholds {
         private static TraitTag AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
             [NotNull] AllItemCollections aic)
         {
-            var name = dr.GetString("Name","No name");
+            var name = dr.GetString("Name", "No name");
             var id = dr.GetIntFromLong("ID");
             var traitLimitType =
-                (TraitLimitType) dr.GetIntFromLong("TraitLimitType", false, ignoreMissingFields);
+                (TraitLimitType)dr.GetIntFromLong("TraitLimitType", false, ignoreMissingFields);
             var traitPriority =
                 (TraitPriority)
-                dr.GetIntFromLong("TraitPriority", false, ignoreMissingFields, (int) TraitPriority.ForExperts);
+                dr.GetIntFromLong("TraitPriority", false, ignoreMissingFields, (int)TraitPriority.ForExperts);
             var guid = GetGuid(dr, ignoreMissingFields);
-            var d = new TraitTag(name, connectionString, traitLimitType, traitPriority,guid, id);
+            var d = new TraitTag(name, connectionString, traitLimitType, traitPriority, guid, id);
             return d;
         }
 
@@ -113,23 +122,19 @@ namespace Database.Tables.ModularHouseholds {
             TraitPriority.Recommended, System.Guid.NewGuid().ToStrGuid());
 
         public override DBBase ImportFromGenericItem(DBBase toImport, Simulator dstSim)
-            => ImportFromItem((TraitTag)toImport,dstSim);
+            => ImportFromItem((TraitTag)toImport, dstSim);
 
         public override List<UsedIn> CalculateUsedIns(Simulator sim)
         {
             var used = new List<UsedIn>();
 
-            foreach (var t in sim.HouseholdTraits.Items) {
-                foreach (var hhtTag in t.Tags) {
-                    if (hhtTag.Tag == this) {
+            foreach (var t in sim.HouseholdTraits.Items)
+            {
+                foreach (var hhtTag in t.Tags)
+                {
+                    if (hhtTag.Tag == this)
+                    {
                         used.Add(new UsedIn(t, "Household Trait"));
-                    }
-                }
-            }
-            foreach (ModularHousehold mhh in sim.ModularHouseholds.Items) {
-                foreach (ModularHouseholdPerson mhhPerson in mhh.Persons) {
-                    if (mhhPerson.TraitTag == this) {
-                        used.Add(new UsedIn(mhh,"Person Description"));
                     }
                 }
             }
@@ -143,7 +148,7 @@ namespace Database.Tables.ModularHouseholds {
 #pragma warning restore RCS1163 // Unused parameter.
         {
             //TODO: finish this
-            var tt = new TraitTag(item.Name,dstSim.ConnectionString,
+            var tt = new TraitTag(item.Name, dstSim.ConnectionString,
                 item.TraitLimitType, item._traitPriority, item.Guid);
             tt.SaveToDB();
             return tt;
@@ -155,7 +160,7 @@ namespace Database.Tables.ModularHouseholds {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<TraitTag> result, [NotNull] string connectionString,
+        public static void LoadFromDatabase([ItemNotNull][NotNull] ObservableCollection<TraitTag> result, [NotNull] string connectionString,
             bool ignoreMissingTables)
         {
             var aic = new AllItemCollections();

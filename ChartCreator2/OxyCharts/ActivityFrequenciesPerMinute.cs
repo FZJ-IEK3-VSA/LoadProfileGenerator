@@ -6,8 +6,11 @@ using Automation;
 using Automation.ResultFiles;
 using Common;
 using OxyPlot;
-using OxyPlot.Axes;
+using OxyPlot.Legends;
 using OxyPlot.Series;
+using BarSeries = OxyPlot.Series.BarSeries;
+using CategoryAxis = OxyPlot.Axes.CategoryAxis;
+using LinearAxis = OxyPlot.Axes.LinearAxis;
 
 namespace ChartCreator2.OxyCharts {
     public class ActivityFrequenciesPerMinute : ChartBaseFileStep {
@@ -53,14 +56,13 @@ namespace ChartCreator2.OxyCharts {
                 }
             }
             foreach (var pair in consumption) {
-                var plotModel1 = new PlotModel
-                {
-                    // general
-                    LegendBorderThickness = 0,
-                    LegendOrientation = LegendOrientation.Horizontal,
-                    LegendPlacement = LegendPlacement.Outside,
-                    LegendPosition = LegendPosition.BottomCenter
-                };
+                var plotModel1 = new PlotModel();
+                var l = new Legend();
+                plotModel1.Legends.Add(l);
+                l.LegendBorderThickness = 0;
+                l.LegendOrientation = LegendOrientation.Horizontal;
+                l.LegendPlacement = LegendPlacement.Outside;
+                l.LegendPosition = LegendPosition.BottomCenter;
                 var personName = pair.Key;
                 if (Parameters.ShowTitle) {
                     plotModel1.Title = plotName + " " + personName;
@@ -94,16 +96,13 @@ namespace ChartCreator2.OxyCharts {
                 }
 
                 for (var i = 0; i < pair.Value.Count; i++) {
-                    var columnSeries2 = new ColumnSeries
-                    {
-                        IsStacked = true,
-                        StrokeThickness = 0,
-
-                        Title = pair.Value[i].Item1
-                    };
+                    var columnSeries2 = new BarSeries();
+                    columnSeries2.IsStacked = true;
+                    columnSeries2.StrokeThickness = 0;
+                    columnSeries2.Title = pair.Value[i].Item1;
                     var values = pair.Value[i].Item2;
                     for (var j = 0; j < values.Count; j++) {
-                        columnSeries2.Items.Add(new ColumnItem(values[j]));
+                        columnSeries2.Items.Add(new BarItem(values[j]));
                     }
                     columnSeries2.FillColor = p.Colors[i];
                     plotModel1.Series.Add(columnSeries2);

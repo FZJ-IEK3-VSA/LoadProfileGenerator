@@ -62,8 +62,9 @@ public void TestHouseJobsActionCarpetPlot(){
       const CalcOption co = CalcOption.ActionCarpetPlot;
       HouseJobTestHelper.RunSingleHouse((sim) => {
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim, hhguid,TestDuration.TwelveMonths);
+      sim.MyGeneralConfig.PerformCleanUpChecksBool = false;
       hj.CalcSpec.CalcOptions.Add(co); return hj;
-      }, (x) => HouseJobTestHelper.CheckForResultfile(x, co));
+      }, (x) => HouseJobTestHelper.CheckForResultfile(x, co),true);
 }
 
 

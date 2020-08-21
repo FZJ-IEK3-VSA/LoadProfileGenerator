@@ -130,7 +130,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
                 var gen = sim.HouseholdTemplates.CreateNewItem(db.ConnectionString);
                 gen.NewHHName = "hh";
                 var entry = gen.AddEntry(sim.TraitTags[0], 5, 10);
-                TraitTag tt = sim.TraitTags[0];
+                LivingPatternTag tt = sim.LivingPatternTags[0];
                 gen.AddPerson(sim.Persons[0], tt);
                 entry.AddPerson(sim.Persons[0]);
 
@@ -190,7 +190,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
                 var hhtemplate = sim.HouseholdTemplates.CreateNewItem(db.ConnectionString);
                 hhtemplate.SaveToDB();
                 hhtemplate.AddEntry(sim.TraitTags[0], 1, 100);
-                hhtemplate.AddPerson(sim.Persons[0], sim.TraitTags[0]);
+                hhtemplate.AddPerson(sim.Persons[0], sim.LivingPatternTags[0]);
                 sim.HouseholdTags.CreateNewItem(sim.ConnectionString);
                 hhtemplate.AddTemplateTag(sim.HouseholdTags[0]);
                 (sim.HouseholdTemplates.Items.Count).Should().Be(1);
@@ -233,15 +233,16 @@ namespace Database.Tests.Tables.ModularHouseholds {
                     locations, variables);
 
                 var traittags = db.LoadTraitTags();
+                var lptags = db.LoadLivingPatternTags();
                 var traits = db.LoadHouseholdTraits(locations, affordances, realDevices,
                     deviceCategories, timeBasedProfiles, loadTypes, timeLimits, desires, deviceActions, deviceActionGroups,
-                    traittags, variables);
+                    traittags, variables, lptags);
                 var vacations = db.LoadVacations();
                 var templateTags = db.LoadHouseholdTags();
                 var datebasedProfiles = db.LoadDateBasedProfiles();
                 HouseholdTemplate.LoadFromDatabase(cat.Items, db.ConnectionString, traits, false, persons, traittags,
                     vacations,
-                    templateTags, datebasedProfiles);
+                    templateTags, datebasedProfiles, lptags);
                 (cat.Items.Count).Should().Be(0);
 
                 var gen = cat.CreateNewItem(db.ConnectionString);
@@ -250,7 +251,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
                 cat.SaveToDB();
                 var generators = new ObservableCollection<HouseholdTemplate>();
                 HouseholdTemplate.LoadFromDatabase(generators, db.ConnectionString, traits, false, persons, traittags,
-                    vacations, templateTags, datebasedProfiles);
+                    vacations, templateTags, datebasedProfiles, lptags);
                 (generators.Count).Should().Be(1);
                 (generators[0].Entries.Count).Should().Be(1);
                 (generators[0].Entries[0].Persons.Count).Should().Be(1);

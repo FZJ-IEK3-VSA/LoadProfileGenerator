@@ -284,7 +284,7 @@ namespace CalculationEngine.HouseholdElements {
             /*if (Math.Abs(cdl.Value) < 0.00000001 ) {
                 throw new LPGException("Trying to calculate with a power consumption factor of 0. This is wrong.");
             }*/
-            if (CalcRepo.Odap == null && !Config.IsInUnitTesting)
+            if (CalcRepo.Odap == null)
             {
                 throw new LPGException("ODAP was null. Please report");
             }
@@ -365,7 +365,7 @@ namespace CalculationEngine.HouseholdElements {
             /*if (Math.Abs(cdl.Value) < 0.00000001 ) {
                 throw new LPGException("Trying to calculate with a power consumption factor of 0. This is wrong.");
             }*/
-            if (CalcRepo.Odap == null && !Config.IsInUnitTesting) {
+            if (CalcRepo.Odap == null) {
                 throw new LPGException("ODAP was null. Please report");
             }
             var totalDuration = calcProfile.StepValues.Count; //.GetNewLengthAfterCompressExpand(timefactor);

@@ -14,7 +14,7 @@ using JetBrains.Annotations;
 namespace CalculationEngine.Transportation {
     public class CalcTransportationDevice : CalcBase {
 
-        [CanBeNull] private readonly CalcLoadType _chargingCalcLoadType1;
+        private readonly CalcLoadType? _chargingCalcLoadType1;
         [NotNull] private readonly DateStampCreator _dsc;
 
         private readonly double _energyToDistanceFactor;
@@ -27,16 +27,16 @@ namespace CalculationEngine.Transportation {
 
         private readonly double _maxChargingPower;
 
-        [NotNull] private readonly Dictionary<int, CalcSite> _targetSiteByTimeStep = new Dictionary<int, CalcSite>();
+        [NotNull] private readonly Dictionary<int, CalcSite?> _targetSiteByTimeStep = new Dictionary<int, CalcSite?>();
 
         [NotNull] private TimeStep _activationStartTimestep = new TimeStep(-1, 0, false);
         [NotNull] private TimeStep _activationStopTimestep = new TimeStep(-1, 0, false);
         private double _availableRangeInMeters;
-        [CanBeNull] private CalcSite _currentSite;
+        private CalcSite? _currentSite;
 
-        [CanBeNull] private CalcChargingStation _lastChargingStation;
+        private CalcChargingStation? _lastChargingStation;
 
-        [CanBeNull] private string _lastUsingPerson;
+        private string? _lastUsingPerson;
         private readonly Dictionary<StrGuid, Dictionary<CalcLoadType, OefcKey>> _keysByLocGuidAndLoadtype = new Dictionary<StrGuid, Dictionary<CalcLoadType, OefcKey>>();
 
         [NotNull] private readonly CalcDeviceDto _calcDeviceDto;
@@ -48,7 +48,7 @@ namespace CalculationEngine.Transportation {
                                         double fullRangeInMeters,
                                         double energyToDistanceFactor,
                                         double maxChargingPower,
-                                        [CanBeNull] CalcLoadType chargingCalcLoadType,
+                                        CalcLoadType? chargingCalcLoadType,
                                         [NotNull] [ItemNotNull] List<CalcSite> allCalcSites,
                                         [NotNull] CalcDeviceDto calcDeviceDto, [NotNull] CalcRepo calcRepo)
             : base(calcDeviceDto.Name, calcDeviceDto.Guid)
@@ -77,9 +77,9 @@ namespace CalculationEngine.Transportation {
             var vehiclePoolGuid = "8C426E95-B269-402E-9806-C3785D6C8433".ToStrGuid();
             _calcDeviceDto.LocationGuid = vehiclePoolGuid;
             _calcDeviceDto.LocationName = "Vehicle Pool";
-            if (calcDeviceDto.LocationGuid==null) {
-                throw new LPGException("Trying to initalize with empty location guid");
-            }
+            //if (calcDeviceDto.LocationGuid==null) {
+            //    throw new LPGException("Trying to initalize with empty location guid");
+            //}
             foreach (CalcDeviceLoad deviceLoad in loads) {
                 //TODO: check if -1 is a good location guid
                 //OefcKey key = new OefcKey(_calcDeviceDto.HouseholdKey, OefcDeviceType.Transportation, Guid, "-1", deviceLoad.LoadType.Guid, "Transportation");
@@ -107,8 +107,7 @@ namespace CalculationEngine.Transportation {
         [NotNull]
         public CalcTransportationDeviceCategory Category { get; }
 
-        [CanBeNull]
-        public CalcSite Currentsite => _currentSite;
+        public CalcSite? Currentsite => _currentSite;
 
         public double LastChargingPower { get; set; }
 
@@ -389,7 +388,7 @@ namespace CalculationEngine.Transportation {
                                     [NotNull] CalcLoadType loadType,
                                     [NotNull] string affordanceName, [NotNull] string activatingPersonName, StrGuid locationGuid)
         {
-            CalcDeviceLoad cdl = null;
+            CalcDeviceLoad? cdl = null;
             foreach (var calcDeviceLoad in _loads) {
                 if (calcDeviceLoad.LoadType == loadType) {
                     cdl = calcDeviceLoad;
@@ -406,7 +405,7 @@ namespace CalculationEngine.Transportation {
                {
                    factor = 1 * multiplier;
                }*/
-            if (_calcRepo.Odap == null && !Config.IsInUnitTesting) {
+            if (_calcRepo.Odap == null) {
                 throw new LPGException("ODAP was null. Please report");
             }
 

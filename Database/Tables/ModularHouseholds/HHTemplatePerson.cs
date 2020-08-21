@@ -14,7 +14,8 @@ namespace Database.Tables.ModularHouseholds {
         private const string TableName = "tblHHTemplatePerson";
         private readonly int _hhTemplateID;
         [CanBeNull]
-        private TraitTag _livingPattern;
+        private readonly TraitTag _livingPattern;
+        private LivingPatternTag _livingPatternTag;
 
         [CanBeNull] private  Person _person;
 
@@ -53,8 +54,8 @@ namespace Database.Tables.ModularHouseholds {
                          ?? throw new LPGException("Could not find a database entry for the person " + jtp.PersonReference);
             }
 
-            if (LivingPattern?.Guid != jtp.LivingPatternTraitTagReference?.Guid) {
-                LivingPattern = sim.TraitTags.FindByGuid(jtp.LivingPatternTraitTagReference?.Guid) ??
+            if (LivingPatternTag?.Guid != jtp.LivingPatternTraitTagReference?.Guid) {
+                LivingPatternTag = sim.LivingPatternTags.FindByGuid(jtp.LivingPatternTraitTagReference?.Guid) ??
                                 throw new LPGException("Could not find a living pattern trait tag for " + jtp.LivingPatternTraitTagReference);
             }
 
@@ -64,17 +65,18 @@ namespace Database.Tables.ModularHouseholds {
 
         public JsonDto GetJson()
         {
-            JsonDto jtp = new JsonDto(Guid,  Person.GetJsonReference(), LivingPattern?.GetJsonReference(), Name) ;
+            JsonDto jtp = new JsonDto(Guid,  Person.GetJsonReference(), LivingPatternTag?.GetJsonReference(), Name) ;
             return jtp;
         }
 
         public HHTemplatePerson([CanBeNull]int? pID, [CanBeNull] Person pPerson, int hhTemplateID, [NotNull] string name,
-            [NotNull] string connectionString,[CanBeNull] TraitTag livingPattern, StrGuid guid)
+            [NotNull] string connectionString,[CanBeNull] TraitTag livingPattern, LivingPatternTag livingPatternTag, StrGuid guid)
             : base(name, TableName, connectionString, guid) {
             ID = pID;
             _person = pPerson;
             _hhTemplateID = hhTemplateID;
             _livingPattern = livingPattern;
+            _livingPatternTag = livingPatternTag;
             TypeDescription = "Household Template Person";
         }
         [CanBeNull]
@@ -86,10 +88,17 @@ namespace Database.Tables.ModularHouseholds {
             set => SetValueWithNotify(value, ref _person);
         }
 
+        //[CanBeNull]
+        //public TraitTag LivingPattern {
+        //    get => _livingPattern;
+        //    set => SetValueWithNotify(value, ref _livingPattern);
+        //}
+
         [CanBeNull]
-        public TraitTag LivingPattern {
-            get => _livingPattern;
-            set => SetValueWithNotify(value, ref _livingPattern);
+        public LivingPatternTag LivingPatternTag
+        {
+            get => _livingPatternTag;
+            set => SetValueWithNotify(value, ref _livingPatternTag);
         }
 
         [NotNull]
@@ -106,9 +115,10 @@ namespace Database.Tables.ModularHouseholds {
             var traitTagID = dr.GetIntFromLong("LivingPatternID", false, ignoreMissingFields,-1);
             var traitTag = aic.TraitTags.FirstOrDefault(x => x.ID == traitTagID);
             var guid = GetGuid(dr, ignoreMissingFields);
-
+            var livingpatternID = dr.GetIntFromLong("LivingPatternTagID", false, ignoreMissingFields);
+            var livingPattern = aic.LivingPatternTags.FirstOrDefault(x => x.ID == livingpatternID);
             var hhp = new HHTemplatePerson(hhpID, p, templateID,
-                name, connectionString,traitTag, guid);
+                name, connectionString,traitTag,livingPattern, guid);
             return hhp;
         }
 
@@ -122,8 +132,10 @@ namespace Database.Tables.ModularHouseholds {
         }
 
         public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<HHTemplatePerson> result, [NotNull] string connectionString,
-            [ItemNotNull] [NotNull] ObservableCollection<Person> persons, bool ignoreMissingTables,[ItemNotNull] [NotNull] ObservableCollection<TraitTag> traitTags) {
-            var aic = new AllItemCollections(persons: persons,traitTags:traitTags);
+            [ItemNotNull] [NotNull] ObservableCollection<Person> persons, bool ignoreMissingTables,[ItemNotNull] [NotNull] ObservableCollection<TraitTag> traitTags,
+                                            [ItemNotNull][NotNull] ObservableCollection<LivingPatternTag> livingPatternTags) {
+            var aic = new AllItemCollections(persons: persons,traitTags:traitTags, livingPatternTags:livingPatternTags);
+
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }
 
@@ -134,6 +146,10 @@ namespace Database.Tables.ModularHouseholds {
             cmd.AddParameter("HHTemplateID", _hhTemplateID);
             if (_livingPattern != null) {
                 cmd.AddParameter("LivingPatternID", _livingPattern.IntID);
+            }
+            if (_livingPatternTag != null)
+            {
+                cmd.AddParameter("LivingPatternTagID", _livingPatternTag.IntID);
             }
         }
 

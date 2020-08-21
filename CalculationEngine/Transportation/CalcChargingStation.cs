@@ -45,7 +45,7 @@ namespace CalculationEngine.Transportation {
         public string ChargingStationName { get; }
         public StrGuid ChargingStationGuid { get; }
         public bool IsAvailable { get; private set; }
-        [CanBeNull] private CalcTransportationDevice _connectedCar;
+        private CalcTransportationDevice? _connectedCar;
         public void SetConnectedCar([NotNull] CalcTransportationDevice device)
         {
             _connectedCar = device;

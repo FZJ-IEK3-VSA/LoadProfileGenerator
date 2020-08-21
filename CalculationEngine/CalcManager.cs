@@ -35,6 +35,8 @@ using Automation.ResultFiles;
 using CalcPostProcessor;
 using CalculationEngine.Helper;
 using CalculationEngine.HouseholdElements;
+using ChartCreator2;
+using ChartCreator2.OxyCharts;
 using Common;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.Loggers;
@@ -83,8 +85,7 @@ namespace CalculationEngine {
          [ItemNotNull]
          public List<CalcAffordanceTaggingSet> AffordanceTaggingSets => _affordanceTaggingSets;*/
 
-        [CanBeNull]
-        public ICalcAbleObject CalcObject { get; private set; }
+        public ICalcAbleObject? CalcObject { get; private set; }
 
         public CalcRepo CalcRepo { get; }
 
@@ -111,7 +112,7 @@ namespace CalculationEngine {
         }
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        public bool Run([CanBeNull] Func<bool> reportCancelFunc)
+        public bool Run(Func<bool>? reportCancelFunc)
         {
             if (!ContinueRunning && reportCancelFunc != null) {
                 reportCancelFunc();
@@ -182,11 +183,18 @@ namespace CalculationEngine {
                 reportCancelFunc();
                 throw new LPGException("Canceling");
             }
-
+            CalcRepo.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Post Post Processing");
             var ppm = new PostProcessingManager(CalcRepo.CalculationProfiler, CalcRepo.FileFactoryAndTracker);
             ppm.Run(_resultPath);
-            Logger.Info("Finished the logfiles.");
-            CalcRepo.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Post Post Processing");
+            CalcRepo.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Post Post Processing");
+            CalcRepo.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Chart Processing");
+            var cpm = new ChartProcessorManager(CalcRepo.CalculationProfiler, CalcRepo.FileFactoryAndTracker);
+            cpm.Run(_resultPath);
+            CalcRepo.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Chart Processing");
+            CalcRepo.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Chart Creation");
+            ChartMaker.MakeChartsAndPDF(CalcRepo.CalculationProfiler, _resultPath);
+            CalcRepo.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Chart Creation");
+
             /*
             try {
                 /var path = Path.Combine(_resultPath, Constants.ResultFileName);
@@ -210,7 +218,6 @@ namespace CalculationEngine {
             }*/
 
             CalcObject.Dispose();
-            CalcRepo.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Post Post Processing");
 
 
             CalcRepo.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Logging");

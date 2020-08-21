@@ -7,10 +7,11 @@ using Automation.ResultFiles;
 using Common;
 using JetBrains.Annotations;
 using OxyPlot;
+using OxyPlot.Legends;
 using OxyPlot.Series;
-using OxyPlot.Wpf;
+using OxyPlot.SkiaSharp;
 using CategoryAxis = OxyPlot.Axes.CategoryAxis;
-using ColumnSeries = OxyPlot.Series.ColumnSeries;
+using ColumnSeries = OxyPlot.Series.BarSeries;
 using LinearAxis = OxyPlot.Axes.LinearAxis;
 
 namespace ChartCreator2.SettlementMergePlots {
@@ -27,9 +28,11 @@ namespace ChartCreator2.SettlementMergePlots {
             var topCols = allColumns.Select(x => x.Item1).Take(20).ToList();
             var p = OxyPalettes.HueDistinct(topCols.Count);
             var oxc = OxyColor.FromArgb(255, 50, 50, 50);
-            plotModel2.LegendPosition = LegendPosition.BottomCenter;
-            plotModel2.LegendPlacement = LegendPlacement.Outside;
-            plotModel2.LegendOrientation = LegendOrientation.Horizontal;
+            Legend l = new Legend();
+            plotModel2.Legends.Add(l);
+            l.LegendPosition = LegendPosition.BottomCenter;
+            l.LegendPlacement = LegendPlacement.Outside;
+            l.LegendOrientation = LegendOrientation.Horizontal;
             plotModel2.Title = "Day " + day;
             // axes
             var cate = new CategoryAxis
@@ -60,7 +63,7 @@ namespace ChartCreator2.SettlementMergePlots {
                         Title = columns[i].Name
                     };
                     for (var j = position; j < position + 1440; j += minutesToSum) {
-                        columnSeries2.Items.Add(new ColumnItem(columns[i].MakeSum(j, minutesToSum) / minutesToSum));
+                        columnSeries2.Items.Add(new BarItem(columns[i].MakeSum(j, minutesToSum) / minutesToSum));
                     }
                     if (topCols.Contains(columns[i].Name)) {
                         var coloridx = topCols.IndexOf(columns[i].Name);
@@ -73,7 +76,7 @@ namespace ChartCreator2.SettlementMergePlots {
                 }
             }
             var path2 = Path.Combine(outputPath, "ActivityPlot." + day + ".bar.png");
-            PngExporter.Export(plotModel2, path2, 3200, 1600, OxyColor.FromRgb(255, 255, 255), 100);
+            PngExporter.Export(plotModel2, path2, 3200, 1600,  100);
         }
 
         private static void ReadFile([JetBrains.Annotations.NotNull] string fullName, [ItemNotNull] [JetBrains.Annotations.NotNull] List<Column> columns, [CanBeNull] int? limit) {

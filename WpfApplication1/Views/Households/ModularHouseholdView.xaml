@@ -214,9 +214,12 @@
                                     <GridViewColumn Width="Auto"
                                                     DisplayMemberBinding="{Binding Person.PrettyName}"
                                                     Header="Person name" />
-                                    <GridViewColumn Width="Auto"
+                                    <!--<GridViewColumn Width="Auto"
                                                     DisplayMemberBinding="{Binding TraitTag}"
-                                                    Header="Trait tag" />
+                                                    Header="Trait tag" />-->
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding LivingPatternTag}"
+                                                    Header="Living tag" />
                                 </GridView>
                             </ListView.View>
                         </ListView>

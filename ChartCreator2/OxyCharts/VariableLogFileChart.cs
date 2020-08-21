@@ -9,6 +9,7 @@ using Common;
 using JetBrains.Annotations;
 using OxyPlot;
 using OxyPlot.Axes;
+using OxyPlot.Legends;
 using OxyPlot.Series;
 
 namespace ChartCreator2.OxyCharts {
@@ -29,14 +30,14 @@ namespace ChartCreator2.OxyCharts {
         private PlotModel MakeChart([JetBrains.Annotations.NotNull] string plotName, [JetBrains.Annotations.NotNull] string yaxisLabel, TimeSpan timestep, [ItemNotNull] [JetBrains.Annotations.NotNull] List<string> headers,
             [ItemNotNull] [JetBrains.Annotations.NotNull] List<double[]> values, [JetBrains.Annotations.NotNull] List<DateTime> dates, int maxTimestep)
         {
-            var plotModel1 = new PlotModel
-            {
+            var plotModel1 = new PlotModel();
+            var l = new Legend();
+            plotModel1.Legends.Add(l);
                 // general
-                LegendBorderThickness = 0,
-                LegendOrientation = LegendOrientation.Horizontal,
-                LegendPlacement = LegendPlacement.Outside,
-                LegendPosition = LegendPosition.BottomCenter
-            };
+            l.LegendBorderThickness = 0;
+            l.LegendOrientation = LegendOrientation.Horizontal;
+            l.LegendPlacement = LegendPlacement.Outside;
+            l.LegendPosition = LegendPosition.BottomCenter;
             if (Parameters.ShowTitle) {
                 plotModel1.Title = plotName;
             }

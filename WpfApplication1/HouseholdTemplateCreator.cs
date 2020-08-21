@@ -29,7 +29,7 @@ namespace LoadProfileGenerator {
             {
                 try
                 {
-                    var toDelete = _sim.HouseholdTemplates.Items.Where(x => x.Persons.Any(y => y.LivingPattern == null))
+                    var toDelete = _sim.HouseholdTemplates.Items.Where(x => x.Persons.Any(y => y.LivingPatternTag == null))
                         .ToList();
                     var toDelete2 = _sim.HouseholdTemplates.Items
                         .Where(x => x.Entries.Any(y =>
@@ -79,7 +79,7 @@ namespace LoadProfileGenerator {
 
                             foreach (var person in modularHousehold.Persons)
                             {
-                                template.AddPerson(person.Person, person.TraitTag);
+                                template.AddPerson(person.Person, person.LivingPatternTag);
                             }
 
                             foreach (var modularHouseholdTag in modularHousehold.ModularHouseholdTags)

@@ -285,9 +285,12 @@
                                     <GridViewColumn Width="Auto"
                                                     DisplayMemberBinding="{Binding Person.PrettyName}"
                                                     Header="Person" />
-                                    <GridViewColumn Width="Auto"
+                                    <!--<GridViewColumn Width="Auto"
                                                     DisplayMemberBinding="{Binding LivingPattern.PrettyName}"
-                                                    Header="Living Pattern" />
+                                                    Header="Living Pattern" />-->
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding LivingPatternTag.PrettyName}"
+                                                    Header="Living Pattern Tag" />
                                 </GridView>
                             </ListView.View>
                         </ListView>

@@ -9,6 +9,7 @@ using Common;
 using JetBrains.Annotations;
 using OxyPlot;
 using OxyPlot.Axes;
+using OxyPlot.Legends;
 using OxyPlot.Series;
 
 namespace ChartCreator2.OxyCharts {
@@ -48,16 +49,16 @@ namespace ChartCreator2.OxyCharts {
                 }
             }
             seasons.Sort();
-            var plotModel1 = new PlotModel
-            {
-                LegendPosition = LegendPosition.BottomCenter,
-                LegendPlacement = LegendPlacement.Outside,
-                LegendOrientation = LegendOrientation.Horizontal
-            };
+            var plotModel1 = new PlotModel();
+            var l = new Legend();
+            plotModel1.Legends.Add(l);
+            l.LegendPosition = LegendPosition.BottomCenter;
+            l.LegendPlacement = LegendPlacement.Outside;
+            l.LegendOrientation = LegendOrientation.Horizontal;
             var strokeThickness = 1;
             if (Config.MakePDFCharts) {
                 plotModel1.DefaultFontSize = Parameters.PDFFontSize;
-                plotModel1.LegendFontSize = Parameters.PDFFontSize;
+                l.LegendFontSize = Parameters.PDFFontSize;
                 strokeThickness = 1;
             }
             if (showTitle) {

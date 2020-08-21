@@ -36,7 +36,7 @@ namespace CalculationController.DtoFactories
         {
             List<CalcPersonDto> personDtOs = new List<CalcPersonDto>();
             foreach (ModularHouseholdPerson hhPerson in persons) {
-                string traitTagName = hhPerson.TraitTag?.Name;
+                string traitTagName = hhPerson.LivingPatternTag?.Name;
                 if (traitTagName == null)
                 {
                     traitTagName = "no trait tag set";

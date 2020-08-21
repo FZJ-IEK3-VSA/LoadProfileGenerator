@@ -229,7 +229,7 @@ namespace CalculationController.Integrity {
                             electricityLoad = load;
                         }
 
-                        if (load.LoadType?.Name?.Contains("Inner") == true) {
+                        if (load.LoadType?.Name.Contains("Inner") == true) {
                             innerLoad = load;
                         }
                     }

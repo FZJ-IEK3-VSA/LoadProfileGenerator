@@ -50,7 +50,8 @@ namespace Database
                                   [ItemNotNull][CanBeNull] ObservableCollection<Site> sites = null,
                                   [ItemNotNull][CanBeNull] ObservableCollection<TravelRouteSet> travelRouteSets = null,
                                   [ItemNotNull][CanBeNull] ObservableCollection<TransportationDeviceSet> transportationDeviceSets = null,
-                                  [ItemNotNull][CanBeNull] ObservableCollection<ChargingStationSet> chargingStationSets = null)
+                                  [ItemNotNull][CanBeNull] ObservableCollection<ChargingStationSet> chargingStationSets = null,
+                                      [ItemNotNull][CanBeNull] ObservableCollection<LivingPatternTag> livingPatternTags = null)
         {
             AffordanceTags = affordanceTags;
             Affordances = affordances;
@@ -91,6 +92,7 @@ namespace Database
             TravelRouteSets = travelRouteSets;
             TransportationDeviceSets = transportationDeviceSets;
             ChargingStationSets = chargingStationSets;
+            LivingPatternTags = livingPatternTags;
         }
         [ItemNotNull]
         [NotNull]
@@ -209,5 +211,7 @@ namespace Database
         [ItemNotNull]
         [NotNull]
         public ObservableCollection<TransportationDevice> TransportationDevices { get; }
+
+        public ObservableCollection<LivingPatternTag > LivingPatternTags { get; set; }
     }
 }

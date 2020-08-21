@@ -601,7 +601,6 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                     false, operatingPath, enableTransportation, sim.MyGeneralConfig.EnableIdlemodeBool);
 
                 cs.Start(csps);
-                ChartMaker.MakeChartsAndPDF(calculationProfiler,operatingPath);
                 Thread.Sleep(3000);
                 /*if (string.IsNullOrWhiteSpace(errormessage) && _result.Count == 0) {
                     throw new LPGException("No results, but no error message. Something is wrong. Please report.");

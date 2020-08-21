@@ -15,10 +15,10 @@ namespace Database.Tables.ModularHouseholds {
 
         public class JsonModularHouseholdPerson : IGuidObject
         {
-            public JsonModularHouseholdPerson([NotNull] JsonReference person, [CanBeNull] JsonReference traitTag, StrGuid guid)
+            public JsonModularHouseholdPerson([NotNull] JsonReference person, [CanBeNull] JsonReference livingPatternTag, StrGuid guid)
             {
                 Person = person;
-                TraitTag = traitTag;
+                LivingPatternTag = livingPatternTag;
                 Guid = guid;
             }
 
@@ -33,14 +33,14 @@ namespace Database.Tables.ModularHouseholds {
             [NotNull]
             public JsonReference Person { get; set; }
 
-            [CanBeNull]
-            public JsonReference TraitTag { get; set; }
+            //[CanBeNull]
+            //public JsonReference TraitTag { get; set; }
             public StrGuid Guid { get; set; }
-
+            public JsonReference LivingPatternTag { get; set; }
         }
         public JsonModularHouseholdPerson GetJson()
         {
-            var p = new JsonModularHouseholdPerson(Person.GetJsonReference(), TraitTag?.GetJsonReference(), Guid);
+            var p = new JsonModularHouseholdPerson(Person.GetJsonReference(), LivingPatternTag?.GetJsonReference(), Guid);
             return p;
         }
 
@@ -48,15 +48,17 @@ namespace Database.Tables.ModularHouseholds {
         public const string TableName = "tblCHHPersons";
         [CanBeNull]
         private readonly int? _modularHouseholdID;
-        [CanBeNull] private  TraitTag _traitTag;
+        //[CanBeNull] private  TraitTag _traitTag;
+        [CanBeNull] private LivingPatternTag _livingPatternTag;
         [CanBeNull] private  Person _person;
 
         public ModularHouseholdPerson([CanBeNull]int? pID, [CanBeNull]int? modularHouseholdID, [NotNull] string name, [NotNull] string connectionString,
-            [CanBeNull] Person person,[CanBeNull] TraitTag traitTag, StrGuid guid ) : base(name, TableName, connectionString,
+            [CanBeNull] Person person, [CanBeNull] LivingPatternTag livingPatternTag, StrGuid guid ) : base(name, TableName, connectionString,
             guid) {
             _person = person;
             ID = pID;
-            _traitTag = traitTag;
+            //_traitTag = traitTag;
+            _livingPatternTag = livingPatternTag;
             _modularHouseholdID = modularHouseholdID;
             TypeDescription = "Modular Household Person";
         }
@@ -69,8 +71,14 @@ namespace Database.Tables.ModularHouseholds {
 
         [NotNull]
         public Person Person => _person ?? throw new InvalidOperationException();
+        //[CanBeNull]
+        //public TraitTag TraitTag => _traitTag;
+
         [CanBeNull]
-        public TraitTag TraitTag => _traitTag;
+        public LivingPatternTag LivingPatternTag {
+            get => _livingPatternTag;
+            set => SetValueWithNotify(value, ref _livingPatternTag,true,nameof(LivingPatternTag));
+        }
 
         public int CompareTo([CanBeNull] ModularHouseholdPerson other) {
             if (other == null) {
@@ -100,11 +108,14 @@ namespace Database.Tables.ModularHouseholds {
             if (p != null) {
                 name = p.PrettyName;
             }
-            var traitTagID = dr.GetIntFromLong("TraitTagID", false, ignoreMissingFields, -1);
-            var traitTag = aic.TraitTags.FirstOrDefault(x => x.ID == traitTagID);
+            //var traitTagID = dr.GetIntFromLong("TraitTagID", false, ignoreMissingFields, -1);
+            //var traitTag = aic.TraitTags.FirstOrDefault(x => x.ID == traitTagID);
+
+            var livingPatternTagID = dr.GetIntFromLong("LivingPatternTagID", false, ignoreMissingFields, -1);
+            var livingPatternTag = aic.LivingPatternTags.FirstOrDefault(x => x.ID == livingPatternTagID);
             var guid = GetGuid(dr, ignoreMissingFields);
-            var chht = new ModularHouseholdPerson(id, modularHouseholdID, name, connectionString, p,traitTag,
-                guid);
+            var chht = new ModularHouseholdPerson(id, modularHouseholdID, name, connectionString, p,
+                livingPatternTag, guid);
             return chht;
         }
 
@@ -120,8 +131,8 @@ namespace Database.Tables.ModularHouseholds {
         public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<ModularHouseholdPerson> result,
             [NotNull] string connectionString,
             bool ignoreMissingTables, [ItemNotNull] [NotNull] ObservableCollection<Person> persons,
-            [NotNull] [ItemNotNull] ObservableCollection<TraitTag> traitTags) {
-            var aic = new AllItemCollections(persons: persons ,traitTags:traitTags);
+            [NotNull] [ItemNotNull] ObservableCollection<TraitTag> traitTags, [NotNull][ItemNotNull] ObservableCollection<LivingPatternTag> livingPatternTags) {
+            var aic = new AllItemCollections(persons: persons ,traitTags:traitTags, livingPatternTags:livingPatternTags);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }
 
@@ -132,8 +143,12 @@ namespace Database.Tables.ModularHouseholds {
             if (_person != null) {
                 cmd.AddParameter("PersonID", _person.IntID);
             }
-            if(_traitTag !=null) {
-                cmd.AddParameter("TraitTagID",_traitTag.IntID);
+            //if(_traitTag !=null) {
+            //    cmd.AddParameter("TraitTagID",_traitTag.IntID);
+            //}
+            if (_livingPatternTag != null)
+            {
+                cmd.AddParameter("LivingPatternTagId", _livingPatternTag.IntID);
             }
         }
 
@@ -145,9 +160,9 @@ namespace Database.Tables.ModularHouseholds {
                 throw new LPGException("Person with the guid " + json.Person.Guid + " and the name " + json.Person.Name + " could not be found in the database.");
             }
 
-            if (json.TraitTag != null)
+            if (json.LivingPatternTag != null)
             {
-                _traitTag = sim.TraitTags.FindByGuid(json.TraitTag.Guid);
+                _livingPatternTag = sim.LivingPatternTags.FindByGuid(json.LivingPatternTag.Guid);
             }
         }
 

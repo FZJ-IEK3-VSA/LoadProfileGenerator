@@ -9,7 +9,7 @@ namespace Automation {
         public bool Equals(JsonReference other)
             => Name == other?.Name && Guid == other?.Guid;
 
-        public static bool operator ==([CanBeNull] JsonReference point1, [CanBeNull] JsonReference point2)
+        public static bool operator ==(JsonReference? point1, JsonReference? point2)
         {
             if (point1 is null && point2 is null)
             {
@@ -28,7 +28,7 @@ namespace Automation {
             return point1.Equals(point2);
         }
 
-        public static bool operator !=([CanBeNull] JsonReference point1, [CanBeNull] JsonReference point2)
+        public static bool operator !=(JsonReference? point1, JsonReference? point2)
         {
             if (point1 is null && point2 is null) {
                 return false;

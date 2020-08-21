@@ -474,7 +474,9 @@ namespace Common.SQLResultLogging {
         private void LoadFileNameDict()
         {
             const string sql = "SELECT * FROM DatabaseList";
-
+            if (!File.Exists(FilenameByHouseholdKey[Constants.GeneralHouseholdKey].Filename)) {
+                throw new LPGException("Missing file: " + FilenameByHouseholdKey[Constants.GeneralHouseholdKey].Filename);
+            }
             string constr = "Data Source=" + FilenameByHouseholdKey[Constants.GeneralHouseholdKey].Filename + ";Version=3";
             using (System.Data.SQLite.SQLiteConnection conn = new System.Data.SQLite.SQLiteConnection(constr)) {
                 //;Synchronous=OFF;Journal Mode=WAL;

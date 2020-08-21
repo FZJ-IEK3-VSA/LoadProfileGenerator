@@ -32,6 +32,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
+using Automation.ResultFiles;
 using Common;
 using Common.Enums;
 using Database.Helpers;
@@ -172,6 +173,12 @@ namespace LoadProfileGenerator.Presenters.Households {
         [UsedImplicitly]
         public ObservableCollection<DeviceActionGroup> DeviceActionGroups
             => Sim.DeviceActionGroups.Items;
+
+        [ItemNotNull]
+        [NotNull]
+        [UsedImplicitly]
+        public ObservableCollection<LivingPatternTag> LivingPatternTags
+            => Sim.LivingPatternTags.Items;
 
         [ItemNotNull]
         [NotNull]
@@ -676,6 +683,9 @@ namespace LoadProfileGenerator.Presenters.Households {
                 Sim.DeviceCategories.Items.ToList().ForEach(dc => dc.RefreshSubDevices());
                 foreach (var hhLocation in _hht.Locations) {
                     foreach (var aff in hhLocation.AffordanceLocations) {
+                        if (aff.Affordance == null) {
+                            throw new LPGException("Affordance was null");
+                        }
                         if (_relevantAffordances.Contains(aff.Affordance)) {
                             _relevantAffordances.Remove(aff.Affordance);
                         }
@@ -686,7 +696,7 @@ namespace LoadProfileGenerator.Presenters.Households {
             if (HideAffordancesOnThisLocation) {
                 if(SelectedAffLocation != null) {
                     foreach (var aff in SelectedAffLocation.AffordanceLocations) {
-                        if (_relevantAffordances.Contains(aff.Affordance)) {
+                        if (aff.Affordance!= null&& _relevantAffordances.Contains(aff.Affordance)) {
                             _relevantAffordances.Remove(aff.Affordance);
                         }
                     }
@@ -746,6 +756,11 @@ namespace LoadProfileGenerator.Presenters.Households {
                 var desirename = desire.Key.PrettyName;
                 Logger.Info(desirename + " (" + allaffs + ")");
             }
+        }
+
+        public void AddLivingPatternTag([NotNull] LivingPatternTag tag)
+        {
+            ThisHouseholdTrait.AddLivingPatternTag(tag);
         }
     }
 }

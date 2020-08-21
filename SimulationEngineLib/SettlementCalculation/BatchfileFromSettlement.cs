@@ -124,7 +124,7 @@ namespace SimulationEngineLib.SettlementCalculation {
                         }
                         foreach (ModularHouseholdPerson mhhperson in mhh.Persons) {
                             Person person = mhhperson.Person;
-                            string traittag = mhhperson.TraitTag?.Name;
+                            string traittag = mhhperson.LivingPatternTag?.Name;
                             if (traittag == null) {
                                 traittag = "";
                             }

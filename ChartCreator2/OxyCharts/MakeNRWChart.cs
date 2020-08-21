@@ -7,8 +7,9 @@ using Database.Tables.Validation;
 using JetBrains.Annotations;
 using OxyPlot;
 using OxyPlot.Axes;
+using OxyPlot.Legends;
 using OxyPlot.Series;
-using OxyPlot.Wpf;
+using OxyPlot.SkiaSharp;
 using CategoryAxis = OxyPlot.Axes.CategoryAxis;
 using LinearAxis = OxyPlot.Axes.LinearAxis;
 using LineSeries = OxyPlot.Series.LineSeries;
@@ -45,17 +46,17 @@ namespace ChartCreator2.OxyCharts {
 
         public void MakeScatterChart([ItemNotNull] [JetBrains.Annotations.NotNull] List<CalculationOutcome> outcomes, [JetBrains.Annotations.NotNull] string pngfullName, [ItemNotNull] [JetBrains.Annotations.NotNull] List<SeriesEntry> series) {
             _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
-            var plotModel1 = new PlotModel
-            {
-                LegendBorderThickness = 0,
-                LegendOrientation = LegendOrientation.Horizontal,
-                LegendPlacement = LegendPlacement.Outside,
-                LegendPosition = LegendPosition.BottomCenter,
-                DefaultFontSize = FontSize,
-                LegendFontSize = FontSize,
-                DefaultFont = "Arial",
-                LegendFont = "Arial"
-            };
+            var plotModel1 = new PlotModel();
+            var l = new Legend();
+            plotModel1.Legends.Add(l);
+            l.LegendBorderThickness = 0;
+            l.LegendOrientation = LegendOrientation.Horizontal;
+            l.LegendPlacement = LegendPlacement.Outside;
+            l.LegendPosition = LegendPosition.BottomCenter;
+            plotModel1.DefaultFontSize = FontSize;
+            l.LegendFontSize = FontSize;
+            plotModel1.DefaultFont = "Arial";
+            l.LegendFont = "Arial";
             var ca = new CategoryAxis
             {
                 Minimum = 0.4,
@@ -129,7 +130,7 @@ namespace ChartCreator2.OxyCharts {
                 sc1.MarkerStrokeThickness = 1;
                 plotModel1.Series.Add(sc1);
             }
-            PngExporter.Export(plotModel1, pngfullName, _width, _height, OxyColor.FromRgb(255, 255, 255), _dpi);
+            PngExporter.Export(plotModel1, pngfullName, _width, _height,  _dpi);
             _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
             //ChartPDFCreator.OxyPDFCreator.Run(plotModel1, pdfFullName);
         }

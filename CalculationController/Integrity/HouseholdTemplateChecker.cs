@@ -77,7 +77,7 @@ namespace CalculationController.Integrity {
                 if(hhg.TemplateVacationType == TemplateVacationType.RandomlyGenerated && hhg.TimeProfileForVacations == null) {
                     throw new DataIntegrityException("The template " + hhg.PrettyName + " has no vacation time profile set even though it is required.",hhg);
                 }
-                if (hhg.Persons.Any(x => x.LivingPattern == null)) {
+                if (hhg.Persons.Any(x => x.LivingPatternTag == null)) {
                     throw new DataIntegrityException("No living pattern set for the persons in " + hhg,hhg);
                 }
                 //check for food / unhungry

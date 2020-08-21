@@ -11,7 +11,6 @@ namespace SimulationEngine {
         public static void Main([NotNull] [ItemNotNull] string[] args)
         {
             CommandProcessor.MakeFlameChart = ChartMaker.MakeFlameChart;
-            CommandProcessor.Makeallthecharts = ChartMaker.MakeChartsAndPDF;
             MainSimEngine.Run(args,"simulationengine.exe");
         }
     }

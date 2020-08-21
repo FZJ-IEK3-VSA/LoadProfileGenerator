@@ -93,8 +93,11 @@ namespace Database.Tests.Tables {
                 var vacations = db.LoadVacations();
                 var householdTags = db.LoadHouseholdTags();
                 var traitTags = db.LoadTraitTags();
-                var modularHouseholds = db.LoadModularHouseholds(householdTraits,
-                    deviceSelections, persons, vacations, householdTags, traitTags);
+                var lpTags = db.LoadLivingPatternTags();
+                var modularHouseholds =
+                    db.LoadModularHouseholds(householdTraits,
+                    deviceSelections, persons, vacations, householdTags,
+                    traitTags, lpTags);
                 db.LoadTransportation(locations, out var transportationDeviceSets, out var travelRouteSets,
                     out var _,
                     out var _, loadTypes, out var chargingStationSets);
@@ -145,8 +148,9 @@ namespace Database.Tests.Tables {
                 var vacations = db.LoadVacations();
                 var householdTags = db.LoadHouseholdTags();
                 var traitTags = db.LoadTraitTags();
+                var lpTags = db.LoadLivingPatternTags();
                 var modularHouseholds = db.LoadModularHouseholds(householdTraits,
-                    deviceSelections, persons, vacations, householdTags, traitTags);
+                    deviceSelections, persons, vacations, householdTags, traitTags, lpTags);
                 db.LoadTransportation(locations, out var transportationDeviceSets, out var travelRouteSets,
                     out var _,
                     out var _, loadTypes, out var chargingStationSets);

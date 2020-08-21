@@ -6,14 +6,13 @@ using System.IO;
 using System.Linq;
 using Automation;
 using Automation.ResultFiles;
-using ChartPDFCreator;
 using Common;
 using Common.SQLResultLogging;
 using JetBrains.Annotations;
 using OxyPlot;
 using OxyPlot.Axes;
+using OxyPlot.Legends;
 using OxyPlot.Series;
-using OxyPlot.Wpf;
 using BarSeries = OxyPlot.Series.BarSeries;
 using CategoryAxis = OxyPlot.Axes.CategoryAxis;
 using LinearAxis = OxyPlot.Axes.LinearAxis;
@@ -84,16 +83,17 @@ namespace ChartCreator2.OxyCharts {
             {
                 p = OxyPalettes.Hue64;
             }
-            var plotModel1 = new PlotModel
-            {
-                LegendBorderThickness = 0,
-                LegendOrientation = LegendOrientation.Vertical,
-                LegendPlacement = LegendPlacement.Inside,
-                LegendPosition = LegendPosition.TopLeft,
-                PlotAreaBorderColor = OxyColors.White,
-                LegendFontSize = fontsize,
-                LegendSymbolMargin = 25
-            };
+
+            var plotModel1 = new PlotModel();
+            plotModel1.PlotAreaBorderColor = OxyColors.White;
+            var l = new Legend();
+            plotModel1.Legends.Add(l);
+            l.LegendBorderThickness = 0;
+            l.LegendOrientation = LegendOrientation.Vertical;
+            l.LegendPlacement = LegendPlacement.Inside;
+            l.LegendPosition = LegendPosition.TopLeft;
+            l.LegendFontSize = fontsize;
+            l.LegendSymbolMargin = 25;
             if (showTitle)
             {
                 plotModel1.Title = plotName;
@@ -238,7 +238,7 @@ namespace ChartCreator2.OxyCharts {
         [JetBrains.Annotations.NotNull]
         protected FileFactoryAndTracker FFT { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         protected ChartCreationParameters Parameters => _parameters;
 
         [JetBrains.Annotations.NotNull] private readonly ChartCreationParameters _parameters;
@@ -273,9 +273,8 @@ namespace ChartCreator2.OxyCharts {
                 }
                 FFT.RegisterFile(fi.Name, "Plot for " + plotName, true, ResultFileID.Chart, Constants.GeneralHouseholdKey, TargetDirectory.Charts,
                     enablingOption,fi.Name);
-                PngExporter.Export(plotModel1, fi.FullName, _parameters.Width,
-                    _parameters.Height, OxyColor.FromArgb(255, 255, 255, 255),
-                    _parameters.Dpi);
+                OxyPlot.SkiaSharp.PngExporter.Export(plotModel1, fi.FullName, _parameters.Width,
+                    _parameters.Height, _parameters.Dpi);
             }
             if (Config.MakePDFCharts)
             {
@@ -312,7 +311,7 @@ namespace ChartCreator2.OxyCharts {
 
         public List<ResultFileID> ResultFileIDs { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         protected ICalculationProfiler Profiler => _calculationProfiler;
 
         public bool IsEnabled(ResultFileEntry resultFileEntry)
@@ -331,7 +330,7 @@ namespace ChartCreator2.OxyCharts {
         [JetBrains.Annotations.NotNull]
         public CalcDataRepository CalcDataRepository { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ICalculationProfiler CalculationProfiler => _calculationProfiler;
 
         protected ChartBaseSqlStep([JetBrains.Annotations.NotNull] ChartCreationParameters parameters,

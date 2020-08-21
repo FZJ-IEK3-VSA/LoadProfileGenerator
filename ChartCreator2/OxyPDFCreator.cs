@@ -1,9 +1,8 @@
 ﻿using Automation.ResultFiles;
 using JetBrains.Annotations;
 using OxyPlot;
-using PdfExporter = OxyPlot.Pdf.PdfExporter;
 
-namespace ChartPDFCreator
+namespace ChartCreator2
 {
     public static class OxyPDFCreator
     {
@@ -20,13 +19,13 @@ namespace ChartPDFCreator
             switch (hw)
             {
                 case HeightWidth.HeightWidth1610:
-                    PdfExporter.Export(plotModel1, pdfChartName, 1600, 1000);
+                    OxyPlot.SkiaSharp.PdfExporter.Export(plotModel1, pdfChartName, 1600, 1000);
                     break;
                 case HeightWidth.HeightWidth167:
-                    PdfExporter.Export(plotModel1, pdfChartName, 1600, 700);
+                    OxyPlot.SkiaSharp.PdfExporter.Export(plotModel1, pdfChartName, 1600, 700);
                     break;
                 case HeightWidth.HeightWidth165:
-                    PdfExporter.Export(plotModel1, pdfChartName, 1600, 500);
+                    OxyPlot.SkiaSharp.PdfExporter.Export(plotModel1, pdfChartName, 1600, 500);
                     break;
                 default:
                     throw new LPGException("Forgotten HeightWidth");

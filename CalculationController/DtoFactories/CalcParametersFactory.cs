@@ -4,6 +4,7 @@ using Automation;
 using Automation.ResultFiles;
 using CalcPostProcessor;
 using CalculationController.Queue;
+using ChartCreator2;
 using Common;
 using Common.Enums;
 using Common.JSON;
@@ -22,6 +23,8 @@ namespace CalculationController.DtoFactories
             cp.SetWriteExcelColumn (csps.WriteExcelColumn);
             cp.SetManyOptionsWithClear(csps.CalcOptions);
             FileFactoryAndTrackerDummy fftd = new FileFactoryAndTrackerDummy();
+            ChartProcessorManager.ChartingFunctionDependencySetter(csps.ResultPath,csps.CalculationProfiler,fftd,cp.Options);
+
             var container =PostProcessingManager.RegisterEverything(csps.ResultPath,csps.CalculationProfiler, fftd);
             using (var scope = container.BeginLifetimeScope())
             {

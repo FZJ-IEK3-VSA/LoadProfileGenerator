@@ -8,7 +8,6 @@ using System.Threading;
 using Autofac;
 using Automation;
 using Automation.ResultFiles;
-using ChartCreator2.PDF;
 using Common;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
@@ -22,9 +21,10 @@ namespace ChartCreator2.OxyCharts {
     }
 
 
+    [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     public static class ChartMaker
     {
-        public static void MakeFlameChart([NotNull] DirectoryInfo di, [NotNull] CalculationProfiler calculationProfiler)
+        public static void MakeFlameChart([JetBrains.Annotations.NotNull] DirectoryInfo di, [JetBrains.Annotations.NotNull] CalculationProfiler calculationProfiler)
         {
             string targetfile = Path.Combine(di.FullName, Constants.CalculationProfilerJson);
             using (StreamWriter sw = new StreamWriter(targetfile))
@@ -77,9 +77,8 @@ namespace ChartCreator2.OxyCharts {
                             Logger.ImportantInfo(
                                 "Creating the PDF. This will take a really long time without any progress report...");
 
-                            MigraPDFCreator mpc = new MigraPDFCreator(calculationProfiler);
-                            mpc.MakeDocument(resultPath, "", false, false,
-                                calcParameters.CSVCharacter, fileFactoryAndTracker);
+                            //MigraPDFCreator mpc = new MigraPDFCreator(calculationProfiler);
+                            //mpc.MakeDocument(resultPath, "", false, false, calcParameters.CSVCharacter, fileFactoryAndTracker);
                             calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - PDF Creation");
                         }
                     }
@@ -116,8 +115,8 @@ namespace ChartCreator2.OxyCharts {
         [JetBrains.Annotations.NotNull] private readonly ChartCreationParameters _chartCreationParameters;
         [JetBrains.Annotations.NotNull] private readonly SqlResultLoggingService _srls;
 
-        public ChartGeneratorManager([JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler, [
-                                             NotNull] FileFactoryAndTracker fft,
+        public ChartGeneratorManager([JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler,
+                                     [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft,
                                          [JetBrains.Annotations.NotNull] ChartCreationParameters chartCreationParameters)
             {
                 _calculationProfiler = calculationProfiler;

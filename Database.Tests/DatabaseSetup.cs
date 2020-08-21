@@ -460,14 +460,15 @@ namespace Database.Tests
                 , realDevices, desires, loadTypes, timeLimits, deviceActions, deviceActionGroups, locations, variables);
 
             var tags = LoadTraitTags();
+            var lptags = LoadLivingPatternTags();
             var traits = LoadHouseholdTraits(locations, affordances, realDevices,
                 deviceCategories, timeBasedProfiles, loadTypes, timeLimits, desires, deviceActions, deviceActionGroups,
-                tags, variables);
+                tags, variables,lptags);
             var deviceSelections = LoadDeviceSelections(deviceCategories, realDevices,
                 deviceActions, deviceActionGroups);
             var vacations = LoadVacations();
             var hhtags = LoadHouseholdTags();
-            modularHouseholds = LoadModularHouseholds(traits, deviceSelections, persons, vacations, hhtags, traitTags);
+            modularHouseholds = LoadModularHouseholds(traits, deviceSelections, persons, vacations, hhtags, traitTags, lptags);
             var temperaturProfiles = LoadTemperatureProfiles();
 
             var geographicLocations = LoadGeographicLocations(out _,
@@ -598,12 +599,13 @@ namespace Database.Tests
                 realDevices, desires, loadTypes, timeLimits, deviceActions, deviceActionGroups, locations, variables);
 
             var tags = LoadTraitTags();
+            var lptags = LoadLivingPatternTags();
             traits = LoadHouseholdTraits(locations, affordances, realDevices, deviceCategories, timeBasedProfiles,
-                loadTypes, timeLimits, desires, deviceActions, deviceActionGroups, tags, variables);
+                loadTypes, timeLimits, desires, deviceActions, deviceActionGroups, tags, variables, lptags);
             var vacations = LoadVacations();
             var templateTags = LoadHouseholdTags();
             HouseholdTemplate.LoadFromDatabase(householdTemplates, ConnectionString, traits, false, persons, tags,
-                vacations, templateTags, dateBasedProfiles);
+                vacations, templateTags, dateBasedProfiles, lptags);
             return householdTemplates;
         }
 
@@ -621,13 +623,15 @@ namespace Database.Tests
            [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<DeviceAction> deviceActions,
            [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<DeviceActionGroup> groups,
            [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<TraitTag> traitTags,
-           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<Variable> variables)
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<Variable> variables,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<LivingPatternTag> livingPatternTags
+           )
         {
             var householdTraits = new ObservableCollection<HouseholdTrait>();
 
             HouseholdTrait.LoadFromDatabase(householdTraits, ConnectionString, locations, affordances, devices,
                 deviceCategories, timeBasedProfiles, loadTypes, timeLimits, desires, deviceActions, groups, traitTags,
-                false, variables);
+                livingPatternTags,false, variables);
             return householdTraits;
         }
 
@@ -702,11 +706,12 @@ namespace Database.Tests
            [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<Person> persons,
            [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<Vacation> vacations,
            [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<HouseholdTag> tags,
-           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<TraitTag> traitTags)
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<TraitTag> traitTags,
+            [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<LivingPatternTag> livingPatternTags)
         {
             var modularHouseholds = new ObservableCollection<ModularHousehold>();
             ModularHousehold.LoadFromDatabase(modularHouseholds, ConnectionString, householdTraits, deviceSelections,
-                false, persons, vacations, tags, traitTags);
+                false, persons, vacations, tags, traitTags, livingPatternTags);
             return modularHouseholds;
         }
 
@@ -807,6 +812,15 @@ namespace Database.Tests
         {
             var tags = new ObservableCollection<TraitTag>();
             TraitTag.LoadFromDatabase(tags, ConnectionString, false);
+            return tags;
+        }
+
+        [JetBrains.Annotations.NotNull]
+        [ItemNotNull]
+        public ObservableCollection<LivingPatternTag> LoadLivingPatternTags()
+        {
+            var tags = new ObservableCollection<LivingPatternTag>();
+            LivingPatternTag.LoadFromDatabase(tags, ConnectionString, false);
             return tags;
         }
 

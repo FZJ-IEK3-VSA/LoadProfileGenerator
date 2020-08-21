@@ -350,7 +350,60 @@ namespace Database.Helpers {
             }
             throw new LPGException("Failed to find " + name);
         }
+        [UsedImplicitly]
+        [NotNull]
+        public T FindFirstByNameNotNull([CanBeNull] string nameRaw, FindMode findMode = FindMode.Exact)
+        {
+            if (nameRaw == null)
+            {
+                throw new LPGException("Name was null");
+            }
+            //no matter which mode, if anything matches exactly, then return that.
+            //this prevents errors where partial matches would return something wrong
+            foreach (var myItem in Items)
+            {
+                if (myItem.Name == nameRaw)
+                {
+                    return myItem;
+                }
+            }
 
+            string nameUpper = nameRaw.ToUpperInvariant();
+            if (findMode == FindMode.IgnoreCase)
+            {
+                foreach (var myItem in Items)
+                {
+                    if (string.Equals(myItem.Name.ToUpperInvariant(), nameUpper,
+                        StringComparison.CurrentCulture))
+                    {
+                        return myItem;
+                    }
+                }
+            }
+            else
+            if (findMode == FindMode.Partial)
+            {
+                foreach (var myItem in Items)
+                {
+                    if (myItem.Name.ToUpperInvariant().Contains(nameUpper))
+                    {
+                        return myItem;
+                    }
+                }
+            }
+            else
+            if (findMode == FindMode.StartsWith)
+            {
+                foreach (var myItem in Items)
+                {
+                    if (myItem.Name.ToUpperInvariant().StartsWith(nameUpper))
+                    {
+                        return myItem;
+                    }
+                }
+            }
+            throw new LPGException("Not found");
+        }
         [UsedImplicitly]
         [CanBeNull]
         public T FindFirstByName([CanBeNull] string nameRaw, FindMode findMode = FindMode.Exact)

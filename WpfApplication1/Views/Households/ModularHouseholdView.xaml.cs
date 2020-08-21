@@ -96,8 +96,8 @@ namespace LoadProfileGenerator.Views.Households {
             }
 
             var p = (Person) CmbChhPersons.SelectedItem;
-            var tag = (TraitTag) CmbLivingPatterns.SelectedItem;
-            Presenter.AddPerson(p, tag);
+            var livingPatternTag = (LivingPatternTag) CmbLivingPatterns.SelectedItem;
+            Presenter.AddPerson(p, livingPatternTag);
         }
 
         private void BtnAddTrait_Click([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
@@ -305,7 +305,7 @@ namespace LoadProfileGenerator.Views.Households {
 
             var srcPerson = (ModularHouseholdPerson) LstChhPersons.SelectedItem;
             var dstPerson = (Person) CmbChhPersons.SelectedItem;
-            var traitTag = (TraitTag) CmbLivingPatterns.SelectedItem;
+            var traitTag = (LivingPatternTag) CmbLivingPatterns.SelectedItem;
             Presenter.SwapPersons(srcPerson, dstPerson, traitTag);
         }
 

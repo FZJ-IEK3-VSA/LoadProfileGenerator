@@ -285,7 +285,7 @@ namespace Automation.ResultFiles {
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public long Size {
             get {
-                if (File.Exists(FullFileName)) {
+                if (FullFileName!= null&& File.Exists(FullFileName)) {
                     var fi = new FileInfo(FullFileName);
                     return fi.Length;
                 }

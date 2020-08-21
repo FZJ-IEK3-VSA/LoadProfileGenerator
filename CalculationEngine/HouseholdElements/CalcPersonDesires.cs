@@ -52,7 +52,7 @@ namespace CalculationEngine.HouseholdElements {
         private readonly List<string> _lastAffordances = new List<string>();
         [NotNull]
         private readonly DateStampCreator _dsc;
-        [CanBeNull] private StreamWriter _sw;
+        private StreamWriter? _sw;
 
         public CalcPersonDesires(CalcRepo calcRepo) {
             _calcRepo = calcRepo;
@@ -93,7 +93,7 @@ namespace CalculationEngine.HouseholdElements {
                 Desires.Values.CopyTo(desiresArray, 0);
                 var affectedCount = _calcRepo.Rnd.Next(Desires.Count - usedDesires.Count + 1);
                 for (var i = 0; i < affectedCount; i++) {
-                    CalcDesire d = null;
+                    CalcDesire? d = null;
                     var loopcount = 0;
                     while (d == null) {
                         var selectedkey = _calcRepo.Rnd.Next(Desires.Count);
@@ -120,7 +120,7 @@ namespace CalculationEngine.HouseholdElements {
             }
         }
 
-        public decimal CalcEffect([NotNull][ItemNotNull] IEnumerable<CalcDesire> satisfactionvalues, [NotNull] out string thoughtstring,
+        public decimal CalcEffect([NotNull][ItemNotNull] IEnumerable<CalcDesire> satisfactionvalues, out string? thoughtstring,
             [NotNull] string affordanceName) {
             // calc decay
             foreach (var calcDesire in Desires.Values) {
@@ -149,9 +149,9 @@ namespace CalculationEngine.HouseholdElements {
             return CalcTotalDeviation(out thoughtstring);
         }
 
-        private decimal CalcTotalDeviation([CanBeNull] out string thoughtstring) {
+        private decimal CalcTotalDeviation(out string? thoughtstring) {
             decimal totalDeviation = 0;
-            StringBuilder sb = null;
+            StringBuilder? sb = null;
             var makeThoughts = _calcRepo.CalcParameters.IsSet(CalcOption.ThoughtsLogfile);
             if (makeThoughts) {
                 sb = new StringBuilder(_calcRepo.CalcParameters.CSVCharacter);
@@ -162,7 +162,7 @@ namespace CalculationEngine.HouseholdElements {
                     var deviation = (1 - calcDesire.TempValue) * 100;
                     var desirevalue = deviation * deviation * calcDesire.Weight;
                     totalDeviation += desirevalue;
-                    if (makeThoughts) {
+                    if (sb!=null) {
                         sb.Append(calcDesire.Name);
                         sb.Append(_calcRepo.CalcParameters.CSVCharacter).Append("'");
                         sb.Append(deviation.ToString("0#.#", Config.CultureInfo));
@@ -176,7 +176,7 @@ namespace CalculationEngine.HouseholdElements {
                     }
                 }
             }
-            if (makeThoughts) {
+            if (sb!=null) {
                 thoughtstring = sb.ToString();
             }
             else {

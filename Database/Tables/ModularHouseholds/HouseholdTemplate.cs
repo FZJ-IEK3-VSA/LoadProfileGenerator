@@ -186,7 +186,7 @@ namespace Database.Tables.ModularHouseholds {
         public HHTemplatePerson AddPersonFromJson([NotNull]HHTemplatePerson.JsonDto jto, [NotNull] Simulator sim)
         {
             var person = sim.Persons.FindByGuid(jto.PersonReference?.Guid) ?? throw new LPGException("Could not find the person " + jto.PersonReference);
-            var livingPattern = sim.TraitTags.FindByGuid(jto.LivingPatternTraitTagReference?.Guid);
+            var livingPattern = sim.LivingPatternTags.FindByGuid(jto.LivingPatternTraitTagReference?.Guid);
             var p = AddPerson(person, livingPattern) ?? throw new LPGException("Could not add person " + jto.PersonReference);
             p.Name = jto.Name;
             p.Guid = jto.Guid;
@@ -248,7 +248,7 @@ namespace Database.Tables.ModularHouseholds {
         }
 
         [CanBeNull]
-        public HHTemplatePerson AddPerson([NotNull] Person p, [CanBeNull] TraitTag tag)
+        public HHTemplatePerson AddPerson([NotNull] Person p, [CanBeNull] LivingPatternTag tag)
         {
             foreach (var hhTemplatePerson in _persons) {
                 if (hhTemplatePerson.Person == p) {
@@ -257,7 +257,7 @@ namespace Database.Tables.ModularHouseholds {
                 }
             }
 
-            var entry = new HHTemplatePerson(null, p, IntID, "...", ConnectionString, tag, System.Guid.NewGuid().ToStrGuid());
+            var entry = new HHTemplatePerson(null, p, IntID, "...", ConnectionString, null,tag, System.Guid.NewGuid().ToStrGuid());
             _persons.Add(entry);
             entry.SaveToDB();
             _persons.Sort();
@@ -474,9 +474,9 @@ namespace Database.Tables.ModularHouseholds {
                     continue;
                 }
 
-                TraitTag traittag = null;
-                if (person.LivingPattern != null) {
-                    traittag = GetItemFromListByName(dstSim.TraitTags.Items, person.LivingPattern.Name);
+                LivingPatternTag traittag = null;
+                if (person.LivingPatternTag != null) {
+                    traittag = GetItemFromListByName(dstSim.LivingPatternTags.Items, person.LivingPatternTag.Name);
                 }
 
                 hhg.AddPerson(p, traittag);
@@ -551,7 +551,8 @@ namespace Database.Tables.ModularHouseholds {
                                             [ItemNotNull] [NotNull] ObservableCollection<HouseholdTrait> householdTraits, bool ignoreMissingTables,
                                             [ItemNotNull] [NotNull] ObservableCollection<Person> persons, [ItemNotNull] [NotNull] ObservableCollection<TraitTag> traitTags,
                                             [ItemNotNull] [NotNull] ObservableCollection<Vacation> vacations, [ItemNotNull] [NotNull] ObservableCollection<HouseholdTag> templateTags,
-                                            [ItemNotNull] [NotNull] ObservableCollection<DateBasedProfile> dateBasedProfiles)
+                                            [ItemNotNull] [NotNull] ObservableCollection<DateBasedProfile> dateBasedProfiles,
+                                            [ItemNotNull][NotNull] ObservableCollection<LivingPatternTag> livingPatternTags)
         {
             var aic = new AllItemCollections(householdTraits: householdTraits, persons: persons, dateBasedProfiles: dateBasedProfiles);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);
@@ -561,7 +562,7 @@ namespace Database.Tables.ModularHouseholds {
             SetSubitems(new List<DBBase>(result), new List<DBBase>(entries), IsCorrectHHTemplateEntryParent, ignoreMissingTables);
 
             var hhTemplatePersons = new ObservableCollection<HHTemplatePerson>();
-            HHTemplatePerson.LoadFromDatabase(hhTemplatePersons, connectionString, persons, ignoreMissingTables, traitTags);
+            HHTemplatePerson.LoadFromDatabase(hhTemplatePersons, connectionString, persons, ignoreMissingTables, traitTags, livingPatternTags);
             SetSubitems(new List<DBBase>(result), new List<DBBase>(hhTemplatePersons), IsCorrectHHTemplatePersonParent, ignoreMissingTables);
 
             var hhTemplateVacations = new ObservableCollection<HHTemplateVacation>();

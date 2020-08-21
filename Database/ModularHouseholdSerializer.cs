@@ -74,7 +74,9 @@ namespace Database {
                         if(tag == null) {
                             throw new LPGException("Tag not found");
                         }
-                        mhh.AddPerson(p,tag);
+
+                        var livingPatternTag = sim.LivingPatternTags.FindFirstByName(sp.LivingPatternTag);
+                        mhh.AddPerson(p, livingPatternTag);
 
                         foreach (var traitName in sp.Traits) {
                             var trait = sim.HouseholdTraits.Items.FirstOrDefault(x => x.PrettyName == traitName);
@@ -187,7 +189,7 @@ namespace Database {
                 sb.Append("AverageSickdays").Append(csv).AppendLine(MakeCSVList(csv, 3, 5, 8, 10, 15));
                 sb.Append("SicknessDuration").Append(csv).AppendLine(MakeCSVList(csv, 1, 1, 2, 5, 5));
                 sb.Append("Gender").Append(csv).AppendLine(MultiplyStrings(p.Gender.ToString(), csv));
-                string livingpattern = mhhPerson.TraitTag?.Name;
+                string livingpattern = mhhPerson.LivingPatternTag?.Name;
                 if (livingpattern == null) {
                     livingpattern = "";
                 }
@@ -602,6 +604,8 @@ namespace Database {
             public string Gender { get; set; }
             [CanBeNull]
             public string TraitTag { get; set; }
+            [CanBeNull]
+            public string LivingPatternTag { get; set; }
             [NotNull]
             public string Name { get; }
             public int SicknessDuration { get; set; }

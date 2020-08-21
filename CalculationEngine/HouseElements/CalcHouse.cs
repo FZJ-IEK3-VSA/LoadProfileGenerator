@@ -45,20 +45,20 @@ namespace CalculationEngine.HouseElements {
 
         //[CanBeNull] private Dictionary<int, CalcProfile> _allProfiles;
 
-        [ItemNotNull] [CanBeNull] private List<CalcAutoDev> _autoDevs;
+        [ItemNotNull] private List<CalcAutoDev>? _autoDevs;
 
-        [CanBeNull] private CalcAirConditioning _calcAirConditioning;
+        private CalcAirConditioning? _calcAirConditioning;
 
-        [CanBeNull] private CalcSpaceHeating _calcSpaceHeating;
+        private CalcSpaceHeating? _calcSpaceHeating;
 
 
-        [ItemNotNull] [CanBeNull] private List<CalcEnergyStorage> _energyStorages;
+        [ItemNotNull] private List<CalcEnergyStorage>? _energyStorages;
 
-        [ItemNotNull] [CanBeNull] private List<CalcGenerator> _generators;
+        [ItemNotNull] private List<CalcGenerator>? _generators;
 
-        [ItemNotNull] [CanBeNull] private List<ICalcAbleObject> _households;
+        [ItemNotNull] private List<ICalcAbleObject>? _households;
 
-        [ItemNotNull] [CanBeNull] private List<CalcTransformationDevice> _transformationDevices;
+        [ItemNotNull] private List<CalcTransformationDevice>? _transformationDevices;
 
         public CalcHouse([NotNull] string name, [NotNull] HouseholdKey houseKey,
                          CalcRepo calcRepo)
@@ -142,7 +142,7 @@ namespace CalculationEngine.HouseElements {
                         var summedDegreeDays = _calcSpaceHeating.CalcDegreeDays.Values.Select(x => x.HeatingAmount).Sum();
                         swHouse.WriteLine("Degree day sum: " + summedDegreeDays);
                         swHouse.WriteLine("Load types");
-                        CalcLoadType lt = null;
+                        CalcLoadType? lt = null;
                         foreach (var load in _calcSpaceHeating.Loads) {
                             lt = load.LoadType;
                             swHouse.WriteLine("\t" + load.LoadType.Name + " Avg:" + load.AverageYearlyConsumption + " - StdDev:" + load.PowerStandardDeviation + " Val:" + load.Value);
@@ -207,9 +207,8 @@ namespace CalculationEngine.HouseElements {
 
         public string Name { get; }
 
-        [CanBeNull]
         [ItemNotNull]
-        public List<CalcEnergyStorage> EnergyStorages => _energyStorages;
+        public List<CalcEnergyStorage>? EnergyStorages => _energyStorages;
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         public void RunOneStep(TimeStep timestep, DateTime now, bool runProcessing)
@@ -263,7 +262,7 @@ namespace CalculationEngine.HouseElements {
             var energyFileRows = _calcRepo.Odap.ProcessOneTimestep(timestep);
 
             var repetitioncount = 0;
-            List<string> log = null;
+            List<string>? log = null;
             while (runAgain) {
                 runAgain = false;
                 repetitioncount++;

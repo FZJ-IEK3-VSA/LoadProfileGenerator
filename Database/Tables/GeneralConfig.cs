@@ -285,8 +285,11 @@ namespace Database.Tables {
 
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "bool")]
         [UsedImplicitly]
-        public bool PerformCleanUpChecksBool => _settings[nameof(PerformCleanUpChecks)].SettingValue
-                                                    .ToUpperInvariant() == "TRUE";
+        public bool PerformCleanUpChecksBool {
+            get =>
+                _settings[nameof(PerformCleanUpChecks)].SettingValue.ToUpperInvariant() == "TRUE";
+            set => PerformCleanUpChecks = value.ToString();
+        }
 
         public int RandomSeed {
             get {

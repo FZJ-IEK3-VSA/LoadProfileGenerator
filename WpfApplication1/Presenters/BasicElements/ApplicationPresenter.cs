@@ -838,6 +838,9 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
                 x => View.AddTab(new DeviceActionPresenter(this, new DeviceActionView(), (DeviceAction) x)));
             _openItemDict.Add(typeof(TraitTag).FullName,
                 x => View.AddTab(new TraitTagPresenter(this, new TraitTagView(), (TraitTag) x)));
+            _openItemDict.Add(typeof(LivingPatternTag).FullName,
+                x => View.AddTab(new LivingPatternTagPresenter(this, new LivingPatternTagView(), (LivingPatternTag)x)));
+#pragma warning restore RCS1163 // Unused parameter.
             _openItemDict.Add(typeof(HouseholdTemplate).FullName,
                 x =>
                     View.AddTab(new HouseholdTemplatePresenter(this, new HouseholdTemplateView(),
@@ -969,6 +972,20 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             View.AddTab(new ChargingStationSetPresenter(this, new ChargingStationSetView(), d));
             d.SaveToDB();
             return d;
+        }
+
+        [NotNull]
+        public object AddLivingPatternTag()
+        {
+            if (Simulator == null)
+            {
+                throw new LPGException("Simulator was null");
+            }
+
+            var t = Simulator.LivingPatternTags.CreateNewItem(Simulator.ConnectionString);
+            View.AddTab(new LivingPatternTagPresenter(this, new LivingPatternTagView(), t));
+            t.SaveToDB();
+            return t;
         }
     }
 }

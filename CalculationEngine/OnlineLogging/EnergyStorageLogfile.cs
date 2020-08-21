@@ -49,11 +49,11 @@ namespace CalculationEngine.OnlineLogging {
 
         [NotNull] private readonly FileFactoryAndTracker _fft;
 
-        [CanBeNull] private EnergyStorageEntry _currentEntry;
+        private EnergyStorageEntry? _currentEntry;
 
         [NotNull] private TimeStep _currentTimeStep = new TimeStep(-1,0,false);
 
-        [CanBeNull] private StreamWriter _energyStoragesSw;
+        private StreamWriter? _energyStoragesSw;
 
         private bool _writeHeader;
 

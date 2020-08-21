@@ -158,11 +158,12 @@ namespace Database.Tables.ModularHouseholds {
                     throw new LPGException("Person with the guid " + personJson.Person.Guid + " and the name " + personJson.Person.Name + " could not be found in the database.");
                 }
 
-                TraitTag tag = null;
-                if (personJson.TraitTag != null) {
-                     tag = sim.TraitTags.FindByGuid(personJson.TraitTag.Guid);
+                LivingPatternTag lptag = null;
+                if(personJson.LivingPatternTag != null)
+                {
+                    lptag = sim.LivingPatternTags.FindByGuid(personJson.LivingPatternTag.Guid);
                 }
-                var hhp = AddPerson(person,tag);
+                var hhp = AddPerson(person, lptag);
                 if(hhp!= null) {
                     hhp.Guid = personJson.Guid;
                 }
@@ -407,12 +408,12 @@ namespace Database.Tables.ModularHouseholds {
         }
 
         [CanBeNull]
-        public ModularHouseholdPerson AddPerson([NotNull] Person person, [CanBeNull] TraitTag tag)
+        public ModularHouseholdPerson AddPerson([NotNull] Person person,  LivingPatternTag lptag)
         {
             if (_persons.Any(x => x.Person == person)) {
                 return null;
             }
-            var chp = new ModularHouseholdPerson(null, IntID, person.Name, ConnectionString, person, tag, System.Guid.NewGuid().ToStrGuid());
+            var chp = new ModularHouseholdPerson(null, IntID, person.Name, ConnectionString, person, lptag, System.Guid.NewGuid().ToStrGuid());
             PurePersons.Add(person);
             chp.SaveToDB();
             _persons.Add(chp);
@@ -674,8 +675,8 @@ namespace Database.Tables.ModularHouseholds {
                     Logger.Error("While importing, could not find a person. Skipping.");
                     continue;
                 }
-                var tag = GetItemFromListByName(dstSim.TraitTags.Items, modularHouseholdPerson.TraitTag?.Name);
-                chh.AddPerson(p, tag);
+                var lpTag = GetItemFromListByName(dstSim.LivingPatternTags.Items, modularHouseholdPerson.LivingPatternTag?.Name);
+                chh.AddPerson(p, lpTag);
             }
             foreach (var householdTag in item.ModularHouseholdTags) {
                 var tag = GetItemFromListByName(dstSim.HouseholdTags.Items, householdTag.Tag.Name);
@@ -699,7 +700,7 @@ namespace Database.Tables.ModularHouseholds {
             EnergyIntensityType = other.EnergyIntensityType;
             SaveToDB();
             foreach (var chhp in other.Persons) {
-                AddPerson(chhp.Person, chhp.TraitTag);
+                AddPerson(chhp.Person,  chhp.LivingPatternTag);
             }
             foreach (var trait in other.Traits) {
                 AddTrait(trait.HouseholdTrait, trait.AssignType, trait.DstPerson);
@@ -755,7 +756,8 @@ namespace Database.Tables.ModularHouseholds {
             [ItemNotNull] [NotNull] ObservableCollection<HouseholdTrait> householdTraits,
             [ItemNotNull] [NotNull] ObservableCollection<DeviceSelection> deviceSelections, bool ignoreMissingTables,
             [ItemNotNull] [NotNull] ObservableCollection<Person> persons, [ItemNotNull] [NotNull] ObservableCollection<Vacation> allVacations,
-            [ItemNotNull] [NotNull] ObservableCollection<HouseholdTag> hhTags, [ItemNotNull] [NotNull] ObservableCollection<TraitTag> traitTags)
+            [ItemNotNull] [NotNull] ObservableCollection<HouseholdTag> hhTags, [ItemNotNull] [NotNull] ObservableCollection<TraitTag> traitTags,
+                                            [ItemNotNull][NotNull] ObservableCollection<LivingPatternTag> livingPatternTags)
         {
             var aic = new AllItemCollections(householdTraits: householdTraits,
                 deviceSelections: deviceSelections, persons: persons, vacations: allVacations);
@@ -776,7 +778,7 @@ namespace Database.Tables.ModularHouseholds {
             var modularHouseholdPersons =
                 new ObservableCollection<ModularHouseholdPerson>();
             ModularHouseholdPerson.LoadFromDatabase(modularHouseholdPersons, connectionString, ignoreMissingTables,
-                persons, traitTags);
+                persons, traitTags, livingPatternTags:livingPatternTags);
             SetSubitems(new List<DBBase>(result), new List<DBBase>(modularHouseholdPersons),
                 IsCorrectModularHouseholdPersonParent, ignoreMissingTables);
 
@@ -863,7 +865,8 @@ namespace Database.Tables.ModularHouseholds {
             }
         }
 
-        public void SwapPersons([NotNull] ModularHouseholdPerson srcPerson, [NotNull] Person dstPerson, [NotNull] TraitTag tag)
+        public void SwapPersons([NotNull] ModularHouseholdPerson srcPerson,
+                                [NotNull] Person dstPerson,  LivingPatternTag lptag)
         {
             var traits2Delete = Traits.Where(x => x.DstPerson == srcPerson.Person).ToList();
             foreach (var trait in traits2Delete) {
@@ -871,7 +874,7 @@ namespace Database.Tables.ModularHouseholds {
             }
 
             RemovePerson(srcPerson);
-            AddPerson(dstPerson, tag);
+            AddPerson(dstPerson,  lptag);
             foreach (var trait in traits2Delete) {
                 AddTrait(trait.HouseholdTrait, ModularHouseholdTrait.ModularHouseholdTraitAssignType.Name,
                     dstPerson);

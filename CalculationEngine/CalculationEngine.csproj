@@ -9,24 +9,22 @@
   </PropertyGroup>
   <PropertyGroup>
     <DebugType>Full</DebugType>
-    <Nullable>disable</Nullable>
+    <Nullable>enable</Nullable>
     <LangVersion>8</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2020.1.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="NullCheckAnalyzer" Version="1.0.0.3" />
     <PackageReference Include="Roslynator.Analyzers" Version="2.3.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="System.Runtime" Version="4.3.1" />
-    <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\CalcPostProcessor\CalcPostProcessor.csproj" />
+    <ProjectReference Include="..\ChartCreator2\ChartCreator2.csproj" />
     <ProjectReference Include="..\Common\Common.csproj" />
   </ItemGroup>
 

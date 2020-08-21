@@ -185,11 +185,11 @@ namespace Database.Tests.Tables.ModularHouseholds {
                 Logger.Info("reloading ");
                 var hhts = new ObservableCollection<HouseholdTrait>();
                 var tags = db.LoadTraitTags();
-
+                var lptags = db.LoadLivingPatternTags();
                 HouseholdTrait.LoadFromDatabase(hhts, db.ConnectionString, locations, affordances, devices,
                     deviceCategories,
-                    timeBasedProfiles, loadTypes, timeLimits, desires, deviceActions, deviceActionGroups, tags, false,
-                    variables);
+                    timeBasedProfiles, loadTypes, timeLimits, desires, deviceActions, deviceActionGroups, tags, lptags, false,
+                    variables );
                 (hhts.Count).Should().Be(1);
                 var hht3 = hhts[0];
                 (hht3.Locations[0].AffordanceLocations.Count).Should().Be(1);
@@ -200,7 +200,8 @@ namespace Database.Tests.Tables.ModularHouseholds {
                 Logger.Info("Loading again...");
                 HouseholdTrait.LoadFromDatabase(hhts, db.ConnectionString, locations, affordances, devices,
                     deviceCategories,
-                    timeBasedProfiles, loadTypes, timeLimits, desires, deviceActions, deviceActionGroups, tags, false,
+                    timeBasedProfiles, loadTypes, timeLimits, desires, deviceActions,
+                    deviceActionGroups, tags,lptags, false,
                     variables);
                 var hht4 = hhts[0];
                 (hht4.Locations[0].AffordanceLocations.Count).Should().Be(0);
@@ -261,9 +262,10 @@ namespace Database.Tests.Tables.ModularHouseholds {
                 (hht.SubTraits.Count).Should().Be(1);
                 var hhts = new ObservableCollection<HouseholdTrait>();
                 var tags = db.LoadTraitTags();
+                var lptags = db.LoadLivingPatternTags();
                 HouseholdTrait.LoadFromDatabase(hhts, db.ConnectionString, locations, affordances, devices,
                     deviceCategories,
-                    timeBasedProfiles, loadTypes, timeLimits, desires, deviceActions, deviceActionGroups, tags, false,
+                    timeBasedProfiles, loadTypes, timeLimits, desires, deviceActions, deviceActionGroups, tags,lptags, false,
                     variables);
                 (hhts.Count).Should().Be(2);
                 var hht3 = hhts[0];
@@ -282,7 +284,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
                 Logger.Info("Loading again...");
                 HouseholdTrait.LoadFromDatabase(hhts, db.ConnectionString, locations, affordances, devices,
                     deviceCategories,
-                    timeBasedProfiles, loadTypes, timeLimits, desires, deviceActions, deviceActionGroups, tags, false,
+                    timeBasedProfiles, loadTypes, timeLimits, desires, deviceActions, deviceActionGroups, tags,lptags, false,
                     variables);
                 (hhts.Count).Should().Be(0);
                 db.Cleanup();

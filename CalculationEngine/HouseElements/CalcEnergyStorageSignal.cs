@@ -40,7 +40,7 @@ namespace CalculationEngine.HouseElements {
         private readonly double _triggerOnPercent;
         private readonly double _value;
         private readonly CalcVariable _calcVariable;
-        [CanBeNull] private TimeStep _currtimestep;
+        private TimeStep? _currtimestep;
         private bool _isTurnedOn;
         private bool _lastTurnedOn;
         private double _tankCurValue;

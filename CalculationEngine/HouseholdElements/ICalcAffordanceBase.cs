@@ -66,14 +66,11 @@ namespace CalculationEngine.HouseholdElements
          ColorRGB AffordanceColor { get; }
         [NotNull]
         string SourceTrait { get; }
-        [CanBeNull]
-        string TimeLimitName { get; }
+        string? TimeLimitName { get; }
         bool AreThereDuplicateEnergyProfiles();
-        [CanBeNull]
-        string AreDeviceProfilesEmpty();
+        string? AreDeviceProfilesEmpty();
 
-        [CanBeNull]
-        CalcSite Site { get; }
+        CalcSite? Site { get; }
 
         BodilyActivityLevel BodilyActivityLevel { get; }
     }

@@ -53,7 +53,7 @@ namespace CalculationEngine.HouseholdElements {
         private readonly bool _isSharedValue;
         [NotNull]
         private readonly string _name;
-        [CanBeNull] private readonly SharedDesireValue _sharedDesireValue;
+        private readonly SharedDesireValue? _sharedDesireValue;
 
         private readonly int _timestepsPerHour;
         [NotNull]
@@ -64,7 +64,7 @@ namespace CalculationEngine.HouseholdElements {
 
         public CalcDesire([NotNull] string name, int desireID, decimal threshold, decimal decayTime, decimal value,
             decimal weight,
-            int timestepsPerHour, decimal criticalThreshold, [CanBeNull] SharedDesireValue sharedDesireValue,
+            int timestepsPerHour, decimal criticalThreshold, SharedDesireValue? sharedDesireValue,
             [NotNull] string sourceTrait, [NotNull] string desireCategory)
         {
             //todo: check the whole shared desire thing and write some unit tests for it. It is initzialized in the factory to null?
@@ -100,8 +100,7 @@ namespace CalculationEngine.HouseholdElements {
 
         public int DesireID { get; }
 
-        [CanBeNull]
-        private TimeStep LastDecay {
+        private TimeStep? LastDecay {
             get => _sharedDesireValue?.LastDecay;
             set {
                 if (_sharedDesireValue == null) {

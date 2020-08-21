@@ -7,8 +7,8 @@ using Common;
 using JetBrains.Annotations;
 using OxyPlot;
 using OxyPlot.Axes;
+using OxyPlot.Legends;
 using OxyPlot.Series;
-using OxyPlot.Wpf;
 using CategoryAxis = OxyPlot.Axes.CategoryAxis;
 using TextAnnotation = OxyPlot.Annotations.TextAnnotation;
 
@@ -200,18 +200,18 @@ namespace ChartCreator2.OxyCharts {
             else {
                 p = OxyPalettes.Hue64;
             }
-            var plotModel1 = new PlotModel
-            {
-                LegendBorderThickness = 0,
-                LegendOrientation = LegendOrientation.Vertical,
-                LegendPlacement = LegendPlacement.Inside,
-                LegendPosition = LegendPosition.TopLeft,
-                PlotAreaBorderColor = OxyColors.White,
-                LegendFontSize = fontsize,
-                LegendSymbolMargin = 25,
-                DefaultFontSize = fontsize
-            };
 
+            var plotModel1 = new PlotModel();
+            plotModel1.PlotAreaBorderColor = OxyColors.White;
+            plotModel1.DefaultFontSize = fontsize;
+            var l = new Legend();
+            plotModel1.Legends.Add(l);
+            l.LegendBorderThickness = 0;
+            l.LegendOrientation = LegendOrientation.Vertical;
+            l.LegendPlacement = LegendPlacement.Inside;
+            l.LegendPosition = LegendPosition.TopLeft;
+            l.LegendFontSize = fontsize;
+            l.LegendSymbolMargin = 25;
             var ca = new CategoryAxis
             {
                 Position = AxisPosition.Left,
@@ -278,8 +278,7 @@ namespace ChartCreator2.OxyCharts {
             //    }
             string dstFileName = Path.Combine(outputDirectory,
                 DirectoryNames.CalculateTargetdirectory(TargetDirectory.Charts), "CalculationDurationFlameChart."+ source+".Png");
-            PngExporter.Export(plotModel1, dstFileName, 3200, 2000, OxyColor.FromArgb(255, 255, 255, 255),
-                144);
+            OxyPlot.SkiaSharp.PngExporter.Export(plotModel1, dstFileName, 3200, 2000, 144);
             //Save(plotModel1, plotName, srcEntry.FullFileName + newFileNameSuffix, basisPath); // ".interval"
         }
     }

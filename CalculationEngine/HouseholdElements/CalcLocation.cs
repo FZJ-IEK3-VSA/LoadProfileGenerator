@@ -44,8 +44,7 @@ namespace CalculationEngine.HouseholdElements {
         private bool _isTransportationEnabled;
         //public object Variables;
 
-        [CanBeNull]
-        public CalcSite CalcSite { get; set; }
+        public CalcSite? CalcSite { get; set; }
         public CalcLocation([NotNull] string pName, StrGuid guid) : base(pName, guid) => Devices = new List<CalcDevice>();
 
         [NotNull]

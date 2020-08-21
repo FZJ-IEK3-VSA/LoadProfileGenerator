@@ -68,15 +68,16 @@ namespace Database.Tests.Tables.BasicElements {
                     locations, variables);
                 var sets = db.LoadAffordanceTaggingSets(affordances, loadTypes);
                 var traitTags = db.LoadTraitTags();
+                var lpTags = db.LoadLivingPatternTags();
                 var traits = db.LoadHouseholdTraits(locations, affordances, realDevices,
                     deviceCategories, timeBasedProfiles, loadTypes, timeLimits, desires, deviceActions, deviceActionGroups,
-                    traitTags, variables);
+                    traitTags, variables, lpTags);
                 var selections = db.LoadDeviceSelections(deviceCategories, realDevices,
                     deviceActions, deviceActionGroups);
                 var vacations = db.LoadVacations();
                 var hhTags = db.LoadHouseholdTags();
                 var modularHouseholds = db.LoadModularHouseholds(traits, selections,
-                    persons, vacations, hhTags, traitTags);
+                    persons, vacations, hhTags, traitTags,lpTags);
                 var plans = new ObservableCollection<HouseholdPlan>();
                 HouseholdPlan.LoadFromDatabase(plans, db.ConnectionString, false, persons, sets,
                     modularHouseholds);
@@ -126,15 +127,16 @@ namespace Database.Tests.Tables.BasicElements {
 
                 var sets = db.LoadAffordanceTaggingSets(affordances, loadTypes);
                 var tags = db.LoadTraitTags();
+                var lptags = db.LoadLivingPatternTags();
                 var traits = db.LoadHouseholdTraits(locations, affordances, realDevices,
                     deviceCategories, timeBasedProfiles, loadTypes, timeLimits, desires, deviceActions, deviceActionGroups,
-                    tags, variables);
+                    tags, variables, lptags);
                 var selections = db.LoadDeviceSelections(deviceCategories, realDevices,
                     deviceActions, deviceActionGroups);
                 var vacations = db.LoadVacations();
                 var hhTags = db.LoadHouseholdTags();
                 var modularHouseholds = db.LoadModularHouseholds(traits, selections,
-                    persons, vacations, hhTags, tags);
+                    persons, vacations, hhTags, tags, lptags);
                 var plans = new ObservableCollection<HouseholdPlan>();
                 HouseholdPlan.LoadFromDatabase(plans, db.ConnectionString, false, persons, sets,
                     modularHouseholds);

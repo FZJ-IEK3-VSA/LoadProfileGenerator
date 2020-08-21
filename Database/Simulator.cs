@@ -140,6 +140,8 @@ namespace Database {
             Categories.Add(AffordanceTaggingSets);
             TraitTags = new CategoryDBBase<TraitTag>("Household Trait Tags");
             Categories.Add(TraitTags);
+            LivingPatternTags = new CategoryDBBase<LivingPatternTag>("Living Pattern Tags");
+            Categories.Add(LivingPatternTags);
             HouseholdTraits = new CategoryDBBase<HouseholdTrait>("Household Traits");
             Categories.Add(HouseholdTraits);
             HouseholdTags = new CategoryDBBase<HouseholdTag>("Household Template Tags");
@@ -371,6 +373,11 @@ namespace Database {
         [NotNull]
         public CategoryDBBase<Variable> Variables { get; }
 
+        [UsedImplicitly]
+        [NotNull]
+        public CategoryDBBase<LivingPatternTag> LivingPatternTags { get; }
+
+
         [SuppressMessage("Microsoft.Reliability", "CA2000:Objekte verwerfen, bevor Bereich verloren geht")]
         public void DeleteAllTemplatedItems(bool noConfirmation) {
             if (!noConfirmation) {
@@ -535,11 +542,14 @@ namespace Database {
                 new LoadingEntry("Trait Tags",
                 () => TraitTag.LoadFromDatabase(TraitTags.Items, ConnectionString, ignoreMissingTables),
                 TraitTags),
+                new LoadingEntry("Living Pattern Tags",
+                    () => LivingPatternTag.LoadFromDatabase(LivingPatternTags.Items, ConnectionString, ignoreMissingTables),
+                    LivingPatternTags),
                 new LoadingEntry("Household Traits",
                 () => HouseholdTrait.LoadFromDatabase(HouseholdTraits.Items, ConnectionString, Locations.Items,
                     Affordances.Items, RealDevices.Items, DeviceCategories.Items, Timeprofiles.Items,
                     LoadTypes.Items, TimeLimits.Items, Desires.Items, DeviceActions.Items, DeviceActionGroups.Items,
-                    TraitTags.Items, ignoreMissingTables, Variables.Items), HouseholdTraits),
+                    TraitTags.Items, LivingPatternTags.Items, ignoreMissingTables, Variables.Items), HouseholdTraits),
                 new LoadingEntry("Device Selections",
                 () => DeviceSelection.LoadFromDatabase(DeviceSelections.Items, ConnectionString,
                     DeviceCategories.Items, RealDevices.Items, DeviceActions.Items, DeviceActionGroups.Items,
@@ -550,11 +560,11 @@ namespace Database {
                 new LoadingEntry("Modular Households",
                 () => ModularHousehold.LoadFromDatabase(ModularHouseholds.Items, ConnectionString,
                     HouseholdTraits.Items, DeviceSelections.Items, ignoreMissingTables, Persons.Items,
-                    Vacations.Items, HouseholdTags.Items, TraitTags.Items), ModularHouseholds),
+                    Vacations.Items, HouseholdTags.Items, TraitTags.Items, LivingPatternTags.Items), ModularHouseholds),
                 new LoadingEntry("Household Templates",
                 () => HouseholdTemplate.LoadFromDatabase(HouseholdTemplates.Items, ConnectionString,
                     HouseholdTraits.Items, ignoreMissingTables, Persons.Items, TraitTags.Items, Vacations.Items,
-                    HouseholdTags.Items, DateBasedProfiles.Items), HouseholdTemplates),
+                    HouseholdTags.Items, DateBasedProfiles.Items, LivingPatternTags.Items), HouseholdTemplates),
                 new LoadingEntry("Template Persons",
                 () => TemplatePerson.LoadFromDatabase(TemplatePersons.Items, ConnectionString, HouseholdTraits.Items,
                     ignoreMissingTables, ModularHouseholds.Items, Persons.Items), TemplatePersons),

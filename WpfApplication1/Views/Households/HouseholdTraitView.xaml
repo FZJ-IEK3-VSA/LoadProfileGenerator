@@ -48,6 +48,9 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
                         <TextBlock Grid.Row="0"
@@ -212,6 +215,57 @@
                                  Grid.Column="1"
                                  Style="{StaticResource TextBoxStyle}"
                                  Text="{Binding ThisHouseholdTrait.ShortDescription}" />
+
+                        <Label Grid.Row="16"
+                               Grid.Column="0"
+                               Content="Living Pattern Tag"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=CmbLivingPatternTags}" />
+                        <ComboBox Name="CmbLivingPatternTags"
+                                  Grid.Row="16"
+                                  Grid.Column="1"
+                                  ItemsSource="{Binding LivingPatternTags}"
+                                  KeyUp="CmbTags_OnKeyUp"
+                                  SelectedItem="{Binding ElementName=HHTLivingPatternTags,
+                                                         Path=SelectedItem.Tag,
+                                                         Mode=OneWay}"
+                                  Style="{StaticResource ComboBoxStyle}" />
+                        
+                        <StackPanel Grid.Row="17"
+                                    Grid.Column="1"
+                                    Orientation="Horizontal">
+                            <Button HorizontalAlignment="Right"
+                                    Click="BtnAddLivingPatternTagClick"
+                                    Style="{StaticResource ButtonStyle}">
+                                Add Living Pattern Tag
+                            </Button>
+                            <Button HorizontalAlignment="Left"
+                                    Click="BtnRemoveLivingPatternTagClick"
+                                    Style="{StaticResource ButtonStyle}">
+                                Remove Tag
+                            </Button>
+                        </StackPanel>
+                        <Label Grid.Row="18"
+                               Grid.Column="0"
+                               Content="Living Pattern Tags of this trait"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=HHTLocations}" />
+                        <ListView x:Name="HHTLivingPatternTags"
+                                  Grid.Row="18"
+                                  Grid.Column="1"
+                                  MinHeight="150"
+                                  ItemsSource="{Binding ThisHouseholdTrait.LivingPatternTags}"
+                                  MouseDoubleClick="HHTLivingPatternTags_OnMouseDoubleClick"
+                                  Style="{StaticResource ListViewStyle}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding Tag}"
+                                                    Header="Tag" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+
                     </Grid>
 
 

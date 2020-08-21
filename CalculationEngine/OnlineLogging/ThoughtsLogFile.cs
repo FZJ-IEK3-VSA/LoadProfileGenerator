@@ -94,6 +94,9 @@ namespace CalculationEngine.OnlineLogging {
                                _calcParameters.CSVCharacter + "Weekday" +
                                _calcParameters.CSVCharacter + "Person" +
                                _calcParameters.CSVCharacter + "Thought");
+            if (pi.Name == null) {
+                throw new LPGException("Person name was null");
+            }
             _thoughtsFiles.Add(new Tuple<HouseholdKey, string>(householdKey, pi.Name), thoughts);
         }
 

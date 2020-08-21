@@ -62,7 +62,7 @@ namespace CalculationEngine.HouseElements {
         }
 
         public bool ProcessOneTimestep([NotNull] [ItemNotNull] List<OnlineEnergyFileRow> fileRows, [NotNull] TimeStep timeStep,
-                                       [CanBeNull] [ItemNotNull] List<string> log)
+                                       [ItemNotNull] List<string>? log)
         {
             var madeChanges = false;
             foreach (var fileRow in fileRows) {

@@ -549,7 +549,7 @@ namespace Database.Tables.Houses {
 
         [NotNull]
         [SuppressMessage("ReSharper", "SwitchStatementMissingSomeCases")]
-        public Dictionary<TraitTag, int> CalculateLivingPatternCounts()
+        public Dictionary<LivingPatternTag, int> CalculateLivingPatternCounts()
         {
             List<ModularHousehold> households = new List<ModularHousehold>();
             foreach (var settlementHH in Households) {
@@ -576,15 +576,15 @@ namespace Database.Tables.Houses {
                 }
             }
 
-            var dict = new Dictionary<TraitTag, int>();
+            var dict = new Dictionary<LivingPatternTag, int>();
             foreach (var household in households) {
                 foreach (var person in household.Persons) {
-                    if (person.TraitTag != null) {
-                        if (!dict.ContainsKey(person.TraitTag)) {
-                            dict.Add(person.TraitTag, 0);
+                    if (person.LivingPatternTag != null) {
+                        if (!dict.ContainsKey(person.LivingPatternTag)) {
+                            dict.Add(person.LivingPatternTag, 0);
                         }
 
-                        dict[person.TraitTag]++;
+                        dict[person.LivingPatternTag]++;
                     }
                 }
             }

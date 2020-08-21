@@ -3,11 +3,11 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using Automation;
-using ChartPDFCreator;
 using Common;
 using JetBrains.Annotations;
 using OxyPlot;
 using OxyPlot.Axes;
+using OxyPlot.Legends;
 using OxyPlot.Series;
 
 namespace ChartCreator2.SettlementMergePlots {
@@ -31,7 +31,7 @@ namespace ChartCreator2.SettlementMergePlots {
             for (var i = 0; i < tagNames.Count; i++) {
                 var tag = tagNames[i];
 
-                var columnSeries2 = new ColumnSeries
+                var columnSeries2 = new BarSeries
                 {
                     IsStacked = true,
                     StackGroup = "1",
@@ -44,10 +44,10 @@ namespace ChartCreator2.SettlementMergePlots {
                 foreach (var householdName in householdNames) {
                     var te = entries.FirstOrDefault(x => x.TagName == tag && x.HouseholdName == householdName);
                     if (te != null) {
-                        columnSeries2.Items.Add(new ColumnItem(te.Value));
+                        columnSeries2.Items.Add(new BarItem(te.Value));
                     }
                     else {
-                        columnSeries2.Items.Add(new ColumnItem(0));
+                        columnSeries2.Items.Add(new BarItem(0));
                     }
                 }
                 plotModel1.Series.Add(columnSeries2);
@@ -61,7 +61,7 @@ namespace ChartCreator2.SettlementMergePlots {
             }
             foreach (var tagName in tagNames) {
                 var plotModel2 = MakePlotmodel(householdNames, "Anteil am Gesamtverbrauch in Prozent");
-                var columnSeries2 = new ColumnSeries
+                var columnSeries2 = new BarSeries
                 {
                     IsStacked = true,
                     StackGroup = "1",
@@ -76,10 +76,10 @@ namespace ChartCreator2.SettlementMergePlots {
                         entries.FirstOrDefault(x => x.TagName == tagName && x.HouseholdName == householdName);
 
                     if (te != null) {
-                        columnSeries2.Items.Add(new ColumnItem(te.Value / hhSums[householdName] * 100));
+                        columnSeries2.Items.Add(new BarItem(te.Value / hhSums[householdName] * 100));
                     }
                     else {
-                        columnSeries2.Items.Add(new ColumnItem(0));
+                        columnSeries2.Items.Add(new BarItem(0));
                     }
                 }
                 plotModel2.Series.Add(columnSeries2);
@@ -91,17 +91,19 @@ namespace ChartCreator2.SettlementMergePlots {
         }
 
         [JetBrains.Annotations.NotNull]
-        private static PlotModel MakePlotmodel([ItemNotNull] [JetBrains.Annotations.NotNull] List<string> householdNames, [JetBrains.Annotations.NotNull] string yaxislabel) {
-            var plotModel1 = new PlotModel
-            {
-                DefaultFontSize = Fontsize,
-                LegendFontSize = Fontsize,
-                LegendBorderThickness = 0,
-                LegendOrientation = LegendOrientation.Horizontal,
-                LegendPlacement = LegendPlacement.Outside,
-                LegendPosition = LegendPosition.BottomCenter,
-                LegendSymbolMargin = 20
+        private static PlotModel MakePlotmodel([ItemNotNull] [JetBrains.Annotations.NotNull] List<string> householdNames, [JetBrains.Annotations.NotNull] string yaxislabel)
+        {
+            var plotModel1 = new PlotModel {
+                DefaultFontSize = Fontsize
             };
+            var l = new Legend();
+            plotModel1.Legends.Add(l);
+            l.LegendFontSize = Fontsize;
+            l.LegendBorderThickness = 0;
+            l.LegendOrientation = LegendOrientation.Horizontal;
+            l.LegendPlacement = LegendPlacement.Outside;
+            l.LegendPosition = LegendPosition.BottomCenter;
+            l.LegendSymbolMargin = 20;
             var categoryAxis1 = new CategoryAxis
             {
                 MajorStep = 1,

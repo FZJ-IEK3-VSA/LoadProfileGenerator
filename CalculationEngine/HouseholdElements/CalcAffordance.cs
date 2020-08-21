@@ -60,8 +60,8 @@ namespace CalculationEngine.HouseholdElements {
 
         [ItemNotNull] [NotNull] private readonly List<VariableRequirement> _variableRequirements;
 
-        [CanBeNull] private TimeStep _endTimeStep;
-        [CanBeNull] private TimeStep _startTimeStep;
+        private TimeStep? _endTimeStep;
+        private TimeStep? _startTimeStep;
 
         public CalcAffordance([NotNull] string pName,
                               [NotNull] CalcProfile personProfile,
@@ -224,7 +224,7 @@ namespace CalculationEngine.HouseholdElements {
             Energyprofiles.Add(calctup);
         }
 
-        public override string AreDeviceProfilesEmpty()
+        public override string? AreDeviceProfilesEmpty()
         {
             var areDeviceProfilesEmpty = Energyprofiles
                 .Where(deviceEnergyProfileTuple => deviceEnergyProfileTuple.TimeProfile.TimeSpanDataPoints.Count < 2)

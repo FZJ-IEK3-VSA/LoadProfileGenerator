@@ -6,9 +6,12 @@ using Automation;
 using Automation.ResultFiles;
 using Common;
 using OxyPlot;
-using OxyPlot.Annotations;
-using OxyPlot.Axes;
+using OxyPlot.Legends;
 using OxyPlot.Series;
+using BarSeries = OxyPlot.Series.BarSeries;
+using CategoryAxis = OxyPlot.Axes.CategoryAxis;
+using LinearAxis = OxyPlot.Axes.LinearAxis;
+using TextAnnotation = OxyPlot.Annotations.TextAnnotation;
 
 namespace ChartCreator2.OxyCharts {
     internal class DeviceSums : ChartBaseFileStep
@@ -105,15 +108,16 @@ namespace ChartCreator2.OxyCharts {
             if (consumption.Count == 0) {
                 return;
             }
-            var plotModel1 = new PlotModel
-            {
-                // general
-                LegendBorderThickness = 0,
-                LegendOrientation = LegendOrientation.Horizontal,
-                LegendPlacement = LegendPlacement.Outside,
-                LegendPosition = LegendPosition.BottomCenter,
-                Title = plotName
-            };
+
+            var plotModel1 = new PlotModel();
+            var legend = new Legend();
+            plotModel1.Legends.Add(legend);
+            // general
+            legend.LegendBorderThickness = 0;
+            legend.LegendOrientation = LegendOrientation.Horizontal;
+            legend.LegendPlacement = LegendPlacement.Outside;
+            legend.LegendPosition = LegendPosition.BottomCenter;
+            plotModel1.Title = plotName;
             // axes
             var categoryAxis1 = new CategoryAxis
             {
@@ -142,7 +146,7 @@ namespace ChartCreator2.OxyCharts {
             var series = 0;
             foreach (var pair in consumption) {
                 // main columns
-                var columnSeries2 = new ColumnSeries
+                var columnSeries2 = new BarSeries
                 {
                     IsStacked = true,
                     StackGroup = "1",
@@ -153,7 +157,7 @@ namespace ChartCreator2.OxyCharts {
                 };
                 var col = 0;
                 foreach (var d in pair.Item2) {
-                    var ci = new ColumnItem(d);
+                    var ci = new BarItem(d);
                     columnSeries2.Items.Add(ci);
                     colSums[col] += d;
 

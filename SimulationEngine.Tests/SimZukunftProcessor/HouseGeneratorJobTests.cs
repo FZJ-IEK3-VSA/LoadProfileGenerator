@@ -68,7 +68,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor {
             Logger.Info("starting house generation");
             Logger.Info("======================================================");
             HouseGenerator houseGenerator = new HouseGenerator();
-            houseGenerator.ProcessSingleHouseJob(houseJobFile, null);
+            houseGenerator.ProcessSingleHouseJob(houseJobFile);
         }
 
         [Fact]
@@ -361,7 +361,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor {
                     srcfi.CopyTo(targetfile, true);
                     Directory.SetCurrentDirectory(wd.WorkingDirectory);
                     HouseGenerator houseGenerator = new HouseGenerator();
-                    houseGenerator.ProcessSingleHouseJob(targetfile, null);
+                    houseGenerator.ProcessSingleHouseJob(targetfile);
                 }
             }
         }

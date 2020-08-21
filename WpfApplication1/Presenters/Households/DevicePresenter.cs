@@ -229,10 +229,10 @@ namespace LoadProfileGenerator.Presenters.Households {
                     electricityLoad = load;
                 }
 
-                if (load.LoadType?.Name?.Contains("Inner") == true) {
+                if (load.LoadType?.Name.Contains("Inner") == true) {
                     innerLoad = load;
                 }
-                if (load.LoadType?.Name?.ToLower().Contains("water") == true)
+                if (load.LoadType?.Name.ToLower().Contains("water") == true)
                 {
                     water = load;
                 }

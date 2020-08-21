@@ -55,9 +55,9 @@ namespace LoadProfileGenerator.Views.Households {
                 return;
             }
 
-            TraitTag tag = null;
+            LivingPatternTag tag = null;
             if (CmbLivingPatterns.SelectedItem != null) {
-                tag = (TraitTag) CmbLivingPatterns.SelectedItem;
+                tag = (LivingPatternTag) CmbLivingPatterns.SelectedItem;
             }
 
             Presenter.ThisTemplate.AddPerson(Presenter.SelectedPerson, tag);

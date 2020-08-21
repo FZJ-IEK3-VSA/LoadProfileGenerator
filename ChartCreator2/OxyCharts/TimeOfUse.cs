@@ -7,6 +7,7 @@ using Automation.ResultFiles;
 using Common;
 using OxyPlot;
 using OxyPlot.Axes;
+using OxyPlot.Legends;
 using OxyPlot.Series;
 
 namespace ChartCreator2.OxyCharts {
@@ -75,14 +76,15 @@ namespace ChartCreator2.OxyCharts {
                     max = sum;
                 }
             }
-            var plotModel1 = new PlotModel
-            {
+
+            var plotModel1 = new PlotModel();
+            var l = new Legend();
+            plotModel1.Legends.Add(l);
                 // general
-                LegendBorderThickness = 0,
-                LegendOrientation = LegendOrientation.Horizontal,
-                LegendPlacement = LegendPlacement.Outside,
-                LegendPosition = LegendPosition.BottomCenter
-            };
+                l.LegendBorderThickness = 0;
+                l.LegendOrientation = LegendOrientation.Horizontal;
+                l.LegendPlacement = LegendPlacement.Outside;
+                l.LegendPosition = LegendPosition.BottomCenter;
 
             if (Parameters.ShowTitle) {
                 plotModel1.Title = plotName;
@@ -121,7 +123,7 @@ namespace ChartCreator2.OxyCharts {
 
             for (var i = 0; i < devices.Count; i++) {
                 // main columns
-                var columnSeries2 = new ColumnSeries
+                var columnSeries2 = new BarSeries
                 {
                     IsStacked = true,
                     StrokeThickness = 0,
@@ -130,7 +132,7 @@ namespace ChartCreator2.OxyCharts {
                 };
                 var myvalues = devices[i].Values;
                 for (var j = 0; j < myvalues.Count; j++) {
-                    columnSeries2.Items.Add(new ColumnItem(myvalues[j]));
+                    columnSeries2.Items.Add(new BarItem(myvalues[j]));
                 }
                 columnSeries2.FillColor = p.Colors[i];
                 plotModel1.Series.Add(columnSeries2);

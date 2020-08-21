@@ -639,12 +639,13 @@ namespace LoadProfileGenerator.Controls.Usercontrols {
 
         private void BtnRemoveDeviceClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
         {
+            if (SelectedDevices.SelectedItem == null) {
+                Logger.Warning("No device selected");
+                return;
+            }
             var evt = new DeviceRemovedEventArgs {
                 ItemToRemove = SelectedDevices.SelectedItem
             };
-            if (evt.ItemToRemove == null) {
-                return;
-            }
 
             RemovedDeviceEvent?.Invoke(this, evt);
         }

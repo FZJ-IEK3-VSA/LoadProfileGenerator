@@ -520,5 +520,35 @@ namespace LoadProfileGenerator.Views.Households {
             Presenter.RemoveAutoDev(ad);
         }
 #pragma warning restore CC0068 // Unused Method
+        private void BtnAddLivingPatternTagClick(object sender, RoutedEventArgs e)
+        {
+            if (CmbLivingPatternTags.SelectedItem != null)
+            {
+                var tag = (LivingPatternTag)CmbLivingPatternTags.SelectedItem;
+                Presenter.AddLivingPatternTag(tag);
+
+                HHTLivingPatternTags.ResizeColummns();
+            }
+        }
+
+        private void BtnRemoveLivingPatternTagClick(object sender, RoutedEventArgs e)
+        {
+            if (HHTLivingPatternTags.SelectedItem != null)
+            {
+                var tag = (HHTLivingPatternTag)HHTLivingPatternTags.SelectedItem;
+                Presenter.ThisHouseholdTrait.DeleteHHTLivingPatternTag(tag);
+            }
+        }
+
+        private void HHTLivingPatternTags_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (HHTLivingPatternTags.SelectedItem == null)
+            {
+                return;
+            }
+
+            var tag = (HHTLivingPatternTag)HHTLivingPatternTags.SelectedItem;
+            Presenter.ApplicationPresenter.OpenItem(tag.Tag);
+        }
     }
 }

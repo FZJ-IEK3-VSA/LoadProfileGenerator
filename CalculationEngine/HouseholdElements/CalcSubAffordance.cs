@@ -120,7 +120,7 @@ namespace CalculationEngine.HouseholdElements {
         public override List<CalcAffordance.DeviceEnergyProfileTuple> Energyprofiles { get; }
         public override ColorRGB AffordanceColor { get; }
         public override string SourceTrait { get; }
-        public override string TimeLimitName { get; }
+        public override string? TimeLimitName { get; }
         public override bool AreThereDuplicateEnergyProfiles() => false;
 
         [NotNull]

@@ -46,17 +46,14 @@ using JetBrains.Annotations;
 
 namespace CalculationEngine.OnlineLogging {
     public interface ILogFile: IDisposable {
-        [CanBeNull]
-        DesiresLogFile DesiresLogfile { get; }
+        DesiresLogFile? DesiresLogfile { get; }
 
         //HashSet<string> HouseholdKeys { get; }
-        [CanBeNull]
-        EnergyStorageLogfile EnergyStorageLogfile { get; }
+        EnergyStorageLogfile? EnergyStorageLogfile { get; }
 
         //[NotNull] FileFactoryAndTracker FileFactoryAndTracker { get; }
 
-        [CanBeNull]
-        IThoughtsLogFile ThoughtsLogFile1 { get; }
+        IThoughtsLogFile? ThoughtsLogFile1 { get; }
 
         //ActionLogFile ActionLogFile { get; }
         //[CanBeNull]LocationsLogFile LocationsLogFile { get; }
@@ -341,12 +338,12 @@ namespace CalculationEngine.OnlineLogging {
     }
 
     public sealed class LogFile :  ILogFile {
-        [CanBeNull] private readonly DesiresLogFile _desiresLogfile;
+        private readonly DesiresLogFile? _desiresLogfile;
 
-        [CanBeNull] private readonly EnergyStorageLogfile _energyStorageLogfile;
+        private readonly EnergyStorageLogfile? _energyStorageLogfile;
 
 
-        [CanBeNull] private readonly IThoughtsLogFile _thoughtsLogFile;
+        private readonly IThoughtsLogFile? _thoughtsLogFile;
 
         public LogFile([NotNull] CalcParameters calcParameters,
                        FileFactoryAndTracker fft,
@@ -388,9 +385,9 @@ namespace CalculationEngine.OnlineLogging {
             _energyStorageLogfile?.Dispose();
         }
 
-        public DesiresLogFile DesiresLogfile => _desiresLogfile;
+        public DesiresLogFile? DesiresLogfile => _desiresLogfile;
 
-        public EnergyStorageLogfile EnergyStorageLogfile => _energyStorageLogfile;
+        public EnergyStorageLogfile? EnergyStorageLogfile => _energyStorageLogfile;
 
 
         //public void InitHousehold([NotNull] HouseholdKey householdKey, [NotNull] string name, HouseholdKeyType type, string description,
@@ -411,6 +408,6 @@ namespace CalculationEngine.OnlineLogging {
         //public HashSet<string> HouseholdKeys => _householdKeys;
 
         //[CanBeNull]public LocationsLogFile LocationsLogFile { get; private set; }
-        public IThoughtsLogFile ThoughtsLogFile1 => _thoughtsLogFile;
+        public IThoughtsLogFile? ThoughtsLogFile1 => _thoughtsLogFile;
     }
 }

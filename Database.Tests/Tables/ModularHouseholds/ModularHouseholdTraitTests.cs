@@ -56,9 +56,10 @@ namespace Database.Tests.Tables.ModularHouseholds {
                     out var deviceCategories, out var realDevices, out var desires, out var loadTypes, out var timeLimits, out ObservableCollection<DeviceAction> deviceActions,
                     out ObservableCollection<DeviceActionGroup> deviceActionGroups, out var locations, out var variables, out _);
                 var tags = db.LoadTraitTags();
+                var lptags = db.LoadLivingPatternTags();
                 var householdTraits = db.LoadHouseholdTraits(locations, affordances,
                     realDevices, deviceCategories, timeBasedProfiles, loadTypes, timeLimits, desires, deviceActions,
-                    deviceActionGroups, tags, variables);
+                    deviceActionGroups, tags, variables,lptags);
                 var hht = new HouseholdTrait("bla", null, "blub", db.ConnectionString, "none", 1, 100, 10, 1, 1,
                     TimeType.Day, 1, 1, TimeType.Day, 1, 0, EstimateType.Theoretical, "", Guid.NewGuid().ToStrGuid());
                 hht.SaveToDB();

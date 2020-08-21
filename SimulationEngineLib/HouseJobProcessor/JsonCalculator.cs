@@ -6,6 +6,7 @@ using System.Threading;
 using Automation;
 using Automation.ResultFiles;
 using CalculationController.Queue;
+using ChartCreator2.OxyCharts;
 using Common;
 using Common.Enums;
 using Database;
@@ -105,7 +106,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
         }
 
         [SuppressMessage("ReSharper", "UseObjectOrCollectionInitializer")]
-        public void StartHousehold([NotNull] Simulator sim, [NotNull] JsonCalcSpecification jcs, [NotNull] JsonReference calcObjectReference, [CanBeNull] Action<CalculationProfiler, string> makeAllCharts)
+        public void StartHousehold([NotNull] Simulator sim, [NotNull] JsonCalcSpecification jcs, [NotNull] JsonReference calcObjectReference)
         {
             if(!CheckSimulator(jcs, sim))
             {
@@ -276,7 +277,9 @@ namespace SimulationEngineLib.HouseJobProcessor {
                 null,
                 jcs.LoadtypesForPostprocessing,
                 sim.MyGeneralConfig.DeviceProfileHeaderMode,
-                jcs.IgnorePreviousActivitiesWhenNeeded, jcs.OutputDirectory,jcs.EnableTransportation, jcs.EnableIdlemode);
+                jcs.IgnorePreviousActivitiesWhenNeeded, jcs.OutputDirectory,jcs.EnableTransportation,
+                jcs.EnableIdlemode
+                );
             calcStartParameterSet.PreserveLogfileWhileClearingFolder = true;
             cs.Start(calcStartParameterSet);
             if (jcs.CalcOptions != null && jcs.CalcOptions.Contains(CalcOption.CalculationFlameChart))
@@ -288,9 +291,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
                 }
             }
             _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
-            if(makeAllCharts!=null) {
-                makeAllCharts(_calculationProfiler, calcStartParameterSet.ResultPath);
-            }
+                ChartMaker.MakeChartsAndPDF(_calculationProfiler,calcStartParameterSet.ResultPath);
 
             var duration = DateTime.Now - calculationStartTime;
             if (jcs.DeleteAllButPDF) {

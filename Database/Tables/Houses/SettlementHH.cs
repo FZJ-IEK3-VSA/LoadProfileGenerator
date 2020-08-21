@@ -97,9 +97,6 @@ namespace Database.Tables.Houses {
             var count = dr.GetInt("Count");
             var calcObjectTypeID = dr.GetNullableIntFromLong("CalcObjectType", false, ignoreMissingFields);
             var objectType = CalcObjectType.ModularHousehold;
-            if (objectType == (CalcObjectType) 1) {
-                objectType = CalcObjectType.ModularHousehold;
-            }
             if (calcObjectTypeID != null && calcObjectTypeID != 0) {
                 objectType = (CalcObjectType) calcObjectTypeID;
             }

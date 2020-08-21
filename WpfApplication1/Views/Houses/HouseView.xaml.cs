@@ -70,11 +70,26 @@ namespace LoadProfileGenerator.Views.Houses {
                 return;
             }
 
+            if (Presenter.SelectedChargingStationSet == null) {
+                Logger.Warning("Select a Charging Station Set.");
+                return;
+            }
+
+            if (Presenter.SelectedTransportationDeviceSet == null) {
+                Logger.Warning("Select a transportation device set");
+                return;
+            }
+
+            if (Presenter.SelectedTravelRouteSet == null) {
+                Logger.Warning("Select a travel route set.");
+                return;
+            }
             switch (Presenter.SelectedCalcObjectType) {
                 case CalcObjectType.ModularHousehold: {
                     var hh = (ModularHousehold) CmbModularHouseholds.SelectedItem;
 
-                    Presenter.AddCalcObject(hh,Presenter.SelectedChargingStationSet,Presenter.SelectedTransportationDeviceSet,
+                    Presenter.AddCalcObject(hh,Presenter.SelectedChargingStationSet,
+                        Presenter.SelectedTransportationDeviceSet,
                         Presenter.SelectedTravelRouteSet);
                 }
                     break;

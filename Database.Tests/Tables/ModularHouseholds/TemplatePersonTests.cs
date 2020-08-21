@@ -40,15 +40,16 @@ namespace Database.Tests.Tables.ModularHouseholds {
                     deviceCategories, devices, desires, loadTypes, timeLimits, deviceActions, deviceActionGroups, locations,
                     variables);
                 var traitTags = db.LoadTraitTags();
+                var lptags = db.LoadLivingPatternTags();
                 var traits = db.LoadHouseholdTraits(locations, affordances, devices,
                     deviceCategories, timeBasedProfiles, loadTypes, timeLimits, desires, deviceActions, deviceActionGroups,
-                    traitTags, variables);
+                    traitTags, variables,lptags);
                 var selections = db.LoadDeviceSelections(deviceCategories, devices,
                     deviceActions, deviceActionGroups);
                 var persons = db.LoadPersons();
                 var vacations = db.LoadVacations();
                 var tags = db.LoadHouseholdTags();
-                var chhs = db.LoadModularHouseholds(traits, selections, persons, vacations, tags, traitTags);
+                var chhs = db.LoadModularHouseholds(traits, selections, persons, vacations, tags, traitTags, lptags);
 
                 TemplatePerson.LoadFromDatabase(cat.Items, db.ConnectionString, traits, false, chhs, persons);
                 (cat.Items.Count).Should().Be(0);

@@ -11,6 +11,7 @@ using JetBrains.Annotations;
 using OxyPlot;
 using OxyPlot.Annotations;
 using OxyPlot.Axes;
+using OxyPlot.Legends;
 using OxyPlot.Series;
 
 namespace ChartCreator2.OxyCharts {
@@ -37,17 +38,19 @@ namespace ChartCreator2.OxyCharts {
                 }
                 var plotModel1 = new PlotModel();
                 pair.Value.Sort((x, y) => x.Value.CompareTo(y.Value));
-                plotModel1.LegendBorderThickness = 0;
-                plotModel1.LegendOrientation = LegendOrientation.Horizontal;
-                plotModel1.LegendPlacement = LegendPlacement.Outside;
-                plotModel1.LegendPosition = LegendPosition.BottomCenter;
+                var l = new Legend();
+                plotModel1.Legends.Add(l);
+                l.LegendBorderThickness = 0;
+                l.LegendOrientation = LegendOrientation.Horizontal;
+                l.LegendPlacement = LegendPlacement.Outside;
+                l.LegendPosition = LegendPosition.BottomCenter;
                 var labelFontSize = 12;
                 if (Config.MakePDFCharts) {
                     plotModel1.DefaultFontSize = Parameters.PDFFontSize;
-                    plotModel1.LegendFontSize = Parameters.PDFFontSize;
+                    l.LegendFontSize = Parameters.PDFFontSize;
                     labelFontSize = 16;
                 }
-                plotModel1.LegendSymbolMargin = 20;
+                l.LegendSymbolMargin = 20;
                 if (Parameters.ShowTitle) {
                     plotModel1.Title = plotName;
                 }
@@ -176,10 +179,12 @@ namespace ChartCreator2.OxyCharts {
             foreach (var pair in consumption) {
                 var plotModel1 = new PlotModel();
                 pair.Value.Sort((x, y) => x.Value.CompareTo(y.Value));
-                plotModel1.LegendBorderThickness = 0;
-                plotModel1.LegendOrientation = LegendOrientation.Horizontal;
-                plotModel1.LegendPlacement = LegendPlacement.Outside;
-                plotModel1.LegendPosition = LegendPosition.BottomCenter;
+                var l = new Legend();
+                plotModel1.Legends.Add(l);
+                l.LegendBorderThickness = 0;
+                l.LegendOrientation = LegendOrientation.Horizontal;
+                l.LegendPlacement = LegendPlacement.Outside;
+                l.LegendPosition = LegendPosition.BottomCenter;
                 if (Parameters.ShowTitle) {
                     plotModel1.Title = plotName;
                 }

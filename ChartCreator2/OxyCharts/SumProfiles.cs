@@ -7,6 +7,7 @@ using Automation.ResultFiles;
 using Common;
 using OxyPlot;
 using OxyPlot.Axes;
+using OxyPlot.Legends;
 using OxyPlot.Series;
 
 namespace ChartCreator2.OxyCharts {
@@ -45,12 +46,12 @@ namespace ChartCreator2.OxyCharts {
                 }
             }
 
-            var plotModel1 = new PlotModel
-            {
-                LegendPlacement = LegendPlacement.Outside,
-                LegendPosition = LegendPosition.BottomCenter,
-                IsLegendVisible = true
-            };
+            var plotModel1 = new PlotModel();
+            var l = new Legend();
+            plotModel1.Legends.Add(l);
+                l.LegendPlacement = LegendPlacement.Outside;
+                l.LegendPosition = LegendPosition.BottomCenter;
+                l.IsLegendVisible = true;
             if (Parameters.ShowTitle) {
                 plotModel1.Title = plotName;
             }
@@ -71,7 +72,7 @@ namespace ChartCreator2.OxyCharts {
                     dayEntries[i].Median, dayEntries[i].Percentile75, dayEntries[i].MaxValue));
             }
             plotModel1.Series.Add(bps);
-            plotModel1.LegendBackground = OxyColor.FromArgb(200, 255, 255, 255);
+            l.LegendBackground = OxyColor.FromArgb(200, 255, 255, 255);
             var fi = new FileInfo(fileName);
             var dstFileName = fi.Name.Insert(fi.Name.Length - 4, "MinMax.");
             Save(plotModel1, plotName, fileName, basisPath,CalcOption.HouseSumProfilesFromDetailedDats, dstFileName);

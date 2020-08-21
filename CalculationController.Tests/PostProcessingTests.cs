@@ -69,12 +69,12 @@ namespace CalculationController.Tests
                         calculationProfiler, wd1.WorkingDirectory,false,false);
                     var cm = cmf.GetCalcManager(sim,  csps, false);
 
-                    static bool ReportCancelFunc()
+                    static bool ReportCancelFunc1()
                     {
                         Logger.Info("canceled");
                         return true;
                     }
-                    cm.Run(ReportCancelFunc);
+                    cm.Run(ReportCancelFunc1);
                     db.Cleanup();
                 }
                 wd1.CleanUp();

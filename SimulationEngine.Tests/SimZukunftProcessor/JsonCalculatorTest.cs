@@ -199,7 +199,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
                     jcs.CalcOptions.Add(CalcOption.SumProfileExternalEntireHouse);
 
                     JsonCalculator jc = new JsonCalculator();
-                    jc.StartHousehold(sim, jcs, house.GetJsonReference(),null);
+                    jc.StartHousehold(sim, jcs, house.GetJsonReference());
                     const string sqliteanalyizer = @"v:\dropbox\lpg\sqlite3_analyzer.exe";
                     if (File.Exists(sqliteanalyizer))
                     {
@@ -262,7 +262,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
                     jcs.DefaultForOutputFiles = OutputFileDefault.OnlySums;
                     Simulator sim = new Simulator(db.ConnectionString);
                     JsonCalculator jc = new JsonCalculator();
-                    jc.StartHousehold(sim, jcs, sim.Houses[0].GetJsonReference(),null);
+                    jc.StartHousehold(sim, jcs, sim.Houses[0].GetJsonReference());
                 }
                 Directory.SetCurrentDirectory(wd.PreviousCurrentDir);
                 wd.CleanUp();
@@ -296,7 +296,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor
                     jcs.LoadTypePriority = LoadTypePriority.RecommendedForHouses;
                     Simulator sim = new Simulator(db.ConnectionString);
                     JsonCalculator jc = new JsonCalculator();
-                    jc.StartHousehold(sim, jcs, sim.Houses[0].GetJsonReference(),null);
+                    jc.StartHousehold(sim, jcs, sim.Houses[0].GetJsonReference());
                 }
                 Directory.SetCurrentDirectory(wd.PreviousCurrentDir);
                 wd.CleanUp();

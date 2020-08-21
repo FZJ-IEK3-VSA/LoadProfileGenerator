@@ -63,11 +63,11 @@ namespace CalculationEngine.HouseholdElements {
 
         //private readonly VariableOperator _variableOperator = new VariableOperator();
 
-        [ItemNotNull] [CanBeNull] private List<CalcAutoDev> _autoDevs;
+        [ItemNotNull] private List<CalcAutoDev>? _autoDevs;
 
-        [CanBeNull] private DayLightStatus _daylightArray;
+        private DayLightStatus? _daylightArray;
 
-        [ItemNotNull] [CanBeNull] private List<CalcDevice> _devices;
+        [ItemNotNull] private List<CalcDevice>? _devices;
 
         private DateTime _lastDisplay = DateTime.MinValue;
         private DateTime _startSimulation = DateTime.MinValue;
@@ -117,8 +117,7 @@ namespace CalculationEngine.HouseholdElements {
         public List<CalcPerson> Persons => _persons;
 
 
-        [CanBeNull]
-        public TransportationHandler TransportationHandler { get; set; }
+        public TransportationHandler? TransportationHandler { get; set; }
 
         public List<CalcAutoDev> CollectAutoDevs()
         {
@@ -209,92 +208,108 @@ namespace CalculationEngine.HouseholdElements {
                 }
             }
 
-            using (var sw = _calcRepo.FileFactoryAndTracker.MakeFile<StreamWriter>(
+            using var sw = _calcRepo.FileFactoryAndTracker.MakeFile<StreamWriter>(
                 "HouseholdContents." + _householdKey + ".txt",
                 "List of persons, locations, devices and affordances in this household", true, ResultFileID.HouseholdContentsDump,
-                _householdKey, TargetDirectory.Root,  _calcRepo.CalcParameters.InternalStepsize, CalcOption.HouseholdContents)) {
-                sw.WriteLine("Name:" + _name);
-                sw.WriteLine("Location:" + _locationname);
-                sw.WriteLine("Temperatureprofile:" + _temperatureprofileName);
-                sw.WriteLine("Persons:");
-                foreach (var calcPerson in _persons) {
-                    sw.WriteLine(calcPerson.Name);
-                    sw.WriteLine("\tDesires:");
-                    foreach (var desire in calcPerson.PersonDesires.Desires) {
-                        sw.WriteLine("\t\t" + desire.Value.Name);
-                    }
-
-                    sw.WriteLine("\tSickness Desires:");
-                    foreach (var desire in calcPerson.SicknessDesires.Desires) {
-                        sw.WriteLine("\t\t" + desire.Value.Name);
-                    }
+                _householdKey, TargetDirectory.Root, _calcRepo.CalcParameters.InternalStepsize, CalcOption.HouseholdContents);
+            sw.WriteLine("Name:" + _name);
+            sw.WriteLine("Location:" + _locationname);
+            sw.WriteLine("Temperatureprofile:" + _temperatureprofileName);
+            sw.WriteLine("Persons:");
+            foreach (var calcPerson in _persons)
+            {
+                sw.WriteLine(calcPerson.Name);
+                sw.WriteLine("\tDesires:");
+                foreach (var desire in calcPerson.PersonDesires.Desires)
+                {
+                    sw.WriteLine("\t\t" + desire.Value.Name);
                 }
 
+                sw.WriteLine("\tSickness Desires:");
+                foreach (var desire in calcPerson.SicknessDesires.Desires)
+                {
+                    sw.WriteLine("\t\t" + desire.Value.Name);
+                }
+            }
+
+            sw.WriteLine();
+            sw.WriteLine(Environment.NewLine + Environment.NewLine + "Locations:");
+
+            foreach (var calcLocation in _locations)
+            {
                 sw.WriteLine();
-                sw.WriteLine(Environment.NewLine + Environment.NewLine + "Locations:");
+                sw.WriteLine(Environment.NewLine + Environment.NewLine + calcLocation.Name);
 
-                foreach (var calcLocation in _locations) {
-                    sw.WriteLine();
-                    sw.WriteLine(Environment.NewLine + Environment.NewLine + calcLocation.Name);
-
-                    sw.WriteLine(Environment.NewLine + "\tLight Devices:");
-                    if (calcLocation.LightDevices.Count > 0) {
-                        foreach (var lightcalcDevice in calcLocation.LightDevices) {
-                            sw.WriteLine("\t\t" + lightcalcDevice.PrettyName);
-                        }
-                    }
-                    else {
-                        sw.WriteLine("\t\t(None)");
-                    }
-
-                    sw.WriteLine(Environment.NewLine + "\tDevices:");
-                    foreach (var calcDevice in calcLocation.Devices) {
-                        sw.WriteLine("\t\t" + calcDevice.PrettyName);
-                    }
-
-                    sw.WriteLine(Environment.NewLine + "\tAffordances (with desires):");
-                    foreach (var calcaff in calcLocation.Affordances) {
-                        sw.WriteLine("\t\t" + calcaff.Name);
-                        foreach (var calcDesire in calcaff.Satisfactionvalues) {
-                            sw.WriteLine("\t\t\t" + calcDesire.Name);
-                        }
+                sw.WriteLine(Environment.NewLine + "\tLight Devices:");
+                if (calcLocation.LightDevices.Count > 0)
+                {
+                    foreach (var lightcalcDevice in calcLocation.LightDevices)
+                    {
+                        sw.WriteLine("\t\t" + lightcalcDevice.PrettyName);
                     }
                 }
+                else
+                {
+                    sw.WriteLine("\t\t(None)");
+                }
 
+                sw.WriteLine(Environment.NewLine + "\tDevices:");
+                foreach (var calcDevice in calcLocation.Devices)
+                {
+                    sw.WriteLine("\t\t" + calcDevice.PrettyName);
+                }
+
+                sw.WriteLine(Environment.NewLine + "\tAffordances (with desires):");
+                foreach (var calcaff in calcLocation.Affordances)
+                {
+                    sw.WriteLine("\t\t" + calcaff.Name);
+                    foreach (var calcDesire in calcaff.Satisfactionvalues)
+                    {
+                        sw.WriteLine("\t\t\t" + calcDesire.Name);
+                    }
+                }
+            }
+
+            sw.WriteLine();
+            sw.WriteLine(Environment.NewLine + Environment.NewLine + "All Devices:");
+            foreach (var calcdev in _devices)
+            {
+                sw.WriteLine(calcdev.Name);
+            }
+
+            sw.WriteLine();
+            sw.WriteLine(Environment.NewLine + Environment.NewLine + "Autonomous Devices:");
+            var devicenames = new List<string>();
+            foreach (var dev in _autoDevs)
+            {
+                devicenames.Add(dev.Name + " @ " + dev.Location);
+            }
+
+            devicenames.Sort();
+            foreach (var devicename in devicenames)
+            {
+                sw.WriteLine(devicename);
+            }
+
+            if (TransportationHandler != null)
+            {
                 sw.WriteLine();
-                sw.WriteLine(Environment.NewLine + Environment.NewLine + "All Devices:");
-                foreach (var calcdev in _devices) {
-                    sw.WriteLine(calcdev.Name);
+                sw.WriteLine(Environment.NewLine + Environment.NewLine + "Transportation:");
+                var transportdevices = new List<string>();
+                foreach (var dev in TransportationHandler.VehicleDepot)
+                {
+                    transportdevices.Add(dev.Category + ": " + dev.Name);
                 }
 
-                sw.WriteLine();
-                sw.WriteLine(Environment.NewLine + Environment.NewLine + "Autonomous Devices:");
-                var devicenames = new List<string>();
-                foreach (var dev in _autoDevs) {
-                    devicenames.Add(dev.Name + " @ " + dev.Location);
+                foreach (var dev in TransportationHandler.LocationUnlimitedDevices)
+                {
+                    transportdevices.Add(dev.Category + ": " + dev.Name);
                 }
 
-                devicenames.Sort();
-                foreach (var devicename in devicenames) {
+                transportdevices.Sort();
+                foreach (var devicename in transportdevices)
+                {
                     sw.WriteLine(devicename);
-                }
-
-                if (TransportationHandler != null) {
-                    sw.WriteLine();
-                    sw.WriteLine(Environment.NewLine + Environment.NewLine + "Transportation:");
-                    var transportdevices = new List<string>();
-                    foreach (var dev in TransportationHandler.VehicleDepot) {
-                        transportdevices.Add(dev.Category + ": " + dev.Name);
-                    }
-
-                    foreach (var dev in TransportationHandler.LocationUnlimitedDevices) {
-                        transportdevices.Add(dev.Category + ": " + dev.Name);
-                    }
-
-                    transportdevices.Sort();
-                    foreach (var devicename in transportdevices) {
-                        sw.WriteLine(devicename);
-                    }
                 }
             }
         }
@@ -306,8 +321,7 @@ namespace CalculationEngine.HouseholdElements {
 
         public HouseholdKey HouseholdKey => _householdKey;
 
-        [CanBeNull]
-        public List<CalcAutoDev> AutoDevs => _autoDevs;
+        public List<CalcAutoDev>? AutoDevs => _autoDevs;
 
         //public Dictionary<int, CalcProfile> AllProfiles => _allProfiles;
 
@@ -642,15 +656,15 @@ namespace CalculationEngine.HouseholdElements {
             var entries = _calcRepo.Odap.ProfileEntries.Values.ToList();
             entries.Sort((x, y) => {
                 if (x.Device != y.Device) {
-                    return string.Compare(x.Device, y.Device, StringComparison.Ordinal);
+                    return string.CompareOrdinal(x.Device, y.Device);
                 }
 
                 if (x.LoadType != y.LoadType) {
-                    return string.Compare(x.LoadType, y.LoadType, StringComparison.Ordinal);
+                    return string.CompareOrdinal(x.LoadType, y.LoadType);
                 }
 
                 if (x.Profile != y.Profile) {
-                    return string.Compare(x.Profile, y.Profile, StringComparison.Ordinal);
+                    return string.CompareOrdinal(x.Profile, y.Profile);
                 }
 
                 return 0;

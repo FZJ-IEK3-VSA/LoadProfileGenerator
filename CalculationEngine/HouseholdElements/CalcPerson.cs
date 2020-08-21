@@ -67,7 +67,7 @@ namespace CalculationEngine.HouseholdElements {
         private readonly PotentialAffs _sicknessPotentialAffs = new PotentialAffs();
         private bool _alreadyloggedvacation;
 
-        [CanBeNull] private ICalcAffordanceBase _currentAffordance;
+        private ICalcAffordanceBase? _currentAffordance;
 
         private bool _isCurrentlyPriorityAffordanceRunning;
         private bool _isCurrentlySick;
@@ -123,8 +123,7 @@ namespace CalculationEngine.HouseholdElements {
         [NotNull]
         public CalcPersonDesires SicknessDesires { get; }
 
-        [CanBeNull]
-        private TimeStep TimeToResetActionEntryAfterInterruption { get; set; }
+        private TimeStep? TimeToResetActionEntryAfterInterruption { get; set; }
 
         [NotNull]
         public string PrettyName => _calcPerson.Name + "(" + _calcPerson.Age + "/" + _calcPerson.Gender + ")";
@@ -463,7 +462,7 @@ namespace CalculationEngine.HouseholdElements {
 
             var weightsum = bestaffordances.Sum(x => x.Weight);
             var pick = _calcRepo.Rnd.Next(weightsum);
-            ICalcAffordanceBase selectedAff = null;
+            ICalcAffordanceBase? selectedAff = null;
             var idx = 0;
             var cumulativesum = 0;
 
@@ -589,7 +588,7 @@ namespace CalculationEngine.HouseholdElements {
                 allAffordances =
                     NewGetAllViableAffordancesAndSubs(time, null,  false, allAffs, true);
             }
-            allAffordances.Sort((x, y) => string.Compare(x.Name, y.Name, StringComparison.Ordinal));
+            allAffordances.Sort((x, y) => string.CompareOrdinal(x.Name, y.Name));
             //no affordances, so search again for the error messages
             if (allAffordances.Count == 0) {
 
@@ -724,19 +723,19 @@ namespace CalculationEngine.HouseholdElements {
                 }
             }
 
-            pa.PotentialAffordances.Sort((x, y) => string.Compare(x.Name, y.Name, StringComparison.Ordinal));
+            pa.PotentialAffordances.Sort((x, y) => string.CompareOrdinal(x.Name, y.Name));
             pa.PotentialInterruptingAffordances.Sort(
-                (x, y) => string.Compare(x.Name, y.Name, StringComparison.Ordinal));
+                (x, y) => string.CompareOrdinal(x.Name, y.Name));
             pa.PotentialAffordancesWithSubAffordances.Sort(
-                (x, y) => string.Compare(x.Name, y.Name, StringComparison.Ordinal));
+                (x, y) => string.CompareOrdinal(x.Name, y.Name));
             pa.PotentialAffordancesWithInterruptingSubAffordances.Sort(
-                (x, y) => string.Compare(x.Name, y.Name, StringComparison.Ordinal));
+                (x, y) => string.CompareOrdinal(x.Name, y.Name));
         }
 
         [NotNull]
         [ItemNotNull]
         private List<ICalcAffordanceBase> NewGetAllViableAffordancesAndSubs([NotNull] TimeStep timeStep,
-                                                                            [CanBeNull] AffordanceStatusClass errors,
+                                                                            AffordanceStatusClass? errors,
                                                                             bool getOnlyInterrupting,
                                                                             [NotNull] PotentialAffs potentialAffs, bool tryHarder)
         {
@@ -793,8 +792,8 @@ namespace CalculationEngine.HouseholdElements {
 
         private bool NewIsAvailableAffordance([NotNull] TimeStep timeStep,
                                               [NotNull] ICalcAffordanceBase aff,
-                                              [CanBeNull] AffordanceStatusClass errors, bool checkForRelevance,
-                                              [CanBeNull] CalcSite srcSite, bool ignoreAlreadyExecutedActivities)
+                                              AffordanceStatusClass? errors, bool checkForRelevance,
+                                              CalcSite? srcSite, bool ignoreAlreadyExecutedActivities)
         {
             if (_calcRepo.CalcParameters.TransportationEnabled) {
                 if (aff.Site != srcSite && !(aff is AffordanceBaseTransportDecorator)) {

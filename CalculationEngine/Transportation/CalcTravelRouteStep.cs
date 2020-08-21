@@ -42,7 +42,7 @@ namespace CalculationEngine.Transportation {
         }
 
         public bool CalculateDurationInTimestepsAndPickDevice([NotNull] TimeStep timestepOfThisStep,
-                                                              [CanBeNull] out CalcTransportationDevice pickedDevice,
+                                                              out CalcTransportationDevice? pickedDevice,
             [CanBeNull] out int? pickeddurationInTimesteps,
             [NotNull][ItemNotNull] List<CalcTransportationDevice> vehiclepool,
             [NotNull][ItemNotNull] List<CalcTransportationDevice> locationUnlimitedDevices,

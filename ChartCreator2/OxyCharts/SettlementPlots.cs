@@ -7,10 +7,11 @@ using Common;
 using JetBrains.Annotations;
 using OxyPlot;
 using OxyPlot.Axes;
+using OxyPlot.Legends;
 using OxyPlot.Series;
-using OxyPlot.Wpf;
+using OxyPlot.SkiaSharp;
 using CategoryAxis = OxyPlot.Axes.CategoryAxis;
-using ColumnSeries = OxyPlot.Series.ColumnSeries;
+using BarSeries = OxyPlot.Series.BarSeries;
 using LinearAxis = OxyPlot.Axes.LinearAxis;
 using LineSeries = OxyPlot.Series.LineSeries;
 
@@ -25,9 +26,11 @@ namespace ChartCreator2.OxyCharts {
             int minutesToSum) {
             var plotModel2 = new PlotModel();
             var p = OxyPalettes.HueDistinct(columns.Count);
-            plotModel2.LegendPosition = LegendPosition.BottomCenter;
-            plotModel2.LegendPlacement = LegendPlacement.Outside;
-            plotModel2.LegendOrientation = LegendOrientation.Horizontal;
+            var l = new Legend();
+            plotModel2.Legends.Add(l);
+            l.LegendPosition = LegendPosition.BottomCenter;
+            l.LegendPlacement = LegendPlacement.Outside;
+            l.LegendOrientation = LegendOrientation.Horizontal;
             plotModel2.Title = "Day " + day;
             // axes
             var categoryAxis = new CategoryAxis
@@ -50,31 +53,31 @@ namespace ChartCreator2.OxyCharts {
             plotModel2.Axes.Add(linearAxis2);
 
             for (var i = 1; i < columns.Count; i++) {
-                var columnSeries2 = new ColumnSeries
+                var columnSeries2 = new BarSeries
                 {
                     IsStacked = true,
                     StrokeThickness = 0,
                     Title = columns[i].HHNumber
                 };
                 for (var j = position; j < position + 1440; j += minutesToSum) {
-                    columnSeries2.Items.Add(new ColumnItem(columns[i].MakeSum(j, minutesToSum)));
+                    columnSeries2.Items.Add(new BarItem(columns[i].MakeSum(j, minutesToSum)));
                 }
                 columnSeries2.FillColor = p.Colors[i];
                 plotModel2.Series.Add(columnSeries2);
             }
             var path2 = Path.Combine(outputPath, "Plot." + day + "." + minutesToSum + "min.bar.png");
-            PngExporter.Export(plotModel2, path2, 3200, 1600, OxyColor.FromRgb(255, 255, 255), 100);
+            PngExporter.Export(plotModel2, path2, 3200, 1600,  100);
         }
 
         private static void MakeLinePlot([JetBrains.Annotations.NotNull] string outputPath, [ItemNotNull] [JetBrains.Annotations.NotNull] List<Column> columns, int position, int day) {
             var p = OxyPalettes.HueDistinct(columns.Count);
-            var plotModel1 = new PlotModel
-            {
-                LegendPosition = LegendPosition.BottomCenter,
-                LegendPlacement = LegendPlacement.Outside,
-                LegendOrientation = LegendOrientation.Horizontal,
-                Title = "Day " + day
-            };
+            var plotModel1 = new PlotModel();
+            var l = new Legend();
+            plotModel1.Legends.Add(l);
+            l.LegendPosition = LegendPosition.BottomCenter;
+            l.LegendPlacement = LegendPlacement.Outside;
+            l.LegendOrientation = LegendOrientation.Horizontal;
+            plotModel1.Title = "Day " + day;
             var linearAxis1 = new LinearAxis
             {
                 Position = AxisPosition.Bottom
@@ -93,17 +96,18 @@ namespace ChartCreator2.OxyCharts {
                 plotModel1.Series.Add(lineSeries1);
             }
             var path = Path.Combine(outputPath, "Plot." + day + ".line.png");
-            PngExporter.Export(plotModel1, path, 3200, 1600, OxyColor.FromRgb(255, 255, 255), 100);
+            PngExporter.Export(plotModel1, path, 3200, 1600,  100);
         }
 
-        private static void MakeTotalLinePlot([JetBrains.Annotations.NotNull] string outputPath, [JetBrains.Annotations.NotNull] List<double> sums) {
-            var plotModel1 = new PlotModel
-            {
-                LegendPosition = LegendPosition.BottomCenter,
-                LegendPlacement = LegendPlacement.Outside,
-                LegendOrientation = LegendOrientation.Horizontal,
-                Title = "Total"
-            };
+        private static void MakeTotalLinePlot([JetBrains.Annotations.NotNull] string outputPath, [JetBrains.Annotations.NotNull] List<double> sums)
+        {
+            var plotModel1 = new PlotModel();
+            var l = new Legend();
+            plotModel1.Legends.Add(l);
+            l.LegendPosition = LegendPosition.BottomCenter;
+                l.LegendPlacement = LegendPlacement.Outside;
+                l.LegendOrientation = LegendOrientation.Horizontal;
+                plotModel1.Title = "Total";
             var linearAxis1 = new LinearAxis
             {
                 Position = AxisPosition.Bottom
@@ -118,7 +122,7 @@ namespace ChartCreator2.OxyCharts {
             }
             plotModel1.Series.Add(lineSeries1);
             var path = Path.Combine(outputPath, "Sum.line.png");
-            PngExporter.Export(plotModel1, path, 3200, 1600, OxyColor.FromRgb(255, 255, 255), 100);
+            PngExporter.Export(plotModel1, path, 3200, 1600,  100);
         }
 
         private static void ReadFile([JetBrains.Annotations.NotNull] string fullName,
