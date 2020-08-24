@@ -162,10 +162,9 @@ namespace CalculationEngine.Transportation {
                     throw new LPGException("was null");
                 }
                 route = _transportationHandler.GetTravelRouteFromSrcLoc(srcLocation, Site,time,calcPersonName, _calcRepo);
-                if (route == null) {
-                    throw new LPGException("route was null");
+                if (route != null) {
+                    _myLastTimeEntry.PreviouslySelectedRoutes.Add(srcLocation, route);
                 }
-                _myLastTimeEntry.PreviouslySelectedRoutes.Add(srcLocation, route);
             }
 
             if (route == null) {

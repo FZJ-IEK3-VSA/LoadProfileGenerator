@@ -31,6 +31,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Automation;
@@ -38,6 +39,25 @@ using Automation.ResultFiles;
 
 namespace Common {
     public static class Extensions {
+        [NotNull]
+        public static string RelativePath([NotNull] this FileInfo fi, [NotNull] DirectoryInfo di)
+        {
+            if (!fi.FullName.StartsWith(di.FullName))
+            {
+                throw new LPGException("Wrong directory");
+            }
+
+            string s = fi.FullName.Substring(di.FullName.Length);
+            while (s.EndsWith("\\")) {
+                s = s.Substring(0, s.Length - 1);
+            }
+
+            while (s.StartsWith("\\")) {
+                s = s.Substring(1);
+            }
+
+            return s;
+        }
         public static StrGuid ToStrGuid(this Guid myguid)
         {
             return StrGuid.FromGuid(myguid);

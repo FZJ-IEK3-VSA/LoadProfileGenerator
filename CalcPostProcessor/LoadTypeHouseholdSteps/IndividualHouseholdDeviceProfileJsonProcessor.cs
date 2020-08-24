@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -79,7 +80,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                 StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < colLength; i++) {
                     double val = efr.GetValueForSingleCols(i);
-                    sb.Append(val).Append(",");
+                    sb.Append(val.ToString(CultureInfo.InvariantCulture)).Append(",");
                 }
                 deviceProfilecsv.WriteLine(sb.ToString());
             }

@@ -23,7 +23,7 @@ copy lpgdata.py c:\work\fzj\pylpg\
 copy lpgpythonbindings.py c:\work\fzj\pylpg\
 c:
 cd \work\lpgdev
-robocopy V:\Dropbox\LPGReleases\releases9.9.0\net48 C:\Work\fzj\pylpg\LPG_9.9.0_win /E /R:0 /W:0 /MIR
-robocopy V:\Dropbox\LPGReleases\releases9.9.0\linux C:\Work\fzj\pylpg\LPG_9.9.0_linux /E /R:0 /W:0 /MIR
+robocopy V:\Dropbox\LPGReleases\releases10.2.0\net48 C:\Work\fzj\pylpg\LPG_10.2.0_win /E /R:0 /W:0 /MIR
+robocopy V:\Dropbox\LPGReleases\releases10.2.0\linux C:\Work\fzj\pylpg\LPG_10.2.0_linux /E /R:0 /W:0 /MIR
 
 pause

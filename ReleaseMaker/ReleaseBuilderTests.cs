@@ -28,23 +28,28 @@ using LoadProfileGenerator.Presenters.SpecialViews;
 namespace ReleaseMaker
 {
     public class CopierBase {
-        protected static void Copy(List<string> programFiles, [NotNull] string src, [NotNull] string dst, [NotNull] string filename, string? dstfilename = null)
+        protected static void Copy(List<string> programFiles, DirectoryInfo basePath, [NotNull] string src, [NotNull] string dst, [NotNull] string filename, string? dstfilename = null)
         {
-            if (File.Exists(Path.Combine(dst, filename)))
+            var dstFi = new FileInfo( Path.Combine(dst, filename));
+            if (!Directory.Exists(dstFi.DirectoryName)) {
+                Directory.CreateDirectory(dstFi.DirectoryName??throw new LPGException("no dir"));
+            }
+            if (dstFi.Exists)
             {
-                File.Delete(Path.Combine(dst, filename));
+                dstFi.Delete();
             }
             if (dstfilename == null)
             {
-                File.Copy(Path.Combine(src, filename), Path.Combine(dst, filename));
+                File.Copy(Path.Combine(src, filename), dstFi.FullName);
             }
             else
             {
-                File.Copy(Path.Combine(src, filename), Path.Combine(dst, dstfilename));
+                File.Copy(Path.Combine(src, filename), dstFi.FullName);
             }
             Logger.Info("Copied " + filename);
-            programFiles.Add(filename);
+            programFiles.Add(new FileInfo(Path.Combine(src, filename)).RelativePath(basePath));
         }
+
         protected static void CheckIfFilesAreCompletelyCopied(string src, List<string> programFiles)
         {
             DirectoryInfo di = new DirectoryInfo(src);
@@ -86,9 +91,10 @@ namespace ReleaseMaker
                     continue;
                 }
 
-                if (!programFiles.Contains(fi.Name))
+                var relpath = fi.RelativePath(di);
+                if (!programFiles.Contains(relpath))
                 {
-                    filesToComplain.Add(fi.Name);
+                    filesToComplain.Add(relpath);
                 }
             }
 
@@ -97,7 +103,7 @@ namespace ReleaseMaker
                 string s1 = "";
                 foreach (var fn in filesToComplain)
                 {
-                    s1 += "Copy(programFiles, src, dst, \"" + fn + "\");\n";
+                    s1 += "Copy(programFiles, srcDi, src, dst,\"" + fn + "\");\n";
                 }
 
                 throw new LPGException("Forgotten Files in " + Utili.GetCallingMethodAndClass() + " :\n" + s1);
