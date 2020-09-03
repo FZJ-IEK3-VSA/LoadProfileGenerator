@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Automation;
 using Automation.ResultFiles;
+using CalculationController.Integrity;
 using Common;
 using Common.Tests;
 using Database.Helpers;
@@ -135,7 +136,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
                 entry.AddPerson(sim.Persons[0]);
 
                 gen.SaveToDB();
-                gen.GenerateHouseholds(sim, true, new List<STTraitLimit>());
+                gen.GenerateHouseholds(sim, true, new List<STTraitLimit>(), new List<TraitTag>());
                 foreach (var household in gen.GeneratedHouseholds)
                 {
                     Logger.Info(household.Name);
@@ -143,6 +144,42 @@ namespace Database.Tests.Tables.ModularHouseholds {
                     {
                         Logger.Info("\t" + trait.HouseholdTrait.Name);
                     }
+                }
+                db.Cleanup();
+            }
+        }
+
+
+        [Fact]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.BasicTest)]
+        public void TestForbiddenTags()
+        {
+            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+            {
+                var sim = new Simulator(db.ConnectionString);
+                SimIntegrityChecker.Run(sim, CheckingOptions.Default());
+                var gen = sim.HouseholdTemplates.CreateNewItem(db.ConnectionString);
+                gen.NewHHName = "hh";
+                gen.AddVacation(sim.Vacations[0]);
+                var entry = gen.AddEntry(sim.TraitTags[0], 5, 10);
+                LivingPatternTag tt = sim.LivingPatternTags[0];
+                gen.AddPerson(sim.Persons[0], tt);
+                entry.AddPerson(sim.Persons[0]);
+
+                gen.SaveToDB();
+                var tags = sim.TraitTags.Items.ToList();
+                var newhhs = gen.GenerateHouseholds(sim, true, new List<STTraitLimit>(),tags );
+                foreach (var household in gen.GeneratedHouseholds)
+                {
+                    Logger.Info(household.Name);
+                    foreach (var trait in household.Traits)
+                    {
+                        Logger.Info("\t" + trait.HouseholdTrait.Name);
+                    }
+                }
+
+                foreach (var household in newhhs) {
+                    household.Traits.Count.Should().Be(0);
                 }
                 db.Cleanup();
             }
@@ -162,7 +199,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
                 gen.AddVacationFromJson(sim.Vacations[0].GetJsonReference(), sim);
 
                 gen.SaveToDB();
-                gen.GenerateHouseholds(sim, true, new List<STTraitLimit>());
+                gen.GenerateHouseholds(sim, true, new List<STTraitLimit>(), new List<TraitTag>());
                 foreach (var household in gen.GeneratedHouseholds)
                 {
                     Logger.Info(household.Name);
@@ -278,7 +315,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
                 newHouseholdTemplate.ImportExistingModularHouseholds(existingHouseholdTemplate);
 
                 newHouseholdTemplate.SaveToDB();
-                newHouseholdTemplate.GenerateHouseholds(sim, true, new List<STTraitLimit>());
+                newHouseholdTemplate.GenerateHouseholds(sim, true, new List<STTraitLimit>(), new List<TraitTag>());
                 var total = 0;
                 foreach (var entry in newHouseholdTemplate.Entries)
                 {

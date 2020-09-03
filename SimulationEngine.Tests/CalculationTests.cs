@@ -21,6 +21,7 @@ using Database.Tables.Houses;
 using Database.Tables.ModularHouseholds;
 using Database.Tests;
 using FluentAssertions;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 using SimulationEngineLib.HouseJobProcessor;
 using Xunit;
@@ -35,6 +36,7 @@ namespace SimulationEngine.Tests {
         ThreeMonths,
         TwelveMonths
     }
+    [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     public static class HouseJobCalcPreparer {
         public static HouseCreationAndCalculationJob PrepareExistingHouseForTesting([JetBrains.Annotations.NotNull] House house)
         {
@@ -847,10 +849,10 @@ namespace SimulationEngine.Tests {
 
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.ManualOnly)]
-        public void TestHouseJobs()
+        public void TestHouseJobFile()
         {
             HouseJobTestHelper.RunSingleHouse(_ => {
-                var str = File.ReadAllText(@"C:\Work\fzj\pylpg\LPG_9.9.0_win\calcspec.json");
+                var str = File.ReadAllText(@"C:\Work\pylpg\C1\calcspec.json");
                 return JsonConvert.DeserializeObject<HouseCreationAndCalculationJob>(str);
                 //hj.CalcSpec.CalcOptions.Add(CalcOption.ActionsLogfile);
             }, _ => { });
@@ -954,20 +956,6 @@ namespace SimulationEngine.Tests {
             return hj;
 
         }
-        [Fact]
-        public void TestHouseJobs1()
-        {
-            const CalcOption co = CalcOption.ActivationFrequencies;
-            HouseJobTestHelper.RunSingleHouse(sim => {
-                var hj = HouseJobCalcPreparer.PrepareNewHouseForOutputFileTesting(sim);
-                if (hj.CalcSpec?.CalcOptions == null) {
-                    throw new LPGException();
-                }
-
-                hj.CalcSpec.CalcOptions.Add(co);
-                return hj;
-            }, x => HouseJobTestHelper.CheckForResultfile(x, co));
-        }
 
 
         [Fact]
@@ -1023,23 +1011,40 @@ namespace SimulationEngine.Tests {
         }
     }
 
+    [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     public class HouseholdDefinitionExporter:UnitTestBaseClass {
+
+        public class LpghhSpec
+        {
+
+            [JetBrains.Annotations.NotNull]
+            [ItemNotNull]
+            public List<PersonData> Persons { get; set; } = new List<PersonData>();
+
+            [ItemNotNull]
+            public List<string>? HouseholdTags { get; set; } = new List<string>();
+
+            public string HHName { get; set; } = "";
+
+        }
+
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.ManualOnly)]
         public void ExportAllHouseholdDefinition()
         {
             DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             Simulator sim = new Simulator(db.ConnectionString);
-            Dictionary<string, HouseholdDataPersonSpecification> hhs  = new Dictionary<string, HouseholdDataPersonSpecification>();
-            foreach (var mhh in sim.ModularHouseholds.Items) {
-                HouseholdDataPersonSpecification hhps = new HouseholdDataPersonSpecification(new List<PersonData>());
-                hhs.Add(mhh.Name,hhps);
+            List<LpghhSpec> hhs  = new List<LpghhSpec>();
+            foreach (var mhh in sim.HouseholdTemplates.Items) {
+                LpghhSpec hhps = new LpghhSpec();
+                hhps.HHName = mhh.Name;
+                hhs.Add(hhps);
                 foreach (var person in mhh.Persons) {
                     var pd = new PersonData(person.Person.Age, person.Person.Gender != PermittedGender.Male ? Gender.Female : Gender.Male);
                     if (person.LivingPatternTag == null) {
                         throw new LPGException("was null");
                     }
-                    pd.PersonTags.Add(person.LivingPatternTag.Name);
+                    pd.LivingPatternTag = person.LivingPatternTag.Name;
                     hhps.Persons.Add(pd);
                 }
 
@@ -1047,7 +1052,7 @@ namespace SimulationEngine.Tests {
                     throw new LPGException("was null");
                 }
 
-                foreach (var tag in mhh.ModularHouseholdTags) {
+                foreach (var tag in mhh.TemplateTags) {
                         hhps.HouseholdTags.Add(tag.Tag.Name);
                 }
             }
@@ -1058,6 +1063,61 @@ namespace SimulationEngine.Tests {
         }
 
         public HouseholdDefinitionExporter([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
+        }
+    }
+
+    public class SingleCalculationTests: UnitTestBaseClass {
+        public static HouseCreationAndCalculationJob PrepareNewHouseholdWithTemplateForTesting(Simulator sim)
+        {
+            var hj = new HouseCreationAndCalculationJob
+            {
+                CalcSpec = JsonCalcSpecification.MakeDefaultsForTesting()
+            };
+            hj.CalcSpec.StartDate = new DateTime(2020, 1, 1);
+            hj.CalcSpec.EndDate = new DateTime(2020, 1, 3);
+            hj.CalcSpec.DeleteDAT = false;
+            hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.NoFiles;
+            hj.CalcSpec.DeleteSqlite = false;
+            hj.CalcSpec.ExternalTimeResolution = "00:15:00";
+            hj.CalcSpec.EnableTransportation = false;
+            var ht = sim.HouseTypes[0];
+            hj.House = new HouseData(StrGuid.FromString("houseguid"), ht.HouseTypeCode, 1000, 100, "housename")
+            {
+                Households = new List<HouseholdData>()
+            };
+            var hhd = new HouseholdData("householdid",
+                "householdname", sim.ChargingStationSets[0].GetJsonReference(),
+                sim.TransportationDeviceSets[0].GetJsonReference(),
+                sim.TravelRouteSets[0].GetJsonReference(), null,
+                HouseholdDataSpecificationType.ByTemplateName);
+            hhd.HouseholdTemplateSpec = new HouseholdTemplateSpecification(sim.HouseholdTemplates[0].Name);
+            var hh = sim.ModularHouseholds[0];
+            hhd.HouseholdNameSpec = new HouseholdNameSpecification(hh.GetJsonReference());
+            hj.House.Households.Add(hhd);
+            return hj;
+        }
+
+        [Fact]
+        public void TestHouseJobs1()
+        {
+            //const CalcOption co = CalcOption.ActivationFrequencies;
+            HouseJobTestHelper.RunSingleHouse(sim => {
+                var hj = PrepareNewHouseholdWithTemplateForTesting(sim);
+                if (hj.CalcSpec?.CalcOptions == null)
+                {
+                    throw new LPGException();
+                }
+
+                hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.All;
+                //hj.CalcSpec.CalcOptions.Add(co);
+                //hj.CalcSpec.CalcOptions.Add(co);
+                hj.CalcSpec.EndDate = new DateTime(2020, 12, 31);
+                return hj;
+            }, x => { });
+        }
+
+        public SingleCalculationTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

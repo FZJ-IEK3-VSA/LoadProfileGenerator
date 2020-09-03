@@ -45,7 +45,7 @@ namespace Common.Tests.SQLResultLogging.InputLoggers
             {
                 cadto
             };
-                idl.SaveList(aes);
+                idl.SaveList<CalcAffordanceDto>(aes);
                 var res = ael.Load(key);
                 var s1 = JsonConvert.SerializeObject(aes, Formatting.Indented);
                 var s2 = JsonConvert.SerializeObject(res, Formatting.Indented);

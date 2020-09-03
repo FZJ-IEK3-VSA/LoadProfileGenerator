@@ -478,28 +478,32 @@ namespace SimulationEngineLib.HouseJobProcessor {
             house.GeographicLocation = geoloc;
             house.TemperatureProfile = temperatureProfile;
             //add the Households
+            if (hj.CalcSpec == null) {
+                throw new LPGPBadParameterException("No calcspecification was set.");
+            }
             int householdidx = 1;
             foreach (var householdData in housedata.Households) {
                 var hhs = MakeHousehold(sim, householdData, r);
 
                 var chargingStationSet = sim.ChargingStationSets.FindByJsonReference(householdData.ChargingStationSet);
-                if (chargingStationSet == null) {
-                    throw new LPGPBadParameterException("Could not find charging station set.");
+                if (hj.CalcSpec.EnableTransportation && chargingStationSet == null) {
+                    // ReSharper disable once RedundantToStringCall
+                    throw new LPGPBadParameterException("Could not find charging station set: " + householdData.ChargingStationSet?.ToString());
                 }
                 var travelrouteset = sim.TravelRouteSets.FindByJsonReference(householdData.TravelRouteSet);
-                if (travelrouteset == null)
+                if (hj.CalcSpec.EnableTransportation && travelrouteset == null)
                 {
                     throw new LPGPBadParameterException("Could not find travel route set.");
                 }
                 var transportationDeviceSet = sim.TransportationDeviceSets.FindByJsonReference(householdData.TransportationDeviceSet);
                 if (householdData.TransportationDistanceModifiers != null  && householdData.TransportationDistanceModifiers.Count > 0
-                    ) {
+                && travelrouteset != null) {
                     Logger.Info("Settings new travel distances for " + hhs.Name + " " + "");
                     travelrouteset = AdjustTravelDistancesBasedOnModifiers(travelrouteset, sim, house,
                         householdData, householdidx++);
                     Logger.Info("Name of the new travel route set to be used is " + travelrouteset.Name);
                 }
-                if (transportationDeviceSet == null)
+                if (hj.CalcSpec.EnableTransportation && transportationDeviceSet == null)
                 {
                     throw new LPGPBadParameterException("Could not find transportation device set.");
                 }
@@ -742,12 +746,58 @@ namespace SimulationEngineLib.HouseJobProcessor {
             }
             template.Count = 1;
             Logger.Info("Generating household with template " + template.Name);
-            var hhs = template.GenerateHouseholds(sim, false, new List<STTraitLimit>());
+            var forbiddenTraitTags = new List<TraitTag>();
+            if (templateSpec.ForbiddenTraitTags != null) {
+                foreach (var forbiddenTraitTag in templateSpec.ForbiddenTraitTags) {
+                    TraitTag traitTag = sim.TraitTags.Items.FirstOrDefault(x => x.Name == forbiddenTraitTag);
+                    if (traitTag == null) {
+                        throw new LPGPBadParameterException("Found a forbidden trait tag \"" + forbiddenTraitTag + "\", but that could not be found in the LPG. Please fix.");
+                    }
+                    forbiddenTraitTags.Add(traitTag);
+                }
+            }
+            if (templateSpec.Persons != null && templateSpec.Persons.Count > 0)
+            {
+                foreach (var templateperson in templateSpec.Persons)
+                {
+                    if (templateperson.PersonName == null)
+                    {
+                        continue;
+                    }
+
+                    if (templateperson.LivingPatternTag == null)
+                    {
+                        continue;
+                    }
+                    var hhperson = template.Persons.FirstOrDefault(x => x.Person.Name == templateperson.PersonName);
+                    if (hhperson == null)
+                    {
+                        string s = "Could not find a person with the name " + templateperson.PersonName + " in the household template " +
+                                   template.Name + ". Please fix. The following persons are in the household template: \n";
+                        foreach (var person in template.Persons)
+                        {
+                            s += person.Person.Name + "\n";
+                        }
+                        throw new LPGPBadParameterException(s);
+                    }
+                    var lptag = sim.LivingPatternTags.Items.FirstOrDefault(x => templateperson.LivingPatternTag == x.Name);
+                    if (lptag == null)
+                    {
+                        throw new LPGPBadParameterException("Living pattern \"" + templateperson.LivingPatternTag + "\" from the person  " +
+                                                            templateperson.PersonName +
+                                                            " was not found in the living pattern list");
+                    }
+                    hhperson.LivingPatternTag = lptag;
+                }
+            }
+
+            var hhs = template.GenerateHouseholds(sim, false, new List<STTraitLimit>(),forbiddenTraitTags);
             if (hhs.Count != 1)
             {
                 throw new Exception("Could not generate this house");
             }
 
+           
             hhs[0].Description = DescriptionText + householdData.UniqueHouseholdId;
             hhs[0].SaveToDB();
             Logger.Info("Finished generating household with template " + template.Name);
@@ -817,7 +867,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
             var pickedHht = selectedHouseholdTemplates[r.Next(selectedHouseholdTemplates.Count)];
             pickedHht.Count = 1;
             Logger.Info("Generating household with template " + pickedHht.Name);
-            var hhs = pickedHht.GenerateHouseholds(sim, false, new List<STTraitLimit>());
+            var hhs = pickedHht.GenerateHouseholds(sim, false, new List<STTraitLimit>(), new List<TraitTag>());
             if (hhs.Count != 1) {
                 throw new Exception("Could not generate this house");
             }
@@ -830,6 +880,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
 
         public static void ProcessHouseJob([NotNull] HouseJobProcessingOptions args)
         {
+            Logger.Threshold = Severity.Warning;
             HouseGenerator hg = new HouseGenerator();
             if (args.JsonPath == null) {
                 throw new LPGCommandlineException("Path to the house job file was not set. This won't work.");

@@ -17,13 +17,15 @@ cd C:\Work\LPGDev\ReleaseMaker\bin\Debug
 releasemaker
 pause
 v:
-cd V:\Dropbox\LPGReleases\releases9.9.0\net48
+cd V:\Dropbox\LPGReleases\releases10.2.0\net48
 simulationengine cpy
-copy lpgdata.py c:\work\fzj\pylpg\
-copy lpgpythonbindings.py c:\work\fzj\pylpg\
+copy lpgdata.py c:\work\pylpg\
+copy lpgpythonbindings.py c:\work\pylpg\
 c:
 cd \work\lpgdev
-robocopy V:\Dropbox\LPGReleases\releases10.2.0\net48 C:\Work\fzj\pylpg\LPG_10.2.0_win /E /R:0 /W:0 /MIR
-robocopy V:\Dropbox\LPGReleases\releases10.2.0\linux C:\Work\fzj\pylpg\LPG_10.2.0_linux /E /R:0 /W:0 /MIR
-
+robocopy V:\Dropbox\LPGReleases\releases10.2.0\net48 C:\Work\pylpg\LPG_win /E /R:0 /W:0 /MIR
+del C:\Work\pylpg\LPG_win\LPG*.zip
+del C:\Work\pylpg\LPG_win\setup*.exe
+robocopy V:\Dropbox\LPGReleases\releases10.2.0\linux C:\Work\pylpg\LPG_linux /E /R:0 /W:0 /MIR
+del C:\Work\pylpg\LPG_linux\LPG*.zip
 pause

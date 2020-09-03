@@ -1,5 +1,4 @@
 ﻿
-using System.Collections.Generic;
 
 namespace Automation {
     public class PersonData {
@@ -12,6 +11,6 @@ namespace Automation {
         public int Age { get; set; }
         public Gender Gender { get; set; }
 
-        public List<string> PersonTags { get; set; } = new List<string>();
+        public string? LivingPatternTag { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Automation;
 using Automation.ResultFiles;
 using Common.Enums;
@@ -34,7 +35,8 @@ namespace Common.Tests {
             }
 
             if (count > 0) {
-                throw new LPGException("Missing calc option descriptions");
+                string s = String.Join(",",missing);
+                throw new LPGException("Missing calc option descriptions:" +s);
             }
         }
 

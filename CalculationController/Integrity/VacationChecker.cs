@@ -7,7 +7,7 @@ namespace CalculationController.Integrity {
         public VacationChecker(bool performCleanupChecks) : base("Vacations", performCleanupChecks) {
         }
 
-        protected override void Run(Simulator sim) {
+        protected override void Run(Simulator sim, CheckingOptions options) {
             foreach (var vacation in sim.Vacations.Items) {
                 if (vacation.MinimumAge < 0 || vacation.MaximumAge == 0) {
                     throw new DataIntegrityException(

@@ -31,6 +31,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using CalculationController.Queue;
 using Common;
 using Database;
 using Database.Helpers;
@@ -131,7 +132,7 @@ namespace CalculationController.Integrity {
             }
         }
 
-        public static void Run([NotNull] Simulator sim) {
+        public static void Run([NotNull] Simulator sim, CheckingOptions options ) {
             var step = 1;
             Logger.Info("Starting the database integrity check");
             var cleanupCheck = sim.MyGeneralConfig.PerformCleanUpChecksBool;
@@ -144,8 +145,31 @@ namespace CalculationController.Integrity {
 
             var checkers = GetAllCheckers(cleanupCheck);
             foreach (var basicChecker in checkers) {
-                basicChecker.RunCheck(sim, step++);
+                basicChecker.RunCheck(sim, step++, options);
             }
+        }
+    }
+
+    public class CheckingOptions {
+        public bool CheckTransport {
+            get;
+            set;
+        }
+
+        [NotNull]
+        public static CheckingOptions Default () {
+
+            var co = new CheckingOptions();
+            co.CheckTransport = false;
+            return co;
+        }
+
+        [NotNull]
+        public static CheckingOptions FromStartParameters([NotNull] CalcStartParameterSet csps)
+        {
+            var co = new CheckingOptions();
+            co.CheckTransport = csps.TransportationEnabled;
+            return co;
         }
     }
 }

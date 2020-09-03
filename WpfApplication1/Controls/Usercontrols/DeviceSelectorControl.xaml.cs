@@ -732,8 +732,11 @@ namespace LoadProfileGenerator.Controls.Usercontrols {
             }
         }
 
-        private void DeviceSelectorControl_OnLoaded([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e) =>
-            RefreshColumns();
+        private void DeviceSelectorControl_OnLoaded([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
+        {
+            Action a = ()=> RefreshColumns();
+            Dispatcher.BeginInvoke(a);
+        }
 
         private void Refresh()
         {

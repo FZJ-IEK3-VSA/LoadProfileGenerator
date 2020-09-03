@@ -95,7 +95,7 @@ namespace LoadProfileGenerator {
                         }
                     }
 
-                    SimIntegrityChecker.Run(_sim);
+                    SimIntegrityChecker.Run(_sim, CheckingOptions.Default());
                     if (!Config.IsInUnitTesting)
                     {
                         MessageWindowHandler.Mw.ShowInfoMessage(

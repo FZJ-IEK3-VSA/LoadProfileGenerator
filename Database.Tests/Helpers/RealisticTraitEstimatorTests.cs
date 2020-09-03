@@ -21,7 +21,7 @@ namespace Database.Tests.Helpers
             {
                 Simulator sim = new Simulator(db.ConnectionString);
                 RealisticTraitEstimator.Run(sim);
-                SimIntegrityChecker.Run(sim);
+                SimIntegrityChecker.Run(sim, CheckingOptions.Default());
                 db.Cleanup();
             }
         }

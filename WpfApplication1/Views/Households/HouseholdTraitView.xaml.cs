@@ -456,8 +456,16 @@ namespace LoadProfileGenerator.Views.Households {
         private void MakeTraitCopyOnClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e) =>
             Presenter.CreateNewTrait();
 
-        private void TreeNewAffordances_OnMouseDoubleClick([CanBeNull] object sender, [CanBeNull] MouseButtonEventArgs e) =>
-            Presenter.ApplicationPresenter.OpenItem(Presenter.SelectedAffordance);
+        private void TreeNewAffordances_OnMouseDoubleClick([CanBeNull] object sender, [CanBeNull] MouseButtonEventArgs e)
+        {
+            try {
+                var a = new Action(() => Presenter.ApplicationPresenter.OpenItem(Presenter.SelectedAffordance));
+                Dispatcher.BeginInvoke(a);
+            }
+            catch (Exception x) {
+                Logger.Exception(x);
+            }
+        }
 
         private void TreeNewAffordancesSelectedItemChanged([CanBeNull] object sender, [CanBeNull] RoutedPropertyChangedEventArgs<object> e)
         {

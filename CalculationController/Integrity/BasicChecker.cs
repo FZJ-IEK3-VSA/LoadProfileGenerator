@@ -14,11 +14,11 @@ namespace CalculationController.Integrity {
         [NotNull]
         private string Name { get; }
         protected bool PerformCleanupChecks { get; }
-        protected abstract void Run([NotNull] Simulator sim);
+        protected abstract void Run([NotNull] Simulator sim, CheckingOptions options);
 
-        public void RunCheck([NotNull] Simulator sim, int step) {
+        public void RunCheck([NotNull] Simulator sim, int step, CheckingOptions options) {
             var start = DateTime.Now;
-            Run(sim);
+            Run(sim,options);
             var end = DateTime.Now;
             Logger.Info(
                 "Database integrity check " + step + ": Checking " + Name + " took " +

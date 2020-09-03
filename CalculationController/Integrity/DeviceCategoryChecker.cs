@@ -8,7 +8,7 @@ namespace CalculationController.Integrity {
         public DeviceCategoryChecker(bool performCleanupChecks) : base("Device Categories", performCleanupChecks) {
         }
 
-        protected override void Run(Simulator sim) {
+        protected override void Run(Simulator sim, CheckingOptions options) {
             var categoryShortNames = new List<string>();
             if (sim.DeviceCategories.DeviceCategoryNone == null) {
                 throw new LPGException("Device category none was null.");

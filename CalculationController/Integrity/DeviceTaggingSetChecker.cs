@@ -6,7 +6,7 @@ namespace CalculationController.Integrity {
         public DeviceTaggingSetChecker(bool performCleanupChecks) : base("Device Tagging Sets", performCleanupChecks) {
         }
 
-        protected override void Run(Simulator sim) {
+        protected override void Run(Simulator sim, CheckingOptions options) {
             foreach (var set in sim.DeviceTaggingSets.Items) {
                 var isrefrehsed = false;
                 foreach (var entry in set.Entries) {

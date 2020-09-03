@@ -122,7 +122,7 @@ namespace CalculationController.Tests {
                     sim.MyGeneralConfig.ShowSettlingPeriod = "false";
                     sim.MyGeneralConfig.CSVCharacter = ";";
                     sim.MyGeneralConfig.SelectedLoadTypePriority = LoadTypePriority.RecommendedForHouseholds;
-                    SimIntegrityChecker.Run(sim);
+                    SimIntegrityChecker.Run(sim, CheckingOptions.Default());
 
                     sim.Should().NotBeNull();
 

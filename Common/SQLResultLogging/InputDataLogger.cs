@@ -78,7 +78,7 @@ namespace Common.SQLResultLogging {
     public interface IInputDataLogger {
         void Save([NotNull] object o);
         void Save([NotNull] HouseholdKey key, [NotNull] object o);
-        void SaveList([ItemNotNull] [NotNull] List<IHouseholdKey> objectsWithKey);
+        void SaveList<T>([ItemNotNull] [NotNull] List<IHouseholdKey> objectsWithKey);
         void AddSaver([NotNull] IDataSaverBase saver);
     }
 
@@ -128,13 +128,16 @@ namespace Common.SQLResultLogging {
             dsb.Run(key, o);
         }
 
-        public void SaveList(List<IHouseholdKey> objectsWithKey)
+        public void SaveList<T>(List<IHouseholdKey> objectsWithKey)
         {
             if (objectsWithKey.Count == 0) {
-                Logger.Error("While trying to save some results, not a single object was contained in the list");
+                Logger.Error("While trying to save some results, not a single object was contained in the list of the type " + typeof(T).FullName);
                 return;
             }
             Type t = objectsWithKey[0].GetType();
+            if (typeof(T) != t) {
+                throw new LPGException("trying to save with the wrong parameter type. " + typeof(T).FullName + " vs. " + t.FullName);
+            }
             if (!FunctionDB.ContainsKey(t)) {
                 throw new LPGException("Forgotten Logger for " + t.FullName);
             }

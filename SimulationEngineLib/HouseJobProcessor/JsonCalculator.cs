@@ -6,7 +6,6 @@ using System.Threading;
 using Automation;
 using Automation.ResultFiles;
 using CalculationController.Queue;
-using ChartCreator2.OxyCharts;
 using Common;
 using Common.Enums;
 using Database;
@@ -291,7 +290,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
                 }
             }
             _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
-                ChartMaker.MakeChartsAndPDF(_calculationProfiler,calcStartParameterSet.ResultPath);
+// ChartMaker.MakeChartsAndPDF(_calculationProfiler,calcStartParameterSet.ResultPath);
 
             var duration = DateTime.Now - calculationStartTime;
             if (jcs.DeleteAllButPDF) {

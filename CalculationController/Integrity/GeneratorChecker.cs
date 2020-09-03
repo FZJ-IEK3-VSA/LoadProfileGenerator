@@ -6,7 +6,7 @@ namespace CalculationController.Integrity {
         public GeneratorChecker(bool performCleanupChecks) : base("Generators", performCleanupChecks) {
         }
 
-        protected override void Run(Simulator sim) {
+        protected override void Run(Simulator sim, CheckingOptions options) {
             foreach (var generator in sim.Generators.Items) {
                 if (generator.DateBasedProfile == null) {
                     throw new DataIntegrityException("The generator " + generator.Name +

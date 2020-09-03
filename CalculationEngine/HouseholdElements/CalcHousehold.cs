@@ -430,25 +430,48 @@ namespace CalculationEngine.HouseholdElements {
                 foreach (CalcAutoDev autoDev in _autoDevs)
                     autoDev.ClearExpiredRanges(timestep);
             }*/
-            if (timestep.InternalStep % 5000 == 0 || (DateTime.Now - _lastDisplay).TotalSeconds > 5) {
-                var timeelapesed = DateTime.Now - _startSimulation;
-                var speed = timestep.InternalStep / timeelapesed.TotalSeconds;
-                string timeLeftStr = "";
-                if (speed > 20) {
-                    int stepsLeft =_calcRepo.CalcParameters.InternalTimesteps - timestep.InternalStep;
-                    double timeLeftSeconds = stepsLeft / speed;
-                    if (timeLeftSeconds > 0) {
-                        TimeSpan timeLeft = TimeSpan.FromSeconds(timeLeftSeconds);
-                        timeLeftStr = ", estimated time left:" + timeLeft;
+            if(Logger.Threshold > Severity.Information) {
+                if (timestep.InternalStep % 5000 == 0 || (DateTime.Now - _lastDisplay).TotalSeconds > 5) {
+                    var timeelapesed = DateTime.Now - _startSimulation;
+                    var speed = timestep.InternalStep / timeelapesed.TotalSeconds;
+                    string timeLeftStr = "";
+                    if (speed > 20) {
+                        int stepsLeft =_calcRepo.CalcParameters.InternalTimesteps - timestep.InternalStep;
+                        double timeLeftSeconds = stepsLeft / speed;
+                        if (timeLeftSeconds > 0) {
+                            TimeSpan timeLeft = TimeSpan.FromSeconds(timeLeftSeconds);
+                            timeLeftStr = ", estimated time left:" + timeLeft;
+                        }
+                    }
+
+                    Logger.Info("Simulating household " + Name + " Time:" + now.ToShortDateString() + " " +
+                                now.ToShortTimeString() + ", Timestep:" + timestep.InternalStep
+                                + ", speed: "
+                                + speed.ToString("F2", CultureInfo.InvariantCulture) + " steps/second, " + timeelapesed.ToString() + " elapsed" + timeLeftStr);
+
+                    _lastDisplay = DateTime.Now;
+                }
+                else {
+                    if (timestep.InternalStep % 50000 == 0 || (DateTime.Now - _lastDisplay).TotalSeconds > 30) {
+                        var timeelapesed = DateTime.Now - _startSimulation;
+                        var speed = timestep.InternalStep / timeelapesed.TotalSeconds;
+                        string timeLeftStr = "";
+                        if (speed > 20) {
+                            int stepsLeft = _calcRepo.CalcParameters.InternalTimesteps - timestep.InternalStep;
+                            double timeLeftSeconds = stepsLeft / speed;
+                            if (timeLeftSeconds > 0) {
+                                TimeSpan timeLeft = TimeSpan.FromSeconds(timeLeftSeconds);
+                                timeLeftStr = ", estimated time left:" + timeLeft;
+                            }
+                        }
+
+                        Logger.Warning("Simulating household " + Name + " Time:" + now.ToShortDateString() + " " + now.ToShortTimeString() +
+                                       ", Timestep:" + timestep.InternalStep + ", speed: " + speed.ToString("F2", CultureInfo.InvariantCulture) +
+                                       " steps/second, " + timeelapesed.ToString() + " elapsed" + timeLeftStr);
+
+                        _lastDisplay = DateTime.Now;
                     }
                 }
-
-                Logger.Info("Simulating household " + Name + " Time:" + now.ToShortDateString() + " " +
-                            now.ToShortTimeString() + ", Timestep:" + timestep.InternalStep
-                            + ", speed: "
-                            + speed.ToString("F2", CultureInfo.InvariantCulture) + " steps/second, " + timeelapesed.ToString() + " elapsed" + timeLeftStr);
-
-                _lastDisplay = DateTime.Now;
             }
 
             foreach (var calcAutoDev in _autoDevs) {

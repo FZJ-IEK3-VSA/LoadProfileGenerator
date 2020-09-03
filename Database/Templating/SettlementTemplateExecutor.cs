@@ -120,7 +120,7 @@ namespace Database.Templating {
             }
             var resultinghouseholds = new List<ModularHousehold>();
             var rnd = new Random();
-            MakeHouseholdDistribution(sim.ModularHouseholds.Items, sim, resultinghouseholds, rnd, template);
+            MakeHouseholdDistribution(sim.ModularHouseholds.Items, sim, resultinghouseholds, rnd, template, new List<TraitTag>());
             // find a house distribution iteratively by increasing the numbers of each house type.
             InitializeHouseSizes(template);
             var previewEntries = new List<HouseEntry>();
@@ -355,7 +355,7 @@ namespace Database.Templating {
         }
 
         private static void MakeHouseholdDistribution([ItemNotNull] [NotNull] ObservableCollection<ModularHousehold> modularHouseholds,
-            [NotNull] Simulator sim, [ItemNotNull] [NotNull] List<ModularHousehold> resultinghouseholds, [NotNull] Random rnd, [NotNull] SettlementTemplate template)
+            [NotNull] Simulator sim, [ItemNotNull] [NotNull] List<ModularHousehold> resultinghouseholds, [NotNull] Random rnd, [NotNull] SettlementTemplate template, List<TraitTag> forbiddenTraitTags)
         {
             foreach (var limit in template.TraitLimits) {
                 limit.Init(template.DesiredHHCount);
@@ -408,7 +408,7 @@ namespace Database.Templating {
                         ht.EnergyIntensityType = distribution.EnergyIntensity;
 
                         Logger.Info("Creating new household with the template " + ht.Name);
-                        var newhh = ht.GenerateHouseholds(sim, false, limits);
+                        var newhh = ht.GenerateHouseholds(sim, false, limits, forbiddenTraitTags);
                         resultinghouseholds.AddRange(newhh);
                     }
                 }

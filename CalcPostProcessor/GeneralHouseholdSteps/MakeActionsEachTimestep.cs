@@ -62,7 +62,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
                 var times = MakeTimeArray(displayNegativeTime, personActivities.Value);
                 allSteps.AddRange(times);
             }
-            _inputDataLogger.SaveList(allSteps.ConvertAll(x => (IHouseholdKey)x));
+            _inputDataLogger.SaveList< SingleTimestepActionEntry>(allSteps.ConvertAll(x => (IHouseholdKey)x));
             _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
 
         }

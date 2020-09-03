@@ -295,6 +295,12 @@ namespace Common {
         private static void LogStringToFile([NotNull] string message, [NotNull] string logfilename, Severity severity, bool preserveNewLines)
         {
             lock (_fileLogLock) {
+                FileInfo fi = new FileInfo(logfilename);
+                var dir = fi.Directory;
+                if (dir!= null && !dir.Exists) {
+                    return;
+                }
+
                 using (var sw = new StreamWriter(logfilename, true)) {
                     var sev = SeverityHelper.SeverityShortName[severity];
                     string msg = message;

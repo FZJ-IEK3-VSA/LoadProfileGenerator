@@ -372,8 +372,9 @@ namespace Database.Tables.ModularHouseholds {
 
         [ItemNotNull]
         [NotNull]
-        public List<ModularHousehold> GenerateHouseholds([NotNull] Simulator sim, bool generateSettlement, [ItemNotNull] [NotNull] List<STTraitLimit> limits) =>
-            HouseholdTemplateExecutor.GenerateHouseholds(sim, generateSettlement, limits, this);
+        public List<ModularHousehold> GenerateHouseholds([NotNull] Simulator sim, bool generateSettlement, [ItemNotNull] [NotNull] List<STTraitLimit> limits,
+                                                         List<TraitTag> forbiddenTraitTags) =>
+            HouseholdTemplateExecutor.GenerateHouseholds(sim, generateSettlement, limits, this, forbiddenTraitTags);
 
         public void ImportExistingModularHouseholds([NotNull] ModularHousehold chh)
         {

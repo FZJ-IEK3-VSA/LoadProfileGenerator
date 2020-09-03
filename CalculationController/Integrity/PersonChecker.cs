@@ -13,7 +13,7 @@ namespace CalculationController.Integrity {
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        protected override void Run(Simulator sim) {
+        protected override void Run(Simulator sim, CheckingOptions options) {
             var allnames = new Dictionary<string, string>();
             var errrorPersons = new List<Person>();
             foreach (var person in sim.Persons.Items) {

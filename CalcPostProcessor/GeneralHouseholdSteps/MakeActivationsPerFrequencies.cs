@@ -470,7 +470,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
                 }
             }
 
-            _dataLogger.SaveList(atuisList.ConvertAll(x => (IHouseholdKey)x));
+            _dataLogger.SaveList<PersonAffordanceInformation>(atuisList.ConvertAll(x => (IHouseholdKey)x));
         }
 
 

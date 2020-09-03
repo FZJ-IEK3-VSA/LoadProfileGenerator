@@ -43,7 +43,7 @@ namespace Database.Tests {
                         ModularHouseholdSerializer.ExportAsCSV(mhh, sim, filename);
                         ModularHouseholdSerializer.ImportFromCSV(filename, sim);
                         var import = DateTime.Now;
-                        SimIntegrityChecker.Run(sim);
+                        SimIntegrityChecker.Run(sim, CheckingOptions.Default());
                         var durationTotal = DateTime.Now - start;
                         var durationIntegrityCheck = DateTime.Now - import;
                         Logger.Info("Duration: total " + durationTotal.TotalSeconds + " seconds, integrity check: " +

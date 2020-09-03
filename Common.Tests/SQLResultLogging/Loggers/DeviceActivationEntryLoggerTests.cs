@@ -41,7 +41,7 @@ namespace Common.Tests.SQLResultLogging.Loggers
             {
                 ae1
             };
-                idl.SaveList(aes);
+                idl.SaveList<DeviceActivationEntry>(aes);
                 var res = ael.Read(key);
                 var s1 = JsonConvert.SerializeObject(aes, Formatting.Indented);
                 var s2 = JsonConvert.SerializeObject(res, Formatting.Indented);

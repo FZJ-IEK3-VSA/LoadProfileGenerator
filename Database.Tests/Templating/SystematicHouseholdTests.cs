@@ -21,7 +21,7 @@ public void GenerateSettlementPreviewTest0()
         var ste = new SettlementTemplateExecutor();
         ste.GenerateSettlementPreview(sim, template);
         ste.CreateSettlementFromPreview(sim, template);
-        SimIntegrityChecker.Run(sim);
+        SimIntegrityChecker.Run(sim, CheckingOptions.Default());
         db.Cleanup();
     }
 }
@@ -37,7 +37,7 @@ public void GenerateSettlementPreviewTest1()
         var ste = new SettlementTemplateExecutor();
         ste.GenerateSettlementPreview(sim, template);
         ste.CreateSettlementFromPreview(sim, template);
-        SimIntegrityChecker.Run(sim);
+        SimIntegrityChecker.Run(sim, CheckingOptions.Default());
         db.Cleanup();
     }
 }
@@ -53,7 +53,7 @@ public void GenerateSettlementPreviewTest2()
         var ste = new SettlementTemplateExecutor();
         ste.GenerateSettlementPreview(sim, template);
         ste.CreateSettlementFromPreview(sim, template);
-        SimIntegrityChecker.Run(sim);
+        SimIntegrityChecker.Run(sim, CheckingOptions.Default());
         db.Cleanup();
     }
 }
@@ -69,7 +69,7 @@ public void GenerateSettlementPreviewTest3()
         var ste = new SettlementTemplateExecutor();
         ste.GenerateSettlementPreview(sim, template);
         ste.CreateSettlementFromPreview(sim, template);
-        SimIntegrityChecker.Run(sim);
+        SimIntegrityChecker.Run(sim, CheckingOptions.Default());
         db.Cleanup();
     }
 }
@@ -85,7 +85,7 @@ public void GenerateSettlementPreviewTest4()
         var ste = new SettlementTemplateExecutor();
         ste.GenerateSettlementPreview(sim, template);
         ste.CreateSettlementFromPreview(sim, template);
-        SimIntegrityChecker.Run(sim);
+        SimIntegrityChecker.Run(sim, CheckingOptions.Default());
         db.Cleanup();
     }
 }
@@ -101,7 +101,7 @@ public void GenerateSettlementPreviewTest5()
         var ste = new SettlementTemplateExecutor();
         ste.GenerateSettlementPreview(sim, template);
         ste.CreateSettlementFromPreview(sim, template);
-        SimIntegrityChecker.Run(sim);
+        SimIntegrityChecker.Run(sim, CheckingOptions.Default());
         db.Cleanup();
     }
 }
@@ -117,7 +117,7 @@ public void GenerateSettlementPreviewTest6()
         var ste = new SettlementTemplateExecutor();
         ste.GenerateSettlementPreview(sim, template);
         ste.CreateSettlementFromPreview(sim, template);
-        SimIntegrityChecker.Run(sim);
+        SimIntegrityChecker.Run(sim, CheckingOptions.Default());
         db.Cleanup();
     }
 }
@@ -133,7 +133,7 @@ public void GenerateSettlementPreviewTest7()
         var ste = new SettlementTemplateExecutor();
         ste.GenerateSettlementPreview(sim, template);
         ste.CreateSettlementFromPreview(sim, template);
-        SimIntegrityChecker.Run(sim);
+        SimIntegrityChecker.Run(sim, CheckingOptions.Default());
         db.Cleanup();
     }
 }
@@ -149,7 +149,7 @@ public void GenerateSettlementPreviewTest8()
         var ste = new SettlementTemplateExecutor();
         ste.GenerateSettlementPreview(sim, template);
         ste.CreateSettlementFromPreview(sim, template);
-        SimIntegrityChecker.Run(sim);
+        SimIntegrityChecker.Run(sim, CheckingOptions.Default());
         db.Cleanup();
     }
 }
@@ -165,7 +165,7 @@ public void GenerateSettlementPreviewTest9()
         var ste = new SettlementTemplateExecutor();
         ste.GenerateSettlementPreview(sim, template);
         ste.CreateSettlementFromPreview(sim, template);
-        SimIntegrityChecker.Run(sim);
+        SimIntegrityChecker.Run(sim, CheckingOptions.Default());
         db.Cleanup();
     }
 }
@@ -181,7 +181,7 @@ public void GenerateSettlementPreviewTest10()
         var ste = new SettlementTemplateExecutor();
         ste.GenerateSettlementPreview(sim, template);
         ste.CreateSettlementFromPreview(sim, template);
-        SimIntegrityChecker.Run(sim);
+        SimIntegrityChecker.Run(sim, CheckingOptions.Default());
         db.Cleanup();
     }
 }

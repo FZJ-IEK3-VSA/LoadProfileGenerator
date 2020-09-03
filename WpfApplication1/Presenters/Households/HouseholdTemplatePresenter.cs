@@ -406,7 +406,7 @@ namespace LoadProfileGenerator.Presenters.Households {
             }
 
             try {
-                SimIntegrityChecker.Run(Sim);
+                SimIntegrityChecker.Run(Sim, CheckingOptions.Default());
             }
             catch (DataIntegrityException ex) {
                 if (!Config.IsInHeadless) {
@@ -423,7 +423,7 @@ namespace LoadProfileGenerator.Presenters.Households {
             var task1 = new Task(() => {
                 try {
                     var previouscount = _generatedHouseholds.Count;
-                    ThisTemplate.GenerateHouseholds(Sim, generateSettlement, new List<STTraitLimit>());
+                    ThisTemplate.GenerateHouseholds(Sim, generateSettlement, new List<STTraitLimit>(), new List<TraitTag>());
                     Logger.Get().SafeExecuteWithWait(RefreshHouseholds);
                     var newCount = _generatedHouseholds.Count;
                     var created = newCount - previouscount;

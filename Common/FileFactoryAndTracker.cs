@@ -198,6 +198,49 @@ namespace Common {
                 ResultFileList.AddExistingEntries(rfes);
             _inputDataLogger.AddSaver(rfel);
         }
+        public static void CheckExistingFilesFromSql([NotNull] string baseResultpath)
+        {
+            SqlResultLoggingService srls = new SqlResultLoggingService(baseResultpath);
+            var rfel = new ResultFileEntryLogger(srls);
+            var rfes = rfel.Load();
+            foreach (ResultFileEntry entry in rfes)
+            {
+                string fn = entry.FullFileName ?? throw new LPGException("Filename was null");
+                if (entry.FileName == null) {
+                    throw new LPGException("filename failure");
+                }
+                if (entry.FileName.ToLower().EndsWith(".sqlite"))
+                {
+                    continue;
+                }
+
+                if (IsFileLocked(new FileInfo(fn)))
+                {
+                    throw new LPGException("Locked file: " + entry.FullFileName);
+                }
+            }
+        }
+        protected static bool IsFileLocked(FileInfo file)
+        {
+            try
+            {
+                using (FileStream stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None))
+                {
+                    stream.Close();
+                }
+            }
+            catch (IOException)
+            {
+                //the file is unavailable because it is:
+                //still being written to
+                //or being processed by another thread
+                //or does not exist (has already been processed)
+                return true;
+            }
+
+            //file is not locked
+            return false;
+        }
         public bool CheckForResultFileEntry(ResultFileID rfid, [NotNull] string loadTypeName,
             [NotNull] HouseholdKey householdKey, [CanBeNull] PersonInformation pi,[CanBeNull] string additionalFileIndex)
         {
@@ -381,27 +424,38 @@ namespace Common {
             var di = new DirectoryInfo(resultPath);
             var fileInfos = di.GetFiles("*.*", SearchOption.AllDirectories);
             var registeredFiles = ResultFileList.ResultFiles.Values.Select(x => (string)x.FullFileName).ToList();
-            foreach (var fileInfo in fileInfos)
-            {
-                if (!registeredFiles.Any(x=> fileInfo.FullName.EndsWith(x, StringComparison.InvariantCultureIgnoreCase)) && !fileInfo.Name.EndsWith("sqlite-wal", StringComparison.InvariantCultureIgnoreCase)
-                                                                 && !fileInfo.Name.EndsWith("sqlite-shm", StringComparison.InvariantCultureIgnoreCase)
-                                                                 && !fileInfo.Name.EndsWith(".sqlite", StringComparison.InvariantCultureIgnoreCase)
-                                                                 && !fileInfo.Name.ToLower(CultureInfo.InvariantCulture).EndsWith(".exe", StringComparison.InvariantCultureIgnoreCase)
-                                                                 && !fileInfo.Name.ToLower(CultureInfo.InvariantCulture).EndsWith(".dll", StringComparison.InvariantCultureIgnoreCase)
-                                                                 && !fileInfo.Name.ToLower(CultureInfo.InvariantCulture).EndsWith(".config", StringComparison.InvariantCultureIgnoreCase)
-                                                                 && !fileInfo.Name.ToLower(CultureInfo.InvariantCulture).EndsWith(".pdb", StringComparison.InvariantCultureIgnoreCase)
-                                                                 && !fileInfo.Name.ToLower(CultureInfo.InvariantCulture).EndsWith(".xml", StringComparison.InvariantCultureIgnoreCase)
-                                                                 && !fileInfo.Name.ToLower(CultureInfo.InvariantCulture).EndsWith(".manifest", StringComparison.InvariantCultureIgnoreCase)
-                                                                 && !fileInfo.Name.ToLower(CultureInfo.InvariantCulture).EndsWith(".cmd", StringComparison.InvariantCultureIgnoreCase)
-                                                                 && !fileInfo.Name.ToLower(CultureInfo.InvariantCulture).EndsWith(".json", StringComparison.InvariantCultureIgnoreCase)
-                                                                 && !fileInfo.Name.ToLower(CultureInfo.InvariantCulture).EndsWith(".db3", StringComparison.InvariantCultureIgnoreCase)
-                    && !fileInfo.Name.ToLower(CultureInfo.InvariantCulture).EndsWith("logfile.txt", StringComparison.InvariantCultureIgnoreCase)
-                                                                 && !fileInfo.Name.ToLower(CultureInfo.InvariantCulture).StartsWith("log.", StringComparison.InvariantCultureIgnoreCase)
-                                                                 && !fileInfo.Name.ToLower(CultureInfo.InvariantCulture).StartsWith("logfile.", StringComparison.InvariantCultureIgnoreCase))
-
+            foreach (var fileInfo in fileInfos) {
+                //skip registered
+                if (registeredFiles.Any(x => fileInfo.FullName.EndsWith(x, StringComparison.InvariantCultureIgnoreCase)))
                 {
-                    throw new LPGException("Unregistered file found: " + fileInfo.FullName);
+                    continue;
                 }
+                //sql files
+                if (fileInfo.Name.EndsWith("sqlite-wal", StringComparison.InvariantCultureIgnoreCase) ||
+                    fileInfo.Name.EndsWith("sqlite-shm", StringComparison.InvariantCultureIgnoreCase) ||
+                    fileInfo.Name.EndsWith(".sqlite", StringComparison.InvariantCultureIgnoreCase)) {
+                    continue;
+                }
+                //program files
+                if (fileInfo.Name.ToLower(CultureInfo.InvariantCulture).EndsWith(".exe", StringComparison.InvariantCultureIgnoreCase) ||
+                    fileInfo.Name.ToLower(CultureInfo.InvariantCulture).EndsWith(".dll", StringComparison.InvariantCultureIgnoreCase) ||
+                    fileInfo.Name.ToLower(CultureInfo.InvariantCulture).EndsWith(".config", StringComparison.InvariantCultureIgnoreCase) ||
+                    fileInfo.Name.ToLower(CultureInfo.InvariantCulture).EndsWith(".pdb", StringComparison.InvariantCultureIgnoreCase) ||
+                    fileInfo.Name.ToLower(CultureInfo.InvariantCulture).EndsWith(".xml", StringComparison.InvariantCultureIgnoreCase) || fileInfo.Name
+                        .ToLower(CultureInfo.InvariantCulture).EndsWith(".manifest", StringComparison.InvariantCultureIgnoreCase)) {
+                    continue;
+                }
+                //other files
+                if (fileInfo.Name.ToLower(CultureInfo.InvariantCulture).EndsWith(".cmd", StringComparison.InvariantCultureIgnoreCase) ||
+                    fileInfo.Name.ToLower(CultureInfo.InvariantCulture).EndsWith(".json", StringComparison.InvariantCultureIgnoreCase) ||
+                    fileInfo.Name.ToLower(CultureInfo.InvariantCulture).EndsWith(".db3", StringComparison.InvariantCultureIgnoreCase) ||
+                    fileInfo.Name.ToLower(CultureInfo.InvariantCulture).EndsWith("logfile.txt", StringComparison.InvariantCultureIgnoreCase) ||
+                    fileInfo.Name.ToLower(CultureInfo.InvariantCulture).StartsWith("log.", StringComparison.InvariantCultureIgnoreCase) ||
+                    fileInfo.Name.ToLower(CultureInfo.InvariantCulture).StartsWith("logfile.", StringComparison.InvariantCultureIgnoreCase) ||
+                    fileInfo.Name.ToLower(CultureInfo.InvariantCulture).EndsWith(".png", StringComparison.InvariantCultureIgnoreCase)) {
+                    continue;
+                }
+                throw new LPGException("Unregistered file found: " + fileInfo.FullName);
             }
         }
 

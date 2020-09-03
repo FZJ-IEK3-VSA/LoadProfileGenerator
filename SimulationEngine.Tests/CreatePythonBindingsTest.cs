@@ -16,8 +16,8 @@ namespace SimulationEngine.Tests
         public void RunPythonTestUtsp()
         {
             DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            const string bindings = @"C:\Work\utsp\lpgpythonbindings.py";
-            const string data = @"C:\Work\utsp\lpgdata.py";
+            const string bindings = @"C:\Work\pylpg\lpgpythonbindings.py";
+            const string data = @"C:\Work\pylpg\lpgdata.py";
             PythonGenerator.MakeFullPythonBindings(db.ConnectionString, bindings,data);
         }
 

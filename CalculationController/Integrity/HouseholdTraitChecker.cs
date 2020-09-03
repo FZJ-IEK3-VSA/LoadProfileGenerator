@@ -486,7 +486,7 @@ namespace CalculationController.Integrity {
         //    }
         //}
 
-        protected override void Run(Simulator sim)
+        protected override void Run(Simulator sim, CheckingOptions options)
         {
             CheckForAffordancesWithoutTraits(sim.HouseholdTraits.Items, sim.Affordances.Items);
             CheckClassifications(sim.HouseholdTraits.Items);
@@ -507,6 +507,27 @@ namespace CalculationController.Integrity {
                 //if(PerformCleanupChecks)
                   //  CheckUsedIns(householdTrait, sim, ref notusedCount);
             }
+            List<HouseholdTrait> traitsWithMissingTags = new List<HouseholdTrait>();
+            var officeTag = "Living Pattern / Office";
+            var wfhtag = "Living Pattern / Work From Home";
+            var worktag = "Work / Work";
+            foreach (var item in sim.HouseholdTraits.Items) {
+                if (item.Tags.Any(x => x.Tag.Name == worktag)) {
+                    continue;
+                }
+                if (item.LivingPatternTags.Any(x => x.Tag.Name.StartsWith(officeTag))) {
+                    if (!item.LivingPatternTags.Any(x => x.Tag.Name.Contains(wfhtag))) {
+                        traitsWithMissingTags.Add(item);
+                    }
+                }
+            }
+
+            if (traitsWithMissingTags.Count > 0) {
+                throw new DataIntegrityException("The following traits have office tags but not work from home tags:",
+                    traitsWithMissingTags.Take(10).Select(x=>(BasicElement) x).ToList());
+            }
         }
+
+
     }
 }

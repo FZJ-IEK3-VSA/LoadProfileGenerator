@@ -78,7 +78,7 @@ namespace Database.Tests.Tables.Houses {
                     }
                 }
                 st.CreateSettlementFromPreview(sim);
-                SimIntegrityChecker.Run(sim);
+                SimIntegrityChecker.Run(sim, CheckingOptions.Default());
                 db.Cleanup();
                 foreach (var pair in traitCounts)
                 {

@@ -24,7 +24,7 @@ namespace Database.Tests.Helpers
                 //    lpvc.RunOfficeJobs(sim);
                 //  lpvc.RunSleep(sim);
                 lpvc.RunAlarm(sim);
-                SimIntegrityChecker.Run(sim);
+                SimIntegrityChecker.Run(sim, CheckingOptions.Default());
                 db.Cleanup();
             }
 

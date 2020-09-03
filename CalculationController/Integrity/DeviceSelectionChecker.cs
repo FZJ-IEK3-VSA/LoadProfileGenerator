@@ -7,7 +7,7 @@ namespace CalculationController.Integrity {
         public DeviceSelectionChecker(bool performCleanupChecks) : base("Device Selections", performCleanupChecks) {
         }
 
-        protected override void Run(Simulator sim) {
+        protected override void Run(Simulator sim, CheckingOptions options) {
             foreach (var deviceSelection in sim.DeviceSelections.Items) {
                 var devices = deviceSelection.Items.Select(x => x.DeviceCategory).ToList();
                 var distinctDevices = devices.Distinct();

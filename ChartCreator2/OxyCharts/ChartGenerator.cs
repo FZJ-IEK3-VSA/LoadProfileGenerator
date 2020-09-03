@@ -9,6 +9,7 @@ using Autofac;
 using Automation;
 using Automation.ResultFiles;
 using Common;
+using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
 using JetBrains.Annotations;
@@ -50,7 +51,7 @@ namespace ChartCreator2.OxyCharts {
         public static void MakeChartsAndPDF(CalculationProfiler calculationProfiler, string resultPath)
         {
             Exception innerException = null;
-            var t = new Thread(() => {
+            Action a = ()=> {
                 try
                 {
                     SqlResultLoggingService srls = new SqlResultLoggingService(resultPath);
@@ -63,9 +64,9 @@ namespace ChartCreator2.OxyCharts {
                         return;
                     }
                     calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Charting");
-
                     using (FileFactoryAndTracker fileFactoryAndTracker =
                         new FileFactoryAndTracker(resultPath, "Name", idl)) {
+                        fileFactoryAndTracker.ReadExistingFilesFromSql();
                         calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Chart Generator RunAll");
                         ChartCreationParameters ccp = new ChartCreationParameters(144, 1600, 1000,
                             false, calcParameters.CSVCharacter, new DirectoryInfo(resultPath));
@@ -92,10 +93,12 @@ namespace ChartCreator2.OxyCharts {
                     innerException = ex;
                     Logger.Exception(ex);
                 }
-            });
-            t.SetApartmentState(ApartmentState.STA);
-            t.Start();
-            t.Join();
+            };
+            a();
+            //var t = new Thread(a);
+// t.SetApartmentState(ApartmentState.STA);
+            //t.Start();
+            //t.Join();
             if (innerException != null)
             {
                 Logger.Error("Exception during the PDF creation!");
@@ -128,6 +131,8 @@ namespace ChartCreator2.OxyCharts {
             public void Run([JetBrains.Annotations.NotNull] string resultPath)
             {
                 _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Post Processing");
+
+                CalcDataRepository cdr = new CalcDataRepository(_srls);
             var builder = new ContainerBuilder();
                 builder.Register(_ => new SqlResultLoggingService(resultPath)).As<SqlResultLoggingService>().SingleInstance();
                 //builder.Register(c =>_logFile).As<ILogFile>().SingleInstance();
@@ -135,6 +140,7 @@ namespace ChartCreator2.OxyCharts {
                 builder.Register(_ => _fft).As<FileFactoryAndTracker>().SingleInstance();
                 builder.Register(_ => _srls).As<SqlResultLoggingService>().SingleInstance();
             builder.Register(_ => _chartCreationParameters).As<ChartCreationParameters>().SingleInstance();
+            builder.Register(_ => cdr.CalcParameters).As<CalcParameters>().SingleInstance();
             builder.RegisterType<ChartGenerator>().As<ChartGenerator>().SingleInstance();
                 builder.RegisterType<CalcDataRepository>().As<CalcDataRepository>().SingleInstance();
 
@@ -155,7 +161,7 @@ namespace ChartCreator2.OxyCharts {
                 builder.RegisterType<ExecutedActionsOverviewCount>().As<IChartMakerStep>().SingleInstance();
                 builder.RegisterType<LocationStatistics>().As<IChartMakerStep>().SingleInstance();
                 builder.RegisterType<HouseholdPlan>().As<IChartMakerStep>().SingleInstance();
-                builder.RegisterType<SumProfiles>().As<IChartMakerStep>().SingleInstance();
+                //builder.RegisterType<SumProfiles>().As<IChartMakerStep>().SingleInstance();
                 builder.RegisterType<SumProfilesExternal>().As<IChartMakerStep>().SingleInstance();
                 builder.RegisterType<Temperatures>().As<IChartMakerStep>().SingleInstance();
                 builder.RegisterType<TimeOfUse>().As<IChartMakerStep>().SingleInstance();
@@ -353,7 +359,10 @@ namespace ChartCreator2.OxyCharts {
                 var start = DateTime.Now;
                 int prevCount = _fft.ResultFileList.ResultFiles.Count;
                 // find the proper chart maker step, making sure only a single chart maker applies
-                var makerStep = _chartMakerSteps.Single(x => x.IsEnabled(entry));
+                var makerStep = _chartMakerSteps.FirstOrDefault(x => x.IsEnabled(entry));
+                if (makerStep == null) {
+                    continue;
+                }
                 //make the chart
                  var result = makerStep.MakePlot(entry);
                //var processingResult =  ProcessFile(entry, di, csvCharacter,fft);

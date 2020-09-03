@@ -274,7 +274,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                     totals.Add(new TotalsPerLoadtypeEntry(key, pair.Key, pair.Value, personscount, totaldays));
                 }
             }
-            _inputDataLogger.SaveList(totals.ConvertAll(x=> (IHouseholdKey) x));
+            _inputDataLogger.SaveList<TotalsPerLoadtypeEntry>(totals.ConvertAll(x=> (IHouseholdKey) x));
         }
 
         [NotNull]

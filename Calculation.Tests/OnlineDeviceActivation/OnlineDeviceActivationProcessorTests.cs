@@ -313,7 +313,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                         var persons = new List<CalcPersonDto> {
                             calcPersonDto
                         };
-                        wd.InputDataLogger.SaveList(persons.ConvertAll(x => (IHouseholdKey)x));
+                        wd.InputDataLogger.SaveList< CalcPersonDto>(persons.ConvertAll(x => (IHouseholdKey)x));
 
                         using (var lf = new LogFile(calcParameters, fft)) {
                             fft.RegisterHousehold(key, "test hh", HouseholdKeyType.Household, "Description", null, null);
@@ -336,7 +336,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                             var calcDeviceDtos = new List<CalcDeviceDto> {
                                 calcDeviceDto
                             };
-                            wd.InputDataLogger.SaveList(calcDeviceDtos.ConvertAll(x => (IHouseholdKey)x));
+                            wd.InputDataLogger.SaveList<CalcDeviceDto>(calcDeviceDtos.ConvertAll(x => (IHouseholdKey)x));
                             //device tagging set for the post processing
                             var cdts = new List<DeviceTaggingSetInformation>();
                             var dtsi = new DeviceTaggingSetInformation("myset");
@@ -480,7 +480,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                             var devices = new List<IHouseholdKey> {
                                 cdto
                             };
-                            wd.InputDataLogger.SaveList(devices);
+                            wd.InputDataLogger.SaveList<CalcDeviceDto>(devices);
                             using (var calcRepo = new CalcRepo(odap, calcParameters: calcParameters, rnd: rnd, normalRandom: nr)) {
                                 var device = new CalcDevice(deviceLoads, cloc, cdto, calcRepo);
                                 //var devices = new List<CalcDevice> {device};
@@ -530,7 +530,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                             var dto = new CalcPersonDto("name", Guid.NewGuid().ToStrGuid(), 18, PermittedGender.Female, key, new List<DateSpan>(),
                                 new List<DateSpan>(), 1, "tag", "hhname");
                             persons.Add(dto);
-                            wd.InputDataLogger.SaveList(persons.ConvertAll(x => (IHouseholdKey)x));
+                            wd.InputDataLogger.SaveList<CalcPersonDto> (persons.ConvertAll(x => (IHouseholdKey)x));
                             //var deviceNamesToCategory = new Dictionary<string, string>();
                             old.FinalSaveToDatabase();
                             lf.Dispose();

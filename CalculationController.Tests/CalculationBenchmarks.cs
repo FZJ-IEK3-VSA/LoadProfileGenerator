@@ -404,7 +404,7 @@ namespace CalculationController.Tests {
                     sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
                     //sim.MyGeneralConfig.Enable(CalcOption.LogAllMessages);
                     sim.Should().NotBeNull();
-                    SimIntegrityChecker.Run(sim);
+                    SimIntegrityChecker.Run(sim, CheckingOptions.Default());
                     CalcManagerFactory.DoIntegrityRun = false;
                     for (var i = 0; i < sim.ModularHouseholds.Items.Count; i++)
                     {
@@ -454,7 +454,7 @@ namespace CalculationController.Tests {
                 sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
                 sim.MyGeneralConfig.Enable(CalcOption.TotalsPerDevice);
                 sim.Should().NotBeNull();
-                SimIntegrityChecker.Run(sim);
+                SimIntegrityChecker.Run(sim, CheckingOptions.Default());
                 CalcManagerFactory.DoIntegrityRun = false;
                 for (var i = 0; i < sim.Houses.Items.Count; i++)
                 {
@@ -497,7 +497,7 @@ namespace CalculationController.Tests {
                 sim.MyGeneralConfig.Enable(CalcOption.HouseSumProfilesFromDetailedDats);
                 sim.MyGeneralConfig.Enable(CalcOption.SumProfileExternalEntireHouse);
                 sim.Should().NotBeNull();
-                SimIntegrityChecker.Run(sim);
+                SimIntegrityChecker.Run(sim, CheckingOptions.Default());
                 CalcManagerFactory.DoIntegrityRun = false;
                 using (var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass()))
                 {
@@ -622,7 +622,7 @@ namespace CalculationController.Tests {
                     sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.All);
                     //sim.MyGeneralConfig.Enable(CalcOption.AffordanceEnergyUse);
                     sim.MyGeneralConfig.Disable(CalcOption.OverallSum);
-                    SimIntegrityChecker.Run(sim);
+                    SimIntegrityChecker.Run(sim, CheckingOptions.Default());
                     //ConfigSetter.SetGlobalTimeParameters(sim.MyGeneralConfig);
                     sim.Should().NotBeNull();
 
@@ -954,7 +954,7 @@ namespace CalculationController.Tests {
                     sim.MyGeneralConfig.Enable(CalcOption.TotalsPerLoadtype);
                     sim.MyGeneralConfig.CSVCharacter = ";";
                     sim.Should().NotBeNull();
-                    SimIntegrityChecker.Run(sim);
+                    SimIntegrityChecker.Run(sim, CheckingOptions.Default());
                     CalcManagerFactory.DoIntegrityRun = false;
                     var mhh = sim.ModularHouseholds.FindFirstByName("x CHR08 Single woman, 2 children, with work 47");
                     if (mhh == null)
@@ -1014,7 +1014,7 @@ namespace CalculationController.Tests {
                     sim.MyGeneralConfig.CSVCharacter = ";";
 
                     sim.Should().NotBeNull();
-                    SimIntegrityChecker.Run(sim);
+                    SimIntegrityChecker.Run(sim, CheckingOptions.Default());
                     CalcManagerFactory.DoIntegrityRun = false;
                     var mhh = sim.Houses[27];
                     var cmf = new CalcManagerFactory();
@@ -1166,7 +1166,7 @@ namespace CalculationController.Tests {
                 sim.MyGeneralConfig.Enable(CalcOption.TransportationStatistics);
                 sim.MyGeneralConfig.Enable(CalcOption.DeviceProfilesIndividualHouseholds);
                 //sim.MyGeneralConfig.Enable(CalcOption.per);
-                SimIntegrityChecker.Run(sim);
+                SimIntegrityChecker.Run(sim, CheckingOptions.Default());
                 sim.Should().NotBeNull();
                 int count = 0;
                 for (var index = 0; index < sim.ModularHouseholds.Items.Count && index < 5; index++)

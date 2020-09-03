@@ -25,6 +25,9 @@ namespace ReleaseMaker {
             Copy(programFiles, srcDi, src, dst,"System.Numerics.Vectors.dll");
             Copy(programFiles, srcDi, src, dst,"System.Resources.Extensions.dll");
             Copy(programFiles, srcDi, src, dst,"System.Runtime.CompilerServices.Unsafe.dll");
+            Copy(programFiles, srcDi, src, dst, "OxyPlot.Wpf.Shared.dll");
+
+
             //Copy(programFiles, srcDi, src, dst,"MigraDoc.DocumentObjectModel-wpf.dll");
             //Copy(programFiles, srcDi, src, dst,"MigraDoc.DocumentObjectModel.dll");
             //Copy(programFiles, srcDi, src, dst,"MigraDoc.Rendering-wpf.dll");

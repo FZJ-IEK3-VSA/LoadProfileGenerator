@@ -9,7 +9,7 @@ namespace CalculationController.Integrity {
             : base("Transformation Devices", performCleanupChecks) {
         }
 
-        protected override void Run(Simulator sim) {
+        protected override void Run(Simulator sim, CheckingOptions options) {
             foreach (var device in sim.TransformationDevices.Items) {
                 foreach (var condition in device.Conditions) {
                     if (condition.Variable == null) {

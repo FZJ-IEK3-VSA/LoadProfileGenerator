@@ -27,7 +27,7 @@ namespace LoadProfileGenerator.Tests {
 
                 hhtc.Run(false, sim);
 
-                SimIntegrityChecker.Run(sim);
+                SimIntegrityChecker.Run(sim, CheckingOptions.Default());
                 db.Cleanup();
             }
         }

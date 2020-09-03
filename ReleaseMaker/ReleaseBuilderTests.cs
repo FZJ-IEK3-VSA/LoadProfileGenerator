@@ -58,12 +58,14 @@ namespace ReleaseMaker
                 throw new Exception("Not a single file in " + src);
             }
             var filesToComplain = new List<string>();
-            var filesToIgnore = new List<string>();
-            filesToIgnore.Add("Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll");
-            filesToIgnore.Add("Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll");
-            filesToIgnore.Add("Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll");
-            filesToIgnore.Add("calcspec.json");
-            filesToIgnore.Add("Log.CommandlineCalculation.txt");
+            var filesToIgnore = new List<string>
+            {
+                "Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll",
+                "Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll",
+                "Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll",
+                "calcspec.json",
+                "Log.CommandlineCalculation.txt"
+            };
             foreach (var fi in fis)
             {
                 if (fi.Name.EndsWith(".pdb"))
@@ -387,7 +389,7 @@ namespace ReleaseMaker
                 //TODO: Add the trait check back
                 //FindUnusedTraits(sim);
                 sim.MyGeneralConfig.PerformCleanUpChecks = "false";
-                SimIntegrityChecker.Run(sim);
+                SimIntegrityChecker.Run(sim, CheckingOptions.Default());
                 db.Cleanup();
             }
             CheckForCalculationOutcomeCompleteness();
@@ -396,21 +398,19 @@ namespace ReleaseMaker
         [SuppressMessage("ReSharper", "HeuristicUnreachableCode")]
         public void CheckForCalculationOutcomeCompleteness()
         {
-            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
-            {
-                Logger.Info("Using file " + db.FileName);
-                var sim = new Simulator(db.ConnectionString);
-                var count = CalculationOutcomesPresenter.CountMissingEntries(sim);
+            using var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
+            Logger.Info("Using file " + db.FileName);
+            var sim = new Simulator(db.ConnectionString);
+            var count = CalculationOutcomesPresenter.CountMissingEntries(sim);
 #pragma warning disable S2583 // Conditionally executed blocks should be reachable
-                // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-                if (count != 0 && ThrowOnMissingOutcomes)
-                    // ReSharper disable once HeuristicUnreachableCode
-                {
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+            if (count != 0 && ThrowOnMissingOutcomes)
+                // ReSharper disable once HeuristicUnreachableCode
+            {
 #pragma warning restore S2583 // Conditionally executed blocks should be reachable
-                    throw new LPGException("Missing " + count + " calculation outcomes!");
-                }
-                db.Cleanup();
+                throw new LPGException("Missing " + count + " calculation outcomes!");
             }
+            db.Cleanup();
         }
 
 
@@ -479,7 +479,7 @@ namespace ReleaseMaker
                 sim.MyGeneralConfig.RandomSeed = -1;
                 sim.MyGeneralConfig.StartDateString = "01.01.2016";
                 sim.MyGeneralConfig.EndDateString = "31.12.2016";
-                SimIntegrityChecker.Run(sim);
+                SimIntegrityChecker.Run(sim, CheckingOptions.Default());
                 sim.MyGeneralConfig.PerformCleanUpChecks = "False";
                 sim.MyGeneralConfig.CSVCharacter = ";";
                 var forgottenUpdates = false;
@@ -535,10 +535,12 @@ namespace ReleaseMaker
             //CopyFilesSimulationEngine(srcsim, dst);
             if (makeZipAndSetup)
             {
-                List<FileInfo> fileForUpload = new List<FileInfo>();
-                fileForUpload.Add(MakeZipFile(releasename, dstWin));
-                fileForUpload.Add(MakeZipFile(releasename +"_core", dstWinCore));
-                fileForUpload.Add(MakeZipFile(releasename + "_linux", dstLinux));
+                List<FileInfo> fileForUpload = new List<FileInfo>
+                {
+                    MakeZipFile(releasename, dstWin),
+                    MakeZipFile(releasename + "_core", dstWinCore),
+                    MakeZipFile(releasename + "_linux", dstLinux)
+                };
 
                 var allSetupFiles = filesForSetup.ToList();
                 allSetupFiles.AddRange(filesForSetup2);

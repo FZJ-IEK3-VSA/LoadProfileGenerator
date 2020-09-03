@@ -9,7 +9,7 @@ namespace CalculationController.Integrity
         {
         }
 
-        protected override void Run(Simulator sim)
+        protected override void Run(Simulator sim, CheckingOptions options)
         {
         }
     }

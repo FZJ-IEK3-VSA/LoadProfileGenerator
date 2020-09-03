@@ -7,7 +7,7 @@ namespace CalculationController.Integrity {
         public TimeProfileChecker(bool performCleanupChecks) : base("Time Profile Checker", performCleanupChecks) {
         }
 
-        protected override void Run(Simulator sim) {
+        protected override void Run(Simulator sim, CheckingOptions options) {
             foreach (var profile in sim.Timeprofiles.Items) {
                 if (profile.DataSource.Length == 0) {
                     throw new DataIntegrityException(

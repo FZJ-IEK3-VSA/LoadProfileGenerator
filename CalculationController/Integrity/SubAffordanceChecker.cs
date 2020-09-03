@@ -6,7 +6,7 @@ namespace CalculationController.Integrity {
         public SubAffordanceChecker(bool performCleanupChecks) : base("Subaffordances", performCleanupChecks) {
         }
 
-        protected override void Run(Simulator sim) {
+        protected override void Run(Simulator sim, CheckingOptions options) {
             foreach (var subaff in sim.SubAffordances.Items) {
                 foreach (var des1 in subaff.SubAffordanceDesires) {
                     if (des1.SatisfactionValue <= 0 || des1.SatisfactionValue > 1) {

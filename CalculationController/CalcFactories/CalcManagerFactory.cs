@@ -93,7 +93,7 @@ namespace CalculationController.CalcFactories
             try
             {
                 if (DoIntegrityRun) {
-                    SimIntegrityChecker.Run(sim);
+                    SimIntegrityChecker.Run(sim, CheckingOptions.FromStartParameters(csps));
                 }
 
                 if (csps.CalcTarget.CalcObjectType == CalcObjectType.House &&
@@ -265,7 +265,9 @@ namespace CalculationController.CalcFactories
             var convertedAutoDevList = housedto.AutoDevs.ConvertAll(x => (IHouseholdKey)x).ToList();
 
             if (calcRepo.CalcParameters.Options.Contains(CalcOption.HouseholdContents)) {
-                calcRepo.InputDataLogger.SaveList(convertedAutoDevList);
+                if (convertedAutoDevList.Count > 0) {
+                    calcRepo.InputDataLogger.SaveList<CalcAutoDevDto>(convertedAutoDevList);
+                }
                 calcRepo.InputDataLogger.Save(Constants.GeneralHouseholdKey, housedto);
             }
 

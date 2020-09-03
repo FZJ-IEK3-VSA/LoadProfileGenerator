@@ -10,7 +10,7 @@ namespace CalculationController.Integrity {
         public SettlementChecker(bool performCleanupChecks) : base("Settlements", performCleanupChecks) {
         }
 
-        protected override void Run(Simulator sim) {
+        protected override void Run(Simulator sim, CheckingOptions options) {
             foreach (var settlement in sim.Settlements.Items) {
                 if (settlement.Name.ToLower(CultureInfo.CurrentCulture).StartsWith("diss", StringComparison.Ordinal)) {
                     if (settlement.Households.Count != 100) {

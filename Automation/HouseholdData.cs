@@ -53,6 +53,11 @@ namespace Automation {
         public List<string>? HouseholdTags { get; set; } = new List<string>();
     }
 
+    public class PersonLivingTag {
+        public string? LivingPatternTag { get; set; }
+        public string? PersonName { get; set; }
+    }
+
     public class HouseholdTemplateSpecification
     {
         public HouseholdTemplateSpecification([NotNull] string householdTemplateName) => HouseholdTemplateName = householdTemplateName;
@@ -62,9 +67,11 @@ namespace Automation {
         public HouseholdTemplateSpecification()
         {
         }
-
+        public List<PersonLivingTag>? Persons { get; set; } = new List<PersonLivingTag>();
         [NotNull]
         public string? HouseholdTemplateName { get; set; }
+
+        public List<string>? ForbiddenTraitTags { get; set; } = new List<string>();
     }
 
     public class HouseholdNameSpecification {

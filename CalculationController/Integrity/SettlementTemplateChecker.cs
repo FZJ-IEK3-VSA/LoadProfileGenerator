@@ -7,7 +7,7 @@ namespace CalculationController.Integrity {
             base("Settlement Templates", performCleanupChecks) {
         }
 
-        protected override void Run(Simulator sim) {
+        protected override void Run(Simulator sim, CheckingOptions options) {
             foreach (var settemp in sim.SettlementTemplates.Items) {
                 if (string.IsNullOrEmpty(settemp.NewName)) {
                     throw new DataIntegrityException(

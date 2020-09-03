@@ -49,7 +49,7 @@ namespace Calculation.HouseholdElements.Tests {
                     sim.MyGeneralConfig.CSVCharacter = ";";
                     //ConfigSetter.SetGlobalTimeParameters(sim.MyGeneralConfig);
                     sim.Should().NotBeNull();
-                    SimIntegrityChecker.Run(sim);
+                    SimIntegrityChecker.Run(sim, CheckingOptions.Default());
                     CalcManagerFactory.DoIntegrityRun = false;
 
                     var cmf = new CalcManagerFactory();

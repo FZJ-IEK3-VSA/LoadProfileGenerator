@@ -8,7 +8,7 @@ namespace CalculationController.Integrity {
         public HouseholdTagChecker(bool performCleanupChecks) : base("Household Tags", performCleanupChecks) {
         }
 
-        protected override void Run(Simulator sim) {
+        protected override void Run(Simulator sim, CheckingOptions options) {
             var noClass =
                 sim.HouseholdTags.Items.Where(x => string.IsNullOrWhiteSpace(x.Classification)).ToList();
             if (noClass.Count > 0) {

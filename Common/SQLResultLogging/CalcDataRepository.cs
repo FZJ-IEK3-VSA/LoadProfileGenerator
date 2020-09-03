@@ -266,6 +266,12 @@ namespace Common.SQLResultLogging {
             var tables = _srls.LoadTables(key);
             return tables.Single(x => x.ResultTableID == resultTableID);
         }
+        [NotNull]
+        public bool DoesTableExist(ResultTableID resultTableID, [NotNull] HouseholdKey key)
+        {
+            var tables = _srls.LoadTables(key);
+            return tables.FirstOrDefault(x => x.ResultTableID == resultTableID)!= null;
+        }
 
         [ItemNotNull]
         [NotNull]

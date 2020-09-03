@@ -108,7 +108,7 @@ namespace LoadProfileGenerator.Tests {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
                 var sim = new Simulator(db.ConnectionString) { MyGeneralConfig = { PerformCleanUpChecks = "False" } };
-                SimIntegrityChecker.Run(sim);
+                SimIntegrityChecker.Run(sim, CheckingOptions.Default());
                 TemplatePersonCreator.CreateTemplatePersons(sim);
                 db.Cleanup();
             }
@@ -124,7 +124,7 @@ namespace LoadProfileGenerator.Tests {
                 using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
                 {
                     var sim = new Simulator(db.ConnectionString) { MyGeneralConfig = { PerformCleanUpChecks = "False" } };
-                    SimIntegrityChecker.Run(sim);
+                    SimIntegrityChecker.Run(sim, CheckingOptions.Default());
                     var newchh = TemplatePersonCreator.RunCalculationTests(sim);
                     foreach (var household in newchh)
                     {
@@ -142,7 +142,7 @@ namespace LoadProfileGenerator.Tests {
                         }
                     }
 
-                    SimIntegrityChecker.Run(sim);
+                    SimIntegrityChecker.Run(sim, CheckingOptions.Default());
                     sim.MyGeneralConfig.StartDateUIString = "1.1.2015";
                     sim.MyGeneralConfig.EndDateUIString = "5.01.2015";
                     sim.MyGeneralConfig.InternalTimeResolution = "00:01:00";

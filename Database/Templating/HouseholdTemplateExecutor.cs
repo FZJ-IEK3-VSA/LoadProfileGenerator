@@ -23,7 +23,8 @@ namespace Database.Templating {
         public static List<ModularHousehold> GenerateHouseholds([NotNull] Simulator sim,
                                                                 bool generateSettlement,
                                                                 [ItemNotNull] [NotNull] List<STTraitLimit> limits,
-                                                                [NotNull] HouseholdTemplate template)
+                                                                [NotNull] HouseholdTemplate template,
+                                                                List<TraitTag> forbiddenTraitTags)
         {
             if (template == null) {
                 throw new LPGException("No template was assigned when calling the GenerateHouseholds-Function");
@@ -51,7 +52,7 @@ namespace Database.Templating {
                     Logger.Get().SafeExecuteWithWait(() => chh = GenerateEmptyHousehold(sim, template, r, ref min, ref max, i1));
                     createdHH.Add(chh);
                     chh.SaveToDB();
-                    AddDesiredTraits(sim, limits, template, r, numberofPersons, chh);
+                    AddDesiredTraits(sim, limits, template, r, numberofPersons, chh, forbiddenTraitTags);
                     chh.SaveToDB();
                     foreach (var hhTemplateTag in template.TemplateTags) {
                         chh.AddHouseholdTag(hhTemplateTag.Tag);
@@ -239,7 +240,8 @@ namespace Database.Templating {
                                              [NotNull] HouseholdTemplate template,
                                              [NotNull] Random rnd,
                                              int numberofPersons,
-                                             [NotNull] ModularHousehold chh)
+                                             [NotNull] ModularHousehold chh,
+                                             List<TraitTag> forbiddenTraitTags)
         {
             // find the living pattern all tag for speed
             var allTag = sim.LivingPatternTags.Items.First(x => x.Name == "Living Pattern / All");
@@ -272,29 +274,55 @@ namespace Database.Templating {
                         throw new LPGException("The living pattern was not set.");
                     }
 
+                    //do this explicitly and with seperate lists for debugging purposes
                     //filter out the wrong living patterns
                     //needs to use the startWith
-                    var filteredTraits = potentialTraits.Where(x =>
-                        x.Tags.Any(y => dstLivingPattern.Name.StartsWith(y.Name)) || x.LivingPatternTags.Any(y => y.Tag == allTag) ||
-                        !x.Tags.Any(y => y.Name.StartsWith("Living Pattern"))).ToList();
-                    if (filteredTraits.Count == 0) {
-                        throw new DataIntegrityException("Not a single trait found for entry " + entry.TraitTag.Name +
-                                                         " and the living pattern tag " + dstLivingPattern.Name + " using the household template " +
-                                                         template.Name);
+                    var traitswithRightTag = potentialTraits.Where(x =>
+                        //any trait that has the same living pattern
+                        x.LivingPatternTags.Any(y => dstLivingPattern.Name.StartsWith(y.Name)));
+                    //or has the all pattern tag
+                    var traitsWithAllTag = potentialTraits.Where(x =>
+                        x.LivingPatternTags.Any(y => y.Tag == allTag));
+                    //or doesn't have a living pattern tag
+                    var traitsWithNoTag = potentialTraits.Where(x =>
+                    x.LivingPatternTags.Count==0).ToList();
+                    var filteredTraits1 = new List<HouseholdTrait>();
+                    filteredTraits1.AddRange(traitswithRightTag);
+                    filteredTraits1.AddRange(traitsWithAllTag);
+                    filteredTraits1.AddRange(traitsWithNoTag);
+                    filteredTraits1 = filteredTraits1.Distinct().ToList();
+                    if (filteredTraits1.Count == 0) {
+                        string s = "Not a single trait found for entry " + entry.TraitTag.Name + " and the living pattern tag " +
+                                   dstLivingPattern.Name + " in the household template " + template.Name + ". The following traits are available with their tags:";
+                        throw new DataIntegrityException(s);
                     }
-
+                    var ft2 = new List<HouseholdTrait>();
+                    foreach (var trait1 in filteredTraits1) {
+                        bool foundForbidden = false;
+                        foreach (var tag in forbiddenTraitTags) {
+                            if (trait1.Tags.Any(x => x.Tag == tag)) {
+                                foundForbidden = true;
+                            }
+                        }
+                        if(!foundForbidden) {
+                            ft2.Add(trait1);
+                        }
+                    }
                     PickATrait(rnd,
                         chh,
-                        filteredTraits,
+                        ft2,
                         ref traitexists,
                         ref classificationexists,
                         ref invalidForPerson,
                         person,
                         out var trait,
                         settlementTraitLimits,
-                        ref violatesLimit);
+                        ref violatesLimit, entry.TraitTag);
 
                     if (trait != null) {
+                        var dstLivingPattern1 = chh.Persons.Single(x => x.Person == person).LivingPatternTag?.Name;
+                        var traitlptags = trait.LivingPatternTags.Select(x => x.Name).ToList();
+                        CheckTraitAssigment(traitlptags, dstLivingPattern1, allTag);
                         chh.AddTrait(trait, ModularHouseholdTrait.ModularHouseholdTraitAssignType.Name, person);
                         //settlementTraitLimits is the function to avoid too many brunches in a settlement for example
                         settlementTraitLimits.ForEach(x => x.RegisterTrait(trait));
@@ -325,6 +353,23 @@ namespace Database.Templating {
                                    " for the person " + persons + "." + Environment.NewLine + reasonString);
                 }
             }
+        }
+
+        private static void CheckTraitAssigment([NotNull] List<string> traitlptags, string dstLivingPattern1, [NotNull] LivingPatternTag alltag)
+        {
+            if (traitlptags.Contains(alltag.Name)) {
+                return;
+            }
+            if (traitlptags.Contains(dstLivingPattern1)) {
+                return;
+            }
+
+            foreach (var traitlptag in traitlptags) {
+                if (dstLivingPattern1.StartsWith(traitlptag)) {
+                    return;
+                }
+            }
+            throw new LPGException("Assigning trait to wrong person");
         }
 
         [NotNull]
@@ -411,19 +456,19 @@ namespace Database.Templating {
             });
         }
 
-        private static void PickATrait([NotNull] Random r,
-                                       [NotNull] ModularHousehold chh,
-                                       [ItemNotNull] [NotNull] List<HouseholdTrait> potentialTraits,
-                                       ref int traitexists,
-                                       ref int classificationexists,
-                                       ref int invalidForPerson,
-                                       [NotNull] Person p,
-                                       [CanBeNull] out HouseholdTrait trait,
-                                       [ItemNotNull] [NotNull] List<STTraitLimit> limits,
-                                       ref int violatesLimit)
+        private static void PickATrait([NotNull] Random r, [NotNull] ModularHousehold chh,
+                                       [ItemNotNull] [NotNull] List<HouseholdTrait> potentialTraits, ref int traitexists,
+                                       ref int classificationexists, ref int invalidForPerson, [NotNull] Person p,
+                                       [CanBeNull] out HouseholdTrait trait, [ItemNotNull] [NotNull] List<STTraitLimit> limits, ref int violatesLimit,
+                                       TraitTag entryTraitTag)
         {
             var trycount = 0;
             trait = null;
+            if (potentialTraits.Count == 0)
+            {
+                Logger.Warning("Not a single trait was found for the trait tag " + entryTraitTag.Name);
+                return;
+            }
             while (trycount < 100 && trait == null) {
                 var traitnumber = r.Next(potentialTraits.Count);
                 var success = true;

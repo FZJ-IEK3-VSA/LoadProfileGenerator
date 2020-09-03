@@ -105,7 +105,7 @@ namespace CalculationController.Integrity {
                     };
                     elementsToOpen.AddRange(traitsWithMissingTags);
                     throw new DataIntegrityException(
-                        "The opened traits have no matching trait tag for " + mhhPerson.LivingPatternTag, elementsToOpen);
+                        "The opened traits have no matching living pattern tag for " + mhhPerson.LivingPatternTag, elementsToOpen);
                 }
             }
         }
@@ -444,7 +444,7 @@ namespace CalculationController.Integrity {
 
         }
         */
-        protected override void Run(Simulator sim)
+        protected override void Run(Simulator sim, CheckingOptions options)
         {
             CheckTags(sim.ModularHouseholds.Items, sim.HouseholdTags.Items);
             var tagForAll = sim.LivingPatternTags.Items.FirstOrDefault(x => x.Name == "Living Pattern / All");

@@ -258,12 +258,12 @@ namespace CalculationEngine.OnlineLogging {
         public void FinalSaveToDatabase()
         {
             if (_actionEntries.Count > 0 && _calcParameters.Options.Contains(CalcOption.ActionEntries)) {
-                _idl.SaveList(_actionEntries.ConvertAll(x => (IHouseholdKey)x));
+                _idl.SaveList<ActionEntry>(_actionEntries.ConvertAll(x => (IHouseholdKey)x));
                 _actionEntries.Clear();
             }
 
             if (_deviceActivationEntries.Count > 0&& _calcParameters.Options.Contains(CalcOption.DeviceActivations)) {
-                _idl.SaveList(_deviceActivationEntries.ConvertAll(x => (IHouseholdKey)x));
+                _idl.SaveList<DeviceActivationEntry>(_deviceActivationEntries.ConvertAll(x => (IHouseholdKey)x));
                 _deviceActivationEntries.Clear();
             }
 
@@ -273,43 +273,43 @@ namespace CalculationEngine.OnlineLogging {
             }
 
             if (_locationEntries.Count > 0 && _calcParameters.Options.Contains(CalcOption.LocationsEntries)) {
-                _idl.SaveList(_locationEntries.ConvertAll(x => (IHouseholdKey)x));
+                _idl.SaveList<LocationEntry>(_locationEntries.ConvertAll(x => (IHouseholdKey)x));
                 _locationEntries.Clear();
             }
 
             if (_transportationStatuses.Count > 0) {
-                _idl.SaveList(_transportationStatuses.ConvertAll(x => (IHouseholdKey)x));
+                _idl.SaveList<TransportationStatus>(_transportationStatuses.ConvertAll(x => (IHouseholdKey)x));
                 _transportationStatuses.Clear();
             }
 
             if (_transportationEvents.Count > 0) {
-                _idl.SaveList(_transportationEvents.ConvertAll(x => (IHouseholdKey)x));
+                _idl.SaveList<TransportationEventEntry>(_transportationEvents.ConvertAll(x => (IHouseholdKey)x));
                 _transportationEvents.Clear();
             }
             if (_personStatus.Count > 0)
             {
-                _idl.SaveList(_personStatus.ConvertAll(x => (IHouseholdKey)x));
+                _idl.SaveList<PersonStatus>(_personStatus.ConvertAll(x => (IHouseholdKey)x));
                 _personStatus.Clear();
             }
             if (_transportationDeviceState.Count > 0)
             {
-                _idl.SaveList(_transportationDeviceState.ConvertAll(x => (IHouseholdKey)x));
+                _idl.SaveList<TransportationDeviceStateEntry>(_transportationDeviceState.ConvertAll(x => (IHouseholdKey)x));
                 _transportationDeviceState.Clear();
             }
 
             if (_chargingStationStates.Count > 0)
             {
-                _idl.SaveList(_chargingStationStates.ConvertAll(x => (IHouseholdKey)x));
+                _idl.SaveList<ChargingStationState>(_chargingStationStates.ConvertAll(x => (IHouseholdKey)x));
                 _chargingStationStates.Clear();
             }
             if (_variableEntries.Count > 0)
             {
-                _idl.SaveList(_variableEntries.ConvertAll(x => (IHouseholdKey)x));
+                _idl.SaveList<CalcVariableEntry>(_variableEntries.ConvertAll(x => (IHouseholdKey)x));
                 _variableEntries.Clear();
             }
 
             if (_deviceEntries.Count > 0) {
-                _idl.SaveList(_deviceEntries.ConvertAll(x => (IHouseholdKey)x));
+                _idl.SaveList<CalcDeviceArchiveDto>(_deviceEntries.ConvertAll(x => (IHouseholdKey)x));
                 _deviceEntries.Clear();
             }
         }

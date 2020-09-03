@@ -6,7 +6,7 @@ namespace CalculationController.Integrity {
         public TraitTagChecker(bool performCleanupChecks) : base("Trait Tags", performCleanupChecks) {
         }
 
-        protected override void Run(Simulator sim)
+        protected override void Run(Simulator sim, CheckingOptions options)
         {
             foreach (var tag in sim.TraitTags.Items) {
                 if (!tag.Name.Contains(" / ") && PerformCleanupChecks) {

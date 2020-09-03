@@ -57,7 +57,7 @@ namespace CalculationController.Tests
                 Vacation vac = sim.Vacations.CreateNewItem(sim.ConnectionString);
                 vac.AddVacationTime(new DateTime(2017, 1, 1), new DateTime(2017, 2, 1), VacationType.GoAway);
                 vac.AddVacationTime(new DateTime(2017, 2, 1), new DateTime(2017, 2, 15), VacationType.GoAway);
-                SimIntegrityChecker.Run(sim);
+                SimIntegrityChecker.Run(sim, CheckingOptions.Default());
                 db.Cleanup();
             }
             CleanTestBase.RunAutomatically(true);
@@ -76,7 +76,7 @@ namespace CalculationController.Tests
                 DateTime start = DateTime.Now;
                 for (int i = 0; i < runcount; i++)
                 {
-                    SimIntegrityChecker.Run(sim);
+                    SimIntegrityChecker.Run(sim, CheckingOptions.Default());
                 }
 
                 DateTime end = DateTime.Now;

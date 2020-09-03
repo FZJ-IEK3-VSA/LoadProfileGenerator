@@ -744,12 +744,20 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             }
 
             if (_openItemDict.ContainsKey(key)) {
-                var f = Logger.Get().SaveExecutionFunction;
-                if (f != null) {
-                    f(() => _openItemDict[key].Invoke(o));
+                //var f = Logger.Get().SaveExecutionFunctionWithWait;
+                //if (f != null) {
+                //f(() => _openItemDict[key].Invoke(o));
+                //}
+                //else
+                //{
+                //  _openItemDict[key].Invoke(o);
+                //}
+                var a = new Action(() => _openItemDict[key].Invoke(o));
+                if(MainDispatcher!=null) {
+                    MainDispatcher.BeginInvoke(a);
                 }
                 else {
-                    _openItemDict[key].Invoke(o);
+                    a();
                 }
             }
             else {

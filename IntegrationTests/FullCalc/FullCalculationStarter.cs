@@ -36,7 +36,7 @@ namespace IntegrationTests.FullCalc
                     sim.MyGeneralConfig.Enable(CalcOption.HouseSumProfilesFromDetailedDats);
                     sim.MyGeneralConfig.CSVCharacter = ";";
                     sim.MyGeneralConfig.SelectedLoadTypePriority = LoadTypePriority.All;
-                    SimIntegrityChecker.Run(sim);
+                    SimIntegrityChecker.Run(sim, CheckingOptions.Default());
                     //CalcParameters
                     //CalcParametersFactory.SetGlobalTimeParameters(sim.MyGeneralConfig);
                     //ConfigSetter.SetGlobalTimeParameters(sim.MyGeneralConfig);

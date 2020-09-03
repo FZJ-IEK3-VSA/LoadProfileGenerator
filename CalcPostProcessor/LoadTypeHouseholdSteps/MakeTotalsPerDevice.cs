@@ -76,8 +76,19 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             //{
             //return;
             //}
-            var deviceActivationEntries = Repository.LoadDeviceActivations(p.Key.HHKey);
-            var deviceArchive = Repository.LoadDeviceArchiveEntries(p.Key.HHKey);
+            var tblExist = Repository.DoesTableExist(ResultTableID.DeviceActivationEntries, p.Key.HHKey);
+            List<DeviceActivationEntry> deviceActivationEntries = new List<DeviceActivationEntry>();
+            if (tblExist) {
+                deviceActivationEntries  = Repository.LoadDeviceActivations(p.Key.HHKey);
+            }
+
+            var tblExistDeviceArchiveEntries = Repository.DoesTableExist(ResultTableID.DeviceArchive, p.Key.HHKey);
+            List<CalcDeviceArchiveDto> deviceArchive = new List<CalcDeviceArchiveDto>();
+            if (tblExistDeviceArchiveEntries)
+            {
+                deviceArchive = Repository.LoadDeviceArchiveEntries(p.Key.HHKey);
+            }
+
             var deviceEnergyDict = new Dictionary<string, double>();
             foreach (var activationEntry in deviceActivationEntries) {
                 if (activationEntry.LoadTypeGuid != p.LoadType.Guid) {
@@ -219,7 +230,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                 value.PositiveValues *= value.Loadtype.ConversionFactor;
             }
 
-            _inputDataLogger.SaveList(tdp.Values.ToList().ConvertAll(x => (IHouseholdKey)x));
+            _inputDataLogger.SaveList<TotalsPerDeviceEntry>(tdp.Values.ToList().ConvertAll(x => (IHouseholdKey)x));
         }
 
         [NotNull]

@@ -7,7 +7,7 @@ namespace CalculationController.Integrity {
             : base("Affordance Tagging Sets", performCleanupChecks) {
         }
 
-        protected override void Run(Simulator sim) {
+        protected override void Run(Simulator sim, CheckingOptions options) {
             foreach (var set in sim.AffordanceTaggingSets.Items) {
                 var isrefrehsed = false;
                 foreach (var entry in set.Entries) {

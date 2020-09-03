@@ -205,16 +205,13 @@ namespace Database.Tables.Houses {
         }
 
         public void AddHousehold([NotNull] ICalcObject hh,
-                                 [NotNull] ChargingStationSet chargingstations,
-                                 [NotNull] TravelRouteSet travelrouteset, [NotNull] TransportationDeviceSet transportationDeviceSet)
+                                 [CanBeNull] ChargingStationSet chargingstations,
+                                 [CanBeNull] TravelRouteSet travelrouteset, [CanBeNull] TransportationDeviceSet transportationDeviceSet)
         {
             if (hh.ConnectionString != ConnectionString) {
                 throw new LPGException("Adding house from another database. This is a bug! Please report.");
             }
 
-            if (chargingstations == null) {
-                throw new LPGException("No charging station was set.");
-            }
             var hd = new HouseHousehold(
                 null, IntID, hh, ConnectionString, hh.Name,
                 System.Guid.NewGuid().ToStrGuid(), transportationDeviceSet, chargingstations, travelrouteset);

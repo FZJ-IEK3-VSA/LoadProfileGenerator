@@ -536,6 +536,11 @@ namespace Database.Tables.ModularHouseholds {
                 jto.Tags.Add(tag.Tag.GetJsonReference());
             }
 
+            foreach (var lptag in LivingPatternTags)
+            {
+                jto.LivingPatternTags.Add(lptag.Tag.GetJsonReference());
+            }
+
             foreach (var subTrait in SubTraits) {
                 jto.SubTraits.Add(subTrait.ThisTrait.GetJsonReference());
             }

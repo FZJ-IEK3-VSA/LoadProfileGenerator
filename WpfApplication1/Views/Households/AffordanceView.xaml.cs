@@ -28,6 +28,7 @@
 
 #region
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
@@ -81,7 +82,8 @@ namespace LoadProfileGenerator.Views.Households {
 
         public AffordanceView()
         {
-            InitializeComponent();
+            var a = new Action(() => InitializeComponent());
+            Dispatcher.BeginInvoke(a);
         }
 
         [NotNull]
@@ -294,7 +296,11 @@ namespace LoadProfileGenerator.Views.Households {
         }
 
         private void CmbPersonProfileSelectionChanged([CanBeNull] object sender,
-            [CanBeNull] SelectionChangedEventArgs e) => RefreshGraph();
+            [CanBeNull] SelectionChangedEventArgs e)
+        {
+            Action a = ()=>RefreshGraph();
+            Dispatcher.BeginInvoke(a);
+        }
 
         private void CreateAffordance_OnClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
         {
@@ -476,32 +482,35 @@ namespace LoadProfileGenerator.Views.Households {
 
         private void UserControl_Loaded([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
         {
-            MyDeviceSelector.Simulator = Presenter.ApplicationPresenter.Simulator;
-            MyDeviceSelector.OpenItem = Presenter.ApplicationPresenter.OpenItem;
-            MyStandbySelector.Simulator = Presenter.ApplicationPresenter.Simulator;
-            MyStandbySelector.OpenItem = Presenter.ApplicationPresenter.OpenItem;
-            _plot = new PlotModel();
-            _dateTimeAxis = new LinearAxis {
-                Position = AxisPosition.Bottom
-            };
-            _plot.Axes.Add(_dateTimeAxis);
-            _categoryAxis = new CategoryAxis {
-                MinorStep = 1,
-                Position = AxisPosition.Left,
-                IsZoomEnabled = false,
-                IsPanEnabled = false
-            };
-            _dateTimeAxis.IsZoomEnabled = false;
-            _dateTimeAxis.IsPanEnabled = false;
-            _plot.Axes.Add(_categoryAxis);
+            Action a = () => {
+                MyDeviceSelector.Simulator = Presenter.ApplicationPresenter.Simulator;
+                MyDeviceSelector.OpenItem = Presenter.ApplicationPresenter.OpenItem;
+                MyStandbySelector.Simulator = Presenter.ApplicationPresenter.Simulator;
+                MyStandbySelector.OpenItem = Presenter.ApplicationPresenter.OpenItem;
+                _plot = new PlotModel();
+                _dateTimeAxis = new LinearAxis {
+                    Position = AxisPosition.Bottom
+                };
+                _plot.Axes.Add(_dateTimeAxis);
+                _categoryAxis = new CategoryAxis {
+                    MinorStep = 1,
+                    Position = AxisPosition.Left,
+                    IsZoomEnabled = false,
+                    IsPanEnabled = false
+                };
+                _dateTimeAxis.IsZoomEnabled = false;
+                _dateTimeAxis.IsPanEnabled = false;
+                _plot.Axes.Add(_categoryAxis);
 
-            var pv = new PlotView {
-                Model = _plot
-            };
-            DeviceGrid.Children.Add(pv);
-            Grid.SetRow(pv, 2);
+                var pv = new PlotView {
+                    Model = _plot
+                };
+                DeviceGrid.Children.Add(pv);
+                Grid.SetRow(pv, 2);
 
-            RefreshGraph();
+                RefreshGraph();
+            };
+            Dispatcher.BeginInvoke(a);
         }
 
 #pragma warning disable CC0068 // Unused Method

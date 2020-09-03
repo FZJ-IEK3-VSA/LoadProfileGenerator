@@ -8,7 +8,7 @@ namespace CalculationController.Integrity
         public DateBasedProfileChecker(bool performCleanupChecks) : base("Date Based Profile", performCleanupChecks) {
         }
 
-        protected override void Run(Simulator sim)
+        protected override void Run(Simulator sim, CheckingOptions options)
         {
             foreach (var profile in sim.DateBasedProfiles.Items) {
                 if(profile.Datapoints.Count == 0) {

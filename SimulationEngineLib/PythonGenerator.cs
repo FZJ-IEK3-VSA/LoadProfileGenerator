@@ -13,6 +13,43 @@ namespace SimulationEngineLib
 {
     public class PythonGenerator
     {
+        private class TemplatePersonEntry {
+            public int Age { get; }
+            public Gender Gender { get; }
+            public string LivingPattern { get; }
+            public string TemplateName { get; }
+            public string PersonName { get; }
+
+            public string Name { get; }
+
+            public TemplatePersonEntry(int age, Gender gender, string livingPattern, string templateName, string personName, string name)
+            {
+                Age = age;
+                Gender = gender;
+                LivingPattern = livingPattern;
+                TemplateName = templateName;
+                PersonName = personName;
+                Name = name;
+            }
+        }
+
+
+        [NotNull]
+        private static List<TemplatePersonEntry> MakeAllTemplatePersonData([NotNull] Simulator sim)
+        {
+            var pds = new List<TemplatePersonEntry>();
+            foreach (var item in sim.HouseholdTemplates.Items) {
+                for (var index = 0; index < item.Persons.Count; index++) {
+                    var person = item.Persons[index];
+                    string name = item.Name.Substring(0, item.Name.IndexOf(" ", StringComparison.InvariantCulture)) + "_" + index + "_" + person.Person.Age + person.Person.Gender.ToString().Substring(0,1);
+                    var pd = new TemplatePersonEntry(person.Person.Age, (Gender)person.Person.Gender,
+                        person.LivingPatternTag?.Name,item.Name, person.Person.Name,name);
+                    pds.Add(pd);
+                }
+            }
+
+            return pds;
+        }
             public void MakePythonData([NotNull] string connectionString, [NotNull] string datafilepath)
             {
                 Simulator sim = new Simulator(connectionString);
@@ -33,11 +70,28 @@ namespace SimulationEngineLib
                 WriteJsonRefs(sim.ChargingStationSets.Items.Select(x => (DBBase)x).ToList(), sw, "ChargingStationSets");
                 WriteJsonRefs(sim.TravelRouteSets.Items.Select(x => (DBBase)x).ToList(), sw, "TravelRouteSets");
                 WriteJsonRefs(sim.Houses.Items.Select(x => (DBBase)x).ToList(), sw, "Houses");
-                WriteNames(sim.HouseholdTags.Items.Select(x => (DBBase)x).ToList(), sw, "HouseholdTags");
+            WriteNames(sim.HouseholdTags.Items.Select(x => (DBBase)x).ToList(), sw, "HouseholdTags");
+            WriteNames(sim.LivingPatternTags.Items.Select(x => (DBBase)x).ToList(), sw, "LivingPatternTags");
+            WriteNames(sim.HouseholdTemplates.Items.Select(x => (DBBase)x).ToList(), sw, "HouseholdTemplates");
+            WriteNames(sim.TraitTags.Items.Select(x => (DBBase)x).ToList(), sw, "TraitTags");
+            WritePersonDatas(MakeAllTemplatePersonData(sim),sw,"TemplatePersons");
             sw.Close();
             }
-
-            private static void WriteJsonRefs([NotNull] List<DBBase> items, [NotNull] StreamWriter sw, string classname)
+            private static void WritePersonDatas([NotNull] List<TemplatePersonEntry> items, [NotNull] StreamWriter sw, string classname)
+            {
+                sw.WriteLine();
+                sw.WriteLine("# noinspection PyPep8,PyUnusedLocal");
+                sw.WriteLine("class " + classname + ":");
+                foreach (var item in items)
+                {
+                    sw.WriteLine("    " + CleanPythonName(item.Name) + ": TemplatePersonEntry = TemplatePersonEntry(Name=\"" + item.Name +
+                                 "\",  Age=" + item.Age + ", Gender=Gender."
+                                 + item.Gender + ", LivingPattern=\"" + item.LivingPattern + "\", TemplateName=\"" +
+                                 item.TemplateName + "\", PersonName=\"" + item.PersonName +  "\")");
+                }
+                sw.WriteLine();
+            }
+        private static void WriteJsonRefs([NotNull] List<DBBase> items, [NotNull] StreamWriter sw, string classname)
             {
                 sw.WriteLine();
                 sw.WriteLine("# noinspection PyPep8,PyUnusedLocal");
@@ -131,12 +185,14 @@ namespace SimulationEngineLib
                 WriteClass<JsonCalcSpecification>(sw, encounteredTypes, writtenTypes);
                 WriteClass<HouseReference>(sw, encounteredTypes, writtenTypes);
                 WriteClass<HouseholdDataPersonSpecification>(sw, encounteredTypes, writtenTypes);
-                WriteClass<HouseholdTemplateSpecification>(sw, encounteredTypes, writtenTypes);
+                WriteClass<PersonLivingTag>(sw, encounteredTypes, writtenTypes);
+            WriteClass<HouseholdTemplateSpecification>(sw, encounteredTypes, writtenTypes);
                 WriteClass<HouseholdNameSpecification>(sw, encounteredTypes, writtenTypes);
                 WriteClass<HouseholdData>(sw, encounteredTypes, writtenTypes);
                 WriteClass<HouseData>(sw, encounteredTypes, writtenTypes);
                 WriteClass<HouseCreationAndCalculationJob>(sw, encounteredTypes, writtenTypes);
                 WriteClass<SingleDeviceProfile>(sw, encounteredTypes, writtenTypes);
+                WriteClass<TemplatePersonEntry>(sw, encounteredTypes, writtenTypes);
             WriteClass<HouseholdKey>(sw, encounteredTypes, writtenTypes);
             WriteClass<LoadTypeInformation>(sw, encounteredTypes, writtenTypes);
                 WriteClass<HouseholdKeyEntry>(sw, encounteredTypes, writtenTypes);
@@ -237,7 +293,12 @@ namespace SimulationEngineLib
                     typename = "List[str]";
                     return info.Name + ": List[str] = field(default_factory=list)";
                 }
-                if (fulltypename.StartsWith("System.Collections.Generic.List`1[[Automation.PersonData,"))
+                if (fulltypename.StartsWith("System.Collections.Generic.List`1[[Automation.PersonLivingTag"))
+                {
+                    typename = "List[PersonLivingTag]";
+                    return info.Name + ": List[PersonLivingTag] = field(default_factory=list)";
+                }
+            if (fulltypename.StartsWith("System.Collections.Generic.List`1[[Automation.PersonData,"))
                 {
                     typename = "List[PersonData]";
                     return info.Name + ": List[PersonData] = field(default_factory=list)";
@@ -245,7 +306,7 @@ namespace SimulationEngineLib
                 if (fulltypename.StartsWith("System.Collections.Generic.List`1[[Automation.TransportationDistanceModifier, "))
                 {
                     typename = "List[TransportationDistanceModifier]";
-                    return info.Name + ": List[TransportationDistanceModifier] = field(default_factory=list)";
+                    return info.Name + ": Optional[List[TransportationDistanceModifier]] = field(default_factory=list)";
                 }
                 if (fulltypename.StartsWith("System.Collections.Generic.List`1[[Automation.HouseholdData,"))
                 {

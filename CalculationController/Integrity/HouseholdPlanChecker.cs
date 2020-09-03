@@ -6,7 +6,7 @@ namespace CalculationController.Integrity {
         public HouseholdPlanChecker(bool performCleanupChecks) : base("Household Plans", performCleanupChecks) {
         }
 
-        protected override void Run(Simulator sim) {
+        protected override void Run(Simulator sim, CheckingOptions options) {
             foreach (var householdPlan in sim.HouseholdPlans.Items) {
                 if (householdPlan.AffordanceTaggingSet == null) {
                     throw new DataIntegrityException(

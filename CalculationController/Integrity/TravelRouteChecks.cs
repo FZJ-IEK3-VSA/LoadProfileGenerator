@@ -12,7 +12,7 @@ namespace CalculationController.Integrity
         {
         }
 
-        protected override void Run(Simulator sim)
+        protected override void Run(Simulator sim, CheckingOptions options)
         {
             if (!PerformCleanupChecks) {
                 return;
@@ -83,7 +83,7 @@ namespace CalculationController.Integrity
         {
         }
 
-        protected override void Run(Simulator sim)
+        protected override void Run(Simulator sim, CheckingOptions options)
         {
             foreach (var travelroute in sim.TravelRoutes.Items) {
                 if(travelroute.Steps.Count == 0) {

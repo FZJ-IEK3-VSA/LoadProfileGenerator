@@ -75,7 +75,7 @@ namespace Database.Tests.Templating {
                 var ste = new SettlementTemplateExecutor();
                 ste.GenerateSettlementPreview(sim, template);
                 ste.CreateSettlementFromPreview(sim, template);
-                SimIntegrityChecker.Run(sim);
+                SimIntegrityChecker.Run(sim, CheckingOptions.Default());
                 db.Cleanup();
             }
         }

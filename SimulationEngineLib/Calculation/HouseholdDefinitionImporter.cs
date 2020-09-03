@@ -13,7 +13,7 @@ namespace SimulationEngineLib.Calculation {
             var sim = new Simulator(connectionString);
             try {
                 var sett = ModularHouseholdSerializer.ImportFromCSV(o.File, sim);
-                SimIntegrityChecker.Run(sim);
+                SimIntegrityChecker.Run(sim, CheckingOptions.Default());
                 var bo = new BatchOptions
                 {
                     OutputFileDefault = OutputFileDefault.ReasonableWithCharts,

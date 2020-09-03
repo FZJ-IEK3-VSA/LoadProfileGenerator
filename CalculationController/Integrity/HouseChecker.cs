@@ -6,7 +6,7 @@ namespace CalculationController.Integrity {
         public HouseChecker(bool performCleanupChecks) : base("Houses", performCleanupChecks) {
         }
 
-        protected override void Run(Simulator sim) {
+        protected override void Run(Simulator sim, CheckingOptions options) {
 
             foreach (var house in sim.Houses.Items) {
 
@@ -53,7 +53,7 @@ namespace CalculationController.Integrity {
                         "The house " + house.PrettyName + " has no temperature profile. Please fix.", house);
                 }
 
-                if (PerformCleanupChecks) {
+                if (PerformCleanupChecks&& options.CheckTransport) {
                     foreach (var household in house.Households) {
                         if (household.ChargingStationSet == null) {
                             throw new DataIntegrityException(

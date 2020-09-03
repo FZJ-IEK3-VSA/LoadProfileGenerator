@@ -30,6 +30,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Runtime.InteropServices;
 using Automation;
 using Automation.ResultFiles;
 using CalcPostProcessor;
@@ -87,7 +88,7 @@ namespace CalculationEngine {
 
         public ICalcAbleObject? CalcObject { get; private set; }
 
-        public CalcRepo CalcRepo { get; }
+        public CalcRepo CalcRepo { get;  }
 
         public static bool ContinueRunning { get; private set; } = true;
 
@@ -176,9 +177,11 @@ namespace CalculationEngine {
             Logger.Info("Generating the logfiles. This might take a while...");
 
             // post processing
-            CalcRepo.Dispose();
+            CalcRepo.Flush();
             CalcObject.Dispose();
             GC.Collect();
+            FileFactoryAndTracker.CheckExistingFilesFromSql(_resultPath);
+
             if (!ContinueRunning && reportCancelFunc != null) {
                 reportCancelFunc();
                 throw new LPGException("Canceling");
@@ -186,14 +189,20 @@ namespace CalculationEngine {
             CalcRepo.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Post Post Processing");
             var ppm = new PostProcessingManager(CalcRepo.CalculationProfiler, CalcRepo.FileFactoryAndTracker);
             ppm.Run(_resultPath);
+            CalcRepo.Flush();
             CalcRepo.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Post Post Processing");
+            FileFactoryAndTracker.CheckExistingFilesFromSql(_resultPath);
             CalcRepo.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Chart Processing");
             var cpm = new ChartProcessorManager(CalcRepo.CalculationProfiler, CalcRepo.FileFactoryAndTracker);
             cpm.Run(_resultPath);
+            CalcRepo.Flush();
             CalcRepo.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Chart Processing");
-            CalcRepo.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Chart Creation");
-            ChartMaker.MakeChartsAndPDF(CalcRepo.CalculationProfiler, _resultPath);
-            CalcRepo.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Chart Creation");
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
+                CalcRepo.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Chart Creation");
+                ChartMaker.MakeChartsAndPDF(CalcRepo.CalculationProfiler, _resultPath);
+                CalcRepo.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Chart Creation");
+                CalcRepo.Flush();
+            }
 
             /*
             try {

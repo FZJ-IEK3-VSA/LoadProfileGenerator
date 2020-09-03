@@ -32,7 +32,7 @@ namespace LoadProfileGenerator.Tests
 
                 CompleteAffordanceAdd.CreateItems(sim, "aff", "Entertainment / desire", "device", "trait", lt, dc, tp, 1,
                     10, 1, 99, loc, tag, "traitclass", timeLimit, "affcategory", null, false, "newLocation");
-                SimIntegrityChecker.Run(sim);
+                SimIntegrityChecker.Run(sim, CheckingOptions.Default());
                 db.Cleanup();
             }
         }

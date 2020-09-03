@@ -59,7 +59,7 @@ namespace Common {
 
             Current.Stop = DateTime.Now;
 
-            Logger.Info("Finished " + key +" after " + Current.Duration.ToString() );
+            Logger.Debug("Finished " + key +" after " + Current.Duration.ToString() );
 
             Current = Current.Parent;
         }

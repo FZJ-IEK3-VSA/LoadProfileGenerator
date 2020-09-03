@@ -1179,7 +1179,7 @@ namespace LoadProfileGenerator {
             var presenter = Presenter;
             var task1 = new Task(() => {
                 try {
-                    SimIntegrityChecker.Run(sim);
+                    SimIntegrityChecker.Run(sim, CheckingOptions.Default());
                 }
                 catch (Exception ex) {
                     if (!Config.IsInUnitTesting) {

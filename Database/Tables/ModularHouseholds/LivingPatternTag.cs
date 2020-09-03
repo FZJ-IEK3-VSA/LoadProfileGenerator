@@ -42,21 +42,30 @@ namespace Database.Tables.ModularHouseholds {
         public override List<UsedIn> CalculateUsedIns(Simulator sim)
         {
             var used = new List<UsedIn>();
-
-            //foreach (var t in sim.HouseholdTraits.Items) {
-            //    foreach (var hhtTag in t.Tags) {
-            //        if (hhtTag.Tag == this) {
-            //            used.Add(new UsedIn(t, "Household Trait"));
-            //        }
-            //    }
-            //}
-            //foreach (ModularHousehold mhh in sim.ModularHouseholds.Items) {
-            //    foreach (ModularHouseholdPerson mhhPerson in mhh.Persons) {
-            //        if (mhhPerson.TraitTag == this) {
-            //            used.Add(new UsedIn(mhh,"Person Description"));
-            //        }
-            //    }
-            //}
+            foreach (var t in sim.HouseholdTraits.Items) {
+                foreach (var hhtTag in t.LivingPatternTags) {
+                    if (hhtTag.Tag == this) {
+                        used.Add(new UsedIn(t, "Household Trait"));
+                    }
+                }
+            }
+            foreach (ModularHousehold mhh in sim.ModularHouseholds.Items) {
+                foreach (ModularHouseholdPerson mhhPerson in mhh.Persons) {
+                    if (mhhPerson.LivingPatternTag == this) {
+                        used.Add(new UsedIn(mhh,"Person Description"));
+                   }
+                }
+            }
+            foreach (var template in sim.HouseholdTemplates.Items)
+            {
+                foreach (var mhhPerson in template.Persons)
+                {
+                    if (mhhPerson.LivingPatternTag == this)
+                    {
+                        used.Add(new UsedIn(template, "Person Description"));
+                    }
+                }
+            }
             return used;
         }
 

@@ -141,11 +141,16 @@ namespace CalculationEngine.HouseholdElements {
         public FileFactoryAndTracker FileFactoryAndTracker => _fft ?? throw new LPGException("no fft");
 
 
-        public void Dispose()
+        public void Flush()
         {
             _fft?.Dispose();
             _lf?.Dispose();
             _onlineLoggingData?.Dispose();
+        }
+
+        public void Dispose()
+        {
+            Flush();
         }
     }
     public abstract class CalcBase {

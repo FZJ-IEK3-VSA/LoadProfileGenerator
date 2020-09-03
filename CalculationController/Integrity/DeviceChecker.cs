@@ -209,7 +209,7 @@ namespace CalculationController.Integrity {
             }
         }
 
-        protected override void Run(Simulator sim) {
+        protected override void Run(Simulator sim, CheckingOptions options) {
             CheckForUnusedDevices(sim.RealDevices.Items, sim.Affordances.Items, sim.DeviceActions.Items, sim.Locations.Items,
                 sim.HouseholdTraits.Items, sim.HouseTypes.Items);
             foreach (var device in sim.RealDevices.Items) {
