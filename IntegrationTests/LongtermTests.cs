@@ -506,6 +506,7 @@ namespace IntegrationTests {
         [Trait(UnitTestCategories.Category,UnitTestCategories.LongTermMerge)]
         public void RunTestCurrentVersionWithClear()
         {
+            Logger.Threshold = Severity.Error;
             HouseholdPlan.FailOnIncorrectImport = true;
             using (var wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
             {

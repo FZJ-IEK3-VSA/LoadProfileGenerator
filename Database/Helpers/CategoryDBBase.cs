@@ -221,12 +221,15 @@ namespace Database.Helpers {
                 }
                 if (itemToChange != null) {
                     var oldname = itemToChange.Name;
+                    while (DeleteLastChar(oldname)) {
+                        oldname = oldname.Substring(0, oldname.Length - 1);
+                    }
                     var i = 1;
-                    while (i < 100 && IsNameTaken(itemToChange.Name + " " + i)) {
+                    while (i < 100 && IsNameTaken(oldname + " " + i)) {
                         i++;
                     }
 
-                    itemToChange.Name = itemToChange.Name + " " + i;
+                    itemToChange.Name = oldname + " " + i;
                     Logger.Info("Changed a name from " + oldname + " to " + itemToChange.Name);
                     count++;
                     if (saveToDB) {
@@ -238,6 +241,21 @@ namespace Database.Helpers {
                 }
             }
             return count;
+        }
+
+        public bool DeleteLastChar(string s)
+        {
+            string last = s.Substring(s.Length - 1);
+            if (int.TryParse(last, out _)) {
+                return true;
+            }
+
+            if (last == " ") {
+                return true;
+            }
+
+            return false;
+
         }
 
         // used dynnamically in the simintegrity checker

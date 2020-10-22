@@ -37,7 +37,7 @@ namespace Database.Tables.ModularHouseholds {
             FindNewName(isNameTaken, "New Living Pattern Tag "), connectionString, System.Guid.NewGuid().ToStrGuid());
 
         public override DBBase ImportFromGenericItem(DBBase toImport, Simulator dstSim)
-            => ImportFromItem((TraitTag)toImport,dstSim);
+            => ImportFromItem((LivingPatternTag)toImport,dstSim);
 
         public override List<UsedIn> CalculateUsedIns(Simulator sim)
         {
@@ -72,7 +72,7 @@ namespace Database.Tables.ModularHouseholds {
         [NotNull]
         [UsedImplicitly]
 #pragma warning disable RCS1163 // Unused parameter.
-        public static DBBase ImportFromItem([NotNull] TraitTag item, [NotNull] Simulator dstSim)
+        public static DBBase ImportFromItem([NotNull] LivingPatternTag item, [NotNull] Simulator dstSim)
 #pragma warning restore RCS1163 // Unused parameter.
         {
             //TODO: finish this
