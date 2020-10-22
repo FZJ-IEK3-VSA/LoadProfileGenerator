@@ -508,9 +508,9 @@ namespace CalculationController.Integrity {
                   //  CheckUsedIns(householdTrait, sim, ref notusedCount);
             }
             List<HouseholdTrait> traitsWithMissingTags = new List<HouseholdTrait>();
-            var officeTag = "Living Pattern / Office";
-            var wfhtag = "Living Pattern / Work From Home";
-            var worktag = "Work / Work";
+            const string officeTag = "Living Pattern / Office";
+            const string wfhtag = "Living Pattern / Work From Home";
+            const string worktag = "Work / Work";
             foreach (var item in sim.HouseholdTraits.Items) {
                 if (item.Tags.Any(x => x.Tag.Name == worktag)) {
                     continue;

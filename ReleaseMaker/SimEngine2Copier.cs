@@ -324,7 +324,6 @@ namespace ReleaseMaker {
             Copy(programFiles, srcDi, src, dst,"Microsoft.Win32.Registry.dll");
             Copy(programFiles, srcDi, src, dst,"Microsoft.Win32.SystemEvents.dll");
             Copy(programFiles, srcDi, src, dst,"mscordaccore.dll");
-            Copy(programFiles, srcDi, src, dst,"mscordaccore_amd64_amd64_4.700.20.36602.dll");
             Copy(programFiles, srcDi, src, dst,"mscordbi.dll");
             Copy(programFiles, srcDi, src, dst,"mscorlib.dll");
             Copy(programFiles, srcDi, src, dst,"mscorrc.debug.dll");
@@ -617,7 +616,6 @@ namespace ReleaseMaker {
             Copy(programFiles, srcDi, src, dst, "publish\\Microsoft.Win32.Registry.dll");
             Copy(programFiles, srcDi, src, dst, "publish\\Microsoft.Win32.SystemEvents.dll");
             Copy(programFiles, srcDi, src, dst, "publish\\mscordaccore.dll");
-            Copy(programFiles, srcDi, src, dst, "publish\\mscordaccore_amd64_amd64_4.700.20.36602.dll");
             Copy(programFiles, srcDi, src, dst, "publish\\mscordbi.dll");
             Copy(programFiles, srcDi, src, dst, "publish\\mscorlib.dll");
             Copy(programFiles, srcDi, src, dst, "publish\\mscorrc.debug.dll");
@@ -833,6 +831,8 @@ namespace ReleaseMaker {
             Copy(programFiles, srcDi, src, dst, "publish\\Utf8Json.dll");
             Copy(programFiles, srcDi, src, dst, "publish\\WindowsBase.dll");
             Copy(programFiles, srcDi, src, dst, "publish\\xunit.abstractions.dll");
+            Copy(programFiles, srcDi, src, dst, "mscordaccore_amd64_amd64_4.700.20.41105.dll");
+            Copy(programFiles, srcDi, src, dst, "publish\\mscordaccore_amd64_amd64_4.700.20.41105.dll");
             CheckIfFilesAreCompletelyCopied(src, programFiles);
         }
     }

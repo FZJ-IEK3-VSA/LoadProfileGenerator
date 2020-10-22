@@ -150,8 +150,8 @@ namespace Database {
             Categories.Add(HouseholdTemplates);
             DeviceSelections = new CategoryDBBase<DeviceSelection>("Device Selections");
             Categories.Add(DeviceSelections);
-            TemplatePersons = new CategoryDBBase<TemplatePerson>("Template Persons");
-            Categories.Add(TemplatePersons);
+            //TemplatePersons = new CategoryDBBase<TemplatePerson>("Template Persons");
+            //Categories.Add(TemplatePersons);
             ModularHouseholds = new CategoryDBBase<ModularHousehold>("Modular Households");
             Categories.Add(ModularHouseholds);
             TransformationDevices = new CategoryDBBase<TransformationDevice>("Transformation Devices");
@@ -326,8 +326,8 @@ namespace Database {
         [NotNull]
         public CategoryDBBase<TemperatureProfile> TemperatureProfiles { get; }
 
-        [NotNull]
-        public CategoryDBBase<TemplatePerson> TemplatePersons { get; }
+        //[NotNull]
+        //public CategoryDBBase<TemplatePerson> TemplatePersons { get; }
 
         [NotNull]
         public CategoryDBBase<TimeLimit> TimeLimits { get; }
@@ -565,9 +565,9 @@ namespace Database {
                 () => HouseholdTemplate.LoadFromDatabase(HouseholdTemplates.Items, ConnectionString,
                     HouseholdTraits.Items, ignoreMissingTables, Persons.Items, TraitTags.Items, Vacations.Items,
                     HouseholdTags.Items, DateBasedProfiles.Items, LivingPatternTags.Items), HouseholdTemplates),
-                new LoadingEntry("Template Persons",
-                () => TemplatePerson.LoadFromDatabase(TemplatePersons.Items, ConnectionString, HouseholdTraits.Items,
-                    ignoreMissingTables, ModularHouseholds.Items, Persons.Items), TemplatePersons),
+                //new LoadingEntry("Template Persons",
+                //() => TemplatePerson.LoadFromDatabase(TemplatePersons.Items, ConnectionString, HouseholdTraits.Items,
+                //    ignoreMissingTables, ModularHouseholds.Items, Persons.Items), TemplatePersons),
                 new LoadingEntry("Household Plans",
                 () => HouseholdPlan.LoadFromDatabase(HouseholdPlans.Items, ConnectionString, ignoreMissingTables,
                     Persons.Items, AffordanceTaggingSets.Items, ModularHouseholds.Items),

@@ -130,9 +130,9 @@ namespace Database.Tests.Tables.ModularHouseholds {
                 var sim = new Simulator(db.ConnectionString);
                 var gen = sim.HouseholdTemplates.CreateNewItem(db.ConnectionString);
                 gen.NewHHName = "hh";
-                var entry = gen.AddEntry(sim.TraitTags[0], 5, 10);
+                var entry = gen.AddEntry(sim.TraitTags[0], 5, 10, false);
                 LivingPatternTag tt = sim.LivingPatternTags[0];
-                gen.AddPerson(sim.Persons[0], tt);
+                gen.AddUpdatePerson(sim.Persons[0], tt);
                 entry.AddPerson(sim.Persons[0]);
 
                 gen.SaveToDB();
@@ -161,9 +161,9 @@ namespace Database.Tests.Tables.ModularHouseholds {
                 var gen = sim.HouseholdTemplates.CreateNewItem(db.ConnectionString);
                 gen.NewHHName = "hh";
                 gen.AddVacation(sim.Vacations[0]);
-                var entry = gen.AddEntry(sim.TraitTags[0], 5, 10);
+                var entry = gen.AddEntry(sim.TraitTags[0], 5, 10,false);
                 LivingPatternTag tt = sim.LivingPatternTags[0];
-                gen.AddPerson(sim.Persons[0], tt);
+                gen.AddUpdatePerson(sim.Persons[0], tt);
                 entry.AddPerson(sim.Persons[0]);
 
                 gen.SaveToDB();
@@ -226,8 +226,8 @@ namespace Database.Tests.Tables.ModularHouseholds {
                 var sim = new Simulator(db.ConnectionString);
                 var hhtemplate = sim.HouseholdTemplates.CreateNewItem(db.ConnectionString);
                 hhtemplate.SaveToDB();
-                hhtemplate.AddEntry(sim.TraitTags[0], 1, 100);
-                hhtemplate.AddPerson(sim.Persons[0], sim.LivingPatternTags[0]);
+                hhtemplate.AddEntry(sim.TraitTags[0], 1, 100, false);
+                hhtemplate.AddUpdatePerson(sim.Persons[0], sim.LivingPatternTags[0]);
                 sim.HouseholdTags.CreateNewItem(sim.ConnectionString);
                 hhtemplate.AddTemplateTag(sim.HouseholdTags[0]);
                 (sim.HouseholdTemplates.Items.Count).Should().Be(1);
@@ -283,7 +283,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
                 (cat.Items.Count).Should().Be(0);
 
                 var gen = cat.CreateNewItem(db.ConnectionString);
-                var entry = gen.AddEntry(traittags[0], 0, 10);
+                var entry = gen.AddEntry(traittags[0], 0, 10,false);
                 entry.AddPerson(persons[0]);
                 cat.SaveToDB();
                 var generators = new ObservableCollection<HouseholdTemplate>();

@@ -186,8 +186,8 @@ namespace Database.Tables.ModularHouseholds {
         public HHTemplatePerson AddPersonFromJson([NotNull]HHTemplatePerson.JsonDto jto, [NotNull] Simulator sim)
         {
             var person = sim.Persons.FindByGuid(jto.PersonReference?.Guid) ?? throw new LPGException("Could not find the person " + jto.PersonReference);
-            var livingPattern = sim.LivingPatternTags.FindByGuid(jto.LivingPatternTraitTagReference?.Guid);
-            var p = AddPerson(person, livingPattern) ?? throw new LPGException("Could not add person " + jto.PersonReference);
+            var livingPattern = sim.LivingPatternTags.FindByGuid(jto.LivingPatternTraitTagReference?.Guid) ?? throw new LPGException("Could not find the Living pattern Tag " + jto.LivingPatternTraitTagReference);
+            var p = AddUpdatePerson(person, livingPattern) ?? throw new LPGException("Could not add person " + jto.PersonReference);
             p.Name = jto.Name;
             p.Guid = jto.Guid;
             p.SaveToDB();
@@ -199,7 +199,7 @@ namespace Database.Tables.ModularHouseholds {
         {
 
             var tag = sim.TraitTags.FindByGuid(jto.TraitTagReference?.Guid)??throw new LPGException("could not find trait tag " + jto.TraitTagReference);
-            var entry = AddEntry(tag, jto.TraitCountMin, jto.TraitCountMax);
+            var entry = AddEntry(tag, jto.TraitCountMin, jto.TraitCountMax, jto.IsMandatory);
             entry.Guid = jto.Guid;
             entry.SaveToDB();
             foreach (JsonReference personRef in jto.Persons)
@@ -211,9 +211,9 @@ namespace Database.Tables.ModularHouseholds {
             return entry;
         }
         [NotNull]
-        public HHTemplateEntry AddEntry([NotNull] TraitTag tag, int min, int max)
+        public HHTemplateEntry AddEntry([NotNull] TraitTag tag, int min, int max, bool isMandatory)
         {
-            var entry = new HHTemplateEntry(null, IntID, "newEntry", ConnectionString, tag, min, max, System.Guid.NewGuid().ToStrGuid());
+            var entry = new HHTemplateEntry(null, IntID, "newEntry", ConnectionString, tag, min, max, System.Guid.NewGuid().ToStrGuid(), isMandatory);
             _entries.Add(entry);
             entry.SaveToDB();
             _entries.Sort();
@@ -221,7 +221,7 @@ namespace Database.Tables.ModularHouseholds {
         }
 
         [NotNull]
-        public HHTemplateEntry AddEntry([NotNull] TraitTag tag, int min, int max, [ItemNotNull] [NotNull] List<Person> persons)
+        public HHTemplateEntry AddEntry([NotNull] TraitTag tag, int min, int max, [ItemNotNull] [NotNull] List<Person> persons, bool isMandatory)
         {
             persons.Sort();
             for (var index = 0; index < _entries.Count; index++) {
@@ -235,7 +235,7 @@ namespace Database.Tables.ModularHouseholds {
                 }
             }
 
-            var entry = new HHTemplateEntry(null, IntID, "newEntry", ConnectionString, tag, min, max, System.Guid.NewGuid().ToStrGuid());
+            var entry = new HHTemplateEntry(null, IntID, "newEntry", ConnectionString, tag, min, max, System.Guid.NewGuid().ToStrGuid(),isMandatory);
 
             _entries.Add(entry);
             entry.SaveToDB();
@@ -248,20 +248,27 @@ namespace Database.Tables.ModularHouseholds {
         }
 
         [CanBeNull]
-        public HHTemplatePerson AddPerson([NotNull] Person p, [CanBeNull] LivingPatternTag tag)
+        public HHTemplatePerson AddUpdatePerson([NotNull] Person p, [CanBeNull] LivingPatternTag tag)
         {
             foreach (var hhTemplatePerson in _persons) {
                 if (hhTemplatePerson.Person == p) {
-                    Logger.Error("The person " + p.PrettyName + " was already added.");
+                    Logger.Info("The person " + p.PrettyName + " was already added.");
+                    if (hhTemplatePerson.LivingPatternTag == tag) {
+                        Logger.Info("The person " + p.PrettyName + " already has the tag " + tag?.Name);
+                        return null;
+                    }
+                    hhTemplatePerson.LivingPatternTag = tag;
+                    hhTemplatePerson.SaveToDB();
+                    Logger.Info("Updated the person " + p.PrettyName + " with the tag " + tag?.Name);
                     return null;
                 }
             }
-
-            var entry = new HHTemplatePerson(null, p, IntID, "...", ConnectionString, null,tag, System.Guid.NewGuid().ToStrGuid());
+            var entry = new HHTemplatePerson(null, p, IntID, "...", ConnectionString, null, tag, System.Guid.NewGuid().ToStrGuid());
             _persons.Add(entry);
             entry.SaveToDB();
             _persons.Sort();
             return entry;
+
         }
         [CanBeNull]
         public HHTemplateTag AddTemplateTagFromJson([NotNull] JsonReference myReference, [NotNull] Simulator sim)
@@ -422,7 +429,7 @@ namespace Database.Tables.ModularHouseholds {
                     p
                 };
                 foreach (var tagdict in persondict.Value) {
-                    AddEntry(tagdict.Key, tagdict.Value, tagdict.Value, ps);
+                    AddEntry(tagdict.Key, tagdict.Value, tagdict.Value, ps,false);
                 }
             }
 
@@ -451,7 +458,7 @@ namespace Database.Tables.ModularHouseholds {
                         continue;
                     }
 
-                    var newEntry = new HHTemplateEntry(null, hhg.IntID, "no name", dstSim.ConnectionString, tag, entry.TraitCountMin, entry.TraitCountMax, entry.Guid);
+                    var newEntry = new HHTemplateEntry(null, hhg.IntID, "no name", dstSim.ConnectionString, tag, entry.TraitCountMin, entry.TraitCountMax, entry.Guid, entry.IsMandatory);
                     newEntry.SaveToDB();
                     foreach (var person in entry.Persons) {
                         var p = GetItemFromListByName(dstSim.Persons.Items, person.Person.Name);
@@ -480,7 +487,7 @@ namespace Database.Tables.ModularHouseholds {
                     traittag = GetItemFromListByName(dstSim.LivingPatternTags.Items, person.LivingPatternTag.Name);
                 }
 
-                hhg.AddPerson(p, traittag);
+                hhg.AddUpdatePerson(p, traittag);
             }
 
             foreach (var vacation in item.Vacations) {
@@ -507,6 +514,16 @@ namespace Database.Tables.ModularHouseholds {
             return hhg;
         }
 
+        [NotNull]
+        public HouseholdTemplate MakeCopy([NotNull] Simulator sim)
+        {
+            var jsonTemplate = this.GetJson();
+            var newtemplate = sim.HouseholdTemplates.CreateNewItem(sim.ConnectionString);
+            jsonTemplate.Name = jsonTemplate.Name + " (copy)";
+            newtemplate.ImportFromJsonTemplate(jsonTemplate,sim);
+            return newtemplate;
+
+        }
         public void ImportFromJsonTemplate([NotNull] JsonDto jsonTemplate, [NotNull] Simulator sim)
         {
             DateBasedProfile dbp = null;

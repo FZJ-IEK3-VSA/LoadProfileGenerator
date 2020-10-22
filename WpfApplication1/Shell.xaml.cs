@@ -753,17 +753,17 @@ namespace LoadProfileGenerator {
             }
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        private void AddTemplatePerson_Click([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
-        {
-            try {
-                var v = Presenter.AddTemplatePerson();
-                MyGlobalTree.SelectItem(v, false);
-            }
-            catch (Exception ex) {
-                MessageWindowHandler.Mw.ShowDebugMessage(ex);
-            }
-        }
+        //[SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
+        //private void AddTemplatePerson_Click([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
+        //{
+        //    try {
+        //        var v = Presenter.AddTemplatePerson();
+        //        MyGlobalTree.SelectItem(v, false);
+        //    }
+        //    catch (Exception ex) {
+        //        MessageWindowHandler.Mw.ShowDebugMessage(ex);
+        //    }
+        //}
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         private void AddTemplateTag_Click([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
@@ -1295,22 +1295,22 @@ namespace LoadProfileGenerator {
             Sim.DeleteAllTemplatedItems(false);
         }
 
-        private void TemplatePersonHouseholds_OnClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
-        {
-            if (Sim == null) {
-                return;
-            }
+        //private void TemplatePersonHouseholds_OnClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
+        //{
+        //    if (Sim == null) {
+        //        return;
+        //    }
 
-            var mbr =
-                MessageWindowHandler.Mw.ShowYesNoMessage(
-                    "Are you sure that you want to create the test households for the templated persons?", "Create?");
-            if (mbr == LPGMsgBoxResult.Yes) {
-                TemplatePersonCreator.RunCalculationTests(Sim);
-            }
-            else {
-                Logger.Warning("canceled.");
-            }
-        }
+        //    var mbr =
+        //        MessageWindowHandler.Mw.ShowYesNoMessage(
+        //            "Are you sure that you want to create the test households for the templated persons?", "Create?");
+        //    if (mbr == LPGMsgBoxResult.Yes) {
+        //        TemplatePersonCreator.RunCalculationTests(Sim);
+        //    }
+        //    else {
+        //        Logger.Warning("canceled.");
+        //    }
+        //}
 
         private void ThrowTestException_OnClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
         {
@@ -1357,26 +1357,26 @@ namespace LoadProfileGenerator {
             }
         }
 
-        private void UpdateTemplatePersonDescriptions_OnClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
-        {
-            if (Sim == null) {
-                return;
-            }
+        //private void UpdateTemplatePersonDescriptions_OnClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
+        //{
+        //    if (Sim == null) {
+        //        return;
+        //    }
 
-            var mbr =
-                MessageWindowHandler.Mw.ShowYesNoMessage("Are you sure that you want to create or update the templated persons?",
-                    "Create?");
-            if (mbr == LPGMsgBoxResult.Yes) {
-                var t = new Thread(() => {
-                    PersonDescriptionFixer.FillPersonDescriptions(Sim);
-                    TemplatePersonCreator.CreateTemplatePersons(Sim);
-                });
-                t.Start();
-            }
-            else {
-                Logger.Warning("canceled.");
-            }
-        }
+        //    var mbr =
+        //        MessageWindowHandler.Mw.ShowYesNoMessage("Are you sure that you want to create or update the templated persons?",
+        //            "Create?");
+        //    if (mbr == LPGMsgBoxResult.Yes) {
+        //        var t = new Thread(() => {
+        //            PersonDescriptionFixer.FillPersonDescriptions(Sim);
+        //            TemplatePersonCreator.CreateTemplatePersons(Sim);
+        //        });
+        //        t.Start();
+        //    }
+        //    else {
+        //        Logger.Warning("canceled.");
+        //    }
+        //}
 
         private void UpdateTitle()
         {

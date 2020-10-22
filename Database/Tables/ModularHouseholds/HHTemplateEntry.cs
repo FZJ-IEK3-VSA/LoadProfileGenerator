@@ -18,10 +18,11 @@ namespace Database.Tables.ModularHouseholds {
         public StrGuid RelevantGuid => Guid;
         public class JsonDto : IGuidObject
         {
-            public JsonDto([CanBeNull] JsonReference traitTagReference, StrGuid guid, int traitCountMax, int traitCountMin, string name)
+            public JsonDto([CanBeNull] JsonReference traitTagReference, StrGuid guid, int traitCountMax, int traitCountMin, string name, bool isMandatory)
             {
                 TraitTagReference = traitTagReference;
                 Guid = guid;
+                IsMandatory = isMandatory;
                 TraitCountMax = traitCountMax;
                 TraitCountMin = traitCountMin;
                 Name = name;
@@ -38,12 +39,13 @@ namespace Database.Tables.ModularHouseholds {
             public int TraitCountMax { get; set; }
 
             public int TraitCountMin { get; set; }
+            public bool IsMandatory { get; set; }
             public string Name { get; set; }
         }
         public JsonDto GetJson()
         {
             JsonDto hhte = new JsonDto(TraitTag.GetJsonReference(), Guid,
-                TraitCountMax, TraitCountMin,Name) {Persons = new List<JsonReference>()};
+                TraitCountMax, TraitCountMin,Name, IsMandatory) {Persons = new List<JsonReference>()};
             foreach (var person in Persons)
             {
                 hhte.Persons.Add(person.Person.GetJsonReference());
@@ -61,15 +63,17 @@ namespace Database.Tables.ModularHouseholds {
 
         private int _traitCountMax;
         private int _traitCountMin;
+        private bool _isMandatory;
 
         public HHTemplateEntry([CanBeNull]int? pID, [CanBeNull] int? householdTemplateId, [NotNull] string name, [NotNull] string connectionString,
-            [CanBeNull] TraitTag tag, int traitCountMin, int traitCountMax, StrGuid guid)
+            [CanBeNull] TraitTag tag, int traitCountMin, int traitCountMax, StrGuid guid, bool isMandatory)
             : base(name, TableName, connectionString, guid)
         {
             _householdTemplateId = householdTemplateId;
             _traitCountMin = traitCountMin;
             _traitCountMax = traitCountMax;
             _persons = new ObservableCollection<HHTemplateEntryPerson>();
+            _isMandatory = isMandatory;
             _tag = tag;
             ID = pID;
             TypeDescription = "Household Template Entry";
@@ -133,6 +137,11 @@ namespace Database.Tables.ModularHouseholds {
             set => SetValueWithNotify(value,ref _tag);
         }
 
+        public bool IsMandatory {
+            get => _isMandatory;
+            set => SetValueWithNotify(value, ref _isMandatory);
+        }
+
         public int CompareTo([CanBeNull] HHTemplateEntry other)
         {
             if (other == null) {
@@ -169,13 +178,13 @@ namespace Database.Tables.ModularHouseholds {
             var minCount = dr.GetIntFromLong("TraitCountMin");
             var maxCount = dr.GetIntFromLong("TraitCountMax");
             var tagID = dr.GetNullableIntFromLong("TraitTagID", false, ignoreMissingFields);
-
+            var isMandatory = dr.GetBool("IsMandatory", false, false, ignoreMissingFields);
             var traitTag = aic.TraitTags.FirstOrDefault(mytrait => mytrait.ID == tagID);
             var name = "(no name)" + hhgID + minCount + maxCount + tagID;
             var guid = GetGuid(dr, ignoreMissingFields);
 
             var chht = new HHTemplateEntry(id, hhgID, name, connectionString,
-                traitTag, minCount, maxCount, guid);
+                traitTag, minCount, maxCount, guid, isMandatory);
             return chht;
         }
 
@@ -246,6 +255,7 @@ namespace Database.Tables.ModularHouseholds {
             }
             cmd.AddParameter("TraitCountMin", _traitCountMin);
             cmd.AddParameter("TraitCountMax", _traitCountMax);
+            cmd.AddParameter("IsMandatory", _isMandatory);
             if (_householdTemplateId != null) {
                 cmd.AddParameter("HouseholdGeneratorID", _householdTemplateId);
             }

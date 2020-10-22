@@ -280,6 +280,13 @@ namespace SimulationEngineLib.HouseJobProcessor {
                 jcs.EnableIdlemode
                 );
             calcStartParameterSet.PreserveLogfileWhileClearingFolder = true;
+            /* debugging
+             var house = (House)calcStartParameterSet.CalcTarget;
+            var household =(ModularHousehold) house.Households[0].CalcObject;
+            var worktraits = household.Traits.Where(x => x.HouseholdTrait.Tags.Any(y => y.Name.Contains("Work"))).ToList();
+            if (worktraits.Count == 1) {
+                throw new LPGException("xxx");
+            }*/
             cs.Start(calcStartParameterSet);
             if (jcs.CalcOptions != null && jcs.CalcOptions.Contains(CalcOption.CalculationFlameChart))
             {

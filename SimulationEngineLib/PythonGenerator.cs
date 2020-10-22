@@ -57,7 +57,7 @@ namespace SimulationEngineLib
                 StreamWriter sw = new StreamWriter(datafilepath);
                 //sw.WriteLine("from dataclasses import dataclass, field");
                 //sw.WriteLine("from dataclasses_json import dataclass_json  # type: ignore");
-                //sw.WriteLine("from typing import List, Optional, Any");
+                //sw.WriteLine("from typing import List, Optional, Any, Dict");
                 sw.WriteLine("from lpgpythonbindings import *");
                 //sw.WriteLine("from enum import Enum");
                 sw.WriteLine();
@@ -164,7 +164,7 @@ namespace SimulationEngineLib
                 sw.WriteLine("from __future__ import annotations");
                 sw.WriteLine("from dataclasses import dataclass, field");
                 sw.WriteLine("from dataclasses_json import dataclass_json  # type: ignore");
-                sw.WriteLine("from typing import List, Optional, Any");
+                sw.WriteLine("from typing import List, Optional, Any, Dict");
                 sw.WriteLine("from enum import Enum");
 
                 sw.WriteLine();
@@ -327,13 +327,13 @@ namespace SimulationEngineLib
 
                 if (fulltypename.StartsWith("System.Collections.Generic.List`1[[Automation.SingleDeviceProfile,"))
                 {
-                    typename = "List[float]";
+                    typename = "List[SingleDeviceProfile]";
                     return info.Name + ": List[SingleDeviceProfile] = field(default_factory=list)";
                 }
             if (fulltypename.StartsWith("System.Collections.Generic.Dictionary`2[[System.String,") && fulltypename.Contains("],[System.String"))
                 {
-                    typename = "Dict[str,str]";
-                    return info.Name + ": Dict[str,str] = field(default_factory=dict)";
+                    typename = "Dict[str, str]";
+                    return info.Name + ": Dict[str, str] = field(default_factory=dict)";
                 }
             switch (fulltypename)
                 {

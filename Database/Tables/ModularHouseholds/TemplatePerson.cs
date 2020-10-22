@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
@@ -268,4 +268,4 @@ namespace Database.Tables.ModularHouseholds {
 
         public override List<UsedIn> CalculateUsedIns(Simulator sim) => throw new NotImplementedException();
     }
-}
+}*/

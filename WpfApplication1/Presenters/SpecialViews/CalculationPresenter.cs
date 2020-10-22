@@ -675,12 +675,12 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                 string s = " (" + SelectedTravelRouteSet + ", " + SelectedTransportationDeviceSet + ", " +
                            SelectedChargingStationSet + ")";
                 s = AutomationUtili.CleanFileName(s);
-                DstPath += s1 + s;
+                DstPath = s1 + s;
             }
             else {
                 string s = " (with transportation)";
                 s = AutomationUtili.CleanFileName(s);
-                DstPath += s1 + s;
+                DstPath = s1 + s;
             }
         }
 

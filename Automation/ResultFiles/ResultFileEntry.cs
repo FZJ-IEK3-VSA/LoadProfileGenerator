@@ -172,7 +172,7 @@ namespace Automation.ResultFiles {
             }
 
             if (FileName.Contains(":")) {
-                throw new LPGException("Somehow the full path ended up in the Filename");
+                throw new LPGException("Somehow the full path ended up in the Filename: " +FileName);
             }
         }
 
@@ -189,7 +189,7 @@ namespace Automation.ResultFiles {
             }
 
             if (FileName.Contains(":")) {
-                throw new LPGException("Somehow the full path ended up in the Filename");
+                throw new LPGException("Somehow the full path ended up in the Filename: " + FileName);
             }
         }
 
@@ -213,7 +213,7 @@ namespace Automation.ResultFiles {
             }
 
             if (FileName.Contains(":")) {
-                throw new LPGException("Somehow the full path ended up in the Filename");
+                throw new LPGException("Somehow the full path ended up in the Filename: " + FileName);
             }
         }
 

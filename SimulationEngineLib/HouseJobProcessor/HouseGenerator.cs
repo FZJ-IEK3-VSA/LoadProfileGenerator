@@ -119,7 +119,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
             HouseholdData hhd1 = new HouseholdData(Guid.NewGuid().ToString(),  "My First Household, template randomly chosen based on persons", null, null,
                 null, new List<TransportationDistanceModifier>(), HouseholdDataSpecificationType.ByPersons);
             HouseholdDataPersonSpecification personSpec = new HouseholdDataPersonSpecification(new List<PersonData>() {
-            new PersonData(25, Gender.Male)  });
+            new PersonData(25, Gender.Male, "name")  });
             hhd1.HouseholdDataPersonSpec = personSpec;
             houseData1.Households.Add(hhd1);
             HouseholdData hhd2 = new HouseholdData(Guid.NewGuid().ToString(),
@@ -138,8 +138,8 @@ namespace SimulationEngineLib.HouseJobProcessor {
             houseData2.Households.Add(hhd3);
             HouseholdData hhd4 = new HouseholdData(Guid.NewGuid().ToString(), "My Fourth Household", null, null, null, null, HouseholdDataSpecificationType.ByPersons);
             hhd4.HouseholdDataPersonSpec = new HouseholdDataPersonSpecification(new List<PersonData>() {
-                new PersonData(75, Gender.Male),
-                new PersonData(74, Gender.Female)
+                new PersonData(75, Gender.Male, "name1"),
+                new PersonData(74, Gender.Female, "name2")
             });
             houseData2.Households.Add(hhd4);
             var calculationSettings = new JsonCalcSpecification {
@@ -797,7 +797,6 @@ namespace SimulationEngineLib.HouseJobProcessor {
                 throw new Exception("Could not generate this house");
             }
 
-           
             hhs[0].Description = DescriptionText + householdData.UniqueHouseholdId;
             hhs[0].SaveToDB();
             Logger.Info("Finished generating household with template " + template.Name);

@@ -81,7 +81,12 @@
                                  Grid.Column="1"
                                  Style="{StaticResource TextBoxStyle}"
                                  Text="{Binding ThisTemplate.Count}" />
-
+                        <Button Grid.Row="6"
+                                Grid.Column="1"
+                                Click="MakeCopyOnClick"
+                                Style="{StaticResource ButtonStyle}">
+                            Create a new Household Template that is an exact copy.
+                        </Button>
 
                     </Grid>
 
@@ -254,7 +259,7 @@
                                   Grid.Column="1"
                                   DisplayMemberPath="PrettyName"
                                   ItemsSource="{Binding LivingPatternTags}"
-                                  SelectedItem="{Binding SelectedItem.LivingPattern,
+                                  SelectedItem="{Binding SelectedItem.LivingPatternTag,
                                                          ElementName=LstPersons,
                                                          Mode=OneWay}"
                                   Style="{StaticResource ComboBoxStyle}" />
@@ -264,7 +269,7 @@
                             <Button HorizontalAlignment="Right"
                                     Click="BtnAddPerson_Click"
                                     Style="{StaticResource ButtonStyle}">
-                                Add Entry
+                                Add/Update Entry
                             </Button>
                             <Button HorizontalAlignment="Left"
                                     Click="BtnRemovePerson_Click"
@@ -466,6 +471,7 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
@@ -520,6 +526,7 @@
                                  Grid.Column="1"
                                  Style="{StaticResource TextBoxStyle}"
                                  Text="{Binding MaxCount}" />
+
                         <Label Grid.Row="3"
                                Grid.Column="0"
                                Content=" of the traits with the tag"
@@ -529,8 +536,13 @@
                                   ItemsSource="{Binding AllTags}"
                                   SelectedItem="{Binding SelectedTag}"
                                   Style="{StaticResource ComboBoxStyle}" />
-
-                        <StackPanel Grid.Row="4"
+<CheckBox Grid.Row="4" Grid.Column="1"
+          Name="ChkTraitIsMandatory"
+          IsChecked="{Binding TraitIsMandatory}"
+          Style="{StaticResource CheckBoxStyle}">
+    Is this trait mandatory and should the LPG throw an error if it can't be assigned?
+          ></CheckBox>
+                        <StackPanel Grid.Row="5"
                                     Grid.Column="1"
                                     Orientation="Horizontal">
                             <Button HorizontalAlignment="Right"
@@ -549,12 +561,12 @@
                                 Remove all Entries
                             </Button>
                         </StackPanel>
-                        <Label Grid.Row="5"
+                        <Label Grid.Row="6"
                                Grid.Column="0"
                                Content="Filter"
                                Style="{StaticResource LabelStyle}" />
                         <TextBox Name="TxtFilter"
-                                 Grid.Row="5"
+                                 Grid.Row="6"
                                  Grid.Column="1"
                                  KeyUp="UIElement_OnKeyUp"
                                  Style="{StaticResource TextBoxStyle}"
@@ -562,7 +574,7 @@
 
 
                         <ListView x:Name="LstEntries"
-                                  Grid.Row="6"
+                                  Grid.Row="7"
                                   Grid.Column="1"
                                   MinHeight="150"
                                   ItemsSource="{Binding FilteredEntries}"

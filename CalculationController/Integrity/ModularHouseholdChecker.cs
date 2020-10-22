@@ -314,6 +314,26 @@ namespace CalculationController.Integrity {
 
         private void CheckTraitsInHH([NotNull] ModularHousehold chh)
         {
+            Dictionary<HouseholdTrait, int> traitCounts = new Dictionary<HouseholdTrait, int>();
+            foreach (var trait in chh.Traits) {
+                if (!traitCounts.ContainsKey(trait.HouseholdTrait)) {
+                    traitCounts.Add(trait.HouseholdTrait,1);
+                }
+                else {
+                    traitCounts[trait.HouseholdTrait]++;
+                }
+            }
+
+            string s = "";
+            foreach (KeyValuePair<HouseholdTrait, int> pair in traitCounts) {
+                if (pair.Value > pair.Key.MaximumNumberInCHH) {
+                    s += pair.Key.Name + " assigned: " + pair.Value + " maximum allowed: " + pair.Key.MaximumNumberInCHH;
+                }
+            }
+
+            if (s.Length > 0) {
+                throw new DataIntegrityException("The following traits are wrongly assigned in the household " + chh.Name + "\n"+s, chh);
+            }
             var persons = chh.Persons.Select(x => x.Person).ToList();
             foreach (var trait in chh.Traits) {
                 if (trait.AssignType == ModularHouseholdTrait.ModularHouseholdTraitAssignType.Name &&

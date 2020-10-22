@@ -316,7 +316,8 @@ namespace SimulationEngine.Tests {
                 "results.house.sqlite",
                 "results.house.sqlite-shm",
                 "results.house.sqlite-wal",
-                "calculationprofiler.json"
+                "calculationprofiler.json",
+                "calculationdurationflamechart.calcmanager.png"
             };
             //check if all files are registered
             var di = new DirectoryInfo(wd);
@@ -857,6 +858,22 @@ namespace SimulationEngine.Tests {
                 //hj.CalcSpec.CalcOptions.Add(CalcOption.ActionsLogfile);
             }, _ => { });
         }
+        [Fact]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.ManualOnly)]
+        public void FixMandatoryTraits()
+        {
+            DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentAssemblyVersion());
+            Simulator sim = new Simulator(db.ConnectionString);
+            foreach (var template in sim.HouseholdTemplates.Items) {
+                foreach (HHTemplateEntry entry in template.Entries) {
+                    if (entry.TraitTag.Name.Contains("Work / ") || entry.TraitTag.Name.Contains("Sleep / ") ||entry.TraitTag.Name == ("Child / School")) {
+                        Logger.Info("setting tag to mandatory: " + template.Name + ": " + entry.TraitTag.Name);
+                        entry.IsMandatory = true;
+                    }
+                    entry.SaveToDB();
+                }
+            }
+        }
 
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.ManualOnly)]
@@ -1040,7 +1057,7 @@ namespace SimulationEngine.Tests {
                 hhps.HHName = mhh.Name;
                 hhs.Add(hhps);
                 foreach (var person in mhh.Persons) {
-                    var pd = new PersonData(person.Person.Age, person.Person.Gender != PermittedGender.Male ? Gender.Female : Gender.Male);
+                    var pd = new PersonData(person.Person.Age, person.Person.Gender != PermittedGender.Male ? Gender.Female : Gender.Male, person.Name);
                     if (person.LivingPatternTag == null) {
                         throw new LPGException("was null");
                     }
@@ -1117,6 +1134,7 @@ namespace SimulationEngine.Tests {
             }, x => { });
         }
 
+        // ReSharper disable once RedundantNameQualifier
         public SingleCalculationTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }

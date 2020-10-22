@@ -97,7 +97,7 @@ namespace Automation.ResultFiles {
         AffordanceDefinition = 63,
         Seed = 64,
         Chart = 65,
-            PDF = 66,
+        PDF = 66,
         JsonResultFileList= 67,
         Logfile = 68,
         HouseContents = 69,

@@ -27,14 +27,6 @@ namespace LoadProfileGenerator.Presenters.Households {
             }
         }
 
-        [UsedImplicitly]
-        public void RefreshLivingPatterns()
-        {
-            var list = Sim.TraitTags.Items
-                .Where(x => x.Name.StartsWith("Living Pattern", StringComparison.InvariantCulture)).ToList();
-            LivingPatternTags.SynchronizeWithList(list);
-        }
-
         internal void ImportFromCHH()
         {
             if (SelectedCHH == null) {
@@ -45,11 +37,6 @@ namespace LoadProfileGenerator.Presenters.Households {
             ThisTemplate.ImportExistingModularHouseholds(SelectedCHH);
         }
 
-        [NotNull]
-        [ItemNotNull]
-        [UsedImplicitly]
-        public ObservableCollection<TraitTag> LivingPatternTags { get; } = new ObservableCollection<TraitTag>();
-
         internal void RefreshFilteredEntries([CanBeNull] string text)
         {
             if (string.IsNullOrEmpty(text)) {
@@ -58,16 +45,13 @@ namespace LoadProfileGenerator.Presenters.Households {
                 return;
             }
 
-            var fentries =
-                ThisTemplate.Entries.Where(x => x.PrettyString.ToUpperInvariant().Contains(text.ToUpperInvariant()))
-                    .ToList();
+            var fentries = ThisTemplate.Entries.Where(x => x.PrettyString.ToUpperInvariant().Contains(text.ToUpperInvariant())).ToList();
             _filteredEntries.SynchronizeWithList(fentries);
         }
 
         internal void RefreshHouseholds()
         {
-            var chhs =
-                Sim.ModularHouseholds.Items.Where(x => x.GeneratorID == ThisTemplate.IntID).ToList();
+            var chhs = Sim.ModularHouseholds.Items.Where(x => x.GeneratorID == ThisTemplate.IntID).ToList();
             _generatedHouseholds.SynchronizeWithList(chhs);
         }
 
@@ -90,8 +74,7 @@ namespace LoadProfileGenerator.Presenters.Households {
             }
         }
 
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<HHTemplateEntry> _filteredEntries =
-            new ObservableCollection<HHTemplateEntry>();
+        [ItemNotNull] [NotNull] private readonly ObservableCollection<HHTemplateEntry> _filteredEntries = new ObservableCollection<HHTemplateEntry>();
 
         [ItemNotNull] [NotNull] private readonly ObservableCollection<ModularHousehold> _generatedHouseholds =
             new ObservableCollection<ModularHousehold>();
@@ -117,13 +100,13 @@ namespace LoadProfileGenerator.Presenters.Households {
         [CanBeNull] private Vacation _selectedVacation;
 
         public HouseholdTemplatePresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] HouseholdTemplateView view,
-            [NotNull] HouseholdTemplate template) : base(view, "ThisTemplate.HeaderString", template, applicationPresenter)
+                                          [NotNull] HouseholdTemplate template) : base(view, "ThisTemplate.HeaderString", template,
+            applicationPresenter)
         {
             _template = template;
             RefreshHouseholds();
             RefreshPersons();
             RefreshFilteredEntries(_filterText);
-            RefreshLivingPatterns();
         }
 
         [ItemNotNull]
@@ -134,8 +117,7 @@ namespace LoadProfileGenerator.Presenters.Households {
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<ModularHousehold> AllModularHouseholds
-            => Sim.ModularHouseholds.Items;
+        public ObservableCollection<ModularHousehold> AllModularHouseholds => Sim.ModularHouseholds.Items;
 
         [ItemNotNull]
         [NotNull]
@@ -156,6 +138,11 @@ namespace LoadProfileGenerator.Presenters.Households {
         [NotNull]
         [UsedImplicitly]
         public ObservableCollection<Vacation> AllVacations => Sim.Vacations.Items;
+
+        [ItemNotNull]
+        [NotNull]
+        [UsedImplicitly]
+        public ObservableCollection<LivingPatternTag> LivingPatternTags => Sim.LivingPatternTags.Items;
 
         [ItemNotNull]
         [NotNull]
@@ -237,6 +224,7 @@ namespace LoadProfileGenerator.Presenters.Households {
                     MaxCount = _selectedEntry.TraitCountMax;
                     MinCount = _selectedEntry.TraitCountMin;
                     SelectedTag = _selectedEntry.TraitTag;
+                    TraitIsMandatory = _selectedEntry.IsMandatory;
                     foreach (var person in _selectedEntry.Persons) {
                         foreach (var entry in Persons) {
                             if (entry.Person == person.Person) {
@@ -348,9 +336,11 @@ namespace LoadProfileGenerator.Presenters.Households {
             }
         }
 
-        internal void AddEntry([NotNull] TraitTag tag, int min, int max, [ItemNotNull] [NotNull] List<Person> persons)
+        public bool TraitIsMandatory { get; set; }
+
+        internal void AddEntry([NotNull] TraitTag tag, int min, int max, [ItemNotNull] [NotNull] List<Person> persons, bool isMandatory)
         {
-            _template.AddEntry(tag, min, max, persons);
+            _template.AddEntry(tag, min, max, persons, isMandatory);
         }
 
         public override void Close(bool saveToDB, bool removeLast = false)
@@ -391,10 +381,7 @@ namespace LoadProfileGenerator.Presenters.Households {
             task1.Start();
         }
 
-        public override bool Equals(object obj)
-        {
-            return obj is HouseholdTemplatePresenter presenter && presenter.ThisTemplate.Equals(_template);
-        }
+        public override bool Equals(object obj) => obj is HouseholdTemplatePresenter presenter && presenter.ThisTemplate.Equals(_template);
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
@@ -436,6 +423,12 @@ namespace LoadProfileGenerator.Presenters.Households {
             });
 #pragma warning restore CC0022 // Should dispose object
             task1.Start();
+        }
+
+        public void MakeACopy()
+        {
+            var newTemplate = ThisTemplate.MakeCopy(Sim);
+            ApplicationPresenter.OpenItem(newTemplate);
         }
     }
 }

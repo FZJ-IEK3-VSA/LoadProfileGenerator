@@ -79,7 +79,7 @@ namespace LoadProfileGenerator {
 
                             foreach (var person in modularHousehold.Persons)
                             {
-                                template.AddPerson(person.Person, person.LivingPatternTag);
+                                template.AddUpdatePerson(person.Person, person.LivingPatternTag);
                             }
 
                             foreach (var modularHouseholdTag in modularHousehold.ModularHouseholdTags)

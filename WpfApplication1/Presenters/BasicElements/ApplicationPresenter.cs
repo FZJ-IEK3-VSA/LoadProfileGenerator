@@ -532,19 +532,19 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             return d;
         }
 
-        [NotNull]
-        public object AddTemplatePerson()
-        {
-            if (Simulator == null)
-            {
-                throw new LPGException("Simulator was null");
-            }
+        //[NotNull]
+        //public object AddTemplatePerson()
+        //{
+        //    if (Simulator == null)
+        //    {
+        //        throw new LPGException("Simulator was null");
+        //    }
 
-            var d = Simulator.TemplatePersons.CreateNewItem(Simulator.ConnectionString);
-            View.AddTab(new TemplatePersonPresenter(this, new TemplatePersonView(), d));
-            d.SaveToDB();
-            return d;
-        }
+        //    var d = Simulator.TemplatePersons.CreateNewItem(Simulator.ConnectionString);
+        //    View.AddTab(new TemplatePersonPresenter(this, new TemplatePersonView(), d));
+        //    d.SaveToDB();
+        //    return d;
+        //}
 
         [NotNull]
         public HouseholdTag AddTemplateTag()
@@ -866,8 +866,8 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
                 x => View.AddTab(new VariablePresenter(this, new VariableView(), (Variable) x)));
             _openItemDict.Add(typeof(HouseholdTag).FullName,
                 x => View.AddTab(new TemplateTagPresenter(this, new TemplateTagView(), (HouseholdTag) x)));
-            _openItemDict.Add(typeof(TemplatePerson).FullName,
-                x => View.AddTab(new TemplatePersonPresenter(this, new TemplatePersonView(), (TemplatePerson) x)));
+            //_openItemDict.Add(typeof(TemplatePerson).FullName,
+            //    x => View.AddTab(new TemplatePersonPresenter(this, new TemplatePersonView(), (TemplatePerson) x)));
             _openItemDict.Add(typeof(Affordance).FullName,
                 x => View.AddTab(new AffordancePresenter(this, new AffordanceView(), (Affordance) x)));
 

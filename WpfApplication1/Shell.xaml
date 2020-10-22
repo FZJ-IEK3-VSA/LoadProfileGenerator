@@ -1115,11 +1115,11 @@
                     Click="AddHouseholdTemplate_Click"
                     Header="Add a Household Template"
                     IsEnabled="{Binding IsMenuEnabled}" />
-                <MenuItem
+                <!--<MenuItem
                     Name="AddTemplatePerson"
                     Click="AddTemplatePerson_Click"
                     Header="Add a Template Person"
-                    IsEnabled="{Binding IsMenuEnabled}" />
+                    IsEnabled="{Binding IsMenuEnabled}" />-->
             </MenuItem>
             <MenuItem Header="Houses">
                 <MenuItem
@@ -1244,7 +1244,7 @@
                     Header="Screenshot of all tabs for the documentation"
                     IsEnabled="{Binding IsMenuEnabled}" />
 
-                <MenuItem
+                <!--<MenuItem
                     Name="TemplatePersonHH"
                     Click="TemplatePersonHouseholds_OnClick"
                     Header="Create / Sync households for testing of the templated persons"
@@ -1254,7 +1254,7 @@
                     Name="CreateTemplatePersons"
                     Click="UpdateTemplatePersonDescriptions_OnClick"
                     Header="(Re-)Create Template Persons"
-                    IsEnabled="{Binding IsMenuEnabled}" />
+                    IsEnabled="{Binding IsMenuEnabled}" />-->
                 <MenuItem
                     Name="CalcRealisticTraitTimeEstimates"
                     Click="CalcRealisticTraitTimeEstimates_OnClick"

@@ -170,8 +170,12 @@ namespace CalculationController.DtoFactories
                     sim.MyGeneralConfig.InternalStepSize, mhh.Vacation.VacationTimeframes(),
                     mhh.Name + "###" + householdKey, sim.DeviceActions.Items, affordancesAtLoc, locationDict,
                     out List<DateTime> bridgeDays, householdKey, deviceDtos,deviceCategoryDtos);
-                if (_calcRepo.CalcParameters.Options.Contains(CalcOption.HouseholdContents)) {
+                if (_calcRepo.CalcParameters.Options.Contains(CalcOption.AffordanceDefinitions)) {
                     _calcRepo.InputDataLogger.SaveList<CalcAffordanceDto>(allAffordances.ConvertAll(x => (IHouseholdKey)x));
+                }
+
+                if (_calcRepo.CalcParameters.Options.Contains(CalcOption.HouseholdContents))
+                    {
                     _calcRepo.InputDataLogger.SaveList<CalcVariableDto>(_calcVariableRepositoryDtoFactory.GetAllVariableDtos()
                         .ConvertAll(x => (IHouseholdKey)x));
                 }

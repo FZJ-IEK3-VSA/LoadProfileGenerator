@@ -45,7 +45,7 @@ namespace LoadProfileGenerator.Views.Households {
             }
 
             var p = Presenter.Persons.Where(x => x.IsChecked).Select(x => x.Person).ToList();
-            Presenter.AddEntry(Presenter.SelectedTag, Presenter.MinCount, Presenter.MaxCount, p);
+            Presenter.AddEntry(Presenter.SelectedTag, Presenter.MinCount, Presenter.MaxCount, p, Presenter.TraitIsMandatory);
             Presenter.RefreshFilteredEntries(Presenter.FilterText);
         }
 
@@ -60,7 +60,7 @@ namespace LoadProfileGenerator.Views.Households {
                 tag = (LivingPatternTag) CmbLivingPatterns.SelectedItem;
             }
 
-            Presenter.ThisTemplate.AddPerson(Presenter.SelectedPerson, tag);
+            Presenter.ThisTemplate.AddUpdatePerson(Presenter.SelectedPerson, tag);
             Presenter.RefreshPersons();
         }
 
@@ -271,5 +271,10 @@ namespace LoadProfileGenerator.Views.Households {
 
         private void UIElement_OnKeyUp([NotNull] object sender, [NotNull] KeyEventArgs e) =>
             Presenter.RefreshFilteredEntries(TxtFilter.Text);
+
+        private void MakeCopyOnClick(object sender, RoutedEventArgs e)
+        {
+            Presenter.MakeACopy();
+        }
     }
 }

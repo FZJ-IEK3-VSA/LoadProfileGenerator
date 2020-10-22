@@ -70,10 +70,11 @@ namespace Database {
                             : PermittedGender.Female;
                         p.SickDays = sp.AverageSickDays;
                         personCount++;
-                        TraitTag tag = sim.TraitTags.FindFirstByName(sp.TraitTag);
-                        if(tag == null) {
-                            throw new LPGException("Tag not found");
-                        }
+                        //TraitTag tag = sim.TraitTags.FindFirstByName(sp.TraitTag);
+                        //if(tag == null) {
+                          //  throw new LPGException("Tag not found: in the household definition there is the trait tag " + sp.TraitTag
+                                                   //+ ". But that tag could not be found.");
+                        //}
 
                         var livingPatternTag = sim.LivingPatternTags.FindFirstByName(sp.LivingPatternTag);
                         mhh.AddPerson(p, livingPatternTag);
@@ -297,7 +298,7 @@ namespace Database {
                     {
                         if (livingPatternArr[i].Length > 0)
                         {
-                            hhs[i - 1].Persons[currentPerson].TraitTag = livingPatternArr[i];
+                            hhs[i - 1].Persons[currentPerson].LivingPatternTag = livingPatternArr[i];
                         }
                     }
                 }
@@ -602,8 +603,6 @@ namespace Database {
             public int AverageSickDays { get; set; }
             [CanBeNull]
             public string Gender { get; set; }
-            [CanBeNull]
-            public string TraitTag { get; set; }
             [CanBeNull]
             public string LivingPatternTag { get; set; }
             [NotNull]

@@ -48,7 +48,7 @@ namespace CalculationController.Integrity {
             foreach (var devtup in affordance.AffordanceDevices) {
                 if (Math.Abs(devtup.Probability) < 0.000001) {
                     throw new DataIntegrityException("The probability for the device " + devtup.Device?.Name +
-                                                     " is 0. This is not very useful. Please fix.");
+                                                     " is 0. This is not very useful. Please fix." , affordance);
                 }
                 var key =
                     new Tuple<IAssignableDevice, decimal, TimeBasedProfile, VLoadType>(devtup.Device, devtup.TimeOffset,

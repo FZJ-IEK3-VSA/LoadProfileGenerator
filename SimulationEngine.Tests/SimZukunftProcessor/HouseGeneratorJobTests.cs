@@ -136,7 +136,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor {
                         null, HouseholdDataSpecificationType.ByPersons);
                     houseData.Households.Add(householdData);
                     var persons = new List<PersonData> {
-                        new PersonData(30, Gender.Male)
+                        new PersonData(30, Gender.Male, "name")
                     };
                     householdData.HouseholdDataPersonSpec = new HouseholdDataPersonSpecification(persons);
                     HouseCreationAndCalculationJob houseJob =
@@ -178,7 +178,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor {
                         travelRouteSet, tdm, HouseholdDataSpecificationType.ByPersons);
                     houseData.Households.Add(householdData);
                     var persons = new List<PersonData> {
-                        new PersonData(30, Gender.Male)
+                        new PersonData(30, Gender.Male, "name")
                     };
                     householdData.HouseholdDataPersonSpec = new HouseholdDataPersonSpecification(persons);
                     HouseCreationAndCalculationJob houseJob =
@@ -244,7 +244,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor {
                         null, HouseholdDataSpecificationType.ByPersons);
                     houseData.Households.Add(householdData);
                     var persons = new List<PersonData> {
-                        new PersonData(30, Gender.Male)
+                        new PersonData(30, Gender.Male, "name")
                     };
                     householdData.HouseholdDataPersonSpec = new HouseholdDataPersonSpecification(persons);
                     houseJob.CalcSpec = new JsonCalcSpecification {
