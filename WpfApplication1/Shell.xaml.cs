@@ -52,9 +52,14 @@ using Database.Tables.ModularHouseholds;
 using JetBrains.Annotations;
 using LoadProfileGenerator.Presenters;
 using LoadProfileGenerator.Presenters.BasicElements;
-using Microsoft.Win32;
+using Application = System.Windows.Application;
+using Binding = System.Windows.Data.Binding;
+using Button = System.Windows.Controls.Button;
+using MessageBox = System.Windows.MessageBox;
+using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
+using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
 
-namespace LoadProfileGenerator {
+ namespace LoadProfileGenerator {
     /// <summary>
     ///     Interaktionslogik f�r MainWindow.xaml
     /// </summary>
@@ -265,7 +270,6 @@ namespace LoadProfileGenerator {
             if (!File.Exists(fileName)) {
                 return;
             }
-
             CloseDB();
             DB3Path = fileName;
             UpdateTitle();

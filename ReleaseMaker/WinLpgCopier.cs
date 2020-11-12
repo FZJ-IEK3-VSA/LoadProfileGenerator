@@ -10,7 +10,6 @@ namespace ReleaseMaker {
             List<string> programFiles = new List<string>();
             var srcDi = new DirectoryInfo(src);
             Copy(programFiles, srcDi, src, dst,"Autofac.dll");
-            Copy(programFiles, srcDi, src, dst,"Autofac.dll");
             Copy(programFiles, srcDi, src, dst,"Automation.dll");
             Copy(programFiles, srcDi, src, dst,"CalcPostProcessor.dll");
             Copy(programFiles, srcDi, src, dst,"CalculationController.dll");
@@ -62,7 +61,7 @@ namespace ReleaseMaker {
             //Copy(programFiles, srcDi, src, dst,"sqlite3.dll");
             Copy(programFiles, srcDi, src, dst,"System.Data.SQLite.dll");
             Copy(programFiles, srcDi, src, dst,"LoadProfileGenerator.exe");
-            Copy(programFiles, srcDi, src, dst,"LoadProfileGenerator.exe.config");
+            Copy(programFiles, srcDi, src, dst,"LoadProfileGenerator.exe.config", "4.0.3.0", "4.0.2.0");
             //Copy(programFiles, srcDi, src, dst,"SimulationEngine.exe");
             //Copy(programFiles, srcDi, src, dst,"PowerArgs.dll");
             Copy(programFiles, srcDi, src, dst,"EntityFramework.dll");

@@ -31,7 +31,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Automation.ResultFiles;
 using CalculationController.CalcFactories;
-using CalculationController.DtoFactories;
 using CalculationEngine;
 using Common;
 //using Common.SQLResultLogging.InputLoggers;
@@ -161,11 +160,11 @@ namespace CalculationController.Queue {
                 }
 #pragma warning restore 162
             if (allgood) {
-                var cpf = new CalcParametersFactory();
-                var calcParameters = cpf.MakeCalculationParametersFromConfig(csps, forceRandom);
-                var cpp = new DatFileDeletor( calcParameters,csps.ResultPath, csps.CalcTarget.Name);
+                Logger.Info("Starting final cleanup");
+                var cpp = new DatFileDeletor( csps.DeleteDatFiles,csps.ResultPath, csps.CalcTarget.Name);
                 cpp.ProcessResults();
                 SaveCallFunction(csps.ReportFinishFuncForHousehold,csps);
+                Logger.Info("Finished final cleanup");
             }
             else {
                 throw new LPGException("No Results in CalcQueRunner! Please report this bug.");

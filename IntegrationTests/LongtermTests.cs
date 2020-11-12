@@ -132,55 +132,51 @@ namespace IntegrationTests {
     {
         private static void ClearAllTables([JetBrains.Annotations.NotNull] DatabaseSetup db)
         {
-            using (var con = new Connection(db.ConnectionString)) {
-                con.Open();
-                var tables = new List<string>();
-                using (var cmd = new Command(con)) {
-                    var dr = cmd.ExecuteReader("SELECT * from SQLITE_Master WHERE type = 'table'");
-                    while (dr.Read()) {
-                        var s = dr.GetString("name").ToLowerInvariant();
-                        if (s.StartsWith("tbl", StringComparison.Ordinal)) {
-                            if (s.Equals("tbllpgversion", StringComparison.Ordinal)) {
-                                continue;
-                            }
-                            tables.Add(s);
-                            Logger.Info("Clearing Table " + s);
-                        }
+            using var con = new Connection(db.ConnectionString);
+            con.Open();
+            var tables = new List<string>();
+            using var cmd = new Command(con);
+            var dr = cmd.ExecuteReader("SELECT * from SQLITE_Master WHERE type = 'table'");
+            while (dr.Read()) {
+                var s = dr.GetString("name").ToLowerInvariant();
+                if (s.StartsWith("tbl", StringComparison.Ordinal)) {
+                    if (s.Equals("tbllpgversion", StringComparison.Ordinal)) {
+                        continue;
                     }
-                    dr.Dispose();
-                    foreach (var table in tables) {
-                        cmd.ExecuteNonQuery("DELETE FROM " + table);
-                    }
+                    tables.Add(s);
+                    Logger.Info("Clearing Table " + s);
                 }
+            }
+            dr.Dispose();
+            foreach (var table in tables) {
+                cmd.ExecuteNonQuery("DELETE FROM " + table);
             }
         }
 
         private static void DeleteOneElementFromAllTables([JetBrains.Annotations.NotNull] DatabaseSetup db)
         {
-            using (var con = new Connection(db.ConnectionString))
+            using var con = new Connection(db.ConnectionString);
+            con.Open();
+            var tables = new List<string>();
+            using (var cmd = new Command(con))
             {
-                con.Open();
-                var tables = new List<string>();
-                using (var cmd = new Command(con))
+                var dr = cmd.ExecuteReader("SELECT * from SQLITE_Master WHERE type = 'table'");
+                while (dr.Read())
                 {
-                    var dr = cmd.ExecuteReader("SELECT * from SQLITE_Master WHERE type = 'table'");
-                    while (dr.Read())
+                    var s = dr.GetString("name");
+                    if (s.ToLower(CultureInfo.CurrentCulture).StartsWith("tbl", StringComparison.Ordinal))
                     {
-                        var s = dr.GetString("name");
-                        if (s.ToLower(CultureInfo.CurrentCulture).StartsWith("tbl", StringComparison.Ordinal))
-                        {
-                            tables.Add(s);
-                            Logger.Info("Clearing Table " + s);
-                        }
+                        tables.Add(s);
+                        Logger.Info("Clearing Table " + s);
                     }
-                    dr.Dispose();
-                    foreach (var table in tables)
-                    {
-                        Logger.Info(table);
-                        string sql = "DELETE FROM " + table + " where ID in (select id from " + table + " limit 1)";
-                        Logger.Info(sql);
-                        cmd.ExecuteNonQuery(sql);
-                    }
+                }
+                dr.Dispose();
+                foreach (var table in tables)
+                {
+                    Logger.Info(table);
+                    string sql = "DELETE FROM " + table + " where ID in (select id from " + table + " limit 1)";
+                    Logger.Info(sql);
+                    cmd.ExecuteNonQuery(sql);
                 }
             }
         }

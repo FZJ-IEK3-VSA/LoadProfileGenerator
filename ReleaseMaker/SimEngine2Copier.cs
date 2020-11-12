@@ -299,7 +299,6 @@ namespace ReleaseMaker {
             Copy(programFiles, srcDi, src, dst,"api-ms-win-crt-string-l1-1-0.dll");
             Copy(programFiles, srcDi, src, dst,"api-ms-win-crt-time-l1-1-0.dll");
             Copy(programFiles, srcDi, src, dst,"api-ms-win-crt-utility-l1-1-0.dll");
-            Copy(programFiles, srcDi, src, dst,"Autofac.dll");
             Copy(programFiles, srcDi, src, dst,"Automation.dll");
             Copy(programFiles, srcDi, src, dst,"CalcPostProcessor.dll");
             Copy(programFiles, srcDi, src, dst,"CalculationController.dll");
@@ -831,8 +830,8 @@ namespace ReleaseMaker {
             Copy(programFiles, srcDi, src, dst, "publish\\Utf8Json.dll");
             Copy(programFiles, srcDi, src, dst, "publish\\WindowsBase.dll");
             Copy(programFiles, srcDi, src, dst, "publish\\xunit.abstractions.dll");
-            Copy(programFiles, srcDi, src, dst, "mscordaccore_amd64_amd64_4.700.20.41105.dll");
-            Copy(programFiles, srcDi, src, dst, "publish\\mscordaccore_amd64_amd64_4.700.20.41105.dll");
+            Copy(programFiles, srcDi, src, dst, "mscordaccore_amd64_amd64_4.700.20.47201.dll");
+            Copy(programFiles, srcDi, src, dst, "publish\\mscordaccore_amd64_amd64_4.700.20.47201.dll");
             CheckIfFilesAreCompletelyCopied(src, programFiles);
         }
     }

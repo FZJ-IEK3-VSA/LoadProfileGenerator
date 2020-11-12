@@ -64,7 +64,7 @@ namespace Calculation.HouseholdElements.Tests {
                     //LoadTypePriority.RecommendedForHouses, null,null
                     var dls = new DayLightStatus(new BitArray(100));
                     if (cm.CalcObject == null) {
-                        throw new LPGException("xxx");
+                        throw new LPGException("CalcObject was null");
                     }
 
                     cm.CalcObject.Init(dls, 1);

@@ -13,7 +13,7 @@
   <PropertyGroup>
     <DebugType>Full</DebugType>
     <Nullable>enable</Nullable>
-    <LangVersion>8</LangVersion>
+    <LangVersion>9</LangVersion>
      <IsTestProject>false</IsTestProject>
   </PropertyGroup>
   <ItemGroup>

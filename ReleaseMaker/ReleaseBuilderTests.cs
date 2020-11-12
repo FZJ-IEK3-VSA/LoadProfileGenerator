@@ -28,25 +28,42 @@ using LoadProfileGenerator.Presenters.SpecialViews;
 namespace ReleaseMaker
 {
     public class CopierBase {
-        protected static void Copy(List<string> programFiles, DirectoryInfo basePath, [NotNull] string src, [NotNull] string dst, [NotNull] string filename, string? dstfilename = null)
+        //string? dstfilename = null,
+        protected static void Copy(List<string> programFiles, DirectoryInfo basePath, [NotNull] string src, [NotNull] string dst, [NotNull] string filename,  string? contentToReplace = null, string? newContent = null)
         {
             var dstFi = new FileInfo( Path.Combine(dst, filename));
             if (!Directory.Exists(dstFi.DirectoryName)) {
                 Directory.CreateDirectory(dstFi.DirectoryName??throw new LPGException("no dir"));
             }
+
+            if (contentToReplace != null && newContent == null) {
+                throw new LPGException("either both or nothing");
+            }
+            if (contentToReplace == null && newContent != null)
+            {
+                throw new LPGException("either both or nothing");
+            }
             if (dstFi.Exists)
             {
                 dstFi.Delete();
             }
-            if (dstfilename == null)
-            {
-                File.Copy(Path.Combine(src, filename), dstFi.FullName);
+            if (contentToReplace != null && newContent != null) {
+                string s = File.ReadAllText(Path.Combine(src, filename));
+                s = s.Replace(contentToReplace, newContent);
+                File.WriteAllText(dstFi.FullName,s);
+                Logger.Info("Copied and modified " + filename);
             }
-            else
-            {
-                File.Copy(Path.Combine(src, filename), dstFi.FullName);
+            else {
+                //if (dstfilename == null) {
+                    File.Copy(Path.Combine(src, filename), dstFi.FullName);
+                //}
+                //else {
+                    //File.Copy(Path.Combine(src, filename), dstFi.FullName);
+                //}
+
+                Logger.Info("Copied " + filename);
             }
-            Logger.Info("Copied " + filename);
+
             programFiles.Add(new FileInfo(Path.Combine(src, filename)).RelativePath(basePath));
         }
 
@@ -418,7 +435,6 @@ namespace ReleaseMaker
         //[Fact]
         //      [Trait(UnitTestCategories.Category,"ReleaseMaker")]
         [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalse")]
-        [SuppressMessage("ReSharper", "HeuristicUnreachableCode")]
         public void MakeRelease()
         {
             const string filename = "profilegenerator-latest.db3";
@@ -477,8 +493,8 @@ namespace ReleaseMaker
                 sim.MyGeneralConfig.DestinationPath = "C:\\Work\\";
                 sim.MyGeneralConfig.ImagePath = "C:\\Work\\";
                 sim.MyGeneralConfig.RandomSeed = -1;
-                sim.MyGeneralConfig.StartDateString = "01.01.2016";
-                sim.MyGeneralConfig.EndDateString = "31.12.2016";
+                sim.MyGeneralConfig.StartDateString = "01.01.2021";
+                sim.MyGeneralConfig.EndDateString = "31.12.2021";
                 SimIntegrityChecker.Run(sim, CheckingOptions.Default());
                 sim.MyGeneralConfig.PerformCleanUpChecks = "False";
                 sim.MyGeneralConfig.CSVCharacter = ";";
@@ -643,7 +659,7 @@ namespace ReleaseMaker
             using (var process = new Process()) {
                 // Configure the process using the StartInfo properties.
                 process.StartInfo.FileName = @"C:\Program Files\7-Zip\7z.exe";
-                process.StartInfo.Arguments = "a -tzip -mx9 LPG" + releaseName + ".zip  *.*";
+                process.StartInfo.Arguments = "a -tzip -mx9 LPG" + releaseName + ".zip  *";
                 Logger.Info(process.StartInfo.FileName + " " + process.StartInfo.Arguments);
                 process.StartInfo.WindowStyle = ProcessWindowStyle.Maximized;
                 process.StartInfo.WorkingDirectory = dst;

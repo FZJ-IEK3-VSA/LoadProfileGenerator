@@ -284,7 +284,7 @@ namespace SimulationEngine.Tests {
             var container = PostProcessingManager.RegisterEverything(wd, cp, fftd);
             HashSet<CalcOption> enabledOptions = new HashSet<CalcOption>();
             enabledOptions.Add(option);
-            ChartProcessorManager.ChartingFunctionDependencySetter(wd,cp,fftd,enabledOptions);
+            ChartProcessorManager.ChartingFunctionDependencySetter(wd,cp,fftd,enabledOptions,false);
             using (var scope = container.BeginLifetimeScope()) {
                 var odm = scope.Resolve<OptionDependencyManager>();
                 odm.EnableRequiredOptions(enabledOptions);

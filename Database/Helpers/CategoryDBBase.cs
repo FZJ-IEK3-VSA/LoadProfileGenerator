@@ -243,7 +243,7 @@ namespace Database.Helpers {
             return count;
         }
 
-        public bool DeleteLastChar(string s)
+        public bool DeleteLastChar([NotNull] string s)
         {
             string last = s.Substring(s.Length - 1);
             if (int.TryParse(last, out _)) {

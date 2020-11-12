@@ -79,7 +79,6 @@ namespace CalculationController.CalcFactories
             //TransportationDeviceSet transportationDeviceSet, TravelRouteSet travelRouteSet,
             //)
         {
-            csps.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() +  " Initializing");
             if (sim == null) {
                 throw new LPGException("Simulation was null");
             }
@@ -90,15 +89,16 @@ namespace CalculationController.CalcFactories
 
             CalcManager cm = null;
             Logger.Info("Starting the calculation of " + csps.CalcTarget.Name);
-            try
-            {
+            ContainerBuilder builder;
+            CalcParameters calcParameters;
+            try {
+                csps.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " Initializing");
                 if (DoIntegrityRun) {
                     SimIntegrityChecker.Run(sim, CheckingOptions.FromStartParameters(csps));
                 }
 
-                if (csps.CalcTarget.CalcObjectType == CalcObjectType.House &&
-                    (csps.LoadTypePriority == LoadTypePriority.RecommendedForHouseholds ||
-                     csps.LoadTypePriority == LoadTypePriority.Mandatory)) {
+                if (csps.CalcTarget.CalcObjectType == CalcObjectType.House && (csps.LoadTypePriority == LoadTypePriority.RecommendedForHouseholds ||
+                                                                               csps.LoadTypePriority == LoadTypePriority.Mandatory)) {
                     throw new DataIntegrityException(
                         "You are trying to calculate a house with only the load types for a household. This would mess up the warm water calculations. Please fix the load type selection.");
                 }
@@ -108,26 +108,29 @@ namespace CalculationController.CalcFactories
                 var ds = GetDeviceSelection(csps, csps.CalcTarget, chh);
 
                 var cpf = new CalcParametersFactory();
-                var calcParameters = cpf.MakeCalculationParametersFromConfig(csps,forceRandom);
+                calcParameters = cpf.MakeCalculationParametersFromConfig(csps, forceRandom);
 
                 var sqlFileName = Path.Combine(csps.ResultPath, "Results.sqlite");
-                var builder = new ContainerBuilder();
-                RegisterEverything(sim, csps.ResultPath, csps, csps.CalcTarget, builder,
-                    sqlFileName, calcParameters, ds);
+                builder = new ContainerBuilder();
+                RegisterEverything(sim, csps.ResultPath, csps, csps.CalcTarget, builder, sqlFileName, calcParameters, ds);
+            }
+            finally {
                 csps.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " Initializing");
+            }
+
+            try {
                 csps.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " Generating Model");
                 var container = builder.Build();
-                using (var scope = container.BeginLifetimeScope())
-                {
-                    var calcRepo = PrepareCalculation(sim, csps, scope,
-                         out var dtoltdict,  out var dls, out var variableRepository);
+                using (var scope = container.BeginLifetimeScope()) {
+                    var calcRepo = PrepareCalculation(sim, csps, scope, out var dtoltdict, out var dls, out var variableRepository);
+
                     cm = new CalcManager(csps.ResultPath,
                         //hh.Name,
                         //householdPlans,
                         //csps.LPGVersion,
-                        calcParameters.ActualRandomSeed,dls, variableRepository,calcRepo
+                        calcParameters.ActualRandomSeed, dls, variableRepository, calcRepo
                         //scope.Resolve<SqlResultLoggingService>()
-                        );
+                    );
                     //_calcParameters.Logfile = cm.Logfile;
                     //_calcParameters.NormalDistributedRandom = normalDistributedRandom;
                     //_calcParameters.RandomGenerator = randomGenerator;
@@ -139,32 +142,29 @@ namespace CalculationController.CalcFactories
                     CalcVariableDtoFactory cvrdto = scope.Resolve<CalcVariableDtoFactory>();
                     CalcDeviceTaggingSets devicetaggingSets = scope.Resolve<CalcDeviceTaggingSets>();
                     if (csps.CalcTarget.GetType() == typeof(House)) {
-                        ch = MakeCalcHouseObject(sim, csps, csps.CalcTarget,  scope,
-                            cvrdto, variableRepository, out cot, calcRepo);
-                        CalcHouse chd =(CalcHouse) ch;
+                        ch = MakeCalcHouseObject(sim, csps, csps.CalcTarget, scope, cvrdto, variableRepository, out cot, calcRepo);
+                        CalcHouse chd = (CalcHouse)ch;
                         if (chd.EnergyStorages != null) {
                             foreach (var calcEnergyStorage in chd.EnergyStorages) {
                                 foreach (var taggingSet in devicetaggingSets.AllCalcDeviceTaggingSets) {
-                                    taggingSet.AddTag(calcEnergyStorage.Name,"Energy Storage");
+                                    taggingSet.AddTag(calcEnergyStorage.Name, "Energy Storage");
                                 }
                             }
                         }
 
                     }
                     else if (csps.CalcTarget.GetType() == typeof(ModularHousehold)) {
-                        ch = MakeCalcHouseholdObject(sim, csps, csps.CalcTarget, scope,  cvrdto, variableRepository, out cot,calcRepo);
+                        ch = MakeCalcHouseholdObject(sim, csps, csps.CalcTarget, scope, cvrdto, variableRepository, out cot, calcRepo);
                     }
-                    else
-                    {
+                    else {
                         throw new LPGException("The type " + csps.CalcTarget.GetType() + " is missing!");
                     }
 
                     if (calcRepo.CalcParameters.Options.Contains(CalcOption.DeviceTaggingSets)) {
-                        calcRepo.InputDataLogger.Save(Constants.GeneralHouseholdKey,
-                            devicetaggingSets.AllCalcDeviceTaggingSets);
+                        calcRepo.InputDataLogger.Save(Constants.GeneralHouseholdKey, devicetaggingSets.AllCalcDeviceTaggingSets);
                     }
 
-                    CalcObjectInformation coi = new CalcObjectInformation(cot,ch.Name,csps.ResultPath);
+                    CalcObjectInformation coi = new CalcObjectInformation(cot, ch.Name, csps.ResultPath);
                     if (calcRepo.CalcParameters.Options.Contains(CalcOption.HouseholdContents)) {
                         calcRepo.InputDataLogger.Save(Constants.GeneralHouseholdKey, coi);
                     }
@@ -176,14 +176,16 @@ namespace CalculationController.CalcFactories
                     CalcManager.ExitCalcFunction = false;
 
                     //LogSeed(calcParameters.ActualRandomSeed, lf.FileFactoryAndTracker, calcParameters);
-                    csps.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " Generating Model");
+
                     return cm;
                 }
             }
-            catch
-            {
+            catch {
                 cm?.Dispose();
                 throw;
+            }
+            finally {
+                csps.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " Generating Model");
             }
         }
 

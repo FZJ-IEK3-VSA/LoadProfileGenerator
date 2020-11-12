@@ -32,5 +32,8 @@ namespace Common.CalcDto {
         public StrGuid LoadTypeGuid { get; }
         [NotNull]
         public string LoadTypeName { get; }
+
+        [NotNull]
+        public override string ToString() => Name + " - " + LoadTypeName + " " + MaxPower + " Power";
     }
 }

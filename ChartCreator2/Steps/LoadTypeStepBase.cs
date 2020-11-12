@@ -17,7 +17,7 @@ namespace ChartCreator2.Steps
         bool IsEnabled();
     }
 
-    public abstract class LoadTypeSumStepBase : BasicPostProcessingStep, ILoadTypeSumStep
+    public abstract class LoadTypeSumStepBase : BasicChartProcessingStep, ILoadTypeSumStep
     {
         protected LoadTypeSumStepBase([JetBrains.Annotations.NotNull] CalcDataRepository repository, [JetBrains.Annotations.NotNull] List<CalcOption> options,
                                       [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler,
@@ -26,7 +26,7 @@ namespace ChartCreator2.Steps
         {
         }
     }
-    public abstract class LoadTypeStepBase : BasicPostProcessingStep, ILoadTypeStep
+    public abstract class LoadTypeStepBase : BasicChartProcessingStep, ILoadTypeStep
     {
         protected LoadTypeStepBase([JetBrains.Annotations.NotNull] CalcDataRepository repository, [JetBrains.Annotations.NotNull] List<CalcOption> options,
                                              [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler,

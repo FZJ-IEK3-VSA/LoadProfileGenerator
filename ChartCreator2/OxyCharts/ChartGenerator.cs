@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -15,137 +14,139 @@ using Common.SQLResultLogging.InputLoggers;
 using JetBrains.Annotations;
 
 namespace ChartCreator2.OxyCharts {
-    public enum FileProcessingResult
-    {
+    public enum FileProcessingResult {
         ShouldCreateFiles,
         NoFilesTocreate
     }
 
 
-    [SuppressMessage("ReSharper", "RedundantNameQualifier")]
-    public static class ChartMaker
-    {
-        public static void MakeFlameChart([JetBrains.Annotations.NotNull] DirectoryInfo di, [JetBrains.Annotations.NotNull] CalculationProfiler calculationProfiler)
+    public static class ChartMaker {
+        public static void MakeFlameChart([NotNull] DirectoryInfo di, [NotNull] CalculationProfiler calculationProfiler)
         {
             string targetfile = Path.Combine(di.FullName, Constants.CalculationProfilerJson);
-            using (StreamWriter sw = new StreamWriter(targetfile))
-            {
-                calculationProfiler.WriteJson(sw);
-                CalculationDurationFlameChart cdfc = new CalculationDurationFlameChart();
-                Thread t = new Thread(() => {
-                    try
-                    {
-                        cdfc.Run(calculationProfiler, di.FullName, "CommandlineCalc");
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Exception(ex);
-                    }
-                });
-                t.SetApartmentState(ApartmentState.STA);
-                t.Start();
-                t.Join();
-            }
+            using StreamWriter sw = new StreamWriter(targetfile);
+            calculationProfiler.WriteJson(sw);
+            CalculationDurationFlameChart cdfc = new CalculationDurationFlameChart();
+            Thread t = new Thread(() => {
+                try {
+                    cdfc.Run(calculationProfiler, di.FullName, "CommandlineCalc");
+                }
+                catch (Exception ex) {
+                    Logger.Exception(ex);
+                }
+            });
+            t.SetApartmentState(ApartmentState.STA);
+            t.Start();
+            t.Join();
         }
 
-        public static void MakeChartsAndPDF(CalculationProfiler calculationProfiler, string resultPath)
+        public static void MakeChartsAndPDF([NotNull] CalculationProfiler calculationProfiler, string resultPath)
         {
-            Exception innerException = null;
-            Action a = ()=> {
-                try
-                {
-                    SqlResultLoggingService srls = new SqlResultLoggingService(resultPath);
-                    CalcParameterLogger cpl = new CalcParameterLogger(srls);
-                    InputDataLogger idl = new InputDataLogger(Array.Empty<IDataSaverBase>());
-                    var calcParameters = cpl.Load();
-                    Logger.Info("Checking for charting parameters");
-                    if (!calcParameters.IsSet(CalcOption.MakePDF) && ! calcParameters.IsSet(CalcOption.MakeGraphics)) {
-                        Logger.Info("No charts wanted");
-                        return;
-                    }
-                    calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Charting");
-                    using (FileFactoryAndTracker fileFactoryAndTracker =
-                        new FileFactoryAndTracker(resultPath, "Name", idl)) {
-                        fileFactoryAndTracker.ReadExistingFilesFromSql();
-                        calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Chart Generator RunAll");
-                        ChartCreationParameters ccp = new ChartCreationParameters(144, 1600, 1000,
-                            false, calcParameters.CSVCharacter, new DirectoryInfo(resultPath));
+            try {
+                SqlResultLoggingService srls = new SqlResultLoggingService(resultPath);
+                CalcParameterLogger cpl = new CalcParameterLogger(srls);
+                InputDataLogger idl = new InputDataLogger(Array.Empty<IDataSaverBase>());
+                var calcParameters = cpl.Load();
+                Logger.Info("Checking for charting parameters");
+                if (!calcParameters.IsSet(CalcOption.MakePDF) && !calcParameters.IsSet(CalcOption.MakeGraphics)) {
+                    Logger.Info("No charts wanted");
+                    return;
+                }
+
+                calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Charting");
+                using (FileFactoryAndTracker fileFactoryAndTracker = new FileFactoryAndTracker(resultPath, "Name", idl)) {
+                    fileFactoryAndTracker.ReadExistingFilesFromSql();
+                    calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Chart Generator RunAll");
+                    try {
+                        ChartCreationParameters ccp = new ChartCreationParameters(144, 1600, 1000, false, calcParameters.CSVCharacter,
+                            new DirectoryInfo(resultPath));
                         var cg = new ChartGeneratorManager(calculationProfiler, fileFactoryAndTracker, ccp);
                         cg.Run(resultPath);
+                    }
+                    finally {
                         calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Chart Generator RunAll");
-                        if (calcParameters.IsSet(CalcOption.MakePDF)) {
+                    }
+
+                    if (calcParameters.IsSet(CalcOption.MakePDF)) {
+                        try {
                             calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - PDF Creation");
-                            Logger.ImportantInfo(
-                                "Creating the PDF. This will take a really long time without any progress report...");
+                            Logger.ImportantInfo("Creating the PDF. This will take a really long time without any progress report...");
 
                             //MigraPDFCreator mpc = new MigraPDFCreator(calculationProfiler);
                             //mpc.MakeDocument(resultPath, "", false, false, calcParameters.CSVCharacter, fileFactoryAndTracker);
+                        }
+                        finally {
                             calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - PDF Creation");
                         }
                     }
-                    Logger.Info("Finished making the charts");
-                    calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Charting");
-                    CalculationDurationFlameChart cdfc = new CalculationDurationFlameChart();
-                            cdfc.Run(calculationProfiler, resultPath, "CalcManager");
                 }
-                catch (Exception ex)
-                {
-                    innerException = ex;
-                    Logger.Exception(ex);
-                }
-            };
-            a();
-            //var t = new Thread(a);
-// t.SetApartmentState(ApartmentState.STA);
-            //t.Start();
-            //t.Join();
-            if (innerException != null)
-            {
-                Logger.Error("Exception during the PDF creation!");
-                Logger.Exception(innerException);
-                throw innerException;
-            }
 
+                Logger.Info("Finished making the charts");
+
+                // CalculationDurationFlameChart cdfc = new CalculationDurationFlameChart();
+                //cdfc.Run(calculationProfiler, resultPath, "CalcManager");
+            }
+            catch (FileLoadException flex) {
+                try {
+                    ErrorReporter er = new ErrorReporter();
+                    er.Run("Caught exception:" + flex.Message, flex.StackTrace);
+                }
+#pragma warning disable RCS1075 // Avoid empty catch clause that catches System.Exception.
+                catch (Exception) {
+#pragma warning restore RCS1075 // Avoid empty catch clause that catches System.Exception.
+                    // ignored
+                }
+
+                Logger.Error(
+                    "Failed to enable the charting library due to missing dependencies on your computer. No chart creation is possible. Everything else worked though. The exact error message is: " +
+                    flex.Message);
+            }
+            finally {
+                calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Charting");
+            }
         }
+
+        //var t = new Thread(a);
+// t.SetApartmentState(ApartmentState.STA);
+        //t.Start();
+        //t.Join();
+
     }
-    [SuppressMessage("ReSharper", "RedundantNameQualifier")]
+
     public class ChartGeneratorManager {
-            [JetBrains.Annotations.NotNull]
-            private readonly ICalculationProfiler _calculationProfiler;
-            [JetBrains.Annotations.NotNull]
-            private readonly FileFactoryAndTracker _fft;
+        [NotNull] private readonly ICalculationProfiler _calculationProfiler;
+        [NotNull] private readonly FileFactoryAndTracker _fft;
 
-        [JetBrains.Annotations.NotNull] private readonly ChartCreationParameters _chartCreationParameters;
-        [JetBrains.Annotations.NotNull] private readonly SqlResultLoggingService _srls;
+        [NotNull] private readonly ChartCreationParameters _chartCreationParameters;
+        [NotNull] private readonly SqlResultLoggingService _srls;
 
-        public ChartGeneratorManager([JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler,
-                                     [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft,
-                                         [JetBrains.Annotations.NotNull] ChartCreationParameters chartCreationParameters)
-            {
-                _calculationProfiler = calculationProfiler;
-                _fft = fft;
-                _chartCreationParameters = chartCreationParameters;
-                _srls = new SqlResultLoggingService(_chartCreationParameters.BaseDirectory.FullName);
-            }
+        public ChartGeneratorManager([NotNull] ICalculationProfiler calculationProfiler, [NotNull] FileFactoryAndTracker fft,
+                                     [NotNull] ChartCreationParameters chartCreationParameters)
+        {
+            _calculationProfiler = calculationProfiler;
+            _fft = fft;
+            _chartCreationParameters = chartCreationParameters;
+            _srls = new SqlResultLoggingService(_chartCreationParameters.BaseDirectory.FullName);
+        }
 
-            public void Run([JetBrains.Annotations.NotNull] string resultPath)
-            {
-                _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Post Processing");
-
+        public void Run([NotNull] string resultPath)
+        {
+            _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Post Processing");
+            try {
                 CalcDataRepository cdr = new CalcDataRepository(_srls);
-            var builder = new ContainerBuilder();
+                var builder = new ContainerBuilder();
                 builder.Register(_ => new SqlResultLoggingService(resultPath)).As<SqlResultLoggingService>().SingleInstance();
                 //builder.Register(c =>_logFile).As<ILogFile>().SingleInstance();
                 builder.Register(_ => _calculationProfiler).As<ICalculationProfiler>().SingleInstance();
                 builder.Register(_ => _fft).As<FileFactoryAndTracker>().SingleInstance();
                 builder.Register(_ => _srls).As<SqlResultLoggingService>().SingleInstance();
-            builder.Register(_ => _chartCreationParameters).As<ChartCreationParameters>().SingleInstance();
-            builder.Register(_ => cdr.CalcParameters).As<CalcParameters>().SingleInstance();
-            builder.RegisterType<ChartGenerator>().As<ChartGenerator>().SingleInstance();
+                builder.Register(_ => _chartCreationParameters).As<ChartCreationParameters>().SingleInstance();
+                builder.Register(_ => cdr.CalcParameters).As<CalcParameters>().SingleInstance();
+                builder.RegisterType<ChartGenerator>().As<ChartGenerator>().SingleInstance();
                 builder.RegisterType<CalcDataRepository>().As<CalcDataRepository>().SingleInstance();
 
-            //general file processing steps
-            builder.RegisterType<ActivityFrequenciesPerMinute>().As<IChartMakerStep>().SingleInstance();
+                //general file processing steps
+                builder.RegisterType<ActivityFrequenciesPerMinute>().As<IChartMakerStep>().SingleInstance();
                 builder.RegisterType<ActivityPercentage>().As<IChartMakerStep>().SingleInstance();
                 builder.RegisterType<AffordanceEnergyUse>().As<IChartMakerStep>().SingleInstance();
                 builder.RegisterType<AffordanceTaggingSet>().As<IChartMakerStep>().SingleInstance();
@@ -171,24 +172,25 @@ namespace ChartCreator2.OxyCharts {
 
                 //sql steps
                 builder.RegisterType<AffordanceEnergyUsePerPerson>().As<ChartBaseSqlStep>().SingleInstance();
-            var container = builder.Build();
-                using (var scope = container.BeginLifetimeScope())
-                {
-                    ChartGenerator ps = scope.Resolve<ChartGenerator>();
-                    ps.RunAll(resultPath);
-                }
+                var container = builder.Build();
+                using var scope = container.BeginLifetimeScope();
+                ChartGenerator ps = scope.Resolve<ChartGenerator>();
+                ps.RunAll();
+            }
+            finally {
                 _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Post Processing");
             }
         }
-    [SuppressMessage("ReSharper", "RedundantNameQualifier")]
+    }
+
     public class ChartCreationParameters {
         public int Dpi { get; }
         public int Height { get; }
         public int Width { get; }
         public bool ShowTitle { get; }
 
-        public ChartCreationParameters(int dpi, int imgWidth, int imgHeight, bool showTitle,
-                                               [JetBrains.Annotations.NotNull] string csvCharacter, [JetBrains.Annotations.NotNull] DirectoryInfo baseDirectory)
+        public ChartCreationParameters(int dpi, int imgWidth, int imgHeight, bool showTitle, [NotNull] string csvCharacter,
+                                       [NotNull] DirectoryInfo baseDirectory)
         {
             Dpi = dpi;
             CSVCharacter = csvCharacter;
@@ -199,39 +201,36 @@ namespace ChartCreator2.OxyCharts {
             _csvCharacterArr = new[] {csvCharacter};
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public DirectoryInfo BaseDirectory { get; }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public string CSVCharacter { get; }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-#pragma warning disable CA1819 // Properties should not return arrays
+        [NotNull]
         public string[] CSVCharacterArr => _csvCharacterArr;
-#pragma warning restore CA1819 // Properties should not return arrays
 
         public int PDFFontSize { get; } = 30;
 
-        [JetBrains.Annotations.NotNull] [ItemNotNull] private readonly string[] _csvCharacterArr;
+        [NotNull] [ItemNotNull] private readonly string[] _csvCharacterArr;
     }
-    [SuppressMessage("ReSharper", "RedundantNameQualifier")]
+
     public class ChartGenerator {
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ChartCreationParameters GeneralParameters { get; }
 
-        [JetBrains.Annotations.NotNull] private readonly ICalculationProfiler _calculationProfiler;
-        [JetBrains.Annotations.NotNull] private readonly FileFactoryAndTracker _fft;
-        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly IChartMakerStep[] _chartMakerSteps;
-        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ISqlChartMakerStep[] _sqlChartMakerSteps;
-        [JetBrains.Annotations.NotNull] private readonly SqlResultLoggingService _srls;
-        [JetBrains.Annotations.NotNull] private readonly CalcDataRepository _repository;
+        [NotNull] private readonly ICalculationProfiler _calculationProfiler;
+        [NotNull] private readonly FileFactoryAndTracker _fft;
+        [ItemNotNull] [NotNull] private readonly IChartMakerStep[] _chartMakerSteps;
+        [ItemNotNull] [NotNull] private readonly ISqlChartMakerStep[] _sqlChartMakerSteps;
+        [NotNull] private readonly SqlResultLoggingService _srls;
+        [NotNull] private readonly CalcDataRepository _repository;
 
-        public ChartGenerator( [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler, [JetBrains.Annotations.NotNull] ChartCreationParameters generalParameters,
-                               [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft, [ItemNotNull] [JetBrains.Annotations.NotNull] IChartMakerStep[] chartMakerSteps,
-                               [ItemNotNull] [JetBrains.Annotations.NotNull] ISqlChartMakerStep[] sqlChartMakerSteps,
-                               [JetBrains.Annotations.NotNull] SqlResultLoggingService srls,
-                               [JetBrains.Annotations.NotNull] CalcDataRepository  repository)
+        public ChartGenerator([NotNull] ICalculationProfiler calculationProfiler, [NotNull] ChartCreationParameters generalParameters,
+                              [NotNull] FileFactoryAndTracker fft, [ItemNotNull] [NotNull] IChartMakerStep[] chartMakerSteps,
+                              [ItemNotNull] [NotNull] ISqlChartMakerStep[] sqlChartMakerSteps, [NotNull] SqlResultLoggingService srls,
+                              [NotNull] CalcDataRepository repository)
         {
             GeneralParameters = generalParameters;
             _fft = fft;
@@ -248,13 +247,11 @@ namespace ChartCreator2.OxyCharts {
                     }
                 }
             }
+
             HashSet<ResultTableID> tableIDs = new HashSet<ResultTableID>();
-            foreach (var step in sqlChartMakerSteps)
-            {
-                foreach (var id in step.ValidResultTableIds)
-                {
-                    if (!tableIDs.Add(id))
-                    {
+            foreach (var step in sqlChartMakerSteps) {
+                foreach (var id in step.ValidResultTableIds) {
+                    if (!tableIDs.Add(id)) {
                         throw new LPGException("Duplicate table id added:" + id);
                     }
                 }
@@ -347,53 +344,58 @@ namespace ChartCreator2.OxyCharts {
             }
         }*/
 
-        public void RunAll([JetBrains.Annotations.NotNull] string directoryName)
+        public void RunAll()
         {
             _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
+            try {
+                List<ResultFileEntry> entriesToProcess = _fft.ResultFileList.ResultFiles.Values.ToList();
+                if (entriesToProcess.Count == 0) {
+                    throw new LPGException("Not a single file to process was found.");
+                }
 
-            List<ResultFileEntry> entriesToProcess = _fft.ResultFileList.ResultFiles.Values.ToList();
-            if(entriesToProcess.Count == 0) {
-                throw new LPGException("Not a single file to process was found.");
-            }
-            foreach (var entry in entriesToProcess) {
-                var start = DateTime.Now;
-                int prevCount = _fft.ResultFileList.ResultFiles.Count;
-                // find the proper chart maker step, making sure only a single chart maker applies
-                var makerStep = _chartMakerSteps.FirstOrDefault(x => x.IsEnabled(entry));
-                if (makerStep == null) {
-                    continue;
-                }
-                //make the chart
-                 var result = makerStep.MakePlot(entry);
-               //var processingResult =  ProcessFile(entry, di, csvCharacter,fft);
-                int newcount = _fft.ResultFileList.ResultFiles.Count;
-                if (result == FileProcessingResult.ShouldCreateFiles && prevCount == newcount) {
-                    throw new LPGException("No pictures created:"+ Environment.NewLine + entry.ResultFileID + Environment.NewLine + entry.FullFileName);
-                }
-                if (entry.Name == null)
-                {
-                    throw new LPGException("Name was null");
-                }
-                Logger.Info(
-                    "Chart for " + entry.Name.PadRight(60) + "(" +
-                    (DateTime.Now - start).TotalSeconds.ToString("N1", CultureInfo.CurrentCulture) + "s)");
-            }
+                foreach (var entry in entriesToProcess) {
+                    var start = DateTime.Now;
+                    int prevCount = _fft.ResultFileList.ResultFiles.Count;
+                    // find the proper chart maker step, making sure only a single chart maker applies
+                    var makerStep = _chartMakerSteps.FirstOrDefault(x => x.IsEnabled(entry));
+                    if (makerStep == null) {
+                        continue;
+                    }
 
-            var databases = _srls.LoadDatabases();
-            var householdKeys = _repository.HouseholdKeys;
-            foreach (var db in databases) {
-                var tables = _srls.LoadTables(db.Key);
-                var hhentry = householdKeys.Single(x => x.HHKey == db.Key);
-                foreach (var table in tables) {
-                    foreach (ISqlChartMakerStep chartMakerStep in _sqlChartMakerSteps) {
-                        if (chartMakerStep.IsEnabled(hhentry, table)) {
-                            chartMakerStep.MakePlot(hhentry);
+                    //make the chart
+                    var result = makerStep.MakePlot(entry);
+                    //var processingResult =  ProcessFile(entry, di, csvCharacter,fft);
+                    int newcount = _fft.ResultFileList.ResultFiles.Count;
+                    if (result == FileProcessingResult.ShouldCreateFiles && prevCount == newcount) {
+                        throw new LPGException("No pictures created:" + Environment.NewLine + entry.ResultFileID + Environment.NewLine +
+                                               entry.FullFileName);
+                    }
+
+                    if (entry.Name == null) {
+                        throw new LPGException("Name was null");
+                    }
+
+                    Logger.Info("Chart for " + entry.Name.PadRight(60) + "(" +
+                                (DateTime.Now - start).TotalSeconds.ToString("N1", CultureInfo.CurrentCulture) + "s)");
+                }
+
+                var databases = _srls.LoadDatabases();
+                var householdKeys = _repository.HouseholdKeys;
+                foreach (var db in databases) {
+                    var tables = _srls.LoadTables(db.Key);
+                    var hhentry = householdKeys.Single(x => x.HHKey == db.Key);
+                    foreach (var table in tables) {
+                        foreach (ISqlChartMakerStep chartMakerStep in _sqlChartMakerSteps) {
+                            if (chartMakerStep.IsEnabled(hhentry, table)) {
+                                chartMakerStep.MakePlot(hhentry);
+                            }
                         }
                     }
                 }
             }
-
-            _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
+            finally {
+                _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
+            }
         }
     }
 }

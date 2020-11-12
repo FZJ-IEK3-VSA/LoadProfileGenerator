@@ -10,7 +10,7 @@ namespace ChartCreator2.Steps
         void Run([JetBrains.Annotations.NotNull] IStepParameters parameters);
         bool IsEnabled();
     }
-    public abstract class GeneralStepBase : BasicPostProcessingStep, IGeneralStep
+    public abstract class GeneralStepBase : BasicChartProcessingStep, IGeneralStep
     {
         protected GeneralStepBase([JetBrains.Annotations.NotNull] CalcDataRepository repository,[JetBrains.Annotations.NotNull] List< CalcOption> option,
                                   [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler,

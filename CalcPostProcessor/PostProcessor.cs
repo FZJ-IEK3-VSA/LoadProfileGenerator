@@ -94,7 +94,7 @@ namespace CalcPostProcessor {
             if(count > 0){
                 EnableRequiredOptions(options);
             }
-            Logger.Info("Enabled " + count + " dependencies");
+            Logger.Info("Enabled " + count + " dependencies for post processing.");
         }
         public Dictionary<CalcOption, List<CalcOption>> Dependencies => _dependencies;
     }
@@ -190,10 +190,14 @@ namespace CalcPostProcessor {
                 throw new LPGException("No household Numbers!");
             }
             _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Preparation");
-            _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - EndOfSimulationProcessing");
-            ActualFunctionCaller(_repository.CalcParameters.LoadtypesToPostprocess);
+            _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Actual Post Processing");
+            try {
+                ActualFunctionCaller(_repository.CalcParameters.LoadtypesToPostprocess);
+            }
+            finally {
+                _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Actual Post Processing");
+            }
             //repository.CalculationResult.RandomSeed = _randomSeed;
-            _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - EndOfSimulationProcessing");
             _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
         }
 

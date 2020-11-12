@@ -31,6 +31,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using Automation.ResultFiles;
 using CalculationEngine;
 using Common;
 using Common.Enums;
@@ -137,6 +138,11 @@ namespace CalculationController.Queue {
                     MessageWindowHandler.Mw.ShowDataIntegrityMessage(e);
                     csps.ReportCancelFunc?.Invoke();
                 }
+            }
+            catch (LPGCancelException)
+            {
+                Logger.Error("Cancelled the execution");
+                CalcQueueRunner.CloseLogfilesAfterError();
             }
             catch (Exception e) {
                 Logger.Exception(e);

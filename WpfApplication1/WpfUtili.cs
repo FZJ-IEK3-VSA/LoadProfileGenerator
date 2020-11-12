@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Windows.Controls;
 using Common;
 using JetBrains.Annotations;
+using ComboBox = System.Windows.Controls.ComboBox;
+using TextBox = System.Windows.Controls.TextBox;
 
 namespace LoadProfileGenerator
 {

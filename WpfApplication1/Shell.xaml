@@ -1356,6 +1356,10 @@
                                 Width="auto"
                                 DisplayMemberBinding="{Binding Time}"
                                 Header="Time" />
+                            <GridViewColumn
+                                Width="auto"
+                                DisplayMemberBinding="{Binding Severity}"
+                                Header="Time" />
                             <GridViewColumn Width="2000" Header="Message">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>

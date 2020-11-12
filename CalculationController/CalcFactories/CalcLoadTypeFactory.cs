@@ -65,10 +65,7 @@ namespace CalculationController.CalcFactories {
 
         public bool SimulateLoadtype(StrGuid guid)
         {
-            if (_guids.Select(x=> x.StrVal).Contains(guid.StrVal)) {
-                return true;
-            }
-            return false;
+            return _guids.Select(x=> x.StrVal).Contains(guid.StrVal);
         }
         /*
         public bool SimulateLoadtype([NotNull] CalcLoadTypeDto lt)

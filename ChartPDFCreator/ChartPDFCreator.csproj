@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.1;net48</TargetFrameworks>
-    <LangVersion>8.0</LangVersion>
 <Nullable>enable</Nullable>
   </PropertyGroup>
   
@@ -12,7 +11,7 @@
   <PropertyGroup>
     <DebugType>Full</DebugType>
     <Nullable>enable</Nullable>
-    <LangVersion>8</LangVersion>
+    <LangVersion>9</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2020.1.0" />

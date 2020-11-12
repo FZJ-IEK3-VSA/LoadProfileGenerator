@@ -10,7 +10,7 @@ namespace ChartCreator2.Steps
         void Run([JetBrains.Annotations.NotNull] IStepParameters parameters);
         bool IsEnabled();
     }
-    public abstract class HouseholdLoadTypeStepBase : BasicPostProcessingStep, IHouseholdLoadTypeStep
+    public abstract class HouseholdLoadTypeStepBase : BasicChartProcessingStep, IHouseholdLoadTypeStep
     {
         protected HouseholdLoadTypeStepBase([JetBrains.Annotations.NotNull] CalcDataRepository repository, [JetBrains.Annotations.NotNull] List<CalcOption> options,
                                              [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler,

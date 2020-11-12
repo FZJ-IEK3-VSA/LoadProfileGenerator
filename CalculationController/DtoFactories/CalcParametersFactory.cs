@@ -23,7 +23,7 @@ namespace CalculationController.DtoFactories
             cp.SetWriteExcelColumn (csps.WriteExcelColumn);
             cp.SetManyOptionsWithClear(csps.CalcOptions);
             FileFactoryAndTrackerDummy fftd = new FileFactoryAndTrackerDummy();
-            ChartProcessorManager.ChartingFunctionDependencySetter(csps.ResultPath,csps.CalculationProfiler,fftd,cp.Options);
+            ChartProcessorManager.ChartingFunctionDependencySetter(csps.ResultPath,csps.CalculationProfiler,fftd,cp.Options,false);
 
             var container =PostProcessingManager.RegisterEverything(csps.ResultPath,csps.CalculationProfiler, fftd);
             using (var scope = container.BeginLifetimeScope())

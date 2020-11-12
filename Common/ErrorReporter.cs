@@ -13,7 +13,7 @@ namespace Common {
             try {
                 //var webAddr = "http://147.87.175.17:8000/API/Report";
                 const string webAddr = "http://www.loadprofilegenerator.de/API/Report";
-                string result;
+                //string result;
                 using (var webClient = new WebClient()) {
                     string version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
                     string versionmessage = "Version " + version  + Environment.NewLine + message;
@@ -25,9 +25,10 @@ namespace Common {
                         stack = stack.Substring(0, 1000);
                     }
                     webClient.QueryString.Add("stack", stack);
-                    result = webClient.DownloadString(webAddr);
+                    //result =
+                    webClient.DownloadString(webAddr);
                 }
-                Logger.Info(result);
+                //Logger.Info(result);
             }
             catch (Exception ex) {
                 if (Config.IsInUnitTesting) {

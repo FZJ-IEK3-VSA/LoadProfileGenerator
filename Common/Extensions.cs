@@ -34,10 +34,13 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using Automation;
 using Automation.ResultFiles;
 
 namespace Common {
+
+
     public static class Extensions {
         [NotNull]
         public static string RelativePath([NotNull] this FileInfo fi, [NotNull] DirectoryInfo di)
@@ -61,6 +64,16 @@ namespace Common {
         public static StrGuid ToStrGuid(this Guid myguid)
         {
             return StrGuid.FromGuid(myguid);
+        }
+
+        [NotNull]
+        public static string GetNotNullThreadName([NotNull] this Thread mythread)
+        {
+            string name = mythread.Name;
+            if (name == null) {
+                name = "(no thread name) #" + mythread.ManagedThreadId;
+            }
+            return name;
         }
 
         public static StrGuid ToStrGuid([NotNull] this string myguid)

@@ -2,19 +2,18 @@
 using Automation;
 using Automation.ResultFiles;
 using Common.CalcDto;
+using Common.JSON;
+using JetBrains.Annotations;
+
 
 namespace CalculationEngine.OnlineDeviceLogging {
-    using System.Diagnostics.CodeAnalysis;
-    using Common.JSON;
-    using JetBrains.Annotations;
-
     public readonly struct OefcKey : IEquatable<OefcKey> {
         public override int GetHashCode()
         {
             unchecked {
                 var hashCode = _hashCode;
                 hashCode = (hashCode * 397) ^ FullKey.GetHashCode();
-                hashCode = (hashCode * 397) ^ (LoadtypeGuid != null ? LoadtypeGuid.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (LoadtypeGuid.GetHashCode());
                 hashCode = (hashCode * 397) ^ DeviceCategory.GetHashCode();
                 hashCode = (hashCode * 397) ^ LocationGuid.GetHashCode();
                 hashCode = (hashCode * 397) ^ DeviceGuid.GetHashCode();
@@ -42,10 +41,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
             unchecked
             {
                 _hashCode = LocationGuid.GetHashCode();
-                if (loadtypeGuid != null)
-                {
                     _hashCode = (_hashCode * 397) ^ loadtypeGuid.GetHashCode();
-                }
 
                 _hashCode = (_hashCode * 397) ^ DeviceGuid.GetHashCode();
                 _hashCode = (_hashCode * 397) ^ HouseholdKey.Key.GetHashCode();
@@ -103,7 +99,6 @@ namespace CalculationEngine.OnlineDeviceLogging {
             return   FullKey;
         }
 
-        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public bool Equals(OefcKey other)
         {
             return FullKey.Equals(other.FullKey);

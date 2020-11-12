@@ -12,7 +12,7 @@ namespace ChartCreator2.Steps
 
         int Priority { get; }
     }
-    public abstract class HouseholdStepBase : BasicPostProcessingStep, IGeneralHouseholdStep
+    public abstract class HouseholdStepBase : BasicChartProcessingStep, IGeneralHouseholdStep
     {
         protected HouseholdStepBase([JetBrains.Annotations.NotNull] CalcDataRepository repository, [JetBrains.Annotations.NotNull] List<CalcOption> options,
                                              [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler,

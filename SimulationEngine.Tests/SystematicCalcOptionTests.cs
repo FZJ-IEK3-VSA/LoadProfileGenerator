@@ -532,7 +532,7 @@ public void TestHouseJobsBodilyActivityStatistics(){
       HouseJobTestHelper.RunSingleHouse((sim) => {
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim, hhguid,TestDuration.TwelveMonths);
       hj.CalcSpec.CalcOptions.Add(co); return hj;
-      }, (x) => HouseJobTestHelper.CheckForResultfile(x, co));
+      }, (x) => HouseJobTestHelper.CheckForResultfile(x, co),true);
 }
 
 

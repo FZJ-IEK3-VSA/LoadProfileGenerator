@@ -214,13 +214,14 @@ namespace Common {
                 });
                 t.Start();
             }
-            _logger.ExceptionMessage(ex);
+            _logger.ExceptionMessage(ex, Utili.GetCallingMethodAndClass());
         }
 
-        private void ExceptionMessage([NotNull] Exception exception)
+        private void ExceptionMessage([NotNull] Exception exception, string reporter)
         {
             var sb = new StringBuilder();
-            sb.Append("Exception occured:").Append(Environment.NewLine);
+            var exceptionName = exception.GetType().FullName;
+            sb.Append(exceptionName +" occured in ").Append(reporter).Append(Environment.NewLine);
             sb.Append(exception.Message);
             sb.Append(Environment.NewLine);
             sb.Append(exception.StackTrace);
@@ -279,6 +280,10 @@ namespace Common {
 
         public static void Info([NotNull] string message, bool preserveLinebreaks = false)
         {
+            //if (message.Contains("ok")) {
+            //    var stacktrace = Environment.StackTrace;
+            //    _logger.InfoMessage(stacktrace, true);
+            //}
             _logger.InfoMessage(message, preserveLinebreaks);
         }
 

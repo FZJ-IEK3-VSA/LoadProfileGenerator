@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <LangVersion>8.0</LangVersion>
 <Nullable>enable</Nullable>
   </PropertyGroup>
 
@@ -13,7 +12,7 @@
   <PropertyGroup>
     <DebugType>Full</DebugType>
     <Nullable>disable</Nullable>
-    <LangVersion>8</LangVersion>
+    <LangVersion>9</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,8 +20,8 @@
     <PackageReference Include="JetBrains.Annotations" Version="2020.1.0" />
     <PackageReference Include="Microsoft.Windows.Compatibility" Version="3.1.1" />
     <PackageReference Include="NullCheckAnalyzer" Version="1.0.0.3" />
-    <PackageReference Include="OxyPlot.Core" Version="2.1.0-unstable.1431" />
-    <PackageReference Include="OxyPlot.SkiaSharp" Version="2.1.0-unstable.1431" />
+    <PackageReference Include="OxyPlot.Core" Version="2.1.0-unstable.1449" />
+    <PackageReference Include="OxyPlot.SkiaSharp" Version="2.1.0-unstable.1449" />
     <PackageReference Include="Roslynator.Analyzers" Version="2.3.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

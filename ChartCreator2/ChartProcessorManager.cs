@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using Autofac;
 using Automation;
 using ChartCreator2.CarpetPlots;
@@ -14,13 +16,13 @@ namespace ChartCreator2
     {
         public static void ChartingFunctionDependencySetter(string path, [JetBrains.Annotations.NotNull] CalculationProfiler profiler,
                                                 FileFactoryAndTrackerDummy ifft,
-                                                HashSet<CalcOption> options)
+                                                HashSet<CalcOption> options, bool throwOnMissingOptionDependencies)
         {
             var container = RegisterEverything(path, profiler, ifft);
             using (var scope = container.BeginLifetimeScope())
             {
                 var odm = scope.Resolve<ChartOptionDependencyManager>();
-                odm.EnableRequiredOptions(options);
+                odm.EnableRequiredOptions(options,throwOnMissingOptionDependencies);
             }
         }
 
@@ -38,14 +40,42 @@ namespace ChartCreator2
 
         public void Run([JetBrains.Annotations.NotNull] string resultPath)
         {
-            _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Post Processing");
-            var container = RegisterEverything(resultPath, _calculationProfiler, _fft);
-            using (var scope = container.BeginLifetimeScope())
-            {
-                ChartProcessor ps = scope.Resolve<ChartProcessor>();
-                ps.RunPostProcessing();
+            try {
+                _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Running Chart Processing");
+                var container = RegisterEverything(resultPath, _calculationProfiler, _fft);
+                using (var scope = container.BeginLifetimeScope()) {
+                    try {
+                        ChartProcessor ps = scope.Resolve<ChartProcessor>();
+                        ps.RunChartProcessing();
+                    }
+                    catch (FileLoadException flex) {
+                        try
+                        {
+                            ErrorReporter er = new ErrorReporter();
+                            er.Run("Caught exception:" + flex.Message, flex.StackTrace);
+                        }
+                        catch (Exception)
+                        {
+                            // ignored
+                        }
+                        Logger.Error("Failed to enable the charting library due to missing dependencies on your computer. No chart creation is possible. Everything else worked though. The exact error message is: " + flex.Message);
+
+                    }
+                    catch (Exception ex) {
+                        try {
+                            ErrorReporter er = new ErrorReporter();
+                            er.Run(ex.Message, ex.StackTrace);
+                        }
+                        catch (Exception) {
+                            // ignored
+                        }
+                        throw;
+                    }
+                }
             }
-            _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Post Processing");
+            finally {
+                _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Running Chart Processing");
+            }
         }
 
         [JetBrains.Annotations.NotNull]

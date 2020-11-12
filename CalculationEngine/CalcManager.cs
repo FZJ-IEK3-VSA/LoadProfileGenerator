@@ -28,7 +28,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.InteropServices;
 using Automation;
@@ -103,16 +102,12 @@ namespace CalculationEngine {
         }
 
         // ReSharper disable once UnusedParameter.Local
-        [SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId =
-            "<Logfile>k__BackingField")]
-        [SuppressMessage("ReSharper", "UseNullPropagation")]
         public void Dispose()
         {
             CalcObject?.Dispose();
             CalcRepo.Dispose();
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public bool Run(Func<bool>? reportCancelFunc)
         {
             if (!ContinueRunning && reportCancelFunc != null) {
@@ -120,134 +115,163 @@ namespace CalculationEngine {
                 return false;
             }
 
-            CalcRepo.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
-            CalcRepo.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Preperation");
-            // init calculation result
-            //var calculationResult = new CalculationResult(_name, DateTime.Now,                _calcParameters.OfficialStartTime, _calcParameters.OfficialEndTime,                calcObjectType, _srls.ReturnMainSqlPath());
+            try {
+                CalcRepo.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
 
-            if (_lightNeededArray == null) {
-                throw new LPGException("Light array was null.");
-            }
+                try {
+                    CalcRepo.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Preperation");
+                    // init calculation result
+                    //var calculationResult = new CalculationResult(_name, DateTime.Now,                _calcParameters.OfficialStartTime, _calcParameters.OfficialEndTime,                calcObjectType, _srls.ReturnMainSqlPath());
 
-            if (CalcObject == null) {
-                throw new LPGException("CalcObject was null");
-            }
+                    //if (_lightNeededArray == null) {
+                    //throw new LPGException("Light array was null.");
+                    //}
 
-            CalcObject.Init(_lightNeededArray,
-                //_householdKey,
-                _randomSeed);
+                    if (CalcObject == null) {
+                        throw new LPGException("CalcObject was null");
+                    }
 
-            //check for transportation weirdness stuff
+                    CalcObject.Init(_lightNeededArray,
+                        //_householdKey,
+                        _randomSeed);
+
+                    //check for transportation weirdness stuff
 
 
-            PreProcessingLogging();
+                    PreProcessingLogging();
 
-            var now = CalcRepo.CalcParameters.InternalStartTime;
-            var timestep = new TimeStep(0, CalcRepo.CalcParameters);
-            //CalcObject.WriteInformation();
-
-            CalcRepo.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Preperation");
-            CalcRepo.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Core Simulation");
-            if (ExitCalcFunction) {
-                if (CalcObject == null) {
-                    throw new LPGException("CalcObject was null");
+                    //CalcObject.WriteInformation();
                 }
+                finally {
+                    CalcRepo.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Preperation");
+                }
+
+                var now = CalcRepo.CalcParameters.InternalStartTime;
+                var timestep = new TimeStep(0, CalcRepo.CalcParameters);
+                try {
+                    CalcRepo.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Core Simulation");
+                    if (ExitCalcFunction) {
+                        if (CalcObject == null) {
+                            throw new LPGException("CalcObject was null");
+                        }
+
+                        CalcObject.Dispose();
+                        return false;
+                    }
+
+                    if (CalcObject == null) {
+                        throw new LPGException("CalcObject was null");
+                    }
+
+                    while (now < CalcRepo.CalcParameters.InternalEndTime && ContinueRunning) {
+                        // ReSharper disable once PossibleNullReferenceException
+                        CalcObject.RunOneStep(timestep, now, true);
+                        SaveVariableStatesIfNeeded(timestep);
+                        CalcRepo.OnlineLoggingData.SaveIfNeeded(timestep);
+                        now += CalcRepo.CalcParameters.InternalStepsize;
+                        timestep = timestep.AddSteps(1);
+                    }
+
+                    Logger.Info("Finished the simulation");
+                }
+                finally {
+                    CalcRepo.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Core Simulation");
+                }
+
+                // ReSharper disable once PossibleNullReferenceException
+                CalcObject.FinishCalculation();
+                Logger.Info("Generating the logfiles. This might take a while...");
+
+                // post processing
+                CalcRepo.Flush();
+                CalcObject.Dispose();
+                GC.Collect();
+                FileFactoryAndTracker.CheckExistingFilesFromSql(_resultPath);
+
+                if (!ContinueRunning && reportCancelFunc != null) {
+                    reportCancelFunc();
+                    throw new LPGCancelException("Cancelling");
+                }
+
+                try {
+                    CalcRepo.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Post Post Processing");
+                    var ppm = new PostProcessingManager(CalcRepo.CalculationProfiler, CalcRepo.FileFactoryAndTracker);
+                    ppm.Run(_resultPath);
+                    CalcRepo.Flush();
+                }
+                finally {
+                    CalcRepo.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Post Post Processing");
+                }
+
+                try {
+                    FileFactoryAndTracker.CheckExistingFilesFromSql(_resultPath);
+                    CalcRepo.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Chart Processing");
+                    var cpm = new ChartProcessorManager(CalcRepo.CalculationProfiler, CalcRepo.FileFactoryAndTracker);
+                    cpm.Run(_resultPath);
+                    CalcRepo.Flush();
+                }
+                finally {
+                    CalcRepo.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Chart Processing");
+                }
+
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
+                    try {
+                        CalcRepo.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Chart Creation");
+                        ChartMaker.MakeChartsAndPDF(CalcRepo.CalculationProfiler, _resultPath);
+                    }
+                    finally {
+                        CalcRepo.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Chart Creation");
+                    }
+
+                    CalcRepo.Flush();
+                }
+
+                /*
+                try {
+                    /var path = Path.Combine(_resultPath, Constants.ResultFileName);
+                    Logfile.FileFactoryAndTracker.RegisterFile(Constants.ResultFileName,
+                        "Serialized list of the result files", false, ResultFileID.ResultFileXML,
+                        Constants.GeneralHouseholdKey, TargetDirectory.Root);
+                    using (var sw = new StreamWriter(path)) {
+                        var xs = new XmlSerializer(typeof(CalculationResult));
+                        xs.Serialize(sw, calculationResult);
+                    }
+                }
+                catch (Exception e) {
+                    var s = "Exception while serializing the results:" + Environment.NewLine;
+                    s += e.Message;
+                    if (e.InnerException != null) {
+                        s += Environment.NewLine + Environment.NewLine + e.InnerException;
+                    }
+    
+                    Logger.Error(s);
+                    Logger.Exception(e);
+                }*/
 
                 CalcObject.Dispose();
-                return false;
-            }
 
-            if (CalcObject == null) {
-                throw new LPGException("CalcObject was null");
-            }
 
-            while (now < CalcRepo.CalcParameters.InternalEndTime && ContinueRunning) {
-                // ReSharper disable once PossibleNullReferenceException
-                CalcObject.RunOneStep(timestep, now, true);
-                SaveVariableStatesIfNeeded(timestep);
-                CalcRepo.OnlineLoggingData.SaveIfNeeded(timestep);
-                now += CalcRepo.CalcParameters.InternalStepsize;
-                timestep = timestep.AddSteps(1);
-            }
+                CalcRepo.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Logging");
 
-            Logger.Info("Finished the simulation");
-            CalcRepo.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Core Simulation");
-            // ReSharper disable once PossibleNullReferenceException
-            CalcObject.FinishCalculation();
-            Logger.Info("Generating the logfiles. This might take a while...");
-
-            // post processing
-            CalcRepo.Flush();
-            CalcObject.Dispose();
-            GC.Collect();
-            FileFactoryAndTracker.CheckExistingFilesFromSql(_resultPath);
-
-            if (!ContinueRunning && reportCancelFunc != null) {
-                reportCancelFunc();
-                throw new LPGException("Canceling");
-            }
-            CalcRepo.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Post Post Processing");
-            var ppm = new PostProcessingManager(CalcRepo.CalculationProfiler, CalcRepo.FileFactoryAndTracker);
-            ppm.Run(_resultPath);
-            CalcRepo.Flush();
-            CalcRepo.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Post Post Processing");
-            FileFactoryAndTracker.CheckExistingFilesFromSql(_resultPath);
-            CalcRepo.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Chart Processing");
-            var cpm = new ChartProcessorManager(CalcRepo.CalculationProfiler, CalcRepo.FileFactoryAndTracker);
-            cpm.Run(_resultPath);
-            CalcRepo.Flush();
-            CalcRepo.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Chart Processing");
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
-                CalcRepo.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Chart Creation");
-                ChartMaker.MakeChartsAndPDF(CalcRepo.CalculationProfiler, _resultPath);
-                CalcRepo.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Chart Creation");
-                CalcRepo.Flush();
-            }
-
-            /*
-            try {
-                /var path = Path.Combine(_resultPath, Constants.ResultFileName);
-                Logfile.FileFactoryAndTracker.RegisterFile(Constants.ResultFileName,
-                    "Serialized list of the result files", false, ResultFileID.ResultFileXML,
-                    Constants.GeneralHouseholdKey, TargetDirectory.Root);
-                using (var sw = new StreamWriter(path)) {
-                    var xs = new XmlSerializer(typeof(CalculationResult));
-                    xs.Serialize(sw, calculationResult);
-                }
-            }
-            catch (Exception e) {
-                var s = "Exception while serializing the results:" + Environment.NewLine;
-                s += e.Message;
-                if (e.InnerException != null) {
-                    s += Environment.NewLine + Environment.NewLine + e.InnerException;
+                if (Config.IsInUnitTesting) {
+                    CalcRepo.FileFactoryAndTracker.CheckIfAllAreRegistered(_resultPath);
+                    Logger.Info("Finished!");
                 }
 
-                Logger.Error(s);
-                Logger.Exception(e);
-            }*/
+                if (CalcRepo.CalcParameters.IsSet(CalcOption.LogAllMessages) || CalcRepo.CalcParameters.IsSet(CalcOption.LogErrorMessages)) {
+                    InitializeFileLogging(CalcRepo.Srls);
+                }
+                //_fft.FillCalculationResult(_repository.CalculationResult);
+                //_repository.CalculationResult.ResultFileEntries.Sort();
+                //_repository.CalculationResult.CalcEndTime = DateTime.Now;
 
-            CalcObject.Dispose();
-
-
-            CalcRepo.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Logging");
-
-            if (Config.IsInUnitTesting) {
-                CalcRepo.FileFactoryAndTracker.CheckIfAllAreRegistered(_resultPath);
-                Logger.Info("Finished!");
+                CalcRepo.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Logging");
             }
 
-            if (CalcRepo.CalcParameters.IsSet(CalcOption.LogAllMessages) ||
-                CalcRepo.CalcParameters.IsSet(CalcOption.LogErrorMessages)) {
-                InitializeFileLogging(CalcRepo.Srls);
+            finally {
+                CalcRepo.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
+                WriteCalcProfilingResults(_resultPath);
             }
-            //_fft.FillCalculationResult(_repository.CalculationResult);
-            //_repository.CalculationResult.ResultFileEntries.Sort();
-            //_repository.CalculationResult.CalcEndTime = DateTime.Now;
-
-            CalcRepo.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Logging");
-            CalcRepo.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
-            WriteCalcProfilingResults(_resultPath);
-            //return calculationResult;
             return true;
         }
 
@@ -353,9 +377,8 @@ namespace CalculationEngine {
         {
             if (CalcRepo.CalcParameters.Options.Contains(CalcOption.CalculationFlameChart)) {
                 var dstfullFilename = Path.Combine(dstPath, Constants.CalculationProfilerJson);
-                using (var sw = new StreamWriter(dstfullFilename)) {
-                    CalcRepo.CalculationProfiler.WriteJson(sw);
-                }
+                using var sw = new StreamWriter(dstfullFilename);
+                CalcRepo.CalculationProfiler.WriteJson(sw);
             }
         }
     }

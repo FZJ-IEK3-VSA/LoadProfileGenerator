@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using Automation.ResultFiles;
 using Common;
 using JetBrains.Annotations;
@@ -186,10 +187,11 @@ namespace ChartCreator2.OxyCharts {
         public void Run([JetBrains.Annotations.NotNull] CalculationProfiler cp, [JetBrains.Annotations.NotNull] string outputDirectory, [JetBrains.Annotations.NotNull] string source)
         {
             //var cp =  CalculationProfiler.Read(@"C:\work\CalculationBenchmarks.ActionCarpetPlotTest\");
+            var mainpart = cp.MainPart.Values.First();
 
-            InitializeDuration2(cp.MainPart);
-            MergeAndCompress(cp.MainPart);
-            InitPartsList(cp.MainPart);
+            InitializeDuration2(mainpart);
+            MergeAndCompress(mainpart);
+            InitPartsList(mainpart);
             const int fontsize = 6;// = GetFontsize(cp.MainPart);
             //const string xaxislabel = "Time Consumption in CPUSeconds";
 
@@ -272,7 +274,7 @@ namespace ChartCreator2.OxyCharts {
 
             var itemsByLevel = new Dictionary<int, IntervalBarSeries>();
             _textOffsets.Clear();
-            AddBars(cp.MainPart, 0, 0, fontsize, itemsByLevel, p, plotModel1);
+            AddBars(mainpart, 0, 0, fontsize, itemsByLevel, p, plotModel1);
             //        foreach (IntervalBarSeries series in itemsByLevel.Values) {
             //          plotModel1.Series.Add(series);
             //    }

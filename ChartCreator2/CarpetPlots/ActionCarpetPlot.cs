@@ -658,43 +658,40 @@ namespace ChartCreator2.CarpetPlots
                          [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcPersonDto> persons)
         {
             _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
-            Logger.Info("Starting to generate the carpet plots...");
-            var displayNegativeTime = _repository.CalcParameters.ShowSettlingPeriodTime;
+            try {
+                Logger.Info("Starting to generate the carpet plots...");
+                var displayNegativeTime = _repository.CalcParameters.ShowSettlingPeriodTime;
 
-            var ts = CalculateTime(displayNegativeTime);
-            var timesteps = (int)(ts.TotalMinutes / _repository.CalcParameters.InternalStepsize.TotalMinutes);
-            var activitiesPerPerson = ReadActivities(householdKey, persons);
-            //var fileIdx = 0;
-            if (activitiesPerPerson.Count == 0)
-            {
-                throw new LPGException("There were no activities for any person in the household " + householdKey.Key);
-            }
+                var ts = CalculateTime(displayNegativeTime);
+                var timesteps = (int)(ts.TotalMinutes / _repository.CalcParameters.InternalStepsize.TotalMinutes);
+                var activitiesPerPerson = ReadActivities(householdKey, persons);
+                //var fileIdx = 0;
+                if (activitiesPerPerson.Count == 0) {
+                    throw new LPGException("There were no activities for any person in the household " + householdKey.Key);
+                }
 
-            foreach (var personActivities in activitiesPerPerson)
-            {
-                //allEntries.AddRange(personActivities.Value);
-                Logger.Info("Starting to generate the carpet plot for " + personActivities.Key.Name + "...");
-                var times = MakeTimeArray(displayNegativeTime, personActivities.Value, timesteps);
-                //MakeLegend(fft, affordanceColorDict, personActivities.Key, personActivities.Value,
-                  //  householdKey, 1, LegendType.ActionLegend, null);
-                MakeCarpet(fft, affordanceColorDict, times, personActivities.Key, ts, householdKey,
-                    _columnWidth, null);
-                if (Config.MakePDFCharts)
-                {
-                    // make tagging set charts
-                    foreach (var calcAffordanceTaggingSet in taggingSets)
-                    {
-                        if (calcAffordanceTaggingSet.MakeCharts)
-                        {
-                            MakeCarpet(fft, affordanceColorDict, times, personActivities.Key, ts,
-                                householdKey, 7,
-                                calcAffordanceTaggingSet);
+                foreach (var personActivities in activitiesPerPerson) {
+                    //allEntries.AddRange(personActivities.Value);
+                    Logger.Info("Starting to generate the carpet plot for " + personActivities.Key.Name + "...");
+                    var times = MakeTimeArray(displayNegativeTime, personActivities.Value, timesteps);
+                    //MakeLegend(fft, affordanceColorDict, personActivities.Key, personActivities.Value,
+                    //  householdKey, 1, LegendType.ActionLegend, null);
+                    MakeCarpet(fft, affordanceColorDict, times, personActivities.Key, ts, householdKey, _columnWidth, null);
+                    if (Config.MakePDFCharts) {
+                        // make tagging set charts
+                        foreach (var calcAffordanceTaggingSet in taggingSets) {
+                            if (calcAffordanceTaggingSet.MakeCharts) {
+                                MakeCarpet(fft, affordanceColorDict, times, personActivities.Key, ts, householdKey, 7, calcAffordanceTaggingSet);
+                            }
                         }
                     }
                 }
             }
+            finally {
 
-            _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
+                _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
+            }
+
             //if (Config.MakePDFCharts) {
             //   MakeLegend(fft, affordanceColorDict, activitiesPerPerson.Count + 1, "TotalLegend", allEntries,
             //     householdNumber, 3, LegendType.ActionLegend, null);

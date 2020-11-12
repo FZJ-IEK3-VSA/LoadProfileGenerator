@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Threading;
 using Automation.ResultFiles;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
@@ -16,62 +17,83 @@ namespace Common {
     public class CalculationProfiler : ICalculationProfiler {
         public CalculationProfiler()
         {
-            MainPart = new ProgramPart(null, "Main");
-            Current = MainPart;
+            MainPart = new Dictionary<string, ProgramPart>();
+            Current = new Dictionary<string, ProgramPart>();
+            var threadname = Thread.CurrentThread.GetNotNullThreadName();
+            MainPart.Add(threadname,  new ProgramPart(null, "Main"));
+            Current[threadname] = MainPart[threadname];
         }
 
         [UsedImplicitly]
         [NotNull]
-        public ProgramPart MainPart { get; private set; }
+        public Dictionary<string,ProgramPart> MainPart { get; private set; }
 
-        [CanBeNull]
-        private ProgramPart Current { get; set; }
+        [NotNull]
+        private Dictionary<string, ProgramPart> Current { get; set; }
 
         public void StartPart(string key)
         {
-            //Logger.Info("Starting "+ key);
-            if (Current == null) {
-                throw new LPGException("Current was null");
-            }
+            lock (MainPart) {
+                //Logger.Info("Starting "+ key);
 
-            if (Current.Key == key) {
-                throw new LPGException("The current key is already " + key + ". Copy&Paste error?");
-            }
+                var threadName = Thread.CurrentThread.GetNotNullThreadName();
+                if (!Current.ContainsKey(threadName)) {
 
-            var newCurrent = new ProgramPart(Current, key);
-            Current.Children.Add(newCurrent);
-            Current = newCurrent;
+                    Current.Add(threadName, new ProgramPart(null, "Main"));
+                    MainPart.Add(threadName, new ProgramPart(null, "Main"));
+                }
+
+                if (Current[threadName].Key == key) {
+                    throw new LPGException("The current key is already " + key + ". Copy&Paste error?");
+                }
+
+                Logger.Info("Starting " + threadName + ": " + key);
+                var newCurrent = new ProgramPart(Current[threadName], key);
+                Current[threadName].Children.Add(newCurrent);
+                Current[threadName] = newCurrent;
+            }
         }
 
         [SuppressMessage("ReSharper", "UnusedParameter.Global")]
         public void StopPart(string key)
-        {   if (Current == null) {
-                throw new LPGException("Current was null");
+        {
+            lock (MainPart) {
+                var threadname = Thread.CurrentThread.GetNotNullThreadName();
+                if (Current[threadname] == null) {
+                    throw new LPGException("Current was null");
+                }
+
+                Logger.Info("Stopping " + threadname + ": " + key);
+
+                if (Current[threadname].Key != key) {
+                    StreamWriter sw = new StreamWriter("DebuggingCalcProfiler.json");
+                    WriteJson(sw);
+                    sw.Close();
+                    throw new LPGException("Mismatched key: \nCurrent active Key: " + Current[threadname].Key +
+                                           "\nBut it's trying to stop the following that was not properly closed: " + key);
+                }
+
+                if (Current == MainPart) {
+                    throw new LPGException("Trying to stop the main");
+                }
+
+                Current[threadname].Stop = DateTime.Now;
+
+                Logger.Info("Finished " + key + " after " + Current[threadname].Duration.ToString());
+
+                Current[threadname] = Current[threadname].Parent;
             }
-
-            if (Current.Key != key) {
-                throw new LPGException("Mismatched key: Current: " + Current.Key + " trying to stop: " + key);
-            }
-
-            if (Current == MainPart) {
-                throw new LPGException("Trying to stop the main");
-            }
-
-            Current.Stop = DateTime.Now;
-
-            Logger.Debug("Finished " + key +" after " + Current.Duration.ToString() );
-
-            Current = Current.Parent;
         }
 
         public void LogToConsole()
         {
+            var threadname = Thread.CurrentThread.GetNotNullThreadName();
             if (Current != MainPart) {
-                throw new LPGException("Forgot to close: " + Current?.Key);
+                throw new LPGException("Forgot to close: " + threadname + ": " + Current[threadname].Key);
             }
 
-            MainPart.Stop = DateTime.Now;
-            LogOneProgramPartToConsole(MainPart, 0);
+            MainPart[threadname].Stop = DateTime.Now;
+            LogOneProgramPartToConsole(MainPart[threadname], 0);
         }
 
         /*
@@ -127,7 +149,8 @@ namespace Common {
 
         public void WriteJson([NotNull] StreamWriter sw)
         {
-            MainPart.Stop = DateTime.Now;
+            var threadname = Thread.CurrentThread.GetNotNullThreadName();
+            MainPart[threadname].Stop = DateTime.Now;
             var json = JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings {
                 NullValueHandling = NullValueHandling.Include
             });

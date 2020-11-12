@@ -46,7 +46,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor {
             File.Copy(db.FileName, dstDir, true);
             houseJob.PathToDatabase = dstDir;
 
-            StartHouseJob(houseJob, wd, "xxx");
+            StartHouseJob(houseJob, wd, "undefined");
         }
 
         private static void StartHouseJob([JetBrains.Annotations.NotNull] HouseCreationAndCalculationJob houseJob, [JetBrains.Annotations.NotNull] WorkingDir wd,

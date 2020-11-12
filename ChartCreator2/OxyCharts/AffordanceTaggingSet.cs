@@ -30,7 +30,6 @@ namespace ChartCreator2.OxyCharts {
         protected override FileProcessingResult MakeOnePlot(ResultFileEntry rfe)
         {
             string plotName = "Affordance Tagging Set " + rfe.HouseholdNumberString;
-            Profiler.StartPart(Utili.GetCurrentMethodAndClass());
             var consumption = new Dictionary<string, List<double>>();
             var colNames = new Dictionary<int, string>();
             var colSums = new Dictionary<int, double>();
@@ -187,7 +186,6 @@ namespace ChartCreator2.OxyCharts {
                 plotModel1.Series.Add(columnSeries2);
             }
             Save(plotModel1, plotName, rfe.FullFileName, Parameters.BaseDirectory, CalcOption.HouseholdContents);
-            Profiler.StopPart(Utili.GetCurrentMethodAndClass());
             return FileProcessingResult.ShouldCreateFiles;
         }
     }

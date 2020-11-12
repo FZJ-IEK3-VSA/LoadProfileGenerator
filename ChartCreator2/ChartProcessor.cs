@@ -74,7 +74,7 @@ namespace ChartCreator2 {
 
         }
 
-        public void EnableRequiredOptions(HashSet<CalcOption> options)
+        public void EnableRequiredOptions(HashSet<CalcOption> options, bool throwIfMissingOptionDiscovered)
         {
             int count = 0;
             foreach (var pair in _dependencies)
@@ -87,14 +87,17 @@ namespace ChartCreator2 {
                         {
                             options.Add(requiredOption);
                             count++;
+                            if (throwIfMissingOptionDiscovered) {
+                                throw new LPGException("While trying to start the charts a missing calcoption was discovered.");
+                            }
                         }
                     }
                 }
             }
             if(count > 0){
-                EnableRequiredOptions(options);
+                EnableRequiredOptions(options, throwIfMissingOptionDiscovered);
             }
-            Logger.Info("Enabled " + count + " dependencies");
+            Logger.Info("Enabled " + count + " dependencies for charts");
         }
 
         private readonly Dictionary<CalcOption, List<CalcOption>> _dependencies = new Dictionary<CalcOption, List<CalcOption>>();
@@ -170,33 +173,30 @@ namespace ChartCreator2 {
         }
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        public void RunPostProcessing()
+        public void RunChartProcessing()
         {
-            _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
-            _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Preparation");
-            if (_repository.CalcParameters.CSVCharacter.Length != 1)
-            {
-                throw new DataIntegrityException(
-                    "The length of the CSV-Character is not 1. Please enter a single, valid character in the settings.");
+            try {
+                _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Making Charts");
+                if (_repository.CalcParameters.CSVCharacter.Length != 1) {
+                    throw new DataIntegrityException(
+                        "The length of the CSV-Character is not 1. Please enter a single, valid character in the settings.");
+                }
+                if (_repository.HouseholdKeys.Count == 0) {
+                    throw new LPGException("No household Numbers!");
+                }
+
+                try {
+                    _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Actual Chart Processing");
+                    ActualFunctionCaller(_repository.CalcParameters.LoadtypesToPostprocess);
+                }
+                finally {
+                    //repository.CalculationResult.RandomSeed = _randomSeed;
+                    _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Actual Chart Processing");
+                }
             }
-            /*    var deviceNamesToCategory = new Dictionary<string, string>();
-              //  foreach (var calcDevice in _repository.GetDevices().Devices)
-                {
-                    if (!deviceNamesToCategory.ContainsKey(calcDevice.Name))
-                    {
-                        deviceNamesToCategory.Add(calcDevice.Name, calcDevice.DeviceCategoryName);
-                    }
-                }*/
-            if (_repository.HouseholdKeys.Count == 0)
-            {
-                throw new LPGException("No household Numbers!");
+            finally {
+                _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Making Charts");
             }
-            _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Preparation");
-            _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - EndOfSimulationProcessing");
-            ActualFunctionCaller(_repository.CalcParameters.LoadtypesToPostprocess);
-            //repository.CalculationResult.RandomSeed = _randomSeed;
-            _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - EndOfSimulationProcessing");
-            _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
         }
 
         private void ActualFunctionCaller([CanBeNull] [ItemNotNull] List<string> loadTypesToProcess) {

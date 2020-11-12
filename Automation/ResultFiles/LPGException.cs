@@ -29,6 +29,28 @@ namespace Automation.ResultFiles {
         }
     }
 
+    public class LPGCancelException : Exception
+    {
+        [UsedImplicitly]
+        public LPGCancelException()
+        {
+        }
+
+        public LPGCancelException([NotNull] string message) : base(message)
+        {
+        }
+
+        [SuppressMessage("ReSharper", "UnusedMember.Global")]
+        public LPGCancelException([NotNull] string message, [NotNull] Exception inner) : base(message, inner)
+        {
+        }
+
+        protected LPGCancelException([NotNull] SerializationInfo si, StreamingContext sc) : base(si, sc)
+        {
+        }
+
+    }
+
     public class LPGCommandlineException : Exception
     {
         [UsedImplicitly]

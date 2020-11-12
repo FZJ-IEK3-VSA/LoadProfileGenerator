@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
     <Nullable>enable</Nullable>
-    <LangVersion>8</LangVersion>
+    <LangVersion>9</LangVersion>
     <UserSecretsId>cd510a45-8a25-43cd-a49a-cbea1ee49643</UserSecretsId>
     <OutputType>Library</OutputType>
     <StartupObject></StartupObject>

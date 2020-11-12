@@ -30,7 +30,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Automation.ResultFiles;
-using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
 using JetBrains.Annotations;
@@ -58,14 +57,14 @@ namespace CalculationController.Queue {
         //private readonly CalculationResult _results;
 
         public DatFileDeletor(//[NotNull] CalculationResult results,
-                                 [NotNull] CalcParameters parameters,
+                                 bool deleteDatFiles,
             //[NotNull][ItemNotNull] ObservableCollection<CalculationEntry> calculationEntries,
                                  [NotNull] string resultPath, [NotNull] string calcObjectName) {
             CalcObjectName = calcObjectName;
             //_results = results;
             //_calculationEntries = calculationEntries;
             _resultPath = resultPath;
-            _deleteDatFiles = parameters.DeleteDatFiles;
+            _deleteDatFiles = deleteDatFiles;
         }
 
         private static void DeleteDatFiles([ItemNotNull] [NotNull] List<ResultFileEntry> resultFiles) {

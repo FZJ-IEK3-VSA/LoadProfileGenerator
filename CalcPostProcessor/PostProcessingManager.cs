@@ -70,7 +70,6 @@ namespace CalcPostProcessor
             //builder.RegisterType<TransportationDeviceCarpetPlot>().As<IGeneralHouseholdStep>().SingleInstance();
             builder.RegisterType<TransportationStatisticsWriter>().As<IGeneralHouseholdStep>().SingleInstance();
             //builder.RegisterType<AffordanceStatisticsWriter>().As<IGeneralPostProcessingStep>().SingleInstance();
-
             //loadtypesteps
             builder.RegisterType<HouseSumProfileFromOverallDatProcessor>().As<ILoadTypeSumStep>().SingleInstance();
             builder.RegisterType<HouseJsonSumProfileProcessor>().As<ILoadTypeStep>().SingleInstance();

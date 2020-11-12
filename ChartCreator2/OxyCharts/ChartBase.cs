@@ -303,10 +303,15 @@ namespace ChartCreator2.OxyCharts {
 
         public FileProcessingResult MakePlot(ResultFileEntry srcResultFileEntry)
         {
-            _calculationProfiler.StartPart(StepName);
-            var result = MakeOnePlot(srcResultFileEntry);
-            _calculationProfiler.StopPart(StepName);
-            return result;
+
+            try {
+                _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " " + StepName);
+                var result = MakeOnePlot(srcResultFileEntry);
+                return result;
+            }
+            finally {
+                _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " " + StepName);
+            }
         }
 
         public List<ResultFileID> ResultFileIDs { get; }

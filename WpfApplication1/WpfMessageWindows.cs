@@ -58,7 +58,7 @@ namespace LoadProfileGenerator
                     }
                 });
                 t.Start();
-                Logger.Exception(exception);
+                //Logger.Exception(exception);
                 if (exception == null)
                 {
                     throw new LPGException("ShowDebugMessage Exception == null");

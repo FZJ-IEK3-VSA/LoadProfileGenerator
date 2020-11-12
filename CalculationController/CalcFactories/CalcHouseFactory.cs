@@ -168,6 +168,20 @@ namespace CalculationController.CalcFactories {
             var autodevs = new List<CalcAutoDev>(houseDto.AutoDevs.Count);
             // zur kategorien zuordnung
             foreach (var hhautodev in houseDto.AutoDevs) {
+                var calcProfileLoadtypes = hhautodev.CalcProfiles.Select(x => x.LoadtypeGuid).ToList();
+                var loadLoadtypes = hhautodev.Loads.Select(x => x.LoadTypeGuid).ToList();
+                foreach (var guid in calcProfileLoadtypes) {
+                    if (!loadLoadtypes.Contains(guid)) {
+                        throw new DataIntegrityException("Mismatch between the load types and the load in the autonomous device of the house " + houseDto.HouseName);
+                    }
+                }
+                foreach (var guid in loadLoadtypes)
+                {
+                    if (!calcProfileLoadtypes.Contains(guid))
+                    {
+                        throw new DataIntegrityException("Mismatch between the load types and the load in the autonomous device of the house " + houseDto.HouseName);
+                    }
+                }
                 List<CalcAutoDevProfile> cadps = new List<CalcAutoDevProfile>();
                 foreach (CalcAutoDevProfileDto profile in hhautodev.CalcProfiles) {
                     CalcProfile calcProfile = CalcDeviceFactory.MakeCalcProfile(profile.Profile, _calcRepo.CalcParameters);
