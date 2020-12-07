@@ -121,7 +121,8 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                     dsc.GenerateDateStampForTimestep(efr.Timestep, sb);
                     if (calcParameters.IsSet(CalcOption.DeviceProfileExternalEntireHouse)) {
                         var normalstr =
-                            sb + efr.GetEnergyEntriesAsString(true, dstLoadType, null, calcParameters.CSVCharacter)
+                            sb + efr.GetEnergyEntriesAsString(true, dstLoadType, null, calcParameters.CSVCharacter,
+                                    calcParameters.DecimalSeperator)
                                 .ToString();
                         if (normalfile == null) {
                             throw new LPGException("File is null. Please report.");
@@ -226,7 +227,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                     if (calcParameters.IsSet(CalcOption.DeviceProfileExternalIndividualHouseholds)) {
                         var normalstr = sb.ToString() +
                                         efr.GetEnergyEntriesAsString(true, dstLoadType, columns,
-                                            calcParameters.CSVCharacter);
+                                            calcParameters.CSVCharacter, calcParameters.DecimalSeperator);
                         if (normalfile == null) {
                             throw new LPGException("File was null. Please report.");
                         }

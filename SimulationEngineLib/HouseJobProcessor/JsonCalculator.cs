@@ -277,7 +277,8 @@ namespace SimulationEngineLib.HouseJobProcessor {
                 jcs.LoadtypesForPostprocessing,
                 sim.MyGeneralConfig.DeviceProfileHeaderMode,
                 jcs.IgnorePreviousActivitiesWhenNeeded, jcs.OutputDirectory,jcs.EnableTransportation,
-                jcs.EnableIdlemode
+                jcs.EnableIdlemode,
+                sim.MyGeneralConfig.DecimalSeperator
                 );
             calcStartParameterSet.PreserveLogfileWhileClearingFolder = true;
             /* debugging

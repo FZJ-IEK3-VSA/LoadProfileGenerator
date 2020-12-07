@@ -29,6 +29,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using Automation.ResultFiles;
@@ -119,16 +120,17 @@ namespace Common.JSON {
 
         [NotNull]
         public StringBuilder GetEnergyEntriesAsString(bool useUnitConverter, [NotNull] CalcLoadTypeDto dstLoadType,
-            [CanBeNull] List<int> usedColumns, [NotNull] string csvChar) {
+            [CanBeNull] List<int> usedColumns, [NotNull] string csvChar, [NotNull] string decimalSeperator) {
             var sb = new StringBuilder();
-
+            NumberFormatInfo nfi = new NumberFormatInfo();
+            nfi.NumberDecimalSeparator = decimalSeperator;
             for (var i = 0; i < _energyEntries.Count; i++) {
                 if (usedColumns == null || usedColumns.Count == 0 || usedColumns.Contains(i)) {
                     var d = _energyEntries[i];
                     if (useUnitConverter) {
                         d *= dstLoadType.ConversionFactor;
                     }
-                    sb.Append(d.ToString(Config.CultureInfo));
+                    sb.Append(d.ToString(nfi));
                     sb.Append(csvChar);
                 }
             }

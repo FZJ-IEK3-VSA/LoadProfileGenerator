@@ -230,6 +230,8 @@ namespace ChartCreator2.OxyCharts {
             [JetBrains.Annotations.NotNull] DeviceTaggingSetList taggingSets, [JetBrains.Annotations.NotNull] string plotName, [JetBrains.Annotations.NotNull] DirectoryInfo basisPath, [JetBrains.Annotations.NotNull] string yaxisLabel,
             TimeSpan timestep)
         {
+            NumberFormatInfo nfi = new NumberFormatInfo();
+            nfi.NumberDecimalSeparator = _calcParameters.DecimalSeperator;
             var pngCount = 0;
             try {
                 var headers = new List<string>();
@@ -292,7 +294,7 @@ namespace ChartCreator2.OxyCharts {
                         var result = new double[headers.Count];
                         for (var index = 0; index < cols.Length; index++) {
                             var col = cols[index];
-                            var success = double.TryParse(col, out double d);
+                            var success = double.TryParse(col,NumberStyles.Float , nfi, out double d);
                             if (success) {
                                 result[index] = d / conversionfactor;
                             }

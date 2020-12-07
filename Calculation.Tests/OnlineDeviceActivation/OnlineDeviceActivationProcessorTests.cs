@@ -570,7 +570,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                         sim.GeographicLocations[0], sim.TemperatureProfiles[0], sim.ModularHouseholds[0], EnergyIntensityType.EnergySaving,
                         ReportCancelFunc, false, null, LoadTypePriority.Mandatory, null, null, sim.MyGeneralConfig.AllEnabledOptions(),
                         new DateTime(2018, 1, 1), new DateTime(2018, 1, 2), new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 1, 0), false, false, false,
-                        3, 3, cp, null, null, DeviceProfileHeaderMode.Standard, false, wd.WorkingDirectory, false,false);
+                        3, 3, cp, null, null, DeviceProfileHeaderMode.Standard, false, wd.WorkingDirectory, false,false, ".");
                     var cs = new CalcStarter(sim);
                     cs.Start(csps);
                     /*var dstpath = Path.Combine(wd.WorkingDirectory,

@@ -72,7 +72,7 @@ namespace CalcPostProcessor.LoadTypeProcessingSteps {
                 }
 
                 var time = dsc.MakeTimeString(efr.Timestep);
-                    var individual = time + efr.GetEnergyEntriesAsString(true, dstLoadType, null, calcParameters.CSVCharacter);
+                    var individual = time + efr.GetEnergyEntriesAsString(true, dstLoadType, null, calcParameters.CSVCharacter, calcParameters.DecimalSeperator);
                     deviceProfileCsv.WriteLine(individual);
             }
             deviceProfileCsv.Flush();

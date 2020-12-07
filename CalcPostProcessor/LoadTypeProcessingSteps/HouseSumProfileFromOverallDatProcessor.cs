@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using Automation;
 using Automation.ResultFiles;
@@ -42,7 +43,8 @@ namespace CalcPostProcessor.LoadTypeProcessingSteps {
             var bytes = File.ReadAllBytes(srcFile.FullFileName);
             var values = new double[bytes.Length / 8];
             Buffer.BlockCopy(bytes, 0, values, 0, values.Length * 8);
-
+            NumberFormatInfo nfi = new NumberFormatInfo();
+            nfi.NumberDecimalSeparator = Repository.CalcParameters.DecimalSeperator;
             for (var i = 0; i < values.Length; i++) {
                 var ts = new TimeStep(i, Repository.CalcParameters);
                 if (!ts.DisplayThisStep) {
@@ -50,7 +52,7 @@ namespace CalcPostProcessor.LoadTypeProcessingSteps {
                 }
 
                 var rowsum = values[i] * dstLoadType.ConversionFactor;
-                var line = dsc.MakeTimeString(ts) + rowsum.ToString(Config.CultureInfo) +
+                var line = dsc.MakeTimeString(ts) + rowsum.ToString(nfi) +
                            Repository.CalcParameters.CSVCharacter;
                 dstFile.WriteLine(line);
             }

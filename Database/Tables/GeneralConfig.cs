@@ -81,6 +81,14 @@ namespace Database.Tables {
             get => _settings[nameof(CSVCharacter)].SettingValue;
             set => UpdateValue(nameof(CSVCharacter), value);
         }
+
+        [NotNull]
+        [UsedImplicitly]
+        public string DecimalSeperator
+        {
+            get => _settings[nameof(DecimalSeperator)].SettingValue;
+            set => UpdateValue(nameof(DecimalSeperator), value);
+        }
         [NotNull]
         [UsedImplicitly]
         public CombinedSettings CombinedSettings {
@@ -526,6 +534,7 @@ namespace Database.Tables {
             gc.CheckExistence(nameof(LastSelectedTransportationSetting), "", ignoreMissing);
             gc.CheckExistence(nameof(LastSelectedTransportationDeviceSet), "", ignoreMissing);
             gc.CheckExistence(nameof(LastSelectedRouteSet), "", ignoreMissing);
+            gc.CheckExistence(nameof(DecimalSeperator), ".", ignoreMissing);
             gc.CheckExistence(nameof(LastSelectedChargingStationSet), "", ignoreMissing);
             gc.CheckExistence(nameof(CombinedSettings), JsonConvert.SerializeObject(new CombinedSettings()), ignoreMissing);
 

@@ -72,7 +72,7 @@ namespace CalculationController.Queue {
             int selectedRandomSeed,
             TimeSpan externalTimeResolution, bool deleteDatFiles, bool writeExcelColumn, bool showSettlingPeriod,
             int settlingDays, int affordanceRepetitionCount, [NotNull] CalculationProfiler calculationProfiler, string resultPath,
-            bool transportationEnabled, bool enableIdlemode)
+            bool transportationEnabled, bool enableIdlemode, [NotNull] string decimalSeperator)
         {
             OfficialSimulationStartTime = officialSimulationStartTime;
             OfficialSimulationEndTime = officialSimulationEndTime;
@@ -103,6 +103,7 @@ namespace CalculationController.Queue {
             CalculationStartTime = DateTime.Now;
             TransportationEnabled = transportationEnabled;
             EnableIdlemode = enableIdlemode;
+            DecimalSeperator = decimalSeperator;
         }
 
         /// <summary>
@@ -130,7 +131,8 @@ namespace CalculationController.Queue {
             [CanBeNull] ChargingStationSet chargingStationSet,
             [CanBeNull][ItemNotNull] List<string> loadTypesToProcess,
             DeviceProfileHeaderMode deviceProfileHeaderMode,
-            bool ignorePreviousActivitiesWhenNeeded, string resultPath, bool transportationEnabled, bool enableIdlemode
+            bool ignorePreviousActivitiesWhenNeeded, string resultPath, bool transportationEnabled, bool enableIdlemode,
+            string decimalSeperator
             )
         {
             IgnorePreviousActivitiesWhenNeeded = ignorePreviousActivitiesWhenNeeded;
@@ -169,6 +171,7 @@ namespace CalculationController.Queue {
             CalculationStartTime = DateTime.Now;
             TransportationEnabled = transportationEnabled;
             EnableIdlemode = enableIdlemode;
+            DecimalSeperator = decimalSeperator;
         }
 
         public string ResultPath { get; set; }
@@ -185,6 +188,9 @@ namespace CalculationController.Queue {
 
         [NotNull]
         public string CsvCharacter { get; }
+
+        [NotNull]
+        public string DecimalSeperator { get; }
 
         public bool DeleteDatFiles { get; }
 

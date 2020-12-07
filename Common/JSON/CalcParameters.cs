@@ -35,6 +35,7 @@ namespace Common.JSON {
         [NotNull]
         public string CSVCharacter { get; set; } = ";";
 
+        public string DecimalSeperator { get; set; }
         public bool DeleteDatFiles { get; set; }
         public int DummyCalcSteps { get; set; }
         public TimeSpan ExternalStepsize { get; set; }
@@ -281,6 +282,13 @@ namespace Common.JSON {
             return this;
         }
 
+
+        [NotNull]
+        public CalcParameters SetDecimalSeperator([NotNull] string decimalSeperator)
+        {
+            DecimalSeperator = decimalSeperator;
+            return this;
+        }
         [NotNull]
         public CalcParameters SetDeleteDatFiles(bool deleteDatFiles)
         {

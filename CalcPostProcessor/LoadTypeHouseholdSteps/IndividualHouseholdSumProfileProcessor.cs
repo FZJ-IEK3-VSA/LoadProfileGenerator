@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using Automation;
@@ -53,17 +54,18 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                 TargetDirectory.Results,
                 Repository.CalcParameters.InternalStepsize, CalcOption.HouseholdSumProfilesFromDetailedDats,
                 dstLoadType.ConvertToLoadTypeInformation());
+            NumberFormatInfo nfi = new NumberFormatInfo();
+            nfi.NumberDecimalSeparator = Repository.CalcParameters.DecimalSeperator;
             sumfile.WriteLine(dstLoadType.Name + "." + dsc.GenerateDateStampHeader() + "Sum [" + dstLoadType.UnitOfSum +
                               "]");
-
-
             foreach (var efr in p.EnergyFileRows) {
                 if (!efr.Timestep.DisplayThisStep) {
                     continue;
                 }
 
                 var time = dsc.MakeTimeString(efr.Timestep);
-                var sumstring = time + efr.GetSumForCertainCols(columns) * dstLoadType.ConversionFactor;
+                var val = efr.GetSumForCertainCols(columns) * dstLoadType.ConversionFactor;
+                var sumstring = time + val.ToString(nfi) ;
                 sumfile.WriteLine(sumstring);
             }
 

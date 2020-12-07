@@ -33,6 +33,7 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
@@ -120,10 +121,20 @@
                                  Text="{Binding ThisConfig.CSVCharacter}" />
                         <Label Grid.Row="8"
                                Grid.Column="0"
+                               Content="Decimal Character for the CSV-Files"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=TxtDecimalCharacter}" />
+                        <TextBox Name="TxtDecimalCharacter"
+                                 Grid.Row="8"
+                                 Grid.Column="1"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding ThisConfig.DecimalSeperator}" />
+                        <Label Grid.Row="9"
+                               Grid.Column="0"
                                Content="Random seed (-1 indicates a random seed)"
                                Style="{StaticResource LabelStyle}"
                                Target="{Binding ElementName=TxtRandomSeed}" />
-                        <Grid Grid.Row="8" Grid.Column="1">
+                        <Grid Grid.Row="9" Grid.Column="1">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="auto" />
@@ -139,48 +150,48 @@
                                     Style="{StaticResource ButtonStyle}" />
 
                         </Grid>
-                        <Label Grid.Row="9"
+                        <Label Grid.Row="10"
                                Grid.Column="0"
                                Content="Include special Excel date column in result files"
                                Style="{StaticResource LabelStyle}"
                                Target="{Binding ElementName=CmbShowExcelColumn}" />
                         <ComboBox Name="CmbShowExcelColumn"
-                                  Grid.Row="9"
+                                  Grid.Row="10"
                                   Grid.Column="1"
                                   x:FieldModifier="private"
                                   ItemsSource="{Binding BoolValues}"
                                   SelectedItem="{Binding ThisConfig.WriteExcelColumn}"
                                   Style="{StaticResource ComboBoxStyle}" />
-                        <Label Grid.Row="10"
+                        <Label Grid.Row="11"
                                Grid.Column="0"
                                Content="During Integrity Check include Release Checks?"
                                Style="{StaticResource LabelStyle}"
                                Target="{Binding ElementName=CmbPerformCleanUpChecks}" />
                         <ComboBox Name="CmbPerformCleanUpChecks"
-                                  Grid.Row="10"
+                                  Grid.Row="11"
                                   Grid.Column="1"
                                   x:FieldModifier="private"
                                   ItemsSource="{Binding BoolValues}"
                                   SelectedItem="{Binding ThisConfig.PerformCleanUpChecks}"
                                   Style="{StaticResource ComboBoxStyle}" />
                         <!--  Energy Intensity  -->
-                        <Label Grid.Row="11"
+                        <Label Grid.Row="12"
                                Grid.Column="0"
                                Content="Carpet Plot Column Width"
                                Style="{StaticResource LabelStyle}"
                                Target="{Binding ElementName=TxtcarpetPlotColumnWidth}" />
                         <TextBox Name="TxtcarpetPlotColumnWidth"
-                                 Grid.Row="11"
+                                 Grid.Row="12"
                                  Grid.Column="1"
                                  Style="{StaticResource TextBoxStyle}"
                                  Text="{Binding ThisConfig.CarpetPlotWidth}" />
-                        <Label Grid.Row="12"
+                        <Label Grid.Row="13"
                                Grid.Column="0"
                                Content="Device Profile Header Style"
                                Style="{StaticResource LabelStyle}"
                                Target="{Binding ElementName=CmbDeviceProfileHeaderStyle}" />
                         <ComboBox Name="CmbDeviceProfileHeaderStyle"
-                                  Grid.Row="12"
+                                  Grid.Row="13"
                                   Grid.Column="1"
                                   x:FieldModifier="private"
                                   ItemsSource="{Binding DeviceProfileHeaderStyles}"

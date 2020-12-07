@@ -34,6 +34,7 @@ namespace CalculationController.DtoFactories
             cp.SetShowSettlingPeriod(csps.ShowSettlingPeriod);
             cp.SetRandomSeed(csps.SelectedRandomSeed, forceRandom);
             cp.SetCsvCharacter(csps.CsvCharacter);
+            cp.SetDecimalSeperator(csps.DecimalSeperator);
             cp.SetStartDate(csps.OfficialSimulationStartTime);
             cp.SetEndDate(csps.OfficialSimulationEndTime.AddDays(1));
             cp.SetInternalTimeResolution(csps.InternalTimeResolution);

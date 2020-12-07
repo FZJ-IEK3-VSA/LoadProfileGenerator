@@ -598,7 +598,8 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                     chargingStationSet,
                     null,
                     sim.MyGeneralConfig.DeviceProfileHeaderMode,
-                    false, operatingPath, enableTransportation, sim.MyGeneralConfig.EnableIdlemodeBool);
+                    false, operatingPath, enableTransportation, sim.MyGeneralConfig.EnableIdlemodeBool,
+                    sim.MyGeneralConfig.DecimalSeperator);
 
                 cs.Start(csps);
                 Thread.Sleep(3000);

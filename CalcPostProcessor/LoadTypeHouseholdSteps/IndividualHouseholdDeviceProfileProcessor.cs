@@ -60,7 +60,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                 }
 
                 var time = dsc.MakeTimeString(efr.Timestep);
-                var indidivdual = time + efr.GetEnergyEntriesAsString(true, p.LoadType, columns, Repository.CalcParameters.CSVCharacter);
+                var indidivdual = time + efr.GetEnergyEntriesAsString(true, p.LoadType, columns, Repository.CalcParameters.CSVCharacter, Repository.CalcParameters.CSVCharacter);
                 normalfile.WriteLine(indidivdual);
 
             }
