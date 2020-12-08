@@ -70,7 +70,7 @@ namespace Common {
                     WriteJson(sw);
                     sw.Close();
                     throw new LPGException("Mismatched key: \nCurrent active Key: " + Current[threadname].Key +
-                                           "\nBut it's trying to stop the following that was not properly closed: " + key);
+                                           "\nBut it's trying to stop the following key: " + key);
                 }
 
                 if (Current == MainPart) {

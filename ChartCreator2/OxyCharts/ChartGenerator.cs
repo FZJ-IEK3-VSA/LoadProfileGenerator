@@ -53,34 +53,39 @@ namespace ChartCreator2.OxyCharts {
                     return;
                 }
 
-                calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Charting");
-                using (FileFactoryAndTracker fileFactoryAndTracker = new FileFactoryAndTracker(resultPath, "Name", idl)) {
-                    fileFactoryAndTracker.ReadExistingFilesFromSql();
-                    calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Chart Generator RunAll");
-                    try {
-                        ChartCreationParameters ccp = new ChartCreationParameters(144, 1600, 1000, false, calcParameters.CSVCharacter,
-                            new DirectoryInfo(resultPath));
-                        var cg = new ChartGeneratorManager(calculationProfiler, fileFactoryAndTracker, ccp);
-                        cg.Run(resultPath);
-                    }
-                    finally {
-                        calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Chart Generator RunAll");
-                    }
-
-                    if (calcParameters.IsSet(CalcOption.MakePDF)) {
+                try {
+                    calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Charting");
+                    using (FileFactoryAndTracker fileFactoryAndTracker = new FileFactoryAndTracker(resultPath, "Name", idl)) {
+                        fileFactoryAndTracker.ReadExistingFilesFromSql();
                         try {
-                            calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - PDF Creation");
-                            Logger.ImportantInfo("Creating the PDF. This will take a really long time without any progress report...");
-
-                            //MigraPDFCreator mpc = new MigraPDFCreator(calculationProfiler);
-                            //mpc.MakeDocument(resultPath, "", false, false, calcParameters.CSVCharacter, fileFactoryAndTracker);
+                            calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - ChartGeneratorManager");
+                            ChartCreationParameters ccp = new ChartCreationParameters(144, 1600, 1000, false, calcParameters.CSVCharacter,
+                                new DirectoryInfo(resultPath));
+                            var cg = new ChartGeneratorManager(calculationProfiler, fileFactoryAndTracker, ccp);
+                            cg.Run(resultPath);
                         }
                         finally {
-                            calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - PDF Creation");
+                            calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - ChartGeneratorManager");
+                        }
+
+                        if (calcParameters.IsSet(CalcOption.MakePDF)) {
+                            try {
+                                calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - PDF Creation");
+                                Logger.ImportantInfo("Creating the PDF. This will take a really long time without any progress report...");
+
+                                //MigraPDFCreator mpc = new MigraPDFCreator(calculationProfiler);
+                                //mpc.MakeDocument(resultPath, "", false, false, calcParameters.CSVCharacter, fileFactoryAndTracker);
+                            }
+                            finally {
+                                calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - PDF Creation");
+                            }
                         }
                     }
                 }
-
+                finally
+                {
+                    calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Charting");
+                }
                 Logger.Info("Finished making the charts");
 
                 // CalculationDurationFlameChart cdfc = new CalculationDurationFlameChart();
@@ -100,9 +105,6 @@ namespace ChartCreator2.OxyCharts {
                 Logger.Error(
                     "Failed to enable the charting library due to missing dependencies on your computer. No chart creation is possible. Everything else worked though. The exact error message is: " +
                     flex.Message);
-            }
-            finally {
-                calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Charting");
             }
         }
 
