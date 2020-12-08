@@ -17,9 +17,9 @@ using JetBrains.Annotations;
 namespace Database {
     public static class ModularHouseholdSerializer {
         [ItemNotNull]
-        [NotNull]
-        private static List<Settlement> Create([ItemNotNull] [NotNull] List<SimpleModularHousehold> simpleHHs, [NotNull] Simulator sim,
-            [NotNull] GlobalOptions globalOptions) {
+        [JetBrains.Annotations.NotNull]
+        private static List<Settlement> Create([ItemNotNull] [JetBrains.Annotations.NotNull] List<SimpleModularHousehold> simpleHHs, [JetBrains.Annotations.NotNull] Simulator sim,
+            [JetBrains.Annotations.NotNull] GlobalOptions globalOptions) {
             var finishedHHs = new List<ModularHousehold>();
             var finishedHouses = new List<House>();
 
@@ -136,7 +136,7 @@ namespace Database {
             return resultingSettlements;
         }
 
-        public static void ExportAsCSV([NotNull] ModularHousehold mhh, [NotNull] Simulator sim, [NotNull] string fullFileName) {
+        public static void ExportAsCSV([JetBrains.Annotations.NotNull] ModularHousehold mhh, [JetBrains.Annotations.NotNull] Simulator sim, [JetBrains.Annotations.NotNull] string fullFileName) {
             var csv = sim.MyGeneralConfig.CSVCharacter;
             var sb = new StringBuilder();
             sb.AppendLine("// This file was exported from LoadProfileGenerator.de");
@@ -221,8 +221,8 @@ namespace Database {
         }
 
         [ItemNotNull]
-        [NotNull]
-        public static List<Settlement> ImportFromCSV([CanBeNull] string fileName, [NotNull] Simulator sim) {
+        [JetBrains.Annotations.NotNull]
+        public static List<Settlement> ImportFromCSV([CanBeNull] string fileName, [JetBrains.Annotations.NotNull] Simulator sim) {
             if (fileName == null) {
                 Logger.Error("No filename was set.");
                 return new List<Settlement>();
@@ -323,8 +323,8 @@ namespace Database {
             return Create(hhs, sim, go);
         }
 
-        [NotNull]
-        private static string MakeCSVList([NotNull] string csv, [NotNull] params int[] list) {
+        [JetBrains.Annotations.NotNull]
+        private static string MakeCSVList([JetBrains.Annotations.NotNull] string csv, [JetBrains.Annotations.NotNull] params int[] list) {
             var s = "";
             foreach (var i in list) {
                 s += i + csv;
@@ -332,9 +332,9 @@ namespace Database {
             return s;
         }
 
-        [NotNull]
-        private static House MakeHouse([NotNull] Simulator sim, [NotNull] GlobalOptions globalOptions, [NotNull] SimpleModularHousehold smhh,
-            [NotNull] ModularHousehold mhh) {
+        [JetBrains.Annotations.NotNull]
+        private static House MakeHouse([JetBrains.Annotations.NotNull] Simulator sim, [JetBrains.Annotations.NotNull] GlobalOptions globalOptions, [JetBrains.Annotations.NotNull] SimpleModularHousehold smhh,
+            [JetBrains.Annotations.NotNull] ModularHousehold mhh) {
             var housename = "House for " + mhh.Name;
             var myHouse = sim.Houses.FindFirstByName(housename);
             if (myHouse != null) {
@@ -378,8 +378,8 @@ namespace Database {
             return house;
         }
 
-        [NotNull]
-        private static string MakeTraitPattern([NotNull] string s1, [NotNull] string csv) {
+        [JetBrains.Annotations.NotNull]
+        private static string MakeTraitPattern([JetBrains.Annotations.NotNull] string s1, [JetBrains.Annotations.NotNull] string csv) {
             var s = "";
             for (var i = 0; i < 5; i++) {
                 s += s1 + csv;
@@ -388,8 +388,8 @@ namespace Database {
             return s;
         }
 
-        [NotNull]
-        private static string MultiplyStrings([NotNull] string s1, [NotNull] string csv, bool randomize = false, [CanBeNull] Random rnd = null) {
+        [JetBrains.Annotations.NotNull]
+        private static string MultiplyStrings([JetBrains.Annotations.NotNull] string s1, [JetBrains.Annotations.NotNull] string csv, bool randomize = false, [CanBeNull] Random rnd = null) {
             if (!randomize) {
                 var s = "";
                 for (var i = 0; i < 5; i++) {
@@ -414,8 +414,8 @@ namespace Database {
             return sR;
         }
 
-        [NotNull]
-        private static GlobalOptions ProcessGlobalOptions([ItemNotNull] [NotNull] List<string> lines, [ItemNotNull] [NotNull] string[] csvArr) {
+        [JetBrains.Annotations.NotNull]
+        private static GlobalOptions ProcessGlobalOptions([ItemNotNull] [JetBrains.Annotations.NotNull] List<string> lines, [ItemNotNull] [JetBrains.Annotations.NotNull] string[] csvArr) {
             var globalOptions = new GlobalOptions();
             while (!lines[0].StartsWith("Cases", StringComparison.Ordinal) && lines.Count > 0) {
                 var s = lines[0];
@@ -426,7 +426,7 @@ namespace Database {
             return globalOptions;
         }
 
-        private static void ProcessOptions([ItemNotNull] [NotNull] string[] s, [NotNull] GlobalOptions go) {
+        private static void ProcessOptions([ItemNotNull] [JetBrains.Annotations.NotNull] string[] s, [JetBrains.Annotations.NotNull] GlobalOptions go) {
             switch (s[0]) {
                 case "Household Name":
                     go.HouseholdName = s[1];
@@ -467,8 +467,8 @@ namespace Database {
         }
 
         [ItemNotNull]
-        [NotNull]
-        private static List<string> ReadEntireFile([NotNull] string filename, [NotNull] Simulator sim) {
+        [JetBrains.Annotations.NotNull]
+        private static List<string> ReadEntireFile([JetBrains.Annotations.NotNull] string filename, [JetBrains.Annotations.NotNull] Simulator sim) {
             var lines = new List<string>();
 
             using (var fs = new FileStream(filename, FileMode.Open)) {
@@ -505,8 +505,8 @@ namespace Database {
         }
 
         [ItemNotNull]
-        [NotNull]
-        private static List<SimpleModularHousehold> ReadHouseholds([ItemNotNull] [NotNull] List<string> lines, [NotNull] [ItemNotNull] string[] csvArr) {
+        [JetBrains.Annotations.NotNull]
+        private static List<SimpleModularHousehold> ReadHouseholds([ItemNotNull] [JetBrains.Annotations.NotNull] List<string> lines, [JetBrains.Annotations.NotNull] [ItemNotNull] string[] csvArr) {
             if (lines.Count == 0) {
                 throw new LPGException("Did not find 'cases'");
             }
@@ -572,7 +572,7 @@ namespace Database {
             public string HouseholdName { get; set; }
 
             [ItemNotNull]
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public List<string> Tags { get; } = new List<string>();
             [CanBeNull]
             public string TemperatureProfileName { get; set; }
@@ -583,21 +583,21 @@ namespace Database {
         }
 
         private class SimpleModularHousehold {
-            public SimpleModularHousehold([NotNull] string name) => Name = name;
+            public SimpleModularHousehold([JetBrains.Annotations.NotNull] string name) => Name = name;
 
             [CanBeNull]
             public string HouseType { get; set; }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string Name { get; }
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public Dictionary<string, SimplePerson> Persons { get; } = new Dictionary<string, SimplePerson>();
             [CanBeNull]
             public string Vacation { get; set; }
         }
 
         private class SimplePerson {
-            public SimplePerson([NotNull] string name) => Name = name;
+            public SimplePerson([JetBrains.Annotations.NotNull] string name) => Name = name;
 
             public int Age { get; set; }
             public int AverageSickDays { get; set; }
@@ -605,11 +605,11 @@ namespace Database {
             public string Gender { get; set; }
             [CanBeNull]
             public string LivingPatternTag { get; set; }
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string Name { get; }
             public int SicknessDuration { get; set; }
             [ItemNotNull]
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public List<string> Traits { get; } = new List<string>();
         }
     }

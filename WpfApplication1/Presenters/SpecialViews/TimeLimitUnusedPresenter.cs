@@ -36,20 +36,20 @@ using LoadProfileGenerator.Views.SpecialViews;
 
 namespace LoadProfileGenerator.Presenters.SpecialViews {
     internal class TimeLimitUnusedPresenter : PresenterBaseWithAppPresenter<TimeLimitUnusedView> {
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<TimeLimit> _selectedTimeLimits = new ObservableCollection<TimeLimit>();
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<TimeLimit> _selectedTimeLimits = new ObservableCollection<TimeLimit>();
 
-        public TimeLimitUnusedPresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] TimeLimitUnusedView view)
+        public TimeLimitUnusedPresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] TimeLimitUnusedView view)
             : base(view, "HeaderString", applicationPresenter)
         {
             Refresh();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string HeaderString => "Unused Time Limits";
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         [UsedImplicitly]
         public ObservableCollection<TimeLimit> SelectedTimeLimits => _selectedTimeLimits;

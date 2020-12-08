@@ -148,12 +148,12 @@
                                Content="Color for the carpet plots"
                                Style="{StaticResource LabelStyle}"
                                Target="{Binding ElementName=BtnPickColor}" />
-                        <Button Name="BtnPickColor"
+                        <!--<Button Name="BtnPickColor"
                                 Grid.Row="9"
                                 Grid.Column="1"
                                 Click="BtnPickColorClick"
                                 Content="Pick Color"
-                                Style="{StaticResource ButtonStyle}" />
+                                Style="{StaticResource ButtonStyle}" />-->
                         <Label Grid.Row="10"
                                Grid.Column="0"
                                Content="Category"

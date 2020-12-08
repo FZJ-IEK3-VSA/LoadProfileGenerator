@@ -12,8 +12,8 @@ namespace Database.Tables.ModularHouseholds {
 
         [CanBeNull] private readonly HouseholdTrait _thisTrait;
 
-        public HHTTrait([CanBeNull]int? pID, [CanBeNull] int? parentTraitID, [CanBeNull] HouseholdTrait thisTrait, [NotNull] string connectionString,
-            [NotNull] string name, StrGuid guid)
+        public HHTTrait([CanBeNull]int? pID, [CanBeNull] int? parentTraitID, [CanBeNull] HouseholdTrait thisTrait, [JetBrains.Annotations.NotNull] string connectionString,
+            [JetBrains.Annotations.NotNull] string name, StrGuid guid)
             : base(name, TableName, connectionString, guid)
         {
             ID = pID;
@@ -22,19 +22,19 @@ namespace Database.Tables.ModularHouseholds {
             TypeDescription = "Household Trait Subtrait";
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public new string Name => ThisTrait.Name;
 
         [CanBeNull]
         public int? ParentTraitID { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public HouseholdTrait ThisTrait => _thisTrait ?? throw new InvalidOperationException();
 
-        [NotNull]
-        private static HHTTrait AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static HHTTrait AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var hhtDesireID = dr.GetIntFromLong("ID");
             var parentTraitID = dr.GetIntFromLong("ParentTraitID");
@@ -59,8 +59,8 @@ namespace Database.Tables.ModularHouseholds {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<HHTTrait> result, [NotNull] string connectionString,
-            [ItemNotNull] [NotNull] ObservableCollection<HouseholdTrait> traits, bool ignoreMissingTables)
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<HHTTrait> result, [JetBrains.Annotations.NotNull] string connectionString,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<HouseholdTrait> traits, bool ignoreMissingTables)
         {
             var aic = new AllItemCollections(householdTraits: traits);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);

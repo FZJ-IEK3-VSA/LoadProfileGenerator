@@ -5,20 +5,19 @@ using Automation.ResultFiles;
 using Common;
 using Database;
 using Database.Tables.ModularHouseholds;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 
 namespace SimulationEngineLib.Other {
     public class JsonDatabaseImporter {
-        [NotNull] private readonly string _connectionString;
-        [NotNull] private readonly CalculationProfiler _calculationProfiler;
-        public JsonDatabaseImporter([NotNull] string connectionString)
+        [JetBrains.Annotations.NotNull] private readonly string _connectionString;
+        [JetBrains.Annotations.NotNull] private readonly CalculationProfiler _calculationProfiler;
+        public JsonDatabaseImporter([JetBrains.Annotations.NotNull] string connectionString)
         {
             _connectionString = connectionString;
             _calculationProfiler = new CalculationProfiler();
         }
 
-        public bool Import([NotNull] JsonDatabaseImportOptions calcDirectoryOptions)
+        public bool Import([JetBrains.Annotations.NotNull] JsonDatabaseImportOptions calcDirectoryOptions)
         {
             _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
             string jsonFileName = calcDirectoryOptions.Input;

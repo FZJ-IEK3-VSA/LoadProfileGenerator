@@ -15,18 +15,18 @@ using JetBrains.Annotations;
 namespace Database.Tables.BasicElements {
     public class HouseholdPlan : DBBaseElement {
         public const string TableName = "tblHouseholdPlans";
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<HouseholdPlanEntry> _entries;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<HouseholdPlanEntry> _entries;
 
         [CanBeNull] private ICalcObject _calcObject;
 
-        [NotNull] private string _description;
+        [JetBrains.Annotations.NotNull] private string _description;
 
         [CanBeNull] private AffordanceTaggingSet _taggingSet;
 
-        public HouseholdPlan([NotNull] string name, [CanBeNull] AffordanceTaggingSet taggingSet,
+        public HouseholdPlan([JetBrains.Annotations.NotNull] string name, [CanBeNull] AffordanceTaggingSet taggingSet,
             [CanBeNull] ICalcObject calcObject,
-                             [NotNull] string description,
-                             [NotNull] string connectionString, StrGuid guid,
+                             [JetBrains.Annotations.NotNull] string description,
+                             [JetBrains.Annotations.NotNull] string connectionString, StrGuid guid,
                              [CanBeNull]int? pID = null) : base(
             name, TableName, connectionString, guid)
         {
@@ -52,7 +52,7 @@ namespace Database.Tables.BasicElements {
             set => SetValueWithNotify(value, ref _calcObject);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string Description {
             get => _description;
@@ -60,7 +60,7 @@ namespace Database.Tables.BasicElements {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<HouseholdPlanEntry> Entries => _entries;
 
@@ -68,7 +68,7 @@ namespace Database.Tables.BasicElements {
         public static bool FailOnIncorrectImport { get; set; }
 
         [UsedImplicitly]
-        public void AddNewEntry([NotNull] Person person, [NotNull] AffordanceTag tag, double times, double timecount, TimeType timeType)
+        public void AddNewEntry([JetBrains.Annotations.NotNull] Person person, [JetBrains.Annotations.NotNull] AffordanceTag tag, double times, double timecount, TimeType timeType)
         {
             //if (tag != null) {
                 var tagname = tag.Name;
@@ -88,10 +88,10 @@ namespace Database.Tables.BasicElements {
             });
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [SuppressMessage("ReSharper", "SwitchStatementMissingSomeCases")]
-        private static HouseholdPlan AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic)
+        private static HouseholdPlan AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var id = dr.GetIntFromLong("ID");
             var name = dr.GetString("Name");
@@ -107,13 +107,13 @@ namespace Database.Tables.BasicElements {
             return new HouseholdPlan(name, afftagset, calcObject, description, connectionString,guid, id);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString)
+        public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString)
             => new HouseholdPlan(FindNewName(isNameTaken, "New Household Plan "), null, null, "(no description)",
                 connectionString, System.Guid.NewGuid().ToStrGuid());
 
-        public void DeleteEntry([NotNull] HouseholdPlanEntry at)
+        public void DeleteEntry([JetBrains.Annotations.NotNull] HouseholdPlanEntry at)
         {
             at.DeleteFromDB();
             Logger.Get().SafeExecuteWithWait(() => _entries.Remove(at));
@@ -127,9 +127,9 @@ namespace Database.Tables.BasicElements {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static HouseholdPlan ImportFromItem([NotNull] HouseholdPlan toImport, [NotNull] Simulator dstSim)
+        public static HouseholdPlan ImportFromItem([JetBrains.Annotations.NotNull] HouseholdPlan toImport, [JetBrains.Annotations.NotNull] Simulator dstSim)
         {
             ICalcObject calcObject = null;
             if (toImport.CalcObject != null) {
@@ -174,7 +174,7 @@ namespace Database.Tables.BasicElements {
             return hd;
         }
 
-        private static bool IsCorrectEntryParent([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectEntryParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var entry = (HouseholdPlanEntry) child;
 
@@ -193,10 +193,10 @@ namespace Database.Tables.BasicElements {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<HouseholdPlan> result, [NotNull] string connectionString,
-            bool ignoreMissingTables, [NotNull] [ItemNotNull] ObservableCollection<Person> persons,
-            [ItemNotNull] [NotNull] ObservableCollection<AffordanceTaggingSet> taggingSets,
-            [NotNull] [ItemNotNull] ObservableCollection<ModularHousehold> modularHouseholds)
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<HouseholdPlan> result, [JetBrains.Annotations.NotNull] string connectionString,
+            bool ignoreMissingTables, [JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<Person> persons,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<AffordanceTaggingSet> taggingSets,
+            [JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<ModularHousehold> modularHouseholds)
         {
             var aic = new AllItemCollections(affordanceTaggingSets: taggingSets,
                 modularHouseholds: modularHouseholds);
@@ -224,7 +224,7 @@ namespace Database.Tables.BasicElements {
             SetSubitems(new List<DBBase>(result), new List<DBBase>(entries), IsCorrectEntryParent, ignoreMissingTables);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private string MakeHash()
         {
             var s = Name + "#";
@@ -311,7 +311,7 @@ namespace Database.Tables.BasicElements {
             }
         }
 
-        public void RefreshTagCategories([ItemNotNull] [NotNull] ObservableCollection<Affordance> affordances)
+        public void RefreshTagCategories([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Affordance> affordances)
         {
             foreach (var entry in _entries) {
                 if (entry.Tag== null)

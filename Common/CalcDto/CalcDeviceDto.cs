@@ -27,14 +27,14 @@ namespace Common.CalcDto {
 
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CalcDeviceDto Clone()
         {
-            return (CalcDeviceDto)this.MemberwiseClone();
+            return (CalcDeviceDto)MemberwiseClone();
         }
-        public CalcDeviceDto([NotNull]string name, StrGuid deviceCategoryGuid, [NotNull] HouseholdKey householdKey, OefcDeviceType deviceType,
-                             [NotNull] string deviceCategoryName, [NotNull]string additionalName, StrGuid guid, StrGuid locationGuid,
-                             [NotNull]string locationName)
+        public CalcDeviceDto([JetBrains.Annotations.NotNull]string name, StrGuid deviceCategoryGuid, [JetBrains.Annotations.NotNull] HouseholdKey householdKey, OefcDeviceType deviceType,
+                             [JetBrains.Annotations.NotNull] string deviceCategoryName, [JetBrains.Annotations.NotNull]string additionalName, StrGuid guid, StrGuid locationGuid,
+                             [JetBrains.Annotations.NotNull]string locationName)
         {
             Name = name;
             DeviceCategoryGuid = deviceCategoryGuid;
@@ -46,7 +46,7 @@ namespace Common.CalcDto {
             LocationGuid = locationGuid;
             LocationName = locationName;
         }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string Name { get; set; }
         public StrGuid DeviceCategoryGuid { get; set; }
         public HouseholdKey HouseholdKey
@@ -55,17 +55,17 @@ namespace Common.CalcDto {
             set;
         }
         public OefcDeviceType DeviceType { get; set; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string DeviceCategoryName { get; set; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string AdditionalName { get; set; }
         public StrGuid Guid { get; set; }
         public StrGuid LocationGuid { get; set; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string LocationName { get; set; }
         public List<CalcDeviceLoadDto> Loads { get; set; } = new List<CalcDeviceLoadDto>();
 
-        public void AddLoads([ItemNotNull] [NotNull]List<CalcDeviceLoadDto> load)
+        public void AddLoads([ItemNotNull] [JetBrains.Annotations.NotNull]List<CalcDeviceLoadDto> load)
         {
             Loads.AddRange(load);
         }

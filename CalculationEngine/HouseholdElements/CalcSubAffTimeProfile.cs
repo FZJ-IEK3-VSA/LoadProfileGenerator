@@ -26,17 +26,16 @@
 
 //-----------------------------------------------------------------------
 
-using JetBrains.Annotations;
 using System.Collections.Generic;
 using Automation;
 using Common;
 
 namespace CalculationEngine.HouseholdElements {
     internal class CalcSubAffTimeProfile : ICalcProfile {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly List<double> _values;
 
-        public CalcSubAffTimeProfile(int duration, [NotNull] string name) {
+        public CalcSubAffTimeProfile(int duration, [JetBrains.Annotations.NotNull] string name) {
             Name = name;
             _values = new List<double>(duration);
             for (var i = 0; i < duration; i++) {

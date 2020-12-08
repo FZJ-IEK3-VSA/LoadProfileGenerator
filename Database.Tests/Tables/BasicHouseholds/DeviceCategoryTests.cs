@@ -32,8 +32,6 @@ using Automation;
 using Common;
 using Common.Tests;
 using Database.Tables.BasicHouseholds;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -64,7 +62,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             }
         }
 
-        public DeviceCategoryTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public DeviceCategoryTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

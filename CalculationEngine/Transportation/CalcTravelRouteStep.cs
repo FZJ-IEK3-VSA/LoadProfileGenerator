@@ -8,12 +8,12 @@ using JetBrains.Annotations;
 namespace CalculationEngine.Transportation {
     public class CalcTravelRouteStep : CalcBase {
         private readonly double _distanceOfStepInM;
-        [ItemNotNull] [NotNull] private readonly List<CalcTransportationDevice> _vehiclePool;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly List<CalcTransportationDevice> _vehiclePool;
         private readonly CalcRepo _calcRepo;
 
-        public CalcTravelRouteStep([NotNull] string pName,
-                                   [NotNull] CalcTransportationDeviceCategory transportationDeviceCategory, int stepNumber, double distanceInM,
-                                   StrGuid guid, [NotNull] [ItemNotNull] List<CalcTransportationDevice> vehiclePool,
+        public CalcTravelRouteStep([JetBrains.Annotations.NotNull] string pName,
+                                   [JetBrains.Annotations.NotNull] CalcTransportationDeviceCategory transportationDeviceCategory, int stepNumber, double distanceInM,
+                                   StrGuid guid, [JetBrains.Annotations.NotNull] [ItemNotNull] List<CalcTransportationDevice> vehiclePool,
                                    CalcRepo calcRepo) : base(pName, guid)
         {
             TransportationDeviceCategory = transportationDeviceCategory;
@@ -23,16 +23,16 @@ namespace CalculationEngine.Transportation {
             _calcRepo = calcRepo;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CalcTransportationDeviceCategory TransportationDeviceCategory { get;  }
         public int StepNumber { get; }
 
         public double DistanceOfStepInM => _distanceOfStepInM;
 
-        public void ActivateStep([NotNull] TimeStep startTimeStep, [NotNull] CalcTransportationDevice pickedDevice,
-            int pickeddurationInTimesteps, [NotNull] CalcSite srcSite, [NotNull] CalcSite dstSite,
-            [NotNull] string travelRouteName, [NotNull] string personName
-            , [NotNull] TimeStep transportationEventStartTimeStep, [NotNull] TimeStep transportationEventEndTimeStep)
+        public void ActivateStep([JetBrains.Annotations.NotNull] TimeStep startTimeStep, [JetBrains.Annotations.NotNull] CalcTransportationDevice pickedDevice,
+            int pickeddurationInTimesteps, [JetBrains.Annotations.NotNull] CalcSite srcSite, [JetBrains.Annotations.NotNull] CalcSite dstSite,
+            [JetBrains.Annotations.NotNull] string travelRouteName, [JetBrains.Annotations.NotNull] string personName
+            , [JetBrains.Annotations.NotNull] TimeStep transportationEventStartTimeStep, [JetBrains.Annotations.NotNull] TimeStep transportationEventEndTimeStep)
         {
             pickedDevice.Activate(startTimeStep, pickeddurationInTimesteps,srcSite,dstSite,
                 travelRouteName,personName, transportationEventStartTimeStep, transportationEventEndTimeStep);
@@ -41,12 +41,12 @@ namespace CalculationEngine.Transportation {
             }
         }
 
-        public bool CalculateDurationInTimestepsAndPickDevice([NotNull] TimeStep timestepOfThisStep,
+        public bool CalculateDurationInTimestepsAndPickDevice([JetBrains.Annotations.NotNull] TimeStep timestepOfThisStep,
                                                               out CalcTransportationDevice? pickedDevice,
             [CanBeNull] out int? pickeddurationInTimesteps,
-            [NotNull][ItemNotNull] List<CalcTransportationDevice> vehiclepool,
-            [NotNull][ItemNotNull] List<CalcTransportationDevice> locationUnlimitedDevices,
-            [ItemNotNull] [NotNull] List<CalcTransportationDevice> devicesAtSrcLoc)
+            [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcTransportationDevice> vehiclepool,
+            [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcTransportationDevice> locationUnlimitedDevices,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] List<CalcTransportationDevice> devicesAtSrcLoc)
         {
             int durationInTimesteps;
             if (TransportationDeviceCategory.IsLimitedToSingleLocation) {

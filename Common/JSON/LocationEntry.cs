@@ -29,7 +29,6 @@
 using Automation;
 using Automation.ResultFiles;
 using Common.SQLResultLogging.Loggers;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 
 namespace Common.JSON {
@@ -37,26 +36,26 @@ namespace Common.JSON {
         [JsonProperty]
         public HouseholdKey HouseholdKey { get; private set; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [JsonProperty]
         public string LocationName { get; private set; }
 
         [JsonProperty]
         public StrGuid LocationGuid { get; private set; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [JsonProperty]
         public  string PersonName { get; private set; }
         [JsonProperty]
         public StrGuid PersonGuid { get; private set; }
         [JsonProperty]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public TimeStep Timestep { get; private set; }
 
-        public LocationEntry([NotNull] HouseholdKey householdKey,
-                             [NotNull] string personName, StrGuid personGuid,
-                             [NotNull] TimeStep pTimestep,
-                             [NotNull] string locationName, StrGuid locationGuid
+        public LocationEntry([JetBrains.Annotations.NotNull] HouseholdKey householdKey,
+                             [JetBrains.Annotations.NotNull] string personName, StrGuid personGuid,
+                             [JetBrains.Annotations.NotNull] TimeStep pTimestep,
+                             [JetBrains.Annotations.NotNull] string locationName, StrGuid locationGuid
                              ) {
             HouseholdKey = householdKey;
             PersonName = personName;

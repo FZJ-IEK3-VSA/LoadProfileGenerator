@@ -10,7 +10,7 @@ namespace Database.Tables.Houses {
         private readonly double _referenceValue;
 
         public TransformationFactorDatapoint([CanBeNull]int? pID, double referenceValue, double factor, int transformationDeviceID,
-            [NotNull] string connectionString, StrGuid guid)
+            [JetBrains.Annotations.NotNull] string connectionString, StrGuid guid)
             : base(referenceValue + " - " + factor, TableName, connectionString, guid)
         {
             ID = pID;
@@ -30,9 +30,9 @@ namespace Database.Tables.Houses {
 
         public int TransformationDeviceID { get; }
 
-        [NotNull]
-        private static TransformationFactorDatapoint AssignFields([NotNull] DataReader dr, [NotNull] string connectionString,
-            bool ignoreMissingFields, [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static TransformationFactorDatapoint AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString,
+            bool ignoreMissingFields, [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var id = dr.GetIntFromLong("ID");
             var factor = dr.GetDouble("Factor");
@@ -51,8 +51,8 @@ namespace Database.Tables.Houses {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<TransformationFactorDatapoint> result,
-            [NotNull] string connectionString, bool ignoreMissingTables)
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TransformationFactorDatapoint> result,
+            [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingTables)
         {
             var aic = new AllItemCollections();
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);

@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 namespace Common.JSON {
     public class TotalsInformation {
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public List<HouseholdEntry> HouseholdEntries { get; set; } = new List<HouseholdEntry>();
 
@@ -14,7 +14,7 @@ namespace Common.JSON {
             [CanBeNull]
             public HouseholdKey HouseholdKey { get; set; }
             [UsedImplicitly]
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             [ItemNotNull]
             public List<LoadTypeEntry> LoadTypeEntries { get; set; } = new List<LoadTypeEntry>();
             [CanBeNull]
@@ -24,18 +24,18 @@ namespace Common.JSON {
         }
 
         public class LoadTypeEntry {
-            public LoadTypeEntry([NotNull] LoadTypeInformation loadTypeInformation, double total)
+            public LoadTypeEntry([JetBrains.Annotations.NotNull] LoadTypeInformation loadTypeInformation, double total)
             {
                 LoadTypeInformation = loadTypeInformation;
                 Total = total;
             }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public LoadTypeInformation LoadTypeInformation { get; set; }
             public double Total { get; set; }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static TotalsInformation Read([CanBeNull] string path)
         {
             if(path == null) {
@@ -52,7 +52,7 @@ namespace Common.JSON {
             return o;
         }
 
-        public void WriteResultEntries([NotNull] StreamWriter sw)
+        public void WriteResultEntries([JetBrains.Annotations.NotNull] StreamWriter sw)
         {
             var json = JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings
             {

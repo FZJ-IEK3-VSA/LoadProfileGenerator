@@ -52,7 +52,7 @@ namespace ChartCreator2
                         try
                         {
                             ErrorReporter er = new ErrorReporter();
-                            er.Run("Caught exception:" + flex.Message, flex.StackTrace);
+                            er.Run("Caught exception:" + flex.Message, flex?.StackTrace ?? "no stacktrace");
                         }
                         catch (Exception)
                         {
@@ -64,7 +64,7 @@ namespace ChartCreator2
                     catch (Exception ex) {
                         try {
                             ErrorReporter er = new ErrorReporter();
-                            er.Run(ex.Message, ex.StackTrace);
+                            er.Run(ex.Message, ex.StackTrace ?? "no stacktrace");
                         }
                         catch (Exception) {
                             // ignored

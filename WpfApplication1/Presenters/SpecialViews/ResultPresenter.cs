@@ -41,21 +41,21 @@ using LoadProfileGenerator.Views.SpecialViews;
 
 namespace LoadProfileGenerator.Presenters.SpecialViews {
     public class ResultPresenter : PresenterBaseWithAppPresenter<ResultView> {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string ResultPath { get; }
         //private readonly CalculationResult _calculationResult;
 
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<ResultFileEntry> _filteredResultFiles =
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<ResultFileEntry> _filteredResultFiles =
             new ObservableCollection<ResultFileEntry>();
 
-        [NotNull] private readonly string _householdname;
+        [JetBrains.Annotations.NotNull] private readonly string _householdname;
 
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<ResultFileEntry> _resultFiles;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<ResultFileEntry> _resultFiles;
 
         [CanBeNull] private string _resultFilter;
 
-        public ResultPresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] ResultView view, [NotNull] string householdname,
-                               [NotNull] string resultPath) : base(view, "HeaderString", applicationPresenter)
+        public ResultPresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] ResultView view, [JetBrains.Annotations.NotNull] string householdname,
+                               [JetBrains.Annotations.NotNull] string resultPath) : base(view, "HeaderString", applicationPresenter)
         {
             ResultPath = resultPath;
             _householdname = householdname;
@@ -73,20 +73,20 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         //[UsedImplicitly]public DateTime Endtime => _calculationResult.CalcEndTime;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<ResultFileEntry> FilteredResultFiles => _filteredResultFiles;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string HeaderString => "Results for " + _householdname;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string Householdname => _householdname;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<ResultFileEntry> ResultFiles => _resultFiles;
 
@@ -144,7 +144,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        public static void StartExcel([NotNull] ResultFileEntry resultFile)
+        public static void StartExcel([JetBrains.Annotations.NotNull] ResultFileEntry resultFile)
         {
 #pragma warning disable S2930 // "IDisposables" should be disposed
 #pragma warning disable CC0022 // Should dispose object
@@ -164,6 +164,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             }
         }
 
+        [JetBrains.Annotations.NotNull]
         public override string ToString() => HeaderString;
     }
 }

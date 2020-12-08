@@ -45,15 +45,15 @@ namespace LoadProfileGenerator.Presenters.Households
 {
     public class DesirePresenter : PresenterBaseDBBase<DesireView>
     {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly Desire _desire;
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly ObservableCollection<UsedIn> _usedIn;
-        [ItemNotNull] [NotNull]
+        [ItemNotNull] [JetBrains.Annotations.NotNull]
         private readonly ObservableCollection<string> _allDesireCategories = new ObservableCollection<string>();
 
-        public DesirePresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] DesireView view, [NotNull] Desire desire)
+        public DesirePresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] DesireView view, [JetBrains.Annotations.NotNull] Desire desire)
             : base(view, "ThisDesire.HeaderString", desire, applicationPresenter)
         {
             _desire = desire;
@@ -62,7 +62,7 @@ namespace LoadProfileGenerator.Presenters.Households
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<string> AllDesireCategories
         {
@@ -75,7 +75,7 @@ namespace LoadProfileGenerator.Presenters.Households
         }
 
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string CriticalTime
         {
             get
@@ -112,12 +112,12 @@ namespace LoadProfileGenerator.Presenters.Households
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Desire ThisDesire => _desire;
 
         [UsedImplicitly]
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<UsedIn> UsedIn => _usedIn;
 
         public override void Close(bool saveToDB, bool removeLast = false)

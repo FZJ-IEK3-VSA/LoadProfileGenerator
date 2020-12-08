@@ -17,11 +17,11 @@ namespace LoadProfileGenerator.Views.Transportation {
     public class TravelRouteSetPresenter : PresenterBaseDBBase<TravelRouteSetView> {
         [CanBeNull] private DataTable _connectionCountTable;
         [CanBeNull] private DataTable _distanceTable;
-        [NotNull] private ModularHousehold _modularHousehold;
+        [JetBrains.Annotations.NotNull] private ModularHousehold _modularHousehold;
         private TravelRoute _selectedTravelRoute;
 
-        public TravelRouteSetPresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] TravelRouteSetView view,
-                                       [NotNull] TravelRouteSet routeSet) : base(view, "ThisRouteSet.Name", routeSet,
+        public TravelRouteSetPresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] TravelRouteSetView view,
+                                       [JetBrains.Annotations.NotNull] TravelRouteSet routeSet) : base(view, "ThisRouteSet.Name", routeSet,
             applicationPresenter)
         {
             ThisRouteSet = routeSet;
@@ -31,18 +31,18 @@ namespace LoadProfileGenerator.Views.Transportation {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<ModularHousehold> AllHouseholds =>
             Sim.ModularHouseholds.Items;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<TravelRoute> AvailableTravelRoutes { get; } =
             new ObservableCollection<TravelRoute>();
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public DataTable ConnectionCountTable {
             get => _connectionCountTable??throw new LPGException("ConnectionCountTable was null");
@@ -56,7 +56,7 @@ namespace LoadProfileGenerator.Views.Transportation {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public DataTable DistanceTable {
             get => _distanceTable ?? throw new LPGException("ConnectionCountTable was null");
@@ -70,7 +70,7 @@ namespace LoadProfileGenerator.Views.Transportation {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ModularHousehold ModularHousehold {
             get => _modularHousehold;
@@ -85,11 +85,11 @@ namespace LoadProfileGenerator.Views.Transportation {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<Site> Sites => Sim.Sites.Items;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public TravelRouteSet ThisRouteSet { get; }
 
@@ -107,12 +107,12 @@ namespace LoadProfileGenerator.Views.Transportation {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<UsedIn> UsedIns { get; } = new ObservableCollection<UsedIn>();
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<TravelRoute> UsedTravelRoutes { get; } = new ObservableCollection<TravelRoute>();
 
@@ -170,7 +170,7 @@ namespace LoadProfileGenerator.Views.Transportation {
         {
             Logger.Info("Refreshing the connection table");
 
-            var arr = RefreshMatrix(ModularHousehold, ThisRouteSet, out var distanceMatrix);
+            string[,] arr = RefreshMatrix(ModularHousehold, ThisRouteSet, out var distanceMatrix);
             if (arr == null) {
                 return;
             }
@@ -180,7 +180,10 @@ namespace LoadProfileGenerator.Views.Transportation {
                 for (var row = 0; row < arr.GetLength(1); row++) {
                     var dr = ConnectionCountTable.Rows[row];
                     for (var col = 0; col < arr.GetLength(0); col++) {
-                        dr[col] = arr[col, row];
+                        var val = arr[col, row];
+                        if(val!= null ) {
+                            dr[col] = val;
+                        }
                     }
                 }
             }
@@ -198,7 +201,10 @@ namespace LoadProfileGenerator.Views.Transportation {
                 for (var row = 1; row < arr.GetLength(1); row++) {
                     var dr = dt.NewRow();
                     for (var col = 0; col < arr.GetLength(0); col++) {
-                        dr[col] = arr[col, row];
+                        var val = arr[col, row];
+                        if (val!= null) {
+                            dr[col] =val ;
+                        }
                     }
 
                     dt.Rows.Add(dr);
@@ -242,8 +248,8 @@ namespace LoadProfileGenerator.Views.Transportation {
 
         [ItemCanBeNull]
         [CanBeNull]
-        public static string[,] RefreshMatrix([CanBeNull] ModularHousehold mhh, [NotNull] TravelRouteSet set,
-                                              [ItemNotNull] [NotNull] out string[,] distanceMatrix)
+        public static string[,] RefreshMatrix([CanBeNull] ModularHousehold mhh, [JetBrains.Annotations.NotNull] TravelRouteSet set,
+                                              [ItemNotNull] [JetBrains.Annotations.NotNull] out string[,] distanceMatrix)
         {
             distanceMatrix = new string[1, 1];
             if (mhh == null) {

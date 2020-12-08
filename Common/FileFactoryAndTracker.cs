@@ -48,7 +48,7 @@ namespace Common {
         private readonly HashSet<HouseholdKey> _householdKeys = new HashSet<HouseholdKey>();
 
         //[ItemNotNull]
-        //[NotNull]
+        //[JetBrains.Annotations.NotNull]
         //private readonly List<HouseholdKeyEntry> _householdEntries = new List<HouseholdKeyEntry>();
 
         public bool IsHouseholdRegistered([NotNull] HouseholdKey key)

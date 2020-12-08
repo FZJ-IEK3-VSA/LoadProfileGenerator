@@ -16,7 +16,7 @@ namespace SimulationEngineLib {
     public class CommandProcessor {
 
         public static Action<DirectoryInfo, CalculationProfiler> MakeFlameChart { get; set; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
 #pragma warning disable CA1044 // Properties should not be write only
         public static string ConnectionString { private get; set; }
@@ -37,7 +37,7 @@ namespace SimulationEngineLib {
         [ArgExample("simulationengine.exe CSVImport -i mycsv -d ; -n my_profile",
             "How to create a batch file to calculate the houses in settlement 1")]
         [UsedImplicitly]
-        public void CSVImport([NotNull] CsvImportOptions args)
+        public void CSVImport([JetBrains.Annotations.NotNull] CsvImportOptions args)
         {
             Logger.Info("Running LoadProfileGenerator Version " + Assembly.GetExecutingAssembly().GetName().Version);
             CsvTimeProfileImporter ctpi  = new CsvTimeProfileImporter(ConnectionString);
@@ -49,7 +49,7 @@ namespace SimulationEngineLib {
         [ArgExample("simulationengine.exe ImportHouseholdDefinition -File txt.csv",
             "How to import a household definition:")]
         [UsedImplicitly]
-        public void ImportHouseholdDefinition([NotNull] HouseholdDefinitionImporter.HouseholdDefinitionImporterOptions args) {
+        public void ImportHouseholdDefinition([JetBrains.Annotations.NotNull] HouseholdDefinitionImporter.HouseholdDefinitionImporterOptions args) {
             HouseholdDefinitionImporter.ImportHouseholdDefinition(args, ConnectionString);
         }
 
@@ -83,7 +83,7 @@ namespace SimulationEngineLib {
             "How to calculate a house:")]
         [ArgShortcut("PHJ")]
         [UsedImplicitly]
-        public void ProcessHouseJob([NotNull] HouseJobProcessingOptions args)
+        public void ProcessHouseJob([JetBrains.Annotations.NotNull] HouseJobProcessingOptions args)
         {
             HouseGenerator.ProcessHouseJob(args);
         }
@@ -94,7 +94,7 @@ namespace SimulationEngineLib {
         [ArgExample("simulationengine.exe LaunchJsonParallel -NumberOfCores 20 -JsonDirectory Results ", "How to launch all the json files from the directory Results, with a maximum of 20 calculations running at the same time.")]
         [UsedImplicitly]
         [ArgShortcut("LJP")]
-        public void LaunchJsonParallel([NotNull] ParallelJsonLauncher.ParallelJsonLauncherOptions args)
+        public void LaunchJsonParallel([JetBrains.Annotations.NotNull] ParallelJsonLauncher.ParallelJsonLauncherOptions args)
         {
             ParallelJsonLauncher.LaunchParallel(args);
         }
@@ -103,7 +103,7 @@ namespace SimulationEngineLib {
         [ArgDescription("Exports selected database contents as a single JSON file.")]
         [ArgExample("simulationengine.exe ExportDatabaseObjectsAsJson -t HouseholdTemplates -o myexport.json", "Export all household templates into a json file.")]
         [UsedImplicitly]
-        public void ExportDatabaseObjectsAsJson([NotNull] JsonDatabaseExportOptions args)
+        public void ExportDatabaseObjectsAsJson([JetBrains.Annotations.NotNull] JsonDatabaseExportOptions args)
         {
             JsonDatabaseExporter hte = new JsonDatabaseExporter(ConnectionString);
             hte.Export(args);
@@ -115,7 +115,7 @@ namespace SimulationEngineLib {
             "Import all household templates from a json file. This will overwrite "
                     + "any changes to ones with the same guid, but will not delete extra profiles.")]
         [UsedImplicitly]
-        public void ImportDatabaseObjectsAsJson([NotNull] JsonDatabaseImportOptions args)
+        public void ImportDatabaseObjectsAsJson([JetBrains.Annotations.NotNull] JsonDatabaseImportOptions args)
         {
             JsonDatabaseImporter hti = new JsonDatabaseImporter(ConnectionString);
             hti.Import(args);

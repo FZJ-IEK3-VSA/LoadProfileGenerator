@@ -51,7 +51,7 @@ namespace LoadProfileGenerator.Views.SpecialViews {
             InitializeComponent();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private CalculationPresenter Presenter => (CalculationPresenter) DataContext;
 
         private void BtnCalculateClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
@@ -96,7 +96,7 @@ namespace LoadProfileGenerator.Views.SpecialViews {
         private void TargetRefresh_OnClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e) =>
             Presenter.RefreshTargets();
 
-        private void BtnExportJson([NotNull] object sender, [NotNull] RoutedEventArgs e)
+        private void BtnExportJson([JetBrains.Annotations.NotNull] object sender, [JetBrains.Annotations.NotNull] RoutedEventArgs e)
         {
             var ofd = new SaveFileDialog
             {

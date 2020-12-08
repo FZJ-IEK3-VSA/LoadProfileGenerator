@@ -10,12 +10,11 @@ using Database;
 using Database.Database;
 using Database.Helpers;
 using Database.Tables.BasicElements;
-using JetBrains.Annotations;
 
 namespace ReleaseMaker {
     public class DissStuffDatabaseCleaner {
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        public static void Run([NotNull] string filePath)
+        public static void Run([JetBrains.Annotations.NotNull] string filePath)
         {
             var start = DateTime.Now;
             var connectionString = "Data Source=" + filePath;

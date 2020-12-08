@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Common.Enums {
@@ -10,7 +9,7 @@ namespace Common.Enums {
 
     public static class CreationTypeHelper {
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static  Dictionary<CreationType, string> CreationTypeDictionary { get; }=
             new Dictionary<CreationType, string> {
                 {CreationType.ManuallyCreated, "Manually created"},

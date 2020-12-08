@@ -1,12 +1,11 @@
-﻿using JetBrains.Annotations;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Common.Enums
 {
     public static class SeverityHelper
     {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
     public static readonly IReadOnlyDictionary<Severity, string> SeverityShortName = new Dictionary<Severity, string>
         {

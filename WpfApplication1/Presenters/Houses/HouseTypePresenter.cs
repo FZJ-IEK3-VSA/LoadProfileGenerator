@@ -41,14 +41,14 @@ using LoadProfileGenerator.Views.Houses;
 
 namespace LoadProfileGenerator.Presenters.Houses {
     public class HouseTypePresenter : PresenterBaseDBBase<HouseTypeView> {
-        [NotNull] private readonly HouseType _houseType;
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<UsedIn> _usedIns;
+        [JetBrains.Annotations.NotNull] private readonly HouseType _houseType;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<UsedIn> _usedIns;
 
         [CanBeNull] private string _selectedAddCategory;
 
         [CanBeNull] private TemperatureProfile _testingTemperatureProfile;
 
-        public HouseTypePresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] HouseTypeView view, [NotNull] HouseType houseType)
+        public HouseTypePresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] HouseTypeView view, [JetBrains.Annotations.NotNull] HouseType houseType)
             : base(view, "ThisHouseType.HeaderString", houseType, applicationPresenter)
         {
             _houseType = houseType;
@@ -61,45 +61,45 @@ namespace LoadProfileGenerator.Presenters.Houses {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<RealDevice> AllDevices => Sim.RealDevices.Items;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<string> CategoryOrDevice => Sim.CategoryOrDevice;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<DeviceCategory> DeviceCategories
             => Sim.DeviceCategories.Items;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<RealDevice> Devices => Sim.RealDevices.Items;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<EnergyStorage> EnergyStorages
             => Sim.EnergyStorages.Items;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<Generator> Generators => Sim.Generators.Items;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<GeographicLocation> GeographicLocations
             => Sim.GeographicLocations.Items;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<Location> Locations => Sim.Locations.Items;
 
@@ -152,13 +152,13 @@ namespace LoadProfileGenerator.Presenters.Houses {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<TemperatureProfile> TemperatureProfiles
             => Sim.TemperatureProfiles.Items;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<TemperatureProfile> TemperaturProfiles
             => Sim.TemperatureProfiles.Items;
@@ -174,33 +174,33 @@ namespace LoadProfileGenerator.Presenters.Houses {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public HouseType ThisHouseType => _houseType;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<TimeLimit> TimeLimits => Sim.TimeLimits.Items;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<TimeBasedProfile> Timeprofiles
             => Sim.Timeprofiles.Items;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<TransformationDevice> TransformationDevices
             => Sim.TransformationDevices.Items;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<UsedIn> UsedIns => _usedIns;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<VLoadType> VLoadTypes => Sim.LoadTypes.Items;
 
@@ -317,7 +317,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
             _usedIns.SynchronizeWithList(usedIn);
         }
 
-        private void ThisHouseTypePropertyChanged([NotNull] object sender, [NotNull] PropertyChangedEventArgs e)
+        private void ThisHouseTypePropertyChanged([JetBrains.Annotations.NotNull] object sender, [JetBrains.Annotations.NotNull] PropertyChangedEventArgs e)
         {
             // heating
             if (e.PropertyName == "HeatingYearlyTotal" || e.PropertyName == "ReferenceDegreeDays" ||

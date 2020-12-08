@@ -30,7 +30,6 @@
 
 using System;
 using System.Data.SQLite;
-using JetBrains.Annotations;
 
 #endregion
 
@@ -39,14 +38,14 @@ namespace Database.Database
     public sealed class Connection : IDisposable
     {
         public static int ConnectionCount { get; private set; }
-        [NotNull] private readonly SQLiteConnection _sqlcon;
-        public Connection([NotNull] string connectionString)
+        [JetBrains.Annotations.NotNull] private readonly SQLiteConnection _sqlcon;
+        public Connection([JetBrains.Annotations.NotNull] string connectionString)
         {
             _sqlcon = new SQLiteConnection(connectionString);
             ConnectionCount++;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public SQLiteConnection Sqlcon => _sqlcon;
 
         public void Dispose() => Close();
@@ -60,7 +59,7 @@ namespace Database.Database
 
         public void Open() => _sqlcon.Open();
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public SQLiteTransaction BeginTransaction()
         {
             return _sqlcon.BeginTransaction();

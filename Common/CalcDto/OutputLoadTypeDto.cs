@@ -1,10 +1,8 @@
 
-using JetBrains.Annotations;
-
 namespace Common.CalcDto {
     public class OutputLoadTypeDto
     {
-        public OutputLoadTypeDto([NotNull] CalcLoadTypeDto loadType, double valueScalingFactor, TransformationOutputFactorType factorType)
+        public OutputLoadTypeDto([JetBrains.Annotations.NotNull] CalcLoadTypeDto loadType, double valueScalingFactor, TransformationOutputFactorType factorType)
         {
             LoadType = loadType;
             ValueScalingFactor = valueScalingFactor;
@@ -16,7 +14,7 @@ namespace Common.CalcDto {
         public TransformationOutputFactorType FactorType { get; }
 
         //        public string FactorTypeStr => FactorType.ToString();
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CalcLoadTypeDto LoadType { get; }
     }
 }

@@ -9,10 +9,10 @@ using Newtonsoft.Json;
 namespace Common.JSON {
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public class SettlementInformation {
-        public SettlementInformation([NotNull] string csvCharacter,
-                                     [NotNull] string name,
+        public SettlementInformation([JetBrains.Annotations.NotNull] string csvCharacter,
+                                     [JetBrains.Annotations.NotNull] string name,
                                      EnergyIntensityType energyIntensity,
-                                     [NotNull] string lpgVersion)
+                                     [JetBrains.Annotations.NotNull] string lpgVersion)
         {
             CSVCharacter = csvCharacter;
             Name = name;
@@ -20,25 +20,25 @@ namespace Common.JSON {
             LPGVersion = lpgVersion;
         }
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string CSVCharacter { get;}
         public EnergyIntensityType EnergyIntensity { get; }
 
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public List<HouseInformation> HouseInformations { get; set; } =
             new List<HouseInformation>();
 
         public int ID { get; set; }
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string LPGVersion { get;  }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string Name { get; }
 
-        [NotNull]
-        public static SettlementInformation Read([NotNull] string path)
+        [JetBrains.Annotations.NotNull]
+        public static SettlementInformation Read([JetBrains.Annotations.NotNull] string path)
         {
             var dstPath = Path.Combine(path, Constants.SettlementJsonName);
             string json;
@@ -49,7 +49,7 @@ namespace Common.JSON {
             return o;
         }
 
-        public void WriteResultEntries([NotNull] string path)
+        public void WriteResultEntries([JetBrains.Annotations.NotNull] string path)
         {
             var json = JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings {
                 NullValueHandling = NullValueHandling.Include
@@ -61,30 +61,30 @@ namespace Common.JSON {
         }
 
         public class HouseInformation {
-            public HouseInformation([NotNull] string name, [NotNull] string directory,
-[NotNull] string houseType)
+            public HouseInformation([JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] string directory,
+[JetBrains.Annotations.NotNull] string houseType)
             {
                 Directory = directory;
                 Name = name;
                 HouseType = houseType;
             }
             [UsedImplicitly]
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string Directory { get;  }
             [UsedImplicitly]
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string Name { get;  }
             [UsedImplicitly]
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             [ItemNotNull]
             public List<HouseholdInformation> HouseholdInformations { get; set; } = new List<HouseholdInformation>();
             [UsedImplicitly]
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string HouseType { get;  }
         }
 
         public class SettlementPersonInformation {
-            public SettlementPersonInformation([NotNull] string name, int age, PermittedGender gender, [NotNull] string personTag)
+            public SettlementPersonInformation([JetBrains.Annotations.NotNull] string name, int age, PermittedGender gender, [JetBrains.Annotations.NotNull] string personTag)
             {
                 Name = name;
                 Age = age;
@@ -97,26 +97,26 @@ namespace Common.JSON {
             [UsedImplicitly]
             public PermittedGender Gender { get; set; }
             [UsedImplicitly]
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string Name { get; set; }
 
             [UsedImplicitly]
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string PersonTag { get; set; }
         }
 
         public class HouseholdInformation {
-            public HouseholdInformation([NotNull] string name) => Name = name;
+            public HouseholdInformation([JetBrains.Annotations.NotNull] string name) => Name = name;
 
             [UsedImplicitly]
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string Name { get; set; }
             [UsedImplicitly]
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             [ItemNotNull]
             public List<SettlementPersonInformation> Persons { get; set; } = new List<SettlementPersonInformation>();
             [UsedImplicitly]
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             [ItemNotNull]
             public List<string> Tags { get; set; } = new List<string>();
         }

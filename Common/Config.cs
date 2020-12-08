@@ -46,9 +46,9 @@ namespace Common {
             DummyTime = new DateTime(1900, 1, 1);
         }
 
-        private Config([NotNull] string startpath) => StartPath = startpath;
+        private Config([JetBrains.Annotations.NotNull] string startpath) => StartPath = startpath;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static CultureInfo CultureInfo { get; } = CultureInfo.CurrentCulture;
 
         public static DateTime DummyTime { get; }
@@ -79,7 +79,7 @@ namespace Common {
         public static bool OutputToConsole { get; set; }
         public static string LPGVersion { get; set; }
 
-        public static void InitConfig([NotNull] string startpath) {
+        public static void InitConfig([JetBrains.Annotations.NotNull] string startpath) {
             if (_config != null) {
                 throw new LPGException("Config was already initialized");
             }

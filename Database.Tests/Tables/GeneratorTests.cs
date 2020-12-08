@@ -33,8 +33,6 @@ using Common;
 using Common.Tests;
 using Database.Tables.Houses;
 using FluentAssertions;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -73,7 +71,7 @@ namespace Database.Tests.Tables {
             }
         }
 
-        public GeneratorTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public GeneratorTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

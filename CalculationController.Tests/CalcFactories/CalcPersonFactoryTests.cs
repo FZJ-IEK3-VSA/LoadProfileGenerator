@@ -39,8 +39,6 @@ using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.ModularHouseholds;
 using FluentAssertions;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -97,7 +95,7 @@ namespace CalculationController.Tests.CalcFactories {
             Assert.Equal(d.PrettyName, cp.Desires[0].Name);
         }
 
-        public CalcPersonFactoryTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public CalcPersonFactoryTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

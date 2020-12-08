@@ -48,7 +48,7 @@ namespace Database.Tables.BasicElements {
 
         [CanBeNull] private DeviceTag _tag;
 
-        public DeviceTaggingReference([NotNull] string name, int taggingSetID, [CanBeNull] DeviceTag tag, [NotNull] string connectionString,
+        public DeviceTaggingReference([JetBrains.Annotations.NotNull] string name, int taggingSetID, [CanBeNull] DeviceTag tag, [JetBrains.Annotations.NotNull] string connectionString,
                                       [CanBeNull]int? pID,
             int personCount, double referenceValue, [CanBeNull] VLoadType loadType,
             StrGuid guid) : base(name, pID, TableName,
@@ -68,7 +68,7 @@ namespace Database.Tables.BasicElements {
         public ObservableCollection<DeviceTag> AllTags { get; set; }
 
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public VLoadType LoadType => _loadType ?? throw new InvalidOperationException();
 
         public int PersonCount => _personCount;
@@ -107,9 +107,9 @@ namespace Database.Tables.BasicElements {
             return _referenceValue.CompareTo(other._referenceValue);
         }
 
-        [NotNull]
-        private static DeviceTaggingReference AssignFields([NotNull] DataReader dr, [NotNull] string connectionString,
-            bool ignoreMissingFields, [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static DeviceTaggingReference AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString,
+            bool ignoreMissingFields, [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var id = dr.GetIntFromLong("ID");
             var taggingSetID = dr.GetIntFromLong("TaggingSetID");
@@ -139,7 +139,7 @@ namespace Database.Tables.BasicElements {
             return CompareTo(other);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private static string GetName([CanBeNull] DeviceTag tag, int personcount, double referenceValue,
             [CanBeNull] VLoadType loadType)
         {
@@ -169,10 +169,10 @@ namespace Database.Tables.BasicElements {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<DeviceTaggingReference> result,
-            [NotNull] string connectionString,
-            bool ignoreMissingTables, [ItemNotNull] [NotNull] ObservableCollection<DeviceTag> allTags,
-            [ItemNotNull] [NotNull] ObservableCollection<VLoadType> loadTypes)
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceTaggingReference> result,
+            [JetBrains.Annotations.NotNull] string connectionString,
+            bool ignoreMissingTables, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceTag> allTags,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<VLoadType> loadTypes)
         {
             var aic = new AllItemCollections(deviceTags: allTags, loadTypes: loadTypes);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);

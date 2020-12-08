@@ -38,22 +38,22 @@ using JetBrains.Annotations;
 
 namespace Common.JSON {
     public class OnlineEnergyFileRow {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
         private readonly List<double> _energyEntries;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly CalcLoadTypeDto _loadType;
         [CanBeNull]
         private double? _sum;
 
-        public OnlineEnergyFileRow([NotNull] TimeStep timestep, [NotNull] List<double> energyEntries, [NotNull] CalcLoadTypeDto loadType) {
+        public OnlineEnergyFileRow([JetBrains.Annotations.NotNull] TimeStep timestep, [JetBrains.Annotations.NotNull] List<double> energyEntries, [JetBrains.Annotations.NotNull] CalcLoadTypeDto loadType) {
             Timestep = timestep;
             _sum = null;
             _energyEntries = energyEntries;
             _loadType = loadType;
         }
 
-        public OnlineEnergyFileRow([NotNull] OnlineEnergyFileRow other) {
+        public OnlineEnergyFileRow([JetBrains.Annotations.NotNull] OnlineEnergyFileRow other) {
             Timestep = other.Timestep;
             var otherEntries = new List<double>(other._energyEntries);
             _energyEntries = otherEntries;
@@ -61,12 +61,12 @@ namespace Common.JSON {
             _sum = null;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public List<double> EnergyEntries => _energyEntries;
 
         public int EntryLengthInByte => sizeof(int) * 2 + sizeof(double) * _energyEntries.Count;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CalcLoadTypeDto LoadType => _loadType;
 
         public double SumCached {
@@ -105,10 +105,10 @@ namespace Common.JSON {
             return d;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public TimeStep Timestep { get; }
 
-        public void AddValues([NotNull] OnlineEnergyFileRow efr) {
+        public void AddValues([JetBrains.Annotations.NotNull] OnlineEnergyFileRow efr) {
             _sum = null;
             if (efr._energyEntries.Count != _energyEntries.Count) {
                 throw new LPGException("Row lengths are inconsistent");
@@ -118,9 +118,9 @@ namespace Common.JSON {
             }
         }
 
-        [NotNull]
-        public StringBuilder GetEnergyEntriesAsString(bool useUnitConverter, [NotNull] CalcLoadTypeDto dstLoadType,
-            [CanBeNull] List<int> usedColumns, [NotNull] string csvChar, [NotNull] string decimalSeperator) {
+        [JetBrains.Annotations.NotNull]
+        public StringBuilder GetEnergyEntriesAsString(bool useUnitConverter, [JetBrains.Annotations.NotNull] CalcLoadTypeDto dstLoadType,
+            [CanBeNull] List<int> usedColumns, [JetBrains.Annotations.NotNull] string csvChar, [JetBrains.Annotations.NotNull] string decimalSeperator) {
             var sb = new StringBuilder();
             NumberFormatInfo nfi = new NumberFormatInfo();
             nfi.NumberDecimalSeparator = decimalSeperator;
@@ -140,7 +140,7 @@ namespace Common.JSON {
             return sb;
         }
 
-        public double GetSumForCertainCols([NotNull] List<int> usedColumns) {
+        public double GetSumForCertainCols([JetBrains.Annotations.NotNull] List<int> usedColumns) {
             double colSum = 0;
             if (usedColumns.Count == 0) {
                 for (var i = 0; i < _energyEntries.Count; i++) {
@@ -159,9 +159,9 @@ namespace Common.JSON {
             return _energyEntries[column];
         }
 
-        [NotNull]
-        public static OnlineEnergyFileRow Read([NotNull] BinaryReader br, [NotNull] CalcLoadTypeDto lt,
-                                               [NotNull] CalcParameters parameters) {
+        [JetBrains.Annotations.NotNull]
+        public static OnlineEnergyFileRow Read([JetBrains.Annotations.NotNull] BinaryReader br, [JetBrains.Annotations.NotNull] CalcLoadTypeDto lt,
+                                               [JetBrains.Annotations.NotNull] CalcParameters parameters) {
             if (parameters == null) {
                 throw new ArgumentNullException(nameof(parameters));
             }
@@ -176,7 +176,7 @@ namespace Common.JSON {
             return efr;
         }
 
-        public void Save([NotNull] BinaryWriter bw) {
+        public void Save([JetBrains.Annotations.NotNull] BinaryWriter bw) {
             bw.Write(Timestep.InternalStep);
             bw.Write(_energyEntries.Count);
             for (var i = 0; i < _energyEntries.Count; i++) {
@@ -184,11 +184,11 @@ namespace Common.JSON {
             }
         }
 
-        public void SaveSum([NotNull] BinaryWriter bw) {
+        public void SaveSum([JetBrains.Annotations.NotNull] BinaryWriter bw) {
             bw.Write(SumFresh());
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public override string ToString() => "Timestep: " + Timestep + " Entries:" + _energyEntries.Count + " Sum:" +
                                              SumFresh() + " LoadType:" + _loadType.Name;
     }

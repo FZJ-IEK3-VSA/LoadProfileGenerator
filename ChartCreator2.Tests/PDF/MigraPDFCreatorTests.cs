@@ -120,7 +120,7 @@
 //#pragma warning restore RECS0110 // Condition is always 'true' or always 'false'
 //        }
 //#pragma warning disable CS0162 // Unreachable code detected
-//        public MigraPDFCreatorTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+//        public MigraPDFCreatorTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
 //        {
 //        }
 //    }

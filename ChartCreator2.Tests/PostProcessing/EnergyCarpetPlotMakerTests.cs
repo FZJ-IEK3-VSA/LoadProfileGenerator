@@ -2,8 +2,6 @@
 using System.Diagnostics.CodeAnalysis;
 using Automation;
 using Common.Tests;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -58,7 +56,7 @@ namespace ChartCreator2.Tests.PostProcessing {
 #pragma warning restore 162*/
         }
 
-        public EnergyCarpetPlotMakerTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public EnergyCarpetPlotMakerTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

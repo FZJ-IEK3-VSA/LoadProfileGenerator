@@ -31,7 +31,6 @@
 using System.ComponentModel;
 using Automation.ResultFiles;
 using Database.Tables.Houses;
-using JetBrains.Annotations;
 
 #endregion
 
@@ -43,8 +42,8 @@ namespace Database.Helpers {
             }
         }
 
-        private static void SettlementOnPropertyChanged([NotNull] object sender,
-            [NotNull] PropertyChangedEventArgs propertyChangedEventArgs) {
+        private static void SettlementOnPropertyChanged([JetBrains.Annotations.NotNull] object sender,
+            [JetBrains.Annotations.NotNull] PropertyChangedEventArgs propertyChangedEventArgs) {
             throw new LPGException("Not implemented on purpose");
         }
     }

@@ -69,8 +69,8 @@ namespace Database.Tables.ModularHouseholds {
             return jtp;
         }
 
-        public HHTemplatePerson([CanBeNull]int? pID, [CanBeNull] Person pPerson, int hhTemplateID, [NotNull] string name,
-            [NotNull] string connectionString,[CanBeNull] TraitTag livingPattern, LivingPatternTag livingPatternTag, StrGuid guid)
+        public HHTemplatePerson([CanBeNull]int? pID, [CanBeNull] Person pPerson, int hhTemplateID, [JetBrains.Annotations.NotNull] string name,
+            [JetBrains.Annotations.NotNull] string connectionString,[CanBeNull] TraitTag livingPattern, LivingPatternTag livingPatternTag, StrGuid guid)
             : base(name, TableName, connectionString, guid) {
             ID = pID;
             _person = pPerson;
@@ -82,7 +82,7 @@ namespace Database.Tables.ModularHouseholds {
         [CanBeNull]
         public int? HHTemplateID => _hhTemplateID;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Person Person {
             get => _person ?? throw new InvalidOperationException();
             set => SetValueWithNotify(value, ref _person);
@@ -101,9 +101,9 @@ namespace Database.Tables.ModularHouseholds {
             set => SetValueWithNotify(value, ref _livingPatternTag);
         }
 
-        [NotNull]
-        private static HHTemplatePerson AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic) {
+        [JetBrains.Annotations.NotNull]
+        private static HHTemplatePerson AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic) {
             var hhpID = dr.GetIntFromLong("ID");
             var personID = dr.GetIntFromLong("PersonID", ignoreMissingField: ignoreMissingFields);
             var templateID = dr.GetIntFromLong("HHTemplateID");
@@ -131,9 +131,9 @@ namespace Database.Tables.ModularHouseholds {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<HHTemplatePerson> result, [NotNull] string connectionString,
-            [ItemNotNull] [NotNull] ObservableCollection<Person> persons, bool ignoreMissingTables,[ItemNotNull] [NotNull] ObservableCollection<TraitTag> traitTags,
-                                            [ItemNotNull][NotNull] ObservableCollection<LivingPatternTag> livingPatternTags) {
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<HHTemplatePerson> result, [JetBrains.Annotations.NotNull] string connectionString,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Person> persons, bool ignoreMissingTables,[ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TraitTag> traitTags,
+                                            [ItemNotNull][JetBrains.Annotations.NotNull] ObservableCollection<LivingPatternTag> livingPatternTags) {
             var aic = new AllItemCollections(persons: persons,traitTags:traitTags, livingPatternTags:livingPatternTags);
 
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);

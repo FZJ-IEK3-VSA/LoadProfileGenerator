@@ -42,7 +42,7 @@ namespace CalculationController.CalcFactories {
     public class CalcPersonFactory {
         private readonly CalcRepo _calcRepo;
 
-        [NotNull] private readonly List<DateTime> _internalDateTimeForSteps;
+        [JetBrains.Annotations.NotNull] private readonly List<DateTime> _internalDateTimeForSteps;
 
 
         public CalcPersonFactory(CalcRepo calcRepo)
@@ -56,11 +56,11 @@ namespace CalculationController.CalcFactories {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
-        public List<CalcPerson> MakeCalcPersons([NotNull] [ItemNotNull] List<CalcPersonDto> persons,
-                                                [NotNull] List<CalcLocation> locations,
-                                                [NotNull] string householdName)
+        public List<CalcPerson> MakeCalcPersons([JetBrains.Annotations.NotNull] [ItemNotNull] List<CalcPersonDto> persons,
+                                                [JetBrains.Annotations.NotNull] List<CalcLocation> locations,
+                                                [JetBrains.Annotations.NotNull] string householdName)
         {
             var calcPersons = new List<CalcPerson>();
             Dictionary<string, SharedDesireValue> sharedDesireValues = new Dictionary<string, SharedDesireValue>();
@@ -98,9 +98,9 @@ namespace CalculationController.CalcFactories {
             return calcPersons;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
-        public BitArray SetBitArrayWithDateSpans([NotNull] [ItemNotNull] List<DateSpan> dates)
+        public BitArray SetBitArrayWithDateSpans([JetBrains.Annotations.NotNull] [ItemNotNull] List<DateSpan> dates)
         {
             BitArray myArray = new BitArray(_calcRepo.CalcParameters.InternalTimesteps);
             var internalTimeSteps = _calcRepo.CalcParameters.InternalTimesteps;
@@ -116,10 +116,10 @@ namespace CalculationController.CalcFactories {
             return myArray;
         }
 
-        private void AddDesireToPerson([NotNull] PersonDesireDto desire,
-                                       [NotNull] CalcPerson calcPerson,
-                                       [NotNull] Dictionary<string, SharedDesireValue> sharedDesireValues,
-                                       [NotNull] string householdName)
+        private void AddDesireToPerson([JetBrains.Annotations.NotNull] PersonDesireDto desire,
+                                       [JetBrains.Annotations.NotNull] CalcPerson calcPerson,
+                                       [JetBrains.Annotations.NotNull] Dictionary<string, SharedDesireValue> sharedDesireValues,
+                                       [JetBrains.Annotations.NotNull] string householdName)
         {
             var sdv = GetSharedDesireValue(desire, sharedDesireValues);
             var cd1 = new CalcDesire(desire.Name,
@@ -144,10 +144,10 @@ namespace CalculationController.CalcFactories {
             }
         }
 
-        private static void CheckIfDesireViolatesCategory([NotNull] PersonDesireDto desire,
-                                                          [NotNull] CalcPersonDesires calcDesires,
-                                                          [NotNull] CalcPerson person,
-                                                          [NotNull] string householdName)
+        private static void CheckIfDesireViolatesCategory([JetBrains.Annotations.NotNull] PersonDesireDto desire,
+                                                          [JetBrains.Annotations.NotNull] CalcPersonDesires calcDesires,
+                                                          [JetBrains.Annotations.NotNull] CalcPerson person,
+                                                          [JetBrains.Annotations.NotNull] string householdName)
         {
             string desirecategory = desire.DesireCategory;
             if (string.IsNullOrWhiteSpace(desirecategory)) {
@@ -171,8 +171,8 @@ namespace CalculationController.CalcFactories {
         }
 
         [CanBeNull]
-        private static SharedDesireValue GetSharedDesireValue([NotNull] PersonDesireDto desire,
-                                                              [NotNull] Dictionary<string, SharedDesireValue> sharedDesireValues)
+        private static SharedDesireValue GetSharedDesireValue([JetBrains.Annotations.NotNull] PersonDesireDto desire,
+                                                              [JetBrains.Annotations.NotNull] Dictionary<string, SharedDesireValue> sharedDesireValues)
         {
             if (desire.IsSharedDesire) {
                 /*

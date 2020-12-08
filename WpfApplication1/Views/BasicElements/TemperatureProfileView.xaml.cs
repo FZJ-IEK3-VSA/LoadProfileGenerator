@@ -48,15 +48,15 @@ namespace LoadProfileGenerator.Views.BasicElements {
     /// </summary>
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public partial class TemperatureProfileView {
-        [NotNull] private DateTimeAxis _dateTimeAxis;
-        [NotNull] private LinearAxis _linearAxis;
-        [NotNull] private PlotModel _plot;
+        [JetBrains.Annotations.NotNull] private DateTimeAxis _dateTimeAxis;
+        [JetBrains.Annotations.NotNull] private LinearAxis _linearAxis;
+        [JetBrains.Annotations.NotNull] private PlotModel _plot;
 
         public TemperatureProfileView() {
             InitializeComponent();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private TemperatureProfilePresenter Presenter => (TemperatureProfilePresenter)DataContext;
 
         private void Adddatapoint_Click([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e) {

@@ -28,10 +28,10 @@
 
 #region
 
+#endregion
+
 using System.ComponentModel;
 using JetBrains.Annotations;
-
-#endregion
 
 namespace LoadProfileGenerator.Controls
 {
@@ -40,6 +40,6 @@ namespace LoadProfileGenerator.Controls
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
-        protected void OnPropertyChanged([NotNull] string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        protected void OnPropertyChanged([JetBrains.Annotations.NotNull] string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

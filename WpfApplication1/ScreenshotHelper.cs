@@ -20,14 +20,15 @@ using LoadProfileGenerator.Controls;
 using LoadProfileGenerator.Controls.Usercontrols;
 using LoadProfileGenerator.Presenters.BasicElements;
 using OxyPlot.Wpf;
+using Image = System.Windows.Controls.Image;
 
 namespace LoadProfileGenerator {
     public class ScreenshotHelper {
-        [NotNull] private readonly ApplicationPresenter _applicationPresenter;
+        [JetBrains.Annotations.NotNull] private readonly ApplicationPresenter _applicationPresenter;
 
-        [ItemNotNull] [NotNull] private readonly List<string> _labels = new List<string>();
-        [NotNull] private readonly Simulator _sim;
-        [NotNull] private readonly TabControl _tabControl;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly List<string> _labels = new List<string>();
+        [JetBrains.Annotations.NotNull] private readonly Simulator _sim;
+        [JetBrains.Annotations.NotNull] private readonly TabControl _tabControl;
 
         [CanBeNull] private string _basisDir;
 
@@ -43,9 +44,9 @@ namespace LoadProfileGenerator {
 
         [CanBeNull] private string _texName;
 
-        [NotNull] private string _typeDescRaw = string.Empty;
+        [JetBrains.Annotations.NotNull] private string _typeDescRaw = string.Empty;
 
-        public ScreenshotHelper([NotNull] Simulator sim, [NotNull] ApplicationPresenter applicationPresenter, [NotNull] TabControl tabControl)
+        public ScreenshotHelper([JetBrains.Annotations.NotNull] Simulator sim, [JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] TabControl tabControl)
         {
             _sim = sim;
             _tabControl = tabControl;
@@ -247,7 +248,7 @@ namespace LoadProfileGenerator {
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         [SuppressMessage("ReSharper", "TailRecursiveCall")]
-        private void FixElements([NotNull] object element)
+        private void FixElements([JetBrains.Annotations.NotNull] object element)
         {
             if (element is Grid g) {
                 foreach (var child in g.Children) {
@@ -385,7 +386,7 @@ namespace LoadProfileGenerator {
         }
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        private static void SnapshotPng([NotNull] UIElement source, [NotNull] string dstFileName)
+        private static void SnapshotPng([JetBrains.Annotations.NotNull] UIElement source, [JetBrains.Annotations.NotNull] string dstFileName)
         {
             try {
                 if (Math.Abs(source.RenderSize.Height) < 0.000001) {
@@ -426,7 +427,7 @@ namespace LoadProfileGenerator {
                 using (drawingContext) {
                     drawingContext.PushTransform(new ScaleTransform(horizontalTransform, verticalTransform));
                     drawingContext.DrawRectangle(sourceBrush, null,
-                        new Rect(new Point(0, 0), new Point(actualWidth, actualHeight)));
+                        new Rect(new System.Windows.Point(0, 0), new System.Windows.Point(actualWidth, actualHeight)));
                 }
 
                 renderTarget.Render(drawingVisual);
@@ -443,15 +444,15 @@ namespace LoadProfileGenerator {
             }
         }
 
-        private static bool TestWithReflection([NotNull] dynamic d, [NotNull] string propertyName)
+        private static bool TestWithReflection([JetBrains.Annotations.NotNull] dynamic d, [JetBrains.Annotations.NotNull] string propertyName)
         {
             Type type = d.GetType();
 
             return type.GetProperties().Any(p => p.Name.Equals(propertyName));
         }
 
-        private void WriteTexBlock([NotNull] StreamWriter sw, [NotNull] string pngFileName, [NotNull] string blockName, [NotNull] string typeDesc,
-            [NotNull] string basisDir)
+        private void WriteTexBlock([JetBrains.Annotations.NotNull] StreamWriter sw, [JetBrains.Annotations.NotNull] string pngFileName, [JetBrains.Annotations.NotNull] string blockName, [JetBrains.Annotations.NotNull] string typeDesc,
+            [JetBrains.Annotations.NotNull] string basisDir)
         {
             sw.WriteLine();
             sw.WriteLine(@"<!--\FloatBarrier-->");

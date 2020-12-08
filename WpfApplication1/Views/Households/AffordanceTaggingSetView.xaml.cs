@@ -28,7 +28,6 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
-using System.Windows.Forms;
 using Automation;
 using Automation.ResultFiles;
 using Common;
@@ -50,7 +49,7 @@ namespace LoadProfileGenerator.Views.Households {
             InitializeComponent();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private AffordanceTaggingSetPresenter Presenter => (AffordanceTaggingSetPresenter)DataContext;
 
         private void BtnAddAffordancesClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e) {
@@ -116,15 +115,15 @@ namespace LoadProfileGenerator.Views.Households {
                 throw new LPGException("Could not convert the button");
             }
             var aff = (AffordanceTag) button.DataContext;
-            Color c2;
-            using (var cd = new ColorDialog()) {
-                var mediaColor = aff.CarpetPlotColor;
+            Color c2 = Color.Aqua;
+            //using (var cd = new ColorDialog()) {
+            //    var mediaColor = aff.CarpetPlotColor;
 
-                var c = Color.FromArgb( mediaColor.R, mediaColor.G, mediaColor.B);
-                cd.Color = c;
-                cd.ShowDialog();
-                c2 = cd.Color;
-            }
+            //    var c = Color.FromArgb( mediaColor.R, mediaColor.G, mediaColor.B);
+            //    cd.Color = c;
+            //    cd.ShowDialog();
+            //    c2 = cd.Color;
+            //}
             var rescolor = System.Windows.Media.Color.FromArgb(c2.A, c2.R, c2.G, c2.B);
             var cp = new ColorRGB(rescolor.R, rescolor.G, rescolor.B);
             aff.CarpetPlotColor = cp;

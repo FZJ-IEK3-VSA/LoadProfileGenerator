@@ -3,7 +3,7 @@ using Automation.ResultFiles;
 using Xunit;
 using Common.Tests;
 using Xunit.Abstractions;
-using JetBrains.Annotations;
+
 #pragma warning disable 8602
 namespace SimulationEngine.Tests {
 public class SystematicTransportHouseholdTests :UnitTestBaseClass {
@@ -787,5 +787,5 @@ public void TestHouseholdWithTransport64(){
 return hj; }, x => {});
 }
 
-public SystematicTransportHouseholdTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper) { }
+public SystematicTransportHouseholdTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper) { }
 }}

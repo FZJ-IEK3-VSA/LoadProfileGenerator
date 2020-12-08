@@ -11,13 +11,12 @@ using Database;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.Houses;
 using Database.Tables.ModularHouseholds;
-using JetBrains.Annotations;
 using SimulationEngineLib.Calculation;
 
 namespace SimulationEngineLib.SettlementCalculation {
     public static class BatchfileFromSettlement {
-        [NotNull]
-        private static string GetAllOptions([NotNull] Simulator sim, [NotNull] Settlement settlement, [NotNull] BatchOptions bo) {
+        [JetBrains.Annotations.NotNull]
+        private static string GetAllOptions([JetBrains.Annotations.NotNull] Simulator sim, [JetBrains.Annotations.NotNull] Settlement settlement, [JetBrains.Annotations.NotNull] BatchOptions bo) {
             var options = " -SkipExisting -MeasureCalculationTimes ";
             options += " -OutputFileDefault " + bo.OutputFileDefault;
             if (bo.OutputFileDefault == OutputFileDefault.OnlyOverallSum) {
@@ -69,8 +68,8 @@ namespace SimulationEngineLib.SettlementCalculation {
             return options;
         }
 
-        [NotNull]
-        private static string GetCalcObjectName([NotNull] string name) {
+        [JetBrains.Annotations.NotNull]
+        private static string GetCalcObjectName([JetBrains.Annotations.NotNull] string name) {
             var cleanname = AutomationUtili.CleanFileName(name);
             cleanname = cleanname.Replace(" ", string.Empty).Replace("+", string.Empty).Replace(",", "_");
             if (cleanname.Length > 20) {
@@ -79,19 +78,19 @@ namespace SimulationEngineLib.SettlementCalculation {
             return cleanname;
         }
 
-        public static void MakeBatchfileFromSettlement([NotNull] string connectionString, [NotNull] BatchOptions bo) {
+        public static void MakeBatchfileFromSettlement([JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.NotNull] BatchOptions bo) {
             Logger.Info("Loading...");
             var sim = new Simulator(connectionString);
             Logger.Info("Loading finished.");
             MakeBatchfileFromSettlement(sim, bo);
         }
 
-        public static void MakeSettlementJson([NotNull] Settlement settlement, [NotNull] Simulator sim, [NotNull] BatchOptions bo, [NotNull] string dstPath)
+        public static void MakeSettlementJson([JetBrains.Annotations.NotNull] Settlement settlement, [JetBrains.Annotations.NotNull] Simulator sim, [JetBrains.Annotations.NotNull] BatchOptions bo, [JetBrains.Annotations.NotNull] string dstPath)
         {
             SettlementInformation si = new SettlementInformation(
                 sim.MyGeneralConfig.CSVCharacter, settlement.Name,
                 bo.EnergyIntensity,
-                Assembly.GetExecutingAssembly().GetName().Version.ToString()
+                Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "no version"
             );
 
             foreach (SettlementHH settlementHousehold in settlement.Households) {
@@ -139,7 +138,7 @@ namespace SimulationEngineLib.SettlementCalculation {
             si.WriteResultEntries(dstPath);
         }
 
-        public static void MakeBatchfileFromSettlement([NotNull] Simulator sim, [NotNull] BatchOptions bo) {
+        public static void MakeBatchfileFromSettlement([JetBrains.Annotations.NotNull] Simulator sim, [JetBrains.Annotations.NotNull] BatchOptions bo) {
             Settlement settlement;
             if (bo.SettlementIndex != null) {
                 settlement = sim.Settlements[bo.SettlementIndex.Value];

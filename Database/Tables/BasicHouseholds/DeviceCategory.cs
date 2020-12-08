@@ -50,23 +50,23 @@ namespace Database.Tables.BasicHouseholds {
     {
         public const string TableName = "tblDeviceCategories";
 
-        [NotNull] private static readonly Dictionary<string, ObservableCollection<RealDevice>> _allDevicesDict =
+        [JetBrains.Annotations.NotNull] private static readonly Dictionary<string, ObservableCollection<RealDevice>> _allDevicesDict =
             new Dictionary<string, ObservableCollection<RealDevice>>();
 
-        [NotNull] private static readonly Dictionary<string, DeviceCategory> _dcNoneCategory =
+        [JetBrains.Annotations.NotNull] private static readonly Dictionary<string, DeviceCategory> _dcNoneCategory =
             new Dictionary<string, DeviceCategory>();
 
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<RealDevice> _allDevices;
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<DeviceCategory> _children;
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<RealDevice> _subDevices;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<RealDevice> _allDevices;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<DeviceCategory> _children;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<RealDevice> _subDevices;
         private bool _ignoreInRealDeviceViews;
 
         [CanBeNull] private DeviceCategory _parentCategory;
 
         private int _parentID;
 
-        public DeviceCategory([NotNull] string pName, int parentID, [NotNull] string connectionString, bool ignoreInRealDeviceViews,
-            [ItemNotNull] [NotNull] ObservableCollection<RealDevice> devices, StrGuid guid,
+        public DeviceCategory([JetBrains.Annotations.NotNull] string pName, int parentID, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreInRealDeviceViews,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<RealDevice> devices, StrGuid guid,
                               [CanBeNull]int? pID = null, bool isEmptyconnectionStringOk = false)
             : base(pName, TableName, connectionString, guid)
         {
@@ -88,11 +88,11 @@ namespace Database.Tables.BasicHouseholds {
             RefreshNames();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<DeviceCategory> Children => _children;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string FullPath {
             get {
@@ -164,7 +164,7 @@ namespace Database.Tables.BasicHouseholds {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string ShortName {
             get => base.Name;
             set => base.Name = value;
@@ -178,9 +178,9 @@ namespace Database.Tables.BasicHouseholds {
             return string.Compare(FullPath, other.FullPath, StringComparison.Ordinal);
         }
 
-        [NotNull]
-        private static DeviceCategory AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static DeviceCategory AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var id =  dr.GetIntFromLong("ID");
             var parentID = -1;
@@ -196,16 +196,16 @@ namespace Database.Tables.BasicHouseholds {
             return db;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString)
+        public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString)
         {
             var dc = new DeviceCategory(FindNewName(isNameTaken, "New Device Category "), -1,
                 connectionString, false, _allDevicesDict[connectionString], System.Guid.NewGuid().ToStrGuid());
             return dc;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string GetAllName(int level)
         {
             _children.Sort();
@@ -223,11 +223,11 @@ namespace Database.Tables.BasicHouseholds {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         public List<UsedIn> GetHouseholdsForDeviceCategory(
-            [ItemNotNull] [NotNull] IEnumerable<Affordance> affordances, [ItemNotNull] [NotNull] IEnumerable<Location> locations,
-            [ItemNotNull] [NotNull] IEnumerable<HouseholdTrait> householdTraits, [ItemNotNull] [NotNull] IEnumerable<HouseType> houseTypes)
+            [ItemNotNull] [JetBrains.Annotations.NotNull] IEnumerable<Affordance> affordances, [ItemNotNull] [JetBrains.Annotations.NotNull] IEnumerable<Location> locations,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] IEnumerable<HouseholdTrait> householdTraits, [ItemNotNull] [JetBrains.Annotations.NotNull] IEnumerable<HouseType> houseTypes)
         {
             var used = new List<UsedIn>();
             foreach (var affordance in affordances) {
@@ -263,9 +263,9 @@ namespace Database.Tables.BasicHouseholds {
             return used;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DeviceCategory ImportFromItem([NotNull] DeviceCategory toImport,[NotNull] Simulator dstSim)
+        public static DeviceCategory ImportFromItem([JetBrains.Annotations.NotNull] DeviceCategory toImport,[JetBrains.Annotations.NotNull] Simulator dstSim)
         {
             var dc2 = GetItemFromListByName(dstSim.DeviceCategories.Items, toImport.ParentCategory?.Name);
             var parentID = -1;
@@ -288,7 +288,7 @@ namespace Database.Tables.BasicHouseholds {
             return dc;
         }
 
-        private void InitParentCategory([ItemNotNull] [NotNull] IEnumerable<DeviceCategory> allCategories)
+        private void InitParentCategory([ItemNotNull] [JetBrains.Annotations.NotNull] IEnumerable<DeviceCategory> allCategories)
         {
             foreach (var deviceCategory in allCategories) {
                 _parentCategory = _dcNoneCategory[ConnectionString];
@@ -300,7 +300,7 @@ namespace Database.Tables.BasicHouseholds {
             }
         }
 
-        private bool IsAChild([NotNull] DeviceCategory dc)
+        private bool IsAChild([JetBrains.Annotations.NotNull] DeviceCategory dc)
         {
             if (Children.Contains(dc)) {
                 return true;
@@ -320,8 +320,8 @@ namespace Database.Tables.BasicHouseholds {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<DeviceCategory> result,
-            [NotNull] out DeviceCategory deviceCategoryNone, [NotNull] string connectionString, [ItemNotNull] [NotNull] ObservableCollection<RealDevice> devices,
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceCategory> result,
+            [JetBrains.Annotations.NotNull] out DeviceCategory deviceCategoryNone, [JetBrains.Annotations.NotNull] string connectionString, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<RealDevice> devices,
             bool ignoreMissingTables)
         {
             var aic = new AllItemCollections(realDevices: devices);
@@ -395,7 +395,7 @@ namespace Database.Tables.BasicHouseholds {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<RealDevice> SubDevices {
             get {
                 RefreshSubDevices();
@@ -404,7 +404,7 @@ namespace Database.Tables.BasicHouseholds {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<RealDevice> SubDevicesWithoutRefresh => _subDevices;
 
         public AssignableDeviceType AssignableDeviceType => AssignableDeviceType.DeviceCategory;
@@ -427,7 +427,7 @@ namespace Database.Tables.BasicHouseholds {
         public List<RealDevice> GetRealDevices(ObservableCollection<DeviceAction> allActions) => GetRealDevices();
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public List<RealDevice> GetRealDevices()
         {
             var devices = new List<RealDevice>();

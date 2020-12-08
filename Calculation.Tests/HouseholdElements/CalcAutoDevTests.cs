@@ -15,7 +15,6 @@ using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
 using Common.Tests;
 using FluentAssertions;
-using JetBrains.Annotations;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -23,7 +22,7 @@ using Xunit.Abstractions;
 namespace Calculation.Tests.HouseholdElements {
     public class CalcAutoDevTests : UnitTestBaseClass
     {
-        public CalcAutoDevTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public CalcAutoDevTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
 

@@ -50,7 +50,7 @@ namespace Database.Tables.Houses {
         private readonly int? _settlementID;
 
         public SettlementHH([CanBeNull]int? pID, [CanBeNull] ICalcObject pHH, int count, [CanBeNull] int? settlementID,
-            [NotNull] string connectionString, [NotNull] string householdName, StrGuid guid)
+            [JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.NotNull] string householdName, StrGuid guid)
             : base(householdName, TableName, connectionString, guid) {
             TypeDescription = "Settlement Household";
             ID = pID;
@@ -73,7 +73,7 @@ namespace Database.Tables.Houses {
 
         public int Count { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
         [UsedImplicitly]
         public string ObjectTypeStr {
@@ -87,10 +87,10 @@ namespace Database.Tables.Houses {
         [CanBeNull]
         public int? SettlementID => _settlementID;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [SuppressMessage("ReSharper", "SwitchStatementMissingSomeCases")]
-        private static SettlementHH AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic) {
+        private static SettlementHH AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic) {
             var shhID =dr.GetIntFromLong("ID");
             var settlementID = dr.GetInt("SettlementID", false, -1, ignoreMissingFields);
             var householdID = dr.GetIntFromLongOrInt("HouseholdID", false);
@@ -133,9 +133,9 @@ namespace Database.Tables.Houses {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<SettlementHH> result, [NotNull] string connectionString,
-            [ItemNotNull] [NotNull] ObservableCollection<ModularHousehold> modularHouseholds,
-            [ItemNotNull] [NotNull] ObservableCollection<House> houses, bool ignoreMissingTables) {
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<SettlementHH> result, [JetBrains.Annotations.NotNull] string connectionString,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<ModularHousehold> modularHouseholds,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<House> houses, bool ignoreMissingTables) {
             var aic = new AllItemCollections(
                 modularHouseholds: modularHouseholds, houses: houses);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);

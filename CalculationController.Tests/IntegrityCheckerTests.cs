@@ -35,8 +35,6 @@ using Database;
 using Database.Tables.BasicHouseholds;
 using Database.Tests;
 using FluentAssertions;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -105,7 +103,7 @@ namespace CalculationController.Tests
             CleanTestBase.RunAutomatically(true);
         }
 
-        public IntegrityCheckerTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public IntegrityCheckerTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

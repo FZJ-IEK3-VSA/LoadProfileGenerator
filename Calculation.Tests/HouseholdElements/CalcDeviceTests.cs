@@ -5,7 +5,6 @@ using Calculation.HouseholdElements;
 using CommonDataWPF;*/
 
 using Common.Tests;
-using JetBrains.Annotations;
 using Xunit.Abstractions;
 
 namespace Calculation.Tests.HouseholdElements
@@ -226,7 +225,7 @@ namespace Calculation.Tests.HouseholdElements
                 }
             }
         }*/
-            public CalcDeviceTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+            public CalcDeviceTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
             {
             }
     }

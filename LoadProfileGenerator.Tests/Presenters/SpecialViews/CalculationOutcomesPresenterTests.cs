@@ -4,9 +4,7 @@ using Common.Tests;
 using Database;
 using Database.Tables.ModularHouseholds;
 using Database.Tests;
-using JetBrains.Annotations;
 using LoadProfileGenerator.Presenters.SpecialViews;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -47,7 +45,7 @@ namespace LoadProfileGenerator.Tests.Presenters.SpecialViews
             }
         }
 
-        public CalculationOutcomesPresenterTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public CalculationOutcomesPresenterTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

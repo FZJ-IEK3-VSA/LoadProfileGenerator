@@ -41,7 +41,7 @@ namespace CalcController.Helpers {
     public class CalcFactoryParameters {
         private static bool _skipChecking;
 
-        [NotNull] private readonly DeviceCategoryPicker _picker;
+        [JetBrains.Annotations.NotNull] private readonly DeviceCategoryPicker _picker;
 
         private EnergyIntensityType _energyIntensity;
         private bool _isinChecking;
@@ -95,7 +95,7 @@ namespace CalcController.Helpers {
             set => _odap = value;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public DeviceCategoryPicker Picker {
             get {
                 CheckCompleteness();

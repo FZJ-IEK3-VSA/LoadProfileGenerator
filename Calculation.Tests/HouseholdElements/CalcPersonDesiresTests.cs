@@ -34,8 +34,6 @@ using CalculationEngine.HouseholdElements;
 using Common;
 using Common.JSON;
 using Common.Tests;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -43,7 +41,7 @@ using Xunit.Abstractions;
 namespace Calculation.Tests.HouseholdElements {
     public class CalcPersonDesiresTests : UnitTestBaseClass
     {
-        public CalcPersonDesiresTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public CalcPersonDesiresTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
 

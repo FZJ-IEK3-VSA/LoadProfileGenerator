@@ -36,7 +36,6 @@ using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.ModularHouseholds;
 using FluentAssertions;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 
 using Xunit;
@@ -257,7 +256,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
             }
         }
 
-        public ModularHouseholdTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public ModularHouseholdTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

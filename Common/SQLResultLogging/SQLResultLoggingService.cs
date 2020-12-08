@@ -11,13 +11,13 @@ using Newtonsoft.Json;
 
 namespace Common.SQLResultLogging {
     /*public interface ITypeDescriber {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         HouseholdKey HouseholdKey { get; }
 
         [UsedImplicitly]
         int ID { get; set; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         string GetTypeDescription();
     }*/
 
@@ -25,7 +25,7 @@ namespace Common.SQLResultLogging {
     public class SqlResultLoggingService {
         [JetBrains.Annotations.NotNull] private readonly string _basePath;
 
-        [NotNull] private readonly Dictionary<HouseholdKey, List<string>> _createdTablesPerHousehold = new Dictionary<HouseholdKey, List<string>>();
+        [JetBrains.Annotations.NotNull] private readonly Dictionary<HouseholdKey, List<string>> _createdTablesPerHousehold = new Dictionary<HouseholdKey, List<string>>();
 
         [JetBrains.Annotations.NotNull] private readonly Dictionary<HouseholdKey, FileEntry> _filenameByHouseholdKey =
             new Dictionary<HouseholdKey, FileEntry>();
@@ -47,11 +47,11 @@ namespace Common.SQLResultLogging {
             GetFilenameForHouseholdKey(Constants.GeneralHouseholdKey);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Dictionary<HouseholdKey, FileEntry> FilenameByHouseholdKey => _filenameByHouseholdKey;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public List<DatabaseEntry> LoadDatabases()
         {
             List<DatabaseEntry> td = new List<DatabaseEntry>();
@@ -66,9 +66,9 @@ namespace Common.SQLResultLogging {
                     cmd.CommandText = sql;
                     var reader = cmd.ExecuteReader();
                     while (reader.Read()) {
-                        string keyStr = reader["HouseholdKey"].ToString();
+                        string keyStr = reader["HouseholdKey"].ToString() ?? "";
                         HouseholdKey key = new HouseholdKey(keyStr);
-                        string filename = reader["Filename"].ToString();
+                        string filename = reader["Filename"].ToString() ?? "";
                         DatabaseEntry fe = new DatabaseEntry(filename, key);
                         td.Add(fe);
                     }
@@ -81,8 +81,8 @@ namespace Common.SQLResultLogging {
         }
 
         [ItemNotNull]
-        [NotNull]
-        public List<ResultTableDefinition> LoadTables([NotNull] HouseholdKey dbKey)
+        [JetBrains.Annotations.NotNull]
+        public List<ResultTableDefinition> LoadTables([JetBrains.Annotations.NotNull] HouseholdKey dbKey)
         {
             List<ResultTableDefinition> td = new List<ResultTableDefinition>();
             const string sql = "SELECT * FROM TableDescription";
@@ -96,8 +96,8 @@ namespace Common.SQLResultLogging {
                     cmd.CommandText = sql;
                     var reader = cmd.ExecuteReader();
                     while (reader.Read()) {
-                        string tableName = reader["TableName"].ToString();
-                        string description = reader["Description"].ToString();
+                        string tableName = reader["TableName"].ToString() ?? "no table name";
+                        string description = reader["Description"].ToString() ?? "no description";
                         int resultTableid = (int)(long)reader["ResultTableID"];
                         CalcOption enablingOption = (CalcOption)(long)reader["EnablingOption"];
                         ResultTableDefinition fe = new ResultTableDefinition(tableName, (ResultTableID)resultTableid, description, enablingOption);
@@ -144,8 +144,8 @@ namespace Common.SQLResultLogging {
             }
         }
         [ItemNotNull]
-        [NotNull]
-        public IEnumerable<T> ReadFromJsonAsEnumerable<T>([NotNull] ResultTableDefinition rtd, [NotNull] HouseholdKey key)
+        [JetBrains.Annotations.NotNull]
+        public IEnumerable<T> ReadFromJsonAsEnumerable<T>([JetBrains.Annotations.NotNull] ResultTableDefinition rtd, [JetBrains.Annotations.NotNull] HouseholdKey key)
         {
             if (!_isFileNameDictLoaded)
             {
@@ -179,7 +179,7 @@ namespace Common.SQLResultLogging {
                     cmd.CommandText = sql;
                     var reader = cmd.ExecuteReader();
                     while (reader.Read()) {
-                        string s = reader[0].ToString();
+                        string s = reader[0].ToString() ?? "";
                         T re = JsonConvert.DeserializeObject<T>(s);
                         yield return re;
                     }
@@ -190,8 +190,8 @@ namespace Common.SQLResultLogging {
 
 
         [ItemNotNull]
-        [NotNull]
-        public List<T> ReadFromJson<T>([NotNull] ResultTableDefinition rtd, [NotNull] HouseholdKey key,
+        [JetBrains.Annotations.NotNull]
+        public List<T> ReadFromJson<T>([JetBrains.Annotations.NotNull] ResultTableDefinition rtd, [JetBrains.Annotations.NotNull] HouseholdKey key,
                                        ExpectedResultCount expectedResult)
         {
             if (!_isFileNameDictLoaded) {
@@ -222,7 +222,7 @@ namespace Common.SQLResultLogging {
                     cmd.CommandText = sql;
                     var reader = cmd.ExecuteReader();
                     while (reader.Read()) {
-                        string s = reader[0].ToString();
+                        string s = reader[0].ToString() ?? "";
                         T re = JsonConvert.DeserializeObject<T>(s);
                         resultsObjects.Add(re);
                     }
@@ -340,7 +340,7 @@ namespace Common.SQLResultLogging {
             }
         }
         /*
-        public void SaveToDatabase<T>([NotNull] [ItemNotNull] List<T> items) where T : ITypeDescriber
+        public void SaveToDatabase<T>([JetBrains.Annotations.NotNull] [ItemNotNull] List<T> items) where T : ITypeDescriber
         {
             Dictionary<HouseholdKey, List<T>> itemsByKey = new Dictionary<HouseholdKey, List<T>>();
             foreach (T item in items) {
@@ -448,7 +448,7 @@ namespace Common.SQLResultLogging {
         }
 
         /*
-        private bool IgnoreThisField([NotNull] string fieldname)
+        private bool IgnoreThisField([JetBrains.Annotations.NotNull] string fieldname)
         {
             if (fieldname == "HouseholdKey") {
                 return true;
@@ -457,7 +457,7 @@ namespace Common.SQLResultLogging {
             return false;
         }*/
 
-        private bool IsTableCreated([NotNull] SaveableEntry entry)
+        private bool IsTableCreated([JetBrains.Annotations.NotNull] SaveableEntry entry)
         {
             if (!_createdTablesPerHousehold.ContainsKey(entry.HouseholdKey)) {
                 return false;
@@ -487,9 +487,9 @@ namespace Common.SQLResultLogging {
                     cmd.CommandText = sql;
                     var reader = cmd.ExecuteReader();
                     while (reader.Read()) {
-                        string keyStr = reader["HouseholdKey"].ToString();
+                        string keyStr = reader["HouseholdKey"].ToString() ?? "";
                         HouseholdKey key = new HouseholdKey(keyStr);
-                        string filename = reader["Filename"].ToString();
+                        string filename = reader["Filename"].ToString() ?? "";
                         FileEntry fe = new FileEntry(filename) {
                             DescriptionTableWritten = true
                         };
@@ -505,8 +505,8 @@ namespace Common.SQLResultLogging {
             _isFileNameDictLoaded = true;
         }
 
-        [NotNull]
-        private static string MakeconnectionString([NotNull] string filename) =>
+        [JetBrains.Annotations.NotNull]
+        private static string MakeconnectionString([JetBrains.Annotations.NotNull] string filename) =>
             "Data Source=" + filename + ";Version=3;Synchronous=OFF;Journal Mode=WAL;";
 
         private static void MakeTableForListOfFields([JetBrains.Annotations.NotNull] [ItemNotNull]
@@ -538,9 +538,9 @@ namespace Common.SQLResultLogging {
         //[JetBrains.Annotations.NotNull]
         //public string ReturnMainSqlPath() => _filenameByHouseholdKey[Constants.GeneralHouseholdKey].Filename;
 
-        private static void SaveDictionaryToDatabase([NotNull] [ItemNotNull] List<Dictionary<string, object>> values,
-                                                     [NotNull] string tableName,
-                                                     [NotNull] System.Data.SQLite.SQLiteConnection conn)
+        private static void SaveDictionaryToDatabase([JetBrains.Annotations.NotNull] [ItemNotNull] List<Dictionary<string, object>> values,
+                                                     [JetBrains.Annotations.NotNull] string tableName,
+                                                     [JetBrains.Annotations.NotNull] System.Data.SQLite.SQLiteConnection conn)
         {
             if (values.Count == 0) {
                 return;
@@ -583,7 +583,7 @@ namespace Common.SQLResultLogging {
         }
 
         public class DatabaseEntry {
-            public DatabaseEntry([JetBrains.Annotations.NotNull] string filename, [NotNull] HouseholdKey key)
+            public DatabaseEntry([JetBrains.Annotations.NotNull] string filename, [JetBrains.Annotations.NotNull] HouseholdKey key)
             {
                 Filename = filename;
                 Key = key;
@@ -592,22 +592,22 @@ namespace Common.SQLResultLogging {
             [JetBrains.Annotations.NotNull]
             public string Filename { get; }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public HouseholdKey Key { get; }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public override string ToString() => Filename;
         }
 
         public class DatabaseList {
-            public DatabaseList([NotNull] string householdKey, [CanBeNull] long? id, [NotNull] string filename)
+            public DatabaseList([JetBrains.Annotations.NotNull] string householdKey, [CanBeNull] long? id, [JetBrains.Annotations.NotNull] string filename)
             {
                 HouseholdKey = householdKey;
                 ID = id;
                 Filename = filename;
             }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string Filename { get; set; }
 
             [JetBrains.Annotations.NotNull]
@@ -640,7 +640,7 @@ namespace Common.SQLResultLogging {
             [JetBrains.Annotations.NotNull]
             public string Filename { get; }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public override string ToString() => Filename;
         }
 
@@ -690,32 +690,32 @@ namespace Common.SQLResultLogging {
     }
 
     public class SaveableEntry {
-        public SaveableEntry([NotNull] HouseholdKey householdKey, [NotNull] ResultTableDefinition resultTableDefinition)
+        public SaveableEntry([JetBrains.Annotations.NotNull] HouseholdKey householdKey, [JetBrains.Annotations.NotNull] ResultTableDefinition resultTableDefinition)
         {
             HouseholdKey = householdKey;
             ResultTableDefinition = resultTableDefinition;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public List<SqlResultLoggingService.FieldDefinition> Fields { get; } = new List<SqlResultLoggingService.FieldDefinition>();
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public HouseholdKey HouseholdKey { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ResultTableDefinition ResultTableDefinition { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public List<Dictionary<string, object>> RowEntries { get; } = new List<Dictionary<string, object>>();
 
-        public void AddField([NotNull] string name, SqliteDataType datatype)
+        public void AddField([JetBrains.Annotations.NotNull] string name, SqliteDataType datatype)
         {
             Fields.Add(new SqlResultLoggingService.FieldDefinition(name, datatype.ToString()));
         }
 
-        public void AddField([NotNull] string name, [NotNull] Type datatype)
+        public void AddField([JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] Type datatype)
         {
             string sqlDataType;
             switch (datatype.Name) {
@@ -738,7 +738,7 @@ namespace Common.SQLResultLogging {
             Fields.Add(new SqlResultLoggingService.FieldDefinition(name, sqlDataType));
         }
 
-        public void AddRow([NotNull] Dictionary<string, object> row)
+        public void AddRow([JetBrains.Annotations.NotNull] Dictionary<string, object> row)
         {
             RowEntries.Add(row);
         }
@@ -752,24 +752,24 @@ namespace Common.SQLResultLogging {
     }
 
     public class RowBuilder {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Dictionary<string, object> Row { get; } = new Dictionary<string, object>();
 
-        [NotNull]
-        public RowBuilder Add([NotNull] string name, [CanBeNull] object content)
+        [JetBrains.Annotations.NotNull]
+        public RowBuilder Add([JetBrains.Annotations.NotNull] string name, [CanBeNull] object content)
         {
             Row.Add(name, content);
             return this;
         }
 
-        [NotNull]
-        public static RowBuilder Start([NotNull] string name, [CanBeNull] object content)
+        [JetBrains.Annotations.NotNull]
+        public static RowBuilder Start([JetBrains.Annotations.NotNull] string name, [CanBeNull] object content)
         {
             RowBuilder rb = new RowBuilder();
             return rb.Add(name, content);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Dictionary<string, object> ToDictionary() => Row;
     }
 }

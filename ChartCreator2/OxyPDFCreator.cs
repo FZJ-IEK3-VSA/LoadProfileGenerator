@@ -1,5 +1,4 @@
 ﻿using Automation.ResultFiles;
-using JetBrains.Annotations;
 using OxyPlot;
 
 namespace ChartCreator2
@@ -14,7 +13,7 @@ namespace ChartCreator2
             HeightWidth165
         }
 
-        public static void Run([NotNull] PlotModel plotModel1, [NotNull] string pdfChartName, HeightWidth hw = HeightWidth.HeightWidth1610)
+        public static void Run([JetBrains.Annotations.NotNull] PlotModel plotModel1, [JetBrains.Annotations.NotNull] string pdfChartName, HeightWidth hw = HeightWidth.HeightWidth1610)
         {
             switch (hw)
             {

@@ -50,7 +50,7 @@ namespace SimulationEngineLib.Calculation {
     }
 
     internal static class ListProcessor {
-        private static void PrintList([NotNull] string connectionString, CalcObjectType type) {
+        private static void PrintList([JetBrains.Annotations.NotNull] string connectionString, CalcObjectType type) {
             Logger.Info("Loading...");
             var sim = new Simulator(connectionString);
             Logger.Info("Loading finished.");
@@ -73,7 +73,7 @@ namespace SimulationEngineLib.Calculation {
             }
         }
 
-        private static void PrintList([NotNull] string connectionString, [NotNull] string type) {
+        private static void PrintList([JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.NotNull] string type) {
             Logger.Info("Loading...");
             var sim = new Simulator(connectionString);
             Logger.Info("Loading finished.");
@@ -96,7 +96,7 @@ namespace SimulationEngineLib.Calculation {
             }
         }
 
-        private static void PrintLoadTypePriorities([NotNull] string connectionString) {
+        private static void PrintLoadTypePriorities([JetBrains.Annotations.NotNull] string connectionString) {
             Logger.Info("Loading...");
             var sim = new Simulator(connectionString);
             Logger.Info("Loading finished.");
@@ -118,7 +118,7 @@ namespace SimulationEngineLib.Calculation {
             }
         }
 
-        public static void RunProcessing([NotNull] ListOptions lo, [NotNull] string connectionString) {
+        public static void RunProcessing([JetBrains.Annotations.NotNull] ListOptions lo, [JetBrains.Annotations.NotNull] string connectionString) {
             if (lo.ModularHouseholds) {
                 PrintList(connectionString, CalcObjectType.ModularHousehold);
                 return;

@@ -43,23 +43,23 @@ using JetBrains.Annotations;
 
 namespace CalculationController.Queue {
     public class DatFileDeletor {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string CalcObjectName { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         //private readonly ObservableCollection<CalculationEntry> _calculationEntries;
 
         private readonly string _resultPath;
         private readonly bool _deleteDatFiles;
-        //[NotNull]
+        //[JetBrains.Annotations.NotNull]
         //private readonly CalcStartParameterSet _csps;
-        //[NotNull]
+        //[JetBrains.Annotations.NotNull]
         //private readonly CalculationResult _results;
 
-        public DatFileDeletor(//[NotNull] CalculationResult results,
+        public DatFileDeletor(//[JetBrains.Annotations.NotNull] CalculationResult results,
                                  bool deleteDatFiles,
-            //[NotNull][ItemNotNull] ObservableCollection<CalculationEntry> calculationEntries,
-                                 [NotNull] string resultPath, [NotNull] string calcObjectName) {
+            //[JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<CalculationEntry> calculationEntries,
+                                 [JetBrains.Annotations.NotNull] string resultPath, [JetBrains.Annotations.NotNull] string calcObjectName) {
             CalcObjectName = calcObjectName;
             //_results = results;
             //_calculationEntries = calculationEntries;
@@ -67,7 +67,7 @@ namespace CalculationController.Queue {
             _deleteDatFiles = deleteDatFiles;
         }
 
-        private static void DeleteDatFiles([ItemNotNull] [NotNull] List<ResultFileEntry> resultFiles) {
+        private static void DeleteDatFiles([ItemNotNull] [JetBrains.Annotations.NotNull] List<ResultFileEntry> resultFiles) {
             foreach (var rfe in resultFiles) {
                 if (rfe.FileName.ToUpperInvariant().EndsWith(".DAT", StringComparison.Ordinal)) {
                     File.Delete(rfe.FullFileName);

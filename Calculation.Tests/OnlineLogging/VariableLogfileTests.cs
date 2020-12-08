@@ -12,8 +12,6 @@ using Common.SQLResultLogging.InputLoggers;
 using Common.SQLResultLogging.Loggers;
 using Common.Tests;
 using FluentAssertions;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -21,7 +19,7 @@ using Xunit.Abstractions;
 namespace Calculation.Tests.OnlineLogging {
     public class VariableLogfileTests : UnitTestBaseClass
     {
-        public VariableLogfileTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public VariableLogfileTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
 

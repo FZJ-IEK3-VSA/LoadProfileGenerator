@@ -27,7 +27,7 @@ namespace Database.Tables.Transportation {
 
         [CanBeNull] private TransportationDeviceCategory _transportationDeviceCategory;
 
-        public TransportationDevice([NotNull] string name, [CanBeNull]int? pID, [NotNull] string connectionString,
+        public TransportationDevice([JetBrains.Annotations.NotNull] string name, [CanBeNull]int? pID, [JetBrains.Annotations.NotNull] string connectionString,
             [CanBeNull] string description, double speedInMPerSecond,
             SpeedUnit speedUnit, [CanBeNull] TransportationDeviceCategory category,
                                     double totalRangeinMeters,
@@ -66,7 +66,7 @@ namespace Database.Tables.Transportation {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<TransportationDeviceLoad> Loads { get; } =
             new ObservableCollection<TransportationDeviceLoad>();
 
@@ -124,7 +124,7 @@ namespace Database.Tables.Transportation {
             set => SetValueWithNotify(value, ref _chargingLoadType, false, nameof(ChargingLoadType));
         }
 
-        public void AddLoad([NotNull] VLoadType mylt, double maxpower)
+        public void AddLoad([JetBrains.Annotations.NotNull] VLoadType mylt, double maxpower)
         {
             TransportationDeviceLoad load =
                 new TransportationDeviceLoad(mylt.Name, IntID, maxpower, mylt, ConnectionString,
@@ -133,23 +133,23 @@ namespace Database.Tables.Transportation {
             Loads.Add(load);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new
+        public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString) => new
             TransportationDevice(FindNewName(isNameTaken, "New Transportation Device "), null, connectionString, "", 100,
                 SpeedUnit.Kmh, null,-1,0,100,
                 0,null, System.Guid.NewGuid().ToStrGuid());
 
-        public void DeleteLoad([NotNull] TransportationDeviceLoad transportationDeviceLoad)
+        public void DeleteLoad([JetBrains.Annotations.NotNull] TransportationDeviceLoad transportationDeviceLoad)
         {
             transportationDeviceLoad.DeleteFromDB();
             Loads.Remove(transportationDeviceLoad);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static TransportationDevice ImportFromItem([NotNull] TransportationDevice toImport,
-            [NotNull] Simulator dstSim)
+        public static TransportationDevice ImportFromItem([JetBrains.Annotations.NotNull] TransportationDevice toImport,
+            [JetBrains.Annotations.NotNull] Simulator dstSim)
         {
             //TODO finish this
             var loc = new TransportationDevice(toImport.Name, null,dstSim.ConnectionString,
@@ -170,9 +170,9 @@ namespace Database.Tables.Transportation {
             return loc;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<TransportationDevice> result, [NotNull] string connectionString,
-            bool ignoreMissingTables, [ItemNotNull] [NotNull] ObservableCollection<TransportationDeviceCategory> categories,
-            [ItemNotNull] [NotNull] ObservableCollection<VLoadType> loadTypes)
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TransportationDevice> result, [JetBrains.Annotations.NotNull] string connectionString,
+            bool ignoreMissingTables, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TransportationDeviceCategory> categories,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<VLoadType> loadTypes)
         {
             var aic = new AllItemCollections(transportationDeviceCategories: categories, loadTypes:loadTypes);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);
@@ -213,9 +213,9 @@ namespace Database.Tables.Transportation {
             }
         }
 
-        [NotNull]
-        private static TransportationDevice AssignFields([NotNull] DataReader dr, [NotNull] string connectionString,
-            bool ignoreMissingFields, [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static TransportationDevice AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString,
+            bool ignoreMissingFields, [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var name = dr.GetString("Name", false, "(no name)", ignoreMissingFields);
             var description = dr.GetString("Description", false, "(no description)", ignoreMissingFields);
@@ -239,7 +239,7 @@ namespace Database.Tables.Transportation {
                 chargingDistanceAmount,chargingEnergyAmount,loadtype,guid );
         }
 
-        private static bool IsCorrectParent([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var hd = (TransportationDeviceLoad) child;
             if (parent.ID == hd.TransportationDeviceID) {

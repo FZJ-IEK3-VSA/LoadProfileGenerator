@@ -1,7 +1,5 @@
 ﻿using Automation;
 using Common.Tests;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 using Logger = Common.Logger;
@@ -17,7 +15,7 @@ namespace LoadProfileGenerator.Tests {
             Logger.Info("Version: " + version);
         }
 
-        public DotNetVersionCheckTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public DotNetVersionCheckTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

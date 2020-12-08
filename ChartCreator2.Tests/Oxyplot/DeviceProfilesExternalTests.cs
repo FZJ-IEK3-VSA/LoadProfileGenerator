@@ -4,8 +4,6 @@ using ChartCreator2.OxyCharts;
 using Common;
 using Common.Tests;
 using FluentAssertions;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -106,7 +104,7 @@ namespace ChartCreator2.Tests.Oxyplot {
             aeupp.MakePlot(rfe, "dev profiles", di);
             Logger.Info("finished picture");
         }*/
-        public DeviceProfilesExternalTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public DeviceProfilesExternalTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

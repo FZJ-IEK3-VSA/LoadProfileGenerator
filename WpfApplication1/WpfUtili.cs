@@ -1,6 +1,5 @@
 ﻿using System;
 using Common;
-using JetBrains.Annotations;
 using ComboBox = System.Windows.Controls.ComboBox;
 using TextBox = System.Windows.Controls.TextBox;
 
@@ -8,7 +7,7 @@ namespace LoadProfileGenerator
 {
     public static class WpfUtili
     {
-        public static bool CheckTextBox([NotNull] this TextBox txtBox, [NotNull] string errorMessage)
+        public static bool CheckTextBox([JetBrains.Annotations.NotNull] this TextBox txtBox, [JetBrains.Annotations.NotNull] string errorMessage)
         {
             var allGood = !String.IsNullOrWhiteSpace(txtBox.Text);
             if (!allGood)
@@ -18,7 +17,7 @@ namespace LoadProfileGenerator
             return allGood;
         }
 
-        public static bool CheckCombobox([NotNull] this ComboBox comboBox, [NotNull] string errorMessage)
+        public static bool CheckCombobox([JetBrains.Annotations.NotNull] this ComboBox comboBox, [JetBrains.Annotations.NotNull] string errorMessage)
         {
             var allGood = comboBox.SelectedItem != null;
             if (!allGood)

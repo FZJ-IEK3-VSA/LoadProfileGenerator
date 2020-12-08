@@ -4,23 +4,22 @@ using Automation.ResultFiles;
 using CalculationController.CalcFactories;
 using Common.JSON;
 using Database;
-using JetBrains.Annotations;
 
 namespace CalculationController.Helpers {
     public class CalcDeviceTaggingSetFactory {
-        [NotNull] private readonly CalcParameters _calcParameters;
+        [JetBrains.Annotations.NotNull] private readonly CalcParameters _calcParameters;
 
-        [NotNull] private readonly CalcLoadTypeDtoDictionary _ltDict;
+        [JetBrains.Annotations.NotNull] private readonly CalcLoadTypeDtoDictionary _ltDict;
 
-        public CalcDeviceTaggingSetFactory([NotNull] CalcParameters calcParameters,
-                                           [NotNull] CalcLoadTypeDtoDictionary ltDict)
+        public CalcDeviceTaggingSetFactory([JetBrains.Annotations.NotNull] CalcParameters calcParameters,
+                                           [JetBrains.Annotations.NotNull] CalcLoadTypeDtoDictionary ltDict)
         {
             _calcParameters = calcParameters;
             _ltDict = ltDict;
         }
 
-        [NotNull]
-        public CalcDeviceTaggingSets GetDeviceTaggingSets([NotNull] Simulator sim, int personCount)
+        [JetBrains.Annotations.NotNull]
+        public CalcDeviceTaggingSets GetDeviceTaggingSets([JetBrains.Annotations.NotNull] Simulator sim, int personCount)
         {
             CalcDeviceTaggingSets cs = new CalcDeviceTaggingSets
             {

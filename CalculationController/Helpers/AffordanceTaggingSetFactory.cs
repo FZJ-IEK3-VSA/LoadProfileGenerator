@@ -9,17 +9,17 @@ namespace CalculationController.Helpers
 {
     public class AffordanceTaggingSetFactory
     {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly CalcLoadTypeDtoDictionary _ltDict;
 
-        public AffordanceTaggingSetFactory([NotNull] CalcLoadTypeDtoDictionary loadTypeDictionary)
+        public AffordanceTaggingSetFactory([JetBrains.Annotations.NotNull] CalcLoadTypeDtoDictionary loadTypeDictionary)
         {
             _ltDict = loadTypeDictionary;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
-        public List<CalcAffordanceTaggingSetDto> GetAffordanceTaggingSets([NotNull] Simulator sim)
+        public List<CalcAffordanceTaggingSetDto> GetAffordanceTaggingSets([JetBrains.Annotations.NotNull] Simulator sim)
         {
             var calcSets = new List<CalcAffordanceTaggingSetDto>();
             foreach (var affordanceTaggingSet in sim.AffordanceTaggingSets.Items)

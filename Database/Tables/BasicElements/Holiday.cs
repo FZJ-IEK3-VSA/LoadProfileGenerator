@@ -44,15 +44,15 @@ namespace Database.Tables.BasicElements {
         }
 
         public const string TableName = "tblHolidays";
-        [NotNull] private static readonly Dictionary<string, double> _randomValueDict = new Dictionary<string, double>();
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<HolidayDate> _holidayDates;
+        [JetBrains.Annotations.NotNull] private static readonly Dictionary<string, double> _randomValueDict = new Dictionary<string, double>();
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<HolidayDate> _holidayDates;
 
-        [NotNull] private readonly Dictionary<DayOfWeek, HolidayProbabilities> _probabilities =
+        [JetBrains.Annotations.NotNull] private readonly Dictionary<DayOfWeek, HolidayProbabilities> _probabilities =
             new Dictionary<DayOfWeek, HolidayProbabilities>();
 
-        [NotNull] private string _description;
+        [JetBrains.Annotations.NotNull] private string _description;
 
-        public Holiday([NotNull] string name, [NotNull] string description, [NotNull] string connectionString, StrGuid guid, [CanBeNull] int? pID = null) : base(name,
+        public Holiday([JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] string description, [JetBrains.Annotations.NotNull] string connectionString, StrGuid guid, [CanBeNull] int? pID = null) : base(name,
             TableName, connectionString, guid) {
             _holidayDates = new ObservableCollection<HolidayDate>();
             ID = pID;
@@ -60,7 +60,7 @@ namespace Database.Tables.BasicElements {
             _description = description;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string DateString {
             get {
@@ -73,7 +73,7 @@ namespace Database.Tables.BasicElements {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string Description {
             get => _description;
@@ -81,26 +81,26 @@ namespace Database.Tables.BasicElements {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<HolidayDate> HolidayDates => _holidayDates;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public HolidayProbabilities ProbFriday => GetHolidayProbability(DayOfWeek.Friday);
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public HolidayProbabilities ProbMonday => GetHolidayProbability(DayOfWeek.Monday);
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public HolidayProbabilities ProbThursday => GetHolidayProbability(DayOfWeek.Thursday);
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public HolidayProbabilities ProbTuesday => GetHolidayProbability(DayOfWeek.Tuesday);
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public HolidayProbabilities ProbWednesday => GetHolidayProbability(DayOfWeek.Wednesday);
 
@@ -111,9 +111,9 @@ namespace Database.Tables.BasicElements {
             SaveToDB();
         }
 
-        [NotNull]
-        private static Holiday AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic) {
+        [JetBrains.Annotations.NotNull]
+        private static Holiday AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic) {
             var id = dr.GetIntFromLong("ID");
             var name = dr.GetString("Name");
             var description = dr.GetString("Description");
@@ -121,7 +121,7 @@ namespace Database.Tables.BasicElements {
             return new Holiday(name, description, connectionString, guid,id);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public List<DateTime> CollectListOfHolidays() {
             var freedays = new List<DateTime>();
 
@@ -131,9 +131,9 @@ namespace Database.Tables.BasicElements {
             return freedays;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new Holiday(
+        public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString) => new Holiday(
             FindNewName(isNameTaken, "New Holiday "), "(no description)", connectionString, System.Guid.NewGuid().ToStrGuid());
 
         public override void DeleteFromDB() {
@@ -146,12 +146,12 @@ namespace Database.Tables.BasicElements {
             }
         }
 
-        public void DeleteHoliday([NotNull] HolidayDate tp) {
+        public void DeleteHoliday([JetBrains.Annotations.NotNull] HolidayDate tp) {
             tp.DeleteFromDB();
             _holidayDates.Remove(tp);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private HolidayProbabilities GetHolidayProbability(DayOfWeek dayOfWeek) {
             if (!_probabilities.ContainsKey(dayOfWeek)) {
                 var hp =
@@ -164,9 +164,9 @@ namespace Database.Tables.BasicElements {
             return _probabilities[dayOfWeek];
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        public Dictionary<DateTime, HolidayType> GetListOfWorkFreeDates([NotNull] Random random, [NotNull] string genericKey) {
+        public Dictionary<DateTime, HolidayType> GetListOfWorkFreeDates([JetBrains.Annotations.NotNull] Random random, [JetBrains.Annotations.NotNull] string genericKey) {
             var freedays = new Dictionary<DateTime, HolidayType>();
             double randomResult;
             var key = genericKey + "#" + IntID;
@@ -254,9 +254,9 @@ namespace Database.Tables.BasicElements {
             return freedays;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static Holiday ImportFromItem([NotNull] Holiday toImport, [NotNull] Simulator dstsim) {
+        public static Holiday ImportFromItem([JetBrains.Annotations.NotNull] Holiday toImport, [JetBrains.Annotations.NotNull] Simulator dstsim) {
             var hd = new Holiday(toImport.Name, toImport.Description,
                 dstsim.ConnectionString, toImport.Guid);
             hd.SaveToDB();
@@ -273,7 +273,7 @@ namespace Database.Tables.BasicElements {
             return hd;
         }
 
-        private static bool IsCorrectParent([NotNull] DBBase parent, [NotNull] DBBase child) {
+        private static bool IsCorrectParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child) {
             var hd = (HolidayDate) child;
             if (parent.ID == hd.HolidayID) {
                 var tp = (Holiday) parent;
@@ -283,7 +283,7 @@ namespace Database.Tables.BasicElements {
             return false;
         }
 
-        private static bool IsCorrectProbabilityParent([NotNull] DBBase parent, [NotNull] DBBase child) {
+        private static bool IsCorrectProbabilityParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child) {
             var hd = (HolidayProbabilities) child;
             if (parent.ID == hd.HolidayID) {
                 var tp = (Holiday) parent;
@@ -301,7 +301,7 @@ namespace Database.Tables.BasicElements {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<Holiday> result, [NotNull] string connectionString,
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Holiday> result, [JetBrains.Annotations.NotNull] string connectionString,
             bool ignoreMissingTables) {
             var aic = new AllItemCollections();
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);

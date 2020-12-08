@@ -33,8 +33,6 @@ using Common;
 using Common.Tests;
 using Database.Tables.BasicHouseholds;
 using FluentAssertions;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -68,7 +66,7 @@ namespace Database.Tests.Tables {
             }
         }
 
-        public LocationDeviceTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public LocationDeviceTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

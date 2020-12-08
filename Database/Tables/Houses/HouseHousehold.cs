@@ -45,8 +45,8 @@ namespace Database.Tables.Houses {
 
         [CanBeNull] private readonly ICalcObject _household;
 
-        public HouseHousehold([CanBeNull]int? pID, int houseID, [CanBeNull] ICalcObject household, [NotNull] string connectionString,
-            [NotNull] string householdName, StrGuid guid, [CanBeNull] TransportationDeviceSet transportationDeviceSet, [CanBeNull] ChargingStationSet chargingStationSet, [CanBeNull] TravelRouteSet travelRouteSet) : base(householdName, TableName, connectionString, guid)
+        public HouseHousehold([CanBeNull]int? pID, int houseID, [CanBeNull] ICalcObject household, [JetBrains.Annotations.NotNull] string connectionString,
+            [JetBrains.Annotations.NotNull] string householdName, StrGuid guid, [CanBeNull] TransportationDeviceSet transportationDeviceSet, [CanBeNull] ChargingStationSet chargingStationSet, [CanBeNull] TravelRouteSet travelRouteSet) : base(householdName, TableName, connectionString, guid)
         {
             ID = pID;
             HouseID = houseID;
@@ -77,13 +77,13 @@ namespace Database.Tables.Houses {
         public int HouseID { get; }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public List<VacationTimeframe> VacationTimeframes => CalculateVacationTimeframes();
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [SuppressMessage("ReSharper", "SwitchStatementMissingSomeCases")]
-        private static HouseHousehold AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic)
+        private static HouseHousehold AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var id = dr.GetIntFromLong("ID");
             var houseID = dr.GetIntFromLong("HouseID");
@@ -109,7 +109,7 @@ namespace Database.Tables.Houses {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [SuppressMessage("ReSharper", "SwitchStatementMissingSomeCases")]
         private List<VacationTimeframe> CalculateVacationTimeframes()
         {
@@ -138,11 +138,11 @@ namespace Database.Tables.Houses {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<HouseHousehold> result, [NotNull] string connectionString,
-            [ItemNotNull] [NotNull] ObservableCollection<ModularHousehold> modularHouseholds,
-                                            [ItemNotNull] [NotNull] ObservableCollection<ChargingStationSet> chargingStationSets,
-                                            [ItemNotNull] [NotNull] ObservableCollection<TransportationDeviceSet> transportationDeviceSets,
-                                            [ItemNotNull] [NotNull] ObservableCollection<TravelRouteSet> travelRouteSets,
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<HouseHousehold> result, [JetBrains.Annotations.NotNull] string connectionString,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<ModularHousehold> modularHouseholds,
+                                            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<ChargingStationSet> chargingStationSets,
+                                            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TransportationDeviceSet> transportationDeviceSets,
+                                            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TravelRouteSet> travelRouteSets,
             bool ignoreMissingTables)
         {
             var aic = new AllItemCollections(modularHouseholds: modularHouseholds,chargingStationSets:chargingStationSets,

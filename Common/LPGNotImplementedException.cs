@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using System;
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 
@@ -9,14 +8,14 @@ namespace Common {
         public LPGNotImplementedException() {
         }
 
-        public LPGNotImplementedException([NotNull] string message) : base(message) {
+        public LPGNotImplementedException([JetBrains.Annotations.NotNull] string message) : base(message) {
         }
 
         [SuppressMessage("ReSharper", "UnusedMember.Global")]
-        public LPGNotImplementedException([NotNull] string message, [NotNull] Exception inner) : base(message, inner) {
+        public LPGNotImplementedException([JetBrains.Annotations.NotNull] string message, [JetBrains.Annotations.NotNull] Exception inner) : base(message, inner) {
         }
 
-        protected LPGNotImplementedException([NotNull] SerializationInfo si, StreamingContext sc) : base(si, sc) {
+        protected LPGNotImplementedException([JetBrains.Annotations.NotNull] SerializationInfo si, StreamingContext sc) : base(si, sc) {
         }
 
         //public static string ErrorLocation() {

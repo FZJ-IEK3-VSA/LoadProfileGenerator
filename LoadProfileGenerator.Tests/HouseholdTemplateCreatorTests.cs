@@ -4,8 +4,6 @@ using Common;
 using Common.Tests;
 using Database;
 using Database.Tests;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -32,7 +30,7 @@ namespace LoadProfileGenerator.Tests {
             }
         }
 
-        public HouseholdTemplateCreatorTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public HouseholdTemplateCreatorTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

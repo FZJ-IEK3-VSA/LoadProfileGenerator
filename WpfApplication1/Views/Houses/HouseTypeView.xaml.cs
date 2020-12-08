@@ -51,7 +51,7 @@ namespace LoadProfileGenerator.Views.Houses {
             InitializeComponent();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private HouseTypePresenter Presenter => (HouseTypePresenter) DataContext;
 
         private void BtnAddEnergyStorage_Click([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
@@ -124,7 +124,7 @@ namespace LoadProfileGenerator.Views.Houses {
             Presenter.Refresh();
 
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        private static bool CheckCombobox([CanBeNull] object box, [NotNull] string s)
+        private static bool CheckCombobox([CanBeNull] object box, [JetBrains.Annotations.NotNull] string s)
         {
             if (box == null) {
                 Logger.Error("Please select a " + s + " to continue");
@@ -141,8 +141,8 @@ namespace LoadProfileGenerator.Views.Houses {
 
 #pragma warning disable CC0068 // Unused Method
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        private void DeviceSelectorControl_OnOnAddedDevice([NotNull] object sender,
-            [NotNull] DeviceSelectorControl.DeviceAddedEventArgs e)
+        private void DeviceSelectorControl_OnOnAddedDevice([JetBrains.Annotations.NotNull] object sender,
+            [JetBrains.Annotations.NotNull] DeviceSelectorControl.DeviceAddedEventArgs e)
         {
             if (!CheckCombobox(AutoDevs.AssignableDevice, "Device")) {
                 return;
@@ -237,7 +237,7 @@ namespace LoadProfileGenerator.Views.Houses {
 #pragma warning restore S1144 // Unused private types or members should be removed
 
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        private void AutoDevs_OnOnRemovedDevice([NotNull] object sender, [NotNull] DeviceSelectorControl.DeviceRemovedEventArgs e)
+        private void AutoDevs_OnOnRemovedDevice([JetBrains.Annotations.NotNull] object sender, [JetBrains.Annotations.NotNull] DeviceSelectorControl.DeviceRemovedEventArgs e)
         {
             if (e.ItemToRemove is HouseTypeDevice ad) {
                 Presenter.ThisHouseType.DeleteHouseDeviceFromDB(ad);

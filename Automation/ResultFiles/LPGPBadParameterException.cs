@@ -12,16 +12,16 @@ namespace Automation.ResultFiles {
         {
         }
 
-        public LPGPBadParameterException([NotNull] string message) : base(message)
+        public LPGPBadParameterException([JetBrains.Annotations.NotNull] string message) : base(message)
         {
         }
 
         [SuppressMessage("ReSharper", "UnusedMember.Global")]
-        public LPGPBadParameterException([NotNull] string message, [NotNull] Exception inner) : base(message, inner)
+        public LPGPBadParameterException([JetBrains.Annotations.NotNull] string message, [JetBrains.Annotations.NotNull] Exception inner) : base(message, inner)
         {
         }
 
-        protected LPGPBadParameterException([NotNull] SerializationInfo si, StreamingContext sc) : base(si, sc)
+        protected LPGPBadParameterException([JetBrains.Annotations.NotNull] SerializationInfo si, StreamingContext sc) : base(si, sc)
         {
         }
 

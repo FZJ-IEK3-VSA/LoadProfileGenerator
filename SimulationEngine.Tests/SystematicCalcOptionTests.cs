@@ -2,7 +2,7 @@ using Automation;
 using Xunit;
 using Common.Tests;
 using Xunit.Abstractions;
-using JetBrains.Annotations;
+
 #pragma warning disable 8602
 namespace SimulationEngine.Tests {
 public class SystematicCalcOptionTests :UnitTestBaseClass {
@@ -667,5 +667,5 @@ public void TestHouseJobsDeviceTaggingSets(){
       }, (x) => HouseJobTestHelper.CheckForResultfile(x, co));
 }
 
-public SystematicCalcOptionTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper) { }
+public SystematicCalcOptionTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper) { }
 }}

@@ -4,8 +4,6 @@ using CalculationController.DtoFactories;
 using CalculationEngine.OnlineDeviceLogging;
 using Common.JSON;
 using Common.Tests;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -14,7 +12,7 @@ namespace Calculation.Tests.OnlineDeviceLogging
 {
     public class ProfileActivationEntryTests : UnitTestBaseClass
     {
-        public ProfileActivationEntryTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public ProfileActivationEntryTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
 

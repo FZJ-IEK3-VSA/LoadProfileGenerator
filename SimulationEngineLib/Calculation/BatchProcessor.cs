@@ -97,7 +97,7 @@ namespace SimulationEngineLib.Calculation {
 
     internal static class BatchProcessor {
 
-        //private static void MakeBatchfile([NotNull] string connectionString, CalcObjectType type) {
+        //private static void MakeBatchfile([JetBrains.Annotations.NotNull] string connectionString, CalcObjectType type) {
         //    Logger.Info("Loading...");
         //    var sim = new Simulator(connectionString);
         //    Logger.Info("Loading finished.");
@@ -132,13 +132,13 @@ namespace SimulationEngineLib.Calculation {
         //    Logger.Info("Finished writing to " + batchfilename);
         //}
 
-        public static void RunProcessing([NotNull] BatchOptions bo, [NotNull] string connectionString) {
+        public static void RunProcessing([JetBrains.Annotations.NotNull] BatchOptions bo, [JetBrains.Annotations.NotNull] string connectionString) {
             if (bo.SettlementIndex != null) {
                 BatchfileFromSettlement.MakeBatchfileFromSettlement(connectionString, bo);
             }
         }
 
-        //public static void RunTestBatching([NotNull] TestBatchOptions bo, [NotNull] string connectionString) {
+        //public static void RunTestBatching([JetBrains.Annotations.NotNull] TestBatchOptions bo, [JetBrains.Annotations.NotNull] string connectionString) {
         //    if (bo.ModularHouseholds) {
         //        MakeBatchfile(connectionString, CalcObjectType.ModularHousehold);
         //        return;

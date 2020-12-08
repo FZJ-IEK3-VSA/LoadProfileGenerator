@@ -39,9 +39,9 @@ using LoadProfileGenerator.Presenters.BasicElements;
 
 namespace LoadProfileGenerator.Presenters {
     public abstract class PresenterBaseWithAppPresenter<T> : PresenterBase<T> where T : class {
-        [NotNull] private readonly ApplicationPresenter _applicationPresenter;
-        protected PresenterBaseWithAppPresenter([NotNull] T view, [NotNull] string tabHeaderPath,
-                                       [NotNull] ApplicationPresenter applicationPresenter):base(view,tabHeaderPath)
+        [JetBrains.Annotations.NotNull] private readonly ApplicationPresenter _applicationPresenter;
+        protected PresenterBaseWithAppPresenter([JetBrains.Annotations.NotNull] T view, [JetBrains.Annotations.NotNull] string tabHeaderPath,
+                                       [JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter):base(view,tabHeaderPath)
         {
             if (!Config.IsInUnitTesting && view == null)
             {
@@ -51,17 +51,17 @@ namespace LoadProfileGenerator.Presenters {
             _applicationPresenter = applicationPresenter ?? throw new LPGException("Applicationpresenter was null");
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ApplicationPresenter ApplicationPresenter => _applicationPresenter;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public  Simulator Sim => _applicationPresenter.Simulator ?? throw new LPGException("Sim was null");
     }
 
     public abstract class PresenterBase<T> : Notifier where T : class {
 
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
-        protected PresenterBase([NotNull] T view, [NotNull] string tabHeaderPath)
+        protected PresenterBase([JetBrains.Annotations.NotNull] T view, [JetBrains.Annotations.NotNull] string tabHeaderPath)
         {
             if (view == null && !Config.IsInUnitTesting) {
                 throw new LPGException("View was null");
@@ -72,17 +72,17 @@ namespace LoadProfileGenerator.Presenters {
         }
 
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string TabHeaderPath { get; }
 
         [SuppressMessage("ReSharper", "MemberCanBeProtected.Global")]
         public bool UnloadingStarted { get; set; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public T View { get; }
 
         [SuppressMessage("Microsoft.Globalization", "CA1300:SpecifyMessageBoxOptions")]
-        public void AskDeleteQuestion([NotNull] string headerstring, [NotNull] Action delete)
+        public void AskDeleteQuestion([JetBrains.Annotations.NotNull] string headerstring, [JetBrains.Annotations.NotNull] Action delete)
         {
             var s = "Are you sure you want to delete the element:" + Environment.NewLine + headerstring + "?";
             var dr = MessageWindowHandler.Mw.ShowYesNoMessage(s, "Delete?");

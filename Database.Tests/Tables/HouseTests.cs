@@ -40,8 +40,6 @@ using Database.Tables.BasicHouseholds;
 using Database.Tables.Houses;
 using Database.Tables.ModularHouseholds;
 using FluentAssertions;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -190,7 +188,7 @@ namespace Database.Tests.Tables {
             }
         }
 
-        public HouseTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public HouseTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

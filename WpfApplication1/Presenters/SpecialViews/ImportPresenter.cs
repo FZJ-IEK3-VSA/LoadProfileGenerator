@@ -35,7 +35,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
     public class ImportPresenter : PresenterBaseWithAppPresenter<ImportView> {
         [CanBeNull] private string _fileName;
 
-        public ImportPresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] ImportView view)
+        public ImportPresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] ImportView view)
             : base(view, "HeaderString", applicationPresenter) => ThisMerger = new DatabaseMerger(Sim);
 
         [CanBeNull]
@@ -48,11 +48,11 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string HeaderString => "Import from other database";
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public DatabaseMerger ThisMerger { get; }
 

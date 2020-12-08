@@ -26,7 +26,6 @@
 
 //-----------------------------------------------------------------------
 
-using JetBrains.Annotations;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using Automation;
@@ -59,10 +58,10 @@ namespace Common {
         public const string FinishedFileFlag = "finished.flag";
         //public const string TotalsJsonName = "TotalsPerLoadtype.json";
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static HouseholdKey GeneralHouseholdKey { get; } = new HouseholdKey("General");
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static HouseholdKey HouseKey { get; } = new HouseholdKey( "House");
 
         public static StrGuid HouseLocationGuid { get; }= StrGuid.FromString("5A8A1AC5-0EAC-462B-BB14-3ED3A789EBC2");
@@ -70,7 +69,7 @@ namespace Common {
 
         public const string TableDescriptionTableName = "TableDescription";
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         //public static HouseholdKey TotalsKey { get; } = new HouseholdKey( "Total");
         //public const string DeviceTaggingSetFileName = "DeviceTaggingSets.json";
         public const string CalculationProfilerJson = "CalculationProfiler.json";

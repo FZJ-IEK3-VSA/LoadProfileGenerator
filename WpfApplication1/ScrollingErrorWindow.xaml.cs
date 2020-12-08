@@ -38,7 +38,7 @@ namespace LoadProfileGenerator
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public partial class ScrollingErrorWindow
     {
-        public ScrollingErrorWindow([NotNull] string message, [NotNull] string header = "Error")
+        public ScrollingErrorWindow([JetBrains.Annotations.NotNull] string message, [JetBrains.Annotations.NotNull] string header = "Error")
         {
             InitializeComponent();
             TextBlock1.Text = message;

@@ -41,11 +41,11 @@ using LoadProfileGenerator.Views.SpecialViews;
 
 namespace LoadProfileGenerator.Presenters.SpecialViews {
     internal class DeviceOverviewPresenter : PresenterBaseWithAppPresenter<DeviceOverviewView> {
-        [NotNull] [ItemNotNull] private readonly ObservableCollection<DeviceWithImg> _devices = new ObservableCollection<DeviceWithImg>();
+        [JetBrains.Annotations.NotNull] [ItemNotNull] private readonly ObservableCollection<DeviceWithImg> _devices = new ObservableCollection<DeviceWithImg>();
 
         [CanBeNull] private string _sortBy;
 
-        public DeviceOverviewPresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] DeviceOverviewView view)
+        public DeviceOverviewPresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] DeviceOverviewView view)
             : base(view, "HeaderString", applicationPresenter)
         {
             SortByOptions.Add("By Name");
@@ -55,12 +55,12 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         [UsedImplicitly]
         public ObservableCollection<DeviceWithImg> Devices => _devices;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string HeaderString => "Device Overview";
 
@@ -76,7 +76,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public List<string> SortByOptions { get; } = new List<string>();
 
@@ -85,7 +85,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             ApplicationPresenter.CloseTab(this, removeLast);
         }
 
-        private int Comparison([NotNull] RealDevice dev1, [NotNull] RealDevice dev2)
+        private int Comparison([JetBrains.Annotations.NotNull] RealDevice dev1, [JetBrains.Annotations.NotNull] RealDevice dev2)
         {
             switch (SortBy) {
                 case "By Name":
@@ -126,15 +126,15 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         }
 
         public class DeviceWithImg {
-            [NotNull] private readonly ApplicationPresenter _applicationPresenter;
+            [JetBrains.Annotations.NotNull] private readonly ApplicationPresenter _applicationPresenter;
 
-            public DeviceWithImg([NotNull] RealDevice rd, [NotNull] ApplicationPresenter ap)
+            public DeviceWithImg([JetBrains.Annotations.NotNull] RealDevice rd, [JetBrains.Annotations.NotNull] ApplicationPresenter ap)
             {
                 Device = rd;
                 _applicationPresenter = ap;
             }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public RealDevice Device { get; }
 
             [CanBeNull]

@@ -5,8 +5,6 @@ using Common;
 using Common.Tests;
 using Database.Database;
 using FluentAssertions;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -45,7 +43,7 @@ namespace ChartCreator2.Tests.Oxyplot {
             //CleanTestBase.Run(true);
         }
 
-        public ActivityPercentageTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public ActivityPercentageTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

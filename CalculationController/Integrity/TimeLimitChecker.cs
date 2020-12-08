@@ -11,7 +11,7 @@ namespace CalculationController.Integrity {
         public TimeLimitChecker(bool performCleanupChecks) : base("Time Limits", performCleanupChecks) {
         }
 
-        private void CheckTimeLimits([NotNull][ItemNotNull] ObservableCollection<TimeLimit> timeLimits) {
+        private void CheckTimeLimits([JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<TimeLimit> timeLimits) {
             if (!PerformCleanupChecks) {
                 return;
             }

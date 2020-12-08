@@ -39,20 +39,20 @@ using JetBrains.Annotations;
 
 namespace Database.Helpers {
     public class Category<T> : BasicCategory {
-        [NotNull] private readonly ObservableCollection<T> _items;
-        public Category([NotNull] string name, [ItemNotNull] [NotNull] ObservableCollection<T> items)
+        [JetBrains.Annotations.NotNull] private readonly ObservableCollection<T> _items;
+        public Category([JetBrains.Annotations.NotNull] string name, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<T> items)
             : base(name) => _items = items;
 
         [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")] //this is the constructor for categories
-        public Category([NotNull] string name)
+        public Category([JetBrains.Annotations.NotNull] string name)
             : base(name) {
         }
 
         [UsedImplicitly]
-        [NotNull][ItemNotNull]
+        [JetBrains.Annotations.NotNull][ItemNotNull]
         public ObservableCollection<T> Items => _items;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public T this[int index] {
             get => _items[index];

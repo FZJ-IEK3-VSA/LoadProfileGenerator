@@ -7,7 +7,6 @@ using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
 using FluentAssertions;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 
 using Xunit;
@@ -48,7 +47,7 @@ namespace Common.Tests.SQLResultLogging.InputLoggers {
             //wd.CleanUp();
         }
 
-        public ColumnEntryLoggerTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public ColumnEntryLoggerTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

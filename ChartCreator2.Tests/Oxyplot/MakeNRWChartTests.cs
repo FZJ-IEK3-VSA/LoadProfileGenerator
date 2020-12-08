@@ -9,8 +9,6 @@ using Common.Tests;
 using Database;
 using Database.Tests;
 using FluentAssertions;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -73,7 +71,7 @@ namespace ChartCreator2.Tests.Oxyplot {
             CleanTestBase.RunAutomatically(true);
         }
 
-        public MakeNRWChartTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public MakeNRWChartTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

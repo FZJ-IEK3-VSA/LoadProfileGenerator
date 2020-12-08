@@ -24,27 +24,27 @@ using JetBrains.Annotations;
 namespace CalculationController.CalcFactories {
     [UsedImplicitly]
     public class CalcHouseDtoFactory {
-        [NotNull] private readonly AvailabilityDtoRepository _availabilityDtoRepository;
+        [JetBrains.Annotations.NotNull] private readonly AvailabilityDtoRepository _availabilityDtoRepository;
 
-        [NotNull] private readonly CalcParameters _calcParameters;
+        [JetBrains.Annotations.NotNull] private readonly CalcParameters _calcParameters;
 
-        [NotNull] private readonly CalcVariableDtoFactory _calcVariableDtoFactory;
+        [JetBrains.Annotations.NotNull] private readonly CalcVariableDtoFactory _calcVariableDtoFactory;
 
-        [NotNull] private readonly CalcModularHouseholdDtoFactory _hhDtoFactory;
+        [JetBrains.Annotations.NotNull] private readonly CalcModularHouseholdDtoFactory _hhDtoFactory;
 
-        [NotNull] private readonly CalcLoadTypeDtoDictionary _ltDict;
+        [JetBrains.Annotations.NotNull] private readonly CalcLoadTypeDtoDictionary _ltDict;
 
-        [NotNull] private readonly IDeviceCategoryPicker _picker;
+        [JetBrains.Annotations.NotNull] private readonly IDeviceCategoryPicker _picker;
 
-        [NotNull] private readonly Random _random;
+        [JetBrains.Annotations.NotNull] private readonly Random _random;
 
-        public CalcHouseDtoFactory([NotNull] CalcLoadTypeDtoDictionary ltDict,
-                                   [NotNull] Random random,
-                                   [NotNull] IDeviceCategoryPicker picker,
-                                   [NotNull] CalcParameters calcParameters,
-                                   [NotNull] CalcModularHouseholdDtoFactory hhDtoFactory,
-                                   [NotNull] AvailabilityDtoRepository availabilityDtoRepository,
-                                   [NotNull] CalcVariableDtoFactory calcVariableDtoFactory)
+        public CalcHouseDtoFactory([JetBrains.Annotations.NotNull] CalcLoadTypeDtoDictionary ltDict,
+                                   [JetBrains.Annotations.NotNull] Random random,
+                                   [JetBrains.Annotations.NotNull] IDeviceCategoryPicker picker,
+                                   [JetBrains.Annotations.NotNull] CalcParameters calcParameters,
+                                   [JetBrains.Annotations.NotNull] CalcModularHouseholdDtoFactory hhDtoFactory,
+                                   [JetBrains.Annotations.NotNull] AvailabilityDtoRepository availabilityDtoRepository,
+                                   [JetBrains.Annotations.NotNull] CalcVariableDtoFactory calcVariableDtoFactory)
         {
             _ltDict = ltDict;
             _random = random;
@@ -57,11 +57,11 @@ namespace CalculationController.CalcFactories {
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Objekte verwerfen, bevor Bereich verloren geht")]
         [SuppressMessage("ReSharper", "SwitchStatementMissingSomeCases")]
-        [NotNull]
-        public CalcHouseDto MakeHouseDto([NotNull] Simulator sim,
-                                      [NotNull] House house,
-                                      [NotNull] TemperatureProfile temperatureProfile,
-                                      [NotNull] GeographicLocation geographicLocation, //List<CalcDeviceTaggingSet> taggingSets,
+        [JetBrains.Annotations.NotNull]
+        public CalcHouseDto MakeHouseDto([JetBrains.Annotations.NotNull] Simulator sim,
+                                      [JetBrains.Annotations.NotNull] House house,
+                                      [JetBrains.Annotations.NotNull] TemperatureProfile temperatureProfile,
+                                      [JetBrains.Annotations.NotNull] GeographicLocation geographicLocation, //List<CalcDeviceTaggingSet> taggingSets,
                                       EnergyIntensityType energyIntensity)
         {
             if (house.HouseType == null) {
@@ -170,8 +170,8 @@ namespace CalculationController.CalcFactories {
             return calchouse;
         }
 
-        private void CreateCalcConditions([NotNull] TransformationDevice trafo,
-                                          [NotNull] [ItemNotNull] List<CalcTransformationConditionDto> calcconditions)
+        private void CreateCalcConditions([JetBrains.Annotations.NotNull] TransformationDevice trafo,
+                                          [JetBrains.Annotations.NotNull] [ItemNotNull] List<CalcTransformationConditionDto> calcconditions)
         {
             foreach (var condition in trafo.Conditions) {
                 CalcVariableDto variableDto = _calcVariableDtoFactory.RegisterVariableIfNotRegistered(
@@ -188,11 +188,11 @@ namespace CalculationController.CalcFactories {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
-        private static List<CalcEnergyStorageDto> CreateEnergyStorageDtos([NotNull] [ItemNotNull] List<EnergyStorage> energyStorages,
-                                                                          [NotNull] CalcLoadTypeDtoDictionary ltdict,
-                                                                          [NotNull] HouseholdKey householdKey, CalcVariableDtoFactory calcVariableDtoFactory)
+        private static List<CalcEnergyStorageDto> CreateEnergyStorageDtos([JetBrains.Annotations.NotNull] [ItemNotNull] List<EnergyStorage> energyStorages,
+                                                                          [JetBrains.Annotations.NotNull] CalcLoadTypeDtoDictionary ltdict,
+                                                                          [JetBrains.Annotations.NotNull] HouseholdKey householdKey, CalcVariableDtoFactory calcVariableDtoFactory)
         {
             var calcEnergyStorages = new List<CalcEnergyStorageDto>();
             foreach (var es in energyStorages) {
@@ -251,9 +251,9 @@ namespace CalculationController.CalcFactories {
         }
 
         [CanBeNull]
-        public static CalcSpaceHeatingDto CreateSpaceHeatingObject([NotNull] House house,
-                                                             [NotNull] TemperatureProfile temperatureProfile,
-                                                             [NotNull] HouseholdKey householdKey,
+        public static CalcSpaceHeatingDto CreateSpaceHeatingObject([JetBrains.Annotations.NotNull] House house,
+                                                             [JetBrains.Annotations.NotNull] TemperatureProfile temperatureProfile,
+                                                             [JetBrains.Annotations.NotNull] HouseholdKey householdKey,
                                                              [CanBeNull]
                                                              out CalcLocationDto heatingLocation, DateTime
                                                                  startTime, DateTime endTime,
@@ -288,9 +288,9 @@ namespace CalculationController.CalcFactories {
         }
 
         [CanBeNull]
-        private CalcAirConditioningDto MakeAirConditioning([NotNull] TemperatureProfile temperatureProfile,
-                                                           [NotNull] HouseType houseType,
-                                                           [NotNull] HouseholdKey householdKey,
+        private CalcAirConditioningDto MakeAirConditioning([JetBrains.Annotations.NotNull] TemperatureProfile temperatureProfile,
+                                                           [JetBrains.Annotations.NotNull] HouseType houseType,
+                                                           [JetBrains.Annotations.NotNull] HouseholdKey householdKey,
                                                            [CanBeNull] out CalcLocationDto airConditioningLocation)
         {
             var coolingParameter = MakeCoolingParameters(temperatureProfile, houseType);
@@ -333,10 +333,10 @@ namespace CalculationController.CalcFactories {
             return csh;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
-        private List<CalcTransformationDeviceDto> MakeAllTransformationDevices([NotNull] HouseType houseType,
-                                                                               [NotNull]
+        private List<CalcTransformationDeviceDto> MakeAllTransformationDevices([JetBrains.Annotations.NotNull] HouseType houseType,
+                                                                               [JetBrains.Annotations.NotNull]
                                                                                HouseholdKey householdKey) //List<CalcDeviceTaggingSet> taggingSets,
         {
             if (houseType == null) {
@@ -353,13 +353,13 @@ namespace CalculationController.CalcFactories {
 
         [CanBeNull]
         private CalcAutoDevDto MakeAutoDevFromDevice(EnergyIntensityType energyIntensity,
-                                                     [NotNull] HouseholdKey householdKey,
-                                                     [ItemNotNull] [NotNull] ObservableCollection<DeviceAction> deviceActions,
-                                                     [ItemNotNull] [NotNull] List<DeviceCategoryDto> deviceCategoryDtos,
-                                                     [NotNull] HouseTypeDevice hhautodev,
-                                                     [ItemNotNull] [NotNull] List<IAssignableDevice> allAutonomousDevices,
-                                                     [NotNull] CalcLocationDto calcLocation,
-                                                     [NotNull] AvailabilityDataReferenceDto timearray
+                                                     [JetBrains.Annotations.NotNull] HouseholdKey householdKey,
+                                                     [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceAction> deviceActions,
+                                                     [ItemNotNull] [JetBrains.Annotations.NotNull] List<DeviceCategoryDto> deviceCategoryDtos,
+                                                     [JetBrains.Annotations.NotNull] HouseTypeDevice hhautodev,
+                                                     [ItemNotNull] [JetBrains.Annotations.NotNull] List<IAssignableDevice> allAutonomousDevices,
+                                                     [JetBrains.Annotations.NotNull] CalcLocationDto calcLocation,
+                                                     [JetBrains.Annotations.NotNull] AvailabilityDataReferenceDto timearray
                                                      )
         {
             if (hhautodev.LoadType == null) {
@@ -429,13 +429,13 @@ namespace CalculationController.CalcFactories {
         }
 
         private void MakeAutoDevFromDeviceAction(EnergyIntensityType energyIntensity,
-                                                 [NotNull] HouseholdKey householdKey,
-                                                 [ItemNotNull] [NotNull] ObservableCollection<DeviceAction> deviceActions,
-                                                 [ItemNotNull] [NotNull] List<DeviceCategoryDto> deviceCategoryDtos,
-                                                 [NotNull] HouseTypeDevice hhautodev,
-                                                 [ItemNotNull] [NotNull] List<IAssignableDevice> allAutonomousDevices,
-                                                 [NotNull] CalcLocationDto calcLocation,
-                                                 [NotNull] AvailabilityDataReferenceDto availref, [NotNull] List<CalcAutoDevDto> autodevs
+                                                 [JetBrains.Annotations.NotNull] HouseholdKey householdKey,
+                                                 [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceAction> deviceActions,
+                                                 [ItemNotNull] [JetBrains.Annotations.NotNull] List<DeviceCategoryDto> deviceCategoryDtos,
+                                                 [JetBrains.Annotations.NotNull] HouseTypeDevice hhautodev,
+                                                 [ItemNotNull] [JetBrains.Annotations.NotNull] List<IAssignableDevice> allAutonomousDevices,
+                                                 [JetBrains.Annotations.NotNull] CalcLocationDto calcLocation,
+                                                 [JetBrains.Annotations.NotNull] AvailabilityDataReferenceDto availref, [JetBrains.Annotations.NotNull] List<CalcAutoDevDto> autodevs
                                                  )
         {
             if (hhautodev.Location == null) {
@@ -517,18 +517,18 @@ namespace CalculationController.CalcFactories {
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
-        private List<CalcAutoDevDto> MakeCalcAutoDevsFromHouse([NotNull] TemperatureProfile temperatureProfile,
-                                                               [NotNull] GeographicLocation geographicLocation,
-                                                               [NotNull] [ItemNotNull] ObservableCollection<HouseTypeDevice> houseDevices,
+        private List<CalcAutoDevDto> MakeCalcAutoDevsFromHouse([JetBrains.Annotations.NotNull] TemperatureProfile temperatureProfile,
+                                                               [JetBrains.Annotations.NotNull] GeographicLocation geographicLocation,
+                                                               [JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<HouseTypeDevice> houseDevices,
                                                                EnergyIntensityType energyIntensity,
-                                                               [NotNull] HouseholdKey householdKey,
-                                                               [NotNull] string holidayKey,
-                                                               [NotNull] [ItemNotNull] ObservableCollection<DeviceAction> deviceActions,
-                                                               [NotNull] House house,
-                                                               [NotNull] [ItemNotNull] out List<CalcLocationDto> deviceLocations,
-                                                               [ItemNotNull] [NotNull] List<DeviceCategoryDto> deviceCategoryDtos)
+                                                               [JetBrains.Annotations.NotNull] HouseholdKey householdKey,
+                                                               [JetBrains.Annotations.NotNull] string holidayKey,
+                                                               [JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<DeviceAction> deviceActions,
+                                                               [JetBrains.Annotations.NotNull] House house,
+                                                               [JetBrains.Annotations.NotNull] [ItemNotNull] out List<CalcLocationDto> deviceLocations,
+                                                               [ItemNotNull] [JetBrains.Annotations.NotNull] List<DeviceCategoryDto> deviceCategoryDtos)
         {
             deviceLocations = new List<CalcLocationDto>();
             var vacationTimeframes = new List<VacationTimeframe>();
@@ -630,7 +630,7 @@ namespace CalculationController.CalcFactories {
         }
 
         [CanBeNull]
-        private CoolingParameter MakeCoolingParameters([NotNull] TemperatureProfile temperatureProfile, [NotNull] HouseType houseType)
+        private CoolingParameter MakeCoolingParameters([JetBrains.Annotations.NotNull] TemperatureProfile temperatureProfile, [JetBrains.Annotations.NotNull] HouseType houseType)
         {
             if (houseType == null) {
                 throw new LPGException("Housetype was null");
@@ -661,9 +661,9 @@ namespace CalculationController.CalcFactories {
             return null;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
-        private List<CalcEnergyStorageDto>  MakeEnergyStorages([NotNull] House house, [NotNull] HouseholdKey householdKey)
+        private List<CalcEnergyStorageDto>  MakeEnergyStorages([JetBrains.Annotations.NotNull] House house, [JetBrains.Annotations.NotNull] HouseholdKey householdKey)
         {
             var energyStorages = new List<EnergyStorage>();
             if (house.HouseType == null) {
@@ -678,11 +678,11 @@ namespace CalculationController.CalcFactories {
             return calcEnergyStorages;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         private List<CalcGeneratorDto>
-            MakeGenerators([NotNull] [ItemNotNull] List<Generator> generators,
-                           [NotNull] HouseholdKey householdKey) //List<CalcDeviceTaggingSet> calcDeviceTaggingSets,
+            MakeGenerators([JetBrains.Annotations.NotNull] [ItemNotNull] List<Generator> generators,
+                           [JetBrains.Annotations.NotNull] HouseholdKey householdKey) //List<CalcDeviceTaggingSet> calcDeviceTaggingSets,
         {
             var cgens = new List<CalcGeneratorDto>();
             foreach (var gen in generators) {
@@ -711,9 +711,9 @@ namespace CalculationController.CalcFactories {
             return cgens;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
-        private List<OutputLoadTypeDto> MakeOutputLoadTypeDtos([NotNull] TransformationDevice trafo)
+        private List<OutputLoadTypeDto> MakeOutputLoadTypeDtos([JetBrains.Annotations.NotNull] TransformationDevice trafo)
         {
             List<OutputLoadTypeDto> outputs = new List<OutputLoadTypeDto>();
             foreach (var outlt in trafo.LoadTypesOut) {
@@ -745,9 +745,9 @@ namespace CalculationController.CalcFactories {
         }
 
         [CanBeNull]
-        private static CalcSpaceHeatingDto MakeSpaceHeatingDto([NotNull] HeatingParameter heatingparameter,
-                                                        [NotNull] CalcLoadTypeDtoDictionary ltDict,
-                                                        [NotNull] HouseholdKey householdKey,
+        private static CalcSpaceHeatingDto MakeSpaceHeatingDto([JetBrains.Annotations.NotNull] HeatingParameter heatingparameter,
+                                                        [JetBrains.Annotations.NotNull] CalcLoadTypeDtoDictionary ltDict,
+                                                        [JetBrains.Annotations.NotNull] HouseholdKey householdKey,
                                                         [CanBeNull] out CalcLocationDto heatingLocation)
             //, List<CalcDeviceTaggingSet> taggingSets)
         {
@@ -789,11 +789,11 @@ namespace CalculationController.CalcFactories {
             return csh;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         private List<CalcTransformationDeviceDto> MakeTransformationDeviceDtos(
-            [NotNull] [ItemNotNull] List<TransformationDevice> transformationDevices,
-            [NotNull] HouseholdKey householdKey)
+            [JetBrains.Annotations.NotNull] [ItemNotNull] List<TransformationDevice> transformationDevices,
+            [JetBrains.Annotations.NotNull] HouseholdKey householdKey)
         {
             var ctds = new List<CalcTransformationDeviceDto>();
             foreach (var trafo in transformationDevices) {

@@ -7,9 +7,9 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
     public class ColourGenerator
     {
         private int _index;
-        [NotNull] private readonly IntensityGenerator _intensityGenerator = new IntensityGenerator();
+        [JetBrains.Annotations.NotNull] private readonly IntensityGenerator _intensityGenerator = new IntensityGenerator();
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string NextColour()
         {
             string colour = string.Format(NextPattern(_index),
@@ -17,7 +17,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
             _index++;
             return colour;
         }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static string NextPattern(int index)
         {
             switch (index % 7)
@@ -37,7 +37,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
             [CanBeNull] private IntensityValueWalker _walker;
             private int _current;
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string NextIntensity(int index)
             {
                 if (index == 0)
@@ -88,10 +88,10 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
             [CanBeNull]
             public IntensityValue Parent { get; set; }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public IntensityValue ChildA => _mChildA ?? (_mChildA = new IntensityValue(this, Value - (1 << (7 - Level)), Level + 1));
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public IntensityValue ChildB => _mChildB ?? (_mChildB = new IntensityValue(this, Value + (1 << (7 - Level)), Level + 1));
         }
 
@@ -102,7 +102,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
                 Current = new IntensityValue(null, 1 << 7, 1);
             }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public IntensityValue Current { get; set; }
 
             public void MoveNext()

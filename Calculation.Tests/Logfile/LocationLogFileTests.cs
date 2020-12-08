@@ -36,7 +36,6 @@ using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.Loggers;
 using FluentAssertions;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 
 using Xunit;
@@ -130,7 +129,7 @@ namespace Calculation.Tests.Logfile
             }
         }
 
-        public LocationLogFileTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public LocationLogFileTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

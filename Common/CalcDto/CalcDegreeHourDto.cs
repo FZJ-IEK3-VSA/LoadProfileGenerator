@@ -1,5 +1,4 @@
 using System;
-using JetBrains.Annotations;
 
 namespace Common.CalcDto {
     public class CalcDegreeHourDto
@@ -19,7 +18,7 @@ namespace Common.CalcDto {
         public int Month { get; }
         public int Year { get;  }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public override string ToString()
         {
             var dt = new DateTime(Year, Month, Day, Hour, 0, 0);

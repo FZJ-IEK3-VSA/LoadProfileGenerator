@@ -18,14 +18,13 @@ using Common.Tests;
 using Database;
 using Database.Tests;
 using FluentAssertions;
-using JetBrains.Annotations;
 using Moq;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Calculation.HouseholdElements.Tests {
     public class CalcHouseholdTests : UnitTestBaseClass {
-        public CalcHouseholdTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public CalcHouseholdTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
 
@@ -82,7 +81,7 @@ namespace Calculation.HouseholdElements.Tests {
 
 namespace Calculation.Tests.HouseholdElements {
     public class CalcHouseholdTests : UnitTestBaseClass {
-        public CalcHouseholdTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public CalcHouseholdTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
 

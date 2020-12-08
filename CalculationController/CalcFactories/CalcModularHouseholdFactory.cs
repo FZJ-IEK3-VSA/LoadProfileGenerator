@@ -39,27 +39,27 @@ using JetBrains.Annotations;
 
 namespace CalculationController.CalcFactories {
     public class DeviceLocationTuple {
-        public DeviceLocationTuple([NotNull] Location location, [NotNull] IAssignableDevice device)
+        public DeviceLocationTuple([JetBrains.Annotations.NotNull] Location location, [JetBrains.Annotations.NotNull] IAssignableDevice device)
         {
             Location = location;
             Device = device;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public IAssignableDevice Device { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Location Location { get; }
     }
 
     public class LocationDtoDict {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Dictionary<Location, CalcLocationDto> LocationDict { get; } = new Dictionary<Location, CalcLocationDto>();
 
-        [NotNull]
-        public CalcLocationDto GetDtoForLocation([NotNull] Location location) => LocationDict[location];
+        [JetBrains.Annotations.NotNull]
+        public CalcLocationDto GetDtoForLocation([JetBrains.Annotations.NotNull] Location location) => LocationDict[location];
 
-        public bool SimulateLocation([NotNull] Location l)
+        public bool SimulateLocation([JetBrains.Annotations.NotNull] Location l)
         {
             if (LocationDict.ContainsKey(l)) {
                 return true;
@@ -70,10 +70,10 @@ namespace CalculationController.CalcFactories {
     }
 
     public class DtoCalcLocationDict {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Dictionary<CalcLocationDto, CalcLocation> LocationDtoDict { get; } = new Dictionary<CalcLocationDto, CalcLocation>();
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CalcLocation GetCalcLocationByGuid(StrGuid calcLocationGuid)
         {
             return LocationDtoDict.Values.First(x => x.Guid == calcLocationGuid);
@@ -81,32 +81,32 @@ namespace CalculationController.CalcFactories {
     }
 
     public class CalcModularHouseholdFactory {
-        [NotNull] private readonly CalcAffordanceFactory _caf;
+        [JetBrains.Annotations.NotNull] private readonly CalcAffordanceFactory _caf;
 
-        [NotNull] private readonly CalcVariableRepository _calcVariableRepository;
+        [JetBrains.Annotations.NotNull] private readonly CalcVariableRepository _calcVariableRepository;
         private readonly CalcRepo _calcRepo;
 
-        [NotNull] private readonly CalcDeviceFactory _cdf;
+        [JetBrains.Annotations.NotNull] private readonly CalcDeviceFactory _cdf;
 
-        [NotNull] private readonly CalcLocationFactory _clf;
+        [JetBrains.Annotations.NotNull] private readonly CalcLocationFactory _clf;
 
-        [NotNull] private readonly CalcPersonFactory _cpf;
+        [JetBrains.Annotations.NotNull] private readonly CalcPersonFactory _cpf;
 
-        [NotNull] private readonly CalcTransportationFactory _ctf;
+        [JetBrains.Annotations.NotNull] private readonly CalcTransportationFactory _ctf;
 
 
-        [NotNull] private readonly CalcLoadTypeDictionary _ltDict;
+        [JetBrains.Annotations.NotNull] private readonly CalcLoadTypeDictionary _ltDict;
 
 
         //private readonly CalcVariableDtoFactory _variableDtoFactory;
 
-        public CalcModularHouseholdFactory([NotNull] CalcLoadTypeDictionary ltDict,
-                                           [NotNull] CalcLocationFactory clf,
-                                           [NotNull] CalcPersonFactory cpf,
-                                           [NotNull] CalcDeviceFactory cdf,
-                                           [NotNull] CalcAffordanceFactory caf,
-                                           [NotNull] CalcTransportationFactory ctf,
-                                           [NotNull] CalcVariableRepository variableRepository,
+        public CalcModularHouseholdFactory([JetBrains.Annotations.NotNull] CalcLoadTypeDictionary ltDict,
+                                           [JetBrains.Annotations.NotNull] CalcLocationFactory clf,
+                                           [JetBrains.Annotations.NotNull] CalcPersonFactory cpf,
+                                           [JetBrains.Annotations.NotNull] CalcDeviceFactory cdf,
+                                           [JetBrains.Annotations.NotNull] CalcAffordanceFactory caf,
+                                           [JetBrains.Annotations.NotNull] CalcTransportationFactory ctf,
+                                           [JetBrains.Annotations.NotNull] CalcVariableRepository variableRepository,
                                            CalcRepo calcRepo
         )
         {
@@ -120,11 +120,11 @@ namespace CalculationController.CalcFactories {
             _calcRepo = calcRepo;
         }
 
-        [NotNull]
-        public CalcHousehold MakeCalcModularHousehold([NotNull] CalcHouseholdDto householdDto,
-                                                      [NotNull] out DtoCalcLocationDict dtoCalcLocationDict,
+        [JetBrains.Annotations.NotNull]
+        public CalcHousehold MakeCalcModularHousehold([JetBrains.Annotations.NotNull] CalcHouseholdDto householdDto,
+                                                      [JetBrains.Annotations.NotNull] out DtoCalcLocationDict dtoCalcLocationDict,
                                                       [CanBeNull] string houseName,
-                                                      [CanBeNull] string houseDescription, [NotNull] CalcRepo calcRepo)
+                                                      [CanBeNull] string houseDescription, [JetBrains.Annotations.NotNull] CalcRepo calcRepo)
         {
             CalcHousehold chh = null;
             _calcRepo.FileFactoryAndTracker.RegisterHousehold(householdDto.HouseholdKey,
@@ -199,7 +199,7 @@ namespace CalculationController.CalcFactories {
             }
         }
 
-        private static void CheckCalcAffordancesForExecutability([NotNull] CalcHousehold calcHousehold)
+        private static void CheckCalcAffordancesForExecutability([JetBrains.Annotations.NotNull] CalcHousehold calcHousehold)
         {
             var calcAffordances = calcHousehold.Locations.SelectMany(x => x.Affordances).ToList();
             foreach (var calcAffordanceBase in calcAffordances) {

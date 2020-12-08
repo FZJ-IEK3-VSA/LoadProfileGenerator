@@ -7,7 +7,7 @@ namespace Automation {
     public class HouseData {
 
         public HouseData(StrGuid houseGuid, string? houseTypeCode, double? targetHeatDemand,
-                         double? targetCoolingDemand, [NotNull] string name)
+                         double? targetCoolingDemand, [JetBrains.Annotations.NotNull] string name)
         {
             HouseGuid = houseGuid;
             HouseTypeCode = houseTypeCode;
@@ -27,7 +27,7 @@ namespace Automation {
         public string? Name { get; set; }
         public StrGuid? HouseGuid { get; set; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public List<HouseholdData> Households { get; set; } = new List<HouseholdData>();
 

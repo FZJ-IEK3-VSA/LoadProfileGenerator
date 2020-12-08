@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using Common.JSON;
-using JetBrains.Annotations;
 
 namespace CalculationEngine.OnlineDeviceLogging {
     public class ProfileActivationEntry {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly CalcParameters _calcParameters;
 
-        public ProfileActivationEntry([NotNull] string device, [NotNull] string profile, [NotNull] string profileSource, [NotNull] string loadType, [NotNull] CalcParameters calcParameters) {
+        public ProfileActivationEntry([JetBrains.Annotations.NotNull] string device, [JetBrains.Annotations.NotNull] string profile, [JetBrains.Annotations.NotNull] string profileSource, [JetBrains.Annotations.NotNull] string loadType, [JetBrains.Annotations.NotNull] CalcParameters calcParameters) {
             _calcParameters = calcParameters;
             Device = device;
             Profile = profile;
@@ -18,10 +17,10 @@ namespace CalculationEngine.OnlineDeviceLogging {
         }
 
         public int ActivationCount { get; set; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string Device { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string Line {
             get {
                 var c = _calcParameters.CSVCharacter;
@@ -29,31 +28,31 @@ namespace CalculationEngine.OnlineDeviceLogging {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string LoadType { get; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string Profile { get; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private string ProfileSource { get; }
 
         public ProfileActivationEntryKey GenerateKey() => new ProfileActivationEntryKey(Device, Profile, ProfileSource,
             LoadType);
 
         public readonly struct ProfileActivationEntryKey : IEquatable<ProfileActivationEntryKey> {
-            public ProfileActivationEntryKey([NotNull] string device, [NotNull] string profile, [NotNull] string profileSource, [NotNull] string loadType)
+            public ProfileActivationEntryKey([JetBrains.Annotations.NotNull] string device, [JetBrains.Annotations.NotNull] string profile, [JetBrains.Annotations.NotNull] string profileSource, [JetBrains.Annotations.NotNull] string loadType)
                 : this() {
                 Device = device;
                 Profile = profile;
                 ProfileSource = profileSource;
                 LoadType = loadType;
             }
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             private string Device { get; }
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             private string Profile { get; }
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             private string ProfileSource { get; }
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             private string LoadType { get; }
 
             [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]

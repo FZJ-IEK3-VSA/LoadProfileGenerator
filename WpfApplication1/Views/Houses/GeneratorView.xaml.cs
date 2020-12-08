@@ -44,7 +44,7 @@ namespace LoadProfileGenerator.Views.Houses
             InitializeComponent();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private GeneratorPresenter Presenter => (GeneratorPresenter)DataContext;
 
         private void Delete_Click([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e) => Presenter.AskDeleteQuestion(Presenter.ThisGenerator.HeaderString, Presenter.Delete);

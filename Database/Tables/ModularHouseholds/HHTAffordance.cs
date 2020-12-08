@@ -33,7 +33,7 @@ namespace Database.Tables.ModularHouseholds {
 
         public HHTAffordance([CanBeNull]int? pID, [CanBeNull] Affordance affv, [CanBeNull] HHTLocation hhtLocation,
             int householdTraitID,
-        [NotNull]    string connectionString, [NotNull] string hhaffName,[CanBeNull] TimeLimit timeLimit, int weight
+        [JetBrains.Annotations.NotNull]    string connectionString, [JetBrains.Annotations.NotNull] string hhaffName,[CanBeNull] TimeLimit timeLimit, int weight
             , int startMinusMinutes, int startPlusMinutes, int endMinusMinutes, int endPlusMinutes,
             StrGuid guid) : base(hhaffName, TableName, connectionString, guid)
         {
@@ -98,9 +98,9 @@ namespace Database.Tables.ModularHouseholds {
 
         public int EndPlusMinutes => _endPlusMinutes;
 
-        [NotNull]
-        private static HHTAffordance AssignFields([NotNull] DataReader dr, [NotNull]string connectionString, bool ignoreMissingFields,
-            [NotNull]     AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static HHTAffordance AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull]string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull]     AllItemCollections aic)
         {
             var hhdevlocID = dr.GetIntFromLong("ID");
             var householdTraitID = dr.GetIntFromLong("HouseholdTraitID");
@@ -154,9 +154,9 @@ namespace Database.Tables.ModularHouseholds {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<HHTAffordance> result, [NotNull] string connectionString,
-            bool ignoreMissingTables, [ItemNotNull] [NotNull] ObservableCollection<Affordance> affordances,
-            [ItemNotNull] [NotNull] ObservableCollection<HouseholdTrait> allhouseholdTraits, [ItemNotNull] [NotNull] ObservableCollection<TimeLimit> timeLimits)
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<HHTAffordance> result, [JetBrains.Annotations.NotNull] string connectionString,
+            bool ignoreMissingTables, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Affordance> affordances,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<HouseholdTrait> allhouseholdTraits, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TimeLimit> timeLimits)
         {
             var aic = new AllItemCollections(affordances: affordances,
                 householdTraits: allhouseholdTraits,timeLimits: timeLimits);

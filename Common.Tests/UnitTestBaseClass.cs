@@ -23,6 +23,7 @@ namespace Common.Tests {
                 throw new LPGException("PercentageRange<0");
             }
 
+            // ReSharper disable once RedundantCast
             double actualValue =(int)parent.Subject;
             double minValue = target - target * percent;
             double maxValue = target + target * percent;
@@ -44,6 +45,7 @@ namespace Common.Tests {
                 throw new LPGException("PercentageRange<0");
             }
 
+            // ReSharper disable once RedundantCast
             double actualValue = (double)parent.Subject;
             double minValue = target - target * percent;
             double maxValue = target + target * percent;
@@ -64,6 +66,7 @@ namespace Common.Tests {
                 throw new LPGException("PercentageRange<0");
             }
 
+            // ReSharper disable once RedundantCast
             int actualValue = (int)parent.Subject;
             int minValue = (int)(target - target * percent);
             int maxValue = (int)(target + target * percent);
@@ -144,8 +147,8 @@ namespace Common.Tests {
 }
 
 /*
-[NotNull]
-protected static CalcPerson MakeCalcPerson([NotNull] CalcLocation cloc, [NotNull] CalcParameters calcParameters, [NotNull] ILogFile lf)
+[JetBrains.Annotations.NotNull]
+protected static CalcPerson MakeCalcPerson([JetBrains.Annotations.NotNull] CalcLocation cloc, [JetBrains.Annotations.NotNull] CalcParameters calcParameters, [JetBrains.Annotations.NotNull] ILogFile lf)
 {
     BitArray isSick = new BitArray(calcParameters.InternalTimesteps);
     BitArray isOnVacation = new BitArray(calcParameters.InternalTimesteps);

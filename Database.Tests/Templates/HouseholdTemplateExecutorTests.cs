@@ -9,8 +9,6 @@ using Database.Tables.BasicElements;
 using Database.Tables.ModularHouseholds;
 using Database.Templating;
 using FluentAssertions;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -109,7 +107,7 @@ namespace Database.Tests.Templates {
             }
         }
 
-        public HouseholdTemplateExecutorTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public HouseholdTemplateExecutorTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

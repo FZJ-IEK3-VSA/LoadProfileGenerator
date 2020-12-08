@@ -5,7 +5,7 @@ using Xunit;
 using Database.Templating;
 using CalculationController.Integrity;
 using Xunit.Abstractions;
-using JetBrains.Annotations;
+
 #pragma warning disable 8602
 namespace Database.Tests.Templating {
 public class SystematicHouseholdTests :UnitTestBaseClass {
@@ -185,5 +185,5 @@ public void GenerateSettlementPreviewTest10()
         db.Cleanup();
     }
 }
-public SystematicHouseholdTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper) { }
+public SystematicHouseholdTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper) { }
 }}

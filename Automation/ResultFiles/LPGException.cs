@@ -11,17 +11,17 @@ namespace Automation.ResultFiles {
         public LPGException() {
         }
 
-        public LPGException([NotNull] string message) : base(message) {
+        public LPGException([JetBrains.Annotations.NotNull] string message) : base(message) {
         }
 
         [SuppressMessage("ReSharper", "UnusedMember.Global")]
-        public LPGException([NotNull] string message, [NotNull] Exception inner) : base(message, inner) {
+        public LPGException([JetBrains.Annotations.NotNull] string message, [JetBrains.Annotations.NotNull] Exception inner) : base(message, inner) {
         }
 
-        protected LPGException([NotNull] SerializationInfo si, StreamingContext sc) : base(si, sc) {
+        protected LPGException([JetBrains.Annotations.NotNull] SerializationInfo si, StreamingContext sc) : base(si, sc) {
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static string ErrorLocation() {
             var callStack = new StackFrame(1, true);
             return " File: " + callStack.GetFileName() + ", Function " + callStack.GetMethod() + ", Line: " +
@@ -36,16 +36,16 @@ namespace Automation.ResultFiles {
         {
         }
 
-        public LPGCancelException([NotNull] string message) : base(message)
+        public LPGCancelException([JetBrains.Annotations.NotNull] string message) : base(message)
         {
         }
 
         [SuppressMessage("ReSharper", "UnusedMember.Global")]
-        public LPGCancelException([NotNull] string message, [NotNull] Exception inner) : base(message, inner)
+        public LPGCancelException([JetBrains.Annotations.NotNull] string message, [JetBrains.Annotations.NotNull] Exception inner) : base(message, inner)
         {
         }
 
-        protected LPGCancelException([NotNull] SerializationInfo si, StreamingContext sc) : base(si, sc)
+        protected LPGCancelException([JetBrains.Annotations.NotNull] SerializationInfo si, StreamingContext sc) : base(si, sc)
         {
         }
 
@@ -58,20 +58,20 @@ namespace Automation.ResultFiles {
         {
         }
 
-        public LPGCommandlineException([NotNull] string message) : base(message)
+        public LPGCommandlineException([JetBrains.Annotations.NotNull] string message) : base(message)
         {
         }
 
         [SuppressMessage("ReSharper", "UnusedMember.Global")]
-        public LPGCommandlineException([NotNull] string message, [NotNull] Exception inner) : base(message, inner)
+        public LPGCommandlineException([JetBrains.Annotations.NotNull] string message, [JetBrains.Annotations.NotNull] Exception inner) : base(message, inner)
         {
         }
 
-        protected LPGCommandlineException([NotNull] SerializationInfo si, StreamingContext sc) : base(si, sc)
+        protected LPGCommandlineException([JetBrains.Annotations.NotNull] SerializationInfo si, StreamingContext sc) : base(si, sc)
         {
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static string ErrorLocation()
         {
             var callStack = new StackFrame(1, true);

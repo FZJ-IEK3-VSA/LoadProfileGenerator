@@ -1,10 +1,9 @@
 ﻿using Automation;
-using JetBrains.Annotations;
 
 namespace Common.CalcDto {
     public class CalcDeviceLoadDto
     {
-        public CalcDeviceLoadDto([NotNull]string name, int id, [NotNull]string loadTypeName, StrGuid loadTypeGuid,
+        public CalcDeviceLoadDto([JetBrains.Annotations.NotNull]string name, int id, [JetBrains.Annotations.NotNull]string loadTypeName, StrGuid loadTypeGuid,
                                  double averageYearlyConsumption, double powerStandardDeviation, StrGuid guid,
                                  double maxPower)
         {
@@ -26,14 +25,14 @@ namespace Common.CalcDto {
         public double PowerStandardDeviation { get; }
         public StrGuid Guid { get; }
         public double MaxPower { get; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string Name { get; }
         public int ID { get; }
         public StrGuid LoadTypeGuid { get; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string LoadTypeName { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public override string ToString() => Name + " - " + LoadTypeName + " " + MaxPower + " Power";
     }
 }

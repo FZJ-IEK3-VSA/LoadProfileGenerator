@@ -18,7 +18,7 @@ namespace CalculationController.Integrity {
         public DeviceChecker(bool performCleanupChecks) : base("Devices", performCleanupChecks) {
         }
 
-        private static void BasicChecks([NotNull] RealDevice device) {
+        private static void BasicChecks([JetBrains.Annotations.NotNull] RealDevice device) {
             if (device.Loads.Count == 0) {
                 throw new DataIntegrityException(
                     "The device " + device.Name + " has no loads. This isn't going to work!", device);
@@ -34,7 +34,7 @@ namespace CalculationController.Integrity {
             }
         }
 
-        private static void CheckDeviceActionLoads([NotNull][ItemNotNull] ObservableCollection<DeviceAction> actions, [NotNull] RealDevice device) {
+        private static void CheckDeviceActionLoads([JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<DeviceAction> actions, [JetBrains.Annotations.NotNull] RealDevice device) {
             foreach (var action in actions) {
                 if (action.Device == device) {
                     foreach (var profile in action.Profiles) {
@@ -87,10 +87,10 @@ namespace CalculationController.Integrity {
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        private void CheckForUnusedDevices([NotNull][ItemNotNull] ObservableCollection<RealDevice> realDevices,
-            [NotNull][ItemNotNull] ObservableCollection<Affordance> affordances, [NotNull][ItemNotNull] ObservableCollection<DeviceAction> actions,
-            [NotNull][ItemNotNull] ObservableCollection<Location> locations,
-            [NotNull][ItemNotNull] ObservableCollection<HouseholdTrait> traits, [NotNull][ItemNotNull] ObservableCollection<HouseType> houses) {
+        private void CheckForUnusedDevices([JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<RealDevice> realDevices,
+            [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<Affordance> affordances, [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<DeviceAction> actions,
+            [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<Location> locations,
+            [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<HouseholdTrait> traits, [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<HouseType> houses) {
             if (!PerformCleanupChecks) {
                 return;
             }
@@ -168,7 +168,7 @@ namespace CalculationController.Integrity {
             }
         }
 
-        private static void ElectricityChecks([NotNull] RealDevice device) {
+        private static void ElectricityChecks([JetBrains.Annotations.NotNull] RealDevice device) {
             if (device.Loads.Any(x => string.Equals(x.LoadType?.Name, "electricity",
                 StringComparison.OrdinalIgnoreCase))) {
                 if (

@@ -5,15 +5,14 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using Common;
-using JetBrains.Annotations;
 
 namespace LoadProfileGenerator.Views.Transportation {
     [ValueConversion(typeof(DataGridCell), typeof(Brush))]
     public sealed class ValueToBrushConverter : IValueConverter
     {
-        [NotNull] public static readonly ValueToBrushConverter Default = new ValueToBrushConverter();
+        [JetBrains.Annotations.NotNull] public static readonly ValueToBrushConverter Default = new ValueToBrushConverter();
 
-        public object Convert(object value, [NotNull] Type targetType, object parameter, [NotNull] System.Globalization.CultureInfo culture)
+        public object Convert(object value, [JetBrains.Annotations.NotNull] Type targetType, object parameter, [JetBrains.Annotations.NotNull] System.Globalization.CultureInfo culture)
         {
             string input = string.Empty;
             try
@@ -25,7 +24,9 @@ namespace LoadProfileGenerator.Views.Transportation {
 
                 if (dgc.DataContext is DataRowView rowView && dgc.Column != null) {
                     input = (string) rowView.Row.ItemArray[dgc.Column.DisplayIndex];
-                    Logger.Info(input);
+                    if(input!=null) {
+                        Logger.Info(input);
+                    }
                 }
             }
             catch (InvalidCastException)
@@ -40,6 +41,6 @@ namespace LoadProfileGenerator.Views.Transportation {
             }
         }
 
-        public object ConvertBack(object value, [NotNull] Type targetType, object parameter, [NotNull] System.Globalization.CultureInfo culture) => throw new NotSupportedException();
+        public object ConvertBack(object value, [JetBrains.Annotations.NotNull] Type targetType, object parameter, [JetBrains.Annotations.NotNull] System.Globalization.CultureInfo culture) => throw new NotSupportedException();
     }
 }

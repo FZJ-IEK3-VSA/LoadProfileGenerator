@@ -9,9 +9,9 @@ using Newtonsoft.Json;
 
 namespace Common {
     public interface ICalculationProfiler {
-        void StartPart([NotNull] string key);
+        void StartPart([JetBrains.Annotations.NotNull] string key);
 
-        void StopPart([NotNull] string key);
+        void StopPart([JetBrains.Annotations.NotNull] string key);
     }
 
     public class CalculationProfiler : ICalculationProfiler {
@@ -25,10 +25,10 @@ namespace Common {
         }
 
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Dictionary<string,ProgramPart> MainPart { get; private set; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private Dictionary<string, ProgramPart> Current { get; set; }
 
         public void StartPart(string key)
@@ -134,8 +134,8 @@ namespace Common {
                     }
                 }*/
 
-        [NotNull]
-        public static CalculationProfiler Read([NotNull] string path)
+        [JetBrains.Annotations.NotNull]
+        public static CalculationProfiler Read([JetBrains.Annotations.NotNull] string path)
         {
             var dstPath = Path.Combine(path, Constants.CalculationProfilerJson);
             string json;
@@ -147,7 +147,7 @@ namespace Common {
             return o;
         }
 
-        public void WriteJson([NotNull] StreamWriter sw)
+        public void WriteJson([JetBrains.Annotations.NotNull] StreamWriter sw)
         {
             var threadname = Thread.CurrentThread.GetNotNullThreadName();
             MainPart[threadname].Stop = DateTime.Now;
@@ -159,7 +159,7 @@ namespace Common {
             }
         }
 
-        private static void LogOneProgramPartToConsole([NotNull] ProgramPart part, int level)
+        private static void LogOneProgramPartToConsole([JetBrains.Annotations.NotNull] ProgramPart part, int level)
         {
             var padding = "";
             for (var i = 0; i < level; i++) {
@@ -173,14 +173,14 @@ namespace Common {
         }
 
         public class ProgramPart {
-            public ProgramPart([CanBeNull] ProgramPart parent, [NotNull] string key)
+            public ProgramPart([CanBeNull] ProgramPart parent, [JetBrains.Annotations.NotNull] string key)
             {
                 Parent = parent;
                 Key = key;
                 Start = DateTime.Now;
             }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             [ItemNotNull]
             public List<ProgramPart> Children { get; } = new List<ProgramPart>();
 
@@ -189,7 +189,7 @@ namespace Common {
             public double Duration2 { get; set; }
 
             [UsedImplicitly]
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string Key { get; set; }
 
             [JsonIgnore]
@@ -202,7 +202,7 @@ namespace Common {
             [UsedImplicitly]
             public DateTime Stop { get; set; }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public override string ToString() => Key + " - " + Duration;
         }
     }

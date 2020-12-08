@@ -38,11 +38,11 @@ using LoadProfileGenerator.Views.BasicElements;
 
 namespace LoadProfileGenerator.Presenters.BasicElements {
     public class VariablePresenter : PresenterBaseDBBase<VariableView> {
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<UsedIn> _usedIn;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<UsedIn> _usedIn;
 
-        [NotNull] private readonly Variable _variable;
+        [JetBrains.Annotations.NotNull] private readonly Variable _variable;
 
-        public VariablePresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] VariableView view, [NotNull] Variable variable)
+        public VariablePresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] VariableView view, [JetBrains.Annotations.NotNull] Variable variable)
             : base(view, "ThisVariable.HeaderString", variable, applicationPresenter)
         {
             _variable = variable;
@@ -51,10 +51,10 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             RefreshUsedIn();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Variable ThisVariable => _variable;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         [UsedImplicitly]
         public ObservableCollection<UsedIn> UsedIn => _usedIn;

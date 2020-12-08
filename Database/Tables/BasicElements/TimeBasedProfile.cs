@@ -48,11 +48,11 @@ namespace Database.Tables.BasicElements {
 
     public class TimeBasedProfile : DBBaseElement {
         public const string TableName = "tblTimeBasedProfile";
-        [NotNull] private string _dataSource;
+        [JetBrains.Annotations.NotNull] private string _dataSource;
         private TimeProfileType _timeProfileType;
 
-        public TimeBasedProfile([NotNull] string name, [CanBeNull] int? pID, [NotNull] string connectionString, TimeProfileType timeProfileType,
-            [NotNull] string dataSource, StrGuid guid) : base(name, TableName, connectionString, guid)
+        public TimeBasedProfile([JetBrains.Annotations.NotNull] string name, [CanBeNull] int? pID, [JetBrains.Annotations.NotNull] string connectionString, TimeProfileType timeProfileType,
+            [JetBrains.Annotations.NotNull] string dataSource, StrGuid guid) : base(name, TableName, connectionString, guid)
         {
             _timeProfileType = timeProfileType;
             ObservableDatapoints = new ObservableCollection<TimeDataPoint>();
@@ -63,7 +63,7 @@ namespace Database.Tables.BasicElements {
 
         public int DatapointsCount => ObservableDatapoints.Count;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string DataSource {
             get => _dataSource;
@@ -94,12 +94,12 @@ namespace Database.Tables.BasicElements {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string NameWithTime => Name + " [" + GetMaximumTime() + "]";
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<TimeDataPoint> ObservableDatapoints { get; }
 
         [UsedImplicitly]
@@ -111,7 +111,7 @@ namespace Database.Tables.BasicElements {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string ValueTypeLabel => CalculateValueTypeLabel();
 
@@ -130,9 +130,9 @@ namespace Database.Tables.BasicElements {
             }
         }
 
-        [NotNull]
-        private static TimeBasedProfile AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static TimeBasedProfile AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var id = dr.GetIntFromLong("ID");
             var name = dr.GetString("Name");
@@ -169,7 +169,7 @@ namespace Database.Tables.BasicElements {
             return value;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private string CalculateValueTypeLabel()
         {
             switch (TimeProfileType) {
@@ -179,9 +179,9 @@ namespace Database.Tables.BasicElements {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new
+        public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString) => new
             TimeBasedProfile(FindNewName(isNameTaken, "New profile "), null, connectionString,
                 TimeProfileType.Relative,
                 "unknown", System.Guid.NewGuid().ToStrGuid());
@@ -201,7 +201,7 @@ namespace Database.Tables.BasicElements {
             DeleteAllTimepoints();
         }
 
-        public void DeleteTimepoint([NotNull] TimeDataPoint tp)
+        public void DeleteTimepoint([JetBrains.Annotations.NotNull] TimeDataPoint tp)
         {
             tp.DeleteFromDB();
             lock (ObservableDatapoints) {
@@ -210,7 +210,7 @@ namespace Database.Tables.BasicElements {
             OnPropertyChanged(nameof(Duration));
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private string GetMaximumTime() => Duration.ToString();
 
         public override DBBase ImportFromGenericItem(DBBase toImport,  Simulator dstSim)
@@ -246,9 +246,9 @@ namespace Database.Tables.BasicElements {
             return result;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DBBase ImportFromItem([NotNull] TimeBasedProfile item, [NotNull] Simulator dstSimulator)
+        public static DBBase ImportFromItem([JetBrains.Annotations.NotNull] TimeBasedProfile item, [JetBrains.Annotations.NotNull] Simulator dstSimulator)
         {
             var tbp = new TimeBasedProfile(item.Name, null,
                 dstSimulator.ConnectionString, item.TimeProfileType,
@@ -261,7 +261,7 @@ namespace Database.Tables.BasicElements {
             return tbp;
         }
 
-        private static bool IsCorrectParent([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var hd = (TimeDataPoint) child;
             if (parent.ID == hd.ProfileID) {
@@ -280,7 +280,7 @@ namespace Database.Tables.BasicElements {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<TimeBasedProfile> result, [NotNull] string connectionString,
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TimeBasedProfile> result, [JetBrains.Annotations.NotNull] string connectionString,
             bool ignoreMissingTables)
         {
             var aic = new AllItemCollections();
@@ -307,7 +307,7 @@ namespace Database.Tables.BasicElements {
             }
         }
 
-        public void SaveToDB([NotNull] Action<int> reportProgress)
+        public void SaveToDB([JetBrains.Annotations.NotNull] Action<int> reportProgress)
         {
             var i = 0;
             base.SaveToDB();

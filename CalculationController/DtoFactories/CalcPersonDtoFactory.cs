@@ -12,16 +12,16 @@ using JetBrains.Annotations;
 namespace CalculationController.DtoFactories
 {
     public class CalcPersonDtoFactory {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly CalcParameters _calcParameters;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly Random _random;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly NormalRandom _normalRandom;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly VacationDtoFactory _vacationDtoFactory;
 
-        public CalcPersonDtoFactory([NotNull] CalcParameters calcParameters, [NotNull] Random random, [NotNull] NormalRandom normalRandom, [NotNull] VacationDtoFactory vacationDtoFactory)
+        public CalcPersonDtoFactory([JetBrains.Annotations.NotNull] CalcParameters calcParameters, [JetBrains.Annotations.NotNull] Random random, [JetBrains.Annotations.NotNull] NormalRandom normalRandom, [JetBrains.Annotations.NotNull] VacationDtoFactory vacationDtoFactory)
         {
             _calcParameters = calcParameters;
             _random = random;
@@ -29,10 +29,10 @@ namespace CalculationController.DtoFactories
             _vacationDtoFactory = vacationDtoFactory;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
-        public List<CalcPersonDto> MakePersonDtos([NotNull][ItemNotNull] List<ModularHouseholdPerson> persons, [NotNull] HouseholdKey householdKey, [NotNull][ItemNotNull] List<VacationTimeframe> vacationTimes,
-            [NotNull][ItemNotNull] List<ModularHousehold.PersonTraitDesireEntry> traitDesires, [NotNull] string modularHouseholdName)
+        public List<CalcPersonDto> MakePersonDtos([JetBrains.Annotations.NotNull][ItemNotNull] List<ModularHouseholdPerson> persons, [JetBrains.Annotations.NotNull] HouseholdKey householdKey, [JetBrains.Annotations.NotNull][ItemNotNull] List<VacationTimeframe> vacationTimes,
+            [JetBrains.Annotations.NotNull][ItemNotNull] List<ModularHousehold.PersonTraitDesireEntry> traitDesires, [JetBrains.Annotations.NotNull] string modularHouseholdName)
         {
             List<CalcPersonDto> personDtOs = new List<CalcPersonDto>();
             foreach (ModularHouseholdPerson hhPerson in persons) {
@@ -53,8 +53,8 @@ namespace CalculationController.DtoFactories
             return personDtOs;
         }
 
-        private static void AddTraitDesiresToOnePerson([NotNull][ItemNotNull] List<ModularHousehold.PersonTraitDesireEntry> traitDesires,
-                                                       [NotNull] CalcPersonDto calcPerson)
+        private static void AddTraitDesiresToOnePerson([JetBrains.Annotations.NotNull][ItemNotNull] List<ModularHousehold.PersonTraitDesireEntry> traitDesires,
+                                                       [JetBrains.Annotations.NotNull] CalcPersonDto calcPerson)
         {
             foreach (var personTraitDesireEntry in traitDesires)
             {
@@ -108,7 +108,7 @@ namespace CalculationController.DtoFactories
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public List<DateSpan> CalculateSicknessdays(int sickDays, int averageSickDays)
         {

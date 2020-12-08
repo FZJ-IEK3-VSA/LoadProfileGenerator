@@ -46,9 +46,9 @@ using JetBrains.Annotations;
 namespace Database.Tables.BasicHouseholds {
     public class Location : DBBaseElement {
         public const string TableName = "tblLocations";
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<LocationDevice> _locDevs = new ObservableCollection<LocationDevice>();
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<LocationDevice> _locDevs = new ObservableCollection<LocationDevice>();
 
-        public Location([NotNull] string name, [CanBeNull]int? pID, [NotNull] string connectionString,
+        public Location([JetBrains.Annotations.NotNull] string name, [CanBeNull]int? pID, [JetBrains.Annotations.NotNull] string connectionString,
                         StrGuid guid) : base(name, TableName, connectionString, guid)
         {
             ID = pID;
@@ -57,10 +57,10 @@ namespace Database.Tables.BasicHouseholds {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<LocationDevice> LocationDevices => _locDevs;
 
-        public void AddDevice([NotNull] IAssignableDevice device, bool save = true)
+        public void AddDevice([JetBrains.Annotations.NotNull] IAssignableDevice device, bool save = true)
         {
             if (device.ConnectionString != ConnectionString) {
                 throw new LPGException("A device from another DB was just added!");
@@ -73,9 +73,9 @@ namespace Database.Tables.BasicHouseholds {
             _locDevs.Sort();
         }
 
-        [NotNull]
-        private static Location AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static Location AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var name = dr.GetString("Name","(no name)");
             var id = dr.GetIntFromLong("ID");
@@ -84,7 +84,7 @@ namespace Database.Tables.BasicHouseholds {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public IEnumerable<DeviceActionGroup> CollectDeviceActionGroups()
         {
             var dcs = new List<DeviceActionGroup>();
@@ -97,7 +97,7 @@ namespace Database.Tables.BasicHouseholds {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public IEnumerable<DeviceCategory> CollectDeviceCategories()
         {
             var dcs = new List<DeviceCategory>();
@@ -107,12 +107,12 @@ namespace Database.Tables.BasicHouseholds {
             return dcs;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new Location(
+        public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString) => new Location(
             FindNewName(isNameTaken, "New Location "), null, connectionString, System.Guid.NewGuid().ToStrGuid());
 
-        public void DeleteDevice([NotNull] LocationDevice ld)
+        public void DeleteDevice([JetBrains.Annotations.NotNull] LocationDevice ld)
         {
             ld.DeleteFromDB();
             _locDevs.Remove(ld);
@@ -155,9 +155,9 @@ namespace Database.Tables.BasicHouseholds {
             return used;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static Location ImportFromItem([NotNull] Location toImport,[NotNull] Simulator dstSim)
+        public static Location ImportFromItem([JetBrains.Annotations.NotNull] Location toImport,[JetBrains.Annotations.NotNull] Simulator dstSim)
         {
             var loc = new Location(toImport.Name, null, dstSim.ConnectionString, toImport.Guid);
             loc.SaveToDB();
@@ -174,7 +174,7 @@ namespace Database.Tables.BasicHouseholds {
             return loc;
         }
 
-        private static bool IsCorrectLocationDeviceParent([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectLocationDeviceParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var hd = (LocationDevice) child;
             if (parent.ID == hd.LocationID) {
@@ -191,9 +191,9 @@ namespace Database.Tables.BasicHouseholds {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<Location> result, [NotNull] string connectionString,
-            [ItemNotNull] [NotNull] ObservableCollection<RealDevice> devices, [ItemNotNull] [NotNull] ObservableCollection<DeviceCategory> deviceCategories,
-            [ItemNotNull] [NotNull] ObservableCollection<VLoadType> loadTypes, bool ignoreMissingTables)
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Location> result, [JetBrains.Annotations.NotNull] string connectionString,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<RealDevice> devices, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceCategory> deviceCategories,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<VLoadType> loadTypes, bool ignoreMissingTables)
         {
             var aic = new AllItemCollections();
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);

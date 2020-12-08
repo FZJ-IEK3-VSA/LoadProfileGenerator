@@ -14,7 +14,6 @@ using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
 using Common.Tests;
 using FluentAssertions;
-using JetBrains.Annotations;
 using Moq;
 
 using Xunit;
@@ -92,7 +91,7 @@ namespace Calculation.Tests.Transportation {
             }
         }
 
-        public CalcSiteTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public CalcSiteTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

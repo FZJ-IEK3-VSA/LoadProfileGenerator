@@ -3,27 +3,26 @@ using Automation;
 using Automation.ResultFiles;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.Loggers;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 
 namespace Common.JSON
 {
     public class TransportationRouteStatistics : IHouseholdKey
     {
-        public TransportationRouteStatistics([NotNull] HouseholdKey householdKey, [NotNull] string transportationDevice,
-                                             [NotNull] string route)
+        public TransportationRouteStatistics([JetBrains.Annotations.NotNull] HouseholdKey householdKey, [JetBrains.Annotations.NotNull] string transportationDevice,
+                                             [JetBrains.Annotations.NotNull] string route)
         {
             HouseholdKey = householdKey;
             TransportationDevice = transportationDevice;
             Route = route;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string Route { get; }
         public double TotalDistance { get; set; }
         public double TotalTimeSteps { get; set; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string TransportationDevice { get; }
         public HouseholdKey HouseholdKey { get; }
         public int NumberOfEvents { get; set; }
@@ -31,7 +30,7 @@ namespace Common.JSON
     public class TransportationRouteStatisticsLogger : DataSaverBase
     {
         private const string TableName = "TransportationRouteStatistics";
-        public TransportationRouteStatisticsLogger([NotNull] SqlResultLoggingService srls) :
+        public TransportationRouteStatisticsLogger([JetBrains.Annotations.NotNull] SqlResultLoggingService srls) :
             base(typeof(List<TransportationRouteStatistics>),
                 new ResultTableDefinition(TableName, ResultTableID.TransportationRouteStatistics, "Statistics about the transportation", CalcOption.TransportationStatistics), srls)
         {
@@ -55,8 +54,8 @@ namespace Common.JSON
         }
 
        /* [ItemNotNull]
-        [NotNull]
-        public List<ActionEntry> Read([NotNull]HouseholdKey hhkey)
+        [JetBrains.Annotations.NotNull]
+        public List<ActionEntry> Read([JetBrains.Annotations.NotNull]HouseholdKey hhkey)
         {
             var res = Srls.ReadFromJson<ActionEntry>(ResultTableDefinition, hhkey, ExpectedResultCount.OneOrMore);
             return res;

@@ -44,7 +44,7 @@ namespace Database.Tables.BasicElements {
         private TimeSpan _time;
         private double _value;
 
-        public TimeDataPoint(TimeSpan ts, double pvalue, [CanBeNull]int? pID, int profileID, [NotNull] string connectionString, StrGuid guid)
+        public TimeDataPoint(TimeSpan ts, double pvalue, [CanBeNull]int? pID, int profileID, [JetBrains.Annotations.NotNull] string connectionString, StrGuid guid)
             : base(ts.ToString(), pID, TableName, connectionString, guid) {
             TypeDescription = "Time Data Point";
             _time = ts;
@@ -52,7 +52,7 @@ namespace Database.Tables.BasicElements {
             ProfileID = profileID;
         }
 
-        public TimeDataPoint(DateTime dbtime, double pvalue, [CanBeNull]int? pID, int profileID, [NotNull] string connectionString, StrGuid guid)
+        public TimeDataPoint(DateTime dbtime, double pvalue, [CanBeNull]int? pID, int profileID, [JetBrains.Annotations.NotNull] string connectionString, StrGuid guid)
             : base(dbtime.ToString(CultureInfo.InvariantCulture),
                 pID, TableName, connectionString, guid) {
             TypeDescription = "Time Data Point";
@@ -103,15 +103,15 @@ namespace Database.Tables.BasicElements {
             return Time.CompareTo(other.Time);
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<TimeDataPoint> result, [NotNull] string connectionString,
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TimeDataPoint> result, [JetBrains.Annotations.NotNull] string connectionString,
             bool ignoreMissingTables) {
             var aic = new AllItemCollections();
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }
 
-        [NotNull]
-        private static TimeDataPoint AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic) {
+        [JetBrains.Annotations.NotNull]
+        private static TimeDataPoint AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic) {
             var datapointID = dr.GetIntFromLong("ID");
             var timeBasedProfileID = dr.GetInt("TimeBasedProfileID");
             var time = dr.GetDateTime("time");

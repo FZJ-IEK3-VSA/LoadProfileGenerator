@@ -37,25 +37,24 @@ using Automation.ResultFiles;
 using Common;
 using Common.JSON;
 using Common.SQLResultLogging;
-using JetBrains.Annotations;
 
 #endregion
 
 namespace CalculationEngine.OnlineLogging {
     public interface IThoughtsLogFile: IDisposable {
-        void WriteEntry([NotNull] ThoughtEntry entry, [NotNull] HouseholdKey householdKey);
+        void WriteEntry([JetBrains.Annotations.NotNull] ThoughtEntry entry, [JetBrains.Annotations.NotNull] HouseholdKey householdKey);
     }
 
     public class ThoughtsLogFile : LogfileBase, IThoughtsLogFile {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly FileFactoryAndTracker _fft;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly CalcParameters _calcParameters;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly Dictionary<Tuple<HouseholdKey, string>, StreamWriter> _thoughtsFiles =
             new Dictionary<Tuple<HouseholdKey, string>, StreamWriter>();
 
-        public ThoughtsLogFile([NotNull] FileFactoryAndTracker fft, [NotNull] CalcParameters calcParameters)
+        public ThoughtsLogFile([JetBrains.Annotations.NotNull] FileFactoryAndTracker fft, [JetBrains.Annotations.NotNull] CalcParameters calcParameters)
         {
             _fft = fft;
             _calcParameters = calcParameters;
@@ -85,7 +84,7 @@ namespace CalculationEngine.OnlineLogging {
             _thoughtsFiles[filekey].WriteLine(line);
         }
 
-        private void MakeNewFile([NotNull] PersonInformation pi, [NotNull] HouseholdKey householdKey) {
+        private void MakeNewFile([JetBrains.Annotations.NotNull] PersonInformation pi, [JetBrains.Annotations.NotNull] HouseholdKey householdKey) {
             var thoughts =
                 _fft.MakeFile<StreamWriter>("Thoughts." + householdKey + "." + pi.Name + ".csv",
                     "Thoughts by " + pi.Name, true, ResultFileID.ThoughtsPerPerson, householdKey, TargetDirectory.Reports,

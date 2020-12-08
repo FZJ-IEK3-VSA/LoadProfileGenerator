@@ -47,14 +47,14 @@ using LoadProfileGenerator.Views.Houses;
 namespace LoadProfileGenerator.Presenters.Houses {
     public class SettlementTemplatePresenter : PresenterBaseDBBase<SettlementTemplateView>,
         IEquatable<SettlementTemplatePresenter> {
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<House> _generatedHouses = new ObservableCollection<House>();
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<House> _generatedHouses = new ObservableCollection<House>();
 
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<Settlement> _generatedSettlements =
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<Settlement> _generatedSettlements =
             new ObservableCollection<Settlement>();
 
-        [NotNull] private readonly SettlementTemplate _template;
+        [JetBrains.Annotations.NotNull] private readonly SettlementTemplate _template;
 
-        [NotNull] private EnergyIntensityConverter.EnergyIntensityForDisplay _hhdIntensity;
+        [JetBrains.Annotations.NotNull] private EnergyIntensityConverter.EnergyIntensityForDisplay _hhdIntensity;
 
         private int _hhdMaxPersons;
         private int _hhdMinPersons;
@@ -79,8 +79,8 @@ namespace LoadProfileGenerator.Presenters.Houses {
         private TravelRouteSet _travelRouteSetSelection;
         private ChargingStationSet _chargingStationSelection;
 
-        public SettlementTemplatePresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] SettlementTemplateView view,
-                                           [NotNull] SettlementTemplate template) : base(view, "ThisTemplate.HeaderString", template, applicationPresenter)
+        public SettlementTemplatePresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] SettlementTemplateView view,
+                                           [JetBrains.Annotations.NotNull] SettlementTemplate template) : base(view, "ThisTemplate.HeaderString", template, applicationPresenter)
         {
             _hhdIntensity = new EnergyIntensityConverter.EnergyIntensityForDisplay(EnergyIntensityType.EnergyIntensive,"Energy Intensive");
             _template = template;
@@ -94,38 +94,38 @@ namespace LoadProfileGenerator.Presenters.Houses {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<TagEntry> AllTags { get; } = new ObservableCollection<TagEntry>();
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<HouseholdTrait> AllTraits { get; } = new ObservableCollection<HouseholdTrait>();
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public EnergyIntensityConverter Eic { get; } = new EnergyIntensityConverter();
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<EnergyIntensityConverter.EnergyIntensityForDisplay> EnergyIntensities => Eic.All;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<House> GeneratedHouses => _generatedHouses;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<Settlement> GeneratedSettlements => _generatedSettlements;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<GeographicLocation> GeographicLocations => Sim.GeographicLocations.Items;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public EnergyIntensityConverter.EnergyIntensityForDisplay HHDIntensity {
             get => _hhdIntensity;
             set {
@@ -171,22 +171,22 @@ namespace LoadProfileGenerator.Presenters.Houses {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<HouseholdTemplate> HouseholdTemplates => Sim.HouseholdTemplates.Items;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<ChargingStationSet> ChargingStationSets => Sim.ChargingStationSets.Items;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<TravelRouteSet> TravelRouteSets => Sim.TravelRouteSets.Items;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<TransportationDeviceSet> TransportationDeviceSets => Sim.TransportationDeviceSets.Items;
 
@@ -268,7 +268,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<HouseType> HouseTypes => Sim.HouseTypes.Items;
 
@@ -355,11 +355,11 @@ namespace LoadProfileGenerator.Presenters.Houses {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<TemperatureProfile> TemperatureProfiles => Sim.TemperatureProfiles.Items;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public SettlementTemplate ThisTemplate => _template;
 
@@ -507,7 +507,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
         public class TagEntry : INotifyPropertyChanged {
             private bool _isChecked;
 
-            public TagEntry([NotNull] HouseholdTag tag, bool isChecked)
+            public TagEntry([JetBrains.Annotations.NotNull] HouseholdTag tag, bool isChecked)
             {
                 Tag = tag;
                 IsChecked = isChecked;
@@ -524,7 +524,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
                 }
             }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public HouseholdTag Tag { get; }
 
             public event PropertyChangedEventHandler PropertyChanged;

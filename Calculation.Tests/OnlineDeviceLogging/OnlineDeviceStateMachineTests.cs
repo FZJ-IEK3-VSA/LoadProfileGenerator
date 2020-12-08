@@ -39,8 +39,6 @@ using Common.CalcDto;
 using Common.JSON;
 using Common.Tests;
 using FluentAssertions;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -48,7 +46,7 @@ using Xunit.Abstractions;
 namespace Calculation.Tests.OnlineDeviceLogging {
     public class OnlineDeviceStateMachineTests : UnitTestBaseClass
     {
-        public OnlineDeviceStateMachineTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public OnlineDeviceStateMachineTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
 

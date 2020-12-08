@@ -40,13 +40,13 @@ using LoadProfileGenerator.Views.Households;
 
 namespace LoadProfileGenerator.Presenters.Households {
     public class TraitTagPresenter : PresenterBaseDBBase<TraitTagView> {
-        [NotNull] private readonly TraitTag _thisTag;
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<UsedIn> _usedIn;
+        [JetBrains.Annotations.NotNull] private readonly TraitTag _thisTag;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<UsedIn> _usedIn;
 
         public TraitTagPresenter(
-            [NotNull] ApplicationPresenter applicationPresenter,
-            [NotNull] TraitTagView view,
-            [NotNull] TraitTag tag)
+            [JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter,
+            [JetBrains.Annotations.NotNull] TraitTagView view,
+            [JetBrains.Annotations.NotNull] TraitTag tag)
             : base(view, "ThisTag.HeaderString", tag, applicationPresenter)
         {
             _thisTag = tag;
@@ -63,15 +63,15 @@ namespace LoadProfileGenerator.Presenters.Households {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public TraitTag ThisTag => _thisTag;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public Dictionary<TraitPriority, string> TraitPriorityList => TraitPriorityHelper
             .TraitPriorityDictionaryEnumDictionaryComplete;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<UsedIn> UsedIn => _usedIn;
 

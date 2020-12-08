@@ -6,8 +6,6 @@ using Common;
 using Common.SQLResultLogging;
 using Common.Tests;
 using FluentAssertions;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -78,7 +76,7 @@ namespace ChartCreator2.Tests.Oxyplot {
                 di);
             Logger.Info("finished picture");
         }*/
-        public AffordanceEnergyUsePerPersonTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public AffordanceEnergyUsePerPersonTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

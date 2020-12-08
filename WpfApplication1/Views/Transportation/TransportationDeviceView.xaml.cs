@@ -19,10 +19,10 @@ namespace LoadProfileGenerator.Views.Transportation {
             InitializeComponent();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private TransportationDevicePresenter Presenter => (TransportationDevicePresenter) DataContext;
 
-        private void BtnAddLoad_Click([NotNull] object sender, [NotNull] RoutedEventArgs e)
+        private void BtnAddLoad_Click([JetBrains.Annotations.NotNull] object sender, [JetBrains.Annotations.NotNull] RoutedEventArgs e)
         {
             string loadStr = TxtLoadValue.Text;
             bool success = double.TryParse(loadStr, out double load);
@@ -48,7 +48,7 @@ namespace LoadProfileGenerator.Views.Transportation {
 #pragma warning restore RCS1079 // Throwing of new NotImplementedException.
         }
 
-        private void BtnRemoveLoad_Click([NotNull] object sender, [NotNull] RoutedEventArgs e)
+        private void BtnRemoveLoad_Click([JetBrains.Annotations.NotNull] object sender, [JetBrains.Annotations.NotNull] RoutedEventArgs e)
         {
             if (LstLoads.SelectedItem == null) {
                 Logger.Error("No item was selected");

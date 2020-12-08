@@ -34,8 +34,6 @@ using Common;
 using Common.JSON;
 using Common.SQLResultLogging.InputLoggers;
 using Common.Tests;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -43,7 +41,7 @@ namespace Calculation.Tests.Logfile
 {
     public class LogFileTests : UnitTestBaseClass
     {
-        public LogFileTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public LogFileTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
 

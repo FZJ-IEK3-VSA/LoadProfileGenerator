@@ -12,7 +12,7 @@ namespace Database.Tables.Houses {
         private readonly double _percentage;
         private readonly int _settlementTemplateID;
 
-        public STHouseSize([CanBeNull]int? pID, [NotNull] string connectionString, int settlementTemplateID, [NotNull] string name,
+        public STHouseSize([CanBeNull]int? pID, [JetBrains.Annotations.NotNull] string connectionString, int settlementTemplateID, [JetBrains.Annotations.NotNull] string name,
                            int minimumSize,
             int maximumSize, double percentage, StrGuid guid) : base(name, TableName, connectionString, guid)
         {
@@ -37,15 +37,15 @@ namespace Database.Tables.Houses {
 
         public double Percentage => _percentage;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string PrettyPercentage => (_percentage * 100).ToString("N2", CultureInfo.CurrentCulture) + "%";
 
         public int SettlementTemplateID => _settlementTemplateID;
 
-        [NotNull]
-        private static STHouseSize AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static STHouseSize AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var id = dr.GetIntFromLong("ID");
             var settlementtemplateID = dr.GetIntFromLong("SettlementTemplateID", false, ignoreMissingFields, -1);
@@ -66,7 +66,7 @@ namespace Database.Tables.Houses {
             return true;
         }
 
-        public static void LoadFromDatabase([NotNull] [ItemNotNull] ObservableCollection<STHouseSize> result, [NotNull] string connectionString,
+        public static void LoadFromDatabase([JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<STHouseSize> result, [JetBrains.Annotations.NotNull] string connectionString,
             bool ignoreMissingTables)
         {
             var aic = new AllItemCollections();

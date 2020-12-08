@@ -3,7 +3,6 @@ using Automation;
 using Automation.ResultFiles;
 using Common.CalcDto;
 using Common.JSON;
-using JetBrains.Annotations;
 
 
 namespace CalculationEngine.OnlineDeviceLogging {
@@ -24,11 +23,11 @@ namespace CalculationEngine.OnlineDeviceLogging {
         }
         private readonly int _hashCode;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string FullKey { get; }
         public string DeviceName { get; }
         public string LocationName { get; }
-        public OefcKey([NotNull] CalcDeviceDto dto, StrGuid loadtypeGuid)
+        public OefcKey([JetBrains.Annotations.NotNull] CalcDeviceDto dto, StrGuid loadtypeGuid)
         {
             HouseholdKey = dto.HouseholdKey;
             ThisDeviceType =dto.DeviceType;
@@ -52,12 +51,12 @@ namespace CalculationEngine.OnlineDeviceLogging {
             FullKey = MakeKey();
         }
         /*
-        public OefcKey([NotNull] HouseholdKey householdKey,
+        public OefcKey([JetBrains.Annotations.NotNull] HouseholdKey householdKey,
                        OefcDeviceType deviceType,
-                       [NotNull] string deviceGuid,
-                       [NotNull] string locationGuid,
+                       [JetBrains.Annotations.NotNull] string deviceGuid,
+                       [JetBrains.Annotations.NotNull] string locationGuid,
                        [CanBeNull] string loadtypeGuid,
-                       [NotNull] string deviceCategory)
+                       [JetBrains.Annotations.NotNull] string deviceCategory)
         {
             HouseholdKey = householdKey;
             ThisDeviceType = deviceType;
@@ -84,7 +83,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
         public override bool Equals(object obj) {
             return obj is OefcKey other && Equals(other);
         }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public  string MakeKey()
         {
             return HouseholdKey + "#" +
@@ -93,7 +92,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
                    LocationGuid + "#" +
                    LoadtypeGuid + "#" + DeviceCategory;
         }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public override string ToString()
         {
             return   FullKey;
@@ -110,13 +109,13 @@ namespace CalculationEngine.OnlineDeviceLogging {
 
         public StrGuid LoadtypeGuid { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string DeviceCategory { get; }
 
         public StrGuid LocationGuid { get; }
 
         public StrGuid DeviceGuid { get; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public HouseholdKey HouseholdKey { get; }
         public OefcDeviceType ThisDeviceType { get; }
     }

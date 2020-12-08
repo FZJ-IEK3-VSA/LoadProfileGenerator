@@ -46,26 +46,26 @@ namespace CalculationEngine {
     public sealed class CalcManager : IDisposable {
         private static bool _exitCalcFunction;
 
-        [NotNull] private readonly DayLightStatus _lightNeededArray;
+        [JetBrains.Annotations.NotNull] private readonly DayLightStatus _lightNeededArray;
 
-        //[ItemNotNull] [NotNull] private readonly List<CalcAffordanceTaggingSet> _affordanceTaggingSets;
+        //[ItemNotNull] [JetBrains.Annotations.NotNull] private readonly List<CalcAffordanceTaggingSet> _affordanceTaggingSets;
 
 
-        //[NotNull] private readonly string _name;
+        //[JetBrains.Annotations.NotNull] private readonly string _name;
 
 
         private readonly int _randomSeed;
 
-        [NotNull] private readonly string _resultPath;
+        [JetBrains.Annotations.NotNull] private readonly string _resultPath;
 
-        //[NotNull] private readonly SqlResultLoggingService _srls;
+        //[JetBrains.Annotations.NotNull] private readonly SqlResultLoggingService _srls;
 
-        [NotNull] private readonly CalcVariableRepository _variableRepository;
+        [JetBrains.Annotations.NotNull] private readonly CalcVariableRepository _variableRepository;
 
-        public CalcManager([NotNull] string resultPath,
+        public CalcManager([JetBrains.Annotations.NotNull] string resultPath,
                            int randomSeed,
-                           [NotNull] DayLightStatus lightNeededArray,
-                           [NotNull] CalcVariableRepository variableRepository,
+                           [JetBrains.Annotations.NotNull] DayLightStatus lightNeededArray,
+                           [JetBrains.Annotations.NotNull] CalcVariableRepository variableRepository,
                            CalcRepo calcRepo)
         {
             _lightNeededArray = lightNeededArray;
@@ -81,7 +81,7 @@ namespace CalculationEngine {
             CalcRepo = calcRepo;
         }
 
-        /* [NotNull]
+        /* [JetBrains.Annotations.NotNull]
          [ItemNotNull]
          public List<CalcAffordanceTaggingSet> AffordanceTaggingSets => _affordanceTaggingSets;*/
 
@@ -210,6 +210,9 @@ namespace CalculationEngine {
                     cpm.Run(_resultPath);
                     CalcRepo.Flush();
                 }
+                catch (TypeInitializationException ex) {
+                    Logger.Warning("Could not generate charts. The error message was: " + ex.Message);
+                }
                 finally {
                     CalcRepo.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Chart Processing");
                 }
@@ -275,7 +278,7 @@ namespace CalculationEngine {
             return true;
         }
 
-        public void SetCalcObject([NotNull] ICalcAbleObject calcObject)
+        public void SetCalcObject([JetBrains.Annotations.NotNull] ICalcAbleObject calcObject)
         {
             CalcObject = calcObject;
             if (calcObject == null) {
@@ -360,7 +363,7 @@ namespace CalculationEngine {
             //WriteDeviceTaggingSets();
         }
 
-        private void SaveVariableStatesIfNeeded([NotNull] TimeStep timestep)
+        private void SaveVariableStatesIfNeeded([JetBrains.Annotations.NotNull] TimeStep timestep)
         {
             if (!CalcRepo.CalcParameters.IsSet(CalcOption.VariableLogFile)) {
                 return;
@@ -373,7 +376,7 @@ namespace CalculationEngine {
             }
         }
 
-        private void WriteCalcProfilingResults([NotNull] string dstPath)
+        private void WriteCalcProfilingResults([JetBrains.Annotations.NotNull] string dstPath)
         {
             if (CalcRepo.CalcParameters.Options.Contains(CalcOption.CalculationFlameChart)) {
                 var dstfullFilename = Path.Combine(dstPath, Constants.CalculationProfilerJson);

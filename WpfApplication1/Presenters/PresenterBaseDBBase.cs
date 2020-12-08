@@ -5,20 +5,20 @@ using LoadProfileGenerator.Presenters.BasicElements;
 
 namespace LoadProfileGenerator.Presenters {
     public abstract class PresenterBaseDBBase<T> : PresenterBaseWithAppPresenter<T> where T : class {
-        [NotNull] private readonly ApplicationPresenter _applicationPresenter;
+        [JetBrains.Annotations.NotNull] private readonly ApplicationPresenter _applicationPresenter;
 
         [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
-        protected PresenterBaseDBBase([NotNull] T view, [NotNull] string tabHeaderPath, [NotNull] DBBase item,
-            [NotNull] ApplicationPresenter applicationPresenter) : base(view, tabHeaderPath, applicationPresenter) {
+        protected PresenterBaseDBBase([JetBrains.Annotations.NotNull] T view, [JetBrains.Annotations.NotNull] string tabHeaderPath, [JetBrains.Annotations.NotNull] DBBase item,
+            [JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter) : base(view, tabHeaderPath, applicationPresenter) {
             Item = item;
             _applicationPresenter = applicationPresenter;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public DBBase Item { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string ItemName => Item.TypeDescription;
 

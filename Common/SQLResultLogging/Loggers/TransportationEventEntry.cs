@@ -69,7 +69,7 @@ namespace Common.SQLResultLogging.Loggers
     /*
     public class TransportationEntry
     {
-        public TransportationEntry([NotNull] string person) => Person = person;
+        public TransportationEntry([JetBrains.Annotations.NotNull] string person) => Person = person;
 
         [UsedImplicitly]
         public CurrentActivity CurrentActivity { get; set; }
@@ -79,7 +79,7 @@ namespace Common.SQLResultLogging.Loggers
         public string Description { get; set; }
         public int IsInAffordance { get; set; }
         public int IsInTransport { get; set; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string Person { get; }
         [CanBeNull]
         public string TransportationDevice { get; set; }

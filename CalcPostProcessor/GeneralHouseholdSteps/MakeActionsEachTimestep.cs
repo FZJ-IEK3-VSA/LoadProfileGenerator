@@ -14,15 +14,15 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
 
     public class MakeActionsEachTimestep : HouseholdStepBase
     {
-        [NotNull] private readonly ICalculationProfiler _calculationProfiler;
+        [JetBrains.Annotations.NotNull] private readonly ICalculationProfiler _calculationProfiler;
 
-        [NotNull] private readonly IInputDataLogger _inputDataLogger;
+        [JetBrains.Annotations.NotNull] private readonly IInputDataLogger _inputDataLogger;
 
-        [NotNull] private readonly CalcDataRepository _repository;
+        [JetBrains.Annotations.NotNull] private readonly CalcDataRepository _repository;
 
-        public MakeActionsEachTimestep([NotNull] ICalculationProfiler calculationProfiler,
-                                [NotNull] CalcDataRepository repository,
-                                [NotNull] IInputDataLogger inputDataLogger) : base(repository,
+        public MakeActionsEachTimestep([JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler,
+                                [JetBrains.Annotations.NotNull] CalcDataRepository repository,
+                                [JetBrains.Annotations.NotNull] IInputDataLogger inputDataLogger) : base(repository,
             AutomationUtili.GetOptionList(CalcOption.ActionsEachTimestep), calculationProfiler,
             "Make Actions Each Timestep List",0)
         {
@@ -67,13 +67,13 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
 
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public override List<CalcOption> NeededOptions => new List<CalcOption>() {CalcOption.ActionEntries, CalcOption.HouseholdContents};
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         private List<SingleTimestepActionEntry> MakeTimeArray(bool displayNegativeTime,
-                                                [NotNull] [ItemNotNull] List<ActionEntry> actionsForPerson)
+                                                [JetBrains.Annotations.NotNull] [ItemNotNull] List<ActionEntry> actionsForPerson)
         {
             var calcParameters = _repository.CalcParameters;
             List<SingleTimestepActionEntry> timestepActionEntries = new List<SingleTimestepActionEntry>();
@@ -117,8 +117,8 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
             return timestepActionEntries;
         }
 
-        [NotNull]
-        private Dictionary<CalcPersonDto, List<ActionEntry>> ReadActivities([NotNull] HouseholdKey householdKey)
+        [JetBrains.Annotations.NotNull]
+        private Dictionary<CalcPersonDto, List<ActionEntry>> ReadActivities([JetBrains.Annotations.NotNull] HouseholdKey householdKey)
         {
             List<ActionEntry> actionEntries = _repository.ReadActionEntries(householdKey);
             var persons = _repository.GetPersons(householdKey);

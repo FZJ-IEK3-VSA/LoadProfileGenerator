@@ -34,7 +34,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Forms;
 using System.Windows.Input;
 using Automation;
 using Automation.ResultFiles;
@@ -86,11 +85,11 @@ namespace LoadProfileGenerator.Views.Households {
             Dispatcher.BeginInvoke(a);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private AffordancePresenter Presenter => (AffordancePresenter) DataContext;
 
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ScrollViewer ScViewer => ScrollViewer1;
 
         private void BtnAddDesireClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
@@ -227,21 +226,21 @@ namespace LoadProfileGenerator.Views.Households {
             Presenter.ImportAffordance();
         }
 
-        private void BtnPickColorClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
-        {
-            using (var cd = new ColorDialog()) {
-                var mediaColor = Presenter.ThisAffordance.CarpetPlotColor;
+        //private void BtnPickColorClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
+        //{
+        //    using (var cd = new ColorDialog()) {
+        //        var mediaColor = Presenter.ThisAffordance.CarpetPlotColor;
 
-                var c =
-                    Color.FromArgb(mediaColor.A, mediaColor.R, mediaColor.G, mediaColor.B);
-                cd.Color = c;
-                cd.ShowDialog();
-                var c2 = cd.Color;
-                var rescolor = System.Windows.Media.Color.FromArgb(c2.A, c2.R, c2.G, c2.B);
-                Presenter.ThisAffordance.CarpetPlotColor = rescolor.GetColorRGB();
-                Presenter.ThisAffordance.SaveToDB();
-            }
-        }
+        //        var c =
+        //            Color.FromArgb(mediaColor.A, mediaColor.R, mediaColor.G, mediaColor.B);
+        //        cd.Color = c;
+        //        cd.ShowDialog();
+        //        var c2 = cd.Color;
+        //        var rescolor = System.Windows.Media.Color.FromArgb(c2.A, c2.R, c2.G, c2.B);
+        //        Presenter.ThisAffordance.CarpetPlotColor = rescolor.GetColorRGB();
+        //        Presenter.ThisAffordance.SaveToDB();
+        //    }
+        //}
 
         private void BtnRefreshHouseholds_Click([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
         {

@@ -37,19 +37,19 @@ using LoadProfileGenerator.Views.SpecialViews;
 
 namespace LoadProfileGenerator.Presenters.SpecialViews {
     internal class HouseholdsWithRealDevicesPresenter : PresenterBaseWithAppPresenter<HouseholdsWithRealDevicesView> {
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<HHEntry> _selectedAffordances = new ObservableCollection<HHEntry>();
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<HHEntry> _selectedAffordances = new ObservableCollection<HHEntry>();
 
-        public HouseholdsWithRealDevicesPresenter([NotNull] ApplicationPresenter applicationPresenter,
-            [NotNull] HouseholdsWithRealDevicesView view) : base(view, "HeaderString", applicationPresenter)
+        public HouseholdsWithRealDevicesPresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter,
+            [JetBrains.Annotations.NotNull] HouseholdsWithRealDevicesView view) : base(view, "HeaderString", applicationPresenter)
         {
             Refresh();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string HeaderString => "Household Device Validation View";
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         [UsedImplicitly]
         public ObservableCollection<HHEntry> SelectedHouseholds => _selectedAffordances;
@@ -99,7 +99,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         }
 
         public class HHEntry {
-            public HHEntry([NotNull] DBBase hh, [CanBeNull] Location loc, [NotNull] IAssignableDevice device, [NotNull] string type)
+            public HHEntry([JetBrains.Annotations.NotNull] DBBase hh, [CanBeNull] Location loc, [JetBrains.Annotations.NotNull] IAssignableDevice device, [JetBrains.Annotations.NotNull] string type)
             {
                 Household = hh;
                 Location = loc;
@@ -107,12 +107,12 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                 Type = type;
             }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
             [UsedImplicitly]
             public IAssignableDevice Device { get; set; }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             [UsedImplicitly]
             public DBBase Household { get; set; }
 
@@ -121,7 +121,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             [UsedImplicitly]
             public Location Location { get; set; }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
             [UsedImplicitly]
             public string Type { get; set; }

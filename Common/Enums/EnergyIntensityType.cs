@@ -36,7 +36,7 @@ namespace Common.Enums {
     public static class EnergyIntensityHelper {
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static  Dictionary<EnergyIntensityType, string> EnergyIntensityEnumDictionaryNoSpace { get; } =
             new Dictionary<EnergyIntensityType, string> {
                 {EnergyIntensityType.EnergySaving, "EnergySaving"},
@@ -47,7 +47,7 @@ namespace Common.Enums {
             };
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static Dictionary<EnergyIntensityType, string> EnergyIntensityEnumDictionaryWithSpace { get; }=
             new Dictionary<EnergyIntensityType, string> {
                 {EnergyIntensityType.EnergySaving, "Energy Saving"},

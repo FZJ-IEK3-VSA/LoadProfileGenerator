@@ -6,7 +6,6 @@ using Automation.ResultFiles;
 using Common;
 using Database;
 using Database.Tables.ModularHouseholds;
-using JetBrains.Annotations;
 
 namespace LoadProfileGenerator {
     public static class PersonDescriptionFixer {
@@ -166,7 +165,7 @@ namespace LoadProfileGenerator {
         }*/
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        public static void FillPersonDescriptions([NotNull] Simulator sim) {
+        public static void FillPersonDescriptions([JetBrains.Annotations.NotNull] Simulator sim) {
             //int year = 365*24*60*60;
             //Dictionary<string, string> dict = GoodNames();
             //List<HouseholdTrait> missingtraits = new List<HouseholdTrait>();

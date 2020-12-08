@@ -37,18 +37,18 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
 #pragma warning disable S3897 // Classes that provide "Equals(<T>)" or override "Equals(Object)" should implement "IEquatable<T>"
     internal class AffordancesTimeLimitsPresenter : PresenterBaseWithAppPresenter<AffordancesTimeLimitView> {
 #pragma warning restore S3897 // Classes that provide "Equals(<T>)" or override "Equals(Object)" should implement "IEquatable<T>"
-        [NotNull] private readonly ApplicationPresenter _applicationPresenter;
+        [JetBrains.Annotations.NotNull] private readonly ApplicationPresenter _applicationPresenter;
 
-        public AffordancesTimeLimitsPresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] AffordancesTimeLimitView view)
+        public AffordancesTimeLimitsPresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] AffordancesTimeLimitView view)
             : base(view, "HeaderString", applicationPresenter) => _applicationPresenter = applicationPresenter;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         [UsedImplicitly]
         public ObservableCollection<Affordance> Affordances => Sim.Affordances.Items;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string HeaderString => "Time limits for all affordances";
 

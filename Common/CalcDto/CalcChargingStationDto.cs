@@ -1,22 +1,20 @@
 ﻿
-using JetBrains.Annotations;
-
 namespace Common.CalcDto {
     public class CalcChargingStationDto
     {
-        public CalcChargingStationDto([NotNull] CalcTransportationDeviceCategoryDto deviceCategory, [NotNull]CalcLoadTypeDto gridchargingLoadType, double maxChargingPower,
-                                      [NotNull] CalcLoadTypeDto carChargingLoadType)
+        public CalcChargingStationDto([JetBrains.Annotations.NotNull] CalcTransportationDeviceCategoryDto deviceCategory, [JetBrains.Annotations.NotNull]CalcLoadTypeDto gridchargingLoadType, double maxChargingPower,
+                                      [JetBrains.Annotations.NotNull] CalcLoadTypeDto carChargingLoadType)
         {
             DeviceCategory = deviceCategory;
             GridChargingLoadType = gridchargingLoadType;
             CarChargingLoadType = carChargingLoadType;
             MaxChargingPower = maxChargingPower;
         }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CalcTransportationDeviceCategoryDto DeviceCategory { get; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CalcLoadTypeDto GridChargingLoadType { get; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CalcLoadTypeDto CarChargingLoadType { get; }
         public double MaxChargingPower { get; }
     }

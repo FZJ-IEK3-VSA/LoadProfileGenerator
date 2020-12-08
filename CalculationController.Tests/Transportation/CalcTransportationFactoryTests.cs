@@ -20,15 +20,14 @@ using Common.Tests;
 using Database;
 using Database.Tests;
 using FluentAssertions;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace CalculationController.Tests.Transportation {
     public class CalcTransportationFactoryTests : UnitTestBaseClass {
-        [NotNull]
-        public CalcHouseholdDto MakeSingleFactory([NotNull] WorkingDir wd, [NotNull] DatabaseSetup db)
+        [JetBrains.Annotations.NotNull]
+        public CalcHouseholdDto MakeSingleFactory([JetBrains.Annotations.NotNull] WorkingDir wd, [JetBrains.Annotations.NotNull] DatabaseSetup db)
         {
             var builder = new ContainerBuilder();
             wd.InputDataLogger.AddSaver(new CalcPersonDtoLogger(wd.SqlResultLoggingService));
@@ -162,21 +161,21 @@ namespace CalculationController.Tests.Transportation {
         }
 
 
-        [Fact]
-        [SuppressMessage("ReSharper", "UnusedVariable")]
-        [Trait(UnitTestCategories.Category, UnitTestCategories.BasicTest)]
-        public void DuplicateDevicesFromFactoryTest()
-        {
-            var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass() + "1");
-            using var db1 = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
-            var dto1 = MakeSingleFactory(wd1, db1);
-            var devices1 = dto1.AutoDevices.Select(x => x).ToList();
-            RowCollection rc = new RowCollection("devices");
-            foreach (var device in devices1) {
-                rc.Add(XlsRowBuilder.GetAllProperties(device));
-            }
-            XlsxDumper.WriteToXlsx(wd1.Combine("devices.xlsx"),rc);
-        }
+        //[Fact]
+        //[SuppressMessage("ReSharper", "UnusedVariable")]
+        //[Trait(UnitTestCategories.Category, UnitTestCategories.BasicTest)]
+        //public void DuplicateDevicesFromFactoryTest()
+        //{
+        //    var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass() + "1");
+        //    using var db1 = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
+        //    var dto1 = MakeSingleFactory(wd1, db1);
+        //    var devices1 = dto1.AutoDevices.Select(x => x).ToList();
+        //    RowCollection rc = new RowCollection("devices");
+        //    foreach (var device in devices1) {
+        //        rc.Add(XlsRowBuilder.GetAllProperties(device));
+        //    }
+        //    XlsxDumper.WriteToXlsx(wd1.Combine("devices.xlsx"),rc);
+        //}
 
         [Fact]
         [SuppressMessage("ReSharper", "UnusedVariable")]
@@ -333,7 +332,7 @@ namespace CalculationController.Tests.Transportation {
             }
         }
 
-        public CalcTransportationFactoryTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public CalcTransportationFactoryTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

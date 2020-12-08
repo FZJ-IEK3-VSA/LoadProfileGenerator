@@ -27,7 +27,6 @@
 //-----------------------------------------------------------------------
 
 using System;
-using JetBrains.Annotations;
 
 namespace Common
 {
@@ -36,17 +35,17 @@ namespace Common
         No
     }
     public interface IMessageWindow {
-        LPGMsgBoxResult ShowYesNoMessage([NotNull] string message, [NotNull] string caption);
-        void ShowDataIntegrityMessage([NotNull] DataIntegrityException exception);
-        void ShowInfoMessage([NotNull] string message, [NotNull] string caption);
-        void ShowErrorMessage([NotNull] string message, [NotNull] string caption);
-        void ShowDebugMessage([NotNull] Exception exception);
+        LPGMsgBoxResult ShowYesNoMessage([JetBrains.Annotations.NotNull] string message, [JetBrains.Annotations.NotNull] string caption);
+        void ShowDataIntegrityMessage([JetBrains.Annotations.NotNull] DataIntegrityException exception);
+        void ShowInfoMessage([JetBrains.Annotations.NotNull] string message, [JetBrains.Annotations.NotNull] string caption);
+        void ShowErrorMessage([JetBrains.Annotations.NotNull] string message, [JetBrains.Annotations.NotNull] string caption);
+        void ShowDebugMessage([JetBrains.Annotations.NotNull] Exception exception);
     }
 
     public static class MessageWindowHandler {
         public static IMessageWindow Mw { get; set; }
 
-        public static void SetMainWindow([NotNull] IMessageWindow mainwindow)
+        public static void SetMainWindow([JetBrains.Annotations.NotNull] IMessageWindow mainwindow)
         {
             Mw = mainwindow;
         }

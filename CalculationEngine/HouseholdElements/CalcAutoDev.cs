@@ -46,20 +46,20 @@ namespace CalculationEngine.HouseholdElements {
     }
 
     public class CalcAutoDev : CalcDevice {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly CalcLocation _calcLocation;
         //private readonly double _setVariableValue;
-        [NotNull] private readonly List<CalcAutoDevProfile> _calcProfiles;
+        [JetBrains.Annotations.NotNull] private readonly List<CalcAutoDevProfile> _calcProfiles;
         private readonly double _timeStandardDeviation;
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly List<VariableRequirement> _requirements = new List<VariableRequirement>();
-        [NotNull] private TimeStep _earliestNextStart;
+        [JetBrains.Annotations.NotNull] private TimeStep _earliestNextStart;
 
-        public CalcAutoDev( [NotNull]List<CalcAutoDevProfile> pCalcProfiles,
-            [NotNull][ItemNotNull] List<CalcDeviceLoad> loads, double timeStandardDeviation,
-            [NotNull] CalcLocation calclocation,
-                           [NotNull][ItemNotNull] List<VariableRequirement> requirements, [NotNull] CalcDeviceDto autoDevDto, [NotNull] CalcRepo calcRepo)
+        public CalcAutoDev( [JetBrains.Annotations.NotNull]List<CalcAutoDevProfile> pCalcProfiles,
+            [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcDeviceLoad> loads, double timeStandardDeviation,
+            [JetBrains.Annotations.NotNull] CalcLocation calclocation,
+                           [JetBrains.Annotations.NotNull][ItemNotNull] List<VariableRequirement> requirements, [JetBrains.Annotations.NotNull] CalcDeviceDto autoDevDto, [JetBrains.Annotations.NotNull] CalcRepo calcRepo)
             : base(
                   loads, calclocation,    autoDevDto, calcRepo)
         {
@@ -73,10 +73,10 @@ namespace CalculationEngine.HouseholdElements {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string Location => _calcLocation.Name;
 
-        public void Activate([NotNull] TimeStep time)
+        public void Activate([JetBrains.Annotations.NotNull] TimeStep time)
         {
             if (time < _earliestNextStart)
             {

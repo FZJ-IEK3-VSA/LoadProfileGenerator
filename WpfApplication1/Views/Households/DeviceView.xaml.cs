@@ -54,7 +54,7 @@ namespace LoadProfileGenerator.Views.Households {
             InitializeComponent();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private DevicePresenter Presenter => (DevicePresenter) DataContext;
 
         private void BtnAddLoad_Click([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)

@@ -43,12 +43,12 @@ namespace Database.Database
     public sealed class DataReader : IDisposable
     {
         private static long _totalReads;
-        [NotNull] [ItemNotNull] private readonly SQLiteDataReader _dr;
+        [JetBrains.Annotations.NotNull] [ItemNotNull] private readonly SQLiteDataReader _dr;
 
-        public DataReader([NotNull] [ItemNotNull] SQLiteDataReader dr) => _dr = dr;
+        public DataReader([JetBrains.Annotations.NotNull] [ItemNotNull] SQLiteDataReader dr) => _dr = dr;
 
         [CanBeNull]
-        public object this[[NotNull] string colkey] => _dr[colkey];
+        public object this[[JetBrains.Annotations.NotNull] string colkey] => _dr[colkey];
 
         public static long TotalReads
         {
@@ -58,7 +58,7 @@ namespace Database.Database
 
         public void Dispose() => Close();
 
-        public bool CheckForField([NotNull] string fieldName)
+        public bool CheckForField([JetBrains.Annotations.NotNull] string fieldName)
         {
             for (var i = 0; i < _dr.FieldCount; i++)
             {
@@ -77,7 +77,7 @@ namespace Database.Database
         }
 
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "bool")]
-        public bool GetBool([NotNull] string fieldName, bool failWithException = true, bool defaultvalue = false,
+        public bool GetBool([JetBrains.Annotations.NotNull] string fieldName, bool failWithException = true, bool defaultvalue = false,
             bool ignoreMissingFields = false)
         {
             _totalReads++;
@@ -110,7 +110,7 @@ namespace Database.Database
         /// <param name="failMissingFieldWithException">fail if field is missing</param>
         /// <returns>db value</returns>
         /// <exception cref="LPGException">Field is missing.</exception>
-        public DateTime GetDateTime([NotNull] string fieldName, bool failWithException = true,[CanBeNull] DateTime? myDefaultValue = null,
+        public DateTime GetDateTime([JetBrains.Annotations.NotNull] string fieldName, bool failWithException = true,[CanBeNull] DateTime? myDefaultValue = null,
             bool checkForFieldFirst = false, bool failMissingFieldWithException = false)
         {
             _totalReads++;
@@ -141,7 +141,7 @@ namespace Database.Database
             return (DateTime)defaultvalue;
         }
 
-        public decimal GetDecimal([NotNull] string fieldName, bool failWithException = true, decimal defaultValue = 0m,
+        public decimal GetDecimal([JetBrains.Annotations.NotNull] string fieldName, bool failWithException = true, decimal defaultValue = 0m,
             bool ignoreMissingField = false)
         {
             _totalReads++;
@@ -163,7 +163,7 @@ namespace Database.Database
             return defaultValue;
         }
 
-        public double GetDouble([NotNull] string fieldName, bool failWithException = true, double defaultvalue = 0,
+        public double GetDouble([JetBrains.Annotations.NotNull] string fieldName, bool failWithException = true, double defaultvalue = 0,
             bool ignoreMissingFields = false)
         {
             _totalReads++;
@@ -186,7 +186,7 @@ namespace Database.Database
         }
 
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "int")]
-        public int GetInt([NotNull] string fieldName, bool faildirectlyWithException = true, int defaultvalue = -1,
+        public int GetInt([JetBrains.Annotations.NotNull] string fieldName, bool faildirectlyWithException = true, int defaultvalue = -1,
             bool ignoreMissingFields = false)
         {
             _totalReads++;
@@ -210,7 +210,7 @@ namespace Database.Database
 
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "int")]
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "long")]
-        public int GetIntFromLong([NotNull] string fieldName, bool faildirectlyWithException = true,
+        public int GetIntFromLong([JetBrains.Annotations.NotNull] string fieldName, bool faildirectlyWithException = true,
             bool ignoreMissingField = false, int defaultValue = 0)
         {
             var result = GetNullableIntFromLongOrInt(fieldName, faildirectlyWithException, ignoreMissingField);
@@ -233,7 +233,7 @@ namespace Database.Database
         /// <exception cref="LPGException">Condition.</exception>
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "long")]
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "int")]
-        public int GetIntFromLongOrInt([NotNull] string fieldName, bool faildirectlyWithException = true,
+        public int GetIntFromLongOrInt([JetBrains.Annotations.NotNull] string fieldName, bool faildirectlyWithException = true,
             bool ignoreMissingField = false, int defaultValue = 0)
         {
             _totalReads++;
@@ -271,7 +271,7 @@ namespace Database.Database
         /// <returns>db value</returns>
         /// <exception cref="LPGException">Condition.</exception>
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "long")]
-        public long GetLong([NotNull] string fieldName, bool failWithException = true, int defaultvalue = -1,
+        public long GetLong([JetBrains.Annotations.NotNull] string fieldName, bool failWithException = true, int defaultvalue = -1,
             bool checkForFieldFirst = false, bool failMissingFieldWithException = false)
         {
             _totalReads++;
@@ -305,7 +305,7 @@ namespace Database.Database
         /// <returns>db value</returns>
         /// <exception cref="LPGException">Condition.</exception>
         [CanBeNull]
-        private int? GetNullableInt([NotNull] string fieldName, bool faildirectlyWithException = true,
+        private int? GetNullableInt([JetBrains.Annotations.NotNull] string fieldName, bool faildirectlyWithException = true,
             bool checkForFieldFirst = false, bool failMissingFieldWithException = false)
         {
             _totalReads++;
@@ -336,7 +336,7 @@ namespace Database.Database
             return null;
         }
         [CanBeNull]
-        public int? GetNullableIntFromLong([NotNull] string fieldName, bool faildirectlyWithException = true,
+        public int? GetNullableIntFromLong([JetBrains.Annotations.NotNull] string fieldName, bool faildirectlyWithException = true,
             bool ignoreMissingField = false)
         {
             _totalReads++;
@@ -376,7 +376,7 @@ namespace Database.Database
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "long")]
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "int")]
         [CanBeNull]
-        public int? GetNullableIntFromLongOrInt([NotNull] string fieldName, bool faildirectlyWithException = true,
+        public int? GetNullableIntFromLongOrInt([JetBrains.Annotations.NotNull] string fieldName, bool faildirectlyWithException = true,
             bool ignoreMissingField = false, [CanBeNull]int? defaultvalue = null)
         {
             _totalReads++;
@@ -400,15 +400,15 @@ namespace Database.Database
             }
             throw new LPGException("Unknown type when reading field " + fieldName + ": " + _dr[fieldName].GetType());
         }
-        [NotNull]
-        public string GetString([NotNull] string fieldName,  [NotNull] string defaultvalue)
+        [JetBrains.Annotations.NotNull]
+        public string GetString([JetBrains.Annotations.NotNull] string fieldName,  [JetBrains.Annotations.NotNull] string defaultvalue)
         {
             string s = GetString(fieldName, true, defaultvalue);
             return s;
         }
 
-        [NotNull]
-        public string GetString([NotNull] string fieldName, bool failAtNullWithException = true,[NotNull] string defaultvalue = "",
+        [JetBrains.Annotations.NotNull]
+        public string GetString([JetBrains.Annotations.NotNull] string fieldName, bool failAtNullWithException = true,[JetBrains.Annotations.NotNull] string defaultvalue = "",
             bool ignoreMissingFields = false)
         {
             _totalReads++;
@@ -441,7 +441,7 @@ namespace Database.Database
         /// <param name="failMissingFieldWithException">failMissingFieldWithException</param>
         /// <returns>db value</returns>
         /// <exception cref="LPGException">Condition.</exception>
-        public TimeSpan GetTimeSpan([NotNull] string fieldName, bool failWithException = true,[CanBeNull] TimeSpan? defaultvalue = null,
+        public TimeSpan GetTimeSpan([JetBrains.Annotations.NotNull] string fieldName, bool failWithException = true,[CanBeNull] TimeSpan? defaultvalue = null,
             bool checkForFieldFirst = false, bool failMissingFieldWithException = false)
         {
             _totalReads++;

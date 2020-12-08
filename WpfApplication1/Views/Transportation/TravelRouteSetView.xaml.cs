@@ -17,7 +17,7 @@ namespace LoadProfileGenerator.Views.Transportation {
             InitializeComponent();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private TravelRouteSetPresenter Presenter => (TravelRouteSetPresenter) DataContext;
 
         private void BtnAddDeviceClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
@@ -36,17 +36,17 @@ namespace LoadProfileGenerator.Views.Transportation {
             Presenter.RefreshRoutes();
         }
 
-        private void BtnFindMissingSitesClick([NotNull] object sender, [NotNull] RoutedEventArgs e)
+        private void BtnFindMissingSitesClick([JetBrains.Annotations.NotNull] object sender, [JetBrains.Annotations.NotNull] RoutedEventArgs e)
         {
             Presenter.FindMissingRoutesAndCreateThem();
         }
 
-        private void BtnRefreshRoutes([NotNull] object sender, [NotNull] RoutedEventArgs e)
+        private void BtnRefreshRoutes([JetBrains.Annotations.NotNull] object sender, [JetBrains.Annotations.NotNull] RoutedEventArgs e)
         {
             Presenter.RefreshRoutes();
         }
 
-        private void BtnRefreshSitesClick([NotNull] object sender, [NotNull] RoutedEventArgs e)
+        private void BtnRefreshSitesClick([JetBrains.Annotations.NotNull] object sender, [JetBrains.Annotations.NotNull] RoutedEventArgs e)
         {
             Presenter.RefreshDataTable();
         }
@@ -85,7 +85,7 @@ namespace LoadProfileGenerator.Views.Transportation {
             Presenter.ApplicationPresenter.OpenItem(ui.Item);
         }
 
-        private void LstSteps_OnMouseDoubleClick([NotNull] object sender, [NotNull] MouseButtonEventArgs e)
+        private void LstSteps_OnMouseDoubleClick([JetBrains.Annotations.NotNull] object sender, [JetBrains.Annotations.NotNull] MouseButtonEventArgs e)
         {
             if (LstSteps.SelectedItem == null) {
                 return;
@@ -95,7 +95,7 @@ namespace LoadProfileGenerator.Views.Transportation {
             Presenter.ApplicationPresenter.OpenItem(entry);
         }
 
-        private void BtnFindMissingSitesForAllHouseholdsClick([NotNull] object sender, [NotNull] RoutedEventArgs e)
+        private void BtnFindMissingSitesForAllHouseholdsClick([JetBrains.Annotations.NotNull] object sender, [JetBrains.Annotations.NotNull] RoutedEventArgs e)
         {
             Presenter.FindMissingRoutesForAllHouseholds();
         }

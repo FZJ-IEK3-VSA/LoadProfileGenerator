@@ -61,8 +61,8 @@ namespace Automation.ResultFiles {
 #pragma warning restore 8618
         }
 
-        public LoadTypeInformation([NotNull] string name, [NotNull] string unitOfSum, [NotNull] string unitOfPower, double conversionFaktor,
-            bool showInCharts, [NotNull] string fileName, StrGuid guid) {
+        public LoadTypeInformation([JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] string unitOfSum, [JetBrains.Annotations.NotNull] string unitOfPower, double conversionFaktor,
+            bool showInCharts, [JetBrains.Annotations.NotNull] string fileName, StrGuid guid) {
             Name = name;
             UnitOfSum = unitOfSum;
             UnitOfPower = unitOfPower;
@@ -77,15 +77,15 @@ namespace Automation.ResultFiles {
         public double ConversionFaktor { get; set; }
 
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string? FileName { get; set; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public StrGuid? Guid { get; }
 
         // needed for xml deserialize
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string? Name { get; set; }
 
         // needed for xml deserialize
@@ -94,12 +94,12 @@ namespace Automation.ResultFiles {
 
         // needed for xml deserialize
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string? UnitOfPower { get; set; }
 
         // needed for xml deserialize
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string? UnitOfSum { get; set; }
     }
 }

@@ -14,7 +14,7 @@ namespace Database.Tables.Transportation {
         public const string TableName = "tblTransportationDeviceSets";
         [CanBeNull] private string _description;
 
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<TransportationDeviceSetEntry> _transportationDevices =
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<TransportationDeviceSetEntry> _transportationDevices =
             new ObservableCollection<TransportationDeviceSetEntry>();
         public override void SaveToDB()
         {
@@ -24,7 +24,7 @@ namespace Database.Tables.Transportation {
                 deviceSetEntry.SaveToDB();
             }
         }
-        public TransportationDeviceSet([NotNull] string name, [CanBeNull]int? pID, [NotNull] string connectionString, [CanBeNull] string description,
+        public TransportationDeviceSet([JetBrains.Annotations.NotNull] string name, [CanBeNull]int? pID, [JetBrains.Annotations.NotNull] string connectionString, [CanBeNull] string description,
             StrGuid guid
             )
             : base(name, TableName, connectionString, guid)
@@ -45,20 +45,20 @@ namespace Database.Tables.Transportation {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<TransportationDeviceSetEntry> TransportationDeviceSetEntries =>
             _transportationDevices;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new
+        public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString) => new
             TransportationDeviceSet(FindNewName(isNameTaken, "New Transportation Device Set"),
                 null, connectionString,"", System.Guid.NewGuid().ToStrGuid());
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static TransportationDeviceSet ImportFromItem([NotNull] TransportationDeviceSet toImport,
-            [NotNull] Simulator dstSim)
+        public static TransportationDeviceSet ImportFromItem([JetBrains.Annotations.NotNull] TransportationDeviceSet toImport,
+            [JetBrains.Annotations.NotNull] Simulator dstSim)
         {
             var loc = new TransportationDeviceSet(toImport.Name, null, dstSim.ConnectionString,
                 toImport.Description, toImport.Guid);
@@ -77,9 +77,9 @@ namespace Database.Tables.Transportation {
 
         [UsedImplicitly]
         //TODO: use and remove usedimplicitly
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<TransportationDeviceSet> result,
-            [NotNull] string connectionString, bool ignoreMissingTables,
-            [ItemNotNull] [NotNull] ObservableCollection<TransportationDevice> transportationDevices)
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TransportationDeviceSet> result,
+            [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingTables,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TransportationDevice> transportationDevices)
         {
             var aic = new AllItemCollections(transportationDevices: transportationDevices);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);
@@ -103,9 +103,9 @@ namespace Database.Tables.Transportation {
             }
         }
 
-        [NotNull]
-        private static TransportationDeviceSet AssignFields([NotNull] DataReader dr, [NotNull] string connectionString,
-            bool ignoreMissingFields, [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static TransportationDeviceSet AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString,
+            bool ignoreMissingFields, [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var name = dr.GetString("Name", false, "(no name)", ignoreMissingFields);
             var description = dr.GetString("Description", false, "(no description)", ignoreMissingFields);
@@ -114,7 +114,7 @@ namespace Database.Tables.Transportation {
             return new TransportationDeviceSet(name, id, connectionString, description, guid);
         }
 
-        private static bool IsCorrectTransportationDeviceSetEntryParent([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectTransportationDeviceSetEntryParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var hd = (TransportationDeviceSetEntry) child;
             if (parent.ID == hd.TransportationDeviceSetID) {
@@ -126,7 +126,7 @@ namespace Database.Tables.Transportation {
             return false;
         }
 
-        public void AddDevice([NotNull] TransportationDevice tdev)
+        public void AddDevice([JetBrains.Annotations.NotNull] TransportationDevice tdev)
         {
                 TransportationDeviceSetEntry tdse = new TransportationDeviceSetEntry(null, IntID,
                     ConnectionString, tdev.Name, tdev, System.Guid.NewGuid().ToStrGuid());
@@ -134,7 +134,7 @@ namespace Database.Tables.Transportation {
             _transportationDevices.Add(tdse);
         }
 
-        public void DeleteEntry([NotNull] TransportationDeviceSetEntry entry)
+        public void DeleteEntry([JetBrains.Annotations.NotNull] TransportationDeviceSetEntry entry)
         {
             entry.DeleteFromDB();
             _transportationDevices.Remove(entry);

@@ -44,10 +44,10 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         private const string NoFiles = "Create no files";
         private const string Onlysum = "Create no files except the sum";
         private const string OnlySumAndDevice = "Create no files except the sum and device profiles";
-        [NotNull] private readonly GeneralConfig _config;
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<string> _defaultOptions = new ObservableCollection<string>();
+        [JetBrains.Annotations.NotNull] private readonly GeneralConfig _config;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<string> _defaultOptions = new ObservableCollection<string>();
 
-        public SettingPresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] SettingsView view)
+        public SettingPresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] SettingsView view)
             : base(view, "HeaderString", applicationPresenter)
         {
             BoolValues.Add("True");
@@ -61,33 +61,33 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<string> BoolValues { get; } = new ObservableCollection<string>();
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string DatabaseString => _config.ConnectionString;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<string> DefaultOptions => _defaultOptions;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string HeaderString => "Settings";
 
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Dictionary<DeviceProfileHeaderMode, string> DeviceProfileHeaderStyles => DeviceProfileHeaderModeHelper.DeviceProfileHeaderModeDict;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<string> NotSelectedOptions { get; } = new ObservableCollection<string>();
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public Dictionary<OutputFileDefault, string> OutputFileDefaults
             => OutputFileDefaultHelper.OutputFileDefaultDictionary;
@@ -96,11 +96,11 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         public OutputFileDefault SelectedOptionDefault { get; set; }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<string> SelectedOptions { get; } = new ObservableCollection<string>();
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public GeneralConfig ThisConfig => _config;
 

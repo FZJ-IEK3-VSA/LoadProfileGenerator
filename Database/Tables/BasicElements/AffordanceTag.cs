@@ -38,7 +38,7 @@ namespace Database.Tables.BasicElements {
         private readonly int _taggingSetID;
         private ColorRGB _carpetPlotColor;
 
-        public AffordanceTag([NotNull] string name, int taggingSetID, [NotNull] string connectionString,[CanBeNull] int? pID, ColorRGB color, StrGuid guid)
+        public AffordanceTag([JetBrains.Annotations.NotNull] string name, int taggingSetID, [JetBrains.Annotations.NotNull] string connectionString,[CanBeNull] int? pID, ColorRGB color, StrGuid guid)
             : base(name, pID, TableName, connectionString,  guid)
         {
             _taggingSetID = taggingSetID;
@@ -58,7 +58,7 @@ namespace Database.Tables.BasicElements {
             }
         }
         /*
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public Brush CarpetPlotBrush => new SolidColorBrush(_carpetPlotColor);
         */
@@ -111,9 +111,9 @@ namespace Database.Tables.BasicElements {
             return string.Compare(Name, other.Name, StringComparison.Ordinal);
         }
 
-        [NotNull]
-        private static AffordanceTag AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static AffordanceTag AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var tagID = dr.GetIntFromLong("ID");
             var taggingSetID = dr.GetIntFromLong("TaggingSetID", false, ignoreMissingFields, -1);
@@ -158,7 +158,7 @@ namespace Database.Tables.BasicElements {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<AffordanceTag> result, [NotNull] string connectionString,
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<AffordanceTag> result, [JetBrains.Annotations.NotNull] string connectionString,
             bool ignoreMissingTables)
         {
             var aic = new AllItemCollections();

@@ -57,9 +57,9 @@ namespace LoadProfileGenerator.Views.BasicElements {
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public partial class TimeLimitView {
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [SuppressMessage("Microsoft.Reliability", "CA2000:Objekte verwerfen, bevor Bereich verloren geht")]
-        public static Bitmap MakeBitmapFromBitArray([ItemNotNull] [NotNull] BitArray br)
+        public static Bitmap MakeBitmapFromBitArray([ItemNotNull] [JetBrains.Annotations.NotNull] BitArray br)
         {
             var rightnow = DateTime.Now;
             var c = new GregorianCalendar(GregorianCalendarTypes.USEnglish);
@@ -108,22 +108,22 @@ namespace LoadProfileGenerator.Views.BasicElements {
             }
         }
 
-        [NotNull] private readonly object _pictureLock = new object();
+        [JetBrains.Annotations.NotNull] private readonly object _pictureLock = new object();
 
         [CanBeNull] private BitmapImage _calcImage;
 
         private int _concurrentlyRunningPreviewCount;
 
-        [NotNull] private GeographicLocation _geographicLocation;
+        [JetBrains.Annotations.NotNull] private GeographicLocation _geographicLocation;
 
         [CanBeNull] private ModularHousehold _household;
 
-        [NotNull] private TimeLimitEntry _rootEntry;
+        [JetBrains.Annotations.NotNull] private TimeLimitEntry _rootEntry;
 
         private int _rowForPermissionLine;
 
         // these are for thread safety
-        [NotNull] private TemperatureProfile _selectedTemperatureProfile;
+        [JetBrains.Annotations.NotNull] private TemperatureProfile _selectedTemperatureProfile;
 
         // this is needed because presenter is in a different thread...
         [CanBeNull] private TimeLimitEntry _timeLimitEntry;
@@ -137,7 +137,7 @@ namespace LoadProfileGenerator.Views.BasicElements {
         private TimeLimitPresenter LimitPresenter => DataContext as TimeLimitPresenter;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<PermissionLine> PermissionLines { get; } =
             new ObservableCollection<PermissionLine>();
 

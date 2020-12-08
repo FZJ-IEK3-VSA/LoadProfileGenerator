@@ -43,7 +43,7 @@ namespace Database.Helpers {
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         [SuppressMessage("ReSharper", "VirtualMemberCallInConstructor")]
-        protected BasicCategory([NotNull] string pName):base(pName) => Name = pName;
+        protected BasicCategory([JetBrains.Annotations.NotNull] string pName):base(pName) => Name = pName;
 
         [UsedImplicitly]
         public int LoadingNumber {
@@ -60,14 +60,14 @@ namespace Database.Helpers {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public abstract List<DBBase> CollectAllDBBaseItems();
 
         [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Global")]
-        public virtual bool ImportFromExistingElement([NotNull] DBBase item, [NotNull] Simulator dstSim) => throw new LPGNotImplementedException();
+        public virtual bool ImportFromExistingElement([JetBrains.Annotations.NotNull] DBBase item, [JetBrains.Annotations.NotNull] Simulator dstSim) => throw new LPGNotImplementedException();
 
         [NotifyPropertyChangedInvocator]
-        protected void OnPropertyChanged([NotNull] string propertyName) {
+        protected void OnPropertyChanged([JetBrains.Annotations.NotNull] string propertyName) {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }

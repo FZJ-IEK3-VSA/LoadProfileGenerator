@@ -41,16 +41,16 @@ using LoadProfileGenerator.Views.Households;
 
 namespace LoadProfileGenerator.Presenters.Households {
     public class DeviceTaggingSetPresenter : PresenterBaseDBBase<DeviceTaggingSetView> {
-        [NotNull] private readonly DeviceTaggingSet _deviceTaggingSet;
+        [JetBrains.Annotations.NotNull] private readonly DeviceTaggingSet _deviceTaggingSet;
 
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<StatisticsEntry> _statistics = new ObservableCollection<StatisticsEntry>();
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<StatisticsEntry> _statistics = new ObservableCollection<StatisticsEntry>();
 
-        [NotNull] private string _sortBy;
+        [JetBrains.Annotations.NotNull] private string _sortBy;
 
         /// <exception cref="Exception">A delegate callback throws an exception.</exception>
-        public DeviceTaggingSetPresenter([NotNull] ApplicationPresenter applicationPresenter,
-                                         [NotNull] DeviceTaggingSetView view,
-                                         [NotNull] DeviceTaggingSet aff) : base(view, "ThisDeviceTaggingSet.HeaderString", aff, applicationPresenter)
+        public DeviceTaggingSetPresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter,
+                                         [JetBrains.Annotations.NotNull] DeviceTaggingSetView view,
+                                         [JetBrains.Annotations.NotNull] DeviceTaggingSet aff) : base(view, "ThisDeviceTaggingSet.HeaderString", aff, applicationPresenter)
         {
             _deviceTaggingSet = aff;
             foreach (var entry in aff.Entries) {
@@ -66,21 +66,21 @@ namespace LoadProfileGenerator.Presenters.Households {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<VLoadType> AllLoadTypes => Sim.LoadTypes.Items;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<RealDevice> Devices => Sim.RealDevices.Items;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<RefStatisEntry> RefStatisEntries { get; } = new ObservableCollection<RefStatisEntry>();
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string SortBy {
             get => _sortBy;
@@ -92,24 +92,24 @@ namespace LoadProfileGenerator.Presenters.Households {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public List<string> SortByOptions { get; } = new List<string>();
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<StatisticsEntry> Statistics => _statistics;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public DeviceTaggingSet ThisDeviceTaggingSet => _deviceTaggingSet;
 
-        public void AddReferenceValue([NotNull] DeviceTag tag, int personcount, double refval, [NotNull] VLoadType loadtype)
+        public void AddReferenceValue([JetBrains.Annotations.NotNull] DeviceTag tag, int personcount, double refval, [JetBrains.Annotations.NotNull] VLoadType loadtype)
         {
             _deviceTaggingSet.AddReferenceEntry(tag, personcount, refval, loadtype);
         }
 
-        public void AddTag([NotNull] string s)
+        public void AddTag([JetBrains.Annotations.NotNull] string s)
         {
             _deviceTaggingSet.AddNewTag(s);
         }
@@ -168,7 +168,7 @@ namespace LoadProfileGenerator.Presenters.Households {
             ThisDeviceTaggingSet.ResortEntries(Comparison);
         }
 
-        private int Comparison([NotNull] DeviceTaggingEntry x, [NotNull] DeviceTaggingEntry y)
+        private int Comparison([JetBrains.Annotations.NotNull] DeviceTaggingEntry x, [JetBrains.Annotations.NotNull] DeviceTaggingEntry y)
         {
             switch (SortBy) {
                 case "By Device":
@@ -241,7 +241,7 @@ namespace LoadProfileGenerator.Presenters.Households {
         }
 
         public class StatisticsEntry {
-            public StatisticsEntry(int count, [NotNull] string name)
+            public StatisticsEntry(int count, [JetBrains.Annotations.NotNull] string name)
             {
                 Count = count;
                 Name = name;
@@ -249,7 +249,7 @@ namespace LoadProfileGenerator.Presenters.Households {
 
             public int Count { get; set; }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string Name { get; set; }
         }
     }

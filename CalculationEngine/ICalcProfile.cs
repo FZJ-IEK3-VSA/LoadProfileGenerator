@@ -26,7 +26,6 @@
 
 //-----------------------------------------------------------------------
 
-using JetBrains.Annotations;
 using System.Collections.Generic;
 using Automation;
 
@@ -34,12 +33,12 @@ namespace CalculationEngine
 {
     public interface ICalcProfile
     {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         List<double> StepValues { get; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         string Name { get; }
         double TimeFactor { get; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         string DataSource { get; }
 
         StrGuid Guid { get; }

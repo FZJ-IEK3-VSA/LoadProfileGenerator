@@ -55,7 +55,7 @@ namespace LoadProfileGenerator.Views.Houses {
             InitializeComponent();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private SettlementPresenter Presenter => (SettlementPresenter) DataContext;
 
         private void BtnAddHousehold_Click([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
@@ -141,7 +141,7 @@ namespace LoadProfileGenerator.Views.Houses {
             Presenter.ApplicationPresenter.OpenItem(shh.CalcObject);
         }
 
-        private void BtnExportJson([NotNull] object sender, [NotNull] RoutedEventArgs e)
+        private void BtnExportJson([JetBrains.Annotations.NotNull] object sender, [JetBrains.Annotations.NotNull] RoutedEventArgs e)
         {
             if (Presenter.ThisSettlement.OutputDirectory == null) {
                 Logger.Error("No output directory was selected");
@@ -156,7 +156,7 @@ namespace LoadProfileGenerator.Views.Houses {
             }
         }
 
-        private void LstSelectedOptions_MouseDoubleClick([NotNull] object sender, [NotNull] MouseButtonEventArgs e)
+        private void LstSelectedOptions_MouseDoubleClick([JetBrains.Annotations.NotNull] object sender, [JetBrains.Annotations.NotNull] MouseButtonEventArgs e)
         {
             if (LstSelected.SelectedItem == null)
             {
@@ -168,7 +168,7 @@ namespace LoadProfileGenerator.Views.Houses {
             Presenter.RemoveOption(o);
         }
 
-        private void OptionRemove_OnClick([NotNull] object sender, [NotNull] RoutedEventArgs e)
+        private void OptionRemove_OnClick([JetBrains.Annotations.NotNull] object sender, [JetBrains.Annotations.NotNull] RoutedEventArgs e)
         {
             if (LstSelected.SelectedItem == null)
             {
@@ -180,7 +180,7 @@ namespace LoadProfileGenerator.Views.Houses {
             Presenter.RemoveOption(o);
         }
 
-        private void OptionAdd_OnClick([NotNull] object sender, [NotNull] RoutedEventArgs e)
+        private void OptionAdd_OnClick([JetBrains.Annotations.NotNull] object sender, [JetBrains.Annotations.NotNull] RoutedEventArgs e)
         {
 
                 if (LstNotSelected.SelectedItem == null)
@@ -195,7 +195,7 @@ namespace LoadProfileGenerator.Views.Houses {
         }
 
 
-        private void ApplyOptionDefaultClick([NotNull] object sender, [NotNull] RoutedEventArgs e)
+        private void ApplyOptionDefaultClick([JetBrains.Annotations.NotNull] object sender, [JetBrains.Annotations.NotNull] RoutedEventArgs e)
         {
             if (CmbOptionPresets.SelectedItem == null) {
                 return;
@@ -205,7 +205,7 @@ namespace LoadProfileGenerator.Views.Houses {
             Presenter.ApplyOptionDefault(ofd.Key);
         }
 
-        private void LstNotSelectedOptions_MouseDoubleClick([NotNull] object sender, [NotNull] MouseButtonEventArgs e)
+        private void LstNotSelectedOptions_MouseDoubleClick([JetBrains.Annotations.NotNull] object sender, [JetBrains.Annotations.NotNull] MouseButtonEventArgs e)
         {
             if (LstNotSelected.SelectedItem == null)
             {
@@ -217,7 +217,7 @@ namespace LoadProfileGenerator.Views.Houses {
             Presenter.AddOption(o);
         }
 
-        private void BtnResetLoadtypeSelection([NotNull] object sender, [NotNull] RoutedEventArgs e)
+        private void BtnResetLoadtypeSelection([JetBrains.Annotations.NotNull] object sender, [JetBrains.Annotations.NotNull] RoutedEventArgs e)
         {
             Presenter.ResetLoadtypeSelection();
         }

@@ -19,20 +19,20 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
 
         private static int _statisticsRefreshCount;
 
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<ModularHouseholdTrait> _alAssignments =
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<ModularHouseholdTrait> _alAssignments =
             new ObservableCollection<ModularHouseholdTrait>();
 
-        [NotNull] private readonly HouseholdPlan _householdPlan;
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<Person> _newPersons = new ObservableCollection<Person>();
+        [JetBrains.Annotations.NotNull] private readonly HouseholdPlan _householdPlan;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<Person> _newPersons = new ObservableCollection<Person>();
 
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<StatisticsEntry>
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<StatisticsEntry>
             _statistics = new ObservableCollection<StatisticsEntry>();
 
         [CanBeNull] private Person _aLPerson;
 
         [CanBeNull] private HouseholdTrait _aLTrait;
 
-        [ItemNotNull] [NotNull] private ObservableCollection<PersonAssignments> _personAssignments =
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private ObservableCollection<PersonAssignments> _personAssignments =
             new ObservableCollection<PersonAssignments>();
 
         private CalcObjectType _selectedCalcObjectType;
@@ -41,8 +41,8 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
 
         [CanBeNull] private string _sortBy;
 
-        public HouseholdPlanPresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] HouseholdPlanView view,
-            [NotNull] HouseholdPlan householdPlan)
+        public HouseholdPlanPresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] HouseholdPlanView view,
+            [JetBrains.Annotations.NotNull] HouseholdPlan householdPlan)
             : base(view, "ThisHouseholdPlan.HeaderString", householdPlan, applicationPresenter)
         {
             SuspendStatistics = true;
@@ -92,13 +92,13 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<AffordanceTaggingSet> AffordanceTaggingSets
             => Sim.AffordanceTaggingSets.Items;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<ModularHouseholdTrait> ALAssignments => _alAssignments;
 
@@ -117,7 +117,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<Person> ALPersons { get;  } = new ObservableCollection<Person>();
 
@@ -136,16 +136,16 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<HouseholdTrait> ALTraits { get;  } = new ObservableCollection<HouseholdTrait>();
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<CalcObjectType> CalcObjectTypes { get; }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<string> ColorSchemes { get;  } = new ObservableCollection<string>();
 
@@ -165,13 +165,13 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<ModularHousehold> ModularHouseholds
             => Sim.ModularHouseholds.Items;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<PersonAssignments> PersonAssignments {
             get => _personAssignments;
@@ -243,19 +243,19 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public List<string> SortByOptions { get; } = new List<string>();
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<StatisticsEntry> Statistics => _statistics;
 
         [UsedImplicitly]
         public bool SuspendStatistics { get; set; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public HouseholdPlan ThisHouseholdPlan => _householdPlan;
 
@@ -272,7 +272,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             }
         }
 
-        public void AddTraitToModularHousehold([NotNull] HouseholdPlanEntry entry)
+        public void AddTraitToModularHousehold([JetBrains.Annotations.NotNull] HouseholdPlanEntry entry)
         {
             if (_householdPlan.CalcObject?.GetType() == typeof(ModularHousehold) && entry.SelectedTrait !=null) {
                 var chh = (ModularHousehold) _householdPlan.CalcObject;
@@ -423,7 +423,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             }
         }
 
-        public void RemoveAlTrait([NotNull] ModularHouseholdTrait ala)
+        public void RemoveAlTrait([JetBrains.Annotations.NotNull] ModularHouseholdTrait ala)
         {
             var chh = _householdPlan.CalcObject as ModularHousehold;
             chh?.DeleteTraitFromDB(ala);
@@ -434,7 +434,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             ThisHouseholdPlan.Entries.Sort(Comparison);
         }
 
-        private int Comparison([NotNull] HouseholdPlanEntry x, [NotNull] HouseholdPlanEntry y)
+        private int Comparison([JetBrains.Annotations.NotNull] HouseholdPlanEntry x, [JetBrains.Annotations.NotNull] HouseholdPlanEntry y)
         {
             if (x.Person == null)
             {

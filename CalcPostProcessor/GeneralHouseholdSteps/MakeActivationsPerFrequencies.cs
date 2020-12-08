@@ -45,14 +45,14 @@ using JetBrains.Annotations;
 namespace CalcPostProcessor.GeneralHouseholdSteps {
     internal class MakeActivationsPerFrequencies : HouseholdStepBase {
 
-        [NotNull] private readonly IInputDataLogger _dataLogger;
+        [JetBrains.Annotations.NotNull] private readonly IInputDataLogger _dataLogger;
 
-        [NotNull] private readonly IFileFactoryAndTracker _fft;
+        [JetBrains.Annotations.NotNull] private readonly IFileFactoryAndTracker _fft;
 
-        public MakeActivationsPerFrequencies([NotNull] IFileFactoryAndTracker fft,
-                                             [NotNull] CalcDataRepository repository,
-                                             [NotNull] ICalculationProfiler profiler,
-                                             [NotNull] IInputDataLogger logger) : base(repository,
+        public MakeActivationsPerFrequencies([JetBrains.Annotations.NotNull] IFileFactoryAndTracker fft,
+                                             [JetBrains.Annotations.NotNull] CalcDataRepository repository,
+                                             [JetBrains.Annotations.NotNull] ICalculationProfiler profiler,
+                                             [JetBrains.Annotations.NotNull] IInputDataLogger logger) : base(repository,
             AutomationUtili.GetOptionList(CalcOption.ActivationFrequencies),
             profiler,
             "Activation Frequency Analysis",0)
@@ -61,11 +61,11 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
             _fft = fft;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static Dictionary<string, Dictionary<string, Dictionary<string, int>>> AffordanceTaggingSetByPersonByTag { get; private set; } =
             new Dictionary<string, Dictionary<string, Dictionary<string, int>>>();
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static Dictionary<string, Dictionary<string, Dictionary<string, int>>> AffordanceTaggingSetByPersonByTagExecutioncount {
             get;
             private set;
@@ -82,12 +82,12 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
             BuildActivitiesPerMinute(entry.HHKey, Repository.AffordanceTaggingSets, Repository.GetPersons(entry.HHKey));
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public override List<CalcOption> NeededOptions => new List<CalcOption>() {CalcOption.ActionEntries, CalcOption.AffordanceTaggingSets, CalcOption.HouseholdContents};
 
-        private void BuildActivitiesPerMinute([NotNull] HouseholdKey householdKey,
-                                              [NotNull] [ItemNotNull] List<CalcAffordanceTaggingSetDto> taggingSets,
-                                              [NotNull] [ItemNotNull] List<CalcPersonDto> persons)
+        private void BuildActivitiesPerMinute([JetBrains.Annotations.NotNull] HouseholdKey householdKey,
+                                              [JetBrains.Annotations.NotNull] [ItemNotNull] List<CalcAffordanceTaggingSetDto> taggingSets,
+                                              [JetBrains.Annotations.NotNull] [ItemNotNull] List<CalcPersonDto> persons)
         {
             int timesteps;
             var calcParameters = Repository.CalcParameters;
@@ -164,9 +164,9 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
             MakeAffordanceTimeUseFile(householdKey, frequencies, taggingSets);
         }
 
-        private static void CalculateTaggingSet([NotNull] [ItemNotNull] TimeActionTuple[] times,
-                                                [NotNull] Dictionary<string, int> tagMinutesDictionary,
-                                                [NotNull] CalcAffordanceTaggingSetDto taggingSet)
+        private static void CalculateTaggingSet([JetBrains.Annotations.NotNull] [ItemNotNull] TimeActionTuple[] times,
+                                                [JetBrains.Annotations.NotNull] Dictionary<string, int> tagMinutesDictionary,
+                                                [JetBrains.Annotations.NotNull] CalcAffordanceTaggingSetDto taggingSet)
         {
             foreach (var time in times) {
                 if (time.ActionEntry == null) {
@@ -186,8 +186,8 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
             }
         }
 
-        private static void GenerateActivityFrequencies([NotNull] [ItemNotNull] TimeActionTuple[] times,
-                                                        [NotNull] Dictionary<string, Dictionary<string, int[]>> frequencies,
+        private static void GenerateActivityFrequencies([JetBrains.Annotations.NotNull] [ItemNotNull] TimeActionTuple[] times,
+                                                        [JetBrains.Annotations.NotNull] Dictionary<string, Dictionary<string, int[]>> frequencies,
                                                         KeyValuePair<string, List<ActionEntry>> person)
         {
             for (var i = 0; i < times.Length; i++) {
@@ -209,8 +209,8 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
             }
         }
 
-        private static void GenerateUsageStatistics([NotNull] [ItemNotNull] TimeActionTuple[] times,
-                                                    [NotNull] Dictionary<string, Dictionary<string, int>> categoryMinutes,
+        private static void GenerateUsageStatistics([JetBrains.Annotations.NotNull] [ItemNotNull] TimeActionTuple[] times,
+                                                    [JetBrains.Annotations.NotNull] Dictionary<string, Dictionary<string, int>> categoryMinutes,
                                                     KeyValuePair<string, List<ActionEntry>> person)
         {
             for (var i = 0; i < times.Length; i++) {
@@ -230,10 +230,10 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
             }
         }
 
-        private static void MakeActionTimeDictionary([NotNull] [ItemNotNull] TimeActionTuple[] times,
+        private static void MakeActionTimeDictionary([JetBrains.Annotations.NotNull] [ItemNotNull] TimeActionTuple[] times,
                                                      int currentActionIndex,
-                                                     [NotNull] [ItemNotNull] List<ActionEntry> entries,
-                                                     [NotNull] ActionEntry action)
+                                                     [JetBrains.Annotations.NotNull] [ItemNotNull] List<ActionEntry> entries,
+                                                     [JetBrains.Annotations.NotNull] ActionEntry action)
         {
             var currentaction = action;
             for (var i = 0; i < times.Length; i++) {
@@ -251,8 +251,8 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
             }
         }
 
-        private void MakeActivityFrequenciesFile([NotNull] HouseholdKey householdKey,
-                                                 [NotNull] Dictionary<string, Dictionary<string, int[]>> frequencies)
+        private void MakeActivityFrequenciesFile([JetBrains.Annotations.NotNull] HouseholdKey householdKey,
+                                                 [JetBrains.Annotations.NotNull] Dictionary<string, Dictionary<string, int[]>> frequencies)
         {
             var calcParameters = Repository.CalcParameters;
             if (calcParameters.IsSet(CalcOption.ActivationFrequencies)) {
@@ -288,8 +288,8 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
             }
         }
 
-        private void MakeActivityPercentageFile([NotNull] HouseholdKey householdKey,
-                                                [NotNull] Dictionary<string, Dictionary<string, int>> categoryMinutes)
+        private void MakeActivityPercentageFile([JetBrains.Annotations.NotNull] HouseholdKey householdKey,
+                                                [JetBrains.Annotations.NotNull] Dictionary<string, Dictionary<string, int>> categoryMinutes)
         {
             var calcParameters = Repository.CalcParameters;
             if (calcParameters.IsSet(CalcOption.ActivationFrequencies)) {
@@ -320,10 +320,10 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
             }
         }
 
-        private void MakeActivityTaggingSetFile([NotNull] HouseholdKey householdKey,
-                                                [NotNull] Dictionary<string, Dictionary<string, Dictionary<string, int>>> affordanceTaggingSets,
-                                                [NotNull] [ItemNotNull] List<CalcAffordanceTaggingSetDto> taggingSets,
-                                                [NotNull] [ItemNotNull] List<CalcPersonDto> persons)
+        private void MakeActivityTaggingSetFile([JetBrains.Annotations.NotNull] HouseholdKey householdKey,
+                                                [JetBrains.Annotations.NotNull] Dictionary<string, Dictionary<string, Dictionary<string, int>>> affordanceTaggingSets,
+                                                [JetBrains.Annotations.NotNull] [ItemNotNull] List<CalcAffordanceTaggingSetDto> taggingSets,
+                                                [JetBrains.Annotations.NotNull] [ItemNotNull] List<CalcPersonDto> persons)
         {
             // taggingset,Person, tag, minutes
             var calcParameters = Repository.CalcParameters;
@@ -408,9 +408,9 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
             }
         }
 
-        private void MakeAffordanceTimeUseFile([NotNull] HouseholdKey householdKey,
-                                               [NotNull] Dictionary<string, Dictionary<string, int[]>> frequencies,
-                                               [NotNull] [ItemNotNull] List<CalcAffordanceTaggingSetDto> taggingSets)
+        private void MakeAffordanceTimeUseFile([JetBrains.Annotations.NotNull] HouseholdKey householdKey,
+                                               [JetBrains.Annotations.NotNull] Dictionary<string, Dictionary<string, int[]>> frequencies,
+                                               [JetBrains.Annotations.NotNull] [ItemNotNull] List<CalcAffordanceTaggingSetDto> taggingSets)
         {
             var calcParameters = Repository.CalcParameters;
             //CSV File
@@ -499,7 +499,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
             }
         }*/
 
-        private void SetTimeDictionary([NotNull] [ItemNotNull] TimeActionTuple[] times)
+        private void SetTimeDictionary([JetBrains.Annotations.NotNull] [ItemNotNull] TimeActionTuple[] times)
         {
             var calcParameters = Repository.CalcParameters;
             if (calcParameters.ShowSettlingPeriodTime) {

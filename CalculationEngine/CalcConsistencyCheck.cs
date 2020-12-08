@@ -29,13 +29,12 @@
 using CalculationEngine.HouseholdElements;
 using Common;
 using Common.JSON;
-using JetBrains.Annotations;
 
 namespace CalculationEngine
 {
     internal static class CalcConsistencyCheck
     {
-        public static void CheckConsistency([NotNull] CalcHousehold chh, [NotNull] CalcParameters calcParameters)
+        public static void CheckConsistency([JetBrains.Annotations.NotNull] CalcHousehold chh, [JetBrains.Annotations.NotNull] CalcParameters calcParameters)
         {
             CheckTimeResolution(calcParameters);
             // check for the same device twice
@@ -79,7 +78,7 @@ namespace CalculationEngine
             }
         }
 
-        private static void CheckTimeResolution([NotNull] CalcParameters calcParameters)
+        private static void CheckTimeResolution([JetBrains.Annotations.NotNull] CalcParameters calcParameters)
         {
             int internalseconds = (int)calcParameters.InternalStepsize.TotalSeconds;
             int externalseconds = (int)calcParameters.ExternalStepsize.TotalSeconds;

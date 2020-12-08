@@ -4,14 +4,13 @@ using Common;
 using Database;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.ModularHouseholds;
-using JetBrains.Annotations;
 
 namespace CalculationController.Integrity {
     internal class HouseholdTemplateChecker : BasicChecker {
         public HouseholdTemplateChecker(bool performCleanupChecks) : base("Household Templates", performCleanupChecks) {
         }
 
-        private static void CheckClassifications([NotNull] Simulator sim) {
+        private static void CheckClassifications([JetBrains.Annotations.NotNull] Simulator sim) {
             var generalTagClassifications =
                 sim.HouseholdTags.Items.Where(x => !string.IsNullOrWhiteSpace(x.Classification))
                     .Select(x => x.Classification).Distinct().ToList();
@@ -34,7 +33,7 @@ namespace CalculationController.Integrity {
             }
         }
 
-        private void CheckGeneralTemplates([NotNull] Simulator sim) {
+        private void CheckGeneralTemplates([JetBrains.Annotations.NotNull] Simulator sim) {
             foreach (var hhg in sim.HouseholdTemplates.Items) {
                 var ages = hhg.Persons.Select(x => x.Person.Age).ToList();
                 if (ages.Count == 0) {

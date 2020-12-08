@@ -3,19 +3,18 @@ using System.Threading;
 using Automation.ResultFiles;
 using Common;
 using Database.Database;
-using JetBrains.Annotations;
 
 namespace Database.Helpers {
     public static class DatabaseVersionChecker {
-        [NotNull] private static string _dstVersion = "10.2.0.a";
+        [JetBrains.Annotations.NotNull] private static string _dstVersion = "10.2.0.a";
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static string DstVersion {
             get => _dstVersion;
             set => _dstVersion = value;
         }
 
-        public static void CheckVersion([NotNull] string connectionString) {
+        public static void CheckVersion([JetBrains.Annotations.NotNull] string connectionString) {
             string fullVersion;
             using (var con = new Connection(connectionString)) {
                 con.Open();

@@ -32,8 +32,6 @@ using Common;
 using Common.Tests;
 using Database.Helpers;
 using FluentAssertions;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -199,7 +197,7 @@ namespace Database.Tests.Helpers {
             }
         }
 
-        public CalcDegreeDaysTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public CalcDegreeDaysTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

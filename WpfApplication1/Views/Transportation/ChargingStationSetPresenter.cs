@@ -16,8 +16,8 @@ namespace LoadProfileGenerator.Views.Transportation {
 
         [CanBeNull] private Site _selectedSite;
 
-        public ChargingStationSetPresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] ChargingStationSetView view,
-                                       [NotNull] ChargingStationSet routeSet) : base(view, "ThisChargingStationSet.Name", routeSet,
+        public ChargingStationSetPresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] ChargingStationSetView view,
+                                       [JetBrains.Annotations.NotNull] ChargingStationSet routeSet) : base(view, "ThisChargingStationSet.Name", routeSet,
             applicationPresenter)
         {
             ThisChargingStationSet = routeSet;
@@ -27,18 +27,18 @@ namespace LoadProfileGenerator.Views.Transportation {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<ModularHousehold> AllHouseholds =>
             Sim.ModularHouseholds.Items;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<TravelRouteSet> AllTravelRouteSets => Sim.TravelRouteSets.Items;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<Site> RelevantSites { get; } =
             new ObservableCollection<Site>();
@@ -118,15 +118,15 @@ namespace LoadProfileGenerator.Views.Transportation {
             RelevantSites.SynchronizeWithList(filteredSites);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ChargingStationSet ThisChargingStationSet { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         [UsedImplicitly]
         public ObservableCollection<VLoadType> LoadTypes => Sim.LoadTypes.Items;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<TransportationDeviceCategory> TransportationDeviceCategories => Sim.TransportationDeviceCategories.Items;
 

@@ -5,8 +5,6 @@ using Common;
 using Common.CalcDto;
 using Common.Tests;
 using FluentAssertions;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -59,7 +57,7 @@ namespace Database.Tests.HouseholdElements
             cp.StepValues[1].Should().Be(25);
         }
 
-        public CalcProfileTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public CalcProfileTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

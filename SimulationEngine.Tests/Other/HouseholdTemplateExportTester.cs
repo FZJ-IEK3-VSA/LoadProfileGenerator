@@ -6,7 +6,6 @@ using Database;
 using Database.Tables.ModularHouseholds;
 using Database.Tests;
 using FluentAssertions;
-using JetBrains.Annotations;
 using SimulationEngineLib.Other;
 using Xunit;
 using Xunit.Abstractions;
@@ -114,7 +113,7 @@ namespace SimulationEngine.Tests.Other
             }
         }
 
-        public HouseholdTemplateExportTester([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public HouseholdTemplateExportTester([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

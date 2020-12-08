@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -23,13 +22,14 @@ using Database.Tests;
 using JetBrains.Annotations;
 using LoadProfileGenerator.Presenters.SpecialViews;
 
+#nullable enable
 #pragma warning disable 162
 
 namespace ReleaseMaker
 {
     public class CopierBase {
         //string? dstfilename = null,
-        protected static void Copy(List<string> programFiles, DirectoryInfo basePath, [NotNull] string src, [NotNull] string dst, [NotNull] string filename,  string? contentToReplace = null, string? newContent = null)
+        protected static void Copy(List<string> programFiles, DirectoryInfo basePath, [JetBrains.Annotations.NotNull] string src, [JetBrains.Annotations.NotNull] string dst, [JetBrains.Annotations.NotNull] string filename,  string? contentToReplace = null, string? newContent = null)
         {
             var dstFi = new FileInfo( Path.Combine(dst, filename));
             if (!Directory.Exists(dstFi.DirectoryName)) {
@@ -136,7 +136,7 @@ namespace ReleaseMaker
         private const bool ThrowOnMissingOutcomes = false;
         private const bool ThrowOnUnusedDesires = true;
 
-        private static void CheckForDevicesWithoutCategory([NotNull] Simulator sim)
+        private static void CheckForDevicesWithoutCategory([JetBrains.Annotations.NotNull] Simulator sim)
         {
             sim.DeviceCategories.DeviceCategoryNone.RefreshSubDevices();
             foreach (var device in sim.DeviceCategories.DeviceCategoryNone.SubDevicesWithoutRefresh)
@@ -151,7 +151,7 @@ namespace ReleaseMaker
         }
 
         [SuppressMessage("ReSharper", "RedundantLogicalConditionalExpressionOperand")]
-        private static void CheckForNewItems([NotNull] Simulator sim)
+        private static void CheckForNewItems([JetBrains.Annotations.NotNull] Simulator sim)
         {
             var unusedDesires = FindUnusedDesires(sim);
             foreach (var unusedDesire in unusedDesires)
@@ -222,7 +222,7 @@ namespace ReleaseMaker
         }
         */
         /*
-        private static void DeleteOldCalcOutcomes([NotNull] DatabaseSetup db)
+        private static void DeleteOldCalcOutcomes([JetBrains.Annotations.NotNull] DatabaseSetup db)
         {
             var sim = new Simulator(db.ConnectionString);
             var maxVersion = sim.CalculationOutcomes.It.Select(x => x.LPGVersion).Distinct()
@@ -238,7 +238,7 @@ namespace ReleaseMaker
         }
         */
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        private static void FindUnusedAffordance([NotNull] Simulator sim)
+        private static void FindUnusedAffordance([JetBrains.Annotations.NotNull] Simulator sim)
         {
             var notFoundAffordances = new List<Affordance>();
             var affordances = new List<Affordance>(sim.Affordances.Items);
@@ -300,8 +300,8 @@ namespace ReleaseMaker
         }
 
         [ItemNotNull]
-        [NotNull]
-        private static List<Desire> FindUnusedDesires([NotNull] Simulator sim)
+        [JetBrains.Annotations.NotNull]
+        private static List<Desire> FindUnusedDesires([JetBrains.Annotations.NotNull] Simulator sim)
         {
             var desires = new List<Desire>();
             // collect all household trait desires
@@ -335,46 +335,57 @@ namespace ReleaseMaker
             return unusedDesires;
         }
 
-        private static void FindUnusedDevices([NotNull] Simulator sim)
+        private static void FindUnusedDevices([JetBrains.Annotations.NotNull] Simulator sim)
         {
             var usedDevices = new List<IAssignableDevice>();
             foreach (var affordance in sim.Affordances.Items)
             {
                 foreach (var affordanceDevice in affordance.AffordanceDevices)
                 {
-                    usedDevices.Add(affordanceDevice.Device);
+                    if(affordanceDevice.Device != null) {
+                        usedDevices.Add(affordanceDevice.Device);
+                    }
                 }
             }
             foreach (var location in sim.Locations.Items)
             {
                 foreach (var locdev in location.LocationDevices)
                 {
-                    usedDevices.Add(locdev.Device);
+                    if (locdev.Device != null) {
+                        usedDevices.Add(locdev.Device);
+                    }
                 }
             }
             foreach (var action in sim.DeviceActions.Items)
             {
-                usedDevices.Add(action.Device);
+                if(action.Device !=null) {
+                    usedDevices.Add(action.Device);
+                }
             }
             foreach (var dev in sim.RealDevices.Items)
             {
-                usedDevices.Add(dev.DeviceCategory);
+                if (dev.DeviceCategory != null) {
+                    usedDevices.Add(dev.DeviceCategory);
+                }
             }
             foreach (var hht in sim.HouseholdTraits.Items)
             {
                 foreach (var autodev in hht.Autodevs)
                 {
-                    usedDevices.Add(autodev.Device);
+                    if (autodev.Device !=null) {
+                        usedDevices.Add(autodev.Device);
+                    }
                 }
             }
             var devices = new List<IAssignableDevice>();
             devices.Clear();
             foreach (var rd in sim.RealDevices.Items)
             {
-                var found = usedDevices.Contains(rd) || usedDevices.Contains(rd.DeviceCategory);
-                if (!found)
-                {
-                    devices.Add(rd);
+                if (rd.DeviceCategory != null) {
+                    var found = usedDevices.Contains(rd) || usedDevices.Contains(rd.DeviceCategory);
+                    if (!found) {
+                        devices.Add(rd);
+                    }
                 }
             }
             foreach (var dc in sim.DeviceCategories.Items)
@@ -394,7 +405,7 @@ namespace ReleaseMaker
             }
         }
 
-        private void ReleaseCheck([NotNull] string filename)
+        private void ReleaseCheck([JetBrains.Annotations.NotNull] string filename)
         {
             using (var db = new DatabaseSetup("CheckForNewLeftovers", filename))
             {
@@ -589,7 +600,7 @@ namespace ReleaseMaker
             Thread.Sleep(250);
         }
 
-        private static FileInfo MakeSetup([NotNull] string dst, [NotNull] string releaseName, List<string> programFiles)
+        private static FileInfo MakeSetup([JetBrains.Annotations.NotNull] string dst, [JetBrains.Annotations.NotNull] string releaseName, List<string> programFiles)
         {
 //make iss
             string dstFileName = dst + "\\lpgsetup.iss";
@@ -654,7 +665,7 @@ namespace ReleaseMaker
             return new FileInfo(newsetupFileName);
         }
 
-        private static FileInfo MakeZipFile([NotNull] string releaseName, [NotNull] string dst)
+        private static FileInfo MakeZipFile([JetBrains.Annotations.NotNull] string releaseName, [JetBrains.Annotations.NotNull] string dst)
         {
             using (var process = new Process()) {
                 // Configure the process using the StartInfo properties.
@@ -669,6 +680,6 @@ namespace ReleaseMaker
             return new FileInfo( Path.Combine( dst, "LPG"+releaseName + ".zip"));
         }
 
- //       public ReleaseBuilderTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper){}
+ //       public ReleaseBuilderTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper){}
     }
 }

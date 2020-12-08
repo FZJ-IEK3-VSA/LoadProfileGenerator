@@ -46,7 +46,7 @@ namespace LoadProfileGenerator.Views.Houses {
             InitializeComponent();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private EnergyStoragePresenter Presenter => (EnergyStoragePresenter) DataContext;
 
         private void BtnAddSignal_Click([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)

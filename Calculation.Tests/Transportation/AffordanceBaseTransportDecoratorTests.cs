@@ -16,7 +16,6 @@ using Common.JSON;
 using Common.SQLResultLogging.InputLoggers;
 using Common.Tests;
 using FluentAssertions;
-using JetBrains.Annotations;
 using Moq;
 using Xunit;
 using Xunit.Abstractions;
@@ -97,11 +96,11 @@ namespace Calculation.Tests.Transportation
             }
         }
 
-        [NotNull]
-        private static CalcRepo SetupFullWorkingTransportationExample([NotNull] WorkingDir wd, [NotNull] Random rnd, [NotNull] out NormalRandom nr,
-                                                                      [NotNull] out CalcLocation srcloc, [NotNull] out CalcLocation dstloc, [NotNull] out CalcSite dstSite,
-                                                                      [NotNull] out TransportationHandler transportationHandler, [NotNull] out AffordanceBaseTransportDecorator abt, [NotNull] CalcParameters calcParameters,
-                                                                      [NotNull] HouseholdKey key)
+        [JetBrains.Annotations.NotNull]
+        private static CalcRepo SetupFullWorkingTransportationExample([JetBrains.Annotations.NotNull] WorkingDir wd, [JetBrains.Annotations.NotNull] Random rnd, [JetBrains.Annotations.NotNull] out NormalRandom nr,
+                                                                      [JetBrains.Annotations.NotNull] out CalcLocation srcloc, [JetBrains.Annotations.NotNull] out CalcLocation dstloc, [JetBrains.Annotations.NotNull] out CalcSite dstSite,
+                                                                      [JetBrains.Annotations.NotNull] out TransportationHandler transportationHandler, [JetBrains.Annotations.NotNull] out AffordanceBaseTransportDecorator abt, [JetBrains.Annotations.NotNull] CalcParameters calcParameters,
+                                                                      [JetBrains.Annotations.NotNull] HouseholdKey key)
         {
             Config.IsInUnitTesting = true;
             CalcAffordance.DoubleCheckBusyArray = true;
@@ -179,7 +178,7 @@ namespace Calculation.Tests.Transportation
 
         //TODO: test for interrupting while driving
         //TODO: only interrupt at the same site
-        public AffordanceBaseTransportDecoratorTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public AffordanceBaseTransportDecoratorTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

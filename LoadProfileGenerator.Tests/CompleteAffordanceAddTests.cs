@@ -7,8 +7,6 @@ using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.ModularHouseholds;
 using Database.Tests;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -37,7 +35,7 @@ namespace LoadProfileGenerator.Tests
             }
         }
 
-        public CompleteAffordanceAddTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public CompleteAffordanceAddTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

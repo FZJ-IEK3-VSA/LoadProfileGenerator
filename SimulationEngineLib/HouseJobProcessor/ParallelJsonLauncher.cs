@@ -24,9 +24,9 @@ namespace SimulationEngineLib.HouseJobProcessor {
             public string  Status { get; set; }
         }
 
-        //[NotNull] private readonly CalculationProfiler _calculationProfiler;
-        [ItemNotNull] [NotNull] private readonly ConcurrentQueue<CalcJobQueueEntry> _calculationsToProcess = new ConcurrentQueue<CalcJobQueueEntry>();
-        [ItemNotNull] [NotNull] private readonly ConcurrentQueue<string> _foldersToArchive = new ConcurrentQueue<string>();
+        //[JetBrains.Annotations.NotNull] private readonly CalculationProfiler _calculationProfiler;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ConcurrentQueue<CalcJobQueueEntry> _calculationsToProcess = new ConcurrentQueue<CalcJobQueueEntry>();
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ConcurrentQueue<string> _foldersToArchive = new ConcurrentQueue<string>();
         [CanBeNull] public DirectoryInfo BaseDirectoryInfo { get; set; }
         private bool _continueArchiving = true;
         private bool _continueProcessing = true;
@@ -42,7 +42,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
             return coreCount;
         }
 
-        public static void LaunchParallel([NotNull] ParallelJsonLauncherOptions options)
+        public static void LaunchParallel([JetBrains.Annotations.NotNull] ParallelJsonLauncherOptions options)
         {
             Logger.LogFileIndex = "JsonParallelCalculationStarter";
             Logger.LogToFile = true;
@@ -54,7 +54,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
         }
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        private void ArchiveEverythingThread([NotNull] ParallelJsonLauncherOptions options)
+        private void ArchiveEverythingThread([JetBrains.Annotations.NotNull] ParallelJsonLauncherOptions options)
         {
             if (options.ArchiveDirectory == null || string.IsNullOrWhiteSpace(options.ArchiveDirectory)) {
                 Logger.Info("archive directory was not set, quitting archiving thread");
@@ -137,13 +137,13 @@ namespace SimulationEngineLib.HouseJobProcessor {
             }
         }
 
-        public static void CopyAll([NotNull] string source, [NotNull] string target)
+        public static void CopyAll([JetBrains.Annotations.NotNull] string source, [JetBrains.Annotations.NotNull] string target)
         {
             CopyAll(new DirectoryInfo(source), new DirectoryInfo(target));
         }
 
 
-        public static void CopyAll([NotNull] DirectoryInfo source, [NotNull] DirectoryInfo target)
+        public static void CopyAll([JetBrains.Annotations.NotNull] DirectoryInfo source, [JetBrains.Annotations.NotNull] DirectoryInfo target)
         {
             Directory.CreateDirectory(target.FullName);
 
@@ -160,7 +160,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
             }
         }
         [CanBeNull]
-        public static HouseCreationAndCalculationJob LoadFromFile([NotNull] string inputFile)
+        public static HouseCreationAndCalculationJob LoadFromFile([JetBrains.Annotations.NotNull] string inputFile)
         {
             string s = File.ReadAllText(inputFile);
             Logger.Info("Reading " + inputFile);
@@ -174,7 +174,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
             }
 
         }
-        private void FillCalculationQueue([NotNull] ParallelJsonLauncherOptions options)
+        private void FillCalculationQueue([JetBrains.Annotations.NotNull] ParallelJsonLauncherOptions options)
         {Logger.Info("Starting to look for all the json files to calculate...");
             if (options.JsonDirectory == null) {
                 throw new LPGCommandlineException("Json directory was not set.");
@@ -247,8 +247,8 @@ namespace SimulationEngineLib.HouseJobProcessor {
             }
         }
 
-        [NotNull]
-        private string GetArchiveDirectory([NotNull] DirectoryInfo outputDirectory, [NotNull] ParallelJsonLauncherOptions pjl)
+        [JetBrains.Annotations.NotNull]
+        private string GetArchiveDirectory([JetBrains.Annotations.NotNull] DirectoryInfo outputDirectory, [JetBrains.Annotations.NotNull] ParallelJsonLauncherOptions pjl)
         {
             if (BaseDirectoryInfo == null) {
                 throw new LPGException("BaseDirectory was not set.");
@@ -267,7 +267,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
             return newPath;
         }
 
-        private void LaunchParallelInternal([NotNull] ParallelJsonLauncherOptions options)
+        private void LaunchParallelInternal([JetBrains.Annotations.NotNull] ParallelJsonLauncherOptions options)
         {
             Logger.LogToFile = true;
             Logger.Info("Reading options");
@@ -306,7 +306,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
 
         private readonly List<Thread> _threads = new List<Thread>();
 
-        private void LaunchWorkerThreads([NotNull] ParallelJsonLauncherOptions options, DateTime startTime)
+        private void LaunchWorkerThreads([JetBrains.Annotations.NotNull] ParallelJsonLauncherOptions options, DateTime startTime)
         {
             _threads.Clear();
             Thread archiveThread = null;
@@ -354,7 +354,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
         }
 
         [DllImport("User32.dll", CharSet = CharSet.Unicode)]
-        private static extern bool SetWindowText(IntPtr hwnd, [NotNull] string title);
+        private static extern bool SetWindowText(IntPtr hwnd, [JetBrains.Annotations.NotNull] string title);
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         private void SingleThreadExecutor(int index)

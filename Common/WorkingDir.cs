@@ -7,19 +7,18 @@ using System.Threading;
 using Automation.ResultFiles;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
-using JetBrains.Annotations;
 
 namespace Common {
     public class WorkingDir: IDisposable {
         private int _filecount;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly string _lastDirectory;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string PreviousCurrentDir { get; }
 
         // ReSharper disable once NotNullMemberIsNotInitialized
-        public WorkingDir([NotNull] string testname, bool useRamdisk = true)
+        public WorkingDir([JetBrains.Annotations.NotNull] string testname, bool useRamdisk = true)
         {
             PreviousCurrentDir = Environment.CurrentDirectory;
             _lastDirectory= InitializeWorkingDirectory(testname, useRamdisk);
@@ -43,12 +42,12 @@ namespace Common {
             InputDataLogger = new InputDataLogger(loggers.ToArray());
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public InputDataLogger InputDataLogger { get; private set; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public SqlResultLoggingService SqlResultLoggingService { get; private  set; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string WorkingDirectory => _lastDirectory;
 
         public bool SkipCleaning {
@@ -142,12 +141,12 @@ namespace Common {
 
         }
 
-        [NotNull]
-        public string Combine([NotNull] string name) => Path.Combine(_lastDirectory, name);
+        [JetBrains.Annotations.NotNull]
+        public string Combine([JetBrains.Annotations.NotNull] string name) => Path.Combine(_lastDirectory, name);
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        [NotNull]
-        private static string InitializeWorkingDirectory([NotNull] string testname, bool useRamdisk) {
+        [JetBrains.Annotations.NotNull]
+        private static string InitializeWorkingDirectory([JetBrains.Annotations.NotNull] string testname, bool useRamdisk) {
             var baseWorkingDir = DetermineBaseWorkingDir(useRamdisk);
             var resultdir = Path.Combine(baseWorkingDir, testname);
             try {
@@ -174,7 +173,7 @@ namespace Common {
             return resultdir;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static string DetermineBaseWorkingDir(bool useRamdisk)
         {
             var myDrives = DriveInfo.GetDrives();
@@ -216,7 +215,7 @@ namespace Common {
         }
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        private void RecursiveDelete([NotNull] DirectoryInfo di) {
+        private void RecursiveDelete([JetBrains.Annotations.NotNull] DirectoryInfo di) {
             var subdirs = di.GetDirectories();
             foreach (var info in subdirs) {
                 RecursiveDelete(info);

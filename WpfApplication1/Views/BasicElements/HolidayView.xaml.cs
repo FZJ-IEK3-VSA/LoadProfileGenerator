@@ -45,7 +45,7 @@ namespace LoadProfileGenerator.Views.BasicElements {
             InitializeComponent();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private HolidayPresenter Presenter => (HolidayPresenter)DataContext;
 
         private void BtnAddDate_Click([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e) {

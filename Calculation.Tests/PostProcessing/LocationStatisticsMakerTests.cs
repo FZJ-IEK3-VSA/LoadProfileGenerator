@@ -11,8 +11,6 @@ using Common.Tests;
 using Database;
 using Database.Tests;
 using FluentAssertions;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -21,7 +19,7 @@ namespace Calculation.Tests.PostProcessing
 {
     public class LocationStatisticsMakerTests : UnitTestBaseClass
     {
-        public LocationStatisticsMakerTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public LocationStatisticsMakerTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
 

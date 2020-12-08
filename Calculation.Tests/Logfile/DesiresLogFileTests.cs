@@ -37,8 +37,6 @@ using Common;
 using Common.CalcDto;
 using Common.JSON;
 using Common.SQLResultLogging.InputLoggers;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -89,7 +87,7 @@ namespace Calculation.Tests.Logfile
             wd.CleanUp();
         }
 
-        public DesiresLogFileTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public DesiresLogFileTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

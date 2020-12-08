@@ -43,7 +43,7 @@ namespace Database.Tables.BasicElements {
         private double _wednesday;
 
         public HolidayProbabilities(int holidayID,[CanBeNull] int? pID, DayOfWeek dayOfWeek, double monday, double tuesday,
-            double wednesday, double thursday, double friday, [NotNull] string connectionString, StrGuid guid)
+            double wednesday, double thursday, double friday, [JetBrains.Annotations.NotNull] string connectionString, StrGuid guid)
             : base(dayOfWeek.ToString(), pID, TableName, connectionString, guid)
         {
             HolidayID = holidayID;
@@ -137,9 +137,9 @@ namespace Database.Tables.BasicElements {
             }
         }
 
-        [NotNull]
-        private static HolidayProbabilities AssignFields([NotNull] DataReader dr, [NotNull] string connectionString,
-            bool ignoreMissingFields, [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static HolidayProbabilities AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString,
+            bool ignoreMissingFields, [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var id = dr.GetIntFromLong("ID");
             var holidayID = dr.GetIntFromLong("HolidayID");
@@ -161,7 +161,7 @@ namespace Database.Tables.BasicElements {
             return true;
         }
 
-        public static void LoadFromDatabase([NotNull] [ItemNotNull] ObservableCollection<HolidayProbabilities> result, [NotNull] string connectionString,
+        public static void LoadFromDatabase([JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<HolidayProbabilities> result, [JetBrains.Annotations.NotNull] string connectionString,
             bool ignoreMissingTables)
         {
             var aic = new AllItemCollections();

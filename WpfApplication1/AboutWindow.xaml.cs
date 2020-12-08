@@ -28,10 +28,10 @@
 
 #region
 
+#endregion
+
 using System.Windows;
 using JetBrains.Annotations;
-
-#endregion
 
 namespace LoadProfileGenerator
 {

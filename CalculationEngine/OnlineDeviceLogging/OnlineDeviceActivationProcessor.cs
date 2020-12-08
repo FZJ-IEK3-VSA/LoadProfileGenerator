@@ -41,71 +41,71 @@ namespace CalculationEngine.OnlineDeviceLogging {
     using Common.SQLResultLogging.Loggers;
 
     public class SetToZeroEntry {
-        public SetToZeroEntry([NotNull] TimeStep startTime, [NotNull] TimeStep endTime, OefcKey key) {
+        public SetToZeroEntry([JetBrains.Annotations.NotNull] TimeStep startTime, [JetBrains.Annotations.NotNull] TimeStep endTime, OefcKey key) {
             StartTime = startTime;
             EndTime = endTime;
             Key = key;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public TimeStep EndTime { get; }
 
         public OefcKey Key { get; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public TimeStep StartTime { get; }
     }
 
     public interface IOnlineDeviceActivationProcessor
     {
-        OefcKey RegisterDevice([NotNull] CalcLoadTypeDto loadType, [NotNull] CalcDeviceDto device);
+        OefcKey RegisterDevice([JetBrains.Annotations.NotNull] CalcLoadTypeDto loadType, [JetBrains.Annotations.NotNull] CalcDeviceDto device);
 
-        void AddNewStateMachine( [NotNull] TimeStep startTimeStep,
-                                [NotNull] CalcLoadTypeDto loadType, [NotNull] string affordanceName, [NotNull] string activatorName,
+        void AddNewStateMachine( [JetBrains.Annotations.NotNull] TimeStep startTimeStep,
+                                [JetBrains.Annotations.NotNull] CalcLoadTypeDto loadType, [JetBrains.Annotations.NotNull] string affordanceName, [JetBrains.Annotations.NotNull] string activatorName,
              OefcKey oefckey, CalcDeviceDto calcDeviceDto, StepValues sv);
 
-        void AddZeroEntryForAutoDev(OefcKey zeKey,[NotNull] TimeStep starttime, int totalDuration);
+        void AddZeroEntryForAutoDev(OefcKey zeKey,[JetBrains.Annotations.NotNull] TimeStep starttime, int totalDuration);
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         OnlineEnergyFileColumns Oefc { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
-        List<OnlineEnergyFileRow> ProcessOneTimestep([NotNull] TimeStep timeStep);
+        List<OnlineEnergyFileRow> ProcessOneTimestep([JetBrains.Annotations.NotNull] TimeStep timeStep);
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         Dictionary<CalcLoadTypeDto, BinaryWriter> BinaryOutStreams { get; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         Dictionary<CalcLoadTypeDto, BinaryWriter> SumBinaryOutStreams { get; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         Dictionary<ProfileActivationEntry.ProfileActivationEntryKey, ProfileActivationEntry> ProfileEntries { get; }
     }
     public class OnlineDeviceActivationProcessor : IOnlineDeviceActivationProcessor {
         private readonly IOnlineLoggingData _old;
-        [NotNull] private readonly CalcParameters _calcParameters;
+        [JetBrains.Annotations.NotNull] private readonly CalcParameters _calcParameters;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly Dictionary<CalcLoadTypeDto, BinaryWriter> _binaryOutStreams;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly FileFactoryAndTracker _fft;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly Dictionary<CalcLoadTypeDto, int> _loadTypeDict;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly Dictionary<ProfileActivationEntry.ProfileActivationEntryKey, ProfileActivationEntry>
             _profileEntries =
                 new Dictionary<ProfileActivationEntry.ProfileActivationEntryKey, ProfileActivationEntry>();
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly Dictionary<CalcLoadTypeDto, BinaryWriter> _sumBinaryOutStreams;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly List<SetToZeroEntry> _zeroEntries = new List<SetToZeroEntry>();
 
         private readonly HashSet<StrGuid> _savedDevices = new HashSet<StrGuid>();
         //[ItemNotNull]
-        //[NotNull]
+        //[JetBrains.Annotations.NotNull]
         //private List<OnlineDeviceStateMachine> _statemachines = new List<OnlineDeviceStateMachine>();
 
-        public OnlineDeviceActivationProcessor(IOnlineLoggingData old, [NotNull] CalcParameters calcParameters, [NotNull] FileFactoryAndTracker fft)
+        public OnlineDeviceActivationProcessor(IOnlineLoggingData old, [JetBrains.Annotations.NotNull] CalcParameters calcParameters, [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft)
         {
             _old = old;
             _calcParameters = calcParameters;
@@ -124,15 +124,15 @@ namespace CalculationEngine.OnlineDeviceLogging {
         public Dictionary<ProfileActivationEntry.ProfileActivationEntryKey, ProfileActivationEntry> ProfileEntries
             => _profileEntries;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Dictionary<CalcLoadTypeDto, List<OnlineDeviceStateMachine>> StateMachinesByLoadtype => _stateMachinesByLoadtype;
 
-        [NotNull] private readonly Dictionary<CalcLoadTypeDto, List<OnlineDeviceStateMachine>> _stateMachinesByLoadtype = new Dictionary<CalcLoadTypeDto, List<OnlineDeviceStateMachine>>();
+        [JetBrains.Annotations.NotNull] private readonly Dictionary<CalcLoadTypeDto, List<OnlineDeviceStateMachine>> _stateMachinesByLoadtype = new Dictionary<CalcLoadTypeDto, List<OnlineDeviceStateMachine>>();
         public Dictionary<CalcLoadTypeDto, BinaryWriter> SumBinaryOutStreams => _sumBinaryOutStreams;
 
         public void AddNewStateMachine( TimeStep startTimeStep,
                                        CalcLoadTypeDto loadType, string affordanceName, string activatorName,
-                                             OefcKey oefckey, [NotNull] CalcDeviceDto calcDeviceDto, [NotNull] StepValues sv)
+                                             OefcKey oefckey, [JetBrains.Annotations.NotNull] CalcDeviceDto calcDeviceDto, [JetBrains.Annotations.NotNull] StepValues sv)
         {
             Oefc.IsDeviceRegistered(loadType, oefckey);
             //OefcKey oefckey = new OefcKey(householdKey, deviceType, deviceID, locationID, loadType.ID);
@@ -173,7 +173,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
             _zeroEntries.Add(stze);
         }
 
-        private static void CleanExpiredStateMachines([NotNull] TimeStep timestep,[NotNull] Dictionary<CalcLoadTypeDto, List<OnlineDeviceStateMachine>> statemachines) {
+        private static void CleanExpiredStateMachines([JetBrains.Annotations.NotNull] TimeStep timestep,[JetBrains.Annotations.NotNull] Dictionary<CalcLoadTypeDto, List<OnlineDeviceStateMachine>> statemachines) {
             // alte state machines entsorgen
             foreach (KeyValuePair<CalcLoadTypeDto, List<OnlineDeviceStateMachine>> pair in statemachines) {
                 var todelete = pair.Value.Where(x => x.IsExpired(timestep)).ToList();
@@ -183,7 +183,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
             }
         }
 
-        private void CleanZeroValueEntries([NotNull] TimeStep currentTime)
+        private void CleanZeroValueEntries([JetBrains.Annotations.NotNull] TimeStep currentTime)
         {
             TimeStep nextStep = currentTime.AddSteps(1);
             var items2Delete = _zeroEntries.Where(x => x.EndTime < nextStep).ToList();

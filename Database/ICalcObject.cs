@@ -40,30 +40,30 @@ using JetBrains.Annotations;
 namespace Database
 {
     public interface ICalcObject : IComparable {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         JsonReference GetJsonReference();
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         ObservableCollection<Person> AllPersons { get; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         string ConnectionString { get; }
         [CanBeNull] GeographicLocation DefaultGeographicLocation { get; }
         [CanBeNull] TemperatureProfile DefaultTemperatureProfile { get; }
         EnergyIntensityType EnergyIntensityType { get; }
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         List<Action<DBBase>> FunctionsToCallAfterDelete { get; }
 
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "int")]
         int IntID { get; }
 
         StrGuid Guid { get; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         string Name { get; }
         CalcObjectType CalcObjectType { get; }
         [ItemNotNull]
-        [NotNull]
-        List<VLoadType> CollectLoadTypes([ItemNotNull] [NotNull] ObservableCollection<Affordance> affordances);
+        [JetBrains.Annotations.NotNull]
+        List<VLoadType> CollectLoadTypes([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Affordance> affordances);
         TimeSpan CalculateMaximumInternalTimeResolution();
         int CalculatePersonCount();
     }

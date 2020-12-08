@@ -54,8 +54,8 @@ using JetBrains.Annotations;
 namespace Database.Tables
 {
     public static class HashSetUtility {
-        [NotNull]
-        public static HashSet<T> ToHashSet<T>([NotNull] this IEnumerable<T> list)
+        [JetBrains.Annotations.NotNull]
+        public static HashSet<T> ToHashSet<T>([JetBrains.Annotations.NotNull] this IEnumerable<T> list)
         {
             HashSet<T> mySet = new HashSet<T>();
             foreach (var item in list) {
@@ -66,7 +66,7 @@ namespace Database.Tables
     }
     public abstract class DBBase : BasicElement, INotifyPropertyChanged
     {
-        public void CheckIfAllPropertiesWereCovered<T>(List<string> checkedProperties, [NotNull] T obj)
+        public void CheckIfAllPropertiesWereCovered<T>(List<string> checkedProperties, [JetBrains.Annotations.NotNull] T obj)
         {
             var myPropertyInfos = obj.GetType().GetProperties();
             List<PropertyInfo> propertiesToSync = new List<PropertyInfo>();
@@ -107,7 +107,7 @@ namespace Database.Tables
         }
 
         public void ValidateAndUpdateValueAsNeeded(string propertyName,
-                                                   [NotNull] List<string> checkedProperties,
+                                                   [JetBrains.Annotations.NotNull] List<string> checkedProperties,
                                                    [CanBeNull] object db, [CanBeNull] object json, Action update)
         {
 
@@ -125,8 +125,8 @@ namespace Database.Tables
             checkedProperties.Add(propertyName);
         }
         [SuppressMessage("ReSharper", "InconsistentNaming")]
-        public static void SynchronizeList<T, U>([ItemNotNull] [NotNull] ObservableCollection<T> dbitems,
-                                                 [ItemNotNull] [NotNull] List<U> jsonItems, [ItemNotNull][NotNull]
+        public static void SynchronizeList<T, U>([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<T> dbitems,
+                                                 [ItemNotNull] [JetBrains.Annotations.NotNull] List<U> jsonItems, [ItemNotNull][JetBrains.Annotations.NotNull]
                                                  out List<U> itemsToCreate) where T : DBBase, IRelevantGuidProvider where U : IGuidObject
         {
             var jsonGuids = jsonItems.Select(x => x.Guid).ToHashSet();
@@ -158,8 +158,8 @@ namespace Database.Tables
             dbitems.Sort();
         }
         [SuppressMessage("ReSharper", "InconsistentNaming")]
-        public static void SynchronizeListWithCreation<Tdb, TJson>([ItemNotNull] [NotNull] ObservableCollection<Tdb> dbitems,
-                                                 [ItemNotNull] [NotNull] List<TJson> jsonItems,
+        public static void SynchronizeListWithCreation<Tdb, TJson>([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Tdb> dbitems,
+                                                 [ItemNotNull] [JetBrains.Annotations.NotNull] List<TJson> jsonItems,
                                                  Func<TJson, Simulator, Tdb> AddNewObjectFromJto, Simulator sim)
             where Tdb : DBBase,  IJSonSubElement<TJson>  where TJson : IGuidObject
         {
@@ -198,7 +198,7 @@ namespace Database.Tables
 
 
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public JsonReference GetJsonReference()
         {
             return new JsonReference(Name,Guid);
@@ -211,14 +211,14 @@ namespace Database.Tables
         [SuppressMessage("ReSharper", "MemberCanBeProtected.Global")]
         public static bool IsLoading { get; set; }
 
-        [NotNull] private readonly string _tableName;
+        [JetBrains.Annotations.NotNull] private readonly string _tableName;
 #pragma warning disable CA2235 // Mark all non-serializable fields
             [CanBeNull]
         private int? _id;
 #pragma warning restore CA2235 // Mark all non-serializable fields
         private bool _needsUpdate;
 
-        protected DBBase([NotNull]string pName, [NotNull] string tableName, [NotNull] string connectionString,StrGuid guid):base(pName)
+        protected DBBase([JetBrains.Annotations.NotNull]string pName, [JetBrains.Annotations.NotNull] string tableName, [JetBrains.Annotations.NotNull] string connectionString,StrGuid guid):base(pName)
         {
             _guid = guid;
             if(guid==null) {
@@ -230,7 +230,7 @@ namespace Database.Tables
             FunctionsToCallAfterDelete = new List<Action<DBBase>>();
         }
 
-        protected DBBase([NotNull]string pName, [CanBeNull] int? pID, [NotNull] string tableName, [NotNull] string connectionString,
+        protected DBBase([JetBrains.Annotations.NotNull]string pName, [CanBeNull] int? pID, [JetBrains.Annotations.NotNull] string tableName, [JetBrains.Annotations.NotNull] string connectionString,
                          StrGuid guid):base(pName)
         {
             _guid = guid;
@@ -245,17 +245,17 @@ namespace Database.Tables
         }
         [IgnoreForJsonSync]
         public bool AreNumbersOkInNameForIntegrityCheck { get; protected set; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [IgnoreForJsonSync]
         public string ConnectionString { get; }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
 #pragma warning disable CA2235 // Mark all non-serializable fields
         public List<Action<DBBase>> FunctionsToCallAfterDelete { get; }
 #pragma warning restore CA2235 // Mark all non-serializable fields
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string HeaderString => TypeDescription + " - " + base.Name;
 
         [CanBeNull]
@@ -309,7 +309,7 @@ namespace Database.Tables
         [UsedImplicitly]
         public static bool NeedsUpdateAllowed { get; set; } = true;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalse")]
         public virtual string PrettyName {
             get {
@@ -324,7 +324,7 @@ namespace Database.Tables
         public static bool ShowDeleteMessage { get; set; } = true;
 
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [IgnoreForJsonSync]
         public string TypeDescription { get; set; } = "ERROR";
 
@@ -335,8 +335,8 @@ namespace Database.Tables
 
         #endregion
 
-        protected static void DeleteAllForOneParent(int parentId, [NotNull] string parentFieldName, [NotNull] string tableName,
-            [NotNull] string connectionString)
+        protected static void DeleteAllForOneParent(int parentId, [JetBrains.Annotations.NotNull] string parentFieldName, [JetBrains.Annotations.NotNull] string tableName,
+            [JetBrains.Annotations.NotNull] string connectionString)
         {
             using (var con = new Connection(connectionString))
             {
@@ -355,7 +355,7 @@ namespace Database.Tables
             }
         }
 
-        protected static void DeleteByID(int id, [NotNull] string tableName, [NotNull] string connectionString)
+        protected static void DeleteByID(int id, [JetBrains.Annotations.NotNull] string tableName, [JetBrains.Annotations.NotNull] string connectionString)
         {
             using (var con = new Connection(connectionString))
             {
@@ -392,7 +392,7 @@ namespace Database.Tables
             }
         }
 
-        protected static bool DoesTableExist([NotNull] string connectionString, [NotNull] string tableName)
+        protected static bool DoesTableExist([JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.NotNull] string tableName)
         {
             using (var con = new Connection(connectionString))
             {
@@ -417,7 +417,7 @@ namespace Database.Tables
             return false;
         }
 
-        public void ExecuteInsert([NotNull]Connection con)
+        public void ExecuteInsert([JetBrains.Annotations.NotNull]Connection con)
         {
             if (ID != null)
             {
@@ -432,8 +432,8 @@ namespace Database.Tables
             NeedsUpdate = false;
         }
 
-        [NotNull]
-        public static string FindNewName([NotNull] Func<string, bool> isNameTaken, [NotNull] string basename)
+        [JetBrains.Annotations.NotNull]
+        public static string FindNewName([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string basename)
         {
             var i = 1;
             while (isNameTaken(basename + i))
@@ -444,9 +444,9 @@ namespace Database.Tables
         }
 
         [CanBeNull]
-        protected static IAssignableDevice GetAssignableDeviceFromListByName([NotNull][ItemNotNull] ObservableCollection<RealDevice> devices,
-            [NotNull][ItemNotNull] ObservableCollection<DeviceCategory> deviceCategories, [NotNull][ItemNotNull]  ObservableCollection<DeviceAction> deviceActions,
-            [NotNull][ItemNotNull] ObservableCollection<DeviceActionGroup> deviceActionGroups,[CanBeNull] IAssignableDevice oldAssignableDevice)
+        protected static IAssignableDevice GetAssignableDeviceFromListByName([JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<RealDevice> devices,
+            [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<DeviceCategory> deviceCategories, [JetBrains.Annotations.NotNull][ItemNotNull]  ObservableCollection<DeviceAction> deviceActions,
+            [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<DeviceActionGroup> deviceActionGroups,[CanBeNull] IAssignableDevice oldAssignableDevice)
         {
             if (oldAssignableDevice == null) {
                 return null;
@@ -483,9 +483,9 @@ namespace Database.Tables
 
         [CanBeNull]
         protected static ICalcObject GetICalcObjectFromList(
-            [ItemNotNull] [NotNull] ObservableCollection<ModularHousehold> modularHouseholds,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<ModularHousehold> modularHouseholds,
             [ItemNotNull] [CanBeNull] ObservableCollection<House> houses, [ItemNotNull] [CanBeNull] ObservableCollection<Settlement> settlements,
-            [NotNull] ICalcObject oldCalcObject)
+            [JetBrains.Annotations.NotNull] ICalcObject oldCalcObject)
         {
             ICalcObject iac;
             if (oldCalcObject.GetType() == typeof(ModularHousehold))
@@ -528,7 +528,7 @@ namespace Database.Tables
         /// ///
         /// <exception cref="LPGException">tried to call needs update even though it's not allowed right now</exception>
         [CanBeNull]
-        protected static T GetItemFromListByName<T>([ItemNotNull] [NotNull] ObservableCollection<T> col, [CanBeNull] string name) where T : DBBase
+        protected static T GetItemFromListByName<T>([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<T> col, [CanBeNull] string name) where T : DBBase
         {
             if (name == null)
             {
@@ -545,7 +545,7 @@ namespace Database.Tables
         }
 
         [CanBeNull]
-        protected static T GetItemFromListByJsonReference<T>([ItemNotNull] [NotNull] ObservableCollection<T> col, [CanBeNull] JsonReference reference) where T : DBBase
+        protected static T GetItemFromListByJsonReference<T>([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<T> col, [CanBeNull] JsonReference reference) where T : DBBase
         {
             if (reference == null)
             {
@@ -575,7 +575,7 @@ namespace Database.Tables
             return (int)ID;
         }
 
-        protected abstract bool IsItemLoadedCorrectly([NotNull] out string message);
+        protected abstract bool IsItemLoadedCorrectly([JetBrains.Annotations.NotNull] out string message);
 
         public override bool IsValid(string filter)
         {
@@ -590,9 +590,9 @@ namespace Database.Tables
             return false;
         }
 
-        public static LoadResults LoadAllFromDatabase<T>([ItemNotNull] [NotNull] ObservableCollection<T> result, [NotNull] string connectionString,
-            [NotNull] string pTableName, [NotNull] Func<DataReader, string, bool, AllItemCollections, T> assignFields,
-            [NotNull] AllItemCollections allItemCollections, bool ignoreMissingTables, bool sort) where T : DBBase
+        public static LoadResults LoadAllFromDatabase<T>([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<T> result, [JetBrains.Annotations.NotNull] string connectionString,
+            [JetBrains.Annotations.NotNull] string pTableName, [JetBrains.Annotations.NotNull] Func<DataReader, string, bool, AllItemCollections, T> assignFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections allItemCollections, bool ignoreMissingTables, bool sort) where T : DBBase
         {
             int prevCount = GuidCreationCount;
             if (ignoreMissingTables)
@@ -666,13 +666,13 @@ namespace Database.Tables
         }
 
         [NotifyPropertyChangedInvocator]
-        protected void OnPropertyChangedNoUpdate([NotNull] string propertyName)
+        protected void OnPropertyChangedNoUpdate([JetBrains.Annotations.NotNull] string propertyName)
         {
             PropertyChanged?.Invoke(this,
                 new PropertyChangedEventArgs(propertyName));
         }
 
-        private void SetBaseParameters([NotNull] Command cmd, bool setID)
+        private void SetBaseParameters([JetBrains.Annotations.NotNull] Command cmd, bool setID)
         {
             if(cmd.IsParameterSet("Guid"))
             {
@@ -693,10 +693,10 @@ namespace Database.Tables
             cmd.AddParameter("Guid",  Guid.StrVal);
         }
 
-        [NotNull] public static readonly HashSet<StrGuid> GuidsToSave = new HashSet<StrGuid>();
-        [NotNull] [ItemNotNull] public static readonly List<string> TypesThatMadeGuids = new List<string>();
+        [JetBrains.Annotations.NotNull] public static readonly HashSet<StrGuid> GuidsToSave = new HashSet<StrGuid>();
+        [JetBrains.Annotations.NotNull] [ItemNotNull] public static readonly List<string> TypesThatMadeGuids = new List<string>();
         public static int GuidCreationCount { get; set; }
-        public static StrGuid GetGuid([NotNull] DataReader dr, bool ignoreMissingFields)
+        public static StrGuid GetGuid([JetBrains.Annotations.NotNull] DataReader dr, bool ignoreMissingFields)
         {
             var oldguid = dr.GetString("Guid", false, "", ignoreMissingFields);
             if (string.IsNullOrWhiteSpace(oldguid))
@@ -714,7 +714,7 @@ namespace Database.Tables
             return StrGuid.FromString(oldguid);
         }
 
-        public virtual void SaveToDB([NotNull] Connection con)
+        public virtual void SaveToDB([JetBrains.Annotations.NotNull] Connection con)
         {
             if (ID != null)
             {
@@ -763,10 +763,10 @@ namespace Database.Tables
             }
         }
 
-        protected abstract void SetSqlParameters([NotNull] Command cmd);
+        protected abstract void SetSqlParameters([JetBrains.Annotations.NotNull] Command cmd);
 
-        protected static void SetSubitems([ItemNotNull] [NotNull] List<DBBase> parents, [ItemNotNull] [NotNull] List<DBBase> children,
-            [NotNull] Func<DBBase, DBBase, bool> isCorrectParent, bool doNotdeleteFromDB)
+        protected static void SetSubitems([ItemNotNull] [JetBrains.Annotations.NotNull] List<DBBase> parents, [ItemNotNull] [JetBrains.Annotations.NotNull] List<DBBase> children,
+            [JetBrains.Annotations.NotNull] Func<DBBase, DBBase, bool> isCorrectParent, bool doNotdeleteFromDB)
         {
             foreach (var child in children)
             {

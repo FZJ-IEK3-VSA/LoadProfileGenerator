@@ -46,49 +46,49 @@ namespace CalculationEngine.HouseholdElements {
     [SuppressMessage("ReSharper", "ConvertToAutoProperty")]
     public class CalcAffordance : CalcAffordanceBase {
 
-        [NotNull] private readonly CalcProfile _personProfile;
+        [JetBrains.Annotations.NotNull] private readonly CalcProfile _personProfile;
 
-        [NotNull] private readonly Dictionary<int, double> _probabilitiesForTimes = new Dictionary<int, double>();
+        [JetBrains.Annotations.NotNull] private readonly Dictionary<int, double> _probabilitiesForTimes = new Dictionary<int, double>();
 
-        [NotNull] private readonly Dictionary<int, double> _timeFactorsForTimes = new Dictionary<int, double>();
+        [JetBrains.Annotations.NotNull] private readonly Dictionary<int, double> _timeFactorsForTimes = new Dictionary<int, double>();
 
         private readonly double _timeStandardDeviation;
 
-        [ItemNotNull] [NotNull] private readonly List<CalcAffordanceVariableOp> _variableOps;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly List<CalcAffordanceVariableOp> _variableOps;
 
-        [NotNull] private readonly CalcVariableRepository _variableRepository;
+        [JetBrains.Annotations.NotNull] private readonly CalcVariableRepository _variableRepository;
 
-        [ItemNotNull] [NotNull] private readonly List<VariableRequirement> _variableRequirements;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly List<VariableRequirement> _variableRequirements;
 
         private TimeStep? _endTimeStep;
         private TimeStep? _startTimeStep;
 
-        public CalcAffordance([NotNull] string pName,
-                              [NotNull] CalcProfile personProfile,
-                              [NotNull] CalcLocation loc,
+        public CalcAffordance([JetBrains.Annotations.NotNull] string pName,
+                              [JetBrains.Annotations.NotNull] CalcProfile personProfile,
+                              [JetBrains.Annotations.NotNull] CalcLocation loc,
                               bool randomEffect,
-                              [NotNull] [ItemNotNull] List<CalcDesire> satisfactionvalues,
+                              [JetBrains.Annotations.NotNull] [ItemNotNull] List<CalcDesire> satisfactionvalues,
                               int miniumAge,
                               int maximumAge,
                               PermittedGender permittedGender,
                               bool needsLight,
                               double timeStandardDeviation,
                               ColorRGB affordanceColor,
-                              [NotNull] string pAffCategory,
+                              [JetBrains.Annotations.NotNull] string pAffCategory,
                               bool isInterruptable,
                               bool isInterrupting,
-                              [NotNull] [ItemNotNull] List<CalcAffordanceVariableOp> variableOps,
-                              [NotNull] [ItemNotNull] List<VariableRequirement> variableRequirements,
+                              [JetBrains.Annotations.NotNull] [ItemNotNull] List<CalcAffordanceVariableOp> variableOps,
+                              [JetBrains.Annotations.NotNull] [ItemNotNull] List<VariableRequirement> variableRequirements,
                               ActionAfterInterruption actionAfterInterruption,
-                              [NotNull] string timeLimitName,
+                              [JetBrains.Annotations.NotNull] string timeLimitName,
                               int weight,
                               bool requireAllDesires,
-                              [NotNull] string srcTrait,
+                              [JetBrains.Annotations.NotNull] string srcTrait,
                               StrGuid guid,
-                              [NotNull] CalcVariableRepository variableRepository,
-                              [NotNull] [ItemNotNull] List<DeviceEnergyProfileTuple> energyprofiles,
-                              [ItemNotNull] [NotNull] BitArray isBusy, BodilyActivityLevel bodilyActivityLevel,
-                              [NotNull] CalcRepo calcRepo) : base(pName,
+                              [JetBrains.Annotations.NotNull] CalcVariableRepository variableRepository,
+                              [JetBrains.Annotations.NotNull] [ItemNotNull] List<DeviceEnergyProfileTuple> energyprofiles,
+                              [ItemNotNull] [JetBrains.Annotations.NotNull] BitArray isBusy, BodilyActivityLevel bodilyActivityLevel,
+                              [JetBrains.Annotations.NotNull] CalcRepo calcRepo) : base(pName,
             loc,
             satisfactionvalues,
             miniumAge,
@@ -129,7 +129,7 @@ namespace CalculationEngine.HouseholdElements {
         public override int DefaultPersonProfileLength => _personProfile.StepValues.Count;
         public static bool DoubleCheckBusyArray { get; set; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public override List<DeviceEnergyProfileTuple> Energyprofiles { get; }
 
         public override string SourceTrait { get; }
@@ -137,7 +137,7 @@ namespace CalculationEngine.HouseholdElements {
         // public int PersonProfileDuration => _personProfile.StepValues.Count;
         public override List<CalcSubAffordance> SubAffordances { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public override string TimeLimitName { get; }
 
         public override void Activate(TimeStep startTime,
@@ -211,9 +211,9 @@ namespace CalculationEngine.HouseholdElements {
             //return tf ;
         }
 
-        public void AddDeviceTuple([NotNull] CalcDevice dev,
-                                   [NotNull] CalcProfile newprof,
-                                   [NotNull] CalcLoadType lt,
+        public void AddDeviceTuple([JetBrains.Annotations.NotNull] CalcDevice dev,
+                                   [JetBrains.Annotations.NotNull] CalcProfile newprof,
+                                   [JetBrains.Annotations.NotNull] CalcLoadType lt,
                                    decimal timeoffset,
                                    TimeSpan internalstepsize,
                                    double multiplier,
@@ -336,7 +336,7 @@ namespace CalculationEngine.HouseholdElements {
 
         public override string ToString() => "Affordance:" + Name;
 
-        private int HasBeenActiveFor([NotNull] TimeStep currentTime)
+        private int HasBeenActiveFor([JetBrains.Annotations.NotNull] TimeStep currentTime)
         {
             if (currentTime < _startTimeStep) {
                 return -1;
@@ -354,7 +354,7 @@ namespace CalculationEngine.HouseholdElements {
             return hasbeenactive;
         }
 
-        private int RemainingActiveTime([NotNull] TimeStep currentTime)
+        private int RemainingActiveTime([JetBrains.Annotations.NotNull] TimeStep currentTime)
         {
             if (currentTime == null) {
                 throw new ArgumentNullException(nameof(currentTime));
@@ -379,13 +379,13 @@ namespace CalculationEngine.HouseholdElements {
         #region Nested type: DeviceEnergyProfileTuple
 
         public class DeviceEnergyProfileTuple {
-            [NotNull] private readonly CalcDevice _calcDevice;
+            [JetBrains.Annotations.NotNull] private readonly CalcDevice _calcDevice;
 
             private readonly double _multiplier;
 
-            public DeviceEnergyProfileTuple([NotNull] CalcDevice pdev,
-                                            [NotNull] CalcProfile ep,
-                                            [NotNull] CalcLoadType pLoadType,
+            public DeviceEnergyProfileTuple([JetBrains.Annotations.NotNull] CalcDevice pdev,
+                                            [JetBrains.Annotations.NotNull] CalcProfile ep,
+                                            [JetBrains.Annotations.NotNull] CalcLoadType pLoadType,
                                             decimal timeOffset,
                                             TimeSpan stepsize,
                                             double multiplier,
@@ -401,10 +401,10 @@ namespace CalculationEngine.HouseholdElements {
                 Probability = probability;
             }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public CalcDevice CalcDevice => _calcDevice;
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public CalcLoadType LoadType { get; }
 
             public double Multiplier => _multiplier;
@@ -416,10 +416,10 @@ namespace CalculationEngine.HouseholdElements {
             [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "InSteps")]
             public int TimeOffsetInSteps { get; }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public CalcProfile TimeProfile { get; }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public override string ToString() => "Device:" + _calcDevice.Name + ", Profile " + TimeProfile.Name + ", Offset " + TimeOffset;
         }
 

@@ -44,12 +44,12 @@ using LoadProfileGenerator.Views.BasicElements;
 
 namespace LoadProfileGenerator.Presenters.BasicElements {
     public class TimeProfilePresenter : PresenterBaseDBBase<TimeProfileView> {
-        [NotNull] private readonly CSVImporter _csvImporter;
-        [NotNull] private readonly TimeBasedProfile _tp;
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<UsedIn> _usedIns;
+        [JetBrains.Annotations.NotNull] private readonly CSVImporter _csvImporter;
+        [JetBrains.Annotations.NotNull] private readonly TimeBasedProfile _tp;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<UsedIn> _usedIns;
 
-        public TimeProfilePresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] TimeProfileView view,
-            [NotNull] TimeBasedProfile tp)
+        public TimeProfilePresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] TimeProfileView view,
+            [JetBrains.Annotations.NotNull] TimeBasedProfile tp)
             : base(view, "ThisProfile.HeaderString", tp, applicationPresenter)
         {
             _tp = tp;
@@ -60,19 +60,19 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             RefreshUsedIn();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CSVImporter CsvImporter => _csvImporter;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public TimeBasedProfile ThisProfile => _tp;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<TimeProfileType> TimeProfileTypes { get; } =
             new ObservableCollection<TimeProfileType>();
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<UsedIn> UsedIns => _usedIns;
 
@@ -83,7 +83,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
         }
 
         [SuppressMessage("Microsoft.Globalization", "CA1300:SpecifyMessageBoxOptions")]
-        public new void AskDeleteQuestion([NotNull] string headerstring, [NotNull] Action delete)
+        public new void AskDeleteQuestion([JetBrains.Annotations.NotNull] string headerstring, [JetBrains.Annotations.NotNull] Action delete)
         {
             var s = "Are you sure you want to delete the element:"+ Environment.NewLine + headerstring + "?";
             var affordances = new Dictionary<Affordance, bool>();
@@ -143,7 +143,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             }
         }
 
-        public void ImportData([NotNull] Action updateGraph)
+        public void ImportData([JetBrains.Annotations.NotNull] Action updateGraph)
         {
             var pbw = new ProgressbarWindow("Importing...",
                 "Importing " + _csvImporter.Entries.Count + " datapoints.",
@@ -180,7 +180,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             }
         }
 
-        public void RemoveTimepoint([NotNull] TimeDataPoint tdp)
+        public void RemoveTimepoint([JetBrains.Annotations.NotNull] TimeDataPoint tdp)
         {
             _tp.DeleteTimepoint(tdp);
         }

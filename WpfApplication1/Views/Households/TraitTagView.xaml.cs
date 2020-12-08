@@ -44,7 +44,7 @@ namespace LoadProfileGenerator.Views.Households {
             InitializeComponent();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private TraitTagPresenter Presenter => (TraitTagPresenter) DataContext;
 
         private void BtnRefreshUsedIn_Click([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e) =>

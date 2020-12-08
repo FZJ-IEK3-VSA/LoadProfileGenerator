@@ -1,8 +1,6 @@
 ﻿using Automation;
 using Common;
 using Common.Tests;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -17,7 +15,7 @@ namespace LoadProfileGenerator.Tests {
             er.Run("testmessage", "teststack");
         }
 
-        public ErrorReporterTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public ErrorReporterTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

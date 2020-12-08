@@ -37,10 +37,10 @@ using LoadProfileGenerator.Views.Houses;
 
 namespace LoadProfileGenerator.Presenters.Houses {
     public class EnergyStoragePresenter : PresenterBaseDBBase<EnergyStorageView> {
-        [NotNull] private readonly EnergyStorage _thisStorage;
+        [JetBrains.Annotations.NotNull] private readonly EnergyStorage _thisStorage;
 
-        public EnergyStoragePresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] EnergyStorageView view,
-            [NotNull] EnergyStorage energyStorage) : base(view, "ThisStorage.HeaderString", energyStorage, applicationPresenter)
+        public EnergyStoragePresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] EnergyStorageView view,
+            [JetBrains.Annotations.NotNull] EnergyStorage energyStorage) : base(view, "ThisStorage.HeaderString", energyStorage, applicationPresenter)
         {
             _thisStorage = energyStorage;
             RefreshUsedIns();
@@ -57,7 +57,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string SelectedUnitsString {
             get {
@@ -71,21 +71,21 @@ namespace LoadProfileGenerator.Presenters.Houses {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public EnergyStorage ThisStorage => _thisStorage;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<UsedIn> UsedIns { get; } = new ObservableCollection<UsedIn>();
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<VLoadType> VLoadTypes => Sim.LoadTypes.Items;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<Variable> Variables => Sim.Variables.Items;
 

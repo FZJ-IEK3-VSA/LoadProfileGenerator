@@ -14,7 +14,7 @@ namespace CalculationController.Integrity {
             base("Device Action Groups", performCleanupChecks) {
         }
 
-        private static void CheckAndDeleteEmptyDeviceActionGroups([NotNull] Simulator sim) {
+        private static void CheckAndDeleteEmptyDeviceActionGroups([JetBrains.Annotations.NotNull] Simulator sim) {
             // do both checks here to avoid doing the getdeviceactions twice
             for (var index = 0; index < sim.DeviceActionGroups.Items.Count; index++) {
                 var actionGroup = sim.DeviceActionGroups[index];
@@ -69,8 +69,8 @@ namespace CalculationController.Integrity {
             }
         }
 
-        private void CheckDeviceActionsAllInSameCategory([NotNull] DeviceActionGroup actionGroup,
-            [NotNull][ItemNotNull] ObservableCollection<DeviceAction> allActions, [NotNull] Simulator sim) {
+        private void CheckDeviceActionsAllInSameCategory([JetBrains.Annotations.NotNull] DeviceActionGroup actionGroup,
+            [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<DeviceAction> allActions, [JetBrains.Annotations.NotNull] Simulator sim) {
             // collect all used groups
 
             var devicesInActions = actionGroup.GetRealDevices(allActions);
@@ -99,7 +99,7 @@ namespace CalculationController.Integrity {
             }
         }
 
-        private void CheckGroupUsage([NotNull] Simulator sim, [NotNull] DeviceActionGroup actionGroup) {
+        private void CheckGroupUsage([JetBrains.Annotations.NotNull] Simulator sim, [JetBrains.Annotations.NotNull] DeviceActionGroup actionGroup) {
             if (!PerformCleanupChecks) {
                 return;
             }
@@ -111,8 +111,8 @@ namespace CalculationController.Integrity {
             }
         }
 
-        private void FindMissingDevice([NotNull] DeviceCategory category, [NotNull][ItemNotNull] List<DeviceAction> actionsInGroup,
-            [NotNull] DeviceActionGroup deviceActionGroup, [NotNull] Simulator sim) {
+        private void FindMissingDevice([JetBrains.Annotations.NotNull] DeviceCategory category, [JetBrains.Annotations.NotNull][ItemNotNull] List<DeviceAction> actionsInGroup,
+            [JetBrains.Annotations.NotNull] DeviceActionGroup deviceActionGroup, [JetBrains.Annotations.NotNull] Simulator sim) {
             if (!PerformCleanupChecks) {
                 return;
             }

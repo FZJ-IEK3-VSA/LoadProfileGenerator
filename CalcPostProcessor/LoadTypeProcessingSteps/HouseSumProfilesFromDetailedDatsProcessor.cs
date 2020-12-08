@@ -6,17 +6,16 @@ using CalcPostProcessor.Steps;
 using Common;
 using Common.CalcDto;
 using Common.SQLResultLogging;
-using JetBrains.Annotations;
 
 namespace CalcPostProcessor.LoadTypeProcessingSteps {
     public class HouseSumProfilesFromDetailedDatsProcessor : LoadTypeStepBase
     {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly IFileFactoryAndTracker _fft;
 
-        public HouseSumProfilesFromDetailedDatsProcessor([NotNull] IFileFactoryAndTracker fft,
-                                                         [NotNull] CalcDataRepository repository,
-                                                         [NotNull] ICalculationProfiler profiler)
+        public HouseSumProfilesFromDetailedDatsProcessor([JetBrains.Annotations.NotNull] IFileFactoryAndTracker fft,
+                                                         [JetBrains.Annotations.NotNull] CalcDataRepository repository,
+                                                         [JetBrains.Annotations.NotNull] ICalculationProfiler profiler)
             : base(repository, AutomationUtili.GetOptionList(CalcOption.HouseSumProfilesFromDetailedDats),
                 profiler, "Individual Sum Profiles")
         {
@@ -51,7 +50,7 @@ namespace CalcPostProcessor.LoadTypeProcessingSteps {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public override List<CalcOption> NeededOptions => new List<CalcOption>() {
             CalcOption.DetailedDatFiles
         };

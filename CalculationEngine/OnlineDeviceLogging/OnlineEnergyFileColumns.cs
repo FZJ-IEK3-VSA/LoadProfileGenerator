@@ -35,11 +35,10 @@ namespace CalculationEngine.OnlineDeviceLogging {
     using System.Diagnostics.CodeAnalysis;
     using Common.CalcDto;
     using Common.JSON;
-    using JetBrains.Annotations;
     using OnlineLogging;
 
     public readonly struct ZeroEntryKey:IEquatable<ZeroEntryKey> {
-        public ZeroEntryKey([NotNull] string locationGuid, [NotNull] string deviceGuid, [NotNull] HouseholdKey householdKey, OefcDeviceType deviceType)
+        public ZeroEntryKey([JetBrains.Annotations.NotNull] string locationGuid, [JetBrains.Annotations.NotNull] string deviceGuid, [JetBrains.Annotations.NotNull] HouseholdKey householdKey, OefcDeviceType deviceType)
         {
             _locationGuid = locationGuid;
             _deviceGuid = deviceGuid;
@@ -56,7 +55,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
             }
         }
 
-        public ZeroEntryKey([NotNull] HouseholdKey householdKey, OefcDeviceType deviceType, [NotNull] string deviceID, [NotNull] string locationID) {
+        public ZeroEntryKey([JetBrains.Annotations.NotNull] HouseholdKey householdKey, OefcDeviceType deviceType, [JetBrains.Annotations.NotNull] string deviceID, [JetBrains.Annotations.NotNull] string locationID) {
             _householdKey = householdKey;
             _deviceType = deviceType;
             _deviceGuid = deviceID;
@@ -79,9 +78,9 @@ namespace CalculationEngine.OnlineDeviceLogging {
 
         public static bool operator !=(ZeroEntryKey point1, ZeroEntryKey point2) => !point1.Equals(point2);
 
-        [NotNull] private readonly string _locationGuid;
-        [NotNull] private readonly string _deviceGuid;
-        [NotNull]
+        [JetBrains.Annotations.NotNull] private readonly string _locationGuid;
+        [JetBrains.Annotations.NotNull] private readonly string _deviceGuid;
+        [JetBrains.Annotations.NotNull]
         private readonly HouseholdKey _householdKey;
         private readonly OefcDeviceType _deviceType;
     }
@@ -89,7 +88,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
     public class OnlineEnergyFileColumns {
         private readonly IOnlineLoggingData _old;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly Dictionary<CalcLoadTypeDto, Dictionary<OefcKey, ColumnEntry>> _columnEntriesByLoadTypeByDeviceKey;
         public OnlineEnergyFileColumns(IOnlineLoggingData old) {
             _old = old;
@@ -98,13 +97,13 @@ namespace CalculationEngine.OnlineDeviceLogging {
             _columnEntriesByColumn = new Dictionary<CalcLoadTypeDto, Dictionary<int, ColumnEntry>>();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Dictionary<CalcLoadTypeDto, int> ColumnCountByLoadType { get; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly Dictionary<CalcLoadTypeDto, Dictionary<int, ColumnEntry>> _columnEntriesByColumn;
-        //[NotNull] public Dictionary<CalcLoadTypeDto, Dictionary<int, ColumnEntry>> ColumnEntriesByColumn => _columnEntriesByColumn;
+        //[JetBrains.Annotations.NotNull] public Dictionary<CalcLoadTypeDto, Dictionary<int, ColumnEntry>> ColumnEntriesByColumn => _columnEntriesByColumn;
         //private readonly Dictionary<string, string> _registeredDevices = new Dictionary<string, string>();
-        public bool IsDeviceRegistered([NotNull] CalcLoadTypeDto loadtype, OefcKey key)
+        public bool IsDeviceRegistered([JetBrains.Annotations.NotNull] CalcLoadTypeDto loadtype, OefcKey key)
         {
             //var tmpkey = key.HouseholdKey + "#" + key.LocationGuid + "#" + key.DeviceName;
           //  if (!_registeredDevices.ContainsKey(tmpkey)) {
@@ -121,12 +120,12 @@ namespace CalculationEngine.OnlineDeviceLogging {
             throw new LPGException("Forgotten device registration: " + key);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Dictionary<CalcLoadTypeDto, Dictionary<OefcKey, ColumnEntry>> ColumnEntriesByLoadTypeByDeviceKey
             => _columnEntriesByLoadTypeByDeviceKey;
-        public void AddColumnEntry([NotNull] string name, OefcKey key,
-                                   [NotNull] string locationName, [NotNull] CalcLoadTypeDto lt, StrGuid deviceGuid,
-            [NotNull] HouseholdKey householdKey, [NotNull] string deviceCategory, [NotNull] CalcDeviceDto calcDeviceDto) {
+        public void AddColumnEntry([JetBrains.Annotations.NotNull] string name, OefcKey key,
+                                   [JetBrains.Annotations.NotNull] string locationName, [JetBrains.Annotations.NotNull] CalcLoadTypeDto lt, StrGuid deviceGuid,
+            [JetBrains.Annotations.NotNull] HouseholdKey householdKey, [JetBrains.Annotations.NotNull] string deviceCategory, [JetBrains.Annotations.NotNull] CalcDeviceDto calcDeviceDto) {
             if (!ColumnCountByLoadType.ContainsKey(lt)) {
                 ColumnCountByLoadType.Add(lt, 0);
             }
@@ -146,7 +145,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
             }
         }
 
-        public int GetColumnNumber([NotNull] CalcLoadTypeDto loadType,  OefcKey deviceKey) =>
+        public int GetColumnNumber([JetBrains.Annotations.NotNull] CalcLoadTypeDto loadType,  OefcKey deviceKey) =>
             _columnEntriesByLoadTypeByDeviceKey[loadType][deviceKey].Column;
     }
 }

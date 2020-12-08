@@ -33,9 +33,9 @@ namespace Database.Database
 {
     internal class Parameter
     {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string Name { get; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string SqlName { get; }
         // value is for debugging to be able to see what it is
         [CanBeNull] [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")] [UsedImplicitly] private readonly
@@ -43,7 +43,7 @@ namespace Database.Database
             object _value;
 #pragma warning restore IDE0052 // Remove unread private members
 
-        public Parameter([NotNull]string sqlname, [NotNull] string name, [CanBeNull] object value)
+        public Parameter([JetBrains.Annotations.NotNull]string sqlname, [JetBrains.Annotations.NotNull] string name, [CanBeNull] object value)
         {
             SqlName = sqlname;
             Name = name;

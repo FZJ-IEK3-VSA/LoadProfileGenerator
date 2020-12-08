@@ -4,30 +4,30 @@
 namespace CalculationEngine.OnlineLogging {
     public class TransportationLogFile {
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly Dictionary<HouseholdKey, List<TransportationEventEntry>> _allEventEntries =
             new Dictionary<HouseholdKey, List<TransportationEventEntry>>();
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly FileFactoryAndTracker _fft;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly CalcParameters _calcParameters;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly Dictionary<HouseholdKey, StreamWriter> _sws;
 
-        public TransportationLogFile([NotNull] FileFactoryAndTracker fft, [NotNull] CalcParameters calcParameters)
+        public TransportationLogFile([JetBrains.Annotations.NotNull] FileFactoryAndTracker fft, [JetBrains.Annotations.NotNull] CalcParameters calcParameters)
         {
             _fft = fft;
             _calcParameters = calcParameters;
             _sws = new Dictionary<HouseholdKey, StreamWriter>();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public List<HouseholdKey> ProcessedHouseholdEntries { get; } = new List<HouseholdKey>();
         //private TransportationHandler _th;
 
-        public void AddTransportationEvent([NotNull] HouseholdKey householdkey, [NotNull] string person, int timestep, [NotNull] string site, [NotNull] string route,
-            [NotNull] string transportationDevice, int transportationDuration, int affordanceDuration, [NotNull] string affordanceName, [NotNull][ItemNotNull] List<CalcTravelRoute.CalcTravelDeviceUseEvent> travelDeviceUseEvents)
+        public void AddTransportationEvent([JetBrains.Annotations.NotNull] HouseholdKey householdkey, [JetBrains.Annotations.NotNull] string person, int timestep, [JetBrains.Annotations.NotNull] string site, [JetBrains.Annotations.NotNull] string route,
+            [JetBrains.Annotations.NotNull] string transportationDevice, int transportationDuration, int affordanceDuration, [JetBrains.Annotations.NotNull] string affordanceName, [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcTravelRoute.CalcTravelDeviceUseEvent> travelDeviceUseEvents)
         {
             if (!_allEventEntries.ContainsKey(householdkey)) {
                 _allEventEntries.Add(householdkey, new List<TransportationEventEntry>());
@@ -129,7 +129,7 @@ namespace CalculationEngine.OnlineLogging {
             csv.Close();
         }
 
-        public void InitSw([NotNull] HouseholdKey householdkey)
+        public void InitSw([JetBrains.Annotations.NotNull] HouseholdKey householdkey)
         {
             if (_sws.ContainsKey(householdkey)) {
                 return;
@@ -142,7 +142,7 @@ namespace CalculationEngine.OnlineLogging {
             _sws.Add(householdkey, sw);
         }
 
-        public void Report([NotNull] HouseholdKey householdkey, [NotNull] string s)
+        public void Report([JetBrains.Annotations.NotNull] HouseholdKey householdkey, [JetBrains.Annotations.NotNull] string s)
         {
             if (!_sws.ContainsKey(householdkey)) {
                 InitSw(householdkey);

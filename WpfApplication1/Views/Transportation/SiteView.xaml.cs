@@ -18,7 +18,7 @@ namespace LoadProfileGenerator.Views.Transportation {
             InitializeComponent();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private SitePresenter Presenter => (SitePresenter) DataContext;
 
         private void BtnAddLocationClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
@@ -82,7 +82,7 @@ namespace LoadProfileGenerator.Views.Transportation {
             Presenter.ApplicationPresenter.OpenItem(ui.Item);
         }
 
-        private void BtnCopySiteClick([NotNull] object sender, [NotNull] RoutedEventArgs e)
+        private void BtnCopySiteClick([JetBrains.Annotations.NotNull] object sender, [JetBrains.Annotations.NotNull] RoutedEventArgs e)
         {
             Presenter.MakeCopy();
         }

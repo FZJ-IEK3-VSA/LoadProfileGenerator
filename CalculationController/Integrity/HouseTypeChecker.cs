@@ -5,14 +5,13 @@ using Common;
 using Database;
 using Database.Tables.BasicElements;
 using Database.Tables.Houses;
-using JetBrains.Annotations;
 
 namespace CalculationController.Integrity {
     internal class HouseTypeChecker : BasicChecker {
         public HouseTypeChecker(bool performCleanupChecks) : base("House Types", performCleanupChecks) {
         }
 
-        private static void CheckStandbyDevicesHouses([NotNull] HouseType ht) {
+        private static void CheckStandbyDevicesHouses([JetBrains.Annotations.NotNull] HouseType ht) {
             if (ht.AdjustYearlyCooling && ht.ReferenceCoolingHours <10) {
                 throw new DataIntegrityException("Reference cooling degree hours in " + ht.Name + " was less than 10, but adjusting the cooling amount was turned on.",ht);
             }
@@ -39,7 +38,7 @@ namespace CalculationController.Integrity {
 
 
 
-        private static void CheckTrafos([NotNull] HouseType ht)
+        private static void CheckTrafos([JetBrains.Annotations.NotNull] HouseType ht)
         {
             List<Variable> usedVariables = new List<Variable>();
             foreach (var trafo in ht.HouseTransformationDevices) {
@@ -104,7 +103,7 @@ namespace CalculationController.Integrity {
             Needed,
             NotNeeded
         }
-        private static void PerformBalanceChecks([NotNull] HouseType houseType, [NotNull] Simulator sim)
+        private static void PerformBalanceChecks([JetBrains.Annotations.NotNull] HouseType houseType, [JetBrains.Annotations.NotNull] Simulator sim)
         {
             var spaceheatinglt = sim.LoadTypes.FindFirstByName("Space Heating");
             if (spaceheatinglt == null) {
@@ -151,7 +150,7 @@ namespace CalculationController.Integrity {
             }
             }
 
-        private static void CheckAllTrafosForEnergyStorageDemands([NotNull] HouseType houseType, [NotNull] HouseTypeTransformationDevice transformationDevice)
+        private static void CheckAllTrafosForEnergyStorageDemands([JetBrains.Annotations.NotNull] HouseType houseType, [JetBrains.Annotations.NotNull] HouseTypeTransformationDevice transformationDevice)
         {
             StorageStatus status = StorageStatus.Missing;
             Variable variable = null;

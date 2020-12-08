@@ -8,7 +8,7 @@ using Newtonsoft.Json.Converters;
 namespace Automation {
     public class TransportationDistanceModifier
     {
-        public TransportationDistanceModifier([NotNull] string routeKey, [NotNull] string stepKey, double newDistanceInMeters)
+        public TransportationDistanceModifier([JetBrains.Annotations.NotNull] string routeKey, [JetBrains.Annotations.NotNull] string stepKey, double newDistanceInMeters)
         {
             RouteKey = routeKey;
             StepKey = stepKey;
@@ -21,9 +21,9 @@ namespace Automation {
         {
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string? RouteKey { get; set; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string? StepKey { get; set; }
         public double NewDistanceInMeters { get; set; }
     }
@@ -35,7 +35,7 @@ namespace Automation {
     }
 
     public class HouseholdDataPersonSpecification {
-        public HouseholdDataPersonSpecification([NotNull] List<PersonData> persons)
+        public HouseholdDataPersonSpecification([JetBrains.Annotations.NotNull] List<PersonData> persons)
         {
             Persons = persons;
         }
@@ -45,7 +45,7 @@ namespace Automation {
         {
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public List<PersonData> Persons { get; set; } = new List<PersonData>();
 
@@ -60,7 +60,7 @@ namespace Automation {
 
     public class HouseholdTemplateSpecification
     {
-        public HouseholdTemplateSpecification([NotNull] string householdTemplateName) => HouseholdTemplateName = householdTemplateName;
+        public HouseholdTemplateSpecification([JetBrains.Annotations.NotNull] string householdTemplateName) => HouseholdTemplateName = householdTemplateName;
 
         [Obsolete("Only for Json")]
         [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
@@ -68,14 +68,14 @@ namespace Automation {
         {
         }
         public List<PersonLivingTag>? Persons { get; set; } = new List<PersonLivingTag>();
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string? HouseholdTemplateName { get; set; }
 
         public List<string>? ForbiddenTraitTags { get; set; } = new List<string>();
     }
 
     public class HouseholdNameSpecification {
-        public HouseholdNameSpecification([NotNull] JsonReference householdName) => HouseholdReference = householdName;
+        public HouseholdNameSpecification([JetBrains.Annotations.NotNull] JsonReference householdName) => HouseholdReference = householdName;
 
         [Obsolete("only for json")]
         [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
@@ -86,8 +86,8 @@ namespace Automation {
         public JsonReference? HouseholdReference { get; set; }
     }
     public class HouseholdData {
-        public HouseholdData([NotNull] string uniqueHouseholdId,
-                             [NotNull] string name, [CanBeNull] JsonReference? chargingStationSet,
+        public HouseholdData([JetBrains.Annotations.NotNull] string uniqueHouseholdId,
+                             [JetBrains.Annotations.NotNull] string name, [CanBeNull] JsonReference? chargingStationSet,
                              [CanBeNull] JsonReference? transportationDeviceSet, [CanBeNull] JsonReference? travelRouteSet,
                              [ItemNotNull][CanBeNull] List<TransportationDistanceModifier>? transportationDistanceModifiers,
                              HouseholdDataSpecificationType householdDataSpecifictionType)
@@ -116,10 +116,10 @@ namespace Automation {
         [CanBeNull]
         public HouseholdNameSpecification? HouseholdNameSpec { get; set; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string UniqueHouseholdId { get; set; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string? Name { get; set; }
 
 

@@ -12,7 +12,7 @@
 
 //namespace LoadProfileGenerator {
 //    public static class TemplatePersonCreator {
-//        public static void CreateTemplatePersons([NotNull] Simulator sim)
+//        public static void CreateTemplatePersons([JetBrains.Annotations.NotNull] Simulator sim)
 //        {
 //            Logger.Info("Starting the creation of the templated persons");
 //            var tps = sim.TemplatePersons.Items.ToList();
@@ -57,8 +57,8 @@
 //        }
 
 //        [ItemNotNull]
-//        [NotNull]
-//        public static List<ModularHousehold> RunCalculationTests([NotNull] Simulator sim)
+//        [JetBrains.Annotations.NotNull]
+//        public static List<ModularHousehold> RunCalculationTests([JetBrains.Annotations.NotNull] Simulator sim)
 //        {
 //            var allhh = new List<ModularHousehold>();
 //            Logger.Info("Starting sync");
@@ -148,7 +148,7 @@
 //        }
 
 //        private class PersonEntry : IComparable<PersonEntry> {
-//            public PersonEntry([NotNull] Person person)
+//            public PersonEntry([JetBrains.Annotations.NotNull] Person person)
 //            {
 //                Person = person;
 //                Age = person.Age;
@@ -161,7 +161,7 @@
 //            [UsedImplicitly]
 //            public PermittedGender Gender { get; }
 
-//            [NotNull]
+//            [JetBrains.Annotations.NotNull]
 //            public Person Person { get; }
 
 //            public int CompareTo([CanBeNull] PersonEntry other)

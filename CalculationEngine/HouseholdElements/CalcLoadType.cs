@@ -31,21 +31,20 @@
 using Automation;
 using Automation.ResultFiles;
 using Common.CalcDto;
-using JetBrains.Annotations;
 
 #endregion
 
 namespace CalculationEngine.HouseholdElements {
     public class CalcLoadType : CalcBase {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly string _fileName;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly LoadTypeInformation _lti;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly CalcLoadTypeDto _dto;
 
-        public CalcLoadType([NotNull] string pName, [NotNull] string unitOfPower, [NotNull] string unitOfSum, double conversionFactor,
+        public CalcLoadType([JetBrains.Annotations.NotNull] string pName, [JetBrains.Annotations.NotNull] string unitOfPower, [JetBrains.Annotations.NotNull] string unitOfSum, double conversionFactor,
             bool showInCharts, StrGuid guid)
             : base(pName, guid) {
             UnitOfPower = unitOfPower;
@@ -60,12 +59,12 @@ namespace CalculationEngine.HouseholdElements {
             _dto = new CalcLoadTypeDto(pName,unitOfPower,unitOfSum,conversionFactor,ShowInCharts,guid);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public LoadTypeInformation ConvertToLoadTypeInformation() {
             return _lti;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CalcLoadTypeDto ConvertToDto()
         {
             return _dto;
@@ -73,15 +72,15 @@ namespace CalculationEngine.HouseholdElements {
 
         public double ConversionFactor { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string FileName => _fileName;
 
         public bool ShowInCharts { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string UnitOfPower { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string UnitOfSum { get; }
     }
 }

@@ -1,11 +1,10 @@
-﻿using JetBrains.Annotations;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using Automation.ResultFiles;
 
 namespace Common {
     public static class DirectoryNames {
         [SuppressMessage("ReSharper", "SwitchStatementMissingSomeCases")]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static string CalculateTargetdirectory(TargetDirectory targetDirectory) {
             switch (targetDirectory) {
                 case TargetDirectory.Root:

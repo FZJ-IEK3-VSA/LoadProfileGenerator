@@ -51,7 +51,7 @@ namespace LoadProfileGenerator.Views.Households {
             InitializeComponent();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private SubAffordancePresenter Presenter => (SubAffordancePresenter) DataContext;
 
         private void BtnAddDesireClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
@@ -118,7 +118,7 @@ namespace LoadProfileGenerator.Views.Households {
             Presenter.RemoveDesire((SubAffordanceDesire) LstAffordanceDesires.SelectedItem);
         }
 
-        private void BtnRemoveVariableOpClick([NotNull] object sender, [NotNull] RoutedEventArgs routedEventArgs)
+        private void BtnRemoveVariableOpClick([JetBrains.Annotations.NotNull] object sender, [JetBrains.Annotations.NotNull] RoutedEventArgs routedEventArgs)
         {
             if (LstOpVariables.SelectedItem == null) {
                 return;

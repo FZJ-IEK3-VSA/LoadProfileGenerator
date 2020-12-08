@@ -15,15 +15,13 @@ using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
 using Common.Tests;
 using FluentAssertions;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
 
 namespace Calculation.Tests.Transportation {
     public class CalcTransportationDeviceTests : UnitTestBaseClass {
-        public CalcTransportationDeviceTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public CalcTransportationDeviceTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
 

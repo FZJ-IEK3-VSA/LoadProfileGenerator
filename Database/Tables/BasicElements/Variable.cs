@@ -39,10 +39,10 @@ namespace Database.Tables.BasicElements {
     public class Variable : DBBaseElement {
         public const string TableName = "tblVariables";
 
-        [NotNull] private string _description;
-        [NotNull] private string _unit;
+        [JetBrains.Annotations.NotNull] private string _description;
+        [JetBrains.Annotations.NotNull] private string _unit;
 
-        public Variable([NotNull] string name, [NotNull] string description, [NotNull] string unit, [NotNull] string connectionString,
+        public Variable([JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] string description, [JetBrains.Annotations.NotNull] string unit, [JetBrains.Annotations.NotNull] string connectionString,
                         StrGuid guid,[CanBeNull]int? pID = null)
             : base(name, TableName, connectionString, guid) {
             _description = description;
@@ -52,23 +52,23 @@ namespace Database.Tables.BasicElements {
             _description = description;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string Description {
             get => _description;
             set => SetValueWithNotify(value, ref _description, nameof(Description));
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string Unit {
             get => _unit;
             set => SetValueWithNotify(value, ref _unit, nameof(Unit));
         }
 
-        [NotNull]
-        private static Variable AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic) {
+        [JetBrains.Annotations.NotNull]
+        private static Variable AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic) {
             var id = dr.GetIntFromLong("ID");
             var name =dr.GetString("Name","(no name)");
             var description =  dr.GetString("Description");
@@ -77,9 +77,9 @@ namespace Database.Tables.BasicElements {
             return new Variable(name, description, unit, connectionString, guid,id);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new Variable(
+        public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString) => new Variable(
             FindNewName(isNameTaken, "New Variable "), "(no description)", "(no unit)",
             connectionString, System.Guid.NewGuid().ToStrGuid());
 
@@ -132,11 +132,11 @@ namespace Database.Tables.BasicElements {
             return usedIns;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "sim")]
         [UsedImplicitly]
 #pragma warning disable RCS1163 // Unused parameter.
-        public static Variable ImportFromItem([NotNull] Variable toImport, [NotNull] Simulator sim) {
+        public static Variable ImportFromItem([JetBrains.Annotations.NotNull] Variable toImport, [JetBrains.Annotations.NotNull] Simulator sim) {
 #pragma warning restore RCS1163 // Unused parameter.
             var hd = new Variable(toImport.Name, toImport.Description,
                 toImport.Unit,sim.ConnectionString, toImport.Guid);
@@ -149,7 +149,7 @@ namespace Database.Tables.BasicElements {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<Variable> result, [NotNull] string connectionString,
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Variable> result, [JetBrains.Annotations.NotNull] string connectionString,
             bool ignoreMissingTables) {
             var aic = new AllItemCollections();
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);

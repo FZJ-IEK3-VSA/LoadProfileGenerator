@@ -36,18 +36,18 @@ using JetBrains.Annotations;
 namespace CalculationEngine.HouseholdElements {
     public class CalcLocation : CalcBase {
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly List<ICalcAffordanceBase> _pureAffordances = new List<ICalcAffordanceBase>();
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly List<ICalcAffordanceBase> _siteAffordances = new List<ICalcAffordanceBase>();
         private bool _isTransportationEnabled;
         //public object Variables;
 
         public CalcSite? CalcSite { get; set; }
-        public CalcLocation([NotNull] string pName, StrGuid guid) : base(pName, guid) => Devices = new List<CalcDevice>();
+        public CalcLocation([JetBrains.Annotations.NotNull] string pName, StrGuid guid) : base(pName, guid) => Devices = new List<CalcDevice>();
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public List<ICalcAffordanceBase> Affordances {
             get {
@@ -59,15 +59,15 @@ namespace CalculationEngine.HouseholdElements {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public List<ICalcAffordanceBase> PureAffordances => _pureAffordances;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public List<CalcDevice> Devices { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public List<CalcDevice> LightDevices { get; } = new List<CalcDevice>();
 
@@ -75,7 +75,7 @@ namespace CalculationEngine.HouseholdElements {
             get;
         } = new Dictionary<CalcPerson, ICalcAffordanceBase>();
 
-        public void AddAffordance([NotNull] CalcAffordance aff)
+        public void AddAffordance([JetBrains.Annotations.NotNull] CalcAffordance aff)
         {
             if(_isTransportationEnabled) {
                 throw new LPGException("Error: tried to add an normal affordance after transportation was enabled.");
@@ -84,13 +84,13 @@ namespace CalculationEngine.HouseholdElements {
             _pureAffordances.Add(aff);
         }
 
-        public void AddTransportationAffordance([NotNull] AffordanceBaseTransportDecorator transportationAffordance)
+        public void AddTransportationAffordance([JetBrains.Annotations.NotNull] AffordanceBaseTransportDecorator transportationAffordance)
         {
             _siteAffordances.Add(transportationAffordance);
             _isTransportationEnabled = true;
         }
 
-        public void AddLightDevice([NotNull] CalcDevice device)
+        public void AddLightDevice([JetBrains.Annotations.NotNull] CalcDevice device)
         {
             LightDevices.Add(device);
         }

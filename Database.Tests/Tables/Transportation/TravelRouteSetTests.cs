@@ -4,8 +4,6 @@ using Common;
 using Common.Tests;
 using Database.Tables.Transportation;
 using FluentAssertions;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -70,7 +68,7 @@ namespace Database.Tests.Tables.Transportation
             //(jsonCopy).Should().Be(jsonOriginal);
         }
 
-        public TravelRouteSetTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public TravelRouteSetTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

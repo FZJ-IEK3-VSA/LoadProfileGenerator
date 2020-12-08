@@ -39,7 +39,7 @@
             MainSqlFilePath = "";
         }
 
-        public CalculationResult([NotNull] string objectName, DateTime calcStartTime, DateTime simStart, DateTime simEnd,
+        public CalculationResult([JetBrains.Annotations.NotNull] string objectName, DateTime calcStartTime, DateTime simStart, DateTime simEnd,
             CalcObjectType calcObjectType) {
           //  ResultFileEntries = new List<ResultFileEntry>();
 //            HiddenResultFileEntries = new List<ResultFileEntry>();
@@ -52,20 +52,20 @@
         }
 
         public DateTime CalcEndTime { get; set; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string CalcObjectName { get; }
 
         public CalcObjectType CalcObjectType { get; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string MainSqlFilePath { get; }
 
         public DateTime CalcStartTime { get; }
-        //[NotNull]
+        //[JetBrains.Annotations.NotNull]
         //[ItemNotNull]
         //public List<ResultFileEntry> HiddenResultFileEntries { get; }
 
         public int RandomSeed { get; set; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public List<ResultFileEntry> ResultFileEntries { get; }
 
@@ -74,10 +74,10 @@
         public DateTime SimStartTime { get; }
 
         [XmlIgnore]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Dictionary<string, double> TotalsPerLoadType { get; }
 
-        private static void AdjustOnePath([NotNull] DirectoryInfo simPath, [NotNull] string housename, [NotNull] ResultFileEntry entry) {
+        private static void AdjustOnePath([JetBrains.Annotations.NotNull] DirectoryInfo simPath, [JetBrains.Annotations.NotNull] string housename, [JetBrains.Annotations.NotNull] ResultFileEntry entry) {
             if (!File.Exists(entry.FullFileName)) {
                 Logger.Error("File " + entry.FullFileName + " does not seem to exist. Probably moved. Adjusting...");
                 var oldFi = new FileInfo(entry.FullFileName);
@@ -100,7 +100,7 @@
             }
         }
 
-        public void AdjustPaths([NotNull] string directory) {
+        public void AdjustPaths([JetBrains.Annotations.NotNull] string directory) {
             var simPath = new DirectoryInfo(directory);
             var housename = simPath.Name;
             foreach (var entry in ResultFileEntries) {

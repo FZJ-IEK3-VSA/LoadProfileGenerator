@@ -39,16 +39,16 @@ using JetBrains.Annotations;
 namespace CalculationController.CalcFactories {
     public class CalcAffordanceFactory {
         //private readonly CalcVariableDtoFactory _variableRepository;
-        [NotNull] private readonly AvailabilityDtoRepository _availabilityDtoRepository;
+        [JetBrains.Annotations.NotNull] private readonly AvailabilityDtoRepository _availabilityDtoRepository;
         private readonly CalcRepo _calcRepo;
 
 
-        [NotNull] private readonly CalcLoadTypeDictionary _loadTypeDictionary;
+        [JetBrains.Annotations.NotNull] private readonly CalcLoadTypeDictionary _loadTypeDictionary;
 
-        public CalcAffordanceFactory([NotNull] CalcLoadTypeDictionary loadTypeDictionary,
-                                     [NotNull] AvailabilityDtoRepository availabilityDtoRepository,
+        public CalcAffordanceFactory([JetBrains.Annotations.NotNull] CalcLoadTypeDictionary loadTypeDictionary,
+                                     [JetBrains.Annotations.NotNull] AvailabilityDtoRepository availabilityDtoRepository,
             CalcRepo calcRepo
-            //[NotNull] CalcVariableDtoFactory variableRepository
+            //[JetBrains.Annotations.NotNull] CalcVariableDtoFactory variableRepository
         )
         {
             _loadTypeDictionary = loadTypeDictionary;
@@ -57,8 +57,8 @@ namespace CalculationController.CalcFactories {
             //_variableRepository = variableRepository;
         }
 
-        [NotNull]
-        public static string FixAffordanceName([NotNull] string name, [NotNull] string csvCharacter)
+        [JetBrains.Annotations.NotNull]
+        public static string FixAffordanceName([JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] string csvCharacter)
         {
             name = name.Replace(".", "_");
             var replacementChar = ",";
@@ -69,10 +69,10 @@ namespace CalculationController.CalcFactories {
             return name.Replace(csvCharacter, replacementChar);
         }
 
-        public void SetAllAffordaces([NotNull] [ItemNotNull] List<CalcAffordanceDto> affordances,
-                                     [NotNull] DtoCalcLocationDict locations,
-                                     [NotNull] CalcVariableRepository variableRepository,
-                                     [ItemNotNull] [NotNull] List<CalcDevice> devices)
+        public void SetAllAffordaces([JetBrains.Annotations.NotNull] [ItemNotNull] List<CalcAffordanceDto> affordances,
+                                     [JetBrains.Annotations.NotNull] DtoCalcLocationDict locations,
+                                     [JetBrains.Annotations.NotNull] CalcVariableRepository variableRepository,
+                                     [ItemNotNull] [JetBrains.Annotations.NotNull] List<CalcDevice> devices)
         {
             if (affordances.Count == 0) {
                 throw new LPGException("No Affordances found.");
@@ -125,8 +125,8 @@ namespace CalculationController.CalcFactories {
             }
         }
 
-        private void MakeSubAffordances([NotNull] DtoCalcLocationDict locations, [NotNull] CalcVariableRepository variableRepository,
-                                        [NotNull] CalcAffordanceDto affordancedto, [NotNull] CalcAffordance caff)
+        private void MakeSubAffordances([JetBrains.Annotations.NotNull] DtoCalcLocationDict locations, [JetBrains.Annotations.NotNull] CalcVariableRepository variableRepository,
+                                        [JetBrains.Annotations.NotNull] CalcAffordanceDto affordancedto, [JetBrains.Annotations.NotNull] CalcAffordance caff)
         {
             foreach (CalcSubAffordanceDto sdto in affordancedto.SubAffordance) {
                 CalcLocation subaffLocation = locations.GetCalcLocationByGuid(sdto.LocGuid);
@@ -153,9 +153,9 @@ namespace CalculationController.CalcFactories {
         }
 
         [ItemNotNull]
-        [NotNull]
-        private List<CalcAffordance.DeviceEnergyProfileTuple> MakeDeviceEnergyProfileTuples([ItemNotNull] [NotNull] List<CalcDevice> devices,
-                                                                                            [NotNull] CalcAffordanceDto affordancedto)
+        [JetBrains.Annotations.NotNull]
+        private List<CalcAffordance.DeviceEnergyProfileTuple> MakeDeviceEnergyProfileTuples([ItemNotNull] [JetBrains.Annotations.NotNull] List<CalcDevice> devices,
+                                                                                            [JetBrains.Annotations.NotNull] CalcAffordanceDto affordancedto)
         {
             List<CalcAffordance.DeviceEnergyProfileTuple> deviceEnergyProfiles =
                 new List<CalcAffordance.DeviceEnergyProfileTuple>();
@@ -172,9 +172,9 @@ namespace CalculationController.CalcFactories {
             return deviceEnergyProfiles;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
-        private static List<CalcDesire> MakeCalcDesires([NotNull] [ItemNotNull] List<CalcDesireDto> satisfactionValues)
+        private static List<CalcDesire> MakeCalcDesires([JetBrains.Annotations.NotNull] [ItemNotNull] List<CalcDesireDto> satisfactionValues)
         {
             List<CalcDesire> calcDesires = new List<CalcDesire>();
             foreach (CalcDesireDto desireDto in satisfactionValues) {
@@ -189,12 +189,12 @@ namespace CalculationController.CalcFactories {
             return calcDesires;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
-        private static List<CalcAffordanceVariableOp> MakeVariableOps([NotNull] DtoCalcLocationDict locations,
-                                                                      [NotNull] [ItemNotNull]
+        private static List<CalcAffordanceVariableOp> MakeVariableOps([JetBrains.Annotations.NotNull] DtoCalcLocationDict locations,
+                                                                      [JetBrains.Annotations.NotNull] [ItemNotNull]
                                                                       List<CalcAffordanceVariableOpDto> affordancedto,
-                                                                      [NotNull] CalcVariableRepository repository)
+                                                                      [JetBrains.Annotations.NotNull] CalcVariableRepository repository)
         {
             List<CalcAffordanceVariableOp> variableOps = new List<CalcAffordanceVariableOp>();
             foreach (CalcAffordanceVariableOpDto variableOpDto in affordancedto) {

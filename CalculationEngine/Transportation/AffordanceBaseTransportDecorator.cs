@@ -10,14 +10,13 @@ using Common.CalcDto;
 using Common.Enums;
 using Common.JSON;
 using Common.SQLResultLogging.Loggers;
-using JetBrains.Annotations;
 
 namespace CalculationEngine.Transportation {
     public class AffordanceBaseTransportDecorator : CalcBase, ICalcAffordanceBase {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly ICalcAffordanceBase _sourceAffordance;
         private readonly TransportationHandler? _transportationHandler;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly HouseholdKey _householdkey;
 
         private readonly CalcRepo _calcRepo;
@@ -26,9 +25,9 @@ namespace CalculationEngine.Transportation {
         [SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields")]
         //[CanBeNull]
         //private CalcAffordanceBase _MainAffordance;
-        public AffordanceBaseTransportDecorator([NotNull] ICalcAffordanceBase sourceAffordance,
-            [NotNull] CalcSite site, [NotNull] TransportationHandler transportationHandler,
-            [NotNull] string name,   [NotNull] HouseholdKey householdkey,
+        public AffordanceBaseTransportDecorator([JetBrains.Annotations.NotNull] ICalcAffordanceBase sourceAffordance,
+            [JetBrains.Annotations.NotNull] CalcSite site, [JetBrains.Annotations.NotNull] TransportationHandler transportationHandler,
+            [JetBrains.Annotations.NotNull] string name,   [JetBrains.Annotations.NotNull] HouseholdKey householdkey,
                                                 StrGuid guid, CalcRepo calcRepo)
             : base(name, guid)
         {
@@ -45,7 +44,7 @@ namespace CalculationEngine.Transportation {
 
         public string PrettyNameForDumping => Name + " (including transportation)";
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CalcSite Site { get; }
 
         //BitArray ICalcAffordanceBase.IsBusyArray { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
@@ -125,22 +124,22 @@ namespace CalculationEngine.Transportation {
         public List<CalcAffordance.DeviceEnergyProfileTuple> Energyprofiles => _sourceAffordance.Energyprofiles;
 
         private class LastTimeEntry {
-            public LastTimeEntry([NotNull] string personName, [NotNull] TimeStep timeOfLastEvalulation)
+            public LastTimeEntry([JetBrains.Annotations.NotNull] string personName, [JetBrains.Annotations.NotNull] TimeStep timeOfLastEvalulation)
             {
                 PersonName = personName;
                 TimeOfLastEvalulation = timeOfLastEvalulation;
             }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string PersonName { get; }
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public TimeStep TimeOfLastEvalulation { get; }
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public Dictionary<CalcLocation, CalcTravelRoute>
                 PreviouslySelectedRoutes { get; } = new Dictionary<CalcLocation, CalcTravelRoute>();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private LastTimeEntry _myLastTimeEntry = new LastTimeEntry("",new TimeStep(-1,0,false));
 
         public int DefaultPersonProfileLength => _sourceAffordance.DefaultPersonProfileLength;

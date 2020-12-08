@@ -49,9 +49,9 @@ namespace Database.Tables.BasicHouseholds {
         private readonly int? _realDeviceID;
         private readonly double _standardDeviation;
 
-        public RealDeviceLoadType([NotNull] string name, [CanBeNull] int? realDeviceID, [CanBeNull] int? loadTypeID, double maxPower,
+        public RealDeviceLoadType([JetBrains.Annotations.NotNull] string name, [CanBeNull] int? realDeviceID, [CanBeNull] int? loadTypeID, double maxPower,
             [CanBeNull] VLoadType loadType,
-            double standardDeviation, double averageYearlyConsumption, [NotNull] string connectionString, StrGuid guid, [CanBeNull] int? id = null)
+            double standardDeviation, double averageYearlyConsumption, [JetBrains.Annotations.NotNull] string connectionString, StrGuid guid, [CanBeNull] int? id = null)
             : base(name, TableName, connectionString, guid) {
             _realDeviceID = realDeviceID;
             _loadTypeID = loadTypeID;
@@ -74,9 +74,9 @@ namespace Database.Tables.BasicHouseholds {
 
         public double StandardDeviation => _standardDeviation;
 
-        [NotNull]
-        private static RealDeviceLoadType AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic) {
+        [JetBrains.Annotations.NotNull]
+        private static RealDeviceLoadType AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic) {
             var id = (int) dr.GetLong("ID");
             var realDeviceID = dr.GetNullableIntFromLong("RealDeviceID", false);
             var loadTypeID = (int) dr.GetLong("LoadTypeID");
@@ -103,8 +103,8 @@ namespace Database.Tables.BasicHouseholds {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<RealDeviceLoadType> result, [NotNull] string connectionString,
-            [NotNull] [ItemNotNull] ObservableCollection<VLoadType> loadTypes, bool ignoreMissingTables) {
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<RealDeviceLoadType> result, [JetBrains.Annotations.NotNull] string connectionString,
+            [JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<VLoadType> loadTypes, bool ignoreMissingTables) {
             var aic = new AllItemCollections(loadTypes: loadTypes);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
             var items2Delete = new ObservableCollection<RealDeviceLoadType>();

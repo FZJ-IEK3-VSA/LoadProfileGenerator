@@ -1,15 +1,14 @@
 ﻿using System.IO;
-using JetBrains.Annotations;
 
 namespace SimulationEngineLib.HouseJobProcessor {
     public class CalcJobQueueEntry {
-        public CalcJobQueueEntry([NotNull] FileInfo jsonFile, int index)
+        public CalcJobQueueEntry([JetBrains.Annotations.NotNull] FileInfo jsonFile, int index)
         {
             JsonFile = jsonFile;
             Index = index;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public FileInfo JsonFile { get; set; }
         public int Index { get; set; }
     }

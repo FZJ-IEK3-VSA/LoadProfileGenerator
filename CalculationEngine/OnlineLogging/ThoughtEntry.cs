@@ -28,23 +28,22 @@
 
 using CalculationEngine.HouseholdElements;
 using Common;
-using JetBrains.Annotations;
 
 namespace CalculationEngine.OnlineLogging {
     public class ThoughtEntry {
-        public ThoughtEntry([NotNull] CalcPerson pPerson, [NotNull] TimeStep pTimestep, [NotNull] string pThought) {
+        public ThoughtEntry([JetBrains.Annotations.NotNull] CalcPerson pPerson, [JetBrains.Annotations.NotNull] TimeStep pTimestep, [JetBrains.Annotations.NotNull] string pThought) {
             Person = pPerson;
             Timestep = pTimestep;
             Thought = pThought;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CalcPerson Person { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string Thought { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public TimeStep Timestep { get; set; }
     }
 }

@@ -3,8 +3,6 @@ using Common;
 using Common.Tests;
 using Database;
 using Database.Tests;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -43,7 +41,7 @@ namespace LoadProfileGenerator.Tests
         //        Shell.ConvertAllPersonTagsToLivingPatternTags(sim);
         //    }
         //}
-        public ShellTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public ShellTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

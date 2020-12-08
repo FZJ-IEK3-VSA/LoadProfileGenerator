@@ -8,7 +8,6 @@ using Common;
 using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.Loggers;
-using JetBrains.Annotations;
 
 namespace CalcPostProcessor.GeneralHouseholdSteps
 {
@@ -252,7 +251,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps
             _logger.Save(hsp.Key.HHKey, energyUseEntries.Values.ToList());
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public override List<CalcOption> NeededOptions => new List<CalcOption>() {CalcOption.DetailedDatFiles, CalcOption.DeviceActivations};
     }
 }

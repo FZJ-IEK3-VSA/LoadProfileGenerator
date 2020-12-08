@@ -13,15 +13,15 @@ using JetBrains.Annotations;
 namespace Database.Tables.BasicHouseholds {
     public class DeviceActionGroup : DBBaseElement, IAssignableDevice, IComparable<DeviceActionGroup> {
         public const string TableName = "tblDeviceActionGroups";
-        [NotNull] private string _description;
+        [JetBrains.Annotations.NotNull] private string _description;
 
-        public DeviceActionGroup([NotNull] string pName, [NotNull] string connectionString, [NotNull] string description, StrGuid guid, [CanBeNull]int? pID = null)
+        public DeviceActionGroup([JetBrains.Annotations.NotNull] string pName, [JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.NotNull] string description, StrGuid guid, [CanBeNull]int? pID = null)
             : base(pName, pID, TableName, connectionString, guid) {
             _description = description;
             TypeDescription = "Device Action Group";
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string Description {
             get => _description;
@@ -88,9 +88,9 @@ namespace Database.Tables.BasicHouseholds {
             return string.Compare(Name, other.Name, StringComparison.Ordinal);
         }
 
-        [NotNull]
-        private static DeviceActionGroup AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic) {
+        [JetBrains.Annotations.NotNull]
+        private static DeviceActionGroup AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic) {
             var id = dr.GetIntFromLongOrInt("ID");
             var description = dr.GetString("Description");
             var name = dr.GetString("Name");
@@ -109,16 +109,16 @@ namespace Database.Tables.BasicHouseholds {
             return ts;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) {
+        public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString) {
             var dc = new DeviceActionGroup(FindNewName(isNameTaken, "New Device Action Group "),
                 connectionString, "(no description)", System.Guid.NewGuid().ToStrGuid());
             return dc;
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public List<DeviceAction> GetDeviceActions([ItemNotNull] [CanBeNull] ObservableCollection<DeviceAction> allActions) {
             if (allActions == null) {
                 return new List<DeviceAction>();
@@ -176,9 +176,9 @@ namespace Database.Tables.BasicHouseholds {
             return used;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DeviceActionGroup ImportFromItem([NotNull] DeviceActionGroup toImport, [NotNull] Simulator dstSim)
+        public static DeviceActionGroup ImportFromItem([JetBrains.Annotations.NotNull] DeviceActionGroup toImport, [JetBrains.Annotations.NotNull] Simulator dstSim)
         {
             var dc = new DeviceActionGroup(toImport.Name, dstSim.ConnectionString,
                 toImport.Description, toImport.Guid);
@@ -191,7 +191,7 @@ namespace Database.Tables.BasicHouseholds {
             return true;
         }
 
-        internal static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<DeviceActionGroup> result, [NotNull] string connectionString,
+        internal static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceActionGroup> result, [JetBrains.Annotations.NotNull] string connectionString,
             bool ignoreMissingTables) {
             var aic = new AllItemCollections();
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);

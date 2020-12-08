@@ -44,15 +44,13 @@ using Database.Tables.BasicHouseholds;
 using Database.Tables.ModularHouseholds;
 using Database.Tests;
 using FluentAssertions;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
 
 namespace CalculationController.Tests.CalcFactories {
     public class CalcManagerFactoryTests:UnitTestBaseClass {
-        private static void CalculateOneHousehold([NotNull] string path) {
+        private static void CalculateOneHousehold([JetBrains.Annotations.NotNull] string path) {
             if (Directory.Exists(path)) {
                 Directory.Delete(path, true);
             }
@@ -373,7 +371,7 @@ namespace CalculationController.Tests.CalcFactories {
             }
         }
 
-        private static void CompareCsv([NotNull] List<ResultFileEntry> rfes1, List<ResultFileEntry> rfes2)
+        private static void CompareCsv([JetBrains.Annotations.NotNull] List<ResultFileEntry> rfes1, List<ResultFileEntry> rfes2)
         {
             List<string> filesToIgnore = new List<string>
             {
@@ -411,7 +409,7 @@ namespace CalculationController.Tests.CalcFactories {
             }
         }
 
-        public CalcManagerFactoryTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public CalcManagerFactoryTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

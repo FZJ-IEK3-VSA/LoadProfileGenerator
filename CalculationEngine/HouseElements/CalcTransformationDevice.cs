@@ -41,10 +41,10 @@ using JetBrains.Annotations;
 namespace CalculationEngine.HouseElements {
     public class CalcTransformationDevice : CalcBase {
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly List<CalcTransformationCondition> _conditions;
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly List<DataPoint> _datapoints = new List<DataPoint>();
         private readonly Dictionary<CalcLoadType,  OefcKey> _devProcessorKeys = new Dictionary<CalcLoadType, OefcKey>();
         private readonly double _maxPower;
@@ -52,16 +52,16 @@ namespace CalculationEngine.HouseElements {
         private readonly double _maxValue;
         private readonly double _minPower;
         private readonly double _minValue;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly IOnlineDeviceActivationProcessor _odap;
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly List<OutputLoadType> _outputLoadTypes;
-        [NotNull] private readonly CalcLoadType _inputLoadType;
+        [JetBrains.Annotations.NotNull] private readonly CalcLoadType _inputLoadType;
 
-        public CalcTransformationDevice([NotNull] IOnlineDeviceActivationProcessor odap, double minValue,
-            double maxValue, double minimumOutputPower, double maximumInputPower, [NotNull] CalcDeviceDto deviceDto,
-            [NotNull] CalcLoadType inputLoadType)
+        public CalcTransformationDevice([JetBrains.Annotations.NotNull] IOnlineDeviceActivationProcessor odap, double minValue,
+            double maxValue, double minimumOutputPower, double maximumInputPower, [JetBrains.Annotations.NotNull] CalcDeviceDto deviceDto,
+            [JetBrains.Annotations.NotNull] CalcLoadType inputLoadType)
             : base(deviceDto.Name,  deviceDto.Guid) {
             _odap = odap;
             _minValue = minValue;
@@ -74,12 +74,12 @@ namespace CalculationEngine.HouseElements {
             _deviceDto = deviceDto;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public List<OutputLoadType> OutputLoadTypes => _outputLoadTypes;
 
-        public void AddCondition([NotNull] string name,
-             [NotNull] CalcVariable variable, double minValue, double maxValue, StrGuid guid) {
+        public void AddCondition([JetBrains.Annotations.NotNull] string name,
+             [JetBrains.Annotations.NotNull] CalcVariable variable, double minValue, double maxValue, StrGuid guid) {
             var cond =
                 new CalcTransformationCondition(name, variable, minValue, maxValue, guid);
             _conditions.Add(cond);
@@ -90,7 +90,7 @@ namespace CalculationEngine.HouseElements {
             _datapoints.Add(dp);
         }
 
-        public void AddOutputLoadType([NotNull] CalcLoadType loadType, double factor, TransformationOutputFactorType factorType) {
+        public void AddOutputLoadType([JetBrains.Annotations.NotNull] CalcLoadType loadType, double factor, TransformationOutputFactorType factorType) {
             var olt = new OutputLoadType(loadType, factor, factorType);
             _devProcessorKeys.Add(loadType, _odap.RegisterDevice( loadType.ConvertToDto(), _deviceDto));
             _outputLoadTypes.Add(olt);
@@ -123,7 +123,7 @@ namespace CalculationEngine.HouseElements {
             }
         }
 
-        public bool ProcessOneTimestep([NotNull][ItemNotNull] List<OnlineEnergyFileRow> fileRows, [ItemNotNull] List<string>? log) {
+        public bool ProcessOneTimestep([JetBrains.Annotations.NotNull][ItemNotNull] List<OnlineEnergyFileRow> fileRows, [ItemNotNull] List<string>? log) {
             var madeChanges = false;
             var conditionsValid = true;
             foreach (var condition in _conditions) {
@@ -202,7 +202,7 @@ namespace CalculationEngine.HouseElements {
     }
 
     public class OutputLoadType {
-        public OutputLoadType([NotNull] CalcLoadType loadType, double valueScalingFactor, TransformationOutputFactorType factorType) {
+        public OutputLoadType([JetBrains.Annotations.NotNull] CalcLoadType loadType, double valueScalingFactor, TransformationOutputFactorType factorType) {
             LoadType = loadType;
             ValueScalingFactor = valueScalingFactor;
             FactorType = factorType;
@@ -214,7 +214,7 @@ namespace CalculationEngine.HouseElements {
 
         //        public string FactorTypeStr => FactorType.ToString();
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CalcLoadType LoadType { get; }
     }
 }

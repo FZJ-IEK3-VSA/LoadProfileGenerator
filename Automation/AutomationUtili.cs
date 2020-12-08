@@ -6,12 +6,11 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using Automation.ResultFiles;
-using JetBrains.Annotations;
 
 namespace Automation {
     public static class AutomationUtili {
-        [NotNull]
-        public static List<CalcOption> GetOptionList([NotNull] params CalcOption[] list)
+        [JetBrains.Annotations.NotNull]
+        public static List<CalcOption> GetOptionList([JetBrains.Annotations.NotNull] params CalcOption[] list)
         {
             List<CalcOption> cos = new List<CalcOption>();
             foreach (var option in list) {
@@ -20,20 +19,20 @@ namespace Automation {
             return cos;
         }
 
-        [NotNull]
-        public static string CombineName([NotNull] this DirectoryInfo di, [NotNull] string name)
+        [JetBrains.Annotations.NotNull]
+        public static string CombineName([JetBrains.Annotations.NotNull] this DirectoryInfo di, [JetBrains.Annotations.NotNull] string name)
         {
             return Path.Combine(di.FullName, name);
         }
-        [NotNull]
-        public static string CleanFileName([NotNull] string oldname)
+        [JetBrains.Annotations.NotNull]
+        public static string CleanFileName([JetBrains.Annotations.NotNull] string oldname)
         {
             var newname = oldname;
             var forbiddenchars = Path.GetInvalidFileNameChars();
             return forbiddenchars.Aggregate(newname, (current, forbiddenchar) => current.Replace(forbiddenchar, ' '));
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static string MakePrettySize(long size)
         {
             var extension = " B";
@@ -65,7 +64,7 @@ namespace Automation {
         //}
 
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static string GetCurrentMethodAndClass() {
             var stackTrace = new StackTrace(true);
             var frames = stackTrace.GetFrames();
@@ -79,7 +78,7 @@ namespace Automation {
             }
             return method.DeclaringType.Name + "." + method.Name;
         }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static string GetCallingMethodAndClass()
         {
             var stackTrace = new StackTrace(true);
@@ -97,7 +96,7 @@ namespace Automation {
             return method.DeclaringType.Name + "." + method.Name;
         }
 
-        public static T ParseStringToEnum<T>([NotNull] string s, T defaultValue) where T : struct, IConvertible {
+        public static T ParseStringToEnum<T>([JetBrains.Annotations.NotNull] string s, T defaultValue) where T : struct, IConvertible {
             var defs = Enum.GetValues(typeof(T)).Cast<T>().ToList();
             var result = defaultValue;
             foreach (var def in defs) {
@@ -108,7 +107,7 @@ namespace Automation {
             return result;
         }
 
-        public static void WriteLine([NotNull] string message) {
+        public static void WriteLine([JetBrains.Annotations.NotNull] string message) {
 #pragma warning disable S2228 // Console logging should not be used
             Console.WriteLine(message);
 #pragma warning restore S2228 // Console logging should not be used

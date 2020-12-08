@@ -43,7 +43,7 @@ using JetBrains.Annotations;
 namespace CalculationEngine.HouseholdElements {
     public sealed class CalcProfile : BasicElement, ICalcProfile {
         [ItemNotNull]
-        [NotNull] private readonly List<CalcTimeDataPoint> _datapoints = new List<CalcTimeDataPoint>();
+        [JetBrains.Annotations.NotNull] private readonly List<CalcTimeDataPoint> _datapoints = new List<CalcTimeDataPoint>();
         private readonly ProfileType _profileType;
         private readonly TimeSpan _stepSize;
         // ReSharper disable once NotAccessedField.Local
@@ -53,7 +53,7 @@ namespace CalculationEngine.HouseholdElements {
 #pragma warning restore IDE0052 // Remove unread private members
 
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public CalcProfile([NotNull] string name, StrGuid guid, TimeSpan stepSize, ProfileType profileType, [NotNull] string dataSource):base(name)
+        public CalcProfile([JetBrains.Annotations.NotNull] string name, StrGuid guid, TimeSpan stepSize, ProfileType profileType, [JetBrains.Annotations.NotNull] string dataSource):base(name)
         {
             _guid = guid;
             _stepSize = stepSize;
@@ -63,8 +63,8 @@ namespace CalculationEngine.HouseholdElements {
             StepValues = new List<double>();
         }
 
-        public CalcProfile([NotNull] string name, StrGuid guid, [NotNull] List<double> newValues,
-            ProfileType profileType, [NotNull] string dataSource, double timeFactor = 1):base(name)
+        public CalcProfile([JetBrains.Annotations.NotNull] string name, StrGuid guid, [JetBrains.Annotations.NotNull] List<double> newValues,
+            ProfileType profileType, [JetBrains.Annotations.NotNull] string dataSource, double timeFactor = 1):base(name)
         {
             _guid = guid;
             TimeFactor = timeFactor;
@@ -73,7 +73,7 @@ namespace CalculationEngine.HouseholdElements {
             DataSource = dataSource;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static List<double> MakeListwithValue1AndCustomDuration(int durationInTimesteps)
         {
             var list = new List<double>(durationInTimesteps);
@@ -84,7 +84,7 @@ namespace CalculationEngine.HouseholdElements {
             return list;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public List<CalcTimeDataPoint> TimeSpanDataPoints => _datapoints;
 
@@ -97,10 +97,10 @@ namespace CalculationEngine.HouseholdElements {
             _datapoints.Add(tp);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private Dictionary<double, CalcProfile> ChangedProfiles { get; } = new Dictionary<double, CalcProfile>();
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CalcProfile CompressExpandDoubleArray(double timeFactor)
         {
             timeFactor = Math.Round(timeFactor, 2);
@@ -144,7 +144,7 @@ namespace CalculationEngine.HouseholdElements {
             ConvertToTimesteps(this);
         }
 
-        private static void ConvertToTimesteps([NotNull] CalcProfile cp)
+        private static void ConvertToTimesteps([JetBrains.Annotations.NotNull] CalcProfile cp)
         {
             if (cp._datapoints == null) {
                 throw new LPGException("Datapoints was null");
@@ -268,7 +268,7 @@ namespace CalculationEngine.HouseholdElements {
             }
         }
 
-        private static TimeSpan FindShortestTimeSpan([NotNull] CalcProfile cp)
+        private static TimeSpan FindShortestTimeSpan([JetBrains.Annotations.NotNull] CalcProfile cp)
         {
             var shortest = TimeSpan.MaxValue;
             if (cp._datapoints == null) {
@@ -313,7 +313,7 @@ namespace CalculationEngine.HouseholdElements {
 
             public double Value { get; }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public override string ToString() => "[" + _time + "] " + Value.ToString(Config.CultureInfo);
         }
 
@@ -333,7 +333,7 @@ namespace CalculationEngine.HouseholdElements {
 
         #endregion
 
-        public void AppendProfile([NotNull] ICalcProfile sourcePersonProfile)
+        public void AppendProfile([JetBrains.Annotations.NotNull] ICalcProfile sourcePersonProfile)
         {
             StepValues.AddRange(sourcePersonProfile.StepValues);
         }

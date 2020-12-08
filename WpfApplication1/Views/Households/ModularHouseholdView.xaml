@@ -127,12 +127,12 @@
                                 Style="{StaticResource ButtonStyle}">
                             Create a new Modular Household that is an exact copy.
                         </Button>
-                        <Button Grid.Row="10"
+                        <!--<Button Grid.Row="10"
                                 Grid.Column="1"
                                 Click="ExportToCsvClick"
                                 Style="{StaticResource ButtonStyle}">
                             Export this household to a CSV file for further processing in Excel
-                        </Button>
+                        </Button>-->
                     </Grid>
                 </Expander>
 

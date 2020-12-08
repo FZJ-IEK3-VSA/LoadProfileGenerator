@@ -38,22 +38,22 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
 #pragma warning disable S3897 // Classes that provide "Equals(<T>)" or override "Equals(Object)" should implement "IEquatable<T>"
     internal class AffordanceUnusedPresenter : PresenterBaseWithAppPresenter<AffordancesUnusedView> {
 #pragma warning restore S3897 // Classes that provide "Equals(<T>)" or override "Equals(Object)" should implement "IEquatable<T>"
-        [NotNull] private readonly ApplicationPresenter _applicationPresenter;
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<Affordance> _selectedAffordances = new ObservableCollection<Affordance>();
+        [JetBrains.Annotations.NotNull] private readonly ApplicationPresenter _applicationPresenter;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<Affordance> _selectedAffordances = new ObservableCollection<Affordance>();
 
-        public AffordanceUnusedPresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] AffordancesUnusedView view)
+        public AffordanceUnusedPresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] AffordancesUnusedView view)
             : base(view, "HeaderString", applicationPresenter)
         {
             _applicationPresenter = applicationPresenter;
             Refresh();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string HeaderString => "Unused Affordances";
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         [UsedImplicitly]
         public ObservableCollection<Affordance> SelectedAffordances => _selectedAffordances;

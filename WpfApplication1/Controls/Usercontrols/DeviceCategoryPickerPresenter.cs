@@ -39,12 +39,12 @@ namespace LoadProfileGenerator.Controls.Usercontrols
 {
     public class DeviceCategoryPickerPresenter : Notifier
     {
-        [NotNull] private readonly Simulator _sim;
-        [NotNull] private readonly DeviceCategoryPicker _deviceCategoryPicker;
+        [JetBrains.Annotations.NotNull] private readonly Simulator _sim;
+        [JetBrains.Annotations.NotNull] private readonly DeviceCategoryPicker _deviceCategoryPicker;
         [CanBeNull] private DeviceCategory _selectedItem;
 
-        public DeviceCategoryPickerPresenter([NotNull] Simulator sim, [CanBeNull] DeviceCategory selectedItem,
-            [NotNull] DeviceCategoryPicker deviceCategoryPicker)
+        public DeviceCategoryPickerPresenter([JetBrains.Annotations.NotNull] Simulator sim, [CanBeNull] DeviceCategory selectedItem,
+            [JetBrains.Annotations.NotNull] DeviceCategoryPicker deviceCategoryPicker)
         {
             _sim = sim;
             _selectedItem = selectedItem;
@@ -52,7 +52,7 @@ namespace LoadProfileGenerator.Controls.Usercontrols
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<DeviceCategory> DeviceCategoriesRoot => _sim.DeviceCategories.DeviceCategoriesRoot;
 

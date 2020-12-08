@@ -19,8 +19,10 @@ namespace LoadProfileGenerator {
         {
             using (var ndpKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32)) {
                 using (ndpKey.OpenSubKey("SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full\\")) {
-                    if (ndpKey.GetValue("Release") != null) {
-                        return (int)ndpKey.GetValue("Release");
+                    var val = ndpKey.GetValue("Release");
+                    if (val != null) {
+                        // ReSharper disable once PossibleNullReferenceException
+                        return (int)val;
                     }
                     Logger.Info("Could not read the .NET Version in the Registry. Probably a permissions issue due to Microsoft changing the permissions on the .NET Framework Setup Key. We are going to assume that the version is probably ok.");
                 }

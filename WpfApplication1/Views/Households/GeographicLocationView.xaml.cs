@@ -45,7 +45,7 @@ namespace LoadProfileGenerator.Views.Households {
             InitializeComponent();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private GeographicLocationPresenter Presenter => (GeographicLocationPresenter) DataContext;
 
         private void BtnAddHoliday_Click([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)

@@ -44,7 +44,7 @@ namespace Database.Tables.Houses {
     public class HouseType : DBBaseElement {
         public const string TableName = "tblHouseTypes";
 
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<HouseTypeTransformationDevice> _houseTransformationDevices =
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<HouseTypeTransformationDevice> _houseTransformationDevices =
             new ObservableCollection<HouseTypeTransformationDevice>();
 
         private bool _adjustYearlyCooling;
@@ -54,7 +54,7 @@ namespace Database.Tables.Houses {
 
         private double _coolingTemperature;
         private double _coolingYearlyTotal;
-        [NotNull] private string _description;
+        [JetBrains.Annotations.NotNull] private string _description;
 
         [CanBeNull] private VLoadType _heatingLoadType;
 
@@ -67,8 +67,8 @@ namespace Database.Tables.Houses {
         private double _referenceDegreeDays;
         private double _roomTemperature;
 
-        public HouseType([NotNull] string pName, [NotNull] string description, double heatingYearlyTotal, double heatingTemperature,
-            double roomTemperature, [CanBeNull] VLoadType heatingLoadType, [NotNull] string connectionString,
+        public HouseType([JetBrains.Annotations.NotNull] string pName, [JetBrains.Annotations.NotNull] string description, double heatingYearlyTotal, double heatingTemperature,
+            double roomTemperature, [CanBeNull] VLoadType heatingLoadType, [JetBrains.Annotations.NotNull] string connectionString,
             double coolingTemperature,
             double coolingYearlyTotal, [CanBeNull] VLoadType coolingLoadType, bool adjustYearlyEnergy,
             double referenceDegreeDays,
@@ -99,7 +99,7 @@ namespace Database.Tables.Houses {
             get => _adjustYearlyCooling;
             set => SetValueWithNotify(value, ref _adjustYearlyCooling, nameof(AdjustYearlyCooling));
         }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string HouseTypeCode
         {
             get
@@ -143,7 +143,7 @@ namespace Database.Tables.Houses {
             set => SetValueWithNotify(value, ref _coolingYearlyTotal, nameof(CoolingYearlyTotal));
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string Description {
             get => _description;
@@ -176,24 +176,24 @@ namespace Database.Tables.Houses {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<HouseTypeDevice> HouseDevices { get; } =
             new ObservableCollection<HouseTypeDevice>();
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<HouseTypeEnergyStorage> HouseEnergyStorages { get; } =
             new ObservableCollection<HouseTypeEnergyStorage>();
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<HouseTypeGenerator> HouseGenerators { get; } =
             new ObservableCollection<HouseTypeGenerator>();
 
         [ItemNotNull]
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<HouseTypeTransformationDevice> HouseTransformationDevices
             => _houseTransformationDevices;
 
@@ -247,14 +247,14 @@ namespace Database.Tables.Houses {
             hes.SaveToDB();
         }
 
-        public void AddGenerator([NotNull] Generator gen)
+        public void AddGenerator([JetBrains.Annotations.NotNull] Generator gen)
         {
             var hgen = new HouseTypeGenerator(null, IntID, gen, ConnectionString, gen.Name, System.Guid.NewGuid().ToStrGuid());
             HouseGenerators.Add(hgen);
             hgen.SaveToDB();
         }
 
-        public void AddHouseTypeDevice([NotNull] IAssignableDevice adev, [NotNull] TimeLimit devTimeLimit, [CanBeNull] TimeBasedProfile profile,
+        public void AddHouseTypeDevice([JetBrains.Annotations.NotNull] IAssignableDevice adev, [JetBrains.Annotations.NotNull] TimeLimit devTimeLimit, [CanBeNull] TimeBasedProfile profile,
             double standardDeviation,[CanBeNull] VLoadType vLoadType,[CanBeNull] Location loc, double variableValue,
             VariableCondition variableCondition,[CanBeNull] Variable variable)
         {
@@ -265,7 +265,7 @@ namespace Database.Tables.Houses {
             hd.SaveToDB();
         }
 
-        public void AddTransformationDevice([NotNull] TransformationDevice td)
+        public void AddTransformationDevice([JetBrains.Annotations.NotNull] TransformationDevice td)
         {
             var htd = new HouseTypeTransformationDevice(null, IntID, td, ConnectionString,
                 td.Name, System.Guid.NewGuid().ToStrGuid());
@@ -273,9 +273,9 @@ namespace Database.Tables.Houses {
             htd.SaveToDB();
         }
 
-        [NotNull]
-        private static HouseType AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static HouseType AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var name =  dr.GetString("Name");
             var id = dr.GetIntFromLong("ID");
@@ -310,9 +310,9 @@ namespace Database.Tables.Houses {
                 minimumHouseholdCount, maximumHouseholdCount,guid, id);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString)
+        public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString)
         {
             var housetype = new HouseType(FindNewName(isNameTaken, "New House Type "),
                 "New house type description", 5000, 15, 20, null, connectionString, 19, 2000, null, false, 400, false,
@@ -334,25 +334,25 @@ namespace Database.Tables.Houses {
             }
         }
 
-        public void DeleteHouseDeviceFromDB([NotNull] HouseTypeDevice hd)
+        public void DeleteHouseDeviceFromDB([JetBrains.Annotations.NotNull] HouseTypeDevice hd)
         {
             HouseDevices.Remove(hd);
             hd.DeleteFromDB();
         }
 
-        public void DeleteHouseEnergyStorage([NotNull] HouseTypeEnergyStorage houseEnergyStorage)
+        public void DeleteHouseEnergyStorage([JetBrains.Annotations.NotNull] HouseTypeEnergyStorage houseEnergyStorage)
         {
             HouseEnergyStorages.Remove(houseEnergyStorage);
             houseEnergyStorage.DeleteFromDB();
         }
 
-        public void DeleteHouseGenerator([NotNull] HouseTypeGenerator houseGen)
+        public void DeleteHouseGenerator([JetBrains.Annotations.NotNull] HouseTypeGenerator houseGen)
         {
             HouseGenerators.Remove(houseGen);
             houseGen.DeleteFromDB();
         }
 
-        public void DeleteHouseTransformationDeviceFromDB([NotNull] HouseTypeTransformationDevice htd)
+        public void DeleteHouseTransformationDeviceFromDB([JetBrains.Annotations.NotNull] HouseTypeTransformationDevice htd)
         {
             _houseTransformationDevices.Remove(htd);
             htd.DeleteFromDB();
@@ -372,9 +372,9 @@ namespace Database.Tables.Houses {
             return usedIns;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DBBase ImportFromItem([NotNull] HouseType item,  [NotNull] Simulator dstSim)
+        public static DBBase ImportFromItem([JetBrains.Annotations.NotNull] HouseType item,  [JetBrains.Annotations.NotNull] Simulator dstSim)
         {
             VLoadType heatingvlt = null;
             if (item.HeatingLoadType != null) {
@@ -438,7 +438,7 @@ namespace Database.Tables.Houses {
             return houseType;
         }
 
-        private static bool IsCorrectParentHouseDevice([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectParentHouseDevice([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var hd = (HouseTypeDevice) child;
             if (parent.ID == hd.HouseID) {
@@ -449,7 +449,7 @@ namespace Database.Tables.Houses {
             return false;
         }
 
-        private static bool IsCorrectParentHouseEnergyStorage([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectParentHouseEnergyStorage([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var hd = (HouseTypeEnergyStorage) child;
             if (parent.ID == hd.HouseID) {
@@ -461,7 +461,7 @@ namespace Database.Tables.Houses {
             return false;
         }
 
-        private static bool IsCorrectParentHouseGenerator([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectParentHouseGenerator([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var gen = (HouseTypeGenerator) child;
             if (parent.ID == gen.HouseID) {
@@ -472,7 +472,7 @@ namespace Database.Tables.Houses {
             return false;
         }
 
-        private static bool IsCorrectParentHouseTransformationDevice([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectParentHouseTransformationDevice([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var hd = (HouseTypeTransformationDevice) child;
             if (parent.ID == hd.HouseID) {
@@ -489,16 +489,16 @@ namespace Database.Tables.Houses {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<HouseType> result, [NotNull] string connectionString,
-            [ItemNotNull] [NotNull] ObservableCollection<RealDevice> pallDevices, [ItemNotNull] [NotNull] ObservableCollection<DeviceCategory> pallDeviceCategories,
-            [ItemNotNull] [NotNull] ObservableCollection<TimeBasedProfile> pallTimeBasedProfiles, [ItemNotNull] [NotNull] ObservableCollection<TimeLimit> timeLimits,
-            [ItemNotNull] [NotNull] ObservableCollection<VLoadType> vLoadTypes,
-            [ItemNotNull] [NotNull] ObservableCollection<TransformationDevice> transformationDevices,
-            [ItemNotNull] [NotNull] ObservableCollection<EnergyStorage> energyStorages, [ItemNotNull] [NotNull] ObservableCollection<Generator> generators,
-            bool ignoreMissingTables, [ItemNotNull] [NotNull] ObservableCollection<Location> allLocations,
-            [ItemNotNull] [NotNull] ObservableCollection<DeviceAction> deviceActions,
-            [ItemNotNull] [NotNull] ObservableCollection<DeviceActionGroup> deviceActionGroups,
-            [ItemNotNull] [NotNull] ObservableCollection<Variable> variables)
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<HouseType> result, [JetBrains.Annotations.NotNull] string connectionString,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<RealDevice> pallDevices, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceCategory> pallDeviceCategories,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TimeBasedProfile> pallTimeBasedProfiles, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TimeLimit> timeLimits,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<VLoadType> vLoadTypes,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TransformationDevice> transformationDevices,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<EnergyStorage> energyStorages, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Generator> generators,
+            bool ignoreMissingTables, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Location> allLocations,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceAction> deviceActions,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceActionGroup> deviceActionGroups,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Variable> variables)
         {
             var aic = new AllItemCollections(loadTypes: vLoadTypes);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);

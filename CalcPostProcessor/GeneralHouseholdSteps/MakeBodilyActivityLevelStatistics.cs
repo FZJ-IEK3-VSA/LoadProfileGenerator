@@ -8,21 +8,20 @@ using Common.Enums;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
 using Common.SQLResultLogging.Loggers;
-using JetBrains.Annotations;
 
 
 namespace CalcPostProcessor.GeneralHouseholdSteps {
     public class MakeBodilyActivityLevelStatistics : HouseholdStepBase
     {
-        [NotNull] private readonly ICalculationProfiler _calculationProfiler;
+        [JetBrains.Annotations.NotNull] private readonly ICalculationProfiler _calculationProfiler;
 
-        [NotNull] private readonly IInputDataLogger _inputDataLogger;
+        [JetBrains.Annotations.NotNull] private readonly IInputDataLogger _inputDataLogger;
 
-        [NotNull] private readonly CalcDataRepository _repository;
+        [JetBrains.Annotations.NotNull] private readonly CalcDataRepository _repository;
 
-        public MakeBodilyActivityLevelStatistics([NotNull] ICalculationProfiler calculationProfiler,
-                                                 [NotNull] CalcDataRepository repository,
-                                                 [NotNull] IInputDataLogger inputDataLogger) : base(repository,
+        public MakeBodilyActivityLevelStatistics([JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler,
+                                                 [JetBrains.Annotations.NotNull] CalcDataRepository repository,
+                                                 [JetBrains.Annotations.NotNull] IInputDataLogger inputDataLogger) : base(repository,
             AutomationUtili.GetOptionList(CalcOption.BodilyActivityStatistics),
             calculationProfiler,
             "Make Bodily Activity Level Statistics",1)
@@ -76,7 +75,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
 
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public override List<CalcOption> NeededOptions => new List<CalcOption>() {CalcOption.ActionsEachTimestep};
     }
 }

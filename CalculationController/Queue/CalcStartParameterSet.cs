@@ -56,23 +56,23 @@ namespace CalculationController.Queue {
         ///     starter for unit tests
         /// </summary>
         public CalcStartParameterSet(
-            [NotNull] GeographicLocation geographicLocation,
-            [NotNull] TemperatureProfile temperatureProfile,
-            [NotNull] ICalcObject calcTarget,
+            [JetBrains.Annotations.NotNull] GeographicLocation geographicLocation,
+            [JetBrains.Annotations.NotNull] TemperatureProfile temperatureProfile,
+            [JetBrains.Annotations.NotNull] ICalcObject calcTarget,
             EnergyIntensityType energyIntensity,
             bool resumeSettlement,
             [CanBeNull] DeviceSelection deviceSelection,
             LoadTypePriority loadTypePriority,
             [CanBeNull] TransportationDeviceSet transportationDeviceSet, [CanBeNull] ChargingStationSet chargingStationSet,
-            [CanBeNull] TravelRouteSet travelRouteSet, [NotNull] List<CalcOption> calcOptions,
+            [CanBeNull] TravelRouteSet travelRouteSet, [JetBrains.Annotations.NotNull] List<CalcOption> calcOptions,
             DateTime officialSimulationStartTime,
             DateTime officialSimulationEndTime,
             TimeSpan internalTimeResolution,
-            [NotNull] string csvCharacter,
+            [JetBrains.Annotations.NotNull] string csvCharacter,
             int selectedRandomSeed,
             TimeSpan externalTimeResolution, bool deleteDatFiles, bool writeExcelColumn, bool showSettlingPeriod,
-            int settlingDays, int affordanceRepetitionCount, [NotNull] CalculationProfiler calculationProfiler, string resultPath,
-            bool transportationEnabled, bool enableIdlemode, [NotNull] string decimalSeperator)
+            int settlingDays, int affordanceRepetitionCount, [JetBrains.Annotations.NotNull] CalculationProfiler calculationProfiler, string resultPath,
+            bool transportationEnabled, bool enableIdlemode, [JetBrains.Annotations.NotNull] string decimalSeperator)
         {
             OfficialSimulationStartTime = officialSimulationStartTime;
             OfficialSimulationEndTime = officialSimulationEndTime;
@@ -110,24 +110,24 @@ namespace CalculationController.Queue {
         ///     starter for real calcs
         /// </summary>
         public CalcStartParameterSet(
-            [NotNull] Func<bool, string, ObservableCollection<ResultFileEntry>, bool>
+            [JetBrains.Annotations.NotNull] Func<bool, string, ObservableCollection<ResultFileEntry>, bool>
                 reportFinishFuncForHouseAndSettlement,
-            [NotNull] Func<bool, string, string, bool> reportFinishFuncForHousehold,
-            [NotNull] Func<object, bool> openTabFunc, [CanBeNull] ILPGDispatcher dispatcher,
-            [NotNull] GeographicLocation geographicLocation,
-            [NotNull] TemperatureProfile temperatureProfile,
-            [NotNull] ICalcObject calcTarget,
-            EnergyIntensityType energyIntensity, [NotNull] Func<bool> reportCancelFunc, bool resumeSettlement,
+            [JetBrains.Annotations.NotNull] Func<bool, string, string, bool> reportFinishFuncForHousehold,
+            [JetBrains.Annotations.NotNull] Func<object, bool> openTabFunc, [CanBeNull] ILPGDispatcher dispatcher,
+            [JetBrains.Annotations.NotNull] GeographicLocation geographicLocation,
+            [JetBrains.Annotations.NotNull] TemperatureProfile temperatureProfile,
+            [JetBrains.Annotations.NotNull] ICalcObject calcTarget,
+            EnergyIntensityType energyIntensity, [JetBrains.Annotations.NotNull] Func<bool> reportCancelFunc, bool resumeSettlement,
             [CanBeNull] DeviceSelection deviceSelection, LoadTypePriority loadTypePriority,
             [CanBeNull] TransportationDeviceSet transportationDeviceSet, [CanBeNull] TravelRouteSet travelRouteSet,
-            [NotNull] List<CalcOption> calcOptions,
+            [JetBrains.Annotations.NotNull] List<CalcOption> calcOptions,
             DateTime officialSimulationStartTime,
             DateTime officialSimulationEndTime,
             TimeSpan internalTimeResolution,
-            [NotNull] string csvCharacter,
+            [JetBrains.Annotations.NotNull] string csvCharacter,
             int selectedRandomSeed,
             TimeSpan externalTimeResolution, bool deleteDatFiles, bool writeExcelColumn, bool showSettlingPeriod,
-            int settlingDays, int affordanceRepetitionCount, [NotNull] CalculationProfiler calculationProfiler,
+            int settlingDays, int affordanceRepetitionCount, [JetBrains.Annotations.NotNull] CalculationProfiler calculationProfiler,
             [CanBeNull] ChargingStationSet chargingStationSet,
             [CanBeNull][ItemNotNull] List<string> loadTypesToProcess,
             DeviceProfileHeaderMode deviceProfileHeaderMode,
@@ -176,20 +176,20 @@ namespace CalculationController.Queue {
 
         public string ResultPath { get; set; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CalculationProfiler CalculationProfiler { get; }
         public int AffordanceRepetitionCount { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public List<CalcOption> CalcOptions { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ICalcObject CalcTarget { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string CsvCharacter { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string DecimalSeperator { get; }
 
         public bool DeleteDatFiles { get; }
@@ -203,13 +203,13 @@ namespace CalculationController.Queue {
         public EnergyIntensityType EnergyIntensity { get; }
         public TimeSpan ExternalTimeResolution { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public GeographicLocation GeographicLocation { get; }
 
         public TimeSpan InternalTimeResolution { get; }
         public LoadTypePriority LoadTypePriority { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string LPGVersion { get; }
 
         public DateTime OfficialSimulationEndTime { get; }
@@ -235,7 +235,7 @@ namespace CalculationController.Queue {
         public int SettlingDays { get; }
         public bool ShowSettlingPeriod { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public TemperatureProfile TemperatureProfile { get; }
 
         [CanBeNull]

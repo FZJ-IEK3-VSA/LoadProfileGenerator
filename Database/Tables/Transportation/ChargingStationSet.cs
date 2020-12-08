@@ -13,8 +13,8 @@ namespace Database.Tables.Transportation
     public class ChargingStationSet : DBBaseElement
     {
 
-        [NotNull]
-        public ChargingStationSet MakeExactCopy([NotNull] Simulator sim)
+        [JetBrains.Annotations.NotNull]
+        public ChargingStationSet MakeExactCopy([JetBrains.Annotations.NotNull] Simulator sim)
         {
             var other= sim.ChargingStationSets.CreateNewItem(sim.ConnectionString);
             other.Name = Name + " (copy)";
@@ -30,10 +30,10 @@ namespace Database.Tables.Transportation
             return other;
         }
         public const string TableName = "tblChargingStationSets";
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<ChargingStationSetEntry> _chargingStations = new ObservableCollection<ChargingStationSetEntry>();
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<ChargingStationSetEntry> _chargingStations = new ObservableCollection<ChargingStationSetEntry>();
         [CanBeNull] private string _description;
 
-        public ChargingStationSet([NotNull] string name, [CanBeNull] int? pID, [NotNull] string connectionString,
+        public ChargingStationSet([JetBrains.Annotations.NotNull] string name, [CanBeNull] int? pID, [JetBrains.Annotations.NotNull] string connectionString,
             [CanBeNull] string description, StrGuid guid) : base(name, TableName,
             connectionString, guid)
         {
@@ -62,13 +62,13 @@ namespace Database.Tables.Transportation
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<ChargingStationSetEntry> ChargingStations => _chargingStations;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public static DBBase CreateNewItem
-            ([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new ChargingStationSet(
+            ([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString) => new ChargingStationSet(
             FindNewName(isNameTaken, "New Charging Station Set "),
             null, connectionString, "", System.Guid.NewGuid().ToStrGuid());
 
@@ -82,9 +82,9 @@ namespace Database.Tables.Transportation
             base.DeleteFromDB();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static ChargingStationSet ImportFromItem([NotNull] ChargingStationSet toImport, [NotNull] Simulator dstSim)
+        public static ChargingStationSet ImportFromItem([JetBrains.Annotations.NotNull] ChargingStationSet toImport, [JetBrains.Annotations.NotNull] Simulator dstSim)
         {
             var chargingStationSet = new ChargingStationSet(toImport.Name, null, dstSim.ConnectionString, toImport.Description, toImport.Guid);
             chargingStationSet.SaveToDB();
@@ -102,11 +102,11 @@ namespace Database.Tables.Transportation
             return chargingStationSet;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<ChargingStationSet> result, [NotNull] string connectionString,
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<ChargingStationSet> result, [JetBrains.Annotations.NotNull] string connectionString,
             bool ignoreMissingTables,
-                                            [ItemNotNull] [NotNull] ObservableCollection<VLoadType> loadTypes,
-                                            [ItemNotNull] [NotNull] ObservableCollection<TransportationDeviceCategory> categories,
-                                            [ItemNotNull] [NotNull] ObservableCollection<Site> sites)
+                                            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<VLoadType> loadTypes,
+                                            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TransportationDeviceCategory> categories,
+                                            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Site> sites)
         {
             var aic = new AllItemCollections();
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);
@@ -139,9 +139,9 @@ namespace Database.Tables.Transportation
             cmd.AddParameter("Name", Name);
         }
 
-        [NotNull]
-        private static ChargingStationSet AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static ChargingStationSet AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var name = dr.GetString("Name", false, "(no name)", ignoreMissingFields);
             var description = dr.GetString("Description", false, "(no description)", ignoreMissingFields);
@@ -150,7 +150,7 @@ namespace Database.Tables.Transportation
             return new ChargingStationSet(name, id, connectionString, description, guid);
         }
 
-        private static bool IsCorrectSiteChargingParent([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectSiteChargingParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var hd = (ChargingStationSetEntry)child;
 
@@ -164,7 +164,7 @@ namespace Database.Tables.Transportation
             return false;
         }
 
-        public void DeleteChargingStation([NotNull] ChargingStationSetEntry chargingStation)
+        public void DeleteChargingStation([JetBrains.Annotations.NotNull] ChargingStationSetEntry chargingStation)
         {
             chargingStation.DeleteFromDB();
             _chargingStations.Remove(chargingStation);

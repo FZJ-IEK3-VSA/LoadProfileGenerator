@@ -41,7 +41,7 @@ using JetBrains.Annotations;
 namespace CalculationController.Queue {
     internal class CalcQueueRunner{
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private static readonly List<CalcManager> _calcManagers = new List<CalcManager>();
         //[CanBeNull] private CalculationResult _results;
 
@@ -61,7 +61,7 @@ namespace CalculationController.Queue {
           //  TransportationDeviceSet transportationDeviceSet, TravelRouteSet travelRouteSet
 
         [SuppressMessage("ReSharper", "RedundantAssignment")]
-        private static bool RunOneCalcEntry([NotNull] CalcStartParameterSet csps, [NotNull] Simulator sim, bool forceRandom)
+        private static bool RunOneCalcEntry([JetBrains.Annotations.NotNull] CalcStartParameterSet csps, [JetBrains.Annotations.NotNull] Simulator sim, bool forceRandom)
         {
             CalcManager.StartRunning();
             Logger.Info("Running the simulation for " + csps.CalcTarget.Name + " from " +
@@ -143,8 +143,8 @@ namespace CalculationController.Queue {
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         [SuppressMessage("ReSharper", "HeuristicUnreachableCode")]
         private static void SaveRun(bool forceRandom,
-                                    [NotNull] Simulator sim,
-                                    [NotNull] CalcStartParameterSet csps)
+                                    [JetBrains.Annotations.NotNull] Simulator sim,
+                                    [JetBrains.Annotations.NotNull] CalcStartParameterSet csps)
         {
             bool allgood = true;
 #pragma warning disable 162
@@ -172,7 +172,7 @@ namespace CalculationController.Queue {
         }
 
         private static void SaveCallFunction([CanBeNull] Func<bool, string,string , bool> reportFinishFuncForHousehold,
-                                             [NotNull] CalcStartParameterSet csps                                             )
+                                             [JetBrains.Annotations.NotNull] CalcStartParameterSet csps                                             )
         {
             if (reportFinishFuncForHousehold == null) {
                 return;
@@ -184,7 +184,7 @@ namespace CalculationController.Queue {
         }
         [SuppressMessage("ReSharper", "ReplaceWithSingleAssignment.False")]
         [SuppressMessage("ReSharper", "ConvertIfToOrExpression")]
-        public void Start([NotNull] CalcStartParameterSet csps, [NotNull] Simulator sim) {
+        public void Start([JetBrains.Annotations.NotNull] CalcStartParameterSet csps, [JetBrains.Annotations.NotNull] Simulator sim) {
                 var forceRandom = false;
                 if (csps.CalcTarget.GetType() == typeof(Settlement)) {
                     forceRandom = true;

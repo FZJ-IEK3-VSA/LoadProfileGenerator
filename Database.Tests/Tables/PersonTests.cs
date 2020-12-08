@@ -36,8 +36,6 @@ using Common.Enums;
 using Common.Tests;
 using Database.Tables.BasicHouseholds;
 using FluentAssertions;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -80,7 +78,7 @@ namespace Database.Tests.Tables {
             }
         }
 
-        public PersonTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public PersonTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

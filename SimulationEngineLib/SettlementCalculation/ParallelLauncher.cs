@@ -15,10 +15,10 @@ using PowerArgs;
 
 namespace SimulationEngineLib.SettlementCalculation {
     public class ParallelLauncher {
-        [ItemNotNull] [NotNull] private readonly ConcurrentQueue<string> _calculationsToProcess = new ConcurrentQueue<string>();
-        [ItemNotNull] [NotNull] private readonly ConcurrentQueue<string> _foldersToArchive = new ConcurrentQueue<string>();
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ConcurrentQueue<string> _calculationsToProcess = new ConcurrentQueue<string>();
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ConcurrentQueue<string> _foldersToArchive = new ConcurrentQueue<string>();
 
-        [NotNull] private readonly Random _r = new Random();
+        [JetBrains.Annotations.NotNull] private readonly Random _r = new Random();
 
         private bool _continueArchiving = true;
         private bool _continueProcessing = true;
@@ -35,14 +35,14 @@ namespace SimulationEngineLib.SettlementCalculation {
             return coreCount;
         }
 
-        public static void LaunchParallel([NotNull] ParallelLauncherOptions options)
+        public static void LaunchParallel([JetBrains.Annotations.NotNull] ParallelLauncherOptions options)
         {
             var pl = new ParallelLauncher();
             pl.LaunchParallelInternal(options);
         }
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        private void ArchiveEverything([NotNull] ParallelLauncherOptions options)
+        private void ArchiveEverything([JetBrains.Annotations.NotNull] ParallelLauncherOptions options)
         {
             try {
                 if (!string.IsNullOrEmpty(options.ArchiveDirectory)) {
@@ -95,7 +95,7 @@ namespace SimulationEngineLib.SettlementCalculation {
             }
         }
 
-        private static void CopyAll([NotNull] DirectoryInfo source, [NotNull] DirectoryInfo target)
+        private static void CopyAll([JetBrains.Annotations.NotNull] DirectoryInfo source, [JetBrains.Annotations.NotNull] DirectoryInfo target)
         {
             Directory.CreateDirectory(target.FullName);
 
@@ -135,7 +135,7 @@ namespace SimulationEngineLib.SettlementCalculation {
         }
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        private void Executor(int index, [NotNull] ParallelLauncherOptions options)
+        private void Executor(int index, [JetBrains.Annotations.NotNull] ParallelLauncherOptions options)
         {
             try {
                 Logger.Info("Starting thread " + index);
@@ -244,7 +244,7 @@ namespace SimulationEngineLib.SettlementCalculation {
             }
         }
 
-        private void LaunchParallelInternal([NotNull] ParallelLauncherOptions options)
+        private void LaunchParallelInternal([JetBrains.Annotations.NotNull] ParallelLauncherOptions options)
         {
             Logger.LogToFile = true;
             Logger.Info("Reading options");
@@ -361,7 +361,7 @@ namespace SimulationEngineLib.SettlementCalculation {
         }
 
         [DllImport("User32.dll", CharSet = CharSet.Unicode)]
-        private static extern bool SetWindowText(IntPtr hwnd, [NotNull] string title);
+        private static extern bool SetWindowText(IntPtr hwnd, [JetBrains.Annotations.NotNull] string title);
 
         [UsedImplicitly]
         public class ParallelLauncherOptions {

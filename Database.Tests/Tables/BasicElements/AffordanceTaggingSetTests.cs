@@ -34,8 +34,6 @@ using Common.Enums;
 using Common.Tests;
 using Database.Tables.BasicElements;
 using FluentAssertions;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -141,7 +139,7 @@ namespace Database.Tests.Tables.BasicElements {
             }
         }
 
-        public AffordanceTaggingSetTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public AffordanceTaggingSetTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

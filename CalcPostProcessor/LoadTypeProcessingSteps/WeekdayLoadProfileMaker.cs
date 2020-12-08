@@ -43,19 +43,19 @@ using JetBrains.Annotations;
 namespace CalcPostProcessor.LoadTypeProcessingSteps {
     internal class WeekdayLoadProfileMaker : LoadTypeStepBase
     {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly IFileFactoryAndTracker _fft;
 
         public WeekdayLoadProfileMaker(
-                                       [NotNull] IFileFactoryAndTracker fft,
-                                       [NotNull] CalcDataRepository repository,
-                                       [NotNull] ICalculationProfiler profiler
+                                       [JetBrains.Annotations.NotNull] IFileFactoryAndTracker fft,
+                                       [JetBrains.Annotations.NotNull] CalcDataRepository repository,
+                                       [JetBrains.Annotations.NotNull] ICalculationProfiler profiler
                                        ):base(repository, AutomationUtili.GetOptionList(CalcOption.WeekdayProfiles),profiler,"Weekday Profiles")
         {
             _fft = fft;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private static string GetHeaderForSeasonKey(int key) {
             switch (key) {
                 case 0: return "Winter Sunday";
@@ -101,7 +101,7 @@ namespace CalcPostProcessor.LoadTypeProcessingSteps {
             return season + daytype;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private  string MakeWriteableString(int timestep)
         {
             var calcParameters = Repository.CalcParameters;
@@ -116,11 +116,11 @@ namespace CalcPostProcessor.LoadTypeProcessingSteps {
             return sb.ToString();
         }
 
-        private  void ReadFile([NotNull][ItemNotNull] List<OnlineEnergyFileRow> energyFileRows,
-            [NotNull] Dictionary<int, Dictionary<int, double>> dailyValues,
-            [NotNull] Dictionary<int, Dictionary<int, Dictionary<int, double>>> dailyValuesbyMonth,
-            [NotNull] Dictionary<int, Dictionary<int, double>> dailyValuesbySeason, [NotNull] Dictionary<DayOfWeek, int> dayCount,
-            [NotNull] Dictionary<int, int> seasonDayCount) {
+        private  void ReadFile([JetBrains.Annotations.NotNull][ItemNotNull] List<OnlineEnergyFileRow> energyFileRows,
+            [JetBrains.Annotations.NotNull] Dictionary<int, Dictionary<int, double>> dailyValues,
+            [JetBrains.Annotations.NotNull] Dictionary<int, Dictionary<int, Dictionary<int, double>>> dailyValuesbyMonth,
+            [JetBrains.Annotations.NotNull] Dictionary<int, Dictionary<int, double>> dailyValuesbySeason, [JetBrains.Annotations.NotNull] Dictionary<DayOfWeek, int> dayCount,
+            [JetBrains.Annotations.NotNull] Dictionary<int, int> seasonDayCount) {
             var calcParameters = Repository.CalcParameters;
             var curTime = calcParameters.OfficialStartTime;
             var curDate = calcParameters.OfficialStartTime;
@@ -176,8 +176,8 @@ namespace CalcPostProcessor.LoadTypeProcessingSteps {
             }
         }
 
-        private  void Run([NotNull] CalcLoadTypeDto dstLoadType, [NotNull][ItemNotNull] List<OnlineEnergyFileRow> energyFileRows,
-            [NotNull] IFileFactoryAndTracker fft) {
+        private  void Run([JetBrains.Annotations.NotNull] CalcLoadTypeDto dstLoadType, [JetBrains.Annotations.NotNull][ItemNotNull] List<OnlineEnergyFileRow> energyFileRows,
+            [JetBrains.Annotations.NotNull] IFileFactoryAndTracker fft) {
             var calcParameters = Repository.CalcParameters;
             var dailyValues = new Dictionary<int, Dictionary<int, double>>();
             var dailyValuesbyMonth =
@@ -202,8 +202,8 @@ namespace CalcPostProcessor.LoadTypeProcessingSteps {
             resultfile.Close();
         }
 
-        private  void WriteByMonth([NotNull] StreamWriter resultfile,
-            [NotNull] Dictionary<int, Dictionary<int, Dictionary<int, double>>> dailyValuesbyMonth, int valuecount) {
+        private  void WriteByMonth([JetBrains.Annotations.NotNull] StreamWriter resultfile,
+            [JetBrains.Annotations.NotNull] Dictionary<int, Dictionary<int, Dictionary<int, double>>> dailyValuesbyMonth, int valuecount) {
             var calcParameters = Repository.CalcParameters;
             resultfile.WriteLine();
             resultfile.WriteLine("---------------------------------------");
@@ -235,8 +235,8 @@ namespace CalcPostProcessor.LoadTypeProcessingSteps {
             }
         }
 
-        private  void WriteBySeason([NotNull] StreamWriter resultfile, int valuecount,
-            [NotNull] Dictionary<int, Dictionary<int, double>> dailyValuesbySeason, [NotNull] Dictionary<int, int> seasonDayCount) {
+        private  void WriteBySeason([JetBrains.Annotations.NotNull] StreamWriter resultfile, int valuecount,
+            [JetBrains.Annotations.NotNull] Dictionary<int, Dictionary<int, double>> dailyValuesbySeason, [JetBrains.Annotations.NotNull] Dictionary<int, int> seasonDayCount) {
             var calcParameters = Repository.CalcParameters;
             resultfile.WriteLine();
             resultfile.WriteLine("---------------------------------------");
@@ -266,8 +266,8 @@ namespace CalcPostProcessor.LoadTypeProcessingSteps {
             }
         }
 
-        private  int WriteNormalPart([NotNull] CalcLoadTypeDto dstLoadType, [NotNull] StreamWriter resultfile,
-            [NotNull] Dictionary<int, Dictionary<int, double>> dailyValues, [NotNull] Dictionary<DayOfWeek, int> dayCount) {
+        private  int WriteNormalPart([JetBrains.Annotations.NotNull] CalcLoadTypeDto dstLoadType, [JetBrains.Annotations.NotNull] StreamWriter resultfile,
+            [JetBrains.Annotations.NotNull] Dictionary<int, Dictionary<int, double>> dailyValues, [JetBrains.Annotations.NotNull] Dictionary<DayOfWeek, int> dayCount) {
             var calcParameters = Repository.CalcParameters;
             var headerdays = string.Empty;
             foreach (DayOfWeek day in Enum.GetValues(typeof(DayOfWeek))) {
@@ -303,7 +303,7 @@ namespace CalcPostProcessor.LoadTypeProcessingSteps {
             Run(p.LoadType,p.EnergyFileRows,_fft);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public override List<CalcOption> NeededOptions => new List<CalcOption>() {CalcOption.DetailedDatFiles};
     }
 }

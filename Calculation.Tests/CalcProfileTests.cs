@@ -36,8 +36,6 @@ using Common;
 using Common.CalcDto;
 using Common.Tests;
 using FluentAssertions;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -45,7 +43,7 @@ using Xunit.Abstractions;
 namespace Calculation.Tests {
     public class CalcProfileTests : UnitTestBaseClass
     {
-        public CalcProfileTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public CalcProfileTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
 

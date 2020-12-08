@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using JetBrains.Annotations;
 
 namespace ReleaseMaker {
     public class SimEngineCopier : CopierBase {
-        [NotNull]
-        public static List<string> CopySimEngineFiles([NotNull] string src, [NotNull] string dst)
+        [JetBrains.Annotations.NotNull]
+        public static List<string> CopySimEngineFiles([JetBrains.Annotations.NotNull] string src, [JetBrains.Annotations.NotNull] string dst)
         {
             List<string> programFiles = new List<string>();
             var srcDi = new DirectoryInfo(src);

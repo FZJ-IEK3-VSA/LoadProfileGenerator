@@ -38,7 +38,7 @@ namespace Database.Tables.ModularHouseholds
         //    };
 #pragma warning restore S3887 // Mutable, non-private fields should not be "readonly"
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
 #pragma warning disable S3887 // Mutable, non-private fields should not be "readonly"
 #pragma warning disable S2386 // Mutable fields should not be "public static"
@@ -54,7 +54,7 @@ namespace Database.Tables.ModularHouseholds
 #pragma warning restore S2386 // Mutable fields should not be "public static"
 #pragma warning restore S3887 // Mutable, non-private fields should not be "readonly"
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
 #pragma warning disable S3887 // Mutable, non-private fields should not be "readonly"
 #pragma warning disable S2386 // Mutable fields should not be "public static"
@@ -75,7 +75,7 @@ namespace Database.Tables.ModularHouseholds
         public const string TableName = "tblTraitTags";
         private TraitLimitType _traitLimitType;
         private TraitPriority _traitPriority;
-        public TraitTag([NotNull] string pName, [NotNull] string connectionString, TraitLimitType traitLimitType, TraitPriority tp,
+        public TraitTag([JetBrains.Annotations.NotNull] string pName, [JetBrains.Annotations.NotNull] string connectionString, TraitLimitType traitLimitType, TraitPriority tp,
                         StrGuid guid, [CanBeNull] int? pID = null)
             : base(pName, TableName, connectionString, guid)
         {
@@ -99,9 +99,9 @@ namespace Database.Tables.ModularHouseholds
             set => SetValueWithNotify(value, ref _traitPriority, nameof(TraitPriority));
         }
 
-        [NotNull]
-        private static TraitTag AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static TraitTag AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var name = dr.GetString("Name", "No name");
             var id = dr.GetIntFromLong("ID");
@@ -115,9 +115,9 @@ namespace Database.Tables.ModularHouseholds
             return d;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new TraitTag(
+        public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString) => new TraitTag(
             FindNewName(isNameTaken, "New Trait Tag "), connectionString, TraitLimitType.NoLimit,
             TraitPriority.Recommended, System.Guid.NewGuid().ToStrGuid());
 
@@ -141,10 +141,10 @@ namespace Database.Tables.ModularHouseholds
             return used;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
 #pragma warning disable RCS1163 // Unused parameter.
-        public static DBBase ImportFromItem([NotNull] TraitTag item, [NotNull] Simulator dstSim)
+        public static DBBase ImportFromItem([JetBrains.Annotations.NotNull] TraitTag item, [JetBrains.Annotations.NotNull] Simulator dstSim)
 #pragma warning restore RCS1163 // Unused parameter.
         {
             //TODO: finish this
@@ -160,7 +160,7 @@ namespace Database.Tables.ModularHouseholds
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull][NotNull] ObservableCollection<TraitTag> result, [NotNull] string connectionString,
+        public static void LoadFromDatabase([ItemNotNull][JetBrains.Annotations.NotNull] ObservableCollection<TraitTag> result, [JetBrains.Annotations.NotNull] string connectionString,
             bool ignoreMissingTables)
         {
             var aic = new AllItemCollections();

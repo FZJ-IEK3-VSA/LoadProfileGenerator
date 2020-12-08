@@ -9,26 +9,26 @@ using JetBrains.Annotations;
 
 namespace CalculationEngine.Transportation {
     public class CalcSite : CalcBase {
-        public CalcSite([NotNull] string pName, StrGuid guid, [NotNull] HouseholdKey householdKey) : base(pName, guid)
+        public CalcSite([JetBrains.Annotations.NotNull] string pName, StrGuid guid, [JetBrains.Annotations.NotNull] HouseholdKey householdKey) : base(pName, guid)
         {
             _householdKey = householdKey;
         }
 
-        [NotNull] private readonly HouseholdKey _householdKey;
-        [NotNull]
+        [JetBrains.Annotations.NotNull] private readonly HouseholdKey _householdKey;
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public List<CalcChargingStation> ChargingDevices {get;} = new List<CalcChargingStation>();
-        /*[NotNull]
+        /*[JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public List<CalcTransportationDevice> Devices { get; } = new List<CalcTransportationDevice>();*/
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public List<CalcLocation> Locations { get; } = new List<CalcLocation>();
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         private List<CalcTravelRoute> MyRoutes { get; } = new List<CalcTravelRoute>();
 
-        public void AddRoute([NotNull] CalcTravelRoute route)
+        public void AddRoute([JetBrains.Annotations.NotNull] CalcTravelRoute route)
         {
             if (MyRoutes.Contains(route)) {
                 return;
@@ -36,9 +36,9 @@ namespace CalculationEngine.Transportation {
             MyRoutes.Add(route);
         }
 
-        public bool AreCategoriesAvailable([NotNull][ItemNotNull] List<CalcTransportationDeviceCategory> neededDeviceCategories,
-            [NotNull] [ItemNotNull] List<CalcTransportationDevice> vehiclepool,
-                                           [ItemNotNull] [NotNull] List<CalcTransportationDevice> devicesAtLoc)
+        public bool AreCategoriesAvailable([JetBrains.Annotations.NotNull][ItemNotNull] List<CalcTransportationDeviceCategory> neededDeviceCategories,
+            [JetBrains.Annotations.NotNull] [ItemNotNull] List<CalcTransportationDevice> vehiclepool,
+                                           [ItemNotNull] [JetBrains.Annotations.NotNull] List<CalcTransportationDevice> devicesAtLoc)
         {
             //TODO: check for fuel on each transportation device
             foreach (var neededDeviceCategory in neededDeviceCategories) {
@@ -65,9 +65,9 @@ namespace CalculationEngine.Transportation {
             return true;
         }
 
-        /*[NotNull]
+        /*[JetBrains.Annotations.NotNull]
         [ItemNotNull]
-        public List<CalcTravelRoute> GetViableTrafficRoutes([NotNull] CalcSite destination, int startTimeStep)
+        public List<CalcTravelRoute> GetViableTrafficRoutes([JetBrains.Annotations.NotNull] CalcSite destination, int startTimeStep)
         {
             List<CalcTravelRoute> viableRoutes = new List<CalcTravelRoute>();
             foreach (CalcTravelRoute myRoute in MyRoutes) {
@@ -79,24 +79,24 @@ namespace CalculationEngine.Transportation {
             return viableRoutes;
         }*/
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
-        public List<CalcTravelRoute> GetAllRoutesTo([NotNull] CalcSite dstSite, [ItemNotNull] [NotNull] List<CalcTransportationDevice> devicesAtSrc)
+        public List<CalcTravelRoute> GetAllRoutesTo([JetBrains.Annotations.NotNull] CalcSite dstSite, [ItemNotNull] [JetBrains.Annotations.NotNull] List<CalcTransportationDevice> devicesAtSrc)
         {
             return MyRoutes.Where(x => x.IsAvailableRouteFor(this, dstSite,devicesAtSrc)).ToList();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
-        public List<CalcChargingStation> CollectChargingDevicesFor([NotNull] CalcTransportationDeviceCategory category, [NotNull] CalcLoadType carLoadType)
+        public List<CalcChargingStation> CollectChargingDevicesFor([JetBrains.Annotations.NotNull] CalcTransportationDeviceCategory category, [JetBrains.Annotations.NotNull] CalcLoadType carLoadType)
         {
             return ChargingDevices.Where(x => x.DeviceCategory == category && x.CarChargingLoadType == carLoadType).ToList();
         }
 
-        public void AddChargingStation([NotNull] CalcLoadType gridchargingLoadType,
-                                       [NotNull] CalcTransportationDeviceCategory cat,
+        public void AddChargingStation([JetBrains.Annotations.NotNull] CalcLoadType gridchargingLoadType,
+                                       [JetBrains.Annotations.NotNull] CalcTransportationDeviceCategory cat,
                                        double chargingDeviceMaxChargingPower,
-                                       [NotNull] CalcLoadType carChargingLoadType,
+                                       [JetBrains.Annotations.NotNull] CalcLoadType carChargingLoadType,
                                        CalcRepo calcRepo, BitArray isBusy)
         {
             string name = Name + " - Charging station " + (ChargingDevices.Count + 1);

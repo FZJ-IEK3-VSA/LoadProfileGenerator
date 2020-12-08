@@ -3,8 +3,6 @@ using Automation;
 using ChartCreator2.OxyCharts;
 using Common;
 using Common.Tests;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -40,7 +38,7 @@ namespace ChartCreator2.Tests.Oxyplot {
             CleanTestBase.RunAutomatically(true);
         }
 
-        public ChartGeneratorTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public ChartGeneratorTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

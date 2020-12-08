@@ -8,16 +8,15 @@ using Common;
 using Common.Enums;
 using Database;
 using Database.Tables.ModularHouseholds;
-using JetBrains.Annotations;
 
 namespace LoadProfileGenerator {
     public class HouseholdTemplateCreator {
-        [NotNull] private readonly Simulator _sim;
+        [JetBrains.Annotations.NotNull] private readonly Simulator _sim;
 
-        public HouseholdTemplateCreator([NotNull] Simulator sim) => _sim = sim;
+        public HouseholdTemplateCreator([JetBrains.Annotations.NotNull] Simulator sim) => _sim = sim;
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        public void Run(bool multithread, [NotNull] Simulator sim)
+        public void Run(bool multithread, [JetBrains.Annotations.NotNull] Simulator sim)
         {
             var basicHouseholds =
                 _sim.ModularHouseholds.Items.Where(x => !x.Name.StartsWith("x ", StringComparison.Ordinal)).ToList();
@@ -119,7 +118,7 @@ namespace LoadProfileGenerator {
             CreateHouseholds();
         }
 
-        private static void SetVacation([NotNull] Simulator sim, [NotNull] HouseholdTemplate template, [NotNull] Random rnd)
+        private static void SetVacation([JetBrains.Annotations.NotNull] Simulator sim, [JetBrains.Annotations.NotNull] HouseholdTemplate template, [JetBrains.Annotations.NotNull] Random rnd)
         {
             template.TemplateVacationType = TemplateVacationType.RandomlyGenerated;
             var forFamiliesWithChildren =

@@ -19,9 +19,11 @@ namespace ReleaseMaker {
                     {
                         var dr = cmd.ExecuteReader("SELECT name FROM sqlite_master WHERE type='table';");
                         var tables = new List<string>();
-                        while (dr.Read())
-                        {
-                            tables.Add((string)dr["name"]);
+                        while (dr.Read()) {
+                            var str = dr["name"];
+                            if(str!=null) {
+                                tables.Add((string)str);
+                            }
                         }
                         dr.Dispose();
                         tables.Sort();
@@ -46,7 +48,7 @@ namespace ReleaseMaker {
                                 var idFound = false;
                                 while (drPragma.Read())
                                 {
-                                    var name = (string)drPragma["name"];
+                                    var name = (string)(drPragma["name"]??"");
                                     if (name == "ID")
                                     {
                                         idFound = true;
@@ -93,7 +95,7 @@ namespace ReleaseMaker {
                         var tables = new List<string>();
                         while (dr.Read())
                         {
-                            tables.Add((string)dr["name"]);
+                            tables.Add((string)(dr["name"]??""));
                         }
                         dr.Dispose();
                         tables.Sort();
@@ -105,7 +107,7 @@ namespace ReleaseMaker {
                                 var guidFound = false;
                                 while (drPragma.Read())
                                 {
-                                    var name = (string)drPragma["name"];
+                                    var name = (string)(drPragma["name"]??"");
                                     if(name==null){throw new LPGException("name was null");}
                                     if (name.ToLower(CultureInfo.InvariantCulture) == "guid")
                                     {

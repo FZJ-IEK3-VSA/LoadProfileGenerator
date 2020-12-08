@@ -5,8 +5,6 @@ using CalculationController.Integrity;
 using Common;
 using Common.Tests;
 using Database.Templating;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -39,12 +37,12 @@ namespace Database.Tests.Templating {
             }
 
             sw.WriteLine(
-                "public SystematicHouseholdTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper) { }");
+                "public SystematicHouseholdTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper) { }");
             sw.WriteLine("}}");
             sw.Close();
         }
 
-        private static void WriteSettlementTemplateTestFunction([NotNull] StreamWriter sw, int i)
+        private static void WriteSettlementTemplateTestFunction([JetBrains.Annotations.NotNull] StreamWriter sw, int i)
         {
             sw.WriteLine("[Fact]");
             sw.WriteLine("[Trait(UnitTestCategories.Category, UnitTestCategories.SystematicSettlementTemplateTests)]");
@@ -103,7 +101,7 @@ namespace Database.Tests.Templating {
             }
         }
 
-        public SettlementTemplateExecutorTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public SettlementTemplateExecutorTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

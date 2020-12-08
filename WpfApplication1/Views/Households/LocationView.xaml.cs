@@ -52,7 +52,7 @@ namespace LoadProfileGenerator.Views.Households {
             InitializeComponent();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private LocationPresenter Presenter => (LocationPresenter) DataContext;
 
         private void BtnAddDeviceClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
@@ -103,7 +103,7 @@ namespace LoadProfileGenerator.Views.Households {
         private void CmbDeviceOrCategory_OnSelectionChanged([CanBeNull] object sender,
             [CanBeNull] SelectionChangedEventArgs e)
         {
-            if (e != null && e.AddedItems.Count > 0) {
+            if (e != null && e.AddedItems.Count > 0 && e.AddedItems[0]!=null) {
                 Presenter.SelectedAddCategory = (string) e.AddedItems[0];
             }
         }

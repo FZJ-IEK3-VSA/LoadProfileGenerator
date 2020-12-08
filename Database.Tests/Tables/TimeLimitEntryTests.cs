@@ -37,8 +37,6 @@ using Database.Helpers;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
 using FluentAssertions;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -138,7 +136,7 @@ namespace Database.Tests.Tables {
             }
         }
 
-        public TimeLimitEntryTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public TimeLimitEntryTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

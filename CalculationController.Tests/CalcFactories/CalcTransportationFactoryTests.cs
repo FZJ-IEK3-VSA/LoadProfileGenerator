@@ -7,8 +7,6 @@ using Common.Tests;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.Transportation;
 using FluentAssertions;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -75,7 +73,7 @@ namespace CalculationController.Tests.CalcFactories {
             CalcTransportationDtoFactory.CheckRouteCompleteness(trs, sites);
         }
 
-        public CalcTransportationFactoryTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public CalcTransportationFactoryTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

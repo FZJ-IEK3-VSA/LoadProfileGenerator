@@ -14,22 +14,22 @@ using JetBrains.Annotations;
 namespace CalcPostProcessor.GeneralHouseholdSteps {
     public class MakeHouseholdPlanResult : HouseholdStepBase
     {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly IFileFactoryAndTracker _fft;
 
         public MakeHouseholdPlanResult(
-                                       [NotNull] CalcDataRepository repository,
-                                       [NotNull] ICalculationProfiler profiler,
-                                       [NotNull] IFileFactoryAndTracker fft):base(repository,
+                                       [JetBrains.Annotations.NotNull] CalcDataRepository repository,
+                                       [JetBrains.Annotations.NotNull] ICalculationProfiler profiler,
+                                       [JetBrains.Annotations.NotNull] IFileFactoryAndTracker fft):base(repository,
             AutomationUtili.GetOptionList(CalcOption.HouseholdPlan),
             profiler,"Household Plans",0)
         {
             _fft = fft;
         }
 
-        [NotNull]
-        private static Dictionary<string, double> GetEnergyUsePerTag([NotNull] Dictionary<string, string> affordanceToTag,
-            [NotNull] Dictionary<string, double> affordanceToEnergy)
+        [JetBrains.Annotations.NotNull]
+        private static Dictionary<string, double> GetEnergyUsePerTag([JetBrains.Annotations.NotNull] Dictionary<string, string> affordanceToTag,
+            [JetBrains.Annotations.NotNull] Dictionary<string, double> affordanceToEnergy)
         {
             var newDictionary = new Dictionary<string, double>();
             foreach (var pair in affordanceToEnergy) {
@@ -46,11 +46,11 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
         }
 
         private  void Run(
-            [NotNull] Dictionary<StrGuid, Dictionary<string, double>>
-                energyByAffordanceByLoadTypeByHousehold, [NotNull] string householdName, [NotNull][ItemNotNull] List<CalcHouseholdPlanDto> householdPlans,
-            [NotNull] IFileFactoryAndTracker fft, [NotNull] HouseholdKey householdKey,
-            [NotNull] Dictionary<string, Dictionary<string, Dictionary<string, int>>> affordanceTaggingSetByPersonByTagTimeUse,
-            [NotNull] Dictionary<string, Dictionary<string, Dictionary<string, int>>>
+            [JetBrains.Annotations.NotNull] Dictionary<StrGuid, Dictionary<string, double>>
+                energyByAffordanceByLoadTypeByHousehold, [JetBrains.Annotations.NotNull] string householdName, [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcHouseholdPlanDto> householdPlans,
+            [JetBrains.Annotations.NotNull] IFileFactoryAndTracker fft, [JetBrains.Annotations.NotNull] HouseholdKey householdKey,
+            [JetBrains.Annotations.NotNull] Dictionary<string, Dictionary<string, Dictionary<string, int>>> affordanceTaggingSetByPersonByTagTimeUse,
+            [JetBrains.Annotations.NotNull] Dictionary<string, Dictionary<string, Dictionary<string, int>>>
                 affordanceTaggingSetByPersonByTagExecutionCount)
         {
             var fileNumberTracker =
@@ -64,9 +64,9 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
         }
 
         private  void RunEnergyPerAffordance(
-            [NotNull]  Dictionary<StrGuid, Dictionary<string, double>>
-                energyByAffordanceByLoadtype, [NotNull] string householdName, [NotNull][ItemNotNull] List<CalcHouseholdPlanDto> householdPlans,
-            [NotNull] HouseholdKey householdKey, [NotNull] Dictionary<Tuple<HouseholdKey, int>, StreamWriter> fileNumberTracker)
+            [JetBrains.Annotations.NotNull]  Dictionary<StrGuid, Dictionary<string, double>>
+                energyByAffordanceByLoadtype, [JetBrains.Annotations.NotNull] string householdName, [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcHouseholdPlanDto> householdPlans,
+            [JetBrains.Annotations.NotNull] HouseholdKey householdKey, [JetBrains.Annotations.NotNull] Dictionary<Tuple<HouseholdKey, int>, StreamWriter> fileNumberTracker)
         {
             var calcParameters = Repository.CalcParameters;
             var simduration = calcParameters.OfficialEndTime -
@@ -132,10 +132,10 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
         }
 
         private  void RunExecutionTimes(
-            [NotNull] Dictionary<string, Dictionary<string, Dictionary<string, int>>>
-                affordanceTaggingSetByPersonByTagExecutionTimes, [NotNull] string householdName,
-            [NotNull][ItemNotNull] List<CalcHouseholdPlanDto> householdPlans, [NotNull] HouseholdKey householdKey,
-            [NotNull] Dictionary<Tuple<HouseholdKey, int>, StreamWriter> fileNumberTracker)
+            [JetBrains.Annotations.NotNull] Dictionary<string, Dictionary<string, Dictionary<string, int>>>
+                affordanceTaggingSetByPersonByTagExecutionTimes, [JetBrains.Annotations.NotNull] string householdName,
+            [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcHouseholdPlanDto> householdPlans, [JetBrains.Annotations.NotNull] HouseholdKey householdKey,
+            [JetBrains.Annotations.NotNull] Dictionary<Tuple<HouseholdKey, int>, StreamWriter> fileNumberTracker)
         {
             var calcParameters = Repository.CalcParameters;
             var simduration = calcParameters.OfficialEndTime -
@@ -191,12 +191,12 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
         }
 
         private void RunTimePerAffordance(
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             Dictionary<string, Dictionary<string, Dictionary<string, int>>> affordanceTaggingSetByPersonByTagTimeUse,
-            [NotNull] string householdName, [NotNull] [ItemNotNull] List<CalcHouseholdPlanDto> householdPlans,
-            [NotNull] IFileFactoryAndTracker fft,
-            [NotNull] HouseholdKey householdKey,
-            [NotNull] Dictionary<Tuple<HouseholdKey, int>, StreamWriter> fileNumberTracker)
+            [JetBrains.Annotations.NotNull] string householdName, [JetBrains.Annotations.NotNull] [ItemNotNull] List<CalcHouseholdPlanDto> householdPlans,
+            [JetBrains.Annotations.NotNull] IFileFactoryAndTracker fft,
+            [JetBrains.Annotations.NotNull] HouseholdKey householdKey,
+            [JetBrains.Annotations.NotNull] Dictionary<Tuple<HouseholdKey, int>, StreamWriter> fileNumberTracker)
         {
             var calcParameters = Repository.CalcParameters;
             var simduration = calcParameters.OfficialEndTime -
@@ -299,7 +299,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
 #pragma warning restore 162
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public override List<CalcOption> NeededOptions => new List<CalcOption>() {CalcOption.DetailedDatFiles};
     }
 }

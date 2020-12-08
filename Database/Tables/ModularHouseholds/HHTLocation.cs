@@ -40,14 +40,14 @@ namespace Database.Tables.ModularHouseholds {
     public class HHTLocation : DBBase, IJSonSubElement<HHTLocation.JsonDto> {
         public const string ParentIDFieldName = "HouseholdTraitID";
         public const string TableName = "tblHHTLocations";
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<HHTAffordance> _affordanceLocations;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<HHTAffordance> _affordanceLocations;
         [CanBeNull]
         private readonly int? _householdTraitID;
 
         [CanBeNull] private Location _location;
 
-        public HHTLocation([CanBeNull]int? pID, [CanBeNull] Location ploc, [CanBeNull] int? householdTraitID, [NotNull] string name,
-            [NotNull] string connectionString, StrGuid guid)
+        public HHTLocation([CanBeNull]int? pID, [CanBeNull] Location ploc, [CanBeNull] int? householdTraitID, [JetBrains.Annotations.NotNull] string name,
+            [JetBrains.Annotations.NotNull] string connectionString, StrGuid guid)
             : base(name, TableName, connectionString, guid) {
             TypeDescription = "Household Trait Location";
             ID = pID;
@@ -58,23 +58,23 @@ namespace Database.Tables.ModularHouseholds {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<HHTAffordance> AffordanceLocations => _affordanceLocations;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public Dictionary<Location, double> DistanceToAllOtherLocs { get; }
         [CanBeNull]
         public int? HouseholdTraitID => _householdTraitID;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Location Location => _location ?? throw new InvalidOperationException();
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public HHTLocation MyLocation => this;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public new string Name => ToString();
 
         [UsedImplicitly]
@@ -82,9 +82,9 @@ namespace Database.Tables.ModularHouseholds {
         [IgnoreForJsonSync]
         public HouseholdTrait ParentHouseholdTrait { get; set; }
 
-        [NotNull]
-        private static HHTLocation AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic) {
+        [JetBrains.Annotations.NotNull]
+        private static HHTLocation AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic) {
             var hhlID = dr.GetIntFromLong("ID");
             var locationID = dr.GetIntFromLong("LocationID");
             var householdID = dr.GetNullableIntFromLong("HouseholdTraitID", false, ignoreMissingFields);
@@ -115,8 +115,8 @@ namespace Database.Tables.ModularHouseholds {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<HHTLocation> result, [NotNull] string connectionString,
-            [ItemNotNull] [NotNull] ObservableCollection<Location> locations, [ItemNotNull] [NotNull] ObservableCollection<Affordance> affordances,
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<HHTLocation> result, [JetBrains.Annotations.NotNull] string connectionString,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Location> locations, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Affordance> affordances,
             bool ignoreMissingTables) {
             var aic = new AllItemCollections(locations: locations, affordances: affordances);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
@@ -132,7 +132,7 @@ namespace Database.Tables.ModularHouseholds {
             }
         }
 
-        public void Notify([NotNull] string name) {
+        public void Notify([JetBrains.Annotations.NotNull] string name) {
             OnPropertyChanged(name);
         }
 

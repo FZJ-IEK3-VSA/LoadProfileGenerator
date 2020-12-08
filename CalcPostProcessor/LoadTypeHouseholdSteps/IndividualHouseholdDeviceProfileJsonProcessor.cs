@@ -8,22 +8,21 @@ using Automation.ResultFiles;
 using CalcPostProcessor.Steps;
 using Common;
 using Common.SQLResultLogging;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 
 namespace CalcPostProcessor.LoadTypeHouseholdSteps {
     public class IndividualHouseholdDeviceProfileJsonProcessor : HouseholdLoadTypeStepBase {
-        [NotNull] private readonly IFileFactoryAndTracker _fft;
+        [JetBrains.Annotations.NotNull] private readonly IFileFactoryAndTracker _fft;
 
-        public IndividualHouseholdDeviceProfileJsonProcessor([NotNull] CalcDataRepository repository,
-                                                             [NotNull] IFileFactoryAndTracker fft,
-                                                             [NotNull] ICalculationProfiler calculationProfiler) : base(repository,
+        public IndividualHouseholdDeviceProfileJsonProcessor([JetBrains.Annotations.NotNull] CalcDataRepository repository,
+                                                             [JetBrains.Annotations.NotNull] IFileFactoryAndTracker fft,
+                                                             [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler) : base(repository,
             AutomationUtili.GetOptionList(CalcOption.JsonDeviceProfilesIndividualHouseholds),
             calculationProfiler,
             "Individual Household Json Device Profiles") =>
             _fft = fft;
 
-        protected override void PerformActualStep([NotNull] IStepParameters parameters)
+        protected override void PerformActualStep([JetBrains.Annotations.NotNull] IStepParameters parameters)
         {
             HouseholdLoadtypeStepParameters p = (HouseholdLoadtypeStepParameters)parameters;
             if (p.Key.HHKey == Constants.GeneralHouseholdKey) {
@@ -95,7 +94,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             deviceProfilejson.Flush();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public override List<CalcOption> NeededOptions => new List<CalcOption>() {CalcOption.DetailedDatFiles, CalcOption.DeviceTaggingSets};
 
     }

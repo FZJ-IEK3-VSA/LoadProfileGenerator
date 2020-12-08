@@ -41,7 +41,7 @@ using JetBrains.Annotations;
 namespace CalculationController.Integrity {
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     public static class SimIntegrityChecker {
-        private static void CheckSimCategorys([NotNull] Simulator sim, bool cleanup) {
+        private static void CheckSimCategorys([JetBrains.Annotations.NotNull] Simulator sim, bool cleanup) {
             if (!cleanup) {
                 return;
             }
@@ -63,7 +63,7 @@ namespace CalculationController.Integrity {
             }
         }
 
-        private static void CheckSimDurationValid([NotNull] Simulator sim) {
+        private static void CheckSimDurationValid([JetBrains.Annotations.NotNull] Simulator sim) {
             var simduration = sim.MyGeneralConfig.EndDateDateTime - sim.MyGeneralConfig.StartDateDateTime;
             var ticks = simduration.Ticks;
             var internalstepticks = sim.MyGeneralConfig.InternalStepSize.Ticks;
@@ -74,7 +74,7 @@ namespace CalculationController.Integrity {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         private static List<BasicChecker> GetAllCheckers(bool isCleanupCheck) {
             var checkers = new List<BasicChecker>
@@ -115,7 +115,7 @@ namespace CalculationController.Integrity {
             return checkers;
         }
 
-        private static void LogProgress(ref DateTime lasttime, ref int step, [NotNull] string name) {
+        private static void LogProgress(ref DateTime lasttime, ref int step, [JetBrains.Annotations.NotNull] string name) {
             var now = DateTime.Now;
             Logger
                 .Info(
@@ -126,13 +126,13 @@ namespace CalculationController.Integrity {
         }
 
         private static void RefreshSubdevicesInDeviceCategories(
-            [NotNull][ItemNotNull] ObservableCollection<DeviceCategory> allDeviceCategories) {
+            [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<DeviceCategory> allDeviceCategories) {
             foreach (var allDeviceCategory in allDeviceCategories) {
                 allDeviceCategory.RefreshSubDevices();
             }
         }
 
-        public static void Run([NotNull] Simulator sim, CheckingOptions options ) {
+        public static void Run([JetBrains.Annotations.NotNull] Simulator sim, CheckingOptions options ) {
             var step = 1;
             Logger.Info("Starting the database integrity check");
             var cleanupCheck = sim.MyGeneralConfig.PerformCleanUpChecksBool;
@@ -156,7 +156,7 @@ namespace CalculationController.Integrity {
             set;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static CheckingOptions Default () {
 
             var co = new CheckingOptions();
@@ -164,8 +164,8 @@ namespace CalculationController.Integrity {
             return co;
         }
 
-        [NotNull]
-        public static CheckingOptions FromStartParameters([NotNull] CalcStartParameterSet csps)
+        [JetBrains.Annotations.NotNull]
+        public static CheckingOptions FromStartParameters([JetBrains.Annotations.NotNull] CalcStartParameterSet csps)
         {
             var co = new CheckingOptions();
             co.CheckTransport = csps.TransportationEnabled;

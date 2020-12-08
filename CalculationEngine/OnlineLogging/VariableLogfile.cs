@@ -8,9 +8,9 @@ using JetBrains.Annotations;
 
 namespace CalculationEngine.OnlineLogging {
     public class VariableLogfile {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly SqlResultLoggingService _sqlResultLoggingService;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly CalcVariableRepository _variableRepository;
         public const string TableName = "VariableValues";
         //private readonly CalcParameters _calcParameters;
@@ -19,7 +19,7 @@ namespace CalculationEngine.OnlineLogging {
         //private readonly StreamWriter _sw;
         //private bool _headerWritten;
         //private DateStampCreator dsc;
-        public VariableLogfile([NotNull] SqlResultLoggingService sqlResultLoggingService, [NotNull] CalcVariableRepository variableRepository)
+        public VariableLogfile([JetBrains.Annotations.NotNull] SqlResultLoggingService sqlResultLoggingService, [JetBrains.Annotations.NotNull] CalcVariableRepository variableRepository)
         {
             _sqlResultLoggingService = sqlResultLoggingService;
             _variableRepository = variableRepository;
@@ -50,7 +50,7 @@ namespace CalculationEngine.OnlineLogging {
                 TargetDirectory.Reports, _calcParameters.InternalStepsize);
         }
 
-        public void LogValues(int timestamp, [NotNull] HouseholdKey key)
+        public void LogValues(int timestamp, [JetBrains.Annotations.NotNull] HouseholdKey key)
         {
             Dictionary<string, object> values = new Dictionary<string, object>();
             values.Add("Time",timestamp);

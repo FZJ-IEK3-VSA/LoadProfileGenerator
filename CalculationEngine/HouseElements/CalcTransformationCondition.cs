@@ -1,18 +1,17 @@
 ﻿using Automation;
 using CalculationEngine.HouseholdElements;
-using JetBrains.Annotations;
 
 namespace CalculationEngine.HouseElements {
     public class CalcTransformationCondition : CalcBase {
-        [NotNull] private readonly CalcVariable _calcVariable;
+        [JetBrains.Annotations.NotNull] private readonly CalcVariable _calcVariable;
 
         private readonly double _maxValue;
         private readonly double _minValue;
 
 
 
-        public CalcTransformationCondition([NotNull] string pName,
-             [NotNull] CalcVariable calcVariable, double minValue,
+        public CalcTransformationCondition([JetBrains.Annotations.NotNull] string pName,
+             [JetBrains.Annotations.NotNull] CalcVariable calcVariable, double minValue,
             double maxValue, StrGuid guid) : base(pName, guid) {
             _minValue = minValue;
             _maxValue = maxValue;

@@ -1,11 +1,10 @@
-﻿using JetBrains.Annotations;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Common.Enums {
     public static class CalcObjectTypeHelper {
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static  Dictionary<CalcObjectType, string> CalcObjectTypeEnumDictionary { get; } =
             new Dictionary<CalcObjectType, string> {
                 {CalcObjectType.ModularHousehold, "Modular Household"},
@@ -14,13 +13,13 @@ namespace Common.Enums {
             };
 
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static Dictionary<CalcObjectType, string> CalcObjectTypeHouseholdDictionary { get; } =
             new Dictionary<CalcObjectType, string> {
                 {CalcObjectType.ModularHousehold, "Modular Household"}
             };
 
-        public static CalcObjectType GetFromString([NotNull] string val) {
+        public static CalcObjectType GetFromString([JetBrains.Annotations.NotNull] string val) {
             foreach (var keyValuePair in CalcObjectTypeEnumDictionary) {
                 if (keyValuePair.Value == val) {
                     return keyValuePair.Key;

@@ -46,17 +46,17 @@ using LoadProfileGenerator.Views.Households;
 
 namespace LoadProfileGenerator.Presenters.Households {
     public class AffordancePresenter : PresenterBaseDBBase<AffordanceView> {
-        [NotNull] private readonly Affordance _aff;
+        [JetBrains.Annotations.NotNull] private readonly Affordance _aff;
 
-        [NotNull] private readonly ObservableCollection<VariableAction> _allActions =
+        [JetBrains.Annotations.NotNull] private readonly ObservableCollection<VariableAction> _allActions =
             new ObservableCollection<VariableAction>();
 
-        [ItemNotNull] [NotNull]
+        [ItemNotNull] [JetBrains.Annotations.NotNull]
         private readonly ObservableCollection<string> _allConditions = new ObservableCollection<string>();
 
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<string> _executionTimes;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<string> _executionTimes;
 
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<UsedIn> _usedIns;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<UsedIn> _usedIns;
 
         private DateTime _endtime;
 
@@ -64,8 +64,8 @@ namespace LoadProfileGenerator.Presenters.Households {
 
         private DateTime _starttime;
 
-        public AffordancePresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] AffordanceView view,
-            [NotNull] Affordance aff)
+        public AffordancePresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] AffordanceView view,
+            [JetBrains.Annotations.NotNull] Affordance aff)
             : base(view, "ThisAffordance.HeaderString", aff, applicationPresenter)
         {
             _aff = aff;
@@ -86,58 +86,58 @@ namespace LoadProfileGenerator.Presenters.Households {
 
         [UsedImplicitly]
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<string> ActionsAfterInterruptions { get; } = new ObservableCollection<string>();
 
         [UsedImplicitly]
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<Affordance> Affordances => Sim.Affordances.Items;
 
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<VariableAction> AllActions => _allActions;
 
         [UsedImplicitly]
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<string> AllAffordanceCategories
             =>Sim.Affordances.AllAffordanceCategories;
 
         [UsedImplicitly]
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<string> AllConditions => _allConditions;
 
         [UsedImplicitly]
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<Location> AllLocations => Sim.Locations.Items;
 
         [UsedImplicitly]
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<Variable> AllVariables => Sim.Variables.Items;
 
         [UsedImplicitly]
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<string> CategoryOrDevice => Sim.CategoryOrDevice;
 
         [UsedImplicitly]
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<Desire> Desires => Sim.Desires.Items;
 
         [UsedImplicitly]
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<DeviceCategory> DeviceCategories
             => Sim.DeviceCategories.Items;
 
         [UsedImplicitly]
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<RealDevice> Devices => Sim.RealDevices.Items;
 
         [UsedImplicitly]
@@ -153,28 +153,28 @@ namespace LoadProfileGenerator.Presenters.Households {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public Dictionary<BodilyActivityLevel, string> BodilyActivityLevelDict => BodilyActivityLevelHelper.BodilyActivityLevelEnumDictionary;
 
         [UsedImplicitly]
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<string> ExecutionTimes => _executionTimes;
 
         [UsedImplicitly]
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<GeographicLocation> GeographicLocations
             => Sim.GeographicLocations.Items;
 
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<VariableLocationMode> LocationModes { get; } =
             new ObservableCollection<VariableLocationMode>();
 
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public IEnumerable<PermittedGender> MyPermittedGenders {
             get {
                 var lt = new List<PermittedGender>();
@@ -188,7 +188,7 @@ namespace LoadProfileGenerator.Presenters.Households {
 
         [UsedImplicitly]
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<VLoadType> MyVLoadTypes => Sim.LoadTypes.Items;
 
         [UsedImplicitly]
@@ -245,42 +245,42 @@ namespace LoadProfileGenerator.Presenters.Households {
 
         [UsedImplicitly]
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<SubAffordance> SubAffordances
             => Sim.SubAffordances.Items;
 
         [UsedImplicitly]
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<TemperatureProfile> TemperaturProfiles
             => Sim.TemperatureProfiles.Items;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Affordance ThisAffordance => _aff;
 
         [UsedImplicitly]
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<TimeLimit> TimeLimits => Sim.TimeLimits.Items;
 
         [UsedImplicitly]
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<TimeBasedProfile> Timeprofiles
             => Sim.Timeprofiles.Items;
 
         [UsedImplicitly]
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<UsedIn> UsedIns => _usedIns;
 
-        public void AddDesire([NotNull] Desire d, decimal satisfactionvalue)
+        public void AddDesire([JetBrains.Annotations.NotNull] Desire d, decimal satisfactionvalue)
         {
             _aff.AddDesire(d, satisfactionvalue, Sim.Desires.Items);
             _aff.SaveToDB();
         }
 
-        public void AddDeviceProfile([NotNull] IAssignableDevice pdev, [CanBeNull] TimeBasedProfile tp,
+        public void AddDeviceProfile([JetBrains.Annotations.NotNull] IAssignableDevice pdev, [CanBeNull] TimeBasedProfile tp,
             decimal timeoffset,
             [CanBeNull] VLoadType vLoadType, double probability)
         {
@@ -289,7 +289,7 @@ namespace LoadProfileGenerator.Presenters.Households {
             _aff.SaveToDB();
         }
 
-        public void AddSubAffordance([NotNull] SubAffordance subAff, decimal delayTime)
+        public void AddSubAffordance([JetBrains.Annotations.NotNull] SubAffordance subAff, decimal delayTime)
         {
             _aff.AddSubAffordance(subAff, delayTime);
             _aff.SaveToDB();
@@ -408,19 +408,19 @@ namespace LoadProfileGenerator.Presenters.Households {
             }
         }
 
-        public void RemoveDesire([NotNull] AffordanceDesire ad)
+        public void RemoveDesire([JetBrains.Annotations.NotNull] AffordanceDesire ad)
         {
             _aff.DeleteAffordanceDesireFromDB(ad);
             _aff.SaveToDB();
         }
 
-        public void RemoveDeviceAndTimeprofile([NotNull] AffordanceDevice dtp)
+        public void RemoveDeviceAndTimeprofile([JetBrains.Annotations.NotNull] AffordanceDevice dtp)
         {
             _aff.DeleteDeviceFromDB(dtp);
             _aff.SaveToDB();
         }
 
-        public void RemoveSubAffordance([NotNull] AffordanceSubAffordance subaff)
+        public void RemoveSubAffordance([JetBrains.Annotations.NotNull] AffordanceSubAffordance subaff)
         {
             _aff.DeleteAffordanceSubAffFromDB(subaff);
             _aff.SaveToDB();

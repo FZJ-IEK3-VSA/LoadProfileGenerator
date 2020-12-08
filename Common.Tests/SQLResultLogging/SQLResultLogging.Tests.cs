@@ -2,7 +2,6 @@
 using Automation;
 using Automation.ResultFiles;
 using Common.SQLResultLogging;
-using JetBrains.Annotations;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -12,7 +11,7 @@ namespace Common.Tests.SQLResultLogging
     {
         /*
         private class TestDataClass  {
-            public TestDataClass([NotNull] string name, [NotNull] HouseholdKey key)
+            public TestDataClass([JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] HouseholdKey key)
             {
                 Name = name;
                 HouseholdKey = key;
@@ -20,7 +19,7 @@ namespace Common.Tests.SQLResultLogging
 
             public int ID { get; set; }
             public HouseholdKey HouseholdKey { get; }
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string Name { [UsedImplicitly] get; }
         }*/
 
@@ -109,7 +108,7 @@ namespace Common.Tests.SQLResultLogging
             }
         }
 
-        public SqlResultLoggingTest([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public SqlResultLoggingTest([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

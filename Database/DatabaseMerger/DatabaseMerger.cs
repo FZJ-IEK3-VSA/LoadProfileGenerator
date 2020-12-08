@@ -44,28 +44,28 @@ using JetBrains.Annotations;
 namespace Database.DatabaseMerger {
     [SuppressMessage("Microsoft.Naming", "CA1724:TypeNamesShouldNotMatchNamespaces")]
     public class DatabaseMerger {
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<ImportEntry> _itemsToImport = new ObservableCollection<ImportEntry>();
-        [NotNull] private readonly Simulator _mainSimulator;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<ImportEntry> _itemsToImport = new ObservableCollection<ImportEntry>();
+        [JetBrains.Annotations.NotNull] private readonly Simulator _mainSimulator;
 
         [CanBeNull] private Simulator _oldSimulator;
 
-        public DatabaseMerger([NotNull] Simulator simulator) => _mainSimulator = simulator;
+        public DatabaseMerger([JetBrains.Annotations.NotNull] Simulator simulator) => _mainSimulator = simulator;
 
         [UsedImplicitly]
         public bool DisplayMessageBox { get; set; }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<ImportEntry> ItemsToImport => _itemsToImport;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Simulator OldSimulator => _oldSimulator ?? throw new InvalidOperationException();
 
-        private static int Comparison([NotNull] BasicCategory category1, [NotNull] BasicCategory category2) => category1.LoadingNumber
+        private static int Comparison([JetBrains.Annotations.NotNull] BasicCategory category1, [JetBrains.Annotations.NotNull] BasicCategory category2) => category1.LoadingNumber
             .CompareTo(category2.LoadingNumber);
 
         [CanBeNull]
-        private static BasicCategory GetBasicCategory([NotNull] Type t, [ItemNotNull] [NotNull] List<BasicCategory> categories) {
+        private static BasicCategory GetBasicCategory([JetBrains.Annotations.NotNull] Type t, [ItemNotNull] [JetBrains.Annotations.NotNull] List<BasicCategory> categories) {
             foreach (var basicCategory in categories) {
                 if (basicCategory.GetType() == t) {
                     return basicCategory;
@@ -75,8 +75,8 @@ namespace Database.DatabaseMerger {
         }
 
         [ItemNotNull]
-        [NotNull]
-        private static List<BasicCategory> GetCategoriesFromSim([NotNull] Simulator sim) {
+        [JetBrains.Annotations.NotNull]
+        private static List<BasicCategory> GetCategoriesFromSim([JetBrains.Annotations.NotNull] Simulator sim) {
             var categories = new List<BasicCategory>();
             foreach (var o in sim.Categories) {
                 if (o is BasicCategory bc)
@@ -97,8 +97,8 @@ namespace Database.DatabaseMerger {
             return categories;
         }
 
-        [NotNull]
-        private static BasicCategory GetCategoryFromSim([NotNull] Simulator sim, [NotNull] Type genericType) {
+        [JetBrains.Annotations.NotNull]
+        private static BasicCategory GetCategoryFromSim([JetBrains.Annotations.NotNull] Simulator sim, [JetBrains.Annotations.NotNull] Type genericType) {
             foreach (var o in sim.Categories) {
                 if (o is BasicCategory bc)
                 {
@@ -217,7 +217,7 @@ namespace Database.DatabaseMerger {
             private readonly int _step;
             private bool _import;
 
-            public ImportEntry([NotNull] DBBase entry, int step) {
+            public ImportEntry([JetBrains.Annotations.NotNull] DBBase entry, int step) {
                 Entry = entry;
                 _step = step;
                 _import = true;
@@ -228,7 +228,7 @@ namespace Database.DatabaseMerger {
                 }
             }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public DBBase Entry { get; set; }
 
             public bool Import {
@@ -239,7 +239,7 @@ namespace Database.DatabaseMerger {
                 }
             }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string TypeDescription => Entry.TypeDescription;
 
             public int CompareTo([CanBeNull] object obj) {
@@ -256,12 +256,12 @@ namespace Database.DatabaseMerger {
             public event PropertyChangedEventHandler PropertyChanged;
 
             [NotifyPropertyChangedInvocator]
-            protected virtual void OnPropertyChanged([NotNull] string propertyName) {
+            protected virtual void OnPropertyChanged([JetBrains.Annotations.NotNull] string propertyName) {
                 var handler = PropertyChanged;
                 handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public override string ToString() => Entry.GetType() + " " + Entry.Name;
         }
     }

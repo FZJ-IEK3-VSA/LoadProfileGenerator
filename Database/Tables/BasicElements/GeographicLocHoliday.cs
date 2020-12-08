@@ -40,8 +40,8 @@ namespace Database.Tables.BasicElements {
 
         [CanBeNull] private readonly Holiday _holiday;
 
-        public GeographicLocHoliday([CanBeNull]int? pID, [CanBeNull] Holiday holiday, int geographicLocID, [NotNull] string connectionString,
-            [NotNull] string holidayname, StrGuid guid) : base(holidayname, TableName, connectionString, guid)
+        public GeographicLocHoliday([CanBeNull]int? pID, [CanBeNull] Holiday holiday, int geographicLocID, [JetBrains.Annotations.NotNull] string connectionString,
+            [JetBrains.Annotations.NotNull] string holidayname, StrGuid guid) : base(holidayname, TableName, connectionString, guid)
         {
             ID = pID;
             _holiday = holiday;
@@ -52,7 +52,7 @@ namespace Database.Tables.BasicElements {
         public int GeographicLocationID { get; }
 
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Holiday Holiday => _holiday ?? throw new InvalidOperationException();
 
         public override string Name {
@@ -64,9 +64,9 @@ namespace Database.Tables.BasicElements {
             }
         }
 
-        [NotNull]
-        private static GeographicLocHoliday AssignFields([NotNull] DataReader dr, [NotNull] string connectionString,
-            bool ignoreMissingFields, [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static GeographicLocHoliday AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString,
+            bool ignoreMissingFields, [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var id = dr.GetIntFromLong("ID");
             var holidayID = dr.GetIntFromLong("HolidayID");
@@ -92,8 +92,8 @@ namespace Database.Tables.BasicElements {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<GeographicLocHoliday> result, [NotNull] string connectionString,
-            [ItemNotNull] [NotNull] ObservableCollection<Holiday> holidays, bool ignoreMissingTables)
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<GeographicLocHoliday> result, [JetBrains.Annotations.NotNull] string connectionString,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Holiday> holidays, bool ignoreMissingTables)
         {
             var aic = new AllItemCollections(holidays: holidays);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);

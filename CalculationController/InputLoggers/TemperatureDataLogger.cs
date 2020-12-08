@@ -4,11 +4,10 @@ using Common;
 using Common.JSON;
 using Common.SQLResultLogging;
 using Database.Tables.BasicElements;
-using JetBrains.Annotations;
 
 namespace CalculationController.InputLoggers {
     /*public class UsedTemperatures : ITypeDescriber {
-        public UsedTemperatures([NotNull] string dateTime, int timeStep, double temperature)
+        public UsedTemperatures([JetBrains.Annotations.NotNull] string dateTime, int timeStep, double temperature)
         {
             DateTime = dateTime;
             TimeStep = timeStep;
@@ -17,7 +16,7 @@ namespace CalculationController.InputLoggers {
         }
 
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string DateTime { get; set; }
 
         [UsedImplicitly]
@@ -34,11 +33,11 @@ namespace CalculationController.InputLoggers {
     }*/
 
     public class TemperatureDataLogger : DataSaverBase {
-        [NotNull] private readonly CalcParameters _calcParameters;
+        [JetBrains.Annotations.NotNull] private readonly CalcParameters _calcParameters;
 
-        [NotNull] private readonly SqlResultLoggingService _srls;
+        [JetBrains.Annotations.NotNull] private readonly SqlResultLoggingService _srls;
 
-        public TemperatureDataLogger([NotNull] SqlResultLoggingService srls, [NotNull] CalcParameters calcParameters) : base(
+        public TemperatureDataLogger([JetBrains.Annotations.NotNull] SqlResultLoggingService srls, [JetBrains.Annotations.NotNull] CalcParameters calcParameters) : base(
             typeof(TemperatureProfile),
             new ResultTableDefinition("Temperatures", ResultTableID.Temperatures, "Used Temperatures", CalcOption.TemperatureFile),
             srls)

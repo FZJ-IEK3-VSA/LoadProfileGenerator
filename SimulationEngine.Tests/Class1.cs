@@ -4,7 +4,6 @@ using Automation;
 using Automation.ResultFiles;
 using Common;
 using Common.Tests;
-using JetBrains.Annotations;
 using PowerArgs;
 using SimulationEngineLib;
 using Xunit;
@@ -97,7 +96,7 @@ namespace SimulationEngine.Tests
             cop.ReadOptions(options.ToArray());
             (cop.CalcObjectNumber).Should().Be(1);
         }*/
-public CalculationOptionProcessorTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+public CalculationOptionProcessorTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
 {
 }
     }

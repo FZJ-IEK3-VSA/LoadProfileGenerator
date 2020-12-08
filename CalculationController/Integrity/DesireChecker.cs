@@ -2,14 +2,13 @@
 using Common;
 using Database;
 using Database.Tables.BasicHouseholds;
-using JetBrains.Annotations;
 
 namespace CalculationController.Integrity {
     internal class DesireChecker : BasicChecker {
         public DesireChecker(bool performCleanupChecks) : base("Desire", performCleanupChecks) {
         }
 
-        private void CheckDesireNamesForSlash([NotNull] Simulator sim) {
+        private void CheckDesireNamesForSlash([JetBrains.Annotations.NotNull] Simulator sim) {
             if (!PerformCleanupChecks) {
                 return;
             }
@@ -32,7 +31,7 @@ namespace CalculationController.Integrity {
             }
         }
 
-        private void CheckDesireUsage([NotNull] Simulator sim) {
+        private void CheckDesireUsage([JetBrains.Annotations.NotNull] Simulator sim) {
             if (!PerformCleanupChecks) {
                 return;
             }

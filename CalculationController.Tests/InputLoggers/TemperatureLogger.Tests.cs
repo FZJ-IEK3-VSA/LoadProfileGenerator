@@ -7,7 +7,6 @@ using Common.SQLResultLogging;
 using Common.Tests;
 using Database;
 using Database.Tests;
-using JetBrains.Annotations;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -48,7 +47,7 @@ namespace CalculationController.Tests.InputLoggers {
                 ipl.Save(s);
             }
         }*/
-        public TemperatureLoggerTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public TemperatureLoggerTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

@@ -46,7 +46,6 @@ using Common.Tests;
 using Database.Helpers;
 using Database.Tables.BasicHouseholds;
 using FluentAssertions;
-using JetBrains.Annotations;
 using Moq;
 
 using Xunit;
@@ -305,7 +304,7 @@ namespace CalculationController.Tests.CalcFactories {
             wd.CleanUp();
         }
 
-        public CalcLocationFactoryTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public CalcLocationFactoryTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

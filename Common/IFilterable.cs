@@ -26,12 +26,11 @@
 
 //-----------------------------------------------------------------------
 
-using JetBrains.Annotations;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Common {
     public interface IFilterable {
         [SuppressMessage("ReSharper", "UnusedMemberInSuper.Global")]
-        bool IsValid([NotNull] string filter);
+        bool IsValid([JetBrains.Annotations.NotNull] string filter);
     }
 }

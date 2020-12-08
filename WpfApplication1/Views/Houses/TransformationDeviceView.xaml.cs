@@ -50,7 +50,7 @@ namespace LoadProfileGenerator.Views.Houses {
             InitializeComponent();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private TransformationDevicePresenter Presenter => (TransformationDevicePresenter) DataContext;
 
         private void BtnAddCondition_Click([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)

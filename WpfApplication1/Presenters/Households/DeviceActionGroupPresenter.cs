@@ -8,11 +8,11 @@ using LoadProfileGenerator.Views.Households;
 
 namespace LoadProfileGenerator.Presenters.Households {
     internal class DeviceActionGroupPresenter : PresenterBaseDBBase<DeviceActionGroupView> {
-        [NotNull] private readonly DeviceActionGroup _deviceActionGroup;
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<UsedIn> _usedIns;
+        [JetBrains.Annotations.NotNull] private readonly DeviceActionGroup _deviceActionGroup;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<UsedIn> _usedIns;
 
-        public DeviceActionGroupPresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] DeviceActionGroupView view,
-            [NotNull] DeviceActionGroup deviceActionGroup)
+        public DeviceActionGroupPresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] DeviceActionGroupView view,
+            [JetBrains.Annotations.NotNull] DeviceActionGroup deviceActionGroup)
             : base(view, "ThisDeviceActionGroup.Name", deviceActionGroup, applicationPresenter)
         {
             _deviceActionGroup = deviceActionGroup;
@@ -20,11 +20,11 @@ namespace LoadProfileGenerator.Presenters.Households {
             RefreshUsedIn();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public DeviceActionGroup ThisDeviceActionGroup => _deviceActionGroup;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         [UsedImplicitly]
         public ObservableCollection<UsedIn> UsedIns => _usedIns;

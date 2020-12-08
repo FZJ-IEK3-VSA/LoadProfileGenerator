@@ -16,7 +16,7 @@ namespace Common {
         public string CalcObjectName { get; set; }
         /*
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private Dictionary<string, string> HouseholdNameByHouseholdKey { get; set; } = new Dictionary<string, string>();
         */
         [UsedImplicitly]
@@ -57,16 +57,16 @@ namespace Common {
             }
         }
         /*
-        [NotNull]
-        public static ResultFileEntry LoadAndGetByFileName([NotNull] string directory, [NotNull] string fileName)
+        [JetBrains.Annotations.NotNull]
+        public static ResultFileEntry LoadAndGetByFileName([JetBrains.Annotations.NotNull] string directory, [JetBrains.Annotations.NotNull] string fileName)
         {
             var rfl = ReadResultEntries(directory);
             return rfl.GetByFilename(fileName);
         }
         */
         /*
-        [NotNull]
-        public static ResultFileList ReadResultEntries([NotNull] string directoryWithResultFile)
+        [JetBrains.Annotations.NotNull]
+        public static ResultFileList ReadResultEntries([JetBrains.Annotations.NotNull] string directoryWithResultFile)
         {
             var dstPath = Path.Combine(directoryWithResultFile, Constants.ResultJsonFileName);
             string json;
@@ -86,7 +86,7 @@ namespace Common {
         }
         */
         /*
-        public void WriteResultEntries([NotNull] string path)
+        public void WriteResultEntries([JetBrains.Annotations.NotNull] string path)
         {
             var json = JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings {
                 NullValueHandling = NullValueHandling.Include
@@ -97,8 +97,8 @@ namespace Common {
             }
         }
         */
-        /*  [NotNull]
-        private ResultFileEntry GetByFilename([NotNull] string fileName) =>
+        /*  [JetBrains.Annotations.NotNull]
+        private ResultFileEntry GetByFilename([JetBrains.Annotations.NotNull] string fileName) =>
             ResultFiles.Values.First(x => x.FileName == fileName);*/
     }
 }

@@ -45,7 +45,7 @@ namespace LoadProfileGenerator.Views.SpecialViews {
             InitializeComponent();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private CalculationOutcomesPresenter Presenter => (CalculationOutcomesPresenter) DataContext;
 
         private void CloseClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e) => Presenter.Close(true);
@@ -88,6 +88,6 @@ namespace LoadProfileGenerator.Views.SpecialViews {
             Presenter.InCalculation = false;
         }
 
-        private void TxtFilter_OnKeyUp([NotNull] object sender, [NotNull] KeyEventArgs e) => Presenter.FilterString = TxtFilter.Text;
+        private void TxtFilter_OnKeyUp([JetBrains.Annotations.NotNull] object sender, [JetBrains.Annotations.NotNull] KeyEventArgs e) => Presenter.FilterString = TxtFilter.Text;
     }
 }

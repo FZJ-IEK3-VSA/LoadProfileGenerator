@@ -18,8 +18,8 @@ namespace Database.Tables.Transportation {
 
         [CanBeNull] private readonly Location _location;
 
-        public SiteLocation([CanBeNull]int? pID, [CanBeNull] Location location, int siteID, [NotNull] string connectionString,
-            [NotNull] string name, StrGuid guid) : base(name, TableName, connectionString, guid)
+        public SiteLocation([CanBeNull]int? pID, [CanBeNull] Location location, int siteID, [JetBrains.Annotations.NotNull] string connectionString,
+            [JetBrains.Annotations.NotNull] string name, StrGuid guid) : base(name, TableName, connectionString, guid)
         {
             TypeDescription = "Site Location";
             ID = pID;
@@ -28,7 +28,7 @@ namespace Database.Tables.Transportation {
         }
 
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Location Location => _location ?? throw new InvalidOperationException();
 
         public override string Name {
@@ -43,9 +43,9 @@ namespace Database.Tables.Transportation {
         [UsedImplicitly]
         public int SiteID { get; }
 
-        [NotNull]
-        private static SiteLocation AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static SiteLocation AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var siteLocID = dr.GetIntFromLong("ID");
             var siteID = dr.GetIntFromLong("SiteID");
@@ -70,8 +70,8 @@ namespace Database.Tables.Transportation {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<SiteLocation> result, [NotNull] string connectionString,
-            [ItemNotNull] [NotNull] ObservableCollection<Location> locations, bool ignoreMissingTables)
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<SiteLocation> result, [JetBrains.Annotations.NotNull] string connectionString,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Location> locations, bool ignoreMissingTables)
         {
             var aic = new AllItemCollections(locations: locations);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);

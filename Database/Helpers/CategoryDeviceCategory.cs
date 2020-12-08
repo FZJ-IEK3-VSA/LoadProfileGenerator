@@ -39,7 +39,7 @@ using JetBrains.Annotations;
 
 namespace Database.Helpers {
     public class CategoryDeviceCategory : CategoryDBBase<DeviceCategory> {
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<DeviceCategory> _deviceCategoriesRoot =
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<DeviceCategory> _deviceCategoriesRoot =
             new ObservableCollection<DeviceCategory>();
 
         [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
@@ -48,7 +48,7 @@ namespace Database.Helpers {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<DeviceCategory> DeviceCategoriesRoot {
             get {
@@ -57,7 +57,7 @@ namespace Database.Helpers {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public DeviceCategory DeviceCategoryNone { get; set; }
 
         [UsedImplicitly]

@@ -10,8 +10,6 @@ using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
 using Common.SQLResultLogging.Loggers;
 using Common.Tests;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -19,7 +17,7 @@ namespace Calculation.Tests.OnlineLogging
 {
     public class AffordanceEnergyUseFileTests : UnitTestBaseClass
     {
-        public AffordanceEnergyUseFileTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public AffordanceEnergyUseFileTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
 

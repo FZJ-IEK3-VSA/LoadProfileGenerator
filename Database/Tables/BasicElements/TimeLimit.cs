@@ -49,7 +49,7 @@ namespace Database.Tables.BasicElements {
 
         [CanBeNull] private TimeLimitEntry _rootEntry;
 
-        public TimeLimit([NotNull] string pName, [NotNull] string connectionString,StrGuid guid, [CanBeNull]int? pID = null)
+        public TimeLimit([JetBrains.Annotations.NotNull] string pName, [JetBrains.Annotations.NotNull] string connectionString,StrGuid guid, [CanBeNull]int? pID = null)
             : base(pName, TableName, connectionString, guid)
         {
             if (guid == null) {
@@ -72,13 +72,13 @@ namespace Database.Tables.BasicElements {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<TimeLimitEntry> TimeLimitEntries { get; } =
             new ObservableCollection<TimeLimitEntry>();
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public TimeLimitEntry AddTimeLimitEntry([CanBeNull] TimeLimitEntry parent,
-            [ItemNotNull] [NotNull] ObservableCollection<DateBasedProfile> dateBasedProfiles, bool savetoDB = true)
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DateBasedProfile> dateBasedProfiles, bool savetoDB = true)
         {
             int? parentID;
             if (parent == null) {
@@ -114,10 +114,10 @@ namespace Database.Tables.BasicElements {
             return dte;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public TimeLimitEntry
-            AddTimeLimitEntry([CanBeNull] TimeLimitEntry parent, [NotNull] TimeLimitEntry fc,
-                [ItemNotNull] [NotNull] ObservableCollection<DateBasedProfile> dateBasedProfiles, bool savetoDB = true) => AddTimeLimitEntry(
+            AddTimeLimitEntry([CanBeNull] TimeLimitEntry parent, [JetBrains.Annotations.NotNull] TimeLimitEntry fc,
+                [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DateBasedProfile> dateBasedProfiles, bool savetoDB = true) => AddTimeLimitEntry(
             parent, fc.StartTimeDateTime, fc.EndTimeDateTime, fc.RepeaterType, fc.DailyDayCount, fc.WeeklyWeekCount,
             fc.WeeklyMonday, fc.WeeklyTuesday, fc.WeeklyWednesday, fc.WeeklyThursday, fc.WeeklyFriday,
             fc.WeeklySaturday, fc.WeeklySunday, fc.MonthlyMonthCount, fc.MonthlyDay, fc.YearlyDay, fc.YearlyMonth,
@@ -127,7 +127,7 @@ namespace Database.Tables.BasicElements {
             fc.VacationDurationLimit, fc.DuringHoliday, dateBasedProfiles, fc.RandomizeTimeAmount,
             fc.DateProfileMinVariation, fc.DateProfileMaxVariation, savetoDB);
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public TimeLimitEntry AddTimeLimitEntry([CanBeNull] TimeLimitEntry parent, DateTime startTime, DateTime endTime,
             PermissionMode repeaterType, int dailyDaycount, int weeklyWeekCount, bool weeklyMonday, bool weeklyTuesday,
             bool weeklyWednesday, bool weeklyThursday, bool weeklyFriday, bool weeklySaturday, bool weeklySunday,
@@ -136,7 +136,7 @@ namespace Database.Tables.BasicElements {
             DateTime dateRangeStart, DateTime dateRangeEnd, [CanBeNull] int? dateProfileID, double maxDateValue,
             double minDateValue, bool duringVacation, bool duringNotVacation, bool duringVacationLongerThan,
             bool duringVacationShorterThan, int vacationDurationLimit, bool duringHoliday,
-            [ItemNotNull] [NotNull] ObservableCollection<DateBasedProfile> dateBasedProfiles, int randomizeTimeAmount,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DateBasedProfile> dateBasedProfiles, int randomizeTimeAmount,
             double dateBasedMinVariation, double dateBasedMaxVariation, bool savetoDB = true)
         {
             int? parentID;
@@ -181,7 +181,7 @@ namespace Database.Tables.BasicElements {
             return dte;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string CombineCompleteString()
         {
             var s = Name + Environment.NewLine;
@@ -189,16 +189,16 @@ namespace Database.Tables.BasicElements {
             return s;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString)
+        public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString)
         {
             var dc = new TimeLimit(FindNewName(isNameTaken, "New time limit "),
                 connectionString, System.Guid.NewGuid().ToStrGuid());
             return dc;
         }
 
-        public void DeleteTimeLimitEntryFromDB([NotNull] TimeLimitEntry db)
+        public void DeleteTimeLimitEntryFromDB([JetBrains.Annotations.NotNull] TimeLimitEntry db)
         {
             if (db.ParentEntry != null) {
                 foreach (var subEntry in db.Subentries) {
@@ -269,9 +269,9 @@ namespace Database.Tables.BasicElements {
             return used;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static TimeLimit ImportFromItem([NotNull] TimeLimit toImport,  [NotNull] Simulator dstSim)
+        public static TimeLimit ImportFromItem([JetBrains.Annotations.NotNull] TimeLimit toImport,  [JetBrains.Annotations.NotNull] Simulator dstSim)
         {
             var dt = new TimeLimit(toImport.Name, dstSim.ConnectionString,
                 toImport.Guid);
@@ -286,7 +286,7 @@ namespace Database.Tables.BasicElements {
             return dt;
         }
 
-        public void ImportFromOtherTimeLimit([NotNull] TimeLimit other, [ItemNotNull] [NotNull] ObservableCollection<DateBasedProfile> dateBasedProfiles)
+        public void ImportFromOtherTimeLimit([JetBrains.Annotations.NotNull] TimeLimit other, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DateBasedProfile> dateBasedProfiles)
         {
             if (_rootEntry == null) {
                 AddTimeLimitEntry(null, dateBasedProfiles);
@@ -299,8 +299,8 @@ namespace Database.Tables.BasicElements {
         }
 
         [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalse")]
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<TimeLimit> result,
-            [ItemNotNull] [NotNull] ObservableCollection<DateBasedProfile> dateBasedProfiles, [NotNull] string connectionString,
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TimeLimit> result,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DateBasedProfile> dateBasedProfiles, [JetBrains.Annotations.NotNull] string connectionString,
             bool ignoreMissingTables)
         {
             var aic = new AllItemCollections();
@@ -364,9 +364,9 @@ namespace Database.Tables.BasicElements {
             cmd.AddParameter("Name", "@myname", Name);
         }
 
-        [NotNull]
-        private static TimeLimit AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static TimeLimit AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var name = dr.GetString("Name");
             var id = dr.GetIntFromLong("ID");
@@ -374,7 +374,7 @@ namespace Database.Tables.BasicElements {
             return new TimeLimit(name, connectionString,guid, id);
         }
 
-        private static bool IsCorrectBoolEntry([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectBoolEntry([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var hd = (TimeLimitEntry) child;
 
@@ -387,17 +387,17 @@ namespace Database.Tables.BasicElements {
             return false;
         }
 
-        private void RecursiveCopy([NotNull] TimeLimitEntry newparent, [NotNull] TimeLimitEntry oldParent,
-            [ItemNotNull] [NotNull] ObservableCollection<DateBasedProfile> dateBasedProfiles)
+        private void RecursiveCopy([JetBrains.Annotations.NotNull] TimeLimitEntry newparent, [JetBrains.Annotations.NotNull] TimeLimitEntry oldParent,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DateBasedProfile> dateBasedProfiles)
         {
             foreach (var entry in oldParent.Subentries) {
                 AddTimeLimitEntry(newparent, entry, dateBasedProfiles);
             }
         }
 
-        [NotNull]
-        private static TimeLimitEntry RecursiveImport([NotNull] TimeLimit newTimeLimit, [NotNull] TimeLimitEntry oldEntry,
-            [CanBeNull] TimeLimitEntry newParent, [ItemNotNull] [NotNull] ObservableCollection<DateBasedProfile> dateBasedProfiles)
+        [JetBrains.Annotations.NotNull]
+        private static TimeLimitEntry RecursiveImport([JetBrains.Annotations.NotNull] TimeLimit newTimeLimit, [JetBrains.Annotations.NotNull] TimeLimitEntry oldEntry,
+            [CanBeNull] TimeLimitEntry newParent, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DateBasedProfile> dateBasedProfiles)
         {
             var newEntry = newTimeLimit.AddTimeLimitEntry(newParent, oldEntry, dateBasedProfiles);
             foreach (var boolEntry in oldEntry.Subentries) {

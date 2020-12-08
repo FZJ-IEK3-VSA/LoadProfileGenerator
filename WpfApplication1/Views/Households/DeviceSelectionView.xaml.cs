@@ -47,7 +47,7 @@ namespace LoadProfileGenerator.Views.Households
             InitializeComponent();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private DeviceSelectionPresenter Presenter => (DeviceSelectionPresenter)DataContext;
 
         private void BtnAddDeviceActionClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)

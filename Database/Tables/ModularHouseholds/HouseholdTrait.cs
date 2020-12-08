@@ -49,14 +49,14 @@ namespace Database.Tables.ModularHouseholds {
     }
 
     public readonly struct AffordanceWithTimeLimit {
-        public AffordanceWithTimeLimit([NotNull] Affordance affordance,
+        public AffordanceWithTimeLimit([JetBrains.Annotations.NotNull] Affordance affordance,
                                        [CanBeNull] TimeLimit timeLimit,
                                        int weight,
                                        int startMinusTime,
                                        int startPlusTime,
                                        int endMinusTime,
                                        int endPlusTime,
-                                       [NotNull] string srcTraitName)
+                                       [JetBrains.Annotations.NotNull] string srcTraitName)
         {
             Affordance = affordance;
             TimeLimit = timeLimit;
@@ -68,10 +68,10 @@ namespace Database.Tables.ModularHouseholds {
             SrcTraitName = srcTraitName;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string SrcTraitName { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public Affordance Affordance { get; }
 
@@ -118,7 +118,10 @@ namespace Database.Tables.ModularHouseholds {
             hashCode = hashCode * -1521134295 + base.GetHashCode();
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(SrcTraitName);
             hashCode = hashCode * -1521134295 + EqualityComparer<Affordance>.Default.GetHashCode(Affordance);
-            hashCode = hashCode * -1521134295 + EqualityComparer<TimeLimit>.Default.GetHashCode(TimeLimit);
+            if (TimeLimit != null) {
+                hashCode = hashCode * -1521134295 + EqualityComparer<TimeLimit>.Default.GetHashCode(TimeLimit);
+            }
+
             hashCode = hashCode * -1521134295 + Weight.GetHashCode();
             hashCode = hashCode * -1521134295 + StartMinusTime.GetHashCode();
             hashCode = hashCode * -1521134295 + StartPlusTime.GetHashCode();
@@ -133,17 +136,17 @@ namespace Database.Tables.ModularHouseholds {
 
     public class HouseholdTrait : DBBaseElement, IHouseholdOrTrait, IJsonSerializable<HouseholdTrait.JsonDto> {
         internal const string TableName = "tblHouseholdTraits";
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<HHTAutonomousDevice> _autodevs;
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<HHTDesire> _desires;
-        [NotNull] [ItemNotNull] private readonly ObservableCollection<HHTLocation> _locations;
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<HHTTrait> _subTraits;
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<HHTTag> _tags;
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<HHTLivingPatternTag> _livingPatternTags;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<HHTAutonomousDevice> _autodevs;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<HHTDesire> _desires;
+        [JetBrains.Annotations.NotNull] [ItemNotNull] private readonly ObservableCollection<HHTLocation> _locations;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<HHTTrait> _subTraits;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<HHTTag> _tags;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<HHTLivingPatternTag> _livingPatternTags;
 
         [CanBeNull] private string _cachedPrettyName;
 
-        [NotNull] private string _classification;
-        [NotNull] private string _description;
+        [JetBrains.Annotations.NotNull] private string _classification;
+        [JetBrains.Annotations.NotNull] private string _description;
         private double _estimatedDuration2InMinutes;
         private double _estimatedTimeCount;
         private double _estimatedTimeCount2;
@@ -157,13 +160,13 @@ namespace Database.Tables.ModularHouseholds {
         private int _maximumNumberInCHH;
         private int _maximumPersonsInCHH;
         private int _minimumPersonsInCHH;
-        [NotNull] private string _shortDescription;
+        [JetBrains.Annotations.NotNull] private string _shortDescription;
 
-        public HouseholdTrait([NotNull] string pName,
+        public HouseholdTrait([JetBrains.Annotations.NotNull] string pName,
                               [CanBeNull] int? id,
-                              [NotNull] string description,
-                              [NotNull] string connectionString,
-                              [NotNull] string classification,
+                              [JetBrains.Annotations.NotNull] string description,
+                              [JetBrains.Annotations.NotNull] string connectionString,
+                              [JetBrains.Annotations.NotNull] string classification,
                               int minimumPersonsInCHH,
                               int maximumPersonsInCHH,
                               int maximumNumberInCHH,
@@ -176,7 +179,7 @@ namespace Database.Tables.ModularHouseholds {
                               double estimatedDuration2InMinutes,
                               double estimatedTimePerYearInH,
                               EstimateType estimateType,
-                              [NotNull] string shortDescription,
+                              [JetBrains.Annotations.NotNull] string shortDescription,
                               StrGuid guid) : base(pName, TableName, connectionString, guid)
         {
             ID = id;
@@ -206,11 +209,11 @@ namespace Database.Tables.ModularHouseholds {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<HHTAutonomousDevice> Autodevs => _autodevs;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string Classification {
             get => _classification;
@@ -220,7 +223,7 @@ namespace Database.Tables.ModularHouseholds {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string Description {
             get => _description;
@@ -228,7 +231,7 @@ namespace Database.Tables.ModularHouseholds {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<HHTDesire> Desires => _desires;
 
         [UsedImplicitly]
@@ -315,7 +318,7 @@ namespace Database.Tables.ModularHouseholds {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<HHTLocation> Locations => _locations;
 
@@ -391,7 +394,7 @@ namespace Database.Tables.ModularHouseholds {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string PrettyNameOld {
             get {
@@ -405,7 +408,7 @@ namespace Database.Tables.ModularHouseholds {
         }
 
         // shortdescription is used for the person description creator that creates the template persons for the web interface
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string ShortDescription {
             get => _shortDescription;
@@ -413,21 +416,21 @@ namespace Database.Tables.ModularHouseholds {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<HHTTrait> SubTraits => _subTraits;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<HHTTag> Tags => _tags;
 
 
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<HHTLivingPatternTag> LivingPatternTags => _livingPatternTags;
 
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string WebName {
             get {
                 if (CollectAffordances(true).Count == 0) {
@@ -549,7 +552,7 @@ namespace Database.Tables.ModularHouseholds {
         }
 
         [CanBeNull]
-        public HHTTag AddTag([NotNull] TraitTag tag)
+        public HHTTag AddTag([JetBrains.Annotations.NotNull] TraitTag tag)
         {
             if (_tags.Any(x => x.Tag == tag)) {
                 return null;
@@ -563,7 +566,7 @@ namespace Database.Tables.ModularHouseholds {
         }
 
         [CanBeNull]
-        public HHTLivingPatternTag AddLivingPatternTag([NotNull] LivingPatternTag tag)
+        public HHTLivingPatternTag AddLivingPatternTag([JetBrains.Annotations.NotNull] LivingPatternTag tag)
         {
             if (_livingPatternTags.Any(x => x.Tag == tag))
             {
@@ -578,14 +581,14 @@ namespace Database.Tables.ModularHouseholds {
         }
 
         [CanBeNull]
-        public HHTLivingPatternTag AddLivingPatternTagFromJto(JsonReference json, [NotNull] Simulator sim)
+        public HHTLivingPatternTag AddLivingPatternTagFromJto(JsonReference json, [JetBrains.Annotations.NotNull] Simulator sim)
         {
             var tag = sim.LivingPatternTags.FindByJsonReference(json) ?? throw new LPGException("Could not find living pattern tag " + json);
             return AddLivingPatternTag(tag);
         }
 
         [CanBeNull]
-        public HHTTag AddTagFromJto(JsonReference json, [NotNull] Simulator sim)
+        public HHTTag AddTagFromJto(JsonReference json, [JetBrains.Annotations.NotNull] Simulator sim)
         {
             var tag = sim.TraitTags.FindByJsonReference(json) ?? throw new LPGException("Could not find trait tag " + json);
             return AddTag(tag);
@@ -656,9 +659,9 @@ namespace Database.Tables.ModularHouseholds {
             return used;
         }
 
-        [NotNull]
-        public List<AffordanceWithTimeLimit> CollectAffordancesForLocation([NotNull] Location loc,
-                                                                           [NotNull] string assignedTo,
+        [JetBrains.Annotations.NotNull]
+        public List<AffordanceWithTimeLimit> CollectAffordancesForLocation([JetBrains.Annotations.NotNull] Location loc,
+                                                                           [JetBrains.Annotations.NotNull] string assignedTo,
                                                                            [CanBeNull] Person person)
         {
             var affordances = new List<AffordanceWithTimeLimit>();
@@ -697,7 +700,7 @@ namespace Database.Tables.ModularHouseholds {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public List<DeviceActionGroup> CollectDeviceActionGroups()
         {
             var dcs = new List<DeviceActionGroup>();
@@ -733,7 +736,7 @@ namespace Database.Tables.ModularHouseholds {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public List<DeviceCategory> CollectDeviceCategories()
         {
             var dcs = new List<DeviceCategory>();
@@ -757,7 +760,7 @@ namespace Database.Tables.ModularHouseholds {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public List<Tuple<Location, IAssignableDevice>> CollectDevicesFromTrait()
         {
             var locdev = new List<Tuple<Location, IAssignableDevice>>();
@@ -806,9 +809,9 @@ namespace Database.Tables.ModularHouseholds {
             return base.CompareTo(other);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new HouseholdTrait(
+        public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString) => new HouseholdTrait(
             FindNewName(isNameTaken, "New Household Trait "),
             null,
             "(no description yet)",
@@ -829,7 +832,7 @@ namespace Database.Tables.ModularHouseholds {
             "",
             System.Guid.NewGuid().ToStrGuid());
 
-        public void DeleteAffordanceFromDB([NotNull] HHTAffordance hhaff)
+        public void DeleteAffordanceFromDB([JetBrains.Annotations.NotNull] HHTAffordance hhaff)
         {
             hhaff.DeleteFromDB();
             var hhl = _locations.First(x => x == hhaff.HHTLocation);
@@ -864,7 +867,7 @@ namespace Database.Tables.ModularHouseholds {
         }*/
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [SuppressMessage("ReSharper", "UnusedParameter.Global")]
         public IEnumerable<IAutonomousDevice> GetAllAutodevs(int count = 0)
         {
@@ -884,7 +887,7 @@ namespace Database.Tables.ModularHouseholds {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [SuppressMessage("ReSharper", "UnusedParameter.Global")]
         public List<HHTDesire> GetAllDesires(int count = 0)
         {
@@ -904,7 +907,7 @@ namespace Database.Tables.ModularHouseholds {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [SuppressMessage("ReSharper", "UnusedParameter.Global")]
         public IEnumerable<HHTLocation> GetAllLocations(int count = 0)
         {
@@ -923,7 +926,7 @@ namespace Database.Tables.ModularHouseholds {
             return locations;
         }
 
-        public int GetExecuteableAffordanes([NotNull] Person p)
+        public int GetExecuteableAffordanes([JetBrains.Annotations.NotNull] Person p)
         {
             var affs = CollectAffordances(true);
             if (affs.Count == 0) // no need to check traits without any affordances.
@@ -942,8 +945,8 @@ namespace Database.Tables.ModularHouseholds {
         }
 
         [ItemNotNull]
-        [NotNull]
-        public List<VLoadType> GetLoadTypes([ItemNotNull] [NotNull] ObservableCollection<Affordance> affordances)
+        [JetBrains.Annotations.NotNull]
+        public List<VLoadType> GetLoadTypes([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Affordance> affordances)
         {
             var loadTypes = new Dictionary<VLoadType, bool>();
 
@@ -976,9 +979,9 @@ namespace Database.Tables.ModularHouseholds {
 
         public override DBBase ImportFromGenericItem(DBBase toImport, Simulator dstSim) => ImportFromItem((HouseholdTrait)toImport, dstSim);
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DBBase ImportFromItem([NotNull] HouseholdTrait item, [NotNull] Simulator dstSim)
+        public static DBBase ImportFromItem([JetBrains.Annotations.NotNull] HouseholdTrait item, [JetBrains.Annotations.NotNull] Simulator dstSim)
         {
             var hh = new HouseholdTrait(item.Name,
                 null,
@@ -1101,7 +1104,7 @@ namespace Database.Tables.ModularHouseholds {
             return hh;
         }
 
-        public void ImportFromJsonObject([NotNull] JsonDto json, [NotNull] Simulator sim)
+        public void ImportFromJsonObject([JetBrains.Annotations.NotNull] JsonDto json, [JetBrains.Annotations.NotNull] Simulator sim)
         {
             var checkedProperties = new List<string>();
             ValidateAndUpdateValueAsNeeded(nameof(Name), checkedProperties, Name, json.Name, () => Name = json.Name ?? "No name");
@@ -1201,7 +1204,7 @@ namespace Database.Tables.ModularHouseholds {
             SaveToDB();
         }
 
-        public void ImportHouseholdTrait([NotNull] HouseholdTrait selectedImportHousehold)
+        public void ImportHouseholdTrait([JetBrains.Annotations.NotNull] HouseholdTrait selectedImportHousehold)
         {
             Classification = selectedImportHousehold._classification;
             Description = selectedImportHousehold.Description;
@@ -1270,8 +1273,8 @@ namespace Database.Tables.ModularHouseholds {
         }
 
         [UsedImplicitly]
-        [NotNull]
-        public static List<HouseholdTrait> ImportObjectFromJson([NotNull] Simulator sim, [NotNull] [ItemNotNull] List<JsonDto> jsonTraits)
+        [JetBrains.Annotations.NotNull]
+        public static List<HouseholdTrait> ImportObjectFromJson([JetBrains.Annotations.NotNull] Simulator sim, [JetBrains.Annotations.NotNull] [ItemNotNull] List<JsonDto> jsonTraits)
         {
             List<HouseholdTrait> newTraits = new List<HouseholdTrait>();
             foreach (var jsonTrait in jsonTraits) {
@@ -1289,7 +1292,7 @@ namespace Database.Tables.ModularHouseholds {
             return newTraits;
         }
 
-        public bool IsValidForHousehold([NotNull] ModularHousehold chh)
+        public bool IsValidForHousehold([JetBrains.Annotations.NotNull] ModularHousehold chh)
         {
             var persons = chh.Persons.Count;
             if (persons < MinimumPersonsInCHH || persons > MaximumPersonsInCHH) {
@@ -1320,22 +1323,22 @@ namespace Database.Tables.ModularHouseholds {
             return false;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<HouseholdTrait> result,
-                                            [NotNull] string connectionString,
-                                            [ItemNotNull] [NotNull] ObservableCollection<Location> allLocations,
-                                            [ItemNotNull] [NotNull] ObservableCollection<Affordance> allAffordances,
-                                            [ItemNotNull] [NotNull] ObservableCollection<RealDevice> allDevices,
-                                            [ItemNotNull] [NotNull] ObservableCollection<DeviceCategory> allDeviceCategories,
-                                            [ItemNotNull] [NotNull] ObservableCollection<TimeBasedProfile> allTimeBasedProfiles,
-                                            [ItemNotNull] [NotNull] ObservableCollection<VLoadType> loadTypes,
-                                            [ItemNotNull] [NotNull] ObservableCollection<TimeLimit> timeLimits,
-                                            [ItemNotNull] [NotNull] ObservableCollection<Desire> allDesires,
-                                            [ItemNotNull] [NotNull] ObservableCollection<DeviceAction> deviceActions,
-                                            [ItemNotNull] [NotNull] ObservableCollection<DeviceActionGroup> groups,
-                                            [ItemNotNull] [NotNull] ObservableCollection<TraitTag> traittags,
-                                            [ItemNotNull][NotNull] ObservableCollection<LivingPatternTag> allLivingPatternTags,
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<HouseholdTrait> result,
+                                            [JetBrains.Annotations.NotNull] string connectionString,
+                                            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Location> allLocations,
+                                            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Affordance> allAffordances,
+                                            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<RealDevice> allDevices,
+                                            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceCategory> allDeviceCategories,
+                                            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TimeBasedProfile> allTimeBasedProfiles,
+                                            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<VLoadType> loadTypes,
+                                            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TimeLimit> timeLimits,
+                                            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Desire> allDesires,
+                                            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceAction> deviceActions,
+                                            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceActionGroup> groups,
+                                            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TraitTag> traittags,
+                                            [ItemNotNull][JetBrains.Annotations.NotNull] ObservableCollection<LivingPatternTag> allLivingPatternTags,
                                             bool ignoreMissingTables,
-                                            [ItemNotNull] [NotNull] ObservableCollection<Variable> variables)
+                                            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Variable> variables)
         {
             var aic = new AllItemCollections(realDevices: allDevices,
                 deviceCategories: allDeviceCategories,
@@ -1407,8 +1410,8 @@ namespace Database.Tables.ModularHouseholds {
             result.Sort();
         }
 
-        [NotNull]
-        public HouseholdTrait MakeCopy([NotNull] Simulator sim)
+        [JetBrains.Annotations.NotNull]
+        public HouseholdTrait MakeCopy([JetBrains.Annotations.NotNull] Simulator sim)
         {
             var newTrait = sim.HouseholdTraits.CreateNewItem(sim.ConnectionString);
             var s = Name;
@@ -1433,7 +1436,7 @@ namespace Database.Tables.ModularHouseholds {
             return newTrait;
         }
 
-        public void RemoveDesire([NotNull] HHTDesire desire)
+        public void RemoveDesire([JetBrains.Annotations.NotNull] HHTDesire desire)
         {
             _desires.Remove(desire);
             desire.DeleteFromDB();
@@ -1468,7 +1471,7 @@ namespace Database.Tables.ModularHouseholds {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string TheoreticalTimeEstimateString()
         {
             var duration = CalculateAverageAffordanceDuration().TotalHours.ToString("N1", CultureInfo.CurrentCulture) + "h, ";
@@ -1506,8 +1509,8 @@ namespace Database.Tables.ModularHouseholds {
             cmd.AddParameter("ShortDescription", _shortDescription);
         }
 
-        internal void AddAffordanceToLocation([NotNull] Location location,
-                                              [NotNull] Affordance aff,
+        internal void AddAffordanceToLocation([JetBrains.Annotations.NotNull] Location location,
+                                              [JetBrains.Annotations.NotNull] Affordance aff,
                                               [CanBeNull] TimeLimit timeLimit,
                                               int weight,
                                               int startMinusTime,
@@ -1524,8 +1527,8 @@ namespace Database.Tables.ModularHouseholds {
             AddAffordanceToLocation(hhl, aff, timeLimit, weight, startMinusTime, startPlusTime, endMinusTime, endPlusTime);
         }
 
-        internal void AddAffordanceToLocation([NotNull] HHTLocation location,
-                                              [NotNull] Affordance aff,
+        internal void AddAffordanceToLocation([JetBrains.Annotations.NotNull] HHTLocation location,
+                                              [JetBrains.Annotations.NotNull] Affordance aff,
                                               [CanBeNull] TimeLimit timeLimit,
                                               int weight,
                                               int startMinusTime,
@@ -1567,8 +1570,8 @@ namespace Database.Tables.ModularHouseholds {
             });
         }
 
-        [NotNull]
-        internal HHTAutonomousDevice AddAutomousDevice([NotNull] IAssignableDevice device,
+        [JetBrains.Annotations.NotNull]
+        internal HHTAutonomousDevice AddAutomousDevice([JetBrains.Annotations.NotNull] IAssignableDevice device,
                                                        [CanBeNull] TimeBasedProfile timeBasedProfile,
                                                        decimal timeStandardDeviation,
                                                        [CanBeNull] VLoadType vLoadType,
@@ -1602,10 +1605,10 @@ namespace Database.Tables.ModularHouseholds {
             return hhad;
         }
 
-        [NotNull]
-        internal HHTDesire AddDesire([NotNull] Desire desire,
+        [JetBrains.Annotations.NotNull]
+        internal HHTDesire AddDesire([JetBrains.Annotations.NotNull] Desire desire,
                                      decimal decayTime,
-                                     [NotNull] string healthStatus,
+                                     [JetBrains.Annotations.NotNull] string healthStatus,
                                      decimal threshold,
                                      decimal weight,
                                      int minAge,
@@ -1631,8 +1634,8 @@ namespace Database.Tables.ModularHouseholds {
             return hht;
         }
 
-        [NotNull]
-        internal HHTLocation AddLocation([NotNull] Location location)
+        [JetBrains.Annotations.NotNull]
+        internal HHTLocation AddLocation([JetBrains.Annotations.NotNull] Location location)
         {
             foreach (var hhLocation in _locations) {
                 if (hhLocation.Location == location) {
@@ -1647,7 +1650,7 @@ namespace Database.Tables.ModularHouseholds {
             return hhl;
         }
 
-        internal void AddTrait([NotNull] HouseholdTrait trait)
+        internal void AddTrait([JetBrains.Annotations.NotNull] HouseholdTrait trait)
         {
             if (trait == this) {
                 return;
@@ -1659,13 +1662,13 @@ namespace Database.Tables.ModularHouseholds {
             SaveToDB();
         }
 
-        internal void DeleteHHTAutonomousDeviceFromDB([NotNull] HHTAutonomousDevice hhAutonomous)
+        internal void DeleteHHTAutonomousDeviceFromDB([JetBrains.Annotations.NotNull] HHTAutonomousDevice hhAutonomous)
         {
             hhAutonomous.DeleteFromDB();
             Autodevs.Remove(hhAutonomous);
         }
 
-        internal void DeleteHHTLocationFromDB([NotNull] HHTLocation hhl)
+        internal void DeleteHHTLocationFromDB([JetBrains.Annotations.NotNull] HHTLocation hhl)
         {
             if (hhl.ID != null) {
                 hhl.DeleteFromDB();
@@ -1674,25 +1677,25 @@ namespace Database.Tables.ModularHouseholds {
             _locations.Remove(hhl);
         }
 
-        public void DeleteHHTTag([NotNull] HHTTag tag)
+        public void DeleteHHTTag([JetBrains.Annotations.NotNull] HHTTag tag)
         {
             tag.DeleteFromDB();
             _tags.Remove(tag);
         }
 
-        public void DeleteHHTLivingPatternTag([NotNull] HHTLivingPatternTag tag)
+        public void DeleteHHTLivingPatternTag([JetBrains.Annotations.NotNull] HHTLivingPatternTag tag)
         {
             tag.DeleteFromDB();
             _livingPatternTags.Remove(tag);
         }
-        internal void DeleteHHTTrait([NotNull] HHTTrait hhtrait)
+        internal void DeleteHHTTrait([JetBrains.Annotations.NotNull] HHTTrait hhtrait)
         {
             hhtrait.DeleteFromDB();
             _subTraits.Remove(hhtrait);
         }
 
-        [NotNull]
-        private HHTAutonomousDevice AddAutonomousDeviceFromJto([NotNull] HHTAutonomousDevice.JsonDto jto, [NotNull] Simulator sim)
+        [JetBrains.Annotations.NotNull]
+        private HHTAutonomousDevice AddAutonomousDeviceFromJto([JetBrains.Annotations.NotNull] HHTAutonomousDevice.JsonDto jto, [JetBrains.Annotations.NotNull] Simulator sim)
         {
             var dev = sim.GetAssignableDeviceByGuid(jto.Device.Guid) ?? throw new LPGException("Could not find " + jto.Device);
             var timeprofile = sim.Timeprofiles.FindByJsonReference(jto.TimeProfile);
@@ -1703,16 +1706,16 @@ namespace Database.Tables.ModularHouseholds {
             return AddAutomousDevice(dev, timeprofile, jto.StandardDeviation, lt, timelimit, loc, jto.VariableValue, jto.VariableCondition, variable);
         }
 
-        [NotNull]
-        private HHTDesire AddDesireFromJto([NotNull] HHTDesire.JsonDto jto, [NotNull] Simulator sim)
+        [JetBrains.Annotations.NotNull]
+        private HHTDesire AddDesireFromJto([JetBrains.Annotations.NotNull] HHTDesire.JsonDto jto, [JetBrains.Annotations.NotNull] Simulator sim)
         {
             Desire d = sim.Desires.FindByJsonReference(jto.Desire) ?? throw new LPGException("Could not import desire " + jto.Desire);
             var desire = AddDesire(d, jto.DecayTime, jto.Sicknessdesire.ToString(), jto.Threshold, jto.Weight, jto.MinAge, jto.MaxAge, jto.Gender);
             return desire;
         }
 
-        [NotNull]
-        private HHTLocation AddLocationFromJto([NotNull] HHTLocation.JsonDto jto, [NotNull] Simulator sim)
+        [JetBrains.Annotations.NotNull]
+        private HHTLocation AddLocationFromJto([JetBrains.Annotations.NotNull] HHTLocation.JsonDto jto, [JetBrains.Annotations.NotNull] Simulator sim)
         {
             var loc = sim.Locations.FindByJsonReference(jto.Location) ?? throw new LPGException("Could not import Location " + jto.Location);
             var hhtloc = AddLocation(loc);
@@ -1733,11 +1736,11 @@ namespace Database.Tables.ModularHouseholds {
             return hhtloc;
         }
 
-        [NotNull]
-        private static HouseholdTrait AssignFields([NotNull] DataReader dr,
-                                                   [NotNull] string connectionString,
+        [JetBrains.Annotations.NotNull]
+        private static HouseholdTrait AssignFields([JetBrains.Annotations.NotNull] DataReader dr,
+                                                   [JetBrains.Annotations.NotNull] string connectionString,
                                                    bool ignoreMissingFields,
-                                                   [NotNull] AllItemCollections aic)
+                                                   [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var hhid = dr.GetIntFromLong("ID");
             var name = dr.GetString("Name", "no name");
@@ -1799,7 +1802,7 @@ namespace Database.Tables.ModularHouseholds {
             return new TimeSpan(0);
         }
 
-        private static bool IsCorrectHHAutonomousParent([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectHHAutonomousParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var hd = (HHTAutonomousDevice)child;
             if (parent.ID == hd.HouseholdTraitID) {
@@ -1811,7 +1814,7 @@ namespace Database.Tables.ModularHouseholds {
             return false;
         }
 
-        private static bool IsCorrectHHTDesireParent([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectHHTDesireParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var hd = (HHTDesire)child;
             if (parent.ID == hd.HouseholdTraitID) {
@@ -1823,7 +1826,7 @@ namespace Database.Tables.ModularHouseholds {
             return false;
         }
 
-        private static bool IsCorrectHHTLocationParent([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectHHTLocationParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var hd = (HHTLocation)child;
             if (parent.ID == hd.HouseholdTraitID) {
@@ -1836,7 +1839,7 @@ namespace Database.Tables.ModularHouseholds {
             return false;
         }
 
-        private static bool IsCorrectHHTTagParent([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectHHTTagParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var hd = (HHTTag)child;
             if (parent.ID == hd.HouseholdTraitID) {
@@ -1847,7 +1850,7 @@ namespace Database.Tables.ModularHouseholds {
 
             return false;
         }
-        private static bool IsCorrectHHTLivingPatternTagParent([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectHHTLivingPatternTagParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var hd = (HHTLivingPatternTag)child;
             if (parent.ID == hd.HouseholdTraitID)
@@ -1860,7 +1863,7 @@ namespace Database.Tables.ModularHouseholds {
             return false;
         }
 
-        private static bool IsCorrectHHTTraitParent([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectHHTTraitParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var hd = (HHTTrait)child;
             if (parent.ID == hd.ParentTraitID) {
@@ -1880,8 +1883,8 @@ namespace Database.Tables.ModularHouseholds {
             }
 
             public JsonDto([CanBeNull] string name,
-                           [NotNull] string description,
-                           [NotNull] string classification,
+                           [JetBrains.Annotations.NotNull] string description,
+                           [JetBrains.Annotations.NotNull] string classification,
                            double estimatedDuration2InMinutes,
                            double estimatedTimeCount,
                            double estimatedTimeCount2,
@@ -1918,18 +1921,18 @@ namespace Database.Tables.ModularHouseholds {
                 EstimatedTimeInSeconds = estimatedTimeInSeconds;
             }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             [ItemNotNull]
             public List<HHTAutonomousDevice.JsonDto> AutonomousDevices { get; set; } = new List<HHTAutonomousDevice.JsonDto>();
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string Classification { get; set; }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string Description { get; set; }
 
             [ItemNotNull]
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public List<HHTDesire.JsonDto> Desires { get; set; } = new List<HHTDesire.JsonDto>();
 
             public double EstimatedDuration2InMinutes { get; set; }
@@ -1944,7 +1947,7 @@ namespace Database.Tables.ModularHouseholds {
             public EstimateType EstimateType { get; set; }
             public StrGuid Guid { get; set; }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             [ItemNotNull]
             public List<HHTLocation.JsonDto> Locations { get; set; } = new List<HHTLocation.JsonDto>();
 
@@ -1958,7 +1961,7 @@ namespace Database.Tables.ModularHouseholds {
             public string ShortDescription { get; set; }
 
             [ItemNotNull]
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public List<JsonReference> SubTraits { get; set; } = new List<JsonReference>();
 
             public List<JsonReference> Tags { get; set; } = new List<JsonReference>();

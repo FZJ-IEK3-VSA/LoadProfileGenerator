@@ -14,14 +14,14 @@ using JetBrains.Annotations;
 namespace Database.Tables.BasicHouseholds {
     public class DeviceAction : DBBaseElement, IAssignableDevice {
         public const string TableName = "tblDeviceActions";
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<DeviceActionProfile> _profiles;
-        [NotNull] private string _description;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<DeviceActionProfile> _profiles;
+        [JetBrains.Annotations.NotNull] private string _description;
 
         [CanBeNull] private RealDevice _device;
 
         [CanBeNull] private DeviceActionGroup _deviceActionGroup;
 
-        public DeviceAction([NotNull] string pName, [CanBeNull]int? id, [NotNull] string description, [NotNull] string connectionString,
+        public DeviceAction([JetBrains.Annotations.NotNull] string pName, [CanBeNull]int? id, [JetBrains.Annotations.NotNull] string description, [JetBrains.Annotations.NotNull] string connectionString,
             [CanBeNull] DeviceActionGroup deviceActionGroup, [CanBeNull] RealDevice device, StrGuid guid) : base(pName, TableName,
             connectionString, guid) {
             ID = id;
@@ -44,7 +44,7 @@ namespace Database.Tables.BasicHouseholds {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string Description {
             get => _description;
@@ -66,7 +66,7 @@ namespace Database.Tables.BasicHouseholds {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<DeviceActionProfile> Profiles => _profiles;
 
@@ -100,7 +100,7 @@ namespace Database.Tables.BasicHouseholds {
             return false;
         }
 
-        public void AddDeviceProfile([NotNull] TimeBasedProfile tp, decimal timeoffset, [NotNull] VLoadType vLoadType, double multiplier) {
+        public void AddDeviceProfile([JetBrains.Annotations.NotNull] TimeBasedProfile tp, decimal timeoffset, [JetBrains.Annotations.NotNull] VLoadType vLoadType, double multiplier) {
             var deviceName = vLoadType.Name;
             var dad = new DeviceActionProfile(tp, null, timeoffset, IntID, deviceName, vLoadType,
                 ConnectionString, multiplier,System.Guid.NewGuid().ToStrGuid());
@@ -111,9 +111,9 @@ namespace Database.Tables.BasicHouseholds {
             dad.SaveToDB();
         }
 
-        [NotNull]
-        private static DeviceAction AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic) {
+        [JetBrains.Annotations.NotNull]
+        private static DeviceAction AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic) {
             var id = dr.GetIntFromLong("ID");
             var name = dr.GetString("Name");
             var description = dr.GetString("Description", false, string.Empty, ignoreMissingFields);
@@ -168,9 +168,9 @@ namespace Database.Tables.BasicHouseholds {
             return result;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) {
+        public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString) {
             var aff = new DeviceAction(FindNewName(isNameTaken, "New Device Action "), null, string.Empty,
                 connectionString, null, null, System.Guid.NewGuid().ToStrGuid());
             return aff;
@@ -185,7 +185,7 @@ namespace Database.Tables.BasicHouseholds {
             }
         }
 
-        public void DeleteProfileFromDB([NotNull] DeviceActionProfile dad) {
+        public void DeleteProfileFromDB([JetBrains.Annotations.NotNull] DeviceActionProfile dad) {
             dad.DeleteFromDB();
             _profiles.Remove(dad);
         }
@@ -243,9 +243,9 @@ namespace Database.Tables.BasicHouseholds {
             return used;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DeviceAction ImportFromItem([NotNull] DeviceAction toImport,  [NotNull] Simulator dstSim) {
+        public static DeviceAction ImportFromItem([JetBrains.Annotations.NotNull] DeviceAction toImport,  [JetBrains.Annotations.NotNull] Simulator dstSim) {
             var rd = GetItemFromListByName(dstSim.RealDevices.Items, toImport.Device?.Name);
             DeviceActionGroup group = null;
             if (toImport.DeviceActionGroup != null) {
@@ -270,7 +270,7 @@ namespace Database.Tables.BasicHouseholds {
             return da;
         }
 
-        private static bool IsCorrectParent([NotNull] DBBase parent, [NotNull] DBBase child) {
+        private static bool IsCorrectParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child) {
             var hd = (DeviceActionProfile) child;
             if (parent.ID == hd.DeviceActionID) {
                 var aff = (DeviceAction) parent;
@@ -285,9 +285,9 @@ namespace Database.Tables.BasicHouseholds {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<DeviceAction> result, [NotNull] string connectionString,
-            [NotNull] [ItemNotNull] ObservableCollection<TimeBasedProfile> pTimeProfiles, [NotNull] [ItemNotNull] ObservableCollection<RealDevice> devices,
-            [NotNull] [ItemNotNull] ObservableCollection<VLoadType> loadTypes, [NotNull] [ItemNotNull] ObservableCollection<DeviceActionGroup> deviceActionGroups,
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceAction> result, [JetBrains.Annotations.NotNull] string connectionString,
+            [JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<TimeBasedProfile> pTimeProfiles, [JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<RealDevice> devices,
+            [JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<VLoadType> loadTypes, [JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<DeviceActionGroup> deviceActionGroups,
             bool ignoreMissingTables) {
             var aic = new AllItemCollections(timeProfiles: pTimeProfiles, realDevices: devices,
                 loadTypes: loadTypes, deviceActionGroups: deviceActionGroups);

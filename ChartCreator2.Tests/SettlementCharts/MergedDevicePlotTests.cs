@@ -1,8 +1,6 @@
 ﻿using Automation;
 using ChartCreator2.SettlementMergePlots;
 using Common.Tests;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -18,7 +16,7 @@ namespace ChartCreator2.Tests.SettlementCharts
             MergedDevicePlot.Run(@"e:\MergedDeviceProfiles.csv", @"G:\masterbatch");
         }
 
-        public MergedDevicePlotTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public MergedDevicePlotTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

@@ -43,17 +43,17 @@ using LoadProfileGenerator.Views.Households;
 
 namespace LoadProfileGenerator.Presenters.Households {
     public class AffordanceTaggingSetPresenter : PresenterBaseDBBase<AffordanceTaggingSetView> {
-        [NotNull] private readonly AffordanceTaggingSet _affordanceTaggingSet;
+        [JetBrains.Annotations.NotNull] private readonly AffordanceTaggingSet _affordanceTaggingSet;
 
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<ReferenceStatistic> _refStatistics =
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<ReferenceStatistic> _refStatistics =
             new ObservableCollection<ReferenceStatistic>();
 
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<StatisticsEntry>
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<StatisticsEntry>
             _statistics = new ObservableCollection<StatisticsEntry>();
 
-        public AffordanceTaggingSetPresenter([NotNull] ApplicationPresenter applicationPresenter,
-                                             [NotNull] AffordanceTaggingSetView view,
-            [NotNull] AffordanceTaggingSet aff) : base(view, "ThisAffordanceTaggingSet.HeaderString", aff, applicationPresenter)
+        public AffordanceTaggingSetPresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter,
+                                             [JetBrains.Annotations.NotNull] AffordanceTaggingSetView view,
+            [JetBrains.Annotations.NotNull] AffordanceTaggingSet aff) : base(view, "ThisAffordanceTaggingSet.HeaderString", aff, applicationPresenter)
         {
             _affordanceTaggingSet = aff;
             foreach (var entry in aff.Entries) {
@@ -67,35 +67,35 @@ namespace LoadProfileGenerator.Presenters.Households {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<Affordance> Affordances => Sim.Affordances.Items;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<AffordanceTag> AllTags => ThisAffordanceTaggingSet.Tags;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<PermittedGender> Genders { get; } = new ObservableCollection<PermittedGender>();
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<VLoadType> LoadTypes => Sim.LoadTypes.Items;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<ReferenceStatistic> RefStatistics => _refStatistics;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<StatisticsEntry> Statistics => _statistics;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public AffordanceTaggingSet ThisAffordanceTaggingSet => _affordanceTaggingSet;
 
         public void AddAllAffordances()
@@ -142,7 +142,7 @@ namespace LoadProfileGenerator.Presenters.Households {
             }
         }
 
-        public void AddTag([NotNull] string s)
+        public void AddTag([JetBrains.Annotations.NotNull] string s)
         {
             _affordanceTaggingSet.AddNewTag(s);
         }
@@ -211,16 +211,16 @@ namespace LoadProfileGenerator.Presenters.Households {
             ThisAffordanceTaggingSet.RemoveAllOldEntries(Sim.Affordances.Items);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private static string GetRefStatisticDescription(PermittedGender gender, int minAge, int maxAge) =>
             gender + " between " + minAge + " and " + maxAge;
 
         public class ReferenceStatistic : INotifyPropertyChanged {
             private double _value;
 
-            public ReferenceStatistic([NotNull] string description) => Description = description;
+            public ReferenceStatistic([JetBrains.Annotations.NotNull] string description) => Description = description;
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string Description { get; }
 
             public double Value {
@@ -251,14 +251,14 @@ namespace LoadProfileGenerator.Presenters.Households {
         }
 
         public class StatisticsEntry {
-            public StatisticsEntry([NotNull] string name, int count)
+            public StatisticsEntry([JetBrains.Annotations.NotNull] string name, int count)
             {
                 Name = name;
                 Count = count;
             }
 
             public int Count { get; set; }
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string Name { get; }
         }
     }

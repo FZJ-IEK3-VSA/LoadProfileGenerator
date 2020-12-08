@@ -47,14 +47,14 @@ using JetBrains.Annotations;
 namespace CalcPostProcessor.LoadTypeHouseholdSteps {
     public class MakeTotalsPerLoadtype : LoadTypeStepBase
     {
-        [NotNull] private readonly IInputDataLogger _inputDataLogger;
+        [JetBrains.Annotations.NotNull] private readonly IInputDataLogger _inputDataLogger;
 
         //[JetBrains.Annotations.NotNull]private readonly Dictionary<HouseholdKey, StreamWriter> _files;
 
         public MakeTotalsPerLoadtype(
-                                     [NotNull] CalcDataRepository repository,
-                                     [NotNull] ICalculationProfiler profiler,
-                                     [NotNull] IInputDataLogger inputDataLogger)
+                                     [JetBrains.Annotations.NotNull] CalcDataRepository repository,
+                                     [JetBrains.Annotations.NotNull] ICalculationProfiler profiler,
+                                     [JetBrains.Annotations.NotNull] IInputDataLogger inputDataLogger)
             :base(repository, AutomationUtili.GetOptionList(CalcOption.TotalsPerLoadtype),profiler,
                 "Totals per LoadType")
         {
@@ -100,8 +100,8 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             return total;
         }*/
 
-        public void RunIndividualHouseholds([NotNull] CalcLoadTypeDto dstLoadType, [NotNull][ItemNotNull] List<OnlineEnergyFileRow> energyFileRows,
-             [NotNull] EnergyFileColumns efc, [NotNull] Dictionary<CalcLoadTypeDto, double> allSums)
+        public void RunIndividualHouseholds([JetBrains.Annotations.NotNull] CalcLoadTypeDto dstLoadType, [JetBrains.Annotations.NotNull][ItemNotNull] List<OnlineEnergyFileRow> energyFileRows,
+             [JetBrains.Annotations.NotNull] EnergyFileColumns efc, [JetBrains.Annotations.NotNull] Dictionary<CalcLoadTypeDto, double> allSums)
         {
             var householdKeys =
                 efc.ColumnEntriesByColumn[dstLoadType].Values.Select(entry => entry.HouseholdKey).Distinct()
@@ -277,7 +277,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             _inputDataLogger.SaveList<TotalsPerLoadtypeEntry>(totals.ConvertAll(x=> (IHouseholdKey) x));
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public override List<CalcOption> NeededOptions => new List<CalcOption>() {CalcOption.DetailedDatFiles, CalcOption.HouseholdContents};
     }
 }

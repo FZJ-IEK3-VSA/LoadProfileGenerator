@@ -50,19 +50,19 @@ namespace Database.Tables.BasicHouseholds {
 
         [CanBeNull] private static DeviceCategory _noneCategory;
 
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<RealDeviceLoadType> _loads;
-        [NotNull] private string _description;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<RealDeviceLoadType> _loads;
+        [JetBrains.Annotations.NotNull] private string _description;
 
         [CanBeNull] private DeviceCategory _deviceCategory;
 
         private bool _forceAllLoadTypesToBeSet;
         private bool _isStandbyDevice;
-        [NotNull] private string _picture;
+        [JetBrains.Annotations.NotNull] private string _picture;
         private int _year;
 
-        public RealDevice([NotNull] string pName, int pYear, [NotNull] string pPicture, [CanBeNull] DeviceCategory deviceCategory,
-            [NotNull] string description,
-            bool forceAllLoadTypesToBeSet, bool isStandbyDevice, [NotNull] string connectionString, StrGuid guid, [CanBeNull]int? pID = null)
+        public RealDevice([JetBrains.Annotations.NotNull] string pName, int pYear, [JetBrains.Annotations.NotNull] string pPicture, [CanBeNull] DeviceCategory deviceCategory,
+            [JetBrains.Annotations.NotNull] string description,
+            bool forceAllLoadTypesToBeSet, bool isStandbyDevice, [JetBrains.Annotations.NotNull] string connectionString, StrGuid guid, [CanBeNull]int? pID = null)
             : base(pName, TableName, connectionString, guid)
         {
             ID = pID;
@@ -77,7 +77,7 @@ namespace Database.Tables.BasicHouseholds {
             PropertyChanged += OnPropertyChanged;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string Description {
             get => _description;
@@ -111,14 +111,14 @@ namespace Database.Tables.BasicHouseholds {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<RealDeviceLoadType> Loads => _loads;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string NameWithEnergyIntensity => Name + " (Energyintensity: " + WeightedEnergyIntensity + ")";
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string Picture {
             get => _picture;
@@ -191,7 +191,7 @@ namespace Database.Tables.BasicHouseholds {
 
         public bool IsOrContainsStandbyDevice(ObservableCollection<DeviceAction> allActions) => IsStandbyDevice;
 
-        public void AddLoad([NotNull] VLoadType loadType, double maxpower, double standardDeviation,
+        public void AddLoad([JetBrains.Annotations.NotNull] VLoadType loadType, double maxpower, double standardDeviation,
             double averageYearlyConsumption)
         {
             // delete old values for the same load type for the update function
@@ -212,9 +212,9 @@ namespace Database.Tables.BasicHouseholds {
             });
         }
 
-        [NotNull]
-        private static RealDevice AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static RealDevice AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var id = dr.GetIntFromLong("ID");
             var name = dr.GetString("Name","(no name)");
@@ -234,9 +234,9 @@ namespace Database.Tables.BasicHouseholds {
             return db;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString)
+        public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString)
         {
             const string s = "New Device ";
             var i = 1;
@@ -256,7 +256,7 @@ namespace Database.Tables.BasicHouseholds {
             base.DeleteFromDB();
         }
 
-        public void DeleteLoad([NotNull] RealDeviceLoadType rdlt)
+        public void DeleteLoad([JetBrains.Annotations.NotNull] RealDeviceLoadType rdlt)
         {
             _loads.Remove(rdlt);
             rdlt.DeleteFromDB();
@@ -329,9 +329,9 @@ namespace Database.Tables.BasicHouseholds {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DBBase ImportFromItem([NotNull] RealDevice item,[NotNull] Simulator dstSim)
+        public static DBBase ImportFromItem([JetBrains.Annotations.NotNull] RealDevice item,[JetBrains.Annotations.NotNull] Simulator dstSim)
         {
             var dstdc = GetItemFromListByName(dstSim.DeviceCategories.Items, item.DeviceCategory?.Name);
             var rd = new RealDevice(item.Name, item.Year, item.Picture, dstdc, item.Description,
@@ -367,7 +367,7 @@ namespace Database.Tables.BasicHouseholds {
             }
         }
 
-        private static bool IsCorrectParent([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var hd = (RealDeviceLoadType) child;
             if (parent.ID == hd.RealDeviceID) {
@@ -384,9 +384,9 @@ namespace Database.Tables.BasicHouseholds {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<RealDevice> result,
-            [ItemNotNull] [NotNull] ObservableCollection<DeviceCategory> deviceCategories, [NotNull] DeviceCategory noneCategory, [NotNull] string connectionString,
-            [ItemNotNull] [NotNull] ObservableCollection<VLoadType> loadTypes, [ItemNotNull] [NotNull] ObservableCollection<TimeBasedProfile> timeBasedProfiles,
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<RealDevice> result,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceCategory> deviceCategories, [JetBrains.Annotations.NotNull] DeviceCategory noneCategory, [JetBrains.Annotations.NotNull] string connectionString,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<VLoadType> loadTypes, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TimeBasedProfile> timeBasedProfiles,
             bool ignoreMissingTables)
         {
             var aic = new AllItemCollections(deviceCategories: deviceCategories, loadTypes: loadTypes,
@@ -400,8 +400,8 @@ namespace Database.Tables.BasicHouseholds {
                 ignoreMissingTables);
         }
 
-        [NotNull]
-        public DeviceAction MakeDeviceAction([NotNull] Simulator sim)
+        [JetBrains.Annotations.NotNull]
+        public DeviceAction MakeDeviceAction([JetBrains.Annotations.NotNull] Simulator sim)
         {
             var action = sim.DeviceActions.CreateNewItem(sim.ConnectionString);
             action.Device = this;
@@ -422,7 +422,7 @@ namespace Database.Tables.BasicHouseholds {
             return action;
         }
 
-        private void OnPropertyChanged([NotNull] object sender, [NotNull] PropertyChangedEventArgs propertyChangedEventArgs)
+        private void OnPropertyChanged([JetBrains.Annotations.NotNull] object sender, [JetBrains.Annotations.NotNull] PropertyChangedEventArgs propertyChangedEventArgs)
         {
             if (propertyChangedEventArgs.PropertyName == nameof(Name) ||
                 propertyChangedEventArgs.PropertyName == nameof(WeightedEnergyIntensity)) {

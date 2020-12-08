@@ -11,7 +11,6 @@ using Common.Tests;
 using Database;
 using Database.Tables.BasicHouseholds;
 using Database.Tests;
-using JetBrains.Annotations;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -45,7 +44,7 @@ namespace CalculationController.Tests.InputLoggers
             }
         }
 
-        public DeviceTaggingSetLoggerTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public DeviceTaggingSetLoggerTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

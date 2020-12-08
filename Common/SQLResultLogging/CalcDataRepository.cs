@@ -13,7 +13,7 @@ namespace Common.SQLResultLogging {
     [SuppressMessage("ReSharper", "UnusedParameter.Local")]
     public class CalcDataRepository
     {
-        [NotNull] private readonly SqlResultLoggingService _srls;
+        [JetBrains.Annotations.NotNull] private readonly SqlResultLoggingService _srls;
         //private readonly List<CalcHouseholdPlanDto> _householdPlans;
         [ItemNotNull] [CanBeNull] private List<CalcAffordanceTaggingSetDto> _affordanceTaggingSets;
 
@@ -21,7 +21,7 @@ namespace Common.SQLResultLogging {
 
         [CanBeNull] private CalcParameters _calcParameters;
 
-        public CalcDataRepository([NotNull] SqlResultLoggingService srls)
+        public CalcDataRepository([JetBrains.Annotations.NotNull] SqlResultLoggingService srls)
         {
             _srls = srls;
             CarpetPlotColumnWidth = 5;
@@ -30,7 +30,7 @@ namespace Common.SQLResultLogging {
         [CanBeNull]
         private CalcObjectInformation _calcObjectInformation;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CalcObjectInformation CalcObjectInformation
         {
             get
@@ -45,17 +45,17 @@ namespace Common.SQLResultLogging {
         }
 
         [ItemNotNull]
-        [NotNull]
-        public List<ActionEntry> ReadActionEntries([NotNull] HouseholdKey key)
+        [JetBrains.Annotations.NotNull]
+        public List<ActionEntry> ReadActionEntries([JetBrains.Annotations.NotNull] HouseholdKey key)
         {
             ActionEntryLogger ael = new ActionEntryLogger(_srls);
             return ael.Read(key);
         }
 
-        [NotNull] private readonly Dictionary<HouseholdKey, List<DeviceActivationEntry>> _deviceActivationEntries = new Dictionary<HouseholdKey, List<DeviceActivationEntry>>();
+        [JetBrains.Annotations.NotNull] private readonly Dictionary<HouseholdKey, List<DeviceActivationEntry>> _deviceActivationEntries = new Dictionary<HouseholdKey, List<DeviceActivationEntry>>();
        [ItemNotNull]
-        [NotNull]
-        public List<DeviceActivationEntry> LoadDeviceActivations([NotNull] HouseholdKey key)
+        [JetBrains.Annotations.NotNull]
+        public List<DeviceActivationEntry> LoadDeviceActivations([JetBrains.Annotations.NotNull] HouseholdKey key)
         {
             if (_deviceActivationEntries.ContainsKey(key)) {
                 return _deviceActivationEntries[key];
@@ -66,18 +66,18 @@ namespace Common.SQLResultLogging {
             _deviceActivationEntries.Add(key,entries);
             return entries;
         }
-        //[NotNull]
+        //[JetBrains.Annotations.NotNull]
         //public AffordanceEnergyUseFile affordanceEnergyUseFile { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
-        public List<CalcAffordanceDto> LoadAffordances([NotNull] HouseholdKey key)
+        public List<CalcAffordanceDto> LoadAffordances([JetBrains.Annotations.NotNull] HouseholdKey key)
         {
             CalcAffordanceDtoLogger cadl = new CalcAffordanceDtoLogger(_srls);
             return cadl.Load(key);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public List<CalcAffordanceTaggingSetDto> AffordanceTaggingSets
         {
@@ -92,15 +92,15 @@ namespace Common.SQLResultLogging {
             }
         }
         /*
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Dictionary<string, double> allResults { get; }
         */
-        //[NotNull]public ICalcAbleObjectDto CalcObject { get; }
+        //[JetBrains.Annotations.NotNull]public ICalcAbleObjectDto CalcObject { get; }
 
-        //[NotNull]
+        //[JetBrains.Annotations.NotNull]
         //public string CalcObjectName { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CalcParameters CalcParameters
         {
             get
@@ -116,28 +116,28 @@ namespace Common.SQLResultLogging {
 
         public int CarpetPlotColumnWidth { get; }
 
-        //[NotNull]
+        //[JetBrains.Annotations.NotNull]
         //public Dictionary<string, double> deviceEnergyDict { get; }
         /*
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Dictionary<string, string> DeviceNameToDeviceCategory { get; }*/
 
         //private List<CalcDeviceDto> _devices;
         [CanBeNull] [ItemNotNull] private List<HouseholdKeyEntry> _householdKeys;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
-        public List<CalcDeviceDto> LoadDevices([NotNull] HouseholdKey key)
+        public List<CalcDeviceDto> LoadDevices([JetBrains.Annotations.NotNull] HouseholdKey key)
         {
             CalcDeviceDtoLogger cpl = new CalcDeviceDtoLogger(_srls);
             return cpl.Load(key);
         }
 
-        //[NotNull]
+        //[JetBrains.Annotations.NotNull]
         //public DeviceSumInformationList DeviceSumInformationList { get; }
 
         //spublic List<AffordanceTaggingSetInformation> taggingSets { get; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public List<DeviceTaggingSetInformation> GetDeviceTaggingSets()
         {
@@ -149,8 +149,8 @@ namespace Common.SQLResultLogging {
         //public List<CalcAutoDevDto> AutoDevices { get; }
         private readonly Dictionary<HouseholdKey, EnergyFileColumns> _previousEfc =
             new Dictionary<HouseholdKey, EnergyFileColumns>();
-        [NotNull]
-        public EnergyFileColumns ReadEnergyFileColumns([NotNull] HouseholdKey key)
+        [JetBrains.Annotations.NotNull]
+        public EnergyFileColumns ReadEnergyFileColumns([JetBrains.Annotations.NotNull] HouseholdKey key)
         {
             if (!_previousEfc.ContainsKey(key)) {
                 _previousEfc.Clear();
@@ -160,7 +160,7 @@ namespace Common.SQLResultLogging {
             return _previousEfc[key];
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public List<HouseholdKeyEntry> HouseholdKeys
         {
@@ -176,10 +176,10 @@ namespace Common.SQLResultLogging {
             }
         }
 
-        //[NotNull]
+        //[JetBrains.Annotations.NotNull]
         //[ItemNotNull]
         //public List<CalcHouseholdPlanDto> HouseholdPlans => _householdPlans;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public List<CalcLoadTypeDto> LoadTypes
         {
@@ -195,9 +195,9 @@ namespace Common.SQLResultLogging {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
-        public List<CalcPersonDto> GetPersons([NotNull] HouseholdKey key)
+        public List<CalcPersonDto> GetPersons([JetBrains.Annotations.NotNull] HouseholdKey key)
         {
             CalcPersonDtoLogger cpl = new CalcPersonDtoLogger(_srls);
             var persons = cpl.Load(key);
@@ -205,10 +205,10 @@ namespace Common.SQLResultLogging {
         }
 
 
-        //  [NotNull]
+        //  [JetBrains.Annotations.NotNull]
         //public TotalsInformation TotalInformation { get; set; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CalcLoadTypeDto GetLoadTypeInformationByGuid(StrGuid guid)
         {
             if (_loadtypes == null)
@@ -221,81 +221,81 @@ namespace Common.SQLResultLogging {
         }
 
         [ItemNotNull]
-        [NotNull]
-        public List<LocationEntry> LoadLocationEntries([NotNull] HouseholdKey householdKey)
+        [JetBrains.Annotations.NotNull]
+        public List<LocationEntry> LoadLocationEntries([JetBrains.Annotations.NotNull] HouseholdKey householdKey)
         {
             LocationEntryLogger lel = new LocationEntryLogger(_srls);
             return lel.Load(householdKey);
         }
 
         [ItemNotNull]
-        [NotNull]
-        public List<CalcSiteDto> LoadSites([NotNull] HouseholdKey householdKey)
+        [JetBrains.Annotations.NotNull]
+        public List<CalcSiteDto> LoadSites([JetBrains.Annotations.NotNull] HouseholdKey householdKey)
         {
             CalcSiteDtoLogger lel = new CalcSiteDtoLogger(_srls);
             return lel.Load(householdKey);
         }
 
         [ItemNotNull]
-        [NotNull]
-        public List<PersonStatus> LoadPersonStatus([NotNull] HouseholdKey householdKey)
+        [JetBrains.Annotations.NotNull]
+        public List<PersonStatus> LoadPersonStatus([JetBrains.Annotations.NotNull] HouseholdKey householdKey)
         {
             PersonStatusLogger psl = new PersonStatusLogger(_srls);
             return psl.Read(householdKey);
         }
 
         [ItemNotNull]
-        [NotNull]
-        public List<TransportationDeviceStateEntry> LoadTransportationDeviceStates([NotNull] HouseholdKey householdKey)
+        [JetBrains.Annotations.NotNull]
+        public List<TransportationDeviceStateEntry> LoadTransportationDeviceStates([JetBrains.Annotations.NotNull] HouseholdKey householdKey)
         {
             TransportationStateEntryLogger tsel = new TransportationStateEntryLogger(_srls);
             return tsel.Load(householdKey);
         }
 
         [ItemNotNull]
-        [NotNull]
-        public List<AffordanceEnergyUseEntry> LoadAffordanceEnergyUses([NotNull] HouseholdKey householdKey)
+        [JetBrains.Annotations.NotNull]
+        public List<AffordanceEnergyUseEntry> LoadAffordanceEnergyUses([JetBrains.Annotations.NotNull] HouseholdKey householdKey)
         {
             AffordanceEnergyUseLogger aeul = new AffordanceEnergyUseLogger(_srls);
             return aeul.Load(householdKey);
         }
 
-        [NotNull]
-        public ResultTableDefinition FindTableByKey(ResultTableID resultTableID, [NotNull] HouseholdKey key)
+        [JetBrains.Annotations.NotNull]
+        public ResultTableDefinition FindTableByKey(ResultTableID resultTableID, [JetBrains.Annotations.NotNull] HouseholdKey key)
         {
             var tables = _srls.LoadTables(key);
             return tables.Single(x => x.ResultTableID == resultTableID);
         }
-        public bool DoesTableExist(ResultTableID resultTableID, [NotNull] HouseholdKey key)
+        public bool DoesTableExist(ResultTableID resultTableID, [JetBrains.Annotations.NotNull] HouseholdKey key)
         {
             var tables = _srls.LoadTables(key);
             return tables.FirstOrDefault(x => x.ResultTableID == resultTableID)!= null;
         }
 
         [ItemNotNull]
-        [NotNull]
-        public List<TransportationEventEntry> LoadTransportationEvents([NotNull] HouseholdKey key)
+        [JetBrains.Annotations.NotNull]
+        public List<TransportationEventEntry> LoadTransportationEvents([JetBrains.Annotations.NotNull] HouseholdKey key)
         {
             TransportationEventLogger aeul = new TransportationEventLogger(_srls);
             return aeul.Load(key);
         }
 
-        [NotNull]
-        public List<CalcAutoDevDto> LoadAutoDevices([NotNull] HouseholdKey key)
+        [JetBrains.Annotations.NotNull]
+        public List<CalcAutoDevDto> LoadAutoDevices([JetBrains.Annotations.NotNull] HouseholdKey key)
         {
             CalcAutoDevDtoLogger cpl = new CalcAutoDevDtoLogger(_srls);
             return cpl.Load(key);
         }
 
-        [NotNull]
-        public IEnumerable<SingleTimestepActionEntry> ReadSingleTimestepActionEntries([NotNull] HouseholdKey key)
+        [JetBrains.Annotations.NotNull]
+        public IEnumerable<SingleTimestepActionEntry> ReadSingleTimestepActionEntries([JetBrains.Annotations.NotNull] HouseholdKey key)
         {
             SingleTimestepActionEntryLogger stael = new SingleTimestepActionEntryLogger(_srls);
             return stael.Read(key);
         }
 
-        [NotNull]
-        public List<CalcDeviceArchiveDto> LoadDeviceArchiveEntries([NotNull] HouseholdKey key)
+        [JetBrains.Annotations.NotNull]
+        public List<CalcDeviceArchiveDto> LoadDeviceArchiveEntries([JetBrains.Annotations.NotNull] HouseholdKey key)
         {
             var cpl = new CalcDeviceArchiveDtoLogger(_srls);
             return cpl.Load(key);

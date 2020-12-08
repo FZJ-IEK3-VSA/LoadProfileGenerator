@@ -18,7 +18,7 @@ namespace LoadProfileGenerator.Views.Transportation {
             InitializeComponent();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private TransportationDeviceSetPresenter Presenter => (TransportationDeviceSetPresenter) DataContext;
 
         private void BtnRefreshUsedIn_Click([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
@@ -45,7 +45,7 @@ namespace LoadProfileGenerator.Views.Transportation {
             Presenter.ApplicationPresenter.OpenItem(ui.Item);
         }
 
-        private void BtnAddTransportationDevice_Click([NotNull] object sender, [NotNull] RoutedEventArgs e)
+        private void BtnAddTransportationDevice_Click([JetBrains.Annotations.NotNull] object sender, [JetBrains.Annotations.NotNull] RoutedEventArgs e)
         {
             if (CmbTransportationDevices.SelectedItem == null) {
                 Logger.Error("No transportation device was selected");
@@ -56,7 +56,7 @@ namespace LoadProfileGenerator.Views.Transportation {
             Presenter.ThisSet.AddDevice(td);
         }
 
-        private void BtnRemoveTransportationDevice_Click([NotNull] object sender, [NotNull] RoutedEventArgs e)
+        private void BtnRemoveTransportationDevice_Click([JetBrains.Annotations.NotNull] object sender, [JetBrains.Annotations.NotNull] RoutedEventArgs e)
         {
             if (LstTransportationDevices.SelectedItem == null) {
                 Logger.Error("No transportation device was selected.");

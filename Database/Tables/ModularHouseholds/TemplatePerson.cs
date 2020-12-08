@@ -15,7 +15,7 @@ namespace Database.Tables.ModularHouseholds {
     public class TemplatePerson : DBBaseElement {
         public const string TableName = "tblTemplatePerson";
 
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<TemplatePersonTrait> _traits =
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<TemplatePersonTrait> _traits =
             new ObservableCollection<TemplatePersonTrait>();
 
         private int _age;
@@ -25,12 +25,12 @@ namespace Database.Tables.ModularHouseholds {
 
         [CanBeNull] private Person _basePerson;
 
-        [NotNull] private string _description;
+        [JetBrains.Annotations.NotNull] private string _description;
         private PermittedGender _gender;
         private int _sickDays;
 
         [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "basePerson")]
-        public TemplatePerson([NotNull] string pName,[CanBeNull] int? id,[NotNull]  string description, [NotNull] string connectionString, int age,
+        public TemplatePerson([JetBrains.Annotations.NotNull] string pName,[CanBeNull] int? id,[JetBrains.Annotations.NotNull]  string description, [JetBrains.Annotations.NotNull] string connectionString, int age,
             int averageSicknessDuration, PermittedGender gender, int sickDays,
             [CanBeNull] ModularHousehold baseHousehold, [CanBeNull] Person basePerson, StrGuid guid) : base(pName, TableName,
             connectionString, guid)
@@ -71,7 +71,7 @@ namespace Database.Tables.ModularHouseholds {
             set => SetValueWithNotify(value, ref _basePerson, true, nameof(BasePerson));
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string Description {
             get => _description;
@@ -92,10 +92,10 @@ namespace Database.Tables.ModularHouseholds {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<TemplatePersonTrait> Traits => _traits;
 
-        public void AddTrait([NotNull] HouseholdTrait trait)
+        public void AddTrait([JetBrains.Annotations.NotNull] HouseholdTrait trait)
         {
             if (_traits.Any(x => x.Trait == trait)) {
                 Logger.Error("This trait was already added.");
@@ -108,9 +108,9 @@ namespace Database.Tables.ModularHouseholds {
             _traits.Sort();
         }
 
-        [NotNull]
-        private static TemplatePerson AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static TemplatePerson AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var hhid = dr.GetIntFromLong("ID");
             var name = (string) dr["Name"];
@@ -139,9 +139,9 @@ namespace Database.Tables.ModularHouseholds {
             return chh;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new
+        public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString) => new
             TemplatePerson(FindNewName(isNameTaken, "New  Template Person "), null, "(no description)",
                 connectionString, 30, 3, PermittedGender.Male,
                 10, null, null, System.Guid.NewGuid().ToStrGuid());
@@ -154,15 +154,15 @@ namespace Database.Tables.ModularHouseholds {
             base.DeleteFromDB();
         }
 
-        public void DeleteTraitFromDB([NotNull] TemplatePersonTrait entry)
+        public void DeleteTraitFromDB([JetBrains.Annotations.NotNull] TemplatePersonTrait entry)
         {
             entry.DeleteFromDB();
             _traits.Remove(entry);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DBBase ImportFromItem([NotNull] TemplatePerson item,  [NotNull] Simulator dstSim)
+        public static DBBase ImportFromItem([JetBrains.Annotations.NotNull] TemplatePerson item,  [JetBrains.Annotations.NotNull] Simulator dstSim)
         {
             if (item.BaseHousehold != null) {
                 GetItemFromListByName(dstSim.ModularHouseholds.Items, item.BaseHousehold.Name);
@@ -195,7 +195,7 @@ namespace Database.Tables.ModularHouseholds {
             return templatePerson;
         }
 
-        private static bool IsCorrectTemplatePersonTraitParent([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectTemplatePersonTraitParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var hhgEntry = (TemplatePersonTrait) child;
 
@@ -213,9 +213,9 @@ namespace Database.Tables.ModularHouseholds {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<TemplatePerson> result, [NotNull] string connectionString,
-            [ItemNotNull] [NotNull] ObservableCollection<HouseholdTrait> householdTraits, bool ignoreMissingTables,
-            [ItemNotNull] [NotNull] ObservableCollection<ModularHousehold> modularHouseholds, [ItemNotNull] [NotNull] ObservableCollection<Person> persons)
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TemplatePerson> result, [JetBrains.Annotations.NotNull] string connectionString,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<HouseholdTrait> householdTraits, bool ignoreMissingTables,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<ModularHousehold> modularHouseholds, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Person> persons)
         {
             var aic = new AllItemCollections(modularHouseholds: modularHouseholds, persons: persons);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);

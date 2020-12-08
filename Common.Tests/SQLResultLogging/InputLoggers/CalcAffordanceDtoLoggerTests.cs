@@ -8,7 +8,6 @@ using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
 using Common.SQLResultLogging.Loggers;
 using FluentAssertions;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 
 using Xunit;
@@ -54,7 +53,7 @@ namespace Common.Tests.SQLResultLogging.InputLoggers
             }
         }
 
-        public CalcAffordanceDtoLoggerTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public CalcAffordanceDtoLoggerTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

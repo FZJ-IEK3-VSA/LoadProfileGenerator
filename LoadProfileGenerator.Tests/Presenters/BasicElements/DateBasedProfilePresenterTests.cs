@@ -9,9 +9,7 @@ using Common.Tests;
 using Database;
 using Database.Tests;
 using FluentAssertions;
-using JetBrains.Annotations;
 using LoadProfileGenerator.Presenters.BasicElements;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -65,7 +63,7 @@ namespace LoadProfileGenerator.Tests.Presenters.BasicElements {
             }
         }
 
-        public DateBasedProfilePresenterTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public DateBasedProfilePresenterTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

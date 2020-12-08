@@ -44,11 +44,11 @@ namespace LoadProfileGenerator.Presenters.Households {
     public class ModularHouseholdPresenter : PresenterBaseDBBase<ModularHouseholdView> {
         [CanBeNull] private static TraitTag _selectedFilterTag;
 
-        [NotNull] private readonly EnergyIntensityConverter _eic = new EnergyIntensityConverter();
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<HouseholdTrait> _householdTraits;
-        [NotNull] private readonly ModularHousehold _modularHousehold;
+        [JetBrains.Annotations.NotNull] private readonly EnergyIntensityConverter _eic = new EnergyIntensityConverter();
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<HouseholdTrait> _householdTraits;
+        [JetBrains.Annotations.NotNull] private readonly ModularHousehold _modularHousehold;
 
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<UsedIn> _usedIns = new ObservableCollection<UsedIn>();
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<UsedIn> _usedIns = new ObservableCollection<UsedIn>();
 
         [CanBeNull] private string _filterText;
 
@@ -65,8 +65,8 @@ namespace LoadProfileGenerator.Presenters.Households {
         private bool _useTags = true;
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        public ModularHouseholdPresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] ModularHouseholdView view,
-            [NotNull] ModularHousehold modularHousehold)
+        public ModularHouseholdPresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] ModularHouseholdView view,
+            [JetBrains.Annotations.NotNull] ModularHousehold modularHousehold)
             : base(view, "ThisModularHousehold.HeaderString", modularHousehold, applicationPresenter)
         {
             _modularHousehold = modularHousehold;
@@ -94,37 +94,37 @@ namespace LoadProfileGenerator.Presenters.Households {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<HouseholdTag> AllTags => Sim.HouseholdTags.Items;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<TraitTag> AllTraitTags => Sim.TraitTags.Items;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<object> AssignTypes { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public Dictionary<CreationType, string> CreationTypes => CreationTypeHelper.CreationTypeDictionary;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<DeviceSelection> DeviceSelections
             => Sim.DeviceSelections.Items;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<EnergyIntensityConverter.EnergyIntensityForDisplay> EnergyIntensities
             => _eic.ForHouseholds;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public EnergyIntensityConverter.EnergyIntensityForDisplay EnergyIntensity {
             get => _eic.GetHHDisplayElement(_modularHousehold.EnergyIntensityType);
@@ -135,7 +135,7 @@ namespace LoadProfileGenerator.Presenters.Households {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<ModularHouseholdTrait> FilteredTraits { get; } =
             new ObservableCollection<ModularHouseholdTrait>();
@@ -158,17 +158,17 @@ namespace LoadProfileGenerator.Presenters.Households {
         public int HouseholdCount => _modularHousehold.Traits.Count;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<HouseholdTrait> HouseholdTraits => _householdTraits;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<TraitTag> LivingPatternTags { get; } = new ObservableCollection<TraitTag>();
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<Person> Persons => Sim.Persons.Items;
 
@@ -242,11 +242,11 @@ namespace LoadProfileGenerator.Presenters.Households {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ModularHousehold ThisModularHousehold => _modularHousehold;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<UsedIn> UsedIns => _usedIns;
 
@@ -279,11 +279,11 @@ namespace LoadProfileGenerator.Presenters.Households {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<Vacation> Vacations => Sim.Vacations.Items;
 
-        public void AddHouseholdTrait([NotNull] HouseholdTrait trait,
+        public void AddHouseholdTrait([JetBrains.Annotations.NotNull] HouseholdTrait trait,
             ModularHouseholdTrait.ModularHouseholdTraitAssignType modularHouseholdTraitAssignType,
             [CanBeNull] Person p)
         {
@@ -292,7 +292,7 @@ namespace LoadProfileGenerator.Presenters.Households {
             FilterTraits(FilterText, SelectedFilterTag);
         }
 
-        public void AddPerson([NotNull] Person person, [NotNull] LivingPatternTag tag)
+        public void AddPerson([JetBrains.Annotations.NotNull] Person person, [JetBrains.Annotations.NotNull] LivingPatternTag tag)
         {
             _modularHousehold.AddPerson(person, tag);
         }
@@ -429,19 +429,19 @@ namespace LoadProfileGenerator.Presenters.Households {
             }
         }
 
-        public void RemoveHouseholdTrait([NotNull] ModularHouseholdTrait trait)
+        public void RemoveHouseholdTrait([JetBrains.Annotations.NotNull] ModularHouseholdTrait trait)
         {
             _modularHousehold.DeleteTraitFromDB(trait);
             OnPropertyChanged(nameof(HouseholdCount));
             FilterTraits(FilterText, SelectedFilterTag);
         }
 
-        public void RemovePerson([NotNull] ModularHouseholdPerson chp)
+        public void RemovePerson([JetBrains.Annotations.NotNull] ModularHouseholdPerson chp)
         {
             _modularHousehold.RemovePerson(chp);
         }
 
-        public void SwapPersons([NotNull] ModularHouseholdPerson srcPerson, [NotNull] Person dstPerson, [NotNull] LivingPatternTag tag)
+        public void SwapPersons([JetBrains.Annotations.NotNull] ModularHouseholdPerson srcPerson, [JetBrains.Annotations.NotNull] Person dstPerson, [JetBrains.Annotations.NotNull] LivingPatternTag tag)
         {
             _modularHousehold.SwapPersons(srcPerson, dstPerson, tag);
             FilterTraits(FilterText, SelectedFilterTag);

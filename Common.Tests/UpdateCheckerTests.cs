@@ -1,6 +1,4 @@
 ﻿using Automation;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -21,7 +19,7 @@ namespace Common.Tests
             }
         }
 
-        public UpdateCheckerTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public UpdateCheckerTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

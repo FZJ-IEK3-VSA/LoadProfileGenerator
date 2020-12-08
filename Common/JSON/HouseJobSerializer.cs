@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using Automation;
 using Automation.ResultFiles;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 
 namespace Common.JSON {
@@ -11,7 +10,7 @@ namespace Common.JSON {
     /// makes an example json  for the calculation and returns it as string
     /// </summary>
     public static class HouseJobSerializer {
-        public static void WriteJsonToFile([NotNull] string fullPath, [NotNull] HouseCreationAndCalculationJob hj)
+        public static void WriteJsonToFile([JetBrains.Annotations.NotNull] string fullPath, [JetBrains.Annotations.NotNull] HouseCreationAndCalculationJob hj)
         {
             using (StreamWriter sw = new StreamWriter(fullPath)) {
                 if (hj.CalcSpec == null) {
@@ -26,8 +25,8 @@ namespace Common.JSON {
                 sw.Close();
             }
         }
-        [NotNull]
-        private static string TurnJsonCalcSpecIntoCommentedString([NotNull] HouseCreationAndCalculationJob jcs)
+        [JetBrains.Annotations.NotNull]
+        private static string TurnJsonCalcSpecIntoCommentedString([JetBrains.Annotations.NotNull] HouseCreationAndCalculationJob jcs)
         {
             var comments = GetCommentDictionary();
             string rawJson = JsonConvert.SerializeObject(jcs, Formatting.Indented);
@@ -48,7 +47,7 @@ namespace Common.JSON {
             return joined;
         }
 
-        private static int CountSpacesAtBeginning([NotNull] string line)
+        private static int CountSpacesAtBeginning([JetBrains.Annotations.NotNull] string line)
         {
             int idx = 0;
             while (idx < line.Length && line[idx] == ' ') {
@@ -57,7 +56,7 @@ namespace Common.JSON {
             return idx;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private static Dictionary<string, CommentAttribute>  GetCommentDictionary()
         {
             Type myType = typeof(JsonCalcSpecification);

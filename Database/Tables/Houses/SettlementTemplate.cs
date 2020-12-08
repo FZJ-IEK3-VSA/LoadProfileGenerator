@@ -17,32 +17,32 @@ namespace Database.Tables.Houses {
     public class SettlementTemplate : DBBaseElement {
         public const string TableName = "tblSettlementTemplates";
 
-        [NotNull] private readonly SettlementTemplateExecutor _executor = new SettlementTemplateExecutor();
+        [JetBrains.Annotations.NotNull] private readonly SettlementTemplateExecutor _executor = new SettlementTemplateExecutor();
 
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<STHouseholdDistribution> _householdDistributions =
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<STHouseholdDistribution> _householdDistributions =
             new ObservableCollection<STHouseholdDistribution>();
 
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<STHouseholdTemplate> _householdTemplates =
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<STHouseholdTemplate> _householdTemplates =
             new ObservableCollection<STHouseholdTemplate>();
 
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<STHouseSize> _houseSizes = new ObservableCollection<STHouseSize>();
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<STHouseType> _houseTypes = new ObservableCollection<STHouseType>();
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<STChargingStationSet> _chargingStationSets = new ObservableCollection<STChargingStationSet>();
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<STTravelRouteSet> _travelRouteSets = new ObservableCollection<STTravelRouteSet>();
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<STTransportationDeviceSet> _transportationDeviceSets = new ObservableCollection<STTransportationDeviceSet>();
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<STHouseSize> _houseSizes = new ObservableCollection<STHouseSize>();
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<STHouseType> _houseTypes = new ObservableCollection<STHouseType>();
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<STChargingStationSet> _chargingStationSets = new ObservableCollection<STChargingStationSet>();
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<STTravelRouteSet> _travelRouteSets = new ObservableCollection<STTravelRouteSet>();
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<STTransportationDeviceSet> _transportationDeviceSets = new ObservableCollection<STTransportationDeviceSet>();
 
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<STTraitLimit> _traitLimits = new ObservableCollection<STTraitLimit>();
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<STTraitLimit> _traitLimits = new ObservableCollection<STTraitLimit>();
         [CanBeNull] private string _description;
         private int _desiredHHCount;
 
         [CanBeNull] private GeographicLocation _geographicLocation;
 
-        [NotNull] private string _newName;
+        [JetBrains.Annotations.NotNull] private string _newName;
 
         [CanBeNull] private TemperatureProfile _temperatureProfile;
 
-        public SettlementTemplate([NotNull] string pName, [CanBeNull] int? id, [CanBeNull] string description, [NotNull] string connectionString,
-            int desiredHHCount, [NotNull] string newName, [CanBeNull] TemperatureProfile temperatureProfile,
+        public SettlementTemplate([JetBrains.Annotations.NotNull] string pName, [CanBeNull] int? id, [CanBeNull] string description, [JetBrains.Annotations.NotNull] string connectionString,
+            int desiredHHCount, [JetBrains.Annotations.NotNull] string newName, [CanBeNull] TemperatureProfile temperatureProfile,
             [CanBeNull] GeographicLocation geographicLocation,StrGuid guid) : base(pName, TableName, connectionString, guid)
         {
             ID = id;
@@ -76,7 +76,7 @@ namespace Database.Tables.Houses {
             set => SetValueWithNotify(value, ref _geographicLocation,false, nameof(GeographicLocation));
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<STHouseholdDistribution> HouseholdDistributions => _householdDistributions;
 
@@ -91,7 +91,7 @@ namespace Database.Tables.Houses {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<STHouseholdTemplate> HouseholdTemplates => _householdTemplates;
 
@@ -107,37 +107,37 @@ namespace Database.Tables.Houses {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<SettlementTemplateExecutor.HouseEntry> HousePreviewEntries => _executor
             .PreviewHouseEntries;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<STHouseSize> HouseSizes => _houseSizes;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<STChargingStationSet> ChargingStationSets => _chargingStationSets;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<STTravelRouteSet> TravelRouteSets => _travelRouteSets;
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<STTransportationDeviceSet> TransportationDeviceSets => _transportationDeviceSets;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<STHouseType> HouseTypes => _houseTypes;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string NewName {
             get => _newName;
             set => SetValueWithNotify(value, ref _newName, nameof(NewName));
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string PersonCount {
             get {
@@ -157,7 +157,7 @@ namespace Database.Tables.Houses {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string PrettyHouseholdPercentage => (HouseholdPercentage * 100).ToString("N2",
             CultureInfo.CurrentCulture);
@@ -169,10 +169,10 @@ namespace Database.Tables.Houses {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<STTraitLimit> TraitLimits => _traitLimits;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public STHouseholdDistribution AddHouseholdDistribution(int minimum, int maximum, double percent,
             EnergyIntensityType eit)
         {
@@ -188,7 +188,7 @@ namespace Database.Tables.Houses {
             return sthhd;
         }
 
-        public void AddHouseholdTemplate([NotNull] HouseholdTemplate hht)
+        public void AddHouseholdTemplate([JetBrains.Annotations.NotNull] HouseholdTemplate hht)
         {
             foreach (var template in _householdTemplates) {
                 if (template.HouseholdTemplate == hht) {
@@ -201,7 +201,7 @@ namespace Database.Tables.Houses {
             sthhd.SaveToDB();
         }
 
-        public void AddChargingStationSet([NotNull] ChargingStationSet chargingStationSet)
+        public void AddChargingStationSet([JetBrains.Annotations.NotNull] ChargingStationSet chargingStationSet)
         {
             foreach (var css in _chargingStationSets)
             {
@@ -217,7 +217,7 @@ namespace Database.Tables.Houses {
             sthhd.SaveToDB();
         }
 
-        public void AddTravelRouteSet([NotNull] TravelRouteSet travelRouteSet)
+        public void AddTravelRouteSet([JetBrains.Annotations.NotNull] TravelRouteSet travelRouteSet)
         {
             foreach (var trs in _travelRouteSets)
             {
@@ -258,16 +258,16 @@ namespace Database.Tables.Houses {
             sthhd.SaveToDB();
         }
 
-        public void AddTraitLimit([NotNull] HouseholdTrait trait, int maximum)
+        public void AddTraitLimit([JetBrains.Annotations.NotNull] HouseholdTrait trait, int maximum)
         {
             var stl = new STTraitLimit(null, ConnectionString, IntID, trait.PrettyName, trait, maximum, System.Guid.NewGuid().ToStrGuid());
             stl.SaveToDB();
             _traitLimits.Add(stl);
         }
 
-        [NotNull]
-        private static SettlementTemplate AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static SettlementTemplate AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var id =  dr.GetIntFromLong("ID");
             var name =  dr.GetString("Name","(no name");
@@ -284,16 +284,16 @@ namespace Database.Tables.Houses {
                 temperatureProfile, geloc, guid);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString)
+        public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString)
         {
             var newname = FindNewName(isNameTaken, "New Settlement Template");
             return new SettlementTemplate(newname, null, "New Settlement Template", connectionString, 100,
                 "Templated from New Settlement Template", null, null, System.Guid.NewGuid().ToStrGuid());
         }
 
-        public void CreateSettlementFromPreview([NotNull] Simulator sim)
+        public void CreateSettlementFromPreview([JetBrains.Annotations.NotNull] Simulator sim)
         {
             _executor.CreateSettlementFromPreview(sim, this);
         }
@@ -328,55 +328,55 @@ namespace Database.Tables.Houses {
             base.DeleteFromDB();
         }
 
-        public void DeleteHouseholdDistribution([NotNull] STHouseholdDistribution sthd)
+        public void DeleteHouseholdDistribution([JetBrains.Annotations.NotNull] STHouseholdDistribution sthd)
         {
             sthd.DeleteFromDB();
             _householdDistributions.Remove(sthd);
             RefreshPersonCount();
         }
 
-        public void DeleteHouseholdTemplate([NotNull] STHouseholdTemplate sthd)
+        public void DeleteHouseholdTemplate([JetBrains.Annotations.NotNull] STHouseholdTemplate sthd)
         {
             sthd.DeleteFromDB();
             _householdTemplates.Remove(sthd);
         }
 
-        public void DeleteHouseSize([NotNull] STHouseSize sthd)
+        public void DeleteHouseSize([JetBrains.Annotations.NotNull] STHouseSize sthd)
         {
             sthd.DeleteFromDB();
             _houseSizes.Remove(sthd);
         }
 
-        public void DeleteHouseType([NotNull] STHouseType sthd)
+        public void DeleteHouseType([JetBrains.Annotations.NotNull] STHouseType sthd)
         {
             sthd.DeleteFromDB();
             _houseTypes.Remove(sthd);
         }
 
-        public void DeleteTraitLimit([NotNull] STTraitLimit stl)
+        public void DeleteTraitLimit([JetBrains.Annotations.NotNull] STTraitLimit stl)
         {
             stl.DeleteFromDB();
             _traitLimits.Remove(stl);
 
         }
 
-        public void DeleteChargingStation([NotNull] STChargingStationSet stl)
+        public void DeleteChargingStation([JetBrains.Annotations.NotNull] STChargingStationSet stl)
             {
                 stl.DeleteFromDB();
                 _chargingStationSets.Remove(stl);
             }
-        public void DeleteTravelRouteSet([NotNull] STTravelRouteSet stl)
+        public void DeleteTravelRouteSet([JetBrains.Annotations.NotNull] STTravelRouteSet stl)
         {
             stl.DeleteFromDB();
             _travelRouteSets.Remove(stl);
         }
 
-        public void GenerateSettlementPreview([NotNull] Simulator sim)
+        public void GenerateSettlementPreview([JetBrains.Annotations.NotNull] Simulator sim)
         {
             _executor.GenerateSettlementPreview( sim, this);
         }
 
-        public void ImportFromExisting([NotNull] SettlementTemplate other)
+        public void ImportFromExisting([JetBrains.Annotations.NotNull] SettlementTemplate other)
         {
             _description = other.Description;
             _desiredHHCount = other.DesiredHHCount;
@@ -414,9 +414,9 @@ namespace Database.Tables.Houses {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DBBase ImportFromItem([NotNull] SettlementTemplate item, [NotNull] Simulator dstsim)
+        public static DBBase ImportFromItem([JetBrains.Annotations.NotNull] SettlementTemplate item, [JetBrains.Annotations.NotNull] Simulator dstsim)
         {
             TemperatureProfile temperatureProfile = null;
             if (item.TemperatureProfile != null) {
@@ -477,7 +477,7 @@ namespace Database.Tables.Houses {
             return st;
         }
 
-        private static bool IsCorrectParentHHDist([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectParentHHDist([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var hhdist = (STHouseholdDistribution) child;
             if (parent.ID == hhdist.SettlementTemplateID) {
@@ -488,7 +488,7 @@ namespace Database.Tables.Houses {
             return false;
         }
 
-        private static bool IsCorrectParentHHTemplate([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectParentHHTemplate([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var hhtemplate = (STHouseholdTemplate) child;
             if (parent.ID == hhtemplate.SettlementTemplateID) {
@@ -499,7 +499,7 @@ namespace Database.Tables.Houses {
             return false;
         }
 
-        private static bool IsCorrectParentHouseSize([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectParentHouseSize([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var houseSize = (STHouseSize) child;
             if (parent.ID == houseSize.SettlementTemplateID) {
@@ -510,7 +510,7 @@ namespace Database.Tables.Houses {
             return false;
         }
 
-        private static bool IsCorrectParentHouseType([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectParentHouseType([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var houseType = (STHouseType) child;
             if (parent.ID == houseType.SettlementTemplateID) {
@@ -521,7 +521,7 @@ namespace Database.Tables.Houses {
             return false;
         }
 
-        private static bool IsCorrectParentTraitLimit([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectParentTraitLimit([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var traitLimit = (STTraitLimit) child;
             if (parent.ID == traitLimit.SettlementTemplateID) {
@@ -532,7 +532,7 @@ namespace Database.Tables.Houses {
             return false;
         }
 
-        private static bool IsCorrectParentTravelRouteSet([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectParentTravelRouteSet([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var travelRouteSet = (STTravelRouteSet)child;
             if (parent.ID == travelRouteSet.SettlementTemplateID)
@@ -544,7 +544,7 @@ namespace Database.Tables.Houses {
             return false;
         }
 
-        private static bool IsCorrectParentTransportationDeviceSet([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectParentTransportationDeviceSet([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var transportationDeviceSet = (STTransportationDeviceSet)child;
             if (parent.ID == transportationDeviceSet.SettlementTemplateID)
@@ -556,7 +556,7 @@ namespace Database.Tables.Houses {
             return false;
         }
 
-        private static bool IsCorrectParentChargingStationSet([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectParentChargingStationSet([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var chargingStation = (STChargingStationSet)child;
             if (parent.ID == chargingStation.SettlementTemplateID)
@@ -568,7 +568,7 @@ namespace Database.Tables.Houses {
             return false;
         }
 
-        public bool IsHouseGeneratedByThis([NotNull] House house)
+        public bool IsHouseGeneratedByThis([JetBrains.Annotations.NotNull] House house)
         {
             if (house.Source == null) {
                 return false;
@@ -584,21 +584,21 @@ namespace Database.Tables.Houses {
             return true;
         }
 
-        public bool IsSettlementGeneratedByThis([NotNull] Settlement sett)
+        public bool IsSettlementGeneratedByThis([JetBrains.Annotations.NotNull] Settlement sett)
         {
             var check = "Generated by " + Name;
             check = check.ToUpperInvariant();
             return sett.Source.ToUpperInvariant().StartsWith(check, StringComparison.Ordinal);
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<SettlementTemplate> result, [NotNull] string connectionString,
-            [ItemNotNull] [NotNull] ObservableCollection<HouseholdTemplate> householdTemplates, [ItemNotNull] [NotNull] ObservableCollection<HouseType> houseTypes,
-            bool ignoreMissingTables, [ItemNotNull] [NotNull] ObservableCollection<TemperatureProfile> temperaturProfile,
-            [ItemNotNull] [NotNull] ObservableCollection<GeographicLocation> geographicLocation, [ItemNotNull] [NotNull] ObservableCollection<HouseholdTag> tags,
-            [ItemNotNull] [NotNull] ObservableCollection<HouseholdTrait> traits,
-            [ItemNotNull][NotNull] ObservableCollection<ChargingStationSet> chargingStationSets,
-            [ItemNotNull][NotNull] ObservableCollection<TravelRouteSet> travelRouteSets,
-            [ItemNotNull][NotNull] ObservableCollection<TransportationDeviceSet> transportationDeviceSets)
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<SettlementTemplate> result, [JetBrains.Annotations.NotNull] string connectionString,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<HouseholdTemplate> householdTemplates, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<HouseType> houseTypes,
+            bool ignoreMissingTables, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TemperatureProfile> temperaturProfile,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<GeographicLocation> geographicLocation, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<HouseholdTag> tags,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<HouseholdTrait> traits,
+            [ItemNotNull][JetBrains.Annotations.NotNull] ObservableCollection<ChargingStationSet> chargingStationSets,
+            [ItemNotNull][JetBrains.Annotations.NotNull] ObservableCollection<TravelRouteSet> travelRouteSets,
+            [ItemNotNull][JetBrains.Annotations.NotNull] ObservableCollection<TransportationDeviceSet> transportationDeviceSets)
         {
             var aic = new AllItemCollections(temperatureProfiles: temperaturProfile,
                 geographicLocations: geographicLocation);
@@ -704,7 +704,7 @@ namespace Database.Tables.Houses {
 
         public override List<UsedIn> CalculateUsedIns(Simulator sim) => throw new NotImplementedException();
 
-        public void AddTransportationDeviceSet([NotNull] TransportationDeviceSet transportationDeviceSet)
+        public void AddTransportationDeviceSet([JetBrains.Annotations.NotNull] TransportationDeviceSet transportationDeviceSet)
         {
             foreach (var trs in _transportationDeviceSets)
             {
@@ -720,7 +720,7 @@ namespace Database.Tables.Houses {
             sthhd.SaveToDB();
         }
 
-        public void DeleteTransportationDeviceSet([NotNull] STTransportationDeviceSet sths)
+        public void DeleteTransportationDeviceSet([JetBrains.Annotations.NotNull] STTransportationDeviceSet sths)
         {
             sths.DeleteFromDB();
             _transportationDeviceSets.Remove(sths);

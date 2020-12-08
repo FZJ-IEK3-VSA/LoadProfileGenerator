@@ -4,13 +4,12 @@ using Automation.ResultFiles;
 namespace Common.SQLResultLogging.Loggers {
     using System.Collections.Generic;
     using System.Linq;
-    using JetBrains.Annotations;
     using SQLResultLogging;
 
     public class TransportationStatusLogger : DataSaverBase {
         private const string TableName = "TransportationStatuses";
 
-        public TransportationStatusLogger([NotNull] SqlResultLoggingService srls) : base(typeof(TransportationStatus),
+        public TransportationStatusLogger([JetBrains.Annotations.NotNull] SqlResultLoggingService srls) : base(typeof(TransportationStatus),
             new ResultTableDefinition(TableName, ResultTableID.TransportationStatuses, "Transportation Status Messages", CalcOption.TransportationStatistics ),
             srls)
         {
@@ -36,8 +35,8 @@ namespace Common.SQLResultLogging.Loggers {
 
         /*
         [ItemNotNull]
-        [NotNull]
-        public List<ActionEntry> Read([NotNull]HouseholdKey hhkey)
+        [JetBrains.Annotations.NotNull]
+        public List<ActionEntry> Read([JetBrains.Annotations.NotNull]HouseholdKey hhkey)
         {
             var res = _Srls.ReadFromJson<ActionEntry>(TableName, hhkey,ExpectedResultCount.OneOrMore);
             return res;

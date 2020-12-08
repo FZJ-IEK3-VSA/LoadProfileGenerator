@@ -20,22 +20,22 @@ using JetBrains.Annotations;
 namespace CalculationController.DtoFactories
 {
     public class CalcDeviceDtoFactory {
-        [NotNull] private readonly IDeviceCategoryPicker _picker;
-        [NotNull]
+        [JetBrains.Annotations.NotNull] private readonly IDeviceCategoryPicker _picker;
+        [JetBrains.Annotations.NotNull]
         private readonly CalcParameters _calcParameters;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly Random _rnd;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly CalcLoadTypeDtoDictionary _loadTypeDictionary;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly CalcVariableDtoFactory _calcVariableRepositoryDtoFactory;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly AvailabilityDtoRepository _availabilityDtoRepository;
 
-        public CalcDeviceDtoFactory([NotNull] IDeviceCategoryPicker picker, [NotNull] CalcParameters calcParameters,
-            [NotNull] Random rnd, [NotNull] CalcLoadTypeDtoDictionary loadTypeDictionary,
-            [NotNull] CalcVariableDtoFactory calcVariableRepositoryDtoFactory,
-                                    [NotNull] AvailabilityDtoRepository availabilityDtoRepository)
+        public CalcDeviceDtoFactory([JetBrains.Annotations.NotNull] IDeviceCategoryPicker picker, [JetBrains.Annotations.NotNull] CalcParameters calcParameters,
+            [JetBrains.Annotations.NotNull] Random rnd, [JetBrains.Annotations.NotNull] CalcLoadTypeDtoDictionary loadTypeDictionary,
+            [JetBrains.Annotations.NotNull] CalcVariableDtoFactory calcVariableRepositoryDtoFactory,
+                                    [JetBrains.Annotations.NotNull] AvailabilityDtoRepository availabilityDtoRepository)
         {
             _picker = picker;
             _calcParameters = calcParameters;
@@ -46,19 +46,19 @@ namespace CalculationController.DtoFactories
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         [SuppressMessage("ReSharper", "FunctionComplexityOverflow")]
         public List<CalcAutoDevDto> MakeCalcAutoDevDtos(
-            [NotNull][ItemNotNull] List<IAutonomousDevice> autoDevices,
+            [JetBrains.Annotations.NotNull][ItemNotNull] List<IAutonomousDevice> autoDevices,
             EnergyIntensityType energyIntensity,
-            [NotNull] HouseholdKey householdKey,
-            [NotNull][ItemNotNull] List<VacationTimeframe> vacationTimeframes,
-            [NotNull] string holidayKey,
-            [NotNull][ItemNotNull] ObservableCollection<DeviceAction> deviceActions,
-            [NotNull] LocationDtoDict locationDict,
-            [NotNull] TemperatureProfile temperatureProfile, [NotNull] GeographicLocation geographicLocation,
-            [ItemNotNull] [NotNull] List<DeviceCategoryDto> deviceCategoryDtos)
+            [JetBrains.Annotations.NotNull] HouseholdKey householdKey,
+            [JetBrains.Annotations.NotNull][ItemNotNull] List<VacationTimeframe> vacationTimeframes,
+            [JetBrains.Annotations.NotNull] string holidayKey,
+            [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<DeviceAction> deviceActions,
+            [JetBrains.Annotations.NotNull] LocationDtoDict locationDict,
+            [JetBrains.Annotations.NotNull] TemperatureProfile temperatureProfile, [JetBrains.Annotations.NotNull] GeographicLocation geographicLocation,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] List<DeviceCategoryDto> deviceCategoryDtos)
         {
             var autodevs = new List<CalcAutoDevDto>(autoDevices.Count);
             //// zur kategorien zuordnung
@@ -187,8 +187,8 @@ namespace CalculationController.DtoFactories
             return autodevs;
         }
 
-        [NotNull]
-        public static CalcProfileDto GetCalcProfileDto([NotNull] TimeBasedProfile tp)
+        [JetBrains.Annotations.NotNull]
+        public static CalcProfileDto GetCalcProfileDto([JetBrains.Annotations.NotNull] TimeBasedProfile tp)
         {
             var cp = new CalcProfileDto(tp.Name, tp.IntID, (ProfileType)tp.TimeProfileType,
                 tp.DataSource, Guid.NewGuid().ToStrGuid());
@@ -199,10 +199,10 @@ namespace CalculationController.DtoFactories
             return cp;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
-        public static List<CalcDeviceLoadDto> MakeCalcDeviceLoads([NotNull] RealDevice device,
-            [NotNull] CalcLoadTypeDtoDictionary ltdtodict)
+        public static List<CalcDeviceLoadDto> MakeCalcDeviceLoads([JetBrains.Annotations.NotNull] RealDevice device,
+            [JetBrains.Annotations.NotNull] CalcLoadTypeDtoDictionary ltdtodict)
         {
             var deviceLoads = new List<CalcDeviceLoadDto>();
             foreach (var realDeviceLoadType in device.Loads) {
@@ -222,18 +222,18 @@ namespace CalculationController.DtoFactories
             return deviceLoads;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
-        public List<CalcDeviceDto> MakeCalcDevices([NotNull][ItemNotNull] List<CalcLocationDto> locs,
-            [ItemNotNull] [NotNull] List<DeviceLocationTuple> devlocs,
+        public List<CalcDeviceDto> MakeCalcDevices([JetBrains.Annotations.NotNull][ItemNotNull] List<CalcLocationDto> locs,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] List<DeviceLocationTuple> devlocs,
             EnergyIntensityType energyIntensity,
-            [NotNull] HouseholdKey householdKey,
-            [NotNull]
+            [JetBrains.Annotations.NotNull] HouseholdKey householdKey,
+            [JetBrains.Annotations.NotNull]
             Dictionary<CalcLocationDto, List<IAssignableDevice>>
                 allreadyAssigendDeviceLocationDict,
-            [NotNull][ItemNotNull] ObservableCollection<DeviceAction> deviceActions,
-            [NotNull] CalcLoadTypeDtoDictionary loadtypes,
-            [ItemNotNull] [NotNull] List<DeviceCategoryDto> deviceCategories)
+            [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<DeviceAction> deviceActions,
+            [JetBrains.Annotations.NotNull] CalcLoadTypeDtoDictionary loadtypes,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] List<DeviceCategoryDto> deviceCategories)
         {
             List<CalcDeviceDto> calcDeviceDtos = new List<CalcDeviceDto>();
             foreach (var devloc in devlocs) {

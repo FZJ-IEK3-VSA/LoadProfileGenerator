@@ -1,6 +1,4 @@
 ﻿using Automation;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -16,7 +14,7 @@ namespace Common.Tests
              Logger.Debug("Current Method:" + s);
         }
 
-        public UtiliTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public UtiliTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

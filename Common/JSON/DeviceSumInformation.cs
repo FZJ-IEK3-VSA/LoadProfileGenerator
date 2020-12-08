@@ -22,12 +22,12 @@ namespace Common.JSON {
     /*
     public class DeviceSumInformationList {
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public List<DeviceSumInformation> DeviceSums { get; set; } = new List<DeviceSumInformation>();
 
-        [NotNull]
-        public static DeviceSumInformationList Read([NotNull] string fullFilePath)
+        [JetBrains.Annotations.NotNull]
+        public static DeviceSumInformationList Read([JetBrains.Annotations.NotNull] string fullFilePath)
         {
             string json;
             using (var sw = new StreamReader(fullFilePath)) {
@@ -37,7 +37,7 @@ namespace Common.JSON {
             return o;
         }
 
-        public void WriteJson([NotNull] FileFactoryAndTracker fft, TimeSpan resolution)
+        public void WriteJson([JetBrains.Annotations.NotNull] FileFactoryAndTracker fft, TimeSpan resolution)
         {
             var sw = fft.MakeFile<StreamWriter>(Constants.DevicesumsJsonFileName, "Totals per device as JSON", false,
                 ResultFileID.DeviceSumsJson, Constants.GeneralHouseholdKey, TargetDirectory.Reports, resolution);
@@ -45,7 +45,7 @@ namespace Common.JSON {
             sw.Close();
         }
 
-        private void WriteResultEntries([NotNull] StreamWriter sw)
+        private void WriteResultEntries([JetBrains.Annotations.NotNull] StreamWriter sw)
         {
             var json = JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings {
                 NullValueHandling = NullValueHandling.Include
@@ -53,7 +53,7 @@ namespace Common.JSON {
             sw.WriteLine(json);
         }
 
-        public void AddDeviceSum([NotNull] string name, double devicesum, [NotNull] CalcLoadTypeDto lti)
+        public void AddDeviceSum([JetBrains.Annotations.NotNull] string name, double devicesum, [JetBrains.Annotations.NotNull] CalcLoadTypeDto lti)
         {
             DeviceSumInformation dsi = new DeviceSumInformation(name,devicesum,lti);
             DeviceSums.Add(dsi);

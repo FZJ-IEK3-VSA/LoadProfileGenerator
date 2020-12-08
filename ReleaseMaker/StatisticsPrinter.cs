@@ -3,7 +3,6 @@ using System.Linq;
 using Common;
 using Database;
 using Database.Tests;
-using JetBrains.Annotations;
 
 namespace ReleaseMaker
 {
@@ -37,6 +36,6 @@ namespace ReleaseMaker
             }
         }
 
-        private static void Print([NotNull] string name, int count) => Logger.Info(name + " & " + count + " \\\\");
+        private static void Print([JetBrains.Annotations.NotNull] string name, int count) => Logger.Info(name + " & " + count + " \\\\");
     }
 }

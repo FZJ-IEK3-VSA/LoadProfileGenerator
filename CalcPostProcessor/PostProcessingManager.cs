@@ -10,7 +10,6 @@ using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
 using Common.SQLResultLogging.Loggers;
-using JetBrains.Annotations;
 
 namespace CalcPostProcessor
 {
@@ -40,7 +39,7 @@ namespace CalcPostProcessor
             _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Post Processing");
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static  IContainer RegisterEverything(string resultPath, [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler, [JetBrains.Annotations.CanBeNull] IFileFactoryAndTracker fft)
         {
             var builder = new ContainerBuilder();

@@ -45,11 +45,11 @@ namespace CalcPostProcessor {
         private readonly Dictionary<CalcOption, List<CalcOption>> _dependencies = new Dictionary<CalcOption, List<CalcOption>>();
 
         public OptionDependencyManager(
-            [NotNull] [ItemNotNull] ILoadTypeStep[] loadTypePostProcessingSteps,
-            [NotNull] [ItemNotNull] IGeneralStep[] generalPostProcessingSteps,
-            [NotNull] [ItemNotNull] IGeneralHouseholdStep[] generalHouseholdSteps,
-            [NotNull] [ItemNotNull] IHouseholdLoadTypeStep[] householdloadTypePostProcessingSteps,
-            [NotNull] [ItemNotNull] ILoadTypeSumStep[] loadtypeSumPostProcessingSteps
+            [JetBrains.Annotations.NotNull] [ItemNotNull] ILoadTypeStep[] loadTypePostProcessingSteps,
+            [JetBrains.Annotations.NotNull] [ItemNotNull] IGeneralStep[] generalPostProcessingSteps,
+            [JetBrains.Annotations.NotNull] [ItemNotNull] IGeneralHouseholdStep[] generalHouseholdSteps,
+            [JetBrains.Annotations.NotNull] [ItemNotNull] IHouseholdLoadTypeStep[] householdloadTypePostProcessingSteps,
+            [JetBrains.Annotations.NotNull] [ItemNotNull] ILoadTypeSumStep[] loadtypeSumPostProcessingSteps
         )
         {
             List<IRequireOptions> allSteps = new List<IRequireOptions>();
@@ -100,35 +100,35 @@ namespace CalcPostProcessor {
     }
 
     public class Postprocessor {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly IFileFactoryAndTracker _fft;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly ICalculationProfiler _calculationProfiler;
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly ILoadTypeStep[] _loadTypePostProcessingSteps;
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly ILoadTypeSumStep[] _loadTypeSumPostProcessingSteps;
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly IGeneralStep[] _generalPostProcessingSteps;
 
-        [NotNull] [ItemNotNull] private readonly IGeneralHouseholdStep[] _generalHouseholdSteps;
-        [NotNull] [ItemNotNull] private readonly IHouseholdLoadTypeStep[] _householdloadTypePostProcessingSteps;
+        [JetBrains.Annotations.NotNull] [ItemNotNull] private readonly IGeneralHouseholdStep[] _generalHouseholdSteps;
+        [JetBrains.Annotations.NotNull] [ItemNotNull] private readonly IHouseholdLoadTypeStep[] _householdloadTypePostProcessingSteps;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly CalcDataRepository _repository;
 
         public Postprocessor(
-            [NotNull] ICalculationProfiler calculationProfiler,
-            [NotNull] CalcDataRepository repository,
-            [NotNull][ItemNotNull] ILoadTypeStep[] loadTypePostProcessingSteps,
-                [NotNull][ItemNotNull] IGeneralStep[] generalPostProcessingSteps,
-            [NotNull][ItemNotNull] IGeneralHouseholdStep[] generalHouseholdSteps,
-            [NotNull][ItemNotNull] IHouseholdLoadTypeStep[] householdloadTypePostProcessingSteps,
-            [NotNull][ItemNotNull] ILoadTypeSumStep[] loadtypeSumPostProcessingSteps,
-            [NotNull] IFileFactoryAndTracker fft
+            [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler,
+            [JetBrains.Annotations.NotNull] CalcDataRepository repository,
+            [JetBrains.Annotations.NotNull][ItemNotNull] ILoadTypeStep[] loadTypePostProcessingSteps,
+                [JetBrains.Annotations.NotNull][ItemNotNull] IGeneralStep[] generalPostProcessingSteps,
+            [JetBrains.Annotations.NotNull][ItemNotNull] IGeneralHouseholdStep[] generalHouseholdSteps,
+            [JetBrains.Annotations.NotNull][ItemNotNull] IHouseholdLoadTypeStep[] householdloadTypePostProcessingSteps,
+            [JetBrains.Annotations.NotNull][ItemNotNull] ILoadTypeSumStep[] loadtypeSumPostProcessingSteps,
+            [JetBrains.Annotations.NotNull] IFileFactoryAndTracker fft
             )
         {
             _loadTypeSumPostProcessingSteps = loadtypeSumPostProcessingSteps;
@@ -141,7 +141,7 @@ namespace CalcPostProcessor {
             _householdloadTypePostProcessingSteps = householdloadTypePostProcessingSteps;
         }
 
-        private static void CheckTotalsForChange([NotNull][ItemNotNull] List<OnlineEnergyFileRow> energyFileRows, double total) {
+        private static void CheckTotalsForChange([JetBrains.Annotations.NotNull][ItemNotNull] List<OnlineEnergyFileRow> energyFileRows, double total) {
             if (Config.IsInUnitTesting && Config.ExtraUnitTestChecking) {
                 double newtotal = 0;
                 foreach (var efr in energyFileRows) {
@@ -372,9 +372,9 @@ namespace CalcPostProcessor {
             //          }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
-        private List<OnlineEnergyFileRow> ReadOnlineEnergyFileRowsIntoMemory([NotNull] CalcLoadTypeDto calcLoadType, out double total)
+        private List<OnlineEnergyFileRow> ReadOnlineEnergyFileRowsIntoMemory([JetBrains.Annotations.NotNull] CalcLoadTypeDto calcLoadType, out double total)
         {
             var path = _fft.GetResultFileEntry(ResultFileID.OnlineDeviceActivationFiles, calcLoadType.Name,
                     Constants.GeneralHouseholdKey, null, null)

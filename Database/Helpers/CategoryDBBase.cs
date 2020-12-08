@@ -46,9 +46,9 @@ using JetBrains.Annotations;
 namespace Database.Helpers {
     public class CategoryDBBase<T> : Category<T> where T : DBBase, IFilterable {
         // ReSharper disable once CollectionNeverUpdated.Local
-        [NotNull] [ItemNotNull] private readonly List<Func<string, bool>> _functionsToCallOnPropertyChanged;
+        [JetBrains.Annotations.NotNull] [ItemNotNull] private readonly List<Func<string, bool>> _functionsToCallOnPropertyChanged;
 
-        [NotNull] [ItemNotNull] private ObservableCollection<T> _filteredMyItems = new ObservableCollection<T>();
+        [JetBrains.Annotations.NotNull] [ItemNotNull] private ObservableCollection<T> _filteredMyItems = new ObservableCollection<T>();
         [CanBeNull] private string _filterString = string.Empty;
 
         [ItemNotNull] [CanBeNull] public ObservableCollection<T> _PrevFilteredMyItems;
@@ -85,7 +85,7 @@ namespace Database.Helpers {
 
             return null;
         }
-        public CategoryDBBase([NotNull] string name) : base(name, new ObservableCollection<T>())
+        public CategoryDBBase([JetBrains.Annotations.NotNull] string name) : base(name, new ObservableCollection<T>())
         {
             //Items = new ObservableCollection<T>();
             _functionsToCallOnPropertyChanged = new List<Func<string, bool>>();
@@ -116,18 +116,18 @@ namespace Database.Helpers {
         public int Count => Items.Count;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<T> FilteredItems => _filteredMyItems;
 
-        private void AddItemToList([NotNull] T item)
+        private void AddItemToList([JetBrains.Annotations.NotNull] T item)
         {
             Items.Add(item);
             Items.Sort();
         }
 
-        protected static void AddUniqueStringToList([ItemNotNull] [NotNull] ObservableCollection<string> list,
-                                                    [NotNull] string valueToAdd)
+        protected static void AddUniqueStringToList([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<string> list,
+                                                    [JetBrains.Annotations.NotNull] string valueToAdd)
         {
             var strToAdd = valueToAdd;
             strToAdd = strToAdd.Trim();
@@ -243,7 +243,7 @@ namespace Database.Helpers {
             return count;
         }
 
-        public bool DeleteLastChar([NotNull] string s)
+        public bool DeleteLastChar([JetBrains.Annotations.NotNull] string s)
         {
             string last = s.Substring(s.Length - 1);
             if (int.TryParse(last, out _)) {
@@ -301,8 +301,8 @@ namespace Database.Helpers {
             return items;
         }
 
-        [NotNull]
-        public T CreateNewItem([NotNull] string connectionString)
+        [JetBrains.Annotations.NotNull]
+        public T CreateNewItem([JetBrains.Annotations.NotNull] string connectionString)
         {
             var thisType = typeof(T);
             var theMethod = thisType.GetMethod("CreateNewItem");
@@ -322,21 +322,21 @@ namespace Database.Helpers {
             return d;
         }
 
-        public void DeleteItem([NotNull] T db)
+        public void DeleteItem([JetBrains.Annotations.NotNull] T db)
         {
             db.DeleteFromDB();
             Logger.Get().SafeExecuteWithWait(() => Items.Remove(db));
         }
 
-        public void DeleteItemNoWait([NotNull] T db)
+        public void DeleteItemNoWait([JetBrains.Annotations.NotNull] T db)
         {
             db.DeleteFromDB();
             Logger.Get().SafeExecute(() => Items.Remove(db));
         }
 
         [UsedImplicitly]
-        [NotNull]
-        public T SafeFindByName([NotNull] string name, FindMode findMode = FindMode.Exact)
+        [JetBrains.Annotations.NotNull]
+        public T SafeFindByName([JetBrains.Annotations.NotNull] string name, FindMode findMode = FindMode.Exact)
         {
             foreach (var myItem in Items)
             {
@@ -369,7 +369,7 @@ namespace Database.Helpers {
             throw new LPGException("Failed to find " + name);
         }
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public T FindFirstByNameNotNull([CanBeNull] string nameRaw, FindMode findMode = FindMode.Exact)
         {
             if (nameRaw == null)
@@ -499,21 +499,21 @@ namespace Database.Helpers {
             return true;
         }
 
-        public bool IsNameTaken([NotNull] string newname)
+        public bool IsNameTaken([JetBrains.Annotations.NotNull] string newname)
         {
             return Items.Any(item => item.Name == newname);
         }
 
-        private void MyItemsOnCollectionChanged([NotNull] object sender,
-            [NotNull] NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
+        private void MyItemsOnCollectionChanged([JetBrains.Annotations.NotNull] object sender,
+            [JetBrains.Annotations.NotNull] NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
         {
             ApplyFilter(_filterString);
         }
 
-        private void OnObservableCollectionChanged([NotNull] object sender,
-            [NotNull] NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
+        private void OnObservableCollectionChanged([JetBrains.Annotations.NotNull] object sender,
+            [JetBrains.Annotations.NotNull] NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
         {
-            if (notifyCollectionChangedEventArgs.Action == NotifyCollectionChangedAction.Add) {
+            if (notifyCollectionChangedEventArgs.Action == NotifyCollectionChangedAction.Add && notifyCollectionChangedEventArgs.NewItems != null) {
                 foreach (var newItem in notifyCollectionChangedEventArgs.NewItems) {
                     if (newItem is DBBase newdb)
                     {
@@ -527,7 +527,7 @@ namespace Database.Helpers {
             }
         }
 
-        private void PropertyChangedEvent([NotNull] object sender, [NotNull] PropertyChangedEventArgs propertyChangedEventArgs)
+        private void PropertyChangedEvent([JetBrains.Annotations.NotNull] object sender, [JetBrains.Annotations.NotNull] PropertyChangedEventArgs propertyChangedEventArgs)
         {
             foreach (var func in _functionsToCallOnPropertyChanged) {
                 func(propertyChangedEventArgs.PropertyName);

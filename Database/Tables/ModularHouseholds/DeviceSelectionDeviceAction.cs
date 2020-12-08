@@ -17,7 +17,7 @@ namespace Database.Tables.ModularHouseholds {
         private readonly int? _deviceSelectionID;
 
         public DeviceSelectionDeviceAction([CanBeNull]int? pID, [CanBeNull]int? deviceSelectionID, [CanBeNull] DeviceActionGroup group,
-            [CanBeNull] DeviceAction action, [NotNull] string connectionString, [NotNull] string name,
+            [CanBeNull] DeviceAction action, [JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.NotNull] string name,
                                            StrGuid guid) : base(name, TableName,
             connectionString, guid) {
             ID = pID;
@@ -27,16 +27,16 @@ namespace Database.Tables.ModularHouseholds {
             TypeDescription = "Device Selection Action Item";
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public DeviceAction DeviceAction => _deviceAction ?? throw new InvalidOperationException();
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public DeviceActionGroup DeviceActionGroup => _deviceActionGroup ?? throw new InvalidOperationException();
         [CanBeNull]
         public int? DeviceSelectionID => _deviceSelectionID;
 
-        [NotNull]
-        private static DeviceSelectionDeviceAction AssignFields([NotNull] DataReader dr, [NotNull] string connectionString,
-            bool ignoreMissingFields, [NotNull] AllItemCollections aic) {
+        [JetBrains.Annotations.NotNull]
+        private static DeviceSelectionDeviceAction AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString,
+            bool ignoreMissingFields, [JetBrains.Annotations.NotNull] AllItemCollections aic) {
             var deviceSelectionItemID = dr.GetIntFromLong("ID");
             var deviceSelectionID = dr.GetIntFromLong("deviceSelectionID", false, ignoreMissingFields, -1);
             var deviceActionGroupID = dr.GetIntFromLong("DeviceActionGroupID", false, ignoreMissingFields, -1);
@@ -69,9 +69,9 @@ namespace Database.Tables.ModularHouseholds {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<DeviceSelectionDeviceAction> result,
-            [NotNull] string connectionString, [ItemNotNull] [NotNull] ObservableCollection<DeviceAction> deviceActions,
-            [ItemNotNull] [NotNull] ObservableCollection<DeviceActionGroup> deviceActionGroups, bool ignoreMissingTables) {
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceSelectionDeviceAction> result,
+            [JetBrains.Annotations.NotNull] string connectionString, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceAction> deviceActions,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceActionGroup> deviceActionGroups, bool ignoreMissingTables) {
             var aic = new AllItemCollections(deviceActions: deviceActions,
                 deviceActionGroups: deviceActionGroups);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);

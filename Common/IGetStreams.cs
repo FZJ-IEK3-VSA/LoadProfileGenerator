@@ -26,12 +26,11 @@
 
 //-----------------------------------------------------------------------
 
-using JetBrains.Annotations;
 using System.IO;
 
 namespace Common {
     public interface IGetStreams {
-        [NotNull]
-        Stream GetWriterStream([NotNull] string fileName);
+        [JetBrains.Annotations.NotNull]
+        Stream GetWriterStream([JetBrains.Annotations.NotNull] string fileName);
     }
 }

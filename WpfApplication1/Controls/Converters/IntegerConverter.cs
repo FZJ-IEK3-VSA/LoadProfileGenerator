@@ -35,7 +35,7 @@ namespace LoadProfileGenerator.Controls.Converters {
     public class IntegerConverter : IValueConverter {
         #region IValueConverter Members
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public object Convert(object value, [CanBeNull] Type targetType, object parameter,
                               [CanBeNull] CultureInfo culture) {
             string result;
@@ -53,7 +53,7 @@ namespace LoadProfileGenerator.Controls.Converters {
             return result;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public object ConvertBack(object value, [CanBeNull] Type targetType, object parameter,
                                   [CanBeNull] CultureInfo culture) {
             var b = int.TryParse((string) value, out int  d);

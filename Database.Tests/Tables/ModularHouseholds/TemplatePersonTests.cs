@@ -62,7 +62,7 @@
 //            }
 //        }
 
-//        public TemplatePersonTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+//        public TemplatePersonTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
 //        {
 //        }
 //    }

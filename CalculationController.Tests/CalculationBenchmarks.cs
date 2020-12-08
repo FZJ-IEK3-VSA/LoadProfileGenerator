@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -12,7 +11,6 @@ using CalculationController.Queue;
 using CalculationEngine;
 using Common;
 using Common.Enums;
-using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
 using Common.SQLResultLogging.Loggers;
 using Common.Tests;
@@ -23,8 +21,6 @@ using Database.Tables.Houses;
 using Database.Tables.Transportation;
 using Database.Tests;
 using FluentAssertions;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -212,38 +208,38 @@ namespace CalculationController.Tests {
             //      wd1.CleanUp();
         }
 
-        [Fact]
-        [Trait(UnitTestCategories.Category,UnitTestCategories.LongTest4)]
-        public void HouseTypeTest()
-        {
-            using (var wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
-            {
-                using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
-                {
-                    Simulator sim = new Simulator(db.ConnectionString);
-                    int housetypecount = sim.HouseTypes.Items.Count;
-                    Logger.Threshold = Severity.Error;
-                    for (int i = 0; i < housetypecount && i < 2; i++)
-                    {
-                        string path = wd.Combine("HT" + (i + 1).ToString(CultureInfo.InvariantCulture));
-                        var rc = CalculateOneHousetype(path, i);
-                        if (rc != null)
-                        {
-                            List<RowCollection> rcs = new List<RowCollection>
-                    {
-                        rc
-                    };
-                            XlsxDumper.WriteToXlsx(wd.Combine("results.HT" + (i + 1) + ".xlsx"), rcs.ToArray());
-                        }
+        //[Fact]
+        //[Trait(UnitTestCategories.Category,UnitTestCategories.LongTest4)]
+        //public void HouseTypeTest()
+        //{
+        //    using (var wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
+        //    {
+        //        using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+        //        {
+        //            Simulator sim = new Simulator(db.ConnectionString);
+        //            int housetypecount = sim.HouseTypes.Items.Count;
+        //            Logger.Threshold = Severity.Error;
+        //            for (int i = 0; i < housetypecount && i < 2; i++)
+        //            {
+        //                string path = wd.Combine("HT" + (i + 1).ToString(CultureInfo.InvariantCulture));
+        //                var rc = CalculateOneHousetype(path, i);
+        //                if (rc != null)
+        //                {
+        //                    List<RowCollection> rcs = new List<RowCollection>
+        //            {
+        //                rc
+        //            };
+        //                    XlsxDumper.WriteToXlsx(wd.Combine("results.HT" + (i + 1) + ".xlsx"), rcs.ToArray());
+        //                }
 
-                        //CheckHouseResults(path);
-                    }
-                }
-            }
-            //      wd1.CleanUp();
-        }
+        //                //CheckHouseResults(path);
+        //            }
+        //        }
+        //    }
+        //    //      wd1.CleanUp();
+        //}
         /*
-        private static void CheckHouseResults([NotNull] string path)
+        private static void CheckHouseResults([JetBrains.Annotations.NotNull] string path)
         {
             var srls = new SqlResultLoggingService(path);
             TotalsPerDeviceLogger tpdl = new TotalsPerDeviceLogger(srls);
@@ -270,126 +266,126 @@ namespace CalculationController.Tests {
             }
         }*/
 
-        [CanBeNull]
-        private static RowCollection CalculateOneHousetype([NotNull] string path, int housetype)
-        {
-            if (Directory.Exists(path))
-            {
-                try
-                {
-                    Directory.Delete(path, true);
-                }
-                catch (Exception ex)
-                {
-                    Logger.Info(ex.Message);
-                }
-            }
+        //[CanBeNull]
+        //private static RowCollection CalculateOneHousetype([JetBrains.Annotations.NotNull] string path, int housetype)
+        //{
+        //    if (Directory.Exists(path))
+        //    {
+        //        try
+        //        {
+        //            Directory.Delete(path, true);
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            Logger.Info(ex.Message);
+        //        }
+        //    }
 
-            Directory.CreateDirectory(path);
-            using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
-            {
-                var sim = new Simulator(db.ConnectionString);
-                sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.OnlyOverallSum);
-                sim.MyGeneralConfig.Enable(CalcOption.DeviceProfilesIndividualHouseholds);
-                sim.MyGeneralConfig.Enable(CalcOption.TotalsPerDevice);
-                sim.MyGeneralConfig.Enable(CalcOption.TotalsPerLoadtype);
-                sim.MyGeneralConfig.Enable(CalcOption.EnergyStorageFile);
-                //sim.MyGeneralConfig.Enable(CalcOption.VariableLogFile);
-                sim.MyGeneralConfig.CSVCharacter = ";";
-                sim.MyGeneralConfig.ShowSettlingPeriodBool = true;
-                sim.Should().NotBeNull();
+        //    Directory.CreateDirectory(path);
+        //    using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
+        //    {
+        //        var sim = new Simulator(db.ConnectionString);
+        //        sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.OnlyOverallSum);
+        //        sim.MyGeneralConfig.Enable(CalcOption.DeviceProfilesIndividualHouseholds);
+        //        sim.MyGeneralConfig.Enable(CalcOption.TotalsPerDevice);
+        //        sim.MyGeneralConfig.Enable(CalcOption.TotalsPerLoadtype);
+        //        sim.MyGeneralConfig.Enable(CalcOption.EnergyStorageFile);
+        //        //sim.MyGeneralConfig.Enable(CalcOption.VariableLogFile);
+        //        sim.MyGeneralConfig.CSVCharacter = ";";
+        //        sim.MyGeneralConfig.ShowSettlingPeriodBool = true;
+        //        sim.Should().NotBeNull();
 
-                var cmf = new CalcManagerFactory();
-                var house = sim.Houses.CreateNewItem(sim.ConnectionString);
-                house.GeographicLocation = sim.GeographicLocations[0];
-                house.TemperatureProfile = sim.TemperatureProfiles[0];
-                house.HouseType = sim.HouseTypes[housetype];
-                house.Name = "housetest for " + house.HouseType.Name;
-                house.AddHousehold(sim.ModularHouseholds[0],
-                    sim.ChargingStationSets[0],
-                    sim.TravelRouteSets[0],
-                    sim.TransportationDeviceSets[0]);
-                house.SaveToDB();
+        //        var cmf = new CalcManagerFactory();
+        //        var house = sim.Houses.CreateNewItem(sim.ConnectionString);
+        //        house.GeographicLocation = sim.GeographicLocations[0];
+        //        house.TemperatureProfile = sim.TemperatureProfiles[0];
+        //        house.HouseType = sim.HouseTypes[housetype];
+        //        house.Name = "housetest for " + house.HouseType.Name;
+        //        house.AddHousehold(sim.ModularHouseholds[0],
+        //            sim.ChargingStationSets[0],
+        //            sim.TravelRouteSets[0],
+        //            sim.TransportationDeviceSets[0]);
+        //        house.SaveToDB();
 
-                CalculationProfiler calculationProfiler = new CalculationProfiler();
-                CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
-                    sim.TemperatureProfiles[0],
-                    house,
-                    EnergyIntensityType.Random,
-                    false,
-                    null,
-                    LoadTypePriority.All,
-                    null,
-                    null,
-                    null,
-                    sim.MyGeneralConfig.AllEnabledOptions(),
-                    new DateTime(2015, 1, 1),
-                    new DateTime(2015, 12, 31),
-                    new TimeSpan(0, 1, 0),
-                    ";",
-                    5,
-                    new TimeSpan(0, 15, 0),
-                    false,
-                    false,
-                    false,
-                    3,
-                    5,
-                    calculationProfiler, path,true,false, ".");
-                var cm = cmf.GetCalcManager(sim, csps, false);
-
-
-                cm.Run(ReportCancelFunc);
-                db.Cleanup();
-
-                string generalfile = Path.Combine(path, "Results." + Constants.GeneralHouseholdKey.Key + ".sqlite");
-                if (!File.Exists(generalfile))
-                {
-                    throw new LPGException("Calculation failed");
-                }
-                string housefile = Path.Combine(path, "Results." + Constants.HouseKey.Key + ".sqlite");
-                if (!File.Exists(housefile))
-                {
-                    return null;
-                }
-                var srls = new SqlResultLoggingService(path);
-                TotalsPerDeviceLogger tpdl = new TotalsPerDeviceLogger(srls);
-                var devices = tpdl.Read(Constants.HouseKey);
-
-                TotalsPerLoadtypeEntryLogger tplt = new TotalsPerLoadtypeEntryLogger(srls);
-                var totalEntries = tplt.Read(Constants.HouseKey);
+        //        CalculationProfiler calculationProfiler = new CalculationProfiler();
+        //        CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
+        //            sim.TemperatureProfiles[0],
+        //            house,
+        //            EnergyIntensityType.Random,
+        //            false,
+        //            null,
+        //            LoadTypePriority.All,
+        //            null,
+        //            null,
+        //            null,
+        //            sim.MyGeneralConfig.AllEnabledOptions(),
+        //            new DateTime(2015, 1, 1),
+        //            new DateTime(2015, 12, 31),
+        //            new TimeSpan(0, 1, 0),
+        //            ";",
+        //            5,
+        //            new TimeSpan(0, 15, 0),
+        //            false,
+        //            false,
+        //            false,
+        //            3,
+        //            5,
+        //            calculationProfiler, path,true,false, ".");
+        //        var cm = cmf.GetCalcManager(sim, csps, false);
 
 
-                if (house.HouseType == null) { throw new LPGException("housetype was null"); }
-                var rc = new RowCollection(house.HouseType.HouseTypeCode);
-                var descrb = XlsRowBuilder.Start("Housetype", house.HouseType?.Name);
-                rc.Add(descrb);
-                foreach (var device in house.HouseType?.HouseTransformationDevices)
-                {
-                    var traforb = XlsRowBuilder.Start("Transformation device", device.TransformationDevice?.Name);
-                    rc.Add(traforb);
-                }
-                foreach (var device in house.HouseType?.HouseEnergyStorages)
-                {
-                    var energyrb = XlsRowBuilder.Start("Energy Storage", device.EnergyStorage?.Name);
-                    rc.Add(energyrb);
-                }
+        //        cm.Run(ReportCancelFunc);
+        //        db.Cleanup();
 
-                foreach (var entry in totalEntries)
-                {
-                    var ltEntry = XlsRowBuilder.Start("Loadtype", entry.Loadtype.Name).Add("Value", entry.Value);
-                    rc.Add(ltEntry);
-                }
+        //        string generalfile = Path.Combine(path, "Results." + Constants.GeneralHouseholdKey.Key + ".sqlite");
+        //        if (!File.Exists(generalfile))
+        //        {
+        //            throw new LPGException("Calculation failed");
+        //        }
+        //        string housefile = Path.Combine(path, "Results." + Constants.HouseKey.Key + ".sqlite");
+        //        if (!File.Exists(housefile))
+        //        {
+        //            return null;
+        //        }
+        //        var srls = new SqlResultLoggingService(path);
+        //        TotalsPerDeviceLogger tpdl = new TotalsPerDeviceLogger(srls);
+        //        var devices = tpdl.Read(Constants.HouseKey);
 
-                foreach (var device in devices)
-                {
-                    var rb = XlsRowBuilder.Start("Device-" + device.Loadtype.Name, device.Device.Name);
-                    rb.Add("Value Positive " + device.Loadtype.Name, device.PositiveValues);
-                    rb.Add("Value Negative " + device.Loadtype.Name, device.NegativeValues);
-                    rc.Add(rb);
-                }
-                return rc;
-            }
-        }
+        //        TotalsPerLoadtypeEntryLogger tplt = new TotalsPerLoadtypeEntryLogger(srls);
+        //        var totalEntries = tplt.Read(Constants.HouseKey);
+
+
+        //        if (house.HouseType == null) { throw new LPGException("housetype was null"); }
+        //        var rc = new RowCollection(house.HouseType.HouseTypeCode);
+        //        var descrb = XlsRowBuilder.Start("Housetype", house.HouseType?.Name);
+        //        rc.Add(descrb);
+        //        foreach (var device in house.HouseType?.HouseTransformationDevices)
+        //        {
+        //            var traforb = XlsRowBuilder.Start("Transformation device", device.TransformationDevice?.Name);
+        //            rc.Add(traforb);
+        //        }
+        //        foreach (var device in house.HouseType?.HouseEnergyStorages)
+        //        {
+        //            var energyrb = XlsRowBuilder.Start("Energy Storage", device.EnergyStorage?.Name);
+        //            rc.Add(energyrb);
+        //        }
+
+        //        foreach (var entry in totalEntries)
+        //        {
+        //            var ltEntry = XlsRowBuilder.Start("Loadtype", entry.Loadtype.Name).Add("Value", entry.Value);
+        //            rc.Add(ltEntry);
+        //        }
+
+        //        foreach (var device in devices)
+        //        {
+        //            var rb = XlsRowBuilder.Start("Device-" + device.Loadtype.Name, device.Device.Name);
+        //            rb.Add("Value Positive " + device.Loadtype.Name, device.PositiveValues);
+        //            rb.Add("Value Negative " + device.Loadtype.Name, device.NegativeValues);
+        //            rc.Add(rb);
+        //        }
+        //        return rc;
+        //    }
+        //}
 
 
         [Fact]
@@ -1232,7 +1228,7 @@ namespace CalculationController.Tests {
             // CleanTestBase.Run(true);
         }
 
-        public CalculationBenchmarks([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public CalculationBenchmarks([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

@@ -31,8 +31,8 @@ namespace Database.Tables.Transportation {
         private readonly double _maxChargingPower;
 
         public ChargingStationSetEntry([CanBeNull]int? pID, [CanBeNull] VLoadType carChargingLoadtype,  [CanBeNull] TransportationDeviceCategory transportationDeviceCategory,
-    int chargingStationSetID, double maxChargingPower, [NotNull] string connectionString,
-            [NotNull] string name, [CanBeNull] Site site, StrGuid guid, [CanBeNull] VLoadType gridChargingLoadtype) : base(name, TableName, connectionString, guid)
+    int chargingStationSetID, double maxChargingPower, [JetBrains.Annotations.NotNull] string connectionString,
+            [JetBrains.Annotations.NotNull] string name, [CanBeNull] Site site, StrGuid guid, [CanBeNull] VLoadType gridChargingLoadtype) : base(name, TableName, connectionString, guid)
         {
             _site = site;
             TypeDescription = "Site Location";
@@ -53,9 +53,9 @@ namespace Database.Tables.Transportation {
             set => _site = value;
         }
 
-        [NotNull]
-        private static ChargingStationSetEntry AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static ChargingStationSetEntry AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var chargingStationID = dr.GetIntFromLong("ID");
             var chargingStationSetID = dr.GetIntFromLong("chargingStationSetID");
@@ -102,9 +102,9 @@ namespace Database.Tables.Transportation {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<ChargingStationSetEntry> result, [NotNull] string connectionString,
-            [ItemNotNull] [NotNull] ObservableCollection<VLoadType> loadTypes, [ItemNotNull] [NotNull] ObservableCollection<TransportationDeviceCategory> transportationDeviceCategories,
-                                            [NotNull] [ItemNotNull] ObservableCollection<Site> sites, bool ignoreMissingTables)
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<ChargingStationSetEntry> result, [JetBrains.Annotations.NotNull] string connectionString,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<VLoadType> loadTypes, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TransportationDeviceCategory> transportationDeviceCategories,
+                                            [JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<Site> sites, bool ignoreMissingTables)
         {
             var aic = new AllItemCollections(loadTypes: loadTypes, transportationDeviceCategories:transportationDeviceCategories,sites:sites);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);

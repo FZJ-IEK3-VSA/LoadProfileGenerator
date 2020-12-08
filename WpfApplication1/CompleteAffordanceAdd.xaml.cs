@@ -20,10 +20,10 @@ namespace LoadProfileGenerator
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public partial class CompleteAffordanceAdd
     {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly ApplicationPresenter _app;
 
-        public CompleteAffordanceAdd([NotNull] ApplicationPresenter app)
+        public CompleteAffordanceAdd([JetBrains.Annotations.NotNull] ApplicationPresenter app)
         {
             InitializeComponent();
             MainGrid.DataContext = this;
@@ -113,7 +113,7 @@ namespace LoadProfileGenerator
         public ObservableCollection<TimeBasedProfile> TimeProfiles => _app.Simulator?.Timeprofiles.Items;
 
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string TraitClassification { get; set; }
 
         [UsedImplicitly]
@@ -123,7 +123,7 @@ namespace LoadProfileGenerator
         public int TraitMinimumAge { get; set; }
 
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string TraitName { get; set; }
 
         [UsedImplicitly]
@@ -201,11 +201,11 @@ namespace LoadProfileGenerator
                 _app, ExistingLocation, LocationName);
         }
 
-        public static void CreateItems([NotNull] Simulator sim, [NotNull] string affordanceName, [NotNull] string desirename, [NotNull] string devicename,
-            [NotNull] string traitName, [NotNull] VLoadType loadType, [NotNull] DeviceCategory deviceCategory, [NotNull] TimeBasedProfile timeprofile,
-            double desireWeight, double desireDecay, int minimumAge, int maximumAge, [NotNull] Location location,
-            [NotNull] TraitTag traitTag, [NotNull] string traitClassification, [NotNull] TimeLimit timelimit, [NotNull] string affordanceCategory,
-            [CanBeNull] ApplicationPresenter app, bool useExistingLocation, [NotNull] string locationName)
+        public static void CreateItems([JetBrains.Annotations.NotNull] Simulator sim, [JetBrains.Annotations.NotNull] string affordanceName, [JetBrains.Annotations.NotNull] string desirename, [JetBrains.Annotations.NotNull] string devicename,
+            [JetBrains.Annotations.NotNull] string traitName, [JetBrains.Annotations.NotNull] VLoadType loadType, [JetBrains.Annotations.NotNull] DeviceCategory deviceCategory, [JetBrains.Annotations.NotNull] TimeBasedProfile timeprofile,
+            double desireWeight, double desireDecay, int minimumAge, int maximumAge, [JetBrains.Annotations.NotNull] Location location,
+            [JetBrains.Annotations.NotNull] TraitTag traitTag, [JetBrains.Annotations.NotNull] string traitClassification, [JetBrains.Annotations.NotNull] TimeLimit timelimit, [JetBrains.Annotations.NotNull] string affordanceCategory,
+            [CanBeNull] ApplicationPresenter app, bool useExistingLocation, [JetBrains.Annotations.NotNull] string locationName)
         {
             Location loc;
             if (useExistingLocation)

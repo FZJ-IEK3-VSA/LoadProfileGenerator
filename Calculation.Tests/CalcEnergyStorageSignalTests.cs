@@ -34,8 +34,6 @@ using CalculationEngine.HouseholdElements;
 using Common;
 using Common.JSON;
 using Common.Tests;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -43,11 +41,11 @@ namespace Calculation.Tests
 {
     public class CalcEnergyStorageSignalTests : UnitTestBaseClass
     {
-        public CalcEnergyStorageSignalTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public CalcEnergyStorageSignalTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
 
-        private static void TestCess([NotNull] CalcEnergyStorageSignal cess, [NotNull] TimeStep timestep, double capacity, double currentfill, [NotNull] List<double> values)
+        private static void TestCess([JetBrains.Annotations.NotNull] CalcEnergyStorageSignal cess, [JetBrains.Annotations.NotNull] TimeStep timestep, double capacity, double currentfill, [JetBrains.Annotations.NotNull] List<double> values)
         {
             double d = cess.GetValue(timestep, capacity, currentfill);
             Logger.Info("Timestep:" + timestep + " StorageLevel:" + currentfill + " Result:" + d);

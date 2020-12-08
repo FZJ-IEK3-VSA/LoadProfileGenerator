@@ -52,7 +52,7 @@ using LoadProfileGenerator.Views.Transportation;
 
 namespace LoadProfileGenerator.Presenters.BasicElements {
     public class ApplicationPresenter : PresenterBase<Shell> {
-        [NotNull] private readonly Dictionary<string, Action<object>> _openItemDict = new Dictionary<string, Action<object>>();
+        [JetBrains.Annotations.NotNull] private readonly Dictionary<string, Action<object>> _openItemDict = new Dictionary<string, Action<object>>();
 
         [CanBeNull] private readonly WelcomePresenter _welcomePresenter;
 
@@ -61,7 +61,8 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
         private bool _isMenuEnabled;
         [CanBeNull] private Simulator _simulator;
 
-        public ApplicationPresenter([NotNull] Shell view, [CanBeNull] Simulator simulator, Dispatcher mainDispatcher) : base(view, "ApplicationPresenter")
+        public ApplicationPresenter([JetBrains.Annotations.NotNull] Shell view, [CanBeNull] Simulator simulator, Dispatcher mainDispatcher)
+            : base(view, "ApplicationPresenter")
         {
             Shell = view;
             MainDispatcher = mainDispatcher;
@@ -108,11 +109,11 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
 
         // the log at the bottom of the screen
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<Logger.LogMessage> LogMessages => Logger.Get().LogCol;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public Shell Shell { get; }
 
@@ -141,7 +142,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
         [CanBeNull]
         public WelcomePresenter WelcomePresenter => _welcomePresenter;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Affordance AddAffordance()
         {
             if(Simulator == null) {
@@ -154,7 +155,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             return d;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public AffordanceTaggingSet AddAffordanceTaggingSet()
         {
             if (Simulator == null)
@@ -168,7 +169,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             return d;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public DateBasedProfile AddDateBasedProfile()
         {
             if (Simulator == null)
@@ -182,7 +183,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             return dateBasedProfile;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Desire AddDesire()
         {
             if (Simulator == null)
@@ -196,7 +197,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             return d;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public RealDevice AddDevice()
         {
             if (Simulator == null)
@@ -210,7 +211,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             return d;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public DeviceAction AddDeviceAction()
         {
             if (Simulator == null)
@@ -224,7 +225,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             return d;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public DeviceActionGroup AddDeviceActionGroup()
         {
             if (Simulator == null)
@@ -238,7 +239,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             return d;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public DeviceCategory AddDeviceCategory()
         {
             if (Simulator == null)
@@ -252,7 +253,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             return d;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public DeviceSelection AddDeviceSelection()
         {
             if (Simulator == null)
@@ -266,7 +267,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             return p;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public DeviceTaggingSet AddDeviceTaggingSet()
         {
             if (Simulator == null)
@@ -280,7 +281,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             return d;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public EnergyStorage AddEnergyStorageDevice()
         {
             if (Simulator == null)
@@ -294,7 +295,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             return d;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Generator AddGenerator()
         {
             if (Simulator == null)
@@ -308,7 +309,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             return gen;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public GeographicLocation AddGeographicLocation()
         {
             if (Simulator == null)
@@ -322,7 +323,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             return p;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Holiday AddHoliday()
         {
             if (Simulator == null)
@@ -336,7 +337,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             return holiday;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public House AddHouse()
         {
             if (Simulator == null)
@@ -350,7 +351,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             return d;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public HouseholdPlan AddHouseholdPlan()
         {
             if (Simulator == null)
@@ -364,7 +365,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             return d;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public HouseholdTemplate AddHouseholdTemplate()
         {
             if (Simulator == null)
@@ -378,7 +379,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             return d;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public HouseholdTrait AddHouseholdTrait()
         {
             if (Simulator == null)
@@ -392,7 +393,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             return ht;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public HouseType AddHouseType()
         {
             if (Simulator == null)
@@ -406,7 +407,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             return d;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public VLoadType AddLoadType()
         {
             if (Simulator == null)
@@ -420,7 +421,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             return d;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Location AddLocation()
         {
             if (Simulator == null)
@@ -434,7 +435,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             return p;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ModularHousehold AddModularHousehold()
         {
             if (Simulator == null)
@@ -448,7 +449,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             return chh;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Person AddPerson()
         {
             if (Simulator == null)
@@ -462,7 +463,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             return p;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Settlement AddSettlement()
         {
             if (Simulator == null)
@@ -476,7 +477,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             return sett;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public SettlementTemplate AddSettlementTemplate()
         {
             if (Simulator == null)
@@ -490,7 +491,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             return d;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Site AddSite()
         {
             if (Simulator == null)
@@ -504,7 +505,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             return d;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public SubAffordance AddSubAffordance()
         {
             if (Simulator == null)
@@ -518,7 +519,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             return d;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public TemperatureProfile AddTemperatureProfile()
         {
             if (Simulator == null)
@@ -532,7 +533,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             return d;
         }
 
-        //[NotNull]
+        //[JetBrains.Annotations.NotNull]
         //public object AddTemplatePerson()
         //{
         //    if (Simulator == null)
@@ -546,7 +547,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
         //    return d;
         //}
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public HouseholdTag AddTemplateTag()
         {
             if (Simulator == null)
@@ -560,7 +561,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             return d;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Settlement AddTestSettlement()
         {
             if (Simulator == null)
@@ -582,7 +583,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             return sett;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public TimeLimit AddTimeLimit()
         {
             if (Simulator == null)
@@ -596,7 +597,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             return d;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public TimeBasedProfile AddTimeProfile()
         {
             if (Simulator == null)
@@ -610,7 +611,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             return d;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public TraitTag AddTraitTag()
         {
             if (Simulator == null)
@@ -624,7 +625,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             return t;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public TransformationDevice AddTransformationDevice()
         {
             if (Simulator == null)
@@ -638,7 +639,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             return d;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public TransportationDeviceCategory AddTransportationDeviceCategory()
         {
             if (Simulator == null)
@@ -652,7 +653,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             return d;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public TravelRoute AddTravelRoute()
         {
             if (Simulator == null)
@@ -666,7 +667,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             return d;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public TravelRouteSet AddTravelRouteSet()
         {
             if (Simulator == null)
@@ -680,7 +681,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             return d;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Vacation AddVacation()
         {
             if (Simulator == null)
@@ -694,7 +695,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             return d;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public object AddVariable()
         {
             if (Simulator == null)
@@ -713,7 +714,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             // needed from interface
         }
 
-        public void CloseTab<T>([NotNull] PresenterBase<T> presenter, bool removeLast) where T : class
+        public void CloseTab<T>([JetBrains.Annotations.NotNull] PresenterBase<T> presenter, bool removeLast) where T : class
         {
             presenter.UnloadingStarted = true;
             View.RemoveTab(presenter, removeLast);
@@ -941,7 +942,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
 #pragma warning restore RCS1163 // Unused parameter.
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public object AddTransportationDevice()
         {
             if (Simulator == null)
@@ -955,7 +956,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             return d;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public object AddTransportationDeviceSet()
         {
             if (Simulator == null)
@@ -969,7 +970,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             return d;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public object AddChargingStationSet()
         {
             if (Simulator == null)
@@ -982,7 +983,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             return d;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public object AddLivingPatternTag()
         {
             if (Simulator == null)

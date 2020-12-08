@@ -41,11 +41,11 @@ using JetBrains.Annotations;
 namespace Database.Tables.BasicElements {
     public class DeviceTaggingSet : DBBaseElement {
         public const string TableName = "tblDeviceTaggingSets";
-        [NotNull] private string _description;
+        [JetBrains.Annotations.NotNull] private string _description;
 
-        public DeviceTaggingSet([NotNull] string name,
-                                [NotNull] string description,
-                                [NotNull] string connectionString, StrGuid guid,
+        public DeviceTaggingSet([JetBrains.Annotations.NotNull] string name,
+                                [JetBrains.Annotations.NotNull] string description,
+                                [JetBrains.Annotations.NotNull] string connectionString, StrGuid guid,
                                 [CanBeNull]int? pID = null) : base(name,
             TableName, connectionString, guid)
         {
@@ -57,7 +57,7 @@ namespace Database.Tables.BasicElements {
             _description = description;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string Description {
             get => _description;
@@ -65,26 +65,26 @@ namespace Database.Tables.BasicElements {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<DeviceTaggingEntry> Entries { get; }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<DeviceTaggingSetLoadType> LoadTypes { get; } = new ObservableCollection<DeviceTaggingSetLoadType>();
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<DeviceTaggingReference> References { get; }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<DeviceTag> Tags { get; }
 
         [CanBeNull]
-        public DeviceTag AddNewTag([NotNull] string name)
+        public DeviceTag AddNewTag([JetBrains.Annotations.NotNull] string name)
         {
             foreach (var deviceTag in Tags) {
                 if (deviceTag.Name == name) {
@@ -100,7 +100,7 @@ namespace Database.Tables.BasicElements {
             return at;
         }
 
-        public void AddLoadType([NotNull] VLoadType loadType)
+        public void AddLoadType([JetBrains.Annotations.NotNull] VLoadType loadType)
         {
             if (LoadTypes.Any(x => x.LoadType == loadType)) {
                 Logger.Warning("Loadtype " + loadType.Name + " is already in the list.");
@@ -113,7 +113,7 @@ namespace Database.Tables.BasicElements {
             SaveToDB();
         }
 
-        public void AddReferenceEntry([NotNull] DeviceTag tag, int personCount, double value, [NotNull] VLoadType loadType)
+        public void AddReferenceEntry([JetBrains.Annotations.NotNull] DeviceTag tag, int personCount, double value, [JetBrains.Annotations.NotNull] VLoadType loadType)
         {
             var todelete = References
                 .Where(x => x.PersonCount == personCount && x.Tag == tag).ToList();
@@ -127,7 +127,7 @@ namespace Database.Tables.BasicElements {
             SaveToDB();
         }
 
-        public void AddTaggingEntry([NotNull] DeviceTag tag, [NotNull] RealDevice device)
+        public void AddTaggingEntry([JetBrains.Annotations.NotNull] DeviceTag tag, [JetBrains.Annotations.NotNull] RealDevice device)
         {
             var at = new DeviceTaggingEntry(string.Empty, IntID, tag, device,
                 ConnectionString, null, System.Guid.NewGuid().ToStrGuid());
@@ -136,9 +136,9 @@ namespace Database.Tables.BasicElements {
             SaveToDB();
         }
 
-        [NotNull]
-        private static DeviceTaggingSet AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static DeviceTaggingSet AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var id = dr.GetIntFromLong("ID");
             var name = dr.GetString("Name");
@@ -146,13 +146,13 @@ namespace Database.Tables.BasicElements {
             return new DeviceTaggingSet(name, description, connectionString, System.Guid.NewGuid().ToStrGuid(), id);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new
+        public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString) => new
             DeviceTaggingSet(FindNewName(isNameTaken, "New Device Tagging Set "), "(no description)",
                 connectionString, System.Guid.NewGuid().ToStrGuid());
 
-        private void DeleteEntry([NotNull] DeviceTaggingEntry at)
+        private void DeleteEntry([JetBrains.Annotations.NotNull] DeviceTaggingEntry at)
         {
             at.DeleteFromDB();
             Entries.Remove(at);
@@ -172,13 +172,13 @@ namespace Database.Tables.BasicElements {
             }
         }
 
-        public void DeleteReference([NotNull] DeviceTaggingReference refVal)
+        public void DeleteReference([JetBrains.Annotations.NotNull] DeviceTaggingReference refVal)
         {
             refVal.DeleteFromDB();
             References.Remove(refVal);
         }
 
-        public void DeleteTag([NotNull] DeviceTag at)
+        public void DeleteTag([JetBrains.Annotations.NotNull] DeviceTag at)
         {
             at.DeleteFromDB();
             Tags.Remove(at);
@@ -200,9 +200,9 @@ namespace Database.Tables.BasicElements {
             return null;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DeviceTaggingSet ImportFromItem([NotNull] DeviceTaggingSet toImport, [NotNull] Simulator dstSim)
+        public static DeviceTaggingSet ImportFromItem([JetBrains.Annotations.NotNull] DeviceTaggingSet toImport, [JetBrains.Annotations.NotNull] Simulator dstSim)
         {
             var hd = new DeviceTaggingSet(toImport.Name,
                 toImport.Description, dstSim.ConnectionString,System.Guid.NewGuid().ToStrGuid());
@@ -261,7 +261,7 @@ namespace Database.Tables.BasicElements {
             return hd;
         }
 
-        private static bool IsCorrectEntryParent([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectEntryParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var entry = (DeviceTaggingEntry) child;
             if (parent.ID == entry.TaggingSetID) {
@@ -272,7 +272,7 @@ namespace Database.Tables.BasicElements {
             return false;
         }
 
-        private static bool IsCorrectLoadTypeParent([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectLoadTypeParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var entry = (DeviceTaggingSetLoadType)child;
             if (parent.ID == entry.TaggingSetID)
@@ -284,7 +284,7 @@ namespace Database.Tables.BasicElements {
             return false;
         }
 
-        private static bool IsCorrectReferenceParent([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectReferenceParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var refValue = (DeviceTaggingReference) child;
             if (parent.ID == refValue.TaggingSetID) {
@@ -295,7 +295,7 @@ namespace Database.Tables.BasicElements {
             return false;
         }
 
-        private static bool IsCorrectTagParent([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectTagParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var at = (DeviceTag) child;
             if (parent.ID == at.TaggingSetID) {
@@ -312,9 +312,9 @@ namespace Database.Tables.BasicElements {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<DeviceTaggingSet> result, [NotNull] string connectionString,
-            bool ignoreMissingTables, [ItemNotNull] [NotNull] ObservableCollection<RealDevice> devices,
-            [ItemNotNull] [NotNull] ObservableCollection<VLoadType> loadtypes)
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceTaggingSet> result, [JetBrains.Annotations.NotNull] string connectionString,
+            bool ignoreMissingTables, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<RealDevice> devices,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<VLoadType> loadtypes)
         {
             var aic = new AllItemCollections();
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);
@@ -347,7 +347,7 @@ namespace Database.Tables.BasicElements {
             SetSubitems(new List<DBBase>(result), new List<DBBase>(entries), IsCorrectEntryParent, ignoreMissingTables);
         }
 
-        public void RefreshDevices([ItemNotNull] [NotNull] ObservableCollection<RealDevice> devices)
+        public void RefreshDevices([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<RealDevice> devices)
         {
             DeviceTag noneTag = null;
             foreach (var deviceTag in Tags) {
@@ -388,7 +388,7 @@ namespace Database.Tables.BasicElements {
             SaveToDB();
         }
 
-        public void ResortEntries([NotNull] Comparison<DeviceTaggingEntry> comparer)
+        public void ResortEntries([JetBrains.Annotations.NotNull] Comparison<DeviceTaggingEntry> comparer)
         {
             Entries.Sort(comparer);
         }
@@ -419,7 +419,7 @@ namespace Database.Tables.BasicElements {
         public override string ToString() => Name;
 
         public class MissingEntry {
-            public MissingEntry([NotNull] DeviceTag tag, int personCount)
+            public MissingEntry([JetBrains.Annotations.NotNull] DeviceTag tag, int personCount)
             {
                 Tag = tag;
                 PersonCount = personCount;
@@ -427,11 +427,11 @@ namespace Database.Tables.BasicElements {
 
             public int PersonCount { get; }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public DeviceTag Tag { get; }
         }
 
-        public void DeleteLoadType([NotNull] DeviceTaggingSetLoadType loadType)
+        public void DeleteLoadType([JetBrains.Annotations.NotNull] DeviceTaggingSetLoadType loadType)
         {
                 loadType.DeleteFromDB();
                 LoadTypes.Remove(loadType);

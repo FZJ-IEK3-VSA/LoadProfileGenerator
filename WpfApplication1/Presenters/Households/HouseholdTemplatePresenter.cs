@@ -74,14 +74,14 @@ namespace LoadProfileGenerator.Presenters.Households {
             }
         }
 
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<HHTemplateEntry> _filteredEntries = new ObservableCollection<HHTemplateEntry>();
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<HHTemplateEntry> _filteredEntries = new ObservableCollection<HHTemplateEntry>();
 
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<ModularHousehold> _generatedHouseholds =
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<ModularHousehold> _generatedHouseholds =
             new ObservableCollection<ModularHousehold>();
 
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<PersonEntry> _persons = new ObservableCollection<PersonEntry>();
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<PersonEntry> _persons = new ObservableCollection<PersonEntry>();
 
-        [NotNull] private readonly HouseholdTemplate _template;
+        [JetBrains.Annotations.NotNull] private readonly HouseholdTemplate _template;
         [CanBeNull] private string _filterText;
         private int _maxCount;
         private int _maximumTraits;
@@ -99,8 +99,8 @@ namespace LoadProfileGenerator.Presenters.Households {
 
         [CanBeNull] private Vacation _selectedVacation;
 
-        public HouseholdTemplatePresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] HouseholdTemplateView view,
-                                          [NotNull] HouseholdTemplate template) : base(view, "ThisTemplate.HeaderString", template,
+        public HouseholdTemplatePresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] HouseholdTemplateView view,
+                                          [JetBrains.Annotations.NotNull] HouseholdTemplate template) : base(view, "ThisTemplate.HeaderString", template,
             applicationPresenter)
         {
             _template = template;
@@ -110,42 +110,42 @@ namespace LoadProfileGenerator.Presenters.Households {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<DateBasedProfile> AllDateBasedProfiles => Sim.DateBasedProfiles.Items;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<ModularHousehold> AllModularHouseholds => Sim.ModularHouseholds.Items;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<Person> AllPersons => Sim.Persons.Items;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<TraitTag> AllTags => Sim.TraitTags.Items;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<HouseholdTag> AllTemplateTags => Sim.HouseholdTags.Items;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<Vacation> AllVacations => Sim.Vacations.Items;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<LivingPatternTag> LivingPatternTags => Sim.LivingPatternTags.Items;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<HHTemplateEntry> FilteredEntries => _filteredEntries;
 
@@ -164,7 +164,7 @@ namespace LoadProfileGenerator.Presenters.Households {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<ModularHousehold> GeneratedHouseholds => _generatedHouseholds;
 
@@ -196,7 +196,7 @@ namespace LoadProfileGenerator.Presenters.Households {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<PersonEntry> Persons => _persons;
 
@@ -294,7 +294,7 @@ namespace LoadProfileGenerator.Presenters.Households {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public HouseholdTemplate ThisTemplate => _template;
 
@@ -338,7 +338,7 @@ namespace LoadProfileGenerator.Presenters.Households {
 
         public bool TraitIsMandatory { get; set; }
 
-        internal void AddEntry([NotNull] TraitTag tag, int min, int max, [ItemNotNull] [NotNull] List<Person> persons, bool isMandatory)
+        internal void AddEntry([JetBrains.Annotations.NotNull] TraitTag tag, int min, int max, [ItemNotNull] [JetBrains.Annotations.NotNull] List<Person> persons, bool isMandatory)
         {
             _template.AddEntry(tag, min, max, persons, isMandatory);
         }

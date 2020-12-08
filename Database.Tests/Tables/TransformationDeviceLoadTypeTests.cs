@@ -33,8 +33,6 @@ using Common;
 using Common.Tests;
 using Database.Tables.Houses;
 using FluentAssertions;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -73,7 +71,7 @@ new ObservableCollection<TransformationDeviceLoadType>();
             }
         }
 
-        public TransformationDeviceLoadTypeTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public TransformationDeviceLoadTypeTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

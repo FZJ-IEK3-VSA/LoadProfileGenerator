@@ -57,7 +57,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
     public class CalculationOutcomesPresenter : PresenterBaseWithAppPresenter<CalculationOutcomesView> {
         //private static readonly List<CalculationResult> _result = new List<CalculationResult>();
 
-        [NotNull] private readonly CategoryOutcome _outcomes;
+        [JetBrains.Annotations.NotNull] private readonly CategoryOutcome _outcomes;
         [CanBeNull] private string _csvPath;
 
         [CanBeNull] private string _filterString;
@@ -68,7 +68,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
 
         private bool _showOnlyErrors;
 
-        public CalculationOutcomesPresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] CalculationOutcomesView view) : base(view,
+        public CalculationOutcomesPresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] CalculationOutcomesView view) : base(view,
             "HeaderString",
             applicationPresenter)
         {
@@ -88,12 +88,12 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<CalculationOutcome> Entries => _outcomes.Items;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<CalculationOutcome> FilteredEntries { get; } = new ObservableCollection<CalculationOutcome>();
 
@@ -108,7 +108,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string HeaderString => "Calculation Outcomes";
 
@@ -125,7 +125,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         [UsedImplicitly]
         public bool NotInCalculation => !_inCalculation;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string OperatingPath { get; set; }
 
@@ -160,7 +160,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             ApplicationPresenter.CloseTab(this, removeLast);
         }
 
-        public static int CountMissingEntries([NotNull] Simulator sim)
+        public static int CountMissingEntries([JetBrains.Annotations.NotNull] Simulator sim)
         {
             var count = 0;
             var geographicLocation = sim.GeographicLocations.FindFirstByName("berlin", FindMode.Partial);
@@ -178,7 +178,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                 }
             }
 
-            var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            var version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "";
 
             var intensities = new List<EnergyIntensityType> {
                 EnergyIntensityType.EnergySavingPreferMeasured,
@@ -207,7 +207,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             RefreshFiltered();
         }
 
-        public void DeleteOutcome([NotNull] CalculationOutcome co)
+        public void DeleteOutcome([JetBrains.Annotations.NotNull] CalculationOutcome co)
         {
             Sim.CalculationOutcomes.DeleteItem(co);
             RefreshFiltered();
@@ -351,7 +351,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             }
         }
 
-        public static void MakeVersionComparisonChart([NotNull] Simulator sim)
+        public static void MakeVersionComparisonChart([JetBrains.Annotations.NotNull] Simulator sim)
         {
             var dstPath = Path.Combine(sim.MyGeneralConfig.DestinationPath, "CalculationOutcomes");
             if (!Directory.Exists(dstPath)) {
@@ -397,10 +397,10 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             }
         }
 
-        [NotNull]
-        public static Dictionary<string, Dictionary<string, OutcomeStatistic>> ReadResult([NotNull] SingleTimestepActionEntryLogger atael,
-                                                                                          [NotNull] HouseholdKey key,
-                                                                                          [NotNull] ActionEntryLogger ael)
+        [JetBrains.Annotations.NotNull]
+        public static Dictionary<string, Dictionary<string, OutcomeStatistic>> ReadResult([JetBrains.Annotations.NotNull] SingleTimestepActionEntryLogger atael,
+                                                                                          [JetBrains.Annotations.NotNull] HouseholdKey key,
+                                                                                          [JetBrains.Annotations.NotNull] ActionEntryLogger ael)
         {
             var singleTimeActionEntries = atael.Read(key);
             var actionEntries = ael.Read(key);
@@ -464,7 +464,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                     EnergyIntensityType.EnergyIntensive,
                     EnergyIntensityType.EnergySaving
                 };
-                var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                var version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "";
                 var versionArray = version.Split('.');
                 version = versionArray[0] + "." + versionArray[1] + "." + versionArray[2];
 
@@ -521,18 +521,18 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         }
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        public static void StartOneCalculation([NotNull] ICalcObject mycalcObject,
-                                               [NotNull] GeographicLocation geographicLocation,
-                                               [NotNull] TemperatureProfile temperatureProfile,
+        public static void StartOneCalculation([JetBrains.Annotations.NotNull] ICalcObject mycalcObject,
+                                               [JetBrains.Annotations.NotNull] GeographicLocation geographicLocation,
+                                               [JetBrains.Annotations.NotNull] TemperatureProfile temperatureProfile,
                                                EnergyIntensityType intensity,
-                                               [NotNull] string operatingPath,
-                                               [NotNull] Simulator sim,
+                                               [JetBrains.Annotations.NotNull] string operatingPath,
+                                               [JetBrains.Annotations.NotNull] Simulator sim,
                                                bool deleteEverything,
                                                [CanBeNull] TransportationDeviceSet transportationDeviceSet,
                                                [CanBeNull] TravelRouteSet travelRouteSet,
                                                [CanBeNull] ChargingStationSet chargingStationSet, bool enableTransportation)
         {
-            var version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            var version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "";
             if (sim.CalculationOutcomes.ItemExists(mycalcObject, geographicLocation, temperatureProfile, intensity, version)) {
                 return;
             }
@@ -651,7 +651,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.Reasonable);
         }
 
-        private static int AffTimeUseComparer([NotNull] AffordanceTimeUseOutcome x, [NotNull] AffordanceTimeUseOutcome y)
+        private static int AffTimeUseComparer([JetBrains.Annotations.NotNull] AffordanceTimeUseOutcome x, [JetBrains.Annotations.NotNull] AffordanceTimeUseOutcome y)
         {
             var result = string.Compare(x.PersonName, y.PersonName, StringComparison.Ordinal);
             if (result != 0) {
@@ -661,16 +661,16 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             return string.Compare(x.AffordanceName, y.AffordanceName, StringComparison.Ordinal);
         }
 
-        private static bool OpenTabFunc([NotNull] object o) => true;
+        private static bool OpenTabFunc([JetBrains.Annotations.NotNull] object o) => true;
 
-        private static void ReadResultDataAndSaveToDb([NotNull] ICalcObject mycalcObject,
-                                                      [NotNull] GeographicLocation geographicLocation,
-                                                      [NotNull] TemperatureProfile temperatureProfile,
+        private static void ReadResultDataAndSaveToDb([JetBrains.Annotations.NotNull] ICalcObject mycalcObject,
+                                                      [JetBrains.Annotations.NotNull] GeographicLocation geographicLocation,
+                                                      [JetBrains.Annotations.NotNull] TemperatureProfile temperatureProfile,
                                                       EnergyIntensityType intensity,
-                                                      [NotNull] string operatingPath,
-                                                      [NotNull] Simulator sim,
-                                                      [NotNull] string version,
-                                                      [NotNull] string errormessage,
+                                                      [JetBrains.Annotations.NotNull] string operatingPath,
+                                                      [JetBrains.Annotations.NotNull] Simulator sim,
+                                                      [JetBrains.Annotations.NotNull] string version,
+                                                      [JetBrains.Annotations.NotNull] string errormessage,
                                                       TimeSpan duration,
                                                       DateTime startDate,
                                                       DateTime endDate,
@@ -768,8 +768,8 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         private static bool ReportCancelFunc() => true;
 
         private static bool ReportFinishFuncForHouseAndSettlement(bool a2,
-                                                                  [NotNull] string a3,
-                                                                  [ItemNotNull] [NotNull] ObservableCollection<ResultFileEntry> a4) =>
+                                                                  [JetBrains.Annotations.NotNull] string a3,
+                                                                  [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<ResultFileEntry> a4) =>
             /*foreach (var calculationResult in a1) {
                 _result.Add(calculationResult);
             }*/
@@ -777,7 +777,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
 
         //TODO: read the results
         //_result.Add(a1);
-        private static bool ReportFinishFuncForHousehold(bool a2, [NotNull] string a3, [NotNull] string resultPath) => true;
+        private static bool ReportFinishFuncForHousehold(bool a2, [JetBrains.Annotations.NotNull] string a3, [JetBrains.Annotations.NotNull] string resultPath) => true;
 
 
         public class OutcomeStatistic {

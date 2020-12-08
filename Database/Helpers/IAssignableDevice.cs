@@ -38,7 +38,7 @@ using JetBrains.Annotations;
 namespace Database.Helpers {
     public interface IAssignableDevice : IComparable {
         AssignableDeviceType AssignableDeviceType { get; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         string ConnectionString { get; }
       //  int? ID { get; }
 
@@ -46,19 +46,19 @@ namespace Database.Helpers {
         [UsedImplicitly]
         int IntID { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         string Name { get; }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         List<Tuple<VLoadType, double>> CalculateAverageEnergyUse([CanBeNull] VLoadType dstLoadType,
             [ItemNotNull] [CanBeNull] ObservableCollection<DeviceAction> allActions, [CanBeNull] TimeBasedProfile timeProfile, double multiplier,
             double probability);
 
         [ItemNotNull]
-        [NotNull]
-        List<RealDevice> GetRealDevices([ItemNotNull] [NotNull] ObservableCollection<DeviceAction> allActions);
-        bool IsOrContainsStandbyDevice([ItemNotNull] [NotNull] ObservableCollection<DeviceAction> allActions);
+        [JetBrains.Annotations.NotNull]
+        List<RealDevice> GetRealDevices([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceAction> allActions);
+        bool IsOrContainsStandbyDevice([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceAction> allActions);
         JsonReference GetJsonReference();
     }
 }

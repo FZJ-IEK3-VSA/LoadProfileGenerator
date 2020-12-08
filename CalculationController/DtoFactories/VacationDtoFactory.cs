@@ -35,18 +35,18 @@ using JetBrains.Annotations;
 
 namespace CalculationController.DtoFactories {
     public class VacationDtoFactory {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly CalcParameters _calcParameters;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly Random _rnd;
 
-        public VacationDtoFactory([NotNull] CalcParameters calcParameters, [NotNull] Random rnd)
+        public VacationDtoFactory([JetBrains.Annotations.NotNull] CalcParameters calcParameters, [JetBrains.Annotations.NotNull] Random rnd)
         {
             _calcParameters = calcParameters;
             _rnd = rnd;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly Dictionary<Tuple<DateTime, DateTime>, Tuple<DateTime, DateTime>> _startEndTimes =
             new Dictionary<Tuple<DateTime, DateTime>, Tuple<DateTime, DateTime>>();
 
@@ -75,9 +75,9 @@ namespace CalculationController.DtoFactories {
             return result;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
-        private List<DateSpan> GetDatesForOneVacation([NotNull] VacationTimeframe hhvac) {
+        private List<DateSpan> GetDatesForOneVacation([JetBrains.Annotations.NotNull] VacationTimeframe hhvac) {
             List<DateSpan> dateSpans = new List<DateSpan>();
             if (!hhvac.MapToOtherYears) {
                 dateSpans.Add(AdjustVacationDatesForMoreRealism(hhvac.StartDate, hhvac.EndDate));
@@ -137,7 +137,7 @@ namespace CalculationController.DtoFactories {
         }*/
 
         // urlaub setzen
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private DateSpan AdjustVacationDatesForMoreRealism( DateTime startdateVac, DateTime enddateVac)
         {
             var startendTuple = new Tuple<DateTime, DateTime>(startdateVac, enddateVac);
@@ -193,9 +193,9 @@ namespace CalculationController.DtoFactories {
             }
          */
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
-        public List<DateSpan> GetVacationSpans([NotNull][ItemNotNull] List<VacationTimeframe> hhvac) {
+        public List<DateSpan> GetVacationSpans([JetBrains.Annotations.NotNull][ItemNotNull] List<VacationTimeframe> hhvac) {
             List<DateSpan> dateSpans = new List<DateSpan>();
             foreach (var timeframe in hhvac) {
                 dateSpans.AddRange( GetDatesForOneVacation(timeframe));

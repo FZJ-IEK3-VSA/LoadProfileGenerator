@@ -6,8 +6,6 @@ using Common.Tests;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.Transportation;
 using FluentAssertions;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -71,7 +69,7 @@ namespace Database.Tests.Tables.Transportation {
             }
         }
 
-        public TransportationDeviceTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public TransportationDeviceTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

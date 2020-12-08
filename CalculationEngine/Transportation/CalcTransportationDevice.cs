@@ -15,22 +15,22 @@ namespace CalculationEngine.Transportation {
     public class CalcTransportationDevice : CalcBase {
 
         private readonly CalcLoadType? _chargingCalcLoadType1;
-        [NotNull] private readonly DateStampCreator _dsc;
+        [JetBrains.Annotations.NotNull] private readonly DateStampCreator _dsc;
 
         private readonly double _energyToDistanceFactor;
         private readonly double _fullRangeInMeters;
 
 
-        [ItemNotNull] [NotNull] private readonly BitArray _isBusyArray;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly BitArray _isBusyArray;
 
-        [ItemNotNull] [NotNull] private readonly List<CalcDeviceLoad> _loads;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly List<CalcDeviceLoad> _loads;
 
         private readonly double _maxChargingPower;
 
-        [NotNull] private readonly Dictionary<int, CalcSite?> _targetSiteByTimeStep = new Dictionary<int, CalcSite?>();
+        [JetBrains.Annotations.NotNull] private readonly Dictionary<int, CalcSite?> _targetSiteByTimeStep = new Dictionary<int, CalcSite?>();
 
-        [NotNull] private TimeStep _activationStartTimestep = new TimeStep(-1, 0, false);
-        [NotNull] private TimeStep _activationStopTimestep = new TimeStep(-1, 0, false);
+        [JetBrains.Annotations.NotNull] private TimeStep _activationStartTimestep = new TimeStep(-1, 0, false);
+        [JetBrains.Annotations.NotNull] private TimeStep _activationStopTimestep = new TimeStep(-1, 0, false);
         private double _availableRangeInMeters;
         private CalcSite? _currentSite;
 
@@ -39,18 +39,18 @@ namespace CalculationEngine.Transportation {
         private string? _lastUsingPerson;
         private readonly Dictionary<StrGuid, Dictionary<CalcLoadType, OefcKey>> _keysByLocGuidAndLoadtype = new Dictionary<StrGuid, Dictionary<CalcLoadType, OefcKey>>();
 
-        [NotNull] private readonly CalcDeviceDto _calcDeviceDto;
+        [JetBrains.Annotations.NotNull] private readonly CalcDeviceDto _calcDeviceDto;
         private readonly CalcRepo _calcRepo;
 
         public CalcTransportationDevice(
-                                        [NotNull] CalcTransportationDeviceCategory category,
-                                        double averageSpeedInMPerS, [NotNull] [ItemNotNull] List<CalcDeviceLoad> loads,
+                                        [JetBrains.Annotations.NotNull] CalcTransportationDeviceCategory category,
+                                        double averageSpeedInMPerS, [JetBrains.Annotations.NotNull] [ItemNotNull] List<CalcDeviceLoad> loads,
                                         double fullRangeInMeters,
                                         double energyToDistanceFactor,
                                         double maxChargingPower,
                                         CalcLoadType? chargingCalcLoadType,
-                                        [NotNull] [ItemNotNull] List<CalcSite> allCalcSites,
-                                        [NotNull] CalcDeviceDto calcDeviceDto, [NotNull] CalcRepo calcRepo)
+                                        [JetBrains.Annotations.NotNull] [ItemNotNull] List<CalcSite> allCalcSites,
+                                        [JetBrains.Annotations.NotNull] CalcDeviceDto calcDeviceDto, [JetBrains.Annotations.NotNull] CalcRepo calcRepo)
             : base(calcDeviceDto.Name, calcDeviceDto.Guid)
         {
             _dsc = new DateStampCreator(calcRepo.CalcParameters);
@@ -104,7 +104,7 @@ namespace CalculationEngine.Transportation {
 
         public double AvailableRangeInMeters => _availableRangeInMeters;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CalcTransportationDeviceCategory Category { get; }
 
         public CalcSite? Currentsite => _currentSite;
@@ -114,11 +114,11 @@ namespace CalculationEngine.Transportation {
 
         private double AverageSpeedInMPerS { get; }
 
-        public void Activate([NotNull] TimeStep startTimeStep, int durationInTimesteps, [NotNull] CalcSite srcSite,
-                             [NotNull] CalcSite dstSite,
-                             [NotNull] string travelRouteName,
-                             [NotNull] string personName, [NotNull] TimeStep transportationEventStartTimeStep,
-                             [NotNull] TimeStep transportationEventEndTimeStep)
+        public void Activate([JetBrains.Annotations.NotNull] TimeStep startTimeStep, int durationInTimesteps, [JetBrains.Annotations.NotNull] CalcSite srcSite,
+                             [JetBrains.Annotations.NotNull] CalcSite dstSite,
+                             [JetBrains.Annotations.NotNull] string travelRouteName,
+                             [JetBrains.Annotations.NotNull] string personName, [JetBrains.Annotations.NotNull] TimeStep transportationEventStartTimeStep,
+                             [JetBrains.Annotations.NotNull] TimeStep transportationEventEndTimeStep)
         {
             if (startTimeStep < transportationEventStartTimeStep || transportationEventEndTimeStep < startTimeStep) {
                 throw new LPGException("Bug in the transportation module. Start time earlier than possible.");
@@ -182,7 +182,7 @@ namespace CalculationEngine.Transportation {
 
         public double CurrentSoc => _availableRangeInMeters / _fullRangeInMeters;
 
-        public void DriveAndCharge([NotNull] TimeStep currentTimeStep)
+        public void DriveAndCharge([JetBrains.Annotations.NotNull] TimeStep currentTimeStep)
         {
             AdjustCurrentsiteByTimestep(currentTimeStep);
             LastChargingPower = 0;
@@ -315,7 +315,7 @@ namespace CalculationEngine.Transportation {
                 , _dsc.MakeDateStringFromTimeStep(currentTimeStep),0));
         }
 
-        public bool IsBusy([NotNull] TimeStep startTimeStep, int durationInTimesteps)
+        public bool IsBusy([JetBrains.Annotations.NotNull] TimeStep startTimeStep, int durationInTimesteps)
         {
             int endTimeStep = startTimeStep.InternalStep + durationInTimesteps;
             for (int i = startTimeStep.InternalStep; i < endTimeStep && i < _calcRepo.CalcParameters.InternalTimesteps; i++) {
@@ -327,7 +327,7 @@ namespace CalculationEngine.Transportation {
             return false;
         }
 
-        private void AdjustCurrentsiteByTimestep([NotNull] TimeStep timestep)
+        private void AdjustCurrentsiteByTimestep([JetBrains.Annotations.NotNull] TimeStep timestep)
         {
             if (Category.IsLimitedToSingleLocation) {
                 if (_targetSiteByTimeStep.ContainsKey(timestep.InternalStep)) {
@@ -343,7 +343,7 @@ namespace CalculationEngine.Transportation {
             }
         }
 
-        private void ConnectCar([NotNull] CalcChargingStation station)
+        private void ConnectCar([JetBrains.Annotations.NotNull] CalcChargingStation station)
         {
             if (_lastChargingStation != null) {
                 _lastChargingStation.DisconnectCar();
@@ -360,7 +360,7 @@ namespace CalculationEngine.Transportation {
         }
 
         //readonly Dictionary<CalcChargingStation,OefcKey> _keysByChargingStation = new Dictionary<CalcChargingStation, OefcKey>();
-        private void RegisterForAllCalcSites([NotNull] [ItemNotNull] List<CalcSite> calcSites)
+        private void RegisterForAllCalcSites([JetBrains.Annotations.NotNull] [ItemNotNull] List<CalcSite> calcSites)
         {
             //if the car doesnt need charging, it doesn't need to register as charging device
             if (_chargingCalcLoadType1 == null) {
@@ -384,9 +384,9 @@ namespace CalculationEngine.Transportation {
             }
         }
 
-        private void SetTimeprofile([NotNull] CalcProfile calcProfile, [NotNull] TimeStep startidx,
-                                    [NotNull] CalcLoadType loadType,
-                                    [NotNull] string affordanceName, [NotNull] string activatingPersonName, StrGuid locationGuid)
+        private void SetTimeprofile([JetBrains.Annotations.NotNull] CalcProfile calcProfile, [JetBrains.Annotations.NotNull] TimeStep startidx,
+                                    [JetBrains.Annotations.NotNull] CalcLoadType loadType,
+                                    [JetBrains.Annotations.NotNull] string affordanceName, [JetBrains.Annotations.NotNull] string activatingPersonName, StrGuid locationGuid)
         {
             CalcDeviceLoad? cdl = null;
             foreach (var calcDeviceLoad in _loads) {

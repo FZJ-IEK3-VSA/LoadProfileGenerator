@@ -18,13 +18,13 @@ using JetBrains.Annotations;
 
 namespace CalculationController.Integrity {
     internal class AffordanceChecker : BasicChecker {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly Dictionary<double, double> _expansionFactorsByDeviation = new Dictionary<double, double>();
 
         public AffordanceChecker(bool performCleanupChecks) : base("Affordances", performCleanupChecks) {
         }
 
-        private static void CheckAffordanceDesires([NotNull] Affordance aff) {
+        private static void CheckAffordanceDesires([JetBrains.Annotations.NotNull] Affordance aff) {
             foreach (var des1 in aff.AffordanceDesires) {
                 foreach (var des2 in aff.AffordanceDesires) {
                     if (des1 != des2 && des1.Desire == des2.Desire) {
@@ -41,7 +41,7 @@ namespace CalculationController.Integrity {
             }
         }
 
-        private static void CheckAffordanceDevices([NotNull] Affordance affordance) {
+        private static void CheckAffordanceDevices([JetBrains.Annotations.NotNull] Affordance affordance) {
             var hashSet =
                 new HashSet<Tuple<IAssignableDevice, decimal, TimeBasedProfile, VLoadType>>();
 
@@ -74,8 +74,8 @@ namespace CalculationController.Integrity {
             }
         }
 
-        private static void CheckAffordancesForStandbyDevices([NotNull] Affordance aff,
-            [NotNull][ItemNotNull] ObservableCollection<DeviceAction> actions) {
+        private static void CheckAffordancesForStandbyDevices([JetBrains.Annotations.NotNull] Affordance aff,
+            [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<DeviceAction> actions) {
             var standbyDevices = new List<RealDevice>();
             foreach (var standby in aff.AffordanceStandbys) {
                 if(standby.Device == null) {
@@ -115,7 +115,7 @@ namespace CalculationController.Integrity {
             }
         }
 
-        private static void CheckAffordanceStandbys([NotNull][ItemNotNull] List<IHouseholdOrTrait> households) {
+        private static void CheckAffordanceStandbys([JetBrains.Annotations.NotNull][ItemNotNull] List<IHouseholdOrTrait> households) {
             foreach (var hh in households) {
                 var deviceToAffordanceNames =
                     new Dictionary<IAssignableDevice, string>();
@@ -166,7 +166,7 @@ namespace CalculationController.Integrity {
             }
         }
 
-        private static void CheckAffordanceStandbysOnTraits([NotNull][ItemNotNull] ObservableCollection<HouseholdTrait> traits) {
+        private static void CheckAffordanceStandbysOnTraits([JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<HouseholdTrait> traits) {
             var list = new List<IHouseholdOrTrait>();
             foreach (var hh in traits) {
                 list.Add(hh);
@@ -174,7 +174,7 @@ namespace CalculationController.Integrity {
             CheckAffordanceStandbys(list);
         }
 
-        private static void CheckAges([NotNull] Affordance aff) {
+        private static void CheckAges([JetBrains.Annotations.NotNull] Affordance aff) {
             if (aff.MaximumAge < aff.MinimumAge) {
                 throw new DataIntegrityException(
                     "The affordance " + aff.Name + " has a lower maximum age than the minimum age. Please fix.", aff);
@@ -189,7 +189,7 @@ namespace CalculationController.Integrity {
             }
         }
 
-        private void CheckGeneralAffordanceSettings([NotNull] Affordance affordance) {
+        private void CheckGeneralAffordanceSettings([JetBrains.Annotations.NotNull] Affordance affordance) {
             if (affordance.AffordanceDesires.Count == 0) {
                 throw new DataIntegrityException(
                     "The affordance " + affordance.Name +
@@ -219,8 +219,8 @@ namespace CalculationController.Integrity {
 
         }
 
-        private void CheckOverlappingDeviceProfiles([NotNull] Affordance affordance,
-            [NotNull][ItemNotNull] ObservableCollection<DeviceAction> allDeviceActions, Random rnd) {
+        private void CheckOverlappingDeviceProfiles([JetBrains.Annotations.NotNull] Affordance affordance,
+            [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<DeviceAction> allDeviceActions, Random rnd) {
             //find overlapping device profiles
             var tpes = new List<TimeProfileEntry>();
 
@@ -263,7 +263,7 @@ namespace CalculationController.Integrity {
             }
         }
 
-        private static void CheckPersonTimeProfiles([NotNull] Affordance affordance) {
+        private static void CheckPersonTimeProfiles([JetBrains.Annotations.NotNull] Affordance affordance) {
             if (affordance.PersonProfile == null) {
                 throw new DataIntegrityException("Affordance " + affordance.Name + " has no Person time profile!",
                     affordance);
@@ -280,7 +280,7 @@ namespace CalculationController.Integrity {
             }
         }
 
-        private static void CheckRequirements([NotNull] Affordance aff) {
+        private static void CheckRequirements([JetBrains.Annotations.NotNull] Affordance aff) {
             foreach (var requirement in aff.RequiredVariables) {
                 var list =
                     aff.RequiredVariables.Where(
@@ -293,7 +293,7 @@ namespace CalculationController.Integrity {
             }
         }
 
-        private static void CheckValidLoadtypes([NotNull] Affordance affordance, [NotNull][ItemNotNull] ObservableCollection<RealDevice> devices) {
+        private static void CheckValidLoadtypes([JetBrains.Annotations.NotNull] Affordance affordance, [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<RealDevice> devices) {
             foreach (var affordanceDevice in affordance.AffordanceDevices) {
                 if (affordanceDevice.Device == null) {
                     continue;
@@ -315,8 +315,8 @@ namespace CalculationController.Integrity {
             }
         }
 
-        private static void CheckValidLoadTypesForDeviceCategories([NotNull][ItemNotNull] ObservableCollection<RealDevice> devices,
-            [NotNull] AffordanceDevice affordanceDevice, [NotNull] Affordance affordance) {
+        private static void CheckValidLoadTypesForDeviceCategories([JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<RealDevice> devices,
+            [JetBrains.Annotations.NotNull] AffordanceDevice affordanceDevice, [JetBrains.Annotations.NotNull] Affordance affordance) {
             var dc = (DeviceCategory) affordanceDevice.Device;
             var catdevices = devices.Where(x => x.DeviceCategory == dc).ToList();
             foreach (var realDevice in catdevices) {
@@ -356,7 +356,7 @@ namespace CalculationController.Integrity {
             }
         }
 
-        private static void CheckValidLoadtypesOnDevices([NotNull] AffordanceDevice affordanceDevice, [NotNull] Affordance affordance) {
+        private static void CheckValidLoadtypesOnDevices([JetBrains.Annotations.NotNull] AffordanceDevice affordanceDevice, [JetBrains.Annotations.NotNull] Affordance affordance) {
             // check if all the load types on the affordance device are set on the device
             var rd = (RealDevice) affordanceDevice.Device;
             if (rd == null) {
@@ -418,8 +418,8 @@ namespace CalculationController.Integrity {
             return maxfactor;
         }
 
-        [NotNull]
-        private TimeProfileEntry MakeTimeProfileEntryFromDevice([NotNull] AffordanceDevice affdev, [NotNull] Affordance affordance, Random rnd) {
+        [JetBrains.Annotations.NotNull]
+        private TimeProfileEntry MakeTimeProfileEntryFromDevice([JetBrains.Annotations.NotNull] AffordanceDevice affdev, [JetBrains.Annotations.NotNull] Affordance affordance, Random rnd) {
             var lt = affdev.LoadType;
             if (lt == null)
             {
@@ -441,10 +441,10 @@ namespace CalculationController.Integrity {
             return tpe;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
-        private List<TimeProfileEntry> MakeTimeProfileEntryFromDeviceAction([NotNull] DeviceAction da, [NotNull] Affordance affordance,
-            [NotNull] AffordanceDevice affdev, Random rnd) {
+        private List<TimeProfileEntry> MakeTimeProfileEntryFromDeviceAction([JetBrains.Annotations.NotNull] DeviceAction da, [JetBrains.Annotations.NotNull] Affordance affordance,
+            [JetBrains.Annotations.NotNull] AffordanceDevice affdev, Random rnd) {
             var tpes = new List<TimeProfileEntry>();
             foreach (var actionProfile in da.Profiles) {
                 var lt = actionProfile.VLoadType;
@@ -470,7 +470,7 @@ namespace CalculationController.Integrity {
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        private void RunFoodDesireCheck([NotNull] Simulator sim)
+        private void RunFoodDesireCheck([JetBrains.Annotations.NotNull] Simulator sim)
         {
             if (!PerformCleanupChecks) {
                 return;
@@ -573,7 +573,7 @@ namespace CalculationController.Integrity {
             }
         }
 
-        private static void SetBusyBits([NotNull] TimeProfileEntry tpe, [NotNull] Dictionary<string, BitArray> busySignals) {
+        private static void SetBusyBits([JetBrains.Annotations.NotNull] TimeProfileEntry tpe, [JetBrains.Annotations.NotNull] Dictionary<string, BitArray> busySignals) {
             for (var i = tpe.OffSet; i < tpe.NewLength + tpe.OffSet; i++) {
                 if (busySignals[tpe.Key][i]) {
                     throw new DataIntegrityException("Overlapping time profiles in the affordance " + tpe.Affordance +
@@ -588,8 +588,8 @@ namespace CalculationController.Integrity {
         }
 
         private class TimeProfileEntry {
-            public TimeProfileEntry([NotNull] AffordanceDevice affDev, int newLength, [NotNull] VLoadType loadType, int offSet,
-                [NotNull] Affordance affordance, double timeFactor, [NotNull] string deviceName) {
+            public TimeProfileEntry([JetBrains.Annotations.NotNull] AffordanceDevice affDev, int newLength, [JetBrains.Annotations.NotNull] VLoadType loadType, int offSet,
+                [JetBrains.Annotations.NotNull] Affordance affordance, double timeFactor, [JetBrains.Annotations.NotNull] string deviceName) {
                 AffDev = affDev;
                 NewLength = newLength;
                 LoadType = loadType;
@@ -599,17 +599,17 @@ namespace CalculationController.Integrity {
                 DeviceName = deviceName;
             }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public AffordanceDevice AffDev { get; }
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public Affordance Affordance { get; }
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             private string DeviceName { get; }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string Key => DeviceName + "#" + LoadType.Name;
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public VLoadType LoadType { get; }
             public int NewLength { get; }
             public int OffSet { get; }

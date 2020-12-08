@@ -7,7 +7,6 @@ using Automation;
 using Automation.ResultFiles;
 using Database;
 using Database.Tables;
-using JetBrains.Annotations;
 
 namespace SimulationEngineLib
 {
@@ -34,8 +33,8 @@ namespace SimulationEngineLib
         }
 
 
-        [NotNull]
-        private static List<TemplatePersonEntry> MakeAllTemplatePersonData([NotNull] Simulator sim)
+        [JetBrains.Annotations.NotNull]
+        private static List<TemplatePersonEntry> MakeAllTemplatePersonData([JetBrains.Annotations.NotNull] Simulator sim)
         {
             var pds = new List<TemplatePersonEntry>();
             foreach (var item in sim.HouseholdTemplates.Items) {
@@ -50,7 +49,7 @@ namespace SimulationEngineLib
 
             return pds;
         }
-            public void MakePythonData([NotNull] string connectionString, [NotNull] string datafilepath)
+            public void MakePythonData([JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.NotNull] string datafilepath)
             {
                 Simulator sim = new Simulator(connectionString);
 
@@ -77,7 +76,7 @@ namespace SimulationEngineLib
             WritePersonDatas(MakeAllTemplatePersonData(sim),sw,"TemplatePersons");
             sw.Close();
             }
-            private static void WritePersonDatas([NotNull] List<TemplatePersonEntry> items, [NotNull] StreamWriter sw, string classname)
+            private static void WritePersonDatas([JetBrains.Annotations.NotNull] List<TemplatePersonEntry> items, [JetBrains.Annotations.NotNull] StreamWriter sw, string classname)
             {
                 sw.WriteLine();
                 sw.WriteLine("# noinspection PyPep8,PyUnusedLocal");
@@ -91,7 +90,7 @@ namespace SimulationEngineLib
                 }
                 sw.WriteLine();
             }
-        private static void WriteJsonRefs([NotNull] List<DBBase> items, [NotNull] StreamWriter sw, string classname)
+        private static void WriteJsonRefs([JetBrains.Annotations.NotNull] List<DBBase> items, [JetBrains.Annotations.NotNull] StreamWriter sw, string classname)
             {
                 sw.WriteLine();
                 sw.WriteLine("# noinspection PyPep8,PyUnusedLocal");
@@ -103,7 +102,7 @@ namespace SimulationEngineLib
                 sw.WriteLine();
             }
 
-            private static void WriteNames([NotNull] List<DBBase> items, [NotNull] StreamWriter sw, string classname)
+            private static void WriteNames([JetBrains.Annotations.NotNull] List<DBBase> items, [JetBrains.Annotations.NotNull] StreamWriter sw, string classname)
             {
                 sw.WriteLine();
                 sw.WriteLine("# noinspection PyPep8,PyUnusedLocal");
@@ -120,8 +119,8 @@ namespace SimulationEngineLib
                 sw.WriteLine();
             }
 
-            [NotNull]
-            private static string CleanPythonName([NotNull] string name)
+            [JetBrains.Annotations.NotNull]
+            private static string CleanPythonName([JetBrains.Annotations.NotNull] string name)
             {
                 string s1 = name.Replace(" ",
                         "_")
@@ -157,7 +156,7 @@ namespace SimulationEngineLib
                 return s1;
             }
 
-            public void MakePythonBindings([NotNull] string bindingfilepath)
+            public void MakePythonBindings([JetBrains.Annotations.NotNull] string bindingfilepath)
             {
 
                 StreamWriter sw = new StreamWriter(bindingfilepath);
@@ -216,7 +215,7 @@ namespace SimulationEngineLib
             }
 
 
-            private static void WriteClass<T>([NotNull] StreamWriter sw, List<string> encounteredTypes, [NotNull] List<string> writtenTypes)
+            private static void WriteClass<T>([JetBrains.Annotations.NotNull] StreamWriter sw, List<string> encounteredTypes, [JetBrains.Annotations.NotNull] List<string> writtenTypes)
             {
                 sw.WriteLine();
                 sw.WriteLine("# noinspection PyPep8Naming, PyUnusedLocal");
@@ -231,11 +230,11 @@ namespace SimulationEngineLib
                     if (info.CanRead)
                     {
                         MethodInfo getAccessor = info.GetMethod;
-                        if (!getAccessor.IsPublic)
+                        if (getAccessor?.IsPublic== false)
                         {
                             continue;
                         }
-                        if (getAccessor.IsStatic)
+                        if (getAccessor?.IsStatic == true)
                         {
                             continue;
                         }
@@ -249,8 +248,8 @@ namespace SimulationEngineLib
                 }
             }
 
-            [NotNull]
-            private static string GetPropLine([NotNull] PropertyInfo info, [NotNull] List<string> encounteredTypes, [NotNull] out string typename)
+            [JetBrains.Annotations.NotNull]
+            private static string GetPropLine([JetBrains.Annotations.NotNull] PropertyInfo info, [JetBrains.Annotations.NotNull] List<string> encounteredTypes, [JetBrains.Annotations.NotNull] out string typename)
             {
                 string fulltypename = info.PropertyType.FullName;
                 if (fulltypename == null)
@@ -427,7 +426,7 @@ namespace SimulationEngineLib
                 throw new LPGException("unknown type: \n" + fulltypename);
             }
 
-            private static void WriteEnum<T>([NotNull] StreamWriter sw, [NotNull] List<string> writtenTypes)
+            private static void WriteEnum<T>([JetBrains.Annotations.NotNull] StreamWriter sw, [JetBrains.Annotations.NotNull] List<string> writtenTypes)
             {
                 sw.WriteLine();
                 var myclass = typeof(T).Name;
@@ -442,7 +441,7 @@ namespace SimulationEngineLib
             }
 
 
-        public static void MakeFullPythonBindings([NotNull] string connectionString, [NotNull] string bindingfilepath, [NotNull] string datafilepath)
+        public static void MakeFullPythonBindings([JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.NotNull] string bindingfilepath, [JetBrains.Annotations.NotNull] string datafilepath)
         {
             PythonGenerator pbg = new PythonGenerator();
             pbg.MakePythonBindings(bindingfilepath);

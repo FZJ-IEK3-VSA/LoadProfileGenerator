@@ -47,9 +47,9 @@ namespace LoadProfileGenerator.Controls.Usercontrols
             InitializeComponent();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public TimeLimitEntry TimeLimitEntry => Presenter.Entry;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public PermissionLinePresenter Presenter => (PermissionLinePresenter)DataContext;
 
         public event EventHandler AddClicked;
@@ -60,7 +60,7 @@ namespace LoadProfileGenerator.Controls.Usercontrols
                         "PermissionLine: " + ActualWidth + " Overgrid: " + OverGrid.ActualWidth + " GridWidth: " +
                         MainGrid.ActualWidth);
 
-        private void HandleAddClicked([NotNull]object sender, [NotNull] EventArgs e)
+        private void HandleAddClicked([JetBrains.Annotations.NotNull]object sender, [JetBrains.Annotations.NotNull] EventArgs e)
         {
             AddClickedEventArgs aca = new AddClickedEventArgs(Presenter.Entry);
             OnAddClicked(aca);
@@ -83,18 +83,21 @@ namespace LoadProfileGenerator.Controls.Usercontrols
         protected virtual void OnAddClicked([CanBeNull]EventArgs e)
         {
             EventHandler handler = AddClicked;
+            // ReSharper disable once AssignNullToNotNullAttribute
             handler?.Invoke(this, e);
         }
 
         protected virtual void OnRemoveClicked([CanBeNull]EventArgs e)
         {
             EventHandler handler = RemoveClicked;
+            // ReSharper disable once AssignNullToNotNullAttribute
             handler?.Invoke(this, e);
         }
 
         protected virtual void OnShowPreviewClicked([CanBeNull]EventArgs e)
         {
             EventHandler handler = ShowPreviewClicked;
+            // ReSharper disable once AssignNullToNotNullAttribute
             handler?.Invoke(this, e);
         }
 
@@ -104,9 +107,9 @@ namespace LoadProfileGenerator.Controls.Usercontrols
 
     public class AddClickedEventArgs : EventArgs
     {
-        public AddClickedEventArgs([NotNull] TimeLimitEntry tle) => TimeLimitEntry = tle;
+        public AddClickedEventArgs([JetBrains.Annotations.NotNull] TimeLimitEntry tle) => TimeLimitEntry = tle;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public TimeLimitEntry TimeLimitEntry { get;  }
     }
 }

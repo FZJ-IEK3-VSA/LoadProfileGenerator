@@ -28,16 +28,17 @@
 
 #region
 
+#endregion
+
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using Automation.ResultFiles;
 using Common;
 using JetBrains.Annotations;
-
-#endregion
 
 namespace LoadProfileGenerator {
     /// <summary>
@@ -50,7 +51,7 @@ namespace LoadProfileGenerator {
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         [SuppressMessage("ReSharper", "EmptyGeneralCatchClause")]
-        protected override void OnStartup([NotNull] StartupEventArgs e)
+        protected override void OnStartup([JetBrains.Annotations.NotNull] StartupEventArgs e)
         {
             // hook on error before app really starts
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
@@ -79,6 +80,7 @@ namespace LoadProfileGenerator {
                     SetSplashMessage("Loading data....");
                     Config.InitConfig(AppDomain.CurrentDomain.BaseDirectory);
                     SetSplashMessage("Finished loading....");
+                    SplashCloser();
                 }
                 catch (Exception ex) {
                     var message = "Error initialising." + Environment.NewLine;
@@ -97,7 +99,7 @@ namespace LoadProfileGenerator {
             };
 
             // Delegat für den Callback der asynchronen Ausführung
-            void SplashCloser(IAsyncResult result)
+            void SplashCloser()
             {
                 if (continueStart) {
                     SetSplashMessage("Opening start window....");
@@ -121,18 +123,18 @@ namespace LoadProfileGenerator {
                 _splashWindow.Dispatcher?.Invoke(DispatcherPriority.Normal, new Action(_splashWindow.Close));
                 SetSplashMessage("Opened start window....");
             }
-
+            Task.Run(() => initializer());
             // Asynchrones Starten der Initialisierung
-            initializer.BeginInvoke(SplashCloser, null);
+            //initializer.BeginInvoke(, null);
         }
 
-        private static void CurrentDomain_UnhandledException([NotNull] object sender, [NotNull] UnhandledExceptionEventArgs e)
+        private static void CurrentDomain_UnhandledException([JetBrains.Annotations.NotNull] object sender, [JetBrains.Annotations.NotNull] UnhandledExceptionEventArgs e)
         {
             Exception ex = (Exception) e.ExceptionObject;
             Thread t = new Thread(() => {
                 try {
                     ErrorReporter er = new ErrorReporter();
-                    er.Run(ex.Message, e.ExceptionObject.ToString());
+                    er.Run(ex.Message, e.ExceptionObject.ToString() ?? "");
                 }
                 catch (Exception ex2) {
                     Logger.Exception(ex2);
@@ -144,7 +146,7 @@ namespace LoadProfileGenerator {
             MessageBox.Show(e.ExceptionObject.ToString());
         }
 
-        private void SetSplashMessage([NotNull] string s)
+        private void SetSplashMessage([JetBrains.Annotations.NotNull] string s)
         {
             var ts = DateTime.Now - _starttime;
             var tsstr = ts.Seconds + "." + ts.Milliseconds;

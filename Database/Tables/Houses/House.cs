@@ -49,7 +49,7 @@ namespace Database.Tables.Houses {
     public class House : DBBaseElement, ICalcObject {
         internal const string TableName = "tblHouses";
 
-        [NotNull] [ItemNotNull] private readonly ObservableCollection<HouseHousehold> _houseHouseholds = new ObservableCollection<HouseHousehold>();
+        [JetBrains.Annotations.NotNull] [ItemNotNull] private readonly ObservableCollection<HouseHousehold> _houseHouseholds = new ObservableCollection<HouseHousehold>();
 
         private CreationType _creationType;
 
@@ -65,8 +65,8 @@ namespace Database.Tables.Houses {
         [CanBeNull] private TemperatureProfile _temperatureProfile;
 
 
-        public House([NotNull] string pName, [CanBeNull] string description, [CanBeNull] TemperatureProfile temperatureProfile, [CanBeNull] GeographicLocation geographicLocation,
-                     [CanBeNull] HouseType houseType, [NotNull] string connectionString, EnergyIntensityType energyIntensity, [CanBeNull] string source, CreationType creationType,
+        public House([JetBrains.Annotations.NotNull] string pName, [CanBeNull] string description, [CanBeNull] TemperatureProfile temperatureProfile, [CanBeNull] GeographicLocation geographicLocation,
+                     [CanBeNull] HouseType houseType, [JetBrains.Annotations.NotNull] string connectionString, EnergyIntensityType energyIntensity, [CanBeNull] string source, CreationType creationType,
                      StrGuid guid,[CanBeNull] int? pID = null) : base(pName, TableName, connectionString, guid)
         {
             ID = pID;
@@ -93,7 +93,7 @@ namespace Database.Tables.Houses {
             set => SetValueWithNotify(value, ref _description, nameof(Description));
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string EnergyIntensityTypeString {
             get => _energyIntensityType.ToString();
@@ -112,7 +112,7 @@ namespace Database.Tables.Houses {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<HouseHousehold> Households => _houseHouseholds;
 
         [UsedImplicitly]
@@ -204,7 +204,7 @@ namespace Database.Tables.Houses {
             }
         }
 
-        public void AddHousehold([NotNull] ICalcObject hh,
+        public void AddHousehold([JetBrains.Annotations.NotNull] ICalcObject hh,
                                  [CanBeNull] ChargingStationSet chargingstations,
                                  [CanBeNull] TravelRouteSet travelrouteset, [CanBeNull] TransportationDeviceSet transportationDeviceSet)
         {
@@ -220,7 +220,7 @@ namespace Database.Tables.Houses {
             hd.SaveToDB();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public HouseData MakeHouseData()
         {
             HouseData hd = new HouseData(System.Guid.NewGuid().ToStrGuid(), HouseType?.HouseTypeCode,
@@ -247,9 +247,9 @@ namespace Database.Tables.Houses {
 
         public override List<UsedIn> CalculateUsedIns(Simulator sim) => throw new NotImplementedException();
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString)
+        public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString)
         {
             var house = new House(FindNewName(isNameTaken, "New House "), "New house description", null, null, null, connectionString, EnergyIntensityType.Random, "Manually Created",
                 CreationType.ManuallyCreated, System.Guid.NewGuid().ToStrGuid());
@@ -281,9 +281,9 @@ namespace Database.Tables.Houses {
             }
         }*/
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DBBase ImportFromItem([NotNull] House item, [NotNull] Simulator dstSim)
+        public static DBBase ImportFromItem([JetBrains.Annotations.NotNull] House item, [JetBrains.Annotations.NotNull] Simulator dstSim)
         {
             TemperatureProfile tp = null;
             if (item.TemperatureProfile != null) {
@@ -393,17 +393,17 @@ namespace Database.Tables.Houses {
             cmd.AddParameter("CreationType", (int)_creationType);
         }
 
-        public void DeleteHouseholdFromDB([NotNull] HouseHousehold hhh)
+        public void DeleteHouseholdFromDB([JetBrains.Annotations.NotNull] HouseHousehold hhh)
         {
             _houseHouseholds.Remove(hhh);
             hhh.DeleteFromDB();
         }
 
-        internal static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<House> result, [NotNull] string connectionString,
-                                              [ItemNotNull] [NotNull] ObservableCollection<TemperatureProfile> temperaturProfiles,
-                                              [ItemNotNull] [NotNull] ObservableCollection<GeographicLocation> geographicLocations, [ItemNotNull] [NotNull] ObservableCollection<HouseType> houseTypes,
-                                              [ItemNotNull] [NotNull] ObservableCollection<ModularHousehold> modularHouseholds, [NotNull] [ItemNotNull] ObservableCollection<ChargingStationSet> chargingStationSets,
-                                              [NotNull] [ItemNotNull] ObservableCollection<TransportationDeviceSet> transportationDeviceSets, [NotNull] [ItemNotNull] ObservableCollection<TravelRouteSet> travelRouteSets, bool ignoreMissingTables)
+        internal static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<House> result, [JetBrains.Annotations.NotNull] string connectionString,
+                                              [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TemperatureProfile> temperaturProfiles,
+                                              [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<GeographicLocation> geographicLocations, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<HouseType> houseTypes,
+                                              [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<ModularHousehold> modularHouseholds, [JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<ChargingStationSet> chargingStationSets,
+                                              [JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<TransportationDeviceSet> transportationDeviceSets, [JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<TravelRouteSet> travelRouteSets, bool ignoreMissingTables)
         {
             var aic = new AllItemCollections(temperatureProfiles: temperaturProfiles, geographicLocations: geographicLocations, houseTypes: houseTypes);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);
@@ -412,8 +412,8 @@ namespace Database.Tables.Houses {
             SetSubitems(new List<DBBase>(result), new List<DBBase>(hhs), IsCorrectParentHouseHousehold, ignoreMissingTables);
         }
 
-        [NotNull]
-        private static House AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields, [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static House AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields, [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var name = dr.GetString("Name", "");
             var id = dr.GetIntFromLong("ID");
@@ -445,7 +445,7 @@ namespace Database.Tables.Houses {
                 connectionString, energyintensity, source, creationType, guid, id);
         }
 
-        private static bool IsCorrectParentHouseHousehold([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectParentHouseHousehold([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var hd = (HouseHousehold)child;
             if (parent.ID == hd.HouseID) {

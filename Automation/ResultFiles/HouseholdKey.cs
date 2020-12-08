@@ -1,13 +1,12 @@
 ﻿using System;
-using JetBrains.Annotations;
 
 namespace Automation.ResultFiles {
     [Serializable]
     public class HouseholdKey :IComparable<HouseholdKey>, IEquatable<HouseholdKey> {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string Key { get; }
 
-        public HouseholdKey([NotNull] string key)
+        public HouseholdKey([JetBrains.Annotations.NotNull] string key)
         {
             Key = key;
         }
@@ -29,10 +28,10 @@ namespace Automation.ResultFiles {
             return k1.Equals(k2);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public override string ToString() => Key;
 
-        public static bool operator !=([NotNull] HouseholdKey k1, [NotNull] HouseholdKey k2)
+        public static bool operator !=([JetBrains.Annotations.NotNull] HouseholdKey k1, [JetBrains.Annotations.NotNull] HouseholdKey k2)
         {
             return !(k1 == k2);
         }

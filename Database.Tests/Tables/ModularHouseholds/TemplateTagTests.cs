@@ -5,8 +5,6 @@ using Common.Tests;
 using Database.Helpers;
 using Database.Tables.ModularHouseholds;
 using FluentAssertions;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -34,7 +32,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
             }
         }
 
-        public TemplateTagTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public TemplateTagTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

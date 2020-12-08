@@ -45,7 +45,7 @@ namespace Common.SQLResultLogging.Loggers {
             //for npoco deserializer
         }
 
-        public SingleTimestepActionEntry([NotNull] HouseholdKey householdKey, int timeStep,
+        public SingleTimestepActionEntry([JetBrains.Annotations.NotNull] HouseholdKey householdKey, int timeStep,
                            DateTime dateTime, StrGuid personGuid, StrGuid actionEntryGuid)
         {
             HouseholdKey = householdKey;
@@ -81,9 +81,9 @@ namespace Common.SQLResultLogging.Loggers {
             //for npoco deserializer
         }
 
-        public ActionEntry([NotNull] string category, [NotNull] HouseholdKey householdKey, [NotNull] TimeStep timeStep,
-                           DateTime dateTime, StrGuid personGuid, [NotNull] string personName, bool isSick,
-                           [NotNull] string affordanceName, StrGuid affordanceGuid, int id, BodilyActivityLevel bodilyActivityLevel)
+        public ActionEntry([JetBrains.Annotations.NotNull] string category, [JetBrains.Annotations.NotNull] HouseholdKey householdKey, [JetBrains.Annotations.NotNull] TimeStep timeStep,
+                           DateTime dateTime, StrGuid personGuid, [JetBrains.Annotations.NotNull] string personName, bool isSick,
+                           [JetBrains.Annotations.NotNull] string affordanceName, StrGuid affordanceGuid, int id, BodilyActivityLevel bodilyActivityLevel)
         {
             Category = category;
             HouseholdKey = householdKey;
@@ -105,11 +105,11 @@ namespace Common.SQLResultLogging.Loggers {
         [JsonProperty]
         public StrGuid AffordanceGuid { get; set; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [JsonProperty]
         public string AffordanceName { get; set; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [JsonProperty]
         public string Category { get; set; }
 
@@ -127,23 +127,23 @@ namespace Common.SQLResultLogging.Loggers {
         [JsonProperty]
         public StrGuid PersonGuid { get; set; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [JsonProperty]
         public string PersonName { get; set; }
 
         [JsonProperty]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public TimeStep TimeStep { get; set; }
 
         [JsonProperty]
         public HouseholdKey HouseholdKey { get; set; }
 
-        [NotNull]
-        public static ActionEntry MakeActionEntry([NotNull] TimeStep timeStep, StrGuid personGuid,
-                                                  [NotNull] string personName,
-                                                  bool isSick, [NotNull] string affordanceName,
-                                                  StrGuid affordanceGuid, [NotNull] HouseholdKey householdKey,
-                                                  [NotNull] string category,
+        [JetBrains.Annotations.NotNull]
+        public static ActionEntry MakeActionEntry([JetBrains.Annotations.NotNull] TimeStep timeStep, StrGuid personGuid,
+                                                  [JetBrains.Annotations.NotNull] string personName,
+                                                  bool isSick, [JetBrains.Annotations.NotNull] string affordanceName,
+                                                  StrGuid affordanceGuid, [JetBrains.Annotations.NotNull] HouseholdKey householdKey,
+                                                  [JetBrains.Annotations.NotNull] string category,
                                                   DateTime timestamp, BodilyActivityLevel bodilyActivityLevel)
         {
             ActionEntry ae = new ActionEntry(

@@ -31,9 +31,9 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows;
 using Database.Tables.BasicHouseholds;
 using JetBrains.Annotations;
 
@@ -45,7 +45,7 @@ namespace LoadProfileGenerator.Controls.Usercontrols {
     /// </summary>
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public partial class DeviceCategoryPicker {
-        [UsedImplicitly] [NotNull] public static readonly DependencyProperty PickedDeviceCategoryProperty =
+        [UsedImplicitly] [JetBrains.Annotations.NotNull] public static readonly DependencyProperty PickedDeviceCategoryProperty =
             DependencyProperty.Register("PickedDeviceCategory", typeof(DeviceCategory), typeof(DeviceCategoryPicker));
 
         public DeviceCategoryPicker()
@@ -65,10 +65,10 @@ namespace LoadProfileGenerator.Controls.Usercontrols {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public DeviceCategoryPickerPresenter Presenter => (DeviceCategoryPickerPresenter) DataContext;
 
-        private void MyTreeViewMouseDoubleClick([CanBeNull] object sender, [NotNull] MouseButtonEventArgs e)
+        private void MyTreeViewMouseDoubleClick([CanBeNull] object sender, [JetBrains.Annotations.NotNull] MouseButtonEventArgs e)
         {
             if (sender is TreeView ti) {
                 var o = ti.SelectedItem;
@@ -82,7 +82,7 @@ namespace LoadProfileGenerator.Controls.Usercontrols {
 
         [CanBeNull]
         private static DeviceCategory Search(
-            [ItemNotNull] [NotNull] ObservableCollection<DeviceCategory> deviceCategories, [NotNull] string s)
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceCategory> deviceCategories, [JetBrains.Annotations.NotNull] string s)
         {
             foreach (var dc in deviceCategories) {
                 if (dc.ShortName.ToLower(CultureInfo.CurrentCulture).Contains(s.ToLower(CultureInfo.CurrentCulture))) {

@@ -43,7 +43,7 @@ namespace LoadProfileGenerator.Views.SpecialViews {
             InitializeComponent();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private DeviceOverviewPresenter Presenter => (DeviceOverviewPresenter) DataContext;
 
         private void CloseClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e) => Presenter.Close(true);

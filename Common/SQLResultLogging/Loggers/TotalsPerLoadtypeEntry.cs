@@ -28,12 +28,11 @@
 
 using Automation.ResultFiles;
 using Common.CalcDto;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 
 namespace Common.SQLResultLogging.Loggers {
     public class TotalsPerLoadtypeEntry : IHouseholdKey {
-        public TotalsPerLoadtypeEntry([NotNull] HouseholdKey key, [NotNull] CalcLoadTypeDto loadtype, double value, int numberOfPersons, double totalDays)
+        public TotalsPerLoadtypeEntry([JetBrains.Annotations.NotNull] HouseholdKey key, [JetBrains.Annotations.NotNull] CalcLoadTypeDto loadtype, double value, int numberOfPersons, double totalDays)
         {
             HouseholdKey = key;
             Loadtype = loadtype;
@@ -76,7 +75,7 @@ namespace Common.SQLResultLogging.Loggers {
         _calcParameters.CSVCharacter + "Unit" +
         _calcParameters.CSVCharacter + "Per Person and Day" +
         _calcParameters.CSVCharacter + "Unit");*/
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [JsonProperty]
         public CalcLoadTypeDto Loadtype { get; private set; }
 

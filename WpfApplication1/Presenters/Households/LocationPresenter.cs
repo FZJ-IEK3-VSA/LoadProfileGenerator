@@ -42,14 +42,14 @@ namespace LoadProfileGenerator.Presenters.Households
     public class LocationPresenter : PresenterBaseDBBase<LocationView>
     {
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly ObservableCollection<UsedIn> _households;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly Location _location;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private string _selectedAddCategory;
 
-        public LocationPresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] LocationView view, [NotNull] Location location)
+        public LocationPresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] LocationView view, [JetBrains.Annotations.NotNull] Location location)
             : base(view, "ThisLocation.HeaderString", location, applicationPresenter)
         {
             _location = location;
@@ -60,27 +60,27 @@ namespace LoadProfileGenerator.Presenters.Households
 
         [UsedImplicitly]
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<string> CategoryOrDevice => Sim.CategoryOrDevice;
 
         [UsedImplicitly]
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<DeviceCategory> DeviceCategories
             => Sim.DeviceCategories.Items;
 
         [UsedImplicitly]
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<RealDevice> Devices => Sim.RealDevices.Items;
 
         [UsedImplicitly]
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<UsedIn> Households => _households;
 
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string SelectedAddCategory
         {
             get => _selectedAddCategory;
@@ -119,10 +119,10 @@ namespace LoadProfileGenerator.Presenters.Households
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Location ThisLocation => _location;
 
-        public void AddDevice([NotNull] IAssignableDevice adev)
+        public void AddDevice([JetBrains.Annotations.NotNull] IAssignableDevice adev)
         {
             _location.AddDevice(adev);
         }
@@ -156,7 +156,7 @@ namespace LoadProfileGenerator.Presenters.Households
             _households.SynchronizeWithList(usedInHH);
         }
 
-        public void RemoveDevice([NotNull] LocationDevice ld)
+        public void RemoveDevice([JetBrains.Annotations.NotNull] LocationDevice ld)
         {
             _location.DeleteDevice(ld);
         }

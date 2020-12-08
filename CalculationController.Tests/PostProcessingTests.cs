@@ -14,8 +14,6 @@ using Database;
 using Database.Tables;
 using Database.Tests;
 using FluentAssertions;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -26,14 +24,14 @@ namespace CalculationController.Tests
     {
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [MethodImpl(MethodImplOptions.NoInlining)]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private static string GetCurrentMethod() {
             var st = new StackTrace();
             var sf = st.GetFrame(1);
             return sf?.GetMethod()?.Name ??"No stack frame";
         }
 
-        private static void RunTest([NotNull] Action<GeneralConfig> setOption, [NotNull] string name)
+        private static void RunTest([JetBrains.Annotations.NotNull] Action<GeneralConfig> setOption, [JetBrains.Annotations.NotNull] string name)
         {
             CleanTestBase.RunAutomatically(false);
             using (var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass() + name))
@@ -341,7 +339,7 @@ namespace CalculationController.Tests
             RunTest(x => x.Enable(CalcOption.DeviceProfileExternalEntireHouse), GetCurrentMethod());
         }
 
-        public PostProcessingTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public PostProcessingTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

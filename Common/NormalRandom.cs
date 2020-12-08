@@ -29,7 +29,6 @@
 #region
 
 using System;
-using JetBrains.Annotations;
 
 #endregion
 
@@ -66,7 +65,7 @@ namespace Common
     /// <version>1.0, 09/24/99</version>
     public class NormalRandom
     {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly Random _randomGenerator;
         private double _cache; // cache for Box-Mueller algorithm
         private bool _cacheFilled; // Box-Mueller
@@ -79,7 +78,7 @@ namespace Common
         /// <param name="mean">mean </param>
         /// <param name="standardDeviation">standard deviation</param>
         /// <param name="randomgenerator">rng</param>
-        public NormalRandom(double mean, double standardDeviation, [NotNull] Random randomgenerator)
+        public NormalRandom(double mean, double standardDeviation, [JetBrains.Annotations.NotNull] Random randomgenerator)
         {
             _randomGenerator = randomgenerator;
             SetState(mean, standardDeviation);
@@ -89,7 +88,7 @@ namespace Common
         /// ///     Returns a String representation of the receiver.
         /// </summary>
         /// <returns>the string</returns>
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public override string ToString() => GetType().FullName + "(" + _mean + "," + _standardDeviation + ")";
 
         /// <summary>

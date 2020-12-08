@@ -47,17 +47,17 @@ using JetBrains.Annotations;
 namespace Database.Tables.BasicHouseholds {
     public class Affordance : DBBaseElement {
         public const string TableName = "tblAffordances";
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<AffordanceDesire> _affDesires;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<AffordanceDesire> _affDesires;
 
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<AffordanceStandby> _affStandby;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<AffordanceStandby> _affStandby;
 
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<AffordanceDevice> _deviceprofiles;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<AffordanceDevice> _deviceprofiles;
 
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<AffVariableOperation> _executedVariables;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<AffVariableOperation> _executedVariables;
 
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<AffVariableRequirement> _requiredVariables;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<AffVariableRequirement> _requiredVariables;
 
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<AffordanceSubAffordance> _subAffordances;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<AffordanceSubAffordance> _subAffordances;
 
         private ActionAfterInterruption _actionAfterInterruption;
 
@@ -85,11 +85,11 @@ namespace Database.Tables.BasicHouseholds {
 
         private decimal _timeStandardDeviation;
 
-        public Affordance([NotNull] string pName, [CanBeNull] TimeBasedProfile pPersonProfile, [CanBeNull] int? id,
+        public Affordance([JetBrains.Annotations.NotNull] string pName, [CanBeNull] TimeBasedProfile pPersonProfile, [CanBeNull] int? id,
             bool needsLight,
             PermittedGender permittedGender, decimal timeStandardDeviation, ColorRGB carpetPlotColor,
-            [NotNull] string affCategory,
-            [CanBeNull] TimeLimit timeLimitLimit, [CanBeNull] string description, [NotNull] string connectionString,
+            [JetBrains.Annotations.NotNull] string affCategory,
+            [CanBeNull] TimeLimit timeLimitLimit, [CanBeNull] string description, [JetBrains.Annotations.NotNull] string connectionString,
             bool isInterruptable,
             bool isInterrupting, int minimumAge, int maximumAge, bool randomResults,
             ActionAfterInterruption actionAfterInterruption, bool requireAllDesires, StrGuid guid,
@@ -141,7 +141,7 @@ namespace Database.Tables.BasicHouseholds {
         }
 
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string ActionAfterInterruptionStr {
             get => ActionAfterInterruptionHelper.ConvertToDescription(_actionAfterInterruption);
             set {
@@ -152,7 +152,7 @@ namespace Database.Tables.BasicHouseholds {
         }
 
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string AffCategory {
             get => _affCategory ?? throw new InvalidOperationException();
             set => SetValueWithNotify(value, ref _affCategory, nameof(AffCategory));
@@ -160,15 +160,15 @@ namespace Database.Tables.BasicHouseholds {
 
         [ItemNotNull]
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<AffordanceDesire> AffordanceDesires => _affDesires;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<AffordanceDevice> AffordanceDevices => _deviceprofiles;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<AffordanceStandby> AffordanceStandbys => _affStandby;
 
         [UsedImplicitly]
@@ -187,7 +187,7 @@ namespace Database.Tables.BasicHouseholds {
        /*
         //todo: reimplment somehow
             [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Brush CarpetPlotBrush => new SolidColorBrush(_carpetPlotColor);*/
 
         public ColorRGB CarpetPlotColor {
@@ -214,7 +214,7 @@ namespace Database.Tables.BasicHouseholds {
             set => SetValueWithNotify(value, ref _description, nameof(Description));
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<AffVariableOperation> ExecutedVariables => _executedVariables;
 
@@ -298,11 +298,11 @@ namespace Database.Tables.BasicHouseholds {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<AffVariableRequirement> RequiredVariables => _requiredVariables;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<AffordanceSubAffordance> SubAffordances => _subAffordances;
 
         [UsedImplicitly]
@@ -318,8 +318,8 @@ namespace Database.Tables.BasicHouseholds {
             set => SetValueWithNotify(value, ref _timeStandardDeviation, nameof(TimeStandardDeviation));
         }
 
-        public void AddDesire([NotNull] Desire desire, decimal satisfactionvalue,
-            [NotNull] [ItemNotNull] ObservableCollection<Desire> desires)
+        public void AddDesire([JetBrains.Annotations.NotNull] Desire desire, decimal satisfactionvalue,
+            [JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<Desire> desires)
         {
             // delete old desire values for the same desire for the update function
             for (var i = 0; i < _affDesires.Count; i++) {
@@ -337,10 +337,10 @@ namespace Database.Tables.BasicHouseholds {
             _affDesires.Sort();
         }
 
-        public void AddDeviceProfile([NotNull] IAssignableDevice device, [CanBeNull] TimeBasedProfile tp,
+        public void AddDeviceProfile([JetBrains.Annotations.NotNull] IAssignableDevice device, [CanBeNull] TimeBasedProfile tp,
             decimal timeoffset,
-            [NotNull] [ItemNotNull] ObservableCollection<RealDevice> allDevices,
-            [NotNull] [ItemNotNull] ObservableCollection<DeviceCategory> allDeviceCategories,
+            [JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<RealDevice> allDevices,
+            [JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<DeviceCategory> allDeviceCategories,
             [CanBeNull] VLoadType vLoadType, double probability)
         {
             var deviceName = device.Name;
@@ -352,7 +352,7 @@ namespace Database.Tables.BasicHouseholds {
             dtl.SaveToDB();
         }
 
-        public void AddStandby([NotNull] IAssignableDevice device)
+        public void AddStandby([JetBrains.Annotations.NotNull] IAssignableDevice device)
         {
             var deviceName = device.Name;
             var standby = new AffordanceStandby(device, null,
@@ -362,7 +362,7 @@ namespace Database.Tables.BasicHouseholds {
             standby.SaveToDB();
         }
 
-        public void AddSubAffordance([NotNull] SubAffordance subAffordance, decimal delaytime)
+        public void AddSubAffordance([JetBrains.Annotations.NotNull] SubAffordance subAffordance, decimal delaytime)
         {
             var affordanceSubAffordance = new AffordanceSubAffordance(null, subAffordance,
                 delaytime, IntID, Name, ConnectionString, subAffordance.Name, System.Guid.NewGuid().ToStrGuid());
@@ -371,7 +371,7 @@ namespace Database.Tables.BasicHouseholds {
         }
 
         public void AddVariableOperation(double value, VariableLocationMode clm, [CanBeNull] Location loc,
-            VariableAction action, [NotNull] Variable variable, [CanBeNull] string description,
+            VariableAction action, [JetBrains.Annotations.NotNull] Variable variable, [CanBeNull] string description,
             VariableExecutionTime executionTime)
         {
             var itemsToDelete = _executedVariables
@@ -393,7 +393,7 @@ namespace Database.Tables.BasicHouseholds {
         }
 
         public void AddVariableRequirement(double value, VariableLocationMode clm, [CanBeNull] Location loc,
-            VariableCondition action, [NotNull] Variable variable, [NotNull] string description)
+            VariableCondition action, [JetBrains.Annotations.NotNull] Variable variable, [JetBrains.Annotations.NotNull] string description)
         {
             var itemsToDelete = _requiredVariables
                 .Where(x => x.Variable == variable && x.LocationMode == clm && x.Location == loc).ToList();
@@ -409,11 +409,11 @@ namespace Database.Tables.BasicHouseholds {
             _requiredVariables.Sort();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalse")]
-        public static Affordance AssignFields([NotNull] DataReader dr, [NotNull] string connectionString,
+        public static Affordance AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString,
             bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic)
+            [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var id = dr.GetIntFromLong("ID", false, ignoreMissingFields);
             var name = dr.GetString("Name", "no name");
@@ -463,7 +463,7 @@ namespace Database.Tables.BasicHouseholds {
             return aff;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Dictionary<VLoadType, double> CalculateAverageEnergyUse(
             [CanBeNull] [ItemNotNull] ObservableCollection<DeviceAction> allActions)
         {
@@ -572,8 +572,8 @@ namespace Database.Tables.BasicHouseholds {
         }
 
         [UsedImplicitly]
-        [NotNull]
-        public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString)
+        [JetBrains.Annotations.NotNull]
+        public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString)
         {
             var aff = new Affordance(FindNewName(isNameTaken, "New Affordance "), null, null, false,
                 PermittedGender.All, 0.1m, new ColorRGB(255, 255, 255), string.Empty, null, string.Empty,
@@ -582,20 +582,20 @@ namespace Database.Tables.BasicHouseholds {
             return aff;
         }
 
-        public bool DeleteAffordanceDesireFromDB([NotNull] AffordanceDesire affordanceDesire)
+        public bool DeleteAffordanceDesireFromDB([JetBrains.Annotations.NotNull] AffordanceDesire affordanceDesire)
         {
             affordanceDesire.DeleteFromDB();
             _affDesires.Remove(affordanceDesire);
             return true;
         }
 
-        public void DeleteAffordanceSubAffFromDB([NotNull] AffordanceSubAffordance affordanceSubAffordance)
+        public void DeleteAffordanceSubAffFromDB([JetBrains.Annotations.NotNull] AffordanceSubAffordance affordanceSubAffordance)
         {
             affordanceSubAffordance.DeleteFromDB();
             SubAffordances.Remove(affordanceSubAffordance);
         }
 
-        public void DeleteDeviceFromDB([NotNull] AffordanceDevice affordanceDevice)
+        public void DeleteDeviceFromDB([JetBrains.Annotations.NotNull] AffordanceDevice affordanceDevice)
         {
             affordanceDevice.DeleteFromDB();
             _deviceprofiles.Remove(affordanceDevice);
@@ -632,19 +632,19 @@ namespace Database.Tables.BasicHouseholds {
             }
         }
 
-        public void DeleteStandby([NotNull] AffordanceStandby standby)
+        public void DeleteStandby([JetBrains.Annotations.NotNull] AffordanceStandby standby)
         {
             standby.DeleteFromDB();
             _affStandby.Remove(standby);
         }
 
-        public void DeleteVariableOperation([NotNull] AffVariableOperation variableOperation)
+        public void DeleteVariableOperation([JetBrains.Annotations.NotNull] AffVariableOperation variableOperation)
         {
             variableOperation.DeleteFromDB();
             _executedVariables.Remove(variableOperation);
         }
 
-        public void DeleteVariableRequirement([NotNull] AffVariableRequirement variableRequirement)
+        public void DeleteVariableRequirement([JetBrains.Annotations.NotNull] AffVariableRequirement variableRequirement)
         {
             variableRequirement.DeleteFromDB();
             _requiredVariables.Remove(variableRequirement);
@@ -665,8 +665,8 @@ namespace Database.Tables.BasicHouseholds {
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         [UsedImplicitly]
-        [NotNull]
-        public static Affordance ImportFromItem([NotNull] Affordance toImport, [NotNull] Simulator dstSim)
+        [JetBrains.Annotations.NotNull]
+        public static Affordance ImportFromItem([JetBrains.Annotations.NotNull] Affordance toImport, [JetBrains.Annotations.NotNull] Simulator dstSim)
         {
             var tp = GetItemFromListByName(dstSim.Timeprofiles.Items, toImport.PersonProfile?.Name);
             TimeLimit timeLimit = null;
@@ -785,10 +785,10 @@ namespace Database.Tables.BasicHouseholds {
             return aff;
         }
 
-        public void ImportFromOtherAffordance([NotNull] Affordance item,
-            [NotNull] [ItemNotNull] ObservableCollection<Desire> desires,
-            [NotNull] [ItemNotNull] ObservableCollection<RealDevice> realDevices,
-            [NotNull] [ItemNotNull] ObservableCollection<DeviceCategory> deviceCategories)
+        public void ImportFromOtherAffordance([JetBrains.Annotations.NotNull] Affordance item,
+            [JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<Desire> desires,
+            [JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<RealDevice> realDevices,
+            [JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<DeviceCategory> deviceCategories)
         {
             Name = item.Name + " (copy)";
             PersonProfile = item.PersonProfile;
@@ -839,8 +839,8 @@ namespace Database.Tables.BasicHouseholds {
             }
         }
 
-        public bool IsAffordanceAvailable([NotNull] [ItemNotNull] List<IAssignableDevice> devicesAtLoc,
-            [NotNull] [ItemNotNull] ObservableCollection<DeviceAction> allActions)
+        public bool IsAffordanceAvailable([JetBrains.Annotations.NotNull] [ItemNotNull] List<IAssignableDevice> devicesAtLoc,
+            [JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<DeviceAction> allActions)
         {
             if (_deviceprofiles.Count == 0) {
                 return false;
@@ -855,7 +855,7 @@ namespace Database.Tables.BasicHouseholds {
             return true;
         }
 
-        public bool IsValidPerson([NotNull] Person person)
+        public bool IsValidPerson([JetBrains.Annotations.NotNull] Person person)
         {
             if (person.Age < MinimumAge) {
                 return false;
@@ -874,19 +874,19 @@ namespace Database.Tables.BasicHouseholds {
             return true;
         }
 
-        public static void LoadFromDatabase([NotNull] [ItemNotNull] ObservableCollection<Affordance> result,
-            [NotNull] string connectionString,
-            [NotNull] [ItemNotNull] ObservableCollection<TimeBasedProfile> pTimeProfiles,
-            [NotNull] [ItemNotNull] ObservableCollection<DeviceCategory> deviceCategories,
-            [NotNull] [ItemNotNull] ObservableCollection<RealDevice> devices,
-            [NotNull] [ItemNotNull] ObservableCollection<Desire> desires,
-            [NotNull] [ItemNotNull] ObservableCollection<SubAffordance> subAffordances,
-            [NotNull] [ItemNotNull] ObservableCollection<VLoadType> loadTypes,
-            [NotNull] [ItemNotNull] ObservableCollection<TimeLimit> timeLimits,
-            [NotNull] [ItemNotNull] ObservableCollection<DeviceAction> deviceActions,
-            [NotNull] [ItemNotNull] ObservableCollection<DeviceActionGroup> deviceActionGroups,
-            [NotNull] [ItemNotNull] ObservableCollection<Location> locations,
-            bool ignoreMissingTables, [NotNull] [ItemNotNull] ObservableCollection<Variable> variables)
+        public static void LoadFromDatabase([JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<Affordance> result,
+            [JetBrains.Annotations.NotNull] string connectionString,
+            [JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<TimeBasedProfile> pTimeProfiles,
+            [JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<DeviceCategory> deviceCategories,
+            [JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<RealDevice> devices,
+            [JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<Desire> desires,
+            [JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<SubAffordance> subAffordances,
+            [JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<VLoadType> loadTypes,
+            [JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<TimeLimit> timeLimits,
+            [JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<DeviceAction> deviceActions,
+            [JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<DeviceActionGroup> deviceActionGroups,
+            [JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<Location> locations,
+            bool ignoreMissingTables, [JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<Variable> variables)
         {
             var aic = new AllItemCollections(desires: desires, timeProfiles: pTimeProfiles,
                 timeLimits: timeLimits, realDevices: devices, deviceCategories: deviceCategories, loadTypes: loadTypes,
@@ -1014,9 +1014,9 @@ namespace Database.Tables.BasicHouseholds {
             }
         }
 
-        private static bool CheckAssignableDevice([NotNull] [ItemNotNull] List<IAssignableDevice> devicesAtLoc,
-            [NotNull] AffordanceDevice affordanceDevice,
-            [NotNull] [ItemNotNull] ObservableCollection<DeviceAction> allActions)
+        private static bool CheckAssignableDevice([JetBrains.Annotations.NotNull] [ItemNotNull] List<IAssignableDevice> devicesAtLoc,
+            [JetBrains.Annotations.NotNull] AffordanceDevice affordanceDevice,
+            [JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<DeviceAction> allActions)
         {
             var dev = affordanceDevice.Device;
             if (dev == null) {
@@ -1117,7 +1117,7 @@ namespace Database.Tables.BasicHouseholds {
             }
         }
 
-        private static bool IsCorrectAffDesireParent([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectAffDesireParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var hd = (AffordanceDesire) child;
             if (parent.ID == hd.AffordanceID) {
@@ -1130,7 +1130,7 @@ namespace Database.Tables.BasicHouseholds {
             return false;
         }
 
-        private static bool IsCorrectAffDeviceParent([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectAffDeviceParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var hd = (AffordanceDevice) child;
             if (parent == hd.ParentAffordance) {
@@ -1142,7 +1142,7 @@ namespace Database.Tables.BasicHouseholds {
             return false;
         }
 
-        private static bool IsCorrectAffordanceStandbyParent([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectAffordanceStandbyParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var hd = (AffordanceStandby) child;
             if (parent.ID == hd.AffordanceID) {
@@ -1154,7 +1154,7 @@ namespace Database.Tables.BasicHouseholds {
             return false;
         }
 
-        private static bool IsCorrectAffordanceSubAffordanceParent([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectAffordanceSubAffordanceParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var hd = (AffordanceSubAffordance) child;
             if (parent.ID == hd.AffordanceID) {
@@ -1166,7 +1166,7 @@ namespace Database.Tables.BasicHouseholds {
             return false;
         }
 
-        private static bool IsCorrectAffordanceVariableParent([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectAffordanceVariableParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var hd = (AffVariableOperation) child;
             if (parent.ID == hd.AffordanceID) {
@@ -1178,7 +1178,7 @@ namespace Database.Tables.BasicHouseholds {
             return false;
         }
 
-        private static bool IsCorrectAffordanceVariableRequiredParent([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectAffordanceVariableRequiredParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var hd = (AffVariableRequirement) child;
             if (parent.ID == hd.AffordanceID) {

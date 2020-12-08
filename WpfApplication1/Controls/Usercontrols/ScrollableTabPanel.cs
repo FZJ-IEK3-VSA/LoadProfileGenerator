@@ -26,10 +26,6 @@
 
 //-----------------------------------------------------------------------
 
-#pragma warning disable SA1623 // Property summary documentation must match accessors
-
-#pragma warning disable SA1615 // Element return value must be documented
-
 using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
@@ -40,6 +36,13 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using Common;
 using JetBrains.Annotations;
+using Point = System.Windows.Point;
+using Size = System.Windows.Size;
+using Vector = System.Windows.Vector;
+
+#pragma warning disable SA1623 // Property summary documentation must match accessors
+
+#pragma warning disable SA1615 // Element return value must be documented
 
 namespace LoadProfileGenerator.Controls.Usercontrols {
     /// <summary>
@@ -51,14 +54,14 @@ namespace LoadProfileGenerator.Controls.Usercontrols {
     [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
     [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
     public class ScrollableTabPanel : Panel, IScrollInfo, INotifyPropertyChanged {
-        [ItemNotNull] [NotNull] private static readonly GradientStopCollection _gscOpacityMaskStopsTransparentOnLeft =
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private static readonly GradientStopCollection _gscOpacityMaskStopsTransparentOnLeft =
             new GradientStopCollection {new GradientStop(Colors.Transparent, 0), new GradientStop(Colors.Black, 0.5)};
 
         // For a description of the members below, refer to the respective property's description.
 
         // The following GradientStopCollections are being used for assigning an OpacityMask
         // to child-controls that are only partially visible.
-        [ItemNotNull] [NotNull]
+        [ItemNotNull] [JetBrains.Annotations.NotNull]
         private static readonly GradientStopCollection _gscOpacityMaskStopsTransparentOnLeftAndRight =
             new GradientStopCollection {
                 new GradientStop(Colors.Transparent, 0.0),
@@ -67,15 +70,15 @@ namespace LoadProfileGenerator.Controls.Usercontrols {
                 new GradientStop(Colors.Transparent, 1.0)
             };
 
-        [ItemNotNull] [NotNull] private static readonly GradientStopCollection _gscOpacityMaskStopsTransparentOnRight =
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private static readonly GradientStopCollection _gscOpacityMaskStopsTransparentOnRight =
             new GradientStopCollection {new GradientStop(Colors.Black, 0.5), new GradientStop(Colors.Transparent, 1)};
 
         /// <summary>
         ///     This will apply the present scroll-position resp. -offset.
         /// </summary>
-        [NotNull] private readonly TranslateTransform _ttScrollTransform = new TranslateTransform();
+        [JetBrains.Annotations.NotNull] private readonly TranslateTransform _ttScrollTransform = new TranslateTransform();
 
-        [NotNull] private ScrollViewer _svOwningScrollViewer;
+        [JetBrains.Annotations.NotNull] private ScrollViewer _svOwningScrollViewer;
 
         private Vector _vOffset;
 
@@ -153,7 +156,7 @@ namespace LoadProfileGenerator.Controls.Usercontrols {
         ///     Returns the left position of the requested child (in Viewport-coordinates).
         /// </summary>
         /// <param name="uieChild"> The child to retrieve the position for. </param>
-        private double GetLeftEdge([NotNull] UIElement uieChild)
+        private double GetLeftEdge([JetBrains.Annotations.NotNull] UIElement uieChild)
         {
             double dblWidthTotal = 0;
 
@@ -190,7 +193,7 @@ namespace LoadProfileGenerator.Controls.Usercontrols {
         ///         60% will overflow into the right invisible portion of the panel.
         ///     </para>
         /// </returns>
-        private double PartlyVisiblePortion_OverflowToRight([NotNull] UIElement uieChild)
+        private double PartlyVisiblePortion_OverflowToRight([JetBrains.Annotations.NotNull] UIElement uieChild)
         {
             var rctIntersect = GetIntersectionRectangle(uieChild);
             double dblVisiblePortion = 1;
@@ -218,7 +221,7 @@ namespace LoadProfileGenerator.Controls.Usercontrols {
         ///         60% will overflow into the left invisible portion of the panel.
         ///     </para>
         /// </returns>
-        private double PartlyVisiblePortion_OverflowToLeft([NotNull] UIElement uieChild)
+        private double PartlyVisiblePortion_OverflowToLeft([JetBrains.Annotations.NotNull] UIElement uieChild)
         {
             var rctIntersect = GetIntersectionRectangle(uieChild);
             double dblVisiblePortion = 1;
@@ -239,7 +242,7 @@ namespace LoadProfileGenerator.Controls.Usercontrols {
         ///     Returns the rectangle that defines the outer bounds of a child control.
         /// </summary>
         /// <param name="uieChild"> The child/control for which to return the bounding rectangle. </param>
-        private Rect GetChildRectangle([NotNull] UIElement uieChild)
+        private Rect GetChildRectangle([JetBrains.Annotations.NotNull] UIElement uieChild)
         {
             // Retrieve the position of the requested child inside the ScrollViewer control
             var childTransform = uieChild.TransformToAncestor(ScrollOwner);
@@ -253,7 +256,7 @@ namespace LoadProfileGenerator.Controls.Usercontrols {
         /// </summary>
         /// <param name="uieChild"> The child for which to retrieve Rectangle. </param>
         /// <returns> the return value</returns>
-        private Rect GetIntersectionRectangle([NotNull] UIElement uieChild)
+        private Rect GetIntersectionRectangle([JetBrains.Annotations.NotNull] UIElement uieChild)
         {
             // Retrieve the ScrollViewer's rectangle
             var rctScrollViewerRectangle = GetScrollViewerRectangle();
@@ -277,7 +280,7 @@ namespace LoadProfileGenerator.Controls.Usercontrols {
         ///     Will remove the OpacityMask for all child controls.
         /// </summary>
         /// <param name="uieChild">todo: describe uieChild parameter on RemoveOpacityMask</param>
-        private static void RemoveOpacityMask([NotNull] UIElement uieChild) => uieChild.OpacityMask = null;
+        private static void RemoveOpacityMask([JetBrains.Annotations.NotNull] UIElement uieChild) => uieChild.OpacityMask = null;
 
         /// <summary>
         ///     Will check all child controls and set their OpacityMasks.
@@ -567,7 +570,7 @@ namespace LoadProfileGenerator.Controls.Usercontrols {
         /// <summary>
         ///     Sets or retrieves the ScrollViewer control that hosts the panel.
         /// </summary>
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ScrollViewer ScrollOwner {
             get => _svOwningScrollViewer;
             set {

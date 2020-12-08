@@ -107,7 +107,7 @@ namespace Database.Tables.ModularHouseholds {
 
         [CanBeNull] private Person _dstPerson;
 
-        public ModularHouseholdTrait([CanBeNull]int? pID, [CanBeNull]int? modularHouseholdID, [NotNull] string name, [NotNull] string connectionString,
+        public ModularHouseholdTrait([CanBeNull]int? pID, [CanBeNull]int? modularHouseholdID, [JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] string connectionString,
             [CanBeNull] HouseholdTrait ht, [CanBeNull] Person dstPerson, ModularHouseholdTraitAssignType assignType,
                                      StrGuid guid)
             : base(name, TableName, connectionString, guid) {
@@ -122,7 +122,7 @@ namespace Database.Tables.ModularHouseholds {
         public ModularHouseholdTraitAssignType AssignType { get; set; }
 
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string AssignTypeString => AssignType.ToString();
 
         [CanBeNull]
@@ -132,7 +132,7 @@ namespace Database.Tables.ModularHouseholds {
         }
 
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string ExecutableAffordances {
             get {
                 if (_householdTrait == null) {
@@ -147,7 +147,7 @@ namespace Database.Tables.ModularHouseholds {
                 return affs + "/" + affs;
             }
         }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public HouseholdTrait HouseholdTrait {
             get => _householdTrait ?? throw new InvalidOperationException();
             set => SetValueWithNotify(value, ref _householdTrait);
@@ -157,7 +157,7 @@ namespace Database.Tables.ModularHouseholds {
         public int? ModularHouseholdID => _modularHouseholdID;
 
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public new string Name => ToString();
 
         public int CompareTo([CanBeNull] ModularHouseholdTrait other) {
@@ -179,9 +179,9 @@ namespace Database.Tables.ModularHouseholds {
             return string.Compare(HouseholdTrait.PrettyName, other.HouseholdTrait.PrettyName, StringComparison.Ordinal);
         }
 
-        [NotNull]
-        private static ModularHouseholdTrait AssignFields([NotNull] DataReader dr, [NotNull] string connectionString,
-            bool ignoreMissingFields, [NotNull] AllItemCollections aic) {
+        [JetBrains.Annotations.NotNull]
+        private static ModularHouseholdTrait AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString,
+            bool ignoreMissingFields, [JetBrains.Annotations.NotNull] AllItemCollections aic) {
             var id = dr.GetIntFromLong("ID");
             int modularHouseholdID;
             if (!ignoreMissingFields) {
@@ -250,9 +250,9 @@ namespace Database.Tables.ModularHouseholds {
             }
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<ModularHouseholdTrait> result, [NotNull] string connectionString,
-            [ItemNotNull] [NotNull] ObservableCollection<HouseholdTrait> householdTraits, bool ignoreMissingTables,
-            [ItemNotNull] [NotNull] ObservableCollection<Person> persons) {
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<ModularHouseholdTrait> result, [JetBrains.Annotations.NotNull] string connectionString,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<HouseholdTrait> householdTraits, bool ignoreMissingTables,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Person> persons) {
             var aic = new AllItemCollections(householdTraits: householdTraits, persons: persons);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
             var items2Delete = new ObservableCollection<ModularHouseholdTrait>();

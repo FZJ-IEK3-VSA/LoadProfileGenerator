@@ -1,13 +1,12 @@
 ﻿using Automation;
 using Automation.ResultFiles;
 using Common.SQLResultLogging.Loggers;
-using JetBrains.Annotations;
 
 namespace Common.CalcDto {
     public class CalcVariableDto: IHouseholdKey
     {
-        public CalcVariableDto([NotNull]string name, StrGuid guid, double value,
-                               [NotNull]string locationName, StrGuid locationGuid, [NotNull]HouseholdKey householdKey)
+        public CalcVariableDto([JetBrains.Annotations.NotNull]string name, StrGuid guid, double value,
+                               [JetBrains.Annotations.NotNull]string locationName, StrGuid locationGuid, [JetBrains.Annotations.NotNull]HouseholdKey householdKey)
         {
             Name = name;
             Guid = guid;
@@ -16,11 +15,11 @@ namespace Common.CalcDto {
             LocationGuid = locationGuid;
             HouseholdKey = householdKey;
         }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string Name { get; }
         public StrGuid Guid { get; }
         public double Value { get;  }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string LocationName { get; }
         public StrGuid LocationGuid { get; }
         public HouseholdKey HouseholdKey { get; }

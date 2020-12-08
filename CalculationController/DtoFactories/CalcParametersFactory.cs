@@ -8,14 +8,13 @@ using ChartCreator2;
 using Common;
 using Common.Enums;
 using Common.JSON;
-using JetBrains.Annotations;
 
 namespace CalculationController.DtoFactories
 {
     public class CalcParametersFactory
     {
-        [NotNull]
-        public CalcParameters MakeCalculationParametersFromConfig([NotNull] CalcStartParameterSet csps, bool forceRandom)
+        [JetBrains.Annotations.NotNull]
+        public CalcParameters MakeCalculationParametersFromConfig([JetBrains.Annotations.NotNull] CalcStartParameterSet csps, bool forceRandom)
         {
             CalcParameters cp = CalcParameters.GetNew();
             cp.LoadtypesToPostprocess = csps.LoadTypesToProcess;
@@ -89,7 +88,7 @@ namespace CalculationController.DtoFactories
             return cp;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static CalcParameters MakeGoodDefaults()
         {
             CalcParameters cp = CalcParameters.GetNew();

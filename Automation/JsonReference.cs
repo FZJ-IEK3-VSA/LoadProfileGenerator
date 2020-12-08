@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-using JetBrains.Annotations;
 
 namespace Automation {
     public class JsonReference : IGuidObject, IEquatable<JsonReference>
@@ -54,7 +53,7 @@ namespace Automation {
             }
         }
 
-        public JsonReference([NotNull] string name, StrGuid guid)
+        public JsonReference([JetBrains.Annotations.NotNull] string name, StrGuid guid)
         {
             Name = name;
             Guid = guid;
@@ -71,11 +70,11 @@ namespace Automation {
             Guid = StrGuid.Empty;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string? Name { get; set; }
         public StrGuid Guid { get; set; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public override string ToString() => Name + "(" + Guid + ")";
     }
 }

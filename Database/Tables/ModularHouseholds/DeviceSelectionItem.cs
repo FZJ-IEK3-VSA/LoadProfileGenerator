@@ -46,7 +46,7 @@ namespace Database.Tables.ModularHouseholds {
 
         public DeviceSelectionItem([CanBeNull]int? pID, [CanBeNull] int? deviceSelectionID, [CanBeNull] DeviceCategory deviceCategory,
             [CanBeNull] RealDevice device,
-            [NotNull] string connectionString, [NotNull] string name, StrGuid guid)
+            [JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.NotNull] string name, StrGuid guid)
             : base(name, TableName, connectionString, guid) {
             ID = pID;
             _deviceCategory = deviceCategory;
@@ -55,17 +55,17 @@ namespace Database.Tables.ModularHouseholds {
             TypeDescription = "Device Selection Item";
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public RealDevice Device => _device ?? throw new InvalidOperationException();
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public DeviceCategory DeviceCategory => _deviceCategory ?? throw new InvalidOperationException();
         [CanBeNull]
         public int? DeviceSelectionID => _deviceSelectionID;
 
-        [NotNull]
-        private static DeviceSelectionItem AssignFields([NotNull] DataReader dr, [NotNull] string connectionString,
+        [JetBrains.Annotations.NotNull]
+        private static DeviceSelectionItem AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString,
             bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic) {
+            [JetBrains.Annotations.NotNull] AllItemCollections aic) {
             var deviceSelectionItemID = dr.GetIntFromLong("ID");
             var deviceSelectionID = dr.GetIntFromLong("deviceSelectionID", false, ignoreMissingFields, -1);
             var deviceCategoryID = dr.GetIntFromLong("deviceCategoryID", false, ignoreMissingFields, -1);
@@ -97,8 +97,8 @@ namespace Database.Tables.ModularHouseholds {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<DeviceSelectionItem> result, [NotNull] string connectionString,
-            [ItemNotNull] [NotNull] ObservableCollection<DeviceCategory> deviceCategories, [ItemNotNull] [NotNull] ObservableCollection<RealDevice> devices,
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceSelectionItem> result, [JetBrains.Annotations.NotNull] string connectionString,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceCategory> deviceCategories, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<RealDevice> devices,
             bool ignoreMissingTables) {
             var aic = new AllItemCollections(deviceCategories: deviceCategories, realDevices: devices);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);

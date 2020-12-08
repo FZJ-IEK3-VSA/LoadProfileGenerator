@@ -11,33 +11,33 @@ namespace CalculationController.DtoFactories
     public class AvailabilityDtoRepository
     {
         public class Entry {
-            public Entry([NotNull] string name, StrGuid guid, [NotNull][ItemNotNull] BitArray array)
+            public Entry([JetBrains.Annotations.NotNull] string name, StrGuid guid, [JetBrains.Annotations.NotNull][ItemNotNull] BitArray array)
             {
                 Name = name;
                 Guid = guid;
                 Array = array;
             }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string Name { get; }
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             [ItemNotNull]
             public BitArray Array { get; }
             public StrGuid Guid { get; }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private Dictionary<StrGuid, Entry> Entries { get; } = new Dictionary<StrGuid, Entry>();
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public BitArray GetByGuid(StrGuid guid)
         {
             return Entries[guid].Array;
         }
 
-        [NotNull]
-        public AvailabilityDataReferenceDto MakeNewReference([NotNull] string name, [NotNull][ItemNotNull] BitArray timearray)
+        [JetBrains.Annotations.NotNull]
+        public AvailabilityDataReferenceDto MakeNewReference([JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull][ItemNotNull] BitArray timearray)
         {
             StrGuid guid = Guid.NewGuid().ToStrGuid();
             Entry e = new Entry(name,guid,timearray);

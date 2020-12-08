@@ -46,7 +46,7 @@ namespace Database.Helpers {
         [CanBeNull] private string _fileName;
 
         private int _headerLineCount;
-        [NotNull] private string _previewText;
+        [JetBrains.Annotations.NotNull] private string _previewText;
         private char _separator;
         private int _timeColumn;
         private TimeSpan _timeSpan;
@@ -81,7 +81,7 @@ namespace Database.Helpers {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<Entry> Entries { get; }
 
@@ -105,7 +105,7 @@ namespace Database.Helpers {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string PreviewText {
             get => _previewText;
@@ -151,8 +151,8 @@ namespace Database.Helpers {
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        [NotNull]
-        private Entry MakeEntry(int linecount, [ItemNotNull] [NotNull] string[] strarr, ref TimeSpan ts) {
+        [JetBrains.Annotations.NotNull]
+        private Entry MakeEntry(int linecount, [ItemNotNull] [JetBrains.Annotations.NotNull] string[] strarr, ref TimeSpan ts) {
             var e = new Entry
             {
                 EntryNumber = linecount
@@ -187,7 +187,7 @@ namespace Database.Helpers {
         }
 
         [NotifyPropertyChangedInvocator]
-        private void OnPropertyChanged([NotNull] string propertyName) {
+        private void OnPropertyChanged([JetBrains.Annotations.NotNull] string propertyName) {
             PropertyChanged?.Invoke(this,
                 new PropertyChangedEventArgs(propertyName));
         }
@@ -269,11 +269,11 @@ namespace Database.Helpers {
             public DateTime Time { get; set; }
             public TimeSpan TimeSinceStart { get; set; }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             [UsedImplicitly]
             public string TimeSpanString => TimeSinceStart.ToString();
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             [UsedImplicitly]
             public string TimeString => Time.ToString(CultureInfo.CurrentCulture);
 

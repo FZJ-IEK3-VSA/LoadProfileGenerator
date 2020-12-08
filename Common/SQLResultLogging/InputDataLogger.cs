@@ -153,16 +153,16 @@ namespace Common.SQLResultLogging {
         /*
         private class CalculationConfiguration : ITypeDescriber
         {
-            public CalculationConfiguration([NotNull] string name, [NotNull] string value)
+            public CalculationConfiguration([JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] string value)
             {
                 Name = name;
                 Value = value;
                 HouseholdKey = Constants.GeneralHouseholdKey;
             }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string Name { [UsedImplicitly] get; set; }
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string Value { [UsedImplicitly] get; set; }
             public string GetTypeDescription()
             {
@@ -173,14 +173,14 @@ namespace Common.SQLResultLogging {
             public HouseholdKey HouseholdKey { get; set; }
         }*/
         /*
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly SqlResultLoggingService _srfl;
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly List<ISingleInputDataLogger> _dataLoggers;*/
         /*
-        public InputDataLogger([NotNull] SqlResultLoggingService srfl,  //FileFactoryAndTracker fft,
-                               [NotNull][ItemNotNull] ISingleInputDataLogger[] dataLoggers)
+        public InputDataLogger([JetBrains.Annotations.NotNull] SqlResultLoggingService srfl,  //FileFactoryAndTracker fft,
+                               [JetBrains.Annotations.NotNull][ItemNotNull] ISingleInputDataLogger[] dataLoggers)
         {
             _srfl = srfl;
             //_fft = fft;
@@ -188,8 +188,8 @@ namespace Common.SQLResultLogging {
         }*/
 
         /*
-                public void Save([NotNull] CalcStartParameterSet csps, [NotNull] ICalcAbleObject calcObject, [NotNull] Simulator sim,
-                    [NotNull] CalcLoadTypeDtoDictionary ltdict)
+                public void Save([JetBrains.Annotations.NotNull] CalcStartParameterSet csps, [JetBrains.Annotations.NotNull] ICalcAbleObject calcObject, [JetBrains.Annotations.NotNull] Simulator sim,
+                    [JetBrains.Annotations.NotNull] CalcLoadTypeDtoDictionary ltdict)
                 {
                     SaveCalculationStartParameters(csps);
 
@@ -199,7 +199,7 @@ namespace Common.SQLResultLogging {
                     }
                 }*/
         /*
-        private void SaveLtDict([NotNull] CalcLoadTypeDtoDictionary ltdict)
+        private void SaveLtDict([JetBrains.Annotations.NotNull] CalcLoadTypeDtoDictionary ltdict)
         {
             var loadtypedtos = ltdict.Ltdtodict.Values.ToList();
             List<LoadTypeDefinition> ltds = new List<LoadTypeDefinition>();
@@ -214,7 +214,7 @@ namespace Common.SQLResultLogging {
             _srfl.SaveToDatabaseAndClearList(ltds);
         }*/
         /*
-        public void SaveCalcParameters([NotNull] CalcParameters parameters)
+        public void SaveCalcParameters([JetBrains.Annotations.NotNull] CalcParameters parameters)
         {
             SaveableEntry se = new SaveableEntry(Constants.GeneralHouseholdKey, CalcParameters.TableName, "All the calculation parameters as Json");
             se.AddField("Name", SqliteDataType.Text);
@@ -223,7 +223,7 @@ namespace Common.SQLResultLogging {
             _srfl.SaveResultEntry(se);
         }*/
         /*
-        public void SaveHouseholdDto([NotNull] CalcHouseholdDto household)
+        public void SaveHouseholdDto([JetBrains.Annotations.NotNull] CalcHouseholdDto household)
         {
             FindMemorySizeOfProperties(household);
             SaveableEntry se = new SaveableEntry(Constants.GeneralHouseholdKey, CalcHouseholdDto.TableName, "All the households");
@@ -234,7 +234,7 @@ namespace Common.SQLResultLogging {
         }
         */
         /*
-        private static void FindMemorySizeOfProperties([NotNull] CalcHouseholdDto household)
+        private static void FindMemorySizeOfProperties([JetBrains.Annotations.NotNull] CalcHouseholdDto household)
         {
             var householdProperties = typeof(CalcHouseholdDto).GetProperties();
             foreach (var propinfo in householdProperties)
@@ -245,7 +245,7 @@ namespace Common.SQLResultLogging {
             }
         }*/
         /*
-        private void SaveCalculationStartParameters([NotNull] CalcStartParameterSet csps)
+        private void SaveCalculationStartParameters([JetBrains.Annotations.NotNull] CalcStartParameterSet csps)
         {
             //_fft.RegisterHouseholdKey("Global","GlobalData");
             //_fft.RegisterFile(_srfl.DstFilename,"SQLite results file",true,ResultFileID.Sqlite,"Global",TargetDirectory.Root);

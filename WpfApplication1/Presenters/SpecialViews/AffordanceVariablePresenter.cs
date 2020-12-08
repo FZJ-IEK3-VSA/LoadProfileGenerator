@@ -41,14 +41,14 @@ using LoadProfileGenerator.Views.SpecialViews;
 namespace LoadProfileGenerator.Presenters.SpecialViews {
 #pragma warning disable S3897 // Classes that provide "Equals(<T>)" or override "Equals(Object)" should implement "IEquatable<T>"
     public class AffordanceVariablePresenter : PresenterBaseWithAppPresenter<AffordanceVariableView> {
-        [NotNull] private readonly ApplicationPresenter _applicationPresenter;
+        [JetBrains.Annotations.NotNull] private readonly ApplicationPresenter _applicationPresenter;
 
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<VariableEntry> _variableEntries =
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<VariableEntry> _variableEntries =
             new ObservableCollection<VariableEntry>();
 
         [CanBeNull] private string _selectedFilterType;
 
-        public AffordanceVariablePresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] AffordanceVariableView view) :
+        public AffordanceVariablePresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] AffordanceVariableView view) :
             base(view, "HeaderString", applicationPresenter)
         {
             _applicationPresenter = applicationPresenter;
@@ -57,7 +57,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             Refresh();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string HeaderString => "Variable Overview";
 
@@ -77,12 +77,12 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<string> SortBy { get; }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<VariableEntry> VariableEntries => _variableEntries;
 
@@ -197,7 +197,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             _variableEntries.Sort(Comparer);
         }
 
-        private int Comparer([NotNull] VariableEntry x, [NotNull] VariableEntry y)
+        private int Comparer([JetBrains.Annotations.NotNull] VariableEntry x, [JetBrains.Annotations.NotNull] VariableEntry y)
         {
             switch (SelectedFilterType) {
                 case "Affordance Name":
@@ -236,8 +236,8 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
 
 #pragma warning disable S1210 // "Equals" and the comparison operators should be overridden when implementing "IComparable"
         public class VariableEntry : IComparable {
-            public VariableEntry([NotNull] DBBase affordance, [NotNull] string variableType, [NotNull] string desc, [NotNull] string value, [NotNull] Variable variable,
-                [NotNull] string locationName, [NotNull] string locationMode, [NotNull] string executionTime)
+            public VariableEntry([JetBrains.Annotations.NotNull] DBBase affordance, [JetBrains.Annotations.NotNull] string variableType, [JetBrains.Annotations.NotNull] string desc, [JetBrains.Annotations.NotNull] string value, [JetBrains.Annotations.NotNull] Variable variable,
+                [JetBrains.Annotations.NotNull] string locationName, [JetBrains.Annotations.NotNull] string locationMode, [JetBrains.Annotations.NotNull] string executionTime)
             {
                 Affordance = affordance;
                 VariableType = variableType;
@@ -249,37 +249,37 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                 ExecutionTime = executionTime;
             }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             [UsedImplicitly]
             public DBBase Affordance { get; }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             [UsedImplicitly]
             public string Desc { get; }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             [UsedImplicitly]
             public string ExecutionTime { get; }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             [UsedImplicitly]
             public string LocationMode { get; }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             [UsedImplicitly]
             public string LocationName { get; }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string Name => Affordance.Name;
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             [UsedImplicitly]
             public string Value { get; }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public Variable Variable { get; }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string VariableType { get; }
 
             public int CompareTo([CanBeNull] object obj)

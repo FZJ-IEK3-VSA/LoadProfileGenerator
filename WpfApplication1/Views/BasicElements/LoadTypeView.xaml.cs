@@ -44,7 +44,7 @@ namespace LoadProfileGenerator.Views.BasicElements {
             InitializeComponent();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private LoadTypePresenter Presenter => (LoadTypePresenter) DataContext;
 
         private void BtnRefreshUsedIn_Click([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)

@@ -34,7 +34,6 @@ using CalculationEngine.OnlineLogging;
 using Common;
 using Common.JSON;
 using Common.SQLResultLogging;
-using JetBrains.Annotations;
 
 namespace CalculationEngine.HouseholdElements {
     /*public class HumanHeatGainSpecification
@@ -48,12 +47,12 @@ namespace CalculationEngine.HouseholdElements {
         public CalcVariableRepository? CalcVariableRepository { get; }
         //public HumanHeatGainSpecification HumanHeatGainSpecification { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public DateStampCreator DateStampCreator => _dateStampCreator ?? throw new LPGException("no dsc");
 
-        [NotNull]
-        public static CalcRepo Make([NotNull] CalcParameters calcParameters, [NotNull] IInputDataLogger idl,
-                                    [NotNull] string resultPath, [NotNull] string calcObjectName,
+        [JetBrains.Annotations.NotNull]
+        public static CalcRepo Make([JetBrains.Annotations.NotNull] CalcParameters calcParameters, [JetBrains.Annotations.NotNull] IInputDataLogger idl,
+                                    [JetBrains.Annotations.NotNull] string resultPath, [JetBrains.Annotations.NotNull] string calcObjectName,
                                     CalculationProfiler calculationProfiler)
         {
 
@@ -110,34 +109,34 @@ namespace CalculationEngine.HouseholdElements {
         private readonly CalculationProfiler? _calculationProfiler;
         private readonly DateStampCreator? _dateStampCreator;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public IOnlineDeviceActivationProcessor Odap => _odap ?? throw new LPGException("no odap");
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Random Rnd => _rnd ?? throw new LPGException("no rnd");
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CalcParameters CalcParameters => _calcParameters ?? throw new LPGException("no calcparameters");
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public IOnlineLoggingData OnlineLoggingData => _onlineLoggingData ?? throw new LPGException("no old");
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public NormalRandom NormalRandom => _normalRandom ?? throw new LPGException("no nr");
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ILogFile Logfile => _lf ?? throw new LPGException("no lf");
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public SqlResultLoggingService Srls => _srls ?? throw new LPGException("no srls");
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public IInputDataLogger InputDataLogger => _inputDataLogger ?? throw new LPGException("no inputdatalogger");
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CalculationProfiler CalculationProfiler => _calculationProfiler ?? throw new LPGException("no calc profiler");
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public FileFactoryAndTracker FileFactoryAndTracker => _fft ?? throw new LPGException("no fft");
 
 
@@ -154,20 +153,20 @@ namespace CalculationEngine.HouseholdElements {
         }
     }
     public abstract class CalcBase {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly string _name;
 
         public StrGuid Guid { get; }
-        protected CalcBase([NotNull] string pName,  StrGuid guid)
+        protected CalcBase([JetBrains.Annotations.NotNull] string pName,  StrGuid guid)
         {
             _name = pName;
             Guid = guid;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string Name => _name;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public override string ToString() => GetType() + " " + _name + " (" + Guid +")";
     }
 }

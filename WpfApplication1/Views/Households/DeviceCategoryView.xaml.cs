@@ -49,7 +49,7 @@ namespace LoadProfileGenerator.Views.Households {
             InitializeComponent();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private DeviceCategoryPresenter Presenter => (DeviceCategoryPresenter) DataContext;
 
         private void BtnRefreshDevices_Click([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e) => Presenter
@@ -90,7 +90,7 @@ namespace LoadProfileGenerator.Views.Households {
             Presenter.ApplicationPresenter.OpenItem(o);
         }
 
-        private void SelectedItemOnPropertyChanged([NotNull] object sender, [NotNull] PropertyChangedEventArgs propertyChangedEventArgs)
+        private void SelectedItemOnPropertyChanged([JetBrains.Annotations.NotNull] object sender, [JetBrains.Annotations.NotNull] PropertyChangedEventArgs propertyChangedEventArgs)
         {
             if (propertyChangedEventArgs.PropertyName == "SelectedItem" && DeviceCategoryPicker1.Presenter.SelectedItem != null) {
                 Presenter.SelectedParentCategory = DeviceCategoryPicker1.Presenter.SelectedItem;

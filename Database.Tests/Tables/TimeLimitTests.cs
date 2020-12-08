@@ -38,8 +38,6 @@ using Common.Tests;
 using Database.Helpers;
 using Database.Tables.BasicElements;
 using FluentAssertions;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -248,7 +246,7 @@ namespace Database.Tests.Tables {
             }
         }
 
-        public TimeLimitTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public TimeLimitTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

@@ -6,8 +6,6 @@ using Common;
 using Common.SQLResultLogging.InputLoggers;
 using Common.Tests;
 using FluentAssertions;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -76,7 +74,7 @@ namespace ChartCreator2.Tests.Oxyplot {
             aeupp.MakePlot(rfe, "dev profiles", di);
             Logger.Info("finished picture");
         }*/
-        public DeviceProfilesTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public DeviceProfilesTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

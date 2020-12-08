@@ -2,14 +2,13 @@
 using Automation;
 using Automation.ResultFiles;
 using Common.CalcDto;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 
 namespace Common.SQLResultLogging.InputLoggers
 {
     public class HouseholdDtoLogger : DataSaverBase
     {
-        public HouseholdDtoLogger([NotNull] SqlResultLoggingService srls) : base(typeof(CalcHouseholdDto),
+        public HouseholdDtoLogger([JetBrains.Annotations.NotNull] SqlResultLoggingService srls) : base(typeof(CalcHouseholdDto),
             new ResultTableDefinition("HouseholdDefinitions", ResultTableID.HouseholdDefinitions, "Json Specification of the household", CalcOption.HouseholdContents), srls)
         {
         }
@@ -27,7 +26,7 @@ namespace Common.SQLResultLogging.InputLoggers
             Srls.SaveResultEntry(se);
         }
 
-        public CalcHouseholdDto Load([NotNull] HouseholdKey key)
+        public CalcHouseholdDto Load([JetBrains.Annotations.NotNull] HouseholdKey key)
         {
             if (Srls == null)
             {

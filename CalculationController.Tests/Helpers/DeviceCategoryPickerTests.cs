@@ -11,8 +11,6 @@ using Database.Tables.BasicHouseholds;
 using Database.Tables.ModularHouseholds;
 using Database.Tests;
 using FluentAssertions;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -160,7 +158,7 @@ namespace CalculationController.Tests.Helpers
             }
         }
 
-        public DeviceCategoryPickerTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public DeviceCategoryPickerTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

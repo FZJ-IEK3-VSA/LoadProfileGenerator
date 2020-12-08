@@ -8,7 +8,6 @@ using Common;
 using Database;
 using Database.Helpers;
 using Database.Tests;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Formatting = Newtonsoft.Json.Formatting;
 using Logger = Common.Logger;
@@ -18,7 +17,7 @@ namespace ReleaseMaker
     public class MakeSampleHouseJobs
     {
         /*
-        private static void CopyAll([NotNull] DirectoryInfo source, [NotNull] DirectoryInfo target)
+        private static void CopyAll([JetBrains.Annotations.NotNull] DirectoryInfo source, [JetBrains.Annotations.NotNull] DirectoryInfo target)
         {
             Directory.CreateDirectory(target.FullName);
 
@@ -107,7 +106,7 @@ namespace ReleaseMaker
             }
         }
 
-        private static void SetCalcSpec([NotNull] HouseCreationAndCalculationJob hj, [NotNull] Simulator sim)
+        private static void SetCalcSpec([JetBrains.Annotations.NotNull] HouseCreationAndCalculationJob hj, [JetBrains.Annotations.NotNull] Simulator sim)
         {
             hj.CalcSpec = JsonCalcSpecification.MakeDefaultsForProduction();
             hj.CalcSpec.OutputDirectory = "Results";

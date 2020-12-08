@@ -60,7 +60,7 @@ namespace CalculationEngine.HouseElements {
 
         [ItemNotNull] private List<CalcTransformationDevice>? _transformationDevices;
 
-        public CalcHouse([NotNull] string name, [NotNull] HouseholdKey houseKey,
+        public CalcHouse([JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] HouseholdKey houseKey,
                          CalcRepo calcRepo)
         {
             _calcRepo = calcRepo;
@@ -346,7 +346,7 @@ namespace CalculationEngine.HouseElements {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public List<CalcDevice> CollectHouseDevices()
         {
@@ -370,22 +370,22 @@ namespace CalculationEngine.HouseElements {
             return devices;
         }
 
-        public void SetAirConditioning([NotNull] CalcAirConditioning airConditioning)
+        public void SetAirConditioning([JetBrains.Annotations.NotNull] CalcAirConditioning airConditioning)
         {
             _calcAirConditioning = airConditioning;
         }
 
-        public void SetAutoDevs([NotNull] [ItemNotNull] List<CalcAutoDev> autoDevs)
+        public void SetAutoDevs([JetBrains.Annotations.NotNull] [ItemNotNull] List<CalcAutoDev> autoDevs)
         {
             _autoDevs = autoDevs;
         }
 
-        public void SetGenerators([NotNull] [ItemNotNull] List<CalcGenerator> generators)
+        public void SetGenerators([JetBrains.Annotations.NotNull] [ItemNotNull] List<CalcGenerator> generators)
         {
             _generators = generators;
         }
 
-        public void SetHouseholds([NotNull] [ItemNotNull] List<ICalcAbleObject> households)
+        public void SetHouseholds([JetBrains.Annotations.NotNull] [ItemNotNull] List<ICalcAbleObject> households)
         {
             _households = households;
         }
@@ -395,13 +395,13 @@ namespace CalculationEngine.HouseElements {
             _calcSpaceHeating = spaceHeating;
         }
 
-        public void SetStorages([NotNull] [ItemNotNull] List<CalcEnergyStorage> energyStorages)
+        public void SetStorages([JetBrains.Annotations.NotNull] [ItemNotNull] List<CalcEnergyStorage> energyStorages)
         {
             _energyStorages = energyStorages;
         }
 
         public void SetTransformationDevices(
-            [NotNull] [ItemNotNull] List<CalcTransformationDevice> transformationDevices)
+            [JetBrains.Annotations.NotNull] [ItemNotNull] List<CalcTransformationDevice> transformationDevices)
         {
             _transformationDevices = transformationDevices;
         }

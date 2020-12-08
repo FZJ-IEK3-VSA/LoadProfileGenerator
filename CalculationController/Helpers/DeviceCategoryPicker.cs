@@ -48,48 +48,48 @@ using JetBrains.Annotations;
 namespace CalculationController.Helpers {
     public interface IDeviceCategoryPicker
     {
-        [NotNull]
-        RealDevice PickDeviceFromCategory([NotNull] DeviceCategory deviceCategory, EnergyIntensityType energyIntensity,
-            [NotNull][ItemNotNull] ObservableCollection<DeviceAction> deviceActions);
+        [JetBrains.Annotations.NotNull]
+        RealDevice PickDeviceFromCategory([JetBrains.Annotations.NotNull] DeviceCategory deviceCategory, EnergyIntensityType energyIntensity,
+            [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<DeviceAction> deviceActions);
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         RealDevice GetAutoDeviceDeviceFromDeviceCategoryOrDevice([CanBeNull] IAssignableDevice dev,
-            [NotNull][ItemNotNull] List<IAssignableDevice> alldevices, EnergyIntensityType energyIntensity,
-            [NotNull][ItemNotNull] ObservableCollection<DeviceAction> deviceActions, int locationID);
+            [JetBrains.Annotations.NotNull][ItemNotNull] List<IAssignableDevice> alldevices, EnergyIntensityType energyIntensity,
+            [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<DeviceAction> deviceActions, int locationID);
 
         //DeviceAction GetDeviceActionFromGroup(IAssignableDevice dev, IEnumerable<CalcDevice> calcDevices,ObservableCollection<DeviceAction> allDeviceActions);
 
-        [NotNull]
-        DeviceAction GetAutoDeviceActionFromGroup([NotNull] IAssignableDevice dev,
-            [NotNull][ItemNotNull] List<IAssignableDevice> otherDevicesAtLocation, EnergyIntensityType energyIntensity,
-            [NotNull][ItemNotNull] ObservableCollection<DeviceAction> allDeviceActions, int locationID);
+        [JetBrains.Annotations.NotNull]
+        DeviceAction GetAutoDeviceActionFromGroup([JetBrains.Annotations.NotNull] IAssignableDevice dev,
+            [JetBrains.Annotations.NotNull][ItemNotNull] List<IAssignableDevice> otherDevicesAtLocation, EnergyIntensityType energyIntensity,
+            [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<DeviceAction> allDeviceActions, int locationID);
 
         [CanBeNull]
-        RealDevice GetOrPickDevice([NotNull] IAssignableDevice dev, [NotNull] Location devLocation,
-            EnergyIntensityType energyIntensity, [NotNull][ItemNotNull] List<IAssignableDevice> allDevLocations,
-            [NotNull][ItemNotNull] ObservableCollection<DeviceAction> allDeviceActions);
+        RealDevice GetOrPickDevice([JetBrains.Annotations.NotNull] IAssignableDevice dev, [JetBrains.Annotations.NotNull] Location devLocation,
+            EnergyIntensityType energyIntensity, [JetBrains.Annotations.NotNull][ItemNotNull] List<IAssignableDevice> allDevLocations,
+            [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<DeviceAction> allDeviceActions);
 
         [CanBeNull]
-        RealDevice GetDeviceDtoForAffordance([NotNull] IAssignableDevice dev, [NotNull][ItemNotNull] IEnumerable<CalcDeviceDto> calcDevices,
+        RealDevice GetDeviceDtoForAffordance([JetBrains.Annotations.NotNull] IAssignableDevice dev, [JetBrains.Annotations.NotNull][ItemNotNull] IEnumerable<CalcDeviceDto> calcDevices,
             int locationID,
-            [NotNull] [ItemNotNull] ObservableCollection<DeviceAction> allDeviceActions,
-            [ItemNotNull] [NotNull] List<DeviceCategoryDto> deviceCategories);
+            [JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<DeviceAction> allDeviceActions,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] List<DeviceCategoryDto> deviceCategories);
 
         [CanBeNull]
-        DeviceAction GetDeviceActionFromGroup([NotNull] IAssignableDevice dev, [NotNull][ItemNotNull] IEnumerable<CalcDeviceDto> calcDevices,
-            [NotNull][ItemNotNull] ObservableCollection<DeviceAction> allDeviceActions);
+        DeviceAction GetDeviceActionFromGroup([JetBrains.Annotations.NotNull] IAssignableDevice dev, [JetBrains.Annotations.NotNull][ItemNotNull] IEnumerable<CalcDeviceDto> calcDevices,
+            [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<DeviceAction> allDeviceActions);
     }
     public class DeviceCategoryPicker: IDeviceCategoryPicker
     {
         [CanBeNull] private readonly DeviceSelection _deviceSelection;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly Dictionary<LocationDeviceTuple, DeviceAction> _pickedDeviceActions;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly Dictionary<LocationDeviceTuple, RealDevice> _pickedDevices;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly Random _random;
 
-        public DeviceCategoryPicker([NotNull] Random random, [CanBeNull] DeviceSelection deviceSelection)
+        public DeviceCategoryPicker([JetBrains.Annotations.NotNull] Random random, [CanBeNull] DeviceSelection deviceSelection)
         {
             _pickedDevices = new Dictionary<LocationDeviceTuple, RealDevice>();
             _pickedDeviceActions = new Dictionary<LocationDeviceTuple, DeviceAction>();
@@ -247,10 +247,10 @@ namespace CalculationController.Helpers {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         private static List<RealDevice> GetMeasuredDevicesFromRealDevices(
-            [NotNull][ItemNotNull] ObservableCollection<DeviceAction> deviceActions, [NotNull][ItemNotNull] ObservableCollection<RealDevice> rds)
+            [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<DeviceAction> deviceActions, [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<RealDevice> rds)
         {
             var devices = new List<RealDevice>();
             foreach (var rd in rds) {
@@ -335,9 +335,9 @@ namespace CalculationController.Helpers {
         }
 
         [CanBeNull]
-        private DeviceAction PickDeviceActionFromGroupAtHHLocation([NotNull] DeviceActionGroup deviceActionGroup,
-            [NotNull][ItemNotNull] List<IAssignableDevice> allDevLocations, EnergyIntensityType energyIntensity, [NotNull] Location targetLoc,
-            [NotNull][ItemNotNull] ObservableCollection<DeviceAction> allDeviceActions)
+        private DeviceAction PickDeviceActionFromGroupAtHHLocation([JetBrains.Annotations.NotNull] DeviceActionGroup deviceActionGroup,
+            [JetBrains.Annotations.NotNull][ItemNotNull] List<IAssignableDevice> allDevLocations, EnergyIntensityType energyIntensity, [JetBrains.Annotations.NotNull] Location targetLoc,
+            [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<DeviceAction> allDeviceActions)
         {
             // check if there is already such a device
             // first get all device actions in the group
@@ -429,9 +429,9 @@ namespace CalculationController.Helpers {
 
         // the real picking function that selects a device
         [SuppressMessage("ReSharper", "SwitchStatementMissingSomeCases")]
-        [NotNull]
-        private DeviceAction PickDeviceFromGroup([NotNull] DeviceActionGroup deviceGroup, EnergyIntensityType energyIntensity,
-            [NotNull][ItemNotNull] ObservableCollection<DeviceAction> allDeviceActions, int locationID)
+        [JetBrains.Annotations.NotNull]
+        private DeviceAction PickDeviceFromGroup([JetBrains.Annotations.NotNull] DeviceActionGroup deviceGroup, EnergyIntensityType energyIntensity,
+            [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<DeviceAction> allDeviceActions, int locationID)
         {
             var deviceActions = deviceGroup.GetDeviceActions(allDeviceActions);
             if (deviceActions.Count == 0) {
@@ -533,9 +533,9 @@ namespace CalculationController.Helpers {
         }
 
         [CanBeNull]
-        private RealDevice PickRealDeviceFromCategoryAtHHLocation([NotNull] DeviceCategory deviceCategory,
-            [NotNull][ItemNotNull] List<IAssignableDevice> allDevicesAtLocations, EnergyIntensityType energyIntensity, [NotNull] Location targetLoc,
-            [NotNull][ItemNotNull] ObservableCollection<DeviceAction> deviceActions)
+        private RealDevice PickRealDeviceFromCategoryAtHHLocation([JetBrains.Annotations.NotNull] DeviceCategory deviceCategory,
+            [JetBrains.Annotations.NotNull][ItemNotNull] List<IAssignableDevice> allDevicesAtLocations, EnergyIntensityType energyIntensity, [JetBrains.Annotations.NotNull] Location targetLoc,
+            [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<DeviceAction> deviceActions)
         {
             // check if there is already such a device
             foreach (var device in allDevicesAtLocations) {
@@ -553,9 +553,9 @@ namespace CalculationController.Helpers {
             return PickDeviceFromCategory(deviceCategory, energyIntensity, deviceActions);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
-        private static List<DeviceAction> TryToGetMeasured([NotNull][ItemNotNull] List<DeviceAction> deviceActions)
+        private static List<DeviceAction> TryToGetMeasured([JetBrains.Annotations.NotNull][ItemNotNull] List<DeviceAction> deviceActions)
         {
             var actions = new List<DeviceAction>();
             foreach (var deviceAction in deviceActions) {
@@ -588,20 +588,20 @@ namespace CalculationController.Helpers {
 
             public static bool operator !=(LocationDeviceTuple left, LocationDeviceTuple right) => !left.Equals(right);
 
-            public LocationDeviceTuple([NotNull] IAssignableDevice category, int locationID)
+            public LocationDeviceTuple([JetBrains.Annotations.NotNull] IAssignableDevice category, int locationID)
             {
                 Category = category;
                 LocationID = locationID;
             }
 
             [UsedImplicitly]
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public IAssignableDevice Category { get; }
 
             [UsedImplicitly]
             public int LocationID { get; }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public override string ToString() => "LocID:" + LocationID + ", " + Category;
         }
 

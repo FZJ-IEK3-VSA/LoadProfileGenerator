@@ -1,26 +1,24 @@
-using JetBrains.Annotations;
-
 namespace CalculationEngine.OnlineLogging {
     public class EnergyStorageHeaderEntry {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly string _capacity;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly string _loadType;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly string _name;
         private string? _signals;
 
-        public EnergyStorageHeaderEntry([NotNull] string name, [NotNull] string capacity, [NotNull] string loadType) {
+        public EnergyStorageHeaderEntry([JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] string capacity, [JetBrains.Annotations.NotNull] string loadType) {
             _name = name;
             _capacity = capacity;
             _loadType = loadType;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string TotalHeader => _name + " (Capacity " + _capacity + ") (Loadtype " + _loadType + ") (" + _signals +
                                      ")";
 
-        public void AddSignal([NotNull] string signal) {
+        public void AddSignal([JetBrains.Annotations.NotNull] string signal) {
             _signals += signal;
         }
     }

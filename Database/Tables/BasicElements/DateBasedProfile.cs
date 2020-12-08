@@ -42,10 +42,10 @@ using JetBrains.Annotations;
 namespace Database.Tables.BasicElements {
     public class DateBasedProfile : DBBaseElement {
         public const string TableName = "tblDateBasedProfile";
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<DateProfileDataPoint> _datapoints;
-        [NotNull] private string _description;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<DateProfileDataPoint> _datapoints;
+        [JetBrains.Annotations.NotNull] private string _description;
 
-        public DateBasedProfile([NotNull] string name, [NotNull] string description, [NotNull] string connectionString, StrGuid guid, [CanBeNull] int? pID = null) : base(name, TableName,
+        public DateBasedProfile([JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] string description, [JetBrains.Annotations.NotNull] string connectionString, StrGuid guid, [CanBeNull] int? pID = null) : base(name, TableName,
             connectionString, guid)
         {
             _datapoints = new ObservableCollection<DateProfileDataPoint>();
@@ -54,21 +54,21 @@ namespace Database.Tables.BasicElements {
             _description = description;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<DateProfileDataPoint> Datapoints => _datapoints;
 
         [UsedImplicitly]
         public int DatapointsCount => _datapoints.Count;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string Description {
             get => _description;
             set => SetValueWithNotify(value, ref _description, nameof(Description));
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public DateProfileDataPoint AddNewDatePoint(DateTime dt, double value, bool saveAndSort = true)
         {
             var tp = new DateProfileDataPoint(dt, value, null, IntID, ConnectionString, System.Guid.NewGuid().ToStrGuid());
@@ -105,9 +105,9 @@ namespace Database.Tables.BasicElements {
             return usedIns;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) =>
+        public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString) =>
             new DateBasedProfile(FindNewName(isNameTaken, "New profile "), "(no description)", connectionString, System.Guid.NewGuid().ToStrGuid());
 
         public void DeleteAllTimepoints()
@@ -122,7 +122,7 @@ namespace Database.Tables.BasicElements {
             _datapoints.Clear();
         }
 
-        public void DeleteDatePoint([NotNull] DateProfileDataPoint tp)
+        public void DeleteDatePoint([JetBrains.Annotations.NotNull] DateProfileDataPoint tp)
         {
             tp.DeleteFromDB();
             _datapoints.Remove(tp);
@@ -136,15 +136,15 @@ namespace Database.Tables.BasicElements {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public double[] GetValueArray(DateTime startDateTime, DateTime endDateTime, TimeSpan stepsize) => GetValueArray(startDateTime, endDateTime, stepsize, _datapoints);
 
         public override DBBase ImportFromGenericItem(DBBase toImport, Simulator dstSim) => ImportFromItem((DateBasedProfile)toImport, dstSim);
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "dstSim")]
         [UsedImplicitly]
-        public static DateBasedProfile ImportFromItem([NotNull] DateBasedProfile toImport, [NotNull] Simulator dstSim)
+        public static DateBasedProfile ImportFromItem([JetBrains.Annotations.NotNull] DateBasedProfile toImport, [JetBrains.Annotations.NotNull] Simulator dstSim)
         {
             var dbp = new DateBasedProfile(toImport.Name, toImport.Description, dstSim.ConnectionString, toImport.Guid);
             dbp.SaveToDB();
@@ -160,7 +160,7 @@ namespace Database.Tables.BasicElements {
             return dbp;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<DateBasedProfile> result, [NotNull] string connectionString, bool ignoreMissingTables)
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DateBasedProfile> result, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingTables)
         {
             var aic = new AllItemCollections();
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);
@@ -177,7 +177,7 @@ namespace Database.Tables.BasicElements {
         /// </summary>
         /// <param name="reportProgress"></param>
         /// <exception cref="Exception">A delegate callback throws an exception.</exception>
-        public void SaveToDB([NotNull] Action<int> reportProgress)
+        public void SaveToDB([JetBrains.Annotations.NotNull] Action<int> reportProgress)
         {
             base.SaveToDB();
             var i = 1;
@@ -257,8 +257,8 @@ namespace Database.Tables.BasicElements {
             cmd.AddParameter("Description", Description);
         }
 
-        [NotNull]
-        private static DateBasedProfile AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields, [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static DateBasedProfile AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields, [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var id = dr.GetIntFromLong("ID");
             var name = dr.GetString("Name");
@@ -267,8 +267,8 @@ namespace Database.Tables.BasicElements {
             return new DateBasedProfile(name, description, connectionString, guid, id);
         }
 
-        [NotNull]
-        private static double[] GetValueArray(DateTime startDateTime, DateTime endDateTime, TimeSpan stepsize, [ItemNotNull] [NotNull] ObservableCollection<DateProfileDataPoint> dataPoints)
+        [JetBrains.Annotations.NotNull]
+        private static double[] GetValueArray(DateTime startDateTime, DateTime endDateTime, TimeSpan stepsize, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DateProfileDataPoint> dataPoints)
         {
             var tempvalues = new List<TempValue>();
             var yearsToMake = new List<int>();
@@ -323,7 +323,7 @@ namespace Database.Tables.BasicElements {
             return allValues;
         }
 
-        private static bool IsCorrectParent([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var hd = (DateProfileDataPoint)child;
             if (parent.ID == hd.ProfileID) {
@@ -374,7 +374,7 @@ namespace Database.Tables.BasicElements {
 
             public override int GetHashCode() => Time.GetHashCode() * 17 + Value.GetHashCode();
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public override string ToString() => Time.ToShortDateString() + " " + Time.ToShortTimeString() + ":" + Value.ToString(CultureInfo.CurrentCulture);
         }
     }

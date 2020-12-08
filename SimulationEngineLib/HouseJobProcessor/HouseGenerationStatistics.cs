@@ -11,19 +11,19 @@ namespace SimulationEngineLib.HouseJobProcessor {
     {
         public class StatisticsEntry
         {
-            public StatisticsEntry([NotNull] string fileName, [NotNull] HouseCreationAndCalculationJob jcs, [NotNull] string sourceDirectory)
+            public StatisticsEntry([JetBrains.Annotations.NotNull] string fileName, [JetBrains.Annotations.NotNull] HouseCreationAndCalculationJob jcs, [JetBrains.Annotations.NotNull] string sourceDirectory)
             {
                 this.FileName = fileName;
                 Jcs = jcs;
                 SourceDirectory = sourceDirectory;
             }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string FileName { get; set; }
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public HouseCreationAndCalculationJob Jcs { get; set; }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string SourceDirectory { get; set; }
 
             public int TotalPersonCount { get; set; } = -1;
@@ -34,14 +34,14 @@ namespace SimulationEngineLib.HouseJobProcessor {
             [CanBeNull]
             public string SourceDistrict { get; set; }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string GetCsvLine()
             {
                 return FileName + ";"  + Jcs.House?.Name + ";" + Jcs.CalcSpec?.OutputDirectory + ";" + TotalPersonCount
                        + ";" + HouseholdCount + ";" + PlannedPersonCount + ";" + PlannedHouseholdCount + ";" + SourceDistrict;
             }
         }
-        public void Run([NotNull] string directory, [NotNull] string districtDefinitionJsonPath)
+        public void Run([JetBrains.Annotations.NotNull] string directory, [JetBrains.Annotations.NotNull] string districtDefinitionJsonPath)
         {
             DirectoryInfo di = new DirectoryInfo(directory);
             var subdirs = di.GetDirectories();
@@ -80,7 +80,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
             sw.Close();
         }
         /*
-        private static void ReadSourceData([NotNull] [ItemNotNull] List<StatisticsEntry> statisticsEntries, [NotNull] string jsonExportPath)
+        private static void ReadSourceData([JetBrains.Annotations.NotNull] [ItemNotNull] List<StatisticsEntry> statisticsEntries, [JetBrains.Annotations.NotNull] string jsonExportPath)
         {
             DirectoryInfo sourcejsonPath = new DirectoryInfo(jsonExportPath);
             var files = sourcejsonPath.GetFiles("*.json");

@@ -51,7 +51,7 @@ namespace Common.SQLResultLogging
     }
     public class ResultTableDefinition: IEquatable<ResultTableDefinition>
     {
-        public ResultTableDefinition([NotNull] string tableName, ResultTableID resultTableID, [NotNull] string description, CalcOption enablingOption)
+        public ResultTableDefinition([JetBrains.Annotations.NotNull] string tableName, ResultTableID resultTableID, [JetBrains.Annotations.NotNull] string description, CalcOption enablingOption)
         {
             TableName = tableName;
             ResultTableID = resultTableID;
@@ -124,10 +124,10 @@ namespace Common.SQLResultLogging
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string TableName { get; set; }
         public ResultTableID ResultTableID { get; set; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string Description { get; set; }
 
         public CalcOption EnablingOption { get; set; }

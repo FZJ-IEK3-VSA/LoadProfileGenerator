@@ -49,24 +49,24 @@ using JetBrains.Annotations;
 namespace Database.Database {
     [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable")]
     public sealed class Command : IDisposable {
-        [NotNull] private static readonly Dictionary<Connection, int> _opencount = new Dictionary<Connection, int>();
-        [NotNull] private readonly SQLiteCommand _cmd;
+        [JetBrains.Annotations.NotNull] private static readonly Dictionary<Connection, int> _opencount = new Dictionary<Connection, int>();
+        [JetBrains.Annotations.NotNull] private readonly SQLiteCommand _cmd;
 
-        [NotNull] private readonly Connection _sqlcon;
+        [JetBrains.Annotations.NotNull] private readonly Connection _sqlcon;
 
         // list of the parameter names for building the sql strings
-        [ItemNotNull] [NotNull] private readonly List<Parameter> _sqlparameter;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly List<Parameter> _sqlparameter;
 
         [CanBeNull] private Parameter _idParameter;
 
-        public bool IsParameterSet([NotNull] string name)
+        public bool IsParameterSet([JetBrains.Annotations.NotNull] string name)
         {
             if (_sqlparameter.Any(x => String.Equals(x.SqlName, name, StringComparison.InvariantCultureIgnoreCase))) {
                 return true;
             }
             return false;
         }
-        public Command([NotNull] Connection sqlcon)
+        public Command([JetBrains.Annotations.NotNull] Connection sqlcon)
         {
             _sqlcon = sqlcon;
             _cmd = new SQLiteCommand
@@ -88,7 +88,7 @@ namespace Database.Database {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [SuppressMessage("Microsoft.Security", "CA2100:SQL-Abfragen auf Sicherheitsrisiken �berpr�fen")]
         private string Cmdstring {
             get => _cmd.CommandText;
@@ -104,10 +104,10 @@ namespace Database.Database {
             }
         }
 
-        public void AddParameter([NotNull] string parametername, [NotNull] object value)
+        public void AddParameter([JetBrains.Annotations.NotNull] string parametername, [JetBrains.Annotations.NotNull] object value)
             => AddParameter(parametername, "@" + parametername, value);
 
-        public void AddParameter([NotNull] string sqlname, [NotNull] string parametername, [NotNull] object value, bool isID = false)
+        public void AddParameter([JetBrains.Annotations.NotNull] string sqlname, [JetBrains.Annotations.NotNull] string parametername, [JetBrains.Annotations.NotNull] object value, bool isID = false)
         {
             if (value == null) {
                 throw new LPGException("Tried to save null to database");
@@ -146,7 +146,7 @@ namespace Database.Database {
             }
         }
 
-        public void DeleteByID([NotNull] string tblName, int id)
+        public void DeleteByID([JetBrains.Annotations.NotNull] string tblName, int id)
         {
             Cmdstring = "DELETE FROM " + tblName + " WHERE ID = @id";
             AddParameter("id", id);
@@ -156,14 +156,14 @@ namespace Database.Database {
             }
         }
 
-        public void DeleteEntireTable([NotNull] string tblName)
+        public void DeleteEntireTable([JetBrains.Annotations.NotNull] string tblName)
         {
             Cmdstring = "DELETE FROM " + tblName + "";
             _cmd.ExecuteNonQuery();
         }
 
 
-        public int ExecuteInsert([NotNull] string tblName)
+        public int ExecuteInsert([JetBrains.Annotations.NotNull] string tblName)
         {
             var cmd = "INSERT INTO " + tblName + " (";
             var sqlnames = string.Empty;
@@ -188,27 +188,27 @@ namespace Database.Database {
         }
 
         // ReSharper disable once UnusedMethodReturnValue.Global
-        public int ExecuteNonQuery([NotNull] string command)
+        public int ExecuteNonQuery([JetBrains.Annotations.NotNull] string command)
         {
             Cmdstring = command;
             return _cmd.ExecuteNonQuery();
         }
 
-        [NotNull]
-        public DataReader ExecuteReader([NotNull] string command)
+        [JetBrains.Annotations.NotNull]
+        public DataReader ExecuteReader([JetBrains.Annotations.NotNull] string command)
         {
             Cmdstring = command;
             return new DataReader(_cmd.ExecuteReader());
         }
 
-        [NotNull]
-        public object ExecuteScalar([NotNull] string command)
+        [JetBrains.Annotations.NotNull]
+        public object ExecuteScalar([JetBrains.Annotations.NotNull] string command)
         {
             Cmdstring = command;
             return _cmd.ExecuteScalar();
         }
 
-        public void ExecuteUpdate([NotNull] string tblName)
+        public void ExecuteUpdate([JetBrains.Annotations.NotNull] string tblName)
         {
             var cmd = "UPDATE " + tblName + " SET ";
             HashSet<string> usedSqlNames = new HashSet<string>();
@@ -330,8 +330,8 @@ namespace Database.Database {
             throw new LPGException("Type fehlt:" + typename + Environment.NewLine + s + Environment.NewLine + s2);
         }
 
-        [NotNull]
-        public DataReader GetTableReader([NotNull] string tblName)
+        [JetBrains.Annotations.NotNull]
+        public DataReader GetTableReader([JetBrains.Annotations.NotNull] string tblName)
         {
             Cmdstring = "SELECT * FROM " + tblName;
             return new DataReader(_cmd.ExecuteReader());
@@ -348,7 +348,7 @@ namespace Database.Database {
             Logger.Debug("sqlconnection status finished");
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public override string ToString() => Cmdstring;
     }
 }

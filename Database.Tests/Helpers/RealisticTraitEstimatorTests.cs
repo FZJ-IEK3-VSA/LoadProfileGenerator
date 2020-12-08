@@ -3,8 +3,6 @@ using CalculationController.Integrity;
 using Common;
 using Common.Tests;
 using Database.Helpers;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -26,7 +24,7 @@ namespace Database.Tests.Helpers
             }
         }
 
-        public RealisticTraitEstimatorTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public RealisticTraitEstimatorTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

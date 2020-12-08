@@ -31,10 +31,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Forms;
 using System.Windows.Input;
 using Common;
-using Database;
 using Database.Helpers;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
@@ -51,10 +49,10 @@ namespace LoadProfileGenerator.Views.Households {
             InitializeComponent();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private ModularHouseholdPresenter Presenter => (ModularHouseholdPresenter) DataContext;
 
-        private void Apply([NotNull] string s, [CanBeNull] Person p = null)
+        private void Apply([JetBrains.Annotations.NotNull] string s, [CanBeNull] Person p = null)
         {
             Presenter.FilterText = s;
             Presenter.UseFilter = true;
@@ -64,7 +62,7 @@ namespace LoadProfileGenerator.Views.Households {
             }
         }
 
-        private void ApplyTag([NotNull] string s, [CanBeNull] Person p = null)
+        private void ApplyTag([JetBrains.Annotations.NotNull] string s, [CanBeNull] Person p = null)
         {
             var tag = Presenter.Sim.TraitTags.FindFirstByName(s, FindMode.Partial);
             Presenter.UseTags = true;
@@ -322,31 +320,46 @@ namespace LoadProfileGenerator.Views.Households {
             Presenter.AskDeleteQuestion(
                 Presenter.ThisModularHousehold.HeaderString, Presenter.Delete);
 
-        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        private void ExportToCsvClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
-        {
-            using (var sfd = new SaveFileDialog()) {
-                sfd.OverwritePrompt = true;
-                sfd.Filter = "CSV file (*.csv)|*.csv";
-                sfd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                sfd.AddExtension = true;
-                sfd.DefaultExt = ".csv";
-                sfd.Title = "Please choose the path to save the exported CSV file.";
-                sfd.CheckPathExists = true;
-                if (sfd.ShowDialog() == DialogResult.OK) {
-                    try {
-                        ModularHouseholdSerializer.ExportAsCSV(Presenter.ThisModularHousehold,
-                            Presenter.Sim, sfd.FileName);
-                        Logger.Info("Finished writing the file.");
-                        MessageWindowHandler.Mw.ShowInfoMessage("Finished exporting to " + sfd.FileName, "Finished Export");
-                    }
-                    catch (Exception ex) {
-                        Logger.Exception(ex);
-                        MessageWindowHandler.Mw.ShowDebugMessage(ex);
-                    }
-                }
-            }
-        }
+        //[SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
+        //private void ExportToCsvClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
+        //{
+        //    Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
+
+        //    // Show save file dialog box
+        //    Nullable<bool> result = dlg.ShowDialog();
+
+        //    // Process save file dialog box results
+        //    if (result == true)
+        //    {
+        //        // Save document
+        //        string filename = dlg.FileName;
+        //    }
+        //    using (var sfd = new SaveFileDialog()) {
+        //        dlg.FileName = "Document"; // Default file name
+        //        dlg.DefaultExt = ".text"; // Default file extension
+        //        dlg.Filter = "Text documents (.txt)|*.txt"; // Filter files by extension
+
+        //        sfd.OverwritePrompt = true;
+        //        sfd.Filter = "CSV file (*.csv)|*.csv";
+        //        sfd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+        //        sfd.AddExtension = true;
+        //        sfd.DefaultExt = ".csv";
+        //        sfd.Title = "Please choose the path to save the exported CSV file.";
+        //        sfd.CheckPathExists = true;
+        //        if (sfd.ShowDialog() == DialogResult.OK) {
+        //            try {
+        //                ModularHouseholdSerializer.ExportAsCSV(Presenter.ThisModularHousehold,
+        //                    Presenter.Sim, sfd.FileName);
+        //                Logger.Info("Finished writing the file.");
+        //                MessageWindowHandler.Mw.ShowInfoMessage("Finished exporting to " + sfd.FileName, "Finished Export");
+        //            }
+        //            catch (Exception ex) {
+        //                Logger.Exception(ex);
+        //                MessageWindowHandler.Mw.ShowDebugMessage(ex);
+        //            }
+        //        }
+        //    }
+        //}
 
         private void HHPersons_OnMouseDoubleClick([CanBeNull] object sender, [CanBeNull] MouseButtonEventArgs e)
         {
@@ -417,7 +430,7 @@ namespace LoadProfileGenerator.Views.Households {
             Presenter.RefreshTimeEstimates();
         }
 
-        private void TxtFilter_OnKeyUp([NotNull] object sender, [NotNull] KeyEventArgs e)
+        private void TxtFilter_OnKeyUp([JetBrains.Annotations.NotNull] object sender, [JetBrains.Annotations.NotNull] KeyEventArgs e)
         {
             Presenter.UseFilter = true;
             Presenter.UseTags = false;

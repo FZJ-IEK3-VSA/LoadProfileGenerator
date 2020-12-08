@@ -12,13 +12,13 @@ using JetBrains.Annotations;
 namespace Database.Tables.BasicHouseholds {
     public class Vacation : DBBaseElement {
         public const string TableName = "tblVacations";
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<VacationTime> _vacationTimes;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<VacationTime> _vacationTimes;
 
         private CreationType _creationType;
         private int _maximumAge;
         private int _minimumAge;
 
-        public Vacation([NotNull] string name, [CanBeNull] int? pID, [NotNull] string connectionString, int minimumAge, int maximumAge,
+        public Vacation([JetBrains.Annotations.NotNull] string name, [CanBeNull] int? pID, [JetBrains.Annotations.NotNull] string connectionString, int minimumAge, int maximumAge,
             CreationType creationType, StrGuid guid) : base(name, TableName, connectionString, guid)
         {
             _creationType = creationType;
@@ -68,7 +68,7 @@ namespace Database.Tables.BasicHouseholds {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<VacationTime> VacationTimes => _vacationTimes;
 
         public void AddVacationTime(DateTime start, DateTime end, VacationType vacationType)
@@ -84,9 +84,9 @@ namespace Database.Tables.BasicHouseholds {
             OnPropertyChangedNoUpdate(nameof(PrettyName));
         }
 
-        [NotNull]
-        private static Vacation AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static Vacation AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var id = dr.GetIntFromLong("ID", false, ignoreMissingFields);
             var name = dr.GetString("Name", false, string.Empty, ignoreMissingFields);
@@ -97,9 +97,9 @@ namespace Database.Tables.BasicHouseholds {
             return new Vacation(name, id, connectionString, minimumAge, maximumAge, creationType,guid);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new Vacation(
+        public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString) => new Vacation(
             FindNewName(isNameTaken, "New Vacation "), null, connectionString, 1, 99, CreationType.ManuallyCreated, System.Guid.NewGuid().ToStrGuid());
 
         public override void DeleteFromDB()
@@ -110,16 +110,16 @@ namespace Database.Tables.BasicHouseholds {
             base.DeleteFromDB();
         }
 
-        public void DeleteVacationTime([NotNull] VacationTime vactime)
+        public void DeleteVacationTime([JetBrains.Annotations.NotNull] VacationTime vactime)
         {
             _vacationTimes.Remove(vactime);
             vactime.DeleteFromDB();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "dstSim")]
         [UsedImplicitly]
-        public static Vacation ImportFromItem([NotNull] Vacation toImport,  [NotNull] Simulator dstSim)
+        public static Vacation ImportFromItem([JetBrains.Annotations.NotNull] Vacation toImport,  [JetBrains.Annotations.NotNull] Simulator dstSim)
         {
             var p = new Vacation(toImport.Name, null, dstSim.ConnectionString, toImport.MinimumAge, toImport.MaximumAge,
                 toImport._creationType, System.Guid.NewGuid().ToStrGuid());
@@ -130,7 +130,7 @@ namespace Database.Tables.BasicHouseholds {
             return p;
         }
 
-        private static bool IsCorrectParent([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var hd = (VacationTime) child;
             if (parent.ID == hd.VacationID) {
@@ -147,7 +147,7 @@ namespace Database.Tables.BasicHouseholds {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<Vacation> result, [NotNull] string connectionString,
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Vacation> result, [JetBrains.Annotations.NotNull] string connectionString,
             bool ignoreMissingTables)
         {
             var aic = new AllItemCollections();
@@ -178,7 +178,7 @@ namespace Database.Tables.BasicHouseholds {
         public override string ToString() => Name;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public List<VacationTimeframe> VacationTimeframes()
         {
             var timeframes = new List<VacationTimeframe>();

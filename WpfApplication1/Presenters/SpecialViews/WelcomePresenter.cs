@@ -34,9 +34,9 @@ using LoadProfileGenerator.Views.SpecialViews;
 
 namespace LoadProfileGenerator.Presenters.SpecialViews {
     public class WelcomePresenter : PresenterBaseWithAppPresenter<WelcomeView> {
-        [NotNull] private readonly ApplicationPresenter _applicationPresenter;
+        [JetBrains.Annotations.NotNull] private readonly ApplicationPresenter _applicationPresenter;
 
-        public WelcomePresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] WelcomeView view)
+        public WelcomePresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] WelcomeView view)
             : base(view, "WelcomeHeader", applicationPresenter) => _applicationPresenter = applicationPresenter;
 
         [CanBeNull]
@@ -52,7 +52,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string WelcomeHeader { get; } = "Welcome";
 

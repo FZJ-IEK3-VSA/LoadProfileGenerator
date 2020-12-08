@@ -25,7 +25,7 @@ namespace LoadProfileGenerator.Views.Houses
             InitializeComponent();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private SettlementTemplatePresenter Presenter => (SettlementTemplatePresenter)DataContext;
 
         private void BtnAddAllTemplate([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e) => Presenter.AddAllTemplates();

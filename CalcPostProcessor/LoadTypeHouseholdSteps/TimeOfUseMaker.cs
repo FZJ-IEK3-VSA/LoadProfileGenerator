@@ -42,19 +42,19 @@ using JetBrains.Annotations;
 namespace CalcPostProcessor.LoadTypeHouseholdSteps {
     public  class TimeOfUseMaker: LoadTypeStepBase
     {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly IFileFactoryAndTracker _fft;
 
         public TimeOfUseMaker(
-                              [NotNull] CalcDataRepository repository,
-                              [NotNull] ICalculationProfiler profiler,
-                              [NotNull] IFileFactoryAndTracker fft):base(repository,
+                              [JetBrains.Annotations.NotNull] CalcDataRepository repository,
+                              [JetBrains.Annotations.NotNull] ICalculationProfiler profiler,
+                              [JetBrains.Annotations.NotNull] IFileFactoryAndTracker fft):base(repository,
             AutomationUtili.GetOptionList(CalcOption.TimeOfUsePlot), profiler, "Time of Use Averages")
         {
             _fft = fft;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private StringBuilder MakeWriteableString(int timestep)
         {
             var calcParameters = Repository.CalcParameters;
@@ -72,8 +72,8 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             return sb;
         }
 
-        private  void Run([NotNull] CalcLoadTypeDto dstLoadType, [NotNull][ItemNotNull] List<OnlineEnergyFileRow> energyFileRows,
-            [NotNull] IFileFactoryAndTracker fft, [NotNull] EnergyFileColumns efcs) {
+        private  void Run([JetBrains.Annotations.NotNull] CalcLoadTypeDto dstLoadType, [JetBrains.Annotations.NotNull][ItemNotNull] List<OnlineEnergyFileRow> energyFileRows,
+            [JetBrains.Annotations.NotNull] IFileFactoryAndTracker fft, [JetBrains.Annotations.NotNull] EnergyFileColumns efcs) {
             var calcParameters = Repository.CalcParameters;
             var comma = calcParameters.CSVCharacter;
             var dailyMinute = new Dictionary<string, double[]>();
@@ -194,7 +194,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             Run(p.LoadType, p.EnergyFileRows, _fft, efc);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public override List<CalcOption> NeededOptions => new List<CalcOption>() {CalcOption.DetailedDatFiles};
     }
 }

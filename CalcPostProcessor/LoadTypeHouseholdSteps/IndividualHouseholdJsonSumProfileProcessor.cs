@@ -6,23 +6,22 @@ using Automation.ResultFiles;
 using CalcPostProcessor.Steps;
 using Common;
 using Common.SQLResultLogging;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 
 namespace CalcPostProcessor.LoadTypeHouseholdSteps {
     public class IndividualHouseholdJsonSumProfileProcessor : HouseholdLoadTypeStepBase {
-        [NotNull] private readonly IFileFactoryAndTracker _fft;
+        [JetBrains.Annotations.NotNull] private readonly IFileFactoryAndTracker _fft;
 
-        public IndividualHouseholdJsonSumProfileProcessor([NotNull] CalcDataRepository repository,
-                                                          [NotNull] IFileFactoryAndTracker fft,
-                                                          [NotNull] ICalculationProfiler calculationProfiler) : base(
+        public IndividualHouseholdJsonSumProfileProcessor([JetBrains.Annotations.NotNull] CalcDataRepository repository,
+                                                          [JetBrains.Annotations.NotNull] IFileFactoryAndTracker fft,
+                                                          [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler) : base(
             repository,
             AutomationUtili.GetOptionList(CalcOption.JsonHouseholdSumFiles),
             calculationProfiler,
             "Individual Household Json Sum Profiles") =>
             _fft = fft;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public override List<CalcOption> NeededOptions => new List<CalcOption> {CalcOption.DetailedDatFiles};
 
         protected override void PerformActualStep(IStepParameters parameters)

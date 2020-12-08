@@ -5,8 +5,6 @@ using Common;
 using Common.Tests;
 using Database.Tables.Validation;
 using FluentAssertions;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -67,7 +65,7 @@ namespace Database.Tests.Tables.Validation {
             }
         }
 
-        public CalculationOutcomeTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public CalculationOutcomeTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

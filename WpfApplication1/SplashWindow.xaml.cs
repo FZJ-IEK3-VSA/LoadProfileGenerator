@@ -29,7 +29,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using Common;
-using JetBrains.Annotations;
 
 namespace LoadProfileGenerator
 {
@@ -45,6 +44,6 @@ namespace LoadProfileGenerator
             Logger.Warning("64bit:" + Environment.Is64BitProcess);
         }
 
-        public void SetInfo([NotNull] string info) => ListBox1.Items.Add(info);
+        public void SetInfo([JetBrains.Annotations.NotNull] string info) => ListBox1.Items.Add(info);
     }
 }

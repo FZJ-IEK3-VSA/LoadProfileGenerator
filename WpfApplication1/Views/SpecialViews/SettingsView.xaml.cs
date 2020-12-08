@@ -52,7 +52,7 @@ namespace LoadProfileGenerator.Views.SpecialViews {
             CmbShowSettling.Items.Add("false");
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private SettingPresenter Presenter => (SettingPresenter) DataContext;
 
         private void AddSelected()

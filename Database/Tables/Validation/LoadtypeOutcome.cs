@@ -8,8 +8,8 @@ namespace Database.Tables.Validation {
         public const string TableName = "tblLoadTypeOutcomes";
         private readonly int _calculationOutcomeID;
 
-        public LoadtypeOutcome([NotNull] string name, int calculationOutcomeID, [NotNull] string loadTypeName, double value,
-            [NotNull] string connectionString,StrGuid guid, [CanBeNull]int? pID = null) : base(name, pID, TableName, connectionString, guid) {
+        public LoadtypeOutcome([JetBrains.Annotations.NotNull] string name, int calculationOutcomeID, [JetBrains.Annotations.NotNull] string loadTypeName, double value,
+            [JetBrains.Annotations.NotNull] string connectionString,StrGuid guid, [CanBeNull]int? pID = null) : base(name, pID, TableName, connectionString, guid) {
             _calculationOutcomeID = calculationOutcomeID;
             LoadTypeName = loadTypeName;
             Value = value;
@@ -23,9 +23,9 @@ namespace Database.Tables.Validation {
 
         public double Value { get; }
 
-        [NotNull]
-        private static LoadtypeOutcome AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic) {
+        [JetBrains.Annotations.NotNull]
+        private static LoadtypeOutcome AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic) {
             var id = dr.GetIntFromLong("ID");
             var calcoutcomeID = dr.GetIntFromLong("CalculationOutcomeID", false, ignoreMissingFields, -1);
             var loadTypeName = dr.GetString("LoadTypeName");
@@ -44,7 +44,7 @@ namespace Database.Tables.Validation {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<LoadtypeOutcome> result, [NotNull] string connectionString,
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<LoadtypeOutcome> result, [JetBrains.Annotations.NotNull] string connectionString,
             bool ignoreMissingTables) {
             var aic = new AllItemCollections();
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);

@@ -46,8 +46,8 @@ namespace Database.Tables.BasicElements {
         public const string TableName = "tblTimeLimitEntries";
         private const string TableNameOld = "tblDeviceTimeBoolEntries";
 
-        [NotNull] private readonly object _bitmapLock = new object();
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<TimeLimitEntry> _subentries;
+        [JetBrains.Annotations.NotNull] private readonly object _bitmapLock = new object();
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<TimeLimitEntry> _subentries;
         private AnyAllTimeLimitCondition _anyAll;
         private int _dailyDaycount;
         [CanBeNull]
@@ -96,8 +96,8 @@ namespace Database.Tables.BasicElements {
             AnyAllTimeLimitCondition anyAllTimeLimitCondition, DateTime dateRangeStart, DateTime dateRangeEnd,
             [CanBeNull]int? dateprofileID, double maxDateProfileValue, double minDateProfileValue, bool duringVacation,
             bool duringNotVacation, bool duringVacationLongerThan, bool duringVacationShorterThan,
-            int vacationDurationLimit, bool duringHoliday, [ItemNotNull] [NotNull] ObservableCollection<DateBasedProfile> allDateProfiles,
-            [NotNull] string connectionString, int randomizeTimeAmount, double dateProfileMinVariation,
+            int vacationDurationLimit, bool duringHoliday, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DateBasedProfile> allDateProfiles,
+            [JetBrains.Annotations.NotNull] string connectionString, int randomizeTimeAmount, double dateProfileMinVariation,
             double dateProfileMaxVariation, StrGuid guid) : base(startTime + " " + endTime, TableName, connectionString, guid)
         {
             ID = id;
@@ -166,7 +166,7 @@ namespace Database.Tables.BasicElements {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<DateBasedProfile> AllDateProfiles { get; }
 
@@ -342,7 +342,7 @@ namespace Database.Tables.BasicElements {
             set => SetValueWithNotify(value, ref _randomizeTimeAmount, nameof(RandomizeTimeAmount));
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string RepeaterString => _repeaterType.ToString();
 
@@ -371,7 +371,7 @@ namespace Database.Tables.BasicElements {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<TimeLimitEntry> Subentries => _subentries;
 
         public int TimeLimitID { get; }
@@ -442,10 +442,10 @@ namespace Database.Tables.BasicElements {
             set => SetValueWithNotify(value, ref _yearlyMonth, nameof(YearlyMonth));
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalse")]
-        private static TimeLimitEntry AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic)
+        private static TimeLimitEntry AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var id = dr.GetIntFromLong("ID");
             var timeLimitID = dr.GetIntFromLong("TimeLimitID", false, ignoreMissingFields, -1);
@@ -505,7 +505,7 @@ namespace Database.Tables.BasicElements {
             return pte;
         }
 
-        public void CopyEverything([NotNull] TimeLimitEntry otherEntry)
+        public void CopyEverything([JetBrains.Annotations.NotNull] TimeLimitEntry otherEntry)
         {
             _startTime = otherEntry._startTime;
             _endTime = otherEntry._endTime;
@@ -566,10 +566,10 @@ namespace Database.Tables.BasicElements {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static TimeLimitEntry
-            CreateDefaultEntry(int timeLimitID, [CanBeNull]int? parentEntryID, [NotNull] string connectionString,
-                [ItemNotNull] [NotNull] ObservableCollection<DateBasedProfile> dateBasedProfiles) => new TimeLimitEntry(null, timeLimitID,
+            CreateDefaultEntry(int timeLimitID, [CanBeNull]int? parentEntryID, [JetBrains.Annotations.NotNull] string connectionString,
+                [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DateBasedProfile> dateBasedProfiles) => new TimeLimitEntry(null, timeLimitID,
             new DateTime(1900, 1, 1, 0, 0, 0), new DateTime(1900, 1, 1, 20, 0, 0), PermissionMode.EveryXDay, 1, 1,
             true,
             true, true, true, true, true, true, 1, 1, 1, 1, 1, -100, 100, true, false, parentEntryID,
@@ -579,8 +579,8 @@ namespace Database.Tables.BasicElements {
             System.Guid.NewGuid().ToStrGuid());
 
         [ItemNotNull]
-        [NotNull]
-        private List<Tuple<DateTime, DateTime>> GetDateRanges([NotNull] List<int> years)
+        [JetBrains.Annotations.NotNull]
+        private List<Tuple<DateTime, DateTime>> GetDateRanges([JetBrains.Annotations.NotNull] List<int> years)
         {
             var ranges = new List<Tuple<DateTime, DateTime>>();
             foreach (var year in years) {
@@ -592,7 +592,7 @@ namespace Database.Tables.BasicElements {
             return ranges;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private string GetDescription()
         {
@@ -691,7 +691,7 @@ namespace Database.Tables.BasicElements {
             return s;
         }
 
-        public static int GetLevel([NotNull] TimeLimitEntry de)
+        public static int GetLevel([JetBrains.Annotations.NotNull] TimeLimitEntry de)
         {
             var dtbe = de;
             var level = 0;
@@ -703,11 +703,11 @@ namespace Database.Tables.BasicElements {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         public BitArray GetOneYearArray(TimeSpan stepsize, DateTime startDateTime, DateTime endDateTime,
-            [NotNull] TemperatureProfile tempProfile, [NotNull] GeographicLocation geoloc, [NotNull] Random random,
-            [ItemNotNull] [NotNull] List<VacationTimeframe> vacationTimeframes, [NotNull] string holidayKey, [NotNull] out List<DateTime> bridgeDates,
+            [JetBrains.Annotations.NotNull] TemperatureProfile tempProfile, [JetBrains.Annotations.NotNull] GeographicLocation geoloc, [JetBrains.Annotations.NotNull] Random random,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] List<VacationTimeframe> vacationTimeframes, [JetBrains.Annotations.NotNull] string holidayKey, [JetBrains.Annotations.NotNull] out List<DateTime> bridgeDates,
             int startMinusMinutes, int startPlusMinutes, int endMinusMinutes, int endPlusMinutes)
         {
             if (_subentries.Count > 0) {
@@ -839,10 +839,10 @@ namespace Database.Tables.BasicElements {
         }
 
         [ItemNotNull]
-        [NotNull]
-        public BitArray GetOneYearHourArray([NotNull] TemperatureProfile temperatureProfile, [NotNull] GeographicLocation geoloc,
-            [NotNull] Random random, [ItemNotNull] [NotNull] List<VacationTimeframe> vacationTimeframes, [NotNull] string holidayKey,
-            [NotNull] out List<DateTime> bridgeDays)
+        [JetBrains.Annotations.NotNull]
+        public BitArray GetOneYearHourArray([JetBrains.Annotations.NotNull] TemperatureProfile temperatureProfile, [JetBrains.Annotations.NotNull] GeographicLocation geoloc,
+            [JetBrains.Annotations.NotNull] Random random, [ItemNotNull] [JetBrains.Annotations.NotNull] List<VacationTimeframe> vacationTimeframes, [JetBrains.Annotations.NotNull] string holidayKey,
+            [JetBrains.Annotations.NotNull] out List<DateTime> bridgeDays)
         {
             var year = DateTime.Now.Year;
             var stepsize = new TimeSpan(1, 0, 0);
@@ -853,7 +853,7 @@ namespace Database.Tables.BasicElements {
             return arr;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string GetRecursiveDescription(int level)
         {
             if (level > 15) {
@@ -869,7 +869,7 @@ namespace Database.Tables.BasicElements {
             return s;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private static List<int> GetYears(DateTime startDate, DateTime endDate)
         {
             var years = new List<int>();
@@ -882,7 +882,7 @@ namespace Database.Tables.BasicElements {
             return years;
         }
 
-        private static bool IsDayAHoliday([NotNull] Dictionary<DateTime, Holiday.HolidayType> holidays, DateTime date)
+        private static bool IsDayAHoliday([JetBrains.Annotations.NotNull] Dictionary<DateTime, Holiday.HolidayType> holidays, DateTime date)
         {
             var dt = new DateTime(date.Year, date.Month, date.Day);
             if (holidays.ContainsKey(dt)) {
@@ -898,8 +898,8 @@ namespace Database.Tables.BasicElements {
         }
 
         [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalse")]
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<TimeLimitEntry> result, [NotNull] string connectionString,
-            [ItemNotNull] [NotNull] ObservableCollection<DateBasedProfile> dateBasedProfiles, bool ignoreMissingTables)
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TimeLimitEntry> result, [JetBrains.Annotations.NotNull] string connectionString,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DateBasedProfile> dateBasedProfiles, bool ignoreMissingTables)
         {
             var aic = new AllItemCollections(dateBasedProfiles: dateBasedProfiles);
             var loadresult = LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic,
@@ -910,7 +910,7 @@ namespace Database.Tables.BasicElements {
             }
             SetTree(result);
         }
-        private void RandomizeTime(TimeSpan start, TimeSpan end, out TimeSpan startout, out TimeSpan endout, [NotNull] Random r)
+        private void RandomizeTime(TimeSpan start, TimeSpan end, out TimeSpan startout, out TimeSpan endout, [JetBrains.Annotations.NotNull] Random r)
         {
             if (_randomizeTimeAmount == 0) {
                 startout = start;
@@ -934,7 +934,7 @@ namespace Database.Tables.BasicElements {
         }
 
         private bool SetDateProfileControlled(TimeSpan stepsize, DateTime startDateTime, DateTime endDateTime,
-            int totalsteps, [ItemNotNull] [NotNull] BitArray br, [NotNull] Random r)
+            int totalsteps, [ItemNotNull] [JetBrains.Annotations.NotNull] BitArray br, [JetBrains.Annotations.NotNull] Random r)
         {
             if (DateBasedProfile != null) {
                 var valueArray = DateBasedProfile.GetValueArray(startDateTime, endDateTime, stepsize);
@@ -951,7 +951,7 @@ namespace Database.Tables.BasicElements {
         }
 
         private bool SetDateRangeControlled(DateTime startDateTime, DateTime endDateTime, int totalsteps,
-            [NotNull] DateTime[] dts, [ItemNotNull] [NotNull] BitArray br)
+            [JetBrains.Annotations.NotNull] DateTime[] dts, [ItemNotNull] [JetBrains.Annotations.NotNull] BitArray br)
         {
             var dateRanges = GetDateRanges(GetYears(startDateTime, endDateTime));
 
@@ -965,8 +965,8 @@ namespace Database.Tables.BasicElements {
             return true;
         }
 
-        private bool SetEveryDay(int totalsteps, [NotNull] DateTime[] dts, TimeSpan mystarttime, TimeSpan myendtime, [ItemNotNull] [NotNull] BitArray br,
-            [NotNull] Random r)
+        private bool SetEveryDay(int totalsteps, [JetBrains.Annotations.NotNull] DateTime[] dts, TimeSpan mystarttime, TimeSpan myendtime, [ItemNotNull] [JetBrains.Annotations.NotNull] BitArray br,
+            [JetBrains.Annotations.NotNull] Random r)
         {
             for (var i = 0; i < totalsteps; i++) {
                 RandomizeTime(mystarttime, myendtime, out var start, out var end, r);
@@ -979,8 +979,8 @@ namespace Database.Tables.BasicElements {
             return true;
         }
 
-        private bool SetEveryXMonths(int totalsteps, [NotNull] DateTime[] dts, TimeSpan mystarttime, TimeSpan myendtime,
-            [ItemNotNull] [NotNull] BitArray br, [NotNull] Random r)
+        private bool SetEveryXMonths(int totalsteps, [JetBrains.Annotations.NotNull] DateTime[] dts, TimeSpan mystarttime, TimeSpan myendtime,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] BitArray br, [JetBrains.Annotations.NotNull] Random r)
         {
             for (var i = 0; i < totalsteps; i++) {
                 var month = dts[i].Month;
@@ -994,7 +994,7 @@ namespace Database.Tables.BasicElements {
             return true;
         }
 
-        private bool SetHolidayControlled([NotNull] GeographicLocation geoloc, int totalsteps, [NotNull] DateTime[] dts, [ItemNotNull] [NotNull] BitArray br)
+        private bool SetHolidayControlled([JetBrains.Annotations.NotNull] GeographicLocation geoloc, int totalsteps, [JetBrains.Annotations.NotNull] DateTime[] dts, [ItemNotNull] [JetBrains.Annotations.NotNull] BitArray br)
         {
             var holidaydict = geoloc.CalculatePureHolidayDict();
             for (var i = 0; i < totalsteps; i++) {
@@ -1014,7 +1014,7 @@ namespace Database.Tables.BasicElements {
         }
 
         private bool SetLightControlled(TimeSpan stepsize, DateTime startDateTime, DateTime endDateTime,
-            [NotNull] GeographicLocation geoloc, int totalsteps, [ItemNotNull] [NotNull] BitArray br)
+            [JetBrains.Annotations.NotNull] GeographicLocation geoloc, int totalsteps, [ItemNotNull] [JetBrains.Annotations.NotNull] BitArray br)
         {
             var st = new SunriseTimes(geoloc);
             var sunlightarr = st.MakeArray(totalsteps, startDateTime, endDateTime, stepsize);
@@ -1077,7 +1077,7 @@ namespace Database.Tables.BasicElements {
         }
 
         private bool SetTemperature(TimeSpan stepsize, DateTime startDateTime, DateTime endDateTime,
-            [NotNull] TemperatureProfile tempProfile, int totalsteps, [ItemNotNull] [NotNull] BitArray br)
+            [JetBrains.Annotations.NotNull] TemperatureProfile tempProfile, int totalsteps, [ItemNotNull] [JetBrains.Annotations.NotNull] BitArray br)
         {
             var temperatureArray = tempProfile.GetTemperatureArray(startDateTime, endDateTime, stepsize);
             for (var i = 0; i < totalsteps; i++) {
@@ -1089,7 +1089,7 @@ namespace Database.Tables.BasicElements {
             return true;
         }
 
-        private static void SetTree([NotNull] [ItemNotNull] ObservableCollection<TimeLimitEntry> entries)
+        private static void SetTree([JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<TimeLimitEntry> entries)
         {
             foreach (var subEntry in entries) {
                 if (subEntry.ParentEntryID != null) {
@@ -1106,7 +1106,7 @@ namespace Database.Tables.BasicElements {
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         private bool SetVacationControlled(DateTime startDateTime, DateTime endDateTime,
-            [ItemNotNull] [NotNull] List<VacationTimeframe> vacationTimeframes, int totalsteps, [NotNull] DateTime[] dts, [ItemNotNull] [NotNull] BitArray br)
+            [ItemNotNull] [JetBrains.Annotations.NotNull] List<VacationTimeframe> vacationTimeframes, int totalsteps, [JetBrains.Annotations.NotNull] DateTime[] dts, [ItemNotNull] [JetBrains.Annotations.NotNull] BitArray br)
         {
             var dateTimes = new List<Tuple<DateTime, DateTime>>();
             var datesToRemap = new List<Tuple<DateTime, DateTime>>();
@@ -1183,8 +1183,8 @@ namespace Database.Tables.BasicElements {
             return true;
         }
 
-        private bool SetWeekly(DateTime startDateTime, int totalsteps, [NotNull] DateTime[] dts, TimeSpan mystarttime,
-            TimeSpan myendtime, [ItemNotNull] [NotNull] BitArray br, [NotNull] Random r)
+        private bool SetWeekly(DateTime startDateTime, int totalsteps, [JetBrains.Annotations.NotNull] DateTime[] dts, TimeSpan mystarttime,
+            TimeSpan myendtime, [ItemNotNull] [JetBrains.Annotations.NotNull] BitArray br, [JetBrains.Annotations.NotNull] Random r)
         {
             Calendar c = new GregorianCalendar(GregorianCalendarTypes.USEnglish);
             for (var i = 0; i < totalsteps; i++) {
@@ -1208,8 +1208,8 @@ namespace Database.Tables.BasicElements {
             return true;
         }
 
-        private bool SetWorkday(int totalsteps, [NotNull] DateTime[] dts, [NotNull] GeographicLocation geoloc, [NotNull] Random r,
-            TimeSpan mystarttime, TimeSpan myendtime, [ItemNotNull] [NotNull] BitArray br, [NotNull] string holidayKey, [NotNull] out List<DateTime> bridgeDays)
+        private bool SetWorkday(int totalsteps, [JetBrains.Annotations.NotNull] DateTime[] dts, [JetBrains.Annotations.NotNull] GeographicLocation geoloc, [JetBrains.Annotations.NotNull] Random r,
+            TimeSpan mystarttime, TimeSpan myendtime, [ItemNotNull] [JetBrains.Annotations.NotNull] BitArray br, [JetBrains.Annotations.NotNull] string holidayKey, [JetBrains.Annotations.NotNull] out List<DateTime> bridgeDays)
         {
             var holidays = geoloc.GetHolidayDictWithBridge(r, holidayKey);
             for (var i = 0; i < totalsteps; i++) {
@@ -1231,8 +1231,8 @@ namespace Database.Tables.BasicElements {
             return true;
         }
 
-        private bool SetYearly(int totalsteps, [NotNull] DateTime[] dts, TimeSpan mystarttime, TimeSpan myendtime, [ItemNotNull] [NotNull] BitArray br,
-            [NotNull] Random r)
+        private bool SetYearly(int totalsteps, [JetBrains.Annotations.NotNull] DateTime[] dts, TimeSpan mystarttime, TimeSpan myendtime, [ItemNotNull] [JetBrains.Annotations.NotNull] BitArray br,
+            [JetBrains.Annotations.NotNull] Random r)
         {
             for (var i = 0; i < totalsteps; i++) {
                 var month = dts[i].Month;

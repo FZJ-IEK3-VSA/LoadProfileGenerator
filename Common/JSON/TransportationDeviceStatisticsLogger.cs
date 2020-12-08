@@ -3,7 +3,6 @@ using Automation;
 using Automation.ResultFiles;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.Loggers;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 
 namespace Common.JSON
@@ -11,7 +10,7 @@ namespace Common.JSON
     public class TransportationDeviceStatisticsLogger : DataSaverBase
     {
         private const string TableName = "TransportationDeviceStatistics";
-        public TransportationDeviceStatisticsLogger([NotNull] SqlResultLoggingService srls) :
+        public TransportationDeviceStatisticsLogger([JetBrains.Annotations.NotNull] SqlResultLoggingService srls) :
             base(typeof(List<TransportationDeviceStatisticsEntry>), new ResultTableDefinition(TableName, ResultTableID.TransportationDeviceStatistics, "Statistics about the transportation", CalcOption.TransportationStatistics), srls)
         {
         }
@@ -34,8 +33,8 @@ namespace Common.JSON
         }
 
        /* [ItemNotNull]
-        [NotNull]
-        public List<ActionEntry> Read([NotNull]HouseholdKey hhkey)
+        [JetBrains.Annotations.NotNull]
+        public List<ActionEntry> Read([JetBrains.Annotations.NotNull]HouseholdKey hhkey)
         {
             var res = Srls.ReadFromJson<ActionEntry>(ResultTableDefinition, hhkey, ExpectedResultCount.OneOrMore);
             return res;
@@ -44,7 +43,7 @@ namespace Common.JSON
 
     public class TransportationDeviceStatisticsEntry:IHouseholdKey
         {
-            public TransportationDeviceStatisticsEntry(StrGuid transportationDeviceGuid, [NotNull] string transportationDeviceName, [NotNull] HouseholdKey householdKey)
+            public TransportationDeviceStatisticsEntry(StrGuid transportationDeviceGuid, [JetBrains.Annotations.NotNull] string transportationDeviceName, [JetBrains.Annotations.NotNull] HouseholdKey householdKey)
             {
                 TransportationDeviceGuid = transportationDeviceGuid;
                 TransportationDeviceName = transportationDeviceName;
@@ -52,18 +51,18 @@ namespace Common.JSON
             }
 
             public StrGuid TransportationDeviceGuid { get; }
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string TransportationDeviceName { get; }
             public double TotalDistanceTraveled { get; set; }
             public double TotalDistanceCharged { get; set; }
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public Dictionary<TransportationDeviceState, int> StepsPerState { get; } = new Dictionary<TransportationDeviceState, int>();
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public Dictionary<string, int> StepsPerSite { get; } = new Dictionary<string, int>();
             public double MaxRange { get; set; } = double.MinValue;
             public double MinRange { get; set; } = double.MaxValue;
 
-            public void ProcessOneState([NotNull] TransportationDeviceStateEntry state)
+            public void ProcessOneState([JetBrains.Annotations.NotNull] TransportationDeviceStateEntry state)
             {
                 string site = state.CurrentSite ?? "(no site)";
                 if (!StepsPerSite.ContainsKey(site))

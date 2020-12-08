@@ -1,19 +1,18 @@
 ﻿using Automation;
-using JetBrains.Annotations;
 
 namespace Common.CalcDto {
     public class CalcTravelRouteStepDto  {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string Name { get; }
         public int ID { get; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CalcTransportationDeviceCategoryDto TransportationDeviceCategory { get; }
         public int StepNumber { get; }
         public double DistanceInM { get; }
         public StrGuid Guid { get; }
 
-        public CalcTravelRouteStepDto([NotNull]string name, int id,
-                                      [NotNull] CalcTransportationDeviceCategoryDto transportationDeviceCategory, int stepNumber,
+        public CalcTravelRouteStepDto([JetBrains.Annotations.NotNull]string name, int id,
+                                      [JetBrains.Annotations.NotNull] CalcTransportationDeviceCategoryDto transportationDeviceCategory, int stepNumber,
                                       double distanceInM,
                                       StrGuid guid)
         {

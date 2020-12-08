@@ -9,11 +9,11 @@ using LoadProfileGenerator.Views.Households;
 
 namespace LoadProfileGenerator.Presenters.Households {
     public class DeviceActionPresenter : PresenterBaseDBBase<DeviceActionView> {
-        [NotNull] private readonly DeviceAction _deviceAction;
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<UsedIn> _usedIns;
+        [JetBrains.Annotations.NotNull] private readonly DeviceAction _deviceAction;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<UsedIn> _usedIns;
 
-        public DeviceActionPresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] DeviceActionView view,
-            [NotNull] DeviceAction deviceAction) : base(view, "ThisDeviceAction.Name", deviceAction, applicationPresenter)
+        public DeviceActionPresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] DeviceActionView view,
+            [JetBrains.Annotations.NotNull] DeviceAction deviceAction) : base(view, "ThisDeviceAction.Name", deviceAction, applicationPresenter)
         {
             _deviceAction = deviceAction;
             _usedIns = new ObservableCollection<UsedIn>();
@@ -22,37 +22,37 @@ namespace LoadProfileGenerator.Presenters.Households {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<DeviceActionGroup> DeviceActionGroups
             => Sim.DeviceActionGroups.Items;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<RealDevice> Devices => Sim.RealDevices.Items;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         [UsedImplicitly]
         public ObservableCollection<EstimateEntry> EstimateEntries { get; } = new ObservableCollection<EstimateEntry>();
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<VLoadType> LoadTypes => Sim.LoadTypes.Items;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public DeviceAction ThisDeviceAction => _deviceAction;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<TimeBasedProfile> Timeprofiles
             => Sim.Timeprofiles.Items;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<UsedIn> UsedIns => _usedIns;
 
@@ -117,17 +117,17 @@ namespace LoadProfileGenerator.Presenters.Households {
         }
 
         public class EstimateEntry {
-            public EstimateEntry([NotNull] string name, [NotNull] string estimate)
+            public EstimateEntry([JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] string estimate)
             {
                 Name = name;
                 Estimate = estimate;
             }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             [UsedImplicitly]
             public string Estimate { get; }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             [UsedImplicitly]
             public string Name { get; }
         }

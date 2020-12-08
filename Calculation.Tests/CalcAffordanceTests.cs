@@ -40,7 +40,6 @@ using Common.Enums;
 using Common.JSON;
 using Common.Tests;
 using FluentAssertions;
-using JetBrains.Annotations;
 using Moq;
 
 using Xunit;
@@ -51,13 +50,13 @@ namespace Calculation.Tests {
     public class CalcAffordanceTests : UnitTestBaseClass
     {
 
-        public CalcAffordanceTests([NotNull] ITestOutputHelper testOutputHelper):base(testOutputHelper)
+        public CalcAffordanceTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper):base(testOutputHelper)
         {
         }
 
-        private static void SetupProbabilityTest([NotNull] out CalcAffordance aff, [NotNull] out CalcLoadType lt,
-                                                 [NotNull] out CalcDevice cd,
-                                                 [NotNull] out CalcLocation loc, int stepcount, double probability)
+        private static void SetupProbabilityTest([JetBrains.Annotations.NotNull] out CalcAffordance aff, [JetBrains.Annotations.NotNull] out CalcLoadType lt,
+                                                 [JetBrains.Annotations.NotNull] out CalcDevice cd,
+                                                 [JetBrains.Annotations.NotNull] out CalcLocation loc, int stepcount, double probability)
         {
             Config.IsInUnitTesting = true;
             DateTime startdate = new DateTime(2018, 1, 1);
@@ -122,9 +121,9 @@ namespace Calculation.Tests {
             aff.AddDeviceTuple(cd, cp, lt, 0, timeStep, 10, probability);
         }
 
-        private static void CheckForBusyness([NotNull] CalcLocation loc,
-                                             [NotNull] CalcAffordance aff,
-                                             [NotNull] CalcDevice cd, [NotNull] CalcLoadType lt )
+        private static void CheckForBusyness([JetBrains.Annotations.NotNull] CalcLocation loc,
+                                             [JetBrains.Annotations.NotNull] CalcAffordance aff,
+                                             [JetBrains.Annotations.NotNull] CalcDevice cd, [JetBrains.Annotations.NotNull] CalcLoadType lt )
         {
             Logger.Info("------------");
             TimeStep ts1 = new TimeStep(0,0,true);

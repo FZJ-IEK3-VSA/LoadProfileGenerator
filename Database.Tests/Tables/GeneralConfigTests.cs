@@ -33,8 +33,6 @@ using Common;
 using Common.Tests;
 using Database.Tables;
 using FluentAssertions;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -69,7 +67,7 @@ namespace Database.Tests.Tables {
             }
         }
 
-        public GeneralConfigTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public GeneralConfigTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

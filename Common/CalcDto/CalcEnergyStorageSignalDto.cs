@@ -1,21 +1,20 @@
 
 using Automation;
-using JetBrains.Annotations;
 
 namespace Common.CalcDto {
     public class CalcEnergyStorageSignalDto {
         public double TriggerOffPercent { get; }
         public double TriggerOnPercent { get; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string Name { get; }
         public int ID { get; }
         public double Value { get; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CalcVariableDto CalcVariableDto { get; }
         public StrGuid Guid { get; }
 
-        public CalcEnergyStorageSignalDto([NotNull]string name, int id, double triggerOff, double triggerOn, double value,
-                                          [NotNull] CalcVariableDto calcVariableDto, StrGuid guid)
+        public CalcEnergyStorageSignalDto([JetBrains.Annotations.NotNull]string name, int id, double triggerOff, double triggerOn, double value,
+                                          [JetBrains.Annotations.NotNull] CalcVariableDto calcVariableDto, StrGuid guid)
         {
             TriggerOffPercent = triggerOff / 100;
             TriggerOnPercent = triggerOn / 100;

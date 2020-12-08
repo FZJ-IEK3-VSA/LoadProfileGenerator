@@ -1,14 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net5.0-windows</TargetFramework>
     <OutputType>winexe</OutputType>
     <ApplicationIcon>Resources\lpgicon4b.ico</ApplicationIcon>
     <OutputTypeEx>winexe</OutputTypeEx>
+    <UseWPF>true</UseWPF>
     <StartupObject />
     <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
     <Nullable>disable</Nullable>
     <LangVersion>9</LangVersion>
+    <EnableDefaultPageItems>False</EnableDefaultPageItems>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -41,10 +43,7 @@
 
     <None Remove="Views\Households\LivingPatternTagView.xaml" />
 
-    <ApplicationDefinition Include="App.xaml">
-      <Generator>MsBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </ApplicationDefinition>
+
 
   </ItemGroup>
 
@@ -55,16 +54,21 @@
     </Resource>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="2020.1.0" />
+    <PackageReference Include="JetBrains.Annotations" Version="2020.3.0" />
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.0" />
     <PackageReference Include="NETStandard.Library" Version="2.0.3" />
     <PackageReference Include="NullCheckAnalyzer" Version="1.0.0.3" />
     <PackageReference Include="OxyPlot.Wpf" Version="2.1.0-unstable.1449" />
-    <PackageReference Include="Roslynator.Analyzers" Version="2.3.0">
+    <PackageReference Include="Roslynator.Analyzers" Version="3.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="System.Resources.Extensions" Version="4.7.1" />
+    <PackageReference Include="System.Resources.Extensions" Version="5.0.0" />
     <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
@@ -78,7 +82,6 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="PresentationFramework.Aero" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="WindowsBase" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />

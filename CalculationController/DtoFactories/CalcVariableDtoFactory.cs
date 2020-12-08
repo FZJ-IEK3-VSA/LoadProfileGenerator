@@ -13,10 +13,10 @@ using JetBrains.Annotations;
 namespace CalculationController.DtoFactories
 {
     public class CalcVariableDtoFactory {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Dictionary<string, CalcVariableDto> VariableDtos { get; } = new Dictionary<string, CalcVariableDto>();
 
-    public bool IsKeyRegistered([NotNull] string key)
+    public bool IsKeyRegistered([JetBrains.Annotations.NotNull] string key)
         {
             if (VariableDtos.ContainsKey(key))
             {
@@ -26,21 +26,21 @@ namespace CalculationController.DtoFactories
             return false;
         }
 
-        [NotNull]
-        public static string MakeKey([NotNull] Variable variable, [NotNull] Location location, [NotNull] HouseholdKey key)
+        [JetBrains.Annotations.NotNull]
+        public static string MakeKey([JetBrains.Annotations.NotNull] Variable variable, [JetBrains.Annotations.NotNull] Location location, [JetBrains.Annotations.NotNull] HouseholdKey key)
         {
             return MakeKey(variable, location.PrettyName, key);
         }
 
-        [NotNull]
-        public static string MakeKey([NotNull] Variable variable, [NotNull] string locationName, [NotNull] HouseholdKey key)
+        [JetBrains.Annotations.NotNull]
+        public static string MakeKey([JetBrains.Annotations.NotNull] Variable variable, [JetBrains.Annotations.NotNull] string locationName, [JetBrains.Annotations.NotNull] HouseholdKey key)
         {
             return locationName + "#" + variable.PrettyName + "#" + key.Key;
         }
 
-        [NotNull]
-        public CalcVariableDto RegisterVariable([NotNull] Variable variable, [NotNull] string locationName, StrGuid locationGuid,
-                                                [NotNull] HouseholdKey householdKey)
+        [JetBrains.Annotations.NotNull]
+        public CalcVariableDto RegisterVariable([JetBrains.Annotations.NotNull] Variable variable, [JetBrains.Annotations.NotNull] string locationName, StrGuid locationGuid,
+                                                [JetBrains.Annotations.NotNull] HouseholdKey householdKey)
         {
             StrGuid variableGuid = Guid.NewGuid().ToStrGuid();
             CalcVariableDto cvd = new CalcVariableDto(variable.PrettyName, variableGuid, 0,
@@ -50,15 +50,15 @@ namespace CalculationController.DtoFactories
             return cvd;
         }
 
-        [NotNull]
-        public CalcVariableDto GetVariableByKey([NotNull] string key)
+        [JetBrains.Annotations.NotNull]
+        public CalcVariableDto GetVariableByKey([JetBrains.Annotations.NotNull] string key)
         {
             return VariableDtos[key];
         }
         /*
         private CalcVariableRepository _repository;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CalcVariableRepository GetRepository()
         {
             if (_repository != null) {
@@ -73,10 +73,10 @@ namespace CalculationController.DtoFactories
 
             return _repository;
         }*/
-        [NotNull]
-        public CalcVariableDto RegisterVariableIfNotRegistered([NotNull] Variable variable, [NotNull] string locationName,
+        [JetBrains.Annotations.NotNull]
+        public CalcVariableDto RegisterVariableIfNotRegistered([JetBrains.Annotations.NotNull] Variable variable, [JetBrains.Annotations.NotNull] string locationName,
                                                                StrGuid locationGuid,
-                                                               [NotNull] HouseholdKey householdKey)
+                                                               [JetBrains.Annotations.NotNull] HouseholdKey householdKey)
         {
             string key = MakeKey(variable, locationName, householdKey);
             if (!IsKeyRegistered(key))
@@ -86,17 +86,17 @@ namespace CalculationController.DtoFactories
 
             return GetVariableByKey(key);
         }
-        [NotNull]
-        public CalcVariableDto RegisterVariableIfNotRegistered([NotNull] Variable variable, [NotNull] Location location,
-                                                               [NotNull] HouseholdKey householdKey,
-            [NotNull] LocationDtoDict locationDict)
+        [JetBrains.Annotations.NotNull]
+        public CalcVariableDto RegisterVariableIfNotRegistered([JetBrains.Annotations.NotNull] Variable variable, [JetBrains.Annotations.NotNull] Location location,
+                                                               [JetBrains.Annotations.NotNull] HouseholdKey householdKey,
+            [JetBrains.Annotations.NotNull] LocationDtoDict locationDict)
         {
             StrGuid locGuid = locationDict.LocationDict[location].Guid;
             return RegisterVariableIfNotRegistered(variable, location.PrettyName, locGuid,
                 householdKey);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public List<CalcVariableDto> GetAllVariableDtos()
         {

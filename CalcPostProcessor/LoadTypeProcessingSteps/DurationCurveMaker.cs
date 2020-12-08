@@ -44,18 +44,18 @@ using JetBrains.Annotations;
 namespace CalcPostProcessor.LoadTypeProcessingSteps {
     public class DurationCurveMaker: LoadTypeStepBase
     {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly IFileFactoryAndTracker _fft;
 
-        public DurationCurveMaker([NotNull] CalcDataRepository repository,
-                                  [NotNull] ICalculationProfiler calculationProfiler,
-                                  [NotNull] IFileFactoryAndTracker fft)
+        public DurationCurveMaker([JetBrains.Annotations.NotNull] CalcDataRepository repository,
+                                  [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler,
+                                  [JetBrains.Annotations.NotNull] IFileFactoryAndTracker fft)
             :base(repository, AutomationUtili.GetOptionList(CalcOption.DurationCurve),calculationProfiler,"Duration Curves")
         {
             _fft = fft;
         }
-        private void Run([NotNull] CalcLoadTypeDto dstLoadType, [NotNull][ItemNotNull] List<OnlineEnergyFileRow> energyFileRows,
-                        [NotNull] EnergyFileColumns efc)
+        private void Run([JetBrains.Annotations.NotNull] CalcLoadTypeDto dstLoadType, [JetBrains.Annotations.NotNull][ItemNotNull] List<OnlineEnergyFileRow> energyFileRows,
+                        [JetBrains.Annotations.NotNull] EnergyFileColumns efc)
         {
             var calcParameters = Repository.CalcParameters;
             var comma = calcParameters.CSVCharacter;
@@ -155,7 +155,7 @@ namespace CalcPostProcessor.LoadTypeProcessingSteps {
             Run(p.LoadType,p.EnergyFileRows,efc);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public override List<CalcOption> NeededOptions => new List<CalcOption>() {CalcOption.DetailedDatFiles};
     }
 }

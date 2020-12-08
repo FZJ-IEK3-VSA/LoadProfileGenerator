@@ -49,16 +49,16 @@ using LoadProfileGenerator.Views.Households;
 
 namespace LoadProfileGenerator.Presenters.Households {
     public class DevicePresenter : PresenterBaseDBBase<DeviceView> {
-        [NotNull] private readonly RealDevice _realDevice;
+        [JetBrains.Annotations.NotNull] private readonly RealDevice _realDevice;
 
-        [NotNull] private readonly ObservableCollection<TimeProfileType> _timeProfileTypes =
+        [JetBrains.Annotations.NotNull] private readonly ObservableCollection<TimeProfileType> _timeProfileTypes =
             new ObservableCollection<TimeProfileType>();
 
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<UsedIn> _usedIns = new ObservableCollection<UsedIn>();
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<UsedIn> _usedIns = new ObservableCollection<UsedIn>();
 
         [CanBeNull] private RealDevice _selectedImportDevice;
 
-        public DevicePresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] DeviceView view, [NotNull] RealDevice realDevice)
+        public DevicePresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] DeviceView view, [JetBrains.Annotations.NotNull] RealDevice realDevice)
             : base(view, "ThisDevice.HeaderString", realDevice, applicationPresenter)
         {
             _realDevice = realDevice;
@@ -73,16 +73,16 @@ namespace LoadProfileGenerator.Presenters.Households {
             _usedIns.SynchronizeWithList(u);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public DeviceCategoryPickerPresenter DeviceCategoryPickerPresenter { get; }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<RealDevice> Devices => Sim.RealDevices.Items;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string FullFileName {
             get {
@@ -124,7 +124,7 @@ namespace LoadProfileGenerator.Presenters.Households {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<VLoadType> LoadTypes => Sim.LoadTypes.Items;
 
@@ -138,28 +138,28 @@ namespace LoadProfileGenerator.Presenters.Households {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Simulator Simulator => Sim;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public RealDevice ThisDevice => _realDevice;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<TimeBasedProfile> TimeProfiles
             => Sim.Timeprofiles.Items;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<TimeProfileType> TimeProfileTypes => _timeProfileTypes;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<UsedIn> UsedIns => _usedIns;
 
-        public void AddRealDeviceLoadType([NotNull] VLoadType loadType, double maxpower, double standardDeviation,
+        public void AddRealDeviceLoadType([JetBrains.Annotations.NotNull] VLoadType loadType, double maxpower, double standardDeviation,
             double averageYearlyConsumption)
         {
             _realDevice.AddLoad(loadType, maxpower, standardDeviation, averageYearlyConsumption);
@@ -174,7 +174,7 @@ namespace LoadProfileGenerator.Presenters.Households {
             ApplicationPresenter.OpenItem(rd);
         }
 
-        private void DcpOnPropertyChanged([NotNull] object sender, [NotNull] PropertyChangedEventArgs propertyChangedEventArgs)
+        private void DcpOnPropertyChanged([JetBrains.Annotations.NotNull] object sender, [JetBrains.Annotations.NotNull] PropertyChangedEventArgs propertyChangedEventArgs)
         {
             if (propertyChangedEventArgs.PropertyName == "SelectedItem") {
                 _realDevice.DeviceCategory = DeviceCategoryPickerPresenter.SelectedItem;
@@ -187,7 +187,7 @@ namespace LoadProfileGenerator.Presenters.Households {
             Close(false);
         }
 
-        public void DeleteLoad([NotNull] RealDeviceLoadType rdlt)
+        public void DeleteLoad([JetBrains.Annotations.NotNull] RealDeviceLoadType rdlt)
         {
             _realDevice.DeleteLoad(rdlt);
         }

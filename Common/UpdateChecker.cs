@@ -15,7 +15,7 @@ namespace Common {
                 string version;
                 string result;
                 using (var webClient = new WebClient()) {
-                    version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                    version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "no version";
                     webClient.QueryString.Add("clientversion", version);
                     result = webClient.DownloadString(webAddr);
                 }
@@ -34,7 +34,7 @@ namespace Common {
                         Logger.Warning("Could not interpret version string:" + latestversionstr);
                         return "";
                     }
-                    var myversion = Assembly.GetExecutingAssembly().GetName().Version;
+                    Version myversion = Assembly.GetExecutingAssembly().GetName().Version ?? new Version(0,0,0);
                     if (myversion.Major < majorversion || ( myversion.Major == majorversion && myversion.Minor < minorversion)) {
                         question = "The latest version is " + latestversionstr + ". You have " + version + ". This means you should probably update. " +
                             " If you have reasons not to update, such as bugs in the new version, please tell me as soon as possible at noah.pflugradt@gmail.com, so that I can fix the issues. Thank you!";

@@ -40,7 +40,7 @@ using JetBrains.Annotations;
 namespace CalculationController.CalcFactories {
     public class CalcLoadTypeDictionary
     {
-        public CalcLoadTypeDictionary([NotNull] Dictionary<CalcLoadTypeDto, CalcLoadType> dtoCalcDict)
+        public CalcLoadTypeDictionary([JetBrains.Annotations.NotNull] Dictionary<CalcLoadTypeDto, CalcLoadType> dtoCalcDict)
         {
             DtoCalcDict = dtoCalcDict;
             _calcLoadTypes = dtoCalcDict.Values.ToList();
@@ -48,16 +48,16 @@ namespace CalculationController.CalcFactories {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly List<CalcLoadType> _calcLoadTypes;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private Dictionary<CalcLoadTypeDto, CalcLoadType> DtoCalcDict { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly HashSet<StrGuid> _guids;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CalcLoadType GetLoadtypeByGuid(StrGuid loadtypeGuid)
         {
             return _calcLoadTypes.Single(x => x.Guid == loadtypeGuid);
@@ -68,7 +68,7 @@ namespace CalculationController.CalcFactories {
             return _guids.Select(x=> x.StrVal).Contains(guid.StrVal);
         }
         /*
-        public bool SimulateLoadtype([NotNull] CalcLoadTypeDto lt)
+        public bool SimulateLoadtype([JetBrains.Annotations.NotNull] CalcLoadTypeDto lt)
         {
             if (DtoCalcDict.ContainsKey(lt))
             {
@@ -78,14 +78,14 @@ namespace CalculationController.CalcFactories {
             return false;
         }*/
 
-        [NotNull]
-        public CalcLoadType GetCalcLoadTypeByLoadtype([NotNull] CalcLoadTypeDto lt)
+        [JetBrains.Annotations.NotNull]
+        public CalcLoadType GetCalcLoadTypeByLoadtype([JetBrains.Annotations.NotNull] CalcLoadTypeDto lt)
         {
             return DtoCalcDict[lt];
         }
 
         /*
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public List<CalcLoadType> GetAllCalcLoadtypes()
         {
@@ -94,9 +94,9 @@ namespace CalculationController.CalcFactories {
     }
 
     public static class CalcLoadTypeDtoFactory {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static CalcLoadTypeDtoDictionary MakeLoadTypes(
-            [NotNull][ItemNotNull] ObservableCollection<VLoadType> loadTypes, TimeSpan internalTimeResolution,
+            [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<VLoadType> loadTypes, TimeSpan internalTimeResolution,
             LoadTypePriority priority)
         {
             var ltDtoDict = new Dictionary<VLoadType, CalcLoadTypeDto>();
@@ -114,9 +114,9 @@ namespace CalculationController.CalcFactories {
     }
 
     public static class CalcLoadTypeFactory {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static CalcLoadTypeDictionary MakeLoadTypes(
-            [NotNull] CalcLoadTypeDtoDictionary dtoDict) {
+            [JetBrains.Annotations.NotNull] CalcLoadTypeDtoDictionary dtoDict) {
             var ltDict = new Dictionary<CalcLoadTypeDto, CalcLoadType>();
             foreach (var dto in dtoDict.Ltdtodict.Values) {
                     var calcLoadType = new CalcLoadType(dto.Name,  dto.UnitOfPower, dto.UnitOfSum,

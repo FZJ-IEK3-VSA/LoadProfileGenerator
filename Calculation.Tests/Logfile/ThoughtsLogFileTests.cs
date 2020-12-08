@@ -37,7 +37,6 @@ using Common;
 using Common.CalcDto;
 using Common.JSON;
 using Common.SQLResultLogging.InputLoggers;
-using JetBrains.Annotations;
 using Moq;
 
 using Xunit;
@@ -93,7 +92,7 @@ cloc, isSick, isOnVacation, calcRepo);
             }
         }
 
-        public ThoughtsLogFileTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public ThoughtsLogFileTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

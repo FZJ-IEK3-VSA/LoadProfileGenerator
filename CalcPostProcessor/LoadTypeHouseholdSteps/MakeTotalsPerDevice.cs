@@ -49,13 +49,13 @@ using JetBrains.Annotations;
 namespace CalcPostProcessor.LoadTypeHouseholdSteps {
     public class MakeTotalsPerDevice : HouseholdLoadTypeStepBase {
 
-        [NotNull] private readonly IFileFactoryAndTracker _fft;
+        [JetBrains.Annotations.NotNull] private readonly IFileFactoryAndTracker _fft;
 
         private readonly IInputDataLogger _inputDataLogger;
 
-        public MakeTotalsPerDevice([NotNull] CalcDataRepository repository,
-                                   [NotNull] ICalculationProfiler profiler,
-                                   [NotNull] IFileFactoryAndTracker fft,
+        public MakeTotalsPerDevice([JetBrains.Annotations.NotNull] CalcDataRepository repository,
+                                   [JetBrains.Annotations.NotNull] ICalculationProfiler profiler,
+                                   [JetBrains.Annotations.NotNull] IFileFactoryAndTracker fft,
                                    IInputDataLogger inputDataLogger) : base(repository,
             AutomationUtili.GetOptionList(CalcOption.TotalsPerDevice),
             profiler,
@@ -134,13 +134,13 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             //Repository.DeviceSumInformationList,
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public override List<CalcOption> NeededOptions => new List<CalcOption>() {CalcOption.DetailedDatFiles,
             CalcOption.HouseholdContents, CalcOption.DeviceActivations, CalcOption.DeviceTaggingSets};
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private Dictionary<CalcLoadTypeDto, Dictionary<StrGuid, double>> GetAverageYearlyConsumptionPerDevice(
-            [NotNull] [ItemNotNull] List<ICalcDeviceDto> alldevices)
+            [JetBrains.Annotations.NotNull] [ItemNotNull] List<ICalcDeviceDto> alldevices)
         {
             var averageYearlyConsumptionPerDevice = new Dictionary<CalcLoadTypeDto, Dictionary<StrGuid, double>>();
             // build a device to power dictionary
@@ -160,12 +160,12 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             return averageYearlyConsumptionPerDevice;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private static Dictionary<StrGuid, Dictionary<int, double>> MakeSumPerMonthPerDeviceID(
-            [NotNull] CalcLoadTypeDto dstLoadType,
-            [NotNull] EnergyFileColumns efc,
-            [NotNull] Dictionary<int, OnlineEnergyFileRow> sumsPerMonth,
-            [NotNull] out Dictionary<int, ColumnEntry> columns)
+            [JetBrains.Annotations.NotNull] CalcLoadTypeDto dstLoadType,
+            [JetBrains.Annotations.NotNull] EnergyFileColumns efc,
+            [JetBrains.Annotations.NotNull] Dictionary<int, OnlineEnergyFileRow> sumsPerMonth,
+            [JetBrains.Annotations.NotNull] out Dictionary<int, ColumnEntry> columns)
         {
             var sumPerMonthPerDeviceID = new Dictionary<StrGuid, Dictionary<int, double>>();
             columns = efc.ColumnEntriesByColumn[dstLoadType];
@@ -190,10 +190,10 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             return sumPerMonthPerDeviceID;
         }
 
-        private void MakeSumsForJson([NotNull] CalcLoadTypeDto dstLoadType,
-                                     [NotNull] [ItemNotNull] List<OnlineEnergyFileRow> energyFileRows,
-                                     [NotNull] EnergyFileColumns efc,
-                                     [NotNull] HouseholdKey key)
+        private void MakeSumsForJson([JetBrains.Annotations.NotNull] CalcLoadTypeDto dstLoadType,
+                                     [JetBrains.Annotations.NotNull] [ItemNotNull] List<OnlineEnergyFileRow> energyFileRows,
+                                     [JetBrains.Annotations.NotNull] EnergyFileColumns efc,
+                                     [JetBrains.Annotations.NotNull] HouseholdKey key)
         {
             var calcParameters = Repository.CalcParameters;
             var dsc = new DateStampCreator(calcParameters);
@@ -233,11 +233,11 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             _inputDataLogger.SaveList<TotalsPerDeviceEntry>(tdp.Values.ToList().ConvertAll(x => (IHouseholdKey)x));
         }
 
-        [NotNull]
-        private Dictionary<int, OnlineEnergyFileRow> MakeSumsPerMonth([NotNull] CalcLoadTypeDto dstLoadType,
-                                                                      [ItemNotNull] [NotNull] List<OnlineEnergyFileRow> energyFileRows,
+        [JetBrains.Annotations.NotNull]
+        private Dictionary<int, OnlineEnergyFileRow> MakeSumsPerMonth([JetBrains.Annotations.NotNull] CalcLoadTypeDto dstLoadType,
+                                                                      [ItemNotNull] [JetBrains.Annotations.NotNull] List<OnlineEnergyFileRow> energyFileRows,
                                                                       DateTime curDate,
-                                                                      [NotNull] OnlineEnergyFileRow sum,
+                                                                      [JetBrains.Annotations.NotNull] OnlineEnergyFileRow sum,
                                                                       int rowlength)
         {
             var calcParameters = Repository.CalcParameters;
@@ -265,11 +265,11 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             return sumsPerMonth;
         }
 
-        private void MakeTotalsPerDeviceTaggingSet([NotNull] IFileFactoryAndTracker fft,
-                                                   [NotNull] CalcLoadTypeDto dstLoadType,
-                                                   [ItemNotNull] [NotNull] List<DeviceTaggingSetInformation> deviceTaggingSets,
-                                                   [NotNull] Dictionary<string, double> deviceEnergyDict,
-                                                   [NotNull] HouseholdKey hhkey)
+        private void MakeTotalsPerDeviceTaggingSet([JetBrains.Annotations.NotNull] IFileFactoryAndTracker fft,
+                                                   [JetBrains.Annotations.NotNull] CalcLoadTypeDto dstLoadType,
+                                                   [ItemNotNull] [JetBrains.Annotations.NotNull] List<DeviceTaggingSetInformation> deviceTaggingSets,
+                                                   [JetBrains.Annotations.NotNull] Dictionary<string, double> deviceEnergyDict,
+                                                   [JetBrains.Annotations.NotNull] HouseholdKey hhkey)
         {
             var calcParameters = Repository.CalcParameters;
             using (var file = fft.MakeFile<StreamWriter>("DeviceTaggingSet." + dstLoadType.FileName + "." + hhkey.Key + ".csv",
@@ -324,15 +324,15 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        private void Run([NotNull] CalcLoadTypeDto dstLoadType,
-                         [NotNull] [ItemNotNull] List<OnlineEnergyFileRow> energyFileRows,
-                         [NotNull] IFileFactoryAndTracker fft,
-                         [NotNull] EnergyFileColumns efc,
-                         [NotNull] Dictionary<CalcLoadTypeDto, Dictionary<StrGuid, double>> loadTypeTodeviceIDToAverageLookup,
-                         [ItemNotNull] [NotNull] List<DeviceTaggingSetInformation> deviceTaggingSets,
-                         [NotNull] Dictionary<string, string> deviceNameToCategory,
-                         [NotNull] Dictionary<string, double> deviceEnergyDict,
-                         [NotNull] HouseholdKey key)
+        private void Run([JetBrains.Annotations.NotNull] CalcLoadTypeDto dstLoadType,
+                         [JetBrains.Annotations.NotNull] [ItemNotNull] List<OnlineEnergyFileRow> energyFileRows,
+                         [JetBrains.Annotations.NotNull] IFileFactoryAndTracker fft,
+                         [JetBrains.Annotations.NotNull] EnergyFileColumns efc,
+                         [JetBrains.Annotations.NotNull] Dictionary<CalcLoadTypeDto, Dictionary<StrGuid, double>> loadTypeTodeviceIDToAverageLookup,
+                         [ItemNotNull] [JetBrains.Annotations.NotNull] List<DeviceTaggingSetInformation> deviceTaggingSets,
+                         [JetBrains.Annotations.NotNull] Dictionary<string, string> deviceNameToCategory,
+                         [JetBrains.Annotations.NotNull] Dictionary<string, double> deviceEnergyDict,
+                         [JetBrains.Annotations.NotNull] HouseholdKey key)
         {
             if (!efc.ColumnEntriesByColumn.ContainsKey(dstLoadType)) {
                 //for this load type for this house there are no column, so nothing to do
@@ -480,11 +480,11 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             WriteMonthlyDeviceSums(fft, dstLoadType, sumPerMonthPerDeviceID, deviceNamesPerID, key);
         }
 
-        private void WriteMonthlyDeviceSums([NotNull] IFileFactoryAndTracker fft,
-                                            [NotNull] CalcLoadTypeDto dstLoadType,
-                                            [NotNull] Dictionary<StrGuid, Dictionary<int, double>> values,
-                                            [NotNull] Dictionary<StrGuid, string> deviceNamesPerID,
-                                            [NotNull] HouseholdKey key)
+        private void WriteMonthlyDeviceSums([JetBrains.Annotations.NotNull] IFileFactoryAndTracker fft,
+                                            [JetBrains.Annotations.NotNull] CalcLoadTypeDto dstLoadType,
+                                            [JetBrains.Annotations.NotNull] Dictionary<StrGuid, Dictionary<int, double>> values,
+                                            [JetBrains.Annotations.NotNull] Dictionary<StrGuid, string> deviceNamesPerID,
+                                            [JetBrains.Annotations.NotNull] HouseholdKey key)
         {
             var calcParameters = Repository.CalcParameters;
             var devicesums = fft.MakeFile<StreamWriter>("DeviceSums_Monthly." + dstLoadType.Name + "." + key.Key + ".csv",

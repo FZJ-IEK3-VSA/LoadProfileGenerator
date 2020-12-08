@@ -12,7 +12,7 @@ namespace Automation.ResultFiles {
         {
         }
 
-        public PersonInformation([NotNull] string name, StrGuid guid, [NotNull] string traitTag)
+        public PersonInformation([JetBrains.Annotations.NotNull] string name, StrGuid guid, [JetBrains.Annotations.NotNull] string traitTag)
         {
             Name = name;
 
@@ -25,10 +25,10 @@ namespace Automation.ResultFiles {
 
         // needed for xml deserialize
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string? Name { get; set; }
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string? TraitTag { get; set; }
     }
 }

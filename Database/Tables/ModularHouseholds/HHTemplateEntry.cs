@@ -32,7 +32,7 @@ namespace Database.Tables.ModularHouseholds {
             public JsonReference TraitTagReference { get; set; }
             public StrGuid Guid { get; set; }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             [ItemNotNull]
             public List<JsonReference> Persons { get; set; } = new List<JsonReference>();
 
@@ -57,7 +57,7 @@ namespace Database.Tables.ModularHouseholds {
         public const string TableName = "tblHHGEntry";
         [CanBeNull]
         private readonly int? _householdTemplateId;
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<HHTemplateEntryPerson> _persons;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<HHTemplateEntryPerson> _persons;
 
         [CanBeNull] private TraitTag _tag;
 
@@ -65,7 +65,7 @@ namespace Database.Tables.ModularHouseholds {
         private int _traitCountMin;
         private bool _isMandatory;
 
-        public HHTemplateEntry([CanBeNull]int? pID, [CanBeNull] int? householdTemplateId, [NotNull] string name, [NotNull] string connectionString,
+        public HHTemplateEntry([CanBeNull]int? pID, [CanBeNull] int? householdTemplateId, [JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] string connectionString,
             [CanBeNull] TraitTag tag, int traitCountMin, int traitCountMax, StrGuid guid, bool isMandatory)
             : base(name, TableName, connectionString, guid)
         {
@@ -82,10 +82,10 @@ namespace Database.Tables.ModularHouseholds {
         public int? HouseholdTemplateID => _householdTemplateId;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<HHTemplateEntryPerson> Persons => _persons;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string PersonString {
             get {
@@ -101,7 +101,7 @@ namespace Database.Tables.ModularHouseholds {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string PrettyString {
             get {
                 var persons = new StringBuilder();
@@ -131,7 +131,7 @@ namespace Database.Tables.ModularHouseholds {
             set => SetValueWithNotify(value,ref _traitCountMin);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public TraitTag TraitTag {
             get => _tag ?? throw new InvalidOperationException();
             set => SetValueWithNotify(value,ref _tag);
@@ -162,16 +162,16 @@ namespace Database.Tables.ModularHouseholds {
             base.DeleteFromDB();
         }
 
-        public void AddPerson([NotNull] Person p)
+        public void AddPerson([JetBrains.Annotations.NotNull] Person p)
         {
             var hhgep = new HHTemplateEntryPerson(null, p, IntID, p.Name, ConnectionString, System.Guid.NewGuid().ToStrGuid());
             hhgep.SaveToDB();
             _persons.Add(hhgep);
         }
 
-        [NotNull]
-        private static HHTemplateEntry AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static HHTemplateEntry AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var id = dr.GetIntFromLong("ID");
             var hhgID = dr.GetIntFromLong("HouseholdGeneratorID");
@@ -207,7 +207,7 @@ namespace Database.Tables.ModularHouseholds {
             return base.CompareTo(obj);
         }
 
-        private static bool IsCorrectHHTemplateEntryParent([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectHHTemplateEntryParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var hhgEntry = (HHTemplateEntryPerson) child;
             if (parent.ID == hhgEntry.HHTemplateEntryID) {
@@ -235,9 +235,9 @@ namespace Database.Tables.ModularHouseholds {
                 person.SaveToDB();
             }
         }
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<HHTemplateEntry> result, [NotNull] string connectionString,
-            [ItemNotNull] [NotNull] ObservableCollection<TraitTag> traitTags, bool ignoreMissingTables,
-            [ItemNotNull] [NotNull] ObservableCollection<Person> allpersons)
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<HHTemplateEntry> result, [JetBrains.Annotations.NotNull] string connectionString,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TraitTag> traitTags, bool ignoreMissingTables,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Person> allpersons)
         {
             var aic = new AllItemCollections(traitTags: traitTags);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);

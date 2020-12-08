@@ -40,37 +40,37 @@ using Newtonsoft.Json.Converters;
 
 namespace Automation.ResultFiles {
     public class ResultFileList {
-        public ResultFileList([NotNull] string calcObjectName, [NotNull] string originalPath)
+        public ResultFileList([JetBrains.Annotations.NotNull] string calcObjectName, [JetBrains.Annotations.NotNull] string originalPath)
         {
             CalcObjectName = calcObjectName;
             OriginalPath = originalPath;
         }
 
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string CalcObjectName { get; set; }
 
         /*
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private Dictionary<string, string> HouseholdNameByHouseholdKey { get; set; } = new Dictionary<string, string>();
         */
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string OriginalPath { get; set; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public Dictionary<string, ResultFileEntry> ResultFiles { get; set; } = new Dictionary<string, ResultFileEntry>();
 
-        public void AddExistingEntries([NotNull] [ItemNotNull] List<ResultFileEntry> rfes)
+        public void AddExistingEntries([JetBrains.Annotations.NotNull] [ItemNotNull] List<ResultFileEntry> rfes)
         {
             foreach (var rfe in rfes) {
                 ResultFiles.Add(rfe.HashKey, rfe);
             }
         }
 
-        public void AdjustPath([NotNull] string helperoriginalPath, [NotNull] string newPath, bool tolerateMissingFiles)
+        public void AdjustPath([JetBrains.Annotations.NotNull] string helperoriginalPath, [JetBrains.Annotations.NotNull] string newPath, bool tolerateMissingFiles)
         {
             //only temporary until the next run
             var oldPath = helperoriginalPath;
@@ -90,16 +90,16 @@ namespace Automation.ResultFiles {
         }
 
         /*
-        [NotNull]
-        public static ResultFileEntry LoadAndGetByFileName([NotNull] string directory, [NotNull] string fileName)
+        [JetBrains.Annotations.NotNull]
+        public static ResultFileEntry LoadAndGetByFileName([JetBrains.Annotations.NotNull] string directory, [JetBrains.Annotations.NotNull] string fileName)
         {
             var rfl = ReadResultEntries(directory);
             return rfl.GetByFilename(fileName);
         }
         */
         /*
-        [NotNull]
-        public static ResultFileList ReadResultEntries([NotNull] string directoryWithResultFile)
+        [JetBrains.Annotations.NotNull]
+        public static ResultFileList ReadResultEntries([JetBrains.Annotations.NotNull] string directoryWithResultFile)
         {
             var dstPath = Path.Combine(directoryWithResultFile, Constants.ResultJsonFileName);
             string json;
@@ -119,7 +119,7 @@ namespace Automation.ResultFiles {
         }
         */
         /*
-        public void WriteResultEntries([NotNull] string path)
+        public void WriteResultEntries([JetBrains.Annotations.NotNull] string path)
         {
             var json = JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings {
                 NullValueHandling = NullValueHandling.Include
@@ -130,26 +130,26 @@ namespace Automation.ResultFiles {
             }
         }
         */
-        /*  [NotNull]
-          private ResultFileEntry GetByFilename([NotNull] string fileName) =>
+        /*  [JetBrains.Annotations.NotNull]
+          private ResultFileEntry GetByFilename([JetBrains.Annotations.NotNull] string fileName) =>
               ResultFiles.Values.First(x => x.FileName == fileName);*/
     }
 
 #pragma warning disable CA1036 // Override methods on comparable types
     public class ResultFileEntry : IComparable {
 #pragma warning restore CA1036 // Override methods on comparable types
-        public ResultFileEntry([NotNull] string name,
-                               [NotNull] FileInfo fileInfo,
+        public ResultFileEntry([JetBrains.Annotations.NotNull] string name,
+                               [JetBrains.Annotations.NotNull] FileInfo fileInfo,
                                bool displayEntry,
                                [CanBeNull] StreamWriter streamWriter,
                                [CanBeNull] BinaryWriter binaryWriter,
-                               [NotNull] Stream stream,
+                               [JetBrains.Annotations.NotNull] Stream stream,
                                ResultFileID rfid,
-                               [NotNull] string householdName,
-                               [NotNull] string householdKey,
-                               [NotNull] LoadTypeInformation lti,
-                               [NotNull] PersonInformation pi,
-                               [NotNull] string additionalFileIndex,
+                               [JetBrains.Annotations.NotNull] string householdName,
+                               [JetBrains.Annotations.NotNull] string householdKey,
+                               [JetBrains.Annotations.NotNull] LoadTypeInformation lti,
+                               [JetBrains.Annotations.NotNull] PersonInformation pi,
+                               [JetBrains.Annotations.NotNull] string additionalFileIndex,
                                TimeSpan timeResolution, CalcOption enablingOption)
         {
             EnablingCalcOption = enablingOption;
@@ -176,7 +176,7 @@ namespace Automation.ResultFiles {
             }
         }
 
-        public ResultFileEntry([NotNull] string name, [NotNull] FileInfo fileInfo, bool displayEntry, CalcOption enablingOption)
+        public ResultFileEntry([JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] FileInfo fileInfo, bool displayEntry, CalcOption enablingOption)
         {
             Name = name;
             FileName = fileInfo.Name;
@@ -193,11 +193,11 @@ namespace Automation.ResultFiles {
             }
         }
 
-        public ResultFileEntry([NotNull] string name,
-                               [NotNull] FileInfo fileinfo,
+        public ResultFileEntry([JetBrains.Annotations.NotNull] string name,
+                               [JetBrains.Annotations.NotNull] FileInfo fileinfo,
                                bool displayEntry,
                                ResultFileID rfid,
-                               [NotNull] string householdKey,
+                               [JetBrains.Annotations.NotNull] string householdKey,
                                [CanBeNull] string? additionalFileIndex, CalcOption enablingOption)
         {
             Name = name;
@@ -236,14 +236,14 @@ namespace Automation.ResultFiles {
         public bool DisplayEntry { get; set; }
 
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string? FileName { get; set; }
 
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string? FullFileName { get; set; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string HashKey => CalculateHashKey(ResultFileID,
             HouseholdName,
             LoadTypeInformation?.Name,
@@ -275,7 +275,7 @@ namespace Automation.ResultFiles {
         public PersonInformation? PersonInformation { get; set; }
 
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string PrettySize => AutomationUtili.MakePrettySize(Size);
 
         [UsedImplicitly]
@@ -314,7 +314,7 @@ namespace Automation.ResultFiles {
             return string.Compare(FullFileName, rfe.FullFileName, StringComparison.Ordinal);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static string CalculateHashKey(ResultFileID resultFileID,
                                               [CanBeNull] string? householdName,
                                               [CanBeNull] string? loadTypeName,
@@ -332,7 +332,7 @@ namespace Automation.ResultFiles {
             return s;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public override string ToString() => FileName + " (" + ResultFileID + ")";
     }
 }

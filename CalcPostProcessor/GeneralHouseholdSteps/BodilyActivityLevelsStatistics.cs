@@ -8,7 +8,6 @@ using Common;
 using Common.Enums;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.Loggers;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 
 
@@ -16,14 +15,14 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
 
     public class BodilyActivityLevelsStatistics : HouseholdStepBase
     {
-        [NotNull] private readonly ICalculationProfiler _calculationProfiler;
+        [JetBrains.Annotations.NotNull] private readonly ICalculationProfiler _calculationProfiler;
 
         private readonly IFileFactoryAndTracker _fft;
 
-        [NotNull] private readonly CalcDataRepository _repository;
+        [JetBrains.Annotations.NotNull] private readonly CalcDataRepository _repository;
 
-        public BodilyActivityLevelsStatistics([NotNull] ICalculationProfiler calculationProfiler,
-                                              [NotNull] CalcDataRepository repository,
+        public BodilyActivityLevelsStatistics([JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler,
+                                              [JetBrains.Annotations.NotNull] CalcDataRepository repository,
                                               IFileFactoryAndTracker fft) : base(repository,
             AutomationUtili.GetOptionList(CalcOption.BodilyActivityStatistics), calculationProfiler,
             "Make Bodily Activity Level Counts",10)
@@ -89,11 +88,11 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
 
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public override List<CalcOption> NeededOptions => new List<CalcOption>() {CalcOption.ActionEntries, CalcOption.HouseholdContents, CalcOption.ActionsEachTimestep };
 
-        [NotNull]
-        private Dictionary<StrGuid, ActionEntry> ReadActivities([NotNull] HouseholdKey householdKey)
+        [JetBrains.Annotations.NotNull]
+        private Dictionary<StrGuid, ActionEntry> ReadActivities([JetBrains.Annotations.NotNull] HouseholdKey householdKey)
         {
             List<ActionEntry> actionEntries = _repository.ReadActionEntries(householdKey);
 

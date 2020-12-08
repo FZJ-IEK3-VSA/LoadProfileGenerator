@@ -8,29 +8,29 @@ using LoadProfileGenerator.Presenters.BasicElements;
 
 namespace LoadProfileGenerator.Views.Transportation {
     public class TransportationDevicePresenter : PresenterBaseDBBase<TransportationDeviceView> {
-        [NotNull] private readonly TransportationDevice _transportationDevice;
+        [JetBrains.Annotations.NotNull] private readonly TransportationDevice _transportationDevice;
 
-        public TransportationDevicePresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] TransportationDeviceView view,
-            [NotNull] TransportationDevice transportationDevice) : base(view, "ThisTransportationDevice.Name", transportationDevice, applicationPresenter)
+        public TransportationDevicePresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] TransportationDeviceView view,
+            [JetBrains.Annotations.NotNull] TransportationDevice transportationDevice) : base(view, "ThisTransportationDevice.Name", transportationDevice, applicationPresenter)
         {
             _transportationDevice = transportationDevice;
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<VLoadType> AllLoadTypes => Sim.LoadTypes.Items;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public TransportationDevice ThisTransportationDevice => _transportationDevice;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<TransportationDeviceCategory> TransportationDeviceCategories => Sim.TransportationDeviceCategories.Items;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<UsedIn> UsedIns { get; } = new ObservableCollection<UsedIn>();
 

@@ -44,38 +44,38 @@
 
 //namespace LoadProfileGenerator.Presenters.Households {
 //    public class TemplatePersonPresenter : PresenterBaseDBBase<TemplatePersonView> {
-//        [NotNull] private readonly TemplatePerson _thisTemplate;
+//        [JetBrains.Annotations.NotNull] private readonly TemplatePerson _thisTemplate;
 //        private TraitPriority _selectedPriority;
 
-//        public TemplatePersonPresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] TemplatePersonView view,
-//            [NotNull] TemplatePerson template) : base(view, "ThisTemplate.HeaderString", template, applicationPresenter)
+//        public TemplatePersonPresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] TemplatePersonView view,
+//            [JetBrains.Annotations.NotNull] TemplatePerson template) : base(view, "ThisTemplate.HeaderString", template, applicationPresenter)
 //        {
 //            _thisTemplate = template;
 //            RefreshTree(TraitPrios, Sim, template);
 //        }
 
 //        [ItemNotNull]
-//        [NotNull]
+//        [JetBrains.Annotations.NotNull]
 //        [UsedImplicitly]
 //        public ObservableCollection<HouseholdTrait> FilteredTraits { get; } =
 //            new ObservableCollection<HouseholdTrait>();
 
-//        [NotNull]
+//        [JetBrains.Annotations.NotNull]
 //        [UsedImplicitly]
 //        public Dictionary<PermittedGender, string> Genders => GenderHelper.GenderEnumDictionary;
 
 //        [ItemNotNull]
-//        [NotNull]
+//        [JetBrains.Annotations.NotNull]
 //        [UsedImplicitly]
 //        public ObservableCollection<ModularHousehold> ModularHouseholds
 //            => Sim.ModularHouseholds.Items;
 
 //        [ItemNotNull]
-//        [NotNull]
+//        [JetBrains.Annotations.NotNull]
 //        [UsedImplicitly]
 //        public ObservableCollection<Person> Persons => Sim.Persons.Items;
 
-//        [NotNull]
+//        [JetBrains.Annotations.NotNull]
 //        [UsedImplicitly]
 //        public Dictionary<TraitPriority, string> Priorities => TraitPriorityHelper
 //            .TraitPriorityDictionaryEnumDictionaryWithAll;
@@ -102,11 +102,11 @@
 //            }
 //        }
 
-//        [NotNull]
+//        [JetBrains.Annotations.NotNull]
 //        public TemplatePerson ThisTemplate => _thisTemplate;
 
 //        [ItemNotNull]
-//        [NotNull]
+//        [JetBrains.Annotations.NotNull]
 //        [UsedImplicitly]
 //        public ObservableCollection<TraitPrio> TraitPrios { get; } = new ObservableCollection<TraitPrio>();
 
@@ -160,8 +160,8 @@
 //            RefreshTree(TraitPrios, Sim, _thisTemplate);
 //        }
 
-//        public static void RefreshTree([ItemNotNull] [NotNull] ObservableCollection<TraitPrio> traitPrios, [NotNull] Simulator sim,
-//            [NotNull] TemplatePerson thisTemplate)
+//        public static void RefreshTree([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TraitPrio> traitPrios, [JetBrains.Annotations.NotNull] Simulator sim,
+//            [JetBrains.Annotations.NotNull] TemplatePerson thisTemplate)
 //        {
 //            traitPrios.Clear();
 //            var prios = sim.TraitTags.Items.Select(x => x.TraitPriority).Distinct().ToList();
@@ -185,25 +185,25 @@
 //        }
 
 //        public class TraitCategory {
-//            public TraitCategory([NotNull] string name) => Name = name;
+//            public TraitCategory([JetBrains.Annotations.NotNull] string name) => Name = name;
 
-//            [NotNull]
+//            [JetBrains.Annotations.NotNull]
 //            public string Name { get; set; }
 
 //            [ItemNotNull]
-//            [NotNull]
+//            [JetBrains.Annotations.NotNull]
 //            public ObservableCollection<TemplatePersonTrait> Traits { get; } =
 //                new ObservableCollection<TemplatePersonTrait>();
 //        }
 
 //        public class TraitPrio {
-//            public TraitPrio([NotNull] string name) => Name = name;
+//            public TraitPrio([JetBrains.Annotations.NotNull] string name) => Name = name;
 
-//            [NotNull]
+//            [JetBrains.Annotations.NotNull]
 //            public string Name { get; set; }
 
 //            [ItemNotNull]
-//            [NotNull]
+//            [JetBrains.Annotations.NotNull]
 //            [UsedImplicitly]
 //            public ObservableCollection<TraitCategory> TraitCategories { get; } =
 //                new ObservableCollection<TraitCategory>();

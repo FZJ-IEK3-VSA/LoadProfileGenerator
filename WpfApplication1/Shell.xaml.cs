@@ -26,31 +26,31 @@
 
 //-----------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Input;
-using System.Windows.Markup;
-using System.Windows.Threading;
-using Automation.ResultFiles;
-using CalculationController.Integrity;
-using Common;
-using Database;
+ using System;
+ using System.Collections.Generic;
+ using System.ComponentModel;
+ using System.Diagnostics.CodeAnalysis;
+ using System.Globalization;
+ using System.IO;
+ using System.Linq;
+ using System.Reflection;
+ using System.Threading;
+ using System.Threading.Tasks;
+ using System.Windows;
+ using System.Windows.Controls;
+ using System.Windows.Data;
+ using System.Windows.Input;
+ using System.Windows.Markup;
+ using Automation.ResultFiles;
+ using CalculationController.Integrity;
+ using Common;
+ using Database;
 using Database.Database;
 using Database.Helpers;
 using Database.Tables.ModularHouseholds;
-using JetBrains.Annotations;
-using LoadProfileGenerator.Presenters;
+ using JetBrains.Annotations;
+ using System.Windows.Threading;
+ using LoadProfileGenerator.Presenters;
 using LoadProfileGenerator.Presenters.BasicElements;
 using Application = System.Windows.Application;
 using Binding = System.Windows.Data.Binding;
@@ -68,13 +68,13 @@ using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
         // CommonDataWPF.WindowWithDialog
         private const string LastFileFileName = "LastDatabase.txt";
 
-        [NotNull] private readonly string _version;
+        [JetBrains.Annotations.NotNull] private readonly string _version;
 
-        [NotNull] private string _connectionString;
+        [JetBrains.Annotations.NotNull] private string _connectionString;
 
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        public void SafeExecuteWithWait([NotNull] Action action)
+        public void SafeExecuteWithWait([JetBrains.Annotations.NotNull] Action action)
         {
             if (Dispatcher != null && Thread.CurrentThread != Dispatcher.Thread)
             {
@@ -104,7 +104,7 @@ using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
                 action();
             }
         }
-        public void SafeExecuteForLogger([NotNull] Action a)
+        public void SafeExecuteForLogger([JetBrains.Annotations.NotNull] Action a)
         {
             if (Dispatcher != null && Thread.CurrentThread != Dispatcher.Thread)
             {
@@ -141,7 +141,7 @@ using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
             Language = XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag);
             InitializeComponent();
             DataContext = new ApplicationPresenter(this, Sim, this.Dispatcher);
-            _version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            _version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "No Version";
             Config.LPGVersion = _version;
             MessageWindowHandler.SetMainWindow(new WpfMsgWindows(this));
             FindDefaultDB3File();
@@ -186,7 +186,7 @@ using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
         [CanBeNull]
         public static string DB3Path { get; private set; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private ApplicationPresenter Presenter => (ApplicationPresenter) DataContext;
 
         [CanBeNull]
@@ -228,7 +228,7 @@ using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
             return result;
         }
 
-        public void AddTab<T>([NotNull] PresenterBase<T> presenter) where T : class
+        public void AddTab<T>([JetBrains.Annotations.NotNull] PresenterBase<T> presenter) where T : class
         {
             TabItem newTab = null;
 
@@ -265,7 +265,7 @@ using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        public void OpenDatabase([NotNull] string fileName)
+        public void OpenDatabase([JetBrains.Annotations.NotNull] string fileName)
         {
             if (!File.Exists(fileName)) {
                 return;
@@ -315,7 +315,7 @@ using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
             t.Start();
         }
 
-        public void RemoveTab<T>([NotNull] PresenterBase<T> presenter, bool closelast = false) where T : class
+        public void RemoveTab<T>([JetBrains.Annotations.NotNull] PresenterBase<T> presenter, bool closelast = false) where T : class
         {
             if (Tabs.Items.Count < 2 && !closelast) {
                 return;
@@ -331,7 +331,7 @@ using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
             }
         }
 
-        public static void UpdateVacationsInHouseholdTemplates1([NotNull] Simulator sim)
+        public static void UpdateVacationsInHouseholdTemplates1([JetBrains.Annotations.NotNull] Simulator sim)
         {
             var forFamiliesWithChildren =
                 sim.DateBasedProfiles.Items.First(x => x.Name == "School Holidays Saxony, Germany, 2015, 1 = vacation");
@@ -1242,7 +1242,7 @@ using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
 
         private void SaveACopyClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e) => SaveAs();
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         private string SaveAs()
         {
@@ -1405,7 +1405,7 @@ using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
             }
         }
 
-        private void AddTransportationDeviceClick([NotNull] object sender, [NotNull] RoutedEventArgs e)
+        private void AddTransportationDeviceClick([JetBrains.Annotations.NotNull] object sender, [JetBrains.Annotations.NotNull] RoutedEventArgs e)
         {
             try
             {
@@ -1419,7 +1419,7 @@ using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
             }
         }
 
-        private void AddTransportationDeviceSetClick([NotNull] object sender, [NotNull] RoutedEventArgs e)
+        private void AddTransportationDeviceSetClick([JetBrains.Annotations.NotNull] object sender, [JetBrains.Annotations.NotNull] RoutedEventArgs e)
         {
             try
             {
@@ -1433,7 +1433,7 @@ using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
             }
         }
 
-        private void AddChargingStationSet([NotNull] object sender, [NotNull] RoutedEventArgs e)
+        private void AddChargingStationSet([JetBrains.Annotations.NotNull] object sender, [JetBrains.Annotations.NotNull] RoutedEventArgs e)
         {
             try
             {
@@ -1447,7 +1447,7 @@ using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
             }
         }
 
-        private void Shell_OnClosed([NotNull] object sender, [NotNull] EventArgs e)
+        private void Shell_OnClosed([JetBrains.Annotations.NotNull] object sender, [JetBrains.Annotations.NotNull] EventArgs e)
         {
 
             Application.Current.Shutdown();
@@ -1473,7 +1473,7 @@ using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
             //ConvertAllPersonTagsToLivingPatternTags(Sim ?? throw new LPGException("was null"));
         }
 
-        public static void RunLivingPatternCopy([NotNull] Simulator sim)
+        public static void RunLivingPatternCopy([JetBrains.Annotations.NotNull] Simulator sim)
         {
             foreach (var tag in sim.TraitTags.Items) {
                 if (tag.Name.StartsWith("Living Pattern")) {
@@ -1484,7 +1484,7 @@ using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
             }
         }
 
-        //public static void ConvertAllPersonTagsToLivingPatternTags([NotNull] Simulator sim)
+        //public static void ConvertAllPersonTagsToLivingPatternTags([JetBrains.Annotations.NotNull] Simulator sim)
         //{
         //    foreach (var household in sim.ModularHouseholds.Items) {
         //        foreach (var person in household.Persons) {
@@ -1505,7 +1505,7 @@ using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
         //    }
         //}
 
-        public static void ConvertAllTraitTagsToLivingPatternTags([NotNull] Simulator sim)
+        public static void ConvertAllTraitTagsToLivingPatternTags([JetBrains.Annotations.NotNull] Simulator sim)
         {
 
             foreach (var trait in sim.HouseholdTraits.Items) {

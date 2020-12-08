@@ -36,13 +36,13 @@ using JetBrains.Annotations;
 
 namespace CalculationEngine.HouseElements {
     public class CalcAirConditioning : CalcDevice {
-        [NotNull] private readonly Dictionary<Tuple<int, int, int, int>, CalcDegreeHour> _calcDegreeHours;
+        [JetBrains.Annotations.NotNull] private readonly Dictionary<Tuple<int, int, int, int>, CalcDegreeHour> _calcDegreeHours;
 
         public CalcAirConditioning(
-                                   [NotNull] [ItemNotNull] List<CalcDeviceLoad> powerUsage,
-                                   [NotNull] Dictionary<Tuple<int, int, int, int>, CalcDegreeHour> calcDegreeHours,
-                                   [NotNull] CalcLocation cloc,
-                                   [NotNull] CalcDeviceDto calcDeviceDto, [NotNull] CalcRepo calcRepo)
+                                   [JetBrains.Annotations.NotNull] [ItemNotNull] List<CalcDeviceLoad> powerUsage,
+                                   [JetBrains.Annotations.NotNull] Dictionary<Tuple<int, int, int, int>, CalcDegreeHour> calcDegreeHours,
+                                   [JetBrains.Annotations.NotNull] CalcLocation cloc,
+                                   [JetBrains.Annotations.NotNull] CalcDeviceDto calcDeviceDto, [JetBrains.Annotations.NotNull] CalcRepo calcRepo)
             : base(
                  powerUsage,  cloc,
                   calcDeviceDto, calcRepo)
@@ -54,7 +54,7 @@ namespace CalculationEngine.HouseElements {
             _calcDegreeHours = calcDegreeHours;
         }
 
-        public void Activate([NotNull] TimeStep time, DateTime dateTime)
+        public void Activate([JetBrains.Annotations.NotNull] TimeStep time, DateTime dateTime)
         {
             var oneHour = new TimeSpan(1, 0, 0);
             var numberOfValuesInOneHour =
@@ -91,7 +91,7 @@ namespace CalculationEngine.HouseElements {
         public int Month { get; }
         public int Year { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public override string ToString()
         {
             var dt = new DateTime(Year, Month, Day, Hour, 0, 0);

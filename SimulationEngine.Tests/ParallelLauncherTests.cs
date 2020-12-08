@@ -4,8 +4,6 @@ using System.IO;
 using Automation;
 using Common;
 using Common.Tests;
-using JetBrains.Annotations;
-
 using SimulationEngineLib;
 using SimulationEngineLib.SettlementCalculation;
 using Xunit;
@@ -38,7 +36,7 @@ namespace SimulationEngine.Tests
             MainSimEngine.Run(arguments.ToArray(), "simulationengine.exe");
         }
 
-        public ParallelLauncherTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public ParallelLauncherTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

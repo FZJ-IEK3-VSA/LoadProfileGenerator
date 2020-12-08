@@ -1,13 +1,12 @@
 ﻿using Automation;
 using Automation.ResultFiles;
 using Common.Enums;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 
 namespace Common.SQLResultLogging.InputLoggers
 {
     public class CalcObjectInformation{
-        public CalcObjectInformation(CalcObjectType calcObjectType, [NotNull] string calcObjectName, [NotNull] string basePath)
+        public CalcObjectInformation(CalcObjectType calcObjectType, [JetBrains.Annotations.NotNull] string calcObjectName, [JetBrains.Annotations.NotNull] string basePath)
         {
             CalcObjectType = calcObjectType;
             CalcObjectName = calcObjectName;
@@ -15,16 +14,16 @@ namespace Common.SQLResultLogging.InputLoggers
         }
 
         public CalcObjectType CalcObjectType { get; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string CalcObjectName { get; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string BasePath { get; }
     }
 
     public class CalcObjectInformationLogger: DataSaverBase
     {
         public const string TableName = "CalcObjectInformation";
-        public CalcObjectInformationLogger([NotNull] SqlResultLoggingService srls)
+        public CalcObjectInformationLogger([JetBrains.Annotations.NotNull] SqlResultLoggingService srls)
         : base(typeof(CalcObjectInformation),
             new ResultTableDefinition(TableName,ResultTableID.CalcObjectInformation, "Additional information about the calc object to help with further processing", CalcOption.HouseholdContents), srls)
     {
@@ -42,7 +41,7 @@ namespace Common.SQLResultLogging.InputLoggers
             Srls.SaveResultEntry(se);
     }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CalcObjectInformation Load()
         {
             if (Srls == null)

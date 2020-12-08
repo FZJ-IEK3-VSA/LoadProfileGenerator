@@ -28,7 +28,6 @@
 
 using System.Diagnostics.CodeAnalysis;
 using Common;
-using JetBrains.Annotations;
 
 namespace LoadProfileGenerator {
     /// <summary>
@@ -38,7 +37,7 @@ namespace LoadProfileGenerator {
     public partial class ProgressbarWindow {
         private readonly int _maxValue;
 
-        public ProgressbarWindow([NotNull] string title, [NotNull] string description, int maxcount) {
+        public ProgressbarWindow([JetBrains.Annotations.NotNull] string title, [JetBrains.Annotations.NotNull] string description, int maxcount) {
             InitializeComponent();
             Title = title;
             LblDescription.Text = description;

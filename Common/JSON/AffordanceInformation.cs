@@ -9,7 +9,7 @@
     public class AffordanceInformation {
         public class SingleAffordanceInfo
         {
-            public SingleAffordanceInfo(int affordanceID, CalcAffordanceType affordanceType, [NotNull] string affordanceName, [NotNull] string locationName, [NotNull] string timeLimitName, [NotNull] string sourceTrait, TimeSpan personProfileDuration, [NotNull] string affordanceCategory, int affordanceSerial)
+            public SingleAffordanceInfo(int affordanceID, CalcAffordanceType affordanceType, [JetBrains.Annotations.NotNull] string affordanceName, [JetBrains.Annotations.NotNull] string locationName, [JetBrains.Annotations.NotNull] string timeLimitName, [JetBrains.Annotations.NotNull] string sourceTrait, TimeSpan personProfileDuration, [JetBrains.Annotations.NotNull] string affordanceCategory, int affordanceSerial)
             {
                 AffordanceID = affordanceID;
                 AffordanceType = affordanceType;
@@ -25,28 +25,28 @@
             [JsonIgnore]
             public CalcAffordanceType AffordanceType { get;  }
             public int AffordanceSerial { get;  }
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string AffordanceName { get;  }
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string LocationName { get;  }
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string TimeLimitName { get;  }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string SourceTrait { get;  }
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public Dictionary<string, string> AffordanceTags { get;  } = new Dictionary<string, string>();
             public TimeSpan PersonProfileDuration { get;  }
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             [ItemNotNull]
             public List<DeviceInformation> DeviceInformations { get;  } = new List<DeviceInformation>();
             public int AffordanceID { get;  }
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string AffordanceCategory { get;  }
         }
 
         public class DeviceInformation {
-            public DeviceInformation([NotNull] string deviceName, [NotNull] string profileName, int profileTimeOffset, [NotNull] string loadType)
+            public DeviceInformation([JetBrains.Annotations.NotNull] string deviceName, [JetBrains.Annotations.NotNull] string profileName, int profileTimeOffset, [JetBrains.Annotations.NotNull] string loadType)
             {
                 DeviceName = deviceName;
                 ProfileName = profileName;
@@ -54,22 +54,22 @@
                 LoadType = loadType;
             }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string DeviceName { get;  }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string ProfileName { get;  }
             public int ProfileTimeOffset { get;  }
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string LoadType { get;  }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public List<SingleAffordanceInfo> AffordanceInfos { get;  } = new List<SingleAffordanceInfo>();
 
-        [NotNull]
-        public static AffordanceInformation Read([NotNull] string fullFilePath)
+        [JetBrains.Annotations.NotNull]
+        public static AffordanceInformation Read([JetBrains.Annotations.NotNull] string fullFilePath)
         {
             string json;
             using (var sw = new StreamReader(fullFilePath)) {
@@ -78,7 +78,7 @@
             return JsonConvert.DeserializeObject<AffordanceInformation>(json);
         }
 
-        public void WriteResultEntries([NotNull] StreamWriter sw)
+        public void WriteResultEntries([JetBrains.Annotations.NotNull] StreamWriter sw)
         {
             var json = JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings {
                 NullValueHandling = NullValueHandling.Include

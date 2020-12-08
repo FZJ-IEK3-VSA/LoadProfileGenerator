@@ -49,11 +49,11 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
     public class ExternalTimeResolutionMaker : LoadTypeStepBase {
 
 
-        [NotNull] private readonly IFileFactoryAndTracker _fft;
+        [JetBrains.Annotations.NotNull] private readonly IFileFactoryAndTracker _fft;
 
-        public ExternalTimeResolutionMaker([NotNull] IFileFactoryAndTracker fft,
-                                           [NotNull] CalcDataRepository repository,
-                                           [NotNull] ICalculationProfiler calculationProfiler) : base(repository,
+        public ExternalTimeResolutionMaker([JetBrains.Annotations.NotNull] IFileFactoryAndTracker fft,
+                                           [JetBrains.Annotations.NotNull] CalcDataRepository repository,
+                                           [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler) : base(repository,
             AutomationUtili.GetOptionList(CalcOption.SumProfileExternalEntireHouse,CalcOption.SumProfileExternalIndividualHouseholds,
                 CalcOption.DeviceProfileExternalEntireHouse,CalcOption.DeviceProfileExternalIndividualHouseholds,
                 CalcOption.SumProfileExternalIndividualHouseholdsAsJson), calculationProfiler, "External Time Resolution Profiles")
@@ -61,9 +61,9 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             _fft = fft;
         }
 
-        public void Run([NotNull] CalcLoadTypeDto dstLoadType,
-                        [NotNull] [ItemNotNull] List<OnlineEnergyFileRow> energyFileRows,
-                        [NotNull] EnergyFileColumns efc)
+        public void Run([JetBrains.Annotations.NotNull] CalcLoadTypeDto dstLoadType,
+                        [JetBrains.Annotations.NotNull] [ItemNotNull] List<OnlineEnergyFileRow> energyFileRows,
+                        [JetBrains.Annotations.NotNull] EnergyFileColumns efc)
         {
             var calcParameters = Repository.CalcParameters;
             var dsc = new DateStampCreator(calcParameters);
@@ -143,10 +143,10 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             }
         }
 
-        public void RunIndividualHouseholds([NotNull] CalcLoadTypeDto dstLoadType,
-                                            [NotNull] [ItemNotNull] List<OnlineEnergyFileRow> energyFileRows,
-                                            [NotNull] EnergyFileColumns efc,
-                                            [NotNull] HouseholdKey hhnum)
+        public void RunIndividualHouseholds([JetBrains.Annotations.NotNull] CalcLoadTypeDto dstLoadType,
+                                            [JetBrains.Annotations.NotNull] [ItemNotNull] List<OnlineEnergyFileRow> energyFileRows,
+                                            [JetBrains.Annotations.NotNull] EnergyFileColumns efc,
+                                            [JetBrains.Annotations.NotNull] HouseholdKey hhnum)
         {
             var calcParameters = Repository.CalcParameters;
             var dsc = new DateStampCreator(calcParameters);
@@ -270,7 +270,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public override List<CalcOption> NeededOptions => new List<CalcOption>() {
             CalcOption.DetailedDatFiles
         };

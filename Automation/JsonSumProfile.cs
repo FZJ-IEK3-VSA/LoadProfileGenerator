@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Automation.ResultFiles;
-using JetBrains.Annotations;
 
 namespace Automation
 {
@@ -56,7 +55,7 @@ namespace Automation
     }
     public class JsonSumProfile
     {
-        public JsonSumProfile(string name, TimeSpan timeResolution, DateTime startTime, string loadTypeName, string unit, LoadTypeInformation? loadTypeDefinition, [NotNull] HouseholdKeyEntry houseKey)
+        public JsonSumProfile(string name, TimeSpan timeResolution, DateTime startTime, string loadTypeName, string unit, LoadTypeInformation? loadTypeDefinition, [JetBrains.Annotations.NotNull] HouseholdKeyEntry houseKey)
         {
             Name = name;
             TimeResolution = timeResolution;

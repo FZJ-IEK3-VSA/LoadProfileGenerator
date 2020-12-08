@@ -12,8 +12,6 @@ using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.ModularHouseholds;
 using FluentAssertions;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -751,7 +749,7 @@ namespace Database.Tests.Tables.BasicHouseholds {
             (aff.IsAffordanceAvailable(allDevices1, deviceActions)).Should().BeTrue();
         }
 
-        public AffordanceTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public AffordanceTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

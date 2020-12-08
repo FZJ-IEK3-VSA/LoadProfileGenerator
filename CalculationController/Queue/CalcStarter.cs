@@ -36,17 +36,16 @@ using CalculationEngine;
 using Common;
 using Common.Enums;
 using Database;
-using JetBrains.Annotations;
 
 #endregion
 
 namespace CalculationController.Queue {
     // this class sets up the entire environment, starts the entry factory and then the queue runner and the post processing
     public class CalcStarter {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly Simulator _sim;
 
-        public CalcStarter([NotNull] Simulator sim) {
+        public CalcStarter([JetBrains.Annotations.NotNull] Simulator sim) {
             _sim = sim;
             CalcManager.ExitCalcFunction = false;
         }
@@ -59,7 +58,7 @@ namespace CalculationController.Queue {
         }
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        private static bool CheckAndClearDirectory([NotNull] string dstPath, bool preserveLogfile) {
+        private static bool CheckAndClearDirectory([JetBrains.Annotations.NotNull] string dstPath, bool preserveLogfile) {
             var di = new DirectoryInfo(dstPath);
             if (di.Exists) {
                 try {
@@ -116,7 +115,7 @@ namespace CalculationController.Queue {
             return true;
         }
 
-        public void Start([NotNull] CalcStartParameterSet csps) {
+        public void Start([JetBrains.Annotations.NotNull] CalcStartParameterSet csps) {
             if (!csps.ResumeSettlement || csps.CalcTarget.CalcObjectType != CalcObjectType.Settlement) {
                 if (!Config.IsInHeadless) {
                     if (!CheckAndClearDirectory(csps.ResultPath, csps.PreserveLogfileWhileClearingFolder)) {

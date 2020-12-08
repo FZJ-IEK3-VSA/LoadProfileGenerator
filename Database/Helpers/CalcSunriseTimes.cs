@@ -32,7 +32,6 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using Automation.ResultFiles;
 using Common;
-using JetBrains.Annotations;
 
 #endregion
 
@@ -54,13 +53,13 @@ namespace Database.Helpers {
     public sealed class CalcSunriseTimes {
         private const double Mk1 = 15 * PiBy180 * 1.0027379;
         private const double PiBy180 = Math.PI / 180;
-        [NotNull] private readonly double[] _mDecensionArr = {0.0, 0.0, 0.0};
-        [NotNull] private readonly object _mLock = new object();
-        [NotNull] private readonly double[] _mRightAscentionArr = {0.0, 0.0, 0.0};
-        [NotNull] private readonly int[] _mRiseTimeArr = {0, 0};
-        [NotNull] private readonly int[] _mSetTimeArr = {0, 0};
-        [NotNull] private readonly double[] _mSunPositionInSkyArr = {0.0, 0.0};
-        [NotNull] private readonly double[] _mVHzArr = {0.0, 0.0, 0.0};
+        [JetBrains.Annotations.NotNull] private readonly double[] _mDecensionArr = {0.0, 0.0, 0.0};
+        [JetBrains.Annotations.NotNull] private readonly object _mLock = new object();
+        [JetBrains.Annotations.NotNull] private readonly double[] _mRightAscentionArr = {0.0, 0.0, 0.0};
+        [JetBrains.Annotations.NotNull] private readonly int[] _mRiseTimeArr = {0, 0};
+        [JetBrains.Annotations.NotNull] private readonly int[] _mSetTimeArr = {0, 0};
+        [JetBrains.Annotations.NotNull] private readonly double[] _mSunPositionInSkyArr = {0.0, 0.0};
+        [JetBrains.Annotations.NotNull] private readonly double[] _mVHzArr = {0.0, 0.0, 0.0};
 
         /// <summary>
         ///     Calculate sunrise and sunset times. Returns false if time zone and longitude are incompatible.
@@ -72,7 +71,7 @@ namespace Database.Helpers {
         /// <param name="setTime"> Sunset time (output) </param>
         /// <param name="isSunrise"> Whether or not the sun rises at that day </param>
         /// <param name="isSunset"> Whether or not the sun sets at that day </param>
-        public void CalculateSunriseSetTimes([NotNull] LatitudeCoords lat, [NotNull] LongitudeCoords lon, DateTime date,
+        public void CalculateSunriseSetTimes([JetBrains.Annotations.NotNull] LatitudeCoords lat, [JetBrains.Annotations.NotNull] LongitudeCoords lon, DateTime date,
             ref DateTime riseTime, ref DateTime setTime, ref bool isSunrise, ref bool isSunset)
         {
             CalculateSunriseSetTimes(lat.ToDouble(), lon.ToDouble(), date, ref riseTime, ref setTime, ref isSunrise,
@@ -275,7 +274,7 @@ namespace Database.Helpers {
         {
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static CalcSunriseTimes Instance { get; } = new CalcSunriseTimes();
 
         #endregion

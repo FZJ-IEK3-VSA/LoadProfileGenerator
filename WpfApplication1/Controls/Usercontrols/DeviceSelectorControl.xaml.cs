@@ -35,90 +35,90 @@ namespace LoadProfileGenerator.Controls.Usercontrols {
         public delegate void
             RemovedDeviceEventDelegate([CanBeNull] object sender, [CanBeNull] DeviceRemovedEventArgs e);
 
-        [NotNull] public static readonly DependencyProperty AssignableDeviceProperty =
+        [JetBrains.Annotations.NotNull] public static readonly DependencyProperty AssignableDeviceProperty =
             DependencyProperty.Register("AssignableDevice", typeof(IAssignableDevice), typeof(DeviceSelectorControl));
 
-        [NotNull] public static readonly DependencyProperty ItemsSourceAProperty = DependencyProperty.Register(
+        [JetBrains.Annotations.NotNull] public static readonly DependencyProperty ItemsSourceAProperty = DependencyProperty.Register(
             "ItemsSourceA",
             typeof(IEnumerable), typeof(DeviceSelectorControl));
 
-        [NotNull] public static readonly DependencyProperty ItemsSourceBProperty =
+        [JetBrains.Annotations.NotNull] public static readonly DependencyProperty ItemsSourceBProperty =
             ItemsControl.ItemsSourceProperty.AddOwner(typeof(DeviceSelectorControl));
 
-        [NotNull] public static readonly DependencyProperty LoadTypeProperty = DependencyProperty.Register("LoadType",
+        [JetBrains.Annotations.NotNull] public static readonly DependencyProperty LoadTypeProperty = DependencyProperty.Register("LoadType",
             typeof(VLoadType), typeof(DeviceSelectorControl));
 
-        [NotNull] public static readonly DependencyProperty LocationProperty = DependencyProperty.Register("Location",
+        [JetBrains.Annotations.NotNull] public static readonly DependencyProperty LocationProperty = DependencyProperty.Register("Location",
             typeof(object), typeof(DeviceSelectorControl));
 
-        [NotNull] public static readonly DependencyProperty LocationsProperty = DependencyProperty.Register("Locations",
+        [JetBrains.Annotations.NotNull] public static readonly DependencyProperty LocationsProperty = DependencyProperty.Register("Locations",
             typeof(IEnumerable), typeof(DeviceSelectorControl));
 
-        [NotNull] public static readonly DependencyProperty ProbabilityProperty = DependencyProperty.Register(
+        [JetBrains.Annotations.NotNull] public static readonly DependencyProperty ProbabilityProperty = DependencyProperty.Register(
             "Probability",
             typeof(double), typeof(DeviceSelectorControl));
 
-        [NotNull] public static readonly DependencyProperty SelectedVariableProperty =
+        [JetBrains.Annotations.NotNull] public static readonly DependencyProperty SelectedVariableProperty =
             DependencyProperty.Register("SelectedVariable", typeof(Variable), typeof(DeviceSelectorControl));
 
-        [NotNull] public static readonly DependencyProperty SimulatorProperty = DependencyProperty.Register("Simulator",
+        [JetBrains.Annotations.NotNull] public static readonly DependencyProperty SimulatorProperty = DependencyProperty.Register("Simulator",
             typeof(Simulator), typeof(DeviceSelectorControl));
 
-        [NotNull] public static readonly DependencyProperty TimeBasedProfileProperty =
+        [JetBrains.Annotations.NotNull] public static readonly DependencyProperty TimeBasedProfileProperty =
             DependencyProperty.Register("TimeBasedProfile", typeof(TimeBasedProfile), typeof(DeviceSelectorControl));
 
-        [NotNull] public static readonly DependencyProperty TimeDeviationProperty = DependencyProperty.Register(
+        [JetBrains.Annotations.NotNull] public static readonly DependencyProperty TimeDeviationProperty = DependencyProperty.Register(
             "TimeDeviation",
             typeof(decimal), typeof(DeviceSelectorControl));
 
-        [NotNull] public static readonly DependencyProperty TimeLimitProperty = DependencyProperty.Register("TimeLimit",
+        [JetBrains.Annotations.NotNull] public static readonly DependencyProperty TimeLimitProperty = DependencyProperty.Register("TimeLimit",
             typeof(TimeLimit), typeof(DeviceSelectorControl));
 
-        [NotNull] public static readonly DependencyProperty TimeOffsetProperty = DependencyProperty.Register(
+        [JetBrains.Annotations.NotNull] public static readonly DependencyProperty TimeOffsetProperty = DependencyProperty.Register(
             "TimeOffset",
             typeof(decimal), typeof(DeviceSelectorControl));
 
-        [NotNull] public static readonly DependencyProperty UseLoadTypeProperty = DependencyProperty.Register(
+        [JetBrains.Annotations.NotNull] public static readonly DependencyProperty UseLoadTypeProperty = DependencyProperty.Register(
             "UseLoadType",
             typeof(bool), typeof(DeviceSelectorControl));
 
-        [NotNull] public static readonly DependencyProperty UseLocationProperty = DependencyProperty.Register(
+        [JetBrains.Annotations.NotNull] public static readonly DependencyProperty UseLocationProperty = DependencyProperty.Register(
             "UseLocation",
             typeof(bool), typeof(DeviceSelectorControl));
 
-        [NotNull] public static readonly DependencyProperty UseProbabilityProperty = DependencyProperty.Register(
+        [JetBrains.Annotations.NotNull] public static readonly DependencyProperty UseProbabilityProperty = DependencyProperty.Register(
             "UseProbability", typeof(bool), typeof(DeviceSelectorControl));
 
-        [NotNull] public static readonly DependencyProperty UseTimeDeviationProperty =
+        [JetBrains.Annotations.NotNull] public static readonly DependencyProperty UseTimeDeviationProperty =
             DependencyProperty.Register("UseTimeDeviation", typeof(bool), typeof(DeviceSelectorControl));
 
-        [NotNull] public static readonly DependencyProperty UseTimeLimitProperty = DependencyProperty.Register(
+        [JetBrains.Annotations.NotNull] public static readonly DependencyProperty UseTimeLimitProperty = DependencyProperty.Register(
             "UseTimeLimit",
             typeof(bool), typeof(DeviceSelectorControl));
 
-        [NotNull] public static readonly DependencyProperty UseTimeOffsetProperty = DependencyProperty.Register(
+        [JetBrains.Annotations.NotNull] public static readonly DependencyProperty UseTimeOffsetProperty = DependencyProperty.Register(
             "UseTimeOffset",
             typeof(bool), typeof(DeviceSelectorControl));
 
-        [NotNull] public static readonly DependencyProperty UseTimeProfileProperty = DependencyProperty.Register(
+        [JetBrains.Annotations.NotNull] public static readonly DependencyProperty UseTimeProfileProperty = DependencyProperty.Register(
             "UseTimeProfile", typeof(bool), typeof(DeviceSelectorControl));
 
-        [NotNull] public static readonly DependencyProperty UseVariableProperty = DependencyProperty.Register(
+        [JetBrains.Annotations.NotNull] public static readonly DependencyProperty UseVariableProperty = DependencyProperty.Register(
             "UseVariable",
             typeof(bool), typeof(DeviceSelectorControl));
 
-        [NotNull] public static readonly DependencyProperty VariableConditionProperty =
+        [JetBrains.Annotations.NotNull] public static readonly DependencyProperty VariableConditionProperty =
             DependencyProperty.Register("VariableCondition", typeof(VariableCondition), typeof(DeviceSelectorControl));
 
-        [NotNull] public static readonly DependencyProperty VariableValueProperty = DependencyProperty.Register(
+        [JetBrains.Annotations.NotNull] public static readonly DependencyProperty VariableValueProperty = DependencyProperty.Register(
             "VariableValue",
             typeof(double), typeof(DeviceSelectorControl));
 
-        [NotNull] private readonly Dictionary<string, AssignableDeviceType> _deviceTypeDict;
+        [JetBrains.Annotations.NotNull] private readonly Dictionary<string, AssignableDeviceType> _deviceTypeDict;
 
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<string> _deviceTypes;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<string> _deviceTypes;
 
-        [NotNull] private string _selectedAddCategory;
+        [JetBrains.Annotations.NotNull] private string _selectedAddCategory;
 
         [CanBeNull] private Simulator _sim;
 
@@ -169,13 +169,13 @@ namespace LoadProfileGenerator.Controls.Usercontrols {
         [CanBeNull]
         public ObservableCollection<RealDevice> Devices => _sim?.RealDevices.Items;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         [UsedImplicitly]
         public ObservableCollection<string> DeviceTypes => _deviceTypes;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public IEnumerable ItemsSourceA {
             get => (IEnumerable) GetValue(ItemsSourceAProperty);
@@ -183,7 +183,7 @@ namespace LoadProfileGenerator.Controls.Usercontrols {
         }
 
 #pragma warning disable WPF0032 // Use same dependency property in get and set.
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         [UsedImplicitly]
         public IEnumerable ItemsSourceB {
@@ -226,7 +226,7 @@ namespace LoadProfileGenerator.Controls.Usercontrols {
             set => SetValue(LocationProperty, value);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         [UsedImplicitly]
         public IEnumerable Locations {
@@ -234,7 +234,7 @@ namespace LoadProfileGenerator.Controls.Usercontrols {
             set => SetValue(LocationsProperty, value);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public Func<object, bool> OpenItem { get; set; }
 
@@ -244,7 +244,7 @@ namespace LoadProfileGenerator.Controls.Usercontrols {
             set => SetValue(ProbabilityProperty, value);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string SelectedAddCategory {
             get => _selectedAddCategory;
@@ -548,11 +548,11 @@ namespace LoadProfileGenerator.Controls.Usercontrols {
 
         [ItemNotNull]
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<string> VariableConditions { get; } = new ObservableCollection<string>();
 
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
 #pragma warning disable WPF0003 // CLR property for a DependencyProperty should match registered name.
         public string VariableConditionStr
         {
@@ -611,7 +611,7 @@ namespace LoadProfileGenerator.Controls.Usercontrols {
         public void ResizeColummns() => SelectedDevices.ResizeColummns(ActualWidth * 0.9);
 
         [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([NotNull] string propertyName)
+        protected virtual void OnPropertyChanged([JetBrains.Annotations.NotNull] string propertyName)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         private event AddedDeviceEventDelegate AddedDeviceEvent;
@@ -650,7 +650,7 @@ namespace LoadProfileGenerator.Controls.Usercontrols {
             RemovedDeviceEvent?.Invoke(this, evt);
         }
 
-        private void CheckOneColumn([NotNull] string title, [NotNull] string binding, bool percentConverter = false)
+        private void CheckOneColumn([JetBrains.Annotations.NotNull] string title, [JetBrains.Annotations.NotNull] string binding, bool percentConverter = false)
         {
             var gv = (GridView) SelectedDevices.View;
             var found = false;
@@ -676,10 +676,10 @@ namespace LoadProfileGenerator.Controls.Usercontrols {
             }
         }
 
-        private static void ClearBinding([NotNull] TextBox txt) =>
+        private static void ClearBinding([JetBrains.Annotations.NotNull] TextBox txt) =>
             BindingOperations.ClearBinding(txt, TextBox.TextProperty);
 
-        private static void ClearBinding([NotNull] ComboBox txt)
+        private static void ClearBinding([JetBrains.Annotations.NotNull] ComboBox txt)
             => BindingOperations.ClearBinding(txt, ComboBox.SelectedItemProperty);
 
         private void CmbDevice_OnSelectionChanged([CanBeNull] object sender, [CanBeNull] SelectionChangedEventArgs e)
@@ -878,7 +878,7 @@ namespace LoadProfileGenerator.Controls.Usercontrols {
             Refresh();
         }
 
-        private static void SetBinding([NotNull] TextBox txt, [NotNull] string binding, bool percentConverter = false)
+        private static void SetBinding([JetBrains.Annotations.NotNull] TextBox txt, [JetBrains.Annotations.NotNull] string binding, bool percentConverter = false)
         {
             var myBinding = new Binding {
                 ElementName = "SelectedDevices",
@@ -897,7 +897,7 @@ namespace LoadProfileGenerator.Controls.Usercontrols {
             txt.SetBinding(TextBox.TextProperty, myBinding);
         }
 
-        private static void SetBinding([NotNull] ComboBox txt, [NotNull] string binding)
+        private static void SetBinding([JetBrains.Annotations.NotNull] ComboBox txt, [JetBrains.Annotations.NotNull] string binding)
         {
             var myBinding = new Binding("SelectedItem." + binding) {
                 ElementName = "SelectedDevices",
@@ -954,7 +954,7 @@ namespace LoadProfileGenerator.Controls.Usercontrols {
         }
 
         public class DeviceRemovedEventArgs : EventArgs {
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public object ItemToRemove { get; set; }
         }
     }

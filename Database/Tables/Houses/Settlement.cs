@@ -57,34 +57,34 @@ using Exception = System.Exception;
 namespace Database.Tables.Houses {
     public class Settlement : DBBaseElement, ICalcObject {
         public const string TableName = "tblSettlement";
-        [NotNull] [ItemNotNull] private readonly ObservableCollection<SettlementHH> _households;
-        [NotNull] private string _buildingType;
-        [NotNull] private JsonCalcSpecification _calcSpecification;
-        [NotNull] private string _character;
+        [JetBrains.Annotations.NotNull] [ItemNotNull] private readonly ObservableCollection<SettlementHH> _households;
+        [JetBrains.Annotations.NotNull] private string _buildingType;
+        [JetBrains.Annotations.NotNull] private JsonCalcSpecification _calcSpecification;
+        [JetBrains.Annotations.NotNull] private string _character;
         private CreationType _creationType;
 
-        [NotNull] private string _description;
-        //[NotNull] private string _dstPath;
+        [JetBrains.Annotations.NotNull] private string _description;
+        //[JetBrains.Annotations.NotNull] private string _dstPath;
 
         [CanBeNull] private GeographicLocation _geographicLocation;
 
-        [NotNull] private string _location;
-        [NotNull] private string _popularWith;
-        [NotNull] private string _source;
+        [JetBrains.Annotations.NotNull] private string _location;
+        [JetBrains.Annotations.NotNull] private string _popularWith;
+        [JetBrains.Annotations.NotNull] private string _source;
         [CanBeNull] private TemperatureProfile _temperatureProfile;
 
-        public Settlement([NotNull] string pName,
+        public Settlement([JetBrains.Annotations.NotNull] string pName,
                           [CanBeNull] int? id,
-                          //[NotNull] string dstPath,
-                          [NotNull] string character,
-                          [NotNull] string location,
-                          [NotNull] string popularWith,
-                          [NotNull] string buildingType,
-                          [NotNull] string description,
-                          [NotNull] string connectionString,
+                          //[JetBrains.Annotations.NotNull] string dstPath,
+                          [JetBrains.Annotations.NotNull] string character,
+                          [JetBrains.Annotations.NotNull] string location,
+                          [JetBrains.Annotations.NotNull] string popularWith,
+                          [JetBrains.Annotations.NotNull] string buildingType,
+                          [JetBrains.Annotations.NotNull] string description,
+                          [JetBrains.Annotations.NotNull] string connectionString,
                           [CanBeNull] GeographicLocation geoLoc,
                           [CanBeNull] TemperatureProfile temperatureProfile,
-                          [NotNull] string source,
+                          [JetBrains.Annotations.NotNull] string source,
                           CreationType creationType,
                           StrGuid guid,
                           [CanBeNull] JsonCalcSpecification calcSpecification) : base(pName, TableName, connectionString, guid)
@@ -105,7 +105,7 @@ namespace Database.Tables.Houses {
             _creationType = creationType;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string BuildingType {
             get => _buildingType;
@@ -123,7 +123,7 @@ namespace Database.Tables.Houses {
         [CanBeNull]
         public IReadOnlyCollection<CalcOption> CalcOptions => _calcSpecification.CalcOptions?.AsReadOnly();
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string Character {
             get => _character;
@@ -158,7 +158,7 @@ namespace Database.Tables.Houses {
             set => SetValueWithNotify(value, ref _creationType, nameof(CreationType));
         }
         /*
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string DstPath {
             get => _dstPath;
             [UsedImplicitly]
@@ -213,7 +213,7 @@ namespace Database.Tables.Houses {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string Description {
             get => _description;
@@ -227,7 +227,7 @@ namespace Database.Tables.Houses {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ReadOnlyCollection<string> EnabledLoadtypes {
             get {
@@ -287,7 +287,7 @@ namespace Database.Tables.Houses {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<SettlementHH> Households => _households;
 
         [UsedImplicitly]
@@ -314,7 +314,7 @@ namespace Database.Tables.Houses {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string Location {
             get => _location;
@@ -346,7 +346,7 @@ namespace Database.Tables.Houses {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string PopularWith {
             get => _popularWith;
@@ -361,7 +361,7 @@ namespace Database.Tables.Houses {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string Source {
             get => _source;
             set => SetValueWithNotify(value, ref _source, nameof(Source));
@@ -455,8 +455,8 @@ namespace Database.Tables.Houses {
             OnPropertyChanged(nameof(CalcOptions));
         }
 
-        [NotNull]
-        public SettlementHH AddHousehold([NotNull] ICalcObject hh, int count)
+        [JetBrains.Annotations.NotNull]
+        public SettlementHH AddHousehold([JetBrains.Annotations.NotNull] ICalcObject hh, int count)
         {
             SettlementHH item2Delete = null;
             foreach (var settlementHH in _households) {
@@ -475,7 +475,7 @@ namespace Database.Tables.Houses {
             return shh;
         }
 
-        public void AddLoadtypeForPostProcessing([NotNull] string lt)
+        public void AddLoadtypeForPostProcessing([JetBrains.Annotations.NotNull] string lt)
         {
             if (_calcSpecification.LoadtypesForPostprocessing == null) {
                 _calcSpecification.LoadtypesForPostprocessing = new List<string>();
@@ -489,7 +489,7 @@ namespace Database.Tables.Houses {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public List<AgeEntry> CalculateAgeEntries()
         {
             var ageEntries = new List<AgeEntry>();
@@ -507,7 +507,7 @@ namespace Database.Tables.Houses {
             return ageEntries;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [SuppressMessage("ReSharper", "SwitchStatementMissingSomeCases")]
         public Dictionary<HouseholdTag, int> CalculateHouseholdTagCounts()
         {
@@ -547,7 +547,7 @@ namespace Database.Tables.Houses {
             return dict;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [SuppressMessage("ReSharper", "SwitchStatementMissingSomeCases")]
         public Dictionary<LivingPatternTag, int> CalculateLivingPatternCounts()
         {
@@ -594,9 +594,9 @@ namespace Database.Tables.Houses {
 
         public override List<UsedIn> CalculateUsedIns(Simulator sim) => throw new NotImplementedException();
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString)
+        public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString)
         {
             var newname = FindNewName(isNameTaken, "New Settlement ");
             var startDate = new DateTime(DateTime.Now.Year, 1, 1);
@@ -639,7 +639,7 @@ namespace Database.Tables.Houses {
             base.DeleteFromDB();
         }
 
-        public void DeleteSettlementHHFromDB([NotNull] SettlementHH shh)
+        public void DeleteSettlementHHFromDB([JetBrains.Annotations.NotNull] SettlementHH shh)
         {
             if (shh.ID != null) {
                 shh.DeleteFromDB();
@@ -648,7 +648,7 @@ namespace Database.Tables.Houses {
             Logger.Get().SafeExecuteWithWait(() => _households.Remove(shh));
         }
 
-        public void ImportFromExisting([NotNull] Settlement settlement)
+        public void ImportFromExisting([JetBrains.Annotations.NotNull] Settlement settlement)
         {
             BuildingType = settlement.BuildingType;
             Source = string.Empty;
@@ -671,9 +671,9 @@ namespace Database.Tables.Houses {
         public override DBBase ImportFromGenericItem(DBBase toImport, Simulator dstSim) =>
             ImportFromItem((Settlement)toImport, dstSim);
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DBBase ImportFromItem([NotNull] Settlement item, [NotNull] Simulator dstsim)
+        public static DBBase ImportFromItem([JetBrains.Annotations.NotNull] Settlement item, [JetBrains.Annotations.NotNull] Simulator dstsim)
         {
             GeographicLocation geoloc = null;
             if (item.GeographicLocation != null) {
@@ -715,12 +715,12 @@ namespace Database.Tables.Houses {
             return settlement;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<Settlement> result,
-                                            [NotNull] string connectionString,
-                                            [ItemNotNull] [NotNull] ObservableCollection<TemperatureProfile> temperatureProfiles,
-                                            [ItemNotNull] [NotNull] ObservableCollection<GeographicLocation> geographicLocations,
-                                            [ItemNotNull] [NotNull] ObservableCollection<ModularHousehold> modularHouseholds,
-                                            [ItemNotNull] [NotNull] ObservableCollection<House> houses,
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Settlement> result,
+                                            [JetBrains.Annotations.NotNull] string connectionString,
+                                            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TemperatureProfile> temperatureProfiles,
+                                            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<GeographicLocation> geographicLocations,
+                                            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<ModularHousehold> modularHouseholds,
+                                            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<House> houses,
                                             bool ignoreMissingTables)
         {
             var aic = new AllItemCollections(temperatureProfiles: temperatureProfiles, geographicLocations: geographicLocations);
@@ -833,7 +833,7 @@ namespace Database.Tables.Houses {
             }
         }*/
 
-        public void MakeTraitStatistics([NotNull] string traitfilename, [NotNull] string affFileName, [NotNull] Simulator sim)
+        public void MakeTraitStatistics([JetBrains.Annotations.NotNull] string traitfilename, [JetBrains.Annotations.NotNull] string affFileName, [JetBrains.Annotations.NotNull] Simulator sim)
         {
             var chhs = new List<ModularHousehold>();
             foreach (var settlementHH in _households) {
@@ -904,7 +904,7 @@ namespace Database.Tables.Houses {
             }
         }
 
-        public void RemoveLoadtypeForPostProcessing([NotNull] string lt)
+        public void RemoveLoadtypeForPostProcessing([JetBrains.Annotations.NotNull] string lt)
         {
             if (_calcSpecification.LoadtypesForPostprocessing == null) {
                 _calcSpecification.LoadtypesForPostprocessing = new List<string>();
@@ -941,7 +941,7 @@ namespace Database.Tables.Houses {
 
         public override string ToString() => Name;
 
-        public void WriteJsonCalculationSpecs([NotNull] string dstDirectory, [NotNull] string simulationEnginePath)
+        public void WriteJsonCalculationSpecs([JetBrains.Annotations.NotNull] string dstDirectory, [JetBrains.Annotations.NotNull] string simulationEnginePath)
         {
             List<string> generatedPaths = new List<string>();
             List<string> outputFiles = new List<string>();
@@ -1047,11 +1047,11 @@ namespace Database.Tables.Houses {
             cmd.AddParameter("CreationType", (int)_creationType);
         }
 
-        [NotNull]
-        private static Settlement AssignFields([NotNull] DataReader dr,
-                                               [NotNull] string connectionString,
+        [JetBrains.Annotations.NotNull]
+        private static Settlement AssignFields([JetBrains.Annotations.NotNull] DataReader dr,
+                                               [JetBrains.Annotations.NotNull] string connectionString,
                                                bool ignoreMissingFields,
-                                               [NotNull] AllItemCollections aic)
+                                               [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var hhid = dr.GetIntFromLong("ID");
             var name = dr.GetString("Name");
@@ -1105,13 +1105,13 @@ namespace Database.Tables.Houses {
                 jcs);
         }
 
-        private void HouseholdsCollectionChanged([NotNull] object sender, [NotNull] NotifyCollectionChangedEventArgs e)
+        private void HouseholdsCollectionChanged([JetBrains.Annotations.NotNull] object sender, [JetBrains.Annotations.NotNull] NotifyCollectionChangedEventArgs e)
         {
             OnPropertyChangedNoUpdate(nameof(Citizens));
             OnPropertyChangedNoUpdate(nameof(HouseholdCount));
         }
 
-        private static bool IsCorrectParent([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var settlementHh = (SettlementHH)child;
             if (parent.ID == settlementHh.SettlementID) {
@@ -1137,7 +1137,7 @@ namespace Database.Tables.Houses {
             }
         }
 
-        private static void ProcessMHHForStatistics([NotNull] ModularHousehold chh, [NotNull] Dictionary<HouseholdTag, int> counts)
+        private static void ProcessMHHForStatistics([JetBrains.Annotations.NotNull] ModularHousehold chh, [JetBrains.Annotations.NotNull] Dictionary<HouseholdTag, int> counts)
         {
             foreach (var tag in chh.ModularHouseholdTags) {
                 if (!counts.ContainsKey(tag.Tag)) {
@@ -1187,7 +1187,7 @@ namespace Database.Tables.Houses {
                 MaxAge = maxAge;
             }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             [UsedImplicitly]
             public string AgeRange => MinAge + " - " + MaxAge;
 

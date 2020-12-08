@@ -50,20 +50,20 @@ using JetBrains.Annotations;
 namespace CalculationEngine.HouseholdElements {
     public class CalcPerson : CalcBase {
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly BitArray _isBusy;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly PotentialAffs _normalPotentialAffs = new PotentialAffs();
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly CalcPersonDesires _normalDesires;
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly List<ICalcAffordanceBase> _previousAffordances;
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly List<Tuple<ICalcAffordanceBase, TimeStep>> _previousAffordancesWithEndTime =
             new List<Tuple<ICalcAffordanceBase, TimeStep>>();
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly PotentialAffs _sicknessPotentialAffs = new PotentialAffs();
         private bool _alreadyloggedvacation;
 
@@ -71,18 +71,18 @@ namespace CalculationEngine.HouseholdElements {
 
         private bool _isCurrentlyPriorityAffordanceRunning;
         private bool _isCurrentlySick;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly CalcPersonDto _calcPerson;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public HouseholdKey HouseholdKey => _calcPerson.HouseholdKey;
 
         private readonly CalcRepo _calcRepo;
 
-        public CalcPerson([NotNull] CalcPersonDto calcPerson,
-                          [NotNull] CalcLocation startingLocation,
-                          [NotNull][ItemNotNull] BitArray isSick,
-                          [NotNull][ItemNotNull] BitArray isOnVacation, CalcRepo calcRepo)
+        public CalcPerson([JetBrains.Annotations.NotNull] CalcPersonDto calcPerson,
+                          [JetBrains.Annotations.NotNull] CalcLocation startingLocation,
+                          [JetBrains.Annotations.NotNull][ItemNotNull] BitArray isSick,
+                          [JetBrains.Annotations.NotNull][ItemNotNull] BitArray isOnVacation, CalcRepo calcRepo)
             : base(calcPerson.Name, calcPerson.Guid)
         {
             _calcPerson = calcPerson;
@@ -102,36 +102,36 @@ namespace CalculationEngine.HouseholdElements {
         //guid for all vacations of this person
         private readonly StrGuid _vacationAffordanceGuid;
         private readonly StrGuid _vacationLocationGuid;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private CalcLocation CurrentLocation { get; set; }
 
         public int DesireCount => PersonDesires.Desires.Count;
 
         //public string HouseholdKey => _person_householdKey;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public BitArray IsOnVacation { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         private BitArray IsSick { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CalcPersonDesires PersonDesires { get; private set; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CalcPersonDesires SicknessDesires { get; }
 
         private TimeStep? TimeToResetActionEntryAfterInterruption { get; set; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string PrettyName => _calcPerson.Name + "(" + _calcPerson.Age + "/" + _calcPerson.Gender + ")";
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public PersonInformation MakePersonInformation() => new PersonInformation(Name, Guid, _calcPerson.TraitTag);
 
-        public bool NewIsBasicallyValidAffordance([NotNull] ICalcAffordanceBase aff, bool sickness, bool logDetails)
+        public bool NewIsBasicallyValidAffordance([JetBrains.Annotations.NotNull] ICalcAffordanceBase aff, bool sickness, bool logDetails)
         {
             // affordanzen löschen, wo alter nicht passt
             if (_calcPerson.Age > aff.MaximumAge || _calcPerson.Age < aff.MiniumAge) {
@@ -193,9 +193,9 @@ namespace CalculationEngine.HouseholdElements {
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        public void NextStep([NotNull] TimeStep time, [NotNull][ItemNotNull] List<CalcLocation> locs, [NotNull] DayLightStatus isDaylight,
-                             [NotNull] HouseholdKey householdKey,
-                             [NotNull][ItemNotNull] List<CalcPerson> persons,
+        public void NextStep([JetBrains.Annotations.NotNull] TimeStep time, [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcLocation> locs, [JetBrains.Annotations.NotNull] DayLightStatus isDaylight,
+                             [JetBrains.Annotations.NotNull] HouseholdKey householdKey,
+                             [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcPerson> persons,
                              int simulationSeed)
         {
             if (_calcRepo.Logfile == null) {
@@ -252,7 +252,7 @@ namespace CalculationEngine.HouseholdElements {
             _isCurrentlyPriorityAffordanceRunning = false;
         }
 
-        private void BecomeHealthy([NotNull] TimeStep time)
+        private void BecomeHealthy([JetBrains.Annotations.NotNull] TimeStep time)
         {
             PersonDesires = _normalDesires;
             PersonDesires.CopyOtherDesires(SicknessDesires);
@@ -269,7 +269,7 @@ namespace CalculationEngine.HouseholdElements {
             }
         }
 
-        private void BecomeSick([NotNull] TimeStep time)
+        private void BecomeSick([JetBrains.Annotations.NotNull] TimeStep time)
         {
             PersonDesires = SicknessDesires;
             PersonDesires.CopyOtherDesires(_normalDesires);
@@ -285,7 +285,7 @@ namespace CalculationEngine.HouseholdElements {
             }
         }
 
-        private void BeOnVacation([NotNull] TimeStep time)
+        private void BeOnVacation([JetBrains.Annotations.NotNull] TimeStep time)
         {
             if (_calcRepo.Logfile == null) {
                 throw new LPGException("Logfile was null.");
@@ -309,7 +309,7 @@ namespace CalculationEngine.HouseholdElements {
             }
         }
 
-        private void InterruptIfNeeded([NotNull] TimeStep time, [NotNull] DayLightStatus isDaylight,
+        private void InterruptIfNeeded([JetBrains.Annotations.NotNull] TimeStep time, [JetBrains.Annotations.NotNull] DayLightStatus isDaylight,
                                        bool ignoreAlreadyExecutedActivities)
         {
             if (_currentAffordance?.IsInterruptable == true &&
@@ -388,7 +388,7 @@ namespace CalculationEngine.HouseholdElements {
             }
         }
 
-        private void ReturnToPreviousActivityIfPreviouslyInterrupted([NotNull] TimeStep time)
+        private void ReturnToPreviousActivityIfPreviouslyInterrupted([JetBrains.Annotations.NotNull] TimeStep time)
         {
             if (time == TimeToResetActionEntryAfterInterruption) {
                 //if (_lf == null) {throw new LPGException("Logfile was null.");}
@@ -413,7 +413,7 @@ namespace CalculationEngine.HouseholdElements {
             }
         }
 
-        private void WriteDesiresToLogfileIfNeeded([NotNull] TimeStep time, [NotNull] HouseholdKey householdKey)
+        private void WriteDesiresToLogfileIfNeeded([JetBrains.Annotations.NotNull] TimeStep time, [JetBrains.Annotations.NotNull] HouseholdKey householdKey)
         {
             if (_calcRepo.CalcParameters.IsSet(CalcOption.DesiresLogfile)) {
                 if (//_lf == null ||
@@ -432,10 +432,10 @@ namespace CalculationEngine.HouseholdElements {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ICalcAffordanceBase PickRandomAffordanceFromEquallyAttractiveOnes(
-            [NotNull][ItemNotNull] List<ICalcAffordanceBase> bestaffordances,
-            [NotNull] TimeStep time, [NotNull] CalcPerson person, [NotNull] HouseholdKey householdKey)
+            [JetBrains.Annotations.NotNull][ItemNotNull] List<ICalcAffordanceBase> bestaffordances,
+            [JetBrains.Annotations.NotNull] TimeStep time, [JetBrains.Annotations.NotNull] CalcPerson person, [JetBrains.Annotations.NotNull] HouseholdKey householdKey)
         {
             // I dont remember why i did this?
             // collect the subaffs for maybe eliminating them
@@ -500,8 +500,8 @@ namespace CalculationEngine.HouseholdElements {
 
         public override string ToString() => "Person:" + Name;
 
-        private void ActivateAffordance([NotNull] TimeStep currentTimeStep, [NotNull] DayLightStatus isDaylight,
-                                         [NotNull] ICalcAffordanceBase bestaff)
+        private void ActivateAffordance([JetBrains.Annotations.NotNull] TimeStep currentTimeStep, [JetBrains.Annotations.NotNull] DayLightStatus isDaylight,
+                                         [JetBrains.Annotations.NotNull] ICalcAffordanceBase bestaff)
         {
             if (_calcRepo.Logfile == null) {
                 throw new LPGException("Logfile was null.");
@@ -563,7 +563,7 @@ namespace CalculationEngine.HouseholdElements {
             //}
         }
 
-        public void LogPersonStatus([NotNull] TimeStep timestep)
+        public void LogPersonStatus([JetBrains.Annotations.NotNull] TimeStep timestep)
         {
             var ps = new PersonStatus(_calcPerson.HouseholdKey,_calcPerson.Name,
                 _calcPerson.Guid,CurrentLocation.Name,CurrentLocation.Guid,CurrentLocation.CalcSite?.Name,
@@ -571,9 +571,9 @@ namespace CalculationEngine.HouseholdElements {
             _calcRepo.OnlineLoggingData.AddPersonStatus(ps);
         }
 
-        [NotNull]
-        private ICalcAffordanceBase FindBestAffordance([NotNull] TimeStep time,
-                                                       [NotNull][ItemNotNull] List<CalcPerson> persons, int simulationSeed)
+        [JetBrains.Annotations.NotNull]
+        private ICalcAffordanceBase FindBestAffordance([JetBrains.Annotations.NotNull] TimeStep time,
+                                                       [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcPerson> persons, int simulationSeed)
         {
             var allAffs = IsSick[time.InternalStep] ? _sicknessPotentialAffs : _normalPotentialAffs;
 
@@ -647,9 +647,9 @@ namespace CalculationEngine.HouseholdElements {
             return GetBestAffordanceFromList(time,  allAffordances);
         }
 
-        [NotNull]
-        private ICalcAffordanceBase GetBestAffordanceFromList([NotNull] TimeStep time,
-                                                              [NotNull][ItemNotNull] List<ICalcAffordanceBase> allAvailableAffordances)
+        [JetBrains.Annotations.NotNull]
+        private ICalcAffordanceBase GetBestAffordanceFromList([JetBrains.Annotations.NotNull] TimeStep time,
+                                                              [JetBrains.Annotations.NotNull][ItemNotNull] List<ICalcAffordanceBase> allAvailableAffordances)
         {
             var bestdiff = decimal.MaxValue;
             var bestaff = allAvailableAffordances[0];
@@ -691,7 +691,7 @@ namespace CalculationEngine.HouseholdElements {
             return bestaff;
         }
 
-        private void Init([NotNull][ItemNotNull] List<CalcLocation> locs, [NotNull] PotentialAffs pa, bool sickness)
+        private void Init([JetBrains.Annotations.NotNull][ItemNotNull] List<CalcLocation> locs, [JetBrains.Annotations.NotNull] PotentialAffs pa, bool sickness)
         {
             pa.PotentialAffordances.Clear();
             pa.PotentialInterruptingAffordances.Clear();
@@ -732,12 +732,12 @@ namespace CalculationEngine.HouseholdElements {
                 (x, y) => string.CompareOrdinal(x.Name, y.Name));
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
-        private List<ICalcAffordanceBase> NewGetAllViableAffordancesAndSubs([NotNull] TimeStep timeStep,
+        private List<ICalcAffordanceBase> NewGetAllViableAffordancesAndSubs([JetBrains.Annotations.NotNull] TimeStep timeStep,
                                                                             AffordanceStatusClass? errors,
                                                                             bool getOnlyInterrupting,
-                                                                            [NotNull] PotentialAffs potentialAffs, bool tryHarder)
+                                                                            [JetBrains.Annotations.NotNull] PotentialAffs potentialAffs, bool tryHarder)
         {
             var getOnlyRelevantDesires = getOnlyInterrupting; // just for clarity
             // normal affs
@@ -790,8 +790,8 @@ namespace CalculationEngine.HouseholdElements {
             return resultingAff;
         }
 
-        private bool NewIsAvailableAffordance([NotNull] TimeStep timeStep,
-                                              [NotNull] ICalcAffordanceBase aff,
+        private bool NewIsAvailableAffordance([JetBrains.Annotations.NotNull] TimeStep timeStep,
+                                              [JetBrains.Annotations.NotNull] ICalcAffordanceBase aff,
                                               AffordanceStatusClass? errors, bool checkForRelevance,
                                               CalcSite? srcSite, bool ignoreAlreadyExecutedActivities)
         {
@@ -831,7 +831,7 @@ namespace CalculationEngine.HouseholdElements {
             return true;
         }
 
-        private int SetBusy([NotNull] TimeStep time, [NotNull] ICalcProfile personCalcProfile, [NotNull] CalcLocation loc, [NotNull] DayLightStatus isDaylight,
+        private int SetBusy([JetBrains.Annotations.NotNull] TimeStep time, [JetBrains.Annotations.NotNull] ICalcProfile personCalcProfile, [JetBrains.Annotations.NotNull] CalcLocation loc, [JetBrains.Annotations.NotNull] DayLightStatus isDaylight,
                             bool needsLight)
         {
             if (_calcRepo.CalcParameters.IsSet(CalcOption.ThoughtsLogfile)) {
@@ -907,7 +907,7 @@ namespace CalculationEngine.HouseholdElements {
         private class AffordanceStatusClass {
             public AffordanceStatusClass() => Reasons = new List<AffordanceStatusTuple>();
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public List<AffordanceStatusTuple> Reasons { get; }
         }
 
@@ -922,21 +922,21 @@ namespace CalculationEngine.HouseholdElements {
             public string Reason { get; }
         }
         private class PotentialAffs {
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             [ItemNotNull]
             public List<ICalcAffordanceBase> PotentialAffordances { get; } = new List<ICalcAffordanceBase>();
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             [ItemNotNull]
             public List<ICalcAffordanceBase> PotentialAffordancesWithInterruptingSubAffordances { get; } =
                 new List<ICalcAffordanceBase>();
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             [ItemNotNull]
             public List<ICalcAffordanceBase> PotentialAffordancesWithSubAffordances { get; } =
                 new List<ICalcAffordanceBase>();
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             [ItemNotNull]
             public List<ICalcAffordanceBase> PotentialInterruptingAffordances { get; } =
                 new List<ICalcAffordanceBase>();
@@ -948,7 +948,7 @@ namespace CalculationEngine.HouseholdElements {
     //    private readonly HumanHeatGainSpecification _hhgs;
     //    private readonly Dictionary<string, CalcDevice> _devices = new Dictionary<string, CalcDevice>();
 
-    //    public HumanHeatGainManager(CalcPerson person, [NotNull] List<CalcLocation> allLocations, [NotNull] CalcRepo calcRepo)
+    //    public HumanHeatGainManager(CalcPerson person, [JetBrains.Annotations.NotNull] List<CalcLocation> allLocations, [JetBrains.Annotations.NotNull] CalcRepo calcRepo)
     //    {
     //        _hhgs = calcRepo.HumanHeatGainSpecification;
     //        var sampleLoc = allLocations[0];
@@ -1001,8 +1001,8 @@ namespace CalculationEngine.HouseholdElements {
     //        }
     //    }
 
-    //    public void Activate([NotNull] CalcPerson person, BodilyActivityLevel level,  [NotNull] CalcLocation loc, [NotNull] TimeStep timeidx, [NotNull] ICalcProfile personProfile,
-    //                         [NotNull] string affordanceName)
+    //    public void Activate([JetBrains.Annotations.NotNull] CalcPerson person, BodilyActivityLevel level,  [JetBrains.Annotations.NotNull] CalcLocation loc, [JetBrains.Annotations.NotNull] TimeStep timeidx, [JetBrains.Annotations.NotNull] ICalcProfile personProfile,
+    //                         [JetBrains.Annotations.NotNull] string affordanceName)
     //    {
     //        List<double> powerProfile = new List<double>();
     //        List<double> countProfile = new List<double>();
@@ -1038,15 +1038,15 @@ namespace CalculationEngine.HouseholdElements {
 
     //    }
 
-    //    [NotNull]
-    //    public string MakePowerKey([NotNull] CalcPerson person,  [NotNull] CalcLocation location, BodilyActivityLevel level)
+    //    [JetBrains.Annotations.NotNull]
+    //    public string MakePowerKey([JetBrains.Annotations.NotNull] CalcPerson person,  [JetBrains.Annotations.NotNull] CalcLocation location, BodilyActivityLevel level)
     //    {
     //        return person.HouseholdKey.Key + "#" + _hhgs.PowerLoadtype.Name + "#" + person.Name + "#" + location.Name + "#" +
     //               level.ToString();
     //    }
 
-    //    [NotNull]
-    //    public string MakeCountKey([NotNull] CalcPerson person, BodilyActivityLevel level)
+    //    [JetBrains.Annotations.NotNull]
+    //    public string MakeCountKey([JetBrains.Annotations.NotNull] CalcPerson person, BodilyActivityLevel level)
     //    {
     //        return person.HouseholdKey.Key + "#" + person.Name + "#" + level.ToString();
     //    }

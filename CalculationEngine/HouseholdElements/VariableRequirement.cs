@@ -1,15 +1,14 @@
 ﻿using Automation;
 using Common.Enums;
-using JetBrains.Annotations;
 
 namespace CalculationEngine.HouseholdElements {
     public class VariableRequirement {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly CalcVariableRepository _repository;
         private readonly StrGuid _variableGuid;
 
-        public VariableRequirement([NotNull] string name, double value, [NotNull] string location, StrGuid locationGuid,
-                                                 VariableCondition variableCondition, [NotNull] CalcVariableRepository repository,
+        public VariableRequirement([JetBrains.Annotations.NotNull] string name, double value, [JetBrains.Annotations.NotNull] string location, StrGuid locationGuid,
+                                                 VariableCondition variableCondition, [JetBrains.Annotations.NotNull] CalcVariableRepository repository,
                                                  StrGuid variableGuid)
         {
             _repository = repository;
@@ -21,11 +20,11 @@ namespace CalculationEngine.HouseholdElements {
             VariableCondition = variableCondition;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string CalcLocationName { get; }
         public StrGuid LocationGuid { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string Name { get; }
         public double Value { get; }
         public VariableCondition VariableCondition { get; }

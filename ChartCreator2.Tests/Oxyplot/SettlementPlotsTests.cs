@@ -1,8 +1,6 @@
 ﻿using Automation;
 using ChartCreator2.OxyCharts;
 using Common.Tests;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -18,7 +16,7 @@ namespace ChartCreator2.Tests.Oxyplot {
                 @"F:\Dissertation\Results2015-12-13\test", ";");
         }
 
-        public SettlementPlotsTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public SettlementPlotsTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

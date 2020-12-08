@@ -56,9 +56,9 @@ namespace Database.Tables {
         private TimeSpan _externalStepSize;
         private TimeSpan _internalStepSize;
 
-        [NotNull] private Dictionary<string, SingleSetting> _settings = new Dictionary<string, SingleSetting>();
+        [JetBrains.Annotations.NotNull] private Dictionary<string, SingleSetting> _settings = new Dictionary<string, SingleSetting>();
 
-        public GeneralConfig([NotNull] string connectionString) : base("GeneralConfig", TableName, connectionString, "E5E37859-2ECB-4F62-A164-3ADD39300225".ToStrGuid()) {
+        public GeneralConfig([JetBrains.Annotations.NotNull] string connectionString) : base("GeneralConfig", TableName, connectionString, "E5E37859-2ECB-4F62-A164-3ADD39300225".ToStrGuid()) {
             Options = new Dictionary<CalcOption, SingleOption>();
         }
         public int CarpetPlotWidth {
@@ -72,24 +72,24 @@ namespace Database.Tables {
             set => UpdateValue(nameof(CarpetPlotWidth), value.ToString(CultureInfo.InvariantCulture));
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public new string ConnectionString => base.ConnectionString;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string CSVCharacter {
             get => _settings[nameof(CSVCharacter)].SettingValue;
             set => UpdateValue(nameof(CSVCharacter), value);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string DecimalSeperator
         {
             get => _settings[nameof(DecimalSeperator)].SettingValue;
             set => UpdateValue(nameof(DecimalSeperator), value);
         }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public CombinedSettings CombinedSettings {
             get => JsonConvert.DeserializeObject<CombinedSettings>(_settings[nameof(CombinedSettings)].SettingValue);
@@ -97,7 +97,7 @@ namespace Database.Tables {
         }
 
 
-        private void UpdateJsonSettings([NotNull] CombinedSettings settings)
+        private void UpdateJsonSettings([JetBrains.Annotations.NotNull] CombinedSettings settings)
         {
             UpdateValue(nameof(CombinedSettings), JsonConvert.SerializeObject(settings, Formatting.Indented));
         }
@@ -115,14 +115,14 @@ namespace Database.Tables {
         [UsedImplicitly]
         public bool DeleteDatFilesBool => DeleteDatFiles=="TRUE";
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string DeleteDatFiles {
             get => _settings[nameof(DeleteDatFiles)].SettingValue;
             set => UpdateValue(nameof(DeleteDatFiles), value);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string DestinationPath {
             get => _settings[nameof(DestinationPath)].SettingValue;
@@ -141,7 +141,7 @@ namespace Database.Tables {
             set => EndDateString = value.ToString("o", CultureInfo.InvariantCulture);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string EndDateString {
             get => _settings["EndDate"].SettingValue;
@@ -154,7 +154,7 @@ namespace Database.Tables {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string EndDateUIString {
             get => EndDateDateTime.ToString(CultureInfo.CurrentCulture);
@@ -172,7 +172,7 @@ namespace Database.Tables {
 
         public TimeSpan ExternalStepSize => _externalStepSize;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string ExternalTimeResolution {
             get => _externalStepSize.ToString();
             set {
@@ -194,7 +194,7 @@ namespace Database.Tables {
             set => UpdateValue(nameof(GeographicLocation), value.ToString(CultureInfo.InvariantCulture));
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string ImagePath {
             get => _settings[nameof(ImagePath)].SettingValue;
@@ -225,7 +225,7 @@ namespace Database.Tables {
 
         public TimeSpan InternalStepSize => _internalStepSize;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string InternalTimeResolution {
             get => _settings[nameof(InternalTimeResolution)].SettingValue;
             set {
@@ -237,14 +237,14 @@ namespace Database.Tables {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string LastSelectedCalcObject {
             get => _settings[nameof(LastSelectedCalcObject)].SettingValue;
             set => UpdateValue(nameof(LastSelectedCalcObject), value);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string LastSelectedTransportationSetting
         {
@@ -274,17 +274,17 @@ namespace Database.Tables {
             get => _settings[nameof(LastSelectedChargingStationSet)].SettingValue;
             set => UpdateValue(nameof(LastSelectedChargingStationSet),value);
         }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string LastSelectedCalcType {
             get => _settings[nameof(LastSelectedCalcType)].SettingValue;
             set => UpdateValue(nameof(LastSelectedCalcType), value);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Dictionary<CalcOption, SingleOption> Options { get; private set; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string PerformCleanUpChecks {
             get => _settings[nameof(PerformCleanUpChecks)].SettingValue;
@@ -320,7 +320,7 @@ namespace Database.Tables {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string RepetitionCountString {
             get => _settings[nameof(RepetitionCount)].SettingValue;
@@ -360,7 +360,7 @@ namespace Database.Tables {
             set => UpdateValue(nameof(SelectedTemperatureProfile), value.ToString(CultureInfo.InvariantCulture));
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string ShowSettlingPeriod {
             get => _settings[nameof(ShowSettlingPeriod)].SettingValue;
@@ -391,7 +391,7 @@ namespace Database.Tables {
             set => StartDateString = value.ToString("o", CultureInfo.InvariantCulture);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string StartDateString {
             get => _settings["StartDate"].SettingValue;
@@ -404,7 +404,7 @@ namespace Database.Tables {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string StartDateUIString {
             get => StartDateDateTime.ToString(CultureInfo.CurrentCulture);
@@ -422,7 +422,7 @@ namespace Database.Tables {
 
         public int TimeStepsPerHour => (int) (60.0 * 60.0 / _internalStepSize.TotalSeconds);
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string WriteExcelColumn {
             get => _settings[nameof(WriteExcelColumn)].SettingValue;
@@ -432,7 +432,7 @@ namespace Database.Tables {
         public bool WriteExcelColumnBool => WriteExcelColumn.ToUpper() == "TRUE";
 
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string EnableIdlemode
         {
@@ -445,7 +445,7 @@ namespace Database.Tables {
             set => EnableIdlemode = value.ToString().ToUpper();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public List<CalcOption> AllEnabledOptions() {
             var options = new List<CalcOption>();
             foreach (var pair in Options) {
@@ -468,7 +468,7 @@ namespace Database.Tables {
             }
         }
 
-        private void CheckExistence([NotNull] string key, [NotNull] string defaultvalue, bool ignoreMissing) {
+        private void CheckExistence([JetBrains.Annotations.NotNull] string key, [JetBrains.Annotations.NotNull] string defaultvalue, bool ignoreMissing) {
             if (!_settings.ContainsKey(key)) {
                 var ss = new SingleSetting(key, defaultvalue, ConnectionString,System.Guid.NewGuid().ToStrGuid());
                 if(!ignoreMissing) {
@@ -501,8 +501,8 @@ namespace Database.Tables {
             return false;
         }*/
 
-        [NotNull]
-        public static GeneralConfig LoadFromDatabase([NotNull] string connectionString, bool ignoreMissing) {
+        [JetBrains.Annotations.NotNull]
+        public static GeneralConfig LoadFromDatabase([JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissing) {
             var gc = new GeneralConfig(connectionString)
             {
                 _settings = SingleSetting.LoadFromDatabase(connectionString, ignoreMissing)
@@ -579,7 +579,7 @@ namespace Database.Tables {
             throw new LPGException("Not Implemented!");
         }
 
-        private void UpdateValue([NotNull] string key, [CanBeNull] string value) {
+        private void UpdateValue([JetBrains.Annotations.NotNull] string key, [CanBeNull] string value) {
             if(value == null) {
                 return;
             }

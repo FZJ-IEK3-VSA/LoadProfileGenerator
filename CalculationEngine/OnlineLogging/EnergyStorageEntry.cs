@@ -29,20 +29,19 @@
 using System.Text;
 using Common;
 using Common.SQLResultLogging;
-using JetBrains.Annotations;
 
 namespace CalculationEngine.OnlineLogging {
     public class EnergyStorageEntry {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly EnergyStorageLogfile _lf;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly string _csvChar;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly double[] _storageValues;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly DateStampCreator _dsc;
 
-        public EnergyStorageEntry([NotNull] TimeStep pTimestep, [NotNull] EnergyStorageLogfile dlf, [NotNull] string csvChar, [NotNull] DateStampCreator dsc) {
+        public EnergyStorageEntry([JetBrains.Annotations.NotNull] TimeStep pTimestep, [JetBrains.Annotations.NotNull] EnergyStorageLogfile dlf, [JetBrains.Annotations.NotNull] string csvChar, [JetBrains.Annotations.NotNull] DateStampCreator dsc) {
             Timestep = pTimestep;
             _lf = dlf;
             _csvChar = csvChar;
@@ -50,15 +49,15 @@ namespace CalculationEngine.OnlineLogging {
             _dsc = dsc;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public TimeStep Timestep { get; set; }
 
-        public void AddValue([NotNull] string name, double value) {
+        public void AddValue([JetBrains.Annotations.NotNull] string name, double value) {
             var column = _lf.EnergyStorageColumnDict[name];
             _storageValues[column] = value;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public override string ToString() {
             var sb = new StringBuilder();
             _dsc.GenerateDateStampForTimestep(Timestep, sb);

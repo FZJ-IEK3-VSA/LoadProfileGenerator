@@ -8,12 +8,12 @@ using LoadProfileGenerator.Views.Households;
 namespace LoadProfileGenerator.Presenters.Households {
     public class LivingPatternTagPresenter : PresenterBaseDBBase<LivingPatternTagView>
     {
-        [NotNull] private readonly LivingPatternTag _thisTag;
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<UsedIn> _usedIn;
+        [JetBrains.Annotations.NotNull] private readonly LivingPatternTag _thisTag;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<UsedIn> _usedIn;
 
         public LivingPatternTagPresenter(
-            [NotNull] ApplicationPresenter applicationPresenter, [NotNull] LivingPatternTagView view,
-            [NotNull] LivingPatternTag tag)
+            [JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] LivingPatternTagView view,
+            [JetBrains.Annotations.NotNull] LivingPatternTag tag)
             : base(view, "ThisTag.HeaderString", tag, applicationPresenter)
         {
             _thisTag = tag;
@@ -21,10 +21,10 @@ namespace LoadProfileGenerator.Presenters.Households {
             RefreshUsedIn();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public LivingPatternTag ThisTag => _thisTag;
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<UsedIn> UsedIn => _usedIn;
 

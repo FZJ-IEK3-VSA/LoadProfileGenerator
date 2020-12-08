@@ -85,21 +85,21 @@ namespace CalculationEngine.HouseholdElements {
 
     [SuppressMessage("ReSharper", "ConvertToAutoProperty")]
     public class CalcDevice : CalcBase {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly CalcLocation _calcLocation;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly Dictionary<CalcLoadType, BitArray> _isBusyForLoadType;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly Dictionary<CalcLoadType, CalcDeviceLoad> _deviceLoadsBy = new Dictionary<CalcLoadType, CalcDeviceLoad>();
 
         public List<CalcDeviceLoad> Loads { get; } = new List<CalcDeviceLoad>();
         private readonly CalcDeviceDto _calcDeviceDto;
         private readonly CalcRepo _calcRepo;
 
-        public CalcDevice( [NotNull][ItemNotNull] List<CalcDeviceLoad> powerUsage,
-                            [NotNull] CalcLocation calcLocation,
-                           [NotNull] CalcDeviceDto calcDeviceDto,
-                           [NotNull] CalcRepo calcRepo) : base(calcDeviceDto.Name,  calcDeviceDto.Guid)
+        public CalcDevice( [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcDeviceLoad> powerUsage,
+                            [JetBrains.Annotations.NotNull] CalcLocation calcLocation,
+                           [JetBrains.Annotations.NotNull] CalcDeviceDto calcDeviceDto,
+                           [JetBrains.Annotations.NotNull] CalcRepo calcRepo) : base(calcDeviceDto.Name,  calcDeviceDto.Guid)
         {
             _calcDeviceDto = calcDeviceDto;
             _calcRepo = calcRepo;
@@ -130,24 +130,24 @@ namespace CalculationEngine.HouseholdElements {
             }
         }
         private readonly Dictionary<CalcLoadType, OefcKey> _keyByLoad = new Dictionary<CalcLoadType, OefcKey>();
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CalcLocation CalcLocation => _calcLocation;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Dictionary<CalcLoadType, BitArray> IsBusyForLoadType => _isBusyForLoadType;
 
         public StrGuid DeviceCategoryGuid => _calcDeviceDto.DeviceCategoryGuid;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public List<CalcAutoDev> MatchingAutoDevs { get; } = new List<CalcAutoDev>();
 
-    //    [NotNull]
+    //    [JetBrains.Annotations.NotNull]
   //      [ItemNotNull]
 // public List<CalcDeviceLoad> PowerUsage => _powerUsage;
 
         public int LoadCount => _deviceLoadsBy.Count;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string PrettyName {
             get {
                 var builder = new StringBuilder();
@@ -167,7 +167,7 @@ namespace CalculationEngine.HouseholdElements {
         public CalcRepo CalcRepo => _calcRepo;
 
         //for the device factories
-        public void ApplyBitArry([NotNull][ItemNotNull] BitArray br, [NotNull] CalcLoadType lt)
+        public void ApplyBitArry([JetBrains.Annotations.NotNull][ItemNotNull] BitArray br, [JetBrains.Annotations.NotNull] CalcLoadType lt)
         {
             if (br.Length != _isBusyForLoadType[lt].Length) {
                 throw new LPGException("Bitarry Length was not equal to BusyArrayLength. Please Report.");
@@ -177,9 +177,9 @@ namespace CalculationEngine.HouseholdElements {
             }
         }
 
-        public bool GetIsBusyForTesting([NotNull] TimeStep i, [NotNull] CalcLoadType lt) => _isBusyForLoadType[lt][i.InternalStep];
+        public bool GetIsBusyForTesting([JetBrains.Annotations.NotNull] TimeStep i, [JetBrains.Annotations.NotNull] CalcLoadType lt) => _isBusyForLoadType[lt][i.InternalStep];
 
-        public bool IsBusyDuringTimespan([NotNull] TimeStep startidx, int duration, double timefactor, [NotNull] CalcLoadType lt)
+        public bool IsBusyDuringTimespan([JetBrains.Annotations.NotNull] TimeStep startidx, int duration, double timefactor, [JetBrains.Annotations.NotNull] CalcLoadType lt)
         {
             var dstduration = CalcProfile.GetNewLengthAfterCompressExpand(duration, timefactor);
             var lastbit = startidx.InternalStep + dstduration;
@@ -215,8 +215,8 @@ namespace CalculationEngine.HouseholdElements {
             return entries;
         }*/
 
-        public void SetAllLoadTypesToTimeprofile([NotNull] CalcProfile tbp, [NotNull] TimeStep startidx,
-            [NotNull] string affordanceName, [NotNull] string activatorName, double multiplier)
+        public void SetAllLoadTypesToTimeprofile([JetBrains.Annotations.NotNull] CalcProfile tbp, [JetBrains.Annotations.NotNull] TimeStep startidx,
+            [JetBrains.Annotations.NotNull] string affordanceName, [JetBrains.Annotations.NotNull] string activatorName, double multiplier)
         {
             foreach (var calcDeviceLoad in _deviceLoadsBy.Values) {
                 SetTimeprofile(tbp, startidx, calcDeviceLoad.LoadType,  affordanceName, activatorName,
@@ -232,7 +232,7 @@ namespace CalculationEngine.HouseholdElements {
             return e1.End.CompareTo(e2.End);
         }*/
 
-        private void SetBusy([NotNull] TimeStep startIndex, int duration, [NotNull] CalcLoadType loadType, bool activateDespiteBeingBusy)
+        private void SetBusy([JetBrains.Annotations.NotNull] TimeStep startIndex, int duration, [JetBrains.Annotations.NotNull] CalcLoadType loadType, bool activateDespiteBeingBusy)
         {
             /*if (UseRanges)
             {
@@ -256,7 +256,7 @@ namespace CalculationEngine.HouseholdElements {
         }
 
         //function only used for testing
-        public void SetIsBusyForTesting([NotNull] TimeStep i, bool value, [NotNull] CalcLoadType lt)
+        public void SetIsBusyForTesting([JetBrains.Annotations.NotNull] TimeStep i, bool value, [JetBrains.Annotations.NotNull] CalcLoadType lt)
         {
             _isBusyForLoadType[lt][i.InternalStep] = value;
             foreach (var pair in _isBusyForLoadType) {
@@ -264,10 +264,10 @@ namespace CalculationEngine.HouseholdElements {
             }
         }
 
-        [NotNull]
-        public TimeStep SetTimeprofile([NotNull] TimeStep startidx, [NotNull] CalcLoadType loadType,
-            [NotNull] string affordanceName, [NotNull] string activatingPersonName,
-                                        bool activateDespiteBeingBusy, [NotNull] StepValues stepValues)
+        [JetBrains.Annotations.NotNull]
+        public TimeStep SetTimeprofile([JetBrains.Annotations.NotNull] TimeStep startidx, [JetBrains.Annotations.NotNull] CalcLoadType loadType,
+            [JetBrains.Annotations.NotNull] string affordanceName, [JetBrains.Annotations.NotNull] string activatingPersonName,
+                                        bool activateDespiteBeingBusy, [JetBrains.Annotations.NotNull] StepValues stepValues)
         {
             if (stepValues.Values.Count == 0)
             {
@@ -348,9 +348,9 @@ namespace CalculationEngine.HouseholdElements {
         }
         private readonly List<RandomValueProfileEntry> _randomValues = new List<RandomValueProfileEntry>();
         //private Dictionary<string, RandomValueProfile> _randomProfileCache;
-        [NotNull]
-        public TimeStep SetTimeprofile([NotNull] CalcProfile calcProfile, [NotNull] TimeStep startTimeStep, [NotNull] CalcLoadType loadType,
-            [NotNull] string affordanceName, [NotNull] string activatingPersonName, double multiplier, bool activateDespiteBeingBusy)
+        [JetBrains.Annotations.NotNull]
+        public TimeStep SetTimeprofile([JetBrains.Annotations.NotNull] CalcProfile calcProfile, [JetBrains.Annotations.NotNull] TimeStep startTimeStep, [JetBrains.Annotations.NotNull] CalcLoadType loadType,
+            [JetBrains.Annotations.NotNull] string affordanceName, [JetBrains.Annotations.NotNull] string activatingPersonName, double multiplier, bool activateDespiteBeingBusy)
         {
             if (calcProfile.StepValues.Count == 0) {
                 throw new LPGException("Trying to set empty device profile. This is a bug. Please report.");

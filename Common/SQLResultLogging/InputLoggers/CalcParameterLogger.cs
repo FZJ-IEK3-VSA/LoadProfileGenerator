@@ -1,7 +1,6 @@
 ﻿using Automation;
 using Automation.ResultFiles;
 using Common.JSON;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 
 namespace Common.SQLResultLogging.InputLoggers
@@ -10,7 +9,7 @@ namespace Common.SQLResultLogging.InputLoggers
     {
         public const string TableName = "CalcParameters";
 
-        public CalcParameterLogger( [NotNull] SqlResultLoggingService srls): base(typeof(CalcParameters),
+        public CalcParameterLogger( [JetBrains.Annotations.NotNull] SqlResultLoggingService srls): base(typeof(CalcParameters),
              new ResultTableDefinition(TableName,ResultTableID.CalcParameters, "All the calculation parameters", CalcOption.BasicOverview), srls)
         {
         }
@@ -26,7 +25,7 @@ namespace Common.SQLResultLogging.InputLoggers
             }
             Srls.SaveResultEntry(se);
         }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CalcParameters Load()
         {
             if (Srls == null)

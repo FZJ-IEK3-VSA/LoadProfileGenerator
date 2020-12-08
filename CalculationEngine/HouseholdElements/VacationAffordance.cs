@@ -14,7 +14,7 @@ namespace CalculationEngine.HouseholdElements {
     public class VacationAffordance : CalcAffordanceBase {
         //TODO: figure out if this is still needed
         public VacationAffordance( StrGuid guid,
-                                  [ItemNotNull] [NotNull] BitArray isBusy, [NotNull] CalcRepo calcRepo)
+                                  [ItemNotNull] [JetBrains.Annotations.NotNull] BitArray isBusy, [JetBrains.Annotations.NotNull] CalcRepo calcRepo)
             : base(
                 Constants.TakingAVacationString, new CalcLocation("Vacation", System.Guid.NewGuid().ToStrGuid()),
                 new List<CalcDesire>(), 0, 99, PermittedGender.All, false,
@@ -27,7 +27,7 @@ namespace CalculationEngine.HouseholdElements {
 
         public override int DefaultPersonProfileLength => 0;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public override List<CalcAffordance.DeviceEnergyProfileTuple> Energyprofiles { get; } =
             new List<CalcAffordance.DeviceEnergyProfileTuple>();
 
@@ -35,7 +35,7 @@ namespace CalculationEngine.HouseholdElements {
 
         public override List<CalcSubAffordance> SubAffordances { get; } = new List<CalcSubAffordance>();
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public override string TimeLimitName { get; } = "None";
 
         //private static VacationAffordance _vacationAffordance;
@@ -52,7 +52,7 @@ namespace CalculationEngine.HouseholdElements {
                                       out ICalcProfile personTimeProfile) =>
             throw new LPGException("This function should never be called");
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public override string AreDeviceProfilesEmpty() => throw new NotImplementedException();
 
         public override bool AreThereDuplicateEnergyProfiles() => false;

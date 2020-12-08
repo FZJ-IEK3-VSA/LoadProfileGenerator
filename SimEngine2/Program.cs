@@ -6,7 +6,7 @@ namespace SimEngine2
 {
     public static class Program
     {
-        public static void Main([NotNull] [ItemNotNull] string[] args)
+        public static void Main([JetBrains.Annotations.NotNull] [ItemNotNull] string[] args)
         {
             Console.WriteLine("Command line:");
             foreach (var arg in args) {

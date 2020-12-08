@@ -17,7 +17,7 @@ namespace LoadProfileGenerator.Views.Transportation {
             InitializeComponent();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private TravelRoutePresenter Presenter => (TravelRoutePresenter) DataContext;
 
         private void BtnAddDeviceClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
@@ -94,12 +94,12 @@ namespace LoadProfileGenerator.Views.Transportation {
             Presenter.ApplicationPresenter.OpenItem(ui.Item);
         }
 
-        private void BtnSort([NotNull] object sender, [NotNull] RoutedEventArgs e)
+        private void BtnSort([JetBrains.Annotations.NotNull] object sender, [JetBrains.Annotations.NotNull] RoutedEventArgs e)
         {
             Presenter.ThisRoute.Steps.Sort();
         }
 
-        private void BtnCopyRouteClick([NotNull] object sender, [NotNull] RoutedEventArgs e)
+        private void BtnCopyRouteClick([JetBrains.Annotations.NotNull] object sender, [JetBrains.Annotations.NotNull] RoutedEventArgs e)
         {
             Presenter.CopyRoute();
         }

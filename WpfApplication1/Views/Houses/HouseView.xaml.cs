@@ -54,7 +54,7 @@ namespace LoadProfileGenerator.Views.Houses {
             InitializeComponent();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private HousePresenter Presenter => (HousePresenter) DataContext;
 
         [SuppressMessage("ReSharper", "SwitchStatementMissingSomeCases")]

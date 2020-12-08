@@ -57,8 +57,8 @@ namespace Common.JSON
         }
 
        /* [ItemNotNull]
-        [NotNull]
-        public List<ActionEntry> Read([NotNull]HouseholdKey hhkey)
+        [JetBrains.Annotations.NotNull]
+        public List<ActionEntry> Read([JetBrains.Annotations.NotNull]HouseholdKey hhkey)
         {
             var res = Srls.ReadFromJson<ActionEntry>(ResultTableDefinition, hhkey, ExpectedResultCount.OneOrMore);
             return res;

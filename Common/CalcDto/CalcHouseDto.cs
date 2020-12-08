@@ -9,7 +9,7 @@ namespace Common.CalcDto {
                             [CanBeNull] CalcSpaceHeatingDto calcSpaceHeating, [NotNull] [ItemNotNull] List<CalcEnergyStorageDto> energyStorages,
                             [NotNull] [ItemNotNull] List<CalcGeneratorDto> generators, [NotNull] [ItemNotNull] List<CalcTransformationDeviceDto> transformationDevices,
                             [NotNull] [ItemNotNull] List<CalcHouseholdDto> households,
-                            //[NotNull]                            [ItemNotNull] List<CalcVariableDto> calcVariables,
+                            //[JetBrains.Annotations.NotNull]                            [ItemNotNull] List<CalcVariableDto> calcVariables,
                             [NotNull] HouseholdKey houseKey, [NotNull] [ItemNotNull] List<CalcLocationDto> houseLocations, [CanBeNull] string description)
         {
             HouseName = houseName;
@@ -50,7 +50,7 @@ namespace Common.CalcDto {
         [ItemNotNull]
         public List<CalcHouseholdDto> Households { get; }
 
-        /*[NotNull]
+        /*[JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public List<CalcVariableDto> CalcVariables { get; }*/
         [NotNull]

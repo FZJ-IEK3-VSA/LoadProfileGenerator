@@ -31,26 +31,25 @@ using System.Threading;
 using Common;
 using Database.Helpers;
 using Database.Tables.BasicElements;
-using JetBrains.Annotations;
 using LoadProfileGenerator.Views.BasicElements;
 
 namespace LoadProfileGenerator.Presenters.BasicElements {
     public class TemperatureProfilePresenter : PresenterBaseDBBase<TemperatureProfileView> {
-        [NotNull] private readonly ApplicationPresenter _applicationPresenter;
-        [NotNull] private readonly CSVImporter _csvImporter;
-        [NotNull] private readonly TemperatureProfile _tp;
+        [JetBrains.Annotations.NotNull] private readonly ApplicationPresenter _applicationPresenter;
+        [JetBrains.Annotations.NotNull] private readonly CSVImporter _csvImporter;
+        [JetBrains.Annotations.NotNull] private readonly TemperatureProfile _tp;
 
-        public TemperatureProfilePresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] TemperatureProfileView view,
-            [NotNull] TemperatureProfile tp) : base(view, "ThisProfile.HeaderString", tp, applicationPresenter) {
+        public TemperatureProfilePresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] TemperatureProfileView view,
+            [JetBrains.Annotations.NotNull] TemperatureProfile tp) : base(view, "ThisProfile.HeaderString", tp, applicationPresenter) {
             _applicationPresenter = applicationPresenter;
             _tp = tp;
             _csvImporter = new CSVImporter(true);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CSVImporter CsvImporter => _csvImporter;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public TemperatureProfile ThisProfile => _tp;
 
         public void AddTemperaturePoint(DateTime time, double value) {
@@ -104,7 +103,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             Logger.Info("Imported all data points.");
         }
 
-        public void RemoveTimepoint([NotNull] TemperatureValue tdp) {
+        public void RemoveTimepoint([JetBrains.Annotations.NotNull] TemperatureValue tdp) {
             _tp.DeleteOneTemperatur(tdp);
         }
     }

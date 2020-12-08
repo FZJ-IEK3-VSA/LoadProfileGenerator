@@ -6,15 +6,14 @@ using Automation.ResultFiles;
 using CalcPostProcessor.Steps;
 using Common;
 using Common.SQLResultLogging;
-using JetBrains.Annotations;
 
 namespace CalcPostProcessor.LoadTypeHouseholdSteps {
     public class IndividualHouseholdDeviceProfileProcessor : HouseholdLoadTypeStepBase {
-        [NotNull] private readonly IFileFactoryAndTracker _fft;
+        [JetBrains.Annotations.NotNull] private readonly IFileFactoryAndTracker _fft;
 
-        public IndividualHouseholdDeviceProfileProcessor([NotNull] CalcDataRepository repository,
-                                                         [NotNull] IFileFactoryAndTracker fft,
-                                                         [NotNull] ICalculationProfiler calculationProfiler) : base(repository,
+        public IndividualHouseholdDeviceProfileProcessor([JetBrains.Annotations.NotNull] CalcDataRepository repository,
+                                                         [JetBrains.Annotations.NotNull] IFileFactoryAndTracker fft,
+                                                         [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler) : base(repository,
             AutomationUtili.GetOptionList(CalcOption.DeviceProfilesIndividualHouseholds),
             calculationProfiler,
             "Individual Household Device Profiles") =>
@@ -68,7 +67,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             normalfile.Flush();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public override List<CalcOption> NeededOptions => new List<CalcOption>() {CalcOption.DetailedDatFiles};
 
     }

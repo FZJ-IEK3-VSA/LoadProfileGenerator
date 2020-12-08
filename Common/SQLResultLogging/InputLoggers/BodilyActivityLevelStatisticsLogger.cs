@@ -5,7 +5,6 @@ using Automation;
 using Automation.ResultFiles;
 using Common.Enums;
 using Common.SQLResultLogging.Loggers;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 
 namespace Common.SQLResultLogging.InputLoggers
@@ -16,15 +15,15 @@ namespace Common.SQLResultLogging.InputLoggers
         [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
         public BodilyActivityLevelStatistics()
         {}
-        public BodilyActivityLevelStatistics([NotNull] HouseholdKey householdKey) => HouseholdKey = householdKey;
+        public BodilyActivityLevelStatistics([JetBrains.Annotations.NotNull] HouseholdKey householdKey) => HouseholdKey = householdKey;
 
         public HouseholdKey HouseholdKey { get; set; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Dictionary<BodilyActivityLevel, List<double>> ActivityLevels { get; set; } = new Dictionary<BodilyActivityLevel, List<double>>();
     }
     public class BodilyActivityLevelStatisticsLogger : DataSaverBase
     {
-        public BodilyActivityLevelStatisticsLogger([NotNull] SqlResultLoggingService srls) :
+        public BodilyActivityLevelStatisticsLogger([JetBrains.Annotations.NotNull] SqlResultLoggingService srls) :
             base(typeof(BodilyActivityLevelStatistics),
             new ResultTableDefinition("BodilyActivityLevelCount",
                 ResultTableID.BodilyActivityLevelCount,

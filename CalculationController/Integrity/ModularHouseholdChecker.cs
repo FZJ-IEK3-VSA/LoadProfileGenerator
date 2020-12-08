@@ -18,7 +18,7 @@ namespace CalculationController.Integrity {
         {
         }
 
-        private void CheckCleanupNames([NotNull] ModularHousehold chh)
+        private void CheckCleanupNames([JetBrains.Annotations.NotNull] ModularHousehold chh)
         {
             if (!PerformCleanupChecks) {
                 return;
@@ -37,7 +37,7 @@ namespace CalculationController.Integrity {
             }
         }
 
-        private void CheckLivingPattern([NotNull] ModularHousehold mhh)
+        private void CheckLivingPattern([JetBrains.Annotations.NotNull] ModularHousehold mhh)
         {
             if (!PerformCleanupChecks) {
                 return;
@@ -71,7 +71,7 @@ namespace CalculationController.Integrity {
 
         [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalse")]
         [SuppressMessage("ReSharper", "HeuristicUnreachableCode")]
-        private void CheckLivingPatternTraits([NotNull] ModularHousehold mhh, [NotNull] LivingPatternTag tagForAll)
+        private void CheckLivingPatternTraits([JetBrains.Annotations.NotNull] ModularHousehold mhh, [JetBrains.Annotations.NotNull] LivingPatternTag tagForAll)
         {
             if (!PerformCleanupChecks) {
                 return;
@@ -111,8 +111,8 @@ namespace CalculationController.Integrity {
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        private void CheckMinimumPersonRequirements([NotNull] ModularHousehold modularHousehold,
-            [NotNull] ModularHouseholdPerson modularHouseholdPerson)
+        private void CheckMinimumPersonRequirements([JetBrains.Annotations.NotNull] ModularHousehold modularHousehold,
+            [JetBrains.Annotations.NotNull] ModularHouseholdPerson modularHouseholdPerson)
         {
             if (!PerformCleanupChecks) {
                 return;
@@ -205,7 +205,7 @@ namespace CalculationController.Integrity {
             }
         }
 
-        private void CheckModularHouseholdsMinimum([NotNull] ModularHousehold modularHousehold)
+        private void CheckModularHouseholdsMinimum([JetBrains.Annotations.NotNull] ModularHousehold modularHousehold)
         {
             if (!PerformCleanupChecks) {
                 return;
@@ -252,7 +252,7 @@ namespace CalculationController.Integrity {
             }
         }
 
-        private void CheckPersonDefinitions([NotNull] ModularHousehold chh)
+        private void CheckPersonDefinitions([JetBrains.Annotations.NotNull] ModularHousehold chh)
         {
             if (!PerformCleanupChecks) {
                 return;
@@ -280,8 +280,8 @@ namespace CalculationController.Integrity {
             }
         }
 
-        private void CheckTags([NotNull][ItemNotNull] ObservableCollection<ModularHousehold> modularHouseholds,
-            [NotNull][ItemNotNull] ObservableCollection<HouseholdTag> householdTags)
+        private void CheckTags([JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<ModularHousehold> modularHouseholds,
+            [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<HouseholdTag> householdTags)
         {
             if (!PerformCleanupChecks) {
                 return;
@@ -312,7 +312,7 @@ namespace CalculationController.Integrity {
             }
         }
 
-        private void CheckTraitsInHH([NotNull] ModularHousehold chh)
+        private void CheckTraitsInHH([JetBrains.Annotations.NotNull] ModularHousehold chh)
         {
             Dictionary<HouseholdTrait, int> traitCounts = new Dictionary<HouseholdTrait, int>();
             foreach (var trait in chh.Traits) {
@@ -381,7 +381,7 @@ namespace CalculationController.Integrity {
             }
         }
 
-        private static void GeneralChecks([NotNull] ModularHousehold chh)
+        private static void GeneralChecks([JetBrains.Annotations.NotNull] ModularHousehold chh)
         {
             if (chh.Vacation == null) {
                 throw new DataIntegrityException(
@@ -430,7 +430,7 @@ namespace CalculationController.Integrity {
             }
         }
 
-        private static void CheckTagPersonAssignments([NotNull] ModularHousehold chh)
+        private static void CheckTagPersonAssignments([JetBrains.Annotations.NotNull] ModularHousehold chh)
         {
             foreach (ModularHouseholdTrait modularHouseholdTrait in chh.Traits) {
                 Person p = modularHouseholdTrait.DstPerson;

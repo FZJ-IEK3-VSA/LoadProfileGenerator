@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Automation;
-using JetBrains.Annotations;
 
 namespace Common {
     public static class OutputFileDefaultHelper {
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static Dictionary<OutputFileDefault, string> OutputFileDefaultDictionary { get; } =
             new Dictionary<OutputFileDefault, string> {
                 [OutputFileDefault.All] = "All files",
@@ -33,7 +32,7 @@ namespace Common {
         //        {OutputFileDefault.None, "No files at all"}
         //    };
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static List<CalcOption> GetOptionsForDefault(OutputFileDefault selectedOptionDefault) {
             var l = new List<CalcOption>();
             switch (selectedOptionDefault) {

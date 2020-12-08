@@ -79,7 +79,7 @@ namespace Common {
 
                 }
                 foreach (var f in stcktrace) {
-                    var g = f.GetMethod().DeclaringType;
+                    var g = f.GetMethod()?.DeclaringType;
                     if (g == null) {
                         throw new LPGException("declaringtype was null");
                     }
@@ -96,25 +96,25 @@ namespace Common {
     }
 
     public class Logger {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private static readonly Logger _logger = new Logger();
 
         private static bool _logToFile;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly List<LogMessage> _errors;
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly ObservableCollection<LogMessage> _logCol;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly object _myLock = new object();
 
         [CanBeNull]
         [ItemNotNull]
         public List<LogMessage> CollectedCalculationMessages { get; set; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string ReturnAllLoggedErrors()
         {
             StringBuilder sb = new StringBuilder();
@@ -132,16 +132,16 @@ namespace Common {
             _errors = new List<LogMessage>();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public List<LogMessage> Errors => _errors;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<LogMessage> LogCol => _logCol;
 
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static string LogFileIndex {
             get => _logFileIndex;
             set {
@@ -150,12 +150,12 @@ namespace Common {
             }
         }
 
-        public static void SetLogFilePath([NotNull] string val) {
+        public static void SetLogFilePath([JetBrains.Annotations.NotNull] string val) {
             _logFilePath = val;
             WriteCurrentFileLoggingStatus("P");
         }
 
-        private static void WriteCurrentFileLoggingStatus([NotNull] string source)
+        private static void WriteCurrentFileLoggingStatus([JetBrains.Annotations.NotNull] string source)
         {
                 Console.WriteLine( source + " Logfile path: " + (_logFilePath ?? "(null)") + ", Logging to file: " + _logToFile + ", Severity: " + Threshold.ToString() + ", LogFileIndex: " + _logFileIndex );
         }
@@ -185,39 +185,39 @@ namespace Common {
             _errors.Clear();
         }
 
-        public static void Debug([NotNull] string message)
+        public static void Debug([JetBrains.Annotations.NotNull] string message)
         {
             _logger.DebugMessage(message);
         }
 
-        private void DebugMessage([NotNull] string message)
+        private void DebugMessage([JetBrains.Annotations.NotNull] string message)
         {
             ReportString(message, Severity.Debug);
         }
 
-        public static void Error([NotNull] string message)
+        public static void Error([JetBrains.Annotations.NotNull] string message)
         {
             _logger.ErrorMessage(message);
         }
 
-        private void ErrorMessage([NotNull] string message)
+        private void ErrorMessage([JetBrains.Annotations.NotNull] string message)
         {
             ReportString(message, Severity.Error);
         }
 
-        public static void Exception([NotNull] Exception ex, bool reporterror = true)
+        public static void Exception([JetBrains.Annotations.NotNull] Exception ex, bool reporterror = true)
         {
             if (reporterror) {
                 var t = new Thread(() => {
                     var er = new ErrorReporter();
-                    er.Run(ex.Message, ex.StackTrace);
+                    er.Run(ex.Message, ex.StackTrace ?? "no stacktrace");
                 });
                 t.Start();
             }
             _logger.ExceptionMessage(ex, Utili.GetCallingMethodAndClass());
         }
 
-        private void ExceptionMessage([NotNull] Exception exception, string reporter)
+        private void ExceptionMessage([JetBrains.Annotations.NotNull] Exception exception, string reporter)
         {
             var sb = new StringBuilder();
             var exceptionName = exception.GetType().FullName;
@@ -235,10 +235,10 @@ namespace Common {
             ReportString(sb.ToString(), Severity.Error);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static Logger Get() => _logger;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private static string GetFilename(Severity severity, bool isForCommonFile)
         {
             if (!string.IsNullOrWhiteSpace(_logFilePath)) {
@@ -268,17 +268,17 @@ namespace Common {
             return newFullName;
         }
 
-        public static void ImportantInfo([NotNull] string message)
+        public static void ImportantInfo([JetBrains.Annotations.NotNull] string message)
         {
             _logger.ImportantInfoMessage(message);
         }
 
-        private void ImportantInfoMessage([NotNull] string message)
+        private void ImportantInfoMessage([JetBrains.Annotations.NotNull] string message)
         {
             ReportString(message, Severity.ImportantInfo);
         }
 
-        public static void Info([NotNull] string message, bool preserveLinebreaks = false)
+        public static void Info([JetBrains.Annotations.NotNull] string message, bool preserveLinebreaks = false)
         {
             //if (message.Contains("ok")) {
             //    var stacktrace = Environment.StackTrace;
@@ -287,17 +287,17 @@ namespace Common {
             _logger.InfoMessage(message, preserveLinebreaks);
         }
 
-        private void InfoMessage([NotNull] string message, bool preserveLinebreaks = false)
+        private void InfoMessage([JetBrains.Annotations.NotNull] string message, bool preserveLinebreaks = false)
         {
             ReportString(message, Severity.Information,preserveLinebreaks);
         }
-        [NotNull] private static readonly object _fileLogLock = new object();
+        [JetBrains.Annotations.NotNull] private static readonly object _fileLogLock = new object();
         [CanBeNull] private static string _logFilePath;
 
         private static Severity _threshold = Severity.Debug;
-        [NotNull] private static string _logFileIndex = string.Empty;
+        [JetBrains.Annotations.NotNull] private static string _logFileIndex = string.Empty;
 
-        private static void LogStringToFile([NotNull] string message, [NotNull] string logfilename, Severity severity, bool preserveNewLines)
+        private static void LogStringToFile([JetBrains.Annotations.NotNull] string message, [JetBrains.Annotations.NotNull] string logfilename, Severity severity, bool preserveNewLines)
         {
             lock (_fileLogLock) {
                 FileInfo fi = new FileInfo(logfilename);
@@ -343,7 +343,7 @@ namespace Common {
 
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public List<LogMessage> GetAndClearAllCollectedMessages()
         {
             if(CollectedCalculationMessages == null) {
@@ -356,7 +356,7 @@ namespace Common {
         }
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        private void ReportString([NotNull] string message, Severity severity, bool preserveLinebreaks = false)
+        private void ReportString([JetBrains.Annotations.NotNull] string message, Severity severity, bool preserveLinebreaks = false)
         {
             if (UnitTestDetector.IsRunningInUnitTest && OutputHelper== null && !Config.OutputToConsole) {
                 throw new LPGException("no output helper even thoug we are in unit testing based on attributes");
@@ -420,7 +420,7 @@ namespace Common {
         [CanBeNull]
         public Action<Action> SaveExecutionFunctionWithWait { get; set; } = null;
 
-        public void SafeExecute([NotNull] Action action)
+        public void SafeExecute([JetBrains.Annotations.NotNull] Action action)
         {
             if (SaveExecutionFunction != null) {
                 SaveExecutionFunction(action);
@@ -432,7 +432,7 @@ namespace Common {
         }
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-                public void SafeExecuteWithWait([NotNull] Action action)
+                public void SafeExecuteWithWait([JetBrains.Annotations.NotNull] Action action)
                 {
                     if(SaveExecutionFunctionWithWait!=null) {
                         SaveExecutionFunctionWithWait(action);
@@ -466,19 +466,19 @@ namespace Common {
             throw new LPGException(sb.ToString());
         }
 
-        public static void Warning([NotNull] string message)
+        public static void Warning([JetBrains.Annotations.NotNull] string message)
         {
             _logger.WarningMessage(message);
         }
 
-        private void WarningMessage([NotNull] string message)
+        private void WarningMessage([JetBrains.Annotations.NotNull] string message)
         {
             ReportString(message, Severity.Warning);
         }
 
         public class LogMessage {
             [UsedImplicitly]
-            public LogMessage([NotNull] string message, DateTime dt, Severity sv)
+            public LogMessage([JetBrains.Annotations.NotNull] string message, DateTime dt, Severity sv)
             {
                 Message = message;
                 Time = dt;
@@ -511,7 +511,7 @@ namespace Common {
             public StackTrace MyStackTrace { get; }
 
             [UsedImplicitly]
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string Message { get;  }
 
             [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
@@ -520,7 +520,7 @@ namespace Common {
             [UsedImplicitly]
             public DateTime Time { get;  }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public override string ToString() => "[" + Severity + "] " + Message ;
         }
 

@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Automation;
 
@@ -66,7 +65,7 @@ namespace Common.Enums {
         }
 
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static  Dictionary<CalcOption, string> CalcOptionDictionary { get; }
     }
 }

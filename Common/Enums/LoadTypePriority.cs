@@ -1,10 +1,9 @@
-﻿using JetBrains.Annotations;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Automation;
 
 namespace Common.Enums {
     public static class LoadTypePriorityHelper {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static Dictionary<LoadTypePriority, string> LoadTypePriorityDictionaryAll { get; } =
             new Dictionary<LoadTypePriority, string> {
                 {LoadTypePriority.Mandatory, "Mandatory"},
@@ -14,7 +13,7 @@ namespace Common.Enums {
                 {LoadTypePriority.All, "All"}
             };
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static Dictionary<LoadTypePriority, string> LoadTypePriorityDictionarySelection { get; } =
             new Dictionary<LoadTypePriority, string> {
                 {LoadTypePriority.Mandatory, "Mandatory"},

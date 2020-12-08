@@ -5,7 +5,6 @@ using Common;
 using Common.Tests;
 using Database.Tables.BasicElements;
 using Database.Tests;
-using JetBrains.Annotations;
 using SimulationEngineLib.Other;
 using Xunit;
 using Xunit.Abstractions;
@@ -51,7 +50,7 @@ namespace SimulationEngine.Tests.Other
 
         }
 
-        public CSVImportTest([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public CSVImportTest([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

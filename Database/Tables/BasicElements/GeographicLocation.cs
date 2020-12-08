@@ -42,7 +42,7 @@ namespace Database.Tables.BasicElements {
     public class GeographicLocation : DBBaseElement {
         public const string TableName = "tblGeographicLocations";
 
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<GeographicLocHoliday> _holidays =
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<GeographicLocHoliday> _holidays =
             new ObservableCollection<GeographicLocHoliday>();
 
         private CalcSunriseTimes.LatitudeCoords.Direction _latDirection;
@@ -57,7 +57,7 @@ namespace Database.Tables.BasicElements {
         private int _longMinute;
         private int _longSecond;
 
-        public GeographicLocation([NotNull] string connectionString, [CanBeNull] TimeLimit lightTimeLimit, StrGuid guid) : base("Chemnitz",
+        public GeographicLocation([JetBrains.Annotations.NotNull] string connectionString, [CanBeNull] TimeLimit lightTimeLimit, StrGuid guid) : base("Chemnitz",
             TableName, connectionString, guid) {
             _lightTimeLimit = lightTimeLimit;
             // dummy loc for unit tests
@@ -73,8 +73,8 @@ namespace Database.Tables.BasicElements {
             TypeDescription = "Geographic Location";
         }
 
-        public GeographicLocation([NotNull] string name, int slathour, int slatMinute, int slatSecond, int slongHour,
-            int slongMinute, int slongSecond, [NotNull] string slongDir, [NotNull] string slatDir, [NotNull] string connectionString,
+        public GeographicLocation([JetBrains.Annotations.NotNull] string name, int slathour, int slatMinute, int slatSecond, int slongHour,
+            int slongMinute, int slongSecond, [JetBrains.Annotations.NotNull] string slongDir, [JetBrains.Annotations.NotNull] string slatDir, [JetBrains.Annotations.NotNull] string connectionString,
             [CanBeNull] TimeLimit lightTimeLimit,StrGuid guid,[CanBeNull] int? id = null) : base(name, id, TableName, connectionString, guid) {
             _latHour = slathour;
             _latMinute = slatMinute;
@@ -98,11 +98,11 @@ namespace Database.Tables.BasicElements {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<GeographicLocHoliday> Holidays => _holidays;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string LatDirection {
             get => LatDirectionEnum.ToString();
@@ -163,7 +163,7 @@ namespace Database.Tables.BasicElements {
             set => SetValueWithNotify(value, ref _lightTimeLimit, false, nameof(LightTimeLimit));
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string LongDirection {
             get => LongDirectionEnum.ToString();
@@ -207,7 +207,7 @@ namespace Database.Tables.BasicElements {
             set => SetValueWithNotify(value, ref _longSecond, nameof(LongSecond));
         }
 
-        public void AddHoliday([NotNull] Holiday hd) {
+        public void AddHoliday([JetBrains.Annotations.NotNull] Holiday hd) {
             var ghd = new GeographicLocHoliday(null, hd, IntID,
                 ConnectionString, hd.Name, System.Guid.NewGuid().ToStrGuid());
             Holidays.Add(ghd);
@@ -215,10 +215,10 @@ namespace Database.Tables.BasicElements {
             ghd.SaveToDB();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalse")]
-        private static GeographicLocation AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic) {
+        private static GeographicLocation AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic) {
             var name = dr.GetString("Name");
             var id = dr.GetIntFromLong("ID");
             var lathour = dr.GetIntFromLong("LatHour");
@@ -239,7 +239,7 @@ namespace Database.Tables.BasicElements {
                 longDir, latDir, connectionString, dt,guid, id);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Dictionary<DateTime, bool> CalculatePureHolidayDict() {
             var dict = new Dictionary<DateTime, bool>();
             foreach (var geographicLocHoliday in _holidays) {
@@ -253,9 +253,9 @@ namespace Database.Tables.BasicElements {
             return dict;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) {
+        public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString) {
             var geoloc = new GeographicLocation(FindNewName(isNameTaken, "New Geographic Location "), 1,
                 1, 1, 1, 1, 1,
                 "East", "North", connectionString,null,System.Guid.NewGuid().ToStrGuid());
@@ -269,13 +269,13 @@ namespace Database.Tables.BasicElements {
             }
         }
 
-        public void DeleteGeoHolidayFromDB([NotNull] GeographicLocHoliday geoholi) {
+        public void DeleteGeoHolidayFromDB([JetBrains.Annotations.NotNull] GeographicLocHoliday geoholi) {
             geoholi.DeleteFromDB();
             Holidays.Remove(geoholi);
         }
 
-        [NotNull]
-        public Dictionary<DateTime, Holiday.HolidayType> GetHolidayDictWithBridge([NotNull] Random random, [NotNull] string key) {
+        [JetBrains.Annotations.NotNull]
+        public Dictionary<DateTime, Holiday.HolidayType> GetHolidayDictWithBridge([JetBrains.Annotations.NotNull] Random random, [JetBrains.Annotations.NotNull] string key) {
             var dict = new Dictionary<DateTime, Holiday.HolidayType>();
             foreach (var geographicLocHoliday in _holidays) {
                 var dts =
@@ -289,9 +289,9 @@ namespace Database.Tables.BasicElements {
             return dict;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static GeographicLocation ImportFromItem([NotNull] GeographicLocation toImport, [NotNull] Simulator dstSim) {
+        public static GeographicLocation ImportFromItem([JetBrains.Annotations.NotNull] GeographicLocation toImport, [JetBrains.Annotations.NotNull] Simulator dstSim) {
             TimeLimit dt = null;
             if (toImport.LightTimeLimit != null) {
                 dt = GetItemFromListByName(dstSim.TimeLimits.Items, toImport.LightTimeLimit.Name);
@@ -314,7 +314,7 @@ namespace Database.Tables.BasicElements {
             return geoloc;
         }
 
-        private static bool IsCorrectParent([NotNull] DBBase parent, [NotNull] DBBase child) {
+        private static bool IsCorrectParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child) {
             var hd = (GeographicLocHoliday) child;
 
             if (parent.ID == hd.GeographicLocationID) {
@@ -330,8 +330,8 @@ namespace Database.Tables.BasicElements {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<GeographicLocation> result, [NotNull] string connectionString,
-            [ItemNotNull] [NotNull] ObservableCollection<Holiday> holidays, [ItemNotNull] [NotNull] ObservableCollection<TimeLimit> timeLimits,
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<GeographicLocation> result, [JetBrains.Annotations.NotNull] string connectionString,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Holiday> holidays, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TimeLimit> timeLimits,
             bool ignoreMissingTables) {
             var aic = new AllItemCollections(timeLimits: timeLimits);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);

@@ -42,8 +42,6 @@ using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
 using FluentAssertions;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -146,7 +144,7 @@ namespace Calculation.Tests {
         }
 
 
-        public CalcEnergyStorageTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public CalcEnergyStorageTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

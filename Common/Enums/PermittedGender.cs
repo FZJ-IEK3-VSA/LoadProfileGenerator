@@ -26,7 +26,6 @@
 
 //-----------------------------------------------------------------------
 
-using JetBrains.Annotations;
 using System.Collections.Generic;
 
 namespace Common.Enums {
@@ -37,7 +36,7 @@ namespace Common.Enums {
     }
 
     public static class GenderHelper {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static Dictionary<PermittedGender, string> GenderEnumDictionary { get; } =
             new Dictionary<PermittedGender, string> {
                 {PermittedGender.Male, "Male"},

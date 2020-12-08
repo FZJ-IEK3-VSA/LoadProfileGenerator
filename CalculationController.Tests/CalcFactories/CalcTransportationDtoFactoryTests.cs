@@ -6,8 +6,6 @@ using Common;
 using Common.Tests;
 using Database.Tables.BasicHouseholds;
 using FluentAssertions;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -30,7 +28,7 @@ namespace CalculationController.Tests.CalcFactories
             Logger.Info(result.ToString(CultureInfo.InvariantCulture));
         }
 
-        public CalcTransportationDtoFactoryTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public CalcTransportationDtoFactoryTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

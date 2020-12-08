@@ -27,11 +27,10 @@
 //-----------------------------------------------------------------------
 
 using Automation;
-using JetBrains.Annotations;
 
 namespace CalculationEngine.HouseholdElements {
     public class CalcDeviceLoad : CalcBase {
-        public CalcDeviceLoad([NotNull] string pName, double value, [NotNull] CalcLoadType loadType,
+        public CalcDeviceLoad([JetBrains.Annotations.NotNull] string pName, double value, [JetBrains.Annotations.NotNull] CalcLoadType loadType,
             double averageYearlyConsumption, double powerStandardDeviation) : base(pName, StrGuid.Empty) {
             Value = value;
             //if (Math.Abs(value) < 0.000001 && loadType.Name.ToLower(CultureInfo.InvariantCulture) != "none") {
@@ -44,7 +43,7 @@ namespace CalculationEngine.HouseholdElements {
 
         public double AverageYearlyConsumption { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CalcLoadType LoadType { get; }
 
         public double PowerStandardDeviation { get; }

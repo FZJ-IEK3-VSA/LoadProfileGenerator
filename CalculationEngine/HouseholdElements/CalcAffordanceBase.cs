@@ -45,19 +45,19 @@ namespace CalculationEngine.HouseholdElements {
         public CalcRepo CalcRepo { get; }
 
         private readonly ActionAfterInterruption _actionAfterInterruption;
-        [ItemNotNull] [NotNull] private readonly BitArray _isBusyArray;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly BitArray _isBusyArray;
 
-        protected CalcAffordanceBase([NotNull] string pName,  [NotNull] CalcLocation loc,
-                                     [NotNull] [ItemNotNull] List<CalcDesire> satisfactionvalues,
+        protected CalcAffordanceBase([JetBrains.Annotations.NotNull] string pName,  [JetBrains.Annotations.NotNull] CalcLocation loc,
+                                     [JetBrains.Annotations.NotNull] [ItemNotNull] List<CalcDesire> satisfactionvalues,
                                      int miniumAge, int maximumAge, PermittedGender permittedGender, bool needsLight,
                                      bool randomEffect,
-                                     [NotNull] string pAffCategory, bool isInterruptable, bool isInterrupting,
+                                     [JetBrains.Annotations.NotNull] string pAffCategory, bool isInterruptable, bool isInterrupting,
                                      ActionAfterInterruption actionAfterInterruption, int weight,
                                      bool requireAllAffordances,
                                      CalcAffordanceType calcAffordanceType,
                                      StrGuid guid,
-                                     [ItemNotNull] [NotNull] BitArray isBusyArray,
-                                     BodilyActivityLevel bodilyActivityLevel,[NotNull] CalcRepo calcRepo,
+                                     [ItemNotNull] [JetBrains.Annotations.NotNull] BitArray isBusyArray,
+                                     BodilyActivityLevel bodilyActivityLevel,[JetBrains.Annotations.NotNull] CalcRepo calcRepo,
                                      CalcSite? site = null) : base(pName, guid)
         {
             CalcAffordanceType = calcAffordanceType;
@@ -90,7 +90,7 @@ namespace CalculationEngine.HouseholdElements {
         }
 
         [SuppressMessage("ReSharper", "MemberCanBeProtected.Global")]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public BitArray IsBusyArray => _isBusyArray;
 

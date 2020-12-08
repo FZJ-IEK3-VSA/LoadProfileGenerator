@@ -34,8 +34,6 @@ using Common.Tests;
 using Database.Tables.BasicElements;
 using Database.Tests;
 using FluentAssertions;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -68,7 +66,7 @@ namespace CalculationController.Tests {
             }
         }
 
-        public CalcHouseholdFactoryTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public CalcHouseholdFactoryTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

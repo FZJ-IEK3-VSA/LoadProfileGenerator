@@ -9,14 +9,13 @@ using Common.SQLResultLogging.InputLoggers;
 using Common.Tests;
 using Database;
 using Database.Tests;
-using JetBrains.Annotations;
 using Moq;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace CalcPostProcessorTests {
     public class PostProcessingManagerTests : UnitTestBaseClass {
-        public PostProcessingManagerTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public PostProcessingManagerTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
 

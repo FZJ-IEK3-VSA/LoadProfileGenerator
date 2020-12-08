@@ -46,9 +46,9 @@ using LoadProfileGenerator.Views.BasicElements;
 
 namespace LoadProfileGenerator.Presenters.BasicElements {
     public class TimeLimitPresenter : PresenterBaseDBBase<TimeLimitView> {
-        [NotNull] private readonly TimeLimitView _dtv;
+        [JetBrains.Annotations.NotNull] private readonly TimeLimitView _dtv;
 
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<PermissionLinePresenter> _plps =
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<PermissionLinePresenter> _plps =
             new ObservableCollection<PermissionLinePresenter>();
 
         [CanBeNull] private BitmapImage _bitmapAllPermittedTime;
@@ -58,10 +58,10 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
         [CanBeNull] private ModularHousehold _household;
 
         private double _imageHeight;
-        [NotNull] private GeographicLocation _previewGeographicLocation;
-        [NotNull] private TemperatureProfile _previewTemperatureProfile;
+        [JetBrains.Annotations.NotNull] private GeographicLocation _previewGeographicLocation;
+        [JetBrains.Annotations.NotNull] private TemperatureProfile _previewTemperatureProfile;
 
-        public TimeLimitPresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] TimeLimitView view, [NotNull] TimeLimit timeLimit)
+        public TimeLimitPresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] TimeLimitView view, [JetBrains.Annotations.NotNull] TimeLimit timeLimit)
             : base(view, "ThisTimeLimit.HeaderString", timeLimit, applicationPresenter)
         {
             _dtv = view;
@@ -103,7 +103,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<GeographicLocation> GeographicLocations
             => Sim.GeographicLocations.Items;
@@ -117,12 +117,12 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<ModularHousehold> ModularHouseholds
             => Sim.ModularHouseholds.Items;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public GeographicLocation PreviewGeographicLocation {
             get => _previewGeographicLocation;
@@ -142,7 +142,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public TemperatureProfile PreviewTemperatureProfile {
             get => _previewTemperatureProfile;
@@ -157,15 +157,15 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
         public TimeLimit SelectedTimeLimit { get; set; }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<TemperatureProfile> TemperaturProfiles
             => Sim.TemperatureProfiles.Items;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public TimeLimit ThisTimeLimit { get; }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<TimeLimit> TimeLimits => Sim.TimeLimits.Items;
 
@@ -174,11 +174,11 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
         public BitmapImage TmpCalcImage { get; set; }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<UsedIn> UsedIn { get; } = new ObservableCollection<UsedIn>();
 
-        public void AddSubentry([NotNull] TimeLimitEntry parentEntry)
+        public void AddSubentry([JetBrains.Annotations.NotNull] TimeLimitEntry parentEntry)
         {
             ThisTimeLimit.AddTimeLimitEntry(parentEntry, parentEntry, Sim.DateBasedProfiles.Items);
             RefreshAllPermissionLines();
@@ -311,7 +311,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             }
         }
 
-        public void RemoveSubentry([NotNull] TimeLimitEntry timeLimitEntry)
+        public void RemoveSubentry([JetBrains.Annotations.NotNull] TimeLimitEntry timeLimitEntry)
         {
             ThisTimeLimit.DeleteTimeLimitEntryFromDB(timeLimitEntry);
             RefreshAllPermissionLines();

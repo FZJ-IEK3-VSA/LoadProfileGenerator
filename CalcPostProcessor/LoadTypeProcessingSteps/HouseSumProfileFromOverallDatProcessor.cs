@@ -8,20 +8,19 @@ using CalcPostProcessor.Steps;
 using Common;
 using Common.CalcDto;
 using Common.SQLResultLogging;
-using JetBrains.Annotations;
 
 namespace CalcPostProcessor.LoadTypeProcessingSteps {
     public class HouseSumProfileFromOverallDatProcessor : LoadTypeSumStepBase {
-        [NotNull] private readonly IFileFactoryAndTracker _fft;
+        [JetBrains.Annotations.NotNull] private readonly IFileFactoryAndTracker _fft;
 
-        public HouseSumProfileFromOverallDatProcessor([NotNull] CalcDataRepository repository,
-                                   [NotNull] IFileFactoryAndTracker fft,
-                                   [NotNull] ICalculationProfiler calculationProfiler)
+        public HouseSumProfileFromOverallDatProcessor([JetBrains.Annotations.NotNull] CalcDataRepository repository,
+                                   [JetBrains.Annotations.NotNull] IFileFactoryAndTracker fft,
+                                   [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler)
             : base(repository, AutomationUtili.GetOptionList(CalcOption.OverallSum), calculationProfiler,
                 "Sum Profile Creation") =>
             _fft = fft;
 
-        public void ProcessSumFile([NotNull] CalcLoadTypeDto dstLoadType)
+        public void ProcessSumFile([JetBrains.Annotations.NotNull] CalcLoadTypeDto dstLoadType)
         {
             var dsc = new DateStampCreator(Repository.CalcParameters);
             if (!_fft.CheckForResultFileEntry(ResultFileID.OnlineSumActivationFiles, dstLoadType.Name,
@@ -64,7 +63,7 @@ namespace CalcPostProcessor.LoadTypeProcessingSteps {
             ProcessSumFile(ltstep.LoadType);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public override List<CalcOption> NeededOptions => new List<CalcOption>() {
             CalcOption.OverallDats
         };

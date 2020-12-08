@@ -5,8 +5,6 @@ using CalculationController.Integrity;
 using Common;
 using Common.Enums;
 using Common.Tests;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -72,7 +70,7 @@ namespace Database.Tests {
 
             db.Cleanup();
         }*/
-        public ModularHouseholdSerializerTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public ModularHouseholdSerializerTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

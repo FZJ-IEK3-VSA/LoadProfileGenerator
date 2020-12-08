@@ -28,7 +28,7 @@ namespace LoadProfileGenerator.Views.SpecialViews {
             InitializeComponent();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private HouseholdPlanPresenter Presenter => (HouseholdPlanPresenter)DataContext;
 
         private void ALAddClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e) {

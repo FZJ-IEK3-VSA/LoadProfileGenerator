@@ -46,7 +46,7 @@ namespace LoadProfileGenerator.Views.SpecialViews {
             InitializeComponent();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private ImportPresenter Presenter => (ImportPresenter)DataContext;
 
         private void BtnBrowseForFile([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e) {

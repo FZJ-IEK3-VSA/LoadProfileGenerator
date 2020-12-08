@@ -12,13 +12,13 @@ using JetBrains.Annotations;
 namespace Database.Tables.Validation {
     public class CalculationOutcome : DBBaseElement, IComparable<CalculationOutcome> {
         public const string TableName = "tblCalculationOutcomes";
-        [NotNull] private readonly string _timeResolution;
+        [JetBrains.Annotations.NotNull] private readonly string _timeResolution;
         private int _randomSeed;
 
-        public CalculationOutcome([NotNull] string name, [NotNull] string householdName, [NotNull] string lpgVersion, [NotNull] string temperatureProfile,
-            [NotNull] string geographicLocaiton, [NotNull] string errorMessage, [NotNull] string timeResolution, [NotNull] string energyIntensity,
+        public CalculationOutcome([JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] string householdName, [JetBrains.Annotations.NotNull] string lpgVersion, [JetBrains.Annotations.NotNull] string temperatureProfile,
+            [JetBrains.Annotations.NotNull] string geographicLocaiton, [JetBrains.Annotations.NotNull] string errorMessage, [JetBrains.Annotations.NotNull] string timeResolution, [JetBrains.Annotations.NotNull] string energyIntensity,
             TimeSpan calculationDuration, DateTime simulationStartTime, DateTime simulationEndtime,
-            [NotNull] string connectionString, int numberOfPersons, int randomSeed, [CanBeNull] int? pID, StrGuid guid) : base(name, TableName,
+            [JetBrains.Annotations.NotNull] string connectionString, int numberOfPersons, int randomSeed, [CanBeNull] int? pID, StrGuid guid) : base(name, TableName,
             connectionString, guid) {
             Entries = new ObservableCollection<LoadtypeOutcome>();
             AffordanceTimeUses = new ObservableCollection<AffordanceTimeUseOutcome>();
@@ -39,13 +39,13 @@ namespace Database.Tables.Validation {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<AffordanceTimeUseOutcome> AffordanceTimeUses { get; }
 
         public TimeSpan CalculationDuration { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string Electricity {
             get {
@@ -72,25 +72,25 @@ namespace Database.Tables.Validation {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string EnergyIntensity { get; }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<LoadtypeOutcome> Entries { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string ErrorMessage { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string GeographicLocationName { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string HouseholdName { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string LPGVersion { get; }
 
         public int NumberOfPersons { get; }
@@ -104,7 +104,7 @@ namespace Database.Tables.Validation {
 
         public DateTime SimulationStartTime { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string TemperatureProfile { get; }
 
         public int CompareTo([CanBeNull] CalculationOutcome other) {
@@ -125,7 +125,7 @@ namespace Database.Tables.Validation {
             return string.Compare(EnergyIntensity, other.EnergyIntensity, StringComparison.Ordinal);
         }
 
-        public void AddAffordanceTimeUse([NotNull] string affordanceName, [NotNull] string personName, double timeInMinutes,
+        public void AddAffordanceTimeUse([JetBrains.Annotations.NotNull] string affordanceName, [JetBrains.Annotations.NotNull] string personName, double timeInMinutes,
             int executions) {
             var name = affordanceName + " -  " + personName;
             var lo = new AffordanceTimeUseOutcome(name, IntID, affordanceName, timeInMinutes,
@@ -134,16 +134,16 @@ namespace Database.Tables.Validation {
             AffordanceTimeUses.Add(lo);
         }
 
-        public void AddLoadType([NotNull] string loadTypeName, double value) {
+        public void AddLoadType([JetBrains.Annotations.NotNull] string loadTypeName, double value) {
             var name = loadTypeName + " -  " + value;
             var lo = new LoadtypeOutcome(name, IntID, loadTypeName, value, ConnectionString, System.Guid.NewGuid().ToStrGuid());
             lo.SaveToDB();
             Entries.Add(lo);
         }
 
-        [NotNull]
-        private static CalculationOutcome AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic) {
+        [JetBrains.Annotations.NotNull]
+        private static CalculationOutcome AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic) {
             var id = dr.GetIntFromLong("ID");
             var householdName = dr.GetString("HouseholdName", false, string.Empty, ignoreMissingFields);
             var lpgVersion = dr.GetString("LPGVersion", false, string.Empty, ignoreMissingFields);
@@ -173,9 +173,9 @@ namespace Database.Tables.Validation {
                 numberOfPersons, randomSeed, id, System.Guid.NewGuid().ToStrGuid());
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new
+        public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString) => new
             CalculationOutcome(FindNewName(isNameTaken, "Calculation Outcome "), string.Empty, string.Empty,
                 string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, TimeSpan.Zero, DateTime.Today,
                 DateTime.Today, connectionString, 0, 0, null, System.Guid.NewGuid().ToStrGuid());
@@ -187,10 +187,10 @@ namespace Database.Tables.Validation {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "dstSim")]
         [UsedImplicitly]
-        public static CalculationOutcome ImportFromItem([NotNull] CalculationOutcome toImport, [NotNull] Simulator dstSim)
+        public static CalculationOutcome ImportFromItem([JetBrains.Annotations.NotNull] CalculationOutcome toImport, [JetBrains.Annotations.NotNull] Simulator dstSim)
         {
             var hd = new CalculationOutcome(toImport.Name, toImport.HouseholdName, toImport.LPGVersion,
                 toImport.TemperatureProfile, toImport.GeographicLocationName, toImport.ErrorMessage,
@@ -212,7 +212,7 @@ namespace Database.Tables.Validation {
             return hd;
         }
 
-        private static bool IsCorrectAffTimeUseParent([NotNull] DBBase parent, [NotNull] DBBase child) {
+        private static bool IsCorrectAffTimeUseParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child) {
             var entry = (AffordanceTimeUseOutcome) child;
             if (parent.ID == entry.CalculationOutcomeID) {
                 var ats = (CalculationOutcome) parent;
@@ -222,7 +222,7 @@ namespace Database.Tables.Validation {
             return false;
         }
 
-        private static bool IsCorrectEntryParent([NotNull] DBBase parent, [NotNull] DBBase child) {
+        private static bool IsCorrectEntryParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child) {
             var entry = (LoadtypeOutcome) child;
             if (parent.ID == entry.CalculationOutcomeID) {
                 var ats = (CalculationOutcome) parent;
@@ -237,7 +237,7 @@ namespace Database.Tables.Validation {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<CalculationOutcome> result, [NotNull] string connectionString,
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<CalculationOutcome> result, [JetBrains.Annotations.NotNull] string connectionString,
             bool ignoreMissingTables) {
             var aic = new AllItemCollections();
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);
@@ -252,9 +252,9 @@ namespace Database.Tables.Validation {
                 ignoreMissingTables);
         }
 
-        [NotNull]
-        private static string MakeName([NotNull] string householdname, [NotNull] string temperatureprofile, [NotNull] string geoLoc,
-            [NotNull] string lpgversion, [NotNull] string intensity) => householdname + "#" + temperatureprofile + "#" + geoLoc + "#" +
+        [JetBrains.Annotations.NotNull]
+        private static string MakeName([JetBrains.Annotations.NotNull] string householdname, [JetBrains.Annotations.NotNull] string temperatureprofile, [JetBrains.Annotations.NotNull] string geoLoc,
+            [JetBrains.Annotations.NotNull] string lpgversion, [JetBrains.Annotations.NotNull] string intensity) => householdname + "#" + temperatureprofile + "#" + geoLoc + "#" +
                                                     lpgversion + "#" + intensity;
 
         public override void SaveToDB() {
@@ -288,7 +288,7 @@ namespace Database.Tables.Validation {
 
         public override List<UsedIn> CalculateUsedIns(Simulator sim) => throw new NotImplementedException();
 
-        public static void ClearTable([NotNull] string simConnectionString)
+        public static void ClearTable([JetBrains.Annotations.NotNull] string simConnectionString)
         {
             using (Connection conn = new Connection(simConnectionString)) {
                 conn.Open();

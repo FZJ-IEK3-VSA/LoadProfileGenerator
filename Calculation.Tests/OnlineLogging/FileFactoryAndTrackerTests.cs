@@ -12,7 +12,6 @@ using Common.JSON;
 using Common.SQLResultLogging.InputLoggers;
 using Common.Tests;
 using FluentAssertions;
-using JetBrains.Annotations;
 using Moq;
 
 using Xunit;
@@ -22,7 +21,7 @@ using Xunit.Abstractions;
 namespace Calculation.Tests.OnlineLogging {
     public class FileFactoryAndTrackerTests : UnitTestBaseClass
     {
-        public FileFactoryAndTrackerTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public FileFactoryAndTrackerTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
 

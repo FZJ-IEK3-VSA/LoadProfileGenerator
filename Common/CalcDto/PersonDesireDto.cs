@@ -1,10 +1,9 @@
 using Common.Enums;
-using JetBrains.Annotations;
 
 namespace Common.CalcDto {
     public class PersonDesireDto {
-        public PersonDesireDto([NotNull] string name, int desireID, decimal threshold, decimal decayTime, decimal weight,
-                               decimal criticalThreshold, [NotNull] string sourceTrait, [NotNull] string desireCategory,
+        public PersonDesireDto([JetBrains.Annotations.NotNull] string name, int desireID, decimal threshold, decimal decayTime, decimal weight,
+                               decimal criticalThreshold, [JetBrains.Annotations.NotNull] string sourceTrait, [JetBrains.Annotations.NotNull] string desireCategory,
                                HealthStatus healthStatus, bool isSharedDesire)
         {
             Name = name;
@@ -19,7 +18,7 @@ namespace Common.CalcDto {
             IsSharedDesire = isSharedDesire;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string Name { get; }
         public int DesireID { get; }
         public decimal Threshold { get; }
@@ -29,9 +28,9 @@ namespace Common.CalcDto {
         public decimal CriticalThreshold { get; }
 
         //[CanBeNull] SharedDesireValue sharedDesireValue,
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string SourceTrait { get; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string DesireCategory { get; }
         public HealthStatus HealthStatus { get; }
         public bool IsSharedDesire { get; }

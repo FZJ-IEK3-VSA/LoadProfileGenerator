@@ -34,8 +34,6 @@ using Common;
 using Common.Tests;
 using Database.Tables.BasicHouseholds;
 using FluentAssertions;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -60,7 +58,7 @@ namespace CalculationController.Tests.CalcFactories
             clt.ConversionFactor.Should().Be( 1.0/3600000);
         }
 
-        public CalcLoadTypeFactoryTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public CalcLoadTypeFactoryTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

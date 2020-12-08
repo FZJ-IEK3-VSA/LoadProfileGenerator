@@ -15,11 +15,11 @@ using Newtonsoft.Json;
 
 namespace SimulationEngineLib.HouseJobProcessor {
     public class JsonCalculator {
-        [NotNull] private readonly CalculationProfiler _calculationProfiler;
+        [JetBrains.Annotations.NotNull] private readonly CalculationProfiler _calculationProfiler;
 
         public JsonCalculator() => _calculationProfiler = new CalculationProfiler();
         /*
-        public bool Calculate([NotNull] JsonDirectoryOptions calcDirectoryOptions)
+        public bool Calculate([JetBrains.Annotations.NotNull] JsonDirectoryOptions calcDirectoryOptions)
         {
             _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
             string jsonFileName = calcDirectoryOptions.Input;
@@ -70,7 +70,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
             return true;
         }*/
 
-        //public bool CheckBasicSettingsForLoadingDatabase([NotNull] JsonCalcSpecification jcs)
+        //public bool CheckBasicSettingsForLoadingDatabase([JetBrains.Annotations.NotNull] JsonCalcSpecification jcs)
         //{
         //    if (!string.IsNullOrWhiteSpace(jcs.PathToDatabase)) {
         //        var fi = new FileInfo(jcs.PathToDatabase);
@@ -81,7 +81,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
         //    return true;
         //}
 
-        public bool CheckSimulator([NotNull] JsonCalcSpecification jcs, [NotNull] Simulator sim)
+        public bool CheckSimulator([JetBrains.Annotations.NotNull] JsonCalcSpecification jcs, [JetBrains.Annotations.NotNull] Simulator sim)
         {
             if (jcs.TemperatureProfile == null) {
                 jcs.TemperatureProfile = sim.TemperatureProfiles[0].GetJsonReference();
@@ -105,7 +105,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
         }
 
         [SuppressMessage("ReSharper", "UseObjectOrCollectionInitializer")]
-        public void StartHousehold([NotNull] Simulator sim, [NotNull] JsonCalcSpecification jcs, [NotNull] JsonReference calcObjectReference)
+        public void StartHousehold([JetBrains.Annotations.NotNull] Simulator sim, [JetBrains.Annotations.NotNull] JsonCalcSpecification jcs, [JetBrains.Annotations.NotNull] JsonReference calcObjectReference)
         {
             if(!CheckSimulator(jcs, sim))
             {
@@ -353,8 +353,8 @@ namespace SimulationEngineLib.HouseJobProcessor {
             }
         }
 
-        [NotNull]
-        private static ICalcObject GetCalcObject([NotNull] Simulator sim, [CanBeNull] JsonReference calcReference)
+        [JetBrains.Annotations.NotNull]
+        private static ICalcObject GetCalcObject([JetBrains.Annotations.NotNull] Simulator sim, [CanBeNull] JsonReference calcReference)
         {
             if (calcReference == null)
             {
@@ -369,15 +369,15 @@ namespace SimulationEngineLib.HouseJobProcessor {
             throw new LPGException("Could not find the Calculation object with the guid " + calcReference.Guid);
         }
 
-        private static bool OpenTabFunc([NotNull] object o) => true;
+        private static bool OpenTabFunc([JetBrains.Annotations.NotNull] object o) => true;
 
         private static bool ReportCancelFunc() => true;
 
         private static bool ReportFinishFuncForHouseAndSettlement(bool a2,
-                                                                  [NotNull] string a3,
+                                                                  [JetBrains.Annotations.NotNull] string a3,
                                                                   [ItemCanBeNull] [CanBeNull] ObservableCollection<ResultFileEntry> a4) => true;
 
-        private static bool ReportFinishFuncForHousehold(bool a2, [NotNull] string a3, [NotNull] string path) => true;
+        private static bool ReportFinishFuncForHousehold(bool a2, [JetBrains.Annotations.NotNull] string a3, [JetBrains.Annotations.NotNull] string path) => true;
 
         /*
         [CanBeNull]
@@ -398,7 +398,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
             return co;
         }*/
         /*
-        private LoadTypePriority GetLoadtypePriority([CanBeNull] string jcsLoadTypePriority, [NotNull] ICalcObject calcObject)
+        private LoadTypePriority GetLoadtypePriority([CanBeNull] string jcsLoadTypePriority, [JetBrains.Annotations.NotNull] ICalcObject calcObject)
         {
             LoadTypePriority ltp = LoadTypePriority.Undefined;
             foreach (LoadTypePriority ofd in Enum.GetValues(typeof(LoadTypePriority)))

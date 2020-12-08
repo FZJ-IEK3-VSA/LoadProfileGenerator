@@ -100,7 +100,7 @@ namespace Common.SQLResultLogging.Loggers {
         [JsonProperty]
         public double TotalEnergySum { get;  set; }
         /*
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public double[] AllValues { get; set; }
         */

@@ -64,7 +64,7 @@ namespace Database.Tables.Houses {
         public HouseTypeDevice([CanBeNull]int? pID, [CanBeNull] IAssignableDevice adev, [CanBeNull] TimeBasedProfile profile,
             int houseID,
             [CanBeNull] TimeLimit timeLimit, double timeStandardDeviation, [CanBeNull] VLoadType loadType,
-            [NotNull] string connectionString, [NotNull] string name,
+            [JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.NotNull] string name,
             [CanBeNull] Location loc, double variableValue, VariableCondition variableCondition,
             [CanBeNull] Variable variable, StrGuid guid)
             : base(name, TableName, connectionString, guid)
@@ -92,7 +92,7 @@ namespace Database.Tables.Houses {
         public VLoadType LoadType => _loadType;
         public Location Location => _location;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public override string Name {
             get {
                 if (_device != null && Profile != null) {
@@ -124,10 +124,10 @@ namespace Database.Tables.Houses {
 
         public double Probability => 0;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        private static HouseTypeDevice AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic)
+        private static HouseTypeDevice AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var id = dr.GetIntFromLong("ID");
             var deviceID =  dr.GetInt("DeviceID");
@@ -204,12 +204,12 @@ namespace Database.Tables.Houses {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<HouseTypeDevice> result, [NotNull] string connectionString,
-            [ItemNotNull] [NotNull] ObservableCollection<RealDevice> pallDevices, [ItemNotNull] [NotNull] ObservableCollection<DeviceCategory> pallDeviceCategories,
-            [ItemNotNull] [NotNull] ObservableCollection<TimeBasedProfile> pallTimeBasedProfiles, [ItemNotNull] [NotNull] ObservableCollection<TimeLimit> timeLimits,
-            [ItemNotNull] [NotNull] ObservableCollection<VLoadType> vLoadTypes, bool ignoreMissingTables,
-            [ItemNotNull] [NotNull] ObservableCollection<Location> allLocations, [ItemNotNull] [NotNull] ObservableCollection<DeviceAction> deviceActions,
-            [ItemNotNull] [NotNull] ObservableCollection<DeviceActionGroup> deviceActionGroups, [ItemNotNull] [NotNull] ObservableCollection<Variable> variables)
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<HouseTypeDevice> result, [JetBrains.Annotations.NotNull] string connectionString,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<RealDevice> pallDevices, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceCategory> pallDeviceCategories,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TimeBasedProfile> pallTimeBasedProfiles, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TimeLimit> timeLimits,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<VLoadType> vLoadTypes, bool ignoreMissingTables,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Location> allLocations, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceAction> deviceActions,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceActionGroup> deviceActionGroups, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Variable> variables)
         {
             var aic = new AllItemCollections(realDevices: pallDevices,
                 deviceCategories: pallDeviceCategories, timeProfiles: pallTimeBasedProfiles, timeLimits: timeLimits,

@@ -15,7 +15,6 @@ using CalcPostProcessor.Steps;
 using Common;
 using Common.JSON;
 using Common.SQLResultLogging;
-using JetBrains.Annotations;
 
 namespace CalcPostProcessor.GeneralHouseholdSteps {
     [SuppressMessage("ReSharper", "RedundantNameQualifier")]
@@ -47,7 +46,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
             Run(_fft, entry.HHKey);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public override List<CalcOption> NeededOptions => new List<CalcOption>() {CalcOption.LocationsEntries};
 
         /// <summary>

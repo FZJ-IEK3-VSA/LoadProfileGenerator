@@ -33,8 +33,6 @@ using Common;
 using Common.Tests;
 using Database.Tables.ModularHouseholds;
 using FluentAssertions;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -102,7 +100,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
             }
         }
 
-        public DeviceSelectionTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public DeviceSelectionTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

@@ -34,18 +34,18 @@ namespace Database.Tables.ModularHouseholds {
 
     public interface IJSonSubElement<T>: IJsonSerializable<T>, IGuidObject, IRelevantGuidProvider {
 
-        void SynchronizeDataFromJson([NotNull] T json, [NotNull] Simulator sim);
+        void SynchronizeDataFromJson([JetBrains.Annotations.NotNull] T json, [JetBrains.Annotations.NotNull] Simulator sim);
     }
 
     public class HouseholdTemplate : DBBaseElement, IJsonSerializable<HouseholdTemplate.JsonDto> {
         public const string TableName = "tblHouseholdTemplates";
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<HHTemplateEntry> _entries = new ObservableCollection<HHTemplateEntry>();
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<HHTemplateEntry> _entries = new ObservableCollection<HHTemplateEntry>();
 
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<HHTemplatePerson> _persons = new ObservableCollection<HHTemplatePerson>();
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<HHTemplatePerson> _persons = new ObservableCollection<HHTemplatePerson>();
 
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<HHTemplateTag> _templateTags = new ObservableCollection<HHTemplateTag>();
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<HHTemplateTag> _templateTags = new ObservableCollection<HHTemplateTag>();
 
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<HHTemplateVacation> _vacations = new ObservableCollection<HHTemplateVacation>();
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<HHTemplateVacation> _vacations = new ObservableCollection<HHTemplateVacation>();
 
         private int _averageVacationDuration;
 
@@ -61,7 +61,7 @@ namespace Database.Tables.ModularHouseholds {
 
         [CanBeNull] private DateBasedProfile _timeProfileForVacations;
 
-        public HouseholdTemplate([NotNull] string pName, [CanBeNull] int? id, [CanBeNull] string description, [NotNull] string connectionString, [CanBeNull] string newName, int count,
+        public HouseholdTemplate([JetBrains.Annotations.NotNull] string pName, [CanBeNull] int? id, [CanBeNull] string description, [JetBrains.Annotations.NotNull] string connectionString, [CanBeNull] string newName, int count,
                                  [CanBeNull] DateBasedProfile timeProfileForVacations, TemplateVacationType templateVacationType, int minNumberOfVacations, int maxNumberOfVacations,
                                  int averageVacationDuration, int minTotalVacationDays, int maxTotalVacationDays, StrGuid guid) : base(pName, TableName, connectionString, guid)
         {
@@ -100,11 +100,11 @@ namespace Database.Tables.ModularHouseholds {
         public EnergyIntensityType EnergyIntensityType { get; set; } = EnergyIntensityType.Random;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<HHTemplateEntry> Entries => _entries;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<ModularHousehold> GeneratedHouseholds { get; } = new ObservableCollection<ModularHousehold>();
 
         public int MaxNumberOfVacations {
@@ -135,11 +135,11 @@ namespace Database.Tables.ModularHouseholds {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<HHTemplatePerson> Persons => _persons;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<HHTemplateTag> TemplateTags => _templateTags;
 
         public TemplateVacationType TemplateVacationType {
@@ -154,7 +154,7 @@ namespace Database.Tables.ModularHouseholds {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<HHTemplateVacation> Vacations => _vacations;
 
         public JsonDto GetJson()
@@ -182,8 +182,8 @@ namespace Database.Tables.ModularHouseholds {
 
             return jec;
         }
-        [NotNull]
-        public HHTemplatePerson AddPersonFromJson([NotNull]HHTemplatePerson.JsonDto jto, [NotNull] Simulator sim)
+        [JetBrains.Annotations.NotNull]
+        public HHTemplatePerson AddPersonFromJson([JetBrains.Annotations.NotNull]HHTemplatePerson.JsonDto jto, [JetBrains.Annotations.NotNull] Simulator sim)
         {
             var person = sim.Persons.FindByGuid(jto.PersonReference?.Guid) ?? throw new LPGException("Could not find the person " + jto.PersonReference);
             var livingPattern = sim.LivingPatternTags.FindByGuid(jto.LivingPatternTraitTagReference?.Guid) ?? throw new LPGException("Could not find the Living pattern Tag " + jto.LivingPatternTraitTagReference);
@@ -194,8 +194,8 @@ namespace Database.Tables.ModularHouseholds {
             return p;
         }
 
-        [NotNull]
-        public HHTemplateEntry AddEntryFromJson([NotNull] HHTemplateEntry.JsonDto jto, [NotNull] Simulator sim)
+        [JetBrains.Annotations.NotNull]
+        public HHTemplateEntry AddEntryFromJson([JetBrains.Annotations.NotNull] HHTemplateEntry.JsonDto jto, [JetBrains.Annotations.NotNull] Simulator sim)
         {
 
             var tag = sim.TraitTags.FindByGuid(jto.TraitTagReference?.Guid)??throw new LPGException("could not find trait tag " + jto.TraitTagReference);
@@ -210,8 +210,8 @@ namespace Database.Tables.ModularHouseholds {
             entry.Persons.Sort();
             return entry;
         }
-        [NotNull]
-        public HHTemplateEntry AddEntry([NotNull] TraitTag tag, int min, int max, bool isMandatory)
+        [JetBrains.Annotations.NotNull]
+        public HHTemplateEntry AddEntry([JetBrains.Annotations.NotNull] TraitTag tag, int min, int max, bool isMandatory)
         {
             var entry = new HHTemplateEntry(null, IntID, "newEntry", ConnectionString, tag, min, max, System.Guid.NewGuid().ToStrGuid(), isMandatory);
             _entries.Add(entry);
@@ -220,8 +220,8 @@ namespace Database.Tables.ModularHouseholds {
             return entry;
         }
 
-        [NotNull]
-        public HHTemplateEntry AddEntry([NotNull] TraitTag tag, int min, int max, [ItemNotNull] [NotNull] List<Person> persons, bool isMandatory)
+        [JetBrains.Annotations.NotNull]
+        public HHTemplateEntry AddEntry([JetBrains.Annotations.NotNull] TraitTag tag, int min, int max, [ItemNotNull] [JetBrains.Annotations.NotNull] List<Person> persons, bool isMandatory)
         {
             persons.Sort();
             for (var index = 0; index < _entries.Count; index++) {
@@ -248,7 +248,7 @@ namespace Database.Tables.ModularHouseholds {
         }
 
         [CanBeNull]
-        public HHTemplatePerson AddUpdatePerson([NotNull] Person p, [CanBeNull] LivingPatternTag tag)
+        public HHTemplatePerson AddUpdatePerson([JetBrains.Annotations.NotNull] Person p, [CanBeNull] LivingPatternTag tag)
         {
             foreach (var hhTemplatePerson in _persons) {
                 if (hhTemplatePerson.Person == p) {
@@ -271,14 +271,14 @@ namespace Database.Tables.ModularHouseholds {
 
         }
         [CanBeNull]
-        public HHTemplateTag AddTemplateTagFromJson([NotNull] JsonReference myReference, [NotNull] Simulator sim)
+        public HHTemplateTag AddTemplateTagFromJson([JetBrains.Annotations.NotNull] JsonReference myReference, [JetBrains.Annotations.NotNull] Simulator sim)
         {
             var tag = sim.HouseholdTags.FindByJsonReference(myReference) ?? throw new LPGException("Tag not found : " + myReference);
 
             return AddTemplateTag(tag);
         }
         [CanBeNull]
-        public HHTemplateTag AddTemplateTag([NotNull] HouseholdTag tag)
+        public HHTemplateTag AddTemplateTag([JetBrains.Annotations.NotNull] HouseholdTag tag)
         {
             var existingTags = _templateTags.Where(x => x.Tag == tag);
             if (existingTags.Any()) {
@@ -301,13 +301,13 @@ namespace Database.Tables.ModularHouseholds {
         }
 
         [CanBeNull]
-        public HHTemplateVacation AddVacationFromJson([NotNull] JsonReference myReference, [NotNull] Simulator sim)
+        public HHTemplateVacation AddVacationFromJson([JetBrains.Annotations.NotNull] JsonReference myReference, [JetBrains.Annotations.NotNull] Simulator sim)
         {
             var vacation = sim.Vacations.FindByJsonReference(myReference)??throw new LPGException("Vacation not found : " + myReference);
             return AddVacation(vacation);
         }
         [CanBeNull]
-        public HHTemplateVacation AddVacation([NotNull] Vacation v)
+        public HHTemplateVacation AddVacation([JetBrains.Annotations.NotNull] Vacation v)
         {
             foreach (var vac in _vacations) {
                 if (vac.Vacation == v) {
@@ -325,12 +325,12 @@ namespace Database.Tables.ModularHouseholds {
 
         public override List<UsedIn> CalculateUsedIns(Simulator sim) => throw new NotImplementedException();
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new HouseholdTemplate(FindNewName(isNameTaken, "New  Household Template"),
+        public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString) => new HouseholdTemplate(FindNewName(isNameTaken, "New  Household Template"),
             null, "(no description yet)", connectionString, "Automatically generated Household", 10, null, TemplateVacationType.FromList, 1, 3, 7, 10, 14, System.Guid.NewGuid().ToStrGuid());
 
-        public void DeleteEntryFromDB([NotNull] HHTemplateEntry entry)
+        public void DeleteEntryFromDB([JetBrains.Annotations.NotNull] HHTemplateEntry entry)
         {
             entry.DeleteFromDB();
             _entries.Remove(entry);
@@ -359,31 +359,31 @@ namespace Database.Tables.ModularHouseholds {
             base.DeleteFromDB();
         }
 
-        public void DeletePersonFromDB([NotNull] HHTemplatePerson entry)
+        public void DeletePersonFromDB([JetBrains.Annotations.NotNull] HHTemplatePerson entry)
         {
             entry.DeleteFromDB();
             _persons.Remove(entry);
         }
 
-        public void DeleteTagFromDB([NotNull] HHTemplateTag tag)
+        public void DeleteTagFromDB([JetBrains.Annotations.NotNull] HHTemplateTag tag)
         {
             tag.DeleteFromDB();
             _templateTags.Remove(tag);
         }
 
-        public void DeleteVacationFromDB([NotNull] HHTemplateVacation entry)
+        public void DeleteVacationFromDB([JetBrains.Annotations.NotNull] HHTemplateVacation entry)
         {
             entry.DeleteFromDB();
             _vacations.Remove(entry);
         }
 
         [ItemNotNull]
-        [NotNull]
-        public List<ModularHousehold> GenerateHouseholds([NotNull] Simulator sim, bool generateSettlement, [ItemNotNull] [NotNull] List<STTraitLimit> limits,
+        [JetBrains.Annotations.NotNull]
+        public List<ModularHousehold> GenerateHouseholds([JetBrains.Annotations.NotNull] Simulator sim, bool generateSettlement, [ItemNotNull] [JetBrains.Annotations.NotNull] List<STTraitLimit> limits,
                                                          List<TraitTag> forbiddenTraitTags) =>
             HouseholdTemplateExecutor.GenerateHouseholds(sim, generateSettlement, limits, this, forbiddenTraitTags);
 
-        public void ImportExistingModularHouseholds([NotNull] ModularHousehold chh)
+        public void ImportExistingModularHouseholds([JetBrains.Annotations.NotNull] ModularHousehold chh)
         {
             var traitcounts = new Dictionary<Person, Dictionary<TraitTag, int>>();
             foreach (var trait in chh.Traits) {
@@ -438,9 +438,9 @@ namespace Database.Tables.ModularHouseholds {
 
         public override DBBase ImportFromGenericItem(DBBase toImport, Simulator dstSim) => ImportFromItem((HouseholdTemplate)toImport, dstSim);
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DBBase ImportFromItem([NotNull] HouseholdTemplate item, [NotNull] Simulator dstSim)
+        public static DBBase ImportFromItem([JetBrains.Annotations.NotNull] HouseholdTemplate item, [JetBrains.Annotations.NotNull] Simulator dstSim)
         {
             DateBasedProfile dbp = null;
             if (item.TimeProfileForVacations != null) {
@@ -514,8 +514,8 @@ namespace Database.Tables.ModularHouseholds {
             return hhg;
         }
 
-        [NotNull]
-        public HouseholdTemplate MakeCopy([NotNull] Simulator sim)
+        [JetBrains.Annotations.NotNull]
+        public HouseholdTemplate MakeCopy([JetBrains.Annotations.NotNull] Simulator sim)
         {
             var jsonTemplate = this.GetJson();
             var newtemplate = sim.HouseholdTemplates.CreateNewItem(sim.ConnectionString);
@@ -524,7 +524,7 @@ namespace Database.Tables.ModularHouseholds {
             return newtemplate;
 
         }
-        public void ImportFromJsonTemplate([NotNull] JsonDto jsonTemplate, [NotNull] Simulator sim)
+        public void ImportFromJsonTemplate([JetBrains.Annotations.NotNull] JsonDto jsonTemplate, [JetBrains.Annotations.NotNull] Simulator sim)
         {
             DateBasedProfile dbp = null;
             if (jsonTemplate.TimeProfileForVacations != null) {
@@ -553,7 +553,7 @@ namespace Database.Tables.ModularHouseholds {
         }
 
         [UsedImplicitly]
-        public static void ImportObjectFromJson([NotNull] Simulator sim, [NotNull] [ItemNotNull] List<JsonDto> jsonHouseholdTemplates)
+        public static void ImportObjectFromJson([JetBrains.Annotations.NotNull] Simulator sim, [JetBrains.Annotations.NotNull] [ItemNotNull] List<JsonDto> jsonHouseholdTemplates)
         {
             foreach (JsonDto jsontemplate in jsonHouseholdTemplates) {
                 HouseholdTemplate hhtemplate = sim.HouseholdTemplates.FindByGuid(jsontemplate.Guid);
@@ -565,12 +565,12 @@ namespace Database.Tables.ModularHouseholds {
             }
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<HouseholdTemplate> result, [NotNull] string connectionString,
-                                            [ItemNotNull] [NotNull] ObservableCollection<HouseholdTrait> householdTraits, bool ignoreMissingTables,
-                                            [ItemNotNull] [NotNull] ObservableCollection<Person> persons, [ItemNotNull] [NotNull] ObservableCollection<TraitTag> traitTags,
-                                            [ItemNotNull] [NotNull] ObservableCollection<Vacation> vacations, [ItemNotNull] [NotNull] ObservableCollection<HouseholdTag> templateTags,
-                                            [ItemNotNull] [NotNull] ObservableCollection<DateBasedProfile> dateBasedProfiles,
-                                            [ItemNotNull][NotNull] ObservableCollection<LivingPatternTag> livingPatternTags)
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<HouseholdTemplate> result, [JetBrains.Annotations.NotNull] string connectionString,
+                                            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<HouseholdTrait> householdTraits, bool ignoreMissingTables,
+                                            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Person> persons, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TraitTag> traitTags,
+                                            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Vacation> vacations, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<HouseholdTag> templateTags,
+                                            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DateBasedProfile> dateBasedProfiles,
+                                            [ItemNotNull][JetBrains.Annotations.NotNull] ObservableCollection<LivingPatternTag> livingPatternTags)
         {
             var aic = new AllItemCollections(householdTraits: householdTraits, persons: persons, dateBasedProfiles: dateBasedProfiles);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);
@@ -650,8 +650,8 @@ namespace Database.Tables.ModularHouseholds {
             cmd.AddParameter("MaxTotalVacationDays", MaxTotalVacationDays);
         }
 
-        [NotNull]
-        private static HouseholdTemplate AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields, [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static HouseholdTemplate AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields, [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var hhid = dr.GetIntFromLong("ID");
             var name = dr.GetString("Name", "no name");
@@ -672,7 +672,7 @@ namespace Database.Tables.ModularHouseholds {
             return chh;
         }
 
-        private static bool IsCorrectHHTemplateEntryParent([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectHHTemplateEntryParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var hhgEntry = (HHTemplateEntry)child;
             if (parent.ID == hhgEntry.HouseholdTemplateID) {
@@ -684,7 +684,7 @@ namespace Database.Tables.ModularHouseholds {
             return false;
         }
 
-        private static bool IsCorrectHHTemplatePersonParent([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectHHTemplatePersonParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var hhgEntry = (HHTemplatePerson)child;
             if (parent.ID == hhgEntry.HHTemplateID) {
@@ -696,7 +696,7 @@ namespace Database.Tables.ModularHouseholds {
             return false;
         }
 
-        private static bool IsCorrectHHTemplateTagParent([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectHHTemplateTagParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var hhTemplateTag = (HHTemplateTag)child;
             if (parent.ID == hhTemplateTag.TemplateID) {
@@ -708,7 +708,7 @@ namespace Database.Tables.ModularHouseholds {
             return false;
         }
 
-        private static bool IsCorrectHHTemplateVacationParent([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectHHTemplateVacationParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var hhgEntry = (HHTemplateVacation)child;
             if (parent.ID == hhgEntry.HHTemplateID) {
@@ -722,7 +722,7 @@ namespace Database.Tables.ModularHouseholds {
 
 
         public class JsonDto {
-            public JsonDto([NotNull] string name, [CanBeNull] string description, [CanBeNull] string newHouseholdName, int count, [CanBeNull] JsonReference timeProfileForVacations,
+            public JsonDto([JetBrains.Annotations.NotNull] string name, [CanBeNull] string description, [CanBeNull] string newHouseholdName, int count, [CanBeNull] JsonReference timeProfileForVacations,
                            TemplateVacationType templateVacationType, int minNumberOfVacations, int maxNumberOfVacations, int averageVacationDuration, int minTotalVacationDays,
                            int maxTotalVacationDays, StrGuid guid)
             {
@@ -756,7 +756,7 @@ namespace Database.Tables.ModularHouseholds {
 
             public StrGuid Guid { get; set; }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             [ItemNotNull]
             public List<JsonReference> HouseholdTags { get; set; } = new List<JsonReference>();
 
@@ -765,13 +765,13 @@ namespace Database.Tables.ModularHouseholds {
             public int MinNumberOfVacations { get; set; }
             public int MinTotalVacationDays { get; set; }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string Name { get; set; }
 
             [CanBeNull]
             public string NewHouseholdName { get; set; }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             [ItemNotNull]
             public List<HHTemplatePerson.JsonDto> TemplatePersons { get; set; } = new List<HHTemplatePerson.JsonDto>();
 
@@ -780,11 +780,11 @@ namespace Database.Tables.ModularHouseholds {
             [CanBeNull]
             public JsonReference TimeProfileForVacations { get; set; }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             [ItemNotNull]
             public List<HHTemplateEntry.JsonDto> TraitEntries { get; set; } = new List<HHTemplateEntry.JsonDto>();
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             [ItemNotNull]
             public List<JsonReference> Vacations { get; set; } = new List<JsonReference>();
         }

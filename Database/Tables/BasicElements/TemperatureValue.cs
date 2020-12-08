@@ -46,7 +46,7 @@ namespace Database.Tables.BasicElements {
         private readonly DateTime _time;
         private readonly double _value;
 
-        public TemperatureValue(DateTime time, double value, int tempProfileID, [CanBeNull]int? id, [NotNull] string connectionString, StrGuid guid)
+        public TemperatureValue(DateTime time, double value, int tempProfileID, [CanBeNull]int? id, [JetBrains.Annotations.NotNull] string connectionString, StrGuid guid)
             : base(
                 time.ToShortDateString() + " " + value.ToString(CultureInfo.InvariantCulture), id, TableName,
                 connectionString, guid)
@@ -64,15 +64,15 @@ namespace Database.Tables.BasicElements {
 
         public DateTime Time => _time;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string TimeString => _time.ToString(CultureInfo.CurrentCulture);
 
         public double Value => _value;
 
-        [NotNull]
-        private static TemperatureValue AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static TemperatureValue AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var id = dr.GetIntFromLong("ID");
             var date = dr.GetDateTime("Date");
@@ -109,7 +109,7 @@ namespace Database.Tables.BasicElements {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<TemperatureValue> result, [NotNull] string connectionString,
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TemperatureValue> result, [JetBrains.Annotations.NotNull] string connectionString,
             bool ignoreMissingTables)
         {
             var aic = new AllItemCollections();

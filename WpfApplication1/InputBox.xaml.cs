@@ -23,7 +23,7 @@ namespace LoadProfileGenerator
         public bool IsOk { get; set; }
 
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string Result { get; set; }
 
         private void CancelClick([CanBeNull]object sender, [CanBeNull] RoutedEventArgs e) => Close();
@@ -40,7 +40,7 @@ namespace LoadProfileGenerator
             Close();
         }
 
-        private void TxtTag_OnKeyUp([NotNull] object sender, [NotNull] KeyEventArgs e)
+        private void TxtTag_OnKeyUp([JetBrains.Annotations.NotNull] object sender, [JetBrains.Annotations.NotNull] KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {

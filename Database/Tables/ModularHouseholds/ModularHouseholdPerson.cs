@@ -15,7 +15,7 @@ namespace Database.Tables.ModularHouseholds {
 
         public class JsonModularHouseholdPerson : IGuidObject
         {
-            public JsonModularHouseholdPerson([NotNull] JsonReference person, [CanBeNull] JsonReference livingPatternTag, StrGuid guid)
+            public JsonModularHouseholdPerson([JetBrains.Annotations.NotNull] JsonReference person, [CanBeNull] JsonReference livingPatternTag, StrGuid guid)
             {
                 Person = person;
                 LivingPatternTag = livingPatternTag;
@@ -30,7 +30,7 @@ namespace Database.Tables.ModularHouseholds {
             {
             }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public JsonReference Person { get; set; }
 
             //[CanBeNull]
@@ -52,7 +52,7 @@ namespace Database.Tables.ModularHouseholds {
         [CanBeNull] private LivingPatternTag _livingPatternTag;
         [CanBeNull] private  Person _person;
 
-        public ModularHouseholdPerson([CanBeNull]int? pID, [CanBeNull]int? modularHouseholdID, [NotNull] string name, [NotNull] string connectionString,
+        public ModularHouseholdPerson([CanBeNull]int? pID, [CanBeNull]int? modularHouseholdID, [JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] string connectionString,
             [CanBeNull] Person person, [CanBeNull] LivingPatternTag livingPatternTag, StrGuid guid ) : base(name, TableName, connectionString,
             guid) {
             _person = person;
@@ -65,11 +65,11 @@ namespace Database.Tables.ModularHouseholds {
         [CanBeNull]
         public int? ModularHouseholdID => _modularHouseholdID;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public new string Name => ToString();
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Person Person => _person ?? throw new InvalidOperationException();
         //[CanBeNull]
         //public TraitTag TraitTag => _traitTag;
@@ -93,10 +93,10 @@ namespace Database.Tables.ModularHouseholds {
             return string.Compare(Person.Name, other.Person.Name, StringComparison.Ordinal);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalse")]
-        private static ModularHouseholdPerson AssignFields([NotNull] DataReader dr, [NotNull] string connectionString,
-            bool ignoreMissingFields, [NotNull] AllItemCollections aic) {
+        private static ModularHouseholdPerson AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString,
+            bool ignoreMissingFields, [JetBrains.Annotations.NotNull] AllItemCollections aic) {
             var id = dr.GetIntFromLong("ID");
             var modularHouseholdID = dr.GetIntFromLong("ParentHouseholdID", false, ignoreMissingFields, -1);
             if (modularHouseholdID == -1 && ignoreMissingFields) {
@@ -128,10 +128,10 @@ namespace Database.Tables.ModularHouseholds {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<ModularHouseholdPerson> result,
-            [NotNull] string connectionString,
-            bool ignoreMissingTables, [ItemNotNull] [NotNull] ObservableCollection<Person> persons,
-            [NotNull] [ItemNotNull] ObservableCollection<TraitTag> traitTags, [NotNull][ItemNotNull] ObservableCollection<LivingPatternTag> livingPatternTags) {
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<ModularHouseholdPerson> result,
+            [JetBrains.Annotations.NotNull] string connectionString,
+            bool ignoreMissingTables, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Person> persons,
+            [JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<TraitTag> traitTags, [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<LivingPatternTag> livingPatternTags) {
             var aic = new AllItemCollections(persons: persons ,traitTags:traitTags, livingPatternTags:livingPatternTags);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }

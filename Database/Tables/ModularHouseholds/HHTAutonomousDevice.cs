@@ -109,7 +109,7 @@ namespace Database.Tables.ModularHouseholds {
 
         public HHTAutonomousDevice([CanBeNull]int? pID, [CanBeNull] IAssignableDevice device,
             [CanBeNull] TimeBasedProfile timeprofile, int householdTraitID, decimal timeStandardDeviation,
-            [CanBeNull] VLoadType vLoadType, [CanBeNull] TimeLimit timeLimit, [NotNull] string connectionString, [NotNull] string name,
+            [CanBeNull] VLoadType vLoadType, [CanBeNull] TimeLimit timeLimit, [JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.NotNull] string name,
             [CanBeNull] Location location, double variableValue, VariableCondition variableCondition,
             [CanBeNull] Variable variable, StrGuid guid) : base(name, TableName, connectionString, guid)
         {
@@ -155,7 +155,7 @@ namespace Database.Tables.ModularHouseholds {
         public Location Location => _location;
 
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public new string Name {
             get {
                 if(_device!= null) {
@@ -178,11 +178,11 @@ namespace Database.Tables.ModularHouseholds {
 
         public double Probability => 0;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalse")]
-        private static HHTAutonomousDevice AssignFields([NotNull] DataReader dr, [NotNull] string connectionString,
-            bool ignoreMissingFields, [NotNull] AllItemCollections aic)
+        private static HHTAutonomousDevice AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString,
+            bool ignoreMissingFields, [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var hhadID = dr.GetIntFromLong("ID");
             var deviceID = dr.GetIntFromLong("DeviceID");
@@ -277,12 +277,12 @@ namespace Database.Tables.ModularHouseholds {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<HHTAutonomousDevice> result, [NotNull] string connectionString,
-            [ItemNotNull] [NotNull] ObservableCollection<TimeBasedProfile> timeBasedProfiles, [ItemNotNull] [NotNull] ObservableCollection<RealDevice> realDevices,
-            [ItemNotNull] [NotNull] ObservableCollection<DeviceCategory> deviceCategories, [ItemNotNull] [NotNull] ObservableCollection<VLoadType> loadTypes,
-            [ItemNotNull] [NotNull] ObservableCollection<TimeLimit> timeLimits, bool ignoreMissingTables,
-            [ItemNotNull] [NotNull] ObservableCollection<Location> locations, [ItemNotNull] [NotNull] ObservableCollection<DeviceAction> deviceActions,
-            [ItemNotNull] [NotNull] ObservableCollection<DeviceActionGroup> deviceActionGroups, [ItemNotNull] [NotNull] ObservableCollection<Variable> variables)
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<HHTAutonomousDevice> result, [JetBrains.Annotations.NotNull] string connectionString,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TimeBasedProfile> timeBasedProfiles, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<RealDevice> realDevices,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceCategory> deviceCategories, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<VLoadType> loadTypes,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TimeLimit> timeLimits, bool ignoreMissingTables,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Location> locations, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceAction> deviceActions,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceActionGroup> deviceActionGroups, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Variable> variables)
         {
             var aic = new AllItemCollections(timeProfiles: timeBasedProfiles, realDevices: realDevices,
                 deviceCategories: deviceCategories, loadTypes: loadTypes, locations: locations, timeLimits: timeLimits,

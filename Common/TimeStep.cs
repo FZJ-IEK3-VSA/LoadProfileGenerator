@@ -12,7 +12,7 @@ namespace Common {
         {
         }
 
-        public TimeStep(int internalstep, [NotNull] CalcParameters parameters)
+        public TimeStep(int internalstep, [JetBrains.Annotations.NotNull] CalcParameters parameters)
         {
             InternalStep = internalstep;
             ShowSettling = parameters.ShowSettlingPeriodTime;
@@ -76,7 +76,7 @@ namespace Common {
             return InternalStep == other.InternalStep;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public TimeStep AddSteps(int i)
         {
             var ts = new TimeStep(i + InternalStep, DummyCalcSteps, ShowSettling);
@@ -105,14 +105,14 @@ namespace Common {
         }
 
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public TimeStep GetAbsoluteStep(int i) => new TimeStep(i, DummyCalcSteps, ShowSettling);
 
         // ReSharper disable once ConditionIsAlwaysTrueOrFalse
         [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
         public override int GetHashCode() => InternalStep.GetHashCode();
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static TimeStep operator +([CanBeNull] TimeStep k1, [CanBeNull] TimeStep k2)
         {
             if (k1 is null) {
@@ -173,7 +173,7 @@ namespace Common {
             return k1.InternalStep >= k2.InternalStep;
         }
 
-        public static bool operator !=([NotNull] TimeStep k1, [NotNull] TimeStep k2) => !(k1 == k2);
+        public static bool operator !=([JetBrains.Annotations.NotNull] TimeStep k1, [JetBrains.Annotations.NotNull] TimeStep k2) => !(k1 == k2);
 
         public static bool operator <([CanBeNull] TimeStep k1, [CanBeNull] TimeStep k2)
         {
@@ -205,7 +205,7 @@ namespace Common {
             return k1.InternalStep <= k2.InternalStep;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static TimeStep operator -([CanBeNull] TimeStep k1, [CanBeNull] TimeStep k2)
         {
             if (k1 is null) {
@@ -219,16 +219,16 @@ namespace Common {
             return new TimeStep(k1.InternalStep - k2.InternalStep, k1.DummyCalcSteps, k1.ShowSettling);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public override string ToString() => "Internal: " + InternalStep + " External:  " + ExternalStep + (DisplayThisStep ? "(D)" : "()");
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static TimeStep Add(TimeStep left, TimeStep right)
         {
             return left + right;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static TimeStep Subtract(TimeStep left, TimeStep right)
         {
             return left - right;

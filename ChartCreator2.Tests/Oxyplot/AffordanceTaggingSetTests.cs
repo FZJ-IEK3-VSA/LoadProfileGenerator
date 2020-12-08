@@ -6,8 +6,6 @@ using Common;
 using Common.Tests;
 using Database.Database;
 using FluentAssertions;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -66,7 +64,7 @@ namespace ChartCreator2.Tests.Oxyplot {
             aeupp.MakePlot(rfe, "affordance tagging set", di);
             Logger.Debug("finished picture");
         }*/
-        public AffordanceTaggingSetTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public AffordanceTaggingSetTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

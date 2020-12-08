@@ -11,7 +11,7 @@ namespace LoadProfileGenerator
 {
     public interface IWindowWithDialog
     {
-        MessageBoxResult ShowMessageWindow([NotNull] string txt, [NotNull] string caption, MessageBoxButton button, MessageBoxImage image,
+        MessageBoxResult ShowMessageWindow([JetBrains.Annotations.NotNull] string txt, [JetBrains.Annotations.NotNull] string caption, MessageBoxButton button, MessageBoxImage image,
                                            MessageBoxResult defaultresult);
     }
     public class WpfMsgWindows : IMessageWindow
@@ -50,7 +50,7 @@ namespace LoadProfileGenerator
                     try
                     {
                         ErrorReporter er = new ErrorReporter();
-                        er.Run(exception.Message, exception.StackTrace);
+                        er.Run(exception.Message, exception?.StackTrace ?? "No Stacktrace");
                     }
                     catch (Exception ex2)
                     {
@@ -96,7 +96,7 @@ namespace LoadProfileGenerator
                     MessageBoxResult.OK);
             }
 
-            private MessageBoxResult ShowMessageBox([NotNull] string message, [NotNull] string caption, MessageBoxButton button,
+            private MessageBoxResult ShowMessageBox([JetBrains.Annotations.NotNull] string message, [JetBrains.Annotations.NotNull] string caption, MessageBoxButton button,
                 MessageBoxImage image, MessageBoxResult result)
             {
                 Logger.Warning(message);

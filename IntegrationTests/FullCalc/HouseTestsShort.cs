@@ -1,7 +1,5 @@
 ﻿using Automation;
 using Common.Tests;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -187,7 +185,7 @@ namespace IntegrationTests.FullCalc {
             FullCalculationStarter.StartHouse(28);
         }
 
-        public HouseTestsShort([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public HouseTestsShort([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

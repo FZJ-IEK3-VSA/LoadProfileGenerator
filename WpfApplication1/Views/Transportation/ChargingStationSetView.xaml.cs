@@ -17,7 +17,7 @@ namespace LoadProfileGenerator.Views.Transportation {
             InitializeComponent();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private ChargingStationSetPresenter Presenter => (ChargingStationSetPresenter) DataContext;
 
         private void CloseClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e) => Presenter.Close(true);
@@ -26,7 +26,7 @@ namespace LoadProfileGenerator.Views.Transportation {
             Presenter.AskDeleteQuestion(
                 Presenter.ThisChargingStationSet.Name, Presenter.Delete);
 
-        private void AddChargingStation([NotNull] object sender, [NotNull] RoutedEventArgs e)
+        private void AddChargingStation([JetBrains.Annotations.NotNull] object sender, [JetBrains.Annotations.NotNull] RoutedEventArgs e)
         {
             if ((CmbDeviceCategories.SelectedItem == null)|| !(CmbDeviceCategories.SelectedItem is TransportationDeviceCategory devcat))
             {
@@ -64,7 +64,7 @@ namespace LoadProfileGenerator.Views.Transportation {
                 carloadType,maxcharging,site,gridloadType);
         }
 
-        private void BtnRemoveChargingStationClick([NotNull] object sender, [NotNull] RoutedEventArgs e)
+        private void BtnRemoveChargingStationClick([JetBrains.Annotations.NotNull] object sender, [JetBrains.Annotations.NotNull] RoutedEventArgs e)
         {
             if (LstChargingStations.SelectedItem == null) {
                 Logger.Error("Please select a charging station to delete first!");

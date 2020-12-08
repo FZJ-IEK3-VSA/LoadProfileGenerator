@@ -56,7 +56,7 @@ namespace LoadProfileGenerator.Views.Households {
             InitializeComponent();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private HouseholdTraitPresenter Presenter => (HouseholdTraitPresenter)DataContext;
 
         private void AddNewTagClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
@@ -326,7 +326,7 @@ namespace LoadProfileGenerator.Views.Households {
         }
 
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        private static bool CheckCombobox([CanBeNull] object box, [NotNull] string s)
+        private static bool CheckCombobox([CanBeNull] object box, [JetBrains.Annotations.NotNull] string s)
         {
             if (box == null) {
                 Logger.Error("Please select a " + s + " to continue");
@@ -518,7 +518,7 @@ namespace LoadProfileGenerator.Views.Households {
         }
 
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        private void AutoDevs_OnOnRemovedDevice([NotNull] object sender, [NotNull] DeviceSelectorControl.DeviceRemovedEventArgs e)
+        private void AutoDevs_OnOnRemovedDevice([JetBrains.Annotations.NotNull] object sender, [JetBrains.Annotations.NotNull] DeviceSelectorControl.DeviceRemovedEventArgs e)
         {
             if (!(e.ItemToRemove is HHTAutonomousDevice ad)) {
                 Logger.Error("Could not remove autonomous device.");

@@ -91,7 +91,7 @@ namespace Database {
         [CanBeNull] private DeviceCategory _dcnone;
 
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
-        public Simulator([NotNull] string connectionString, bool ignoreMissingTables = false) {
+        public Simulator([JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingTables = false) {
             ConnectionString = connectionString;
             MyGeneralConfig = new GeneralConfig(ConnectionString);
             CategoryOrDevice.Add("Device");
@@ -218,163 +218,163 @@ namespace Database {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CategoryAffordance Affordances { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CategoryDBBase<AffordanceTaggingSet> AffordanceTaggingSets { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CategoryOutcome CalculationOutcomes { get; }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<object> Categories { get; }
 
         [UsedImplicitly]
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<string> CategoryOrDevice { get; } = new ObservableCollection<string>();
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string ConnectionString { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CategoryDBBase<DateBasedProfile> DateBasedProfiles { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CategoryDBBase<Desire> Desires { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CategoryDBBase<DeviceActionGroup> DeviceActionGroups { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CategoryDBBase<DeviceAction> DeviceActions { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CategoryDeviceCategory DeviceCategories { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CategoryDBBase<DeviceSelection> DeviceSelections { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CategoryDBBase<DeviceTaggingSet> DeviceTaggingSets { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CategoryDBBase<EnergyStorage> EnergyStorages { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CategoryDBBase<Generator> Generators { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CategoryDBBase<GeographicLocation> GeographicLocations { get; }
 
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CategoryDBBase<Holiday> Holidays { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CategoryDBBase<HouseholdPlan> HouseholdPlans { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CategoryDBBase<HouseholdTag> HouseholdTags { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CategoryDBBase<HouseholdTemplate> HouseholdTemplates { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CategoryDBBase<HouseholdTrait> HouseholdTraits { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CategoryDBBase<House> Houses { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CategoryDBBase<HouseType> HouseTypes { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public CategoryDBBase<VLoadType> LoadTypes { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CategoryDBBase<Location> Locations { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CategoryDBBase<ModularHousehold> ModularHouseholds { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public GeneralConfig MyGeneralConfig { get; private set; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CategoryDBBase<Person> Persons { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CategoryDBBase<RealDevice> RealDevices { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CategorySettlement Settlements { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CategoryDBBase<SettlementTemplate> SettlementTemplates { get; }
 
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CategoryDBBase<Site> Sites { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CategoryDBBase<SubAffordance> SubAffordances { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CategoryDBBase<TemperatureProfile> TemperatureProfiles { get; }
 
-        //[NotNull]
+        //[JetBrains.Annotations.NotNull]
         //public CategoryDBBase<TemplatePerson> TemplatePersons { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CategoryDBBase<TimeLimit> TimeLimits { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CategoryDBBase<TimeBasedProfile> Timeprofiles { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CategoryDBBase<TraitTag> TraitTags { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CategoryDBBase<TransformationDevice> TransformationDevices { get; }
 
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CategoryDBBase<TransportationDeviceCategory> TransportationDeviceCategories { get; }
 
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CategoryDBBase<TransportationDevice> TransportationDevices { get; }
 
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CategoryDBBase<TransportationDeviceSet> TransportationDeviceSets { get; }
 
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CategoryDBBase<TravelRoute> TravelRoutes { get; }
 
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CategoryDBBase<ChargingStationSet> ChargingStationSets { get; }
 
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CategoryDBBase<TravelRouteSet> TravelRouteSets { get; }
 
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CategoryDBBase<Vacation> Vacations { get; }
 
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CategoryDBBase<Variable> Variables { get; }
 
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CategoryDBBase<LivingPatternTag> LivingPatternTags { get; }
 
 
@@ -459,7 +459,7 @@ namespace Database {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private List<LoadingEntry> GetLoadingActions(bool ignoreMissingTables) {
             var actions = new List<LoadingEntry>
@@ -691,13 +691,13 @@ namespace Database {
                     }
                 }
                 else {
-                    Logger.Info(category.ToString());
+                    Logger.Info(category?.ToString() ?? "No message");
                 }
             }
             DBBase.IsLoading = false;
         }
 
-        private static void LogLoadingProgress(ref DateTime lasttime, ref int step, [NotNull] string description) {
+        private static void LogLoadingProgress(ref DateTime lasttime, ref int step, [JetBrains.Annotations.NotNull] string description) {
             var now = DateTime.Now;
             Logger.Debug("Loaded " + description + " (Part " + step + ")  in " +
                          (now - lasttime).TotalMilliseconds.ToString("0", CultureInfo.CurrentCulture) +
@@ -707,17 +707,17 @@ namespace Database {
         }
 
         private class LoadingEntry {
-            public LoadingEntry([NotNull] string name, [NotNull] Action action, [CanBeNull] dynamic categoryDBBase) {
+            public LoadingEntry([JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] Action action, [CanBeNull] dynamic categoryDBBase) {
                 Action = action;
                 CategoryDBBase = categoryDBBase;
                 Name = name;
             }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public Action Action { get; }
             [CanBeNull]
             public dynamic CategoryDBBase { get; }
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string Name { get; }
         }
     }

@@ -16,7 +16,7 @@ namespace LoadProfileGenerator.Views.Transportation {
             InitializeComponent();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private TransportationDeviceCategoryPresenter Presenter => (TransportationDeviceCategoryPresenter) DataContext;
 
         private void BtnRefreshUsedIn_Click([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)

@@ -35,9 +35,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Threading;
+using System.Threading;
 using Automation;
 using Automation.ResultFiles;
 using CalculationController.Queue;
@@ -81,8 +80,8 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         }
     }
     public class CalculationPresenter : PresenterBaseWithAppPresenter<CalculateView> {
-        [NotNull] private readonly ApplicationPresenter _applicationPresenter;
-        [NotNull] private readonly EnergyIntensityConverter _eic = new EnergyIntensityConverter();
+        [JetBrains.Annotations.NotNull] private readonly ApplicationPresenter _applicationPresenter;
+        [JetBrains.Annotations.NotNull] private readonly EnergyIntensityConverter _eic = new EnergyIntensityConverter();
 
         [CanBeNull] private string _dstPath;
         private bool _calculateTransportation;
@@ -102,7 +101,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
 
             set => Sim.MyGeneralConfig.EnableIdlemodeBool = value;
         }
-        public CalculationPresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] CalculateView view) : base(view, "Headerstring", applicationPresenter)
+        public CalculationPresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] CalculateView view) : base(view, "Headerstring", applicationPresenter)
         {
             CalcObjects = new ObservableCollection<ICalcObject>();
             _applicationPresenter = applicationPresenter;
@@ -141,21 +140,21 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<ICalcObject> CalcObjects { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public Dictionary<CalcObjectType, string> CalcObjectTypes => CalcObjectTypeHelper.CalcObjectTypeEnumDictionary;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<ChargingStationSet> ChargingStationSets => Sim.ChargingStationSets.Items;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<string> DefaultTimeSteps { get; }
 
@@ -187,11 +186,11 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<EnergyIntensityConverter.EnergyIntensityForDisplay> EnergyIntensities => _eic.All;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public EnergyIntensityConverter.EnergyIntensityForDisplay EnergyIntensity {
             get => _eic.GetAllDisplayElement(Sim.MyGeneralConfig.SelectedEnergyIntensity);
@@ -201,7 +200,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string ExternalTimeResolution {
             get => Sim.MyGeneralConfig.ExternalTimeResolution;
@@ -212,11 +211,11 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<string> ExternalTimeSteps { get; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public GeneralConfig GConfig => Sim.MyGeneralConfig;
 
@@ -246,15 +245,15 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<GeographicLocation> GeographicLocations => Sim.GeographicLocations.Items;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string Headerstring => "Calculation";
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string InternalTimeResolution {
             get => Sim.MyGeneralConfig.InternalTimeResolution;
@@ -305,7 +304,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         [UsedImplicitly]
         public bool IsNotInCalc => !IsInCalc;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public Dictionary<LoadTypePriority, string> LoadTypePriorities => LoadTypePriorityHelper.LoadTypePriorityDictionaryAll;
 
@@ -322,7 +321,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         [CanBeNull]
         public string NameForJsonExportOutputDirectory { get; set; } = "My Export";
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string RandomSeed {
             get {
@@ -456,21 +455,21 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<TemperatureProfile> TemperatureProfiles => Sim.TemperatureProfiles.Items;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public GeneralConfig ThisConfig => Sim.MyGeneralConfig;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<TransportationDeviceSet> TransportationDeviceSets => Sim.TransportationDeviceSets.Items;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<TravelRouteSet> TravelRouteSets => Sim.TravelRouteSets.Items;
 
@@ -603,14 +602,15 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             //_calculationProfiler.Clear();
 #pragma warning disable S2930 // "IDisposables" should be disposed
 #pragma warning disable CC0022 // Should dispose object
-            var task1 = new Task(() => cs.Start(csps));
+            var task1 = new Thread(() => cs.Start(csps));
 #pragma warning restore CC0022 // Should dispose object
 #pragma warning restore S2930 // "IDisposables" should be disposed
+            task1.Name = "MainThread";
             task1.Start();
         }
 
-        [NotNull]
-        public string WriteCalculationJsonSpecForCommandLine([NotNull] string resultpath)
+        [JetBrains.Annotations.NotNull]
+        public string WriteCalculationJsonSpecForCommandLine([JetBrains.Annotations.NotNull] string resultpath)
         {
             if (SelectedCalcObject == null) {
                 const string s = "Nothing selected to calculate";
@@ -741,7 +741,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         }
 
         [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalse")]
-        private bool ReportFinishHouse(bool everythingOk, [NotNull] string name, [ItemNotNull] [NotNull] ObservableCollection<ResultFileEntry> rfes)
+        private bool ReportFinishHouse(bool everythingOk, [JetBrains.Annotations.NotNull] string name, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<ResultFileEntry> rfes)
         {
             if (everythingOk) {
                 throw new LPGException("Show house results");
@@ -754,7 +754,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             return everythingOk;
         }
 
-        private bool ReportFinishHousehold(bool everythingOk, [NotNull] string name, [NotNull] string resultPath)
+        private bool ReportFinishHousehold(bool everythingOk, [JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] string resultPath)
         {
             if (everythingOk) {
                 var rp = new ResultPresenter(_applicationPresenter, new ResultView(), name, resultPath);

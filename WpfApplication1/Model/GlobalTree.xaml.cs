@@ -45,12 +45,12 @@ namespace LoadProfileGenerator.Model {
             InitializeComponent();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private ApplicationPresenter Presenter => (ApplicationPresenter) DataContext;
 
         public void SelectItem([CanBeNull] object toSelect, bool expand) => GlobalTreeA.SelectItem(toSelect, expand);
 
-        private void MyTreeViewMouseDoubleClick([CanBeNull] object sender, [NotNull] MouseButtonEventArgs e)
+        private void MyTreeViewMouseDoubleClick([CanBeNull] object sender, [JetBrains.Annotations.NotNull] MouseButtonEventArgs e)
         {
             if (sender is TreeView ti) {
                 Presenter.OpenItem(ti.SelectedItem);

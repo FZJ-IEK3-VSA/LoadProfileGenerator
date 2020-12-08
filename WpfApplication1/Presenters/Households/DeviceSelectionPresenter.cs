@@ -45,7 +45,7 @@ namespace LoadProfileGenerator.Presenters.Households {
     }
 
     public class DeviceSelectionPresenter : PresenterBaseDBBase<DeviceSelectionView> {
-        [NotNull] private readonly DeviceSelection _deviceSelection;
+        [JetBrains.Annotations.NotNull] private readonly DeviceSelection _deviceSelection;
 
         [CanBeNull] private RealDevice _selectedDevice;
 
@@ -59,15 +59,15 @@ namespace LoadProfileGenerator.Presenters.Households {
 
         private SelectionSource _selectionSource;
 
-        public DeviceSelectionPresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] DeviceSelectionView view,
-            [NotNull] DeviceSelection deviceSelection) : base(view, "ThisDeviceSelection.HeaderString", deviceSelection,
+        public DeviceSelectionPresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] DeviceSelectionView view,
+            [JetBrains.Annotations.NotNull] DeviceSelection deviceSelection) : base(view, "ThisDeviceSelection.HeaderString", deviceSelection,
             applicationPresenter)
         {
             _deviceSelection = deviceSelection;
             RefreshDeviceCategoriesAndGroups();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string DeviceActionEnergyEnergy {
             get {
@@ -114,7 +114,7 @@ namespace LoadProfileGenerator.Presenters.Households {
         public ObservableCollection<RealDevice> DevicesInCategory => _selectedDeviceCategory?.SubDevices;
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<ModularHousehold> ModularHouseholds => Sim.ModularHouseholds.Items;
 
@@ -203,16 +203,16 @@ namespace LoadProfileGenerator.Presenters.Households {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public DeviceSelection ThisDeviceSelection => _deviceSelection;
 
-        public void AddAction([NotNull] DeviceActionGroup dag, [NotNull] DeviceAction da)
+        public void AddAction([JetBrains.Annotations.NotNull] DeviceActionGroup dag, [JetBrains.Annotations.NotNull] DeviceAction da)
         {
             ThisDeviceSelection.AddAction(dag, da);
             RefreshDeviceCategoriesAndGroups();
         }
 
-        public void AddItem([NotNull] DeviceCategory dc, [NotNull] RealDevice rd)
+        public void AddItem([JetBrains.Annotations.NotNull] DeviceCategory dc, [JetBrains.Annotations.NotNull] RealDevice rd)
         {
             ThisDeviceSelection.AddItem(dc, rd);
             RefreshDeviceCategoriesAndGroups();
@@ -224,12 +224,12 @@ namespace LoadProfileGenerator.Presenters.Households {
             Close(false);
         }
 
-        public void DeleteAction([NotNull] DeviceSelectionDeviceAction dsi)
+        public void DeleteAction([JetBrains.Annotations.NotNull] DeviceSelectionDeviceAction dsi)
         {
             _deviceSelection.DeleteActionFromDB(dsi);
         }
 
-        public void DeleteItem([NotNull] DeviceSelectionItem item)
+        public void DeleteItem([JetBrains.Annotations.NotNull] DeviceSelectionItem item)
         {
             _deviceSelection.DeleteItemFromDB(item);
         }

@@ -41,7 +41,7 @@
 //            }
 //        }
 
-//        public TemplatePersonPresenterTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+//        public TemplatePersonPresenterTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
 //        {
 //        }
 //    }

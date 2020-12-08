@@ -40,27 +40,27 @@ using JetBrains.Annotations;
 
 namespace CalculationEngine.OnlineLogging {
     public class EnergyStorageLogfile : LogfileBase, IDisposable {
-        [NotNull] private readonly CalcParameters _calcParameters;
+        [JetBrains.Annotations.NotNull] private readonly CalcParameters _calcParameters;
 
-        [NotNull] private readonly Dictionary<string, int> _energyStorageColumns = new Dictionary<string, int>();
+        [JetBrains.Annotations.NotNull] private readonly Dictionary<string, int> _energyStorageColumns = new Dictionary<string, int>();
 
-        [NotNull] private readonly Dictionary<string, EnergyStorageHeaderEntry> _energyStorageHeaders =
+        [JetBrains.Annotations.NotNull] private readonly Dictionary<string, EnergyStorageHeaderEntry> _energyStorageHeaders =
             new Dictionary<string, EnergyStorageHeaderEntry>();
 
-        [NotNull] private readonly FileFactoryAndTracker _fft;
+        [JetBrains.Annotations.NotNull] private readonly FileFactoryAndTracker _fft;
 
         private EnergyStorageEntry? _currentEntry;
 
-        [NotNull] private TimeStep _currentTimeStep = new TimeStep(-1,0,false);
+        [JetBrains.Annotations.NotNull] private TimeStep _currentTimeStep = new TimeStep(-1,0,false);
 
         private StreamWriter? _energyStoragesSw;
 
         private bool _writeHeader;
 
-        [NotNull] private readonly DateStampCreator _dsc;
+        [JetBrains.Annotations.NotNull] private readonly DateStampCreator _dsc;
 
         [UsedImplicitly]
-        public EnergyStorageLogfile([NotNull] CalcParameters calcParameters, [NotNull] FileFactoryAndTracker fft)
+        public EnergyStorageLogfile([JetBrains.Annotations.NotNull] CalcParameters calcParameters, [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft)
         {
             _fft = fft;
             _calcParameters = calcParameters;
@@ -69,7 +69,7 @@ namespace CalculationEngine.OnlineLogging {
             //_makeLogFile = _calcParameters.IsSet(CalcOption.EnergyStorageFile)
         }
         /*
-        public EnergyStorageLogfile([NotNull] FileFactoryAndTracker fft, bool displayNegativeTime,
+        public EnergyStorageLogfile([JetBrains.Annotations.NotNull] FileFactoryAndTracker fft, bool displayNegativeTime,
                                     CalcParameters calcParameters)
         {
             _fft = fft;
@@ -78,7 +78,7 @@ namespace CalculationEngine.OnlineLogging {
             _calcParameters = calcParameters;
         }*/
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Dictionary<string, int> EnergyStorageColumnDict => _energyStorageColumns;
 
         public void Dispose()
@@ -86,7 +86,7 @@ namespace CalculationEngine.OnlineLogging {
             _energyStoragesSw?.Close();
         }
 
-        public void RegisterStorage([NotNull] string name, [NotNull] EnergyStorageHeaderEntry eslf)
+        public void RegisterStorage([JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] EnergyStorageHeaderEntry eslf)
         {
             var i = EnergyStorageColumnDict.Count;
             if (!EnergyStorageColumnDict.ContainsKey(name)) {
@@ -95,8 +95,8 @@ namespace CalculationEngine.OnlineLogging {
             }
         }
 
-        public void SetValue([NotNull] string name, double value, [NotNull] TimeStep timestep, [NotNull] HouseholdKey householdKey,
-                             [NotNull] CalcLoadTypeDto loadType)
+        public void SetValue([JetBrains.Annotations.NotNull] string name, double value, [JetBrains.Annotations.NotNull] TimeStep timestep, [JetBrains.Annotations.NotNull] HouseholdKey householdKey,
+                             [JetBrains.Annotations.NotNull] CalcLoadTypeDto loadType)
         {
             if (timestep != _currentTimeStep) {
                 if (_currentEntry != null) {
@@ -114,7 +114,7 @@ namespace CalculationEngine.OnlineLogging {
             _currentEntry.AddValue(name, value * loadType.ConversionFactor);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private string GetHeader()
         {
             var s = new StringBuilder();
@@ -125,7 +125,7 @@ namespace CalculationEngine.OnlineLogging {
             return s.ToString();
         }
 
-        private void WriteEntry([NotNull] EnergyStorageEntry e, [NotNull] HouseholdKey householdKey)
+        private void WriteEntry([JetBrains.Annotations.NotNull] EnergyStorageEntry e, [JetBrains.Annotations.NotNull] HouseholdKey householdKey)
         {
             if (_writeHeader) {
                 _energyStoragesSw = _fft.MakeFile<StreamWriter>("EnergyStorages.csv", "Energy storage values", true,

@@ -9,7 +9,7 @@ using SimulationEngineLib.SettlementCalculation;
 
 namespace SimulationEngineLib.Calculation {
     public static class HouseholdDefinitionImporter {
-        public static void ImportHouseholdDefinition([NotNull] HouseholdDefinitionImporterOptions o, [NotNull] string connectionString) {
+        public static void ImportHouseholdDefinition([JetBrains.Annotations.NotNull] HouseholdDefinitionImporterOptions o, [JetBrains.Annotations.NotNull] string connectionString) {
             var sim = new Simulator(connectionString);
             try {
                 var sett = ModularHouseholdSerializer.ImportFromCSV(o.File, sim);

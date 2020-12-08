@@ -69,9 +69,9 @@ namespace CalculationController.CalcFactories
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         [SuppressMessage("Microsoft.Reliability", "CA2000:Objekte verwerfen, bevor Bereich verloren geht")]
         [SuppressMessage("ReSharper", "ThrowingSystemException")]
-        [NotNull]
-        public CalcManager GetCalcManager([NotNull] Simulator sim,
-                [NotNull] CalcStartParameterSet csps,  bool forceRandom)
+        [JetBrains.Annotations.NotNull]
+        public CalcManager GetCalcManager([JetBrains.Annotations.NotNull] Simulator sim,
+                [JetBrains.Annotations.NotNull] CalcStartParameterSet csps,  bool forceRandom)
             //, ICalcObject hh,
             //bool forceRandom, TemperatureProfile temperatureProfile,
             //GeographicLocation geographicLocation, EnergyIntensityType energyIntensity,
@@ -189,12 +189,12 @@ namespace CalculationController.CalcFactories
             }
         }
 
-        [NotNull]
-        private static CalcRepo PrepareCalculation([NotNull] Simulator sim, [NotNull] CalcStartParameterSet csps,
-                                                   [NotNull] ILifetimeScope scope,
-                                                   [NotNull] out CalcLoadTypeDtoDictionary dtoltdict,
-                                                   [NotNull] out DayLightStatus dls,
-                                                   [NotNull] out CalcVariableRepository variableRepository
+        [JetBrains.Annotations.NotNull]
+        private static CalcRepo PrepareCalculation([JetBrains.Annotations.NotNull] Simulator sim, [JetBrains.Annotations.NotNull] CalcStartParameterSet csps,
+                                                   [JetBrains.Annotations.NotNull] ILifetimeScope scope,
+                                                   [JetBrains.Annotations.NotNull] out CalcLoadTypeDtoDictionary dtoltdict,
+                                                   [JetBrains.Annotations.NotNull] out DayLightStatus dls,
+                                                   [JetBrains.Annotations.NotNull] out CalcVariableRepository variableRepository
                                                    )
         {
             CalcRepo calcRepo = scope.Resolve<CalcRepo>();
@@ -220,7 +220,7 @@ namespace CalculationController.CalcFactories
         }
 
         [CanBeNull]
-        private static DeviceSelection GetDeviceSelection([NotNull] CalcStartParameterSet csps, [NotNull] ICalcObject hh, [CanBeNull] ModularHousehold chh)
+        private static DeviceSelection GetDeviceSelection([JetBrains.Annotations.NotNull] CalcStartParameterSet csps, [JetBrains.Annotations.NotNull] ICalcObject hh, [CanBeNull] ModularHousehold chh)
         {
 // device selection
             DeviceSelection ds = null;
@@ -247,12 +247,12 @@ namespace CalculationController.CalcFactories
             return ds;
         }
 
-        [NotNull]
-        private static ICalcAbleObject MakeCalcHouseObject([NotNull] Simulator sim,
-                                                           [NotNull] CalcStartParameterSet csps, [NotNull] ICalcObject hh,
-                                                      [NotNull] ILifetimeScope scope,
-                                                      [NotNull] CalcVariableDtoFactory cvrdto, [NotNull] CalcVariableRepository variableRepository,
-                                                      out CalcObjectType cot, [NotNull] CalcRepo calcRepo)
+        [JetBrains.Annotations.NotNull]
+        private static ICalcAbleObject MakeCalcHouseObject([JetBrains.Annotations.NotNull] Simulator sim,
+                                                           [JetBrains.Annotations.NotNull] CalcStartParameterSet csps, [JetBrains.Annotations.NotNull] ICalcObject hh,
+                                                      [JetBrains.Annotations.NotNull] ILifetimeScope scope,
+                                                      [JetBrains.Annotations.NotNull] CalcVariableDtoFactory cvrdto, [JetBrains.Annotations.NotNull] CalcVariableRepository variableRepository,
+                                                      out CalcObjectType cot, [JetBrains.Annotations.NotNull] CalcRepo calcRepo)
         {
             var house =(House) hh;
             calcRepo.FileFactoryAndTracker.RegisterHousehold(Constants.HouseKey, "House Infrastructure",
@@ -280,13 +280,13 @@ namespace CalculationController.CalcFactories
             return ch;
         }
 
-        [NotNull]
-        private static ICalcAbleObject MakeCalcHouseholdObject([NotNull] Simulator sim, [NotNull] CalcStartParameterSet csps, [NotNull] ICalcObject hh,
-                                                          [NotNull] ILifetimeScope scope,
-                                                          [NotNull] CalcVariableDtoFactory cvrdto,
-                                                          [NotNull] CalcVariableRepository variableRepository,
+        [JetBrains.Annotations.NotNull]
+        private static ICalcAbleObject MakeCalcHouseholdObject([JetBrains.Annotations.NotNull] Simulator sim, [JetBrains.Annotations.NotNull] CalcStartParameterSet csps, [JetBrains.Annotations.NotNull] ICalcObject hh,
+                                                          [JetBrains.Annotations.NotNull] ILifetimeScope scope,
+                                                          [JetBrains.Annotations.NotNull] CalcVariableDtoFactory cvrdto,
+                                                          [JetBrains.Annotations.NotNull] CalcVariableRepository variableRepository,
                                                                out CalcObjectType cot,
-                                                               [NotNull] CalcRepo calcRepo)
+                                                               [JetBrains.Annotations.NotNull] CalcRepo calcRepo)
         {
             var cmhdf = scope.Resolve<CalcModularHouseholdDtoFactory>();
             HouseholdKey householdKey = new HouseholdKey("HH1");
@@ -310,8 +310,8 @@ namespace CalculationController.CalcFactories
             return ch;
         }
 
-        private void RegisterEverything([NotNull] Simulator sim, [NotNull] string resultpath, [NotNull] CalcStartParameterSet csps, [NotNull] ICalcObject hh,
-                                          [NotNull] ContainerBuilder builder, [NotNull] string sqlFileName, [NotNull] CalcParameters calcParameters,
+        private void RegisterEverything([JetBrains.Annotations.NotNull] Simulator sim, [JetBrains.Annotations.NotNull] string resultpath, [JetBrains.Annotations.NotNull] CalcStartParameterSet csps, [JetBrains.Annotations.NotNull] ICalcObject hh,
+                                          [JetBrains.Annotations.NotNull] ContainerBuilder builder, [JetBrains.Annotations.NotNull] string sqlFileName, [JetBrains.Annotations.NotNull] CalcParameters calcParameters,
                                           [CanBeNull] DeviceSelection ds)
         {
             builder.Register(c => new SqlResultLoggingService(sqlFileName)).As<SqlResultLoggingService>()
@@ -414,7 +414,7 @@ namespace CalculationController.CalcFactories
                 new List<VacationTimeframe>(), hh.Name, calcParameters)).As<DayLightStatus>().SingleInstance();
         }
 
-        private static void RegisterAllDtoVariables([NotNull] CalcVariableDtoFactory cvrdto, [NotNull] CalcVariableRepository variableRepository)
+        private static void RegisterAllDtoVariables([JetBrains.Annotations.NotNull] CalcVariableDtoFactory cvrdto, [JetBrains.Annotations.NotNull] CalcVariableRepository variableRepository)
         {
             foreach (var v in cvrdto.GetAllVariableDtos()) {
                 variableRepository.RegisterVariable(new CalcVariable(v.Name, v.Guid, v.Value, v.LocationName,
@@ -451,9 +451,9 @@ namespace CalculationController.CalcFactories
             }
         }*/
 
-        [NotNull]
-        private DayLightStatus MakeLightNeededArray([NotNull] GeographicLocation geographicLocation, [NotNull] TemperatureProfile tp,
-            [NotNull] Random r, [NotNull][ItemNotNull] List<VacationTimeframe> vacations, [NotNull] string householdname, [NotNull] CalcParameters calcParameters)
+        [JetBrains.Annotations.NotNull]
+        private DayLightStatus MakeLightNeededArray([JetBrains.Annotations.NotNull] GeographicLocation geographicLocation, [JetBrains.Annotations.NotNull] TemperatureProfile tp,
+            [JetBrains.Annotations.NotNull] Random r, [JetBrains.Annotations.NotNull][ItemNotNull] List<VacationTimeframe> vacations, [JetBrains.Annotations.NotNull] string householdname, [JetBrains.Annotations.NotNull] CalcParameters calcParameters)
         {
             if (geographicLocation.LightTimeLimit == null) {
                 throw new DataIntegrityException("Geographic Location has no definition for the light time",

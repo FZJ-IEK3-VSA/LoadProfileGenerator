@@ -1,22 +1,21 @@
 ﻿using System;
 using System.Text;
 using Common.JSON;
-using JetBrains.Annotations;
 
 namespace Common.SQLResultLogging
 {
     public class DateStampCreator {
         //TODO: clean up this class thoroughly and eliminate the duplicates
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly CalcParameters _calcParameters;
 
-        public DateStampCreator([NotNull] CalcParameters calcParameters)
+        public DateStampCreator([JetBrains.Annotations.NotNull] CalcParameters calcParameters)
         {
             _calcParameters = calcParameters;
         }
 
-        [NotNull]
-        public string MakeDateStringFromTimeStep([NotNull] TimeStep time)
+        [JetBrains.Annotations.NotNull]
+        public string MakeDateStringFromTimeStep([JetBrains.Annotations.NotNull] TimeStep time)
         {
             var totalsecondsPerStep = _calcParameters.InternalStepsize.TotalSeconds;
             var totalseconds = (int)(time.ExternalStep * totalsecondsPerStep);
@@ -26,7 +25,7 @@ namespace Common.SQLResultLogging
         }
         // gets the external date from a external time step
         // this ignores the settling period
-        public DateTime MakeDateFromTimeStep([NotNull] TimeStep time)
+        public DateTime MakeDateFromTimeStep([JetBrains.Annotations.NotNull] TimeStep time)
         {
             var totalsecondsPerStep = _calcParameters.InternalStepsize.TotalSeconds;
             var totalseconds = (int)(time.ExternalStep * totalsecondsPerStep);
@@ -34,8 +33,8 @@ namespace Common.SQLResultLogging
             return _calcParameters.OfficialStartTime + ts;
         }
 
-        [NotNull]
-        public string MakeDateStringFromTimeStep([NotNull] TimeStep time, [NotNull] out string weekdayname)
+        [JetBrains.Annotations.NotNull]
+        public string MakeDateStringFromTimeStep([JetBrains.Annotations.NotNull] TimeStep time, [JetBrains.Annotations.NotNull] out string weekdayname)
         {
             var totalsecondsPerStep = _calcParameters.InternalStepsize.TotalSeconds;
             var totalseconds = (int)(time.ExternalStep * totalsecondsPerStep);
@@ -45,7 +44,7 @@ namespace Common.SQLResultLogging
             return dt.ToShortDateString() + " " + dt.ToShortTimeString();
         }
 
-        public  void GenerateDateStampForTimestep([NotNull] TimeStep calcTimestamp, [NotNull] StringBuilder sb) {
+        public  void GenerateDateStampForTimestep([JetBrains.Annotations.NotNull] TimeStep calcTimestamp, [JetBrains.Annotations.NotNull] StringBuilder sb) {
             sb.Append(calcTimestamp.ExternalStep);
             sb.Append(_calcParameters.CSVCharacter);
             sb.Append(MakeDateStringFromTimeStep(calcTimestamp));
@@ -57,7 +56,7 @@ namespace Common.SQLResultLogging
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public  string GenerateDateStampHeader() {
             var s = "Timestep" + _calcParameters.CSVCharacter + "Time" +
                     _calcParameters.CSVCharacter;
@@ -67,8 +66,8 @@ namespace Common.SQLResultLogging
             return s;
         }
 
-        [NotNull]
-        public string MakeTimeString([NotNull] TimeStep timestep) {
+        [JetBrains.Annotations.NotNull]
+        public string MakeTimeString([JetBrains.Annotations.NotNull] TimeStep timestep) {
             var sb = new StringBuilder();
             GenerateDateStampForTimestep(timestep, sb);
             return sb.ToString();

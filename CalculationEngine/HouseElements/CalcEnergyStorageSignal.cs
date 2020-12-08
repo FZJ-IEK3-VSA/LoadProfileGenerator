@@ -30,7 +30,6 @@ using Automation;
 using Automation.ResultFiles;
 using CalculationEngine.HouseholdElements;
 using Common;
-using JetBrains.Annotations;
 
 namespace CalculationEngine.HouseElements {
     using OnlineDeviceLogging;
@@ -47,7 +46,7 @@ namespace CalculationEngine.HouseElements {
         private double _tankLastLastValue;
         private double _tankLastValue;
 
-        public CalcEnergyStorageSignal([NotNull] string pName, double triggerOff, double triggerOn, double value,
+        public CalcEnergyStorageSignal([JetBrains.Annotations.NotNull] string pName, double triggerOff, double triggerOn, double value,
             CalcVariable calcVariable, StrGuid guid) : base(pName,guid) {
             _triggerOffPercent = triggerOff ;
             _triggerOnPercent = triggerOn;
@@ -59,7 +58,7 @@ namespace CalculationEngine.HouseElements {
 
         public CalcVariable CalcVariable => _calcVariable;
 
-        public double GetValue([NotNull] TimeStep timestep, double tankCapacity, double currentFill) {
+        public double GetValue([JetBrains.Annotations.NotNull] TimeStep timestep, double tankCapacity, double currentFill) {
             var currentFillPercent = currentFill / tankCapacity;
             if (currentFillPercent < 0) {
                 throw new LPGException("Energy Storage less than 0% full. This is a bug.");

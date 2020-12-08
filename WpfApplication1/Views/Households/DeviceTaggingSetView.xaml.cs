@@ -47,7 +47,7 @@ namespace LoadProfileGenerator.Views.Households {
             InitializeComponent();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private DeviceTaggingSetPresenter Presenter => (DeviceTaggingSetPresenter) DataContext;
 
         private void BtnAddLoadTypeClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)

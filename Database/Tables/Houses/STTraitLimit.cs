@@ -14,7 +14,7 @@ namespace Database.Tables.Houses {
 
         [CanBeNull] private readonly HouseholdTrait _trait;
 
-        public STTraitLimit([CanBeNull]int? pID, [NotNull] string connectionString, int settlementTemplateID, [NotNull] string name,
+        public STTraitLimit([CanBeNull]int? pID, [JetBrains.Annotations.NotNull] string connectionString, int settlementTemplateID, [JetBrains.Annotations.NotNull] string name,
             [CanBeNull] HouseholdTrait trait, int maximum, StrGuid guid) : base(name, TableName, connectionString, guid) {
             TypeDescription = "Settlement Template Household Trait Limit";
             ID = pID;
@@ -39,9 +39,9 @@ namespace Database.Tables.Houses {
         [UsedImplicitly]
         public int UsedCount { get; set; }
 
-        [NotNull]
-        private static STTraitLimit AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic) {
+        [JetBrains.Annotations.NotNull]
+        private static STTraitLimit AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic) {
             var id = dr.GetIntFromLong("ID");
             var settlementtemplateID = dr.GetIntFromLong("SettlementTemplateID", false, ignoreMissingFields, -1);
             var traitID = dr.GetIntFromLong("TraitID", false);
@@ -71,7 +71,7 @@ namespace Database.Tables.Houses {
             return true;
         }
 
-        public bool IsPermitted([NotNull] ModularHousehold chh) {
+        public bool IsPermitted([JetBrains.Annotations.NotNull] ModularHousehold chh) {
             var traits =
                 chh.Traits.Where(x => x.HouseholdTrait == _trait).Select(x => x.HouseholdTrait).ToList();
             if (traits.Count <= PermittedCount - UsedCount) {
@@ -80,7 +80,7 @@ namespace Database.Tables.Houses {
             return false;
         }
 
-        public bool IsPermitted([NotNull] HouseholdTrait trait) {
+        public bool IsPermitted([JetBrains.Annotations.NotNull] HouseholdTrait trait) {
             if (trait != _trait) {
                 return true;
             }
@@ -90,13 +90,13 @@ namespace Database.Tables.Houses {
             return false;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<STTraitLimit> result, [NotNull] string connectionString,
-            bool ignoreMissingTables, [ItemNotNull] [NotNull] ObservableCollection<HouseholdTrait> traits) {
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<STTraitLimit> result, [JetBrains.Annotations.NotNull] string connectionString,
+            bool ignoreMissingTables, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<HouseholdTrait> traits) {
             var aic = new AllItemCollections(householdTraits: traits);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }
 
-        public void RegisterMHH([NotNull] ModularHousehold chh) {
+        public void RegisterMHH([JetBrains.Annotations.NotNull] ModularHousehold chh) {
             var traits =
                 chh.Traits.Where(x => x.HouseholdTrait == _trait).Select(x => x.HouseholdTrait).ToList();
             UsedCount += traits.Count;
@@ -105,7 +105,7 @@ namespace Database.Tables.Houses {
             }
         }
 
-        public void RegisterTrait([NotNull] HouseholdTrait trait) {
+        public void RegisterTrait([JetBrains.Annotations.NotNull] HouseholdTrait trait) {
             if (_trait != trait) {
                 return;
             }

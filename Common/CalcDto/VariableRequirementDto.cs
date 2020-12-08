@@ -1,13 +1,12 @@
 ﻿using Automation;
 using Common.Enums;
-using JetBrains.Annotations;
 
 namespace Common.CalcDto {
     public class VariableRequirementDto
     {
         public StrGuid VariableGuid { get; }
 
-        public VariableRequirementDto([NotNull]string name, double value, [NotNull] string location, StrGuid locationGuid,
+        public VariableRequirementDto([JetBrains.Annotations.NotNull]string name, double value, [JetBrains.Annotations.NotNull] string location, StrGuid locationGuid,
                                       VariableCondition variableCondition,
                                       StrGuid variableGuid)
         {
@@ -18,10 +17,10 @@ namespace Common.CalcDto {
             LocationGuid = locationGuid;
             VariableCondition = variableCondition;
         }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string CalcLocationName { get; }
         public StrGuid LocationGuid { get; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string Name { get; }
         public double Value { get; }
         public VariableCondition VariableCondition { get; }

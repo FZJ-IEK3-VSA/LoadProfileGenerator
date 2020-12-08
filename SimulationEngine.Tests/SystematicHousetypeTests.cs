@@ -2,7 +2,7 @@ using Automation;
 using Xunit;
 using Common.Tests;
 using Xunit.Abstractions;
-using JetBrains.Annotations;
+
 #pragma warning disable 8602
 namespace SimulationEngine.Tests {
 public class SystematicHousetypeTests :UnitTestBaseClass {
@@ -216,5 +216,5 @@ public void TestHousetype20HT23(){
       , (x) => {});
 }
 
-public SystematicHousetypeTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper) { }
+public SystematicHousetypeTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper) { }
 }}

@@ -43,16 +43,16 @@ using JetBrains.Annotations;
 
 namespace CalculationEngine.OnlineLogging {
     public class DesiresLogFile : LogfileBase, IDisposable {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly Dictionary<string, StreamWriter> _desireFiles;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly CalcParameters _calcParameters;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly FileFactoryAndTracker _fft;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly Dictionary<string, bool> _writeDesiresHeader;
 
-        public DesiresLogFile([NotNull] FileFactoryAndTracker fft, [NotNull] CalcParameters calcParameters)
+        public DesiresLogFile([JetBrains.Annotations.NotNull] FileFactoryAndTracker fft, [JetBrains.Annotations.NotNull] CalcParameters calcParameters)
         {
             _fft = fft;
             _calcParameters = calcParameters;
@@ -61,10 +61,10 @@ namespace CalculationEngine.OnlineLogging {
             _dsc = new DateStampCreator(calcParameters);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly DateStampCreator _dsc;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Dictionary<string, int> DesireColumn { get; } = new Dictionary<string, int>();
 
         public void Dispose()
@@ -74,10 +74,10 @@ namespace CalculationEngine.OnlineLogging {
             }
         }
 
-        [NotNull]
-        private static string GetKey([NotNull] DesireEntry e, [NotNull] HouseholdKey householdKey) => householdKey + "###" + e.PersonName;
+        [JetBrains.Annotations.NotNull]
+        private static string GetKey([JetBrains.Annotations.NotNull] DesireEntry e, [JetBrains.Annotations.NotNull] HouseholdKey householdKey) => householdKey + "###" + e.PersonName;
 
-        public void RegisterDesires([NotNull][ItemNotNull] IEnumerable<CalcDesire> desires)
+        public void RegisterDesires([JetBrains.Annotations.NotNull][ItemNotNull] IEnumerable<CalcDesire> desires)
         {
             var i = DesireColumn.Count;
             foreach (var calcDesire in desires) {
@@ -88,7 +88,7 @@ namespace CalculationEngine.OnlineLogging {
             }
         }
 
-        public void WriteEntry([NotNull] DesireEntry entry, [NotNull] HouseholdKey householdKey)
+        public void WriteEntry([JetBrains.Annotations.NotNull] DesireEntry entry, [JetBrains.Annotations.NotNull] HouseholdKey householdKey)
         {
             if (!_writeDesiresHeader.ContainsKey(GetKey(entry, householdKey))) {
                 _desireFiles.Add(GetKey(entry, householdKey),

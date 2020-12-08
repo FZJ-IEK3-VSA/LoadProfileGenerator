@@ -31,27 +31,26 @@ using System.Threading;
 using Common;
 using Database.Helpers;
 using Database.Tables.BasicElements;
-using JetBrains.Annotations;
 using LoadProfileGenerator.Views.BasicElements;
 
 namespace LoadProfileGenerator.Presenters.BasicElements {
     public class DateBasedProfilePresenter : PresenterBaseDBBase<DateBasedProfileView> {
-        [NotNull] private readonly CSVImporter _csvImporter;
-        [NotNull] private readonly DateBasedProfile _dbp;
+        [JetBrains.Annotations.NotNull] private readonly CSVImporter _csvImporter;
+        [JetBrains.Annotations.NotNull] private readonly DateBasedProfile _dbp;
 
-        public DateBasedProfilePresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] DateBasedProfileView view,
-            [NotNull] DateBasedProfile tp) : base(view, "ThisProfile.HeaderString", tp, applicationPresenter) {
+        public DateBasedProfilePresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] DateBasedProfileView view,
+            [JetBrains.Annotations.NotNull] DateBasedProfile tp) : base(view, "ThisProfile.HeaderString", tp, applicationPresenter) {
             _dbp = tp;
             _csvImporter = new CSVImporter(true);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CSVImporter CsvImporter => _csvImporter;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public DateBasedProfile ThisProfile => _dbp;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public DateProfileDataPoint AddDataPoint(DateTime time, double value) {
             DateProfileDataPoint dp= _dbp.AddNewDatePoint(time, value);
             _dbp.SaveToDB();
@@ -111,7 +110,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             Logger.Info("Imported all data points.");
         }
 
-        public void RemoveTimepoint([NotNull] DateProfileDataPoint tdp) {
+        public void RemoveTimepoint([JetBrains.Annotations.NotNull] DateProfileDataPoint tdp) {
             _dbp.DeleteDatePoint(tdp);
         }
     }

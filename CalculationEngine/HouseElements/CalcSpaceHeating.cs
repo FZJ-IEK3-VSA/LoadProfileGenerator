@@ -36,14 +36,14 @@ using JetBrains.Annotations;
 
 namespace CalculationEngine.HouseElements {
     public class CalcSpaceHeating : CalcDevice {
-        [NotNull] private readonly Dictionary<Tuple<int, int, int>, CalcDegreeDay> _calcDegreeDays;
+        [JetBrains.Annotations.NotNull] private readonly Dictionary<Tuple<int, int, int>, CalcDegreeDay> _calcDegreeDays;
 
 
         public CalcSpaceHeating(
-                                [NotNull] [ItemNotNull] List<CalcDeviceLoad> powerUsage,
-                                [NotNull] Dictionary<Tuple<int, int, int>, CalcDegreeDay> calcDegreeDays,
-                                [NotNull] CalcLocation cloc,
-                                 [NotNull] CalcDeviceDto deviceDto, [NotNull] CalcRepo calcRepo) : base(
+                                [JetBrains.Annotations.NotNull] [ItemNotNull] List<CalcDeviceLoad> powerUsage,
+                                [JetBrains.Annotations.NotNull] Dictionary<Tuple<int, int, int>, CalcDegreeDay> calcDegreeDays,
+                                [JetBrains.Annotations.NotNull] CalcLocation cloc,
+                                 [JetBrains.Annotations.NotNull] CalcDeviceDto deviceDto, [JetBrains.Annotations.NotNull] CalcRepo calcRepo) : base(
             powerUsage,
             cloc,
             deviceDto, calcRepo)
@@ -55,10 +55,10 @@ namespace CalculationEngine.HouseElements {
             _calcDegreeDays = calcDegreeDays;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Dictionary<Tuple<int, int, int>, CalcDegreeDay> CalcDegreeDays => _calcDegreeDays;
 
-        public void Activate([NotNull] TimeStep time, DateTime dateTime)
+        public void Activate([JetBrains.Annotations.NotNull] TimeStep time, DateTime dateTime)
         {
             var oneDay = new TimeSpan(24, 0, 0);
             var numberOfValuesInOneDay = (int)(oneDay.TotalMilliseconds / CalcRepo.CalcParameters.InternalStepsize.TotalMilliseconds);

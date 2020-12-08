@@ -41,7 +41,7 @@ namespace LoadProfileGenerator.Controls.Usercontrols {
     public class PermissionLinePresenter : Notifier {
         private readonly bool _isMinusVisible;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
 #pragma warning disable IDE0052 // Remove unread private members
         [SuppressMessage("ReSharper", "NotAccessedField.Local")]
@@ -49,14 +49,14 @@ namespace LoadProfileGenerator.Controls.Usercontrols {
 #pragma warning restore IDE0052 // Remove unread private members
         // needed so that the reference is kept somewhere
 
-        [NotNull] private readonly Simulator _sim;
+        [JetBrains.Annotations.NotNull] private readonly Simulator _sim;
         private double _expanderSize;
         private double _leftMargin;
 
         [CanBeNull] private PermissionTuple _selectedPermissionTuple;
 
-        public PermissionLinePresenter([NotNull] Simulator sim, [NotNull] PermissionLine permissionLine,
-                                       [NotNull] TimeLimitEntry timeEntry,
+        public PermissionLinePresenter([JetBrains.Annotations.NotNull] Simulator sim, [JetBrains.Annotations.NotNull] PermissionLine permissionLine,
+                                       [JetBrains.Annotations.NotNull] TimeLimitEntry timeEntry,
                                        double leftMargin, bool isMinusVisible)
         {
             _sim = sim;
@@ -87,16 +87,16 @@ namespace LoadProfileGenerator.Controls.Usercontrols {
             SetSelectedPermissionModel(Entry);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<AnyAllTimeLimitCondition> AndOrList { get; }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<DateBasedProfile> DateBasedProfiles => _sim.DateBasedProfiles.Items;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public TimeLimitEntry Entry { get; }
 
         [UsedImplicitly]
@@ -139,7 +139,7 @@ namespace LoadProfileGenerator.Controls.Usercontrols {
         public Thickness Margin { get; set; }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<PermissionTuple> PermissionModes { get; }
 
@@ -242,7 +242,7 @@ namespace LoadProfileGenerator.Controls.Usercontrols {
             return Visibility.Collapsed;
         }
 
-        private void SetSelectedPermissionModel([NotNull] TimeLimitEntry de)
+        private void SetSelectedPermissionModel([JetBrains.Annotations.NotNull] TimeLimitEntry de)
         {
             foreach (var pm in PermissionModes) {
                 if (pm.PermissionMode == de.RepeaterType) {

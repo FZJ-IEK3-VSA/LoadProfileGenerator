@@ -4,8 +4,6 @@ using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
 using FluentAssertions;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 using Newtonsoft.Json;
@@ -44,7 +42,7 @@ namespace Common.Tests.SQLResultLogging.InputLoggers
             }
         }
 
-        public CalcParameterLoggerTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public CalcParameterLoggerTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

@@ -28,12 +28,12 @@
 
 #region
 
+#endregion
+
 using System;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using JetBrains.Annotations;
-
-#endregion
 
 namespace LoadProfileGenerator.Controls {
     public static class TreeViewHelper {
@@ -41,7 +41,7 @@ namespace LoadProfileGenerator.Controls {
         ///     Expands all children of a TreeView
         /// </summary>
         /// <param name="treeView">The TreeView whose children will be expanded</param>
-        public static void ExpandAll([NotNull] this TreeView treeView)
+        public static void ExpandAll([JetBrains.Annotations.NotNull] this TreeView treeView)
         {
             ExpandSubContainers(treeView);
         }
@@ -53,7 +53,7 @@ namespace LoadProfileGenerator.Controls {
         /// <param name="item">The item to search and select</param>
         /// ///
         /// <param name="expand">Expand to this element</param>
-        public static void SelectItem([NotNull] this TreeView treeView, [CanBeNull] object item, bool expand)
+        public static void SelectItem([JetBrains.Annotations.NotNull] this TreeView treeView, [CanBeNull] object item, bool expand)
         {
             if (item == null) {
                 return;
@@ -70,7 +70,7 @@ namespace LoadProfileGenerator.Controls {
         /// ///
         /// <param name="expand">Wether to Expand this element</param>
         /// <returns>True if the item is found and selected, false otherwise</returns>
-        private static bool ExpandAndSelectItem([NotNull] ItemsControl parentContainer, [NotNull] object itemToSelect, bool expand)
+        private static bool ExpandAndSelectItem([JetBrains.Annotations.NotNull] ItemsControl parentContainer, [JetBrains.Annotations.NotNull] object itemToSelect, bool expand)
         {
             // check all items at the current level
             foreach (var item in parentContainer.Items) {
@@ -145,7 +145,7 @@ namespace LoadProfileGenerator.Controls {
         ///     Expands all children of a TreeView or TreeViewItem
         /// </summary>
         /// <param name="parentContainer">The TreeView or TreeViewItem containing the children to expand</param>
-        private static void ExpandSubContainers([NotNull] ItemsControl parentContainer)
+        private static void ExpandSubContainers([JetBrains.Annotations.NotNull] ItemsControl parentContainer)
         {
             foreach (var item in parentContainer.Items) {
                 if (parentContainer.ItemContainerGenerator.ContainerFromItem(item) is TreeViewItem currentContainer &&

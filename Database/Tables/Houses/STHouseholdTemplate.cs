@@ -14,7 +14,7 @@ namespace Database.Tables.Houses {
 
         private readonly int _settlementTemplateID;
 
-        public STHouseholdTemplate([CanBeNull]int? pID, [NotNull] string connectionString, int settlementTemplateID, [NotNull] string name,
+        public STHouseholdTemplate([CanBeNull]int? pID, [JetBrains.Annotations.NotNull] string connectionString, int settlementTemplateID, [JetBrains.Annotations.NotNull] string name,
             [CanBeNull] HouseholdTemplate householdTemplate, StrGuid guid) : base(name, TableName, connectionString, guid) {
             TypeDescription = "Settlement Template Household Templates";
             ID = pID;
@@ -27,9 +27,9 @@ namespace Database.Tables.Houses {
 
         public int SettlementTemplateID => _settlementTemplateID;
 
-        [NotNull]
-        private static STHouseholdTemplate AssignFields([NotNull] DataReader dr, [NotNull] string connectionString,
-            bool ignoreMissingFields, [NotNull] AllItemCollections aic) {
+        [JetBrains.Annotations.NotNull]
+        private static STHouseholdTemplate AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString,
+            bool ignoreMissingFields, [JetBrains.Annotations.NotNull] AllItemCollections aic) {
             var id = dr.GetIntFromLong("ID");
             var settlementtemplateID = dr.GetIntFromLong("SettlementTemplateID", false, ignoreMissingFields, -1);
             var householdTemplateID = dr.GetIntFromLong("HouseholdTemplateID", false);
@@ -58,8 +58,8 @@ namespace Database.Tables.Houses {
         /// <param name="ignoreMissingTables">todo: describe ignoreMissingTables parameter on LoadFromDatabase</param>
         /// <param name="templates">todo: describe templates parameter on LoadFromDatabase</param>
         /// <exception cref="LPGException">tried to call needs update even though it's not allowed right now</exception>
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<STHouseholdTemplate> result, [NotNull] string connectionString,
-            bool ignoreMissingTables, [ItemNotNull] [NotNull] ObservableCollection<HouseholdTemplate> templates) {
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<STHouseholdTemplate> result, [JetBrains.Annotations.NotNull] string connectionString,
+            bool ignoreMissingTables, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<HouseholdTemplate> templates) {
             var aic = new AllItemCollections(householdTemplates: templates);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);
         }

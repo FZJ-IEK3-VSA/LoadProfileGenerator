@@ -2,7 +2,6 @@
 using Common;
 using Common.Tests;
 using Database.Tests;
-using JetBrains.Annotations;
 using SimulationEngineLib;
 using Xunit;
 using Xunit.Abstractions;
@@ -30,7 +29,7 @@ namespace SimulationEngine.Tests
             const string data = @"lpgdata.py";
             PythonGenerator.MakeFullPythonBindings(db.ConnectionString, bindings, data);
         }
-        public CreatePythonBindingsTest([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public CreatePythonBindingsTest([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

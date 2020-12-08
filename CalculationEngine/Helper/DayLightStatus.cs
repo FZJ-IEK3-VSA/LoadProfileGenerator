@@ -5,12 +5,12 @@ namespace CalculationEngine.Helper
 {
     public class DayLightStatus
     {
-        public DayLightStatus([NotNull][ItemNotNull] BitArray status )
+        public DayLightStatus([JetBrains.Annotations.NotNull][ItemNotNull] BitArray status )
         {
             Status = status;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public BitArray Status { get; }
     }

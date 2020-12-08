@@ -48,12 +48,12 @@ namespace Database.Tables.BasicHouseholds {
 
         private int _age;
         private int _averageSicknessDuration;
-        [NotNull] private string _description;
+        [JetBrains.Annotations.NotNull] private string _description;
         private PermittedGender _gender;
         private int _sickDays;
 
-        public Person([NotNull] string name, int age, [CanBeNull]int? pID, int sickDays, int averageSicknessDuration, PermittedGender gender,
-            [NotNull] string connectionString, [NotNull] string description, StrGuid guid) : base(name, TableName, connectionString, guid)
+        public Person([JetBrains.Annotations.NotNull] string name, int age, [CanBeNull]int? pID, int sickDays, int averageSicknessDuration, PermittedGender gender,
+            [JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.NotNull] string description, StrGuid guid) : base(name, TableName, connectionString, guid)
         {
             _age = age;
             ID = pID;
@@ -75,7 +75,7 @@ namespace Database.Tables.BasicHouseholds {
             set => SetValueWithNotify(value, ref _averageSicknessDuration, nameof(AverageSicknessDuration));
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string Description {
             get => _description;
             set => SetValueWithNotify(value, ref _description, nameof(Description));
@@ -96,10 +96,10 @@ namespace Database.Tables.BasicHouseholds {
             set => SetValueWithNotify(value, ref _sickDays, nameof(SickDays));
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalse")]
-        private static Person AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic)
+        private static Person AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var id =  dr.GetIntFromLong("ID");
             var age = dr.GetInt("Age");
@@ -130,9 +130,9 @@ namespace Database.Tables.BasicHouseholds {
             return new Person(name, age, id, sickdays, averageSicknessduration, gender, connectionString, description, guid);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new Person(
+        public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString) => new Person(
             FindNewName(isNameTaken, "New Person "), 20, null, 5, 2, PermittedGender.Male, connectionString,
             "(no description)", System.Guid.NewGuid().ToStrGuid());
 
@@ -152,10 +152,10 @@ namespace Database.Tables.BasicHouseholds {
             return used;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
 #pragma warning disable RCS1163 // Unused parameter.
-        public static Person ImportFromItem([NotNull] Person toImport, [NotNull] Simulator dstSim)
+        public static Person ImportFromItem([JetBrains.Annotations.NotNull] Person toImport, [JetBrains.Annotations.NotNull] Simulator dstSim)
 #pragma warning restore RCS1163 // Unused parameter.
         {
             var p = new Person(toImport.Name, toImport.Age, null, toImport.SickDays,
@@ -171,7 +171,7 @@ namespace Database.Tables.BasicHouseholds {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<Person> result, [NotNull] string connectionString,
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Person> result, [JetBrains.Annotations.NotNull] string connectionString,
             bool ignoreMissingTables)
         {
             var aic = new AllItemCollections();

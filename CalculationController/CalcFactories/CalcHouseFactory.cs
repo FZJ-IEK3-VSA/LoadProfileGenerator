@@ -43,25 +43,25 @@ using CalcDegreeHour = CalculationEngine.HouseElements.CalcDegreeHour;
 
 namespace CalculationController.CalcFactories {
     public class CalcHouseFactory {
-        [NotNull] private readonly AvailabilityDtoRepository _availabilityDtoRepository;
+        [JetBrains.Annotations.NotNull] private readonly AvailabilityDtoRepository _availabilityDtoRepository;
 
-        [NotNull] private readonly CalcDeviceTaggingSets _calcDeviceTaggingSets;
+        [JetBrains.Annotations.NotNull] private readonly CalcDeviceTaggingSets _calcDeviceTaggingSets;
         private readonly CalcRepo _calcRepo;
 
 
-        [NotNull] private readonly CalcModularHouseholdFactory _cmhf;
+        [JetBrains.Annotations.NotNull] private readonly CalcModularHouseholdFactory _cmhf;
 
 
-        [NotNull] private readonly CalcLoadTypeDictionary _ltDict;
+        [JetBrains.Annotations.NotNull] private readonly CalcLoadTypeDictionary _ltDict;
 
 
-        [NotNull] private readonly CalcVariableRepository _variableRepository;
+        [JetBrains.Annotations.NotNull] private readonly CalcVariableRepository _variableRepository;
 
-        public CalcHouseFactory([NotNull] CalcLoadTypeDictionary ltDict,
-                                [NotNull] CalcModularHouseholdFactory cmhf,
-                                [NotNull] AvailabilityDtoRepository availabilityDtoRepository,
-                                [NotNull] CalcVariableRepository variableRepository,
-                                [NotNull] CalcDeviceTaggingSets calcDeviceTaggingSets,
+        public CalcHouseFactory([JetBrains.Annotations.NotNull] CalcLoadTypeDictionary ltDict,
+                                [JetBrains.Annotations.NotNull] CalcModularHouseholdFactory cmhf,
+                                [JetBrains.Annotations.NotNull] AvailabilityDtoRepository availabilityDtoRepository,
+                                [JetBrains.Annotations.NotNull] CalcVariableRepository variableRepository,
+                                [JetBrains.Annotations.NotNull] CalcDeviceTaggingSets calcDeviceTaggingSets,
                                 CalcRepo calcRepo)
         {
             _ltDict = ltDict;
@@ -74,8 +74,8 @@ namespace CalculationController.CalcFactories {
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Objekte verwerfen, bevor Bereich verloren geht")]
         [SuppressMessage("ReSharper", "SwitchStatementMissingSomeCases")]
-        [NotNull]
-        public CalcHouse MakeCalcHouse([NotNull] CalcHouseDto calcHouseDto, [NotNull] CalcRepo calcRepo)
+        [JetBrains.Annotations.NotNull]
+        public CalcHouse MakeCalcHouse([JetBrains.Annotations.NotNull] CalcHouseDto calcHouseDto, [JetBrains.Annotations.NotNull] CalcRepo calcRepo)
         {
             HouseholdKey houseKey = Constants.HouseKey;
             var calchouse = new CalcHouse(calcHouseDto.HouseName, calcHouseDto.HouseKey, calcRepo);
@@ -117,9 +117,9 @@ namespace CalculationController.CalcFactories {
             return calchouse;
         }
 
-        private void MakeAllTransformationDevices([NotNull] CalcHouseDto house,
-                                                  [NotNull] CalcHouse calchouse,
-                                                  [NotNull] HouseholdKey householdKey) //List<CalcDeviceTaggingSet> taggingSets,
+        private void MakeAllTransformationDevices([JetBrains.Annotations.NotNull] CalcHouseDto house,
+                                                  [JetBrains.Annotations.NotNull] CalcHouse calchouse,
+                                                  [JetBrains.Annotations.NotNull] HouseholdKey householdKey) //List<CalcDeviceTaggingSet> taggingSets,
         {
             var ctds = new List<CalcTransformationDevice>();
             var devcategoryGuid = Guid.NewGuid().ToStrGuid();
@@ -160,10 +160,10 @@ namespace CalculationController.CalcFactories {
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
-        private List<CalcAutoDev> MakeCalcAutoDevsFromHouse([NotNull] CalcHouseDto houseDto,
-                                                            [NotNull] [ItemNotNull] List<CalcLocation> houseLocations)
+        private List<CalcAutoDev> MakeCalcAutoDevsFromHouse([JetBrains.Annotations.NotNull] CalcHouseDto houseDto,
+                                                            [JetBrains.Annotations.NotNull] [ItemNotNull] List<CalcLocation> houseLocations)
         {
             var autodevs = new List<CalcAutoDev>(houseDto.AutoDevs.Count);
             // zur kategorien zuordnung
@@ -231,9 +231,9 @@ namespace CalculationController.CalcFactories {
             return autodevs;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
-        private List<CalcGenerator> MakeGenerators([NotNull] [ItemNotNull] List<CalcGeneratorDto> generators, [NotNull] HouseholdKey householdKey)
+        private List<CalcGenerator> MakeGenerators([JetBrains.Annotations.NotNull] [ItemNotNull] List<CalcGeneratorDto> generators, [JetBrains.Annotations.NotNull] HouseholdKey householdKey)
             //,
         {
             var cgens = new List<CalcGenerator>();
@@ -259,10 +259,10 @@ namespace CalculationController.CalcFactories {
             return cgens;
         }
 
-        private void MakeHeating([NotNull] CalcHouseDto house,
-                                 [NotNull] CalcHouse calchouse,
-                                 [NotNull] HouseholdKey householdKey,
-                                 [NotNull] [ItemNotNull] List<CalcLocation> locations) //, List<CalcDeviceTaggingSet> deviceTaggingSets)
+        private void MakeHeating([JetBrains.Annotations.NotNull] CalcHouseDto house,
+                                 [JetBrains.Annotations.NotNull] CalcHouse calchouse,
+                                 [JetBrains.Annotations.NotNull] HouseholdKey householdKey,
+                                 [JetBrains.Annotations.NotNull] [ItemNotNull] List<CalcLocation> locations) //, List<CalcDeviceTaggingSet> deviceTaggingSets)
         {
             if (house.SpaceHeating == null) {
                 return;
@@ -311,9 +311,9 @@ namespace CalculationController.CalcFactories {
             calchouse.SetSpaceHeating(csh); //,deviceTaggingSets
         }
 
-        private void SetAirConditioningOnHouse([NotNull] CalcHouseDto house,
-                                               [NotNull] CalcHouse calcHouse,
-                                               [NotNull] [ItemNotNull] List<CalcLocation> calcLocations)
+        private void SetAirConditioningOnHouse([JetBrains.Annotations.NotNull] CalcHouseDto house,
+                                               [JetBrains.Annotations.NotNull] CalcHouse calcHouse,
+                                               [JetBrains.Annotations.NotNull] [ItemNotNull] List<CalcLocation> calcLocations)
         {
             if (house.AirConditioning == null) {
                 return;
@@ -359,9 +359,9 @@ namespace CalculationController.CalcFactories {
             calcHouse.SetAirConditioning(csh);
         }
 
-        private void SetEnergyStoragesOnHouse([NotNull] [ItemNotNull] List<CalcEnergyStorageDto> energyStorages,
-                                                                 [NotNull] HouseholdKey householdKey,
-                                                                 [NotNull] CalcHouse calchouse, CalcVariableRepository calcVariableRepository
+        private void SetEnergyStoragesOnHouse([JetBrains.Annotations.NotNull] [ItemNotNull] List<CalcEnergyStorageDto> energyStorages,
+                                                                 [JetBrains.Annotations.NotNull] HouseholdKey householdKey,
+                                                                 [JetBrains.Annotations.NotNull] CalcHouse calchouse, CalcVariableRepository calcVariableRepository
                                               ) //, List<CalcDeviceTaggingSet> deviceTaggingSets)
         {
             var cess = new List<CalcEnergyStorage>();

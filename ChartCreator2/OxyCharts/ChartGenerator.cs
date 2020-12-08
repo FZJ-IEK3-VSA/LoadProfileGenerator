@@ -94,7 +94,7 @@ namespace ChartCreator2.OxyCharts {
             catch (FileLoadException flex) {
                 try {
                     ErrorReporter er = new ErrorReporter();
-                    er.Run("Caught exception:" + flex.Message, flex.StackTrace);
+                    er.Run("Caught exception:" + flex.Message, flex.StackTrace ?? "no stackstrace");
                 }
 #pragma warning disable RCS1075 // Avoid empty catch clause that catches System.Exception.
                 catch (Exception) {

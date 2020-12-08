@@ -2,8 +2,6 @@
 using ChartCreator2.OxyCharts;
 using Common;
 using Common.Tests;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -19,7 +17,7 @@ namespace ChartCreator2.Tests.OxyCharts {
             cdfc.Run(cp,@"e:\", "FlameChartTest");
         }
 
-        public CalculationDurationFlameChartTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public CalculationDurationFlameChartTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

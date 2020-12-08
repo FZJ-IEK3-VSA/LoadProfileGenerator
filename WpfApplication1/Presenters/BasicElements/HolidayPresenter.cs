@@ -32,12 +32,12 @@ using LoadProfileGenerator.Views.BasicElements;
 
 namespace LoadProfileGenerator.Presenters.BasicElements {
     public class HolidayPresenter : PresenterBaseDBBase<HolidayView> {
-        [NotNull] private readonly Holiday _thisHoliday;
+        [JetBrains.Annotations.NotNull] private readonly Holiday _thisHoliday;
 
-        public HolidayPresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] HolidayView view, [NotNull] Holiday holiday)
+        public HolidayPresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] HolidayView view, [JetBrains.Annotations.NotNull] Holiday holiday)
             : base(view, "ThisHoliday.HeaderString", holiday, applicationPresenter) => _thisHoliday = holiday;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public Holiday ThisHoliday => _thisHoliday;
 

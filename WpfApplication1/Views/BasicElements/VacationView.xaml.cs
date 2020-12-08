@@ -15,7 +15,7 @@ namespace LoadProfileGenerator.Views.BasicElements {
         public VacationView() {
             InitializeComponent();
         }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private VacationPresenter Presenter => (VacationPresenter)DataContext;
 
         private void BtnAddDate_Click([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e) {

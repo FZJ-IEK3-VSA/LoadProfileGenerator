@@ -19,23 +19,23 @@ using JetBrains.Annotations;
 
 namespace CalculationController.CalcFactories {
     public class CalcTransportationDtoFactory {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly CalcLoadTypeDtoDictionary _loadTypeDict;
 
-        public CalcTransportationDtoFactory([NotNull] CalcLoadTypeDtoDictionary loadTypeDict)
+        public CalcTransportationDtoFactory([JetBrains.Annotations.NotNull] CalcLoadTypeDtoDictionary loadTypeDict)
         {
             _loadTypeDict = loadTypeDict;
         }
 
         [SuppressMessage("ReSharper", "HeuristicUnreachableCode")]
-        public void MakeTransportationDtos([NotNull] Simulator sim, [NotNull] ModularHousehold mhh,
+        public void MakeTransportationDtos([JetBrains.Annotations.NotNull] Simulator sim, [JetBrains.Annotations.NotNull] ModularHousehold mhh,
                                            [CanBeNull] TransportationDeviceSet transportationDeviceSet,
                                            [CanBeNull] TravelRouteSet travelRouteSet,
                                            [CanBeNull] ChargingStationSet chargingStationSet,
-                                           [NotNull][ItemNotNull] out List<CalcSiteDto> sites,
-                                           [NotNull][ItemNotNull] out List<CalcTransportationDeviceDto> transportationDevices,
-                                           [NotNull][ItemNotNull] out List<CalcTravelRouteDto> routes,
-                                           [NotNull][ItemNotNull] List<CalcLocationDto> locations, [NotNull] HouseholdKey key)
+                                           [JetBrains.Annotations.NotNull][ItemNotNull] out List<CalcSiteDto> sites,
+                                           [JetBrains.Annotations.NotNull][ItemNotNull] out List<CalcTransportationDeviceDto> transportationDevices,
+                                           [JetBrains.Annotations.NotNull][ItemNotNull] out List<CalcTravelRouteDto> routes,
+                                           [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcLocationDto> locations, [JetBrains.Annotations.NotNull] HouseholdKey key)
         {
             if (transportationDeviceSet == null) {
                 throw new LPGException("Transportationdeviceset was null");
@@ -77,10 +77,10 @@ namespace CalculationController.CalcFactories {
             routes  = MakeTravelRoutes(travelRouteSet, householdSites,categoriesDict, sites,key);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
-        private List<CalcTransportationDeviceDto> MakeTransportationDevices([NotNull][ItemNotNull] List<TransportationDevice> transportationDevices,
-                                              [NotNull] Dictionary<TransportationDeviceCategory, CalcTransportationDeviceCategoryDto> categoriesDict, [NotNull] HouseholdKey key)
+        private List<CalcTransportationDeviceDto> MakeTransportationDevices([JetBrains.Annotations.NotNull][ItemNotNull] List<TransportationDevice> transportationDevices,
+                                              [JetBrains.Annotations.NotNull] Dictionary<TransportationDeviceCategory, CalcTransportationDeviceCategoryDto> categoriesDict, [JetBrains.Annotations.NotNull] HouseholdKey key)
         {
             List< CalcTransportationDeviceDto > transportationDeviceDtos = new List<CalcTransportationDeviceDto>();
             foreach (var transportationDevice in transportationDevices) {
@@ -128,8 +128,8 @@ namespace CalculationController.CalcFactories {
             return distanceToEnergyFactor;
         }
 
-        [NotNull]
-        private static Dictionary<TransportationDeviceCategory, CalcTransportationDeviceCategoryDto> MakeCalcTransportationDeviceCategoryDtos([NotNull] Simulator sim)
+        [JetBrains.Annotations.NotNull]
+        private static Dictionary<TransportationDeviceCategory, CalcTransportationDeviceCategoryDto> MakeCalcTransportationDeviceCategoryDtos([JetBrains.Annotations.NotNull] Simulator sim)
         {
             Dictionary<TransportationDeviceCategory, CalcTransportationDeviceCategoryDto> categoriesDict =
                 new Dictionary<TransportationDeviceCategory, CalcTransportationDeviceCategoryDto>();
@@ -142,8 +142,8 @@ namespace CalculationController.CalcFactories {
             return categoriesDict;
         }
 
-        public static void CheckReachabilityofLocations([NotNull][ItemNotNull] List<Location> locations, [NotNull][ItemNotNull] List<Site> sites,
-                                                        [NotNull] string calcHouseholdName, [NotNull] string travelRouteSetName)
+        public static void CheckReachabilityofLocations([JetBrains.Annotations.NotNull][ItemNotNull] List<Location> locations, [JetBrains.Annotations.NotNull][ItemNotNull] List<Site> sites,
+                                                        [JetBrains.Annotations.NotNull] string calcHouseholdName, [JetBrains.Annotations.NotNull] string travelRouteSetName)
         {
             List<Location> siteLocations = sites.SelectMany(x => x.Locations.Select(y => y.Location)).ToList();
 
@@ -168,7 +168,7 @@ namespace CalculationController.CalcFactories {
             }
         }
 
-        public static void CheckRouteCompleteness([NotNull] TravelRouteSet travelRouteSet, [NotNull][ItemNotNull] List<Site> sites)
+        public static void CheckRouteCompleteness([JetBrains.Annotations.NotNull] TravelRouteSet travelRouteSet, [JetBrains.Annotations.NotNull][ItemNotNull] List<Site> sites)
         {
             //figure out if every site is connected to every other site
             foreach (Site siteA in sites) {
@@ -190,13 +190,13 @@ namespace CalculationController.CalcFactories {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
-        private List<CalcSiteDto> MakeCalcSiteDtos([NotNull][ItemNotNull] List<Site> householdSites,
-                                                [NotNull][ItemNotNull] List<CalcLocationDto> calcLocations,
-                                                [NotNull] Dictionary<TransportationDeviceCategory,
+        private List<CalcSiteDto> MakeCalcSiteDtos([JetBrains.Annotations.NotNull][ItemNotNull] List<Site> householdSites,
+                                                [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcLocationDto> calcLocations,
+                                                [JetBrains.Annotations.NotNull] Dictionary<TransportationDeviceCategory,
                                                 CalcTransportationDeviceCategoryDto> categoriesDict,
-                                                   [NotNull] HouseholdKey householdKey,
+                                                   [JetBrains.Annotations.NotNull] HouseholdKey householdKey,
                                                    [CanBeNull] ChargingStationSet chargingStationSet)
         {
             List<CalcSiteDto> calcSites = new List<CalcSiteDto>();
@@ -239,11 +239,11 @@ namespace CalculationController.CalcFactories {
             return calcSites;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
-        private static List<CalcTravelRouteDto> MakeTravelRoutes([NotNull] TravelRouteSet travelRouteSet, [NotNull][ItemNotNull] List<Site> householdSites,
-                                                                 [NotNull] Dictionary<TransportationDeviceCategory, CalcTransportationDeviceCategoryDto> categoriesDict,
-                                                                 [NotNull][ItemNotNull] List<CalcSiteDto> calcSites, [NotNull] HouseholdKey key)
+        private static List<CalcTravelRouteDto> MakeTravelRoutes([JetBrains.Annotations.NotNull] TravelRouteSet travelRouteSet, [JetBrains.Annotations.NotNull][ItemNotNull] List<Site> householdSites,
+                                                                 [JetBrains.Annotations.NotNull] Dictionary<TransportationDeviceCategory, CalcTransportationDeviceCategoryDto> categoriesDict,
+                                                                 [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcSiteDto> calcSites, [JetBrains.Annotations.NotNull] HouseholdKey key)
         {
             List<CalcTravelRouteDto> routes = new List<CalcTravelRouteDto>();
             //make travel routes
@@ -278,10 +278,10 @@ namespace CalculationController.CalcFactories {
             return routes;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
-        private static List<Site> MakeTravelRouteSites([NotNull] ModularHousehold mhh, [NotNull] TravelRouteSet travelRouteSet,
-                                                       [NotNull][ItemNotNull] out List<Site> householdSites)
+        private static List<Site> MakeTravelRouteSites([JetBrains.Annotations.NotNull] ModularHousehold mhh, [JetBrains.Annotations.NotNull] TravelRouteSet travelRouteSet,
+                                                       [JetBrains.Annotations.NotNull][ItemNotNull] out List<Site> householdSites)
         {
             //first figure out the sites in the travel route set
             List<Site> travelRouteSites = new List<Site>();
@@ -308,8 +308,8 @@ namespace CalculationController.CalcFactories {
             return travelRouteSites;
         }
 
-        private static bool IsAtLeastOneRouteOk([NotNull] TravelRouteSet travelRouteSet,
-                                                [NotNull][ItemNotNull] List<TransportationDeviceCategory> categories, [NotNull] Site siteA, [NotNull] Site siteB)
+        private static bool IsAtLeastOneRouteOk([JetBrains.Annotations.NotNull] TravelRouteSet travelRouteSet,
+                                                [JetBrains.Annotations.NotNull][ItemNotNull] List<TransportationDeviceCategory> categories, [JetBrains.Annotations.NotNull] Site siteA, [JetBrains.Annotations.NotNull] Site siteB)
         {
             var tr = travelRouteSet.TravelRoutes.Where(x =>
                 x.TravelRoute.SiteA == siteA && x.TravelRoute.SiteB == siteB ||
@@ -331,9 +331,9 @@ namespace CalculationController.CalcFactories {
             return atLeastOneRouteIsOk;
         }
 
-        private static void CheckRouteTransportationDeviceCompleteness([NotNull] TravelRouteSet travelRouteSet,
-                                                                       [NotNull][ItemNotNull] List<Site> householdSites,
-                                                                       [NotNull] TransportationDeviceSet transportationDeviceSet)
+        private static void CheckRouteTransportationDeviceCompleteness([JetBrains.Annotations.NotNull] TravelRouteSet travelRouteSet,
+                                                                       [JetBrains.Annotations.NotNull][ItemNotNull] List<Site> householdSites,
+                                                                       [JetBrains.Annotations.NotNull] TransportationDeviceSet transportationDeviceSet)
         {
             var devices = transportationDeviceSet.TransportationDeviceSetEntries.Select(x => x.TransportationDevice)
                 .ToList();
@@ -356,9 +356,9 @@ namespace CalculationController.CalcFactories {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
-        private static List<TransportationDevice> SelectTransportationDevices([NotNull] TransportationDeviceSet transportationDeviceSet)
+        private static List<TransportationDevice> SelectTransportationDevices([JetBrains.Annotations.NotNull] TransportationDeviceSet transportationDeviceSet)
         {
             List<TransportationDevice> selectedDevices = new List<TransportationDevice>();
             foreach (var device in transportationDeviceSet.TransportationDeviceSetEntries)
@@ -374,21 +374,21 @@ namespace CalculationController.CalcFactories {
     }
 
     public class CalcTransportationFactory {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private readonly CalcLoadTypeDictionary _loadTypeDict;
 
         private readonly CalcRepo _calcRepo;
 
-        public CalcTransportationFactory( [NotNull] CalcLoadTypeDictionary loadTypeDict,
+        public CalcTransportationFactory( [JetBrains.Annotations.NotNull] CalcLoadTypeDictionary loadTypeDict,
                                          CalcRepo calcRepo)
         {
             _loadTypeDict = loadTypeDict;
             _calcRepo = calcRepo;
         }
 
-        public void MakeTransportation([NotNull] CalcHouseholdDto household,
-                                       [NotNull] DtoCalcLocationDict locDict,
-                                       [NotNull] CalcHousehold chh)
+        public void MakeTransportation([JetBrains.Annotations.NotNull] CalcHouseholdDto household,
+                                       [JetBrains.Annotations.NotNull] DtoCalcLocationDict locDict,
+                                       [JetBrains.Annotations.NotNull] CalcHousehold chh)
         {
             if (household.CalcTravelRoutes == null || household.CalcSites == null ||
                 household.CalcTransportationDevices == null) {
@@ -424,8 +424,8 @@ namespace CalculationController.CalcFactories {
             Logger.Info("Finished initalizing the transportation");
         }
 
-        private void MakeTravelRoutes([NotNull][ItemNotNull] List<CalcTravelRouteDto> travelRouteDtos,
-                                      [NotNull] CalcHousehold chh, [NotNull][ItemNotNull] List<CalcSite> sites, [NotNull] TransportationHandler th)
+        private void MakeTravelRoutes([JetBrains.Annotations.NotNull][ItemNotNull] List<CalcTravelRouteDto> travelRouteDtos,
+                                      [JetBrains.Annotations.NotNull] CalcHousehold chh, [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcSite> sites, [JetBrains.Annotations.NotNull] TransportationHandler th)
         {
             foreach (CalcTravelRouteDto travelRouteDto in travelRouteDtos) {
                 CalcSite siteA = sites.Single(x => x.Guid == travelRouteDto.SiteAGuid);
@@ -451,11 +451,11 @@ namespace CalculationController.CalcFactories {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
-        private List<CalcSite> MakeCalcSites([NotNull] CalcHouseholdDto household, [NotNull]
-                                                    DtoCalcLocationDict locDict, [NotNull] CalcLoadTypeDictionary ltDict,
-                                                    [NotNull] TransportationHandler th
+        private List<CalcSite> MakeCalcSites([JetBrains.Annotations.NotNull] CalcHouseholdDto household, [JetBrains.Annotations.NotNull]
+                                                    DtoCalcLocationDict locDict, [JetBrains.Annotations.NotNull] CalcLoadTypeDictionary ltDict,
+                                                    [JetBrains.Annotations.NotNull] TransportationHandler th
                                                     )
         {
             List<CalcSite> sites = new List<CalcSite>();
@@ -487,7 +487,7 @@ namespace CalculationController.CalcFactories {
             return sites;
         }
 
-        private void SetAffordances([NotNull] CalcHousehold chh)
+        private void SetAffordances([JetBrains.Annotations.NotNull] CalcHousehold chh)
         {
             if (chh.TransportationHandler == null)
             {
@@ -535,8 +535,8 @@ namespace CalculationController.CalcFactories {
             }
         }
 
-        private void MakeTransportationDevice([NotNull] CalcHousehold chh,
-                                              [NotNull][ItemNotNull]
+        private void MakeTransportationDevice([JetBrains.Annotations.NotNull] CalcHousehold chh,
+                                              [JetBrains.Annotations.NotNull][ItemNotNull]
                                               List<CalcTransportationDeviceDto> transportationDevices)
         {
             foreach (var transportationDevice in transportationDevices) {

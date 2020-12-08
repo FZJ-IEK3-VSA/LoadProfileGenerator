@@ -45,21 +45,21 @@ using JetBrains.Annotations;
 namespace CalculationEngine.HouseholdElements {
     public sealed class CalcHousehold : CalcBase, ICalcAbleObject {
 
-        [NotNull] private readonly CalcVariableRepository _calcVariableRepository;
+        [JetBrains.Annotations.NotNull] private readonly CalcVariableRepository _calcVariableRepository;
 
-        //[NotNull] private readonly string _cleanName;
+        //[JetBrains.Annotations.NotNull] private readonly string _cleanName;
 
-        [NotNull] private readonly HouseholdKey _householdKey;
+        [JetBrains.Annotations.NotNull] private readonly HouseholdKey _householdKey;
 
-        [NotNull] private readonly string _locationname;
+        [JetBrains.Annotations.NotNull] private readonly string _locationname;
 
-        [ItemNotNull] [NotNull] private readonly List<CalcLocation> _locations;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly List<CalcLocation> _locations;
 
-        [NotNull] private readonly string _name;
+        [JetBrains.Annotations.NotNull] private readonly string _name;
 
-        [ItemNotNull] [NotNull] private readonly List<CalcPerson> _persons;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly List<CalcPerson> _persons;
 
-        [NotNull] private readonly string _temperatureprofileName;
+        [JetBrains.Annotations.NotNull] private readonly string _temperatureprofileName;
 
         //private readonly VariableOperator _variableOperator = new VariableOperator();
 
@@ -75,18 +75,18 @@ namespace CalculationEngine.HouseholdElements {
 
 
         private int _simulationSeed;
-        [NotNull] private readonly string _description;
+        [JetBrains.Annotations.NotNull] private readonly string _description;
         private readonly CalcRepo _calcRepo;
 
         //[CanBeNull] private VariableLogfile _variableLogfile;
 
-        public CalcHousehold([NotNull] string pName, [NotNull] string locationname,
-                             [NotNull] string temperatureprofileName, [NotNull] HouseholdKey householdkey,
+        public CalcHousehold([JetBrains.Annotations.NotNull] string pName, [JetBrains.Annotations.NotNull] string locationname,
+                             [JetBrains.Annotations.NotNull] string temperatureprofileName, [JetBrains.Annotations.NotNull] HouseholdKey householdkey,
                               StrGuid guid,
-                             [NotNull] CalcVariableRepository calcVariableRepository,
-                             [ItemNotNull] [NotNull] List<CalcLocation> locations,
-                             [ItemNotNull] [NotNull] List<CalcPerson> persons,
-                             [NotNull] string description, CalcRepo calcRepo) : base(pName,  guid)
+                             [JetBrains.Annotations.NotNull] CalcVariableRepository calcVariableRepository,
+                             [ItemNotNull] [JetBrains.Annotations.NotNull] List<CalcLocation> locations,
+                             [ItemNotNull] [JetBrains.Annotations.NotNull] List<CalcPerson> persons,
+                             [JetBrains.Annotations.NotNull] string description, CalcRepo calcRepo) : base(pName,  guid)
         {
             _locations = locations;
             _persons = persons;
@@ -100,11 +100,11 @@ namespace CalculationEngine.HouseholdElements {
             _calcVariableRepository = calcVariableRepository;
         }
 
-        //[NotNull]public List<DateTime> BridgeDays { get; set; }
+        //[JetBrains.Annotations.NotNull]public List<DateTime> BridgeDays { get; set; }
 
 #pragma warning disable CC0017 // Use auto property
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public List<CalcLocation> Locations => _locations;
 
@@ -112,7 +112,7 @@ namespace CalculationEngine.HouseholdElements {
 
 #pragma warning disable CC0017 // Use auto property
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public List<CalcPerson> Persons => _persons;
 
@@ -523,8 +523,8 @@ namespace CalculationEngine.HouseholdElements {
             _calcRepo.Dispose();
         }
 
-        public static void MatchAutonomousDevicesWithNormalDevices([NotNull] [ItemNotNull] List<CalcAutoDev> autoDevs,
-                                                    [NotNull] [ItemNotNull] List<CalcDevice> devices)
+        public static void MatchAutonomousDevicesWithNormalDevices([JetBrains.Annotations.NotNull] [ItemNotNull] List<CalcAutoDev> autoDevs,
+                                                    [JetBrains.Annotations.NotNull] [ItemNotNull] List<CalcDevice> devices)
         {
             //TODO: test this and make sure it does what it is supposed to do
             foreach (var device in devices) {
@@ -577,19 +577,19 @@ namespace CalculationEngine.HouseholdElements {
             sw.Close();
         }*/
 
-        public void SetAutoDevs([NotNull] [ItemNotNull] List<CalcAutoDev> autoDevs)
+        public void SetAutoDevs([JetBrains.Annotations.NotNull] [ItemNotNull] List<CalcAutoDev> autoDevs)
         {
             _autoDevs = autoDevs;
         }
 
-        public void SetDevices([NotNull] [ItemNotNull] List<CalcDevice> devices)
+        public void SetDevices([JetBrains.Annotations.NotNull] [ItemNotNull] List<CalcDevice> devices)
         {
             _devices = devices;
         }
 
         /*
          //todo: fix this and change to sql
-        private void DumpAffordanceInformation([NotNull][ItemNotNull] List<CalcAffordanceTaggingSetDto> taggingSets)
+        private void DumpAffordanceInformation([JetBrains.Annotations.NotNull][ItemNotNull] List<CalcAffordanceTaggingSetDto> taggingSets)
         {
             if (_lf == null) {
                 throw new LPGException("lf was null");

@@ -6,7 +6,6 @@ using Automation.ResultFiles;
 using CalcPostProcessor.Steps;
 using Common;
 using Common.SQLResultLogging;
-using JetBrains.Annotations;
 
 namespace CalcPostProcessor.GeneralSteps
 {
@@ -50,7 +49,7 @@ namespace CalcPostProcessor.GeneralSteps
             WriteAffordanceTags();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public override List<CalcOption> NeededOptions => new List<CalcOption>() {CalcOption.AffordanceTaggingSets};
     }
 }

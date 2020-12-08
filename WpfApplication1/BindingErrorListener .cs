@@ -6,7 +6,7 @@ namespace LoadProfileGenerator {
     public class BindingErrorListener : TraceListener {
         [CanBeNull] private Action<string> _logAction;
 
-        public static void Listen([NotNull] Action<string> logAction) {
+        public static void Listen([JetBrains.Annotations.NotNull] Action<string> logAction) {
             PresentationTraceSources.DataBindingSource.Listeners
 #pragma warning disable CC0022 // Should dispose object
                 .Add(new BindingErrorListener {_logAction = logAction});

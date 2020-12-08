@@ -7,7 +7,7 @@ using JetBrains.Annotations;
 
 namespace ReleaseMaker {
     public class MakeClassDiagrams {
-        private static void Printedges([NotNull] MyClassNode clss, [NotNull] StreamWriter sw) {
+        private static void Printedges([JetBrains.Annotations.NotNull] MyClassNode clss, [JetBrains.Annotations.NotNull] StreamWriter sw) {
             foreach (var subclass in clss.Subclasses) {
                 Printedges(subclass, sw);
             }
@@ -25,7 +25,7 @@ namespace ReleaseMaker {
             }
         }
 
-        private static void Printnodes([NotNull]MyClassNode clss,[NotNull] StreamWriter sw) {
+        private static void Printnodes([JetBrains.Annotations.NotNull]MyClassNode clss,[JetBrains.Annotations.NotNull] StreamWriter sw) {
             var node = "node"+ Environment.NewLine;
             node += "["+ Environment.NewLine;
             node += "\tid " + clss.ID + Environment.NewLine;
@@ -56,7 +56,7 @@ namespace ReleaseMaker {
             sw.WriteLine(node);
         }
 
-        private static void ProcessAssembly([NotNull] string assemblyFilename, [NotNull] string gmlFileName) {
+        private static void ProcessAssembly([JetBrains.Annotations.NotNull] string assemblyFilename, [JetBrains.Annotations.NotNull] string gmlFileName) {
             using (var sw = new StreamWriter(gmlFileName)) {
                 var assembly = Assembly.Load(assemblyFilename);
                 // assembly.loa
@@ -108,7 +108,7 @@ namespace ReleaseMaker {
         }
 
         public class MyClassNode {
-            public MyClassNode([NotNull]Type myType, int id) {
+            public MyClassNode([JetBrains.Annotations.NotNull]Type myType, int id) {
                 MyType = myType;
                 ID = id;
                 if (myType.BaseType != null) {
@@ -119,9 +119,9 @@ namespace ReleaseMaker {
             public string BaseName { get; }
 
             public int ID { get; }
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public Type MyType { get; }
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             [ItemNotNull]
             public List<MyClassNode> Subclasses { get; } = new List<MyClassNode>();
         }

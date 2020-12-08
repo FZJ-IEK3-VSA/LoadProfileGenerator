@@ -51,7 +51,7 @@ namespace CalculationEngine.OnlineLogging {
         //HashSet<string> HouseholdKeys { get; }
         EnergyStorageLogfile? EnergyStorageLogfile { get; }
 
-        //[NotNull] FileFactoryAndTracker FileFactoryAndTracker { get; }
+        //[JetBrains.Annotations.NotNull] FileFactoryAndTracker FileFactoryAndTracker { get; }
 
         IThoughtsLogFile? ThoughtsLogFile1 { get; }
 
@@ -62,62 +62,62 @@ namespace CalculationEngine.OnlineLogging {
     }
 
     public interface IOnlineLoggingData: IDisposable {
-        void AddActionEntry([NotNull] TimeStep timeStep, StrGuid personGuid, [NotNull] string personName, bool isSick,
-                            [NotNull] string affordanceName,
-                            StrGuid affordanceGuid, [NotNull] HouseholdKey householdKey,
-                            [NotNull] string affordanceCategory, BodilyActivityLevel bodilyActivityLevel);
+        void AddActionEntry([JetBrains.Annotations.NotNull] TimeStep timeStep, StrGuid personGuid, [JetBrains.Annotations.NotNull] string personName, bool isSick,
+                            [JetBrains.Annotations.NotNull] string affordanceName,
+                            StrGuid affordanceGuid, [JetBrains.Annotations.NotNull] HouseholdKey householdKey,
+                            [JetBrains.Annotations.NotNull] string affordanceCategory, BodilyActivityLevel bodilyActivityLevel);
 
-        void AddColumnEntry([NotNull] ColumnEntry ce);
-        void AddLocationEntry([NotNull] LocationEntry le);
+        void AddColumnEntry([JetBrains.Annotations.NotNull] ColumnEntry ce);
+        void AddLocationEntry([JetBrains.Annotations.NotNull] LocationEntry le);
 
-        void AddTransportationEvent([NotNull] HouseholdKey householdkey,
-                                    [NotNull] string person, [NotNull] TimeStep timestep,
-                                    [NotNull] string srcSite,
-                                    [NotNull] string dstSite,
-                                    [NotNull] string route,
-                                    [NotNull] string transportationDevice,
+        void AddTransportationEvent([JetBrains.Annotations.NotNull] HouseholdKey householdkey,
+                                    [JetBrains.Annotations.NotNull] string person, [JetBrains.Annotations.NotNull] TimeStep timestep,
+                                    [JetBrains.Annotations.NotNull] string srcSite,
+                                    [JetBrains.Annotations.NotNull] string dstSite,
+                                    [JetBrains.Annotations.NotNull] string route,
+                                    [JetBrains.Annotations.NotNull] string transportationDevice,
                                     int transportationDuration,
                                     int affordanceDuration,
-                                    [NotNull] string affordanceName,
-                                    [NotNull] [ItemNotNull]
+                                    [JetBrains.Annotations.NotNull] string affordanceName,
+                                    [JetBrains.Annotations.NotNull] [ItemNotNull]
                                     List<CalcTravelRoute.CalcTravelDeviceUseEvent> travelDeviceUseEvents);
 
-        void AddTransportationStatus([NotNull] TransportationStatus transportationStatus);
+        void AddTransportationStatus([JetBrains.Annotations.NotNull] TransportationStatus transportationStatus);
 
         void FinalSaveToDatabase();
-        void SaveIfNeeded([NotNull] TimeStep timestep);
-        void RegisterDeviceActivation([NotNull] DeviceActivationEntry affordanceActivationEntry);
-        void RegisterDeviceArchiveDto([NotNull] CalcDeviceArchiveDto deviceDto);
-        void AddPersonStatus([NotNull] PersonStatus ps);
-        void AddTransportationDeviceState([NotNull] TransportationDeviceStateEntry tdse);
-        void AddChargingStationState([NotNull] ChargingStationState state);
-        void AddVariableStatus([NotNull] CalcVariableEntry calcVariableEntry);
+        void SaveIfNeeded([JetBrains.Annotations.NotNull] TimeStep timestep);
+        void RegisterDeviceActivation([JetBrains.Annotations.NotNull] DeviceActivationEntry affordanceActivationEntry);
+        void RegisterDeviceArchiveDto([JetBrains.Annotations.NotNull] CalcDeviceArchiveDto deviceDto);
+        void AddPersonStatus([JetBrains.Annotations.NotNull] PersonStatus ps);
+        void AddTransportationDeviceState([JetBrains.Annotations.NotNull] TransportationDeviceStateEntry tdse);
+        void AddChargingStationState([JetBrains.Annotations.NotNull] ChargingStationState state);
+        void AddVariableStatus([JetBrains.Annotations.NotNull] CalcVariableEntry calcVariableEntry);
     }
 
     public class OnlineLoggingData : IOnlineLoggingData {
-        [NotNull] [ItemNotNull] private readonly List<ActionEntry> _actionEntries = new List<ActionEntry>();
+        [JetBrains.Annotations.NotNull] [ItemNotNull] private readonly List<ActionEntry> _actionEntries = new List<ActionEntry>();
 
-        [NotNull] [ItemNotNull] private readonly List<DeviceActivationEntry> _deviceActivationEntries;
-        [NotNull] [ItemNotNull] private readonly List<CalcDeviceArchiveDto> _deviceEntries;
+        [JetBrains.Annotations.NotNull] [ItemNotNull] private readonly List<DeviceActivationEntry> _deviceActivationEntries;
+        [JetBrains.Annotations.NotNull] [ItemNotNull] private readonly List<CalcDeviceArchiveDto> _deviceEntries;
 
-        [ItemNotNull] [NotNull] private readonly List<ColumnEntry> _columnEntries;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly List<ColumnEntry> _columnEntries;
 
-        [NotNull] private readonly DateStampCreator _dsc;
+        [JetBrains.Annotations.NotNull] private readonly DateStampCreator _dsc;
 
-        [NotNull] private readonly IInputDataLogger _idl;
-        [NotNull] private readonly CalcParameters _calcParameters;
+        [JetBrains.Annotations.NotNull] private readonly IInputDataLogger _idl;
+        [JetBrains.Annotations.NotNull] private readonly CalcParameters _calcParameters;
 
-        [ItemNotNull] [NotNull] private readonly List<LocationEntry> _locationEntries;
-        [ItemNotNull] [NotNull] private readonly List<PersonStatus> _personStatus;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly List<LocationEntry> _locationEntries;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly List<PersonStatus> _personStatus;
 
-        [ItemNotNull] [NotNull] private readonly List<TransportationEventEntry> _transportationEvents;
-        [ItemNotNull] [NotNull] private readonly List<TransportationStatus> _transportationStatuses;
-        [ItemNotNull] [NotNull] private readonly List<TransportationDeviceStateEntry> _transportationDeviceState;
-        [ItemNotNull] [NotNull] private readonly List<ChargingStationState> _chargingStationStates;
-        [ItemNotNull] [NotNull] private readonly List<CalcVariableEntry> _variableEntries;
-        [ItemNotNull] [NotNull] private readonly List<dynamic> _lists = new List<dynamic>();
-        public OnlineLoggingData([NotNull] DateStampCreator dsc, [NotNull] IInputDataLogger idl,
-                                 [NotNull] CalcParameters calcParameters)
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly List<TransportationEventEntry> _transportationEvents;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly List<TransportationStatus> _transportationStatuses;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly List<TransportationDeviceStateEntry> _transportationDeviceState;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly List<ChargingStationState> _chargingStationStates;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly List<CalcVariableEntry> _variableEntries;
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly List<dynamic> _lists = new List<dynamic>();
+        public OnlineLoggingData([JetBrains.Annotations.NotNull] DateStampCreator dsc, [JetBrains.Annotations.NotNull] IInputDataLogger idl,
+                                 [JetBrains.Annotations.NotNull] CalcParameters calcParameters)
         {
             _dsc = dsc;
             _idl = idl;
@@ -345,7 +345,7 @@ namespace CalculationEngine.OnlineLogging {
 
         private readonly IThoughtsLogFile? _thoughtsLogFile;
 
-        public LogFile([NotNull] CalcParameters calcParameters,
+        public LogFile([JetBrains.Annotations.NotNull] CalcParameters calcParameters,
                        FileFactoryAndTracker fft,
                        bool writeToConsole = false
                        )
@@ -390,7 +390,7 @@ namespace CalculationEngine.OnlineLogging {
         public EnergyStorageLogfile? EnergyStorageLogfile => _energyStorageLogfile;
 
 
-        //public void InitHousehold([NotNull] HouseholdKey householdKey, [NotNull] string name, HouseholdKeyType type, string description,
+        //public void InitHousehold([JetBrains.Annotations.NotNull] HouseholdKey householdKey, [JetBrains.Annotations.NotNull] string name, HouseholdKeyType type, string description,
         //                          [CanBeNull] string housename, string houseDescription)
         //{
 

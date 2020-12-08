@@ -4,20 +4,19 @@ using Automation.ResultFiles;
 using CalculationEngine.HouseholdElements;
 using Common;
 using Common.SQLResultLogging.InputLoggers;
-using JetBrains.Annotations;
 
 namespace CalculationEngine.Transportation {
     public class CalcChargingStation {
-        [NotNull] private readonly HouseholdKey _householdKey;
+        [JetBrains.Annotations.NotNull] private readonly HouseholdKey _householdKey;
         private readonly CalcRepo _calcRepo;
 
-        public CalcChargingStation([NotNull] CalcTransportationDeviceCategory deviceCategory, [NotNull] CalcLoadType gridChargingLoadType,
+        public CalcChargingStation([JetBrains.Annotations.NotNull] CalcTransportationDeviceCategory deviceCategory, [JetBrains.Annotations.NotNull] CalcLoadType gridChargingLoadType,
                                    double maxChargingPower,
-                                   [NotNull] string chargingStationName, StrGuid chargingStationGuid,
-                                   [NotNull] HouseholdKey householdKey,
+                                   [JetBrains.Annotations.NotNull] string chargingStationName, StrGuid chargingStationGuid,
+                                   [JetBrains.Annotations.NotNull] HouseholdKey householdKey,
                                    // ReSharper disable once UnusedParameter.Local
                                    //todo: put in isbusy
-                                   [NotNull] CalcLoadType carChargingLoadType, CalcRepo calcRepo, BitArray isBusyArray)
+                                   [JetBrains.Annotations.NotNull] CalcLoadType carChargingLoadType, CalcRepo calcRepo, BitArray isBusyArray)
         {
             _householdKey = householdKey;
             _calcRepo = calcRepo;
@@ -33,20 +32,20 @@ namespace CalculationEngine.Transportation {
         //TODO: do the entire "requested power, real active power" thing
         //TODO: multiple charging points at one charging station
         //TODO: power limits across multiple charging stations
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CalcTransportationDeviceCategory DeviceCategory { get; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CalcLoadType GridChargingLoadType { get; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public CalcLoadType CarChargingLoadType { get; }
 
         public double MaxChargingPower { get; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string ChargingStationName { get; }
         public StrGuid ChargingStationGuid { get; }
         public bool IsAvailable { get; private set; }
         private CalcTransportationDevice? _connectedCar;
-        public void SetConnectedCar([NotNull] CalcTransportationDevice device)
+        public void SetConnectedCar([JetBrains.Annotations.NotNull] CalcTransportationDevice device)
         {
             _connectedCar = device;
             IsAvailable = false;
@@ -57,7 +56,7 @@ namespace CalculationEngine.Transportation {
             _connectedCar = null;
             IsAvailable = true;
         }
-        public void ProcessRequests([NotNull] TimeStep timestep)
+        public void ProcessRequests([JetBrains.Annotations.NotNull] TimeStep timestep)
         {
             //TODO: do the entire thing with requested power / real power
             ChargingStationState state  = new ChargingStationState(ChargingStationName,ChargingStationGuid,

@@ -16,12 +16,12 @@ using JetBrains.Annotations;
 
 namespace Database.Templating {
     public class SettlementTemplateExecutor {
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<HouseEntry> _previewHouseEntries = new ObservableCollection<HouseEntry>();
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<HouseEntry> _previewHouseEntries = new ObservableCollection<HouseEntry>();
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<HouseEntry> PreviewHouseEntries => _previewHouseEntries;
 
-        public void CreateSettlementFromPreview([NotNull] Simulator sim, [NotNull] SettlementTemplate template)
+        public void CreateSettlementFromPreview([JetBrains.Annotations.NotNull] Simulator sim, [JetBrains.Annotations.NotNull] SettlementTemplate template)
         {
             if (string.IsNullOrEmpty(template.NewName)) {
                 Logger.Error("The new name for the settlement can not be empty.");
@@ -90,8 +90,8 @@ namespace Database.Templating {
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
-        public void GenerateSettlementPreview( [NotNull] Simulator sim,
-            [NotNull] SettlementTemplate template)
+        public void GenerateSettlementPreview( [JetBrains.Annotations.NotNull] Simulator sim,
+            [JetBrains.Annotations.NotNull] SettlementTemplate template)
         {
             if (Math.Abs(template.HousePercentage - 1) > Constants.Ebsilon) {
                 throw new DataIntegrityException(
@@ -177,8 +177,8 @@ namespace Database.Templating {
             Logger.Get().SafeExecuteWithWait(() => _previewHouseEntries.SynchronizeWithList(filteredEntries));
         }
 
-        [NotNull]
-        private static HouseholdEntry MakeHouseEntry(ModularHousehold household, [NotNull] SettlementTemplate template, [NotNull] Random rnd)
+        [JetBrains.Annotations.NotNull]
+        private static HouseholdEntry MakeHouseEntry(ModularHousehold household, [JetBrains.Annotations.NotNull] SettlementTemplate template, [JetBrains.Annotations.NotNull] Random rnd)
         {
             ChargingStationSet css = template.ChargingStationSets[rnd.Next(template.ChargingStationSets.Count)].ChargingStationSet;
             var transportationDeviceSet = template.TransportationDeviceSets[rnd.Next(template.TransportationDeviceSets.Count)];
@@ -188,9 +188,9 @@ namespace Database.Templating {
         }
 
         [ItemNotNull]
-        [NotNull]
-        private static List<HouseholdTemplate> GetFittingtemplates([NotNull] STHouseholdDistribution distribution,
-            [NotNull] SettlementTemplate template)
+        [JetBrains.Annotations.NotNull]
+        private static List<HouseholdTemplate> GetFittingtemplates([JetBrains.Annotations.NotNull] STHouseholdDistribution distribution,
+            [JetBrains.Annotations.NotNull] SettlementTemplate template)
         {
             var fittingtemplates = template.HouseholdTemplates
                 .Where(x => x.HouseholdTemplate?.Persons.Count >= distribution.MinimumNumber &&
@@ -217,9 +217,9 @@ namespace Database.Templating {
             return fittingtemplates;
         }
 
-        [NotNull]
-        private static string GetHouseName([NotNull] string basis, ref int offset, [NotNull] Simulator sim,
-                                           [ItemNotNull] [NotNull] List<HouseholdEntry> households,
+        [JetBrains.Annotations.NotNull]
+        private static string GetHouseName([JetBrains.Annotations.NotNull] string basis, ref int offset, [JetBrains.Annotations.NotNull] Simulator sim,
+                                           [ItemNotNull] [JetBrains.Annotations.NotNull] List<HouseholdEntry> households,
             [CanBeNull] HouseType ht)
         {
             var houselist = string.Empty;
@@ -252,7 +252,7 @@ namespace Database.Templating {
             return GetName(offset);
         }
 
-        private static void GetMachtingCHH([ItemNotNull] [NotNull] List<ModularHousehold> matchingCHH, [NotNull] SettlementTemplate template)
+        private static void GetMachtingCHH([ItemNotNull] [JetBrains.Annotations.NotNull] List<ModularHousehold> matchingCHH, [JetBrains.Annotations.NotNull] SettlementTemplate template)
         {
             var chhIdx = 0;
             while (chhIdx < matchingCHH.Count) {
@@ -274,8 +274,8 @@ namespace Database.Templating {
             }
         }
 
-        [NotNull]
-        private static string GetSettlementName([NotNull] Simulator sim, [NotNull] SettlementTemplate template)
+        [JetBrains.Annotations.NotNull]
+        private static string GetSettlementName([JetBrains.Annotations.NotNull] Simulator sim, [JetBrains.Annotations.NotNull] SettlementTemplate template)
         {
             var nameoffset = 1;
 
@@ -291,7 +291,7 @@ namespace Database.Templating {
             return GetName(nameoffset);
         }
 
-        public static void InitializeHouseSizes([NotNull] SettlementTemplate template)
+        public static void InitializeHouseSizes([JetBrains.Annotations.NotNull] SettlementTemplate template)
         {
             var foundSolution = false;
             var multiplier = 0.01;
@@ -318,7 +318,7 @@ namespace Database.Templating {
         ///     Calculates the correct number of households for the distribution
         /// </summary>
         /// <param name="template">Template to calculate the counts for</param>
-        private static void MakeHouseholdCounts([NotNull] SettlementTemplate template)
+        private static void MakeHouseholdCounts([JetBrains.Annotations.NotNull] SettlementTemplate template)
         {
             var totalCount = 0;
             foreach (var distribution in template.HouseholdDistributions) {
@@ -354,8 +354,8 @@ namespace Database.Templating {
             }
         }
 
-        private static void MakeHouseholdDistribution([ItemNotNull] [NotNull] ObservableCollection<ModularHousehold> modularHouseholds,
-            [NotNull] Simulator sim, [ItemNotNull] [NotNull] List<ModularHousehold> resultinghouseholds, [NotNull] Random rnd, [NotNull] SettlementTemplate template, List<TraitTag> forbiddenTraitTags)
+        private static void MakeHouseholdDistribution([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<ModularHousehold> modularHouseholds,
+            [JetBrains.Annotations.NotNull] Simulator sim, [ItemNotNull] [JetBrains.Annotations.NotNull] List<ModularHousehold> resultinghouseholds, [JetBrains.Annotations.NotNull] Random rnd, [JetBrains.Annotations.NotNull] SettlementTemplate template, List<TraitTag> forbiddenTraitTags)
         {
             foreach (var limit in template.TraitLimits) {
                 limit.Init(template.DesiredHHCount);
@@ -448,7 +448,7 @@ namespace Database.Templating {
 
             public EnergyIntensityType EnergyIntensityType { get; }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             [UsedImplicitly]
             public string HouseholdList {
                 get {
@@ -462,7 +462,7 @@ namespace Database.Templating {
             }
 
             [ItemNotNull]
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public List<HouseholdEntry> Households { get; }
 
             [UsedImplicitly]
@@ -475,7 +475,7 @@ namespace Database.Templating {
             [UsedImplicitly]
             public int Number { get; }
 
-            public int CompareTo([NotNull] object obj)
+            public int CompareTo([JetBrains.Annotations.NotNull] object obj)
             {
                 if (!(obj is HouseEntry other))
                 {

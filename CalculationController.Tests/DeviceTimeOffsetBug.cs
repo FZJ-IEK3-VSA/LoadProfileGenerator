@@ -27,7 +27,7 @@ using Xunit;
 
 namespace CalculationController.Tests {
     public class DeviceTimeOffsetBug {
-        private static void CheckForOverdoneOffsets([NotNull] string path, [NotNull] SqlResultLoggingService srls) {
+        private static void CheckForOverdoneOffsets([JetBrains.Annotations.NotNull] string path, [JetBrains.Annotations.NotNull] SqlResultLoggingService srls) {
             //var actionsName = Path.Combine(path, "Reports", "ActionsEachStep.HH1.csv");
             var wwDeviceProfiles = Path.Combine(path, "Results", "DeviceProfiles.Warm Water.csv");
             HouseholdKeyLogger hkl = new HouseholdKeyLogger(srls);
@@ -78,7 +78,7 @@ namespace CalculationController.Tests {
             }
         }
         private class EnergyUseEntry {
-            public EnergyUseEntry([NotNull] string s, [NotNull][ItemNotNull] string[] headerDict) {
+            public EnergyUseEntry([JetBrains.Annotations.NotNull] string s, [JetBrains.Annotations.NotNull][ItemNotNull] string[] headerDict) {
                 var arr = s.Split(';');
                 Timestep = Convert.ToInt32(arr[0], CultureInfo.InvariantCulture);
                 for (var i = 2; i < arr.Length; i++) {
@@ -90,7 +90,7 @@ namespace CalculationController.Tests {
             }
 
             public int Timestep { get; }
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public Dictionary<string, double> Values { get; } = new Dictionary<string, double>();
         }
 

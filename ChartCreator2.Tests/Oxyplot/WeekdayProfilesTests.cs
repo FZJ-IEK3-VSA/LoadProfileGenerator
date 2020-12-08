@@ -5,8 +5,6 @@ using ChartCreator2.OxyCharts;
 using Common;
 using Common.Tests;
 using FluentAssertions;
-using JetBrains.Annotations;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -63,7 +61,7 @@ namespace ChartCreator2.Tests.Oxyplot {
             aeupp.MakePlot(rfe, "Weekday", di);
             Logger.Info("finished picture");
         }*/
-        public WeekdayProfilesTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        public WeekdayProfilesTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {
         }
     }

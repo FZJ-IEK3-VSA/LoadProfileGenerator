@@ -42,7 +42,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
         private readonly DateTime _calcStartTime;
         private readonly string _settlementName;
 
-        public SettlementResultsPresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] SettlementResultView view,
+        public SettlementResultsPresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] SettlementResultView view,
             string settlementName, ObservableCollection<ResultFileEntry> resultFileEntries) :
             base(view, "HeaderString", applicationPresenter)
         {
@@ -74,7 +74,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
         [UsedImplicitly]
         public DateTime CalcStartTime => _calcStartTime;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string HeaderString => "Results for " + _settlementName;
 
@@ -118,7 +118,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        public static void StartExcel([NotNull] ResultFileEntry resultFile)
+        public static void StartExcel([JetBrains.Annotations.NotNull] ResultFileEntry resultFile)
         {
 #pragma warning disable S2930 // "IDisposables" should be disposed
 #pragma warning disable CC0022 // Should dispose object

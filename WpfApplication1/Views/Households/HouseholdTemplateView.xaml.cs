@@ -20,7 +20,7 @@ namespace LoadProfileGenerator.Views.Households {
             InitializeComponent();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private HouseholdTemplatePresenter Presenter => (HouseholdTemplatePresenter) DataContext;
 
         private void BtnAddAllVacation_Click([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
@@ -269,7 +269,7 @@ namespace LoadProfileGenerator.Views.Households {
             Presenter.SelectedPerson = hhTemplatePerson.Person;
         }
 
-        private void UIElement_OnKeyUp([NotNull] object sender, [NotNull] KeyEventArgs e) =>
+        private void UIElement_OnKeyUp([JetBrains.Annotations.NotNull] object sender, [JetBrains.Annotations.NotNull] KeyEventArgs e) =>
             Presenter.RefreshFilteredEntries(TxtFilter.Text);
 
         private void MakeCopyOnClick(object sender, RoutedEventArgs e)

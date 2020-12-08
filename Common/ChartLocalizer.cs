@@ -3,7 +3,7 @@
 namespace Common {
     public class ChartLocalizer {
         [CanBeNull] private static ChartLocalizer _chartLocalizer;
-        //[NotNull]
+        //[JetBrains.Annotations.NotNull]
         //private readonly Dictionary<string, string> _translations = new Dictionary<string, string>();
 
         private ChartLocalizer() {
@@ -40,14 +40,14 @@ namespace Common {
             }*/
         }
 
-      /*  [NotNull]
+      /*  [JetBrains.Annotations.NotNull]
         public static string MissingFileName { private get; set; } = @"MissingTranslations.txt";
 
         private static int MissingTranslationCount { get; set; }
 
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public static bool ShouldTranslate { get; set; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static string TranslationFileName { get; set; } = @"c:\work\Translations.txt";
         */
         [NotNull]

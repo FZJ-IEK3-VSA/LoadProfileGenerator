@@ -1,9 +1,8 @@
 ﻿using Automation.ResultFiles;
-using JetBrains.Annotations;
 
 namespace Common.SQLResultLogging.Loggers {
     public interface IHouseholdKey {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         HouseholdKey HouseholdKey { get; }
     }
 }

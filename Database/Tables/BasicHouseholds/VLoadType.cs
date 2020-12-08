@@ -45,18 +45,18 @@ using JetBrains.Annotations;
 namespace Database.Tables.BasicHouseholds {
     public class VLoadType : DBBaseElement {
         public const string TableName = "tblLoadTypes";
-        [NotNull] private string _description;
+        [JetBrains.Annotations.NotNull] private string _description;
         private double _exampleOfPower;
         private double _exampleOfSum;
         private double _loadTypeWeight;
         private LoadTypePriority _priority;
         private bool _showInCharts;
         private TimeSpan _timeSpanForSum;
-        [NotNull] private string _unitOfPower;
-        [NotNull] private string _unitOfSum;
+        [JetBrains.Annotations.NotNull] private string _unitOfPower;
+        [JetBrains.Annotations.NotNull] private string _unitOfSum;
 
-        public VLoadType([NotNull] string pName, [NotNull] string description, [NotNull] string unitOfPower, [NotNull] string unitOfSum, double exampleOfPower,
-            double exampleOfSum, TimeSpan timeSpanForSum, double loadTypeWeight, [NotNull] string connectionString,
+        public VLoadType([JetBrains.Annotations.NotNull] string pName, [JetBrains.Annotations.NotNull] string description, [JetBrains.Annotations.NotNull] string unitOfPower, [JetBrains.Annotations.NotNull] string unitOfSum, double exampleOfPower,
+            double exampleOfSum, TimeSpan timeSpanForSum, double loadTypeWeight, [JetBrains.Annotations.NotNull] string connectionString,
             LoadTypePriority priority, bool showInCharts, StrGuid guid, [CanBeNull]int? pID = null)
             : base(pName, TableName, connectionString, guid)
         {
@@ -86,7 +86,7 @@ namespace Database.Tables.BasicHouseholds {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string Description {
             get => _description;
@@ -126,21 +126,21 @@ namespace Database.Tables.BasicHouseholds {
             set => SetValueWithNotify(value, ref _timeSpanForSum, nameof(TimeSpanForSum));
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string UnitOfPower {
             get => _unitOfPower;
             set => SetValueWithNotify(value, ref _unitOfPower, nameof(UnitOfPower));
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string UnitOfSum {
             get => _unitOfSum;
             set => SetValueWithNotify(value, ref _unitOfSum, nameof(UnitOfSum));
         }
 
-        [NotNull]
-        private static VLoadType AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static VLoadType AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var name = dr.GetString("Name");
             var id = (int) dr.GetLong("ID");
@@ -161,9 +161,9 @@ namespace Database.Tables.BasicHouseholds {
         public double ConvertPowerValueWithTime(double value, TimeSpan ts) => value * ts.TotalSeconds *
                                                                               ConversionFaktorPowerToSum;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DBBase CreateNewItem([CanBeNull] Func<string, bool> isNameTaken, [NotNull] string connectionString)
+        public static DBBase CreateNewItem([CanBeNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString)
         {
             string name = "New Load Type";
             if (isNameTaken != null) {
@@ -201,10 +201,10 @@ namespace Database.Tables.BasicHouseholds {
             return usedIns;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "dstSim")]
         [UsedImplicitly]
-        public static VLoadType ImportFromItem([NotNull] VLoadType toImport, [NotNull] Simulator dstSim)
+        public static VLoadType ImportFromItem([JetBrains.Annotations.NotNull] VLoadType toImport, [JetBrains.Annotations.NotNull] Simulator dstSim)
         {
             var vlt = new VLoadType(toImport.Name, toImport.Description, toImport.UnitOfPower, toImport.UnitOfSum,
                 toImport.ExampleOfPower, toImport.ExampleOfSum, toImport.TimeSpanForSum, toImport.LoadTypeWeight,
@@ -219,7 +219,7 @@ namespace Database.Tables.BasicHouseholds {
             return true;
         }
 
-        public static void LoadFromDatabase([NotNull] [ItemNotNull] ObservableCollection<VLoadType> result, [NotNull] string connectionString,
+        public static void LoadFromDatabase([JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<VLoadType> result, [JetBrains.Annotations.NotNull] string connectionString,
             bool ignoreMissingTables)
         {
             var aic = new AllItemCollections();

@@ -42,8 +42,8 @@ namespace Common {
 
 
     public static class Extensions {
-        [NotNull]
-        public static string RelativePath([NotNull] this FileInfo fi, [NotNull] DirectoryInfo di)
+        [JetBrains.Annotations.NotNull]
+        public static string RelativePath([JetBrains.Annotations.NotNull] this FileInfo fi, [JetBrains.Annotations.NotNull] DirectoryInfo di)
         {
             if (!fi.FullName.StartsWith(di.FullName))
             {
@@ -66,8 +66,8 @@ namespace Common {
             return StrGuid.FromGuid(myguid);
         }
 
-        [NotNull]
-        public static string GetNotNullThreadName([NotNull] this Thread mythread)
+        [JetBrains.Annotations.NotNull]
+        public static string GetNotNullThreadName([JetBrains.Annotations.NotNull] this Thread mythread)
         {
             string name = mythread.Name;
             if (name == null) {
@@ -76,7 +76,7 @@ namespace Common {
             return name;
         }
 
-        public static StrGuid ToStrGuid([NotNull] this string myguid)
+        public static StrGuid ToStrGuid([JetBrains.Annotations.NotNull] this string myguid)
         {
             return  StrGuid.FromString(myguid);
         }
@@ -88,7 +88,7 @@ namespace Common {
 
         //    return sf.GetMethod().Name;
         //}
-        public static void Sort<T>([NotNull][ItemNotNull] this ObservableCollection<T> collection, [NotNull] Comparison<T> comparer)
+        public static void Sort<T>([JetBrains.Annotations.NotNull][ItemNotNull] this ObservableCollection<T> collection, [JetBrains.Annotations.NotNull] Comparison<T> comparer)
             where T : IComparable {
             if (collection == null) {
                 throw new LPGException("Sorting failed, collection = null");
@@ -100,7 +100,7 @@ namespace Common {
             }
         }
 
-        public static void Sort<T>([NotNull][ItemNotNull] this ObservableCollection<T> collection) where T : IComparable {
+        public static void Sort<T>([JetBrains.Annotations.NotNull][ItemNotNull] this ObservableCollection<T> collection) where T : IComparable {
             if (collection == null) {
                 throw new LPGException("Sorting failed, collection = null");
             }
@@ -118,7 +118,7 @@ namespace Common {
             }
         }
 
-        public static void SynchronizeWithList<T>([NotNull][ItemNotNull] this ObservableCollection<T> collection, [NotNull][ItemNotNull] List<T> list)
+        public static void SynchronizeWithList<T>([JetBrains.Annotations.NotNull][ItemNotNull] this ObservableCollection<T> collection, [JetBrains.Annotations.NotNull][ItemNotNull] List<T> list)
             where T : IComparable {
             foreach (var item in list) {
                 if (!collection.Contains(item)) {
