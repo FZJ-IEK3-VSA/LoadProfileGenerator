@@ -42,10 +42,10 @@ using LoadProfileGenerator.Views.BasicElements;
 
 namespace LoadProfileGenerator.Presenters.BasicElements {
     public class LoadTypePresenter : PresenterBaseDBBase<LoadTypeView> {
-        [JetBrains.Annotations.NotNull] private readonly ApplicationPresenter _applicationPresenter;
+        [NotNull] private readonly ApplicationPresenter _applicationPresenter;
         private double _amountForTesting;
 
-        public LoadTypePresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] LoadTypeView view, [JetBrains.Annotations.NotNull] VLoadType loadtype)
+        public LoadTypePresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] LoadTypeView view, [NotNull] VLoadType loadtype)
             : base(view, "ThisLoadType.HeaderString", loadtype, applicationPresenter)
         {
             _applicationPresenter = applicationPresenter;
@@ -86,7 +86,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             }
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public string FifteenMinuteExample
             =>
@@ -94,7 +94,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
                 ThisLoadType.ConvertPowerValueWithTime(_amountForTesting, new TimeSpan(0, 0, 15, 0)) + " " +
                 ThisLoadType.UnitOfSum;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public string OneDayExample
             =>
@@ -102,7 +102,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
                 ThisLoadType.ConvertPowerValueWithTime(_amountForTesting, new TimeSpan(0, 24, 0, 0)) + " " +
                 ThisLoadType.UnitOfSum;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public string OneHourExample
             =>
@@ -110,7 +110,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
                 ThisLoadType.ConvertPowerValueWithTime(_amountForTesting, new TimeSpan(0, 1, 0, 0)) + " " +
                 ThisLoadType.UnitOfSum;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public string OneMinuteExample
             =>
@@ -118,7 +118,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
                 ThisLoadType.ConvertPowerValueWithTime(_amountForTesting, new TimeSpan(0, 0, 1, 0)) + " " +
                 ThisLoadType.UnitOfSum;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public string OneSecondExample
             =>
@@ -126,12 +126,12 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
                 ThisLoadType.ConvertPowerValueWithTime(_amountForTesting, new TimeSpan(0, 0, 0, 1)) + " " +
                 ThisLoadType.UnitOfSum;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public Dictionary<LoadTypePriority, string> Priorities
             => LoadTypePriorityHelper.LoadTypePriorityDictionarySelection;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public VLoadType ThisLoadType { get; }
 
@@ -145,11 +145,11 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             }
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<bool> TrueFalse { get; } = new ObservableCollection<bool>();
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public string UnitOfPower {
             get => ThisLoadType.UnitOfPower;
@@ -160,7 +160,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             }
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public string UnitOfSum {
             get => ThisLoadType.UnitOfSum;
@@ -172,7 +172,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
         }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<UsedIn> UsedIn { get; } = new ObservableCollection<UsedIn>();
 

@@ -45,14 +45,14 @@ namespace Database.Tables.BasicElements {
         public override List<UsedIn> CalculateUsedIns(Simulator sim) => throw new NotImplementedException();
 
         public const string TableName = "tblAffTaggingSet";
-        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<AffordanceTaggingEntry> _entries;
-        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<AffordanceTagReference> _tagReferences;
-        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<AffordanceTag> _tags;
-        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<AffordanceTaggingSetLoadType> _loadTypes = new ObservableCollection<AffordanceTaggingSetLoadType>();
-        [JetBrains.Annotations.NotNull] private string _description;
+        [ItemNotNull] [NotNull] private readonly ObservableCollection<AffordanceTaggingEntry> _entries;
+        [ItemNotNull] [NotNull] private readonly ObservableCollection<AffordanceTagReference> _tagReferences;
+        [ItemNotNull] [NotNull] private readonly ObservableCollection<AffordanceTag> _tags;
+        [ItemNotNull] [NotNull] private readonly ObservableCollection<AffordanceTaggingSetLoadType> _loadTypes = new ObservableCollection<AffordanceTaggingSetLoadType>();
+        [NotNull] private string _description;
         private bool _makeCharts;
 
-        public AffordanceTaggingSet([JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] string description, [JetBrains.Annotations.NotNull] string connectionString, bool makeCharts, StrGuid guid,
+        public AffordanceTaggingSet([NotNull] string name, [NotNull] string description, [NotNull] string connectionString, bool makeCharts, StrGuid guid,
                                     [CanBeNull]int? pID = null) : base(name, TableName, connectionString, guid)
         {
             _tags = new ObservableCollection<AffordanceTag>();
@@ -64,7 +64,7 @@ namespace Database.Tables.BasicElements {
             _description = description;
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public string Description {
             get => _description;
@@ -72,7 +72,7 @@ namespace Database.Tables.BasicElements {
         }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<AffordanceTaggingEntry> Entries => _entries;
 
@@ -83,22 +83,22 @@ namespace Database.Tables.BasicElements {
         }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<AffordanceTagReference> TagReferences => _tagReferences;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<AffordanceTaggingSetLoadType> LoadTypes => _loadTypes;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [ItemNotNull]
         [UsedImplicitly]
         public ObservableCollection<AffordanceTag> Tags => _tags;
 
         [CanBeNull]
-        public AffordanceTag AddNewTag([JetBrains.Annotations.NotNull] string name)
+        public AffordanceTag AddNewTag([NotNull] string name)
         {
             foreach (var affordanceTag in _tags) {
                 if (affordanceTag.Name == name) {
@@ -115,7 +115,7 @@ namespace Database.Tables.BasicElements {
             return at;
         }
 
-        public void AddNewLoadType([JetBrains.Annotations.NotNull] VLoadType loadType)
+        public void AddNewLoadType([NotNull] VLoadType loadType)
         {
             if (_loadTypes.Any(x => x.LoadType == loadType)) {
                 return;
@@ -127,7 +127,7 @@ namespace Database.Tables.BasicElements {
             SaveToDB();
         }
 
-        public void AddTaggingEntry([JetBrains.Annotations.NotNull] AffordanceTag tag, [JetBrains.Annotations.NotNull] Affordance aff)
+        public void AddTaggingEntry([NotNull] AffordanceTag tag, [NotNull] Affordance aff)
         {
             var at = new AffordanceTaggingEntry(string.Empty, IntID, tag, aff, ConnectionString, null, System.Guid.NewGuid().ToStrGuid())
             {
@@ -141,7 +141,7 @@ namespace Database.Tables.BasicElements {
             });
         }
 
-        public void AddTagReference([JetBrains.Annotations.NotNull] AffordanceTag tag, PermittedGender gender, int minAge, int maxAge,
+        public void AddTagReference([NotNull] AffordanceTag tag, PermittedGender gender, int minAge, int maxAge,
             double percentage)
         {
             var at = new AffordanceTagReference(tag.Name, IntID, tag, ConnectionString, null, gender, minAge, maxAge,
@@ -153,9 +153,9 @@ namespace Database.Tables.BasicElements {
             at.SaveToDB();
         }
 
-        [JetBrains.Annotations.NotNull]
-        private static AffordanceTaggingSet AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString,
-            bool ignoreMissingFields, [JetBrains.Annotations.NotNull] AllItemCollections aic)
+        [NotNull]
+        private static AffordanceTaggingSet AssignFields([NotNull] DataReader dr, [NotNull] string connectionString,
+            bool ignoreMissingFields, [NotNull] AllItemCollections aic)
         {
             var id = dr.GetIntFromLong("ID");
             var name = dr.GetString("Name");
@@ -165,14 +165,14 @@ namespace Database.Tables.BasicElements {
             return new AffordanceTaggingSet(name, description, connectionString, makeCharts,guid, id);
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
-        public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString) => new
+        public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new
             AffordanceTaggingSet(FindNewName(isNameTaken, "New Affordance Tagging Set "),
                 "(no description)",
                 connectionString, true, System.Guid.NewGuid().ToStrGuid());
 
-        private void DeleteEntry([JetBrains.Annotations.NotNull] AffordanceTaggingEntry at)
+        private void DeleteEntry([NotNull] AffordanceTaggingEntry at)
         {
             at.DeleteFromDB();
             _entries.Remove(at);
@@ -192,7 +192,7 @@ namespace Database.Tables.BasicElements {
             }
         }
 
-        public void DeleteTag([JetBrains.Annotations.NotNull] AffordanceTag at)
+        public void DeleteTag([NotNull] AffordanceTag at)
         {
             at.DeleteFromDB();
             _tags.Remove(at);
@@ -203,15 +203,15 @@ namespace Database.Tables.BasicElements {
             }
         }
 
-        public void DeleteTagReference([JetBrains.Annotations.NotNull] AffordanceTagReference at)
+        public void DeleteTagReference([NotNull] AffordanceTagReference at)
         {
             at.DeleteFromDB();
             _tagReferences.Remove(at);
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
-        public static AffordanceTaggingSet ImportFromItem([JetBrains.Annotations.NotNull] AffordanceTaggingSet toImport, [JetBrains.Annotations.NotNull] Simulator dstSim)
+        public static AffordanceTaggingSet ImportFromItem([NotNull] AffordanceTaggingSet toImport, [NotNull] Simulator dstSim)
         {
             var hd = new AffordanceTaggingSet(toImport.Name, toImport.Description, dstSim.ConnectionString,
                 toImport.MakeCharts, toImport.Guid);
@@ -269,7 +269,7 @@ namespace Database.Tables.BasicElements {
             return hd;
         }
 
-        private static bool IsCorrectEntryParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
+        private static bool IsCorrectEntryParent([NotNull] DBBase parent, [NotNull] DBBase child)
         {
             var entry = (AffordanceTaggingEntry) child;
             if (parent.ID == entry.TaggingSetID) {
@@ -281,7 +281,7 @@ namespace Database.Tables.BasicElements {
             return false;
         }
 
-        private static bool IsCorrectLoadType([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
+        private static bool IsCorrectLoadType([NotNull] DBBase parent, [NotNull] DBBase child)
         {
             var at = (AffordanceTaggingSetLoadType)child;
             if (parent.ID == at.TaggingSetID)
@@ -292,7 +292,7 @@ namespace Database.Tables.BasicElements {
             }
             return false;
         }
-        private static bool IsCorrectTagParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
+        private static bool IsCorrectTagParent([NotNull] DBBase parent, [NotNull] DBBase child)
         {
             var at = (AffordanceTag) child;
             if (parent.ID == at.TaggingSetID) {
@@ -303,7 +303,7 @@ namespace Database.Tables.BasicElements {
             return false;
         }
 
-        private static bool IsCorrectTagReferenceParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
+        private static bool IsCorrectTagReferenceParent([NotNull] DBBase parent, [NotNull] DBBase child)
         {
             var at = (AffordanceTagReference) child;
             if (parent.ID == at.TaggingSetID) {
@@ -333,8 +333,8 @@ namespace Database.Tables.BasicElements {
         ///     The automatic deletion function for cleaning the database of stale entries didn't work.
         ///     Please report!
         /// </exception>
-        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<AffordanceTaggingSet> result, [JetBrains.Annotations.NotNull] string connectionString,
-            bool ignoreMissingTables, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Affordance> affordances, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<VLoadType> loadTypes)
+        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<AffordanceTaggingSet> result, [NotNull] string connectionString,
+            bool ignoreMissingTables, [ItemNotNull] [NotNull] ObservableCollection<Affordance> affordances, [ItemNotNull] [NotNull] ObservableCollection<VLoadType> loadTypes)
         {
             var aic = new AllItemCollections();
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);
@@ -363,7 +363,7 @@ namespace Database.Tables.BasicElements {
             SetSubitems(new List<DBBase>(result), new List<DBBase>(entries), IsCorrectEntryParent, ignoreMissingTables);
         }
 
-        public void RefreshAffordances([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Affordance> affordances)
+        public void RefreshAffordances([ItemNotNull] [NotNull] ObservableCollection<Affordance> affordances)
         {
             AffordanceTag noneTag = null;
             foreach (var affordanceTag in _tags) {
@@ -404,7 +404,7 @@ namespace Database.Tables.BasicElements {
             SaveToDB();
         }
 
-        public void RemoveAllOldEntries([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Affordance> allAff)
+        public void RemoveAllOldEntries([ItemNotNull] [NotNull] ObservableCollection<Affordance> allAff)
         {
             var alltags = Tags.Select(x => x.Name).ToList();
             foreach (var aff in allAff) {
@@ -454,7 +454,7 @@ namespace Database.Tables.BasicElements {
 
         public override string ToString() => Name;
 
-        public void DeleteLoadType([JetBrains.Annotations.NotNull] AffordanceTaggingSetLoadType loadType)
+        public void DeleteLoadType([NotNull] AffordanceTaggingSetLoadType loadType)
         {
             loadType.DeleteFromDB();
             _loadTypes.Remove(loadType);

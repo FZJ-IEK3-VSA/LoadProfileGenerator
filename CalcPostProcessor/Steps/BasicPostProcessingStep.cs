@@ -18,41 +18,41 @@ namespace CalcPostProcessor.Steps
     }
     public class HouseholdStepParameters : IStepParameters
     {
-        public HouseholdStepParameters([JetBrains.Annotations.NotNull] HouseholdKeyEntry key) => Key = key;
+        public HouseholdStepParameters([NotNull] HouseholdKeyEntry key) => Key = key;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public HouseholdKeyEntry Key { get;  }
     }
 
     public class HouseholdLoadtypeStepParameters : IStepParameters
     {
-        public HouseholdLoadtypeStepParameters([JetBrains.Annotations.NotNull] HouseholdKeyEntry key, [JetBrains.Annotations.NotNull] CalcLoadTypeDto loadType,
-                                                      [JetBrains.Annotations.NotNull][ItemNotNull] List<OnlineEnergyFileRow> energyFileRows)
+        public HouseholdLoadtypeStepParameters([NotNull] HouseholdKeyEntry key, [NotNull] CalcLoadTypeDto loadType,
+                                                      [NotNull][ItemNotNull] List<OnlineEnergyFileRow> energyFileRows)
         {
             Key = key;
             LoadType = loadType;
             EnergyFileRows = energyFileRows;
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public HouseholdKeyEntry Key { get; }
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public CalcLoadTypeDto LoadType { get; }
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [ItemNotNull]
         public List<OnlineEnergyFileRow> EnergyFileRows { get; }
     }
 
     public class LoadtypeStepParameters : IStepParameters
     {
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public CalcLoadTypeDto LoadType { get; }
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [ItemNotNull]
         public List<OnlineEnergyFileRow> EnergyFileRows { get; }
 
-        public LoadtypeStepParameters([JetBrains.Annotations.NotNull] CalcLoadTypeDto loadType,
-                                            [JetBrains.Annotations.NotNull][ItemNotNull] List<OnlineEnergyFileRow> energyFileRows)
+        public LoadtypeStepParameters([NotNull] CalcLoadTypeDto loadType,
+                                            [NotNull][ItemNotNull] List<OnlineEnergyFileRow> energyFileRows)
         {
             LoadType = loadType;
             EnergyFileRows = energyFileRows;
@@ -61,9 +61,9 @@ namespace CalcPostProcessor.Steps
 
     public class LoadtypeSumStepParameters : IStepParameters
     {
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public CalcLoadTypeDto LoadType { get; }
-        public LoadtypeSumStepParameters([JetBrains.Annotations.NotNull] CalcLoadTypeDto loadType)
+        public LoadtypeSumStepParameters([NotNull] CalcLoadTypeDto loadType)
         {
             LoadType = loadType;
         }
@@ -78,11 +78,11 @@ namespace CalcPostProcessor.Steps
     {
 
         public int Priority { get; }
-        [JetBrains.Annotations.NotNull] private readonly List<CalcOption> _options;
+        [NotNull] private readonly List<CalcOption> _options;
 
-        protected BasicPostProcessingStep([JetBrains.Annotations.NotNull] CalcDataRepository repository, [JetBrains.Annotations.NotNull] List<CalcOption> options,
-                                             [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler,
-                                             [JetBrains.Annotations.NotNull] string stepName, int priority)
+        protected BasicPostProcessingStep([NotNull] CalcDataRepository repository, [NotNull] List<CalcOption> options,
+                                             [NotNull] ICalculationProfiler calculationProfiler,
+                                             [NotNull] string stepName, int priority)
         {
             Repository = repository;
             _options = options;
@@ -90,7 +90,7 @@ namespace CalcPostProcessor.Steps
             _stepName = stepName;
             Priority = priority;
         }
-        public void Run([JetBrains.Annotations.NotNull] IStepParameters parameters)
+        public void Run([NotNull] IStepParameters parameters)
         {
             if (!IsEnabled()) {
                 return;
@@ -100,17 +100,17 @@ namespace CalcPostProcessor.Steps
             _calculationProfiler.StopPart(StepName);
         }
 
-        protected abstract void PerformActualStep([JetBrains.Annotations.NotNull] IStepParameters parameters);
+        protected abstract void PerformActualStep([NotNull] IStepParameters parameters);
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         protected CalcDataRepository Repository { get; }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public List<CalcOption> Options => _options;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private readonly ICalculationProfiler _calculationProfiler;
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private readonly string _stepName;
 
         public bool IsEnabled()
@@ -124,7 +124,7 @@ namespace CalcPostProcessor.Steps
 
         public  abstract List<CalcOption> NeededOptions { get; }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public string StepName => _stepName;
     }
 }

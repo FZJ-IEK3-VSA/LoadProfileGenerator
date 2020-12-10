@@ -31,12 +31,12 @@ using JetBrains.Annotations;
 
 namespace Database.Tables.BasicElements {
     public class UsedIn : IComparable {
-        public UsedIn([JetBrains.Annotations.NotNull] DBBase item, [JetBrains.Annotations.NotNull] string typeDescription) {
+        public UsedIn([NotNull] DBBase item, [NotNull] string typeDescription) {
             Item = item;
             TypeDescription = typeDescription;
         }
 
-        public UsedIn([JetBrains.Annotations.NotNull] DBBase item, [JetBrains.Annotations.NotNull] string typeDescription, [JetBrains.Annotations.NotNull] string information) {
+        public UsedIn([NotNull] DBBase item, [NotNull] string typeDescription, [NotNull] string information) {
             Item = item;
             TypeDescription = typeDescription;
             Information = information;
@@ -46,11 +46,11 @@ namespace Database.Tables.BasicElements {
         [UsedImplicitly]
         public string Information { get; set; }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public DBBase Item { get; set; }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public string TypeDescription { get; set; }
 

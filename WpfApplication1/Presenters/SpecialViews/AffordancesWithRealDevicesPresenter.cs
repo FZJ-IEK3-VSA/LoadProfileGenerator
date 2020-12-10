@@ -39,20 +39,20 @@ using LoadProfileGenerator.Views.SpecialViews;
 
 namespace LoadProfileGenerator.Presenters.SpecialViews {
     internal class AffordancesWithRealDevicesPresenter : PresenterBaseWithAppPresenter<AffordancesWithRealDevicesView> {
-        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<AffEntry> _selectedAffordances = new ObservableCollection<AffEntry>();
+        [ItemNotNull] [NotNull] private readonly ObservableCollection<AffEntry> _selectedAffordances = new ObservableCollection<AffEntry>();
 
-        public AffordancesWithRealDevicesPresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter,
-            [JetBrains.Annotations.NotNull] AffordancesWithRealDevicesView view) : base(view, "HeaderString", applicationPresenter)
+        public AffordancesWithRealDevicesPresenter([NotNull] ApplicationPresenter applicationPresenter,
+            [NotNull] AffordancesWithRealDevicesView view) : base(view, "HeaderString", applicationPresenter)
         {
             Refresh();
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public string HeaderString => "Affordance with Real Devices View";
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<AffEntry> SelectedAffordances => _selectedAffordances;
 
@@ -103,17 +103,17 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         }
 
         public class AffEntry {
-            public AffEntry([JetBrains.Annotations.NotNull] Affordance affordance, [JetBrains.Annotations.NotNull] IAssignableDevice devices)
+            public AffEntry([NotNull] Affordance affordance, [NotNull] IAssignableDevice devices)
             {
                 Affordance = affordance;
                 Device = devices;
             }
 
-            [JetBrains.Annotations.NotNull]
+            [NotNull]
             [UsedImplicitly]
             public Affordance Affordance { [UsedImplicitly] get; }
 
-            [JetBrains.Annotations.NotNull]
+            [NotNull]
             [UsedImplicitly]
             public IAssignableDevice Device { get; }
         }

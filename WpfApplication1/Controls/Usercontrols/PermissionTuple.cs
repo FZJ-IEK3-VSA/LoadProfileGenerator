@@ -5,13 +5,13 @@ namespace LoadProfileGenerator.Controls.Usercontrols
 {
     public class PermissionTuple
     {
-        public PermissionTuple(PermissionMode permissionMode, [JetBrains.Annotations.NotNull] string name)
+        public PermissionTuple(PermissionMode permissionMode, [NotNull] string name)
         {
             PermissionMode = permissionMode;
             Name = name;
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public string Name { get; set; }
 

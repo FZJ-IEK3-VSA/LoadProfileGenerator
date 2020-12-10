@@ -36,21 +36,21 @@ using LoadProfileGenerator.Views.Households;
 
 namespace LoadProfileGenerator.Presenters.BasicElements {
     public class GeographicLocationPresenter : PresenterBaseDBBase<GeographicLocationView> {
-        [JetBrains.Annotations.NotNull] private readonly GeographicLocation _geoloc;
+        [NotNull] private readonly GeographicLocation _geoloc;
 
         [CanBeNull] private GeographicLocation _selectedGeoLoc;
 
-        public GeographicLocationPresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] GeographicLocationView view,
-            [JetBrains.Annotations.NotNull] GeographicLocation geoloc) : base(view, "ThisGeographicLocation.HeaderString", geoloc,
+        public GeographicLocationPresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] GeographicLocationView view,
+            [NotNull] GeographicLocation geoloc) : base(view, "ThisGeographicLocation.HeaderString", geoloc,
             applicationPresenter) => _geoloc = geoloc;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<GeographicLocation> GeoLocs => Sim.GeographicLocations.Items;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<Holiday> Holidays => Sim.Holidays.Items;
 
@@ -67,11 +67,11 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
             }
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public GeographicLocation ThisGeographicLocation => _geoloc;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<TimeLimit> TimeLimits => Sim.TimeLimits.Items;
 

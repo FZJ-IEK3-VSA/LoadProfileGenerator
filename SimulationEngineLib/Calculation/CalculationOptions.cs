@@ -171,7 +171,7 @@ namespace SimulationEngineLib.Calculation {
         [CanBeNull]
         public int? ChargingStationSetIndex { get; set; }
 
-        public bool CheckSettings([JetBrains.Annotations.NotNull] string connectionString)
+        public bool CheckSettings([NotNull] string connectionString)
         {
             ConnectionString = connectionString;
             if (!string.IsNullOrWhiteSpace(Database)) {

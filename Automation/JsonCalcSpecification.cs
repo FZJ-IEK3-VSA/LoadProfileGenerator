@@ -32,7 +32,7 @@ namespace Automation {
             EnableTransportation = enableTransportation;
         }
 
-        public JsonCalcSpecification([JetBrains.Annotations.NotNull] JsonCalcSpecification o)
+        public JsonCalcSpecification([NotNull] JsonCalcSpecification o)
         {
             //CalcObject = o.CalcObject;
             DefaultForOutputFiles = o.DefaultForOutputFiles;
@@ -175,14 +175,14 @@ namespace Automation {
         public bool EnableIdlemode { get; set; }
 
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public static JsonCalcSpecification MakeDefaultsForTesting()
         {
             return new JsonCalcSpecification(false,null,new DateTime(2019,1,1),
                 "00:15:00","00:01:00",null,LoadTypePriority.All,null,false,new DateTime(2019,1,1),null,false);
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public static JsonCalcSpecification MakeDefaultsForProduction()
         {
             return new JsonCalcSpecification( false,  null, new DateTime(2019, 12, 31),

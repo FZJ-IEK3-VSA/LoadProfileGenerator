@@ -18,7 +18,7 @@ namespace Database.Tables.Transportation {
 
         private readonly int _stepNumber;
 
-        public TravelRouteStep([CanBeNull]int? pID, int routeID, [JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.NotNull] string name,
+        public TravelRouteStep([CanBeNull]int? pID, int routeID, [NotNull] string connectionString, [NotNull] string name,
             [CanBeNull] TransportationDeviceCategory deviceCategory, double distance, int stepNumber, StrGuid guid, [CanBeNull] string stepKey) : base(name, TableName,
             connectionString, guid)
         {
@@ -40,7 +40,7 @@ namespace Database.Tables.Transportation {
         [UsedImplicitly]
         public int StepNumber => _stepNumber;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public TransportationDeviceCategory TransportationDeviceCategory => _deviceCategory ?? throw new InvalidOperationException();
 
@@ -60,9 +60,9 @@ namespace Database.Tables.Transportation {
             return string.Compare(Name, other.Name, StringComparison.Ordinal);
         }
 
-        [JetBrains.Annotations.NotNull]
-        private static TravelRouteStep AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
-            [JetBrains.Annotations.NotNull] AllItemCollections aic)
+        [NotNull]
+        private static TravelRouteStep AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
+            [NotNull] AllItemCollections aic)
         {
             var id = dr.GetIntFromLong("ID");
             var routeid = dr.GetIntFromLong("TravelRouteID");
@@ -88,8 +88,8 @@ namespace Database.Tables.Transportation {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TravelRouteStep> result, [JetBrains.Annotations.NotNull] string connectionString,
-            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TransportationDeviceCategory> transportationDeviceCategories, bool ignoreMissingTables)
+        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<TravelRouteStep> result, [NotNull] string connectionString,
+            [ItemNotNull] [NotNull] ObservableCollection<TransportationDeviceCategory> transportationDeviceCategories, bool ignoreMissingTables)
         {
             var aic = new AllItemCollections(transportationDeviceCategories: transportationDeviceCategories);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);

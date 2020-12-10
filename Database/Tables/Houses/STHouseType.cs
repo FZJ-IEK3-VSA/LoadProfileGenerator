@@ -12,7 +12,7 @@ namespace Database.Tables.Houses {
 
         private readonly int _settlementTemplateID;
 
-        public STHouseType([CanBeNull]int? pID, [JetBrains.Annotations.NotNull] string connectionString, int settlementTemplateID, [JetBrains.Annotations.NotNull] string name,
+        public STHouseType([CanBeNull]int? pID, [NotNull] string connectionString, int settlementTemplateID, [NotNull] string name,
             [CanBeNull] HouseType houseType, StrGuid guid)
             : base(name, TableName, connectionString, guid) {
             TypeDescription = "Settlement Template House Type";
@@ -26,9 +26,9 @@ namespace Database.Tables.Houses {
 
         public int SettlementTemplateID => _settlementTemplateID;
 
-        [JetBrains.Annotations.NotNull]
-        private static STHouseType AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
-            [JetBrains.Annotations.NotNull] AllItemCollections aic) {
+        [NotNull]
+        private static STHouseType AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
+            [NotNull] AllItemCollections aic) {
             var id =  dr.GetIntFromLong("ID");
             var settlementtemplateID = dr.GetIntFromLong("SettlementTemplateID", false, ignoreMissingFields, -1);
             var householdTemplateID = dr.GetIntFromLong("HouseTypeID", false);
@@ -52,8 +52,8 @@ namespace Database.Tables.Houses {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<STHouseType> result, [JetBrains.Annotations.NotNull] string connectionString,
-            bool ignoreMissingTables, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<HouseType> houseTypes) {
+        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<STHouseType> result, [NotNull] string connectionString,
+            bool ignoreMissingTables, [ItemNotNull] [NotNull] ObservableCollection<HouseType> houseTypes) {
             var aic = new AllItemCollections(houseTypes: houseTypes);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);
         }

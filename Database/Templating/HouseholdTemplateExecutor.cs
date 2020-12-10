@@ -19,11 +19,11 @@ using JetBrains.Annotations;
 namespace Database.Templating {
     internal static class HouseholdTemplateExecutor {
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-        public static List<ModularHousehold> GenerateHouseholds([JetBrains.Annotations.NotNull] Simulator sim,
+        [NotNull]
+        public static List<ModularHousehold> GenerateHouseholds([NotNull] Simulator sim,
                                                                 bool generateSettlement,
-                                                                [ItemNotNull] [JetBrains.Annotations.NotNull] List<STTraitLimit> limits,
-                                                                [JetBrains.Annotations.NotNull] HouseholdTemplate template,
+                                                                [ItemNotNull] [NotNull] List<STTraitLimit> limits,
+                                                                [NotNull] HouseholdTemplate template,
                                                                 List<TraitTag> forbiddenTraitTags)
         {
             if (template == null) {
@@ -71,11 +71,11 @@ namespace Database.Templating {
             }
         }
 
-        [JetBrains.Annotations.NotNull]
-        internal static Vacation GenerateVacation([JetBrains.Annotations.NotNull] HouseholdTemplate template,
-                                                  [JetBrains.Annotations.NotNull] Random rnd,
-                                                  [JetBrains.Annotations.NotNull] Simulator sim,
-                                                  [JetBrains.Annotations.NotNull] string hhname)
+        [NotNull]
+        internal static Vacation GenerateVacation([NotNull] HouseholdTemplate template,
+                                                  [NotNull] Random rnd,
+                                                  [NotNull] Simulator sim,
+                                                  [NotNull] string hhname)
         {
             switch (template.TemplateVacationType) {
                 case TemplateVacationType.FromList:
@@ -171,8 +171,8 @@ namespace Database.Templating {
         }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-        internal static List<VacationProbabilityRange> VacationGetProbabilityRanges([JetBrains.Annotations.NotNull] double[] probabilities, int year)
+        [NotNull]
+        internal static List<VacationProbabilityRange> VacationGetProbabilityRanges([NotNull] double[] probabilities, int year)
         {
             //change to probability ranges
             var currentProbability = probabilities[0];
@@ -203,8 +203,8 @@ namespace Database.Templating {
         }
 
         //only public for unit testing
-        [JetBrains.Annotations.NotNull]
-        internal static List<double> VacationMakeProbabilityArray([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DateProfileDataPoint> dataPoints)
+        [NotNull]
+        internal static List<double> VacationMakeProbabilityArray([ItemNotNull] [NotNull] ObservableCollection<DateProfileDataPoint> dataPoints)
         {
             var probabilities = new List<double>();
 
@@ -235,12 +235,12 @@ namespace Database.Templating {
             return pickArray;
         }
 
-        private static void AddDesiredTraits([JetBrains.Annotations.NotNull] Simulator sim,
-                                             [ItemNotNull] [JetBrains.Annotations.NotNull] List<STTraitLimit> settlementTraitLimits,
-                                             [JetBrains.Annotations.NotNull] HouseholdTemplate template,
-                                             [JetBrains.Annotations.NotNull] Random rnd,
+        private static void AddDesiredTraits([NotNull] Simulator sim,
+                                             [ItemNotNull] [NotNull] List<STTraitLimit> settlementTraitLimits,
+                                             [NotNull] HouseholdTemplate template,
+                                             [NotNull] Random rnd,
                                              int numberofPersons,
-                                             [JetBrains.Annotations.NotNull] ModularHousehold chh,
+                                             [NotNull] ModularHousehold chh,
                                              List<TraitTag> forbiddenTraitTags)
         {
             // find the living pattern all tag for speed
@@ -304,8 +304,8 @@ namespace Database.Templating {
             }
         }
 
-        private static void AssignSingleTrait([JetBrains.Annotations.NotNull] List<STTraitLimit> settlementTraitLimits, HouseholdTemplate template, [JetBrains.Annotations.NotNull] Random rnd, [JetBrains.Annotations.NotNull] ModularHousehold chh,
-                                              List<TraitTag> forbiddenTraitTags, [JetBrains.Annotations.NotNull] HHTemplateEntry entry, [JetBrains.Annotations.NotNull] List<HouseholdTrait> potentialTraits, LivingPatternTag allTag,ref int traitexists,
+        private static void AssignSingleTrait([NotNull] List<STTraitLimit> settlementTraitLimits, HouseholdTemplate template, [NotNull] Random rnd, [NotNull] ModularHousehold chh,
+                                              List<TraitTag> forbiddenTraitTags, [NotNull] HHTemplateEntry entry, [NotNull] List<HouseholdTrait> potentialTraits, LivingPatternTag allTag,ref int traitexists,
                                               ref int classificationexists, ref int invalidForPerson, ref int violatesLimit, ref int successes)
         {
             var personnumber = rnd.Next(entry.Persons.Count);
@@ -364,7 +364,7 @@ namespace Database.Templating {
             }
         }
 
-        private static void CheckTraitAssigment([JetBrains.Annotations.NotNull] List<string> traitlptags, string dstLivingPattern1, [JetBrains.Annotations.NotNull] LivingPatternTag alltag)
+        private static void CheckTraitAssigment([NotNull] List<string> traitlptags, string dstLivingPattern1, [NotNull] LivingPatternTag alltag)
         {
             if (traitlptags.Contains(alltag.Name)) {
                 return;
@@ -381,10 +381,10 @@ namespace Database.Templating {
             throw new LPGException("Assigning trait to wrong person");
         }
 
-        [JetBrains.Annotations.NotNull]
-        private static ModularHousehold GenerateEmptyHousehold([JetBrains.Annotations.NotNull] Simulator sim,
-                                                               [JetBrains.Annotations.NotNull] HouseholdTemplate template,
-                                                               [JetBrains.Annotations.NotNull] Random r,
+        [NotNull]
+        private static ModularHousehold GenerateEmptyHousehold([NotNull] Simulator sim,
+                                                               [NotNull] HouseholdTemplate template,
+                                                               [NotNull] Random r,
                                                                ref int min,
                                                                ref int max,
                                                                int i1)
@@ -442,12 +442,12 @@ namespace Database.Templating {
             }
         }
 
-        private static void MakeSettlement([JetBrains.Annotations.NotNull] Simulator sim,
+        private static void MakeSettlement([NotNull] Simulator sim,
                                            bool generateSettlement,
-                                           [JetBrains.Annotations.NotNull] HouseholdTemplate template,
+                                           [NotNull] HouseholdTemplate template,
                                            int min,
                                            int max,
-                                           [ItemNotNull] [JetBrains.Annotations.NotNull] List<ModularHousehold> createdHH)
+                                           [ItemNotNull] [NotNull] List<ModularHousehold> createdHH)
         {
             if (!generateSettlement) {
                 return;
@@ -465,10 +465,10 @@ namespace Database.Templating {
             });
         }
 
-        private static void PickATrait([JetBrains.Annotations.NotNull] Random r, [JetBrains.Annotations.NotNull] ModularHousehold chh,
-                                       [ItemNotNull] [JetBrains.Annotations.NotNull] List<HouseholdTrait> potentialTraits, ref int traitexists,
-                                       ref int classificationexists, ref int invalidForPerson, [JetBrains.Annotations.NotNull] Person p,
-                                       [CanBeNull] out HouseholdTrait trait, [ItemNotNull] [JetBrains.Annotations.NotNull] List<STTraitLimit> limits, ref int violatesLimit,
+        private static void PickATrait([NotNull] Random r, [NotNull] ModularHousehold chh,
+                                       [ItemNotNull] [NotNull] List<HouseholdTrait> potentialTraits, ref int traitexists,
+                                       ref int classificationexists, ref int invalidForPerson, [NotNull] Person p,
+                                       [CanBeNull] out HouseholdTrait trait, [ItemNotNull] [NotNull] List<STTraitLimit> limits, ref int violatesLimit,
                                        TraitTag entryTraitTag)
         {
             var trycount = 0;
@@ -515,9 +515,9 @@ namespace Database.Templating {
             }
         }
 
-        private static void VacationSetDatesToTargetEntries([JetBrains.Annotations.NotNull] Random rnd,
-                                                            [ItemNotNull] [JetBrains.Annotations.NotNull] List<VacationEntry> targetVacationEntries,
-                                                            [JetBrains.Annotations.NotNull] DateBasedProfile dbp)
+        private static void VacationSetDatesToTargetEntries([NotNull] Random rnd,
+                                                            [ItemNotNull] [NotNull] List<VacationEntry> targetVacationEntries,
+                                                            [NotNull] DateBasedProfile dbp)
         {
             //normalize to first entry for each day
             var year = DateTime.Now.Year;

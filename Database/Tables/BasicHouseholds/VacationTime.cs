@@ -16,7 +16,7 @@ namespace Database.Tables.BasicHouseholds {
     }
 
     public static class VacationTypeHelper {
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public static Dictionary<VacationType, string> VacationTypeDictionary { get; } =
             new Dictionary<VacationType, string> {
                 {VacationType.GoAwayAndTurnOffElectricity, "Vacation with all devices at home turned off"},
@@ -34,8 +34,8 @@ namespace Database.Tables.BasicHouseholds {
 
         private VacationType _vacationType;
 
-        public VacationTime([JetBrains.Annotations.NotNull] string name, [CanBeNull] int? pID, DateTime start, DateTime end, int vacationID,
-            [JetBrains.Annotations.NotNull] string connectionString, VacationType vacationType, StrGuid guid)
+        public VacationTime([NotNull] string name, [CanBeNull] int? pID, DateTime start, DateTime end, int vacationID,
+            [NotNull] string connectionString, VacationType vacationType, StrGuid guid)
             : base(name, TableName, connectionString, guid)
         {
             _vacationType = vacationType;
@@ -60,13 +60,13 @@ namespace Database.Tables.BasicHouseholds {
             set => SetValueWithNotify(value, ref _vacationType, nameof(VacationType));
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public string VacationTypeName => VacationTypeHelper.VacationTypeDictionary[_vacationType];
 
-        [JetBrains.Annotations.NotNull]
-        private static VacationTime AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
-            [JetBrains.Annotations.NotNull] AllItemCollections aic)
+        [NotNull]
+        private static VacationTime AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
+            [NotNull] AllItemCollections aic)
         {
             var id = dr.GetIntFromLongOrInt("ID", false, ignoreMissingFields);
             var start = dr.GetDateTime("Start", false);
@@ -99,7 +99,7 @@ namespace Database.Tables.BasicHouseholds {
             return true;
         }
 
-        public static void LoadFromDatabase([JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<VacationTime> result, [JetBrains.Annotations.NotNull] string connectionString,
+        public static void LoadFromDatabase([NotNull] [ItemNotNull] ObservableCollection<VacationTime> result, [NotNull] string connectionString,
             bool ignoreMissingTables)
         {
             var aic = new AllItemCollections();

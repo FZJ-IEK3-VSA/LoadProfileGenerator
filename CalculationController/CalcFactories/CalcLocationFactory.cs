@@ -34,22 +34,22 @@ using JetBrains.Annotations;
 namespace CalculationController.CalcFactories {
     public class CalcLocationFactory
     {
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private readonly CalcLoadTypeDictionary _calcLoadTypeDict;
 
         private readonly CalcRepo _calcRepo;
 
-        public CalcLocationFactory( [JetBrains.Annotations.NotNull] CalcLoadTypeDictionary calcLoadTypeDict,CalcRepo calcRepo
+        public CalcLocationFactory( [NotNull] CalcLoadTypeDictionary calcLoadTypeDict,CalcRepo calcRepo
             )
         {
             _calcLoadTypeDict = calcLoadTypeDict;
             _calcRepo = calcRepo;
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [ItemNotNull]
-        public List<CalcLocation> MakeCalcLocations([JetBrains.Annotations.NotNull][ItemNotNull] List<CalcLocationDto> locations,
-                                                    [JetBrains.Annotations.NotNull] DtoCalcLocationDict locdict, CalcRepo calcRepo) {
+        public List<CalcLocation> MakeCalcLocations([NotNull][ItemNotNull] List<CalcLocationDto> locations,
+                                                    [NotNull] DtoCalcLocationDict locdict, CalcRepo calcRepo) {
             var locs = new List<CalcLocation>();
             foreach (var t in locations) {
                 // loc anlegen

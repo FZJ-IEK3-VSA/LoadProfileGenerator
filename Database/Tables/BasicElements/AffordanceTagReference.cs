@@ -47,8 +47,8 @@ namespace Database.Tables.BasicElements {
 
         private readonly int _taggingSetID;
 
-        public AffordanceTagReference([JetBrains.Annotations.NotNull] string name, int taggingSetID, [CanBeNull] AffordanceTag tag,
-            [JetBrains.Annotations.NotNull] string connectionString,
+        public AffordanceTagReference([NotNull] string name, int taggingSetID, [CanBeNull] AffordanceTag tag,
+            [NotNull] string connectionString,
                                       [CanBeNull]int? pID, PermittedGender gender, int minAge, int maxAge, double percentage, StrGuid guid)
             : base(name, pID, TableName, connectionString, guid)
         {
@@ -83,7 +83,7 @@ namespace Database.Tables.BasicElements {
         public double Percentage100 => _percentage * 100;
 
         [UsedImplicitly]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public AffordanceTag Tag => _tag ?? throw new InvalidOperationException();
 
         public int TaggingSetID => _taggingSetID;
@@ -106,9 +106,9 @@ namespace Database.Tables.BasicElements {
             return result;
         }
 
-        [JetBrains.Annotations.NotNull]
-        private static AffordanceTagReference AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString,
-            bool ignoreMissingFields, [JetBrains.Annotations.NotNull] AllItemCollections aic)
+        [NotNull]
+        private static AffordanceTagReference AssignFields([NotNull] DataReader dr, [NotNull] string connectionString,
+            bool ignoreMissingFields, [NotNull] AllItemCollections aic)
         {
             var holidayDateID = dr.GetIntFromLong("ID");
             var taggingSetID = dr.GetIntFromLong("TaggingSetID");
@@ -133,7 +133,7 @@ namespace Database.Tables.BasicElements {
             return string.Compare(Name, other.Name, StringComparison.Ordinal);
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private static string GetName([CanBeNull] AffordanceTag tag)
         {
             var name = string.Empty;
@@ -153,9 +153,9 @@ namespace Database.Tables.BasicElements {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<AffordanceTagReference> result,
-            [JetBrains.Annotations.NotNull] string connectionString,
-            bool ignoreMissingTables, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<AffordanceTag> allTags)
+        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<AffordanceTagReference> result,
+            [NotNull] string connectionString,
+            bool ignoreMissingTables, [ItemNotNull] [NotNull] ObservableCollection<AffordanceTag> allTags)
         {
             var aic = new AllItemCollections(allTags);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);

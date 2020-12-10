@@ -7,7 +7,7 @@ namespace LoadProfileGenerator
     public static class LPGExtensions
     {
 
-        public static void ResizeColummns([JetBrains.Annotations.NotNull] this ListView lv, [CanBeNull] double? maxWidth = null)
+        public static void ResizeColummns([NotNull] this ListView lv, [CanBeNull] double? maxWidth = null)
         {
             if (lv == null)
             {

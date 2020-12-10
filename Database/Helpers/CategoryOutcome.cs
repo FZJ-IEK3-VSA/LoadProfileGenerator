@@ -41,14 +41,14 @@ namespace Database.Helpers {
         public CategoryOutcome() : base("Calculation Outcomes") {
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [ItemNotNull]
         [UsedImplicitly]
         public new ObservableCollection<CategoryOutcome> FilteredItems { get; } =
             new ObservableCollection<CategoryOutcome>();
 
-        public int CountItems([JetBrains.Annotations.NotNull] string mycalcObject, [JetBrains.Annotations.NotNull] string geoloc, [JetBrains.Annotations.NotNull] string temperaturProfile, [JetBrains.Annotations.NotNull] string intensity,
-            [JetBrains.Annotations.NotNull] string lpgVersion) {
+        public int CountItems([NotNull] string mycalcObject, [NotNull] string geoloc, [NotNull] string temperaturProfile, [NotNull] string intensity,
+            [NotNull] string lpgVersion) {
             var count = 0;
             foreach (var co in Items) {
                 if (co.HouseholdName == mycalcObject && co.GeographicLocationName == geoloc &&
@@ -60,9 +60,9 @@ namespace Database.Helpers {
             return count;
         }
 
-        public bool ItemExists([JetBrains.Annotations.NotNull] ICalcObject mycalcObject, [JetBrains.Annotations.NotNull] GeographicLocation geoloc,
-            [JetBrains.Annotations.NotNull] TemperatureProfile temperatureProfile,
-            EnergyIntensityType intensity, [JetBrains.Annotations.NotNull] string lpgVersion) {
+        public bool ItemExists([NotNull] ICalcObject mycalcObject, [NotNull] GeographicLocation geoloc,
+            [NotNull] TemperatureProfile temperatureProfile,
+            EnergyIntensityType intensity, [NotNull] string lpgVersion) {
             foreach (var co in Items) {
                 if (co.HouseholdName == mycalcObject.Name && co.GeographicLocationName == geoloc.Name &&
                     co.TemperatureProfile == temperatureProfile.Name && co.EnergyIntensity == intensity.ToString() &&

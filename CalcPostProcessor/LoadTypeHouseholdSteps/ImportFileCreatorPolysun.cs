@@ -14,11 +14,11 @@ using JetBrains.Annotations;
 namespace CalcPostProcessor.LoadTypeHouseholdSteps {
     public class ImportFileCreatorPolysun : LoadTypeStepBase {
 
-        [JetBrains.Annotations.NotNull] private readonly IFileFactoryAndTracker _fft;
+        [NotNull] private readonly IFileFactoryAndTracker _fft;
 
-        public ImportFileCreatorPolysun([JetBrains.Annotations.NotNull] CalcDataRepository repository,
-                                        [JetBrains.Annotations.NotNull] ICalculationProfiler profiler,
-                                        [JetBrains.Annotations.NotNull] IFileFactoryAndTracker fft) : base(repository,
+        public ImportFileCreatorPolysun([NotNull] CalcDataRepository repository,
+                                        [NotNull] ICalculationProfiler profiler,
+                                        [NotNull] IFileFactoryAndTracker fft) : base(repository,
             AutomationUtili.GetOptionList(CalcOption.PolysunImportFiles),
             profiler,
             "Polysun Import Files")
@@ -92,10 +92,10 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             }
         }*/
 
-        public void RunPolysun([JetBrains.Annotations.NotNull] CalcLoadTypeDto dstLoadType,
-                               [JetBrains.Annotations.NotNull] [ItemNotNull] List<OnlineEnergyFileRow> energyFileRows,
-                               [JetBrains.Annotations.NotNull] IFileFactoryAndTracker fft,
-                               [JetBrains.Annotations.NotNull] string housename)
+        public void RunPolysun([NotNull] CalcLoadTypeDto dstLoadType,
+                               [NotNull] [ItemNotNull] List<OnlineEnergyFileRow> energyFileRows,
+                               [NotNull] IFileFactoryAndTracker fft,
+                               [NotNull] string housename)
         {
             var calcParameters = Repository.CalcParameters;
             var fifteenMin = new TimeSpan(0, 15, 0);
@@ -149,10 +149,10 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             //RunIndividualHouseholdsPolysun(p.LoadType,p.EnergyFileRows,_fft,efc);
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public override List<CalcOption> NeededOptions => new List<CalcOption>() {CalcOption.DetailedDatFiles, CalcOption.HouseholdContents};
 
-        private static void WritePolysunHeader([JetBrains.Annotations.NotNull] StreamWriter sw, [JetBrains.Annotations.NotNull] string housename, [JetBrains.Annotations.NotNull] CalcLoadTypeDto loadtype)
+        private static void WritePolysunHeader([NotNull] StreamWriter sw, [NotNull] string housename, [NotNull] CalcLoadTypeDto loadtype)
         {
             sw.WriteLine("# Load profile: " + housename);
             sw.WriteLine("# Created with www.loadprofilegenerator.de");

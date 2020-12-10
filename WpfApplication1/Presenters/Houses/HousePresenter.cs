@@ -46,8 +46,8 @@ using LoadProfileGenerator.Views.Houses;
 
 namespace LoadProfileGenerator.Presenters.Houses {
     public class HousePresenter : PresenterBaseDBBase<HouseView> {
-        [JetBrains.Annotations.NotNull] private readonly EnergyIntensityConverter _eic = new EnergyIntensityConverter();
-        [JetBrains.Annotations.NotNull] private readonly House _house;
+        [NotNull] private readonly EnergyIntensityConverter _eic = new EnergyIntensityConverter();
+        [NotNull] private readonly House _house;
 
         [CanBeNull] private string _selectedAddCategory;
 
@@ -56,33 +56,33 @@ namespace LoadProfileGenerator.Presenters.Houses {
         [CanBeNull] private TravelRouteSet _selectedTravelRouteSet;
         [CanBeNull] private TransportationDeviceSet _selectedTransportationDeviceSet;
 
-        public HousePresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] HouseView view, [JetBrains.Annotations.NotNull] House house) : base(view,
+        public HousePresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] HouseView view, [NotNull] House house) : base(view,
             "ThisHouse.HeaderString", house, applicationPresenter)
         {
             _house = house;
         }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<RealDevice> AllDevices => Sim.RealDevices.Items;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public Dictionary<CalcObjectType, string> CalcObjectTypes => CalcObjectTypeHelper
             .CalcObjectTypeHouseholdDictionary;
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public Dictionary<CreationType, string> CreationTypes => CreationTypeHelper.CreationTypeDictionary;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<DeviceCategory> DeviceCategories => Sim.DeviceCategories
             .Items;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<ChargingStationSet> ChargingStationSets => Sim.ChargingStationSets.Items;
 
@@ -102,7 +102,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
 
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<TravelRouteSet> TravelRouteSets => Sim.TravelRouteSets.Items;
 
@@ -124,7 +124,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
         }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<TransportationDeviceSet> TransportationDeviceSets => Sim.TransportationDeviceSets.Items;
 
@@ -146,11 +146,11 @@ namespace LoadProfileGenerator.Presenters.Houses {
         }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<EnergyIntensityConverter.EnergyIntensityForDisplay> EnergyIntensities => _eic.All;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public EnergyIntensityConverter.EnergyIntensityForDisplay EnergyIntensity {
             get => _eic.GetAllDisplayElement(_house.EnergyIntensityType);
@@ -161,13 +161,13 @@ namespace LoadProfileGenerator.Presenters.Houses {
         }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<GeographicLocation> GeographicLocations => Sim
             .GeographicLocations.Items;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<HouseType> HouseTypes => Sim.HouseTypes.Items;
 
@@ -182,7 +182,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
         }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<ModularHousehold> ModularHouseholds => Sim
             .ModularHouseholds.Items;
@@ -234,35 +234,35 @@ namespace LoadProfileGenerator.Presenters.Houses {
         }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<TemperatureProfile> TemperatureProfiles => Sim
             .TemperatureProfiles.Items;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public House ThisHouse => _house;
 
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<TimeLimit> TimeLimits => Sim.TimeLimits.Items;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<TimeBasedProfile> Timeprofiles => Sim.Timeprofiles
             .Items;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<VLoadType> VLoadTypes => Sim.LoadTypes.Items;
 
-        public void AddCalcObject([JetBrains.Annotations.NotNull] ICalcObject calcObject, [JetBrains.Annotations.NotNull] ChargingStationSet
-                                      chargingStationSet, [JetBrains.Annotations.NotNull] TransportationDeviceSet transportationDeviceSet,
-                                  [JetBrains.Annotations.NotNull] TravelRouteSet travelRouteSet)
+        public void AddCalcObject([NotNull] ICalcObject calcObject, [NotNull] ChargingStationSet
+                                      chargingStationSet, [NotNull] TransportationDeviceSet transportationDeviceSet,
+                                  [NotNull] TravelRouteSet travelRouteSet)
         {
             _house.AddHousehold(calcObject, chargingStationSet, travelRouteSet,transportationDeviceSet );
         }
@@ -290,7 +290,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
             }
         }
 
-        public void RemoveHousehold([JetBrains.Annotations.NotNull] HouseHousehold hhh)
+        public void RemoveHousehold([NotNull] HouseHousehold hhh)
         {
             _house.DeleteHouseholdFromDB(hhh);
         }

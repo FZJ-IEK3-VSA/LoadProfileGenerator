@@ -42,8 +42,8 @@ namespace Database.Tables.BasicHouseholds {
 
         private readonly int _locationID;
 
-        public LocationDevice([CanBeNull]int? pID, [CanBeNull] IAssignableDevice adev, int locationID, [JetBrains.Annotations.NotNull] string connectionString,
-            [JetBrains.Annotations.NotNull] string name, StrGuid guid)
+        public LocationDevice([CanBeNull]int? pID, [CanBeNull] IAssignableDevice adev, int locationID, [NotNull] string connectionString,
+            [NotNull] string name, StrGuid guid)
             : base(name, TableName, connectionString, guid)
         {
             TypeDescription = "Location Device";
@@ -65,7 +65,7 @@ namespace Database.Tables.BasicHouseholds {
             }
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public string DeviceName {
             get {
@@ -76,7 +76,7 @@ namespace Database.Tables.BasicHouseholds {
             }
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public string DeviceOrCategory {
             get {
@@ -124,9 +124,9 @@ namespace Database.Tables.BasicHouseholds {
         public double Probability => 0;
         public TimeBasedProfile TimeProfile => null;
 
-        [JetBrains.Annotations.NotNull]
-        private static LocationDevice AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
-            [JetBrains.Annotations.NotNull] AllItemCollections aic)
+        [NotNull]
+        private static LocationDevice AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
+            [NotNull] AllItemCollections aic)
         {
             var locdevID = dr.GetIntFromLong("ID");
             var locID = dr.GetIntFromLong("LocationID");
@@ -159,9 +159,9 @@ namespace Database.Tables.BasicHouseholds {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<LocationDevice> result, [JetBrains.Annotations.NotNull] string connectionString,
-            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<RealDevice> realDevices, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceCategory> deviceCategories,
-            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<VLoadType> loadTypes, bool ignoreMissingTables)
+        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<LocationDevice> result, [NotNull] string connectionString,
+            [ItemNotNull] [NotNull] ObservableCollection<RealDevice> realDevices, [ItemNotNull] [NotNull] ObservableCollection<DeviceCategory> deviceCategories,
+            [ItemNotNull] [NotNull] ObservableCollection<VLoadType> loadTypes, bool ignoreMissingTables)
         {
             var aic = new AllItemCollections(realDevices: realDevices, deviceCategories: deviceCategories,
                 loadTypes: loadTypes);

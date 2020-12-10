@@ -44,13 +44,13 @@ namespace CalculationEngine.HouseholdElements {
     public class CalcPersonDesires {
         private readonly CalcRepo _calcRepo;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private static readonly Dictionary<Tuple<string, HouseholdKey>, int> _persons =
             new Dictionary<Tuple<string, HouseholdKey>, int>();
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private readonly List<string> _lastAffordances = new List<string>();
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private readonly DateStampCreator _dsc;
         private StreamWriter? _sw;
 
@@ -61,17 +61,17 @@ namespace CalculationEngine.HouseholdElements {
             _dsc = new DateStampCreator(_calcRepo.CalcParameters);
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public Dictionary<int, CalcDesire> Desires { get; }
 
-        public void AddDesires([JetBrains.Annotations.NotNull] CalcDesire cd) {
+        public void AddDesires([NotNull] CalcDesire cd) {
             if (!Desires.ContainsKey(cd.DesireID)) {
                 Desires.Add(cd.DesireID, cd);
             }
         }
 
-        public void ApplyAffordanceEffect([JetBrains.Annotations.NotNull][ItemNotNull] List<CalcDesire> satisfactionvalues, bool randomEffect,
-            [JetBrains.Annotations.NotNull] string affordance) {
+        public void ApplyAffordanceEffect([NotNull][ItemNotNull] List<CalcDesire> satisfactionvalues, bool randomEffect,
+            [NotNull] string affordance) {
             while (_lastAffordances.Count > 10) {
                 _lastAffordances.RemoveAt(0);
             }
@@ -114,14 +114,14 @@ namespace CalculationEngine.HouseholdElements {
             }
         }
 
-        public void ApplyDecay([JetBrains.Annotations.NotNull] TimeStep timestep) {
+        public void ApplyDecay([NotNull] TimeStep timestep) {
             foreach (var calcDesire in Desires.Values) {
                 calcDesire.ApplyDecay(timestep);
             }
         }
 
-        public decimal CalcEffect([JetBrains.Annotations.NotNull][ItemNotNull] IEnumerable<CalcDesire> satisfactionvalues, out string? thoughtstring,
-            [JetBrains.Annotations.NotNull] string affordanceName) {
+        public decimal CalcEffect([NotNull][ItemNotNull] IEnumerable<CalcDesire> satisfactionvalues, out string? thoughtstring,
+            [NotNull] string affordanceName) {
             // calc decay
             foreach (var calcDesire in Desires.Values) {
                 calcDesire.TempValue = calcDesire.Value;
@@ -185,8 +185,8 @@ namespace CalculationEngine.HouseholdElements {
             return totalDeviation;
         }
 
-        public void CheckForCriticalThreshold([JetBrains.Annotations.NotNull] CalcPerson person, [JetBrains.Annotations.NotNull] TimeStep time, [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft,
-                                              [JetBrains.Annotations.NotNull] HouseholdKey householdKey) {
+        public void CheckForCriticalThreshold([NotNull] CalcPerson person, [NotNull] TimeStep time, [NotNull] FileFactoryAndTracker fft,
+                                              [NotNull] HouseholdKey householdKey) {
             if ( time.ExternalStep < 0 &&
                 !time.ShowSettling) {
                 return;
@@ -235,7 +235,7 @@ namespace CalculationEngine.HouseholdElements {
             }
         }
 
-        public void CopyOtherDesires([JetBrains.Annotations.NotNull] CalcPersonDesires otherdesires) {
+        public void CopyOtherDesires([NotNull] CalcPersonDesires otherdesires) {
             foreach (var calcDesire in Desires.Values) {
                 if (calcDesire.DecayTime < 100) {
                     calcDesire.Value = 1;
@@ -250,7 +250,7 @@ namespace CalculationEngine.HouseholdElements {
             }
         }
 
-        public bool HasAtLeastOneDesireBelowThreshold([JetBrains.Annotations.NotNull] ICalcAffordanceBase aff) {
+        public bool HasAtLeastOneDesireBelowThreshold([NotNull] ICalcAffordanceBase aff) {
             foreach (var desire in aff.Satisfactionvalues) {
                 if (Desires.ContainsKey(desire.DesireID)) {
                     if (Desires[desire.DesireID].Value < Desires[desire.DesireID].Threshold) {

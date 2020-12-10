@@ -40,8 +40,8 @@ namespace Database.Tables.Houses {
         [CanBeNull] private readonly TransformationDevice _transformationDevice;
 
         public HouseTypeTransformationDevice([CanBeNull]int? pID, int houseID, [CanBeNull] TransformationDevice td,
-            [JetBrains.Annotations.NotNull] string connectionString,
-            [JetBrains.Annotations.NotNull] string tdName, StrGuid guid) : base(tdName, TableName, connectionString, guid)
+            [NotNull] string connectionString,
+            [NotNull] string tdName, StrGuid guid) : base(tdName, TableName, connectionString, guid)
         {
             ID = pID;
             HouseID = houseID;
@@ -63,9 +63,9 @@ namespace Database.Tables.Houses {
         [CanBeNull]
         public TransformationDevice TransformationDevice => _transformationDevice;
 
-        [JetBrains.Annotations.NotNull]
-        private static HouseTypeTransformationDevice AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString,
-            bool ignoreMissingFields, [JetBrains.Annotations.NotNull] AllItemCollections aic)
+        [NotNull]
+        private static HouseTypeTransformationDevice AssignFields([NotNull] DataReader dr, [NotNull] string connectionString,
+            bool ignoreMissingFields, [NotNull] AllItemCollections aic)
         {
             var id = dr.GetIntFromLong("ID");
             var transformationDeviceID = dr.GetIntFromLong("TransformationDeviceID");
@@ -92,8 +92,8 @@ namespace Database.Tables.Houses {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<HouseTypeTransformationDevice> result,
-            [JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<TransformationDevice> transformationDevices,
+        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<HouseTypeTransformationDevice> result,
+            [NotNull] string connectionString, [NotNull] [ItemNotNull] ObservableCollection<TransformationDevice> transformationDevices,
             bool ignoreMissingTables)
         {
             var aic = new AllItemCollections(transformationDevices: transformationDevices);

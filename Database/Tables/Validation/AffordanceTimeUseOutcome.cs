@@ -9,10 +9,10 @@ namespace Database.Tables.Validation {
         public const string TableName = "tblAffordanceOutcomes";
         private readonly int _calculationOutcomeID;
 
-        public AffordanceTimeUseOutcome([JetBrains.Annotations.NotNull] string name, int calculationOutcomeID, [JetBrains.Annotations.NotNull] string affordanceName,
+        public AffordanceTimeUseOutcome([NotNull] string name, int calculationOutcomeID, [NotNull] string affordanceName,
             double timeInMinutes,
-            [JetBrains.Annotations.NotNull] string personName, int executions,
-            [JetBrains.Annotations.NotNull] string connectionString,StrGuid guid, [CanBeNull] int? pID = null)
+            [NotNull] string personName, int executions,
+            [NotNull] string connectionString,StrGuid guid, [CanBeNull] int? pID = null)
             : base(name, pID, TableName, connectionString, guid) {
             _calculationOutcomeID = calculationOutcomeID;
             AffordanceName = affordanceName;
@@ -22,17 +22,17 @@ namespace Database.Tables.Validation {
             TypeDescription = "Loadtype Outcome";
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public string AffordanceName { get; }
 
         public int CalculationOutcomeID => _calculationOutcomeID;
         public int Executions { get; }
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public string PersonName { get; }
 
         public double TimeInMinutes { get; }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public string TimePerExecution {
             get {
@@ -44,10 +44,10 @@ namespace Database.Tables.Validation {
             }
         }
 
-        [JetBrains.Annotations.NotNull]
-        private static AffordanceTimeUseOutcome AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString,
+        [NotNull]
+        private static AffordanceTimeUseOutcome AssignFields([NotNull] DataReader dr, [NotNull] string connectionString,
             bool ignoreMissingFields,
-            [JetBrains.Annotations.NotNull] AllItemCollections aic) {
+            [NotNull] AllItemCollections aic) {
             var id = dr.GetIntFromLong("ID");
             var calcoutcomeID = dr.GetIntFromLong("CalculationOutcomeID", false, ignoreMissingFields, -1);
             var affordanceName = dr.GetString("AffordanceName");
@@ -69,8 +69,8 @@ namespace Database.Tables.Validation {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<AffordanceTimeUseOutcome> result,
-            [JetBrains.Annotations.NotNull] string connectionString,
+        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<AffordanceTimeUseOutcome> result,
+            [NotNull] string connectionString,
             bool ignoreMissingTables) {
             var aic = new AllItemCollections();
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);

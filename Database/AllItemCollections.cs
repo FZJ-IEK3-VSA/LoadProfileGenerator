@@ -95,121 +95,121 @@ namespace Database
             LivingPatternTags = livingPatternTags;
         }
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ObservableCollection<TransportationDeviceSet> TransportationDeviceSets { get; }
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ObservableCollection<TravelRouteSet> TravelRouteSets { get; }
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ObservableCollection<HouseholdTag> HouseholdTags { get; }
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ObservableCollection<Variable> Variables { get; }
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ObservableCollection<AffordanceTag> AffordanceTags { get; }
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ObservableCollection<ChargingStationSet> ChargingStationSets { get; }
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ObservableCollection<Affordance> Affordances { get; }
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ObservableCollection<ModularHousehold> ModularHouseholds { get; }
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ObservableCollection<DateBasedProfile> DateBasedProfiles { get; }
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ObservableCollection<Desire> Desires { get; }
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ObservableCollection<DeviceCategory> DeviceCategories { get; }
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ObservableCollection<DeviceSelection> DeviceSelections { get; }
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ObservableCollection<DeviceTag> DeviceTags { get; }
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ObservableCollection<TimeLimit> TimeLimits { get; }
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ObservableCollection<EnergyStorage> EnergyStorages { get; }
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ObservableCollection<Generator> Generators { get; }
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ObservableCollection<GeographicLocation> GeographicLocations { get; }
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ObservableCollection<Holiday> Holidays { get; }
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ObservableCollection<HouseType> HouseTypes { get; }
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ObservableCollection<House> Houses { get; }
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ObservableCollection<HouseholdTrait> HouseholdTraits { get; }
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ObservableCollection<VLoadType> LoadTypes { get; }
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ObservableCollection<Location> Locations { get; }
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ObservableCollection<Person> Persons { get; }
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ObservableCollection<RealDevice> RealDevices { get; }
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ObservableCollection<SubAffordance> SubAffordances { get; }
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ObservableCollection<TemperatureProfile> TemperatureProfiles { get; }
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ObservableCollection<TimeBasedProfile> TimeProfiles { get; }
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ObservableCollection<TransformationDevice> TransformationDevices { get; }
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ObservableCollection<AffordanceTaggingSet> AffordanceTaggingSets { get; }
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ObservableCollection<DeviceActionGroup> DeviceActionGroups { get; }
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ObservableCollection<DeviceAction> DeviceActions { get; }
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ObservableCollection<TraitTag> TraitTags { get; }
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ObservableCollection<Vacation> Vacations { get; }
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ObservableCollection<HouseholdTemplate> HouseholdTemplates { get; }
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ObservableCollection<Site> Sites { get; }
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ObservableCollection<TransportationDeviceCategory> TransportationDeviceCategories { get;  }
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ObservableCollection<TravelRoute> TravelRoutes { get; }
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ObservableCollection<TransportationDevice> TransportationDevices { get; }
 
         public ObservableCollection<LivingPatternTag > LivingPatternTags { get; set; }

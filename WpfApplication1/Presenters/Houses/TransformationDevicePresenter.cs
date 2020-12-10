@@ -42,16 +42,16 @@ using LoadProfileGenerator.Views.Houses;
 
 namespace LoadProfileGenerator.Presenters.Houses {
     public class TransformationDevicePresenter : PresenterBaseDBBase<TransformationDeviceView> {
-        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<string> _factorTypes = new ObservableCollection<string>();
+        [ItemNotNull] [NotNull] private readonly ObservableCollection<string> _factorTypes = new ObservableCollection<string>();
 
-        [JetBrains.Annotations.NotNull] private readonly TransformationDevice _trafoDevice;
-        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<UsedIn> _usedIn = new ObservableCollection<UsedIn>();
+        [NotNull] private readonly TransformationDevice _trafoDevice;
+        [ItemNotNull] [NotNull] private readonly ObservableCollection<UsedIn> _usedIn = new ObservableCollection<UsedIn>();
         private double _exampleConversionFactor1;
 
         [CanBeNull] private VLoadType _selectedOutputLoadtype;
 
-        public TransformationDevicePresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] TransformationDeviceView view,
-            [JetBrains.Annotations.NotNull] TransformationDevice trafoDevice) : base(view, "ThisTrafo.HeaderString", trafoDevice,
+        public TransformationDevicePresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] TransformationDeviceView view,
+            [NotNull] TransformationDevice trafoDevice) : base(view, "ThisTrafo.HeaderString", trafoDevice,
             applicationPresenter)
         {
             _trafoDevice = trafoDevice;
@@ -66,7 +66,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
         }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public List<string> ConditionTypes { get; } = new List<string>();
 
@@ -93,7 +93,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
         public VLoadType ConversionOutLoadType { get; set; }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<EnergyStorage> EnergyStorages
             => Sim.EnergyStorages.Items;
@@ -111,7 +111,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
         }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<string> FactorTypes => _factorTypes;
 
@@ -125,27 +125,27 @@ namespace LoadProfileGenerator.Presenters.Houses {
             }
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public TransformationDevice ThisTrafo => _trafoDevice;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<UsedIn> UsedIn => _usedIn;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<VLoadType> VLoadTypes => Sim.LoadTypes.Items;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<Variable> Variables => Sim.Variables.Items;
 
 
-        public void AddOutputLoadType([JetBrains.Annotations.NotNull] VLoadType selectedLoadType, double factor, TransformationFactorType factorType)
+        public void AddOutputLoadType([NotNull] VLoadType selectedLoadType, double factor, TransformationFactorType factorType)
         {
             ThisTrafo.AddOutTransformationDeviceLoadType(selectedLoadType, factor, factorType);
         }
@@ -210,7 +210,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
             }
         }
 
-        public void RemoveOutputDeviceLoadType([JetBrains.Annotations.NotNull] TransformationDeviceLoadType tdlt)
+        public void RemoveOutputDeviceLoadType([NotNull] TransformationDeviceLoadType tdlt)
         {
             ThisTrafo.DeleteTransformationLoadtypeFromDB(tdlt);
         }

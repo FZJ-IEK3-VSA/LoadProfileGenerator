@@ -7,25 +7,25 @@ using LoadProfileGenerator.Presenters.BasicElements;
 
 namespace LoadProfileGenerator.Views.Transportation {
     public class TransportationDeviceSetPresenter : PresenterBaseDBBase<TransportationDeviceSetView> {
-        [JetBrains.Annotations.NotNull] private readonly TransportationDeviceSet _transporatationDeviceSet;
+        [NotNull] private readonly TransportationDeviceSet _transporatationDeviceSet;
 
-        public TransportationDeviceSetPresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] TransportationDeviceSetView view,
-            [JetBrains.Annotations.NotNull] TransportationDeviceSet set) : base(view, "ThisSet.Name", set, applicationPresenter)
+        public TransportationDeviceSetPresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] TransportationDeviceSetView view,
+            [NotNull] TransportationDeviceSet set) : base(view, "ThisSet.Name", set, applicationPresenter)
         {
             _transporatationDeviceSet = set;
         }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<TransportationDevice> AllTransportationDevices => Sim.TransportationDevices.Items;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public TransportationDeviceSet ThisSet => _transporatationDeviceSet;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<UsedIn> UsedIns { get; } = new ObservableCollection<UsedIn>();
 

@@ -16,13 +16,13 @@ using JetBrains.Annotations;
 namespace CalculationController.DtoFactories
 {
     public class DeviceCategoryDto {
-        public DeviceCategoryDto([JetBrains.Annotations.NotNull] string fullCategoryName, StrGuid guid)
+        public DeviceCategoryDto([NotNull] string fullCategoryName, StrGuid guid)
         {
             FullCategoryName = fullCategoryName;
             Guid = guid;
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public string FullCategoryName { get; set; }
         [UsedImplicitly]
@@ -30,28 +30,28 @@ namespace CalculationController.DtoFactories
     }
 
     public class CalcLocationDtoFactory {
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private readonly IDeviceCategoryPicker _picker;
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private readonly CalcLoadTypeDtoDictionary _calcLoadTypeDict;
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private readonly CalcParameters _calcParameters;
 
-        public CalcLocationDtoFactory([JetBrains.Annotations.NotNull] CalcParameters calcParameters, [JetBrains.Annotations.NotNull] IDeviceCategoryPicker picker, [JetBrains.Annotations.NotNull] CalcLoadTypeDtoDictionary calcLoadTypeDict)
+        public CalcLocationDtoFactory([NotNull] CalcParameters calcParameters, [NotNull] IDeviceCategoryPicker picker, [NotNull] CalcLoadTypeDtoDictionary calcLoadTypeDict)
         {
             _picker = picker;
             _calcLoadTypeDict = calcLoadTypeDict;
             _calcParameters = calcParameters;
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [ItemNotNull]
-        public List<CalcLocationDto> MakeCalcLocations([JetBrains.Annotations.NotNull][ItemNotNull] List<Location> locations,
-            [JetBrains.Annotations.NotNull] HouseholdKey householdKey, EnergyIntensityType et,
-            [JetBrains.Annotations.NotNull] Dictionary<CalcLocationDto, List<IAssignableDevice>> deviceLocationDict,
-            [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<DeviceAction> deviceActions,
-            [JetBrains.Annotations.NotNull] LocationDtoDict locdict,
-                                                       [ItemNotNull] [JetBrains.Annotations.NotNull] List<DeviceCategoryDto> deviceCategoryDtos)
+        public List<CalcLocationDto> MakeCalcLocations([NotNull][ItemNotNull] List<Location> locations,
+            [NotNull] HouseholdKey householdKey, EnergyIntensityType et,
+            [NotNull] Dictionary<CalcLocationDto, List<IAssignableDevice>> deviceLocationDict,
+            [NotNull][ItemNotNull] ObservableCollection<DeviceAction> deviceActions,
+            [NotNull] LocationDtoDict locdict,
+                                                       [ItemNotNull] [NotNull] List<DeviceCategoryDto> deviceCategoryDtos)
         {
             var locs = new List<CalcLocationDto>();
             foreach (var t in locations)

@@ -132,7 +132,7 @@ namespace SimulationEngineLib.Calculation {
         //    Logger.Info("Finished writing to " + batchfilename);
         //}
 
-        public static void RunProcessing([JetBrains.Annotations.NotNull] BatchOptions bo, [JetBrains.Annotations.NotNull] string connectionString) {
+        public static void RunProcessing([NotNull] BatchOptions bo, [NotNull] string connectionString) {
             if (bo.SettlementIndex != null) {
                 BatchfileFromSettlement.MakeBatchfileFromSettlement(connectionString, bo);
             }

@@ -35,9 +35,9 @@ using JetBrains.Annotations;
 
 namespace LoadProfileGenerator.Model {
     public class TextInputToVisibilityConverter : IMultiValueConverter {
-        [JetBrains.Annotations.NotNull]
-        public object Convert([ItemNotNull] [CanBeNull] object[] values, [JetBrains.Annotations.NotNull] Type targetType, [JetBrains.Annotations.NotNull] object parameter,
-            [JetBrains.Annotations.NotNull] CultureInfo culture) {
+        [NotNull]
+        public object Convert([ItemNotNull] [CanBeNull] object[] values, [NotNull] Type targetType, [NotNull] object parameter,
+            [NotNull] CultureInfo culture) {
             if (values == null) {
                 throw new ArgumentNullException(nameof(values));
             }
@@ -57,7 +57,7 @@ namespace LoadProfileGenerator.Model {
         }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public object[] ConvertBack([CanBeNull] object value, [CanBeNull][ItemNotNull] Type[] targetTypes,
             [CanBeNull] object parameter, [CanBeNull] CultureInfo culture) => throw new LPGNotImplementedException();
     }

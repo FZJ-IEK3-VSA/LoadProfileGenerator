@@ -43,9 +43,9 @@ namespace Database.Tables.BasicElements {
 
         [CanBeNull] private DeviceTag _tag;
 
-        public DeviceTaggingEntry([JetBrains.Annotations.NotNull] string name, int taggingSetID, [CanBeNull] DeviceTag tag,
+        public DeviceTaggingEntry([NotNull] string name, int taggingSetID, [CanBeNull] DeviceTag tag,
             [CanBeNull] RealDevice device,
-            [JetBrains.Annotations.NotNull] string connectionString, [CanBeNull]int? pID, StrGuid guid) : base(name, pID, TableName, connectionString, guid)
+            [NotNull] string connectionString, [CanBeNull]int? pID, StrGuid guid) : base(name, pID, TableName, connectionString, guid)
         {
             _taggingSetID = taggingSetID;
             _tag = tag;
@@ -90,9 +90,9 @@ namespace Database.Tables.BasicElements {
             return result;
         }
 
-        [JetBrains.Annotations.NotNull]
-        private static DeviceTaggingEntry AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
-            [JetBrains.Annotations.NotNull] AllItemCollections aic)
+        [NotNull]
+        private static DeviceTaggingEntry AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
+            [NotNull] AllItemCollections aic)
         {
             var holidayDateID =dr.GetIntFromLong("ID");
             var taggingSetID = dr.GetIntFromLong("TaggingSetID");
@@ -115,7 +115,7 @@ namespace Database.Tables.BasicElements {
             return string.Compare(Name, other.Name, StringComparison.Ordinal);
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private static string GetName([CanBeNull] DeviceTag tag, [CanBeNull] RealDevice device)
         {
             var name = string.Empty;
@@ -142,9 +142,9 @@ namespace Database.Tables.BasicElements {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceTaggingEntry> result, [JetBrains.Annotations.NotNull] string connectionString,
-            bool ignoreMissingTables, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<RealDevice> allDevices,
-            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceTag> allTags)
+        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<DeviceTaggingEntry> result, [NotNull] string connectionString,
+            bool ignoreMissingTables, [ItemNotNull] [NotNull] ObservableCollection<RealDevice> allDevices,
+            [ItemNotNull] [NotNull] ObservableCollection<DeviceTag> allTags)
         {
             var aic = new AllItemCollections(realDevices: allDevices, deviceTags: allTags);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);

@@ -37,15 +37,15 @@ using LoadProfileGenerator.Views.Households;
 
 namespace LoadProfileGenerator.Presenters.Households {
     public class SubAffordancePresenter : PresenterBaseDBBase<SubAffordanceView> {
-        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<string> _allActions = new ObservableCollection<string>();
-        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<string> _executionTimes = new ObservableCollection<string>();
+        [ItemNotNull] [NotNull] private readonly ObservableCollection<string> _allActions = new ObservableCollection<string>();
+        [ItemNotNull] [NotNull] private readonly ObservableCollection<string> _executionTimes = new ObservableCollection<string>();
 
-        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<string> _locationModes = new ObservableCollection<string>();
-        [JetBrains.Annotations.NotNull] private readonly SubAffordance _subaff;
-        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<UsedIn> _usedIns;
+        [ItemNotNull] [NotNull] private readonly ObservableCollection<string> _locationModes = new ObservableCollection<string>();
+        [NotNull] private readonly SubAffordance _subaff;
+        [ItemNotNull] [NotNull] private readonly ObservableCollection<UsedIn> _usedIns;
 
-        public SubAffordancePresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] SubAffordanceView view,
-            [JetBrains.Annotations.NotNull] SubAffordance subaff) : base(view, "ThisSubAffordance.HeaderString", subaff, applicationPresenter)
+        public SubAffordancePresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] SubAffordanceView view,
+            [NotNull] SubAffordance subaff) : base(view, "ThisSubAffordance.HeaderString", subaff, applicationPresenter)
         {
             _subaff = subaff;
             _usedIns = new ObservableCollection<UsedIn>();
@@ -56,50 +56,50 @@ namespace LoadProfileGenerator.Presenters.Households {
         }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<string> AllActions => _allActions;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<Location> AllLocations => Sim.Locations.Items;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<Variable> AllVariables => Sim.Variables.Items;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<Desire> Desires => Sim.Desires.Items;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<string> ExecutionTimes => _executionTimes;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<string> LocationModes => _locationModes;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public SubAffordance ThisSubAffordance => _subaff;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<TimeBasedProfile> Timeprofiles
             => Sim.Timeprofiles.Items;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<UsedIn> UsedIns => _usedIns;
 
-        public void AddDesire([JetBrains.Annotations.NotNull] Desire d, decimal satisfactionvalue)
+        public void AddDesire([NotNull] Desire d, decimal satisfactionvalue)
         {
             _subaff.AddDesire(d, satisfactionvalue, Sim.Desires.Items);
         }
@@ -134,7 +134,7 @@ namespace LoadProfileGenerator.Presenters.Households {
             }
         }
 
-        public void RemoveDesire([JetBrains.Annotations.NotNull] SubAffordanceDesire ad)
+        public void RemoveDesire([NotNull] SubAffordanceDesire ad)
         {
             _subaff.DeleteAffordanceDesireFromDB(ad);
             _subaff.SaveToDB();

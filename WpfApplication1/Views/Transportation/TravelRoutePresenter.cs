@@ -10,31 +10,31 @@ namespace LoadProfileGenerator.Views.Transportation
 {
     public class TravelRoutePresenter : PresenterBaseDBBase<TravelRouteView>
     {
-        [JetBrains.Annotations.NotNull] private readonly TravelRoute _travelRoute;
+        [NotNull] private readonly TravelRoute _travelRoute;
 
-        public TravelRoutePresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] TravelRouteView view,
-            [JetBrains.Annotations.NotNull] TravelRoute route) : base(view, "ThisRoute.Name", route, applicationPresenter)
+        public TravelRoutePresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] TravelRouteView view,
+            [NotNull] TravelRoute route) : base(view, "ThisRoute.Name", route, applicationPresenter)
         {
             _travelRoute = route;
         }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<Site> Sites => Sim.Sites.Items;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public TravelRoute ThisRoute => _travelRoute;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<TransportationDeviceCategory> TransportationDeviceCategories => Sim
             .TransportationDeviceCategories.Items;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<UsedIn> UsedIns { get; } = new ObservableCollection<UsedIn>();
 

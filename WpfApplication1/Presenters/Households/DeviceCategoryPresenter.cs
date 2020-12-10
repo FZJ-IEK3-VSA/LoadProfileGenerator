@@ -40,14 +40,14 @@ using LoadProfileGenerator.Views.Households;
 
 namespace LoadProfileGenerator.Presenters.Households {
     public class DeviceCategoryPresenter : PresenterBaseDBBase<DeviceCategoryView> {
-        [JetBrains.Annotations.NotNull] private readonly DeviceCategory _deviceCategory;
-        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<UsedIn> _usedIns;
-        [JetBrains.Annotations.NotNull] private DeviceCategoryPickerPresenter _dcp;
+        [NotNull] private readonly DeviceCategory _deviceCategory;
+        [ItemNotNull] [NotNull] private readonly ObservableCollection<UsedIn> _usedIns;
+        [NotNull] private DeviceCategoryPickerPresenter _dcp;
         [CanBeNull] private DeviceCategory _selectedParentCategory;
 
         public DeviceCategoryPresenter(
-            [JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter,
-            [JetBrains.Annotations.NotNull] DeviceCategoryView view, [JetBrains.Annotations.NotNull] DeviceCategory deviceCategory)
+            [NotNull] ApplicationPresenter applicationPresenter,
+            [NotNull] DeviceCategoryView view, [NotNull] DeviceCategory deviceCategory)
             : base(view, "ThisDeviceCategory.Name", deviceCategory, applicationPresenter)
         {
             _deviceCategory = deviceCategory;
@@ -61,11 +61,11 @@ namespace LoadProfileGenerator.Presenters.Households {
         }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<DeviceCategory> AllDeviceCategories => Sim.DeviceCategories.Items;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public DeviceCategoryPickerPresenter DeviceCategoryPicker {
             get => _dcp;
@@ -83,11 +83,11 @@ namespace LoadProfileGenerator.Presenters.Households {
             }
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public DeviceCategory ThisDeviceCategory => _deviceCategory;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<UsedIn> UsedIns => _usedIns;
 

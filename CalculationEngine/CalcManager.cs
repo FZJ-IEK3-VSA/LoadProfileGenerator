@@ -46,7 +46,7 @@ namespace CalculationEngine {
     public sealed class CalcManager : IDisposable {
         private static bool _exitCalcFunction;
 
-        [JetBrains.Annotations.NotNull] private readonly DayLightStatus _lightNeededArray;
+        [NotNull] private readonly DayLightStatus _lightNeededArray;
 
         //[ItemNotNull] [JetBrains.Annotations.NotNull] private readonly List<CalcAffordanceTaggingSet> _affordanceTaggingSets;
 
@@ -56,16 +56,16 @@ namespace CalculationEngine {
 
         private readonly int _randomSeed;
 
-        [JetBrains.Annotations.NotNull] private readonly string _resultPath;
+        [NotNull] private readonly string _resultPath;
 
         //[JetBrains.Annotations.NotNull] private readonly SqlResultLoggingService _srls;
 
-        [JetBrains.Annotations.NotNull] private readonly CalcVariableRepository _variableRepository;
+        [NotNull] private readonly CalcVariableRepository _variableRepository;
 
-        public CalcManager([JetBrains.Annotations.NotNull] string resultPath,
+        public CalcManager([NotNull] string resultPath,
                            int randomSeed,
-                           [JetBrains.Annotations.NotNull] DayLightStatus lightNeededArray,
-                           [JetBrains.Annotations.NotNull] CalcVariableRepository variableRepository,
+                           [NotNull] DayLightStatus lightNeededArray,
+                           [NotNull] CalcVariableRepository variableRepository,
                            CalcRepo calcRepo)
         {
             _lightNeededArray = lightNeededArray;
@@ -278,7 +278,7 @@ namespace CalculationEngine {
             return true;
         }
 
-        public void SetCalcObject([JetBrains.Annotations.NotNull] ICalcAbleObject calcObject)
+        public void SetCalcObject([NotNull] ICalcAbleObject calcObject)
         {
             CalcObject = calcObject;
             if (calcObject == null) {
@@ -363,7 +363,7 @@ namespace CalculationEngine {
             //WriteDeviceTaggingSets();
         }
 
-        private void SaveVariableStatesIfNeeded([JetBrains.Annotations.NotNull] TimeStep timestep)
+        private void SaveVariableStatesIfNeeded([NotNull] TimeStep timestep)
         {
             if (!CalcRepo.CalcParameters.IsSet(CalcOption.VariableLogFile)) {
                 return;
@@ -376,7 +376,7 @@ namespace CalculationEngine {
             }
         }
 
-        private void WriteCalcProfilingResults([JetBrains.Annotations.NotNull] string dstPath)
+        private void WriteCalcProfilingResults([NotNull] string dstPath)
         {
             if (CalcRepo.CalcParameters.Options.Contains(CalcOption.CalculationFlameChart)) {
                 var dstfullFilename = Path.Combine(dstPath, Constants.CalculationProfilerJson);

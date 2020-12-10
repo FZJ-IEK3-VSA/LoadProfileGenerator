@@ -40,7 +40,7 @@ using JetBrains.Annotations;
 namespace CalculationController.CalcFactories {
     public class CalcLoadTypeDictionary
     {
-        public CalcLoadTypeDictionary([JetBrains.Annotations.NotNull] Dictionary<CalcLoadTypeDto, CalcLoadType> dtoCalcDict)
+        public CalcLoadTypeDictionary([NotNull] Dictionary<CalcLoadTypeDto, CalcLoadType> dtoCalcDict)
         {
             DtoCalcDict = dtoCalcDict;
             _calcLoadTypes = dtoCalcDict.Values.ToList();
@@ -48,16 +48,16 @@ namespace CalculationController.CalcFactories {
         }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private readonly List<CalcLoadType> _calcLoadTypes;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private Dictionary<CalcLoadTypeDto, CalcLoadType> DtoCalcDict { get; }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private readonly HashSet<StrGuid> _guids;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public CalcLoadType GetLoadtypeByGuid(StrGuid loadtypeGuid)
         {
             return _calcLoadTypes.Single(x => x.Guid == loadtypeGuid);
@@ -78,8 +78,8 @@ namespace CalculationController.CalcFactories {
             return false;
         }*/
 
-        [JetBrains.Annotations.NotNull]
-        public CalcLoadType GetCalcLoadTypeByLoadtype([JetBrains.Annotations.NotNull] CalcLoadTypeDto lt)
+        [NotNull]
+        public CalcLoadType GetCalcLoadTypeByLoadtype([NotNull] CalcLoadTypeDto lt)
         {
             return DtoCalcDict[lt];
         }
@@ -94,9 +94,9 @@ namespace CalculationController.CalcFactories {
     }
 
     public static class CalcLoadTypeDtoFactory {
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public static CalcLoadTypeDtoDictionary MakeLoadTypes(
-            [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<VLoadType> loadTypes, TimeSpan internalTimeResolution,
+            [NotNull][ItemNotNull] ObservableCollection<VLoadType> loadTypes, TimeSpan internalTimeResolution,
             LoadTypePriority priority)
         {
             var ltDtoDict = new Dictionary<VLoadType, CalcLoadTypeDto>();
@@ -114,9 +114,9 @@ namespace CalculationController.CalcFactories {
     }
 
     public static class CalcLoadTypeFactory {
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public static CalcLoadTypeDictionary MakeLoadTypes(
-            [JetBrains.Annotations.NotNull] CalcLoadTypeDtoDictionary dtoDict) {
+            [NotNull] CalcLoadTypeDtoDictionary dtoDict) {
             var ltDict = new Dictionary<CalcLoadTypeDto, CalcLoadType>();
             foreach (var dto in dtoDict.Ltdtodict.Values) {
                     var calcLoadType = new CalcLoadType(dto.Name,  dto.UnitOfPower, dto.UnitOfSum,

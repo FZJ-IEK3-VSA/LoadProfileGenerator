@@ -10,7 +10,7 @@ namespace SimulationEngineLib
     public static class MainSimEngine
     {
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private static string GetConnectionString()
         {
             if (!File.Exists("profilegenerator.db3"))
@@ -23,7 +23,7 @@ namespace SimulationEngineLib
             return "Data Source=profilegenerator.db3";
         }
 
-        public static void RunOptionProcessing([JetBrains.Annotations.NotNull] string connectionString, [ItemNotNull][JetBrains.Annotations.NotNull] string[] args, string exename)
+        public static void RunOptionProcessing([NotNull] string connectionString, [ItemNotNull][NotNull] string[] args, string exename)
         {
             CommandProcessor.ConnectionString = connectionString;
             Config.IsInHeadless = true;
@@ -58,7 +58,7 @@ namespace SimulationEngineLib
             //}
         }
 
-        public static void Run([JetBrains.Annotations.NotNull] string[] args, string exename)
+        public static void Run([NotNull] string[] args, string exename)
         {
             Logger.Get().StartCollectingAllMessages();
             void RunThisOptionProcessing()

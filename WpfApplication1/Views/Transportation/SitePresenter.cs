@@ -11,9 +11,9 @@ namespace LoadProfileGenerator.Views.Transportation
 {
     public class SitePresenter : PresenterBaseDBBase<SiteView>
     {
-        [JetBrains.Annotations.NotNull] private readonly Site _site;
+        [NotNull] private readonly Site _site;
 
-        public SitePresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] SiteView view, [JetBrains.Annotations.NotNull] Site site) : base(view,
+        public SitePresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] SiteView view, [NotNull] Site site) : base(view,
             "ThisSite.Name", site, applicationPresenter)
         {
             _site = site;
@@ -21,25 +21,25 @@ namespace LoadProfileGenerator.Views.Transportation
         }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<Location> Locations => Sim.Locations.Items;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<VLoadType> LoadTypes => Sim.LoadTypes.Items;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<TransportationDeviceCategory> TransportationDeviceCategories => Sim.TransportationDeviceCategories.Items;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public Site ThisSite => _site;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<UsedIn> UsedIns { get; } = new ObservableCollection<UsedIn>();
 

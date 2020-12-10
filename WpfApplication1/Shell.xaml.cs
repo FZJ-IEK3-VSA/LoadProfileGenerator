@@ -140,7 +140,7 @@ using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
 
             Language = XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag);
             InitializeComponent();
-            DataContext = new ApplicationPresenter(this, Sim, this.Dispatcher);
+            DataContext = new ApplicationPresenter(this, Sim, Dispatcher);
             _version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "No Version";
             Config.LPGVersion = _version;
             MessageWindowHandler.SetMainWindow(new WpfMsgWindows(this));

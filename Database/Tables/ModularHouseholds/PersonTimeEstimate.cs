@@ -2,8 +2,8 @@
 
 namespace Database.Tables.ModularHouseholds {
     public class PersonTimeEstimate {
-        public PersonTimeEstimate([JetBrains.Annotations.NotNull] string personName, double estimatedTimeUseInH, double vacationEstimateInH,
-            int traitsWithoutEstimate, [JetBrains.Annotations.NotNull] string notConsideredTraits)
+        public PersonTimeEstimate([NotNull] string personName, double estimatedTimeUseInH, double vacationEstimateInH,
+            int traitsWithoutEstimate, [NotNull] string notConsideredTraits)
         {
             PersonName = personName;
             EstimatedTimeUseInH = estimatedTimeUseInH;
@@ -15,14 +15,14 @@ namespace Database.Tables.ModularHouseholds {
         [UsedImplicitly]
         public double EstimatedTimeUseInH { get; }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public string NotConsideredTraits { get; }
 
         [UsedImplicitly]
         public double Percentage => (EstimatedTimeUseInH + VacationEstimateInH) / 8760 * 100;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public string PersonName { get; }
 

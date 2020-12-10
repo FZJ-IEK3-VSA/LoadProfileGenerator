@@ -43,11 +43,11 @@ using JetBrains.Annotations;
 namespace CalcPostProcessor.GeneralHouseholdSteps {
     internal class MakeActivationsPerHour : HouseholdStepBase {
 
-        [JetBrains.Annotations.NotNull] private readonly IFileFactoryAndTracker _fft;
+        [NotNull] private readonly IFileFactoryAndTracker _fft;
 
-        public MakeActivationsPerHour([JetBrains.Annotations.NotNull] CalcDataRepository repository,
-                                      [JetBrains.Annotations.NotNull] ICalculationProfiler profiler,
-                                      [JetBrains.Annotations.NotNull] IFileFactoryAndTracker fft) : base(repository,
+        public MakeActivationsPerHour([NotNull] CalcDataRepository repository,
+                                      [NotNull] ICalculationProfiler profiler,
+                                      [NotNull] IFileFactoryAndTracker fft) : base(repository,
             AutomationUtili.GetOptionList(CalcOption.ActivationsPerHour),
             profiler,
             "Activiations per Hour",0)
@@ -66,13 +66,13 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
             BuildActivationsPerHours(_fft, entry.HHKey, Repository.AffordanceTaggingSets, Repository.ReadActionEntries(entry.HHKey));
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public override List<CalcOption> NeededOptions => new List<CalcOption>() {CalcOption.AffordanceTaggingSets, CalcOption.ActionEntries};
 
-        private void BuildActivationsPerHours([JetBrains.Annotations.NotNull] IFileFactoryAndTracker fft,
-                                              [JetBrains.Annotations.NotNull] HouseholdKey householdKey,
-                                              [JetBrains.Annotations.NotNull] [ItemNotNull] List<CalcAffordanceTaggingSetDto> taggingSets,
-                                              [JetBrains.Annotations.NotNull] [ItemNotNull] List<ActionEntry> actionEntries)
+        private void BuildActivationsPerHours([NotNull] IFileFactoryAndTracker fft,
+                                              [NotNull] HouseholdKey householdKey,
+                                              [NotNull] [ItemNotNull] List<CalcAffordanceTaggingSetDto> taggingSets,
+                                              [NotNull] [ItemNotNull] List<ActionEntry> actionEntries)
         {
             var calcParameters = Repository.CalcParameters;
             var activitiesPerHour = new Dictionary<string, Dictionary<string, int[]>>();
@@ -181,7 +181,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
             }
         }
 
-        private static int Comparison([JetBrains.Annotations.NotNull] [ItemNotNull] List<string> list, [JetBrains.Annotations.NotNull] [ItemNotNull] List<string> list1)
+        private static int Comparison([NotNull] [ItemNotNull] List<string> list, [NotNull] [ItemNotNull] List<string> list1)
         {
             var result = 0;
             if (list.Count > 9) {

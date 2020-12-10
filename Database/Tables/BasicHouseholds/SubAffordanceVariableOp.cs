@@ -23,9 +23,9 @@ namespace Database.Tables.BasicHouseholds {
         private readonly VariableAction _variableAction;
         private readonly VariableLocationMode _variableLocationMode;
 
-        public SubAffordanceVariableOp(double value,[CanBeNull] int? id, int affordanceID, [JetBrains.Annotations.NotNull] string connectionString,
+        public SubAffordanceVariableOp(double value,[CanBeNull] int? id, int affordanceID, [NotNull] string connectionString,
             VariableLocationMode variableLocationMode, [CanBeNull] Location location, VariableAction variableAction,
-            [CanBeNull] Variable variable, VariableExecutionTime executionTime, [JetBrains.Annotations.NotNull] string name, StrGuid guid) : base(name, TableName,
+            [CanBeNull] Variable variable, VariableExecutionTime executionTime, [NotNull] string name, StrGuid guid) : base(name, TableName,
             connectionString, guid) {
             _value = value;
             ID = id;
@@ -42,7 +42,7 @@ namespace Database.Tables.BasicHouseholds {
 
         public VariableExecutionTime ExecutionTime => _executionTime;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public string ExecutionTimeStr => VariableExecutionTimeHelper.ConvertToVariableDescription(_executionTime);
 
         [CanBeNull]
@@ -50,7 +50,7 @@ namespace Database.Tables.BasicHouseholds {
 
         public VariableLocationMode LocationMode => _variableLocationMode;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public string LocationModeStr
             => VariableLocationModeHelper.ConvertToVariableActionDescription(_variableLocationMode);
 
@@ -61,13 +61,13 @@ namespace Database.Tables.BasicHouseholds {
 
         public VariableAction VariableAction => _variableAction;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public string VariableActionStr => VariableActionHelper.ConvertToVariableDescription(_variableAction);
 
-        [JetBrains.Annotations.NotNull]
-        private static SubAffordanceVariableOp AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString,
-            bool ignoreMissingFields, [JetBrains.Annotations.NotNull] AllItemCollections aic) {
+        [NotNull]
+        private static SubAffordanceVariableOp AssignFields([NotNull] DataReader dr, [NotNull] string connectionString,
+            bool ignoreMissingFields, [NotNull] AllItemCollections aic) {
             var id = dr.GetIntFromLong("ID", true, ignoreMissingFields, -1);
             var affordanceID = dr.GetIntFromLong("AffordanceID", false, ignoreMissingFields, -1);
             var value = dr.GetDouble("Value", false, 0, ignoreMissingFields);
@@ -99,9 +99,9 @@ namespace Database.Tables.BasicHouseholds {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<SubAffordanceVariableOp> result,
-            [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingTables, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Location> locations,
-            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Variable> variables) {
+        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<SubAffordanceVariableOp> result,
+            [NotNull] string connectionString, bool ignoreMissingTables, [ItemNotNull] [NotNull] ObservableCollection<Location> locations,
+            [ItemNotNull] [NotNull] ObservableCollection<Variable> variables) {
             var aic = new AllItemCollections(locations: locations, variables: variables);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }

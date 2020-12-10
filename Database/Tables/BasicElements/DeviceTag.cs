@@ -36,7 +36,7 @@ namespace Database.Tables.BasicElements {
     public class DeviceTag : DBBase, IComparable<DeviceTag> {
         public const string TableName = "tblDeviceTags";
 
-        public DeviceTag([JetBrains.Annotations.NotNull] string name, int taggingSetID, [JetBrains.Annotations.NotNull] string connectionString, [CanBeNull]int? pID,StrGuid guid)
+        public DeviceTag([NotNull] string name, int taggingSetID, [NotNull] string connectionString, [CanBeNull]int? pID,StrGuid guid)
             : base(name, pID, TableName, connectionString, guid)
         {
             TaggingSetID = taggingSetID;
@@ -53,9 +53,9 @@ namespace Database.Tables.BasicElements {
             return string.CompareOrdinal(Name, other.Name);
         }
 
-        [JetBrains.Annotations.NotNull]
-        private static DeviceTag AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
-            [JetBrains.Annotations.NotNull] AllItemCollections aic)
+        [NotNull]
+        private static DeviceTag AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
+            [NotNull] AllItemCollections aic)
         {
             var tagID = dr.GetIntFromLong("ID");
             var taggingSetID = dr.GetIntFromLong("TaggingSetID");
@@ -79,7 +79,7 @@ namespace Database.Tables.BasicElements {
             return true;
         }
 
-        public static void LoadFromDatabase([JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<DeviceTag> result, [JetBrains.Annotations.NotNull] string connectionString,
+        public static void LoadFromDatabase([NotNull] [ItemNotNull] ObservableCollection<DeviceTag> result, [NotNull] string connectionString,
             bool ignoreMissingTables)
         {
             var aic = new AllItemCollections();

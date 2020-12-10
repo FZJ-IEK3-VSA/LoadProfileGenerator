@@ -18,8 +18,8 @@ namespace Database.Tables.BasicHouseholds {
         [CanBeNull] private readonly IAssignableDevice _assignableDevice;
 
         public AffordanceStandby([CanBeNull] IAssignableDevice assignableDevice, [CanBeNull]int? id, [CanBeNull]int? affordanceID,
-            [JetBrains.Annotations.NotNull] string connectionString,
-            [JetBrains.Annotations.NotNull] string deviceName, StrGuid guid) : base(deviceName, TableName, connectionString, guid) {
+            [NotNull] string connectionString,
+            [NotNull] string deviceName, StrGuid guid) : base(deviceName, TableName, connectionString, guid) {
             _assignableDevice = assignableDevice;
             ID = id;
             _affordanceID = affordanceID;
@@ -42,7 +42,7 @@ namespace Database.Tables.BasicHouseholds {
         [UsedImplicitly]
         public Affordance ParentAffordance { get; set; }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public string StrKey => Name;
 
@@ -65,9 +65,9 @@ namespace Database.Tables.BasicHouseholds {
 
         public TimeBasedProfile TimeProfile => null;
 
-        [JetBrains.Annotations.NotNull]
-        private static AffordanceStandby AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
-            [JetBrains.Annotations.NotNull] AllItemCollections aic) {
+        [NotNull]
+        private static AffordanceStandby AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
+            [NotNull] AllItemCollections aic) {
             var id = dr.GetIntFromLong("ID", true, ignoreMissingFields, -1);
             var affordanceID = dr.GetIntFromLong("AffordanceID", false, ignoreMissingFields, -1);
             var deviceID = dr.GetIntFromLong("DeviceID", false, ignoreMissingFields, -1);
@@ -129,10 +129,10 @@ namespace Database.Tables.BasicHouseholds {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<AffordanceStandby> result, [JetBrains.Annotations.NotNull] string connectionString,
-            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceCategory> deviceCategories, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<RealDevice> realDevices,
-            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Affordance> affordances, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceAction> deviceActions,
-            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceActionGroup> deviceActionGroups, bool ignoreMissingTables) {
+        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<AffordanceStandby> result, [NotNull] string connectionString,
+            [ItemNotNull] [NotNull] ObservableCollection<DeviceCategory> deviceCategories, [ItemNotNull] [NotNull] ObservableCollection<RealDevice> realDevices,
+            [ItemNotNull] [NotNull] ObservableCollection<Affordance> affordances, [ItemNotNull] [NotNull] ObservableCollection<DeviceAction> deviceActions,
+            [ItemNotNull] [NotNull] ObservableCollection<DeviceActionGroup> deviceActionGroups, bool ignoreMissingTables) {
             var aic = new AllItemCollections(deviceCategories: deviceCategories, realDevices: realDevices,
                 affordances: affordances, deviceActions: deviceActions, deviceActionGroups: deviceActionGroups);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);

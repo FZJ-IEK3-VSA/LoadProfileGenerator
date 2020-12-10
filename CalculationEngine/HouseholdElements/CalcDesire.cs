@@ -51,21 +51,21 @@ namespace CalculationEngine.HouseholdElements {
     public class CalcDesire {
         private readonly decimal _decayRate;
         private readonly bool _isSharedValue;
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private readonly string _name;
         private readonly SharedDesireValue? _sharedDesireValue;
 
         private readonly int _timestepsPerHour;
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private readonly string _desireCategory;
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private readonly string _sourceTrait;
         private decimal _value;
 
-        public CalcDesire([JetBrains.Annotations.NotNull] string name, int desireID, decimal threshold, decimal decayTime, decimal value,
+        public CalcDesire([NotNull] string name, int desireID, decimal threshold, decimal decayTime, decimal value,
             decimal weight,
             int timestepsPerHour, decimal criticalThreshold, SharedDesireValue? sharedDesireValue,
-            [JetBrains.Annotations.NotNull] string sourceTrait, [JetBrains.Annotations.NotNull] string desireCategory)
+            [NotNull] string sourceTrait, [NotNull] string desireCategory)
         {
             //todo: check the whole shared desire thing and write some unit tests for it. It is initzialized in the factory to null?
             _timestepsPerHour = timestepsPerHour;
@@ -95,7 +95,7 @@ namespace CalculationEngine.HouseholdElements {
 
         public decimal DecayTime { get; }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public string DesireCategory => _desireCategory;
 
         public int DesireID { get; }
@@ -112,10 +112,10 @@ namespace CalculationEngine.HouseholdElements {
             }
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public string Name => _name;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public string SourceTrait => _sourceTrait;
 
         public decimal TempValue { get; set; }
@@ -140,7 +140,7 @@ namespace CalculationEngine.HouseholdElements {
 
         public decimal Weight { get; }
 
-        public void ApplyDecay([JetBrains.Annotations.NotNull] TimeStep timestep)
+        public void ApplyDecay([NotNull] TimeStep timestep)
         {
             if (!_isSharedValue) {
                 _value *= _decayRate;
@@ -168,7 +168,7 @@ namespace CalculationEngine.HouseholdElements {
             return factor;
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public override string ToString() => "desire:" + _name;
     }
 }

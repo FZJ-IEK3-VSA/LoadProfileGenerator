@@ -15,14 +15,14 @@ namespace CalculationController.Integrity {
         public DeviceActionChecker(bool performCleanupChecks) : base("Device Actions", performCleanupChecks) {
         }
 
-        private static void CheckDeviceActionGroup([JetBrains.Annotations.NotNull] DeviceAction action) {
+        private static void CheckDeviceActionGroup([NotNull] DeviceAction action) {
             if (action.DeviceActionGroup == null) {
                 throw new DataIntegrityException(
                     "The device action " + action.Name + " is missing a device action group. Please fix.", action);
             }
         }
 
-        private void CheckElectricity([JetBrains.Annotations.NotNull] DeviceAction action) {
+        private void CheckElectricity([NotNull] DeviceAction action) {
             var elec = action.Profiles.FirstOrDefault(p => p.VLoadType?.Name == "Electricity");
             if (elec != null) {
                 var apparent = action.Profiles.FirstOrDefault(p => p.VLoadType?.Name == "Apparent");
@@ -61,7 +61,7 @@ namespace CalculationController.Integrity {
             }
         }
 
-        private static void CheckforAllPlaceholders([JetBrains.Annotations.NotNull] DeviceAction action) {
+        private static void CheckforAllPlaceholders([NotNull] DeviceAction action) {
             var areAllPlaceholder = true;
             foreach (var profile in action.Profiles) {
                 if (profile.Timeprofile?.Name.ToUpperInvariant().Contains("PLACEHOLDER") == false) {
@@ -77,7 +77,7 @@ namespace CalculationController.Integrity {
             }
         }
 
-        private static void CheckForDuplicateTimeProfiles([JetBrains.Annotations.NotNull] DeviceAction action) {
+        private static void CheckForDuplicateTimeProfiles([NotNull] DeviceAction action) {
             foreach (var profile1 in action.Profiles) {
                 foreach (var profile2 in action.Profiles) {
                     if (profile1 != profile2) {
@@ -91,7 +91,7 @@ namespace CalculationController.Integrity {
             }
         }
 
-        private void CheckForUsage([JetBrains.Annotations.NotNull] DeviceAction action, [JetBrains.Annotations.NotNull] Simulator sim) {
+        private void CheckForUsage([NotNull] DeviceAction action, [NotNull] Simulator sim) {
             if (!PerformCleanupChecks) {
                 return;
             }
@@ -103,7 +103,7 @@ namespace CalculationController.Integrity {
             }
         }
 
-        private static void CheckValidLoadtypesOnDeviceAction([JetBrains.Annotations.NotNull] DeviceAction da) {
+        private static void CheckValidLoadtypesOnDeviceAction([NotNull] DeviceAction da) {
             if (da.Device == null) {
                 throw new DataIntegrityException(
                     "The Device Action " + da.Name + " has no device selected! Please fix.", da);

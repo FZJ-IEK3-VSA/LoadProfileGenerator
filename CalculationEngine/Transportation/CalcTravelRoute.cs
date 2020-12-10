@@ -10,24 +10,24 @@ using JetBrains.Annotations;
 namespace CalculationEngine.Transportation
 {
     public class CalcTravelRoute : CalcBase {
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private readonly HouseholdKey _householdkey;
 
         private readonly CalcRepo _calcRepo;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private readonly List<CalcTransportationDevice> _locationUnlimitedDevices;
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private readonly List<CalcTransportationDevice> _vehiclePool;
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private PreviouslyPickedDevices _mypicks = new PreviouslyPickedDevices("", new TimeStep(-1,0,false));
 
-        public CalcTravelRoute([JetBrains.Annotations.NotNull] string pName, [JetBrains.Annotations.NotNull] CalcSite siteA, [JetBrains.Annotations.NotNull] CalcSite siteB,
-            [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcTransportationDevice> vehiclePool,
-            [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcTransportationDevice> locationUnlimitedDevices,
-            [JetBrains.Annotations.NotNull] HouseholdKey householdkey, StrGuid guid,
+        public CalcTravelRoute([NotNull] string pName, [NotNull] CalcSite siteA, [NotNull] CalcSite siteB,
+            [NotNull][ItemNotNull] List<CalcTransportationDevice> vehiclePool,
+            [NotNull][ItemNotNull] List<CalcTransportationDevice> locationUnlimitedDevices,
+            [NotNull] HouseholdKey householdkey, StrGuid guid,
                                CalcRepo calcRepo) : base(pName, guid)
         {
             _householdkey = householdkey;
@@ -41,35 +41,35 @@ namespace CalculationEngine.Transportation
 
         //TODO: Time limit
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private CalcSite SiteA { get; }
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public CalcSite SiteB { get; }
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [ItemNotNull]
         private List<CalcTravelRouteStep> Steps { get; } = new List<CalcTravelRouteStep>();
 
         public class CalcTravelDeviceUseEvent {
-            public CalcTravelDeviceUseEvent([JetBrains.Annotations.NotNull] CalcTransportationDevice device, int durationInSteps, double totalDistance)
+            public CalcTravelDeviceUseEvent([NotNull] CalcTransportationDevice device, int durationInSteps, double totalDistance)
             {
                 Device = device;
                 DurationInSteps = durationInSteps;
                 TotalDistance = totalDistance;
             }
 
-            [JetBrains.Annotations.NotNull]
+            [NotNull]
             public CalcTransportationDevice Device { get; }
             public int DurationInSteps { get; }
             public double TotalDistance { get;  }
 
-            [JetBrains.Annotations.NotNull]
+            [NotNull]
             public override string ToString()
             {
                 return Device.Name + " (" + DurationInSteps + " steps)";
             }
         }
-        public int Activate([JetBrains.Annotations.NotNull] TimeStep currentTimeStep, [JetBrains.Annotations.NotNull] string calcPersonName,
-                            [JetBrains.Annotations.NotNull][ItemNotNull] out List<CalcTravelDeviceUseEvent> usedDeviceEvents)
+        public int Activate([NotNull] TimeStep currentTimeStep, [NotNull] string calcPersonName,
+                            [NotNull][ItemNotNull] out List<CalcTravelDeviceUseEvent> usedDeviceEvents)
         {
             if (_mypicks.Timestep != currentTimeStep || _mypicks.CalcPersonName != calcPersonName) {
                 throw new LPGException("Device was not previously picked?");
@@ -117,7 +117,7 @@ namespace CalculationEngine.Transportation
             return totalDuration;
         }
 
-        public void AddTravelRouteStep([JetBrains.Annotations.NotNull] string stepName, [JetBrains.Annotations.NotNull] CalcTransportationDeviceCategory deviceCategory,
+        public void AddTravelRouteStep([NotNull] string stepName, [NotNull] CalcTransportationDeviceCategory deviceCategory,
             int stepNumber, double distanceInM, StrGuid guid)
         {
             CalcTravelRouteStep trs = new CalcTravelRouteStep(
@@ -127,8 +127,8 @@ namespace CalculationEngine.Transportation
         }
 
         [CanBeNull]
-        public int? GetDuration([JetBrains.Annotations.NotNull] TimeStep currentTimeStep, [JetBrains.Annotations.NotNull] string calcPersonName,
-                                [ItemNotNull] [JetBrains.Annotations.NotNull] List<CalcTransportationDevice> allTransportationDevices)
+        public int? GetDuration([NotNull] TimeStep currentTimeStep, [NotNull] string calcPersonName,
+                                [ItemNotNull] [NotNull] List<CalcTransportationDevice> allTransportationDevices)
         {
             if (_mypicks.Timestep == currentTimeStep && _mypicks.CalcPersonName == calcPersonName) {
                 return _mypicks.PreviouslyCalculatedTimeSteps;
@@ -172,7 +172,7 @@ namespace CalculationEngine.Transportation
             return totalDuration;
         }
 
-        public bool IsAvailableRouteFor([JetBrains.Annotations.NotNull] CalcSite srcSite, [JetBrains.Annotations.NotNull] CalcSite dstSite, [ItemNotNull] [JetBrains.Annotations.NotNull] List<CalcTransportationDevice> devicesAtSrcLoc)
+        public bool IsAvailableRouteFor([NotNull] CalcSite srcSite, [NotNull] CalcSite dstSite, [ItemNotNull] [NotNull] List<CalcTransportationDevice> devicesAtSrcLoc)
         {
             if (SiteA == srcSite && dstSite == SiteB) {
                 List<CalcTransportationDeviceCategory> neededCategories =
@@ -188,7 +188,7 @@ namespace CalculationEngine.Transportation
             return false;
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [ItemNotNull]
         private List<CalcTransportationDeviceCategory> CollectNeededCalcTransportationDeviceCategory()
         {
@@ -203,25 +203,25 @@ namespace CalculationEngine.Transportation
         }
 
         private class PreviouslyPickedDevices {
-            public PreviouslyPickedDevices([JetBrains.Annotations.NotNull] string calcPersonName, [JetBrains.Annotations.NotNull] TimeStep timestep)
+            public PreviouslyPickedDevices([NotNull] string calcPersonName, [NotNull] TimeStep timestep)
             {
                 CalcPersonName = calcPersonName;
                 Timestep = timestep;
             }
 
-            [JetBrains.Annotations.NotNull]
+            [NotNull]
             public string CalcPersonName { get; }
 
-            [JetBrains.Annotations.NotNull]
+            [NotNull]
             public Dictionary<CalcTravelRouteStep, CalcTransportationDevice> PickedDevices { get; } =
                 new Dictionary<CalcTravelRouteStep, CalcTransportationDevice>();
 
-            [JetBrains.Annotations.NotNull]
+            [NotNull]
             public Dictionary<CalcTravelRouteStep, int> PickedDurations { get; } =
                 new Dictionary<CalcTravelRouteStep, int>();
 
             public int PreviouslyCalculatedTimeSteps { get; set; } = -1;
-            [JetBrains.Annotations.NotNull]
+            [NotNull]
             public TimeStep Timestep { get; }
         }
     }

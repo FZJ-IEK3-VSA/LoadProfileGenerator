@@ -6,22 +6,22 @@ using JetBrains.Annotations;
 namespace Automation {
     [AttributeUsage(AttributeTargets.All)]
     public class CommentAttribute : Attribute {
-        [JetBrains.Annotations.NotNull] private string _text;
+        [NotNull] private string _text;
 
-        public CommentAttribute([JetBrains.Annotations.NotNull] string text, ListPossibleOptions list= ListPossibleOptions.NoSelection)
+        public CommentAttribute([NotNull] string text, ListPossibleOptions list= ListPossibleOptions.NoSelection)
         {
             _text = text;
             List = list;
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public string Text {
             get => _text;
 
             set => _text = value.Replace("\n","").Replace("\r","");
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [ItemNotNull]
         public List<string> TurnIntoComment(int indentDepth)
         {
@@ -76,9 +76,9 @@ namespace Automation {
         }
         public ListPossibleOptions List { get; }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [ItemNotNull]
-        public static List<string> WrapText([JetBrains.Annotations.NotNull] string text, int targetLineLength)
+        public static List<string> WrapText([NotNull] string text, int targetLineLength)
         {
             string[] originalLines = text.Split(new[] { " " },
                 StringSplitOptions.None);

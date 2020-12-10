@@ -38,7 +38,7 @@ namespace LoadProfileGenerator.Model
     {
         // *** Dependency Properties ***
 
-        [JetBrains.Annotations.NotNull] public static readonly DependencyProperty DropDownProperty = DependencyProperty.Register("DropDown",
+        [NotNull] public static readonly DependencyProperty DropDownProperty = DependencyProperty.Register("DropDown",
             typeof(ContextMenu), typeof(DropDownButton), new UIPropertyMetadata(null));
 
         // *** Constructors ***

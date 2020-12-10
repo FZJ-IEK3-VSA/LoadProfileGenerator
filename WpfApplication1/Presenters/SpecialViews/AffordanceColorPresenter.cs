@@ -43,13 +43,13 @@ using LoadProfileGenerator.Views.SpecialViews;
 namespace LoadProfileGenerator.Presenters.SpecialViews {
 #pragma warning disable S3897 // Classes that provide "Equals(<T>)" or override "Equals(Object)" should implement "IEquatable<T>"
     public class AffordanceColorPresenter : PresenterBaseWithAppPresenter<AffordanceColorView> {
-        [JetBrains.Annotations.NotNull] [ItemNotNull]
+        [NotNull] [ItemNotNull]
         private readonly ObservableCollection<Affordance> _affordances = new ObservableCollection<Affordance>();
 
         [CanBeNull] private string _sortBy;
 
-        public AffordanceColorPresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter,
-            [JetBrains.Annotations.NotNull] AffordanceColorView view)
+        public AffordanceColorPresenter([NotNull] ApplicationPresenter applicationPresenter,
+            [NotNull] AffordanceColorView view)
             : base(view, "HeaderString", applicationPresenter)
         {
             SortByOptions.Add("By Name");
@@ -64,15 +64,15 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ObservableCollection<Affordance> Affordances => _affordances;
 
         [UsedImplicitly]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public string HeaderString => "Affordance Color Setter";
 
         [UsedImplicitly]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public string SortBy {
             get {
                 if (_sortBy != null) {
@@ -90,7 +90,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         }
 
         [UsedImplicitly]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [ItemNotNull]
         public List<string> SortByOptions { get; } = new List<string>();
 
@@ -120,7 +120,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             Resort();
         }
 
-        private int Comparison([JetBrains.Annotations.NotNull] Affordance affordance, [JetBrains.Annotations.NotNull] Affordance affordance1)
+        private int Comparison([NotNull] Affordance affordance, [NotNull] Affordance affordance1)
         {
             if (affordance == null) {
                 throw new LPGException("affordance was null");

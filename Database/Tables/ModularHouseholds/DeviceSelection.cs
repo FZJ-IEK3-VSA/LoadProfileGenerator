@@ -41,12 +41,12 @@ using JetBrains.Annotations;
 namespace Database.Tables.ModularHouseholds {
     public class DeviceSelection : DBBaseElement {
         public const string TableName = "tblDeviceSelections";
-        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<DeviceSelectionDeviceAction> _selectionActions;
-        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<DeviceSelectionItem> _selectionItems;
+        [ItemNotNull] [NotNull] private readonly ObservableCollection<DeviceSelectionDeviceAction> _selectionActions;
+        [ItemNotNull] [NotNull] private readonly ObservableCollection<DeviceSelectionItem> _selectionItems;
         [CanBeNull] private string _description;
 
-        public DeviceSelection([JetBrains.Annotations.NotNull] string pName, [CanBeNull]int? id, [CanBeNull] string description,
-                               [JetBrains.Annotations.NotNull] string connectionString, StrGuid guid)
+        public DeviceSelection([NotNull] string pName, [CanBeNull]int? id, [CanBeNull] string description,
+                               [NotNull] string connectionString, StrGuid guid)
             : base(pName, TableName, connectionString, guid)
         {
             ID = id;
@@ -57,7 +57,7 @@ namespace Database.Tables.ModularHouseholds {
         }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ObservableCollection<DeviceSelectionDeviceAction> Actions => _selectionActions;
 
         [CanBeNull]
@@ -68,10 +68,10 @@ namespace Database.Tables.ModularHouseholds {
         }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ObservableCollection<DeviceSelectionItem> Items => _selectionItems;
 
-        public void AddAction([JetBrains.Annotations.NotNull] DeviceActionGroup dag, [JetBrains.Annotations.NotNull] DeviceAction da)
+        public void AddAction([NotNull] DeviceActionGroup dag, [NotNull] DeviceAction da)
         {
             var dsi =
                 _selectionActions.FirstOrDefault(dagroup => dagroup.DeviceActionGroup == dag);
@@ -90,7 +90,7 @@ namespace Database.Tables.ModularHouseholds {
             SaveToDB();
         }
 
-        public void AddItem([JetBrains.Annotations.NotNull] DeviceCategory dc, [JetBrains.Annotations.NotNull] RealDevice rd)
+        public void AddItem([NotNull] DeviceCategory dc, [NotNull] RealDevice rd)
         {
             var dsi = _selectionItems.FirstOrDefault(devcat => devcat.DeviceCategory == dc);
             if (dsi != null) {
@@ -108,9 +108,9 @@ namespace Database.Tables.ModularHouseholds {
             SaveToDB();
         }
 
-        [JetBrains.Annotations.NotNull]
-        private static DeviceSelection AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
-            [JetBrains.Annotations.NotNull] AllItemCollections aic)
+        [NotNull]
+        private static DeviceSelection AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
+            [NotNull] AllItemCollections aic)
         {
             var hhid =dr.GetIntFromLong("ID");
             var name =  dr.GetString("Name","(no name)");
@@ -121,14 +121,14 @@ namespace Database.Tables.ModularHouseholds {
             return chh;
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
-        public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString) => new
+        public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new
             DeviceSelection(FindNewName(isNameTaken, "New Device Selection "),
                 null, "(no description yet)",
                 connectionString, System.Guid.NewGuid().ToStrGuid());
 
-        public void DeleteActionFromDB([JetBrains.Annotations.NotNull] DeviceSelectionDeviceAction dsi)
+        public void DeleteActionFromDB([NotNull] DeviceSelectionDeviceAction dsi)
         {
             dsi.DeleteFromDB();
             _selectionActions.Remove(dsi);
@@ -145,16 +145,16 @@ namespace Database.Tables.ModularHouseholds {
             base.DeleteFromDB();
         }
 
-        public void DeleteItemFromDB([JetBrains.Annotations.NotNull] DeviceSelectionItem dsi)
+        public void DeleteItemFromDB([NotNull] DeviceSelectionItem dsi)
         {
             dsi.DeleteFromDB();
             _selectionItems.Remove(dsi);
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
-        public static DBBase ImportFromItem([JetBrains.Annotations.NotNull] DeviceSelection otherDeviceSelection,
-            [JetBrains.Annotations.NotNull] Simulator dstSim)
+        public static DBBase ImportFromItem([NotNull] DeviceSelection otherDeviceSelection,
+            [NotNull] Simulator dstSim)
         {
             var deviceSelection = new DeviceSelection(otherDeviceSelection.Name, null,
                 otherDeviceSelection.Description, dstSim.ConnectionString,otherDeviceSelection.Guid);
@@ -180,7 +180,7 @@ namespace Database.Tables.ModularHouseholds {
             return deviceSelection;
         }
 
-        private static bool IsCorrectDeviceSelectionActionParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
+        private static bool IsCorrectDeviceSelectionActionParent([NotNull] DBBase parent, [NotNull] DBBase child)
         {
             var dsi = (DeviceSelectionDeviceAction) child;
             if (parent.ID == dsi.DeviceSelectionID) {
@@ -191,7 +191,7 @@ namespace Database.Tables.ModularHouseholds {
             return false;
         }
 
-        private static bool IsCorrectDeviceSelectionItemParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
+        private static bool IsCorrectDeviceSelectionItemParent([NotNull] DBBase parent, [NotNull] DBBase child)
         {
             var dsi = (DeviceSelectionItem) child;
             if (parent.ID == dsi.DeviceSelectionID) {
@@ -208,10 +208,10 @@ namespace Database.Tables.ModularHouseholds {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceSelection> result, [JetBrains.Annotations.NotNull] string connectionString,
-            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceCategory> deviceCategories, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<RealDevice> devices,
-            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceAction> deviceActions,
-            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceActionGroup> deviceActionGroups,
+        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<DeviceSelection> result, [NotNull] string connectionString,
+            [ItemNotNull] [NotNull] ObservableCollection<DeviceCategory> deviceCategories, [ItemNotNull] [NotNull] ObservableCollection<RealDevice> devices,
+            [ItemNotNull] [NotNull] ObservableCollection<DeviceAction> deviceActions,
+            [ItemNotNull] [NotNull] ObservableCollection<DeviceActionGroup> deviceActionGroups,
             bool ignoreMissingTables)
         {
             var aic = new AllItemCollections();

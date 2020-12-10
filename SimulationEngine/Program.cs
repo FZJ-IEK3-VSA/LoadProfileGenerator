@@ -8,7 +8,7 @@ using SimulationEngineLib;
 namespace SimulationEngine {
     internal static class Program {
 
-        public static void Main([JetBrains.Annotations.NotNull] [ItemNotNull] string[] args)
+        public static void Main([NotNull] [ItemNotNull] string[] args)
         {
             CommandProcessor.MakeFlameChart = ChartMaker.MakeFlameChart;
             MainSimEngine.Run(args,"simulationengine.exe");

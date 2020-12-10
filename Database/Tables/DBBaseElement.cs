@@ -8,21 +8,21 @@ namespace Database.Tables
 {
     public interface IImportFromOtherItem
     {
-        [JetBrains.Annotations.NotNull]
-        DBBase ImportFromGenericItem([JetBrains.Annotations.NotNull] DBBase toImport, [JetBrains.Annotations.NotNull] Simulator dstSim);
+        [NotNull]
+        DBBase ImportFromGenericItem([NotNull] DBBase toImport, [NotNull] Simulator dstSim);
     }
     public abstract class DBBaseElement : DBBase, IImportFromOtherItem
     {
         public abstract DBBase ImportFromGenericItem(DBBase toImport, Simulator dstSim);
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-        public abstract List<UsedIn> CalculateUsedIns([JetBrains.Annotations.NotNull] Simulator sim);
+        [NotNull]
+        public abstract List<UsedIn> CalculateUsedIns([NotNull] Simulator sim);
 
-        protected DBBaseElement([JetBrains.Annotations.NotNull] string pName, [JetBrains.Annotations.NotNull] string tableName, [JetBrains.Annotations.NotNull] string connectionString, StrGuid guid) : base(pName, tableName, connectionString, guid)
+        protected DBBaseElement([NotNull] string pName, [NotNull] string tableName, [NotNull] string connectionString, StrGuid guid) : base(pName, tableName, connectionString, guid)
         {
         }
 
-        protected DBBaseElement([JetBrains.Annotations.NotNull]string pName,[CanBeNull] int? pID, [JetBrains.Annotations.NotNull] string tableName, [JetBrains.Annotations.NotNull] string connectionString, StrGuid guid) : base(pName,pID, tableName, connectionString, guid)
+        protected DBBaseElement([NotNull]string pName,[CanBeNull] int? pID, [NotNull] string tableName, [NotNull] string connectionString, StrGuid guid) : base(pName,pID, tableName, connectionString, guid)
         {
         }
         /*

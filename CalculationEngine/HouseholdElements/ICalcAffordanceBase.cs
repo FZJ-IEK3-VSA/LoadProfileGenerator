@@ -18,9 +18,9 @@ namespace CalculationEngine.HouseholdElements
     }
     public interface ICalcAffordanceBase
     {
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         string Name { get; }
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         string AffCategory { get; }
         ActionAfterInterruption AfterInterruption { get; }
         int CalcAffordanceSerial { get; }
@@ -30,33 +30,33 @@ namespace CalculationEngine.HouseholdElements
         bool IsInterrupting { get; }
         int MaximumAge { get; }
         int MiniumAge { get; }
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         string PrettyNameForDumping { get; }
         bool NeedsLight { get; }
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         CalcLocation ParentLocation { get; }
         PermittedGender PermittedGender { get; }
         bool RandomEffect { get; }
         bool RequireAllAffordances { get; }
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [ItemNotNull]
         List<CalcDesire> Satisfactionvalues { get; }
         int Weight { get; }
         StrGuid Guid { get; }
 
-        void Activate([JetBrains.Annotations.NotNull] TimeStep startTime, [JetBrains.Annotations.NotNull] string activatorName,
-             [JetBrains.Annotations.NotNull] CalcLocation personSourceLocation,
-            [JetBrains.Annotations.NotNull] out ICalcProfile personTimeProfile);
+        void Activate([NotNull] TimeStep startTime, [NotNull] string activatorName,
+             [NotNull] CalcLocation personSourceLocation,
+            [NotNull] out ICalcProfile personTimeProfile);
         //ICalcProfile CollectPersonProfile();
         int DefaultPersonProfileLength { get; }
-        BusynessType IsBusy([JetBrains.Annotations.NotNull] TimeStep time, [JetBrains.Annotations.NotNull] CalcLocation srcLocation, [JetBrains.Annotations.NotNull] string calcPersonName, bool clearDictionaries = true);
+        BusynessType IsBusy([NotNull] TimeStep time, [NotNull] CalcLocation srcLocation, [NotNull] string calcPersonName, bool clearDictionaries = true);
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [ItemNotNull]
-        List<CalcSubAffordance> CollectSubAffordances([JetBrains.Annotations.NotNull] TimeStep time,  bool onlyInterrupting,
-            [JetBrains.Annotations.NotNull] CalcLocation srcLocation);
+        List<CalcSubAffordance> CollectSubAffordances([NotNull] TimeStep time,  bool onlyInterrupting,
+            [NotNull] CalcLocation srcLocation);
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [ItemNotNull]
         List<CalcSubAffordance> SubAffordances { get; }
 
@@ -64,7 +64,7 @@ namespace CalculationEngine.HouseholdElements
         [ItemNotNull]
         List<CalcAffordance.DeviceEnergyProfileTuple> Energyprofiles { get; }
          ColorRGB AffordanceColor { get; }
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         string SourceTrait { get; }
         string? TimeLimitName { get; }
         bool AreThereDuplicateEnergyProfiles();

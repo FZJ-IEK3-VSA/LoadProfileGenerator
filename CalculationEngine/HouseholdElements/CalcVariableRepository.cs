@@ -9,8 +9,8 @@ using JetBrains.Annotations;
 namespace CalculationEngine.HouseholdElements
 {
     public class CalcVariable {
-        public CalcVariable([JetBrains.Annotations.NotNull] string name, StrGuid guid, double value,
-                            [JetBrains.Annotations.NotNull] string locationName, StrGuid locationGuid, [JetBrains.Annotations.NotNull] HouseholdKey householdKey)
+        public CalcVariable([NotNull] string name, StrGuid guid, double value,
+                            [NotNull] string locationName, StrGuid locationGuid, [NotNull] HouseholdKey householdKey)
         {
             Name = name;
             Guid = guid;
@@ -21,24 +21,24 @@ namespace CalculationEngine.HouseholdElements
             SqlName = (householdKey+ "_"+ locationName + "_" + Name).Replace(" ", "");
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public string Name { get; }
         public StrGuid Guid { get; }
         public double Value { get; set; }
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public string LocationName { get; }
         public StrGuid LocationGuid { get; }
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public HouseholdKey HouseholdKey { get; }
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public string SqlName { get; }
     }
 
     public class CalcVariableRepository
     {
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private readonly Dictionary<StrGuid, CalcVariable> _variablesByGuid = new Dictionary<StrGuid, CalcVariable>();
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private readonly VariableOperator _variableOperator;
 
         public CalcVariableRepository()
@@ -46,14 +46,14 @@ namespace CalculationEngine.HouseholdElements
             _variableOperator = new VariableOperator(this);
         }
 
-        public void AddExecutionEntry([JetBrains.Annotations.NotNull] string name, double value, [JetBrains.Annotations.NotNull] CalcLocation location, VariableAction variableAction,
-                                      [JetBrains.Annotations.NotNull] TimeStep timeStep, StrGuid variableGuid)
+        public void AddExecutionEntry([NotNull] string name, double value, [NotNull] CalcLocation location, VariableAction variableAction,
+                                      [NotNull] TimeStep timeStep, StrGuid variableGuid)
         {
             _variableOperator.AddEntry(name,value,location,variableAction,
                 timeStep,variableGuid);
         }
 
-        public void RegisterVariable([JetBrains.Annotations.NotNull] CalcVariable variable)
+        public void RegisterVariable([NotNull] CalcVariable variable)
         {
             _variablesByGuid.Add(variable.Guid,variable);
         }
@@ -90,12 +90,12 @@ namespace CalculationEngine.HouseholdElements
             _variablesByGuid[variableGuid].Value -= value;
         }
 
-        public void Execute([JetBrains.Annotations.NotNull] TimeStep timestep)
+        public void Execute([NotNull] TimeStep timestep)
         {
             _variableOperator.Execute(timestep);
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [ItemNotNull]
         public List<CalcVariable> GetAllVariables()
         {

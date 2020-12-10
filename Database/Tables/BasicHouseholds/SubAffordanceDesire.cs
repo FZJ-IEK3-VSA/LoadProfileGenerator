@@ -47,9 +47,9 @@ namespace Database.Tables.BasicHouseholds {
         [CanBeNull] private Func<SubAffordanceDesire, bool> _deleteThis;
 
         public SubAffordanceDesire([CanBeNull]int? pID, [CanBeNull] Desire desire, [CanBeNull]int? affordanceID, decimal satisfactionvalue,
-            [ItemNotNull][JetBrains.Annotations.NotNull] ObservableCollection<Desire> simdesires, [CanBeNull] Func<SubAffordanceDesire, bool> deleteThis,
-            [JetBrains.Annotations.NotNull] string connectionString,
-            [JetBrains.Annotations.NotNull] string name, StrGuid guid) : base(name, TableName, connectionString, guid) {
+            [ItemNotNull][NotNull] ObservableCollection<Desire> simdesires, [CanBeNull] Func<SubAffordanceDesire, bool> deleteThis,
+            [NotNull] string connectionString,
+            [NotNull] string name, StrGuid guid) : base(name, TableName, connectionString, guid) {
             ID = pID;
             _deleteThis = deleteThis;
             _desire = desire;
@@ -64,16 +64,16 @@ namespace Database.Tables.BasicHouseholds {
 
         public decimal SatisfactionValue => _satisfactionvalue;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public string SatisfactionValuePercent => (_satisfactionvalue * 100).ToString("#0.00",
             CultureInfo.CurrentCulture);
         [CanBeNull]
         public int? SubaffordanceID { get; }
 
-        [JetBrains.Annotations.NotNull]
-        private static SubAffordanceDesire AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString,
+        [NotNull]
+        private static SubAffordanceDesire AssignFields([NotNull] DataReader dr, [NotNull] string connectionString,
             bool ignoreMissingFields,
-            [JetBrains.Annotations.NotNull] AllItemCollections aic) {
+            [NotNull] AllItemCollections aic) {
             var id = dr.GetIntFromLong("ID");
             int? affordanceID = null;
             if (dr["SubAffordanceID"] != DBNull.Value) {
@@ -101,8 +101,8 @@ namespace Database.Tables.BasicHouseholds {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<SubAffordanceDesire> result, [JetBrains.Annotations.NotNull] string connectionString,
-            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Desire> desires, bool ignoreMissingTables) {
+        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<SubAffordanceDesire> result, [NotNull] string connectionString,
+            [ItemNotNull] [NotNull] ObservableCollection<Desire> desires, bool ignoreMissingTables) {
             var aic = new AllItemCollections(desires: desires);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
             var items2Delete = new List<SubAffordanceDesire>();
@@ -117,7 +117,7 @@ namespace Database.Tables.BasicHouseholds {
             }
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public string MakeDescription() {
             if (_desire != null) {
                 var desc = _desire.Name;
@@ -127,7 +127,7 @@ namespace Database.Tables.BasicHouseholds {
             return "(no desire)";
         }
 
-        public void SetDeleteFuncFromParent([JetBrains.Annotations.NotNull] Func<SubAffordanceDesire, bool> deleteThis) {
+        public void SetDeleteFuncFromParent([NotNull] Func<SubAffordanceDesire, bool> deleteThis) {
             _deleteThis = deleteThis;
         }
 
@@ -141,8 +141,8 @@ namespace Database.Tables.BasicHouseholds {
             cmd.AddParameter("SatisfactionValue", "@SatisfactionValue", _satisfactionvalue);
         }
 
-        private void SimdesiresOnCollectionChanged([JetBrains.Annotations.NotNull] object sender,
-            [JetBrains.Annotations.NotNull] NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs) {
+        private void SimdesiresOnCollectionChanged([NotNull] object sender,
+            [NotNull] NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs) {
             if (notifyCollectionChangedEventArgs.Action == NotifyCollectionChangedAction.Remove &&
                 notifyCollectionChangedEventArgs.OldItems != null &&
                 notifyCollectionChangedEventArgs.OldItems[0] == Desire) {

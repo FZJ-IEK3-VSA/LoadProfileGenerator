@@ -12,15 +12,15 @@ using Newtonsoft.Json;
 
 namespace SimulationEngineLib.Other {
     public class JsonDatabaseExporter {
-        [JetBrains.Annotations.NotNull] private readonly string _connectionString;
-        [JetBrains.Annotations.NotNull] private readonly CalculationProfiler _calculationProfiler;
-        public JsonDatabaseExporter([JetBrains.Annotations.NotNull] string connectionString)
+        [NotNull] private readonly string _connectionString;
+        [NotNull] private readonly CalculationProfiler _calculationProfiler;
+        public JsonDatabaseExporter([NotNull] string connectionString)
         {
             _connectionString = connectionString;
             _calculationProfiler = new CalculationProfiler();
         }
 
-        public bool Export([JetBrains.Annotations.NotNull] JsonDatabaseExportOptions calcDirectoryOptions)
+        public bool Export([NotNull] JsonDatabaseExportOptions calcDirectoryOptions)
         {
             _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
             string jsonFileName = calcDirectoryOptions.Output;
@@ -84,7 +84,7 @@ namespace SimulationEngineLib.Other {
             }
         }
 
-        private static void ExportHHTsWithDeviceCategories([JetBrains.Annotations.NotNull] string jsonFileName, [JetBrains.Annotations.NotNull] Simulator sim)
+        private static void ExportHHTsWithDeviceCategories([NotNull] string jsonFileName, [NotNull] Simulator sim)
         {
             List<HouseholdTraitJtoForDeviceCategoryExport> hhtj = new List<HouseholdTraitJtoForDeviceCategoryExport>();
 
@@ -122,7 +122,7 @@ namespace SimulationEngineLib.Other {
             Logger.Info("Finished exporting " + hhtj.Count + " items to " + jsonFileName);
         }
         // ReSharper disable once InconsistentNaming
-        private static void ExportStuff<T,U>([JetBrains.Annotations.NotNull] string jsonFileName,  [JetBrains.Annotations.NotNull] [ItemNotNull] List<U> items) where U : IJsonSerializable<T>
+        private static void ExportStuff<T,U>([NotNull] string jsonFileName,  [NotNull] [ItemNotNull] List<U> items) where U : IJsonSerializable<T>
         {
             List<T> hhts = new List<T>();
             foreach (var template in items) {

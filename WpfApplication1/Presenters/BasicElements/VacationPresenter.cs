@@ -6,18 +6,18 @@ using LoadProfileGenerator.Views.BasicElements;
 
 namespace LoadProfileGenerator.Presenters.BasicElements {
     public class VacationPresenter : PresenterBaseDBBase<VacationView> {
-        [JetBrains.Annotations.NotNull] private readonly ApplicationPresenter _applicationPresenter;
-        [JetBrains.Annotations.NotNull] private readonly Vacation _thisVacation;
+        [NotNull] private readonly ApplicationPresenter _applicationPresenter;
+        [NotNull] private readonly Vacation _thisVacation;
 
-        public VacationPresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter,
-                                 [JetBrains.Annotations.NotNull] VacationView view,
-                                 [JetBrains.Annotations.NotNull] Vacation vacation)
+        public VacationPresenter([NotNull] ApplicationPresenter applicationPresenter,
+                                 [NotNull] VacationView view,
+                                 [NotNull] Vacation vacation)
             : base(view, "ThisVacation.HeaderString", vacation, applicationPresenter)
         {
             _applicationPresenter = applicationPresenter;
             _thisVacation = vacation;
         }
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
 
         public Dictionary<CreationType, string> CreationTypes => CreationTypeHelper.CreationTypeDictionary;
@@ -25,9 +25,9 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
         [UsedImplicitly]
         public VacationType SelectedVacationType { get; set; }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public Vacation ThisVacation => _thisVacation;
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public Dictionary<VacationType, string> VacationTypes => VacationTypeHelper.VacationTypeDictionary;
 

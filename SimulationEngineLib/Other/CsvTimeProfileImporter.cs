@@ -9,15 +9,15 @@ using JetBrains.Annotations;
 namespace SimulationEngineLib.Other {
     public class CsvTimeProfileImporter
     {
-        [JetBrains.Annotations.NotNull] private readonly string _connectionString;
-        [JetBrains.Annotations.NotNull] private readonly CalculationProfiler _calculationProfiler;
-        public CsvTimeProfileImporter([JetBrains.Annotations.NotNull] string connectionString)
+        [NotNull] private readonly string _connectionString;
+        [NotNull] private readonly CalculationProfiler _calculationProfiler;
+        public CsvTimeProfileImporter([NotNull] string connectionString)
         {
             _connectionString = connectionString;
             _calculationProfiler = new CalculationProfiler();
         }
 
-        public bool Import([JetBrains.Annotations.NotNull] CsvImportOptions calcDirectoryOptions, [CanBeNull] out DateBasedProfile newProfile )
+        public bool Import([NotNull] CsvImportOptions calcDirectoryOptions, [CanBeNull] out DateBasedProfile newProfile )
         {
             _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
             string csvFilename = calcDirectoryOptions.Input;

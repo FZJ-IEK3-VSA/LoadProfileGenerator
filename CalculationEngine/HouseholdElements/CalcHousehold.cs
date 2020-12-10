@@ -45,21 +45,21 @@ using JetBrains.Annotations;
 namespace CalculationEngine.HouseholdElements {
     public sealed class CalcHousehold : CalcBase, ICalcAbleObject {
 
-        [JetBrains.Annotations.NotNull] private readonly CalcVariableRepository _calcVariableRepository;
+        [NotNull] private readonly CalcVariableRepository _calcVariableRepository;
 
         //[JetBrains.Annotations.NotNull] private readonly string _cleanName;
 
-        [JetBrains.Annotations.NotNull] private readonly HouseholdKey _householdKey;
+        [NotNull] private readonly HouseholdKey _householdKey;
 
-        [JetBrains.Annotations.NotNull] private readonly string _locationname;
+        [NotNull] private readonly string _locationname;
 
-        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly List<CalcLocation> _locations;
+        [ItemNotNull] [NotNull] private readonly List<CalcLocation> _locations;
 
-        [JetBrains.Annotations.NotNull] private readonly string _name;
+        [NotNull] private readonly string _name;
 
-        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly List<CalcPerson> _persons;
+        [ItemNotNull] [NotNull] private readonly List<CalcPerson> _persons;
 
-        [JetBrains.Annotations.NotNull] private readonly string _temperatureprofileName;
+        [NotNull] private readonly string _temperatureprofileName;
 
         //private readonly VariableOperator _variableOperator = new VariableOperator();
 
@@ -75,18 +75,18 @@ namespace CalculationEngine.HouseholdElements {
 
 
         private int _simulationSeed;
-        [JetBrains.Annotations.NotNull] private readonly string _description;
+        [NotNull] private readonly string _description;
         private readonly CalcRepo _calcRepo;
 
         //[CanBeNull] private VariableLogfile _variableLogfile;
 
-        public CalcHousehold([JetBrains.Annotations.NotNull] string pName, [JetBrains.Annotations.NotNull] string locationname,
-                             [JetBrains.Annotations.NotNull] string temperatureprofileName, [JetBrains.Annotations.NotNull] HouseholdKey householdkey,
+        public CalcHousehold([NotNull] string pName, [NotNull] string locationname,
+                             [NotNull] string temperatureprofileName, [NotNull] HouseholdKey householdkey,
                               StrGuid guid,
-                             [JetBrains.Annotations.NotNull] CalcVariableRepository calcVariableRepository,
-                             [ItemNotNull] [JetBrains.Annotations.NotNull] List<CalcLocation> locations,
-                             [ItemNotNull] [JetBrains.Annotations.NotNull] List<CalcPerson> persons,
-                             [JetBrains.Annotations.NotNull] string description, CalcRepo calcRepo) : base(pName,  guid)
+                             [NotNull] CalcVariableRepository calcVariableRepository,
+                             [ItemNotNull] [NotNull] List<CalcLocation> locations,
+                             [ItemNotNull] [NotNull] List<CalcPerson> persons,
+                             [NotNull] string description, CalcRepo calcRepo) : base(pName,  guid)
         {
             _locations = locations;
             _persons = persons;
@@ -104,7 +104,7 @@ namespace CalculationEngine.HouseholdElements {
 
 #pragma warning disable CC0017 // Use auto property
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [ItemNotNull]
         public List<CalcLocation> Locations => _locations;
 
@@ -112,7 +112,7 @@ namespace CalculationEngine.HouseholdElements {
 
 #pragma warning disable CC0017 // Use auto property
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [ItemNotNull]
         public List<CalcPerson> Persons => _persons;
 
@@ -523,8 +523,8 @@ namespace CalculationEngine.HouseholdElements {
             _calcRepo.Dispose();
         }
 
-        public static void MatchAutonomousDevicesWithNormalDevices([JetBrains.Annotations.NotNull] [ItemNotNull] List<CalcAutoDev> autoDevs,
-                                                    [JetBrains.Annotations.NotNull] [ItemNotNull] List<CalcDevice> devices)
+        public static void MatchAutonomousDevicesWithNormalDevices([NotNull] [ItemNotNull] List<CalcAutoDev> autoDevs,
+                                                    [NotNull] [ItemNotNull] List<CalcDevice> devices)
         {
             //TODO: test this and make sure it does what it is supposed to do
             foreach (var device in devices) {
@@ -577,12 +577,12 @@ namespace CalculationEngine.HouseholdElements {
             sw.Close();
         }*/
 
-        public void SetAutoDevs([JetBrains.Annotations.NotNull] [ItemNotNull] List<CalcAutoDev> autoDevs)
+        public void SetAutoDevs([NotNull] [ItemNotNull] List<CalcAutoDev> autoDevs)
         {
             _autoDevs = autoDevs;
         }
 
-        public void SetDevices([JetBrains.Annotations.NotNull] [ItemNotNull] List<CalcDevice> devices)
+        public void SetDevices([NotNull] [ItemNotNull] List<CalcDevice> devices)
         {
             _devices = devices;
         }

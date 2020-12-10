@@ -14,7 +14,7 @@ namespace Database.Tables.Houses {
 
         private readonly int _settlementTemplateID;
 
-        public STTransportationDeviceSet([CanBeNull] int? pID, [JetBrains.Annotations.NotNull] string connectionString, int settlementTemplateID, [JetBrains.Annotations.NotNull] string name,
+        public STTransportationDeviceSet([CanBeNull] int? pID, [NotNull] string connectionString, int settlementTemplateID, [NotNull] string name,
                                          [CanBeNull] TransportationDeviceSet transportationDeviceSet, StrGuid guid) : base(name, TableName, connectionString, guid)
         {
             TypeDescription = "Settlement Template Transportation Device Sets";
@@ -28,9 +28,9 @@ namespace Database.Tables.Houses {
 
         public int SettlementTemplateID => _settlementTemplateID;
 
-        [JetBrains.Annotations.NotNull]
-        private static STTransportationDeviceSet AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString,
-                                                              bool ignoreMissingFields, [JetBrains.Annotations.NotNull] AllItemCollections aic)
+        [NotNull]
+        private static STTransportationDeviceSet AssignFields([NotNull] DataReader dr, [NotNull] string connectionString,
+                                                              bool ignoreMissingFields, [NotNull] AllItemCollections aic)
         {
             var id = dr.GetIntFromLong("ID");
             var settlementtemplateID = dr.GetIntFromLong("SettlementTemplateID", false, ignoreMissingFields, -1);
@@ -58,8 +58,8 @@ namespace Database.Tables.Houses {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull][JetBrains.Annotations.NotNull] ObservableCollection<STTransportationDeviceSet> result, [JetBrains.Annotations.NotNull] string connectionString,
-                                            bool ignoreMissingTables, [ItemNotNull][JetBrains.Annotations.NotNull] ObservableCollection<TransportationDeviceSet> transportationDeviceSets)
+        public static void LoadFromDatabase([ItemNotNull][NotNull] ObservableCollection<STTransportationDeviceSet> result, [NotNull] string connectionString,
+                                            bool ignoreMissingTables, [ItemNotNull][NotNull] ObservableCollection<TransportationDeviceSet> transportationDeviceSets)
         {
             var aic = new AllItemCollections(transportationDeviceSets:transportationDeviceSets);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);

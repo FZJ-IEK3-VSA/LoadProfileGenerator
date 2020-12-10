@@ -56,7 +56,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
         public AgeRange AgeRange { get; set; }
         public PermittedGender Gender { get; set; }
 
-        public bool IsMatch([JetBrains.Annotations.NotNull] PersonCategory pc)
+        public bool IsMatch([NotNull] PersonCategory pc)
         {
             if (pc.Gender == Gender && pc.AgeRange == AgeRange) {
                 return true;
@@ -65,7 +65,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
             return false;
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public override string ToString() => "Age: " + AgeRange + " Gender:" + Gender;
     }
 
@@ -74,7 +74,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
         //[JetBrains.Annotations.NotNull] private static readonly object _errorLogLock = new object();
         private static int _householdErrorCount;
 
-        public static bool AreOfferedCategoriesEnough([JetBrains.Annotations.NotNull] [ItemNotNull] List<PersonCategory> offered, [JetBrains.Annotations.NotNull] [ItemNotNull] List<PersonCategory> demanded)
+        public static bool AreOfferedCategoriesEnough([NotNull] [ItemNotNull] List<PersonCategory> offered, [NotNull] [ItemNotNull] List<PersonCategory> demanded)
         {
             List<PersonCategory> demandedCopy = demanded.ToList();
             foreach (PersonCategory category in offered) {
@@ -99,7 +99,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
             return true;
         }
 
-        public static void CreateExampleHouseJob([JetBrains.Annotations.NotNull] string connectionString)
+        public static void CreateExampleHouseJob([NotNull] string connectionString)
         {
             const string relativePathHousejobs = "Example\\HouseJobs";
             DirectoryInfo diHouseJobs = new DirectoryInfo(relativePathHousejobs);
@@ -298,7 +298,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
         //}
 
         [CanBeNull]
-        private static TemperatureProfile FindTemperatureProfile([JetBrains.Annotations.NotNull] Simulator sim, [JetBrains.Annotations.NotNull] JsonCalcSpecification calcSpecification)
+        private static TemperatureProfile FindTemperatureProfile([NotNull] Simulator sim, [NotNull] JsonCalcSpecification calcSpecification)
         {
             TemperatureProfile temperatureProfile = sim.TemperatureProfiles[0];
             if (calcSpecification.TemperatureProfile != null) {
@@ -309,7 +309,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
         }
 
         [CanBeNull]
-        private static GeographicLocation FindGeographicLocation([JetBrains.Annotations.NotNull] Simulator sim, [JetBrains.Annotations.NotNull] JsonCalcSpecification calcSpecification)
+        private static GeographicLocation FindGeographicLocation([NotNull] Simulator sim, [NotNull] JsonCalcSpecification calcSpecification)
         {
             GeographicLocation geoloc = sim.GeographicLocations[0];
             if (calcSpecification.GeographicLocation != null) {
@@ -319,7 +319,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
             return geoloc;
         }
 
-        public void ProcessSingleHouseJob([JetBrains.Annotations.NotNull] string houseJobFile)
+        public void ProcessSingleHouseJob([NotNull] string houseJobFile)
         {
             string resultDir = "Results";
             try {
@@ -400,7 +400,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
             }
         }
 
-        public void ProcessSingleHouseJob([JetBrains.Annotations.NotNull] HouseCreationAndCalculationJob hcj,  [JetBrains.Annotations.NotNull] Simulator sim)
+        public void ProcessSingleHouseJob([NotNull] HouseCreationAndCalculationJob hcj,  [NotNull] Simulator sim)
         {
             if (hcj.House == null)
             {
@@ -433,8 +433,8 @@ namespace SimulationEngineLib.HouseJobProcessor {
             //hcj.CalcSpec.CalcObject = null;
             jc.StartHousehold(sim, hcj.CalcSpec,objectToCalc);
         }
-        [JetBrains.Annotations.NotNull]
-        public string GetAllFootprints([JetBrains.Annotations.NotNull] Exception x)
+        [NotNull]
+        public string GetAllFootprints([NotNull] Exception x)
         {
             var st = new StackTrace(x, true);
             var frames = st.GetFrames();
@@ -459,8 +459,8 @@ namespace SimulationEngineLib.HouseJobProcessor {
         }
         [CanBeNull]
         private static JsonReference CreateSingleHouse(
-                                              [JetBrains.Annotations.NotNull] HouseCreationAndCalculationJob hj,
-                                              [JetBrains.Annotations.NotNull] Simulator sim,
+                                              [NotNull] HouseCreationAndCalculationJob hj,
+                                              [NotNull] Simulator sim,
                                               GeographicLocation geoloc,
                                               TemperatureProfile temperatureProfile,
                                               Random r)
@@ -529,11 +529,11 @@ namespace SimulationEngineLib.HouseJobProcessor {
             return house.GetJsonReference();
         }
 
-        [JetBrains.Annotations.NotNull]
-        private static TravelRouteSet AdjustTravelDistancesBasedOnModifiers([JetBrains.Annotations.NotNull] TravelRouteSet travelrouteset,
-                                                                            [JetBrains.Annotations.NotNull] Simulator sim,
-                                                                            [JetBrains.Annotations.NotNull] House house,
-                                                                            [JetBrains.Annotations.NotNull] HouseholdData householdData,
+        [NotNull]
+        private static TravelRouteSet AdjustTravelDistancesBasedOnModifiers([NotNull] TravelRouteSet travelrouteset,
+                                                                            [NotNull] Simulator sim,
+                                                                            [NotNull] House house,
+                                                                            [NotNull] HouseholdData householdData,
                                                                             int householdidx)
         {
             Stopwatch sw = Stopwatch.StartNew();
@@ -574,12 +574,12 @@ namespace SimulationEngineLib.HouseJobProcessor {
             return travelrouteset;
         }
 
-        private static void MakeNewAdjustedRoute([JetBrains.Annotations.NotNull] Simulator sim,
-                                                 [JetBrains.Annotations.NotNull] TravelRouteSetEntry oldTravelRouteSetEntry,
+        private static void MakeNewAdjustedRoute([NotNull] Simulator sim,
+                                                 [NotNull] TravelRouteSetEntry oldTravelRouteSetEntry,
                                                  int adjustingDistances,
                                                  [CanBeNull] string modRouteKey,
-                                                 [JetBrains.Annotations.NotNull] TransportationDistanceModifier modifier,
-                                                 [JetBrains.Annotations.NotNull] TravelRouteSet adjustedTravelrouteset)
+                                                 [NotNull] TransportationDistanceModifier modifier,
+                                                 [NotNull] TravelRouteSet adjustedTravelrouteset)
         {
             var oldRoute = oldTravelRouteSetEntry.TravelRoute;
             TravelRoute newRoute = new TravelRoute(null,
@@ -606,7 +606,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
             adjustedTravelrouteset.AddRoute(newRoute);
         }
 
-        public static void WriteGuidList([JetBrains.Annotations.NotNull] string filename, [JetBrains.Annotations.NotNull] [ItemNotNull] List<DBBase> elements, [JetBrains.Annotations.NotNull] DirectoryInfo relativePath)
+        public static void WriteGuidList([NotNull] string filename, [NotNull] [ItemNotNull] List<DBBase> elements, [NotNull] DirectoryInfo relativePath)
         {
             string fn = relativePath.CombineName(filename);
             using (StreamWriter sw = new StreamWriter(fn)) {
@@ -629,8 +629,8 @@ namespace SimulationEngineLib.HouseJobProcessor {
             Logger.Info("Finished writing " + jsonFile);
         }
 
-        [JetBrains.Annotations.NotNull]
-        private static House MakeHouse([JetBrains.Annotations.NotNull] Simulator sim, [JetBrains.Annotations.NotNull] HouseData hd)
+        [NotNull]
+        private static House MakeHouse([NotNull] Simulator sim, [NotNull] HouseData hd)
         {
             //house creation
             House house = sim.Houses.CreateNewItem(sim.ConnectionString);
@@ -670,9 +670,9 @@ namespace SimulationEngineLib.HouseJobProcessor {
             return house;
         }
 
-        [JetBrains.Annotations.NotNull]
-        private static ModularHousehold MakeHousehold([JetBrains.Annotations.NotNull] Simulator sim, [JetBrains.Annotations.NotNull] HouseholdData householdData,
-                                                      [JetBrains.Annotations.NotNull] Random r)
+        [NotNull]
+        private static ModularHousehold MakeHousehold([NotNull] Simulator sim, [NotNull] HouseholdData householdData,
+                                                      [NotNull] Random r)
         {
             if (sim == null) {
                 throw new ArgumentNullException(nameof(sim));
@@ -706,8 +706,8 @@ namespace SimulationEngineLib.HouseJobProcessor {
             }
         }
 
-        [JetBrains.Annotations.NotNull]
-        private static ModularHousehold MakeHouseholdBaseOnHouseholdName([JetBrains.Annotations.NotNull] Simulator sim, [JetBrains.Annotations.NotNull] HouseholdData householdData)
+        [NotNull]
+        private static ModularHousehold MakeHouseholdBaseOnHouseholdName([NotNull] Simulator sim, [NotNull] HouseholdData householdData)
         {
             HouseholdNameSpecification nameSpec = householdData.HouseholdNameSpec;
             if (nameSpec == null)
@@ -730,8 +730,8 @@ namespace SimulationEngineLib.HouseJobProcessor {
             Logger.Info("Finished household with template " + household.Name);
             return newHH;
         }
-        [JetBrains.Annotations.NotNull]
-        private static ModularHousehold MakeHouseholdBaseOnTemplateSpec([JetBrains.Annotations.NotNull] Simulator sim, [JetBrains.Annotations.NotNull] HouseholdData householdData)
+        [NotNull]
+        private static ModularHousehold MakeHouseholdBaseOnTemplateSpec([NotNull] Simulator sim, [NotNull] HouseholdData householdData)
         {
             HouseholdTemplateSpecification templateSpec = householdData.HouseholdTemplateSpec;
             if (templateSpec == null)
@@ -802,8 +802,8 @@ namespace SimulationEngineLib.HouseJobProcessor {
             Logger.Info("Finished generating household with template " + template.Name);
             return hhs[0];
         }
-        [JetBrains.Annotations.NotNull]
-        private static ModularHousehold MakeHouseholdBaseOnPersonSpec([JetBrains.Annotations.NotNull] Simulator sim, [JetBrains.Annotations.NotNull] HouseholdData householdData, [JetBrains.Annotations.NotNull] Random r)
+        [NotNull]
+        private static ModularHousehold MakeHouseholdBaseOnPersonSpec([NotNull] Simulator sim, [NotNull] HouseholdData householdData, [NotNull] Random r)
         {
             HouseholdDataPersonSpecification personSpec = householdData.HouseholdDataPersonSpec;
             if (personSpec == null) {
@@ -877,7 +877,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
             return hhs[0];
         }
 
-        public static void ProcessHouseJob([JetBrains.Annotations.NotNull] HouseJobProcessingOptions args)
+        public static void ProcessHouseJob([NotNull] HouseJobProcessingOptions args)
         {
             Logger.Threshold = Severity.Warning;
             HouseGenerator hg = new HouseGenerator();

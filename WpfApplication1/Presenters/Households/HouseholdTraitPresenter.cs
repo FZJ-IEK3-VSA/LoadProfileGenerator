@@ -45,16 +45,16 @@ using LoadProfileGenerator.Views.Households;
 
 namespace LoadProfileGenerator.Presenters.Households {
     public class HouseholdTraitPresenter : PresenterBaseDBBase<HouseholdTraitView> {
-        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<string> _classifications = new ObservableCollection<string>();
-        [JetBrains.Annotations.NotNull] private readonly HouseholdTrait _hht;
-        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<Affordance> _relevantAffordances = new ObservableCollection<Affordance>();
+        [ItemNotNull] [NotNull] private readonly ObservableCollection<string> _classifications = new ObservableCollection<string>();
+        [NotNull] private readonly HouseholdTrait _hht;
+        [ItemNotNull] [NotNull] private readonly ObservableCollection<Affordance> _relevantAffordances = new ObservableCollection<Affordance>();
         private int _affordanceWeight;
-        [JetBrains.Annotations.NotNull] private string _autoSelectedAddCategory;
+        [NotNull] private string _autoSelectedAddCategory;
         [CanBeNull] private string _currentAffordanceDesireString;
         private int _endMinusTime;
         private int _endPlusTime;
         private bool _overwriteTimeLimitOnAffordance;
-        [JetBrains.Annotations.NotNull] private string _selectedAddCategory;
+        [NotNull] private string _selectedAddCategory;
 
         [CanBeNull] private HHTLocation _selectedAffLocation;
 
@@ -77,8 +77,8 @@ namespace LoadProfileGenerator.Presenters.Households {
         private int _startMinusTime;
         private int _startPlusTime;
 
-        public HouseholdTraitPresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] HouseholdTraitView view,
-            [JetBrains.Annotations.NotNull] HouseholdTrait householdTrait)
+        public HouseholdTraitPresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] HouseholdTraitView view,
+            [NotNull] HouseholdTrait householdTrait)
             : base(view, "ThisHouseholdTrait.HeaderString", householdTrait, applicationPresenter)
         {
             _hht = householdTrait;
@@ -116,11 +116,11 @@ namespace LoadProfileGenerator.Presenters.Households {
         }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<VLoadType> AllLoadTypes => Sim.LoadTypes.Items;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public string AutoSelectedAddCategory {
             get => _autoSelectedAddCategory;
@@ -133,11 +133,11 @@ namespace LoadProfileGenerator.Presenters.Households {
         }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<string> CategoryOrDevice => Sim.CategoryOrDevice;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public string Classification {
             get => ThisHouseholdTrait.Classification;
@@ -145,7 +145,7 @@ namespace LoadProfileGenerator.Presenters.Households {
         }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<string> Classifications => _classifications;
 
@@ -164,40 +164,40 @@ namespace LoadProfileGenerator.Presenters.Households {
         }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<Desire> Desires => Sim.Desires.Items;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<DeviceActionGroup> DeviceActionGroups
             => Sim.DeviceActionGroups.Items;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<LivingPatternTag> LivingPatternTags
             => Sim.LivingPatternTags.Items;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<DeviceAction> DeviceActions => Sim.DeviceActions.Items;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<DeviceCategory> DeviceCategories
             => Sim.DeviceCategories.Items;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<RealDevice> Devices => Sim.RealDevices.Items;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<string> DeviceTypeStrings => DeviceTypeSelectorHelper.DeviceTypeStrings;
 
@@ -226,7 +226,7 @@ namespace LoadProfileGenerator.Presenters.Households {
         }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<string> HealthStatusStrings { get; } = HHTDesire.HealthStatusStrings;
 
@@ -237,22 +237,22 @@ namespace LoadProfileGenerator.Presenters.Households {
         public bool HideAffordancesOnThisLocation { get; set; }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<HouseholdTrait> HouseholdTraits
             => Sim.HouseholdTraits.Items;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<Location> Locations => Sim.Locations.Items;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<UsedIn> ModularHouseholds { get; set; } = new ObservableCollection<UsedIn>();
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public IEnumerable<PermittedGender> MyPermittedGenders {
             get {
@@ -279,11 +279,11 @@ namespace LoadProfileGenerator.Presenters.Households {
         }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<Person> Persons => Sim.Persons.Items;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public string PracticalEstimate {
             get {
@@ -302,11 +302,11 @@ namespace LoadProfileGenerator.Presenters.Households {
         }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<Affordance> RelevantAffordances => _relevantAffordances;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public string SelectedAddCategory {
             get => _selectedAddCategory;
@@ -377,7 +377,7 @@ namespace LoadProfileGenerator.Presenters.Households {
             }
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public HouseholdTrait SelectedHouseholdTrait { get; set; }
 
@@ -532,30 +532,30 @@ namespace LoadProfileGenerator.Presenters.Households {
         }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<TraitTag> Tags => Sim.TraitTags.Items;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public HouseholdTrait ThisHouseholdTrait => _hht;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<TimeLimit> TimeLimits => Sim.TimeLimits.Items;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<TimeBasedProfile> Timeprofiles
             => Sim.Timeprofiles.Items;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<TimeType> TimeTypes { get; } = new ObservableCollection<TimeType>();
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<HouseholdTrait> Traits => Sim.HouseholdTraits.Items;
 
@@ -579,9 +579,9 @@ namespace LoadProfileGenerator.Presenters.Households {
                 _startPlusTime, _endMinusTime, _endPlusTime);
         }
 
-        public void AddAutoDev([JetBrains.Annotations.NotNull] IAssignableDevice db, [CanBeNull] TimeBasedProfile tp,
+        public void AddAutoDev([NotNull] IAssignableDevice db, [CanBeNull] TimeBasedProfile tp,
             decimal timeStandardDeviation,
-            [CanBeNull] VLoadType vLoadType, [JetBrains.Annotations.NotNull] TimeLimit timeLimit, [CanBeNull] Location loc,
+            [CanBeNull] VLoadType vLoadType, [NotNull] TimeLimit timeLimit, [CanBeNull] Location loc,
             double variableValue,
             VariableCondition variableCondition, [CanBeNull] Variable variable)
         {
@@ -591,22 +591,22 @@ namespace LoadProfileGenerator.Presenters.Households {
             _hht.SaveToDB();
         }
 
-        public void AddDesire([JetBrains.Annotations.NotNull] Desire desire, decimal decayTime, [JetBrains.Annotations.NotNull] string healthStatus, decimal threshold, decimal weight,
+        public void AddDesire([NotNull] Desire desire, decimal decayTime, [NotNull] string healthStatus, decimal threshold, decimal weight,
             int minAge, int maxAge, PermittedGender gender)
         {
             _hht.AddDesire(desire, decayTime, healthStatus, threshold, weight, minAge, maxAge, gender);
             _hht.CalculateEstimatedTimes();
         }
 
-        [JetBrains.Annotations.NotNull]
-        public HHTLocation AddLocation([JetBrains.Annotations.NotNull] Location l)
+        [NotNull]
+        public HHTLocation AddLocation([NotNull] Location l)
         {
             var hhtl = _hht.AddLocation(l);
             _hht.SaveToDB();
             return hhtl;
         }
 
-        public void AddTag([JetBrains.Annotations.NotNull] TraitTag tag)
+        public void AddTag([NotNull] TraitTag tag)
         {
             ThisHouseholdTrait.AddTag(tag);
         }
@@ -713,19 +713,19 @@ namespace LoadProfileGenerator.Presenters.Households {
             }
         }
 
-        public void RemoveAutoDev([JetBrains.Annotations.NotNull] HHTAutonomousDevice ad)
+        public void RemoveAutoDev([NotNull] HHTAutonomousDevice ad)
         {
             _hht.DeleteHHTAutonomousDeviceFromDB(ad);
             _hht.SaveToDB();
         }
 
-        public void RemoveDesire([JetBrains.Annotations.NotNull] HHTDesire hhtDesire)
+        public void RemoveDesire([NotNull] HHTDesire hhtDesire)
         {
             _hht.RemoveDesire(hhtDesire);
             _hht.CalculateEstimatedTimes();
         }
 
-        public void RemoveLocation([JetBrains.Annotations.NotNull] HHTLocation l)
+        public void RemoveLocation([NotNull] HHTLocation l)
         {
             _hht.DeleteHHTLocationFromDB(l);
             _hht.SaveToDB();
@@ -758,7 +758,7 @@ namespace LoadProfileGenerator.Presenters.Households {
             }
         }
 
-        public void AddLivingPatternTag([JetBrains.Annotations.NotNull] LivingPatternTag tag)
+        public void AddLivingPatternTag([NotNull] LivingPatternTag tag)
         {
             ThisHouseholdTrait.AddLivingPatternTag(tag);
         }

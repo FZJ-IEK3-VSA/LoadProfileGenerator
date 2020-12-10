@@ -41,10 +41,10 @@ using LoadProfileGenerator.Views.Households;
 
 namespace LoadProfileGenerator.Presenters.Households {
     public class TemplateTagPresenter : PresenterBaseDBBase<TemplateTagView> {
-        [JetBrains.Annotations.NotNull] private readonly HouseholdTag _thisTag;
-        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<UsedIn> _usedIn;
+        [NotNull] private readonly HouseholdTag _thisTag;
+        [ItemNotNull] [NotNull] private readonly ObservableCollection<UsedIn> _usedIn;
 
-        public TemplateTagPresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] TemplateTagView view, [JetBrains.Annotations.NotNull] HouseholdTag tag)
+        public TemplateTagPresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] TemplateTagView view, [NotNull] HouseholdTag tag)
             : base(view, "ThisTag.HeaderString", tag, applicationPresenter)
         {
             _thisTag = tag;
@@ -53,15 +53,15 @@ namespace LoadProfileGenerator.Presenters.Households {
             RefreshClassifications();
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [ItemNotNull]
         [UsedImplicitly]
         public ObservableCollection<string> Classifications { get; } = new ObservableCollection<string>();
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public HouseholdTag ThisTag => _thisTag;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [ItemNotNull]
         [UsedImplicitly]
         public ObservableCollection<UsedIn> UsedIn => _usedIn;

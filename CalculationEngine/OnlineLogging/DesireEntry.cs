@@ -39,20 +39,20 @@ using JetBrains.Annotations;
 
 namespace CalculationEngine.OnlineLogging {
     public class DesireEntry {
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public CalcPerson CPerson { get; }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private readonly decimal[] _desirevalues;
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private readonly DesiresLogFile _lf;
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private readonly CalcParameters _calcParameters;
-        [JetBrains.Annotations.NotNull] private TimeStep _timestep;
+        [NotNull] private TimeStep _timestep;
 
-        public DesireEntry([JetBrains.Annotations.NotNull] CalcPerson pPerson, [JetBrains.Annotations.NotNull] TimeStep pTimestep,
-                           [JetBrains.Annotations.NotNull] CalcPersonDesires pDesires, [JetBrains.Annotations.NotNull]DesiresLogFile dlf,
-                           [JetBrains.Annotations.NotNull] CalcParameters calcParameters ) {
+        public DesireEntry([NotNull] CalcPerson pPerson, [NotNull] TimeStep pTimestep,
+                           [NotNull] CalcPersonDesires pDesires, [NotNull]DesiresLogFile dlf,
+                           [NotNull] CalcParameters calcParameters ) {
             CPerson = pPerson;
             _timestep = pTimestep;
             _lf = dlf;
@@ -64,20 +64,20 @@ namespace CalculationEngine.OnlineLogging {
             _dsc = new DateStampCreator(calcParameters);
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private readonly DateStampCreator _dsc;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public string PersonName => CPerson.Name;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public TimeStep Timestep {
             get => _timestep;
             set => _timestep = value;
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public string GenerateHeader() {
             var desirestring = string.Empty;
             foreach (var keyValuePair in _lf.DesireColumn) {
@@ -86,7 +86,7 @@ namespace CalculationEngine.OnlineLogging {
             return desirestring;
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public override string ToString() {
             var sb = new StringBuilder();
             _dsc.GenerateDateStampForTimestep(_timestep, sb);

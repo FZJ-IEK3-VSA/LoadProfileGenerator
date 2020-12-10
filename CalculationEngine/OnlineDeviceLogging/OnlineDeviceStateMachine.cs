@@ -40,13 +40,13 @@ namespace CalculationEngine.OnlineDeviceLogging {
 
     public class RandomValueProfile
     {
-        private RandomValueProfile([JetBrains.Annotations.NotNull] List<double> values)
+        private RandomValueProfile([NotNull] List<double> values)
         {
             Values = values;
         }
 
-        [JetBrains.Annotations.NotNull]
-        public static RandomValueProfile MakeStepValues(int stepCount, [JetBrains.Annotations.NotNull] NormalRandom nr, double powerStandardDeviation)
+        [NotNull]
+        public static RandomValueProfile MakeStepValues(int stepCount, [NotNull] NormalRandom nr, double powerStandardDeviation)
         {
             if (stepCount == 0) {
                 throw new LPGException("stepcount was 0");
@@ -65,19 +65,19 @@ namespace CalculationEngine.OnlineDeviceLogging {
             return new RandomValueProfile(values);
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public List<double> Values { get; }
     }
     public class StepValues {
-        private StepValues([JetBrains.Annotations.NotNull] List<double> values, string name, string dataSource)
+        private StepValues([NotNull] List<double> values, string name, string dataSource)
         {
             Values = values;
             Name = name;
             DataSource = dataSource;
         }
-        [JetBrains.Annotations.NotNull]
-        public  static StepValues MakeStepValues([JetBrains.Annotations.NotNull] CalcProfile srcProfile,
-                                                  double multiplier, RandomValueProfile rvp, [JetBrains.Annotations.NotNull] CalcDeviceLoad cdl)
+        [NotNull]
+        public  static StepValues MakeStepValues([NotNull] CalcProfile srcProfile,
+                                                  double multiplier, RandomValueProfile rvp, [NotNull] CalcDeviceLoad cdl)
         {
 
             var powerUsage = cdl.Value * multiplier;
@@ -92,24 +92,24 @@ namespace CalculationEngine.OnlineDeviceLogging {
             }
             return new StepValues(values, srcProfile.Name, srcProfile.DataSource);
         }
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public List<double> Values { get; }
 
         public string Name { get; }
         public string DataSource { get; }
     }
     public class OnlineDeviceStateMachine {
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private readonly string _deviceName;
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private readonly CalcParameters _calcParameters;
-        [JetBrains.Annotations.NotNull] private readonly TimeStep _startTimeStep;
+        [NotNull] private readonly TimeStep _startTimeStep;
         //private readonly OefcKey _zek;
 
-        public OnlineDeviceStateMachine( [JetBrains.Annotations.NotNull] TimeStep startTimeStep,
-              [JetBrains.Annotations.NotNull] CalcLoadTypeDto loadType,
-            [JetBrains.Annotations.NotNull] string deviceName, OefcKey deviceKey, [JetBrains.Annotations.NotNull] string affordanceName, [JetBrains.Annotations.NotNull] CalcParameters calcParameters,
-                                         [JetBrains.Annotations.NotNull] StepValues stepValues, int columnNumber) {
+        public OnlineDeviceStateMachine( [NotNull] TimeStep startTimeStep,
+              [NotNull] CalcLoadTypeDto loadType,
+            [NotNull] string deviceName, OefcKey deviceKey, [NotNull] string affordanceName, [NotNull] CalcParameters calcParameters,
+                                         [NotNull] StepValues stepValues, int columnNumber) {
             //_zek = new ZeroEntryKey(deviceKey.HouseholdKey, deviceKey.ThisDeviceType,deviceKey.DeviceGuid,deviceKey.LocationGuid);
             _deviceName = deviceName;
             _calcParameters = calcParameters;
@@ -128,18 +128,18 @@ namespace CalculationEngine.OnlineDeviceLogging {
             HouseholdKey = deviceKey.HouseholdKey;
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public string AffordanceName { get; }
 
         public OefcKey OefcKey { get; }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public HouseholdKey HouseholdKey { get; }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public CalcLoadTypeDto LoadType { get; }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public StepValues StepValues { get; }
 
         public int ColumnNumber { get; }
@@ -173,7 +173,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
             return sum1;
         }
 
-        public double GetEnergyValueForTimeStep([JetBrains.Annotations.NotNull] TimeStep timestep, [JetBrains.Annotations.NotNull][ItemNotNull] List<SetToZeroEntry> zeroEntries) {
+        public double GetEnergyValueForTimeStep([NotNull] TimeStep timestep, [NotNull][ItemNotNull] List<SetToZeroEntry> zeroEntries) {
             foreach (var setToZeroEntry in zeroEntries) {
                 if (setToZeroEntry.Key == OefcKey) {
                     if (timestep >= setToZeroEntry.StartTime && timestep < setToZeroEntry.EndTime) {
@@ -191,14 +191,14 @@ namespace CalculationEngine.OnlineDeviceLogging {
             return StepValues.Values[time.InternalStep];
         }
 
-        public bool IsExpired([JetBrains.Annotations.NotNull] TimeStep timestep) {
+        public bool IsExpired([NotNull] TimeStep timestep) {
             if (timestep >= _startTimeStep.AddSteps( StepValues.Values.Count)) {
                 return true;
             }
             return false;
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public override string ToString() => _deviceName;
     }
 }

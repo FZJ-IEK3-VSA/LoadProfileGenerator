@@ -7,10 +7,10 @@ namespace LoadProfileGenerator
 {
     internal static class DeviceTypeSelectorHelper
     {
-        [ItemNotNull] [JetBrains.Annotations.NotNull] private static readonly ObservableCollection<string> _categoryOrDevice = new ObservableCollection<string>();
-        [ItemNotNull] [JetBrains.Annotations.NotNull] private static readonly ObservableCollection<string> _deviceTypeStrings = new ObservableCollection<string>();
+        [ItemNotNull] [NotNull] private static readonly ObservableCollection<string> _categoryOrDevice = new ObservableCollection<string>();
+        [ItemNotNull] [NotNull] private static readonly ObservableCollection<string> _deviceTypeStrings = new ObservableCollection<string>();
 
-        [JetBrains.Annotations.NotNull] private static readonly Dictionary<string, AssignableDeviceType> _deviceTypeDict =
+        [NotNull] private static readonly Dictionary<string, AssignableDeviceType> _deviceTypeDict =
             new Dictionary<string, AssignableDeviceType>();
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline")]
@@ -29,17 +29,17 @@ namespace LoadProfileGenerator
         }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         [UsedImplicitly]
         public static ObservableCollection<string> CategoryOrDevice => _categoryOrDevice;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public static ObservableCollection<string> DeviceTypeStrings => _deviceTypeStrings;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public static Dictionary<string, AssignableDeviceType> DeviceTypeDict => _deviceTypeDict;
     }
 }

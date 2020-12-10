@@ -8,24 +8,24 @@ using LoadProfileGenerator.Presenters.BasicElements;
 
 namespace LoadProfileGenerator.Views.Transportation {
     public class TransportationDeviceCategoryPresenter : PresenterBaseDBBase<TransportationDeviceCategoryView> {
-        [JetBrains.Annotations.NotNull] private readonly TransportationDeviceCategory _transportationDeviceCategory;
+        [NotNull] private readonly TransportationDeviceCategory _transportationDeviceCategory;
 
-        public TransportationDeviceCategoryPresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] TransportationDeviceCategoryView view,
-            [JetBrains.Annotations.NotNull] TransportationDeviceCategory category) : base(view, "ThisCategory.Name", category, applicationPresenter)
+        public TransportationDeviceCategoryPresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] TransportationDeviceCategoryView view,
+            [NotNull] TransportationDeviceCategory category) : base(view, "ThisCategory.Name", category, applicationPresenter)
         {
             _transportationDeviceCategory = category;
         }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<Location> Locations => Sim.Locations.Items;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public TransportationDeviceCategory ThisCategory => _transportationDeviceCategory;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<UsedIn> UsedIns { get; } = new ObservableCollection<UsedIn>();
 

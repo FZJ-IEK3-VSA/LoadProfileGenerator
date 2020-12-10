@@ -19,10 +19,10 @@ using JetBrains.Annotations;
 namespace Database.Tables.Transportation {
     public class Site : DBBaseElement {
         public const string TableName = "tblSites";
-        [JetBrains.Annotations.NotNull] [ItemNotNull] private readonly ObservableCollection<SiteLocation> _siteLocations = new ObservableCollection<SiteLocation>();
+        [NotNull] [ItemNotNull] private readonly ObservableCollection<SiteLocation> _siteLocations = new ObservableCollection<SiteLocation>();
         [CanBeNull] private string _description;
 
-        public Site([JetBrains.Annotations.NotNull] string name, [CanBeNull] int? pID, [JetBrains.Annotations.NotNull] string connectionString,
+        public Site([NotNull] string name, [CanBeNull] int? pID, [NotNull] string connectionString,
             [CanBeNull] string description, StrGuid guid) : base(name, TableName,
             connectionString, guid)
         {
@@ -40,10 +40,10 @@ namespace Database.Tables.Transportation {
         }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<SiteLocation> Locations => _siteLocations;
-        public void AddLocation([JetBrains.Annotations.NotNull] Location location, bool savetoDB = true)
+        public void AddLocation([NotNull] Location location, bool savetoDB = true)
         {
             if (location == null) {
                 throw new LPGException("Can't add a null location.");
@@ -67,12 +67,12 @@ namespace Database.Tables.Transportation {
             _siteLocations.Sort();
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
-        public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString) => new Site(
+        public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new Site(
             FindNewName(isNameTaken, "New Site "), null, connectionString, "",System.Guid.NewGuid().ToStrGuid());
 
-        public void DeleteLocation([JetBrains.Annotations.NotNull] SiteLocation ld)
+        public void DeleteLocation([NotNull] SiteLocation ld)
         {
             ld.DeleteFromDB();
             _siteLocations.Remove(ld);
@@ -87,9 +87,9 @@ namespace Database.Tables.Transportation {
             base.DeleteFromDB();
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
-        public static Site ImportFromItem([JetBrains.Annotations.NotNull] Site toImport, [JetBrains.Annotations.NotNull] Simulator dstSim)
+        public static Site ImportFromItem([NotNull] Site toImport, [NotNull] Simulator dstSim)
         {
             var site = new Site(toImport.Name, null, dstSim.ConnectionString, toImport.Description, toImport.Guid);
             site.SaveToDB();
@@ -104,8 +104,8 @@ namespace Database.Tables.Transportation {
             return site;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Site> result, [JetBrains.Annotations.NotNull] string connectionString,
-            bool ignoreMissingTables, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Location> locations)
+        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<Site> result, [NotNull] string connectionString,
+            bool ignoreMissingTables, [ItemNotNull] [NotNull] ObservableCollection<Location> locations)
         {
             var aic = new AllItemCollections();
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);
@@ -134,9 +134,9 @@ namespace Database.Tables.Transportation {
             cmd.AddParameter("Name", Name);
         }
 
-        [JetBrains.Annotations.NotNull]
-        private static Site AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
-            [JetBrains.Annotations.NotNull] AllItemCollections aic)
+        [NotNull]
+        private static Site AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
+            [NotNull] AllItemCollections aic)
         {
             var name = dr.GetString("Name", false, "(no name)", ignoreMissingFields);
             var description = dr.GetString("Description", false, "(no description)", ignoreMissingFields);
@@ -145,7 +145,7 @@ namespace Database.Tables.Transportation {
             return new Site(name, id, connectionString, description, guid);
         }
 
-        private static bool IsCorrectSiteLocationParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
+        private static bool IsCorrectSiteLocationParent([NotNull] DBBase parent, [NotNull] DBBase child)
         {
             var hd = (SiteLocation) child;
 
@@ -184,8 +184,8 @@ namespace Database.Tables.Transportation {
             return uis;
         }
 
-        [JetBrains.Annotations.NotNull]
-        public Site MakeCopy([JetBrains.Annotations.NotNull] Simulator sim)
+        [NotNull]
+        public Site MakeCopy([NotNull] Simulator sim)
         {
             var newSite = sim.Sites.CreateNewItem(sim.ConnectionString);
             newSite.Name = Name + "(copy)";

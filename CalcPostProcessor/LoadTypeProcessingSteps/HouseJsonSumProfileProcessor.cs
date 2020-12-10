@@ -12,11 +12,11 @@ using Newtonsoft.Json;
 
 namespace CalcPostProcessor.LoadTypeProcessingSteps {
     public class HouseJsonSumProfileProcessor : LoadTypeStepBase {
-        [JetBrains.Annotations.NotNull] private readonly IFileFactoryAndTracker _fft;
+        [NotNull] private readonly IFileFactoryAndTracker _fft;
 
-        public HouseJsonSumProfileProcessor([JetBrains.Annotations.NotNull] CalcDataRepository repository,
-                                       [JetBrains.Annotations.NotNull] IFileFactoryAndTracker fft,
-                                       [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler)
+        public HouseJsonSumProfileProcessor([NotNull] CalcDataRepository repository,
+                                       [NotNull] IFileFactoryAndTracker fft,
+                                       [NotNull] ICalculationProfiler calculationProfiler)
             : base(repository, AutomationUtili.GetOptionList(CalcOption.JsonHouseSumFiles), calculationProfiler,
                 "Json Sum Profile Creation") =>
             _fft = fft;
@@ -27,11 +27,11 @@ namespace CalcPostProcessor.LoadTypeProcessingSteps {
             Run(ltstep.LoadType, ltstep.EnergyFileRows);
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public override List<CalcOption> NeededOptions => new List<CalcOption>() { CalcOption.DetailedDatFiles, CalcOption.HouseholdContents};
 
-        private void Run([JetBrains.Annotations.NotNull] CalcLoadTypeDto dstLoadType,
-                         [JetBrains.Annotations.NotNull] [ItemNotNull] List<OnlineEnergyFileRow> energyFileRows)
+        private void Run([NotNull] CalcLoadTypeDto dstLoadType,
+                         [NotNull] [ItemNotNull] List<OnlineEnergyFileRow> energyFileRows)
         {
             var calcParameters = Repository.CalcParameters;
             if (!calcParameters.IsSet(CalcOption.JsonHouseSumFiles)) {

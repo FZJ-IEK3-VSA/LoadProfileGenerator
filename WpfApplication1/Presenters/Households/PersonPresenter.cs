@@ -38,12 +38,12 @@ using LoadProfileGenerator.Views.Households;
 
 namespace LoadProfileGenerator.Presenters.Households {
     public class PersonPresenter : PresenterBaseDBBase<PersonView> {
-        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<UsedIn> _households;
-        [JetBrains.Annotations.NotNull] private readonly Person _person;
+        [ItemNotNull] [NotNull] private readonly ObservableCollection<UsedIn> _households;
+        [NotNull] private readonly Person _person;
 
         [CanBeNull] private Person _selectedOtherPerson;
 
-        public PersonPresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] PersonView view, [JetBrains.Annotations.NotNull] Person person)
+        public PersonPresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] PersonView view, [NotNull] Person person)
             : base(view, "ThisPerson.HeaderString", person, applicationPresenter)
         {
             _person = person;
@@ -52,21 +52,21 @@ namespace LoadProfileGenerator.Presenters.Households {
         }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<Desire> Desires => Sim.Desires.Items;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public Dictionary<PermittedGender, string> Genders1 => GenderHelper.GenderEnumDictionary;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<UsedIn> Households => _households;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<Person> Persons => Sim.Persons.Items;
 
@@ -85,7 +85,7 @@ namespace LoadProfileGenerator.Presenters.Households {
                 OnPropertyChanged(nameof(SelectedOtherPerson));
             }
         }
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public Person ThisPerson => _person;
 

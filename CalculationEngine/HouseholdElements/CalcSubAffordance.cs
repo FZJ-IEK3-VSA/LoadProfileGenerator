@@ -39,19 +39,19 @@ using JetBrains.Annotations;
 namespace CalculationEngine.HouseholdElements {
     public class CalcSubAffordance : CalcAffordanceBase {
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private readonly List<CalcAffordanceVariableOp> _variableOps;
 
-        [JetBrains.Annotations.NotNull] private readonly CalcVariableRepository _repository;
+        [NotNull] private readonly CalcVariableRepository _repository;
         private int _durations;
 
-        public CalcSubAffordance([JetBrains.Annotations.NotNull] string pName,[JetBrains.Annotations.NotNull] CalcLocation loc,[JetBrains.Annotations.NotNull][ItemNotNull] List<CalcDesire> satisfactionvalues,
-            int miniumAge, int maximumAge, int delaytimesteps, PermittedGender permittedGender,[JetBrains.Annotations.NotNull] string pAffCategory,
-            bool isInterruptable, bool isInterrupting,[JetBrains.Annotations.NotNull] CalcAffordance parentAffordance,
-            [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcAffordanceVariableOp> variableOps, int weight,
-                                 [JetBrains.Annotations.NotNull] string sourceTrait,
-                                 StrGuid guid, [ItemNotNull] [JetBrains.Annotations.NotNull] BitArray isBusy,
-            [JetBrains.Annotations.NotNull] CalcVariableRepository repository, BodilyActivityLevel bodilyActivityLevel, [JetBrains.Annotations.NotNull] CalcRepo calcRepo)
+        public CalcSubAffordance([NotNull] string pName,[NotNull] CalcLocation loc,[NotNull][ItemNotNull] List<CalcDesire> satisfactionvalues,
+            int miniumAge, int maximumAge, int delaytimesteps, PermittedGender permittedGender,[NotNull] string pAffCategory,
+            bool isInterruptable, bool isInterrupting,[NotNull] CalcAffordance parentAffordance,
+            [NotNull][ItemNotNull] List<CalcAffordanceVariableOp> variableOps, int weight,
+                                 [NotNull] string sourceTrait,
+                                 StrGuid guid, [ItemNotNull] [NotNull] BitArray isBusy,
+            [NotNull] CalcVariableRepository repository, BodilyActivityLevel bodilyActivityLevel, [NotNull] CalcRepo calcRepo)
             : base(
                 pName, loc, satisfactionvalues, miniumAge, maximumAge, permittedGender, false, false, pAffCategory,
                 isInterruptable, isInterrupting, ActionAfterInterruption.GoBackToOld, weight, false,
@@ -70,7 +70,7 @@ namespace CalculationEngine.HouseholdElements {
 
         public int Delaytimesteps { get; }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public CalcAffordance ParentAffordance { get; }
 
         private int PersonProfileDuration => _durations;
@@ -123,7 +123,7 @@ namespace CalculationEngine.HouseholdElements {
         public override string? TimeLimitName { get; }
         public override bool AreThereDuplicateEnergyProfiles() => false;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public override string AreDeviceProfilesEmpty()
         {
             throw new NotImplementedException();

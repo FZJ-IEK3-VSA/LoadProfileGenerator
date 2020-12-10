@@ -18,7 +18,7 @@ namespace CalculationController.Integrity {
         {
         }
 
-        private void CheckAffordanceUse([JetBrains.Annotations.NotNull] Simulator sim, [JetBrains.Annotations.NotNull] HouseholdTrait trait)
+        private void CheckAffordanceUse([NotNull] Simulator sim, [NotNull] HouseholdTrait trait)
         {
             if (!PerformCleanupChecks) {
                 return;
@@ -74,7 +74,7 @@ namespace CalculationController.Integrity {
             }
         }
 
-        private void CheckAutoDevTimeProfileForZero1([JetBrains.Annotations.NotNull] Simulator sim, [JetBrains.Annotations.NotNull] HouseholdTrait householdTrait)
+        private void CheckAutoDevTimeProfileForZero1([NotNull] Simulator sim, [NotNull] HouseholdTrait householdTrait)
         {
             if (!PerformCleanupChecks) {
                 return;
@@ -101,7 +101,7 @@ namespace CalculationController.Integrity {
             }
         }
 
-        private static void CheckAutonomousDevices([JetBrains.Annotations.NotNull] HouseholdTrait trait)
+        private static void CheckAutonomousDevices([NotNull] HouseholdTrait trait)
         {
             var usedLocations = new List<Location>();
             usedLocations.AddRange(trait.Locations.Select(x => x.Location));
@@ -115,7 +115,7 @@ namespace CalculationController.Integrity {
             }
         }
 
-        private void CheckClassifications([JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<HouseholdTrait> traits)
+        private void CheckClassifications([NotNull][ItemNotNull] ObservableCollection<HouseholdTrait> traits)
         {
             if (!PerformCleanupChecks) {
                 return;
@@ -150,7 +150,7 @@ namespace CalculationController.Integrity {
             }
         }
 
-        private static void CheckDesires([JetBrains.Annotations.NotNull] HouseholdTrait trait)
+        private static void CheckDesires([NotNull] HouseholdTrait trait)
         {
             foreach (var desire in trait.Desires) {
                 if (desire.Threshold > 100) {
@@ -171,7 +171,7 @@ namespace CalculationController.Integrity {
             }
         }
 
-        private void CheckFoodTimeLimit([JetBrains.Annotations.NotNull] HouseholdTrait trait)
+        private void CheckFoodTimeLimit([NotNull] HouseholdTrait trait)
         {
             if (!PerformCleanupChecks) {
                 return;
@@ -211,8 +211,8 @@ namespace CalculationController.Integrity {
             }
         }
 
-        private void CheckForAffordancesWithoutTraits([JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<HouseholdTrait> traits,
-            [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<Affordance> affordances)
+        private void CheckForAffordancesWithoutTraits([NotNull][ItemNotNull] ObservableCollection<HouseholdTrait> traits,
+            [NotNull][ItemNotNull] ObservableCollection<Affordance> affordances)
         {
             if (!PerformCleanupChecks) {
                 return;
@@ -239,7 +239,7 @@ namespace CalculationController.Integrity {
             }
         }
 
-        private void CheckPersonCounts([JetBrains.Annotations.NotNull] HouseholdTrait householdTrait)
+        private void CheckPersonCounts([NotNull] HouseholdTrait householdTrait)
         {
             if (!PerformCleanupChecks) {
                 return;
@@ -263,7 +263,7 @@ namespace CalculationController.Integrity {
             }
         }
 
-        private void CheckSleepDesire([JetBrains.Annotations.NotNull] HouseholdTrait trait)
+        private void CheckSleepDesire([NotNull] HouseholdTrait trait)
         {
             if (!PerformCleanupChecks) {
                 return;
@@ -288,7 +288,7 @@ namespace CalculationController.Integrity {
             }
         }
 
-        private void CheckTraitLocations([JetBrains.Annotations.NotNull] HouseholdTrait trait)
+        private void CheckTraitLocations([NotNull] HouseholdTrait trait)
         {
             if (!PerformCleanupChecks) {
                 return;
@@ -337,7 +337,7 @@ namespace CalculationController.Integrity {
             }
         }*/
 
-        private void CleanTraitNames([JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<HouseholdTrait> traits)
+        private void CleanTraitNames([NotNull][ItemNotNull] ObservableCollection<HouseholdTrait> traits)
         {
             if (!PerformCleanupChecks) {
                 return;
@@ -385,7 +385,7 @@ namespace CalculationController.Integrity {
             }
         }
 
-        private void GeneralCleanupChecks([JetBrains.Annotations.NotNull] HouseholdTrait trait)
+        private void GeneralCleanupChecks([NotNull] HouseholdTrait trait)
         {
             if (!PerformCleanupChecks) {
                 return;
@@ -427,10 +427,10 @@ namespace CalculationController.Integrity {
             }
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [ItemNotNull]
-        private static List<TimeBasedProfile> GetTimeProfile([JetBrains.Annotations.NotNull] HHTAutonomousDevice autodev,
-            [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<DeviceAction> actions)
+        private static List<TimeBasedProfile> GetTimeProfile([NotNull] HHTAutonomousDevice autodev,
+            [NotNull][ItemNotNull] ObservableCollection<DeviceAction> actions)
         {
             if(autodev.Device==null) {
                 throw new DataIntegrityException("Device was null");

@@ -14,8 +14,8 @@ namespace Database.Tables.ModularHouseholds {
 
         [CanBeNull] private readonly HouseholdTag _householdTag;
 
-        public HHTemplateTag([CanBeNull]int? pID, [CanBeNull] HouseholdTag householdTag, int hhTemplateID, [JetBrains.Annotations.NotNull] string name,
-            [JetBrains.Annotations.NotNull] string connectionString, StrGuid guid)
+        public HHTemplateTag([CanBeNull]int? pID, [CanBeNull] HouseholdTag householdTag, int hhTemplateID, [NotNull] string name,
+            [NotNull] string connectionString, StrGuid guid)
             : base(name, TableName, connectionString, guid) {
             ID = pID;
             _householdTag = householdTag;
@@ -23,14 +23,14 @@ namespace Database.Tables.ModularHouseholds {
             TypeDescription = "Household Template Tag";
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public HouseholdTag Tag => _householdTag ?? throw new InvalidOperationException();
 
         public int TemplateID => _hhTemplateID;
 
-        [JetBrains.Annotations.NotNull]
-        private static HHTemplateTag AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
-            [JetBrains.Annotations.NotNull] AllItemCollections aic) {
+        [NotNull]
+        private static HHTemplateTag AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
+            [NotNull] AllItemCollections aic) {
             var hhpID = dr.GetIntFromLong("ID");
             var templateTagID = dr.GetIntFromLong("TemplateTagID", ignoreMissingField: ignoreMissingFields);
             var householdID = dr.GetIntFromLong("HHTemplateID");
@@ -54,7 +54,7 @@ namespace Database.Tables.ModularHouseholds {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<HHTemplateTag> result, [JetBrains.Annotations.NotNull] string connectionString,
+        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<HHTemplateTag> result, [NotNull] string connectionString,
             [ItemNotNull] [CanBeNull]ObservableCollection<HouseholdTag> templateTags, bool ignoreMissingTables) {
             var aic = new AllItemCollections(householdTags: templateTags);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);

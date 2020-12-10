@@ -42,20 +42,20 @@ namespace CalculationEngine.HouseElements {
 
         private readonly EnergyStorageLogfile? _elf;
 
-        [JetBrains.Annotations.NotNull] private readonly EnergyStorageHeaderEntry _headerEntry;
+        [NotNull] private readonly EnergyStorageHeaderEntry _headerEntry;
 
         private readonly CalcDeviceDto _deviceDto;
 
-        [JetBrains.Annotations.NotNull] private readonly CalcLoadTypeDto _inputLoadType;
+        [NotNull] private readonly CalcLoadTypeDto _inputLoadType;
 
         private readonly double _maximumStorageRate;
         private readonly double _maximumWithdrawRate;
         private readonly double _minimumStorageRate;
         private readonly double _minimumWithdrawRate;
 
-        [JetBrains.Annotations.NotNull] private readonly IOnlineDeviceActivationProcessor _odap;
+        [NotNull] private readonly IOnlineDeviceActivationProcessor _odap;
 
-        [ItemNotNull] [JetBrains.Annotations.NotNull]
+        [ItemNotNull] [NotNull]
         private readonly List<CalcEnergyStorageSignal> _signals = new List<CalcEnergyStorageSignal>();
 
         private readonly double _storageCapacity;
@@ -63,12 +63,12 @@ namespace CalculationEngine.HouseElements {
         private TimeStep? _currentTimeStep;
         private double _previousDelta;
 
-        public CalcEnergyStorage(  [JetBrains.Annotations.NotNull] IOnlineDeviceActivationProcessor odap,
-                                 [JetBrains.Annotations.NotNull] CalcLoadTypeDto loadType,
+        public CalcEnergyStorage(  [NotNull] IOnlineDeviceActivationProcessor odap,
+                                 [NotNull] CalcLoadTypeDto loadType,
                                  double maximumStorageRate, double maximumWithdrawRate, double minimumStorageRate,
                                  double minimumWithdrawRate,
                                  double initialFill, double storageCapacity, EnergyStorageLogfile? elf,
-                                   [JetBrains.Annotations.NotNull] CalcDeviceDto deviceDto)
+                                   [NotNull] CalcDeviceDto deviceDto)
             : base(deviceDto.Name,deviceDto.Guid)
         {
             //_devProcessorKey = new OefcKey(householdKey, OefcDeviceType.Storage, guid, "-1", loadType.Guid,"Energy Storage");
@@ -95,16 +95,16 @@ namespace CalculationEngine.HouseElements {
 
         public double PreviousFillLevel { get; private set; }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public List<CalcEnergyStorageSignal> Signals => _signals;
 
-        public void AddSignal([JetBrains.Annotations.NotNull] CalcEnergyStorageSignal signal)
+        public void AddSignal([NotNull] CalcEnergyStorageSignal signal)
         {
             Signals.Add(signal);
             _headerEntry.AddSignal(signal.ToString());
         }
 
-        public bool ProcessOneTimestep([JetBrains.Annotations.NotNull] [ItemNotNull] List<OnlineEnergyFileRow> fileRows, [JetBrains.Annotations.NotNull] TimeStep timeStep,
+        public bool ProcessOneTimestep([NotNull] [ItemNotNull] List<OnlineEnergyFileRow> fileRows, [NotNull] TimeStep timeStep,
                                        [ItemNotNull] List<string>? log)
         {
             if (timeStep != _currentTimeStep) {
@@ -183,8 +183,8 @@ namespace CalculationEngine.HouseElements {
             return madeChanges;
         }
 
-        private static OnlineEnergyFileRow? GetRowForLoadType([JetBrains.Annotations.NotNull] CalcLoadTypeDto lt,
-                                                              [JetBrains.Annotations.NotNull] [ItemNotNull] List<OnlineEnergyFileRow> fileRows)
+        private static OnlineEnergyFileRow? GetRowForLoadType([NotNull] CalcLoadTypeDto lt,
+                                                              [NotNull] [ItemNotNull] List<OnlineEnergyFileRow> fileRows)
         {
             foreach (var onlineEnergyFileRow in fileRows) {
                 if (onlineEnergyFileRow.LoadType == lt) {

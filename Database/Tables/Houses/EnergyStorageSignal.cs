@@ -39,7 +39,7 @@ namespace Database.Tables.Houses {
         public const string TableName = "tblEnergyStorageSignals";
 
         public EnergyStorageSignal([CanBeNull]int? pID, int energyStorageID, Variable variable, double triggerLevelOn,
-            double triggerLevelOff, double value, [JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.NotNull] string name, StrGuid guid)
+            double triggerLevelOff, double value, [NotNull] string connectionString, [NotNull] string name, StrGuid guid)
             : base(name, TableName, connectionString, guid)
         {
             Variable = variable;
@@ -61,10 +61,10 @@ namespace Database.Tables.Houses {
 
         public double Value { get; }
 
-        [JetBrains.Annotations.NotNull]
-        private static EnergyStorageSignal AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString,
+        [NotNull]
+        private static EnergyStorageSignal AssignFields([NotNull] DataReader dr, [NotNull] string connectionString,
             bool ignoreMissingFields,
-            [JetBrains.Annotations.NotNull] AllItemCollections aic)
+            [NotNull] AllItemCollections aic)
         {
             var id = dr.GetIntFromLong("ID");
             var energyStorageID = dr.GetIntFromLong("EnergyStorageID");
@@ -93,8 +93,8 @@ namespace Database.Tables.Houses {
             return true;
         }
 
-        public static void LoadFromDatabase([JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<EnergyStorageSignal> result, [JetBrains.Annotations.NotNull] string connectionString,
-            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<VLoadType> loadTypes, bool ignoreMissingTables, ObservableCollection<Variable> variables)
+        public static void LoadFromDatabase([NotNull][ItemNotNull] ObservableCollection<EnergyStorageSignal> result, [NotNull] string connectionString,
+            [ItemNotNull] [NotNull] ObservableCollection<VLoadType> loadTypes, bool ignoreMissingTables, ObservableCollection<Variable> variables)
         {
             var aic = new AllItemCollections(loadTypes: loadTypes, variables:variables);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);

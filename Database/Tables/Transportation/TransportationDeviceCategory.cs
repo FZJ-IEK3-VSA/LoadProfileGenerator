@@ -13,8 +13,8 @@ namespace Database.Tables.Transportation {
         [CanBeNull] private string _description;
         private bool _isLimitedToSingleLocation;
 
-        public TransportationDeviceCategory([JetBrains.Annotations.NotNull] string name, [CanBeNull] int? pID,
-                                            [JetBrains.Annotations.NotNull] string connectionString, [CanBeNull] string description,
+        public TransportationDeviceCategory([NotNull] string name, [CanBeNull] int? pID,
+                                            [NotNull] string connectionString, [CanBeNull] string description,
             bool isLimitedToSingleLocation, StrGuid guid)
             : base(name, TableName, connectionString, guid)
         {
@@ -37,16 +37,16 @@ namespace Database.Tables.Transportation {
             set => SetValueWithNotify(value, ref _isLimitedToSingleLocation, nameof(IsLimitedToSingleLocation));
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
-        public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString) => new
+        public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new
             TransportationDeviceCategory(FindNewName(isNameTaken, "New Transportation Device Category "), null,
                 connectionString, "", false, System.Guid.NewGuid().ToStrGuid());
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
-        public static TransportationDeviceCategory ImportFromItem([JetBrains.Annotations.NotNull] TransportationDeviceCategory toImport,
-            [JetBrains.Annotations.NotNull] Simulator dstSim)
+        public static TransportationDeviceCategory ImportFromItem([NotNull] TransportationDeviceCategory toImport,
+            [NotNull] Simulator dstSim)
         {
             var loc = new TransportationDeviceCategory(toImport.Name, null,dstSim.ConnectionString,
                 toImport.Description, toImport.IsLimitedToSingleLocation,toImport.Guid);
@@ -54,8 +54,8 @@ namespace Database.Tables.Transportation {
             return loc;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TransportationDeviceCategory> result,
-            [JetBrains.Annotations.NotNull] string connectionString,
+        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<TransportationDeviceCategory> result,
+            [NotNull] string connectionString,
             bool ignoreMissingTables)
         {
             var aic = new AllItemCollections();
@@ -78,9 +78,9 @@ namespace Database.Tables.Transportation {
             cmd.AddParameter("IsLimitedToSingleLocation", _isLimitedToSingleLocation);
         }
 
-        [JetBrains.Annotations.NotNull]
-        private static TransportationDeviceCategory AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString,
-            bool ignoreMissingFields, [JetBrains.Annotations.NotNull] AllItemCollections aic)
+        [NotNull]
+        private static TransportationDeviceCategory AssignFields([NotNull] DataReader dr, [NotNull] string connectionString,
+            bool ignoreMissingFields, [NotNull] AllItemCollections aic)
         {
             var name = dr.GetString("Name", false, "(no name)", ignoreMissingFields);
             var description = dr.GetString("Description", false, "(no description)", ignoreMissingFields);

@@ -7,34 +7,34 @@ using JetBrains.Annotations;
 
 namespace CalculationEngine.Transportation {
     public class TransportationHandler {
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [ItemNotNull]
         public List<CalcSite> CalcSites { get; }= new List<CalcSite>();
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [ItemNotNull]
         public List<CalcTransportationDevice> VehicleDepot { get; } = new List<CalcTransportationDevice>();
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [ItemNotNull]
         public List<CalcTransportationDevice> LocationUnlimitedDevices { get; } = new List<CalcTransportationDevice>();
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [ItemNotNull]
         public List<CalcTravelRoute> TravelRoutes { get; }= new List<CalcTravelRoute>();
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private Dictionary<CalcLocation, CalcSite> LocationSiteLookup { get; } = new Dictionary<CalcLocation, CalcSite>();
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [ItemNotNull]
         public List<CalcTransportationDevice> AllMoveableDevices { get; } = new List<CalcTransportationDevice>();
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public Dictionary<CalcSite, CalcTravelRoute> SameSiteRoutes { get; }= new Dictionary<CalcSite, CalcTravelRoute>();
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [ItemNotNull]
         public List<CalcTransportationDeviceCategory> DeviceCategories { get;  } = new List<CalcTransportationDeviceCategory>();
 
-        public CalcTravelRoute? GetTravelRouteFromSrcLoc([JetBrains.Annotations.NotNull] CalcLocation srcLocation,
-                                                         [JetBrains.Annotations.NotNull] CalcSite dstSite, [JetBrains.Annotations.NotNull] TimeStep startTimeStep,
-                                                         [JetBrains.Annotations.NotNull] string personName, CalcRepo calcRepo)
+        public CalcTravelRoute? GetTravelRouteFromSrcLoc([NotNull] CalcLocation srcLocation,
+                                                         [NotNull] CalcSite dstSite, [NotNull] TimeStep startTimeStep,
+                                                         [NotNull] string personName, CalcRepo calcRepo)
         {
             CalcSite srcSite = LocationSiteLookup[srcLocation];
             if (srcSite == dstSite) {
@@ -63,13 +63,13 @@ namespace CalculationEngine.Transportation {
             return ctr;
         }
 
-        public void AddVehicleDepotDevice([JetBrains.Annotations.NotNull] CalcTransportationDevice dev)
+        public void AddVehicleDepotDevice([NotNull] CalcTransportationDevice dev)
         {
             VehicleDepot.Add(dev);
             AllMoveableDevices.Add(dev);
         }
 
-        public void AddSite([JetBrains.Annotations.NotNull] CalcSite srcSite)
+        public void AddSite([NotNull] CalcSite srcSite)
         {
             CalcSites.Add(srcSite);
             foreach (CalcLocation location in srcSite.Locations) {
@@ -77,8 +77,8 @@ namespace CalculationEngine.Transportation {
             }
         }
 
-        [JetBrains.Annotations.NotNull]
-        public CalcTransportationDeviceCategory GetCategory([JetBrains.Annotations.NotNull] CalcTransportationDeviceCategoryDto catDto)
+        [NotNull]
+        public CalcTransportationDeviceCategory GetCategory([NotNull] CalcTransportationDeviceCategoryDto catDto)
         {
             if (DeviceCategories.Any(x => x.Guid == catDto.Guid)) {
                 return DeviceCategories.Single(x => x.Guid == catDto.Guid);

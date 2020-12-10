@@ -14,7 +14,7 @@ namespace Database.Tables.ModularHouseholds {
         [CanBeNull]
         private string _classification;
 
-        public HouseholdTag([JetBrains.Annotations.NotNull] string pName, [JetBrains.Annotations.NotNull] string connectionString, [CanBeNull] string classification,StrGuid guid, [CanBeNull] int? pID = null)
+        public HouseholdTag([NotNull] string pName, [NotNull] string connectionString, [CanBeNull] string classification,StrGuid guid, [CanBeNull] int? pID = null)
             : base(pName, TableName, connectionString, guid)
         {
             ID = pID;
@@ -29,9 +29,9 @@ namespace Database.Tables.ModularHouseholds {
             set => SetValueWithNotify(value, ref _classification, nameof(Classification));
         }
 
-        [JetBrains.Annotations.NotNull]
-        private static HouseholdTag AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
-            [JetBrains.Annotations.NotNull] AllItemCollections aic)
+        [NotNull]
+        private static HouseholdTag AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
+            [NotNull] AllItemCollections aic)
         {
             var name =  dr.GetString("Name","no name");
             var id = dr.GetIntFromLong("ID");
@@ -41,9 +41,9 @@ namespace Database.Tables.ModularHouseholds {
             return d;
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
-        public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString) => new HouseholdTag(
+        public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new HouseholdTag(
             FindNewName(isNameTaken, "New Template Tag "), connectionString, string.Empty, System.Guid.NewGuid().ToStrGuid());
 
         public override DBBase ImportFromGenericItem(DBBase toImport, Simulator dstSim)
@@ -63,10 +63,10 @@ namespace Database.Tables.ModularHouseholds {
             return used;
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
 #pragma warning disable RCS1163 // Unused parameter.
-        public static DBBase ImportFromItem([JetBrains.Annotations.NotNull] HouseholdTag item, [JetBrains.Annotations.NotNull] Simulator dstSim)
+        public static DBBase ImportFromItem([NotNull] HouseholdTag item, [NotNull] Simulator dstSim)
 #pragma warning restore RCS1163 // Unused parameter.
         {
             var tt = new HouseholdTag(item.Name, dstSim.ConnectionString, item.Classification,item.Guid);
@@ -80,7 +80,7 @@ namespace Database.Tables.ModularHouseholds {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<HouseholdTag> result, [JetBrains.Annotations.NotNull] string connectionString,
+        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<HouseholdTag> result, [NotNull] string connectionString,
             bool ignoreMissingTables)
         {
             var aic = new AllItemCollections();

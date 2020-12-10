@@ -48,8 +48,8 @@ namespace Database.Tables.BasicHouseholds {
 
         [CanBeNull] private readonly SubAffordance _subaff;
 
-        public AffordanceSubAffordance([CanBeNull]int? pID, [CanBeNull] SubAffordance subaff, decimal delayTime, [JetBrains.Annotations.NotNull] string name,
-            [JetBrains.Annotations.NotNull] string connectionString, [CanBeNull]int? affordanceID, StrGuid guid) : base(name, TableName, connectionString, guid) {
+        public AffordanceSubAffordance([CanBeNull]int? pID, [CanBeNull] SubAffordance subaff, decimal delayTime, [NotNull] string name,
+            [NotNull] string connectionString, [CanBeNull]int? affordanceID, StrGuid guid) : base(name, TableName, connectionString, guid) {
             TypeDescription = "Affordance - Subaffordance";
             ID = pID;
             _affordanceID = affordanceID;
@@ -61,7 +61,7 @@ namespace Database.Tables.BasicHouseholds {
         }
 
         public AffordanceSubAffordance([CanBeNull]int? pID, [CanBeNull] SubAffordance subaff, decimal delayTime, [CanBeNull]int? affordanceID,
-            [JetBrains.Annotations.NotNull] string affordanceName, [JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.NotNull] string subaffname, StrGuid guid)
+            [NotNull] string affordanceName, [NotNull] string connectionString, [NotNull] string subaffname, StrGuid guid)
             : base(subaffname + "(" + affordanceName + ")", TableName, connectionString, guid) {
             if (subaffname == null) {
                 throw new ArgumentNullException(nameof(subaffname));
@@ -81,7 +81,7 @@ namespace Database.Tables.BasicHouseholds {
 
         public decimal DelayTime => _delayTime;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public string Desc {
             get {
@@ -109,9 +109,9 @@ namespace Database.Tables.BasicHouseholds {
         [CanBeNull]
         public SubAffordance SubAffordance => _subaff;
 
-        [JetBrains.Annotations.NotNull]
-        private static AffordanceSubAffordance AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString,
-            bool ignoreMissingFields, [JetBrains.Annotations.NotNull] AllItemCollections aic) {
+        [NotNull]
+        private static AffordanceSubAffordance AssignFields([NotNull] DataReader dr, [NotNull] string connectionString,
+            bool ignoreMissingFields, [NotNull] AllItemCollections aic) {
             var id = dr.GetIntFromLong("ID");
             var affordanceID = dr.GetInt("AffID", false, -1, ignoreMissingFields);
             var subAffID = dr.GetInt("SubAffID");
@@ -142,9 +142,9 @@ namespace Database.Tables.BasicHouseholds {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<AffordanceSubAffordance> result,
-            [JetBrains.Annotations.NotNull] string connectionString, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Affordance> affordances,
-            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<SubAffordance> subAffordances, bool ignoreMissingTables) {
+        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<AffordanceSubAffordance> result,
+            [NotNull] string connectionString, [ItemNotNull] [NotNull] ObservableCollection<Affordance> affordances,
+            [ItemNotNull] [NotNull] ObservableCollection<SubAffordance> subAffordances, bool ignoreMissingTables) {
             var aic = new AllItemCollections(affordances: affordances, subAffordances: subAffordances);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
             var items2Delete = new List<AffordanceSubAffordance>();

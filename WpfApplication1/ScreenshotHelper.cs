@@ -427,7 +427,7 @@ namespace LoadProfileGenerator {
                 using (drawingContext) {
                     drawingContext.PushTransform(new ScaleTransform(horizontalTransform, verticalTransform));
                     drawingContext.DrawRectangle(sourceBrush, null,
-                        new Rect(new System.Windows.Point(0, 0), new System.Windows.Point(actualWidth, actualHeight)));
+                        new Rect(new Point(0, 0), new Point(actualWidth, actualHeight)));
                 }
 
                 renderTarget.Render(drawingVisual);

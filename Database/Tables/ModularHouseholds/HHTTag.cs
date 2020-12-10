@@ -15,7 +15,7 @@ namespace Database.Tables.ModularHouseholds {
 
         [CanBeNull] private readonly TraitTag _tag;
 
-        public HHTTag([CanBeNull]int? pID, [CanBeNull] int? householdTraitID, [CanBeNull] TraitTag tag, [JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.NotNull] string name, StrGuid guid)
+        public HHTTag([CanBeNull]int? pID, [CanBeNull] int? householdTraitID, [CanBeNull] TraitTag tag, [NotNull] string connectionString, [NotNull] string name, StrGuid guid)
             : base(name, TableName, connectionString,guid) {
             _tag = tag;
             ID = pID;
@@ -25,7 +25,7 @@ namespace Database.Tables.ModularHouseholds {
         [CanBeNull]
         public int? HouseholdTraitID => _householdTraitID;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
 #pragma warning disable S4015 // Inherited member visibility should not be decreased
         public new string Name {
@@ -38,12 +38,12 @@ namespace Database.Tables.ModularHouseholds {
             }
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public TraitTag Tag => _tag ?? throw new InvalidOperationException();
 
-        [JetBrains.Annotations.NotNull]
-        private static HHTTag AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
-            [JetBrains.Annotations.NotNull] AllItemCollections aic) {
+        [NotNull]
+        private static HHTTag AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
+            [NotNull] AllItemCollections aic) {
             var hhtTagID = dr.GetIntFromLong("ID");
             var householdTraitID = dr.GetIntFromLong("HouseholdTraitID");
             var traitTagID = dr.GetNullableIntFromLong("TraitTagID", false, ignoreMissingFields);
@@ -70,8 +70,8 @@ namespace Database.Tables.ModularHouseholds {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<HHTTag> result, [JetBrains.Annotations.NotNull] string connectionString,
-            bool ignoreMissingTables, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TraitTag> tags) {
+        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<HHTTag> result, [NotNull] string connectionString,
+            bool ignoreMissingTables, [ItemNotNull] [NotNull] ObservableCollection<TraitTag> tags) {
             var aic = new AllItemCollections(traitTags: tags);
 
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);

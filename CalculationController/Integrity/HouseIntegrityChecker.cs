@@ -34,7 +34,7 @@ using JetBrains.Annotations;
 
 namespace CalculationController.Integrity {
     public static class HouseIntegrityChecker {
-        private static void CheckEnergyStorages([JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<EnergyStorage> myItems) {
+        private static void CheckEnergyStorages([NotNull][ItemNotNull] ObservableCollection<EnergyStorage> myItems) {
             foreach (var storage1 in myItems) {
                 foreach (var storage2 in myItems) {
                     if (storage1 != storage2 && storage1.Name == storage2.Name) {
@@ -47,7 +47,7 @@ namespace CalculationController.Integrity {
         }
 
 
-        public static void Run([JetBrains.Annotations.NotNull] House house, [JetBrains.Annotations.NotNull] Simulator sim) {
+        public static void Run([NotNull] House house, [NotNull] Simulator sim) {
             if (house.HouseType == null) {
                 throw new DataIntegrityException("The house " + house.Name +
                                                  " has no house type selected. This makes calculation impossible.");

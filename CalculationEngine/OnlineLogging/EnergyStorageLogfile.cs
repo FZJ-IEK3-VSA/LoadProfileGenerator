@@ -40,27 +40,27 @@ using JetBrains.Annotations;
 
 namespace CalculationEngine.OnlineLogging {
     public class EnergyStorageLogfile : LogfileBase, IDisposable {
-        [JetBrains.Annotations.NotNull] private readonly CalcParameters _calcParameters;
+        [NotNull] private readonly CalcParameters _calcParameters;
 
-        [JetBrains.Annotations.NotNull] private readonly Dictionary<string, int> _energyStorageColumns = new Dictionary<string, int>();
+        [NotNull] private readonly Dictionary<string, int> _energyStorageColumns = new Dictionary<string, int>();
 
-        [JetBrains.Annotations.NotNull] private readonly Dictionary<string, EnergyStorageHeaderEntry> _energyStorageHeaders =
+        [NotNull] private readonly Dictionary<string, EnergyStorageHeaderEntry> _energyStorageHeaders =
             new Dictionary<string, EnergyStorageHeaderEntry>();
 
-        [JetBrains.Annotations.NotNull] private readonly FileFactoryAndTracker _fft;
+        [NotNull] private readonly FileFactoryAndTracker _fft;
 
         private EnergyStorageEntry? _currentEntry;
 
-        [JetBrains.Annotations.NotNull] private TimeStep _currentTimeStep = new TimeStep(-1,0,false);
+        [NotNull] private TimeStep _currentTimeStep = new TimeStep(-1,0,false);
 
         private StreamWriter? _energyStoragesSw;
 
         private bool _writeHeader;
 
-        [JetBrains.Annotations.NotNull] private readonly DateStampCreator _dsc;
+        [NotNull] private readonly DateStampCreator _dsc;
 
         [UsedImplicitly]
-        public EnergyStorageLogfile([JetBrains.Annotations.NotNull] CalcParameters calcParameters, [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft)
+        public EnergyStorageLogfile([NotNull] CalcParameters calcParameters, [NotNull] FileFactoryAndTracker fft)
         {
             _fft = fft;
             _calcParameters = calcParameters;
@@ -78,7 +78,7 @@ namespace CalculationEngine.OnlineLogging {
             _calcParameters = calcParameters;
         }*/
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public Dictionary<string, int> EnergyStorageColumnDict => _energyStorageColumns;
 
         public void Dispose()
@@ -86,7 +86,7 @@ namespace CalculationEngine.OnlineLogging {
             _energyStoragesSw?.Close();
         }
 
-        public void RegisterStorage([JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] EnergyStorageHeaderEntry eslf)
+        public void RegisterStorage([NotNull] string name, [NotNull] EnergyStorageHeaderEntry eslf)
         {
             var i = EnergyStorageColumnDict.Count;
             if (!EnergyStorageColumnDict.ContainsKey(name)) {
@@ -95,8 +95,8 @@ namespace CalculationEngine.OnlineLogging {
             }
         }
 
-        public void SetValue([JetBrains.Annotations.NotNull] string name, double value, [JetBrains.Annotations.NotNull] TimeStep timestep, [JetBrains.Annotations.NotNull] HouseholdKey householdKey,
-                             [JetBrains.Annotations.NotNull] CalcLoadTypeDto loadType)
+        public void SetValue([NotNull] string name, double value, [NotNull] TimeStep timestep, [NotNull] HouseholdKey householdKey,
+                             [NotNull] CalcLoadTypeDto loadType)
         {
             if (timestep != _currentTimeStep) {
                 if (_currentEntry != null) {
@@ -114,7 +114,7 @@ namespace CalculationEngine.OnlineLogging {
             _currentEntry.AddValue(name, value * loadType.ConversionFactor);
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private string GetHeader()
         {
             var s = new StringBuilder();
@@ -125,7 +125,7 @@ namespace CalculationEngine.OnlineLogging {
             return s.ToString();
         }
 
-        private void WriteEntry([JetBrains.Annotations.NotNull] EnergyStorageEntry e, [JetBrains.Annotations.NotNull] HouseholdKey householdKey)
+        private void WriteEntry([NotNull] EnergyStorageEntry e, [NotNull] HouseholdKey householdKey)
         {
             if (_writeHeader) {
                 _energyStoragesSw = _fft.MakeFile<StreamWriter>("EnergyStorages.csv", "Energy storage values", true,

@@ -40,16 +40,16 @@ namespace CalculationEngine.HouseElements {
     public class CalcGenerator : CalcBase {
         private readonly OefcKey _devProcessorKey;
 
-        [JetBrains.Annotations.NotNull] private readonly CalcLoadType _loadType;
+        [NotNull] private readonly CalcLoadType _loadType;
 
-        [JetBrains.Annotations.NotNull] private readonly IOnlineDeviceActivationProcessor _odap;
+        [NotNull] private readonly IOnlineDeviceActivationProcessor _odap;
 
-        [JetBrains.Annotations.NotNull] private readonly List<double> _values;
+        [NotNull] private readonly List<double> _values;
 
-        public CalcGenerator(  [JetBrains.Annotations.NotNull] IOnlineDeviceActivationProcessor odap,
-                             [JetBrains.Annotations.NotNull] CalcLoadType loadType,
-                             [JetBrains.Annotations.NotNull] List<double> values,
-                             [JetBrains.Annotations.NotNull] CalcParameters calcParameters,  [JetBrains.Annotations.NotNull] CalcDeviceDto calcDeviceDto) : base(calcDeviceDto.Name, calcDeviceDto.Guid)
+        public CalcGenerator(  [NotNull] IOnlineDeviceActivationProcessor odap,
+                             [NotNull] CalcLoadType loadType,
+                             [NotNull] List<double> values,
+                             [NotNull] CalcParameters calcParameters,  [NotNull] CalcDeviceDto calcDeviceDto) : base(calcDeviceDto.Name, calcDeviceDto.Guid)
         {
             //_devProcessorKey = new OefcKey(householdKey, OefcDeviceType.Generator, guid, "-1", loadType.Guid, "Generator");
             _odap = odap;
@@ -61,7 +61,7 @@ namespace CalculationEngine.HouseElements {
             }
         }
 
-        public bool ProcessOneTimestep([JetBrains.Annotations.NotNull] [ItemNotNull] List<OnlineEnergyFileRow> fileRows, [JetBrains.Annotations.NotNull] TimeStep timeStep,
+        public bool ProcessOneTimestep([NotNull] [ItemNotNull] List<OnlineEnergyFileRow> fileRows, [NotNull] TimeStep timeStep,
                                        [ItemNotNull] List<string>? log)
         {
             var madeChanges = false;

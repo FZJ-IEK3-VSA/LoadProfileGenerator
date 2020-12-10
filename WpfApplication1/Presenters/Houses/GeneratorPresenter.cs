@@ -36,16 +36,16 @@ using LoadProfileGenerator.Views.Houses;
 
 namespace LoadProfileGenerator.Presenters.Houses {
     public class GeneratorPresenter : PresenterBaseDBBase<GeneratorView> {
-        [JetBrains.Annotations.NotNull] private readonly Generator _thisGenerator;
+        [NotNull] private readonly Generator _thisGenerator;
 
-        public GeneratorPresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter, [JetBrains.Annotations.NotNull] GeneratorView view, [JetBrains.Annotations.NotNull] Generator generator)
+        public GeneratorPresenter([NotNull] ApplicationPresenter applicationPresenter, [NotNull] GeneratorView view, [NotNull] Generator generator)
             : base(view, "ThisGenerator.HeaderString", generator, applicationPresenter)
         {
             _thisGenerator = generator;
         }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<DateBasedProfile> DateBasedProfiles
             => Sim.DateBasedProfiles.Items;
@@ -61,7 +61,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
             }
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public string SelectedUnitsString {
             get {
@@ -72,11 +72,11 @@ namespace LoadProfileGenerator.Presenters.Houses {
             }
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public Generator ThisGenerator => _thisGenerator;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<VLoadType> VLoadTypes => Sim.LoadTypes.Items;
 

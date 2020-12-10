@@ -12,7 +12,7 @@ namespace CalculationController.InputLoggers
 
     public class EveryDayLightTimes //: ITypeDescriber
     {
-        public EveryDayLightTimes([JetBrains.Annotations.NotNull] string dateTime, int timeStep, bool isLight)
+        public EveryDayLightTimes([NotNull] string dateTime, int timeStep, bool isLight)
         {
             DateTime = dateTime;
             TimeStep = timeStep;
@@ -23,11 +23,11 @@ namespace CalculationController.InputLoggers
         //public string GetTypeDescription(){return "A list of the calculated daylight times";}
 
         //public int ID { get; set; }
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public HouseholdKey HouseholdKey { get;  }
 
         [UsedImplicitly]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public string DateTime { get; set; }
         [UsedImplicitly]
         public int TimeStep { get; set; }
@@ -37,14 +37,14 @@ namespace CalculationController.InputLoggers
 
     public class DaylightTimesLogger:DataSaverBase
     {
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private readonly SqlResultLoggingService _srls;
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private readonly CalcParameters _calcParameters;
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private readonly DateStampCreator _dsc;
 
-        public DaylightTimesLogger([JetBrains.Annotations.NotNull] SqlResultLoggingService srls, [JetBrains.Annotations.NotNull] CalcParameters calcParameters):base(typeof(DayLightStatus),
+        public DaylightTimesLogger([NotNull] SqlResultLoggingService srls, [NotNull] CalcParameters calcParameters):base(typeof(DayLightStatus),
            new ResultTableDefinition("DaylightTimes",ResultTableID.DaylightTimes,  "Time of daylight each day", CalcOption.DaylightTimesList),srls)
         {
             _srls = srls;

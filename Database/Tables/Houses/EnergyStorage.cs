@@ -42,7 +42,7 @@ namespace Database.Tables.Houses {
     public class EnergyStorage : DBBaseElement {
         public const string TableName = "tblEnergyStorages";
 
-        [JetBrains.Annotations.NotNull] [ItemNotNull] private readonly ObservableCollection<EnergyStorageSignal> _signals =
+        [NotNull] [ItemNotNull] private readonly ObservableCollection<EnergyStorageSignal> _signals =
             new ObservableCollection<EnergyStorageSignal>();
 
         [CanBeNull] private string _description;
@@ -56,11 +56,11 @@ namespace Database.Tables.Houses {
         private double _minimumWithdrawRate;
         private double _storageCapacity;
 
-        public EnergyStorage([JetBrains.Annotations.NotNull] string pName, [CanBeNull] string description,
+        public EnergyStorage([NotNull] string pName, [CanBeNull] string description,
                              [CanBeNull] VLoadType loadType, double storageCapacity,
             double initialFill, double minimumStorageRate, double maximumStorageRate,
                              double minimumWithdrawRate,
-            double maximumWithdrawRate, [JetBrains.Annotations.NotNull] string connectionString,StrGuid guid, [CanBeNull]int? pID = null)
+            double maximumWithdrawRate, [NotNull] string connectionString,StrGuid guid, [CanBeNull]int? pID = null)
             : base(pName, TableName, connectionString, guid)
         {
             ID = pID;
@@ -125,7 +125,7 @@ namespace Database.Tables.Houses {
         }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ObservableCollection<EnergyStorageSignal> Signals => _signals;
 
         [UsedImplicitly]
@@ -134,7 +134,7 @@ namespace Database.Tables.Houses {
             set => SetValueWithNotify(value, ref _storageCapacity, nameof(StorageCapacity));
         }
 
-        public void AddSignal([JetBrains.Annotations.NotNull] Variable variable, double triggerOn, double triggerOff, double value)
+        public void AddSignal([NotNull] Variable variable, double triggerOn, double triggerOff, double value)
         {
             var ess = new EnergyStorageSignal(null, IntID, variable, triggerOn, triggerOff, value,
                 ConnectionString, variable.Name, System.Guid.NewGuid().ToStrGuid());
@@ -142,9 +142,9 @@ namespace Database.Tables.Houses {
             ess.SaveToDB();
         }
 
-        [JetBrains.Annotations.NotNull]
-        private static EnergyStorage AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
-            [JetBrains.Annotations.NotNull] AllItemCollections aic)
+        [NotNull]
+        private static EnergyStorage AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
+            [NotNull] AllItemCollections aic)
         {
             var name =  dr.GetString("Name","no name");
             var id = dr.GetIntFromLong("ID");
@@ -180,9 +180,9 @@ namespace Database.Tables.Houses {
             return usedIns;
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
-        public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString)
+        public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString)
         {
             var house = new EnergyStorage(FindNewName(isNameTaken, "New Energy Storage Device "),
                 "New energy storage device description", null, 5, 5,
@@ -199,9 +199,9 @@ namespace Database.Tables.Houses {
             }
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
-        public static EnergyStorage ImportFromItem([JetBrains.Annotations.NotNull] EnergyStorage toImport, [JetBrains.Annotations.NotNull] Simulator dstSim)
+        public static EnergyStorage ImportFromItem([NotNull] EnergyStorage toImport, [NotNull] Simulator dstSim)
         {
             if(toImport.LoadType == null) {
                 throw new LPGException("Load type was null");
@@ -225,7 +225,7 @@ namespace Database.Tables.Houses {
             return es;
         }
 
-        private static bool IsCorrectParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull]DBBase child)
+        private static bool IsCorrectParent([NotNull] DBBase parent, [NotNull]DBBase child)
         {
             var hd = (EnergyStorageSignal) child;
             if (parent.ID == hd.EnergyStorageID) {
@@ -242,8 +242,8 @@ namespace Database.Tables.Houses {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<EnergyStorage> result, [JetBrains.Annotations.NotNull] string connectionString,
-            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<VLoadType> loadTypes,ObservableCollection<Variable> variables, bool ignoreMissingTables)
+        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<EnergyStorage> result, [NotNull] string connectionString,
+            [ItemNotNull] [NotNull] ObservableCollection<VLoadType> loadTypes,ObservableCollection<Variable> variables, bool ignoreMissingTables)
         {
             var aic = new AllItemCollections(loadTypes: loadTypes);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);
@@ -253,7 +253,7 @@ namespace Database.Tables.Houses {
             SetSubitems(new List<DBBase>(result), new List<DBBase>(esss), IsCorrectParent, ignoreMissingTables);
         }
 
-        public void RemoveSignal([JetBrains.Annotations.NotNull] EnergyStorageSignal ess)
+        public void RemoveSignal([NotNull] EnergyStorageSignal ess)
         {
             _signals.Remove(ess);
             ess.DeleteFromDB();

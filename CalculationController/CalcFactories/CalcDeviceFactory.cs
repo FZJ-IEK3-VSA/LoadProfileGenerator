@@ -40,18 +40,18 @@ using JetBrains.Annotations;
 
 namespace CalculationController.CalcFactories {
     public class CalcDeviceFactory {
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private readonly AvailabilityDtoRepository _availabilityDtoRepository;
 
-        [JetBrains.Annotations.NotNull] private readonly CalcVariableRepository _calcVariableRepository;
+        [NotNull] private readonly CalcVariableRepository _calcVariableRepository;
         private readonly CalcRepo _calcRepo;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private readonly CalcLoadTypeDictionary _loadTypeDictionary;
 
-        public CalcDeviceFactory([JetBrains.Annotations.NotNull] CalcLoadTypeDictionary loadTypeDictionary,
-                                 [JetBrains.Annotations.NotNull] AvailabilityDtoRepository availabilityDtoRepository,
-            [JetBrains.Annotations.NotNull] CalcVariableRepository calcVariableRepository, CalcRepo calcRepo)
+        public CalcDeviceFactory([NotNull] CalcLoadTypeDictionary loadTypeDictionary,
+                                 [NotNull] AvailabilityDtoRepository availabilityDtoRepository,
+            [NotNull] CalcVariableRepository calcVariableRepository, CalcRepo calcRepo)
         {
             _loadTypeDictionary = loadTypeDictionary;
             _availabilityDtoRepository = availabilityDtoRepository;
@@ -59,11 +59,11 @@ namespace CalculationController.CalcFactories {
             _calcRepo = calcRepo;
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [ItemNotNull]
         public List<CalcAutoDev> MakeCalcAutoDevs(
-            [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcAutoDevDto> autoDevices,
-            [JetBrains.Annotations.NotNull] DtoCalcLocationDict locationDict)
+            [NotNull][ItemNotNull] List<CalcAutoDevDto> autoDevices,
+            [NotNull] DtoCalcLocationDict locationDict)
         {
             var autodevs = new List<CalcAutoDev>(autoDevices.Count);
             foreach (var autoDevDto in autoDevices) {
@@ -106,8 +106,8 @@ namespace CalculationController.CalcFactories {
             return autodevs;
         }
 
-        [JetBrains.Annotations.NotNull]
-        public static CalcProfile MakeCalcProfile([JetBrains.Annotations.NotNull] CalcProfileDto cpd, [JetBrains.Annotations.NotNull] CalcParameters calcParameters)
+        [NotNull]
+        public static CalcProfile MakeCalcProfile([NotNull] CalcProfileDto cpd, [NotNull] CalcParameters calcParameters)
         {
             CalcProfile cp = new CalcProfile(cpd.Name, cpd.Guid, calcParameters.InternalStepsize,
                 cpd.ProfileType,cpd.DataSource);
@@ -118,8 +118,8 @@ namespace CalculationController.CalcFactories {
             return cp;
         }
 
-        [JetBrains.Annotations.NotNull]
-        public static CalcProfile GetCalcProfile([JetBrains.Annotations.NotNull] TimeBasedProfile timeBasedProfile, TimeSpan ts)
+        [NotNull]
+        public static CalcProfile GetCalcProfile([NotNull] TimeBasedProfile timeBasedProfile, TimeSpan ts)
         {
             CalcProfile cp = new CalcProfile(timeBasedProfile.Name, Guid.NewGuid().ToStrGuid(),
                 ts,(ProfileType)  timeBasedProfile.TimeProfileType, timeBasedProfile.DataSource);
@@ -131,10 +131,10 @@ namespace CalculationController.CalcFactories {
             return cp;
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [ItemNotNull]
-        public static List<CalcDeviceLoad> MakeCalcDeviceLoads([JetBrains.Annotations.NotNull] CalcAutoDevDto device,
-                                                               [JetBrains.Annotations.NotNull] CalcLoadTypeDictionary calcLoadTypeDictionary)
+        public static List<CalcDeviceLoad> MakeCalcDeviceLoads([NotNull] CalcAutoDevDto device,
+                                                               [NotNull] CalcLoadTypeDictionary calcLoadTypeDictionary)
         {
             var deviceLoads = new List<CalcDeviceLoad>();
             foreach (var ltdto in device.Loads)
@@ -152,10 +152,10 @@ namespace CalculationController.CalcFactories {
             return deviceLoads;
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [ItemNotNull]
-        public static List<CalcDeviceLoad> MakeCalcDeviceLoads([JetBrains.Annotations.NotNull] CalcDeviceDto device,
-                                                               [JetBrains.Annotations.NotNull] CalcLoadTypeDictionary calcLoadTypeDictionary)
+        public static List<CalcDeviceLoad> MakeCalcDeviceLoads([NotNull] CalcDeviceDto device,
+                                                               [NotNull] CalcLoadTypeDictionary calcLoadTypeDictionary)
         {
             var deviceLoads = new List<CalcDeviceLoad>();
             foreach (var ltdto in device.Loads) {
@@ -171,9 +171,9 @@ namespace CalculationController.CalcFactories {
             return deviceLoads;
         }
 
-        public void MakeCalcDevices([JetBrains.Annotations.NotNull][ItemNotNull] List<CalcLocation> locs, [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcDeviceDto> calcDeviceDtos,
-                                    [ItemNotNull] [JetBrains.Annotations.NotNull] List<CalcDevice> calcDevices,
-                                    [JetBrains.Annotations.NotNull] HouseholdKey householdKey, [JetBrains.Annotations.NotNull] CalcLoadTypeDictionary calcLoadTypeDictionary, CalcRepo calcRepo)
+        public void MakeCalcDevices([NotNull][ItemNotNull] List<CalcLocation> locs, [NotNull][ItemNotNull] List<CalcDeviceDto> calcDeviceDtos,
+                                    [ItemNotNull] [NotNull] List<CalcDevice> calcDevices,
+                                    [NotNull] HouseholdKey householdKey, [NotNull] CalcLoadTypeDictionary calcLoadTypeDictionary, CalcRepo calcRepo)
         {
             foreach (var cdd in calcDeviceDtos) {
                 var cloc = locs.First(x => x.Guid == cdd.LocationGuid);

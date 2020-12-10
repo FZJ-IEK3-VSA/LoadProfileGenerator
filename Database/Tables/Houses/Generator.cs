@@ -50,8 +50,8 @@ namespace Database.Tables.Houses {
 
         private double _scalingFactor;
 
-        public Generator([JetBrains.Annotations.NotNull] string pName, [CanBeNull] string description, [CanBeNull] VLoadType loadType, double scalingFactor,
-            [CanBeNull] DateBasedProfile dateBasedProfile, [JetBrains.Annotations.NotNull] string connectionString, StrGuid guid, [CanBeNull] int? pID = null)
+        public Generator([NotNull] string pName, [CanBeNull] string description, [CanBeNull] VLoadType loadType, double scalingFactor,
+            [CanBeNull] DateBasedProfile dateBasedProfile, [NotNull] string connectionString, StrGuid guid, [CanBeNull] int? pID = null)
             : base(pName, TableName, connectionString, guid)
         {
             ID = pID;
@@ -94,9 +94,9 @@ namespace Database.Tables.Houses {
             set => SetValueWithNotify(value, ref _scalingFactor, nameof(ScalingFactor));
         }
 
-        [JetBrains.Annotations.NotNull]
-        private static Generator AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
-            [JetBrains.Annotations.NotNull] AllItemCollections aic)
+        [NotNull]
+        private static Generator AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
+            [NotNull] AllItemCollections aic)
         {
             var name = (string) dr["Name"];
             if (name == null) {
@@ -119,16 +119,16 @@ namespace Database.Tables.Houses {
             return new Generator(name, description, vlt, scalingFactor, dbp, connectionString,guid, id);
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
-        public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString)
+        public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString)
         {
             var generator = new Generator(FindNewName(isNameTaken, "New Generator "), "New generator description",
                 null, 1, null, connectionString, System.Guid.NewGuid().ToStrGuid());
             return generator;
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public double[] GetValues(DateTime startTime, DateTime endTime, TimeSpan stepSize)
         {
             if (_dateBasedProfile == null) {
@@ -141,9 +141,9 @@ namespace Database.Tables.Houses {
             return values;
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
-        public static Generator ImportFromItem([JetBrains.Annotations.NotNull] Generator toImport, [JetBrains.Annotations.NotNull] Simulator dstSim)
+        public static Generator ImportFromItem([NotNull] Generator toImport, [NotNull] Simulator dstSim)
         {
             var vlt = GetItemFromListByName(dstSim.LoadTypes.Items, toImport.LoadType?.Name);
             var prof = GetItemFromListByName(dstSim.DateBasedProfiles.Items,
@@ -161,8 +161,8 @@ namespace Database.Tables.Houses {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Generator> result, [JetBrains.Annotations.NotNull] string connectionString,
-            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<VLoadType> loadTypes, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DateBasedProfile> dateBasedProfiles,
+        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<Generator> result, [NotNull] string connectionString,
+            [ItemNotNull] [NotNull] ObservableCollection<VLoadType> loadTypes, [ItemNotNull] [NotNull] ObservableCollection<DateBasedProfile> dateBasedProfiles,
             bool ignoreMissingTables)
         {
             var aic = new AllItemCollections(loadTypes: loadTypes, dateBasedProfiles: dateBasedProfiles);

@@ -47,11 +47,11 @@ using LoadProfileGenerator.Views.Houses;
 
 namespace LoadProfileGenerator.Presenters.Houses {
     public class LoadTypeSelection {
-        [JetBrains.Annotations.NotNull] private readonly Action _refreshSettlement;
+        [NotNull] private readonly Action _refreshSettlement;
         private bool _enabled;
 
 
-        public LoadTypeSelection([JetBrains.Annotations.NotNull] Action refreshSettlement, [JetBrains.Annotations.NotNull] VLoadType loadType, bool enabled)
+        public LoadTypeSelection([NotNull] Action refreshSettlement, [NotNull] VLoadType loadType, bool enabled)
         {
             _refreshSettlement = refreshSettlement;
             LoadType = loadType;
@@ -71,21 +71,21 @@ namespace LoadProfileGenerator.Presenters.Houses {
             }
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public VLoadType LoadType { get; }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public string Name => LoadType.PrettyName;
     }
 
     public class SettlementPresenter : PresenterBaseDBBase<SettlementView> {
-        [JetBrains.Annotations.NotNull] private readonly EnergyIntensityConverter _eic = new EnergyIntensityConverter();
-        [JetBrains.Annotations.NotNull] private readonly Settlement _settlement;
+        [NotNull] private readonly EnergyIntensityConverter _eic = new EnergyIntensityConverter();
+        [NotNull] private readonly Settlement _settlement;
         private CalcObjectType _selectedCalcObjectType;
 
-        public SettlementPresenter([JetBrains.Annotations.NotNull] ApplicationPresenter applicationPresenter,
-                                   [JetBrains.Annotations.NotNull] SettlementView view,
-                                   [JetBrains.Annotations.NotNull] Settlement settlement) : base(view, "ThisSettlement.HeaderString", settlement, applicationPresenter)
+        public SettlementPresenter([NotNull] ApplicationPresenter applicationPresenter,
+                                   [NotNull] SettlementView view,
+                                   [NotNull] Settlement settlement) : base(view, "ThisSettlement.HeaderString", settlement, applicationPresenter)
         {
             _settlement = settlement;
             UpdateInternalTimesteps();
@@ -101,29 +101,29 @@ namespace LoadProfileGenerator.Presenters.Houses {
         }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<Settlement.AgeEntry> AgeEntries { get; } = new ObservableCollection<Settlement.AgeEntry>();
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<CalcObjectType> CalcObjectTypes { get; }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public Dictionary<CreationType, string> CreationTypes => CreationTypeHelper.CreationTypeDictionary;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<string> DefaultTimeSteps { get; } = new ObservableCollection<string>();
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<EnergyIntensityConverter.EnergyIntensityForDisplay> EnergyIntensities => _eic.All;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public EnergyIntensityConverter.EnergyIntensityForDisplay EnergyIntensity {
             get => _eic.GetAllDisplayElement(ThisSettlement.EnergyIntensityType);
@@ -142,17 +142,17 @@ namespace LoadProfileGenerator.Presenters.Houses {
         }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<string> ExternalTimeSteps { get; } = new ObservableCollection<string>();
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<GeographicLocation> GeographicLocations => Sim.GeographicLocations.Items;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<House> Houses => Sim.Houses.Items;
 
@@ -190,28 +190,28 @@ namespace LoadProfileGenerator.Presenters.Houses {
         }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<TagEntry> LivingPatternEntries { get; } = new ObservableCollection<TagEntry>();
 
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<LoadTypeSelection> LoadTypeList { get; } = new ObservableCollection<LoadTypeSelection>();
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<ModularHousehold> ModularHouseholds => Sim.ModularHouseholds.Items;
 
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<string> NotSelectedOptions { get; } = new ObservableCollection<string>();
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public Dictionary<OutputFileDefault, string> OutputFileDefaults => OutputFileDefaultHelper.OutputFileDefaultDictionary;
 
@@ -233,11 +233,11 @@ namespace LoadProfileGenerator.Presenters.Houses {
         public OutputFileDefault SelectedOptionDefault { get; set; }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<string> SelectedOptions { get; } = new ObservableCollection<string>();
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public string Statistics {
             get {
@@ -266,16 +266,16 @@ namespace LoadProfileGenerator.Presenters.Houses {
         }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<TagEntry> TagEntries { get; } = new ObservableCollection<TagEntry>();
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<TemperatureProfile> TemperatureProfiles => Sim.TemperatureProfiles.Items;
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public Settlement ThisSettlement => _settlement;
 
@@ -291,9 +291,9 @@ namespace LoadProfileGenerator.Presenters.Houses {
             }
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
-        public SettlementHH AddCalcObject([JetBrains.Annotations.NotNull] ICalcObject calcObject, int count)
+        public SettlementHH AddCalcObject([NotNull] ICalcObject calcObject, int count)
         {
             var shh = _settlement.AddHousehold(calcObject, count);
             _settlement.SaveToDB();
@@ -343,7 +343,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
             return presenter?.ThisSettlement.Equals(_settlement) == true;
         }
 
-        public void ExportCalculationJson([JetBrains.Annotations.NotNull] string dstDirectory)
+        public void ExportCalculationJson([NotNull] string dstDirectory)
         {
             //copy entire directory and db3 file
             if (!Directory.Exists(dstDirectory)) {
@@ -463,7 +463,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
             }
         }
 
-        public void RemoveHousehold([JetBrains.Annotations.NotNull] SettlementHH shh)
+        public void RemoveHousehold([NotNull] SettlementHH shh)
         {
             _settlement.DeleteSettlementHHFromDB(shh);
             _settlement.SaveToDB();
@@ -546,7 +546,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
         }
 
         public class TagEntry {
-            public TagEntry([JetBrains.Annotations.NotNull] string tag, int count)
+            public TagEntry([NotNull] string tag, int count)
             {
                 Tag = tag;
                 Count = count;
@@ -555,7 +555,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
             [UsedImplicitly]
             public int Count { get; }
 
-            [JetBrains.Annotations.NotNull]
+            [NotNull]
             public string Tag { get; }
         }
     }

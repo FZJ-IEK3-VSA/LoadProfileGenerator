@@ -517,7 +517,7 @@ namespace Database.Tables.ModularHouseholds {
         [JetBrains.Annotations.NotNull]
         public HouseholdTemplate MakeCopy([JetBrains.Annotations.NotNull] Simulator sim)
         {
-            var jsonTemplate = this.GetJson();
+            var jsonTemplate = GetJson();
             var newtemplate = sim.HouseholdTemplates.CreateNewItem(sim.ConnectionString);
             jsonTemplate.Name = jsonTemplate.Name + " (copy)";
             newtemplate.ImportFromJsonTemplate(jsonTemplate,sim);

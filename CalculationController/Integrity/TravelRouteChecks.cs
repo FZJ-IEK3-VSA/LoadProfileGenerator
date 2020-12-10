@@ -56,7 +56,7 @@ namespace CalculationController.Integrity
 
         }
 
-        public void CheckRouteCompleteness([JetBrains.Annotations.NotNull] TravelRouteSet travelRouteSet, [JetBrains.Annotations.NotNull] [ItemNotNull] List<Site> sites)
+        public void CheckRouteCompleteness([NotNull] TravelRouteSet travelRouteSet, [NotNull] [ItemNotNull] List<Site> sites)
         {
             //figure out if every site is connected to every other site
             foreach (Site siteA in sites) {

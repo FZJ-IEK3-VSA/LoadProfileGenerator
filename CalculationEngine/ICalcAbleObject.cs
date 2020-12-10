@@ -38,28 +38,28 @@ namespace CalculationEngine
 {
     public interface ICalcAbleObject : IDisposable
     {
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         string Name { get; }
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         HouseholdKey HouseholdKey { get;  }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [ItemNotNull]
         List<CalcAutoDev> CollectAutoDevs();
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [ItemNotNull]
         List<CalcDevice> CollectDevices();
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [ItemNotNull]
         List<CalcLocation> CollectLocations();
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [ItemNotNull]
         List<CalcPerson> CollectPersons();
         void DumpHouseholdContentsToText();
         void FinishCalculation();
 
-        void Init( [JetBrains.Annotations.NotNull] DayLightStatus daylightArray, int simulationSeed);
+        void Init( [NotNull] DayLightStatus daylightArray, int simulationSeed);
 //void WriteInformation();
-        void RunOneStep([JetBrains.Annotations.NotNull] TimeStep timestep, DateTime now, bool runProcessing);
+        void RunOneStep([NotNull] TimeStep timestep, DateTime now, bool runProcessing);
     }
 }

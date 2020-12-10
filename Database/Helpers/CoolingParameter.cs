@@ -32,17 +32,17 @@ using JetBrains.Annotations;
 
 namespace Database.Helpers {
     public class CoolingParameter {
-        public CoolingParameter([ItemNotNull] [JetBrains.Annotations.NotNull] List<DbCalcDegreeHour> degreeDays, [JetBrains.Annotations.NotNull] VLoadType heatingLoadType, double yearlyConsumption) {
+        public CoolingParameter([ItemNotNull] [NotNull] List<DbCalcDegreeHour> degreeDays, [NotNull] VLoadType heatingLoadType, double yearlyConsumption) {
             DegreeHours = degreeDays;
             CoolingLoadType = heatingLoadType;
             YearlyConsumption = yearlyConsumption;
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public VLoadType CoolingLoadType { get; }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public List<DbCalcDegreeHour> DegreeHours { get; }
 
         public double YearlyConsumption { get; }

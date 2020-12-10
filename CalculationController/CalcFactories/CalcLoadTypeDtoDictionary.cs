@@ -7,13 +7,13 @@ using JetBrains.Annotations;
 namespace CalculationController.CalcFactories {
     public class CalcLoadTypeDtoDictionary
     {
-        public CalcLoadTypeDtoDictionary([JetBrains.Annotations.NotNull] Dictionary<VLoadType, CalcLoadTypeDto> ltdtodict)
+        public CalcLoadTypeDtoDictionary([NotNull] Dictionary<VLoadType, CalcLoadTypeDto> ltdtodict)
         {
             Ltdtodict = ltdtodict;
             //_guids = new HashSet<string>(ltdtodict.Values.Select(x => x.Guid));
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public Dictionary<VLoadType, CalcLoadTypeDto> Ltdtodict { get; }
 
         //public const string TableName = "CalcLoadTypeDtoDictionary";
@@ -22,8 +22,8 @@ namespace CalculationController.CalcFactories {
         [JetBrains.Annotations.NotNull]
         private readonly HashSet<string> _guids;*/
 
-        [JetBrains.Annotations.NotNull]
-        public CalcLoadTypeDto GetLoadtypeDtoByLoadType([JetBrains.Annotations.NotNull] VLoadType loadType)
+        [NotNull]
+        public CalcLoadTypeDto GetLoadtypeDtoByLoadType([NotNull] VLoadType loadType)
         {
             return Ltdtodict[loadType];
         }
@@ -38,7 +38,7 @@ namespace CalculationController.CalcFactories {
             return false;
         }*/
 
-        public bool SimulateLoadtype([JetBrains.Annotations.NotNull] VLoadType lt)
+        public bool SimulateLoadtype([NotNull] VLoadType lt)
         {
             if (Ltdtodict.ContainsKey(lt))
             {
@@ -49,7 +49,7 @@ namespace CalculationController.CalcFactories {
         }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public List<CalcLoadTypeDto> GetLoadTypeDtos()
         {
             return Ltdtodict.Values.ToList();

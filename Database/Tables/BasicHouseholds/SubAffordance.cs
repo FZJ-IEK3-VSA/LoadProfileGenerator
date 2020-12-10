@@ -46,15 +46,15 @@ using JetBrains.Annotations;
 namespace Database.Tables.BasicHouseholds {
     public class SubAffordance : DBBaseElement {
         public const string TableName = "tblSubAffordances";
-        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<SubAffordanceDesire> _subAffordanceDesires;
-        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<SubAffordanceVariableOp> _subAffordanceVariableOps;
+        [ItemNotNull] [NotNull] private readonly ObservableCollection<SubAffordanceDesire> _subAffordanceDesires;
+        [ItemNotNull] [NotNull] private readonly ObservableCollection<SubAffordanceVariableOp> _subAffordanceVariableOps;
         private bool _isInterruptable;
         private bool _isInterrupting;
         private int _maximumAge;
         private int _minimumAge;
         private PermittedGender _permittedGender;
 
-        public SubAffordance([JetBrains.Annotations.NotNull] string pName, [CanBeNull] int? id, PermittedGender permittedGender, [JetBrains.Annotations.NotNull] string connectionString,
+        public SubAffordance([NotNull] string pName, [CanBeNull] int? id, PermittedGender permittedGender, [NotNull] string connectionString,
             bool isInterruptable, bool isInterrupting, int maximumAge, int minimumAge, StrGuid guid) : base(pName, TableName,
             connectionString, guid)
         {
@@ -69,7 +69,7 @@ namespace Database.Tables.BasicHouseholds {
             _minimumAge = minimumAge;
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public string DesireList {
             get {
                 var builder = new StringBuilder();
@@ -117,15 +117,15 @@ namespace Database.Tables.BasicHouseholds {
         }
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public ObservableCollection<SubAffordanceDesire> SubAffordanceDesires => _subAffordanceDesires;
 
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
         public ObservableCollection<SubAffordanceVariableOp> SubAffordanceVariableOps => _subAffordanceVariableOps;
 
-        public void AddDesire([JetBrains.Annotations.NotNull] Desire desire, decimal satisfactionvalue, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Desire> simdesires)
+        public void AddDesire([NotNull] Desire desire, decimal satisfactionvalue, [ItemNotNull] [NotNull] ObservableCollection<Desire> simdesires)
         {
             for (var i = 0; i < _subAffordanceDesires.Count; i++) {
                 if (_subAffordanceDesires[i].Desire == desire) {
@@ -144,7 +144,7 @@ namespace Database.Tables.BasicHouseholds {
         }
 
         public void AddVariableOperation(double value, VariableLocationMode clm, [CanBeNull] Location loc,
-            VariableAction action, [JetBrains.Annotations.NotNull] Variable variable, VariableExecutionTime variableExecutionTime)
+            VariableAction action, [NotNull] Variable variable, VariableExecutionTime variableExecutionTime)
         {
             var itemstodelete = _subAffordanceVariableOps
                 .Where(x => x.Variable == variable && x.LocationMode == clm && x.Location == loc)
@@ -161,9 +161,9 @@ namespace Database.Tables.BasicHouseholds {
             _subAffordanceVariableOps.Sort();
         }
 
-        [JetBrains.Annotations.NotNull]
-        private static SubAffordance AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
-            [JetBrains.Annotations.NotNull] AllItemCollections aic)
+        [NotNull]
+        private static SubAffordance AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
+            [NotNull] AllItemCollections aic)
         {
             var id = dr.GetIntFromLong("ID");
             var name =dr.GetString("Name","(no name)");
@@ -182,9 +182,9 @@ namespace Database.Tables.BasicHouseholds {
             return aff;
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
-        public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString)
+        public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString)
         {
             var subAffordance = new SubAffordance(FindNewName(isNameTaken, "New Sub-Affordance "), null,
                 PermittedGender.All, connectionString, false, false, 0, 99,
@@ -192,7 +192,7 @@ namespace Database.Tables.BasicHouseholds {
             return subAffordance;
         }
 
-        public bool DeleteAffordanceDesireFromDB([JetBrains.Annotations.NotNull] SubAffordanceDesire affd)
+        public bool DeleteAffordanceDesireFromDB([NotNull] SubAffordanceDesire affd)
         {
             affd.DeleteFromDB();
             _subAffordanceDesires.Remove(affd);
@@ -210,7 +210,7 @@ namespace Database.Tables.BasicHouseholds {
             }
         }
 
-        public void DeleteVariableOpFromDB([JetBrains.Annotations.NotNull] SubAffordanceVariableOp affd)
+        public void DeleteVariableOpFromDB([NotNull] SubAffordanceVariableOp affd)
         {
             affd.DeleteFromDB();
             _subAffordanceVariableOps.Remove(affd);
@@ -233,9 +233,9 @@ namespace Database.Tables.BasicHouseholds {
             return usedins;
         }
 
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         [UsedImplicitly]
-        public static DBBase ImportFromItem([JetBrains.Annotations.NotNull] SubAffordance item,[JetBrains.Annotations.NotNull] Simulator dstSim)
+        public static DBBase ImportFromItem([NotNull] SubAffordance item,[NotNull] Simulator dstSim)
         {
             var subaff = new SubAffordance(item.Name, null, item.PermittedGender,dstSim.ConnectionString,
                 item.IsInterruptable, item.IsInterrupting, item.MaximumAge, item.MinimumAge,item.Guid);
@@ -267,7 +267,7 @@ namespace Database.Tables.BasicHouseholds {
             return subaff;
         }
 
-        private static bool IsCorrectParentDesire([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
+        private static bool IsCorrectParentDesire([NotNull] DBBase parent, [NotNull] DBBase child)
         {
             var affdes = (SubAffordanceDesire) child;
             if (parent.ID == affdes.SubaffordanceID) {
@@ -279,7 +279,7 @@ namespace Database.Tables.BasicHouseholds {
             return false;
         }
 
-        private static bool IsCorrectParentVariableOp([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
+        private static bool IsCorrectParentVariableOp([NotNull] DBBase parent, [NotNull] DBBase child)
         {
             var affdes = (SubAffordanceVariableOp) child;
             if (parent.ID == affdes.AffordanceID) {
@@ -296,9 +296,9 @@ namespace Database.Tables.BasicHouseholds {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<SubAffordance> result, [JetBrains.Annotations.NotNull] string connectionString,
-            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Desire> desires, bool ignoreMissingTables, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Location> locations,
-            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Variable> variables)
+        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<SubAffordance> result, [NotNull] string connectionString,
+            [ItemNotNull] [NotNull] ObservableCollection<Desire> desires, bool ignoreMissingTables, [ItemNotNull] [NotNull] ObservableCollection<Location> locations,
+            [ItemNotNull] [NotNull] ObservableCollection<Variable> variables)
         {
             var aic = new AllItemCollections(desires: desires);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);

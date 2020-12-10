@@ -20,33 +20,33 @@ namespace CalculationController.DtoFactories
 {
     public class CalcModularHouseholdDtoFactory
     {
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private readonly CalcLoadTypeDtoDictionary _ltDict;
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private readonly Random _random;
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private readonly CalcPersonDtoFactory _calcPersonDtoFactory;
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private readonly CalcDeviceDtoFactory _calcDeviceDtoFactory;
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private readonly CalcLocationDtoFactory _calcLocationDtoFactory;
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private readonly CalcVariableDtoFactory _calcVariableRepositoryDtoFactory;
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private readonly CalcAffordanceDtoFactory _calcAffordanceDtoFactory;
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         private readonly CalcTransportationDtoFactory _transportationDtoFactory;
 
         private readonly CalcRepo _calcRepo;
 
 
-        public CalcModularHouseholdDtoFactory([JetBrains.Annotations.NotNull] CalcLoadTypeDtoDictionary ltDict, [JetBrains.Annotations.NotNull] Random random,
-            [JetBrains.Annotations.NotNull] CalcPersonDtoFactory calcPersonDtoFactory,
-            [JetBrains.Annotations.NotNull] CalcDeviceDtoFactory calcDeviceDtoFactory,
-            [JetBrains.Annotations.NotNull] CalcLocationDtoFactory calcLocationDtoFactory,
-            [JetBrains.Annotations.NotNull] CalcVariableDtoFactory calcVariableRepositoryDtoFactory,
-            [JetBrains.Annotations.NotNull] CalcAffordanceDtoFactory calcAffordanceDtoFactory,
-                                              [JetBrains.Annotations.NotNull] CalcTransportationDtoFactory transportationDtoFactory,
+        public CalcModularHouseholdDtoFactory([NotNull] CalcLoadTypeDtoDictionary ltDict, [NotNull] Random random,
+            [NotNull] CalcPersonDtoFactory calcPersonDtoFactory,
+            [NotNull] CalcDeviceDtoFactory calcDeviceDtoFactory,
+            [NotNull] CalcLocationDtoFactory calcLocationDtoFactory,
+            [NotNull] CalcVariableDtoFactory calcVariableRepositoryDtoFactory,
+            [NotNull] CalcAffordanceDtoFactory calcAffordanceDtoFactory,
+                                              [NotNull] CalcTransportationDtoFactory transportationDtoFactory,
                                               CalcRepo calcRepo)
         {
             _ltDict = ltDict;
@@ -59,10 +59,10 @@ namespace CalculationController.DtoFactories
             _transportationDtoFactory = transportationDtoFactory;
             _calcRepo = calcRepo;
         }
-        [JetBrains.Annotations.NotNull]
-        public CalcHouseholdDto MakeCalcModularHouseholdDto([JetBrains.Annotations.NotNull] Simulator sim, [JetBrains.Annotations.NotNull] ModularHousehold mhh,
-            [JetBrains.Annotations.NotNull] TemperatureProfile temperatureProfile, [JetBrains.Annotations.NotNull] HouseholdKey householdKey, [JetBrains.Annotations.NotNull] GeographicLocation geographicLocation,
-            [JetBrains.Annotations.NotNull] out LocationDtoDict locationDict,
+        [NotNull]
+        public CalcHouseholdDto MakeCalcModularHouseholdDto([NotNull] Simulator sim, [NotNull] ModularHousehold mhh,
+            [NotNull] TemperatureProfile temperatureProfile, [NotNull] HouseholdKey householdKey, [NotNull] GeographicLocation geographicLocation,
+            [NotNull] out LocationDtoDict locationDict,
             [CanBeNull] TransportationDeviceSet transportationDeviceSet,
             [CanBeNull] TravelRouteSet travelRouteSet, EnergyIntensityType energyIntensity,
                                                             [CanBeNull] ChargingStationSet chargingStationSet)
@@ -228,8 +228,8 @@ namespace CalculationController.DtoFactories
             _srls.SaveToDatabase(deviceDefs);
         }*/
 
-        private static void CollectDevicesFromTrait([JetBrains.Annotations.NotNull] HouseholdTrait hht,
-            [JetBrains.Annotations.NotNull][ItemNotNull] List<DeviceLocationTuple> deviceList)
+        private static void CollectDevicesFromTrait([NotNull] HouseholdTrait hht,
+            [NotNull][ItemNotNull] List<DeviceLocationTuple> deviceList)
         {
             var allDevices = hht.CollectDevicesFromTrait();
             foreach (var dev in allDevices)

@@ -15,7 +15,7 @@ namespace CalculationController.Integrity {
         public LocationChecker(bool performCleanupChecks) : base("Locations", performCleanupChecks) {
         }
 
-        private static void CheckDevicesAtLocation([JetBrains.Annotations.NotNull] Location location) {
+        private static void CheckDevicesAtLocation([NotNull] Location location) {
             var devices = location.LocationDevices.Select(x => x.Device).Distinct().ToList();
             foreach (var device in devices) {
                 var selectedLocationDevices =
@@ -52,7 +52,7 @@ namespace CalculationController.Integrity {
             }
         }
 
-        private static void CheckForDuplicateDevices([JetBrains.Annotations.NotNull] Location location) {
+        private static void CheckForDuplicateDevices([NotNull] Location location) {
             var alldevices = location.LocationDevices.Select(x => x.Device).ToList();
             var distinctdevices = alldevices.Distinct().ToList();
             if (alldevices.Count != distinctdevices.Count) {
@@ -61,8 +61,8 @@ namespace CalculationController.Integrity {
             }
         }
 
-        private static void CheckUses([JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<Location> locations,
-            [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<HouseholdTrait> traits, [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<HouseType> houseTypes) {
+        private static void CheckUses([NotNull][ItemNotNull] ObservableCollection<Location> locations,
+            [NotNull][ItemNotNull] ObservableCollection<HouseholdTrait> traits, [NotNull][ItemNotNull] ObservableCollection<HouseType> houseTypes) {
             var usedLocations = new List<Location>();
             foreach (var trait in traits) {
                 foreach (var location in trait.Locations) {
