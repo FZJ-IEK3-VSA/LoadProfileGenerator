@@ -115,12 +115,16 @@ Starting form March 2020 the development has been supported by the Forschungszen
 
 # References
 
-The LPG has been used in various paper for various applications.
+The LPG has been used in many paper for various applications. To demonstrate what the LPG can be used for, six citing papers have been randomly selected:
 
-For example [@harder_cost_2020] used the LPG to analyze operating flexibility. [@bockl_hyflowhybrid_2019] used the generated profiles for an evaluation of sector coupling.
-[@lovati_optimal_2020] used the model to evaluate peer-to-peer electricity trading while considering the influence of lifestyle.
-[@boeckl_sizing_2019] evaluated the optimal size of photovoltaik systems for different load profiles. And building on that [@lovati_design_2020] evaluated the impact of the load profile on optimal photovoltaik system operation.
-[@haider_data_2020] analyzed optimal ways of charging selectric cars.
+- [@harder_cost_2020] used the LPG to analyze operating flexibility in electricity grids. 
+- [@bockl_hyflowhybrid_2019] used the generated profiles for an evaluation of sector coupling.
+- [@lovati_optimal_2020] used the model to evaluate peer-to-peer electricity trading while considering the influence of lifestyle.
+- [@boeckl_sizing_2019] evaluated the optimal size of photovoltaik systems for different load profiles. 
+- And building on that [@lovati_design_2020] evaluated the impact of the load profile on optimal photovoltaik system operation.
+- [@haider_data_2020] analyzed optimal ways of charging selectric cars.
+  
+  
 
 
 
