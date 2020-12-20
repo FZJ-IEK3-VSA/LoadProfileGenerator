@@ -49,7 +49,7 @@ The stochastic approach is well-suited for situations where a lot of data is ava
 load profiles are needed and the accurate profile of the individual household is not critical.
 The second approach is building a detailed behavior simulation and use that to generate the load profile, since a 
 large part of the residential energy consumption directly depends on the actions of the residents. This approach is much more complex, 
-but yields more realistic profiles for individual households. A detailed review of different approaches of synthesizign load profiles can be found for example in [xxx grandjean]
+but yields more realistic profiles for individual households. A detailed review of different approaches of synthesizign load profiles can be found for example in [@grandjean_review_2012]
 
 The LoadProfileGenerator (LPG) implments the second approach: It implements a desire-driven human behaviour model to simulate when people are doing what and where they are. It was originally developed as PhD-thesis [@pflugradt_modellierung_2016].
 The human actions are then used to calculate energy consumption and generate the load profiles. 
@@ -83,7 +83,8 @@ In conclusion the LPG is a tool to synthesize highly detailed load profiles for 
 # Novelty of this publication
 
 The LPG has been in development since 2010, has been available free of charge the entire time, but it has only recently been open sourced 
-in Febrary 2020 under the MIT-License and this is the first publication describing the LPG as an open-source tool. Contributions and merge requests are greatly appreciated.
+in Febrary 2020 under the MIT-License. This is the first publication describing the LPG as an open-source tool. 
+Contributions and merge requests are greatly appreciated.
 
 # Statement of need
 
@@ -124,7 +125,7 @@ The LPG has been used in many paper for various applications. To demonstrate wha
 - And building on that [@lovati_design_2020] evaluated the impact of the load profile on optimal photovoltaik system operation.
 - [@haider_data_2020] analyzed optimal ways of charging selectric cars.
   
-  
+
 
 
 
