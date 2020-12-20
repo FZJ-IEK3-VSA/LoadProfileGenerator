@@ -51,13 +51,14 @@ The second approach is building a detailed behavior simulation and use that to g
 large part of the residential energy consumption directly depends on the actions of the residents. This approach is much more complex, 
 but yields more realistic profiles for individual households. A detailed review of different approaches of synthesizign load profiles can be found for example in [xxx grandjean]
 
-The LoadProfileGenerator (LPG) implments the second approach: It implements a desire-driven human behaviour model to simulate when people are doing what and where they are. It was originally developed as PhD-thesis `@pflugradt_modellierung_2016`
+The LoadProfileGenerator (LPG) implments the second approach: It implements a desire-driven human behaviour model to simulate when people are doing what and where they are. It was originally developed as PhD-thesis [@pflugradt_modellierung_2016].
 The human actions are then used to calculate energy consumption and generate the load profiles. 
 This is combined with a lot of additional details for more realistic behaviour modelling, such as illnesses, vacations, joint activities between multiple residents such as eating dinner together, 
 varying shifts from one day or one week to the next, holidays, a detailed per-room lighting model, automatically adjusted dishwasher and washing machine frequency and much more.
 
 The LPG also contains a full mobility model that tracks for every person where they are and what transport they use to get to other locations, 
-which makes it possible to also generate for example charging profiles for electric cars, electric bicycles and other vehicles.
+which makes it possible to also generate for example charging profiles for electric cars, electric bicycles and other vehicles. The different load profiles have a very strong influence on the self consumption
+for a photovolatic system for example, as has been shown in [@pflugradt_impact_2019]
 
 Automatically switching out the devices in a household is a non-trivial task, since multiple activities might use the same device with different 
 load profiles, for example a washing machine might be used to wash 30°C laundry and 60°C laundry.
@@ -71,7 +72,7 @@ to specify households with essentially "a household with a working couple,
 a husband that works in an office 9am to 5pm and a wife that works from about 7am to 3pm and each have two hobbies". The LPG can 
 then generate from this description an unlimited number of versions of the household that vary 
 for example in the hobbies, in the cooking behaviour, hygiene habits and more. This solves the issue of the load spikes by 
-simulating a realistic level of concurrency. That this works has been shown in previous publications [xxx].
+simulating a realistic level of concurrency. That this works has been shown in previous publications [@pflugradt_synthesizing_2019], [@pflugradt_simzukunft_2018].
 
 The LPG offers both a Windows GUI and a command line interface, which can be automated for example with Python. The full code base is 
 about 60.000 lines of code and includes large amount of unit and integration tests. The LPG comes with 60 predefined households for Germany, 
@@ -115,14 +116,12 @@ Starting form March 2020 the development has been supported by the Forschungszen
 # References
 
 The LPG has been used in various paper for various applications.
-`@harder_cost_2020`
-[@bockl_hyflowhybrid_2019]
-`@lovati_optimal_2020`
-`@boeckl_sizing_2019`
-`@haider_data_2020`
-`@lovati_design_2020`
+
+For example [@harder_cost_2020] used the LPG to analyze operating flexibility. [@bockl_hyflowhybrid_2019] used the generated profiles for an evaluation of sector coupling.
+[@lovati_optimal_2020] used the model to evaluate peer-to-peer electricity trading while considering the influence of lifestyle.
+[@boeckl_sizing_2019] evaluated the optimal size of photovoltaik systems for different load profiles. And building on that [@lovati_design_2020] evaluated the impact of the load profile on optimal photovoltaik system operation.
+[@haider_data_2020] analyzed optimal ways of charging selectric cars.
 
 
-•  Mention (if applicable) a representative set of past or ongoing research projects using the software and recent scholarly publications enabled by it. 
--	List of citing authors researchgate
+
 
