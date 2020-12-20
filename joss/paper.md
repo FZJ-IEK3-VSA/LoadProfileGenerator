@@ -10,10 +10,9 @@ tags:
   - electromobility
   - C#
 authors:
-  - name: Noah Pflugradt^[Corresponding Author+
-  - ]
+  - name: Noah Pflugradt
     orcid: 0000-0002-1982-8794
-    affiliation: "1, 2" # (Multiple affiliations must be quoted)
+    affiliation: "1, 2"
   - name: Peter Stenzel
     orcid: 0000-0002-3348-0122
     affiliation: "1, 2"
@@ -117,7 +116,7 @@ Starting form March 2020 the development has been supported by the Forschungszen
 
 The LPG has been used in various paper for various applications.
 `@harder_cost_2020`
-`@bockl_hyflowhybrid_2019`
+[@bockl_hyflowhybrid_2019]
 `@lovati_optimal_2020`
 `@boeckl_sizing_2019`
 `@haider_data_2020`
