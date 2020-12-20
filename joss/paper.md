@@ -33,7 +33,7 @@ affiliations:
  - name: Chair for Fuel Cells, RWTH Aachen University, c/o Institute of Techno-economic Systems Analysis (IEK-3), Forschungszentrum Jülich GmbH, Wilhelm-Johnen-Str., D-52428 Jülich, Germany
    index: 3
 date: 27 November 2020
-bibliography: paper.bib
+bibliography: references.bib
 
 ---
 
