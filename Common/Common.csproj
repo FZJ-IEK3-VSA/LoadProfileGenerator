@@ -2,15 +2,12 @@
 
   <PropertyGroup>
     <TargetFrameworks>net5.0;net5.0-windows</TargetFrameworks>
-  </PropertyGroup>
+    <DebugType>Full</DebugType>
+    <Nullable>disable</Nullable>
+ </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <PlatformTarget>x64</PlatformTarget>
-  </PropertyGroup>
-  <PropertyGroup>
-    <DebugType>Full</DebugType>
-    <Nullable>disable</Nullable>
-    <LangVersion>9</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2020.1.0" />

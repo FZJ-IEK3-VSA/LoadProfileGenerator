@@ -62,7 +62,7 @@ namespace CalculationEngine.HouseElements {
         public CalcTransformationDevice([NotNull] IOnlineDeviceActivationProcessor odap, double minValue,
             double maxValue, double minimumOutputPower, double maximumInputPower, [NotNull] CalcDeviceDto deviceDto,
             [NotNull] CalcLoadType inputLoadType)
-            : base(deviceDto.Name,  deviceDto.Guid) {
+            : base(deviceDto.Name,  deviceDto.DeviceInstanceGuid) {
             _odap = odap;
             _minValue = minValue;
             _maxValue = maxValue;

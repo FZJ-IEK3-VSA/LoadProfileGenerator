@@ -95,7 +95,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                     continue;
                 }
 
-                var deviceName = deviceArchive.Single(x => x.Device.Guid == activationEntry.DeviceGuid).Device.Name;
+                var deviceName = deviceArchive.Single(x => x.Device.DeviceInstanceGuid == activationEntry.DeviceInstanceGuid).Device.Name;
                 if (!deviceEnergyDict.ContainsKey(deviceName)) {
                     deviceEnergyDict.Add(deviceName, 0);
                 }
@@ -151,8 +151,8 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                         averageYearlyConsumptionPerDevice.Add(lt, new Dictionary<StrGuid, double>());
                     }
 
-                    if (!averageYearlyConsumptionPerDevice[lt].ContainsKey(calcDevice.Guid)) {
-                        averageYearlyConsumptionPerDevice[lt].Add(calcDevice.Guid, calcDeviceLoad.AverageYearlyConsumption);
+                    if (!averageYearlyConsumptionPerDevice[lt].ContainsKey(calcDevice.DeviceInstanceGuid)) {
+                        averageYearlyConsumptionPerDevice[lt].Add(calcDevice.DeviceInstanceGuid, calcDeviceLoad.AverageYearlyConsumption);
                     }
                 }
             }

@@ -438,9 +438,9 @@ namespace SimulationEngineLib.HouseJobProcessor {
         {
             var st = new StackTrace(x, true);
             var frames = st.GetFrames();
-            if (frames == null) {
-                return "(no frames found)";
-            }
+            //if (frames == null) {
+            //    return "(no frames found)";
+            //}
 
             var traceString = new StringBuilder();
 

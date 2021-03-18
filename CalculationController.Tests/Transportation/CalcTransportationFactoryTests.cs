@@ -53,17 +53,17 @@ namespace CalculationController.Tests.Transportation {
             var ltdict = CalcLoadTypeFactory.MakeLoadTypes(ltdtoDict);
             var parameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(2018, 1, 1)
                 .SetEndDate(new DateTime(2018, 1, 1, 2, 0, 0)).SetSettlingDays(0).EnableShowSettlingPeriod();
-            builder.Register(x => parameters).As<CalcParameters>().SingleInstance();
-            builder.Register(x => new DateStampCreator(parameters)).As<DateStampCreator>().SingleInstance();
-            builder.Register(c => ltdict).As<CalcLoadTypeDictionary>().SingleInstance();
-            builder.Register(c => ltdtoDict).As<CalcLoadTypeDtoDictionary>().SingleInstance();
-            builder.Register(c => new NormalRandom(0, 1, r)).As<NormalRandom>().SingleInstance();
-            builder.Register(c => new FileFactoryAndTracker(wd.WorkingDirectory, mhh.Name, wd.InputDataLogger))
+            builder.Register(_ => parameters).As<CalcParameters>().SingleInstance();
+            builder.Register(_ => new DateStampCreator(parameters)).As<DateStampCreator>().SingleInstance();
+            builder.Register(_ => ltdict).As<CalcLoadTypeDictionary>().SingleInstance();
+            builder.Register(_ => ltdtoDict).As<CalcLoadTypeDtoDictionary>().SingleInstance();
+            builder.Register(_ => new NormalRandom(0, 1, r)).As<NormalRandom>().SingleInstance();
+            builder.Register(_ => new FileFactoryAndTracker(wd.WorkingDirectory, mhh.Name, wd.InputDataLogger))
                 .As<FileFactoryAndTracker>()
                 .SingleInstance();
-            builder.Register(c => new SqlResultLoggingService(wd.WorkingDirectory)).As<SqlResultLoggingService>()
+            builder.Register(_ => new SqlResultLoggingService(wd.WorkingDirectory)).As<SqlResultLoggingService>()
                 .SingleInstance();
-            builder.Register(c => wd.InputDataLogger).As<IInputDataLogger>().SingleInstance();
+            builder.Register(_ => wd.InputDataLogger).As<IInputDataLogger>().SingleInstance();
 
             builder.Register(c => new OnlineLoggingData(c.Resolve<DateStampCreator>(), c.Resolve<IInputDataLogger>(),
                     c.Resolve<CalcParameters>()))
@@ -74,9 +74,9 @@ namespace CalculationController.Tests.Transportation {
             builder.RegisterType<OnlineDeviceActivationProcessor>().As<IOnlineDeviceActivationProcessor>()
                 .SingleInstance();
             builder.RegisterType<CalcModularHouseholdFactory>().As<CalcModularHouseholdFactory>().SingleInstance();
-            builder.Register(x => new DeviceCategoryPicker(r, null)).As<IDeviceCategoryPicker>().SingleInstance();
+            builder.Register(_ => new DeviceCategoryPicker(r, null)).As<IDeviceCategoryPicker>().SingleInstance();
 
-            builder.Register(x => r).As<Random>().SingleInstance();
+            builder.Register(_ => r).As<Random>().SingleInstance();
             builder.RegisterType<CalcDeviceFactory>().As<CalcDeviceFactory>().SingleInstance();
             builder.RegisterType<CalcDeviceDtoFactory>().As<CalcDeviceDtoFactory>().SingleInstance();
             builder.RegisterType<CalcLocationFactory>().As<CalcLocationFactory>().SingleInstance();
@@ -214,16 +214,16 @@ namespace CalculationController.Tests.Transportation {
                     var nr = new NormalRandom(0, 0.1, r);
                     var parameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(2018, 1, 1)
                         .SetEndDate(new DateTime(2018, 1, 1, 2, 0, 0)).SetSettlingDays(0).EnableShowSettlingPeriod();
-                    builder.Register(x => parameters).As<CalcParameters>().SingleInstance();
-                    builder.Register(x => new DateStampCreator(parameters)).As<DateStampCreator>().SingleInstance();
-                    builder.Register(c => ltdict).As<CalcLoadTypeDictionary>().SingleInstance();
-                    builder.Register(c => ltdtoDict).As<CalcLoadTypeDtoDictionary>().SingleInstance();
-                    builder.Register(c => new NormalRandom(0, 1, r)).As<NormalRandom>().SingleInstance();
-                    builder.Register(c => new FileFactoryAndTracker(path, mhh.Name, inputlogger))
+                    builder.Register(_ => parameters).As<CalcParameters>().SingleInstance();
+                    builder.Register(_ => new DateStampCreator(parameters)).As<DateStampCreator>().SingleInstance();
+                    builder.Register(_ => ltdict).As<CalcLoadTypeDictionary>().SingleInstance();
+                    builder.Register(_ => ltdtoDict).As<CalcLoadTypeDtoDictionary>().SingleInstance();
+                    builder.Register(_ => new NormalRandom(0, 1, r)).As<NormalRandom>().SingleInstance();
+                    builder.Register(_ => new FileFactoryAndTracker(path, mhh.Name, inputlogger))
                         .As<FileFactoryAndTracker>().SingleInstance();
-                    builder.Register(c => new SqlResultLoggingService(path)).As<SqlResultLoggingService>()
+                    builder.Register(_ => new SqlResultLoggingService(path)).As<SqlResultLoggingService>()
                         .SingleInstance();
-                    builder.Register(c => inputlogger).As<IInputDataLogger>().As<InputDataLogger>().SingleInstance();
+                    builder.Register(_ => inputlogger).As<IInputDataLogger>().As<InputDataLogger>().SingleInstance();
 
                     builder.Register(c => new OnlineLoggingData(c.Resolve<DateStampCreator>(),
                             c.Resolve<IInputDataLogger>(), c.Resolve<CalcParameters>())).As<OnlineLoggingData>().As<IOnlineLoggingData>()
@@ -235,10 +235,10 @@ namespace CalculationController.Tests.Transportation {
                         .SingleInstance();
                     builder.RegisterType<CalcModularHouseholdFactory>().As<CalcModularHouseholdFactory>()
                         .SingleInstance();
-                    builder.Register(x => new DeviceCategoryPicker(r, null)).As<IDeviceCategoryPicker>()
+                    builder.Register(_ => new DeviceCategoryPicker(r, null)).As<IDeviceCategoryPicker>()
                         .SingleInstance();
 
-                    builder.Register(x => r).As<Random>().SingleInstance();
+                    builder.Register(_ => r).As<Random>().SingleInstance();
                     builder.RegisterType<CalcDeviceFactory>().As<CalcDeviceFactory>().SingleInstance();
                     builder.RegisterType<CalcDeviceDtoFactory>().As<CalcDeviceDtoFactory>().SingleInstance();
                     builder.RegisterType<CalcLocationFactory>().As<CalcLocationFactory>().SingleInstance();

@@ -120,6 +120,7 @@ namespace Calculation.Tests.Transportation
                 calcdesire
             };
             CalcVariableRepository crv = new CalcVariableRepository();
+            var hhkey = new HouseholdKey("hh1");
             Mock<IOnlineDeviceActivationProcessor> iodap = new Mock<IOnlineDeviceActivationProcessor>();
             var old = new Mock<IOnlineLoggingData>();
             using (var fft = new FileFactoryAndTracker(wd.WorkingDirectory, "hh0", wd.InputDataLogger))
@@ -134,7 +135,7 @@ namespace Calculation.Tests.Transportation
                         ActionAfterInterruption.GoBackToOld, "timelimitname", 1, false,
                         "srctrait",
                         Guid.NewGuid().ToStrGuid(), crv, new List<CalcAffordance.DeviceEnergyProfileTuple>(),
-                        isBusy, BodilyActivityLevel.Low, calcRepo);
+                        isBusy, BodilyActivityLevel.Low, calcRepo, hhkey);
 
                     var srcSite = new CalcSite("srcsite", Guid.NewGuid().ToStrGuid(), key);
                     srcSite.Locations.Add(srcloc);
@@ -164,8 +165,8 @@ namespace Calculation.Tests.Transportation
                     CalcDeviceLoad cdl = new CalcDeviceLoad("bla", 1, chargingloadtype, 1, 1);
                     list.Add(cdl);
                     CalcDeviceDto cdd = new CalcDeviceDto("bus", myCategory.Guid,
-                        new HouseholdKey("hh1"), OefcDeviceType.Transportation, myCategory.Name, string.Empty,
-                        Guid.NewGuid().ToStrGuid(), string.Empty.ToStrGuid(), string.Empty);
+                        hhkey, OefcDeviceType.Transportation, myCategory.Name, string.Empty,
+                        Guid.NewGuid().ToStrGuid(), string.Empty.ToStrGuid(), string.Empty, FlexibilityType.NoFlexibility, 0);
                     var transportationDevice =
                         new CalcTransportationDevice(myCategory, 1, list, 100,
                             10, 1000, chargingloadtype, calcSites,

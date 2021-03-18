@@ -58,11 +58,12 @@ using LinearAxis = OxyPlot.Axes.LinearAxis;
 namespace LoadProfileGenerator.Views.Households {
 
     public static class LPGExtensions {
-        public static Color GetColor(this ColorRGB color)
+        public static Color GetColor([JetBrains.Annotations.NotNull] this ColorRGB color)
         {
             return Color.FromArgb(color.A, color.R, color.G, color.B);
         }
 
+        [JetBrains.Annotations.NotNull]
         public static ColorRGB GetColorRGB(this System.Windows.Media.Color color)
         {
             return new ColorRGB(color.A,color.R,color.G,color.B);

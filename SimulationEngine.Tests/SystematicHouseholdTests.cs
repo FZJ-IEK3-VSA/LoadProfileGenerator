@@ -16,7 +16,7 @@ public void TestBasicHousehold0(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -28,7 +28,7 @@ public void TestBasicHousehold1(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -40,7 +40,7 @@ public void TestBasicHousehold2(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -52,7 +52,7 @@ public void TestBasicHousehold3(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -64,7 +64,7 @@ public void TestBasicHousehold4(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -76,7 +76,7 @@ public void TestBasicHousehold5(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -88,7 +88,7 @@ public void TestBasicHousehold6(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -100,7 +100,7 @@ public void TestBasicHousehold7(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -112,7 +112,7 @@ public void TestBasicHousehold8(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -124,7 +124,7 @@ public void TestBasicHousehold9(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -136,7 +136,7 @@ public void TestBasicHousehold10(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -148,7 +148,7 @@ public void TestBasicHousehold11(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -160,7 +160,7 @@ public void TestBasicHousehold12(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -172,7 +172,7 @@ public void TestBasicHousehold13(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -184,7 +184,7 @@ public void TestBasicHousehold14(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -196,7 +196,7 @@ public void TestBasicHousehold15(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -208,7 +208,7 @@ public void TestBasicHousehold16(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -220,7 +220,7 @@ public void TestBasicHousehold17(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -232,7 +232,7 @@ public void TestBasicHousehold18(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -244,7 +244,7 @@ public void TestBasicHousehold19(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -256,7 +256,7 @@ public void TestBasicHousehold20(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -268,7 +268,7 @@ public void TestBasicHousehold21(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -280,7 +280,7 @@ public void TestBasicHousehold22(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -292,7 +292,7 @@ public void TestBasicHousehold23(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -304,7 +304,7 @@ public void TestBasicHousehold24(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -316,7 +316,7 @@ public void TestBasicHousehold25(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -328,7 +328,7 @@ public void TestBasicHousehold26(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -340,7 +340,7 @@ public void TestBasicHousehold27(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -352,7 +352,7 @@ public void TestBasicHousehold28(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -364,7 +364,7 @@ public void TestBasicHousehold29(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -376,7 +376,7 @@ public void TestBasicHousehold30(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -388,7 +388,7 @@ public void TestBasicHousehold31(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -400,7 +400,7 @@ public void TestBasicHousehold32(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -412,7 +412,7 @@ public void TestBasicHousehold33(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -424,7 +424,7 @@ public void TestBasicHousehold34(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -436,7 +436,7 @@ public void TestBasicHousehold35(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -448,7 +448,7 @@ public void TestBasicHousehold36(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -460,7 +460,7 @@ public void TestBasicHousehold37(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -472,7 +472,7 @@ public void TestBasicHousehold38(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -484,7 +484,7 @@ public void TestBasicHousehold39(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -496,7 +496,7 @@ public void TestBasicHousehold40(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -508,7 +508,7 @@ public void TestBasicHousehold41(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -520,7 +520,7 @@ public void TestBasicHousehold42(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -532,7 +532,7 @@ public void TestBasicHousehold43(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -544,7 +544,7 @@ public void TestBasicHousehold44(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -556,7 +556,7 @@ public void TestBasicHousehold45(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -568,7 +568,7 @@ public void TestBasicHousehold46(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -580,7 +580,7 @@ public void TestBasicHousehold47(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -592,7 +592,7 @@ public void TestBasicHousehold48(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -604,7 +604,7 @@ public void TestBasicHousehold49(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -616,7 +616,7 @@ public void TestBasicHousehold50(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -628,7 +628,7 @@ public void TestBasicHousehold51(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -640,7 +640,7 @@ public void TestBasicHousehold52(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -652,7 +652,7 @@ public void TestBasicHousehold53(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -664,7 +664,7 @@ public void TestBasicHousehold54(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -676,7 +676,7 @@ public void TestBasicHousehold55(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -688,7 +688,7 @@ public void TestBasicHousehold56(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -700,7 +700,7 @@ public void TestBasicHousehold57(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -712,7 +712,7 @@ public void TestBasicHousehold58(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -724,7 +724,7 @@ public void TestBasicHousehold59(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -736,7 +736,7 @@ public void TestBasicHousehold60(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -748,7 +748,7 @@ public void TestBasicHousehold61(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -760,7 +760,7 @@ public void TestBasicHousehold62(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -772,7 +772,7 @@ public void TestBasicHousehold63(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 
@@ -784,7 +784,7 @@ public void TestBasicHousehold64(){
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);
       if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }
       hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
-return hj; }, x => {});
+return hj; }, _ => {});
 }
 
 public SystematicHouseholdTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper) { }

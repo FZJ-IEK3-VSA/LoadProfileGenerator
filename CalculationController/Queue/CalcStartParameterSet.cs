@@ -72,7 +72,7 @@ namespace CalculationController.Queue {
             int selectedRandomSeed,
             TimeSpan externalTimeResolution, bool deleteDatFiles, bool writeExcelColumn, bool showSettlingPeriod,
             int settlingDays, int affordanceRepetitionCount, [NotNull] CalculationProfiler calculationProfiler, string resultPath,
-            bool transportationEnabled, bool enableIdlemode, [NotNull] string decimalSeperator)
+            bool transportationEnabled, bool enableIdlemode, [NotNull] string decimalSeperator, bool flexibilityEnabled)
         {
             OfficialSimulationStartTime = officialSimulationStartTime;
             OfficialSimulationEndTime = officialSimulationEndTime;
@@ -104,6 +104,7 @@ namespace CalculationController.Queue {
             TransportationEnabled = transportationEnabled;
             EnableIdlemode = enableIdlemode;
             DecimalSeperator = decimalSeperator;
+            FlexibilityEnabled = flexibilityEnabled;
         }
 
         /// <summary>
@@ -132,8 +133,7 @@ namespace CalculationController.Queue {
             [CanBeNull][ItemNotNull] List<string> loadTypesToProcess,
             DeviceProfileHeaderMode deviceProfileHeaderMode,
             bool ignorePreviousActivitiesWhenNeeded, string resultPath, bool transportationEnabled, bool enableIdlemode,
-            string decimalSeperator
-            )
+            string decimalSeperator, bool flexibilityEnabled)
         {
             IgnorePreviousActivitiesWhenNeeded = ignorePreviousActivitiesWhenNeeded;
             ResultPath = resultPath;
@@ -172,6 +172,7 @@ namespace CalculationController.Queue {
             TransportationEnabled = transportationEnabled;
             EnableIdlemode = enableIdlemode;
             DecimalSeperator = decimalSeperator;
+            FlexibilityEnabled = flexibilityEnabled;
         }
 
         public string ResultPath { get; set; }
@@ -258,7 +259,6 @@ namespace CalculationController.Queue {
         public bool EnableIdlemode { get; }
 
         public JsonCalcSpecification CalcSpec { get; set; }
-
-
+        public bool FlexibilityEnabled { get; set; }
     }
 }

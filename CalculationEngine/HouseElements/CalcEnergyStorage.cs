@@ -69,7 +69,7 @@ namespace CalculationEngine.HouseElements {
                                  double minimumWithdrawRate,
                                  double initialFill, double storageCapacity, EnergyStorageLogfile? elf,
                                    [NotNull] CalcDeviceDto deviceDto)
-            : base(deviceDto.Name,deviceDto.Guid)
+            : base(deviceDto.Name,deviceDto.DeviceInstanceGuid)
         {
             //_devProcessorKey = new OefcKey(householdKey, OefcDeviceType.Storage, guid, "-1", loadType.Guid,"Energy Storage");
             _odap = odap;

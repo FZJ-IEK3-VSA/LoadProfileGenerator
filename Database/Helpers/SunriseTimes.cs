@@ -39,18 +39,18 @@ using JetBrains.Annotations;
 
 namespace Database.Helpers {
     public class SunriseTimes {
-        [NotNull] private readonly GeographicLocation _geoloc;
-        [NotNull] private readonly Dictionary<DateTime, DateTime> _sunriseTimes;
-        [NotNull] private readonly Dictionary<DateTime, DateTime> _sunsetTimes;
+        [JetBrains.Annotations.NotNull] private readonly GeographicLocation _geoloc;
+        [JetBrains.Annotations.NotNull] private readonly Dictionary<DateTime, DateTime> _sunriseTimes;
+        [JetBrains.Annotations.NotNull] private readonly Dictionary<DateTime, DateTime> _sunsetTimes;
 
-        public SunriseTimes([NotNull] GeographicLocation geoloc) {
+        public SunriseTimes([JetBrains.Annotations.NotNull] GeographicLocation geoloc) {
             _geoloc = geoloc;
             _sunriseTimes = new Dictionary<DateTime, DateTime>();
             _sunsetTimes = new Dictionary<DateTime, DateTime>();
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public BitArray MakeArray(int timesteps, DateTime startTime, DateTime endTime, TimeSpan stepSize) {
             Logger.Info("Starting to calculate daylight hours...");
             MakeLists(startTime, endTime);

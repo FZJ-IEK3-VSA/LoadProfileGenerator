@@ -182,7 +182,7 @@ namespace LoadProfileGenerator.Views.BasicElements {
                 var firstdt = new DateTime(2000, 1, 1).Add(first.Time).AddSeconds(-30);
                 var minTime = DateTimeAxis.ToDouble(firstdt);
                 _dateTimeAxis.Minimum = minTime;
-                _linearAxis.Minimum = prof.ObservableDatapoints.Select(x => x.Value).Min() * 0.90;
+                _linearAxis.Minimum = prof.ObservableDatapoints.Min(x => x.Value) * 0.90;
                 if (Math.Abs(_linearAxis.Minimum) < 0.0000001) {
                     _linearAxis.Minimum = -0.1;
                 }
@@ -191,7 +191,7 @@ namespace LoadProfileGenerator.Views.BasicElements {
                 var lastdt = new DateTime(2000, 1, 1).Add(last.Time).AddSeconds(30);
                 var maxTime = DateTimeAxis.ToDouble(lastdt);
                 _dateTimeAxis.Maximum = maxTime;
-                _linearAxis.Maximum = prof.ObservableDatapoints.Select(x => x.Value).Max() * 1.10;
+                _linearAxis.Maximum = prof.ObservableDatapoints.Max(x => x.Value) * 1.10;
             }
 
             _plot.InvalidatePlot(true);

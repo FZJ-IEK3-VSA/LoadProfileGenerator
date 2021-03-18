@@ -599,7 +599,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                     null,
                     sim.MyGeneralConfig.DeviceProfileHeaderMode,
                     false, operatingPath, enableTransportation, sim.MyGeneralConfig.EnableIdlemodeBool,
-                    sim.MyGeneralConfig.DecimalSeperator);
+                    sim.MyGeneralConfig.DecimalSeperator, sim.MyGeneralConfig.EnableFlexibilityBool);
 
                 cs.Start(csps);
                 Thread.Sleep(3000);

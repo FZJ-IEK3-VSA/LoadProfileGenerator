@@ -36,8 +36,8 @@ using JetBrains.Annotations;
 namespace Database.Helpers {
     public static class MakeDegreeDaysClass {
         [ItemNotNull]
-        [NotNull]
-        public static List<DegreeDay> MakeDegreeDays([NotNull] TemperatureProfile temperatureProfile, DateTime startTime,
+        [JetBrains.Annotations.NotNull]
+        public static List<DegreeDay> MakeDegreeDays([JetBrains.Annotations.NotNull] TemperatureProfile temperatureProfile, DateTime startTime,
             DateTime endTime, double heatingTemp, double roomTemperature, double yearlyHeatingAmount, bool adjustValue,
             double referenceValue) {
             var years = new List<int>();

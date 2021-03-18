@@ -84,7 +84,7 @@ namespace CalculationController.DtoFactories
                     var devcatdto = deviceCategoryDtos.Single(x => x.FullCategoryName == rd.DeviceCategory.FullPath);
                     var clightdevice = new CalcDeviceDto(deviceName,  devcatdto.Guid,
                         householdKey, OefcDeviceType.Light, rd.DeviceCategory.FullPath,
-                        string.Empty, Guid.NewGuid().ToStrGuid(),cloc.Guid,cloc.Name);
+                        string.Empty, Guid.NewGuid().ToStrGuid(),cloc.Guid,cloc.Name, FlexibilityType.NoFlexibility, 0);
                     clightdevice.AddLoads(CalcDeviceDtoFactory.MakeCalcDeviceLoads(rd, _calcLoadTypeDict));
                     cloc.AddLightDevice(clightdevice);
                 }

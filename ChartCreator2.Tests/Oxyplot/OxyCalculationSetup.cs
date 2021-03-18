@@ -140,7 +140,7 @@ namespace ChartCreator2.Tests.Oxyplot
                     null, priority, null, null,sim.MyGeneralConfig.AllEnabledOptions(),
                     sim.MyGeneralConfig.StartDateDateTime,sim.MyGeneralConfig.EndDateDateTime,sim.MyGeneralConfig.InternalStepSize,
                     ";",-1,new TimeSpan(0,15,0),false,false,false,3, 3,calculationProfiler,null,null,
-                    DeviceProfileHeaderMode.Standard,false, workingDir,false,false, ".");
+                    DeviceProfileHeaderMode.Standard,false, workingDir,false,false, ".", false);
                 var duration = cspsHouse.OfficialSimulationEndTime - cspsHouse.OfficialSimulationStartTime;
                 if (duration.TotalDays > 370) {
                     throw new LPGException("Trying to test with more than 1 year");
@@ -157,7 +157,7 @@ namespace ChartCreator2.Tests.Oxyplot
                  null, priority, null, null, sim.MyGeneralConfig.AllEnabledOptions(),
                 sim.MyGeneralConfig.StartDateDateTime, sim.MyGeneralConfig.EndDateDateTime, sim.MyGeneralConfig.InternalStepSize,
                 ";", -1, new TimeSpan(0, 15, 0),false,false,false,3,3,calculationProfiler,null,null,
-                 DeviceProfileHeaderMode.Standard,false, workingDir,false,false, ".");
+                 DeviceProfileHeaderMode.Standard,false, workingDir,false,false, ".", false);
             var simduration = csps.OfficialSimulationEndTime - csps.OfficialSimulationStartTime;
             if (simduration.TotalDays > 370)
             {

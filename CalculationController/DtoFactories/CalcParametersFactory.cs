@@ -45,6 +45,7 @@ namespace CalculationController.DtoFactories
             cp.DeviceProfileHeaderMode = csps.DeviceProfileHeaderMode;
             cp.IgnorePreviousActivitesWhenNeeded = csps.IgnorePreviousActivitiesWhenNeeded;
             cp.TransportationEnabled = csps.TransportationEnabled;
+            cp.FlexibilityEnabled = csps.FlexibilityEnabled;
             //if (cp.TransportationEnabled && csps.CalcTarget.CalcObjectType == CalcObjectType.House) {
             //    if (csps.ChargingStationSet != null) {
             //        throw new LPGException("trying to set transportation options on a house. that won't work.");

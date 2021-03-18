@@ -30,15 +30,17 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Automation;
+using Automation.ResultFiles;
 using CalculationEngine.Transportation;
 using Common;
 using Common.Enums;
 using Common.JSON;
+using Common.SQLResultLogging.Loggers;
 using JetBrains.Annotations;
 
 namespace CalculationEngine.HouseholdElements {
     [SuppressMessage("ReSharper", "ConvertToAutoProperty")]
-    public abstract class CalcAffordanceBase : CalcBase, ICalcAffordanceBase {
+    public abstract class CalcAffordanceBase : CalcBase, ICalcAffordanceBase, IHouseholdKey {
         private static int _calcAffordanceBaseSerialTracker;
 
         public BodilyActivityLevel BodilyActivityLevel { get; }
@@ -57,12 +59,12 @@ namespace CalculationEngine.HouseholdElements {
                                      CalcAffordanceType calcAffordanceType,
                                      StrGuid guid,
                                      [ItemNotNull] [JetBrains.Annotations.NotNull] BitArray isBusyArray,
-                                     BodilyActivityLevel bodilyActivityLevel,[JetBrains.Annotations.NotNull] CalcRepo calcRepo,
-                                     CalcSite? site = null) : base(pName, guid)
+                                     BodilyActivityLevel bodilyActivityLevel,[JetBrains.Annotations.NotNull] CalcRepo calcRepo, HouseholdKey householdKey, CalcSite? site = null) : base(pName, guid)
         {
             CalcAffordanceType = calcAffordanceType;
             BodilyActivityLevel = bodilyActivityLevel;
             CalcRepo = calcRepo;
+            HouseholdKey = householdKey;
             Site = site;
             ParentLocation = loc;
             Satisfactionvalues = satisfactionvalues;
@@ -161,5 +163,6 @@ namespace CalculationEngine.HouseholdElements {
         public abstract string? TimeLimitName { get; }
 
         public int Weight { get; }
+        public HouseholdKey HouseholdKey { get; }
     }
 }

@@ -35,7 +35,7 @@ namespace Database.Tables.ModularHouseholds {
             int householdTraitID,
         [JetBrains.Annotations.NotNull]    string connectionString, [JetBrains.Annotations.NotNull] string hhaffName,[CanBeNull] TimeLimit timeLimit, int weight
             , int startMinusMinutes, int startPlusMinutes, int endMinusMinutes, int endPlusMinutes,
-            StrGuid guid) : base(hhaffName, TableName, connectionString, guid)
+            [JetBrains.Annotations.NotNull] StrGuid guid) : base(hhaffName, TableName, connectionString, guid)
         {
             _timeLimit = timeLimit;
             _weight = weight;

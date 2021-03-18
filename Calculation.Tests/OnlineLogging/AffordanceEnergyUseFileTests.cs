@@ -42,7 +42,7 @@ namespace Calculation.Tests.OnlineLogging
                     CalcLoadTypeDto clt = new CalcLoadTypeDto("lt", "unitofpower", "unitofsum", 1, true, "guid".ToStrGuid());
                     TimeStep ts = new TimeStep(1, 1, true);
                     CalcDeviceDto cdd = new CalcDeviceDto("devname", "".ToStrGuid(), key,
-                        OefcDeviceType.Device, "devcatname", "", Guid.NewGuid().ToStrGuid(), "locguid".ToStrGuid(), "locname");
+                        OefcDeviceType.Device, "devcatname", "", Guid.NewGuid().ToStrGuid(), "locguid".ToStrGuid(), "locname", FlexibilityType.NoFlexibility, 0);
                     DeviceActivationEntry aeue = new DeviceActivationEntry("affname", clt, 1, "activatorname", 1, ts, cdd);
                     old.RegisterDeviceActivation(aeue);
                     old.FinalSaveToDatabase();

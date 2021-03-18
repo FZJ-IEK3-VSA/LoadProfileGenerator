@@ -14,8 +14,8 @@ namespace Database.Tables.Houses {
 
         private readonly int _settlementTemplateID;
 
-        public STChargingStationSet([CanBeNull] int? pID, [NotNull] string connectionString, int settlementTemplateID, [NotNull] string name,
-                                    [CanBeNull] ChargingStationSet chargingStationSet, StrGuid guid) : base(name, TableName, connectionString, guid)
+        public STChargingStationSet([CanBeNull] int? pID, [JetBrains.Annotations.NotNull] string connectionString, int settlementTemplateID, [JetBrains.Annotations.NotNull] string name,
+                                    [CanBeNull] ChargingStationSet chargingStationSet, [NotNull] StrGuid guid) : base(name, TableName, connectionString, guid)
         {
             TypeDescription = "Settlement Template Charging Station Sets";
             ID = pID;
@@ -28,9 +28,9 @@ namespace Database.Tables.Houses {
 
         public int SettlementTemplateID => _settlementTemplateID;
 
-        [NotNull]
-        private static STChargingStationSet AssignFields([NotNull] DataReader dr, [NotNull] string connectionString,
-                                                         bool ignoreMissingFields, [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static STChargingStationSet AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString,
+                                                         bool ignoreMissingFields, [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var id = dr.GetIntFromLong("ID");
             var settlementtemplateID = dr.GetIntFromLong("SettlementTemplateID", false, ignoreMissingFields, -1);
@@ -58,8 +58,8 @@ namespace Database.Tables.Houses {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull][NotNull] ObservableCollection<STChargingStationSet> result, [NotNull] string connectionString,
-                                            bool ignoreMissingTables, [ItemNotNull][NotNull] ObservableCollection<ChargingStationSet> chargingStationSets)
+        public static void LoadFromDatabase([ItemNotNull][JetBrains.Annotations.NotNull] ObservableCollection<STChargingStationSet> result, [JetBrains.Annotations.NotNull] string connectionString,
+                                            bool ignoreMissingTables, [ItemNotNull][JetBrains.Annotations.NotNull] ObservableCollection<ChargingStationSet> chargingStationSets)
         {
             var aic = new AllItemCollections(chargingStationSets: chargingStationSets);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);

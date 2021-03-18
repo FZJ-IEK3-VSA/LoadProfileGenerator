@@ -6,7 +6,7 @@ using Database.Database;
 
 namespace Database.Helpers {
     public static class DatabaseVersionChecker {
-        [JetBrains.Annotations.NotNull] private static string _dstVersion = "10.2.0.a";
+        [JetBrains.Annotations.NotNull] private static string _dstVersion = "10.5.0.a";
 
         [JetBrains.Annotations.NotNull]
         public static string DstVersion {
@@ -26,7 +26,7 @@ namespace Database.Helpers {
                         var subsub = dr.GetIntFromLong("SubSub");
                         var index = dr.GetString("Index");
                         fullVersion = main + "." + sub + "." + subsub + "." + index;
-                        Logger.Info("Successfully read database version: " + fullVersion + ". This is compatible. Program version is " + Config.LPGVersion);
+                        Logger.Info("Successfully read database version: " + fullVersion + ". Program version is " + Config.LPGVersion);
                     }
                 }
             }
@@ -34,6 +34,9 @@ namespace Database.Helpers {
             if (!string.Equals(fullVersion.Trim(), _dstVersion.Trim(), StringComparison.OrdinalIgnoreCase)) {
                 throw new LPGException("The database version is wrong! Looking for: \"" + _dstVersion +
                                        "\", but found \"" + fullVersion + "\"");
+            }
+            else {
+                Logger.Info("Database version is compatible. Excellent.");
             }
         }
     }

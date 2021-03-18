@@ -61,7 +61,6 @@ namespace CalculationController.CalcFactories
 {
     using Common.SQLResultLogging.Loggers;
 
-    [SuppressMessage("ReSharper", "CatchAllClause")]
     public class CalcManagerFactory
     {
         public static bool DoIntegrityRun { get; set; } = true;
@@ -121,64 +120,63 @@ namespace CalculationController.CalcFactories
             try {
                 csps.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " Generating Model");
                 var container = builder.Build();
-                using (var scope = container.BeginLifetimeScope()) {
-                    var calcRepo = PrepareCalculation(sim, csps, scope, out var dtoltdict, out var dls, out var variableRepository);
+                using var scope = container.BeginLifetimeScope();
+                var calcRepo = PrepareCalculation(sim, csps, scope, out var dtoltdict, out var dls, out var variableRepository);
 
-                    cm = new CalcManager(csps.ResultPath,
-                        //hh.Name,
-                        //householdPlans,
-                        //csps.LPGVersion,
-                        calcParameters.ActualRandomSeed, dls, variableRepository, calcRepo
-                        //scope.Resolve<SqlResultLoggingService>()
-                    );
-                    //_calcParameters.Logfile = cm.Logfile;
-                    //_calcParameters.NormalDistributedRandom = normalDistributedRandom;
-                    //_calcParameters.RandomGenerator = randomGenerator;
-                    //_calcParameters.Odap = cm.Odap;
-                    //_calcParameters.EnergyIntensity = csps.EnergyIntensity;
-                    // no vacation times needed for the light array
-                    CalcObjectType cot;
-                    ICalcAbleObject ch;
-                    CalcVariableDtoFactory cvrdto = scope.Resolve<CalcVariableDtoFactory>();
-                    CalcDeviceTaggingSets devicetaggingSets = scope.Resolve<CalcDeviceTaggingSets>();
-                    if (csps.CalcTarget.GetType() == typeof(House)) {
-                        ch = MakeCalcHouseObject(sim, csps, csps.CalcTarget, scope, cvrdto, variableRepository, out cot, calcRepo);
-                        CalcHouse chd = (CalcHouse)ch;
-                        if (chd.EnergyStorages != null) {
-                            foreach (var calcEnergyStorage in chd.EnergyStorages) {
-                                foreach (var taggingSet in devicetaggingSets.AllCalcDeviceTaggingSets) {
-                                    taggingSet.AddTag(calcEnergyStorage.Name, "Energy Storage");
-                                }
+                cm = new CalcManager(csps.ResultPath,
+                    //hh.Name,
+                    //householdPlans,
+                    //csps.LPGVersion,
+                    calcParameters.ActualRandomSeed, dls, variableRepository, calcRepo
+                    //scope.Resolve<SqlResultLoggingService>()
+                );
+                //_calcParameters.Logfile = cm.Logfile;
+                //_calcParameters.NormalDistributedRandom = normalDistributedRandom;
+                //_calcParameters.RandomGenerator = randomGenerator;
+                //_calcParameters.Odap = cm.Odap;
+                //_calcParameters.EnergyIntensity = csps.EnergyIntensity;
+                // no vacation times needed for the light array
+                CalcObjectType cot;
+                ICalcAbleObject ch;
+                CalcVariableDtoFactory cvrdto = scope.Resolve<CalcVariableDtoFactory>();
+                CalcDeviceTaggingSets devicetaggingSets = scope.Resolve<CalcDeviceTaggingSets>();
+                if (csps.CalcTarget.GetType() == typeof(House)) {
+                    ch = MakeCalcHouseObject(sim, csps, csps.CalcTarget, scope, cvrdto, variableRepository, out cot, calcRepo);
+                    CalcHouse chd = (CalcHouse)ch;
+                    if (chd.EnergyStorages != null) {
+                        foreach (var calcEnergyStorage in chd.EnergyStorages) {
+                            foreach (var taggingSet in devicetaggingSets.AllCalcDeviceTaggingSets) {
+                                taggingSet.AddTag(calcEnergyStorage.Name, "Energy Storage");
                             }
                         }
-
-                    }
-                    else if (csps.CalcTarget.GetType() == typeof(ModularHousehold)) {
-                        ch = MakeCalcHouseholdObject(sim, csps, csps.CalcTarget, scope, cvrdto, variableRepository, out cot, calcRepo);
-                    }
-                    else {
-                        throw new LPGException("The type " + csps.CalcTarget.GetType() + " is missing!");
                     }
 
-                    if (calcRepo.CalcParameters.Options.Contains(CalcOption.DeviceTaggingSets)) {
-                        calcRepo.InputDataLogger.Save(Constants.GeneralHouseholdKey, devicetaggingSets.AllCalcDeviceTaggingSets);
-                    }
-
-                    CalcObjectInformation coi = new CalcObjectInformation(cot, ch.Name, csps.ResultPath);
-                    if (calcRepo.CalcParameters.Options.Contains(CalcOption.HouseholdContents)) {
-                        calcRepo.InputDataLogger.Save(Constants.GeneralHouseholdKey, coi);
-                    }
-
-                    //this logger doesnt save json, but strings!
-                    calcRepo.InputDataLogger.Save(Constants.GeneralHouseholdKey, csps);
-                    calcRepo.InputDataLogger.Save(Constants.GeneralHouseholdKey, dtoltdict.GetLoadTypeDtos());
-                    cm.SetCalcObject(ch);
-                    CalcManager.ExitCalcFunction = false;
-
-                    //LogSeed(calcParameters.ActualRandomSeed, lf.FileFactoryAndTracker, calcParameters);
-
-                    return cm;
                 }
+                else if (csps.CalcTarget.GetType() == typeof(ModularHousehold)) {
+                    ch = MakeCalcHouseholdObject(sim, csps, csps.CalcTarget, scope, cvrdto, variableRepository, out cot, calcRepo);
+                }
+                else {
+                    throw new LPGException("The type " + csps.CalcTarget.GetType() + " is missing!");
+                }
+
+                if (calcRepo.CalcParameters.Options.Contains(CalcOption.DeviceTaggingSets)) {
+                    calcRepo.InputDataLogger.Save(Constants.GeneralHouseholdKey, devicetaggingSets.AllCalcDeviceTaggingSets);
+                }
+
+                CalcObjectInformation coi = new CalcObjectInformation(cot, ch.Name, csps.ResultPath);
+                if (calcRepo.CalcParameters.Options.Contains(CalcOption.HouseholdContents)) {
+                    calcRepo.InputDataLogger.Save(Constants.GeneralHouseholdKey, coi);
+                }
+
+                //this logger doesnt save json, but strings!
+                calcRepo.InputDataLogger.Save(Constants.GeneralHouseholdKey, csps);
+                calcRepo.InputDataLogger.Save(Constants.GeneralHouseholdKey, dtoltdict.GetLoadTypeDtos());
+                cm.SetCalcObject(ch);
+                CalcManager.ExitCalcFunction = false;
+
+                //LogSeed(calcParameters.ActualRandomSeed, lf.FileFactoryAndTracker, calcParameters);
+
+                return cm;
             }
             catch {
                 cm?.Dispose();
@@ -314,19 +312,19 @@ namespace CalculationController.CalcFactories
                                           [JetBrains.Annotations.NotNull] ContainerBuilder builder, [JetBrains.Annotations.NotNull] string sqlFileName, [JetBrains.Annotations.NotNull] CalcParameters calcParameters,
                                           [CanBeNull] DeviceSelection ds)
         {
-            builder.Register(c => new SqlResultLoggingService(sqlFileName)).As<SqlResultLoggingService>()
+            builder.Register(_ => new SqlResultLoggingService(sqlFileName)).As<SqlResultLoggingService>()
                 .SingleInstance();
-            builder.Register(c => calcParameters).As<CalcParameters>().SingleInstance();
+            builder.Register(_ => calcParameters).As<CalcParameters>().SingleInstance();
             Random rnd = new Random(calcParameters.ActualRandomSeed);
-            builder.Register(c => rnd).As<Random>().SingleInstance();
-            builder.Register(c => csps.CalculationProfiler).As<CalculationProfiler>().SingleInstance();
-            builder.Register(c => new NormalRandom(0, 0.1, rnd)).As<NormalRandom>().SingleInstance();
+            builder.Register(_ => rnd).As<Random>().SingleInstance();
+            builder.Register(_ => csps.CalculationProfiler).As<CalculationProfiler>().SingleInstance();
+            builder.Register(_ => new NormalRandom(0, 0.1, rnd)).As<NormalRandom>().SingleInstance();
             builder.RegisterType<OnlineDeviceActivationProcessor>().As<IOnlineDeviceActivationProcessor>()
                 .SingleInstance();
             builder.RegisterType<CalcHouseFactory>().As<CalcHouseFactory>().SingleInstance();
             builder.RegisterType<CalcManager>().As<CalcManager>().SingleInstance();
             builder.RegisterType<AffordanceTaggingSetFactory>().As<AffordanceTaggingSetFactory>().SingleInstance();
-            builder.Register(x =>
+            builder.Register(_ =>
                     CalcLoadTypeDtoFactory.MakeLoadTypes(sim.LoadTypes.Items, calcParameters.InternalStepsize,
                         csps.LoadTypePriority))
                 .As<CalcLoadTypeDtoDictionary>().SingleInstance();
@@ -338,7 +336,7 @@ namespace CalculationController.CalcFactories
                     new CalcDeviceTaggingSetFactory(x.Resolve<CalcParameters>(), x.Resolve<CalcLoadTypeDtoDictionary>());
                 return ctsf.GetDeviceTaggingSets(sim, hh.CalculatePersonCount());
             }).As<CalcDeviceTaggingSets>().SingleInstance();
-            builder.Register(x => new DeviceCategoryPicker(rnd, ds)).As<IDeviceCategoryPicker>().SingleInstance();
+            builder.Register(_ => new DeviceCategoryPicker(rnd, ds)).As<IDeviceCategoryPicker>().SingleInstance();
             builder.RegisterType<CalcModularHouseholdFactory>().As<CalcModularHouseholdFactory>().SingleInstance();
             builder.RegisterType<CalcHouseFactory>().As<CalcHouseFactory>().SingleInstance();
             builder.RegisterType<CalcLocationFactory>().As<CalcLocationFactory>().SingleInstance();
@@ -380,6 +378,7 @@ namespace CalculationController.CalcFactories
             builder.RegisterType<CalcStartParameterSetLogger>().As<IDataSaverBase>();
             builder.RegisterType<CalcLoadTypeDtoLogger>().As<IDataSaverBase>();
             builder.RegisterType<ActionEntryLogger>().As<IDataSaverBase>();
+            builder.RegisterType<FlexibilityDataLogger>().As<IDataSaverBase>();
             builder.RegisterType<CalcPersonDtoLogger>().As<IDataSaverBase>();
             builder.RegisterType<CalcDeviceDtoLogger>().As<IDataSaverBase>();
             builder.RegisterType<CalcDeviceArchiveDtoLogger>().As<IDataSaverBase>();
@@ -409,7 +408,7 @@ namespace CalculationController.CalcFactories
 
             builder.RegisterType<AffordanceEnergyUseLogger>().As<IDataSaverBase>();
             //builder.Register(x=> x.Resolve<CalcVariableDtoFactory>().GetRepository()).As<CalcVariableRepository>().SingleInstance();
-            builder.Register(x => MakeLightNeededArray(csps.GeographicLocation, csps.TemperatureProfile,
+            builder.Register(_ => MakeLightNeededArray(csps.GeographicLocation, csps.TemperatureProfile,
                 rnd,
                 new List<VacationTimeframe>(), hh.Name, calcParameters)).As<DayLightStatus>().SingleInstance();
         }

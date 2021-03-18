@@ -31,7 +31,7 @@ namespace CalculationController.DtoFactories
 
         [NotNull]
         [ItemNotNull]
-        public BitArray GetByGuid(StrGuid guid)
+        public BitArray GetByGuid([NotNull] StrGuid guid)
         {
             return Entries[guid].Array;
         }

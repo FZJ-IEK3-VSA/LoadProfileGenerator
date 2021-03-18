@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using Autofac;
 using Automation;
 using Automation.ResultFiles;
@@ -534,7 +535,7 @@ namespace SimulationEngine.Tests {
             sw.WriteLine("      var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim,hhguid, TestDuration.ThreeMonths);");
             sw.WriteLine("      if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }");
             sw.WriteLine("      hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;");
-            sw.WriteLine("return hj; }, x => {});");
+            sw.WriteLine("return hj; }, _ => {});");
             sw.WriteLine("}");
             sw.WriteLine("");
         }
@@ -552,7 +553,7 @@ namespace SimulationEngine.Tests {
                 "      var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim,hhguid,TestDuration.ThreeMonths);");
             sw.WriteLine("      if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException(); }");
             sw.WriteLine("      hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;");
-            sw.WriteLine("return hj; }, x => {});");
+            sw.WriteLine("return hj; }, _ => {});");
             sw.WriteLine("}");
             sw.WriteLine("");
         }
@@ -1085,7 +1086,7 @@ namespace SimulationEngine.Tests {
     }
 
     public class SingleCalculationTests: UnitTestBaseClass {
-        public static HouseCreationAndCalculationJob PrepareNewHouseholdWithTemplateForTesting(Simulator sim)
+        public static HouseCreationAndCalculationJob PrepareNewHouseholdWithTemplateForTesting(Simulator sim, int hhtnumber = 0)
         {
             var hj = new HouseCreationAndCalculationJob
             {
@@ -1096,6 +1097,7 @@ namespace SimulationEngine.Tests {
             hj.CalcSpec.DeleteDAT = false;
             hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.NoFiles;
             hj.CalcSpec.DeleteSqlite = false;
+            //hj.CalcSpec.EnergyIntensityType = EnergyIntensityType.EnergyIntensive;
             hj.CalcSpec.ExternalTimeResolution = "00:15:00";
             hj.CalcSpec.EnableTransportation = false;
             var ht = sim.HouseTypes[0];
@@ -1108,9 +1110,9 @@ namespace SimulationEngine.Tests {
                 sim.TransportationDeviceSets[0].GetJsonReference(),
                 sim.TravelRouteSets[0].GetJsonReference(), null,
                 HouseholdDataSpecificationType.ByTemplateName);
-            hhd.HouseholdTemplateSpec = new HouseholdTemplateSpecification(sim.HouseholdTemplates[0].Name);
-            var hh = sim.ModularHouseholds[0];
-            hhd.HouseholdNameSpec = new HouseholdNameSpecification(hh.GetJsonReference());
+            hhd.HouseholdTemplateSpec = new HouseholdTemplateSpecification(sim.HouseholdTemplates[hhtnumber].Name);
+            // var hh = sim.ModularHouseholds[hhtnumber];
+            //hhd.HouseholdNameSpec = new HouseholdNameSpecification(hh.GetJsonReference());
             hj.House.Households.Add(hhd);
             return hj;
         }
@@ -1131,9 +1133,46 @@ namespace SimulationEngine.Tests {
                 //hj.CalcSpec.CalcOptions.Add(co);
                 hj.CalcSpec.EndDate = new DateTime(2020, 12, 31);
                 return hj;
-            }, x => { });
+            }, _ => { });
         }
+        [Fact]
+        public void TestFlexibility()
+        {
+            Thread.CurrentThread.Name = "TestingThread";
+            //const CalcOption co = CalcOption.ActivationFrequencies;
+            HouseJobTestHelper.RunSingleHouse(sim => {
+                var hj = PrepareNewHouseholdWithTemplateForTesting(sim,3);
+                if (hj.CalcSpec?.CalcOptions == null)
+                {
+                    throw new LPGException();
+                }
 
+                //hj.House.Households[0].HouseholdTemplateSpec.ForbiddenTraitTags = new List<string>();
+                //hj.House.Households[0].HouseholdTemplateSpec.ForbiddenTraitTags.Add("Dishwashing");
+                hj.CalcSpec.EnableFlexibility = true;
+                hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.NoFiles;
+                hj.CalcSpec.EnergyIntensityType = EnergyIntensityType.Random;
+                hj.CalcSpec.CalcOptions.Add(CalcOption.HouseholdSumProfilesCsvNoFlex);
+                hj.CalcSpec.CalcOptions.Add(CalcOption.HouseholdSumProfilesFromDetailedDats);
+                hj.CalcSpec.CalcOptions.Add(CalcOption.HouseholdContents);
+
+                sim.MyGeneralConfig.DecimalSeperator = ",";
+                hj.CalcSpec.CalcOptions.Add(CalcOption.FlexibilityEvents);
+                //hj.CalcSpec.CalcOptions.Add(co);
+                foreach (var device in sim.RealDevices.Items) {
+                    if (device.DeviceCategory == null) {
+                        throw new LPGException("no device category");
+                    }
+                    if (device.DeviceCategory.Name.ToLower().Contains("washing") || device.DeviceCategory.Name.ToLower().Contains("washer")||  device.DeviceCategory.Name.ToLower().Contains("Whirl")) {
+                        Logger.Info("Switched device " + device.Name);
+                        device.FlexibilityType = FlexibilityType.ProfileShiftable;
+                        device.MaxTimeShiftInMinutes = 1440;
+                    }
+                }
+                hj.CalcSpec.EndDate = new DateTime(2020, 12, 31);
+                return hj;
+            }, _ => { },true);
+        }
         // ReSharper disable once RedundantNameQualifier
         public SingleCalculationTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
         {

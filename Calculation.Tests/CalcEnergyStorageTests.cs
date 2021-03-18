@@ -71,7 +71,7 @@ namespace Calculation.Tests {
                         HouseholdKey hhkey = new HouseholdKey("HH1");
                         var locationGuid = Guid.NewGuid().ToStrGuid();
                         CalcDeviceDto cdd = new CalcDeviceDto("dev1", "devcatguid".ToStrGuid(),
-                            hhkey, OefcDeviceType.Device, "devcatname", "", deviceGuid, locationGuid, "loc");
+                            hhkey, OefcDeviceType.Device, "devcatname", "", deviceGuid, locationGuid, "loc", FlexibilityType.NoFlexibility, 0);
                         var key = new OefcKey(cdd, clt.Guid);
                         odap.RegisterDevice(clt.ConvertToDto(), cdd);
                         double[] timestepValue = { 1.0, 0 };

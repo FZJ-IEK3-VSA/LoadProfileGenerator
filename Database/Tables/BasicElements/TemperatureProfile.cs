@@ -42,9 +42,9 @@ using JetBrains.Annotations;
 namespace Database.Tables.BasicElements {
     public class TemperatureProfile : DBBaseElement {
         public const string TableName = "tblTemperatureProfiles";
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<TemperatureValue> _temperatureValues;
-        [NotNull] private string _description;
-        public TemperatureProfile([NotNull] string name,[CanBeNull] int? id, [NotNull] string description, [NotNull] string connectionString,
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<TemperatureValue> _temperatureValues;
+        [JetBrains.Annotations.NotNull] private string _description;
+        public TemperatureProfile([JetBrains.Annotations.NotNull] string name,[CanBeNull] int? id, [JetBrains.Annotations.NotNull] string description, [JetBrains.Annotations.NotNull] string connectionString,
                                   StrGuid guid) : base(name,
             TableName, connectionString, guid) {
             _description = description;
@@ -53,7 +53,7 @@ namespace Database.Tables.BasicElements {
             ID = id;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string Description {
             get => _description;
@@ -61,7 +61,7 @@ namespace Database.Tables.BasicElements {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<TemperatureValue> TemperatureValues => _temperatureValues;
 
         public void AddTemperature(DateTime time, double value, [CanBeNull]int? id = null, bool sort = true, bool save = true) {
@@ -75,9 +75,9 @@ namespace Database.Tables.BasicElements {
             }
         }
 
-        [NotNull]
-        private static TemperatureProfile AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic) {
+        [JetBrains.Annotations.NotNull]
+        private static TemperatureProfile AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic) {
             var id = dr.GetIntFromLong("ID");
             var name = dr.GetString("Name");
             var description = dr.GetString("Description");
@@ -85,9 +85,9 @@ namespace Database.Tables.BasicElements {
             return new TemperatureProfile(name, id, description, connectionString, guid);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) {
+        public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString) {
             var house = new TemperatureProfile(FindNewName(isNameTaken, "New Temperature Profile "),
                 null, "(no description)", connectionString, System.Guid.NewGuid().ToStrGuid());
             return house;
@@ -109,7 +109,7 @@ namespace Database.Tables.BasicElements {
             base.DeleteFromDB();
         }
 
-        public void DeleteOneTemperatur([NotNull] TemperatureValue tv) {
+        public void DeleteOneTemperatur([JetBrains.Annotations.NotNull] TemperatureValue tv) {
             if (tv.ID != null) {
                 using (var con = new Connection(ConnectionString)) {
                     con.Open();
@@ -121,13 +121,13 @@ namespace Database.Tables.BasicElements {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public double[] GetTemperatureArray(DateTime startDateTime, DateTime endDateTime, TimeSpan stepsize) =>
             GetTemperatureArray(startDateTime, endDateTime, stepsize, _temperatureValues);
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static double[] GetTemperatureArray(DateTime startDateTime, DateTime endDateTime, TimeSpan stepsize,
-            [ItemNotNull] [NotNull] ObservableCollection<TemperatureValue> temperatureValues) {
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TemperatureValue> temperatureValues) {
             var tempvalues = new List<TempValue>();
             var yearsToMake = new List<int>();
             var startyear = startDateTime.Year;
@@ -178,9 +178,9 @@ namespace Database.Tables.BasicElements {
             return alltemperatures;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static TemperatureProfile ImportFromItem([NotNull] TemperatureProfile toImport, [NotNull] Simulator dstSim) {
+        public static TemperatureProfile ImportFromItem([JetBrains.Annotations.NotNull] TemperatureProfile toImport, [JetBrains.Annotations.NotNull] Simulator dstSim) {
             var tp = new TemperatureProfile(toImport.Name, null, toImport.Description,
                 dstSim.ConnectionString, toImport.Guid);
             tp.SaveToDB();
@@ -191,7 +191,7 @@ namespace Database.Tables.BasicElements {
             return tp;
         }
 
-        private static bool IsCorrectParent([NotNull] DBBase parent, [NotNull] DBBase child) {
+        private static bool IsCorrectParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child) {
             var hd = (TemperatureValue) child;
             if (parent.ID == hd.TempProfileID) {
                 var tp = (TemperatureProfile) parent;
@@ -206,8 +206,8 @@ namespace Database.Tables.BasicElements {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<TemperatureProfile> temperatureProfiles,
-            [NotNull] string connectionString, bool ignoreMissingTables) {
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TemperatureProfile> temperatureProfiles,
+            [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingTables) {
             var aic = new AllItemCollections();
             LoadAllFromDatabase(temperatureProfiles, connectionString, TableName, AssignFields, aic,
                 ignoreMissingTables, true);
@@ -287,7 +287,7 @@ namespace Database.Tables.BasicElements {
                 return Time.CompareTo(other.Time);
             }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public override string ToString() => Time.ToShortDateString() + " " + Time.ToShortTimeString() + ":" +
                                                  Value.ToString(CultureInfo.CurrentCulture);
         }

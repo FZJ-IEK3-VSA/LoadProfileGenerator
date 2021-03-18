@@ -612,7 +612,7 @@ namespace Database.Tables.Houses {
                 "Results",
                 false,
                 startDate,
-                null, true);
+                null, true,false);
             return new Settlement(newname,
                 null,
                 string.Empty,

@@ -9,8 +9,8 @@ using JetBrains.Annotations;
 
 namespace Database.Helpers {
     public class LivingPatternVariationCreator {
-        private static void AddAffordanceEntry([NotNull] Simulator sim, [ItemNotNull] [NotNull] List<AffordanceEntry> affordances, [NotNull] string affname,
-                                               [NotNull] string newName, double duration)
+        private static void AddAffordanceEntry([JetBrains.Annotations.NotNull] Simulator sim, [ItemNotNull] [JetBrains.Annotations.NotNull] List<AffordanceEntry> affordances, [JetBrains.Annotations.NotNull] string affname,
+                                               [JetBrains.Annotations.NotNull] string newName, double duration)
         {
             var aff = sim.Affordances.FindFirstByName(affname);
             if (aff == null) {
@@ -19,9 +19,9 @@ namespace Database.Helpers {
             affordances.Add(new AffordanceEntry(aff, newName,duration));
         }
 
-        private static void AddTimeLimitEntry([NotNull] Simulator sim, [ItemNotNull] [NotNull] List<TimeLimitEntry> timeLimits,
-                                              [NotNull] string timelimitName,
-                                              [NotNull] string newName, [CanBeNull] string tagName, TimeSpan beginSpan )
+        private static void AddTimeLimitEntry([JetBrains.Annotations.NotNull] Simulator sim, [ItemNotNull] [JetBrains.Annotations.NotNull] List<TimeLimitEntry> timeLimits,
+                                              [JetBrains.Annotations.NotNull] string timelimitName,
+                                              [JetBrains.Annotations.NotNull] string newName, [CanBeNull] string tagName, TimeSpan beginSpan )
         {
             var aff = sim.TimeLimits.FindFirstByName(timelimitName);
             if (aff == null)
@@ -34,7 +34,7 @@ namespace Database.Helpers {
         }
 
         [CanBeNull]
-        private static TraitTag GetTraitTagByName([NotNull] Simulator sim, [CanBeNull] string tagName)
+        private static TraitTag GetTraitTagByName([JetBrains.Annotations.NotNull] Simulator sim, [CanBeNull] string tagName)
         {
             TraitTag tag = null;
             if (tagName != null)
@@ -49,7 +49,7 @@ namespace Database.Helpers {
             return tag;
         }
 
-        public void RunOfficeJobs([NotNull] Simulator sim)
+        public void RunOfficeJobs([JetBrains.Annotations.NotNull] Simulator sim)
         {
             //office 1
             //find the base thread
@@ -95,7 +95,7 @@ namespace Database.Helpers {
             GenerateNewTraits(sim, basetrait2, baseName2, affordances, timeLimits, TaggingType.OfficeJob);
         }
 
-        public void RunSleep([NotNull] Simulator sim)
+        public void RunSleep([JetBrains.Annotations.NotNull] Simulator sim)
         {
             //office 1
             //find the base thread
@@ -139,7 +139,7 @@ namespace Database.Helpers {
             GenerateNewTraits(sim, basetrait2, baseName2, affordance2, timeLimits,TaggingType.AdultSleep);
         }
 
-        public void RunAlarm([NotNull] Simulator sim)
+        public void RunAlarm([JetBrains.Annotations.NotNull] Simulator sim)
         {
             //office 1
             //find the base thread
@@ -179,8 +179,8 @@ namespace Database.Helpers {
             AdultSleep,
             AlarmClock
         }
-        private static void GenerateNewTraits([NotNull] Simulator sim,[CanBeNull] HouseholdTrait basetrait, [NotNull] string baseName,
-            [ItemNotNull] [NotNull] List<AffordanceEntry> affordances, [ItemNotNull] [NotNull] List<TimeLimitEntry> timeLimits, TaggingType taggingType)
+        private static void GenerateNewTraits([JetBrains.Annotations.NotNull] Simulator sim,[CanBeNull] HouseholdTrait basetrait, [JetBrains.Annotations.NotNull] string baseName,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] List<AffordanceEntry> affordances, [ItemNotNull] [JetBrains.Annotations.NotNull] List<TimeLimitEntry> timeLimits, TaggingType taggingType)
         {
             if (basetrait == null)
             {
@@ -262,7 +262,7 @@ namespace Database.Helpers {
             }
         }
 
-        private static void TagAlarms([NotNull] Simulator sim, [NotNull] TimeLimitEntry timeLimitEntry, [NotNull] HouseholdTrait newTrait)
+        private static void TagAlarms([JetBrains.Annotations.NotNull] Simulator sim, [JetBrains.Annotations.NotNull] TimeLimitEntry timeLimitEntry, [JetBrains.Annotations.NotNull] HouseholdTrait newTrait)
         {
             var livingTags = newTrait.Tags.Where(x => x.Tag.Name.Contains("Living Pattern")).ToList();
             foreach (HHTTag livingTag in livingTags)
@@ -305,7 +305,7 @@ namespace Database.Helpers {
             }
         }
 
-        private static void TagAdultSleep([NotNull] Simulator sim, [NotNull] AffordanceEntry affordanceEntry, [NotNull] TimeLimitEntry timeLimitEntry, [NotNull] HouseholdTrait newTrait)
+        private static void TagAdultSleep([JetBrains.Annotations.NotNull] Simulator sim, [JetBrains.Annotations.NotNull] AffordanceEntry affordanceEntry, [JetBrains.Annotations.NotNull] TimeLimitEntry timeLimitEntry, [JetBrains.Annotations.NotNull] HouseholdTrait newTrait)
         {
             var livingTags = newTrait.Tags.Where(x => x.Tag.Name.Contains("Living Pattern / Office Job")).ToList();
             foreach (HHTTag livingTag in livingTags) {
@@ -346,7 +346,7 @@ namespace Database.Helpers {
             }
         }
 
-        private static void TagOfficeJob([NotNull] TimeLimitEntry timeLimitEntry, [NotNull] HouseholdTrait newTrait)
+        private static void TagOfficeJob([JetBrains.Annotations.NotNull] TimeLimitEntry timeLimitEntry, [JetBrains.Annotations.NotNull] HouseholdTrait newTrait)
         {
             var livingTags = newTrait.Tags.Where(x => x.Tag.Name.Contains("Living Pattern / Office Job")).ToList();
             if (livingTags.Count != 1)
@@ -362,16 +362,16 @@ namespace Database.Helpers {
         }
 
         private class AffordanceEntry {
-            public AffordanceEntry([NotNull] Affordance affordance, [NotNull] string name, double duration)
+            public AffordanceEntry([JetBrains.Annotations.NotNull] Affordance affordance, [JetBrains.Annotations.NotNull] string name, double duration)
             {
                 Affordance = affordance;
                 Name = name;
                 Duration = duration;
             }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public Affordance Affordance { get; }
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string Name { get; }
 
             public double Duration { get; }
@@ -389,7 +389,7 @@ namespace Database.Helpers {
         }*/
 
         private class TimeLimitEntry {
-            public TimeLimitEntry([NotNull] string name,[NotNull] TimeLimit timeLimit, [CanBeNull] TraitTag tag, TimeSpan beginTime)
+            public TimeLimitEntry([JetBrains.Annotations.NotNull] string name,[JetBrains.Annotations.NotNull] TimeLimit timeLimit, [CanBeNull] TraitTag tag, TimeSpan beginTime)
             {
                 Name = name;
                 TimeLimit = timeLimit;
@@ -397,12 +397,12 @@ namespace Database.Helpers {
                 BeginTime = beginTime;
             }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string Name { get; }
             [CanBeNull]
             public TraitTag Tag { get; }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public TimeLimit TimeLimit { get; }
 
             public TimeSpan BeginTime { get; }

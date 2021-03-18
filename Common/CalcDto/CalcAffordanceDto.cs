@@ -102,7 +102,8 @@ namespace Common.CalcDto {
                                    CalcProfileDto newprof, [NotNull]string calcLoadTypeName, StrGuid calcLoadtypeGuid, decimal timeoffset,
                                    TimeSpan internalstepsize, double multiplier, double probability)
         {
-            var calctup = new DeviceEnergyProfileTupleDto(calcDeviceName, calcDeviceGuid, newprof, calcLoadTypeName, calcLoadtypeGuid, timeoffset,
+            var calctup = new DeviceEnergyProfileTupleDto(calcDeviceName, calcDeviceGuid,
+                newprof, calcLoadTypeName, calcLoadtypeGuid, timeoffset,
                 internalstepsize, multiplier, probability);
             Energyprofiles.Add(calctup);
         }

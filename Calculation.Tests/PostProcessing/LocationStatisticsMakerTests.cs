@@ -42,7 +42,8 @@ namespace Calculation.Tests.PostProcessing
                 EnergyIntensityType.Random,false,null,
                 LoadTypePriority.All,null,null,null,sim.MyGeneralConfig.AllEnabledOptions(),
                 new DateTime(2015,1,15), new DateTime(2015,1,18), new TimeSpan(0,1,0),";",10,new TimeSpan(0,1,0),false,false,false,3 ,3,
-                calculationProfiler, wd.WorkingDirectory,false,false, ".");
+                calculationProfiler, wd.WorkingDirectory,
+                false,false, ".", false);
             CalcManager cm = cmf.GetCalcManager(sim, csps, false);
                 //wd.WorkingDirectory, sim.ModularHouseholds[0],  false,
                 //sim.TemperatureProfiles[0], sim.GeographicLocations[0], EnergyIntensityType.Random, version,

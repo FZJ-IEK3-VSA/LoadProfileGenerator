@@ -11,7 +11,7 @@
     <DebugType>Full</DebugType>
     <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
     <Nullable>disable</Nullable>
-    <LangVersion>9</LangVersion>
+    <LangVersion>9.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Autofac" Version="6.1.0" />

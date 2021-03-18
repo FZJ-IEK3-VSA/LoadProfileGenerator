@@ -49,11 +49,11 @@ namespace Database.Tables.BasicHouseholds {
         private decimal _defaultThreshold;
         private decimal _defaultWeight;
         private bool _isSharedDesire;
-        [NotNull] private string _desireCategory;
+        [JetBrains.Annotations.NotNull] private string _desireCategory;
 
-        public Desire([NotNull] string pName, decimal pDefaultDecayRate, decimal defaultThreshold, decimal defaultWeight,
-            [NotNull] string connectionString, decimal criticalThreshold, bool isSharedDesire, [CanBeNull] int? pID,
-                      [NotNull] string desireCategory, StrGuid guid)
+        public Desire([JetBrains.Annotations.NotNull] string pName, decimal pDefaultDecayRate, decimal defaultThreshold, decimal defaultWeight,
+            [JetBrains.Annotations.NotNull] string connectionString, decimal criticalThreshold, bool isSharedDesire, [CanBeNull] int? pID,
+                      [JetBrains.Annotations.NotNull] string desireCategory, StrGuid guid)
             : base(pName, TableName, connectionString, guid)
         {
             ID = pID;
@@ -65,7 +65,7 @@ namespace Database.Tables.BasicHouseholds {
             _isSharedDesire = isSharedDesire;
             _desireCategory = desireCategory;
         }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string DesireCategory {
             get => _desireCategory;
@@ -103,9 +103,9 @@ namespace Database.Tables.BasicHouseholds {
             set => SetValueWithNotify(value, ref _isSharedDesire, nameof(IsSharedDesire));
         }
 
-        [NotNull]
-        private static Desire AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static Desire AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var defaultdecay = dr.GetDecimal("DefaultDecayRate", false, 12m, ignoreMissingFields);
             var defaultThreshold = dr.GetDecimal("DefaultThreshold", false, 0.5m, ignoreMissingFields);
@@ -121,9 +121,9 @@ namespace Database.Tables.BasicHouseholds {
             return d;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new Desire(
+        public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString) => new Desire(
             FindNewName(isNameTaken, "New Desire "), 12m, 0.5m, 1,
             connectionString, -1, false, null,"", System.Guid.NewGuid().ToStrGuid());
 
@@ -159,7 +159,7 @@ namespace Database.Tables.BasicHouseholds {
             return used;
         }
 
-        public void ImportFromExistingItem([NotNull] Desire src)
+        public void ImportFromExistingItem([JetBrains.Annotations.NotNull] Desire src)
         {
             Name = src.Name + " (copy)";
             CriticalThreshold = src.CriticalThreshold;
@@ -170,9 +170,9 @@ namespace Database.Tables.BasicHouseholds {
             SaveToDB();
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DBBase ImportFromItem([NotNull] Desire item, [NotNull] Simulator dstSim) => new Desire(
+        public static DBBase ImportFromItem([JetBrains.Annotations.NotNull] Desire item, [JetBrains.Annotations.NotNull] Simulator dstSim) => new Desire(
             item.Name, item.DefaultDecayRate, item.DefaultThreshold, item.DefaultWeight,
             dstSim.ConnectionString,
             item.CriticalThreshold, item.IsSharedDesire, null,
@@ -184,7 +184,7 @@ namespace Database.Tables.BasicHouseholds {
             return true;
         }
 
-        public static void LoadFromDatabase([NotNull] [ItemNotNull] ObservableCollection<Desire> result, [NotNull] string connectionString,
+        public static void LoadFromDatabase([JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<Desire> result, [JetBrains.Annotations.NotNull] string connectionString,
             bool ignoreMissingTables)
         {
             var aic = new AllItemCollections();

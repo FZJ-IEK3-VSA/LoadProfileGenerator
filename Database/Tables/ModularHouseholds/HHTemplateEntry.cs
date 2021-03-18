@@ -66,7 +66,7 @@ namespace Database.Tables.ModularHouseholds {
         private bool _isMandatory;
 
         public HHTemplateEntry([CanBeNull]int? pID, [CanBeNull] int? householdTemplateId, [JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] string connectionString,
-            [CanBeNull] TraitTag tag, int traitCountMin, int traitCountMax, StrGuid guid, bool isMandatory)
+            [CanBeNull] TraitTag tag, int traitCountMin, int traitCountMax, [JetBrains.Annotations.NotNull] StrGuid guid, bool isMandatory)
             : base(name, TableName, connectionString, guid)
         {
             _householdTemplateId = householdTemplateId;

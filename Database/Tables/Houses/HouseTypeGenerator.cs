@@ -39,8 +39,8 @@ namespace Database.Tables.Houses {
 
         [CanBeNull] private readonly Generator _generator;
 
-        public HouseTypeGenerator([CanBeNull]int? pID, int houseID, [CanBeNull] Generator gen, [NotNull] string connectionString,
-            [NotNull] string generatorName, StrGuid guid)
+        public HouseTypeGenerator([CanBeNull]int? pID, int houseID, [CanBeNull] Generator gen, [JetBrains.Annotations.NotNull] string connectionString,
+            [JetBrains.Annotations.NotNull] string generatorName, [NotNull] StrGuid guid)
             : base(generatorName, TableName, connectionString, guid)
         {
             ID = pID;
@@ -63,9 +63,9 @@ namespace Database.Tables.Houses {
             }
         }
 
-        [NotNull]
-        private static HouseTypeGenerator AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static HouseTypeGenerator AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var id = dr.GetIntFromLong("ID");
             var generatorID = dr.GetIntFromLong("GeneratorID");
@@ -90,8 +90,8 @@ namespace Database.Tables.Houses {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<HouseTypeGenerator> result, [NotNull] string connectionString,
-            [NotNull] [ItemNotNull] ObservableCollection<Generator> generators, bool ignoreMissingTables)
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<HouseTypeGenerator> result, [JetBrains.Annotations.NotNull] string connectionString,
+            [JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<Generator> generators, bool ignoreMissingTables)
         {
             var aic = new AllItemCollections(generators: generators);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);

@@ -49,7 +49,8 @@ namespace CalculationEngine.HouseElements {
         public CalcGenerator(  [NotNull] IOnlineDeviceActivationProcessor odap,
                              [NotNull] CalcLoadType loadType,
                              [NotNull] List<double> values,
-                             [NotNull] CalcParameters calcParameters,  [NotNull] CalcDeviceDto calcDeviceDto) : base(calcDeviceDto.Name, calcDeviceDto.Guid)
+                             [NotNull] CalcParameters calcParameters,  [NotNull] CalcDeviceDto calcDeviceDto)
+            : base(calcDeviceDto.Name, calcDeviceDto.DeviceInstanceGuid)
         {
             //_devProcessorKey = new OefcKey(householdKey, OefcDeviceType.Generator, guid, "-1", loadType.Guid, "Generator");
             _odap = odap;

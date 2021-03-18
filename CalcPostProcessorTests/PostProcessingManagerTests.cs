@@ -52,7 +52,7 @@ namespace CalcPostProcessorTests {
                         3,
                         3,
                         calculationProfiler, wd.WorkingDirectory,false,false,
-                        ".");
+                        ".", false);
                     var cmf = new CalcManagerFactory();
                     var cm = cmf.GetCalcManager(sim, csps, false);
                     cm.Run(null);

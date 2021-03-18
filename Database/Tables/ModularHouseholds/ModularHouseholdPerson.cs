@@ -53,7 +53,7 @@ namespace Database.Tables.ModularHouseholds {
         [CanBeNull] private  Person _person;
 
         public ModularHouseholdPerson([CanBeNull]int? pID, [CanBeNull]int? modularHouseholdID, [JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] string connectionString,
-            [CanBeNull] Person person, [CanBeNull] LivingPatternTag livingPatternTag, StrGuid guid ) : base(name, TableName, connectionString,
+            [CanBeNull] Person person, [CanBeNull] LivingPatternTag livingPatternTag, [JetBrains.Annotations.NotNull] StrGuid guid ) : base(name, TableName, connectionString,
             guid) {
             _person = person;
             ID = pID;

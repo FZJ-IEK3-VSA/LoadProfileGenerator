@@ -40,15 +40,15 @@ namespace Database.Tables {
     internal class SingleSetting : DBBase {
         [CanBeNull] private string _settingValue;
 
-        public SingleSetting([NotNull] string settingName, [NotNull] string settingValue, [NotNull] string connectionString,
-                             StrGuid guid,
+        public SingleSetting([JetBrains.Annotations.NotNull] string settingName, [JetBrains.Annotations.NotNull] string settingValue, [JetBrains.Annotations.NotNull] string connectionString,
+                             [NotNull] StrGuid guid,
                              [CanBeNull]int? pID = null)
             : base(settingName, GeneralConfig.TableName, connectionString, guid) {
             _settingValue = settingValue;
             ID = pID;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string SettingValue {
             get => _settingValue ??"";
             set {
@@ -66,8 +66,8 @@ namespace Database.Tables {
             return true;
         }
 
-        [NotNull]
-        public static Dictionary<string, SingleSetting> LoadFromDatabase([NotNull] string connectionString, bool ignoreMissingFields) {
+        [JetBrains.Annotations.NotNull]
+        public static Dictionary<string, SingleSetting> LoadFromDatabase([JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields) {
             var items2Delete = new List<SingleSetting>();
             var settings = new Dictionary<string, SingleSetting>();
             using (var con = new Connection(connectionString)) {

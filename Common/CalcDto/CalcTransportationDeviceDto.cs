@@ -23,6 +23,7 @@ namespace Common.CalcDto {
         [CanBeNull]
         public StrGuid? ChargingCalcLoadTypeGuid { get; }
         public StrGuid Guid { get; }
+
         public bool IsLimitedToSingleLocation { get; }
 
         public CalcTransportationDeviceDto([NotNull]string name, int id, [NotNull] CalcTransportationDeviceCategoryDto category,

@@ -11,7 +11,7 @@ namespace Database.Tables.ModularHouseholds {
 
     public class LivingPatternTag : DBBaseElement {
         public const string TableName = "tblLivingPatternTags";
-        public LivingPatternTag([NotNull] string pName, [NotNull] string connectionString,
+        public LivingPatternTag([JetBrains.Annotations.NotNull] string pName, [JetBrains.Annotations.NotNull] string connectionString,
                         StrGuid guid, [CanBeNull]int? pID = null)
             : base(pName, TableName, connectionString, guid)
         {
@@ -20,9 +20,9 @@ namespace Database.Tables.ModularHouseholds {
         }
 
 
-        [NotNull]
-        private static LivingPatternTag AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-                                                     [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static LivingPatternTag AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+                                                     [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var name = dr.GetString("Name","No name");
             var id = dr.GetIntFromLong("ID");
@@ -31,9 +31,9 @@ namespace Database.Tables.ModularHouseholds {
             return d;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new LivingPatternTag(
+        public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString) => new LivingPatternTag(
             FindNewName(isNameTaken, "New Living Pattern Tag "), connectionString, System.Guid.NewGuid().ToStrGuid());
 
         public override DBBase ImportFromGenericItem(DBBase toImport, Simulator dstSim)
@@ -69,10 +69,10 @@ namespace Database.Tables.ModularHouseholds {
             return used;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
 #pragma warning disable RCS1163 // Unused parameter.
-        public static DBBase ImportFromItem([NotNull] LivingPatternTag item, [NotNull] Simulator dstSim)
+        public static DBBase ImportFromItem([JetBrains.Annotations.NotNull] LivingPatternTag item, [JetBrains.Annotations.NotNull] Simulator dstSim)
 #pragma warning restore RCS1163 // Unused parameter.
         {
             //TODO: finish this
@@ -88,7 +88,7 @@ namespace Database.Tables.ModularHouseholds {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<LivingPatternTag> result, [NotNull] string connectionString,
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<LivingPatternTag> result, [JetBrains.Annotations.NotNull] string connectionString,
             bool ignoreMissingTables)
         {
             var aic = new AllItemCollections();

@@ -54,8 +54,8 @@ namespace Database.Helpers {
         private int Year => _date.Year;
 
         [ItemNotNull]
-        [NotNull]
-        public static List<DbCalcDegreeHour> GetCalcDegreeHours([NotNull] TemperatureProfile temperatureProfile, DateTime startTime,
+        [JetBrains.Annotations.NotNull]
+        public static List<DbCalcDegreeHour> GetCalcDegreeHours([JetBrains.Annotations.NotNull] TemperatureProfile temperatureProfile, DateTime startTime,
             DateTime endTime, double coolingTemp, double yearlycoolingAmount, bool adjustYearlyEnergy,
             double referenceCoolingHours)
         {
@@ -124,7 +124,7 @@ namespace Database.Helpers {
             return degreeHourvalue;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public override string ToString() => _date.ToShortDateString() + " " + _date.ToShortTimeString() + ": " +
                                              _averageTemperature;
     }

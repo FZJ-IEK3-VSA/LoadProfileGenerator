@@ -111,7 +111,7 @@ namespace Database.Tables.ModularHouseholds {
             [CanBeNull] TimeBasedProfile timeprofile, int householdTraitID, decimal timeStandardDeviation,
             [CanBeNull] VLoadType vLoadType, [CanBeNull] TimeLimit timeLimit, [JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.NotNull] string name,
             [CanBeNull] Location location, double variableValue, VariableCondition variableCondition,
-            [CanBeNull] Variable variable, StrGuid guid) : base(name, TableName, connectionString, guid)
+            [CanBeNull] Variable variable, [JetBrains.Annotations.NotNull] StrGuid guid) : base(name, TableName, connectionString, guid)
         {
             TypeDescription = "Household Trait Autonomous Device";
             ID = pID;

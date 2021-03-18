@@ -48,7 +48,7 @@ namespace Database.Tables.ModularHouseholds {
         FromCalculations
     }
 
-    public readonly struct AffordanceWithTimeLimit {
+    public record AffordanceWithTimeLimit {
         public AffordanceWithTimeLimit([JetBrains.Annotations.NotNull] Affordance affordance,
                                        [CanBeNull] TimeLimit timeLimit,
                                        int weight,
@@ -94,44 +94,44 @@ namespace Database.Tables.ModularHouseholds {
         [UsedImplicitly]
         public int EndPlusTime { get; }
 
-        public bool Equals(AffordanceWithTimeLimit other)
-        {
-            if (other.Affordance == Affordance && TimeLimit == other.TimeLimit) {
-                return true;
-            }
+        //public bool Equals(AffordanceWithTimeLimit other)
+        //{
+        //    if (other.Affordance == Affordance && TimeLimit == other.TimeLimit) {
+        //        return true;
+        //    }
 
-            return false;
-        }
+        //    return false;
+        //}
 
-        public override bool Equals(object obj)
-        {
-            if (!(obj is AffordanceWithTimeLimit)) {
-                return false;
-            }
+        //public override bool Equals(object obj)
+        //{
+        //    if (!(obj is AffordanceWithTimeLimit)) {
+        //        return false;
+        //    }
 
-            return Equals((AffordanceWithTimeLimit)obj);
-        }
+        //    return Equals((AffordanceWithTimeLimit)obj);
+        //}
 
-        public override int GetHashCode()
-        {
-            var hashCode = -1402040524;
-            hashCode = hashCode * -1521134295 + base.GetHashCode();
-            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(SrcTraitName);
-            hashCode = hashCode * -1521134295 + EqualityComparer<Affordance>.Default.GetHashCode(Affordance);
-            if (TimeLimit != null) {
-                hashCode = hashCode * -1521134295 + EqualityComparer<TimeLimit>.Default.GetHashCode(TimeLimit);
-            }
+        //public override int GetHashCode()
+        //{
+        //    var hashCode = -1402040524;
+        //    hashCode = hashCode * -1521134295 + base.GetHashCode();
+        //    hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(SrcTraitName);
+        //    hashCode = hashCode * -1521134295 + EqualityComparer<Affordance>.Default.GetHashCode(Affordance);
+        //    if (TimeLimit != null) {
+        //        hashCode = hashCode * -1521134295 + EqualityComparer<TimeLimit>.Default.GetHashCode(TimeLimit);
+        //    }
 
-            hashCode = hashCode * -1521134295 + Weight.GetHashCode();
-            hashCode = hashCode * -1521134295 + StartMinusTime.GetHashCode();
-            hashCode = hashCode * -1521134295 + StartPlusTime.GetHashCode();
-            hashCode = hashCode * -1521134295 + EndMinusTime.GetHashCode();
-            return hashCode * -1521134295 + EndPlusTime.GetHashCode();
-        }
+        //    hashCode = hashCode * -1521134295 + Weight.GetHashCode();
+        //    hashCode = hashCode * -1521134295 + StartMinusTime.GetHashCode();
+        //    hashCode = hashCode * -1521134295 + StartPlusTime.GetHashCode();
+        //    hashCode = hashCode * -1521134295 + EndMinusTime.GetHashCode();
+        //    return hashCode * -1521134295 + EndPlusTime.GetHashCode();
+        //}
 
-        public static bool operator ==(AffordanceWithTimeLimit left, AffordanceWithTimeLimit right) => left.Equals(right);
+        //public static bool operator ==(AffordanceWithTimeLimit left, AffordanceWithTimeLimit right) => left.Equals(right);
 
-        public static bool operator !=(AffordanceWithTimeLimit left, AffordanceWithTimeLimit right) => !(left == right);
+        //public static bool operator !=(AffordanceWithTimeLimit left, AffordanceWithTimeLimit right) => !(left == right);
     }
 
     public class HouseholdTrait : DBBaseElement, IHouseholdOrTrait, IJsonSerializable<HouseholdTrait.JsonDto> {

@@ -549,8 +549,8 @@ namespace CalculationController.CalcFactories {
                 double distanceToEnergyFactor = transportationDevice.EnergyToDistanceFactor;
 
                 CalcLoadType chargingLoadType = null;
-                if (transportationDevice.ChargingCalcLoadTypeGuid.HasValue) {
-                    chargingLoadType= _loadTypeDict.GetLoadtypeByGuid(transportationDevice.ChargingCalcLoadTypeGuid.Value);
+                if (transportationDevice.ChargingCalcLoadTypeGuid!=null) {
+                    chargingLoadType= _loadTypeDict.GetLoadtypeByGuid(transportationDevice.ChargingCalcLoadTypeGuid);
                 }
                 if (chh.TransportationHandler == null)
                 {
@@ -561,7 +561,7 @@ namespace CalculationController.CalcFactories {
                     transportationDevice.Category.Guid,
                     chh.HouseholdKey,
                     OefcDeviceType.Transportation,transportationDevice.Category.Name,
-                    string.Empty,transportationDevice.Guid, StrGuid.Empty, string.Empty);
+                    string.Empty,transportationDevice.Guid, StrGuid.Empty, string.Empty, FlexibilityType.EnergyBudget, 14400);
                 var category = chh.TransportationHandler.GetCategory(transportationDevice.Category);
                 CalcTransportationDevice cd = new CalcTransportationDevice(
                     category,

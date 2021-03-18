@@ -155,7 +155,7 @@ namespace CalculationController.CalcFactories {
                 }*/
 
                 //_cdf.MakeCalcDevices(calcLocations, householdDto.DeviceDtos, calcDevices,householdDto.HouseholdKey, _ltDict);
-                var calcpersons = _cpf.MakeCalcPersons(householdDto.Persons, calcLocations, householdDto.Name);
+                var calcpersons = _cpf.MakeCalcPersons(householdDto.Persons, calcLocations, householdDto.Name, householdDto.HouseholdKey);
 
                 chh = new CalcHousehold(name,
                     householdDto.GeographicLocationName,
@@ -181,7 +181,7 @@ namespace CalculationController.CalcFactories {
                 //}
                 //chh.BridgeDays = householdDto.BridgeDays;
                 _caf.SetAllAffordaces(householdDto.Affordances, dtoCalcLocationDict,
-                    _calcVariableRepository, calcDevices);
+                    _calcVariableRepository, calcDevices, householdDto.HouseholdKey);
                 CheckCalcAffordancesForExecutability(chh);
                 if (householdDto.CalcTravelRoutes != null) {
                     Logger.Info("Starting to initialize transportation for household " + householdDto.Name + "...");

@@ -63,7 +63,7 @@ namespace Database.Tests.Tables {
                 AffordanceDevice.LoadFromDatabase(affdev, db.ConnectionString, deviceCategories, realDevices,
                     timeBasedProfiles, affordances, loadtypes, deviceActions, deviceActionGroups, false);
                 affdev.Count.Should().Be(0);
-                var rd = new RealDevice("blub", 1, "1", null, "name", true, false, db.ConnectionString, Guid.NewGuid().ToStrGuid());
+                var rd = new RealDevice("blub", 1, "1", null, "name", true, false, db.ConnectionString, Guid.NewGuid().ToStrGuid(), 0,FlexibilityType.NoFlexibility);
                 rd.SaveToDB();
                 realDevices.Add(rd);
                 var tp = new TimeBasedProfile("blub", null, db.ConnectionString, TimeProfileType.Relative,

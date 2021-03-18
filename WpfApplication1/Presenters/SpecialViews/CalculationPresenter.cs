@@ -597,7 +597,9 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                 Sim.MyGeneralConfig.CSVCharacter, Sim.MyGeneralConfig.RandomSeed, Sim.MyGeneralConfig.ExternalStepSize, Sim.MyGeneralConfig.DeleteDatFilesBool,
                 Sim.MyGeneralConfig.WriteExcelColumnBool, Sim.MyGeneralConfig.ShowSettlingPeriodBool, 3,
                 Sim.MyGeneralConfig.RepetitionCount, calculationProfiler, SelectedChargingStationSet,null,
-                Sim.MyGeneralConfig.DeviceProfileHeaderMode,false,resultpath,_calculateTransportation, Sim.MyGeneralConfig.EnableIdlemodeBool, Sim.MyGeneralConfig.DecimalSeperator);
+                Sim.MyGeneralConfig.DeviceProfileHeaderMode,false,resultpath,_calculateTransportation,
+                Sim.MyGeneralConfig.EnableIdlemodeBool, Sim.MyGeneralConfig.DecimalSeperator,
+                Sim.MyGeneralConfig.EnableFlexibilityBool);
             var cs = new CalcStarter(Sim);
             //_calculationProfiler.Clear();
 #pragma warning disable S2930 // "IDisposables" should be disposed

@@ -70,41 +70,39 @@ namespace LoadProfileGenerator.Views.BasicElements {
             {
                 var g = Graphics.FromImage(mybm);
 
-                using (var b = new SolidBrush(Color.DarkBlue))
+                using var b = new SolidBrush(Color.DarkBlue);
+                g.FillRectangle(b, 0, 0, daysinyear, 24);
+                var dts = new DateTime[daysinyear * 24];
+                dts[0] = new DateTime(year, 1, 1);
+                for (var i = 1; i < daysinyear * 24; i++)
                 {
-                    g.FillRectangle(b, 0, 0, daysinyear, 24);
-                    var dts = new DateTime[daysinyear * 24];
-                    dts[0] = new DateTime(year, 1, 1);
-                    for (var i = 1; i < daysinyear * 24; i++)
+                    dts[i] = dts[i - 1] + new TimeSpan(1, 0, 0);
+                }
+                for (var day = 0; day < daysinyear; day++)
+                {
+                    for (var hour = 0; hour < 24; hour++)
                     {
-                        dts[i] = dts[i - 1] + new TimeSpan(1, 0, 0);
-                    }
-                    for (var day = 0; day < daysinyear; day++)
-                    {
-                        for (var hour = 0; hour < 24; hour++)
+                        var starthour = new DateTime(year, 1, 1, hour, 0, 0);
+                        starthour = starthour.AddDays(day);
+                        var endhour = starthour.AddHours(1);
+                        var foundanyactive = false;
+                        for (var i = 0; i < dts.Length; i++)
                         {
-                            var starthour = new DateTime(year, 1, 1, hour, 0, 0);
-                            starthour = starthour.AddDays(day);
-                            var endhour = starthour.AddHours(1);
-                            var foundanyactive = false;
-                            for (var i = 0; i < dts.Length; i++)
+                            if (dts[i] >= starthour && dts[i] < endhour && br[i])
                             {
-                                if (dts[i] >= starthour && dts[i] < endhour && br[i])
-                                {
-                                    foundanyactive = true;
-                                    i = dts.Length;
-                                }
-                            }
-                            if (foundanyactive)
-                            {
-                                var x = day;
-                                var y = hour;
-                                mybm.SetPixel(x, y, Color.White);
+                                foundanyactive = true;
+                                i = dts.Length;
                             }
                         }
+                        if (foundanyactive)
+                        {
+                            var x = day;
+                            var y = hour;
+                            mybm.SetPixel(x, y, Color.White);
+                        }
                     }
-                    return mybm;
                 }
+                return mybm;
             }
         }
 
@@ -379,11 +377,11 @@ namespace LoadProfileGenerator.Views.BasicElements {
                     throw new LPGException("this should never happen!");
                 }
 
-                Action<Image, BitmapImage> setsingleimage = (i1, bitmapImage) => {
+                Action<Image, BitmapImage> setsingleimage = (_, bitmapImage) => {
                     p.BitmapSinglePermittedTime = bitmapImage;
                     Logger.Debug("Setting the new image with " + bitmapImage.Width + " pixels width.");
                 };
-                Action<Image, BitmapImage> setMergedImage = (i1, bitmapImage) => {
+                Action<Image, BitmapImage> setMergedImage = (_, bitmapImage) => {
                     p.BitmapAllPermittedTime = bitmapImage;
                     Logger.Debug("Setting the new image with " + bitmapImage.Width + " pixels width.");
                 };

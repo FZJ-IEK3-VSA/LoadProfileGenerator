@@ -572,21 +572,21 @@ namespace CalculationController.Helpers {
 
         #region Nested type: LocationDeviceTuple
 
-        private readonly struct LocationDeviceTuple : IEquatable<LocationDeviceTuple> {
-            public bool Equals(LocationDeviceTuple other) => Category.Equals(other.Category) && LocationID == other.LocationID;
+        private record LocationDeviceTuple : IEquatable<LocationDeviceTuple> {
+            //public bool Equals(LocationDeviceTuple other) => Category.Equals(other.Category) && LocationID == other.LocationID;
 
-            public override bool Equals(object obj) => obj is LocationDeviceTuple other && Equals(other);
+            //public override bool Equals(object obj) => obj is LocationDeviceTuple other && Equals(other);
 
-            public override int GetHashCode()
-            {
-                unchecked {
-                    return (Category.GetHashCode() * 397) ^ LocationID;
-                }
-            }
+            //public override int GetHashCode()
+            //{
+            //    unchecked {
+            //        return (Category.GetHashCode() * 397) ^ LocationID;
+            //    }
+            //}
 
-            public static bool operator ==(LocationDeviceTuple left, LocationDeviceTuple right) => left.Equals(right);
+            //public static bool operator ==(LocationDeviceTuple left, LocationDeviceTuple right) => left.Equals(right);
 
-            public static bool operator !=(LocationDeviceTuple left, LocationDeviceTuple right) => !left.Equals(right);
+            //public static bool operator !=(LocationDeviceTuple left, LocationDeviceTuple right) => !left.Equals(right);
 
             public LocationDeviceTuple([JetBrains.Annotations.NotNull] IAssignableDevice category, int locationID)
             {

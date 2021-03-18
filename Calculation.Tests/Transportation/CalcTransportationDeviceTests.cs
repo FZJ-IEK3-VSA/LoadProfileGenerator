@@ -80,7 +80,7 @@ namespace Calculation.Tests.Transportation {
                 dstSite
             };
             var cdd = new CalcDeviceDto("transport device", category.Guid, key, OefcDeviceType.Transportation, category.Name,
-                string.Empty, Guid.NewGuid().ToStrGuid(), StrGuid.Empty, string.Empty);
+                string.Empty, Guid.NewGuid().ToStrGuid(), StrGuid.Empty, string.Empty, FlexibilityType.NoFlexibility, 0);
             var loads = new List<CalcDeviceLoad> {
                 new CalcDeviceLoad("load1", 10, lt2, 10000, 0)
             };

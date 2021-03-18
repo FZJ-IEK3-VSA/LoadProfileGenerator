@@ -32,8 +32,8 @@ namespace Database.Tables.BasicHouseholds {
 
         public AffordanceDevice([CanBeNull] IAssignableDevice assignableDevice,
             [CanBeNull] TimeBasedProfile timeProfile, [CanBeNull] int? id, decimal timeOffset, [CanBeNull] int? affordanceID,
-            [ItemNotNull] [NotNull] ObservableCollection<RealDevice> simdevices, [ItemNotNull] [NotNull] ObservableCollection<DeviceCategory> simdevcategories,
-            [NotNull] string deviceName, [CanBeNull] VLoadType loadType, [NotNull] string connectionString, double probability, StrGuid guid) : base(
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<RealDevice> simdevices, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceCategory> simdevcategories,
+            [JetBrains.Annotations.NotNull] string deviceName, [CanBeNull] VLoadType loadType, [JetBrains.Annotations.NotNull] string connectionString, double probability, [NotNull] StrGuid guid) : base(
             deviceName, TableName, connectionString, guid) {
             _assignableDevice = assignableDevice;
             _timeProfile = timeProfile;
@@ -62,7 +62,7 @@ namespace Database.Tables.BasicHouseholds {
         [UsedImplicitly]
         public decimal TimeOffset => _timeOffset;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string TimeOffsetString => _timeOffset.ToString("0.00", CultureInfo.CurrentCulture);
 
@@ -96,9 +96,9 @@ namespace Database.Tables.BasicHouseholds {
         [UsedImplicitly]
         public TimeBasedProfile TimeProfile => _timeProfile;
 
-        [NotNull]
-        private static AffordanceDevice AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic) {
+        [JetBrains.Annotations.NotNull]
+        private static AffordanceDevice AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic) {
             var id = dr.GetIntFromLong("ID");
             var affordanceID = dr.GetInt("AffordanceID", false, -1, ignoreMissingFields);
             var deviceID =  dr.GetInt("DeviceID");
@@ -169,11 +169,11 @@ namespace Database.Tables.BasicHouseholds {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<AffordanceDevice> result, [NotNull] string connectionString,
-            [ItemNotNull] [NotNull] ObservableCollection<DeviceCategory> deviceCategories, [ItemNotNull] [NotNull] ObservableCollection<RealDevice> realDevices,
-            [ItemNotNull] [NotNull] ObservableCollection<TimeBasedProfile> timeBasedProfiles, [ItemNotNull] [NotNull] ObservableCollection<Affordance> affordances,
-            [ItemNotNull] [NotNull] ObservableCollection<VLoadType> loadTypes, [ItemNotNull] [NotNull] ObservableCollection<DeviceAction> deviceActions,
-            [ItemNotNull] [NotNull] ObservableCollection<DeviceActionGroup> deviceActionGroups, bool ignoreMissingTables) {
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<AffordanceDevice> result, [JetBrains.Annotations.NotNull] string connectionString,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceCategory> deviceCategories, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<RealDevice> realDevices,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TimeBasedProfile> timeBasedProfiles, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Affordance> affordances,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<VLoadType> loadTypes, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceAction> deviceActions,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceActionGroup> deviceActionGroups, bool ignoreMissingTables) {
             var aic = new AllItemCollections(deviceCategories: deviceCategories,
                 realDevices: realDevices, timeProfiles: timeBasedProfiles, affordances: affordances,
                 loadTypes: loadTypes, deviceActions: deviceActions, deviceActionGroups: deviceActionGroups);
@@ -199,8 +199,8 @@ namespace Database.Tables.BasicHouseholds {
             cmd.AddParameter("Probability", _probability);
         }
 
-        private void SimdevicesOnCollectionChanged([NotNull] object sender,
-            [NotNull] NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs) {
+        private void SimdevicesOnCollectionChanged([JetBrains.Annotations.NotNull] object sender,
+            [JetBrains.Annotations.NotNull] NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs) {
             if (notifyCollectionChangedEventArgs.Action == NotifyCollectionChangedAction.Remove &&
                 notifyCollectionChangedEventArgs.OldItems != null &&
                 notifyCollectionChangedEventArgs.OldItems[0] == _assignableDevice) {

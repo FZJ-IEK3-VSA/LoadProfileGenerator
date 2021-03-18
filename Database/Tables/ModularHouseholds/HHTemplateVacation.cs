@@ -15,8 +15,8 @@ namespace Database.Tables.ModularHouseholds {
 
         [CanBeNull] private readonly Vacation _vacation;
 
-        public HHTemplateVacation([CanBeNull]int? pID, [CanBeNull] Vacation vacation, int hhTemplateID, [NotNull] string name,
-            [NotNull] string connectionString, StrGuid guid)
+        public HHTemplateVacation([CanBeNull]int? pID, [CanBeNull] Vacation vacation, int hhTemplateID, [JetBrains.Annotations.NotNull] string name,
+            [JetBrains.Annotations.NotNull] string connectionString, [NotNull] StrGuid guid)
             : base(name, TableName, connectionString, guid) {
             ID = pID;
             _vacation = vacation;
@@ -26,12 +26,12 @@ namespace Database.Tables.ModularHouseholds {
         [CanBeNull]
         public int? HHTemplateID => _hhTemplateID;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Vacation Vacation => _vacation ?? throw new InvalidOperationException();
 
-        [NotNull]
-        private static HHTemplateVacation AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic) {
+        [JetBrains.Annotations.NotNull]
+        private static HHTemplateVacation AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic) {
             var hhpID = dr.GetIntFromLong("ID");
             var vacationID = dr.GetIntFromLong("VacationID", ignoreMissingField: ignoreMissingFields);
             var templateID = dr.GetIntFromLong("HHTemplateID");
@@ -54,8 +54,8 @@ namespace Database.Tables.ModularHouseholds {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<HHTemplateVacation> result, [NotNull] string connectionString,
-            [ItemNotNull] [NotNull] ObservableCollection<Vacation> vacations, bool ignoreMissingTables) {
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<HHTemplateVacation> result, [JetBrains.Annotations.NotNull] string connectionString,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Vacation> vacations, bool ignoreMissingTables) {
             var aic = new AllItemCollections(vacations: vacations);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }

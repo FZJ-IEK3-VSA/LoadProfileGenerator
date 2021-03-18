@@ -50,7 +50,7 @@ namespace Database.Tables.Houses {
         private readonly int? _settlementID;
 
         public SettlementHH([CanBeNull]int? pID, [CanBeNull] ICalcObject pHH, int count, [CanBeNull] int? settlementID,
-            [JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.NotNull] string householdName, StrGuid guid)
+            [JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.NotNull] string householdName, [JetBrains.Annotations.NotNull] StrGuid guid)
             : base(householdName, TableName, connectionString, guid) {
             TypeDescription = "Settlement Household";
             ID = pID;

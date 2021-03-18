@@ -13,8 +13,8 @@ namespace Database.Tables.ModularHouseholds {
 
         [CanBeNull] private readonly Person _person;
 
-        public HHTemplateEntryPerson([CanBeNull]int? pID, [CanBeNull] Person pPerson, int hhTemplateEntryID, [NotNull] string name,
-            [NotNull] string connectionString, StrGuid guid)
+        public HHTemplateEntryPerson([CanBeNull]int? pID, [CanBeNull] Person pPerson, int hhTemplateEntryID, [JetBrains.Annotations.NotNull] string name,
+            [JetBrains.Annotations.NotNull] string connectionString, [NotNull] StrGuid guid)
             : base(name, TableName, connectionString, guid) {
             ID = pID;
             _person = pPerson;
@@ -24,12 +24,12 @@ namespace Database.Tables.ModularHouseholds {
         [CanBeNull]
         public int? HHTemplateEntryID => _hhTemplateEntryID;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Person Person => _person ?? throw new InvalidOperationException();
 
-        [NotNull]
-        private static HHTemplateEntryPerson AssignFields([NotNull] DataReader dr, [NotNull] string connectionString,
-            bool ignoreMissingFields, [NotNull] AllItemCollections aic) {
+        [JetBrains.Annotations.NotNull]
+        private static HHTemplateEntryPerson AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString,
+            bool ignoreMissingFields, [JetBrains.Annotations.NotNull] AllItemCollections aic) {
             var hhpID = dr.GetIntFromLong("ID");
             var personID = dr.GetIntFromLong("PersonID", ignoreMissingField: ignoreMissingFields);
             var householdID = dr.GetIntFromLong("HHGEntryID");
@@ -54,8 +54,8 @@ namespace Database.Tables.ModularHouseholds {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<HHTemplateEntryPerson> result, [NotNull] string connectionString,
-            [ItemNotNull] [NotNull] ObservableCollection<Person> persons, bool ignoreMissingTables) {
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<HHTemplateEntryPerson> result, [JetBrains.Annotations.NotNull] string connectionString,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Person> persons, bool ignoreMissingTables) {
             var aic = new AllItemCollections(persons: persons);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }

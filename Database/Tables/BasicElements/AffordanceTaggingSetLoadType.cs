@@ -12,8 +12,8 @@ namespace Database.Tables.BasicElements {
 
         [CanBeNull] private VLoadType _loadType;
 
-        public AffordanceTaggingSetLoadType([NotNull] string name, int taggingSetID, [CanBeNull] VLoadType loadType,
-            [NotNull] string connectionString,[CanBeNull]int? pID, StrGuid guid) : base(name, pID, TableName,
+        public AffordanceTaggingSetLoadType([JetBrains.Annotations.NotNull] string name, int taggingSetID, [CanBeNull] VLoadType loadType,
+            [JetBrains.Annotations.NotNull] string connectionString,[CanBeNull]int? pID, [NotNull] StrGuid guid) : base(name, pID, TableName,
             connectionString, guid)
         {
             _taggingSetID = taggingSetID;
@@ -30,9 +30,9 @@ namespace Database.Tables.BasicElements {
 
         public int TaggingSetID => _taggingSetID;
 
-        [NotNull]
-        private static AffordanceTaggingSetLoadType AssignFields([NotNull] DataReader dr, [NotNull] string connectionString,
-            bool ignoreMissingFields, [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static AffordanceTaggingSetLoadType AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString,
+            bool ignoreMissingFields, [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var id = dr.GetIntFromLong("ID");
             var taggingSetID = dr.GetIntFromLong("AffTagSetID");
@@ -56,8 +56,8 @@ namespace Database.Tables.BasicElements {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<AffordanceTaggingSetLoadType> result,
-            [NotNull] string connectionString, bool ignoreMissingTables, [ItemNotNull] [NotNull] ObservableCollection<VLoadType> loadTypes)
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<AffordanceTaggingSetLoadType> result,
+            [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingTables, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<VLoadType> loadTypes)
         {
             var aic = new AllItemCollections(loadTypes: loadTypes);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);

@@ -48,7 +48,7 @@ namespace Database.Tables.Houses {
 
         public TransformationDeviceLoadType([CanBeNull]int? pID, [CanBeNull] VLoadType loadType, double factor,
             int transformationDeviceID,
-            [NotNull] string connectionString, [NotNull] string loadTypeName, TransformationFactorType factorType ,StrGuid guid)
+            [JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.NotNull] string loadTypeName, TransformationFactorType factorType ,[NotNull] StrGuid guid)
             : base(loadTypeName, TableName, connectionString, guid)
         {
             ID = pID;
@@ -63,7 +63,7 @@ namespace Database.Tables.Houses {
         public double Factor { get; }
 
         public TransformationFactorType FactorType { get; }
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string FactorTypeStr => FactorType.ToString();
 
@@ -82,9 +82,9 @@ namespace Database.Tables.Houses {
         [CanBeNull]
         public VLoadType VLoadType => _loadType;
 
-        [NotNull]
-        private static TransformationDeviceLoadType AssignFields([NotNull] DataReader dr, [NotNull] string connectionString,
-            bool ignoreMissingFields, [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static TransformationDeviceLoadType AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString,
+            bool ignoreMissingFields, [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var id =  dr.GetIntFromLong("ID");
             var loadTypeID = dr.GetIntFromLong("VLoadTypeID");
@@ -114,8 +114,8 @@ namespace Database.Tables.Houses {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<TransformationDeviceLoadType> result,
-            [NotNull] string connectionString, [ItemNotNull] [NotNull] ObservableCollection<VLoadType> loadTypes, bool ignoreMissingTables)
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TransformationDeviceLoadType> result,
+            [JetBrains.Annotations.NotNull] string connectionString, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<VLoadType> loadTypes, bool ignoreMissingTables)
         {
             var aic = new AllItemCollections(loadTypes: loadTypes);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);

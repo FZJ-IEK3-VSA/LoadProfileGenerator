@@ -91,8 +91,8 @@ namespace Database.Tables.ModularHouseholds {
         }
         public HHTDesire([CanBeNull]int? pID, [CanBeNull] int? householdTraitID, decimal decayTime, [CanBeNull] Desire desire,
             HealthStatus sicknessdesire,
-            decimal threshold, decimal weight, [NotNull] string connectionString, [NotNull] string name, int minAge, int maxAge,
-            PermittedGender gender, StrGuid guid) : base(name, TableName, connectionString, guid)
+            decimal threshold, decimal weight, [JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.NotNull] string name, int minAge, int maxAge,
+            PermittedGender gender, [NotNull] StrGuid guid) : base(name, TableName, connectionString, guid)
         {
             ID = pID;
             _decayTime = decayTime;
@@ -109,10 +109,10 @@ namespace Database.Tables.ModularHouseholds {
 
         public decimal DecayTime => _decayTime;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Desire Desire => _desire ?? throw new InvalidOperationException();
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string Estimated25PercentTime {
             get {
@@ -121,17 +121,17 @@ namespace Database.Tables.ModularHouseholds {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string EstimatedExecutions => CalculateEstimatedExecutions();
 
         public PermittedGender Gender { get; private set; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string HealthStatus => HealthStatusStrings[(int) SicknessDesire];
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [IgnoreForJsonSync]
         public static ObservableCollection<string> HealthStatusStrings { get; private set; }
         [CanBeNull]
@@ -141,7 +141,7 @@ namespace Database.Tables.ModularHouseholds {
 
         public int MinAge { get; private set; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public new string Name {
             get {
@@ -159,9 +159,9 @@ namespace Database.Tables.ModularHouseholds {
 
         public decimal Weight { get; private set; }
 
-        [NotNull]
-        private static HHTDesire AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static HHTDesire AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var hhtDesireID =  dr.GetIntFromLong("ID");
             var householdTraitID = dr.GetIntFromLong("HouseholdTraitID");
@@ -188,7 +188,7 @@ namespace Database.Tables.ModularHouseholds {
             return hhad;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private string CalculateEstimatedExecutions()
         {
             var ts = TimeSpan.FromHours((double) _decayTime * 2);
@@ -208,7 +208,7 @@ namespace Database.Tables.ModularHouseholds {
             return times.ToString("N1", CultureInfo.CurrentCulture) + " per year";
         }
 
-        public static HealthStatus GetHealthStatusEnumForHealthStatusString([NotNull] string healthStatusStr)
+        public static HealthStatus GetHealthStatusEnumForHealthStatusString([JetBrains.Annotations.NotNull] string healthStatusStr)
         {
             for (var i = 0; i < HealthStatusStrings.Count; i++) {
                 if (HealthStatusStrings[i] == healthStatusStr) {
@@ -229,14 +229,14 @@ namespace Database.Tables.ModularHouseholds {
             return true;
         }
 
-        public static void LoadFromDatabase([NotNull] [ItemNotNull] ObservableCollection<HHTDesire> result, [NotNull] string connectionString,
-            [ItemNotNull] [NotNull] ObservableCollection<Desire> desires, bool ignoreMissingTables)
+        public static void LoadFromDatabase([JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<HHTDesire> result, [JetBrains.Annotations.NotNull] string connectionString,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Desire> desires, bool ignoreMissingTables)
         {
             var aic = new AllItemCollections(desires: desires);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string MakeDescription()
         {
             if (_desire != null) {

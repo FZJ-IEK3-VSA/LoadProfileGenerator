@@ -14,8 +14,8 @@ namespace Database.Tables.Houses {
 
         private readonly int _settlementTemplateID;
 
-        public STTravelRouteSet([CanBeNull] int? pID, [NotNull] string connectionString, int settlementTemplateID, [NotNull] string name,
-                                [CanBeNull] TravelRouteSet travelRouteSet, StrGuid guid) : base(name, TableName, connectionString, guid)
+        public STTravelRouteSet([CanBeNull] int? pID, [JetBrains.Annotations.NotNull] string connectionString, int settlementTemplateID, [JetBrains.Annotations.NotNull] string name,
+                                [CanBeNull] TravelRouteSet travelRouteSet, [NotNull] StrGuid guid) : base(name, TableName, connectionString, guid)
         {
             TypeDescription = "Settlement Template Travel Route Sets";
             ID = pID;
@@ -28,9 +28,9 @@ namespace Database.Tables.Houses {
 
         public int SettlementTemplateID => _settlementTemplateID;
 
-        [NotNull]
-        private static STTravelRouteSet AssignFields([NotNull] DataReader dr, [NotNull] string connectionString,
-                                                     bool ignoreMissingFields, [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static STTravelRouteSet AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString,
+                                                     bool ignoreMissingFields, [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var id = dr.GetIntFromLong("ID");
             var settlementtemplateID = dr.GetIntFromLong("SettlementTemplateID", false, ignoreMissingFields, -1);
@@ -58,8 +58,8 @@ namespace Database.Tables.Houses {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull][NotNull] ObservableCollection<STTravelRouteSet> result, [NotNull] string connectionString,
-                                            bool ignoreMissingTables, [ItemNotNull][NotNull] ObservableCollection<TravelRouteSet> travelRouteSets)
+        public static void LoadFromDatabase([ItemNotNull][JetBrains.Annotations.NotNull] ObservableCollection<STTravelRouteSet> result, [JetBrains.Annotations.NotNull] string connectionString,
+                                            bool ignoreMissingTables, [ItemNotNull][JetBrains.Annotations.NotNull] ObservableCollection<TravelRouteSet> travelRouteSets)
         {
             var aic = new AllItemCollections(travelRouteSets: travelRouteSets);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);

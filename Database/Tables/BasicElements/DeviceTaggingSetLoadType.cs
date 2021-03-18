@@ -12,8 +12,8 @@ namespace Database.Tables.BasicElements {
 
         [CanBeNull] private VLoadType _loadType;
 
-        public DeviceTaggingSetLoadType([NotNull] string name, int taggingSetID, [CanBeNull] VLoadType loadType,
-            [NotNull] string connectionString, [CanBeNull]int? pID, StrGuid guid) : base(name, pID, TableName,
+        public DeviceTaggingSetLoadType([JetBrains.Annotations.NotNull] string name, int taggingSetID, [CanBeNull] VLoadType loadType,
+            [JetBrains.Annotations.NotNull] string connectionString, [CanBeNull]int? pID, [NotNull] StrGuid guid) : base(name, pID, TableName,
             connectionString, guid)
         {
             _taggingSetID = taggingSetID;
@@ -30,8 +30,8 @@ namespace Database.Tables.BasicElements {
 
         public int TaggingSetID => _taggingSetID;
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<DeviceTaggingSetLoadType> result,
-            [NotNull] string connectionString, bool ignoreMissingTables, [ItemNotNull] [NotNull] ObservableCollection<VLoadType> loadTypes)
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceTaggingSetLoadType> result,
+            [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingTables, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<VLoadType> loadTypes)
         {
             var aic = new AllItemCollections(loadTypes: loadTypes);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
@@ -58,9 +58,9 @@ namespace Database.Tables.BasicElements {
             }
         }
 
-        [NotNull]
-        private static DeviceTaggingSetLoadType AssignFields([NotNull] DataReader dr, [NotNull] string connectionString,
-            bool ignoreMissingFields, [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static DeviceTaggingSetLoadType AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString,
+            bool ignoreMissingFields, [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var id = dr.GetIntFromLong("ID");
             var taggingSetID = dr.GetIntFromLong("DeviceTaggingSetID");

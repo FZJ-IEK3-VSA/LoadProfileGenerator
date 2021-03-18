@@ -37,11 +37,13 @@ namespace Database.Tables.BasicElements {
     public class HolidayDate : DBBase, IComparable<HolidayDate> {
         public const string TableName = "tblHolidayDates";
         private DateTime _dateAndTime;
+        [NotNull] private readonly StrGuid _guid;
 
-        public HolidayDate(DateTime dt, int holidayID, [NotNull] string connectionString, [CanBeNull] int? pID, StrGuid guid)
+        public HolidayDate(DateTime dt, int holidayID, [JetBrains.Annotations.NotNull] string connectionString, [CanBeNull] int? pID, [NotNull] StrGuid guid)
             : base(dt.ToLongDateString(), pID, TableName, connectionString, guid)
         {
             _dateAndTime = dt;
+            _guid = guid;
             HolidayID = holidayID;
             TypeDescription = "Holiday Date";
         }
@@ -55,7 +57,7 @@ namespace Database.Tables.BasicElements {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string DateAndTimeString {
             get => _dateAndTime.ToString(CultureInfo.CurrentCulture);
@@ -79,9 +81,9 @@ namespace Database.Tables.BasicElements {
             return DateAndTime.CompareTo(other.DateAndTime);
         }
 
-        [NotNull]
-        private static HolidayDate AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static HolidayDate AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var holidayDateID = dr.GetIntFromLong("ID");
             var holidayID = dr.GetIntFromLong("HolidayID");
@@ -105,7 +107,7 @@ namespace Database.Tables.BasicElements {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<HolidayDate> result, [NotNull] string connectionString,
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<HolidayDate> result, [JetBrains.Annotations.NotNull] string connectionString,
             bool ignoreMissingTables)
         {
             var aic = new AllItemCollections();

@@ -47,7 +47,7 @@ namespace Database.Tables.ModularHouseholds {
         [CanBeNull] private Location _location;
 
         public HHTLocation([CanBeNull]int? pID, [CanBeNull] Location ploc, [CanBeNull] int? householdTraitID, [JetBrains.Annotations.NotNull] string name,
-            [JetBrains.Annotations.NotNull] string connectionString, StrGuid guid)
+            [JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.NotNull] StrGuid guid)
             : base(name, TableName, connectionString, guid) {
             TypeDescription = "Household Trait Location";
             ID = pID;

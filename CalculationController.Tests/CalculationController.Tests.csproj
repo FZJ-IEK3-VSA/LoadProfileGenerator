@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net5.0;net5.0-windows</TargetFrameworks>
-    <LangVersion>9</LangVersion>
+    <LangVersion>9.0</LangVersion>
 <Nullable>disable</Nullable>
   </PropertyGroup>
 

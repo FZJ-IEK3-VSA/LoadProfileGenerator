@@ -33,7 +33,7 @@ namespace Common.Tests.SQLResultLogging.Loggers
                 TimeStep ts = new TimeStep(1, 1, true);
                 CalcDeviceDto cdd = new CalcDeviceDto("devicename", "device".ToStrGuid(),
                     key, OefcDeviceType.Device, "devicecategoryname",
-                    "additionalname", "deviceguid".ToStrGuid(), "locationguid".ToStrGuid(), "locationname");
+                    "additionalname", "deviceguid".ToStrGuid(), "locationguid".ToStrGuid(), "locationname", FlexibilityType.NoFlexibility, 0);
                 DeviceActivationEntry ae1 = new DeviceActivationEntry("affordancename",
                     cldto, 1, "activator", 1, ts, cdd);
                 List<IHouseholdKey> aes = new List<IHouseholdKey>

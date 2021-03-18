@@ -29,7 +29,7 @@ namespace CalculationController.Tests.Helpers
             ObservableCollection<RealDevice> allDevices = new ObservableCollection<RealDevice>();
             DeviceCategory dc = new DeviceCategory("dc", -1, "bla", false, allDevices, Guid.NewGuid().ToStrGuid());
             RealDevice rd = new RealDevice("bla", 0, string.Empty, dc, "desc", false, true, string.Empty,
-                Guid.NewGuid().ToStrGuid(),-1);
+                Guid.NewGuid().ToStrGuid(),0,FlexibilityType.NoFlexibility, -1);
             allDevices.Add(rd);
             Location loc = new Location("bla", -1, string.Empty, Guid.NewGuid().ToStrGuid());
             List<IAssignableDevice> devices = new List<IAssignableDevice>
@@ -64,7 +64,7 @@ namespace CalculationController.Tests.Helpers
             DeviceCategoryPicker dcp = new DeviceCategoryPicker(r, ds);
             ObservableCollection<RealDevice> allDevices = new ObservableCollection<RealDevice>();
             DeviceCategory dc = new DeviceCategory("dc", -1, "bla", false, allDevices, Guid.NewGuid().ToStrGuid());
-            RealDevice rd = new RealDevice("bla", 0, string.Empty, dc, "desc", false, true, string.Empty,Guid.NewGuid().ToStrGuid(), -1);
+            RealDevice rd = new RealDevice("bla", 0, string.Empty, dc, "desc", false, true, string.Empty,Guid.NewGuid().ToStrGuid(),0,FlexibilityType.NoFlexibility, -1);
             allDevices.Add(rd);
             Location loc = new Location("bla", -1, string.Empty, Guid.NewGuid().ToStrGuid());
             List<IAssignableDevice> devices = new List<IAssignableDevice>
@@ -130,8 +130,8 @@ namespace CalculationController.Tests.Helpers
             // device stuff
             ObservableCollection<RealDevice> allDevices = new ObservableCollection<RealDevice>();
             DeviceCategory dc = new DeviceCategory("dc", -1, "bla", false, allDevices, Guid.NewGuid().ToStrGuid());
-            RealDevice rd1 = new RealDevice("device1", 0, string.Empty, dc, "desc", false, true, string.Empty, Guid.NewGuid().ToStrGuid(), - 1);
-            RealDevice rd2 = new RealDevice("device2", 0, string.Empty, dc, "desc", false, true, string.Empty, Guid.NewGuid().ToStrGuid(), -1);
+            RealDevice rd1 = new RealDevice("device1", 0, string.Empty, dc, "desc", false, true, string.Empty, Guid.NewGuid().ToStrGuid(),0,FlexibilityType.NoFlexibility, -1);
+            RealDevice rd2 = new RealDevice("device2", 0, string.Empty, dc, "desc", false, true, string.Empty, Guid.NewGuid().ToStrGuid(),0,FlexibilityType.NoFlexibility ,-1);
             DeviceActionGroup dag = new DeviceActionGroup("Dag1", string.Empty, "blub",Guid.NewGuid().ToStrGuid(), -1);
             DeviceAction da1 = new DeviceAction("da1", -1, "blub", string.Empty, dag, rd1, Guid.NewGuid().ToStrGuid());
             DeviceAction da2 = new DeviceAction("da2", -1, "blub", string.Empty, dag, rd2, Guid.NewGuid().ToStrGuid());

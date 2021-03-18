@@ -70,7 +70,7 @@ namespace Calculation.Tests.Transportation {
                             cdls.Add(cdl);
                             CalcDeviceDto dto = new CalcDeviceDto("car-device", transcategory.Guid,
                                 hhkey, OefcDeviceType.Transportation, transcategory.Name, string.Empty,
-                                Guid.NewGuid().ToStrGuid(), StrGuid.Empty, string.Empty);
+                                Guid.NewGuid().ToStrGuid(), StrGuid.Empty, string.Empty, FlexibilityType.NoFlexibility, 0);
                             CalcTransportationDevice ctd = new CalcTransportationDevice(transcategory, 1,
                                 cdls, 100, distanceToEnergyFactor,
                                 1000, chargingLoadType,

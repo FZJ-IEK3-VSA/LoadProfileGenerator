@@ -18,8 +18,8 @@ namespace Database.Tables.Houses {
         private readonly double _percentOfHouseholds;
         private readonly int _settlementTemplateID;
 
-        public STHouseholdDistribution([CanBeNull]int? pID, [NotNull] string connectionString, int minimumNumber, int maximumNumber,
-            double percentOfHouseholds, int settlementTemplateID, [NotNull] string name, EnergyIntensityType energyIntensity, StrGuid guid)
+        public STHouseholdDistribution([CanBeNull]int? pID, [JetBrains.Annotations.NotNull] string connectionString, int minimumNumber, int maximumNumber,
+            double percentOfHouseholds, int settlementTemplateID, [JetBrains.Annotations.NotNull] string name, EnergyIntensityType energyIntensity, [NotNull] StrGuid guid)
             : base(name, TableName, connectionString, guid)
         {
             TypeDescription = "Settlement Template Household Distribution";
@@ -43,7 +43,7 @@ namespace Database.Tables.Houses {
 
         public double PreciseHHCount { get; set; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string PrettyPercentOfHouseholds
             => (_percentOfHouseholds * 100).ToString("N2", CultureInfo.CurrentCulture) + "%";
@@ -52,7 +52,7 @@ namespace Database.Tables.Houses {
 
         public int SettlementTemplateID => _settlementTemplateID;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string TagDescription {
             get {
                 var builder = new StringBuilder();
@@ -70,7 +70,7 @@ namespace Database.Tables.Houses {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<STHouseholdDistributionTag> Tags { get; } =
             new ObservableCollection<STHouseholdDistributionTag>();
 
@@ -88,7 +88,7 @@ namespace Database.Tables.Houses {
             return string.Compare(TagDescription, other.TagDescription, StringComparison.CurrentCulture);
         }
 
-        public void AddTag([NotNull] HouseholdTag tag)
+        public void AddTag([JetBrains.Annotations.NotNull] HouseholdTag tag)
         {
             var stdt = new STHouseholdDistributionTag(null, tag, IntID, tag.Name,
                 ConnectionString, System.Guid.NewGuid().ToStrGuid());
@@ -104,9 +104,9 @@ namespace Database.Tables.Houses {
             }
         }
 
-        [NotNull]
-        private static STHouseholdDistribution AssignFields([NotNull] DataReader dr, [NotNull] string connectionString,
-            bool ignoreMissingFields, [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static STHouseholdDistribution AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString,
+            bool ignoreMissingFields, [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var id = dr.GetIntFromLong("ID");
             var settlementtemplateID = dr.GetIntFromLong("SettlementTemplateID", false, ignoreMissingFields, -1);
@@ -129,7 +129,7 @@ namespace Database.Tables.Houses {
             base.DeleteFromDB();
         }
 
-        private static bool IsCorrectParentHHDist([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectParentHHDist([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var tag = (STHouseholdDistributionTag) child;
             if (parent.ID == tag.STHouseholdDistributionID) {
@@ -146,8 +146,8 @@ namespace Database.Tables.Houses {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<STHouseholdDistribution> result,
-            [NotNull] string connectionString, bool ignoreMissingTables, [ItemNotNull] [NotNull] ObservableCollection<HouseholdTag> tags)
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<STHouseholdDistribution> result,
+            [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingTables, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<HouseholdTag> tags)
         {
             var aic = new AllItemCollections();
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);

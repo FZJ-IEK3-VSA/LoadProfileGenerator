@@ -9,8 +9,8 @@ rmdir /S/Q C:\Work\LPGDev\WpfApplication1\bin
 "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\msbuild.exe" LoadProfileGenerator.csproj -t:rebuild  -v:m
 cd C:\Work\LPGDev\SimEngine2
 rmdir /S /Q C:\Work\LPGDev\SimEngine2\bin
-dotnet publish simengine2.csproj --configuration Release --self-contained true --runtime win10-x64 --verbosity quiet
-dotnet publish simengine2.csproj --configuration Release --self-contained true --runtime linux-x64 --verbosity quiet
+dotnet publish simengine2.csproj --configuration Release --self-contained true --runtime win10-x64 --verbosity quiet -f net5.0-windows
+dotnet publish simengine2.csproj --configuration Release --self-contained true --runtime linux-x64 --verbosity quiet -f net5.0
 
 cd C:\Work\LPGDev\ReleaseMaker
 "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\msbuild.exe" ReleaseMaker.csproj -t:rebuild  -v:m

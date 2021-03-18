@@ -32,6 +32,7 @@ namespace Common.JSON {
         public int AffordanceRepetitionCount { get; set; }
 
         public bool TransportationEnabled { get; set; }
+        public bool FlexibilityEnabled { get; set; }
         [NotNull]
         public string CSVCharacter { get; set; } = ";";
 

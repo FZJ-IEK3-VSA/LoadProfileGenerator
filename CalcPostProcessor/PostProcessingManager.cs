@@ -60,6 +60,7 @@ namespace CalcPostProcessor
             builder.RegisterType<BodilyActivityLevelsStatistics>().As<IGeneralHouseholdStep>().SingleInstance();
             builder.RegisterType<MakeHouseholdPlanResult>().As<IGeneralHouseholdStep>().SingleInstance();
             builder.RegisterType<MakeBodilyActivityLevelStatistics>().As<IGeneralHouseholdStep>().SingleInstance();
+            builder.RegisterType<MakeFlexJsonFiles>().As<IGeneralHouseholdStep>().SingleInstance();
             //builder.RegisterType<ActionCarpetPlot>().As<IGeneralHouseholdStep>().SingleInstance();
             builder.RegisterType<MakeActionsEachTimestep>().As<IGeneralHouseholdStep>().SingleInstance();
             builder.RegisterType<LocationStatisticsMaker>().As<IGeneralHouseholdStep>().SingleInstance();
@@ -75,7 +76,9 @@ namespace CalcPostProcessor
             builder.RegisterType<HouseSumProfilesFromDetailedDatsProcessor>().As<ILoadTypeStep>().SingleInstance();
             builder.RegisterType<IndividualHouseholdSumProfileProcessor>().As<IHouseholdLoadTypeStep>().SingleInstance();
             builder.RegisterType<IndividualHouseholdDeviceProfileProcessor>().As<IHouseholdLoadTypeStep>().SingleInstance();
+            builder.RegisterType<IndividualHouseholdNoFlexSumProfileProcessor>().As<IHouseholdLoadTypeStep>().SingleInstance();
             builder.RegisterType<IndividualHouseholdJsonSumProfileProcessor>().As<IHouseholdLoadTypeStep>().SingleInstance();
+            builder.RegisterType<IndividualHouseholdFlexJsonSumProfileProcessor>().As<IHouseholdLoadTypeStep>().SingleInstance();
             builder.RegisterType<IndividualHouseholdDeviceProfileJsonProcessor>().As<IHouseholdLoadTypeStep>().SingleInstance();
             builder.RegisterType<HouseDeviceProfileFileProcessor>().As<ILoadTypeStep>().SingleInstance();
             //builder.RegisterType<EnergyCarpetPlotMaker>().As<ILoadTypeStep>().SingleInstance();

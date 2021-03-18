@@ -56,6 +56,9 @@
         JsonDeviceProfilesIndividualHouseholds,
         TansportationDeviceJsons,
         DeviceTaggingSets,
-        AffordanceDefinitions
+        AffordanceDefinitions,
+        JsonHouseholdSumFilesNoFlex,
+        HouseholdSumProfilesCsvNoFlex,
+        FlexibilityEvents
     }
 }

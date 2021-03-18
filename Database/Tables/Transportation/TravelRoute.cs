@@ -19,7 +19,7 @@ namespace Database.Tables.Transportation {
     public class TravelRoute : DBBaseElement {
         public const string TableName = "tblTravelRoutes";
 
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<TravelRouteStep> _steps = new ObservableCollection<TravelRouteStep>();
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<TravelRouteStep> _steps = new ObservableCollection<TravelRouteStep>();
         [CanBeNull] private string _description;
 
         [CanBeNull] private Site _siteA;
@@ -52,7 +52,7 @@ namespace Database.Tables.Transportation {
                 }
             }
         }
-        public TravelRoute([CanBeNull]int? pID, [NotNull] string connectionString, [NotNull] string name, [CanBeNull] string description, [CanBeNull] Site siteA,
+        public TravelRoute([CanBeNull]int? pID, [JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.NotNull] string name, [CanBeNull] string description, [CanBeNull] Site siteA,
             [CanBeNull] Site siteB, StrGuid guid, [CanBeNull] string routeKey)
             : base(name, TableName, connectionString, guid)
         {
@@ -85,13 +85,13 @@ namespace Database.Tables.Transportation {
             set => SetValueWithNotify(value, ref _siteB, false, nameof(SiteB));
         }
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<TravelRouteStep> Steps => _steps;
 
         [UsedImplicitly]
         //TODO: use and remove used implictily
-        public void AddStep([NotNull] TravelRouteStep step)
+        public void AddStep([JetBrains.Annotations.NotNull] TravelRouteStep step)
         {
             if (step == null) {
                 throw new LPGException("Can't add a null step.");
@@ -106,7 +106,7 @@ namespace Database.Tables.Transportation {
             OnPropertyChanged(nameof(PrettyName));
         }
 
-        public void AddStep([NotNull] string name, [NotNull] TransportationDeviceCategory category, double distance, int stepNumber, [CanBeNull] string stepKey, bool save = true)
+        public void AddStep([JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] TransportationDeviceCategory category, double distance, int stepNumber, [CanBeNull] string stepKey, bool save = true)
         {
             var step = new TravelRouteStep(null, IntID, ConnectionString,
                 name, category, distance, stepNumber, System.Guid.NewGuid().ToStrGuid(), stepKey);
@@ -119,9 +119,9 @@ namespace Database.Tables.Transportation {
         }
 
 
-        [NotNull]
-        private static TravelRoute AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static TravelRoute AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var id = dr.GetIntFromLong("ID");
             var name = dr.GetString("Name","(no name)");
@@ -137,22 +137,22 @@ namespace Database.Tables.Transportation {
             return locdev;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new TravelRoute(
+        public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString) => new TravelRoute(
             null, connectionString, FindNewName(isNameTaken, "New Travel Route "),
             "", null, null, System.Guid.NewGuid().ToStrGuid(),"");
 
-        public void DeleteStep([NotNull] TravelRouteStep step)
+        public void DeleteStep([JetBrains.Annotations.NotNull] TravelRouteStep step)
         {
             step.DeleteFromDB();
             _steps.Remove(step);
             OnPropertyChanged(nameof(PrettyName));
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static TravelRoute ImportFromItem([NotNull] TravelRoute toImport, [NotNull] Simulator dstSim)
+        public static TravelRoute ImportFromItem([JetBrains.Annotations.NotNull] TravelRoute toImport, [JetBrains.Annotations.NotNull] Simulator dstSim)
         {
             Site a = GetItemFromListByName(dstSim.Sites.Items, toImport.SiteA?.Name);
             Site b = GetItemFromListByName(dstSim.Sites.Items, toImport.SiteB?.Name);
@@ -172,7 +172,7 @@ namespace Database.Tables.Transportation {
             return route;
         }
 
-        private static bool IsCorrectTravelRouteParent([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectTravelRouteParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var hd = (TravelRouteStep) child;
             if (parent.ID == hd.RouteID) {
@@ -199,9 +199,9 @@ namespace Database.Tables.Transportation {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<TravelRoute> result, [NotNull] string connectionString,
-            bool ignoreMissingTables, [ItemNotNull] [NotNull] ObservableCollection<TransportationDeviceCategory> transportationDeviceCategories,
-            [ItemNotNull] [NotNull] ObservableCollection<Site> sites)
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TravelRoute> result, [JetBrains.Annotations.NotNull] string connectionString,
+            bool ignoreMissingTables, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TransportationDeviceCategory> transportationDeviceCategories,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Site> sites)
         {
             var aic = new AllItemCollections(sites: sites);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
@@ -249,8 +249,8 @@ namespace Database.Tables.Transportation {
 
         public override List<UsedIn> CalculateUsedIns(Simulator sim) => throw new NotImplementedException();
 
-        [NotNull]
-        public TravelRoute MakeACopy([NotNull] Simulator sim)
+        [JetBrains.Annotations.NotNull]
+        public TravelRoute MakeACopy([JetBrains.Annotations.NotNull] Simulator sim)
         {
             var newRoute = sim.TravelRoutes.CreateNewItem(sim.ConnectionString);
             newRoute.Name = Name;

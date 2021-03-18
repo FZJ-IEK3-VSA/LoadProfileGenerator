@@ -54,7 +54,8 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
         /// </summary>
         [JetBrains.Annotations.NotNull]
         private static StreamWriter GetWriter([JetBrains.Annotations.NotNull] IFileFactoryAndTracker fft, [JetBrains.Annotations.NotNull] HouseholdKey householdKey,
-                                              [JetBrains.Annotations.NotNull] CalcParameters calcParameters) => fft
+                                              [JetBrains.Annotations.NotNull] CalcParameters calcParameters) =>
+            fft
             .MakeFile<StreamWriter>("LocationStatistics." + householdKey + ".csv",
                 "How much time the people are spending at each Location", true, ResultFileID.LocationStatistic,
                 householdKey, TargetDirectory.Reports, calcParameters.InternalStepsize, CalcOption.LocationsFile);

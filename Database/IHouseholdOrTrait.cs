@@ -7,13 +7,13 @@ namespace Database
 {
     public interface IHouseholdOrTrait
     {
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         string Name { get; }
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         List<Affordance> CollectAffordances(bool onlyRelevant);
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         List<IAssignableDevice> CollectStandbyDevices();
     }
 }

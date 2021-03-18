@@ -9,7 +9,7 @@ using JetBrains.Annotations;
 namespace Common.CalcDto {
     using JSON;
 
-    public class CalcDeviceArchiveDto : IHouseholdKey
+    public record CalcDeviceArchiveDto : IHouseholdKey
     {
         public CalcDeviceArchiveDto(CalcDeviceDto device) => Device = device;
 
@@ -17,9 +17,12 @@ namespace Common.CalcDto {
         public HouseholdKey HouseholdKey => Device.HouseholdKey;
     }
 
+
     [Serializable]
-    public class CalcDeviceDto : ICalcDeviceDto, IHouseholdKey
+    public record CalcDeviceDto : ICalcDeviceDto, IHouseholdKey
     {
+        private FlexibilityType _flexibilityMode;
+
         [Obsolete("json only")]
         [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
         public CalcDeviceDto()
@@ -27,14 +30,9 @@ namespace Common.CalcDto {
 
         }
 
-        [JetBrains.Annotations.NotNull]
-        public CalcDeviceDto Clone()
-        {
-            return (CalcDeviceDto)MemberwiseClone();
-        }
         public CalcDeviceDto([JetBrains.Annotations.NotNull]string name, StrGuid deviceCategoryGuid, [JetBrains.Annotations.NotNull] HouseholdKey householdKey, OefcDeviceType deviceType,
                              [JetBrains.Annotations.NotNull] string deviceCategoryName, [JetBrains.Annotations.NotNull]string additionalName, StrGuid guid, StrGuid locationGuid,
-                             [JetBrains.Annotations.NotNull]string locationName)
+                             [JetBrains.Annotations.NotNull]string locationName, FlexibilityType flexibilityMode, int maxTimeShiftInMinutes)
         {
             Name = name;
             DeviceCategoryGuid = deviceCategoryGuid;
@@ -42,10 +40,19 @@ namespace Common.CalcDto {
             DeviceType = deviceType;
             DeviceCategoryName = deviceCategoryName;
             AdditionalName = additionalName;
-            Guid = guid;
+            DeviceClassGuid = guid;
             LocationGuid = locationGuid;
             LocationName = locationName;
+            FlexibilityMode = flexibilityMode;
+            MaxTimeShiftInMinutes = maxTimeShiftInMinutes;
+            DeviceInstanceGuid = StrGuid.New();
         }
+
+        [JetBrains.Annotations.NotNull]
+        public StrGuid DeviceInstanceGuid { get; set; }
+
+        public int MaxTimeShiftInMinutes { get; set; }
+
         [JetBrains.Annotations.NotNull]
         public string Name { get; set; }
         public StrGuid DeviceCategoryGuid { get; set; }
@@ -59,10 +66,21 @@ namespace Common.CalcDto {
         public string DeviceCategoryName { get; set; }
         [JetBrains.Annotations.NotNull]
         public string AdditionalName { get; set; }
-        public StrGuid Guid { get; set; }
+        public StrGuid DeviceClassGuid { get; set; }
         public StrGuid LocationGuid { get; set; }
         [JetBrains.Annotations.NotNull]
         public string LocationName { get; set; }
+
+        public FlexibilityType FlexibilityMode {
+            get => _flexibilityMode;
+            set {
+                _flexibilityMode = value;
+                if(!Enum.IsDefined(typeof(FlexibilityType), value)) {
+                    throw new LPGException("Invalid Flexibilty");
+                }
+            }
+        }
+
         public List<CalcDeviceLoadDto> Loads { get; set; } = new List<CalcDeviceLoadDto>();
 
         public void AddLoads([ItemNotNull] [JetBrains.Annotations.NotNull]List<CalcDeviceLoadDto> load)

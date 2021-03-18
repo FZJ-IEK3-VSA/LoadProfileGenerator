@@ -61,6 +61,7 @@ namespace Common {
 
             return s;
         }
+        [JetBrains.Annotations.NotNull]
         public static StrGuid ToStrGuid(this Guid myguid)
         {
             return StrGuid.FromGuid(myguid);
@@ -71,11 +72,13 @@ namespace Common {
         {
             string name = mythread.Name;
             if (name == null) {
+                //throw new Exception("No thread name");
                 name = "(no thread name) #" + mythread.ManagedThreadId;
             }
             return name;
         }
 
+        [JetBrains.Annotations.NotNull]
         public static StrGuid ToStrGuid([JetBrains.Annotations.NotNull] this string myguid)
         {
             return  StrGuid.FromString(myguid);

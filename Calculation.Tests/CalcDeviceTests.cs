@@ -79,7 +79,7 @@ namespace Calculation.Tests {
                         var deviceCategoryGuid = Guid.NewGuid().ToStrGuid();
                         CalcDeviceDto cdd = new CalcDeviceDto("bla", deviceCategoryGuid
                             , new HouseholdKey("HH-6"), OefcDeviceType.Device, "category",
-                            string.Empty, Guid.NewGuid().ToStrGuid(), cloc.Guid, cloc.Name);
+                            string.Empty, Guid.NewGuid().ToStrGuid(), cloc.Guid, cloc.Name, FlexibilityType.NoFlexibility, 0);
                         using CalcRepo calcRepo = new CalcRepo(odap: odap, calcParameters: calcParameters, normalRandom: NormalRandom);
                         CalcDevice cd = new CalcDevice(cdls, cloc,
     cdd, calcRepo);

@@ -52,7 +52,7 @@ namespace DatabaseIO.Tests.Tables.BasicHouseholds {
             {
                 Config.IsInUnitTesting = true;
                 var rd2 = new RealDevice("rd2", 1, string.Empty, null, string.Empty, false, false,
-                    db.ConnectionString, Guid.NewGuid().ToStrGuid());
+                    db.ConnectionString, Guid.NewGuid().ToStrGuid(), 0,FlexibilityType.NoFlexibility);
                 var lt = new VLoadType("lt", string.Empty, "bla", "blub", 1, 1, new TimeSpan(0, 1, 0), 1,
                     db.ConnectionString, LoadTypePriority.Mandatory, true, Guid.NewGuid().ToStrGuid());
                 lt.SaveToDB();
@@ -86,7 +86,7 @@ namespace DatabaseIO.Tests.Tables.BasicHouseholds {
             {
                 Config.IsInUnitTesting = true;
                 var rd2 = new RealDevice("rd2", 1, string.Empty, null, string.Empty, false, false,
-                    db.ConnectionString, Guid.NewGuid().ToStrGuid());
+                    db.ConnectionString, Guid.NewGuid().ToStrGuid(), 0,FlexibilityType.NoFlexibility);
                 var lt = new VLoadType("lt", string.Empty, "bla", "blub", 1, 1, new TimeSpan(0, 1, 0), 1,
                     db.ConnectionString, LoadTypePriority.Mandatory, true, Guid.NewGuid().ToStrGuid());
                 lt.SaveToDB();

@@ -212,7 +212,8 @@ namespace CalculationController.DtoFactories
                         var newprof =
                             CalcDeviceDtoFactory.GetCalcProfileDto(devtup.TimeProfile);
                         CalcLoadTypeDto loadtype = ltdict.GetLoadtypeDtoByLoadType(devtup.LoadType);
-                        caff.AddDeviceTuple(dev.Name, dev.Guid, newprof,loadtype.Name,loadtype.Guid,
+                        caff.AddDeviceTuple(dev.Name, dev.DeviceInstanceGuid, newprof,
+                            loadtype.Name,loadtype.Guid,
                             devtup.TimeOffset,internalStepSize, 1, devtup.Probability);
                     }
                 }
@@ -267,7 +268,7 @@ namespace CalculationController.DtoFactories
                             var newprof =
                                 CalcDeviceDtoFactory.GetCalcProfileDto(profile.Timeprofile);
                             CalcLoadTypeDto loadType = ltdict.GetLoadtypeDtoByLoadType(profile.VLoadType);
-                            caff.AddDeviceTuple(dev.Name,dev.Guid, newprof, loadType.Name,loadType.Guid,
+                            caff.AddDeviceTuple(dev.Name,dev.DeviceInstanceGuid, newprof, loadType.Name,loadType.Guid,
                                 profile.TimeOffset + devtup.TimeOffset, internalStepSize, profile.Multiplier,
                                 devtup.Probability);
                         }
@@ -284,7 +285,7 @@ namespace CalculationController.DtoFactories
             [JetBrains.Annotations.NotNull] GeographicLocation geographicLocation,
             [JetBrains.Annotations.NotNull] Random rnd, [JetBrains.Annotations.NotNull][ItemNotNull] List<VacationTimeframe> vacationTimeframes,
             [JetBrains.Annotations.NotNull] string holidayKey, [JetBrains.Annotations.NotNull] List<DateTime> bridgeDays,
-            AffordanceWithTimeLimit aff,
+            [JetBrains.Annotations.NotNull] AffordanceWithTimeLimit aff,
                                                  [JetBrains.Annotations.NotNull] out AvailabilityDataReferenceDto availabilityDataReference)
         {
             //time limit stuff
@@ -325,7 +326,7 @@ namespace CalculationController.DtoFactories
 
         [JetBrains.Annotations.NotNull]
         [ItemNotNull]
-        private static List<CalcDesireDto> MakeCalcDesires(int timeStepsPerHour, AffordanceWithTimeLimit aff,
+        private static List<CalcDesireDto> MakeCalcDesires(int timeStepsPerHour, [JetBrains.Annotations.NotNull] AffordanceWithTimeLimit aff,
             [JetBrains.Annotations.NotNull] string affordanceName)
         {
             var calcDesires = new List<CalcDesireDto>();
@@ -419,7 +420,7 @@ namespace CalculationController.DtoFactories
         private List<CalcAffordanceVariableOpDto> MakeVariableOps([JetBrains.Annotations.NotNull] CalcLocationDto calcloc,
             [JetBrains.Annotations.NotNull] LocationDtoDict
                 locDict, [JetBrains.Annotations.NotNull] HouseholdKey householdKey,
-            AffordanceWithTimeLimit aff)
+            [JetBrains.Annotations.NotNull] AffordanceWithTimeLimit aff)
         {
             var variableOps = new List<CalcAffordanceVariableOpDto>();
             foreach (var affVariableOperation in aff.Affordance.ExecutedVariables)
@@ -465,7 +466,7 @@ namespace CalculationController.DtoFactories
         private List<VariableRequirementDto> MakeVariableRequirements([JetBrains.Annotations.NotNull] CalcLocationDto calcloc,
             [JetBrains.Annotations.NotNull] LocationDtoDict locDict,
             [JetBrains.Annotations.NotNull] HouseholdKey householdKey,
-            AffordanceWithTimeLimit aff)
+            [JetBrains.Annotations.NotNull] AffordanceWithTimeLimit aff)
         {
             var variableRequirements =
                 new List<VariableRequirementDto>();

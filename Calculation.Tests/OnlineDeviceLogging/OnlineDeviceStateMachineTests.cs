@@ -71,7 +71,7 @@ namespace Calculation.Tests.OnlineDeviceLogging {
             var locGuid = Guid.NewGuid().ToStrGuid();
             var clt = new CalcLoadType("lt", "kWh", "W", 1, true, Guid.NewGuid().ToStrGuid());
             var calcDeviceDto  = new CalcDeviceDto("device",devGuid, new HouseholdKey("hh1"),OefcDeviceType.Device,
-                "mycategory","", devGuid,locGuid,"locname");
+                "mycategory","", devGuid,locGuid,"locname", FlexibilityType.NoFlexibility, 0);
             var key = new OefcKey(calcDeviceDto, locGuid);
             var cp = new CalcProfile("mycalcprofile", Guid.NewGuid().ToStrGuid(), valueList, ProfileType.Absolute, "bla");
             TimeStep ts = new TimeStep(5, 0, false);

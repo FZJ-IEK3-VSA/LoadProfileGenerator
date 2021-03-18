@@ -93,7 +93,7 @@ namespace Calculation.Tests.HouseholdElements {
                 var deviceCategoryGuid = Guid.NewGuid().ToStrGuid();
                 CalcDeviceDto cdd = new CalcDeviceDto("autodevnamename", deviceCategoryGuid,key,
                     OefcDeviceType.AutonomousDevice, "device category","", Guid.NewGuid().ToStrGuid(),
-                    location.Guid,location.Name);
+                    location.Guid,location.Name, FlexibilityType.NoFlexibility, 0);
                 CalcAutoDevProfile cadp = new CalcAutoDevProfile(profile,cloadtype, 1);
                 var cadps = new List<CalcAutoDevProfile>(){cadp};
                 var cad = new CalcAutoDev(cadps, loads,

@@ -82,10 +82,10 @@ namespace Database.Tests.Tables {
                 (houseTypes.Count).Should().Be(1);
                 var houseType2 = houseTypes[0];
                 (houseType2.HouseDevices.Count).Should().Be(0);
-                var rd = new RealDevice("test", 1, "bla", null, "name", true, false, db.ConnectionString, Guid.NewGuid().ToStrGuid());
+                var rd = new RealDevice("test", 1, "bla", null, "name", true, false, db.ConnectionString, Guid.NewGuid().ToStrGuid(),0, FlexibilityType.NoFlexibility);
                 rd.SaveToDB();
                 devices.Add(rd);
-                var rd2 = new RealDevice("test2", 1, "bla", null, "name", true, false, db.ConnectionString, Guid.NewGuid().ToStrGuid());
+                var rd2 = new RealDevice("test2", 1, "bla", null, "name", true, false, db.ConnectionString, Guid.NewGuid().ToStrGuid(), 0,FlexibilityType.NoFlexibility);
                 rd2.SaveToDB();
                 devices.Add(rd2);
 
@@ -154,7 +154,7 @@ namespace Database.Tests.Tables {
                 var housetype = new HouseType("haus1", "blub", 1000, 5, 10, loadTypes[0], db.ConnectionString, 1, 1,
                     loadTypes[1], false, 0, false, 0, 1, 100, Guid.NewGuid().ToStrGuid());
                 housetype.SaveToDB();
-                var rd = new RealDevice("test", 1, "bla", null, "name", true, false, db.ConnectionString, Guid.NewGuid().ToStrGuid());
+                var rd = new RealDevice("test", 1, "bla", null, "name", true, false, db.ConnectionString, Guid.NewGuid().ToStrGuid(), 0,FlexibilityType.NoFlexibility);
                 rd.SaveToDB();
                 devices.Add(rd);
 
@@ -275,7 +275,7 @@ namespace Database.Tests.Tables {
                 var dt = new TimeLimit("blub", db.ConnectionString, Guid.NewGuid().ToStrGuid());
                 dt.SaveToDB();
                 timeLimits.Add(dt);
-                var rd = new RealDevice("blub", 1, string.Empty, null, string.Empty, true, false, db.ConnectionString, Guid.NewGuid().ToStrGuid());
+                var rd = new RealDevice("blub", 1, string.Empty, null, string.Empty, true, false, db.ConnectionString, Guid.NewGuid().ToStrGuid(), 0,FlexibilityType.NoFlexibility);
                 rd.SaveToDB();
                 devices.Add(rd);
                 var tbp = new TimeBasedProfile("blub", null, db.ConnectionString, TimeProfileType.Relative,

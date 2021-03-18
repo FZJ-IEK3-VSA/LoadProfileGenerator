@@ -92,6 +92,7 @@ namespace CalculationEngine.HouseholdElements {
         [JetBrains.Annotations.NotNull]
         private readonly Dictionary<CalcLoadType, CalcDeviceLoad> _deviceLoadsBy = new Dictionary<CalcLoadType, CalcDeviceLoad>();
 
+        public int ActivationCount { get; set; }
         public List<CalcDeviceLoad> Loads { get; } = new List<CalcDeviceLoad>();
         private readonly CalcDeviceDto _calcDeviceDto;
         private readonly CalcRepo _calcRepo;
@@ -99,7 +100,7 @@ namespace CalculationEngine.HouseholdElements {
         public CalcDevice( [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcDeviceLoad> powerUsage,
                             [JetBrains.Annotations.NotNull] CalcLocation calcLocation,
                            [JetBrains.Annotations.NotNull] CalcDeviceDto calcDeviceDto,
-                           [JetBrains.Annotations.NotNull] CalcRepo calcRepo) : base(calcDeviceDto.Name,  calcDeviceDto.Guid)
+                           [JetBrains.Annotations.NotNull] CalcRepo calcRepo) : base(calcDeviceDto.Name,  calcDeviceDto.DeviceInstanceGuid)
         {
             _calcDeviceDto = calcDeviceDto;
             _calcRepo = calcRepo;
@@ -141,6 +142,7 @@ namespace CalculationEngine.HouseholdElements {
         [ItemNotNull]
         public List<CalcAutoDev> MatchingAutoDevs { get; } = new List<CalcAutoDev>();
 
+        public FlexibilityType FlexibilityMode => _calcDeviceDto.FlexibilityMode;
     //    [JetBrains.Annotations.NotNull]
   //      [ItemNotNull]
 // public List<CalcDeviceLoad> PowerUsage => _powerUsage;
@@ -165,6 +167,8 @@ namespace CalculationEngine.HouseholdElements {
         }
 
         public CalcRepo CalcRepo => _calcRepo;
+
+        public CalcDeviceDto DeviceDto => _calcDeviceDto;
 
         //for the device factories
         public void ApplyBitArry([JetBrains.Annotations.NotNull][ItemNotNull] BitArray br, [JetBrains.Annotations.NotNull] CalcLoadType lt)
@@ -220,7 +224,7 @@ namespace CalculationEngine.HouseholdElements {
         {
             foreach (var calcDeviceLoad in _deviceLoadsBy.Values) {
                 SetTimeprofile(tbp, startidx, calcDeviceLoad.LoadType,  affordanceName, activatorName,
-                    multiplier, false);
+                    multiplier, false, out _);
             }
         }
 
@@ -264,57 +268,57 @@ namespace CalculationEngine.HouseholdElements {
             }
         }
 
-        [JetBrains.Annotations.NotNull]
-        public TimeStep SetTimeprofile([JetBrains.Annotations.NotNull] TimeStep startidx, [JetBrains.Annotations.NotNull] CalcLoadType loadType,
-            [JetBrains.Annotations.NotNull] string affordanceName, [JetBrains.Annotations.NotNull] string activatingPersonName,
-                                        bool activateDespiteBeingBusy, [JetBrains.Annotations.NotNull] StepValues stepValues)
-        {
-            if (stepValues.Values.Count == 0)
-            {
-                throw new LPGException("Trying to set empty device profile. This is a bug. Please report.");
-            }
+        //[JetBrains.Annotations.NotNull]
+        //public TimeStep SetTimeprofile([JetBrains.Annotations.NotNull] TimeStep startidx, [JetBrains.Annotations.NotNull] CalcLoadType loadType,
+        //    [JetBrains.Annotations.NotNull] string affordanceName, [JetBrains.Annotations.NotNull] string activatingPersonName,
+        //                                bool activateDespiteBeingBusy, [JetBrains.Annotations.NotNull] StepValues stepValues)
+        //{
+        //    if (stepValues.Values.Count == 0)
+        //    {
+        //        throw new LPGException("Trying to set empty device profile. This is a bug. Please report.");
+        //    }
 
-            CalcDeviceLoad cdl = _deviceLoadsBy[loadType];
-            if (cdl == null)
-            {
-                throw new LPGException("It was tried to activate the loadtype " + loadType.Name +
-                                       " even though that one is not set for the device " + Name);
-            }
+        //    CalcDeviceLoad cdl = _deviceLoadsBy[loadType];
+        //    if (cdl == null)
+        //    {
+        //        throw new LPGException("It was tried to activate the loadtype " + loadType.Name +
+        //                               " even though that one is not set for the device " + Name);
+        //    }
 
-            /*if (Math.Abs(cdl.Value) < 0.00000001 ) {
-                throw new LPGException("Trying to calculate with a power consumption factor of 0. This is wrong.");
-            }*/
-            if (CalcRepo.Odap == null)
-            {
-                throw new LPGException("ODAP was null. Please report");
-            }
-            var totalDuration = stepValues.Values.Count; //.GetNewLengthAfterCompressExpand(timefactor);
-                                                              //calcProfile.CompressExpandDoubleArray(timefactor,allProfiles),
-            var key = _keyByLoad[cdl.LoadType];
-            CalcRepo.Odap.AddNewStateMachine(
-                startidx,
-                cdl.LoadType.ConvertToDto(),
-                affordanceName,
-                activatingPersonName,
-                key,
-                _calcDeviceDto, stepValues);
+        //    /*if (Math.Abs(cdl.Value) < 0.00000001 ) {
+        //        throw new LPGException("Trying to calculate with a power consumption factor of 0. This is wrong.");
+        //    }*/
+        //    if (CalcRepo.Odap == null)
+        //    {
+        //        throw new LPGException("ODAP was null. Please report");
+        //    }
+        //    var totalDuration = stepValues.Values.Count; //.GetNewLengthAfterCompressExpand(timefactor);
+        //                                                      //calcProfile.CompressExpandDoubleArray(timefactor,allProfiles),
+        //    var key = _keyByLoad[cdl.LoadType];
+        //    CalcRepo.Odap.AddNewStateMachine(
+        //        startidx,
+        //        cdl.LoadType.ConvertToDto(),
+        //        affordanceName,
+        //        activatingPersonName,
+        //        key,
+        //        _calcDeviceDto, stepValues);
 
-            if (MatchingAutoDevs.Count > 0)
-            {
-                foreach (CalcAutoDev matchingAutoDev in MatchingAutoDevs)
-                {
-                    if (matchingAutoDev._keyByLoad.ContainsKey(cdl.LoadType))
-                    {
-                        var zerokey = matchingAutoDev._keyByLoad[cdl.LoadType];
-                        CalcRepo.Odap.AddZeroEntryForAutoDev(zerokey,
-                            startidx,
-                            totalDuration);
-                    }
-                }
-            }
-            SetBusy(startidx, totalDuration, loadType, activateDespiteBeingBusy);
-            return startidx.AddSteps(totalDuration);
-        }
+        //    if (MatchingAutoDevs.Count > 0)
+        //    {
+        //        foreach (CalcAutoDev matchingAutoDev in MatchingAutoDevs)
+        //        {
+        //            if (matchingAutoDev._keyByLoad.ContainsKey(cdl.LoadType))
+        //            {
+        //                var zerokey = matchingAutoDev._keyByLoad[cdl.LoadType];
+        //                CalcRepo.Odap.AddZeroEntryForAutoDev(zerokey,
+        //                    startidx,
+        //                    totalDuration);
+        //            }
+        //        }
+        //    }
+        //    SetBusy(startidx, totalDuration, loadType, activateDespiteBeingBusy);
+        //    return startidx.AddSteps(totalDuration);
+        //}
 
         private class RandomValueProfileEntry {
             public RandomValueProfileEntry(TimeStep timeStep, double powerStandardDeviation, RandomValueProfile randomValueProfile)
@@ -350,7 +354,9 @@ namespace CalculationEngine.HouseholdElements {
         //private Dictionary<string, RandomValueProfile> _randomProfileCache;
         [JetBrains.Annotations.NotNull]
         public TimeStep SetTimeprofile([JetBrains.Annotations.NotNull] CalcProfile calcProfile, [JetBrains.Annotations.NotNull] TimeStep startTimeStep, [JetBrains.Annotations.NotNull] CalcLoadType loadType,
-            [JetBrains.Annotations.NotNull] string affordanceName, [JetBrains.Annotations.NotNull] string activatingPersonName, double multiplier, bool activateDespiteBeingBusy)
+            [JetBrains.Annotations.NotNull] string affordanceName, [JetBrains.Annotations.NotNull] string activatingPersonName,
+                                       double multiplier, bool activateDespiteBeingBusy,
+                                       out StepValues finalValues)
         {
             if (calcProfile.StepValues.Count == 0) {
                 throw new LPGException("Trying to set empty device profile. This is a bug. Please report.");
@@ -382,7 +388,7 @@ namespace CalculationEngine.HouseholdElements {
                     activatingPersonName,
                     key,
                     _calcDeviceDto, sv);
-
+                finalValues = sv;
             if (MatchingAutoDevs.Count > 0) {
                 foreach (CalcAutoDev matchingAutoDev in MatchingAutoDevs) {
                     if (matchingAutoDev._keyByLoad.ContainsKey(cdl.LoadType)) {
@@ -394,6 +400,7 @@ namespace CalculationEngine.HouseholdElements {
                 }
             }
             SetBusy(startTimeStep, totalDuration, loadType, activateDespiteBeingBusy);
+
             return  startTimeStep.AddSteps(totalDuration);
         }
 

@@ -67,13 +67,13 @@ namespace Database.Tests.Tables {
                 RealDevice.LoadFromDatabase(alldevices, deviceCategories, dcnone, db.ConnectionString, loadTypes, profiles,
                     false);
                 (alldevices.Count).Should().Be(0);
-                var rd = new RealDevice("bla", 3, "p1", null, "name", true, false, db.ConnectionString, Guid.NewGuid().ToStrGuid());
+                var rd = new RealDevice("bla", 3, "p1", null, "name", true, false, db.ConnectionString, Guid.NewGuid().ToStrGuid(),0, FlexibilityType.NoFlexibility);
                 rd.SaveToDB();
                 alldevices.Clear();
                 RealDevice.LoadFromDatabase(alldevices, deviceCategories, dcnone, db.ConnectionString, loadTypes, profiles,
                     false);
                 (alldevices.Count).Should().Be(1);
-                var rd2 = new RealDevice("bla2", 3, "p1", null, "name", true, false, db.ConnectionString, Guid.NewGuid().ToStrGuid());
+                var rd2 = new RealDevice("bla2", 3, "p1", null, "name", true, false, db.ConnectionString, Guid.NewGuid().ToStrGuid(), 0,FlexibilityType.NoFlexibility);
                 rd2.SaveToDB();
                 alldevices.Clear();
                 RealDevice.LoadFromDatabase(alldevices, deviceCategories, dcnone, db.ConnectionString, loadTypes, profiles,

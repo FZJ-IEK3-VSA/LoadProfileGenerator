@@ -15,7 +15,7 @@ namespace Database.Tables.BasicHouseholds {
         [CanBeNull]
         private readonly int? _affordanceID;
         private readonly VariableCondition _condition;
-        [NotNull] private readonly string _description;
+        [JetBrains.Annotations.NotNull] private readonly string _description;
 
         [CanBeNull] private readonly Location _location;
 
@@ -25,10 +25,10 @@ namespace Database.Tables.BasicHouseholds {
 
         private readonly VariableLocationMode _variableLocationMode;
 
-        public AffVariableRequirement(double value, [CanBeNull]int? id, [CanBeNull]int? affordanceID, [NotNull] string connectionString,
+        public AffVariableRequirement(double value, [CanBeNull]int? id, [CanBeNull]int? affordanceID, [JetBrains.Annotations.NotNull] string connectionString,
             VariableLocationMode variableLocationMode, [CanBeNull] Location location, VariableCondition condition,
             [CanBeNull] Variable variable,
-            [NotNull] string description, [NotNull] string name, StrGuid guid) : base(name, TableName, connectionString, guid) {
+            [JetBrains.Annotations.NotNull] string description, [JetBrains.Annotations.NotNull] string name, [NotNull] StrGuid guid) : base(name, TableName, connectionString, guid) {
             _value = value;
             ID = id;
             _affordanceID = affordanceID;
@@ -44,10 +44,10 @@ namespace Database.Tables.BasicHouseholds {
 
         public VariableCondition Condition => _condition;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string ConditionStr => VariableConditionHelper.ConvertToVariableDescription(_condition);
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string Description => _description;
 
         [CanBeNull]
@@ -56,12 +56,12 @@ namespace Database.Tables.BasicHouseholds {
         public VariableLocationMode LocationMode => _variableLocationMode;
 
         public double Value => _value;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Variable Variable => _variable ?? throw new InvalidOperationException();
 
-        [NotNull]
-        private static AffVariableRequirement AssignFields([NotNull] DataReader dr, [NotNull] string connectionString,
-            bool ignoreMissingFields, [NotNull] AllItemCollections aic) {
+        [JetBrains.Annotations.NotNull]
+        private static AffVariableRequirement AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString,
+            bool ignoreMissingFields, [JetBrains.Annotations.NotNull] AllItemCollections aic) {
             var id = dr.GetIntFromLong("ID", true, ignoreMissingFields, -1);
             var affordanceID = dr.GetIntFromLong("AffordanceID", false, ignoreMissingFields, -1);
             var variableValue = dr.GetDouble("Value", false, 0, ignoreMissingFields);
@@ -94,10 +94,10 @@ namespace Database.Tables.BasicHouseholds {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<AffVariableRequirement> result,
-            [NotNull] string connectionString,
-            bool ignoreMissingTables, [ItemNotNull] [NotNull] ObservableCollection<Location> locations,
-            [ItemNotNull] [NotNull] ObservableCollection<Variable> variables) {
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<AffVariableRequirement> result,
+            [JetBrains.Annotations.NotNull] string connectionString,
+            bool ignoreMissingTables, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Location> locations,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Variable> variables) {
             var aic = new AllItemCollections(locations: locations, variables: variables);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }

@@ -4,6 +4,7 @@ using System.Text;
 using JetBrains.Annotations;
 
 namespace Automation {
+
     [AttributeUsage(AttributeTargets.All)]
     public class CommentAttribute : Attribute {
         [NotNull] private string _text;

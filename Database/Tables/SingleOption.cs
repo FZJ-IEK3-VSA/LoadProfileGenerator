@@ -44,7 +44,7 @@ namespace Database.Tables {
         private CalcOption _option;
         private bool _settingValue;
 
-        public SingleOption(CalcOption option, bool settingValue, [NotNull] string connectionString, StrGuid guid,
+        public SingleOption(CalcOption option, bool settingValue, [JetBrains.Annotations.NotNull] string connectionString, [NotNull] StrGuid guid,
                             [CanBeNull] int? pID = null)
             : base(option.ToString(), GeneralConfig.TableName, connectionString, guid)
         {
@@ -84,9 +84,9 @@ namespace Database.Tables {
             return true;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public static Dictionary<CalcOption, SingleOption>
-            LoadFromDatabase([NotNull] string connectionString, bool ignoreMissing)
+            LoadFromDatabase([JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissing)
         {
             if (ignoreMissing) {
                 if (!DoesTableExist(connectionString, TableName)) {

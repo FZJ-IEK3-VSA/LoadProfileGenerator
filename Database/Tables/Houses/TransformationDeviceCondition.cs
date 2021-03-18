@@ -18,8 +18,8 @@ namespace Database.Tables.Houses {
 
         public TransformationDeviceCondition([CanBeNull]int? pID,
              double minValue, double maxValue,
-             int transformationDeviceID, [NotNull] string connectionString, [NotNull] string name,
-                                             StrGuid guid, Variable variable) : base(
+             int transformationDeviceID, [JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.NotNull] string name,
+                                             [NotNull] StrGuid guid, Variable variable) : base(
             name, TableName, connectionString, guid)
         {
             ID = pID;
@@ -37,15 +37,15 @@ namespace Database.Tables.Houses {
 
         public Variable Variable => _variable;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string TextDescription => GetTextDescription();
 
         public int TransformationDeviceID { get; }
 
-        [NotNull]
-        private static TransformationDeviceCondition AssignFields([NotNull] DataReader dr, [NotNull] string connectionString,
-            bool ignoreMissingFields, [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static TransformationDeviceCondition AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString,
+            bool ignoreMissingFields, [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var id = dr.GetIntFromLong("ID");
             var transformationDeviceID = dr.GetIntFromLong("TransformationDeviceID");
@@ -61,7 +61,7 @@ namespace Database.Tables.Houses {
             return tdlt;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private string GetTextDescription()
         {
             var variableName = "(no load type set)";
@@ -81,8 +81,8 @@ namespace Database.Tables.Houses {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<TransformationDeviceCondition> result,
-            [NotNull] string connectionString, [ItemNotNull] [NotNull] ObservableCollection<VLoadType> loadTypes,
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TransformationDeviceCondition> result,
+            [JetBrains.Annotations.NotNull] string connectionString, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<VLoadType> loadTypes,
              bool ignoreMissingTables, ObservableCollection<Variable> variables)
         {
             var aic = new AllItemCollections(loadTypes: loadTypes, variables:variables);

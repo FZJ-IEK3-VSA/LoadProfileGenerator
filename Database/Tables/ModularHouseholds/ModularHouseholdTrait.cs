@@ -109,7 +109,7 @@ namespace Database.Tables.ModularHouseholds {
 
         public ModularHouseholdTrait([CanBeNull]int? pID, [CanBeNull]int? modularHouseholdID, [JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] string connectionString,
             [CanBeNull] HouseholdTrait ht, [CanBeNull] Person dstPerson, ModularHouseholdTraitAssignType assignType,
-                                     StrGuid guid)
+                                     [JetBrains.Annotations.NotNull] StrGuid guid)
             : base(name, TableName, connectionString, guid) {
             AssignType = assignType;
             _dstPerson = dstPerson;

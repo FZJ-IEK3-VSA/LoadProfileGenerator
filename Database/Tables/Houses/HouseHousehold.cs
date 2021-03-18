@@ -46,7 +46,7 @@ namespace Database.Tables.Houses {
         [CanBeNull] private readonly ICalcObject _household;
 
         public HouseHousehold([CanBeNull]int? pID, int houseID, [CanBeNull] ICalcObject household, [JetBrains.Annotations.NotNull] string connectionString,
-            [JetBrains.Annotations.NotNull] string householdName, StrGuid guid, [CanBeNull] TransportationDeviceSet transportationDeviceSet, [CanBeNull] ChargingStationSet chargingStationSet, [CanBeNull] TravelRouteSet travelRouteSet) : base(householdName, TableName, connectionString, guid)
+            [JetBrains.Annotations.NotNull] string householdName, [JetBrains.Annotations.NotNull] StrGuid guid, [CanBeNull] TransportationDeviceSet transportationDeviceSet, [CanBeNull] ChargingStationSet chargingStationSet, [CanBeNull] TravelRouteSet travelRouteSet) : base(householdName, TableName, connectionString, guid)
         {
             ID = pID;
             HouseID = houseID;

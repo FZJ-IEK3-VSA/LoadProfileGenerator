@@ -143,11 +143,11 @@
                                  Grid.Column="1"
                                  Style="{StaticResource TextBoxStyle}"
                                  Text="{Binding ThisAffordance.TimeStandardDeviation}" />
-                        <Label Grid.Row="9"
+                        <!--<Label Grid.Row="9"
                                Grid.Column="0"
                                Content="Color for the carpet plots"
                                Style="{StaticResource LabelStyle}"
-                               Target="{Binding ElementName=BtnPickColor}" />
+                               Target="{Binding ElementName=BtnPickColor}" />-->
                         <!--<Button Name="BtnPickColor"
                                 Grid.Row="9"
                                 Grid.Column="1"

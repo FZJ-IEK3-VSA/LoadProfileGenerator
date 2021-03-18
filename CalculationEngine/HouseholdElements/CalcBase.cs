@@ -119,7 +119,7 @@ namespace CalculationEngine.HouseholdElements {
         public CalcParameters CalcParameters => _calcParameters ?? throw new LPGException("no calcparameters");
 
         [JetBrains.Annotations.NotNull]
-        public IOnlineLoggingData OnlineLoggingData => _onlineLoggingData ?? throw new LPGException("no old");
+        public IOnlineLoggingData OnlineLoggingData => _onlineLoggingData ?? throw new LPGException("online data logging not initialized");
 
         [JetBrains.Annotations.NotNull]
         public NormalRandom NormalRandom => _normalRandom ?? throw new LPGException("no nr");

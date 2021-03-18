@@ -9,7 +9,7 @@
     <StartupObject />
     <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
     <Nullable>disable</Nullable>
-    <LangVersion>9</LangVersion>
+    <LangVersion>9.0</LangVersion>
     <EnableDefaultPageItems>False</EnableDefaultPageItems>
   </PropertyGroup>
 

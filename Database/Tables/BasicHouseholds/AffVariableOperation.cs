@@ -28,9 +28,9 @@ namespace Database.Tables.BasicHouseholds {
         public AffVariableOperation(double variableValue,
                                     [CanBeNull]int? id,
                                     [CanBeNull] int? affordanceID,
-                                    [NotNull] string connectionString,
+                                    [JetBrains.Annotations.NotNull] string connectionString,
             VariableLocationMode variableLocationMode, [CanBeNull] Location location, VariableAction variableAction,
-            [CanBeNull] Variable variable, [CanBeNull] string description, VariableExecutionTime variableExecutionTime,[NotNull] string name, StrGuid guid)
+            [CanBeNull] Variable variable, [CanBeNull] string description, VariableExecutionTime variableExecutionTime,[JetBrains.Annotations.NotNull] string name, [NotNull] StrGuid guid)
             : base(name, TableName, connectionString, guid) {
             _variableValue = variableValue;
             ID = id;
@@ -52,7 +52,7 @@ namespace Database.Tables.BasicHouseholds {
         public string Description => _description;
 
         public VariableExecutionTime ExecutionTime => _variableExecutionTime;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string ExecutionTimeStr
             => VariableExecutionTimeHelper.ConvertToVariableDescription(_variableExecutionTime);
         [CanBeNull]
@@ -61,12 +61,12 @@ namespace Database.Tables.BasicHouseholds {
         public VariableLocationMode LocationMode => _variableLocationMode;
 
         public double Value => _variableValue;
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Variable Variable => _variable ?? throw new InvalidOperationException();
 
-        [NotNull]
-        private static AffVariableOperation AssignFields([NotNull] DataReader dr, [NotNull]string connectionString,
-            bool ignoreMissingFields, [NotNull] AllItemCollections aic) {
+        [JetBrains.Annotations.NotNull]
+        private static AffVariableOperation AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull]string connectionString,
+            bool ignoreMissingFields, [JetBrains.Annotations.NotNull] AllItemCollections aic) {
             var id = dr.GetIntFromLong("ID", true, ignoreMissingFields, -1);
             var affordanceID = dr.GetIntFromLong("AffordanceID", false, ignoreMissingFields, -1);
 
@@ -100,9 +100,9 @@ namespace Database.Tables.BasicHouseholds {
             return true;
         }
 
-        public static void LoadFromDatabase([NotNull][ItemNotNull] ObservableCollection<AffVariableOperation> result,[NotNull] string connectionString,
-            bool ignoreMissingTables, [NotNull][ItemNotNull] ObservableCollection<Location> locations,
-            [NotNull][ItemNotNull]    ObservableCollection<Variable> variables) {
+        public static void LoadFromDatabase([JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<AffVariableOperation> result,[JetBrains.Annotations.NotNull] string connectionString,
+            bool ignoreMissingTables, [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<Location> locations,
+            [JetBrains.Annotations.NotNull][ItemNotNull]    ObservableCollection<Variable> variables) {
             var aic = new AllItemCollections(locations: locations, variables: variables);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }

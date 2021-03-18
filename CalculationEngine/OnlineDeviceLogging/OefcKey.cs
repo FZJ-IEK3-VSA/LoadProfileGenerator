@@ -1,12 +1,12 @@
-﻿using System;
-using Automation;
+﻿using Automation;
 using Automation.ResultFiles;
 using Common.CalcDto;
 using Common.JSON;
 
 
 namespace CalculationEngine.OnlineDeviceLogging {
-    public readonly struct OefcKey : IEquatable<OefcKey> {
+    public record OefcKey
+    { //: IEquatable<OefcKey>
         public override int GetHashCode()
         {
             unchecked {
@@ -15,7 +15,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
                 hashCode = (hashCode * 397) ^ (LoadtypeGuid.GetHashCode());
                 hashCode = (hashCode * 397) ^ DeviceCategory.GetHashCode();
                 hashCode = (hashCode * 397) ^ LocationGuid.GetHashCode();
-                hashCode = (hashCode * 397) ^ DeviceGuid.GetHashCode();
+                hashCode = (hashCode * 397) ^ DeviceInstanceGuid.GetHashCode();
                 hashCode = (hashCode * 397) ^ HouseholdKey.GetHashCode();
                 hashCode = (hashCode * 397) ^ (int)ThisDeviceType;
                 return hashCode;
@@ -31,7 +31,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
         {
             HouseholdKey = dto.HouseholdKey;
             ThisDeviceType =dto.DeviceType;
-            DeviceGuid = dto.Guid;
+            DeviceInstanceGuid = dto.DeviceInstanceGuid;
             LocationGuid = dto.LocationGuid;
             LoadtypeGuid = loadtypeGuid;
             DeviceCategory = dto.DeviceCategoryName;
@@ -42,7 +42,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
                 _hashCode = LocationGuid.GetHashCode();
                     _hashCode = (_hashCode * 397) ^ loadtypeGuid.GetHashCode();
 
-                _hashCode = (_hashCode * 397) ^ DeviceGuid.GetHashCode();
+                _hashCode = (_hashCode * 397) ^ DeviceInstanceGuid.GetHashCode();
                 _hashCode = (_hashCode * 397) ^ HouseholdKey.Key.GetHashCode();
                 _hashCode = (_hashCode * 397) ^ (int)ThisDeviceType;
             }
@@ -80,15 +80,15 @@ namespace CalculationEngine.OnlineDeviceLogging {
             FullKey= MakeKey();
         }
         */
-        public override bool Equals(object obj) {
-            return obj is OefcKey other && Equals(other);
-        }
+        //public override bool Equals(object obj) {
+        //    return obj is OefcKey other && Equals(other);
+        //}
         [JetBrains.Annotations.NotNull]
         public  string MakeKey()
         {
             return HouseholdKey + "#" +
                    ThisDeviceType + "#" +
-                   DeviceGuid + "#" +
+                   DeviceInstanceGuid + "#" +
                    LocationGuid + "#" +
                    LoadtypeGuid + "#" + DeviceCategory;
         }
@@ -98,14 +98,14 @@ namespace CalculationEngine.OnlineDeviceLogging {
             return   FullKey;
         }
 
-        public bool Equals(OefcKey other)
-        {
-            return FullKey.Equals(other.FullKey);
-        }
+        //public bool Equals(OefcKey other)
+        //{
+        //    return FullKey.Equals(other.FullKey);
+        //}
 
-        public static bool operator ==(in OefcKey point1, OefcKey point2) => point1.Equals(point2);
+        //public static bool operator ==(in OefcKey point1, OefcKey point2) => point1.Equals(point2);
 
-        public static bool operator !=(in OefcKey point1, OefcKey point2) => !point1.Equals(point2);
+        //public static bool operator !=(in OefcKey point1, OefcKey point2) => !point1.Equals(point2);
 
         public StrGuid LoadtypeGuid { get; }
 
@@ -114,7 +114,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
 
         public StrGuid LocationGuid { get; }
 
-        public StrGuid DeviceGuid { get; }
+        public StrGuid DeviceInstanceGuid { get; }
         [JetBrains.Annotations.NotNull]
         public HouseholdKey HouseholdKey { get; }
         public OefcDeviceType ThisDeviceType { get; }

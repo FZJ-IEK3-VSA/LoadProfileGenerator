@@ -160,9 +160,9 @@ namespace CalculationEngine.OnlineDeviceLogging {
                 var entry = new DeviceActivationEntry( dsm.AffordanceName,
                     dsm.LoadType,totalEnergysum , activatorName,sv.Values.Count,
                     startTimeStep, calcDeviceDto); // dsm.StepValues.ToArray(),
-                if (!_savedDevices.Contains(calcDeviceDto.Guid)) {
+                if (!_savedDevices.Contains(calcDeviceDto.DeviceInstanceGuid)) {
                     _old.RegisterDeviceArchiveDto(new CalcDeviceArchiveDto( calcDeviceDto));
-                    _savedDevices.Add(calcDeviceDto.Guid);
+                    _savedDevices.Add(calcDeviceDto.DeviceInstanceGuid);
                 }
                 _old.RegisterDeviceActivation(entry);
             }
@@ -242,7 +242,7 @@ namespace CalculationEngine.OnlineDeviceLogging {
             }
 
             Oefc.AddColumnEntry(devicedto.Name, key, devicedto.LocationName,
-                loadType, key.DeviceGuid, key.HouseholdKey, key.DeviceCategory,devicedto);
+                loadType, key.DeviceInstanceGuid, key.HouseholdKey, key.DeviceCategory,devicedto);
 
             if (!_loadTypeDict.ContainsKey(loadType)) {
                 _loadTypeDict.Add(loadType, 1);

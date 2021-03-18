@@ -16,7 +16,7 @@ namespace Database.Tables.ModularHouseholds {
 
         [CanBeNull] private readonly LivingPatternTag _tag;
 
-        public HHTLivingPatternTag([CanBeNull] int? pID, [CanBeNull] int? householdTraitID, [CanBeNull] LivingPatternTag tag, [NotNull] string connectionString, [NotNull] string name, StrGuid guid)
+        public HHTLivingPatternTag([CanBeNull] int? pID, [CanBeNull] int? householdTraitID, [CanBeNull] LivingPatternTag tag, [JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.NotNull] string name, [NotNull] StrGuid guid)
             : base(name, TableName, connectionString, guid)
         {
             _tag = tag;
@@ -27,7 +27,7 @@ namespace Database.Tables.ModularHouseholds {
         [CanBeNull]
         public int? HouseholdTraitID => _householdTraitID;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
 #pragma warning disable S4015 // Inherited member visibility should not be decreased
         public new string Name
@@ -43,12 +43,12 @@ namespace Database.Tables.ModularHouseholds {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public LivingPatternTag Tag => _tag ?? throw new InvalidOperationException();
 
-        [NotNull]
-        private static HHTLivingPatternTag AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-                                                        [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static HHTLivingPatternTag AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+                                                        [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var hhtTagID = dr.GetIntFromLong("ID");
             var householdTraitID = dr.GetIntFromLong("HouseholdTraitID");
@@ -80,8 +80,8 @@ namespace Database.Tables.ModularHouseholds {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull][NotNull] ObservableCollection<HHTLivingPatternTag> result, [NotNull] string connectionString,
-                                            bool ignoreMissingTables, [ItemNotNull][NotNull] ObservableCollection<LivingPatternTag> tags)
+        public static void LoadFromDatabase([ItemNotNull][JetBrains.Annotations.NotNull] ObservableCollection<HHTLivingPatternTag> result, [JetBrains.Annotations.NotNull] string connectionString,
+                                            bool ignoreMissingTables, [ItemNotNull][JetBrains.Annotations.NotNull] ObservableCollection<LivingPatternTag> tags)
         {
             var aic = new AllItemCollections(livingPatternTags: tags);
 

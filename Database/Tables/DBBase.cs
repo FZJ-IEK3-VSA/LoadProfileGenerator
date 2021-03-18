@@ -218,7 +218,7 @@ namespace Database.Tables
 #pragma warning restore CA2235 // Mark all non-serializable fields
         private bool _needsUpdate;
 
-        protected DBBase([JetBrains.Annotations.NotNull]string pName, [JetBrains.Annotations.NotNull] string tableName, [JetBrains.Annotations.NotNull] string connectionString,StrGuid guid):base(pName)
+        protected DBBase([JetBrains.Annotations.NotNull]string pName, [JetBrains.Annotations.NotNull] string tableName, [JetBrains.Annotations.NotNull] string connectionString,[JetBrains.Annotations.NotNull] StrGuid guid):base(pName)
         {
             _guid = guid;
             if(guid==null) {
@@ -231,7 +231,7 @@ namespace Database.Tables
         }
 
         protected DBBase([JetBrains.Annotations.NotNull]string pName, [CanBeNull] int? pID, [JetBrains.Annotations.NotNull] string tableName, [JetBrains.Annotations.NotNull] string connectionString,
-                         StrGuid guid):base(pName)
+                         [JetBrains.Annotations.NotNull] StrGuid guid):base(pName)
         {
             _guid = guid;
             if (guid == null)
@@ -392,7 +392,7 @@ namespace Database.Tables
             }
         }
 
-        protected static bool DoesTableExist([JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.NotNull] string tableName)
+        public static bool DoesTableExist([JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.NotNull] string tableName)
         {
             using (var con = new Connection(connectionString))
             {
@@ -696,6 +696,7 @@ namespace Database.Tables
         [JetBrains.Annotations.NotNull] public static readonly HashSet<StrGuid> GuidsToSave = new HashSet<StrGuid>();
         [JetBrains.Annotations.NotNull] [ItemNotNull] public static readonly List<string> TypesThatMadeGuids = new List<string>();
         public static int GuidCreationCount { get; set; }
+        [JetBrains.Annotations.NotNull]
         public static StrGuid GetGuid([JetBrains.Annotations.NotNull] DataReader dr, bool ignoreMissingFields)
         {
             var oldguid = dr.GetString("Guid", false, "", ignoreMissingFields);
@@ -837,6 +838,18 @@ namespace Database.Tables
             OnPropertyChanged(propertyName);
         }
 
+
+        [NotifyPropertyChangedInvocator]
+        protected void SetValueWithNotify(FlexibilityType value, ref FlexibilityType dstField,
+                                          [CanBeNull][CallerMemberName] string propertyName = null)
+        {
+            if (value == dstField)
+            {
+                return;
+            }
+            dstField = value;
+            OnPropertyChanged(propertyName);
+        }
         [NotifyPropertyChangedInvocator]
         protected void SetValueWithNotify(BodilyActivityLevel value, ref BodilyActivityLevel dstField,
                                           [CanBeNull] [CallerMemberName] string propertyName = null)

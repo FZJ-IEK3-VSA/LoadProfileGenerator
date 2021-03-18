@@ -62,7 +62,9 @@ namespace Database.Tables.BasicHouseholds {
 
         public RealDevice([JetBrains.Annotations.NotNull] string pName, int pYear, [JetBrains.Annotations.NotNull] string pPicture, [CanBeNull] DeviceCategory deviceCategory,
             [JetBrains.Annotations.NotNull] string description,
-            bool forceAllLoadTypesToBeSet, bool isStandbyDevice, [JetBrains.Annotations.NotNull] string connectionString, StrGuid guid, [CanBeNull]int? pID = null)
+            bool forceAllLoadTypesToBeSet, bool isStandbyDevice, [JetBrains.Annotations.NotNull] string connectionString, StrGuid guid,
+            int maximumTineMaxTimeShiftInMinutes,
+            FlexibilityType flexibilityType, [CanBeNull]int? pID = null)
             : base(pName, TableName, connectionString, guid)
         {
             ID = pID;
@@ -73,7 +75,9 @@ namespace Database.Tables.BasicHouseholds {
             _description = description;
             TypeDescription = "Device";
             _forceAllLoadTypesToBeSet = forceAllLoadTypesToBeSet;
+            _maxTimeShiftInMinutes = maximumTineMaxTimeShiftInMinutes;
             _loads = new ObservableCollection<RealDeviceLoadType>();
+            _flexibilityType = flexibilityType;
             PropertyChanged += OnPropertyChanged;
         }
 
@@ -145,10 +149,24 @@ namespace Database.Tables.BasicHouseholds {
         }
 
         public AssignableDeviceType AssignableDeviceType => AssignableDeviceType.Device;
+        public FlexibilityType FlexibilityType
+        {
+            get => _flexibilityType;
+            set => SetValueWithNotify(value, ref _flexibilityType, nameof(FlexibilityType));
+        }
+
+        public int MaxTimeShiftInMinutes
+        {
+            get => _maxTimeShiftInMinutes;
+            set => SetValueWithNotify(value, ref _maxTimeShiftInMinutes, nameof(MaxTimeShiftInMinutes));
+        }
+
+        private FlexibilityType _flexibilityType;
+        private int _maxTimeShiftInMinutes;
 
         public List<Tuple<VLoadType, double>> CalculateAverageEnergyUse(VLoadType dstLoadType,
-            ObservableCollection<DeviceAction> allActions,TimeBasedProfile timeProfile, double multiplier,
-            double probability)
+                                                                        ObservableCollection<DeviceAction> allActions,TimeBasedProfile timeProfile, double multiplier,
+                                                                        double probability)
         {
             var result = new List<Tuple<VLoadType, double>>();
             if (timeProfile == null) {
@@ -221,6 +239,12 @@ namespace Database.Tables.BasicHouseholds {
             var year = dr.GetInt("year", false, 0);
             var picture = dr.GetString("Picture", false);
             var deviceCategoryID = dr.GetInt("DeviceCategoryID", false);
+            var flexbilityType =(FlexibilityType) dr.GetInt("FlexibilityType", false,0);
+            if (!Enum.IsDefined(typeof(FlexibilityType), flexbilityType)) {
+                flexbilityType = FlexibilityType.NoFlexibility;
+            }
+
+            var maxTimeShiftInMinutes = dr.GetInt("MaxTimeShiftInMinutes", false, 0, ignoreMissingFields);
             var forceAllLoadTypesToBeSet = dr.GetBool("ForceAllLoadTypesToBeSet", false, true, ignoreMissingFields);
             var isStandbyDevice = dr.GetBool("IsStandbyDevice", false, false, ignoreMissingFields);
             var description = dr.GetString("Description", false, string.Empty, ignoreMissingFields);
@@ -230,7 +254,7 @@ namespace Database.Tables.BasicHouseholds {
             }
             var guid = GetGuid(dr, ignoreMissingFields);
             var db = new RealDevice(name, year, picture, dc, description, forceAllLoadTypesToBeSet,
-                isStandbyDevice, connectionString, guid,id);
+                isStandbyDevice, connectionString, guid ,maxTimeShiftInMinutes,flexbilityType,   id);
             return db;
         }
 
@@ -244,7 +268,7 @@ namespace Database.Tables.BasicHouseholds {
                 i++;
             }
             var db = new RealDevice(s + i, DateTime.Now.Year, string.Empty, null, string.Empty, true, false,
-                connectionString, System.Guid.NewGuid().ToStrGuid());
+                connectionString, System.Guid.NewGuid().ToStrGuid(), 0, FlexibilityType.NoFlexibility);
             return db;
         }
 
@@ -336,7 +360,9 @@ namespace Database.Tables.BasicHouseholds {
             var dstdc = GetItemFromListByName(dstSim.DeviceCategories.Items, item.DeviceCategory?.Name);
             var rd = new RealDevice(item.Name, item.Year, item.Picture, dstdc, item.Description,
                 item.ForceAllLoadTypesToBeSet, item.IsStandbyDevice,
-                dstSim.ConnectionString, item.Guid);
+                dstSim.ConnectionString, item.Guid,
+                item.MaxTimeShiftInMinutes,
+                item.FlexibilityType);
             rd.SaveToDB();
             foreach (var rdlt in item.Loads) {
                 var newlt = GetItemFromListByName(dstSim.LoadTypes.Items, rdlt.LoadType?.Name);
@@ -438,6 +464,8 @@ namespace Database.Tables.BasicHouseholds {
             cmd.AddParameter("Description", _description);
             cmd.AddParameter("ForceAllLoadTypesToBeSet", _forceAllLoadTypesToBeSet);
             cmd.AddParameter("IsStandbyDevice", _isStandbyDevice);
+            cmd.AddParameter("FlexibilityType", _flexibilityType);
+            cmd.AddParameter("MaxTimeShiftInMinutes", _maxTimeShiftInMinutes);
             if (_deviceCategory != null) {
                 cmd.AddParameter("DeviceCategoryID", "@DeviceCategoryID", _deviceCategory.IntID);
             }

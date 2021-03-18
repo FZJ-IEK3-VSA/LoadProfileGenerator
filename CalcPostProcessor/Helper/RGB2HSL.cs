@@ -36,8 +36,9 @@ namespace CalcPostProcessor.Helper {
     /// <summary>
     ///     Utility struct for color conversions
     /// </summary>
-    internal static class RGBHSL {
+    internal record RGBHSL {
         [SuppressMessage("ReSharper", "SwitchStatementMissingSomeCases")]
+        [JetBrains.Annotations.NotNull]
         public static ColorRGB HSL2RGB(double myH, double sl, double l)
         {
             var h = myH;
@@ -87,11 +88,10 @@ namespace CalcPostProcessor.Helper {
                         break;
                 }
             }
-            var rgb = new ColorRGB {
-                R = Convert.ToByte(r * 255.0f),
-                G = Convert.ToByte(g * 255.0f),
-                B = Convert.ToByte(b * 255.0f)
-            };
+            var rgb = new ColorRGB(
+                 Convert.ToByte(r * 255.0f),
+                Convert.ToByte(g * 255.0f),
+                 Convert.ToByte(b * 255.0f));
             return rgb;
         }
 
@@ -106,7 +106,7 @@ namespace CalcPostProcessor.Helper {
         /// <param name="h"> The h. </param>
         /// <param name="s"> The s. </param>
         /// <param name="l"> The l. </param>
-        public static void RGB2HSL(ColorRGB rgb, out double h, out double s, out double l)
+        public static void RGB2HSL([JetBrains.Annotations.NotNull] ColorRGB rgb, out double h, out double s, out double l)
         {
             var r = rgb.R / 255.0;
             var g = rgb.G / 255.0;

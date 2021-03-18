@@ -125,7 +125,7 @@ namespace CalculationController.DtoFactories
                             cadps.Add(cadp);
                             var cautodev = new CalcAutoDevDto(rd.Name, cadps, cdl, (double)hhautodev.TimeStandardDeviation, deviceCategoryDto.Guid,
                                 householdKey,  calcLocation.Name, calcLocation.Guid, deviceCategoryDto.FullCategoryName, Guid.NewGuid().ToStrGuid(),
-                                timeprofilereference, requirementDtos, deviceCategoryDto.FullCategoryName);
+                                timeprofilereference, requirementDtos, deviceCategoryDto.FullCategoryName, rd.FlexibilityType, rd.MaxTimeShiftInMinutes);
                             autodevs.Add(cautodev);
                         }
                     }
@@ -175,7 +175,7 @@ namespace CalculationController.DtoFactories
                         var cautodev = new CalcAutoDevDto(deviceAction.Device.Name, cdaps, cdl, (double)hhautodev.TimeStandardDeviation,
                                 deviceCategoryDto.Guid, householdKey, calcLocation.Name, calcLocation.Guid,
                                 deviceAction.Device.DeviceCategory.FullPath, Guid.NewGuid().ToStrGuid(), timeprofilereference, requirementDtos,
-                                deviceCategoryDto.FullCategoryName);
+                                deviceCategoryDto.FullCategoryName, deviceAction.Device.FlexibilityType, deviceAction.Device.MaxTimeShiftInMinutes);
                             autodevs.Add(cautodev);
                     }
                         break;
@@ -237,6 +237,10 @@ namespace CalculationController.DtoFactories
         {
             List<CalcDeviceDto> calcDeviceDtos = new List<CalcDeviceDto>();
             foreach (var devloc in devlocs) {
+                if(devloc.Device.Name.Contains("Dishwasher")) {
+                    Logger.Info("Figuring out dishwasher");
+                }
+
                 var locdto = locs.First(x => x.ID == devloc.Location.IntID);
                 // ggf dev category / device action in dev umwandeln
                 var devicesAtLocation =
@@ -273,7 +277,7 @@ namespace CalculationController.DtoFactories
                         deviceCategories.Single(x => x.FullCategoryName == rd.DeviceCategory.FullPath);
                     CalcDeviceDto cdd = new CalcDeviceDto(rd.Name, dcdto.Guid, householdKey, OefcDeviceType.Device,
                         rd.DeviceCategory.FullPath, string.Empty, Guid.NewGuid().ToStrGuid(),
-                         locdto.Guid, locdto.Name);
+                         locdto.Guid, locdto.Name, rd.FlexibilityType, rd.MaxTimeShiftInMinutes);
                     cdd.AddLoads(MakeCalcDeviceLoads(rd, loadtypes));
                     calcDeviceDtos.Add(cdd);
                 }

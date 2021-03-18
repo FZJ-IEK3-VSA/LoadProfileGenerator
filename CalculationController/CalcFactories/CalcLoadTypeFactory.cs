@@ -63,7 +63,7 @@ namespace CalculationController.CalcFactories {
             return _calcLoadTypes.Single(x => x.Guid == loadtypeGuid);
         }
 
-        public bool SimulateLoadtype(StrGuid guid)
+        public bool SimulateLoadtype([NotNull] StrGuid guid)
         {
             return _guids.Select(x=> x.StrVal).Contains(guid.StrVal);
         }

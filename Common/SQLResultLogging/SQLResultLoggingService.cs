@@ -32,6 +32,33 @@ namespace Common.SQLResultLogging {
 
         private bool _isFileNameDictLoaded;
         //static readonly List<SqlResultLoggingService> loggingServices = new List<SqlResultLoggingService>();
+        public bool DoesTableExist(HouseholdKey key, [JetBrains.Annotations.NotNull] string tableName)
+        {
+            if (!File.Exists(FilenameByHouseholdKey[Constants.GeneralHouseholdKey].Filename)) {
+                throw new LPGException(
+                    "Missing file: " + FilenameByHouseholdKey[Constants.GeneralHouseholdKey].Filename);
+            }
+
+            string constr = "Data Source=" + FilenameByHouseholdKey[Constants.GeneralHouseholdKey].Filename +
+                            ";Version=3";
+            using (System.Data.SQLite.SQLiteConnection conn = new System.Data.SQLite.SQLiteConnection(constr)) {
+                //;Synchronous=OFF;Journal Mode=WAL;
+                conn.Open();
+                using (SQLiteCommand cmd = new SQLiteCommand("SELECT name FROM sqlite_master WHERE type='table' AND name LIKE'" +
+                                                             tableName + "'")) {
+                    cmd.Connection = conn;
+                    using (var dr = cmd.ExecuteReader()) {
+                        while (dr.Read()) {
+                            var s = dr.GetString(0);
+                            if (string.Equals(s, tableName, StringComparison.OrdinalIgnoreCase)) {
+                                return true;
+                            }
+                        }
+                    }
+                    return false;
+                }
+            }
+        }
 
         public SqlResultLoggingService([JetBrains.Annotations.NotNull] string basePath)
         {

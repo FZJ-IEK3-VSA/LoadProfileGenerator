@@ -92,6 +92,7 @@ namespace CalculationEngine.OnlineLogging {
         void AddTransportationDeviceState([NotNull] TransportationDeviceStateEntry tdse);
         void AddChargingStationState([NotNull] ChargingStationState state);
         void AddVariableStatus([NotNull] CalcVariableEntry calcVariableEntry);
+        void AddTimeShiftableEntry([NotNull] TimeShiftableDeviceActivation timeShiftableDeviceActivation);
     }
 
     public class OnlineLoggingData : IOnlineLoggingData {
@@ -115,6 +116,7 @@ namespace CalculationEngine.OnlineLogging {
         [ItemNotNull] [NotNull] private readonly List<TransportationDeviceStateEntry> _transportationDeviceState;
         [ItemNotNull] [NotNull] private readonly List<ChargingStationState> _chargingStationStates;
         [ItemNotNull] [NotNull] private readonly List<CalcVariableEntry> _variableEntries;
+        [ItemNotNull] [NotNull] private readonly List<TimeShiftableDeviceActivation> _timeShiftableDeviceActivations;
         [ItemNotNull] [NotNull] private readonly List<dynamic> _lists = new List<dynamic>();
         public OnlineLoggingData([NotNull] DateStampCreator dsc, [NotNull] IInputDataLogger idl,
                                  [NotNull] CalcParameters calcParameters)
@@ -142,6 +144,8 @@ namespace CalculationEngine.OnlineLogging {
             _lists.Add(_variableEntries);
             _deviceEntries = new List<CalcDeviceArchiveDto>();
             _lists.Add(_deviceEntries);
+            _timeShiftableDeviceActivations = new List<TimeShiftableDeviceActivation>();
+            _lists.Add(_timeShiftableDeviceActivations);
         }
 
         public void AddTransportationDeviceState(TransportationDeviceStateEntry tdse)
@@ -185,6 +189,11 @@ namespace CalculationEngine.OnlineLogging {
         public void AddLocationEntry(LocationEntry le)
         {
             _locationEntries.Add(le);
+        }
+
+        public void AddTimeShiftableEntry(TimeShiftableDeviceActivation tsda)
+        {
+            _timeShiftableDeviceActivations.Add(tsda);
         }
 
         public void AddTransportationEvent(HouseholdKey householdkey,
@@ -311,6 +320,11 @@ namespace CalculationEngine.OnlineLogging {
             if (_deviceEntries.Count > 0) {
                 _idl.SaveList<CalcDeviceArchiveDto>(_deviceEntries.ConvertAll(x => (IHouseholdKey)x));
                 _deviceEntries.Clear();
+            }
+            if (_timeShiftableDeviceActivations.Count > 0)
+            {
+                _idl.SaveList<TimeShiftableDeviceActivation>(_timeShiftableDeviceActivations.ConvertAll(x => (IHouseholdKey)x));
+                _timeShiftableDeviceActivations.Clear();
             }
         }
 

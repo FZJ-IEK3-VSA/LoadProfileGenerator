@@ -14,7 +14,8 @@ namespace Automation {
                                      [CanBeNull]DateTime? endDate, [CanBeNull] string? externalTimeResolution, [CanBeNull] string? internalTimeResolution,
                                      [CanBeNull] JsonReference? geographicLocation, LoadTypePriority loadTypePriorityEnum,
                                       [CanBeNull] string? outputDirectory, bool showSettlingPeriod,
-                                     [CanBeNull] DateTime? startDate, [CanBeNull] JsonReference? temperatureProfile, bool enableTransportation
+                                     [CanBeNull] DateTime? startDate, [CanBeNull] JsonReference? temperatureProfile, bool enableTransportation,
+                                      bool enableFlexibility
                                       )
         {
             //CalcObject = calcObject;
@@ -30,6 +31,7 @@ namespace Automation {
             StartDate = startDate;
             TemperatureProfile = temperatureProfile;
             EnableTransportation = enableTransportation;
+            enableFlexibility = enableFlexibility;
         }
 
         public JsonCalcSpecification([NotNull] JsonCalcSpecification o)
@@ -66,6 +68,7 @@ namespace Automation {
             }
             DeleteSqlite = o.DeleteSqlite;
             EnableTransportation = o.EnableTransportation;
+            EnableFlexibility = o.EnableFlexibility;
         }
 
         [Comment(
@@ -152,6 +155,10 @@ namespace Automation {
         public bool ShowSettlingPeriod { get; set; }
 
         [Comment(
+            "Flexibility modelling seperates the electric devices out that can time shifted. The LPG then generates two distinct profiles.")]
+        public bool EnableFlexibility { get; set; }
+
+        [Comment(
             "If you enable this, the LPG will check in the result directory if this household/house was already calculated and if so, will quit quietly. Defaults to true.")]
         public bool SkipExisting { get; set; } = true;
 
@@ -179,14 +186,14 @@ namespace Automation {
         public static JsonCalcSpecification MakeDefaultsForTesting()
         {
             return new JsonCalcSpecification(false,null,new DateTime(2019,1,1),
-                "00:15:00","00:01:00",null,LoadTypePriority.All,null,false,new DateTime(2019,1,1),null,false);
+                "00:15:00","00:01:00",null,LoadTypePriority.All,null,false,new DateTime(2019,1,1),null,false,false);
         }
 
         [NotNull]
         public static JsonCalcSpecification MakeDefaultsForProduction()
         {
             return new JsonCalcSpecification( false,  null, new DateTime(2019, 12, 31),
-                null, null, null, LoadTypePriority.All, null, false, new DateTime(2019, 1, 1),null, true);
+                null, null, null, LoadTypePriority.All, null, false, new DateTime(2019, 1, 1),null, true, false);
         }
     }
 }

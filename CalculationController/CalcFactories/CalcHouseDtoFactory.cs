@@ -97,6 +97,12 @@ namespace CalculationController.CalcFactories {
                     throw new LPGException("Calcobject was null");
                 }
 
+
+                var mhh = (ModularHousehold)household.CalcObject;
+                Logger.Info("Adding household " + mhh.Name + " with the traits:");
+                foreach (var trait in mhh.Traits) {
+                    Logger.Info("\t" + trait.Name);
+                }
                 if (household.CalcObject.CalcObjectType == CalcObjectType.ModularHousehold) {
                     CalcHouseholdDto hhdto = _hhDtoFactory.MakeCalcModularHouseholdDto(sim,
                         (ModularHousehold)household.CalcObject,
@@ -422,7 +428,7 @@ namespace CalculationController.CalcFactories {
                 deviceCategoryDto.FullCategoryName,
                 Guid.NewGuid().ToStrGuid(),
                 timearray,
-                reqDtos,deviceCategoryDto.FullCategoryName);
+                reqDtos,deviceCategoryDto.FullCategoryName, rd.FlexibilityType, rd.MaxTimeShiftInMinutes);
             //cautodev.ApplyBitArry(busyarr, _ltDict.LtDict[hhautodev.LoadType]);
             return cautodev;
 
@@ -446,7 +452,7 @@ namespace CalculationController.CalcFactories {
                 throw new LPGException("Device was null");
             }
 
-            var deviceAction = _picker.GetAutoDeviceActionFromGroup(hhautodev.Device,
+            DeviceAction deviceAction = _picker.GetAutoDeviceActionFromGroup(hhautodev.Device,
                 allAutonomousDevices,
                 energyIntensity,
                 deviceActions,
@@ -511,7 +517,7 @@ namespace CalculationController.CalcFactories {
                 devcat.FullCategoryName,
                 Guid.NewGuid().ToStrGuid(),
                 availref,
-                reqDtos, devcat.FullCategoryName);
+                reqDtos, devcat.FullCategoryName, deviceAction.Device.FlexibilityType, deviceAction.Device.MaxTimeShiftInMinutes);
             autodevs.Add(cautodev);
             //cautodev.ApplyBitArry(, _ltDict.LtDict[actionProfile.VLoadType]);
         }

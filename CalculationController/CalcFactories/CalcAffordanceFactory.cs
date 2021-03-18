@@ -72,7 +72,7 @@ namespace CalculationController.CalcFactories {
         public void SetAllAffordaces([NotNull] [ItemNotNull] List<CalcAffordanceDto> affordances,
                                      [NotNull] DtoCalcLocationDict locations,
                                      [NotNull] CalcVariableRepository variableRepository,
-                                     [ItemNotNull] [NotNull] List<CalcDevice> devices)
+                                     [ItemNotNull] [NotNull] List<CalcDevice> devices, HouseholdKey key)
         {
             if (affordances.Count == 0) {
                 throw new LPGException("No Affordances found.");
@@ -118,15 +118,15 @@ namespace CalculationController.CalcFactories {
                     affordancedto.SrcTrait,
                     affordancedto.Guid,
                     variableRepository, deviceEnergyProfiles,
-                    busyarr, affordancedto.BodilyActivityLevel,_calcRepo);
-                MakeSubAffordances(locations, variableRepository, affordancedto, caff);
+                    busyarr, affordancedto.BodilyActivityLevel,_calcRepo, key);
+                MakeSubAffordances(locations, variableRepository, affordancedto, caff, key);
 
                 calcLocation.AddAffordance(caff);
             }
         }
 
         private void MakeSubAffordances([NotNull] DtoCalcLocationDict locations, [NotNull] CalcVariableRepository variableRepository,
-                                        [NotNull] CalcAffordanceDto affordancedto, [NotNull] CalcAffordance caff)
+                                        [NotNull] CalcAffordanceDto affordancedto, [NotNull] CalcAffordance caff, HouseholdKey key)
         {
             foreach (CalcSubAffordanceDto sdto in affordancedto.SubAffordance) {
                 CalcLocation subaffLocation = locations.GetCalcLocationByGuid(sdto.LocGuid);
@@ -147,7 +147,7 @@ namespace CalculationController.CalcFactories {
                     varOps,
                     sdto.Weight,
                     sdto.SourceTrait,
-                    sdto.Guid, isBusySub, variableRepository, caff.BodilyActivityLevel,_calcRepo);
+                    sdto.Guid, isBusySub, variableRepository, caff.BodilyActivityLevel,_calcRepo, key );
                 caff.SubAffordances.Add(csuf);
             }
         }

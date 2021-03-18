@@ -44,8 +44,8 @@ namespace Database.Tables.BasicElements {
                                     double pvalue,
                                     [CanBeNull]int? pID,
                                     int profileID,
-                                    [NotNull] string connectionString,
-                                    StrGuid guid)
+                                    [JetBrains.Annotations.NotNull] string connectionString,
+                                    [NotNull] StrGuid guid)
             : base(dt.ToString(CultureInfo.InvariantCulture), pID, TableName, connectionString,
                 guid) {
             _dateAndTime = dt;
@@ -60,7 +60,7 @@ namespace Database.Tables.BasicElements {
             set => SetValueWithNotify(value, ref _dateAndTime, nameof(DateAndTime));
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string DateAndTimeString {
             get => _dateAndTime.ToString(CultureInfo.CurrentCulture);
@@ -88,9 +88,9 @@ namespace Database.Tables.BasicElements {
             return DateAndTime.CompareTo(other.DateAndTime);
         }
 
-        [NotNull]
-        private static DateProfileDataPoint AssignFields([NotNull] DataReader dr, [NotNull] string connectionString,
-            bool ignoreMissingFields, [NotNull] AllItemCollections aic) {
+        [JetBrains.Annotations.NotNull]
+        private static DateProfileDataPoint AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString,
+            bool ignoreMissingFields, [JetBrains.Annotations.NotNull] AllItemCollections aic) {
             var datapointID = dr.GetIntFromLong("ID");
             var timeBasedProfileID = dr.GetIntFromLong("DateBasedProfileID");
             var time = dr.GetDateTime("DateAndTime");
@@ -126,7 +126,7 @@ namespace Database.Tables.BasicElements {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<DateProfileDataPoint> result, [NotNull] string connectionString,
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DateProfileDataPoint> result, [JetBrains.Annotations.NotNull] string connectionString,
             bool ignoreMissingTables) {
             var aic = new AllItemCollections();
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);

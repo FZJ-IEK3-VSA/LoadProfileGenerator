@@ -861,7 +861,7 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
                     View.AddTab(new SettlementTemplatePresenter(this, new SettlementTemplateView(),
                         (SettlementTemplate) x)));
 #pragma warning disable RCS1163 // Unused parameter.
-            _openItemDict.Add(typeof(CategoryOutcome).FullName, x => View.AddTab(new CalculationOutcomesPresenter(this, new CalculationOutcomesView())));
+            _openItemDict.Add(typeof(CategoryOutcome).FullName, _ => View.AddTab(new CalculationOutcomesPresenter(this, new CalculationOutcomesView())));
 #pragma warning restore RCS1163 // Unused parameter.
             _openItemDict.Add(typeof(Variable).FullName,
                 x => View.AddTab(new VariablePresenter(this, new VariableView(), (Variable) x)));
@@ -898,48 +898,26 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
                     new ChargingStationSetView(), (ChargingStationSet)x)));
 
             _openItemDict.Add("OtherCategory.Calculation",
-#pragma warning disable RCS1163 // Unused parameter.
-                x => View.AddTab(new CalculationPresenter(this, new CalculateView())));
-#pragma warning restore RCS1163 // Unused parameter.
+                _=> View.AddTab(new CalculationPresenter(this, new CalculateView())));
             _openItemDict.Add("OtherCategory.Settings",
-#pragma warning disable RCS1163 // Unused parameter.
-                x => View.AddTab(new SettingPresenter(this, new SettingsView())));
-#pragma warning restore RCS1163 // Unused parameter.
-#pragma warning disable RCS1163 // Unused parameter.
-            _openItemDict.Add("Import", x => View.AddTab(new ImportPresenter(this, new ImportView())));
-#pragma warning restore RCS1163 // Unused parameter.
+                _ => View.AddTab(new SettingPresenter(this, new SettingsView())));
+            _openItemDict.Add("Import", _ => View.AddTab(new ImportPresenter(this, new ImportView())));
             _openItemDict.Add("Affordance Color View",
-#pragma warning disable RCS1163 // Unused parameter.
-                x => View.AddTab(new AffordanceColorPresenter(this, new AffordanceColorView())));
-#pragma warning restore RCS1163 // Unused parameter.
+                _ => View.AddTab(new AffordanceColorPresenter(this, new AffordanceColorView())));
             _openItemDict.Add("Affordance Time Limit Overview",
-#pragma warning disable RCS1163 // Unused parameter.
-                x => View.AddTab(new AffordancesTimeLimitsPresenter(this, new AffordancesTimeLimitView())));
-#pragma warning restore RCS1163 // Unused parameter.
+                _ => View.AddTab(new AffordancesTimeLimitsPresenter(this, new AffordancesTimeLimitView())));
             _openItemDict.Add("Affordances with real devices",
-#pragma warning disable RCS1163 // Unused parameter.
-                x => View.AddTab(new AffordancesWithRealDevicesPresenter(this, new AffordancesWithRealDevicesView())));
-#pragma warning restore RCS1163 // Unused parameter.
+                _ => View.AddTab(new AffordancesWithRealDevicesPresenter(this, new AffordancesWithRealDevicesView())));
             _openItemDict.Add("Households with real devices",
-#pragma warning disable RCS1163 // Unused parameter.
-                x => View.AddTab(new HouseholdsWithRealDevicesPresenter(this, new HouseholdsWithRealDevicesView())));
-#pragma warning restore RCS1163 // Unused parameter.
+                _ => View.AddTab(new HouseholdsWithRealDevicesPresenter(this, new HouseholdsWithRealDevicesView())));
             _openItemDict.Add("Unused Affordances",
-#pragma warning disable RCS1163 // Unused parameter.
-                x => View.AddTab(new AffordanceUnusedPresenter(this, new AffordancesUnusedView())));
-#pragma warning restore RCS1163 // Unused parameter.
+                _ => View.AddTab(new AffordanceUnusedPresenter(this, new AffordancesUnusedView())));
             _openItemDict.Add("Unused Time Limits",
-#pragma warning disable RCS1163 // Unused parameter.
-                x => View.AddTab(new TimeLimitUnusedPresenter(this, new TimeLimitUnusedView())));
-#pragma warning restore RCS1163 // Unused parameter.
+                _ => View.AddTab(new TimeLimitUnusedPresenter(this, new TimeLimitUnusedView())));
             _openItemDict.Add("Device Overview",
-#pragma warning disable RCS1163 // Unused parameter.
-                x => View.AddTab(new DeviceOverviewPresenter(this, new DeviceOverviewView())));
-#pragma warning restore RCS1163 // Unused parameter.
+                _ => View.AddTab(new DeviceOverviewPresenter(this, new DeviceOverviewView())));
             _openItemDict.Add("Affordances Variable Overview",
-#pragma warning disable RCS1163 // Unused parameter.
-                x => View.AddTab(new AffordanceVariablePresenter(this, new AffordanceVariableView())));
-#pragma warning restore RCS1163 // Unused parameter.
+                _ => View.AddTab(new AffordanceVariablePresenter(this, new AffordanceVariableView())));
         }
 
         [JetBrains.Annotations.NotNull]

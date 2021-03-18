@@ -49,7 +49,7 @@ namespace Database.Tables.BasicElements {
 
         [CanBeNull] private TimeLimitEntry _rootEntry;
 
-        public TimeLimit([JetBrains.Annotations.NotNull] string pName, [JetBrains.Annotations.NotNull] string connectionString,StrGuid guid, [CanBeNull]int? pID = null)
+        public TimeLimit([JetBrains.Annotations.NotNull] string pName, [JetBrains.Annotations.NotNull] string connectionString,[JetBrains.Annotations.NotNull] StrGuid guid, [CanBeNull]int? pID = null)
             : base(pName, TableName, connectionString, guid)
         {
             if (guid == null) {

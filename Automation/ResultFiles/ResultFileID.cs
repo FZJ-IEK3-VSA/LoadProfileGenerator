@@ -123,6 +123,10 @@ namespace Automation.ResultFiles {
         JsonTransportDeviceState,
         JsonTransportDeviceLocation,
         BodilyActivityJsons,
-        JsonDeviceProfilesCsv
+        JsonDeviceProfilesCsv,
+        JsonHouseholdSumsNoFlexDevices,
+        SumProfileForHouseholdsNoFlex,
+        FlexibilityEventsJson,
+        FlexibilityEventsStatistics
     }
 }

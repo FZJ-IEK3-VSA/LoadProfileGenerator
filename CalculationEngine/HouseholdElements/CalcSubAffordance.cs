@@ -51,11 +51,11 @@ namespace CalculationEngine.HouseholdElements {
             [NotNull][ItemNotNull] List<CalcAffordanceVariableOp> variableOps, int weight,
                                  [NotNull] string sourceTrait,
                                  StrGuid guid, [ItemNotNull] [NotNull] BitArray isBusy,
-            [NotNull] CalcVariableRepository repository, BodilyActivityLevel bodilyActivityLevel, [NotNull] CalcRepo calcRepo)
+            [NotNull] CalcVariableRepository repository, BodilyActivityLevel bodilyActivityLevel, [NotNull] CalcRepo calcRepo, HouseholdKey hhkey)
             : base(
                 pName, loc, satisfactionvalues, miniumAge, maximumAge, permittedGender, false, false, pAffCategory,
                 isInterruptable, isInterrupting, ActionAfterInterruption.GoBackToOld, weight, false,
-                CalcAffordanceType.Subaffordance, guid,isBusy, bodilyActivityLevel,calcRepo )
+                CalcAffordanceType.Subaffordance, guid,isBusy, bodilyActivityLevel,calcRepo, hhkey)
         {
             Delaytimesteps = delaytimesteps;
             _variableOps = variableOps;

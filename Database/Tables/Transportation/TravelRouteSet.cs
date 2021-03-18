@@ -13,14 +13,14 @@ namespace Database.Tables.Transportation {
     public class TravelRouteSet : DBBaseElement {
         public const string TableName = "tblTravelRouteSet";
 
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<TravelRouteSetEntry> _routes =
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<TravelRouteSetEntry> _routes =
             new ObservableCollection<TravelRouteSetEntry>();
 
         [CanBeNull] private string _description;
 
-        public TravelRouteSet([NotNull] string name,
+        public TravelRouteSet([JetBrains.Annotations.NotNull] string name,
                               [CanBeNull]int? pID,
-                              [NotNull] string connectionString,
+                              [JetBrains.Annotations.NotNull] string connectionString,
                               [CanBeNull] string description, StrGuid guid) : base(name,
             TableName, connectionString, guid)
         {
@@ -39,10 +39,10 @@ namespace Database.Tables.Transportation {
 
         [ItemNotNull]
         [UsedImplicitly]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<TravelRouteSetEntry> TravelRoutes => _routes;
 
-        public void AddRoute([NotNull] TravelRoute route,bool savetodb = true)
+        public void AddRoute([JetBrains.Annotations.NotNull] TravelRoute route,bool savetodb = true)
         {
             if (route == null) {
                 throw new LPGException("Can't add a null route.");
@@ -64,9 +64,9 @@ namespace Database.Tables.Transportation {
             _routes.Sort();
         }
 
-        [NotNull]
-        private static TravelRouteSet AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static TravelRouteSet AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var name = dr.GetString("Name", false, "(no name)", ignoreMissingFields);
             var description = dr.GetString("Description", false, "(no description)", ignoreMissingFields);
@@ -75,18 +75,18 @@ namespace Database.Tables.Transportation {
             return new TravelRouteSet(name, id, connectionString, description, guid);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString) => new
+        public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString) => new
             TravelRouteSet(FindNewName(isNameTaken, "New Travel Route Set "), null, connectionString, "", System.Guid.NewGuid().ToStrGuid());
 
-        public void DeleteEntry([NotNull] TravelRouteSetEntry ld)
+        public void DeleteEntry([JetBrains.Annotations.NotNull] TravelRouteSetEntry ld)
         {
             ld.DeleteFromDB();
             _routes.Remove(ld);
         }
 
-        public void DeleteEntry([NotNull] TravelRoute ld)
+        public void DeleteEntry([JetBrains.Annotations.NotNull] TravelRoute ld)
         {
             var trse = TravelRoutes.Where(x => x.TravelRoute == ld).ToList();
             if (trse.Count == 0) {
@@ -98,10 +98,10 @@ namespace Database.Tables.Transportation {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static TravelRouteSet ImportFromItem([NotNull] TravelRouteSet toImport,
-            [NotNull] Simulator dstSim)
+        public static TravelRouteSet ImportFromItem([JetBrains.Annotations.NotNull] TravelRouteSet toImport,
+            [JetBrains.Annotations.NotNull] Simulator dstSim)
         {
             var loc = new TravelRouteSet(toImport.Name, null,dstSim.ConnectionString, toImport.Description, toImport.Guid);
             dstSim.TravelRouteSets.Items.Add(loc);
@@ -118,7 +118,7 @@ namespace Database.Tables.Transportation {
             return loc;
         }
 
-        private static bool IsCorrectTravelRouteSetParent([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectTravelRouteSetParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var hd = (TravelRouteSetEntry) child;
             if (parent.ID == hd.TravelRouteSetID) {
@@ -135,8 +135,8 @@ namespace Database.Tables.Transportation {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<TravelRouteSet> result, [NotNull] string connectionString,
-            bool ignoreMissingTables, [ItemNotNull] [NotNull] ObservableCollection<TravelRoute> travelRoutes)
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TravelRouteSet> result, [JetBrains.Annotations.NotNull] string connectionString,
+            bool ignoreMissingTables, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TravelRoute> travelRoutes)
         {
             var aic = new AllItemCollections(travelRoutes: travelRoutes);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);

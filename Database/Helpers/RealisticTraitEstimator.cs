@@ -9,7 +9,7 @@ using JetBrains.Annotations;
 
 namespace Database.Helpers {
     internal static class RealisticTraitEstimator {
-        public static void Run([NotNull] Simulator sim) {
+        public static void Run([JetBrains.Annotations.NotNull] Simulator sim) {
             var allEntries = new List<TimeConsumptionEntry>();
             foreach (var outcome in sim.CalculationOutcomes.Items) {
                 foreach (var afftime in outcome.AffordanceTimeUses) {
@@ -81,7 +81,7 @@ namespace Database.Helpers {
             }
         }
 
-        private static void SetEstimate([NotNull] HouseholdTrait trait, double timeSpent, int timesExecuted) {
+        private static void SetEstimate([JetBrains.Annotations.NotNull] HouseholdTrait trait, double timeSpent, int timesExecuted) {
             if (Math.Abs(timeSpent) < 0.00001 || timesExecuted == 0) {
                 trait.EstimatedDuration2InMinutes = -1;
                 trait.EstimatedTimeCount2 = -1;
@@ -119,7 +119,7 @@ namespace Database.Helpers {
         }
 
         private class TimeConsumptionEntry {
-            public TimeConsumptionEntry([NotNull] string affordanceName, [CanBeNull] string personName, double timeSpent,
+            public TimeConsumptionEntry([JetBrains.Annotations.NotNull] string affordanceName, [CanBeNull] string personName, double timeSpent,
                 int executions) {
                 AffordanceName = affordanceName;
                 PersonName = personName;
@@ -127,7 +127,7 @@ namespace Database.Helpers {
                 Executions = executions;
             }
 
-            [NotNull]
+            [JetBrains.Annotations.NotNull]
             public string AffordanceName { get; }
             public int Executions { get; }
             public int PersonCount { get; set; }

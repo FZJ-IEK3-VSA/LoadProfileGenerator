@@ -95,7 +95,7 @@ namespace CalculationEngine.HouseholdElements {
                 foreach (var cprof in _calcProfiles) {
                     CalcProfile adjustedProfile = cprof.Profile.CompressExpandDoubleArray(timefactor);
                     _earliestNextStart = SetTimeprofile(adjustedProfile, time, cprof.LoadType,
-                        "(autonomous)", "(autonomous)", cprof.Multiplier, true);
+                        "(autonomous)", "(autonomous)", cprof.Multiplier, true, out var _);
                 }
             }
         }

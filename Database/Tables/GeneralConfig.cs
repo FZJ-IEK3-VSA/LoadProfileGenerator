@@ -446,6 +446,20 @@ namespace Database.Tables {
         }
 
         [JetBrains.Annotations.NotNull]
+        [UsedImplicitly]
+        public string EnableFlexibility
+        {
+            get => _settings[nameof(EnableFlexibility)].SettingValue;
+            set => UpdateValue(nameof(EnableFlexibility), value);
+        }
+
+        public bool EnableFlexibilityBool
+        {
+            get => EnableFlexibility.ToUpper() == "TRUE";
+            set => EnableFlexibility = value.ToString().ToUpper();
+        }
+
+        [JetBrains.Annotations.NotNull]
         public List<CalcOption> AllEnabledOptions() {
             var options = new List<CalcOption>();
             foreach (var pair in Options) {
@@ -524,6 +538,7 @@ namespace Database.Tables {
             gc.CheckExistence(nameof(SelectedLoadTypePriority), "Mandatory", ignoreMissing);
 
             gc.CheckExistence(nameof(DeleteDatFiles), "False", ignoreMissing);
+            gc.CheckExistence(nameof(EnableFlexibility), "False", ignoreMissing);
             gc.CheckExistence(nameof(CarpetPlotWidth), "7", ignoreMissing);
             gc.CheckExistence(nameof(SelectedEnergyIntensity), "0", ignoreMissing);
             gc.CheckExistence(nameof(WriteExcelColumn), "True", ignoreMissing);

@@ -7,7 +7,7 @@ namespace Automation
         public static ColorRGB Blue { get; } = new ColorRGB(0,0, 255);
         public static ColorRGB Black { get; } = new ColorRGB(0, 0, 0);
     }
-    public struct ColorRGB
+    public record ColorRGB
     {
         [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
         public override int GetHashCode()
@@ -20,6 +20,7 @@ namespace Automation
                 return hashCode;
             }
         }
+        public ColorRGB() { }
 
         public ColorRGB(byte r, byte g, byte b)
         {
@@ -75,41 +76,41 @@ namespace Automation
             return c;
         }*/
 
-        public override bool Equals(object obj)
-        {
-            if (!(obj is ColorRGB))
-            {
-                return false;
-            }
+        //public override bool Equals(object obj)
+        //{
+        //    if (!(obj is ColorRGB))
+        //    {
+        //        return false;
+        //    }
 
-            return Equals((ColorRGB)obj);
-        }
+        //    return Equals((ColorRGB)obj);
+        //}
 
-        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-        public bool Equals(ColorRGB other)
-        {
-            if (R != other.R)
-            {
-                return false;
-            }
-            if (G != other.G)
-            {
-                return false;
-            }
-            if (B != other.B)
-            {
-                return false;
-            }
-            if (A != other.A)
-            {
-                return false;
-            }
-            return true;
-        }
+        //[SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+        //public bool Equals(ColorRGB other)
+        //{
+        //    if (R != other.R)
+        //    {
+        //        return false;
+        //    }
+        //    if (G != other.G)
+        //    {
+        //        return false;
+        //    }
+        //    if (B != other.B)
+        //    {
+        //        return false;
+        //    }
+        //    if (A != other.A)
+        //    {
+        //        return false;
+        //    }
+        //    return true;
+        //}
 
-        public static bool operator ==(ColorRGB point1, ColorRGB point2) => point1.Equals(point2);
+        //public static bool operator ==(ColorRGB point1, ColorRGB point2) => point1.Equals(point2);
 
-        public static bool operator !=(ColorRGB point1, ColorRGB point2) => !point1.Equals(point2);
+        //public static bool operator !=(ColorRGB point1, ColorRGB point2) => !point1.Equals(point2);
 
     }
 }

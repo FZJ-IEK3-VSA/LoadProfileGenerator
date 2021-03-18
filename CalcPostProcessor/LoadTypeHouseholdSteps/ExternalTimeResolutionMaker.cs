@@ -101,7 +101,8 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                 normalfile.WriteLine(dstLoadType.Name + "." + dsc.GenerateDateStampHeader() +
                                      efc.GetTotalHeaderString(dstLoadType, null));
             }
-
+            NumberFormatInfo nfi = new NumberFormatInfo();
+            nfi.NumberDecimalSeparator = Repository.CalcParameters.DecimalSeperator;
             if (calcParameters.IsSet(CalcOption.DeviceProfileExternalEntireHouse) ||
                 calcParameters.IsSet(CalcOption.SumProfileExternalEntireHouse)) {
                 for (var outerIndex = 0; outerIndex < energyFileRows.Count; outerIndex += externalfactor) {
@@ -137,7 +138,7 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                         }
 
                         sumfile.WriteLine(sb +
-                                          (efr.SumCached * dstLoadType.ConversionFactor).ToString(Config.CultureInfo));
+                                          (efr.SumCached * dstLoadType.ConversionFactor).ToString(nfi));
                     }
                 }
             }

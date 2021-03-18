@@ -56,7 +56,7 @@ namespace Calculation.HouseholdElements.Tests {
                     var csps = new CalcStartParameterSet(sim.GeographicLocations[0], sim.TemperatureProfiles[0], sim.ModularHouseholds[0],
                         EnergyIntensityType.Random, false, null, LoadTypePriority.RecommendedForHouses, null, null, null,
                         sim.MyGeneralConfig.AllEnabledOptions(), new DateTime(2015, 1, 1), new DateTime(2015, 1, 2), new TimeSpan(0, 1, 0), ";", 5,
-                        new TimeSpan(0, 15, 0), false, false, false, 3, 3, calculationProfiler, wd1.WorkingDirectory, false,false, ".");
+                        new TimeSpan(0, 15, 0), false, false, false, 3, 3, calculationProfiler, wd1.WorkingDirectory, false,false, ".", false);
                     var cm = cmf.GetCalcManager(sim, csps, false);
                     //,, wd1.WorkingDirectory, sim.ModularHouseholds[0], false,
                     //sim.TemperatureProfiles[0], sim.GeographicLocations[0], EnergyIntensityType.Random, version,
@@ -107,21 +107,21 @@ namespace Calculation.Tests.HouseholdElements {
             IMock<IOnlineDeviceActivationProcessor> iodap = new Mock<IOnlineDeviceActivationProcessor>();
             using (var calcRepo = new CalcRepo(iodap.Object, calcParameters: calcParameters)) {
                 var cdd1 = new CalcDeviceDto("cdevice1", devCategoryGuid, new HouseholdKey("HH1"), OefcDeviceType.Device, "category", "",
-                    Guid.NewGuid().ToStrGuid(), cloc1.Guid, cloc1.Name);
+                    Guid.NewGuid().ToStrGuid(), cloc1.Guid, cloc1.Name, FlexibilityType.NoFlexibility, 0);
 
                 var cdLoc1 = new CalcDevice(new List<CalcDeviceLoad>(), cloc1, cdd1, calcRepo);
                 var cdd2 = new CalcDeviceDto("cdevice1", devCategoryGuid, new HouseholdKey("HH1"), OefcDeviceType.Device, "category", "",
-                    Guid.NewGuid().ToStrGuid(), cloc1.Guid, cloc1.Name);
+                    Guid.NewGuid().ToStrGuid(), cloc1.Guid, cloc1.Name, FlexibilityType.NoFlexibility, 0);
                 var cdLoc1B = new CalcDevice(new List<CalcDeviceLoad>(), cloc1, cdd2, calcRepo);
                 var cdd3 = new CalcDeviceDto("cdevice1", devCategoryGuid, new HouseholdKey("HH1"), OefcDeviceType.Device, "category", "",
-                    Guid.NewGuid().ToStrGuid(), cloc2.Guid, cloc2.Name);
+                    Guid.NewGuid().ToStrGuid(), cloc2.Guid, cloc2.Name, FlexibilityType.NoFlexibility, 0);
                 var cdLoc2 = new CalcDevice(new List<CalcDeviceLoad>(), cloc2, cdd3, calcRepo);
                 var cp = new CalcProfile("cp1", Guid.NewGuid().ToStrGuid(), TimeSpan.FromMilliseconds(1), ProfileType.Absolute, "blub");
                 //CalcVariableRepository crv = new CalcVariableRepository();
                 //VariableRequirement vr = new VariableRequirement("");
                 var requirements = new List<VariableRequirement>();
                 var cdd4 = new CalcDeviceDto("cdevice1", devCategoryGuid, new HouseholdKey("HH1"), OefcDeviceType.Device, "category", "",
-                    Guid.NewGuid().ToStrGuid(), cloc1.Guid, cloc1.Name);
+                    Guid.NewGuid().ToStrGuid(), cloc1.Guid, cloc1.Name, FlexibilityType.NoFlexibility, 0);
                 var cadp = new CalcAutoDevProfile(cp, clt, 1);
                 var cadps = new List<CalcAutoDevProfile>() { cadp };
                 var cadLoc1 = new CalcAutoDev(cadps, cdevload, 0,  cloc1, requirements, cdd4, calcRepo);

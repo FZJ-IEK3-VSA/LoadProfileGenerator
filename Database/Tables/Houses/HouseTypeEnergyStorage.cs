@@ -40,8 +40,8 @@ namespace Database.Tables.Houses {
 
         [CanBeNull] private readonly EnergyStorage _energyStorage;
 
-        public HouseTypeEnergyStorage([CanBeNull]int? pID, [NotNull] string name, int houseID, [CanBeNull] EnergyStorage es,
-            [NotNull] string connectionString, StrGuid guid)
+        public HouseTypeEnergyStorage([CanBeNull]int? pID, [JetBrains.Annotations.NotNull] string name, int houseID, [CanBeNull] EnergyStorage es,
+            [JetBrains.Annotations.NotNull] string connectionString, [NotNull] StrGuid guid)
             : base(name, TableName, connectionString, guid)
         {
             ID = pID;
@@ -56,9 +56,9 @@ namespace Database.Tables.Houses {
 
         public int HouseID { get; }
 
-        [NotNull]
-        private static HouseTypeEnergyStorage AssignFields([NotNull] DataReader dr, [NotNull] string connectionString,
-            bool ignoreMissingFields, [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static HouseTypeEnergyStorage AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString,
+            bool ignoreMissingFields, [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var id = dr.GetIntFromLong("ID");
             var energyStorageID = dr.GetIntFromLong("EnergyStorageID");
@@ -84,9 +84,9 @@ namespace Database.Tables.Houses {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<HouseTypeEnergyStorage> result,
-            [NotNull] string connectionString,
-            [NotNull] [ItemNotNull] ObservableCollection<EnergyStorage> energyStorages, bool ignoreMissingTables)
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<HouseTypeEnergyStorage> result,
+            [JetBrains.Annotations.NotNull] string connectionString,
+            [JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<EnergyStorage> energyStorages, bool ignoreMissingTables)
         {
             var aic = new AllItemCollections(energyStorages: energyStorages);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
@@ -102,7 +102,7 @@ namespace Database.Tables.Houses {
             }
         }
 
-        public void SetDeleteFunction([NotNull] Action<HouseTypeEnergyStorage> deleteHouseEnergyStorage)
+        public void SetDeleteFunction([JetBrains.Annotations.NotNull] Action<HouseTypeEnergyStorage> deleteHouseEnergyStorage)
         {
             if(_energyStorage != null) {
                 _energyStorage.FunctionsToCallAfterDelete.Add(delegate { deleteHouseEnergyStorage(this); });

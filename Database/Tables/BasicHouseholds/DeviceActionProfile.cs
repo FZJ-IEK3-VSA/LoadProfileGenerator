@@ -21,7 +21,7 @@ namespace Database.Tables.BasicHouseholds {
 
         public DeviceActionProfile([CanBeNull] TimeBasedProfile timeprofile, [CanBeNull] int? id, decimal timeOffset,
             int deviceActionID,
-            [NotNull] string deviceName, [CanBeNull] VLoadType vLoadType, [NotNull] string connectionString, double multiplier, StrGuid guid)
+            [JetBrains.Annotations.NotNull] string deviceName, [CanBeNull] VLoadType vLoadType, [JetBrains.Annotations.NotNull] string connectionString, double multiplier, [NotNull] StrGuid guid)
             : base(deviceName, TableName, connectionString, guid) {
             _deviceActionID = deviceActionID;
             _timeprofile = timeprofile;
@@ -44,7 +44,7 @@ namespace Database.Tables.BasicHouseholds {
         [UsedImplicitly]
         public decimal TimeOffset => _timeOffset;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string TimeOffsetString => _timeOffset.ToString("0.00", CultureInfo.CurrentCulture);
 
@@ -73,10 +73,10 @@ namespace Database.Tables.BasicHouseholds {
             return 0;
         }
 
-        [NotNull]
-        private static DeviceActionProfile AssignFields([NotNull] DataReader dr, [NotNull] string connectionString,
+        [JetBrains.Annotations.NotNull]
+        private static DeviceActionProfile AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString,
             bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic) {
+            [JetBrains.Annotations.NotNull] AllItemCollections aic) {
             var id = dr.GetIntFromLong("ID");
             var deviceActionID = dr.GetIntFromLong("DeviceActionID", false, ignoreMissingFields, -1);
             var timeprofileID = dr.GetIntFromLong("TimeprofileID");
@@ -116,9 +116,9 @@ namespace Database.Tables.BasicHouseholds {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<DeviceActionProfile> result, [NotNull] string connectionString,
-            [ItemNotNull] [NotNull] ObservableCollection<DeviceAction> deviceActions, [ItemNotNull] [NotNull] ObservableCollection<TimeBasedProfile> timeBasedProfiles,
-            [ItemNotNull] [NotNull] ObservableCollection<VLoadType> loadTypes, bool ignoreMissingTables) {
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceActionProfile> result, [JetBrains.Annotations.NotNull] string connectionString,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<DeviceAction> deviceActions, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TimeBasedProfile> timeBasedProfiles,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<VLoadType> loadTypes, bool ignoreMissingTables) {
             var aic = new AllItemCollections(timeProfiles: timeBasedProfiles, loadTypes: loadTypes,
                 deviceActions: deviceActions);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);

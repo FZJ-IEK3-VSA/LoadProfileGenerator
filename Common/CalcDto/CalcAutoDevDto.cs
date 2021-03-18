@@ -20,7 +20,7 @@ namespace Common.CalcDto {
         public double Multiplier { get; }
         public CalcProfileDto Profile { get; set; }
     }
-    public class CalcAutoDevDto : CalcDeviceDto
+    public record CalcAutoDevDto : CalcDeviceDto
     {
         [NotNull]
         public List<CalcAutoDevProfileDto> CalcProfiles { get; }
@@ -50,12 +50,12 @@ namespace Common.CalcDto {
                               [NotNull] HouseholdKey householdKey,
                               [NotNull] string calclocationName, StrGuid calcLocationGuid,
                              //[CanBeNull] string variableName, double variableValue, VariableCondition variableCondition,
-                              [NotNull] string deviceCategoryFullPath, StrGuid guid, [NotNull]AvailabilityDataReferenceDto busyArr,
+                              [NotNull] string deviceCategoryFullPath, StrGuid deviceClassGuid, [NotNull]AvailabilityDataReferenceDto busyArr,
                               //string variableGuid,
                               [ItemNotNull] [NotNull]List<VariableRequirementDto> requirements,
-                             [NotNull] string deviceCategoryName):
+                             [NotNull] string deviceCategoryName, FlexibilityType flexibilityType, int maxTimeShiftInMinutes) :
             base(name,deviceCategoryGuid,householdKey,OefcDeviceType.AutonomousDevice,
-                deviceCategoryName,"",guid,calcLocationGuid,calclocationName)
+                deviceCategoryName,"",deviceClassGuid,calcLocationGuid,calclocationName,flexibilityType, maxTimeShiftInMinutes)
         {
             CalcProfiles = profiles;
             Loads = loads;
@@ -68,7 +68,6 @@ namespace Common.CalcDto {
             //VariableValue = variableValue;
             //VariableCondition = variableCondition;
             DeviceCategoryFullPath = deviceCategoryFullPath;
-            Guid = guid;
             BusyArr = busyArr; //busyArr;
             //VariableGuid = variableGuid;
             Requirements = requirements;

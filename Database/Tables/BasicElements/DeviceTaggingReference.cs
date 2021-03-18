@@ -51,7 +51,7 @@ namespace Database.Tables.BasicElements {
         public DeviceTaggingReference([JetBrains.Annotations.NotNull] string name, int taggingSetID, [CanBeNull] DeviceTag tag, [JetBrains.Annotations.NotNull] string connectionString,
                                       [CanBeNull]int? pID,
             int personCount, double referenceValue, [CanBeNull] VLoadType loadType,
-            StrGuid guid) : base(name, pID, TableName,
+            [JetBrains.Annotations.NotNull] StrGuid guid) : base(name, pID, TableName,
             connectionString, guid)
         {
             _taggingSetID = taggingSetID;

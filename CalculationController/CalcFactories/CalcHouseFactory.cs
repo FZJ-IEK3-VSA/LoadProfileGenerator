@@ -30,6 +30,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Automation;
 using Automation.ResultFiles;
 using CalculationController.DtoFactories;
 using CalculationEngine;
@@ -84,7 +85,7 @@ namespace CalculationController.CalcFactories {
                 CalcLocation cl = new CalcLocation(houseLoc.Name, houseLoc.Guid);
                 houseLocations.Add(cl);
             }
-
+            Logger.Info("Calculating " + calcHouseDto.HouseName);
             var calcAbleObjects = new List<ICalcAbleObject>();
             //var globalLocationDict = new Dictionary<CalcLocationDto, CalcLocation>();
             foreach (var householddto in calcHouseDto.Households) {
@@ -129,7 +130,8 @@ namespace CalculationController.CalcFactories {
                     set.AddTag(trafo.Name, "House Device");
                 }
                 CalcDeviceDto cdd = new CalcDeviceDto(trafo.Name,devcategoryGuid,householdKey,
-                    OefcDeviceType.Transformation,"Transformation Devices","",trafo.Guid,trafolocGuid,"Transformation Devices");
+                    OefcDeviceType.Transformation,"Transformation Devices","",trafo.Guid,
+                    trafolocGuid,"Transformation Devices", FlexibilityType.NoFlexibility, 0);
                 var ctd = new CalcTransformationDevice(_calcRepo.Odap,
                     trafo.MinValue,
                     trafo.MaxValue,
@@ -243,7 +245,7 @@ namespace CalculationController.CalcFactories {
                 //CalcLoadType lt = _ltDict.GetLoadtypeByGuid(gen.LoadType.Guid);
                 CalcDeviceDto deviceDto = new CalcDeviceDto(gen.Name,
                     gendevcategoryGuid,householdKey,OefcDeviceType.Generator,"Generators",
-                    "",gen.Guid,genlocGuid,"Generators");
+                    "",gen.Guid,genlocGuid,"Generators", FlexibilityType.NoFlexibility, 0);
                 var cgen = new CalcGenerator(
                     _calcRepo.Odap,
                     _ltDict.GetCalcLoadTypeByLoadtype(gen.LoadType),
@@ -299,7 +301,7 @@ namespace CalculationController.CalcFactories {
                 Guid.NewGuid().ToStrGuid(),
                 householdKey,OefcDeviceType.SpaceHeating,"Space Heating",
                 string.Empty,Guid.NewGuid().ToStrGuid(),
-                heatloc.Guid,heatloc.Name);
+                heatloc.Guid,heatloc.Name, FlexibilityType.NoFlexibility, 0);
             var csh = new CalcSpaceHeating(cdls,
                 degreeDayDict,
                 heatloc,
@@ -350,7 +352,7 @@ namespace CalculationController.CalcFactories {
                 house.HouseKey,OefcDeviceType.AirConditioning,
                 "Air Conditioning",
                 string.Empty,Guid.NewGuid().ToStrGuid(),
-                acloc.Guid,acloc.Name);
+                acloc.Guid,acloc.Name,FlexibilityType.NoFlexibility, 0);
             var csh = new CalcAirConditioning(
                 cdls,
                 degreeHourDict,
@@ -373,7 +375,7 @@ namespace CalculationController.CalcFactories {
                 //}
                 var lti = _ltDict.GetCalcLoadTypeByLoadtype(es.InputLoadType).ConvertToDto();
                 CalcDeviceDto deviceDto = new CalcDeviceDto(es.Name,esCategoryGuid,householdKey,OefcDeviceType.Storage,
-                    "Energy Storage","",es.Guid,esLocGuid,"Energy Storages");
+                    "Energy Storage","",es.Guid,esLocGuid,"Energy Storages", FlexibilityType.NoFlexibility, 0);
                 var ces = new CalcEnergyStorage(_calcRepo.Odap,
                     lti,
                     es.MaximumStorageRate,

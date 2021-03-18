@@ -51,7 +51,7 @@ namespace CalculationEngine.Transportation {
                                         CalcLoadType? chargingCalcLoadType,
                                         [NotNull] [ItemNotNull] List<CalcSite> allCalcSites,
                                         [NotNull] CalcDeviceDto calcDeviceDto, [NotNull] CalcRepo calcRepo)
-            : base(calcDeviceDto.Name, calcDeviceDto.Guid)
+            : base(calcDeviceDto.Name, calcDeviceDto.DeviceInstanceGuid)
         {
             _dsc = new DateStampCreator(calcRepo.CalcParameters);
             _loads = loads;
@@ -373,7 +373,7 @@ namespace CalculationEngine.Transportation {
                 foreach (CalcChargingStation station in chargingStations) {
                     //
                     //new OefcKey(_householdKey, OefcDeviceType.Charging, Guid, site.Guid, station.GridChargingLoadType.Guid, "Transportation")
-                    var  clone = _calcDeviceDto.Clone();
+                    var  clone = _calcDeviceDto with { };
                     clone.Name = "Charging " + Name + " @ " + station.ChargingStationName;
                     clone.LocationGuid = site.Guid;
                     var key = _calcRepo.Odap.RegisterDevice(station.GridChargingLoadType.ConvertToDto(),_calcDeviceDto);

@@ -14,12 +14,12 @@ namespace CalculationEngine.HouseholdElements {
     public class VacationAffordance : CalcAffordanceBase {
         //TODO: figure out if this is still needed
         public VacationAffordance( StrGuid guid,
-                                  [ItemNotNull] [JetBrains.Annotations.NotNull] BitArray isBusy, [JetBrains.Annotations.NotNull] CalcRepo calcRepo)
+                                  [ItemNotNull] [JetBrains.Annotations.NotNull] BitArray isBusy, [JetBrains.Annotations.NotNull] CalcRepo calcRepo, HouseholdKey key)
             : base(
                 Constants.TakingAVacationString, new CalcLocation("Vacation", System.Guid.NewGuid().ToStrGuid()),
                 new List<CalcDesire>(), 0, 99, PermittedGender.All, false,
                 false, "Vacation", false, false, ActionAfterInterruption.GoBackToOld, 0, false,
-                CalcAffordanceType.Vacation, guid, isBusy, BodilyActivityLevel.Outside, calcRepo)
+                CalcAffordanceType.Vacation, guid, isBusy, BodilyActivityLevel.Outside, calcRepo, key)
         {
         }
 

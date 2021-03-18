@@ -35,6 +35,7 @@ using JetBrains.Annotations;
 using Newtonsoft.Json;
 
 namespace Common.SQLResultLogging.Loggers {
+
     public class SingleTimestepActionEntry : IHouseholdKey
     {
         [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
@@ -46,7 +47,7 @@ namespace Common.SQLResultLogging.Loggers {
         }
 
         public SingleTimestepActionEntry([JetBrains.Annotations.NotNull] HouseholdKey householdKey, int timeStep,
-                           DateTime dateTime, StrGuid personGuid, StrGuid actionEntryGuid)
+                           DateTime dateTime, StrGuid personGuid, [JetBrains.Annotations.NotNull] StrGuid actionEntryGuid)
         {
             HouseholdKey = householdKey;
             TimeStep = timeStep;

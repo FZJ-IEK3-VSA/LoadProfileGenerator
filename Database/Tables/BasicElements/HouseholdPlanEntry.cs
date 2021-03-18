@@ -73,7 +73,7 @@ namespace Database.Tables.BasicElements {
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([NotNull] string propertyName)
+        protected virtual void OnPropertyChanged([JetBrains.Annotations.NotNull] string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
@@ -87,11 +87,11 @@ namespace Database.Tables.BasicElements {
 
         public const string TableName = "tblHouseholdPlanEntries";
         private readonly int _householdPlanID;
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<HouseholdTrait> _traits = new ObservableCollection<HouseholdTrait>();
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<HouseholdTrait> _traits = new ObservableCollection<HouseholdTrait>();
 
         [CanBeNull] private ICalcObject _calcObject;
 
-        [NotNull] private string _existingTraits;
+        [JetBrains.Annotations.NotNull] private string _existingTraits;
 
         [CanBeNull] private Person _person;
 
@@ -103,8 +103,8 @@ namespace Database.Tables.BasicElements {
         private double _times;
         private TimeType _timeType;
 
-        public HouseholdPlanEntry([NotNull] string name, int householdPlanID, [CanBeNull] AffordanceTag tag, [CanBeNull] Person person, double times, double timeCount, TimeType timeType,
-                                  [NotNull] string connectionString, [CanBeNull] int? pID, [CanBeNull] ICalcObject calcObject, StrGuid guid) : base(name, pID, TableName, connectionString,
+        public HouseholdPlanEntry([JetBrains.Annotations.NotNull] string name, int householdPlanID, [CanBeNull] AffordanceTag tag, [CanBeNull] Person person, double times, double timeCount, TimeType timeType,
+                                  [JetBrains.Annotations.NotNull] string connectionString, [CanBeNull] int? pID, [CanBeNull] ICalcObject calcObject, [NotNull] StrGuid guid) : base(name, pID, TableName, connectionString,
             guid)
         {
             _householdPlanID = householdPlanID;
@@ -122,7 +122,7 @@ namespace Database.Tables.BasicElements {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string AffordanceCategory { get; set; }
 
         [ItemNotNull]
@@ -131,7 +131,7 @@ namespace Database.Tables.BasicElements {
         public ObservableCollection<DeviceAction> AllDeviceActions { get; set; }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<HouseholdTrait> AllTraits { get; set; } = new ObservableCollection<HouseholdTrait>();
 
@@ -144,7 +144,7 @@ namespace Database.Tables.BasicElements {
         [UsedImplicitly]
         public AffordanceTaggingSet Ats { get; set; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string AvailableInHousehold {
             get {
@@ -174,7 +174,7 @@ namespace Database.Tables.BasicElements {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string AverageEnergyPerActivation {
             get {
@@ -220,7 +220,7 @@ namespace Database.Tables.BasicElements {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string BackColor {
             get {
@@ -278,7 +278,7 @@ namespace Database.Tables.BasicElements {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string Desires {
             get {
                 if (Ats == null) {
@@ -307,7 +307,7 @@ namespace Database.Tables.BasicElements {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string DesireValues {
             get {
@@ -348,7 +348,7 @@ namespace Database.Tables.BasicElements {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string ExistingTraits {
             get => _existingTraits;
@@ -391,7 +391,7 @@ namespace Database.Tables.BasicElements {
             set => SetValueWithNotify(value, ref _tag);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public HouseholdPlanEntry ThisEntry => this;
 
@@ -422,11 +422,11 @@ namespace Database.Tables.BasicElements {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<TimeType> TimeTypes { get; } = new ObservableCollection<TimeType>();
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string ToolTipText {
             get {
@@ -468,7 +468,7 @@ namespace Database.Tables.BasicElements {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<HouseholdTrait> Traits => _traits;
 
@@ -482,8 +482,8 @@ namespace Database.Tables.BasicElements {
             return result;
         }
 
-        [NotNull]
-        public Dictionary<VLoadType, double> CollectTotalEnergyUses([NotNull] [ItemNotNull] ObservableCollection<DeviceAction> deviceActions)
+        [JetBrains.Annotations.NotNull]
+        public Dictionary<VLoadType, double> CollectTotalEnergyUses([JetBrains.Annotations.NotNull] [ItemNotNull] ObservableCollection<DeviceAction> deviceActions)
         {
             double totalActivations = TotalActivations;
             var energyUses = CollectEnergyUses(deviceActions);
@@ -506,14 +506,14 @@ namespace Database.Tables.BasicElements {
             return string.Compare(Name, other.Name, StringComparison.Ordinal);
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<HouseholdPlanEntry> result, [NotNull] string connectionString, bool ignoreMissingTables,
-                                            [ItemNotNull] [NotNull] ObservableCollection<AffordanceTag> tagsFromParent, [ItemNotNull] [NotNull] ObservableCollection<Person> persons)
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<HouseholdPlanEntry> result, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingTables,
+                                            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<AffordanceTag> tagsFromParent, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Person> persons)
         {
             var aic = new AllItemCollections(tagsFromParent, persons: persons);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string MakeHash()
         {
             var s = _tag?.Name + "#";
@@ -524,7 +524,7 @@ namespace Database.Tables.BasicElements {
             return s;
         }
 
-        public void RefreshAllRelevantTraits([NotNull] ModularHousehold chh, bool refreshDropDown)
+        public void RefreshAllRelevantTraits([JetBrains.Annotations.NotNull] ModularHousehold chh, bool refreshDropDown)
         {
             if (Ats == null) {
                 return;
@@ -614,8 +614,8 @@ namespace Database.Tables.BasicElements {
             cmd.AddParameter("TimeType", _timeType);
         }
 
-        [NotNull]
-        private static HouseholdPlanEntry AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields, [NotNull] AllItemCollections aic)
+        [JetBrains.Annotations.NotNull]
+        private static HouseholdPlanEntry AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields, [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var householdPlanEntryID = dr.GetIntFromLong("ID");
             var householdPlanID = dr.GetIntFromLong("HouseholdPlanID");
@@ -661,7 +661,7 @@ namespace Database.Tables.BasicElements {
             return (int)result;
         }
 
-        private void CollectDesiresAndAffordances([ItemNotNull] [NotNull] List<Desire> affdesires, [ItemNotNull] [NotNull] List<Affordance> affordances)
+        private void CollectDesiresAndAffordances([ItemNotNull] [JetBrains.Annotations.NotNull] List<Desire> affdesires, [ItemNotNull] [JetBrains.Annotations.NotNull] List<Affordance> affordances)
         {
             if (Ats == null) {
                 return;
@@ -682,7 +682,7 @@ namespace Database.Tables.BasicElements {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         private Dictionary<VLoadType, double> CollectEnergyUses([ItemNotNull] [CanBeNull] ObservableCollection<DeviceAction> allActions)
         {
             var energyUses = new Dictionary<VLoadType, double>();
@@ -718,7 +718,7 @@ namespace Database.Tables.BasicElements {
             return avg;
         }
 
-        private static bool FindAffordances([ItemNotNull] [NotNull] List<Affordance> affordances, [NotNull] HouseholdTrait trait)
+        private static bool FindAffordances([ItemNotNull] [JetBrains.Annotations.NotNull] List<Affordance> affordances, [JetBrains.Annotations.NotNull] HouseholdTrait trait)
         {
             var affordanceFound = false;
             foreach (var hhtLocation in trait.Locations) {
@@ -733,7 +733,7 @@ namespace Database.Tables.BasicElements {
             return affordanceFound;
         }
 
-        private static bool FindDesires([ItemNotNull] [NotNull] List<Desire> affdesires, [NotNull] HouseholdTrait trait)
+        private static bool FindDesires([ItemNotNull] [JetBrains.Annotations.NotNull] List<Desire> affdesires, [JetBrains.Annotations.NotNull] HouseholdTrait trait)
         {
             var desireFound = false;
 

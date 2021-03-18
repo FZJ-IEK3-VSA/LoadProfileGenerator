@@ -79,6 +79,14 @@ namespace Common.SQLResultLogging {
 
         [JetBrains.Annotations.NotNull]
         [ItemNotNull]
+        public List<TimeShiftableDeviceActivation> LoadFlexibilityEvents([JetBrains.Annotations.NotNull] HouseholdKey key)
+        {
+            FlexibilityDataLogger cadl = new FlexibilityDataLogger(_srls);
+            return cadl.Read(key);
+        }
+
+        [JetBrains.Annotations.NotNull]
+        [ItemNotNull]
         public List<CalcAffordanceTaggingSetDto> AffordanceTaggingSets
         {
             get

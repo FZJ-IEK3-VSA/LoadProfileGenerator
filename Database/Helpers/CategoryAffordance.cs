@@ -37,17 +37,17 @@ using JetBrains.Annotations;
 
 namespace Database.Helpers {
     public class CategoryAffordance : CategoryDBBase<Affordance> {
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<string> _allAffordanceCategories = new ObservableCollection<string>();
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<string> _allAffordanceCategories = new ObservableCollection<string>();
 
-        public CategoryAffordance([NotNull] string name) : base(name) {
+        public CategoryAffordance([JetBrains.Annotations.NotNull] string name) : base(name) {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public ObservableCollection<string> AllAffordanceCategories => _allAffordanceCategories;
 
-        [NotNull]
-        public new Affordance CreateNewItem([NotNull] string connectionString) {
+        [JetBrains.Annotations.NotNull]
+        public new Affordance CreateNewItem([JetBrains.Annotations.NotNull] string connectionString) {
             var t = base.CreateNewItem(connectionString);
             return t;
         }

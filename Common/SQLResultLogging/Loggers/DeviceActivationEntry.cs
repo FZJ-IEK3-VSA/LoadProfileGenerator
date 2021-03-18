@@ -26,14 +26,45 @@
 
 //-----------------------------------------------------------------------
 
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Automation;
 using Automation.ResultFiles;
 using Newtonsoft.Json;
+using Common.CalcDto;
+using JetBrains.Annotations;
 
 namespace Common.SQLResultLogging.Loggers {
-    using CalcDto;
-    using JetBrains.Annotations;
+
+    public record TimeShiftableDeviceActivation : IHouseholdKey
+    {
+        public TimeShiftableDeviceActivation(CalcDeviceDto device, TimeStep earliestStart, [JetBrains.Annotations.NotNull] HouseholdKey householdKey)
+        {
+            Device = device;
+            EarliestStart = earliestStart;
+            HouseholdKey = householdKey;
+        }
+
+        public CalcDeviceDto Device { get; }
+        public TimeStep EarliestStart { get; set; }
+        public TimeStep LatestStart { get; set; }
+        public int TotalDuration { get; set; }
+        public List<TimeShiftableDeviceProfile> Profiles { get; set; } = new List<TimeShiftableDeviceProfile>();
+        public HouseholdKey HouseholdKey { get; }
+    }
+    public record TimeShiftableDeviceProfile
+    {
+        public TimeShiftableDeviceProfile(CalcLoadTypeDto loadType, int timeOffsetInSteps, List<double> values)
+        {
+            LoadType = loadType;
+            TimeOffsetInSteps = timeOffsetInSteps;
+            Values = values;
+        }
+
+        public CalcLoadTypeDto LoadType { get; set; }
+        public int TimeOffsetInSteps { get; set; }
+        public List<double> Values { get; set; }
+    }
 
     public class  DeviceActivationEntry : IHouseholdKey {
         /// <summary>
@@ -45,12 +76,12 @@ namespace Common.SQLResultLogging.Loggers {
         {
         }
         public DeviceActivationEntry(
-                                     [NotNull] string affordanceName,
-                                     [NotNull] CalcLoadTypeDto loadType,
+                                     [JetBrains.Annotations.NotNull] string affordanceName,
+                                     [JetBrains.Annotations.NotNull] CalcLoadTypeDto loadType,
                                      double value,
-                                     [NotNull] string activatorName,
+                                     [JetBrains.Annotations.NotNull] string activatorName,
                                      int durationInSteps,
-                                     TimeStep timestep, [NotNull] CalcDeviceDto calcDeviceDto)
+                                     TimeStep timestep, [JetBrains.Annotations.NotNull] CalcDeviceDto calcDeviceDto)
         {
             if (calcDeviceDto == null) {
                 throw new LPGException("Calcdevicedto was null");
@@ -61,14 +92,14 @@ namespace Common.SQLResultLogging.Loggers {
             TotalEnergySum = value;
             ActivatorName = activatorName;
             Timestep = timestep;
-            DeviceGuid = calcDeviceDto.Guid;
+            DeviceInstanceGuid = calcDeviceDto.DeviceInstanceGuid;
             DurationInSteps = durationInSteps;
             HouseholdKey = calcDeviceDto.HouseholdKey;
         }
 
         [UsedImplicitly]
         [CanBeNull]
-        public StrGuid? DeviceGuid {
+        public StrGuid? DeviceInstanceGuid {
             get;
             set;
         }
@@ -82,7 +113,7 @@ namespace Common.SQLResultLogging.Loggers {
 //[UsedImplicitly]
         //public HouseholdKey HouseholdKey => CalcDeviceDto.HouseholdKey;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         [JsonProperty]
         public string AffordanceName { get;  set; }
@@ -91,7 +122,7 @@ namespace Common.SQLResultLogging.Loggers {
         [JsonProperty]
         public StrGuid LoadTypeGuid { get;  set; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         [JsonProperty]
         public string LoadTypeName { get;  set; }
@@ -105,7 +136,7 @@ namespace Common.SQLResultLogging.Loggers {
         public double[] AllValues { get; set; }
         */
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         [JsonProperty]
         public string ActivatorName { get;  set; }

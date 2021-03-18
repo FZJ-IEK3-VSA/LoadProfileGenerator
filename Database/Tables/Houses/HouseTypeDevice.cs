@@ -66,7 +66,7 @@ namespace Database.Tables.Houses {
             [CanBeNull] TimeLimit timeLimit, double timeStandardDeviation, [CanBeNull] VLoadType loadType,
             [JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.NotNull] string name,
             [CanBeNull] Location loc, double variableValue, VariableCondition variableCondition,
-            [CanBeNull] Variable variable, StrGuid guid)
+            [CanBeNull] Variable variable, [JetBrains.Annotations.NotNull] StrGuid guid)
             : base(name, TableName, connectionString, guid)
         {
             ID = pID;

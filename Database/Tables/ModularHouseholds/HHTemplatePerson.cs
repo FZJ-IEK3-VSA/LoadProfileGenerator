@@ -70,7 +70,7 @@ namespace Database.Tables.ModularHouseholds {
         }
 
         public HHTemplatePerson([CanBeNull]int? pID, [CanBeNull] Person pPerson, int hhTemplateID, [JetBrains.Annotations.NotNull] string name,
-            [JetBrains.Annotations.NotNull] string connectionString,[CanBeNull] TraitTag livingPattern, LivingPatternTag livingPatternTag, StrGuid guid)
+            [JetBrains.Annotations.NotNull] string connectionString,[CanBeNull] TraitTag livingPattern, LivingPatternTag livingPatternTag, [JetBrains.Annotations.NotNull] StrGuid guid)
             : base(name, TableName, connectionString, guid) {
             ID = pID;
             _person = pPerson;

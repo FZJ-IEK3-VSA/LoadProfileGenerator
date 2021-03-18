@@ -42,16 +42,16 @@ namespace Database.Tables.Houses {
     public class TransformationDevice : DBBaseElement {
         public const string TableName = "tblTransformationDevices";
 
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<TransformationDeviceCondition> _conditions =
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<TransformationDeviceCondition> _conditions =
             new ObservableCollection<TransformationDeviceCondition>();
 
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<TransformationFactorDatapoint> _factorDatapoints =
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<TransformationFactorDatapoint> _factorDatapoints =
             new ObservableCollection<TransformationFactorDatapoint>();
 
-        [ItemNotNull] [NotNull] private readonly ObservableCollection<TransformationDeviceLoadType> _loadTypesOut =
+        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<TransformationDeviceLoadType> _loadTypesOut =
             new ObservableCollection<TransformationDeviceLoadType>();
 
-        [NotNull] private string _description;
+        [JetBrains.Annotations.NotNull] private string _description;
 
         [CanBeNull] private VLoadType _loadTypeIn;
 
@@ -60,12 +60,12 @@ namespace Database.Tables.Houses {
         private double _minimumInputPower;
         private double _minValue;
 
-        public TransformationDevice([NotNull] string pName,
-                                    [NotNull] string description,
+        public TransformationDevice([JetBrains.Annotations.NotNull] string pName,
+                                    [JetBrains.Annotations.NotNull] string description,
                                     [CanBeNull] VLoadType loadTypeIn,
                                     double minValue,
                                     double maxValue,
-                                    [NotNull] string connectionString,
+                                    [JetBrains.Annotations.NotNull] string connectionString,
                                     double minimumInputPower,
                                     double maximumInputPower,
                                     StrGuid guid,
@@ -82,11 +82,11 @@ namespace Database.Tables.Houses {
         }
 
         [ItemNotNull]
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<TransformationDeviceCondition> Conditions => _conditions;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string Description {
             get => _description;
@@ -100,7 +100,7 @@ namespace Database.Tables.Houses {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<TransformationFactorDatapoint> FactorDatapoints => _factorDatapoints;
 
@@ -111,7 +111,7 @@ namespace Database.Tables.Houses {
             set => SetValueWithNotify(value, ref _loadTypeIn, false, nameof(LoadTypeIn));
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<TransformationDeviceLoadType> LoadTypesOut => _loadTypesOut;
 
@@ -149,7 +149,7 @@ namespace Database.Tables.Houses {
             }
         }
 
-        public void AddOutTransformationDeviceLoadType([NotNull] VLoadType lt, double factor, TransformationFactorType factorType)
+        public void AddOutTransformationDeviceLoadType([JetBrains.Annotations.NotNull] VLoadType lt, double factor, TransformationFactorType factorType)
         {
             var items2Delete = new List<TransformationDeviceLoadType>();
             foreach (var transformationDeviceLoadType in _loadTypesOut) {
@@ -174,7 +174,7 @@ namespace Database.Tables.Houses {
             tdlt.SaveToDB();
         }
 
-        public void AddTransformationDeviceCondition([NotNull] Variable variable, double minValue, double maxValue)
+        public void AddTransformationDeviceCondition([JetBrains.Annotations.NotNull] Variable variable, double minValue, double maxValue)
         {
             var tdlt = new TransformationDeviceCondition(null,
                 minValue,
@@ -202,9 +202,9 @@ namespace Database.Tables.Houses {
             return used;
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static DBBase CreateNewItem([NotNull] Func<string, bool> isNameTaken, [NotNull] string connectionString)
+        public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString)
         {
             var house = new TransformationDevice(FindNewName(isNameTaken, "New Transformation Device "),
                 "New transformation device description",
@@ -218,19 +218,19 @@ namespace Database.Tables.Houses {
             return house;
         }
 
-        public void DeleteFactorDataPoint([NotNull] TransformationFactorDatapoint factorDatapoint)
+        public void DeleteFactorDataPoint([JetBrains.Annotations.NotNull] TransformationFactorDatapoint factorDatapoint)
         {
             factorDatapoint.DeleteFromDB();
             _factorDatapoints.Remove(factorDatapoint);
         }
 
-        public void DeleteTransformationDeviceCondition([NotNull] TransformationDeviceCondition condition)
+        public void DeleteTransformationDeviceCondition([JetBrains.Annotations.NotNull] TransformationDeviceCondition condition)
         {
             condition.DeleteFromDB();
             _conditions.Remove(condition);
         }
 
-        public void DeleteTransformationLoadtypeFromDB([NotNull] TransformationDeviceLoadType lt)
+        public void DeleteTransformationLoadtypeFromDB([JetBrains.Annotations.NotNull] TransformationDeviceLoadType lt)
         {
             lt.DeleteFromDB();
             _loadTypesOut.Remove(lt);
@@ -239,9 +239,9 @@ namespace Database.Tables.Houses {
         public override DBBase ImportFromGenericItem(DBBase toImport, Simulator dstSim) =>
             ImportFromItem((TransformationDevice)toImport, dstSim);
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public static TransformationDevice ImportFromItem([NotNull] TransformationDevice toImport, [NotNull] Simulator dstSim)
+        public static TransformationDevice ImportFromItem([JetBrains.Annotations.NotNull] TransformationDevice toImport, [JetBrains.Annotations.NotNull] Simulator dstSim)
         {
             VLoadType vlt = null;
             if (toImport.LoadTypeIn != null) {
@@ -289,10 +289,10 @@ namespace Database.Tables.Houses {
             return td;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<TransformationDevice> result,
-                                            [NotNull] string connectionString,
-                                            [ItemNotNull] [NotNull] ObservableCollection<VLoadType> loadTypes,
-                                            [ItemNotNull] [NotNull] ObservableCollection<Variable> variables,
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TransformationDevice> result,
+                                            [JetBrains.Annotations.NotNull] string connectionString,
+                                            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<VLoadType> loadTypes,
+                                            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Variable> variables,
                                             bool ignoreMissingTables)
         {
             var aic = new AllItemCollections(loadTypes: loadTypes);
@@ -347,11 +347,11 @@ namespace Database.Tables.Houses {
             }
         }
 
-        [NotNull]
-        private static TransformationDevice AssignFields([NotNull] DataReader dr,
-                                                         [NotNull] string connectionString,
+        [JetBrains.Annotations.NotNull]
+        private static TransformationDevice AssignFields([JetBrains.Annotations.NotNull] DataReader dr,
+                                                         [JetBrains.Annotations.NotNull] string connectionString,
                                                          bool ignoreMissingFields,
-                                                         [NotNull] AllItemCollections aic)
+                                                         [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var name = dr.GetString("Name", "(no name)");
             var id = dr.GetIntFromLong("ID");
@@ -371,7 +371,7 @@ namespace Database.Tables.Houses {
             return new TransformationDevice(name, description, vlt, minValue, maxValue, connectionString, minPower, maxPower, guid, id);
         }
 
-        private static bool IsCorrectConditionParent([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectConditionParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var hd = (TransformationDeviceCondition)child;
             if (parent.ID == hd.TransformationDeviceID) {
@@ -383,7 +383,7 @@ namespace Database.Tables.Houses {
             return false;
         }
 
-        private static bool IsCorrectDataPointParent([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectDataPointParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var hd = (TransformationFactorDatapoint)child;
             if (parent.ID == hd.TransformationDeviceID) {
@@ -395,7 +395,7 @@ namespace Database.Tables.Houses {
             return false;
         }
 
-        private static bool IsCorrectParent([NotNull] DBBase parent, [NotNull] DBBase child)
+        private static bool IsCorrectParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
             var hd = (TransformationDeviceLoadType)child;
             if (parent.ID == hd.TransformationDeviceID) {

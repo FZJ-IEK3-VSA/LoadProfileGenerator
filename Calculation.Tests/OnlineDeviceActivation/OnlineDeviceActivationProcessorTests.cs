@@ -154,12 +154,12 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                                 var devCatGuid = Guid.NewGuid().ToStrGuid();
                                 var key = new HouseholdKey("HH1");
                                 var cddauto = new CalcDeviceDto("devicename", devCatGuid, key, OefcDeviceType.Device, "device category",
-                                    " (autonomous)", Guid.NewGuid().ToStrGuid(), cloc.Guid, cloc.Name);
+                                    " (autonomous)", Guid.NewGuid().ToStrGuid(), cloc.Guid, cloc.Name, FlexibilityType.NoFlexibility, 0);
                                 var cadp = new CalcAutoDevProfile(profileWith100,clt, 1);
                                 var cadps = new List<CalcAutoDevProfile>() {cadp};
                                 var autodev = new CalcAutoDev(cadps, loads, 0,  cloc, requirements, cddauto, calcRepo);
                                 var cdd = new CalcDeviceDto("devicename", devCatGuid, key, OefcDeviceType.Device, "device category", "",
-                                    Guid.NewGuid().ToStrGuid(), cloc.Guid, cloc.Name);
+                                    Guid.NewGuid().ToStrGuid(), cloc.Guid, cloc.Name, FlexibilityType.NoFlexibility, 0);
                                 var device = new CalcDevice(loads, cloc, cdd, calcRepo);
                                 var autoDevs = new List<CalcAutoDev> {
                                     autodev
@@ -186,7 +186,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                                     }
 
                                     if (i == 6) {
-                                        device.SetTimeprofile(profileWith50, ts, clt, "blub", "Person", 1, false);
+                                        device.SetTimeprofile(profileWith50, ts, clt, "blub", "Person", 1, false, out _);
                                     }
 
                                     var filerows = odap.ProcessOneTimestep(ts);
@@ -237,7 +237,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                         var locationGuid = "locationGuid".ToStrGuid();
                         var loadtypeGuid = "ltguid".ToStrGuid();
                         var cdd = new CalcDeviceDto("devicename", "devcatguid".ToStrGuid(), hhkey, OefcDeviceType.Device, "devcatname", "",
-                            deviceGuid, locationGuid, "loc");
+                            deviceGuid, locationGuid, "loc", FlexibilityType.NoFlexibility, 0);
 
                         var key = new OefcKey(cdd, loadtypeGuid);
                         var clt = new CalcLoadType("lt1", "W", "kWh", 1, true, loadtypeGuid);
@@ -332,7 +332,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                             var cloc = new CalcLocation("locname", Guid.NewGuid().ToStrGuid());
                             var deviceCategoryGuid = Guid.NewGuid().ToStrGuid();
                             var calcDeviceDto = new CalcDeviceDto("devicename", deviceCategoryGuid, key, OefcDeviceType.Device, "category",
-                                string.Empty, Guid.NewGuid().ToStrGuid(), cloc.Guid, cloc.Name);
+                                string.Empty, Guid.NewGuid().ToStrGuid(), cloc.Guid, cloc.Name, FlexibilityType.NoFlexibility,0);
                             var calcDeviceDtos = new List<CalcDeviceDto> {
                                 calcDeviceDto
                             };
@@ -356,7 +356,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                                 cp.ConvertToTimesteps();
                                 //var locations = new List<CalcLocation> {cloc};
                                 var ts1 = new TimeStep(0, calcParameters);
-                                device.SetTimeprofile(cp, ts1, clt, "affordanceName", "activatorName", 10, false);
+                                device.SetTimeprofile(cp, ts1, clt, "affordanceName", "activatorName", 10, false, out _);
                                 for (var i = 0; i < 10; i++) {
                                     var ts = new TimeStep(i, calcParameters);
                                     var filerows = odap.ProcessOneTimestep(ts);
@@ -476,7 +476,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                             var devguid = Guid.NewGuid().ToStrGuid();
                             var devcategoryguid = Guid.NewGuid().ToStrGuid();
                             var cdto = new CalcDeviceDto("devicename", devcategoryguid, key, OefcDeviceType.Device, "category", "", devguid,
-                                cloc.Guid, cloc.Name);
+                                cloc.Guid, cloc.Name, FlexibilityType.NoFlexibility, 0);
                             var devices = new List<IHouseholdKey> {
                                 cdto
                             };
@@ -492,12 +492,12 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                                 cp.ConvertToTimesteps();
                                 //var locations = new List<CalcLocation> {cloc};
                                 var ts = new TimeStep(0, calcParameters);
-                                device.SetTimeprofile(cp, ts, clt, "affordanceName", "activatorName", 1, false);
-                                device.SetTimeprofile(cp, ts.AddSteps(5), clt, "affordanceName", "activatorName", 1, false);
+                                device.SetTimeprofile(cp, ts, clt, "affordanceName", "activatorName", 1, false, out _);
+                                device.SetTimeprofile(cp, ts.AddSteps(5), clt, "affordanceName", "activatorName", 1, false, out _);
                                 device.SetTimeprofile(cp.CompressExpandDoubleArray(0.5), ts.AddSteps(8), clt, "affordanceName", "activatorName", 1,
-                                    false);
+                                    false, out _);
                                 device.SetTimeprofile(cp.CompressExpandDoubleArray(2), ts.AddSteps(10), clt, "affordanceName", "activatorName", 1,
-                                    false);
+                                    false, out _);
                             }
 
                             for (var i = 0; i < 30; i++) {
@@ -570,7 +570,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                         sim.GeographicLocations[0], sim.TemperatureProfiles[0], sim.ModularHouseholds[0], EnergyIntensityType.EnergySaving,
                         ReportCancelFunc, false, null, LoadTypePriority.Mandatory, null, null, sim.MyGeneralConfig.AllEnabledOptions(),
                         new DateTime(2018, 1, 1), new DateTime(2018, 1, 2), new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 1, 0), false, false, false,
-                        3, 3, cp, null, null, DeviceProfileHeaderMode.Standard, false, wd.WorkingDirectory, false,false, ".");
+                        3, 3, cp, null, null, DeviceProfileHeaderMode.Standard, false, wd.WorkingDirectory, false,false, ".",sim.MyGeneralConfig.EnableFlexibilityBool);
                     var cs = new CalcStarter(sim);
                     cs.Start(csps);
                     /*var dstpath = Path.Combine(wd.WorkingDirectory,

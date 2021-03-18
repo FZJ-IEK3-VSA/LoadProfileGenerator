@@ -50,8 +50,8 @@ namespace Database.Tables.BasicHouseholds {
         private readonly decimal _satisfactionvalue;
 
         public AffordanceDesire([CanBeNull]int? pID, [CanBeNull] Desire desire, [CanBeNull] int? affordanceID, decimal satisfactionvalue,
-            [ItemNotNull] [NotNull] ObservableCollection<Desire> desires, [NotNull] string name, [NotNull] string connectionString,
-                                StrGuid guid) : base(name, TableName,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Desire> desires, [JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] string connectionString,
+                                [NotNull] StrGuid guid) : base(name, TableName,
             connectionString, guid) {
             desires.CollectionChanged += DesirecollOnCollectionChanged;
             ID = pID;
@@ -67,19 +67,19 @@ namespace Database.Tables.BasicHouseholds {
         [UsedImplicitly]
         public Func<AffordanceDesire, bool> DeleteThis { get; set; }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public Desire Desire => _desire ?? throw new InvalidOperationException();
 
         public decimal SatisfactionValue => _satisfactionvalue;
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string SatisfactionValuePercent => (_satisfactionvalue * 100).ToString("#0.00",
             CultureInfo.CurrentCulture);
 
-        [NotNull]
-        private static AffordanceDesire AssignFields([NotNull] DataReader dr, [NotNull] string connectionString, bool ignoreMissingFields,
-            [NotNull] AllItemCollections aic) {
+        [JetBrains.Annotations.NotNull]
+        private static AffordanceDesire AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
+            [JetBrains.Annotations.NotNull] AllItemCollections aic) {
             var id =  dr.GetIntFromLong("ID");
             var affordanceID = dr.GetIntFromLongOrInt("AffordanceID", false, ignoreMissingFields, -1);
             var desireID = dr.GetInt("DesireID");
@@ -103,8 +103,8 @@ namespace Database.Tables.BasicHouseholds {
             return base.CompareTo(other);
         }
 
-        private void DesirecollOnCollectionChanged([NotNull] object sender,
-            [NotNull] NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs) {
+        private void DesirecollOnCollectionChanged([JetBrains.Annotations.NotNull] object sender,
+            [JetBrains.Annotations.NotNull] NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs) {
             if (notifyCollectionChangedEventArgs.Action == NotifyCollectionChangedAction.Remove &&
                 notifyCollectionChangedEventArgs.OldItems != null &&
                 notifyCollectionChangedEventArgs.OldItems[0] == Desire) {
@@ -122,8 +122,8 @@ namespace Database.Tables.BasicHouseholds {
             return true;
         }
 
-        public static void LoadFromDatabase([ItemNotNull] [NotNull] ObservableCollection<AffordanceDesire> result, [NotNull] string connectionString,
-            [ItemNotNull] [NotNull] ObservableCollection<Desire> desires, bool ignoreMissingTables) {
+        public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<AffordanceDesire> result, [JetBrains.Annotations.NotNull] string connectionString,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Desire> desires, bool ignoreMissingTables) {
             var aic = new AllItemCollections(desires: desires);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
 
@@ -139,7 +139,7 @@ namespace Database.Tables.BasicHouseholds {
             }
         }
 
-        [NotNull]
+        [JetBrains.Annotations.NotNull]
         public string MakeDescription() {
             if (_desire != null) {
                 var desc = _desire.Name;

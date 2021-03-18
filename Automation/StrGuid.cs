@@ -2,25 +2,25 @@
 
 namespace Automation
 {
-    public struct StrGuid : IEquatable<StrGuid>, IComparable<StrGuid>, IComparable {
-        public int CompareTo(StrGuid? other)
-        {
-            if (!other.HasValue) {
-                return 1;
-            }
+    public record StrGuid
+    { // : IEquatable<StrGuid>, IComparable<StrGuid>, IComparable
+        //public int CompareTo(StrGuid? other)
+        //{
+        //    if (!other.HasValue) {
+        //        return 1;
+        //    }
 
-            return string.Compare(StrVal, other.Value.StrVal, StringComparison.Ordinal);
-        }
+        //    return string.Compare(StrVal, other.Value.StrVal, StringComparison.Ordinal);
+        //}
 
-        public bool Equals(StrGuid? other)
-        {
-            if (!other.HasValue) {
-                return false;
-            }
+        //public bool Equals(StrGuid? other)
+        //{
+        //    if (!other.HasValue) {
+        //        return false;
+        //    }
 
-            return StrVal == other.Value.StrVal;
-        }
-
+        //    return StrVal == other.Value.StrVal;
+        //}
         public int CompareTo(object? obj)
         {
             if (ReferenceEquals(null, obj)) {
@@ -38,38 +38,38 @@ namespace Automation
 
         public static bool operator >=(StrGuid left, StrGuid right) => left.CompareTo(right) >= 0;
 
-        public bool Equals(StrGuid other)
-        {
-            return StrVal == other.StrVal;
-        }
+        //public bool Equals(StrGuid other)
+        //{
+        //    return StrVal == other.StrVal;
+        //}
 
         public int CompareTo(StrGuid other)
         {
             return string.Compare(StrVal, other.StrVal, StringComparison.Ordinal);
         }
 
-        public override bool Equals(object? obj)
-        {
-            if (ReferenceEquals(null, obj)) {
-                return false;
-            }
+        //public override bool Equals(object? obj)
+        //{
+        //    if (ReferenceEquals(null, obj)) {
+        //        return false;
+        //    }
 
-            if (obj.GetType() != GetType()) {
-                return false;
-            }
+        //    if (obj.GetType() != GetType()) {
+        //        return false;
+        //    }
 
-            return Equals((StrGuid)obj);
-        }
+        //    return Equals((StrGuid)obj);
+        //}
 
         // ReSharper disable once NonReadonlyMemberInGetHashCode
         public override int GetHashCode() => StrVal.GetHashCode();
 
-        public static bool operator ==(StrGuid? left, StrGuid? right)
-        {
-            return Equals(left, right);
-        }
+        //public static bool operator ==(StrGuid? left, StrGuid? right)
+        //{
+        //    return Equals(left, right);
+        //}
 
-        public static bool operator !=(StrGuid? left, StrGuid? right) => !Equals(left, right);
+        //public static bool operator !=(StrGuid? left, StrGuid? right) => !Equals(left, right);
 /*
         public StrGuid(string value)
         {

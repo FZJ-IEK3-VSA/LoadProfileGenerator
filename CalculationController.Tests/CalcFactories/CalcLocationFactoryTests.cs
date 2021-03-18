@@ -86,13 +86,13 @@ namespace CalculationController.Tests.CalcFactories {
                 deviceActions,
                 calclocdict,
                 devcat);
-            locdtos.Count.Should().Be(1);
+            locdtos.Should().HaveCount(1);
             locdtos[0].Name.Should().Be(loc.Name);
             CalcLocationFactory clf = new CalcLocationFactory (ltDict,calcRepo);
             //"HH1", EnergyIntensityType.EnergySaving, dict,deviceActions,
             DtoCalcLocationDict dcl = new DtoCalcLocationDict();
             var calclocs = clf.MakeCalcLocations(locdtos, dcl,calcRepo);
-            calclocs.Count.Should().Be(1);
+            calclocs.Should().HaveCount(1);
             calclocs[0].Name.Should().Be(loc.Name);
             calclocs[0].Guid.Should().Be(locdtos[0].Guid);
         }
@@ -113,24 +113,24 @@ namespace CalculationController.Tests.CalcFactories {
             List<DeviceCategoryDto> devcat = new List<DeviceCategoryDto> {
                 new DeviceCategoryDto(dc.FullPath, Guid.NewGuid().ToStrGuid())
             };
-            var rd = new RealDevice("rda", 1, string.Empty, dc, string.Empty, false, false, string.Empty, Guid.NewGuid().ToStrGuid(), 1);
-            var rd2 = new RealDevice("rdb", 1, string.Empty, dc, string.Empty, false, false, string.Empty, Guid.NewGuid().ToStrGuid(), 1);
+            var rd = new RealDevice("rda", 1, string.Empty, dc, string.Empty, false, false, string.Empty, Guid.NewGuid().ToStrGuid(),0,FlexibilityType.NoFlexibility, 1);
+            var rd2 = new RealDevice("rdb", 1, string.Empty, dc, string.Empty, false, false, string.Empty, Guid.NewGuid().ToStrGuid(),0,FlexibilityType.NoFlexibility, 1);
             loc.AddDevice(rd, false);
             loc.AddDevice(rd2, false);
             var deviceLocationDict = new Dictionary<CalcLocationDto, List<IAssignableDevice>>();
             var allDeviceActions = new ObservableCollection<DeviceAction>();
             //var locdict = new Dictionary<Location, CalcLocation>();
-            builder.Register(x => new CalcLoadTypeDtoDictionary(new Dictionary<VLoadType, CalcLoadTypeDto>())).As<CalcLoadTypeDtoDictionary>()
+            builder.Register(_ => new CalcLoadTypeDtoDictionary(new Dictionary<VLoadType, CalcLoadTypeDto>())).As<CalcLoadTypeDtoDictionary>()
                 .SingleInstance();
-            builder.Register(x => new CalcLoadTypeDictionary(new Dictionary<CalcLoadTypeDto, CalcLoadType>())).As<CalcLoadTypeDictionary>()
+            builder.Register(_ => new CalcLoadTypeDictionary(new Dictionary<CalcLoadTypeDto, CalcLoadType>())).As<CalcLoadTypeDictionary>()
                 .SingleInstance();
 
-            builder.Register(x => new DeviceCategoryPicker(r, null)).As<IDeviceCategoryPicker>().SingleInstance();
-            builder.Register(x => calcParameters).As<CalcParameters>().SingleInstance();
+            builder.Register(_ => new DeviceCategoryPicker(r, null)).As<IDeviceCategoryPicker>().SingleInstance();
+            builder.Register(_ => calcParameters).As<CalcParameters>().SingleInstance();
             builder.RegisterType<CalcLocationFactory>().As<CalcLocationFactory>().SingleInstance();
             Mock<IOnlineDeviceActivationProcessor> odapmock = new Mock<IOnlineDeviceActivationProcessor>();
-            builder.Register(x => odapmock.Object).As<IOnlineDeviceActivationProcessor>().SingleInstance();
-            builder.Register(x => r).As<Random>().SingleInstance();
+            builder.Register(_ => odapmock.Object).As<IOnlineDeviceActivationProcessor>().SingleInstance();
+            builder.Register(_ => r).As<Random>().SingleInstance();
             builder.RegisterType<CalcLocationDtoFactory>().As<CalcLocationDtoFactory>();
             builder.RegisterType<CalcDeviceFactory>().As<CalcDeviceFactory>().SingleInstance();
             builder.RegisterType<CalcRepo>().As<CalcRepo>().SingleInstance();
@@ -164,7 +164,7 @@ namespace CalculationController.Tests.CalcFactories {
             CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(2018, 1, 1)
                 .SetEndDate(new DateTime(2018, 1, 1, 2, 0, 0)).SetSettlingDays(0).EnableShowSettlingPeriod();
             var picker = new DeviceCategoryPicker(r, null);
-            builder.Register(x => picker).As<DeviceCategoryPicker>().SingleInstance();
+            builder.Register(_ => picker).As<DeviceCategoryPicker>().SingleInstance();
             //var nr = new NormalRandom(0, 1, r);
             var locations = new List<Location>();
             var loc = new Location("loc", 1, string.Empty, Guid.NewGuid().ToStrGuid());
@@ -174,23 +174,23 @@ namespace CalculationController.Tests.CalcFactories {
             List<DeviceCategoryDto> devcat = new List<DeviceCategoryDto> {
                 new DeviceCategoryDto(dc.FullPath, Guid.NewGuid().ToStrGuid())
             };
-            var rd = new RealDevice("rd", 1, string.Empty, dc, string.Empty, false, false, string.Empty, Guid.NewGuid().ToStrGuid(), 1);
+            var rd = new RealDevice("rd", 1, string.Empty, dc, string.Empty, false, false, string.Empty, Guid.NewGuid().ToStrGuid(),0,FlexibilityType.NoFlexibility, 1);
             loc.AddDevice(rd, false);
             var deviceLocationDict = new Dictionary<CalcLocationDto, List<IAssignableDevice>>();
             var allDeviceActions = new ObservableCollection<DeviceAction>();
 
             //CalcLoadTypeDictionary cltd = CalcLoadTypeFactory.MakeLoadTypes(new ObservableCollection<VLoadType>(),calcParameters.InternalStepsize, calcParameters.LoadTypePriority);
             builder.Register(x => new DateStampCreator(x.Resolve<CalcParameters>())).As<DateStampCreator>().SingleInstance();
-            builder.Register(x => new CalcLoadTypeDtoDictionary(new Dictionary<VLoadType, CalcLoadTypeDto>())).As<CalcLoadTypeDtoDictionary>()
+            builder.Register(_ => new CalcLoadTypeDtoDictionary(new Dictionary<VLoadType, CalcLoadTypeDto>())).As<CalcLoadTypeDtoDictionary>()
                 .SingleInstance();
-            builder.Register(x => new CalcLoadTypeDictionary(new Dictionary<CalcLoadTypeDto, CalcLoadType>())).As<CalcLoadTypeDictionary>()
+            builder.Register(_ => new CalcLoadTypeDictionary(new Dictionary<CalcLoadTypeDto, CalcLoadType>())).As<CalcLoadTypeDictionary>()
                 .SingleInstance();
-            builder.Register(x => new DeviceCategoryPicker(r, null)).As<IDeviceCategoryPicker>().SingleInstance();
+            builder.Register(_ => new DeviceCategoryPicker(r, null)).As<IDeviceCategoryPicker>().SingleInstance();
             builder.Register(_ => calcParameters).As<CalcParameters>().SingleInstance();
             //builder.RegisterType<CalcLocationFactory>().As<CalcLocationFactory>().SingleInstance();
             Mock<IOnlineDeviceActivationProcessor> odapmock = new Mock<IOnlineDeviceActivationProcessor>();
-            builder.Register(x => odapmock.Object).As<IOnlineDeviceActivationProcessor>().SingleInstance();
-            builder.Register(x => r).As<Random>().SingleInstance();
+            builder.Register(_ => odapmock.Object).As<IOnlineDeviceActivationProcessor>().SingleInstance();
+            builder.Register(_ => r).As<Random>().SingleInstance();
             builder.RegisterType<CalcDeviceFactory>().As<CalcDeviceFactory>().SingleInstance();
             builder.RegisterType<CalcLocationFactory>().As<CalcLocationFactory>().SingleInstance();
             builder.RegisterType<CalcLocationDtoFactory>().As<CalcLocationDtoFactory>();
@@ -233,8 +233,8 @@ namespace CalculationController.Tests.CalcFactories {
             var devices = new ObservableCollection<RealDevice>();
 
             var dc = new DeviceCategory("dc", -1, string.Empty, false, devices, Guid.NewGuid().ToStrGuid(), 1, true);
-            var rd = new RealDevice("rd", 1, string.Empty, dc, string.Empty, false, false, string.Empty, Guid.NewGuid().ToStrGuid(), 1);
-            var rd2 = new RealDevice("rd2", 1, string.Empty, dc, string.Empty, false, false, string.Empty, Guid.NewGuid().ToStrGuid(), 1);
+            var rd = new RealDevice("rd", 1, string.Empty, dc, string.Empty, false, false, string.Empty, Guid.NewGuid().ToStrGuid(),0,FlexibilityType.NoFlexibility, 1);
+            var rd2 = new RealDevice("rd2", 1, string.Empty, dc, string.Empty, false, false, string.Empty, Guid.NewGuid().ToStrGuid(),0,FlexibilityType.NoFlexibility, 1);
             dc.SubDevices.Add(rd);
             loc.AddDevice(dc, false);
             loc.AddDevice(rd2, false);
@@ -248,22 +248,22 @@ namespace CalculationController.Tests.CalcFactories {
             //var dict =new Dictionary<CalcLocation, List<IAssignableDevice>>();
             var allDeviceActions = new ObservableCollection<DeviceAction>();
             //var locdict = new Dictionary<Location, CalcLocation>();
-            builder.Register(x => new CalcLoadTypeDtoDictionary(new Dictionary<VLoadType, CalcLoadTypeDto>())).As<CalcLoadTypeDtoDictionary>()
+            builder.Register(_ => new CalcLoadTypeDtoDictionary(new Dictionary<VLoadType, CalcLoadTypeDto>())).As<CalcLoadTypeDtoDictionary>()
                 .SingleInstance();
-            builder.Register(x => new CalcLoadTypeDictionary(new Dictionary<CalcLoadTypeDto, CalcLoadType>())).As<CalcLoadTypeDictionary>()
+            builder.Register(_ => new CalcLoadTypeDictionary(new Dictionary<CalcLoadTypeDto, CalcLoadType>())).As<CalcLoadTypeDictionary>()
                 .SingleInstance();
-            builder.Register(x => new DeviceCategoryPicker(r, null)).As<IDeviceCategoryPicker>().SingleInstance();
-            builder.Register(x => calcParameters).As<CalcParameters>().SingleInstance();
+            builder.Register(_ => new DeviceCategoryPicker(r, null)).As<IDeviceCategoryPicker>().SingleInstance();
+            builder.Register(_ => calcParameters).As<CalcParameters>().SingleInstance();
             //builder.RegisterType<CalcLocationFactory>().As<CalcLocationFactory>().SingleInstance();
             Mock<IOnlineDeviceActivationProcessor> odapmock = new Mock<IOnlineDeviceActivationProcessor>();
-            builder.Register(x => odapmock.Object).As<IOnlineDeviceActivationProcessor>().SingleInstance();
-            builder.Register(x => r).As<Random>().SingleInstance();
+            builder.Register(_ => odapmock.Object).As<IOnlineDeviceActivationProcessor>().SingleInstance();
+            builder.Register(_ => r).As<Random>().SingleInstance();
             var idl = wd.InputDataLogger;
-            builder.Register(x => idl).As<IInputDataLogger>().SingleInstance();
+            builder.Register(_ => idl).As<IInputDataLogger>().SingleInstance();
             string path = wd.WorkingDirectory;
-            builder.Register(x => new FileFactoryAndTracker(path, "HH1", idl)).As<FileFactoryAndTracker>()
+            builder.Register(_ => new FileFactoryAndTracker(path, "HH1", idl)).As<FileFactoryAndTracker>()
                 .SingleInstance();
-            builder.Register(x => new SqlResultLoggingService(path)).As<SqlResultLoggingService>().SingleInstance();
+            builder.Register(_ => new SqlResultLoggingService(path)).As<SqlResultLoggingService>().SingleInstance();
             builder.Register(x => new DateStampCreator(x.Resolve<CalcParameters>())).As<DateStampCreator>().SingleInstance();
             builder.Register(x => new DateStampCreator(x.Resolve<CalcParameters>())).As<DateStampCreator>().SingleInstance();
             builder.Register(x => new OnlineLoggingData(x.Resolve<DateStampCreator>(), x.Resolve<IInputDataLogger>(), x.Resolve<CalcParameters>()))

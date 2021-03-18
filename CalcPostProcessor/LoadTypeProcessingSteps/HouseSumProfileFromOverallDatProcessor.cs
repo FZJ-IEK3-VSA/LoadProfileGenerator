@@ -28,6 +28,7 @@ namespace CalcPostProcessor.LoadTypeProcessingSteps {
                 return;
             }
 
+
             var dstFile = _fft.MakeFile<StreamWriter>("Overall.SumProfiles." + dstLoadType.Name + ".csv",
                 "Overall summed up energy profile for everything in the house/household for " + dstLoadType.Name, true,
                 ResultFileID.OverallSumFile, Constants.GeneralHouseholdKey, TargetDirectory.Results,
