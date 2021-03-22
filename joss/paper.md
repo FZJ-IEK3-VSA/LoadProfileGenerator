@@ -131,7 +131,7 @@ The LPG is written in C# and has about 60.000 lines of code.
 
 The LPG has the following features for generating better load profiles:
 
-**Templating Engine***
+**Templating Engine**
 To enable the simulation of large numbers of households the LPG includes a full rule-based templating engine. With this it is possible 
 to specify households abstract households templates. The LPG can then generate an unlimited number of versions of the household that vary 
 for example in the hobbies, in the cooking behavior, hygiene habits and more. Scaling up a load profile from a single household essentially models everyone as performing their activities 
