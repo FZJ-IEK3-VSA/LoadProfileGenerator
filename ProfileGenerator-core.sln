@@ -12,7 +12,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		lpg.FxCop = lpg.FxCop
 		MyRules.ruleset = MyRules.ruleset
 		MyRules_UnitTests.ruleset = MyRules_UnitTests.ruleset
-		.github\workflows\paper.yml = .github\workflows\paper.yml
 		WpfApplication1\profilegenerator-latest.db3 = WpfApplication1\profilegenerator-latest.db3
 		readme.md = readme.md
 		VersionInfo.cs = VersionInfo.cs
@@ -999,8 +998,8 @@ Global
 		{C0BB40C3-EDCC-4138-93BE-CA80BA45AA22} = {C22A7685-3DEA-41E1-A862-717AE9E0540C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {D5BC00F0-DD2C-4393-B941-CE78F0EEE1FA}
 		VisualSVNWorkingCopyRoot = .
+		SolutionGuid = {D5BC00F0-DD2C-4393-B941-CE78F0EEE1FA}
 	EndGlobalSection
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
