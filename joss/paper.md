@@ -77,6 +77,9 @@ knowledge of the authors the most detailed and the only one doing a full desire-
 ![Difference between the average over many households and measurements from a single household. The high peaks are from cooking. [@pflugradt_modellierung_2016] .\label{fig:hzero}](h0vsmeasurement.png)
 
 
+![Difference between the average over many households and measurements from a single household. The high peaks are from cooking. [@pflugradt_modellierung_2016] .\label{fig:hzero}](joss/h0vsmeasurement.png)
+
+
 ## Examples for Previous Usage
 
 The LPG has been used in many papers for various applications. To demonstrate what the LPG can be used for, six citing papers have been selected that give a good overview of the possible applications:
