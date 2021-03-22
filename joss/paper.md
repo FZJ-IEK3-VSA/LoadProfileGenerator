@@ -71,10 +71,10 @@ For the future no measured load profiles can exist, so for calculating future gr
 
 The `LPG` aims to solve these problems by providing a free and easy to use tool that enables researchers and planners to generate custom profiles very quickly.
 
-There are a number of different tools for load profile synthesis available, such as CREST [xxx] or Synpro [xxx], but the LPG introduced in this paper is to the best 
+There are a number of different tools for load profile synthesis available, such as CREST [@mckenna_high-resolution_2016] or Synpro [@fischer_stochastic_2016], but the LPG introduced in this paper is to the best 
 knowledge of the authors the most detailed and the only one doing a full desire-driven behavior simulation.
 
-![Difference between the average over many households and measurements from a single household. The high peaks are from cooking. [@pflugradt_modellierung_2016] .\label{fig:hzero}]](h0vsmeasurement.png)
+![Difference between the average over many households and measurements from a single household. The high peaks are from cooking. [@pflugradt_modellierung_2016] .\label{fig:hzero}](h0vsmeasurement.png)
 
 
 ## Examples for Previous Usage
@@ -91,7 +91,7 @@ The LPG has been used in many papers for various applications. To demonstrate wh
 
 # Background
 
-There are two major approaches for generating residential load profiles: Stochastic or agent-based. The different approaches are explained in detail in for example Grandjean et al. [@grandjean_review_2012] [xxx] [xxx, xxx, swan]
+There are two major approaches for generating residential load profiles: Stochastic or agent-based. The different approaches are explained in detail in for example Grandjean et al. [@grandjean_review_2012] [@swan_modeling_2009]
 The stochastic approach in the most simple form works with probability rules for activities or device activation such as 
 "70% chance of using the toaster for breakfast on Sundays between 8:00 and 10:00". To achieve realistic load profiles much more details are needed, 
 such as occupancy modelling, dependencies between activities, combination of devices (coffee machine and toaster or washer and dryer for example) and many more.
@@ -114,7 +114,7 @@ includes things like occupancy modelling and makes it easy to implement for exam
 The LoadProfileGenerator (LPG) implements the second approach: It implements a desire-driven human behavior model to simulate when people are doing what and where they are. 
 The basic algorithm for selecting an activity is shown in \autoref{fig:happiness}.
 
-![Basic idea behind the activity selection process.\label{fig:happiness}]](lpg_happiness.png)
+![Basic idea behind the activity selection process.\label{fig:happiness}](lpg_happiness.png)
 
 It was originally developed as PhD-thesis [@pflugradt_modellierung_2016] and has since then been extended and improved. 
 
@@ -123,7 +123,7 @@ This is combined with additional details for more realistic behavior modelling, 
 varying shifts from one day or one week to the next, holidays, a detailed per-room lighting model, automatically adjusted dishwasher and washing machine frequency and much more.
 The method for selecting an activity is shown in \autoref{fig:execution}.
 
-![Simplified flow chart of the activity execution process and generation of load profiles.\label{fig:execution}]](activityexecution.png.png)
+![Simplified flow chart of the activity execution process and generation of load profiles.\label{fig:execution}](activityexecution.png)
 
 The LPG is written in C# and has about 60.000 lines of code. 
 
@@ -147,7 +147,7 @@ which makes it possible to also generate for example charging profiles for elect
 This allows the user to specify the calculation as a JSON file and feed the input to the simulation engine.
 
 **Modelling Behavior Change**
-This has a major advantage over the stochastic approaches in other load profile generators such as CREST [xxx] or SynPro [xxx]: With the LPG it is  
+This has a major advantage over the stochastic approaches in other load profile generators such as CREST [@mckenna_high-resolution_2016] or SynPro [@fischer_stochastic_2016]: With the LPG it is  
 easy to model both the impact of homogenous resident such as neighborhoods with lots of young families, a retirement community or a student neighborhood and to analyze the impact of changing 
 behavior patterns or population structures.
 
