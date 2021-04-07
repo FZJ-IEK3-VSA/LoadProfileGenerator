@@ -359,11 +359,11 @@ namespace Common {
         private void ReportString([JetBrains.Annotations.NotNull] string message, Severity severity, bool preserveLinebreaks = false)
         {
             if (UnitTestDetector.IsRunningInUnitTest && OutputHelper== null && !Config.OutputToConsole) {
-                throw new LPGException("no output helper even thoug we are in unit testing based on attributes");
+                throw new LPGException("no output helper even though we are in unit testing based on attributes");
             }
 
             if (Config.IsInUnitTesting&&OutputHelper == null && !Config.OutputToConsole) {
-                throw new LPGException("no output helper even thoug we are in unit testing based on config");
+                throw new LPGException("no output helper even though we are in unit testing based on config");
             }
             if (severity <= Threshold)
             {
