@@ -101,7 +101,7 @@ It was originally developed as PhD-thesis [@pflugradt_modellierung_2016] and has
 # Novelty of this publication
 
 The LPG has been in development since 2010, has been available free of charge the entire time at http://www.loadprofilegenerator.de, but it has been open sourced only
-in February 2020 under the MIT-License. This is the first publication describing the LPG as an open-source tool. 
+in February 2020 under the MIT-License. This is the first publication describing the LPG as an open-source tool, now available at https://github.com/FZJ-IEK3-VSA/LoadProfileGenerator. 
 Contributions and merge requests are greatly appreciated.
 
 # Acknowledgements
