@@ -109,6 +109,7 @@ namespace CalculationController.Tests
                     sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
                     sim.MyGeneralConfig.WriteExcelColumn = "False";
                     sim.MyGeneralConfig.Enable(CalcOption.DeviceProfilesIndividualHouseholds);
+                    sim.MyGeneralConfig.Enable(CalcOption.DeviceProfilesHouse);
                     sim.MyGeneralConfig.Enable(CalcOption.HouseSumProfilesFromDetailedDats);
                     sim.MyGeneralConfig.Enable(CalcOption.DeviceProfileExternalEntireHouse);
                     sim.MyGeneralConfig.Enable(CalcOption.SumProfileExternalEntireHouse);

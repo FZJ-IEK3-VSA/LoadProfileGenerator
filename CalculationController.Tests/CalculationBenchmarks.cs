@@ -205,8 +205,8 @@ namespace CalculationController.Tests {
                 {
                     cp.WriteJson(sw);
                 }
+                wd1.CleanUp();
             }
-            //      wd1.CleanUp();
         }
 
         //[Fact]

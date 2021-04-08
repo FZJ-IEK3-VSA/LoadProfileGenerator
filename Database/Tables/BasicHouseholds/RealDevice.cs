@@ -239,12 +239,12 @@ namespace Database.Tables.BasicHouseholds {
             var year = dr.GetInt("year", false, 0);
             var picture = dr.GetString("Picture", false);
             var deviceCategoryID = dr.GetInt("DeviceCategoryID", false);
-            var flexbilityType =(FlexibilityType) dr.GetInt("FlexibilityType", false,0,ignoreMissingFields);
+            var flexbilityType =(FlexibilityType) dr.GetIntFromLong("FlexibilityType", false,ignoreMissingFields,0);
             if (!Enum.IsDefined(typeof(FlexibilityType), flexbilityType)) {
                 flexbilityType = FlexibilityType.NoFlexibility;
             }
 
-            var maxTimeShiftInMinutes = dr.GetInt("MaxTimeShiftInMinutes", false, 0, ignoreMissingFields);
+            var maxTimeShiftInMinutes = dr.GetIntFromLong("MaxTimeShiftInMinutes", false,  ignoreMissingFields,0);
             var forceAllLoadTypesToBeSet = dr.GetBool("ForceAllLoadTypesToBeSet", false, true, ignoreMissingFields);
             var isStandbyDevice = dr.GetBool("IsStandbyDevice", false, false, ignoreMissingFields);
             var description = dr.GetString("Description", false, string.Empty, ignoreMissingFields);
