@@ -180,7 +180,7 @@ namespace Database.Tables.ModularHouseholds {
                               double estimatedTimePerYearInH,
                               EstimateType estimateType,
                               [JetBrains.Annotations.NotNull] string shortDescription,
-                              StrGuid guid) : base(pName, TableName, connectionString, guid)
+                              [JetBrains.Annotations.NotNull] StrGuid guid) : base(pName, TableName, connectionString, guid)
         {
             ID = id;
             _locations = new ObservableCollection<HHTLocation>();

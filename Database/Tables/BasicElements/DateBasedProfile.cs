@@ -45,7 +45,7 @@ namespace Database.Tables.BasicElements {
         [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<DateProfileDataPoint> _datapoints;
         [JetBrains.Annotations.NotNull] private string _description;
 
-        public DateBasedProfile([JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] string description, [JetBrains.Annotations.NotNull] string connectionString, StrGuid guid, [CanBeNull] int? pID = null) : base(name, TableName,
+        public DateBasedProfile([JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] string description, [JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.NotNull] StrGuid guid, [CanBeNull] int? pID = null) : base(name, TableName,
             connectionString, guid)
         {
             _datapoints = new ObservableCollection<DateProfileDataPoint>();

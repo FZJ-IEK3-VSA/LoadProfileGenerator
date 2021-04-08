@@ -26,7 +26,7 @@ namespace Database.Tables.BasicElements {
         public HouseholdPlan([JetBrains.Annotations.NotNull] string name, [CanBeNull] AffordanceTaggingSet taggingSet,
             [CanBeNull] ICalcObject calcObject,
                              [JetBrains.Annotations.NotNull] string description,
-                             [JetBrains.Annotations.NotNull] string connectionString, StrGuid guid,
+                             [JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.NotNull] StrGuid guid,
                              [CanBeNull]int? pID = null) : base(
             name, TableName, connectionString, guid)
         {

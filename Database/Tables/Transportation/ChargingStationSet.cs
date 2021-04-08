@@ -34,7 +34,7 @@ namespace Database.Tables.Transportation
         [CanBeNull] private string _description;
 
         public ChargingStationSet([JetBrains.Annotations.NotNull] string name, [CanBeNull] int? pID, [JetBrains.Annotations.NotNull] string connectionString,
-            [CanBeNull] string description, StrGuid guid) : base(name, TableName,
+            [CanBeNull] string description, [NotNull] StrGuid guid) : base(name, TableName,
             connectionString, guid)
         {
             _description = description;

@@ -57,7 +57,7 @@ namespace Database.Tables.BasicElements {
         private int _longMinute;
         private int _longSecond;
 
-        public GeographicLocation([JetBrains.Annotations.NotNull] string connectionString, [CanBeNull] TimeLimit lightTimeLimit, StrGuid guid) : base("Chemnitz",
+        public GeographicLocation([JetBrains.Annotations.NotNull] string connectionString, [CanBeNull] TimeLimit lightTimeLimit, [JetBrains.Annotations.NotNull] StrGuid guid) : base("Chemnitz",
             TableName, connectionString, guid) {
             _lightTimeLimit = lightTimeLimit;
             // dummy loc for unit tests
@@ -75,7 +75,7 @@ namespace Database.Tables.BasicElements {
 
         public GeographicLocation([JetBrains.Annotations.NotNull] string name, int slathour, int slatMinute, int slatSecond, int slongHour,
             int slongMinute, int slongSecond, [JetBrains.Annotations.NotNull] string slongDir, [JetBrains.Annotations.NotNull] string slatDir, [JetBrains.Annotations.NotNull] string connectionString,
-            [CanBeNull] TimeLimit lightTimeLimit,StrGuid guid,[CanBeNull] int? id = null) : base(name, id, TableName, connectionString, guid) {
+            [CanBeNull] TimeLimit lightTimeLimit,[JetBrains.Annotations.NotNull] StrGuid guid,[CanBeNull] int? id = null) : base(name, id, TableName, connectionString, guid) {
             _latHour = slathour;
             _latMinute = slatMinute;
             _latSecond = slatSecond;

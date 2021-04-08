@@ -62,7 +62,7 @@ namespace Database.Tables.BasicHouseholds {
 
         public RealDevice([JetBrains.Annotations.NotNull] string pName, int pYear, [JetBrains.Annotations.NotNull] string pPicture, [CanBeNull] DeviceCategory deviceCategory,
             [JetBrains.Annotations.NotNull] string description,
-            bool forceAllLoadTypesToBeSet, bool isStandbyDevice, [JetBrains.Annotations.NotNull] string connectionString, StrGuid guid,
+            bool forceAllLoadTypesToBeSet, bool isStandbyDevice, [JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.NotNull] StrGuid guid,
             int maximumTineMaxTimeShiftInMinutes,
             FlexibilityType flexibilityType, [CanBeNull]int? pID = null)
             : base(pName, TableName, connectionString, guid)
@@ -239,7 +239,7 @@ namespace Database.Tables.BasicHouseholds {
             var year = dr.GetInt("year", false, 0);
             var picture = dr.GetString("Picture", false);
             var deviceCategoryID = dr.GetInt("DeviceCategoryID", false);
-            var flexbilityType =(FlexibilityType) dr.GetInt("FlexibilityType", false,0);
+            var flexbilityType =(FlexibilityType) dr.GetInt("FlexibilityType", false,0,ignoreMissingFields);
             if (!Enum.IsDefined(typeof(FlexibilityType), flexbilityType)) {
                 flexbilityType = FlexibilityType.NoFlexibility;
             }

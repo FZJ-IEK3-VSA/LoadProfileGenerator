@@ -20,13 +20,14 @@ using FluentAssertions;
 using JetBrains.Annotations;
 
 using Xunit;
+using Xunit.Abstractions;
 
 
 //using Calculation.HouseholdElements;
 //
 
 namespace CalculationController.Tests {
-    public class DeviceTimeOffsetBug {
+    public class DeviceTimeOffsetBug : UnitTestBaseClass {
         private static void CheckForOverdoneOffsets([NotNull] string path, [NotNull] SqlResultLoggingService srls) {
             //var actionsName = Path.Combine(path, "Reports", "ActionsEachStep.HH1.csv");
             var wwDeviceProfiles = Path.Combine(path, "Results", "DeviceProfiles.Warm Water.csv");
@@ -114,8 +115,8 @@ namespace CalculationController.Tests {
                 {
                     var sim = new Simulator(db.ConnectionString);
                     var calcstart = DateTime.Now;
-                    sim.MyGeneralConfig.StartDateUIString = "1.1.2015";
-                    sim.MyGeneralConfig.EndDateUIString = "31.1.2015";
+                    sim.MyGeneralConfig.StartDateUIString = "01.01.2015";
+                    sim.MyGeneralConfig.EndDateUIString = "31.01.2015";
                     sim.MyGeneralConfig.InternalTimeResolution = "00:01:00";
                     sim.MyGeneralConfig.RandomSeed = 5;
                     sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.Reasonable);
@@ -136,12 +137,14 @@ namespace CalculationController.Tests {
                     var chh =
                         sim.ModularHouseholds.Items.First(x => x.Name.StartsWith("CHR09", StringComparison.Ordinal));
                     CalculationProfiler calculationProfiler = new CalculationProfiler();
-
+                    var options = sim.MyGeneralConfig.AllEnabledOptions();
+                    options.Add(CalcOption.DeviceProfilesIndividualHouseholds);
+                    options.Add(CalcOption.DeviceProfilesHouse);
                     CalcStartParameterSet csps = new CalcStartParameterSet(geoloc,
                         sim.TemperatureProfiles[0], chh, EnergyIntensityType.Random,
                         false,  null,
                         sim.MyGeneralConfig.SelectedLoadTypePriority, null, null, null,
-                        sim.MyGeneralConfig.AllEnabledOptions(), new DateTime(2015, 1, 1), new DateTime(2015, 1, 31),
+                        options, new DateTime(2015, 1, 1), new DateTime(2015, 1, 31),
                         new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 1, 0),
                         false, false, false, 3, 3,
                         calculationProfiler, wd1.WorkingDirectory,
@@ -163,6 +166,10 @@ namespace CalculationController.Tests {
                 wd1.CleanUp();
             }
             CleanTestBase.RunAutomatically(true);
+        }
+
+        public DeviceTimeOffsetBug([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

@@ -45,7 +45,7 @@ namespace Database.Tables.BasicElements {
         [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<TemperatureValue> _temperatureValues;
         [JetBrains.Annotations.NotNull] private string _description;
         public TemperatureProfile([JetBrains.Annotations.NotNull] string name,[CanBeNull] int? id, [JetBrains.Annotations.NotNull] string description, [JetBrains.Annotations.NotNull] string connectionString,
-                                  StrGuid guid) : base(name,
+                                  [NotNull] StrGuid guid) : base(name,
             TableName, connectionString, guid) {
             _description = description;
             _temperatureValues = new ObservableCollection<TemperatureValue>();

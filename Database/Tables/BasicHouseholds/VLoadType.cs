@@ -57,7 +57,7 @@ namespace Database.Tables.BasicHouseholds {
 
         public VLoadType([JetBrains.Annotations.NotNull] string pName, [JetBrains.Annotations.NotNull] string description, [JetBrains.Annotations.NotNull] string unitOfPower, [JetBrains.Annotations.NotNull] string unitOfSum, double exampleOfPower,
             double exampleOfSum, TimeSpan timeSpanForSum, double loadTypeWeight, [JetBrains.Annotations.NotNull] string connectionString,
-            LoadTypePriority priority, bool showInCharts, StrGuid guid, [CanBeNull]int? pID = null)
+            LoadTypePriority priority, bool showInCharts, [JetBrains.Annotations.NotNull] StrGuid guid, [CanBeNull]int? pID = null)
             : base(pName, TableName, connectionString, guid)
         {
             if (pID == 0 || pID == -1) {

@@ -76,7 +76,7 @@ namespace Database.Tables.ModularHouseholds
         private TraitLimitType _traitLimitType;
         private TraitPriority _traitPriority;
         public TraitTag([JetBrains.Annotations.NotNull] string pName, [JetBrains.Annotations.NotNull] string connectionString, TraitLimitType traitLimitType, TraitPriority tp,
-                        StrGuid guid, [CanBeNull] int? pID = null)
+                        [JetBrains.Annotations.NotNull] StrGuid guid, [CanBeNull] int? pID = null)
             : base(pName, TableName, connectionString, guid)
         {
             ID = pID;

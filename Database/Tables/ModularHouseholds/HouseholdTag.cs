@@ -14,7 +14,7 @@ namespace Database.Tables.ModularHouseholds {
         [CanBeNull]
         private string _classification;
 
-        public HouseholdTag([JetBrains.Annotations.NotNull] string pName, [JetBrains.Annotations.NotNull] string connectionString, [CanBeNull] string classification,StrGuid guid, [CanBeNull] int? pID = null)
+        public HouseholdTag([JetBrains.Annotations.NotNull] string pName, [JetBrains.Annotations.NotNull] string connectionString, [CanBeNull] string classification,[NotNull] StrGuid guid, [CanBeNull] int? pID = null)
             : base(pName, TableName, connectionString, guid)
         {
             ID = pID;

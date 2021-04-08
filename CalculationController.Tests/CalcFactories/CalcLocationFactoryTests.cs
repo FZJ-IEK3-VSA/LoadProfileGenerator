@@ -213,7 +213,7 @@ namespace CalculationController.Tests.CalcFactories {
             DtoCalcLocationDict dtl = new DtoCalcLocationDict();
             var clocations = clf.MakeCalcLocations(locdtos, dtl, calcRepo);
             clocations.Count.Should().Be(1);
-            clocations[0].LightDevices.Count.Should().Be(2);
+            clocations[0].LightDevices.Count.Should().Be(1);
         }
 
         [Fact]

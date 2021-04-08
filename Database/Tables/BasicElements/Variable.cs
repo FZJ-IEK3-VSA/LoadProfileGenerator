@@ -43,7 +43,7 @@ namespace Database.Tables.BasicElements {
         [JetBrains.Annotations.NotNull] private string _unit;
 
         public Variable([JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] string description, [JetBrains.Annotations.NotNull] string unit, [JetBrains.Annotations.NotNull] string connectionString,
-                        StrGuid guid,[CanBeNull]int? pID = null)
+                        [JetBrains.Annotations.NotNull] StrGuid guid,[CanBeNull]int? pID = null)
             : base(name, TableName, connectionString, guid) {
             _description = description;
             _unit = unit;

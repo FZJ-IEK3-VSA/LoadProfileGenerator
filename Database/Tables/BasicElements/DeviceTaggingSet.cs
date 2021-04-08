@@ -45,7 +45,7 @@ namespace Database.Tables.BasicElements {
 
         public DeviceTaggingSet([JetBrains.Annotations.NotNull] string name,
                                 [JetBrains.Annotations.NotNull] string description,
-                                [JetBrains.Annotations.NotNull] string connectionString, StrGuid guid,
+                                [JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.NotNull] StrGuid guid,
                                 [CanBeNull]int? pID = null) : base(name,
             TableName, connectionString, guid)
         {

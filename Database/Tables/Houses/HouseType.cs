@@ -73,7 +73,7 @@ namespace Database.Tables.Houses {
             double coolingYearlyTotal, [CanBeNull] VLoadType coolingLoadType, bool adjustYearlyEnergy,
             double referenceDegreeDays,
             bool adjustYearlyCooling, double referenceCoolingHours, int minimumHouseholdCount,
-            int maximumHouseholdCount,StrGuid guid,
+            int maximumHouseholdCount,[NotNull] StrGuid guid,
             [CanBeNull]int? pID = null) : base(pName, TableName, connectionString, guid)
         {
             ID = pID;

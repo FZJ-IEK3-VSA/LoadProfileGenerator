@@ -214,6 +214,7 @@ namespace CalculationController.Tests.Transportation {
                     var nr = new NormalRandom(0, 0.1, r);
                     var parameters = CalcParametersFactory.MakeGoodDefaults().SetStartDate(2018, 1, 1)
                         .SetEndDate(new DateTime(2018, 1, 1, 2, 0, 0)).SetSettlingDays(0).EnableShowSettlingPeriod();
+                    parameters.TransportationEnabled = true;
                     builder.Register(_ => parameters).As<CalcParameters>().SingleInstance();
                     builder.Register(_ => new DateStampCreator(parameters)).As<DateStampCreator>().SingleInstance();
                     builder.Register(_ => ltdict).As<CalcLoadTypeDictionary>().SingleInstance();
@@ -306,8 +307,8 @@ namespace CalculationController.Tests.Transportation {
                         }
 
                         var cmhf = scope.Resolve<CalcModularHouseholdFactory>();
-                        //CalcTransportationDtoFactory dtoFactory = new CalcTransportationDtoFactory(ltdtoDict);
-                        //dtoFactory.MakeTransportationDtos(sim, sim.ModularHouseholds[0], tds, trs, out var sites,out var transportationDevices, out var routes, dtohh.LocationDtos, dtohh.HouseholdKey);
+                        CalcTransportationDtoFactory dtoFactory = new CalcTransportationDtoFactory(ltdtoDict);
+                        //dtoFactory.MakeTransportationDtos(sim, sim.ModularHouseholds[0], tds, trs,css, out var sites,out var transportationDevices, out var routes, dtohh.LocationDtos, dtohh.HouseholdKey);
                         var calcRepo = scope.Resolve<CalcRepo>();
                         var chh = cmhf.MakeCalcModularHousehold(dtohh, out var dtoCalcLocationDict, null, null,
                             calcRepo);

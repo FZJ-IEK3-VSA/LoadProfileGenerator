@@ -15,7 +15,7 @@ namespace Database.Tables.Transportation {
 
         public TransportationDeviceCategory([JetBrains.Annotations.NotNull] string name, [CanBeNull] int? pID,
                                             [JetBrains.Annotations.NotNull] string connectionString, [CanBeNull] string description,
-            bool isLimitedToSingleLocation, StrGuid guid)
+            bool isLimitedToSingleLocation, [NotNull] StrGuid guid)
             : base(name, TableName, connectionString, guid)
         {
             _isLimitedToSingleLocation = isLimitedToSingleLocation;

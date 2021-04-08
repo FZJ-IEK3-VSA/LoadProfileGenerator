@@ -5,14 +5,17 @@ using Automation.ResultFiles;
 using CalculationController.CalcFactories;
 using Common;
 using Common.Enums;
+using Common.Tests;
 using Database;
 using Database.Tables.Houses;
 using Database.Tests;
+using JetBrains.Annotations;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace CalculationController.Tests
 {
-    public class DegreeDayFactoryTests
+    public class DegreeDayFactoryTests : UnitTestBaseClass
     {
         [Fact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
@@ -60,6 +63,10 @@ namespace CalculationController.Tests
                 }
             }
 
+        }
+
+        public DegreeDayFactoryTests([NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

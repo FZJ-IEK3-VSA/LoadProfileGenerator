@@ -22,7 +22,7 @@ namespace Database.Tables.BasicHouseholds {
         [CanBeNull] private DeviceActionGroup _deviceActionGroup;
 
         public DeviceAction([JetBrains.Annotations.NotNull] string pName, [CanBeNull]int? id, [JetBrains.Annotations.NotNull] string description, [JetBrains.Annotations.NotNull] string connectionString,
-            [CanBeNull] DeviceActionGroup deviceActionGroup, [CanBeNull] RealDevice device, StrGuid guid) : base(pName, TableName,
+            [CanBeNull] DeviceActionGroup deviceActionGroup, [CanBeNull] RealDevice device, [JetBrains.Annotations.NotNull] StrGuid guid) : base(pName, TableName,
             connectionString, guid) {
             ID = id;
             _profiles = new ObservableCollection<DeviceActionProfile>();

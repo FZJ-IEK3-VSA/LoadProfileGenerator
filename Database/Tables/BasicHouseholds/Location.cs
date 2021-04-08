@@ -49,7 +49,7 @@ namespace Database.Tables.BasicHouseholds {
         [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<LocationDevice> _locDevs = new ObservableCollection<LocationDevice>();
 
         public Location([JetBrains.Annotations.NotNull] string name, [CanBeNull]int? pID, [JetBrains.Annotations.NotNull] string connectionString,
-                        StrGuid guid) : base(name, TableName, connectionString, guid)
+                        [JetBrains.Annotations.NotNull] StrGuid guid) : base(name, TableName, connectionString, guid)
         {
             ID = pID;
             AreNumbersOkInNameForIntegrityCheck = true;

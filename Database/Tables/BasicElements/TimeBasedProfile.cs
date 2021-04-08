@@ -52,7 +52,7 @@ namespace Database.Tables.BasicElements {
         private TimeProfileType _timeProfileType;
 
         public TimeBasedProfile([JetBrains.Annotations.NotNull] string name, [CanBeNull] int? pID, [JetBrains.Annotations.NotNull] string connectionString, TimeProfileType timeProfileType,
-            [JetBrains.Annotations.NotNull] string dataSource, StrGuid guid) : base(name, TableName, connectionString, guid)
+            [JetBrains.Annotations.NotNull] string dataSource, [JetBrains.Annotations.NotNull] StrGuid guid) : base(name, TableName, connectionString, guid)
         {
             _timeProfileType = timeProfileType;
             ObservableDatapoints = new ObservableCollection<TimeDataPoint>();

@@ -67,7 +67,7 @@ namespace Database.Tables.Houses {
 
         public House([JetBrains.Annotations.NotNull] string pName, [CanBeNull] string description, [CanBeNull] TemperatureProfile temperatureProfile, [CanBeNull] GeographicLocation geographicLocation,
                      [CanBeNull] HouseType houseType, [JetBrains.Annotations.NotNull] string connectionString, EnergyIntensityType energyIntensity, [CanBeNull] string source, CreationType creationType,
-                     StrGuid guid,[CanBeNull] int? pID = null) : base(pName, TableName, connectionString, guid)
+                     [NotNull] StrGuid guid,[CanBeNull] int? pID = null) : base(pName, TableName, connectionString, guid)
         {
             ID = pID;
             TypeDescription = "House";

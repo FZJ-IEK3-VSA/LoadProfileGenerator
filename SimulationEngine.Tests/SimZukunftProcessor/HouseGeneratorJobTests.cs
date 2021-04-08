@@ -12,6 +12,7 @@ using Common.Tests;
 using Database;
 using Database.Helpers;
 using Database.Tests;
+using FluentAssertions;
 using Newtonsoft.Json;
 using SimulationEngineLib.HouseJobProcessor;
 using Xunit;
@@ -34,8 +35,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor {
                 DefaultForOutputFiles = OutputFileDefault.Reasonable,
                 StartDate = new DateTime(2017, 1, 1),
                 EndDate = new DateTime(2017, 1, 3),
-                GeographicLocation = sim.GeographicLocations.FindFirstByName("Berlin", FindMode.Partial)
-                                         ?.GetJsonReference() ??
+                GeographicLocation = sim.GeographicLocations.FindFirstByName("Berlin", FindMode.Partial)?.GetJsonReference() ??
                                      throw new LPGException("No Berlin in the DB"),
                 TemperatureProfile = sim.TemperatureProfiles[0].GetJsonReference(),
                 OutputDirectory = wd.Combine("Results"),
@@ -49,8 +49,8 @@ namespace SimulationEngine.Tests.SimZukunftProcessor {
             StartHouseJob(houseJob, wd, "undefined");
         }
 
-        private static void StartHouseJob([JetBrains.Annotations.NotNull] HouseCreationAndCalculationJob houseJob, [JetBrains.Annotations.NotNull] WorkingDir wd,
-                                          string fnSuffix)
+        private static void StartHouseJob([JetBrains.Annotations.NotNull] HouseCreationAndCalculationJob houseJob,
+                                          [JetBrains.Annotations.NotNull] WorkingDir wd, string fnSuffix)
         {
             string houseJobFile = wd.Combine("houseJob." + fnSuffix + ".json");
             if (File.Exists(houseJobFile)) {
@@ -82,8 +82,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor {
                 using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass())) {
                     const string fn = @"C:\work\LPGUnitTest\HouseJob.Felseggstrasse 29.json";
                     string txt = File.ReadAllText(fn);
-                    HouseCreationAndCalculationJob houseJob =
-                        JsonConvert.DeserializeObject<HouseCreationAndCalculationJob>(txt);
+                    HouseCreationAndCalculationJob houseJob = JsonConvert.DeserializeObject<HouseCreationAndCalculationJob>(txt);
                     MakeAndCalculateHouseJob(houseJob, sim, wd, db);
                 }
             }
@@ -99,19 +98,14 @@ namespace SimulationEngine.Tests.SimZukunftProcessor {
             Simulator sim = new Simulator(db.ConnectionString);
             using WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass());
             //housedata
-            HouseData houseData = new HouseData(Guid.NewGuid().ToStrGuid(),
-                "HT01", 10000, 1000, "HouseGeneratorJobHouse");
-            var householdData = new HouseholdData(Guid.NewGuid().ToString(),
-                "blub", sim.ChargingStationSets[0].GetJsonReference(),
-                sim.TransportationDeviceSets[0].GetJsonReference(),
-                sim.TravelRouteSets[0].GetJsonReference(), null,
+            HouseData houseData = new HouseData(Guid.NewGuid().ToStrGuid(), "HT01", 10000, 1000, "HouseGeneratorJobHouse");
+            var householdData = new HouseholdData(Guid.NewGuid().ToString(), "blub", sim.ChargingStationSets[0].GetJsonReference(),
+                sim.TransportationDeviceSets[0].GetJsonReference(), sim.TravelRouteSets[0].GetJsonReference(), null,
                 HouseholdDataSpecificationType.ByHouseholdName);
             houseData.Households.Add(householdData);
-            householdData.HouseholdNameSpec =
-                new HouseholdNameSpecification(sim.ModularHouseholds[0].GetJsonReference());
+            householdData.HouseholdNameSpec = new HouseholdNameSpecification(sim.ModularHouseholds[0].GetJsonReference());
             HouseCreationAndCalculationJob houseJob =
-                new HouseCreationAndCalculationJob("present", "2019", "trafokreis",
-                    HouseDefinitionType.HouseData);
+                new HouseCreationAndCalculationJob("present", "2019", "trafokreis", HouseDefinitionType.HouseData);
             houseJob.House = houseData;
 
             MakeAndCalculateHouseJob(houseJob, sim, wd, db);
@@ -127,21 +121,17 @@ namespace SimulationEngine.Tests.SimZukunftProcessor {
                 Simulator sim = new Simulator(db.ConnectionString);
                 using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass())) {
                     //housedata
-                    HouseData houseData = new HouseData(Guid.NewGuid().ToStrGuid(),
-                        "HT01", 10000, 1000, "HouseGeneratorJobHouse");
-                    var householdData = new HouseholdData(Guid.NewGuid().ToString(),
-                        "blub", sim.ChargingStationSets[0].GetJsonReference(),
-                        sim.TransportationDeviceSets[0].GetJsonReference(),
-                        sim.TravelRouteSets[0].GetJsonReference(),
-                        null, HouseholdDataSpecificationType.ByPersons);
+                    HouseData houseData = new HouseData(Guid.NewGuid().ToStrGuid(), "HT01", 10000, 1000, "HouseGeneratorJobHouse");
+                    var householdData = new HouseholdData(Guid.NewGuid().ToString(), "blub", sim.ChargingStationSets[0].GetJsonReference(),
+                        sim.TransportationDeviceSets[0].GetJsonReference(), sim.TravelRouteSets[0].GetJsonReference(), null,
+                        HouseholdDataSpecificationType.ByPersons);
                     houseData.Households.Add(householdData);
                     var persons = new List<PersonData> {
                         new PersonData(30, Gender.Male, "name")
                     };
                     householdData.HouseholdDataPersonSpec = new HouseholdDataPersonSpecification(persons);
                     HouseCreationAndCalculationJob houseJob =
-                        new HouseCreationAndCalculationJob("present", "2019", "trafokreis",
-                            HouseDefinitionType.HouseData);
+                        new HouseCreationAndCalculationJob("present", "2019", "trafokreis", HouseDefinitionType.HouseData);
                     houseJob.House = houseData;
 
                     MakeAndCalculateHouseJob(houseJob, sim, wd, db);
@@ -161,20 +151,16 @@ namespace SimulationEngine.Tests.SimZukunftProcessor {
                     WorkingDir wd = workingDir;
 
                     //housedata
-                    HouseData houseData = new HouseData(Guid.NewGuid().ToStrGuid(),
-                        "HT01", 10000, 1000, "HouseGeneratorJobHouse");
+                    HouseData houseData = new HouseData(Guid.NewGuid().ToStrGuid(), "HT01", 10000, 1000, "HouseGeneratorJobHouse");
                     var chargingStationSet = sim.ChargingStationSets
-                        .SafeFindByName("Charging At Home with 03.7 kW, output results to Car Electricity")
-                        .GetJsonReference();
+                        .SafeFindByName("Charging At Home with 03.7 kW, output results to Car Electricity").GetJsonReference();
                     Logger.Info("Using charging station " + chargingStationSet);
                     var transportationDeviceSet = sim.TransportationDeviceSets[0].GetJsonReference();
                     var travelRouteSet = sim.TravelRouteSets[0].GetJsonReference();
                     var work = new TransportationDistanceModifier("Work", "Car", 0);
                     var entertainment = new TransportationDistanceModifier("Entertainment", "Car", 12000);
-                    List<TransportationDistanceModifier> tdm = new List<TransportationDistanceModifier>
-                        {work, entertainment};
-                    var householdData = new HouseholdData(Guid.NewGuid().ToString(),
-                        "blub", chargingStationSet, transportationDeviceSet,
+                    List<TransportationDistanceModifier> tdm = new List<TransportationDistanceModifier> {work, entertainment};
+                    var householdData = new HouseholdData(Guid.NewGuid().ToString(), "blub", chargingStationSet, transportationDeviceSet,
                         travelRouteSet, tdm, HouseholdDataSpecificationType.ByPersons);
                     houseData.Households.Add(householdData);
                     var persons = new List<PersonData> {
@@ -182,8 +168,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor {
                     };
                     householdData.HouseholdDataPersonSpec = new HouseholdDataPersonSpecification(persons);
                     HouseCreationAndCalculationJob houseJob =
-                        new HouseCreationAndCalculationJob("present", "2019", "trafokreis",
-                            HouseDefinitionType.HouseData);
+                        new HouseCreationAndCalculationJob("present", "2019", "trafokreis", HouseDefinitionType.HouseData);
                     houseJob.House = houseData;
                     MakeAndCalculateHouseJob(houseJob, sim, wd, db);
                 }
@@ -192,6 +177,72 @@ namespace SimulationEngine.Tests.SimZukunftProcessor {
 
 
         [Fact]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.BasicTest)]
+        public void StrGuidSerialisationTest()
+        {
+            Logger.Get().StartCollectingAllMessages();
+            using (WorkingDir wd = new WorkingDir(Utili.GetCurrentMethodAndClass())) {
+                StrGuid myguid = StrGuid.New();
+
+                var guidfile = wd.Combine("guid.json");
+                using (StreamWriter sw = new StreamWriter(guidfile)) {
+                    sw.WriteLine(JsonConvert.SerializeObject(myguid, Formatting.Indented));
+                    sw.Close();
+                }
+
+                char[] charsToTrim = {'\n', ' '};
+                string guidStr = File.ReadAllText(guidfile).Trim(charsToTrim);
+                var newguid = JsonConvert.DeserializeObject<StrGuid>(guidStr);
+                myguid.Should().BeEquivalentTo(newguid);
+            }
+
+        }
+
+        [Fact]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.BasicTest)]
+        public void HouseJobDeserializeTest() {
+            Logger.Get().StartCollectingAllMessages();
+            using (WorkingDir workingDir = new WorkingDir(Utili.GetCurrentMethodAndClass())) {
+                using (DatabaseSetup db = new DatabaseSetup(Utili.GetCurrentMethodAndClass())) {
+                    Simulator sim = new Simulator(db.ConnectionString);
+                    WorkingDir wd = workingDir;
+
+                    //housedata
+                    HouseData houseData = new HouseData(Guid.NewGuid().ToStrGuid(), "HT01", 10000, 1000, "HouseGeneratorJobHouse");
+                    var chargingStationSet = sim.ChargingStationSets
+                        .SafeFindByName("Charging At Home with 03.7 kW, output results to Car Electricity").GetJsonReference();
+                    Logger.Info("Using charging station " + chargingStationSet);
+                    var transportationDeviceSet = sim.TransportationDeviceSets[0].GetJsonReference();
+                    var travelRouteSet = sim.TravelRouteSets[0].GetJsonReference();
+                    var work = new TransportationDistanceModifier("Work", "Car", 0);
+                    var entertainment = new TransportationDistanceModifier("Entertainment", "Car", 12000);
+                    List<TransportationDistanceModifier> tdm = new List<TransportationDistanceModifier> {work, entertainment};
+                    var householdData = new HouseholdData(Guid.NewGuid().ToString(), "blub", chargingStationSet, transportationDeviceSet,
+                        travelRouteSet, tdm, HouseholdDataSpecificationType.ByPersons);
+                    houseData.Households.Add(householdData);
+                    var persons = new List<PersonData> {
+                        new PersonData(30, Gender.Male, "name")
+                    };
+                    householdData.HouseholdDataPersonSpec = new HouseholdDataPersonSpecification(persons);
+                    HouseCreationAndCalculationJob houseJob =
+                        new HouseCreationAndCalculationJob("present", "2019", "trafokreis", HouseDefinitionType.HouseData);
+                    houseJob.House = houseData;
+                    var housejobfile = wd.Combine("housejob.json");
+                    using (StreamWriter sw = new StreamWriter(housejobfile)) {
+                        sw.WriteLine(JsonConvert.SerializeObject(houseJob, Formatting.Indented));
+                        sw.Close();
+                    }
+                    char[] charsToTrim = { '\n', ' ' };
+                    string houseJobStr = File.ReadAllText(housejobfile).Trim(charsToTrim);
+                    HouseCreationAndCalculationJob deserializedHouseJob = JsonConvert.DeserializeObject<HouseCreationAndCalculationJob>(houseJobStr);
+                    deserializedHouseJob.Should().BeEquivalentTo(houseJob);
+                }
+
+            }
+        }
+
+
+    [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.BasicTest)]
         public void HouseGeneratorTestWithTemplateSpec()
         {

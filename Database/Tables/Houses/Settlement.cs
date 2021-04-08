@@ -86,7 +86,7 @@ namespace Database.Tables.Houses {
                           [CanBeNull] TemperatureProfile temperatureProfile,
                           [JetBrains.Annotations.NotNull] string source,
                           CreationType creationType,
-                          StrGuid guid,
+                          [JetBrains.Annotations.NotNull] StrGuid guid,
                           [CanBeNull] JsonCalcSpecification calcSpecification) : base(pName, TableName, connectionString, guid)
         {
             _calcSpecification = calcSpecification ?? JsonCalcSpecification.MakeDefaultsForProduction();

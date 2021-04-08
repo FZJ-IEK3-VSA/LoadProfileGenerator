@@ -296,7 +296,7 @@ namespace Database.Templating {
                                    " for the person " + persons + "." + Environment.NewLine + reasonString);
                     if (entry.IsMandatory)
                     {
-                        throw new LPGException("Tried to assign " + entry.TraitTag.Name + " but didn't succeed although the trait is marked as manadatory. " +
+                        throw new LPGException("Tried to assign " + entry.TraitTag.Name + " but didn't succeed although the trait is marked as mandatory. " +
                                                "Maybe you need to have more kind of work, school or sleep? " +
                                                "Reasons for failure during 100 tries to find a match: \n" + reasonString);
                     }

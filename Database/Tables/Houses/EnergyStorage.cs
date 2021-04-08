@@ -60,7 +60,7 @@ namespace Database.Tables.Houses {
                              [CanBeNull] VLoadType loadType, double storageCapacity,
             double initialFill, double minimumStorageRate, double maximumStorageRate,
                              double minimumWithdrawRate,
-            double maximumWithdrawRate, [JetBrains.Annotations.NotNull] string connectionString,StrGuid guid, [CanBeNull]int? pID = null)
+            double maximumWithdrawRate, [JetBrains.Annotations.NotNull] string connectionString,[NotNull] StrGuid guid, [CanBeNull]int? pID = null)
             : base(pName, TableName, connectionString, guid)
         {
             ID = pID;

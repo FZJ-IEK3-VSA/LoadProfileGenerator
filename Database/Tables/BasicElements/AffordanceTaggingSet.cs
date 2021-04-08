@@ -52,7 +52,7 @@ namespace Database.Tables.BasicElements {
         [JetBrains.Annotations.NotNull] private string _description;
         private bool _makeCharts;
 
-        public AffordanceTaggingSet([JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] string description, [JetBrains.Annotations.NotNull] string connectionString, bool makeCharts, StrGuid guid,
+        public AffordanceTaggingSet([JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] string description, [JetBrains.Annotations.NotNull] string connectionString, bool makeCharts, [NotNull] StrGuid guid,
                                     [CanBeNull]int? pID = null) : base(name, TableName, connectionString, guid)
         {
             _tags = new ObservableCollection<AffordanceTag>();

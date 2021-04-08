@@ -15,7 +15,7 @@ namespace Database.Tables.BasicHouseholds {
         public const string TableName = "tblDeviceActionGroups";
         [JetBrains.Annotations.NotNull] private string _description;
 
-        public DeviceActionGroup([JetBrains.Annotations.NotNull] string pName, [JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.NotNull] string description, StrGuid guid, [CanBeNull]int? pID = null)
+        public DeviceActionGroup([JetBrains.Annotations.NotNull] string pName, [JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.NotNull] string description, [JetBrains.Annotations.NotNull] StrGuid guid, [CanBeNull]int? pID = null)
             : base(pName, pID, TableName, connectionString, guid) {
             _description = description;
             TypeDescription = "Device Action Group";

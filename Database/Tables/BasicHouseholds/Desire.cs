@@ -53,7 +53,7 @@ namespace Database.Tables.BasicHouseholds {
 
         public Desire([JetBrains.Annotations.NotNull] string pName, decimal pDefaultDecayRate, decimal defaultThreshold, decimal defaultWeight,
             [JetBrains.Annotations.NotNull] string connectionString, decimal criticalThreshold, bool isSharedDesire, [CanBeNull] int? pID,
-                      [JetBrains.Annotations.NotNull] string desireCategory, StrGuid guid)
+                      [JetBrains.Annotations.NotNull] string desireCategory, [NotNull] StrGuid guid)
             : base(pName, TableName, connectionString, guid)
         {
             ID = pID;

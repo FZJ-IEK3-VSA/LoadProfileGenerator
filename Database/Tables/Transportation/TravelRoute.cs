@@ -53,7 +53,7 @@ namespace Database.Tables.Transportation {
             }
         }
         public TravelRoute([CanBeNull]int? pID, [JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.NotNull] string name, [CanBeNull] string description, [CanBeNull] Site siteA,
-            [CanBeNull] Site siteB, StrGuid guid, [CanBeNull] string routeKey)
+            [CanBeNull] Site siteB, [NotNull] StrGuid guid, [CanBeNull] string routeKey)
             : base(name, TableName, connectionString, guid)
         {
             TypeDescription = "Travel Route";

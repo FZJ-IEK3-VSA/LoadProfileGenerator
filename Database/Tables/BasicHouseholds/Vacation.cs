@@ -19,7 +19,7 @@ namespace Database.Tables.BasicHouseholds {
         private int _minimumAge;
 
         public Vacation([JetBrains.Annotations.NotNull] string name, [CanBeNull] int? pID, [JetBrains.Annotations.NotNull] string connectionString, int minimumAge, int maximumAge,
-            CreationType creationType, StrGuid guid) : base(name, TableName, connectionString, guid)
+            CreationType creationType, [JetBrains.Annotations.NotNull] StrGuid guid) : base(name, TableName, connectionString, guid)
         {
             _creationType = creationType;
             _minimumAge = minimumAge;

@@ -21,7 +21,7 @@ namespace Database.Tables.Transportation {
         public TravelRouteSet([JetBrains.Annotations.NotNull] string name,
                               [CanBeNull]int? pID,
                               [JetBrains.Annotations.NotNull] string connectionString,
-                              [CanBeNull] string description, StrGuid guid) : base(name,
+                              [CanBeNull] string description, [NotNull] StrGuid guid) : base(name,
             TableName, connectionString, guid)
         {
             _description = description;

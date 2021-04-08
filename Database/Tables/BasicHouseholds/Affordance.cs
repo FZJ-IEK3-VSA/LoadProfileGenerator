@@ -92,7 +92,7 @@ namespace Database.Tables.BasicHouseholds {
             [CanBeNull] TimeLimit timeLimitLimit, [CanBeNull] string description, [JetBrains.Annotations.NotNull] string connectionString,
             bool isInterruptable,
             bool isInterrupting, int minimumAge, int maximumAge, bool randomResults,
-            ActionAfterInterruption actionAfterInterruption, bool requireAllDesires, StrGuid guid,
+            ActionAfterInterruption actionAfterInterruption, bool requireAllDesires, [JetBrains.Annotations.NotNull] StrGuid guid,
             BodilyActivityLevel bodilyActivityLevel) : base(pName, TableName,
             connectionString, guid)
         {

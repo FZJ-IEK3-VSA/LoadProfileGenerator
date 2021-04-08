@@ -62,7 +62,7 @@ namespace Database.Tables.ModularHouseholds {
 
         public HouseholdTemplate([JetBrains.Annotations.NotNull] string pName, [CanBeNull] int? id, [CanBeNull] string description, [JetBrains.Annotations.NotNull] string connectionString, [CanBeNull] string newName, int count,
                                  [CanBeNull] DateBasedProfile timeProfileForVacations, TemplateVacationType templateVacationType, int minNumberOfVacations, int maxNumberOfVacations,
-                                 int averageVacationDuration, int minTotalVacationDays, int maxTotalVacationDays, StrGuid guid) : base(pName, TableName, connectionString, guid)
+                                 int averageVacationDuration, int minTotalVacationDays, int maxTotalVacationDays, [NotNull] StrGuid guid) : base(pName, TableName, connectionString, guid)
         {
             _templateVacationType = templateVacationType;
             _minNumberOfVacations = minNumberOfVacations;

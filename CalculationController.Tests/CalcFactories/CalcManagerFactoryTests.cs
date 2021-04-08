@@ -330,6 +330,7 @@ namespace CalculationController.Tests.CalcFactories {
                             }
                         }
                     }
+                    cm.CalcRepo.FileFactoryAndTracker.Dispose();
                     cm.CalcRepo.Logfile.Dispose();
                     db.Cleanup();
                 }
@@ -362,7 +363,9 @@ namespace CalculationController.Tests.CalcFactories {
                     var rfel2 = new ResultFileEntryLogger(wd2.SqlResultLoggingService);
                     var rfes2 = rfel2.Load();
                     rfes1.Should().BeEquivalentTo(rfes2, o => o.Excluding(
-                         x => x.SelectedMemberPath.EndsWith("FullFileName", StringComparison.InvariantCultureIgnoreCase)));
+                         x => x.SelectedMemberPath.EndsWith("FullFileName", StringComparison.InvariantCultureIgnoreCase) ||
+                              x.SelectedMemberPath.EndsWith("PersonInformation.Guid", StringComparison.InvariantCultureIgnoreCase)
+                              ));
 
                     CompareCsv(rfes1, rfes2);
                     wd1.CleanUp();

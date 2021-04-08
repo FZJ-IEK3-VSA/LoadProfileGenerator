@@ -87,7 +87,7 @@ namespace Common.Tests {
 
 
     [SuppressMessage("ReSharper", "RedundantNameQualifier")]
-    public class UnitTestBaseClass {
+    public class UnitTestBaseClass: IDisposable {
         public ITestOutputHelper TestOutputHelper { get; }
 
         public UnitTestBaseClass(ITestOutputHelper testOutputHelper)
@@ -143,6 +143,9 @@ namespace Common.Tests {
         [JetBrains.Annotations.NotNull]
         protected NormalRandom NormalRandom { get; private set; } = new NormalRandom(0, 0.1, new Random());
 
+        public void Dispose()
+        {
+        }
     }
 }
 

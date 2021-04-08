@@ -530,5 +530,6 @@ namespace Common {
         }
 
         public ITestOutputHelper OutputHelper { get; set; }
+
     }
 }

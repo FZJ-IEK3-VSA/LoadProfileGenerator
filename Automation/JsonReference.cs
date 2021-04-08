@@ -67,7 +67,7 @@ namespace Automation {
         [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public JsonReference()
         {
-            Guid = StrGuid.Empty;
+            //Guid = StrGuid.Empty;
         }
 
         [JetBrains.Annotations.NotNull]

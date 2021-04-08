@@ -499,7 +499,7 @@ namespace IntegrationTests {
         }
 
         [Fact]
-        [Trait(UnitTestCategories.Category,UnitTestCategories.LongTermMerge)]
+        [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
         public void RunTestCurrentVersionWithClear()
         {
             Logger.Threshold = Severity.Error;

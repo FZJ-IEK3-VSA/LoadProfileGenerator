@@ -171,7 +171,7 @@ namespace Database.Tests
                 }
             }
 
-            Logger.Info("finished cleaning.");
+            //Logger.Info("finished cleaning.");
         }
 
         public void ClearTable([JetBrains.Annotations.NotNull] string name)

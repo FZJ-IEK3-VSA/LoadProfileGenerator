@@ -12,7 +12,7 @@ namespace Database.Tables.ModularHouseholds {
     public class LivingPatternTag : DBBaseElement {
         public const string TableName = "tblLivingPatternTags";
         public LivingPatternTag([JetBrains.Annotations.NotNull] string pName, [JetBrains.Annotations.NotNull] string connectionString,
-                        StrGuid guid, [CanBeNull]int? pID = null)
+                        [NotNull] StrGuid guid, [CanBeNull]int? pID = null)
             : base(pName, TableName, connectionString, guid)
         {
             ID = pID;

@@ -25,7 +25,7 @@ namespace Database.Tables.Transportation {
             }
         }
         public TransportationDeviceSet([JetBrains.Annotations.NotNull] string name, [CanBeNull]int? pID, [JetBrains.Annotations.NotNull] string connectionString, [CanBeNull] string description,
-            StrGuid guid
+            [JetBrains.Annotations.NotNull] StrGuid guid
             )
             : base(name, TableName, connectionString, guid)
         {

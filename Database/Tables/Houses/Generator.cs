@@ -51,7 +51,7 @@ namespace Database.Tables.Houses {
         private double _scalingFactor;
 
         public Generator([JetBrains.Annotations.NotNull] string pName, [CanBeNull] string description, [CanBeNull] VLoadType loadType, double scalingFactor,
-            [CanBeNull] DateBasedProfile dateBasedProfile, [JetBrains.Annotations.NotNull] string connectionString, StrGuid guid, [CanBeNull] int? pID = null)
+            [CanBeNull] DateBasedProfile dateBasedProfile, [JetBrains.Annotations.NotNull] string connectionString, [NotNull] StrGuid guid, [CanBeNull] int? pID = null)
             : base(pName, TableName, connectionString, guid)
         {
             ID = pID;

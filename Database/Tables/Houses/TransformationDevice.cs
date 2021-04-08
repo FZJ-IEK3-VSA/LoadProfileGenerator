@@ -68,7 +68,7 @@ namespace Database.Tables.Houses {
                                     [JetBrains.Annotations.NotNull] string connectionString,
                                     double minimumInputPower,
                                     double maximumInputPower,
-                                    StrGuid guid,
+                                    [NotNull] StrGuid guid,
                                     [CanBeNull] int? pID = null) : base(pName, TableName, connectionString, guid)
         {
             _minValue = minValue;

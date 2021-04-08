@@ -18,7 +18,7 @@ namespace Database.Tables.Validation {
         public CalculationOutcome([JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] string householdName, [JetBrains.Annotations.NotNull] string lpgVersion, [JetBrains.Annotations.NotNull] string temperatureProfile,
             [JetBrains.Annotations.NotNull] string geographicLocaiton, [JetBrains.Annotations.NotNull] string errorMessage, [JetBrains.Annotations.NotNull] string timeResolution, [JetBrains.Annotations.NotNull] string energyIntensity,
             TimeSpan calculationDuration, DateTime simulationStartTime, DateTime simulationEndtime,
-            [JetBrains.Annotations.NotNull] string connectionString, int numberOfPersons, int randomSeed, [CanBeNull] int? pID, StrGuid guid) : base(name, TableName,
+            [JetBrains.Annotations.NotNull] string connectionString, int numberOfPersons, int randomSeed, [CanBeNull] int? pID, [JetBrains.Annotations.NotNull] StrGuid guid) : base(name, TableName,
             connectionString, guid) {
             Entries = new ObservableCollection<LoadtypeOutcome>();
             AffordanceTimeUses = new ObservableCollection<AffordanceTimeUseOutcome>();

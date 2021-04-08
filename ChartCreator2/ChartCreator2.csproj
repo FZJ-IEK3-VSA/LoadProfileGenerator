@@ -17,12 +17,12 @@
 
   <ItemGroup>
     <PackageReference Include="Autofac" Version="6.1.0" />
-    <PackageReference Include="JetBrains.Annotations" Version="2020.1.0" />
-    <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.0" />
+    <PackageReference Include="JetBrains.Annotations" Version="2021.1.0" />
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.2" />
     <PackageReference Include="NullCheckAnalyzer" Version="1.0.0.3" />
     <PackageReference Include="OxyPlot.Core" Version="2.1.0-unstable.1449" />
     <PackageReference Include="OxyPlot.SkiaSharp" Version="2.1.0-unstable.1449" />
-    <PackageReference Include="Roslynator.Analyzers" Version="3.0.0">
+    <PackageReference Include="Roslynator.Analyzers" Version="3.1.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

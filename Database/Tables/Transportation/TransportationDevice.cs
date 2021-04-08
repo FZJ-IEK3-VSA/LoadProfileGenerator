@@ -34,7 +34,7 @@ namespace Database.Tables.Transportation {
                                     double chargingPower,
                                     double chargingDistanceAmount,
                                     double chargingEnergyAmount,
-                                    [CanBeNull] VLoadType chargingLoadType, StrGuid guid) : base(name, TableName,
+                                    [CanBeNull] VLoadType chargingLoadType, [JetBrains.Annotations.NotNull] StrGuid guid) : base(name, TableName,
             connectionString, guid)
         {
             _description = description;

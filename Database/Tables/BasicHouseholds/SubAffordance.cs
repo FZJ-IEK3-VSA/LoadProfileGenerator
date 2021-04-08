@@ -55,7 +55,7 @@ namespace Database.Tables.BasicHouseholds {
         private PermittedGender _permittedGender;
 
         public SubAffordance([JetBrains.Annotations.NotNull] string pName, [CanBeNull] int? id, PermittedGender permittedGender, [JetBrains.Annotations.NotNull] string connectionString,
-            bool isInterruptable, bool isInterrupting, int maximumAge, int minimumAge, StrGuid guid) : base(pName, TableName,
+            bool isInterruptable, bool isInterrupting, int maximumAge, int minimumAge, [NotNull] StrGuid guid) : base(pName, TableName,
             connectionString, guid)
         {
             ID = id;

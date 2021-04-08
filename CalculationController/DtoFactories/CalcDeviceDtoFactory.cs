@@ -237,9 +237,9 @@ namespace CalculationController.DtoFactories
         {
             List<CalcDeviceDto> calcDeviceDtos = new List<CalcDeviceDto>();
             foreach (var devloc in devlocs) {
-                if(devloc.Device.Name.Contains("Dishwasher")) {
-                    Logger.Info("Figuring out dishwasher");
-                }
+                //if(devloc.Device.Name.Contains("Dishwasher")) {
+                //    Logger.Info("Figuring out dishwasher");
+                //}
 
                 var locdto = locs.First(x => x.ID == devloc.Location.IntID);
                 // ggf dev category / device action in dev umwandeln

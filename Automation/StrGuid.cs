@@ -1,9 +1,20 @@
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace Automation
 {
     public record StrGuid
-    { // : IEquatable<StrGuid>, IComparable<StrGuid>, IComparable
+    {
+        public StrGuid()
+        {
+
+        }
+        [JsonConstructor]
+        public StrGuid(string strVal)
+        {
+            StrVal = strVal;
+        }
+        // : IEquatable<StrGuid>, IComparable<StrGuid>, IComparable
         //public int CompareTo(StrGuid? other)
         //{
         //    if (!other.HasValue) {

@@ -255,7 +255,7 @@ namespace Database.Tables.ModularHouseholds {
 
         public ModularHousehold([JetBrains.Annotations.NotNull] string pName, [CanBeNull] int? id, [JetBrains.Annotations.NotNull] string description, [JetBrains.Annotations.NotNull] string connectionString,
             [CanBeNull] DeviceSelection deviceSelection, [JetBrains.Annotations.NotNull] string source, [CanBeNull] int? generatorID, [CanBeNull] Vacation vacation,
-            EnergyIntensityType energyIntensityType, CreationType creationType, StrGuid guid) : base(pName, TableName,
+            EnergyIntensityType energyIntensityType, CreationType creationType, [JetBrains.Annotations.NotNull] StrGuid guid) : base(pName, TableName,
             connectionString, guid)
         {
             ID = id;

@@ -46,7 +46,7 @@ namespace Database.Tables.ModularHouseholds {
         [CanBeNull] private string _description;
 
         public DeviceSelection([JetBrains.Annotations.NotNull] string pName, [CanBeNull]int? id, [CanBeNull] string description,
-                               [JetBrains.Annotations.NotNull] string connectionString, StrGuid guid)
+                               [JetBrains.Annotations.NotNull] string connectionString, [NotNull] StrGuid guid)
             : base(pName, TableName, connectionString, guid)
         {
             ID = id;

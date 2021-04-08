@@ -53,7 +53,7 @@ namespace Database.Tables.BasicHouseholds {
         private int _sickDays;
 
         public Person([JetBrains.Annotations.NotNull] string name, int age, [CanBeNull]int? pID, int sickDays, int averageSicknessDuration, PermittedGender gender,
-            [JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.NotNull] string description, StrGuid guid) : base(name, TableName, connectionString, guid)
+            [JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.NotNull] string description, [JetBrains.Annotations.NotNull] StrGuid guid) : base(name, TableName, connectionString, guid)
         {
             _age = age;
             ID = pID;

@@ -66,7 +66,7 @@ namespace Database.Tables.BasicHouseholds {
         private int _parentID;
 
         public DeviceCategory([JetBrains.Annotations.NotNull] string pName, int parentID, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreInRealDeviceViews,
-            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<RealDevice> devices, StrGuid guid,
+            [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<RealDevice> devices, [JetBrains.Annotations.NotNull] StrGuid guid,
                               [CanBeNull]int? pID = null, bool isEmptyconnectionStringOk = false)
             : base(pName, TableName, connectionString, guid)
         {

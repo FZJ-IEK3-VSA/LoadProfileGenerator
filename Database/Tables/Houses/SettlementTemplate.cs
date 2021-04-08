@@ -43,7 +43,7 @@ namespace Database.Tables.Houses {
 
         public SettlementTemplate([JetBrains.Annotations.NotNull] string pName, [CanBeNull] int? id, [CanBeNull] string description, [JetBrains.Annotations.NotNull] string connectionString,
             int desiredHHCount, [JetBrains.Annotations.NotNull] string newName, [CanBeNull] TemperatureProfile temperatureProfile,
-            [CanBeNull] GeographicLocation geographicLocation,StrGuid guid) : base(pName, TableName, connectionString, guid)
+            [CanBeNull] GeographicLocation geographicLocation,[NotNull] StrGuid guid) : base(pName, TableName, connectionString, guid)
         {
             ID = id;
             _description = description;
