@@ -92,7 +92,7 @@ namespace Database.Tables {
         [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public CombinedSettings CombinedSettings {
-            get => JsonConvert.DeserializeObject<CombinedSettings>(_settings[nameof(CombinedSettings)].SettingValue);
+            get => JsonConvert.DeserializeObject<CombinedSettings>(_settings[nameof(CombinedSettings)].SettingValue) ?? throw new InvalidOperationException();
             set => UpdateValue(nameof(CombinedSettings), JsonConvert.SerializeObject(value, Formatting.Indented));
         }
 

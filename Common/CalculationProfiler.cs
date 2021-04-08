@@ -144,6 +144,10 @@ namespace Common {
             }
 
             var o = JsonConvert.DeserializeObject<CalculationProfiler>(json);
+            if (o == null) {
+                throw new LPGException("Calc Profiler was null");
+            }
+
             return o;
         }
 

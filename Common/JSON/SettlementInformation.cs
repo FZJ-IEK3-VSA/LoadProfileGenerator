@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Automation;
+using Automation.ResultFiles;
 using Common.Enums;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
@@ -46,7 +47,10 @@ namespace Common.JSON {
                 json = sw.ReadToEnd();
             }
             var o = JsonConvert.DeserializeObject<SettlementInformation>(json);
-            return o;
+            if (o == null) {
+                throw new LPGException("settlement information was null");
+            }
+            return  o;
         }
 
         public void WriteResultEntries([JetBrains.Annotations.NotNull] string path)

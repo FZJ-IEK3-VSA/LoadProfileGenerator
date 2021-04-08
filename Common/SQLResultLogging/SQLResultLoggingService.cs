@@ -208,6 +208,10 @@ namespace Common.SQLResultLogging {
                     while (reader.Read()) {
                         string s = reader[0].ToString() ?? "";
                         T re = JsonConvert.DeserializeObject<T>(s);
+                        if (re is null) {
+                            throw new LPGException("object was null");
+                        }
+
                         yield return re;
                     }
                     conn.Close();

@@ -51,6 +51,9 @@ namespace SimulationEngineLib.HouseJobProcessor {
                 foreach (var file in files) {
                     string json = File.ReadAllText(file.FullName);
                     HouseCreationAndCalculationJob jcs = JsonConvert.DeserializeObject<HouseCreationAndCalculationJob>(json);
+                    if(jcs == null) {
+                        throw new LPGException("housejob was null");
+                    }
                     var e = new StatisticsEntry(file.FullName,jcs,subdir.Name);
                     entries.Add(e);
                 }

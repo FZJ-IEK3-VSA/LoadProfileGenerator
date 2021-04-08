@@ -151,9 +151,9 @@ namespace Database.Database {
             Cmdstring = "DELETE FROM " + tblName + " WHERE ID = @id";
             AddParameter("id", id);
             _cmd.ExecuteNonQuery();
-            if (Config.ShowDeleteMessages) {
-                Logger.Debug("Deleted from " + tblName + " the entry with ID " + id);
-            }
+            //if (Config.ShowDeleteMessages) {
+            //    Logger.Debug("Deleted from " + tblName + " the entry with ID " + id);
+            //}
         }
 
         public void DeleteEntireTable([JetBrains.Annotations.NotNull] string tblName)

@@ -326,6 +326,9 @@ namespace SimulationEngineLib.HouseJobProcessor {
                 char[] charsToTrim = { '\n', ' ' };
                 string houseJobStr = File.ReadAllText(houseJobFile).Trim(charsToTrim);
                 HouseCreationAndCalculationJob hcj = JsonConvert.DeserializeObject<HouseCreationAndCalculationJob>(houseJobStr);
+                if(hcj == null) {
+                    throw new LPGException("housejob was null");
+                }
                 resultDir = hcj.CalcSpec?.OutputDirectory ?? "Results";
                 if (!Directory.Exists(resultDir))
                 {

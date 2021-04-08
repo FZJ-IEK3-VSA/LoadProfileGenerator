@@ -38,7 +38,11 @@ namespace SimulationEngineLib.Other {
                 case TypesToProcess.HouseholdTemplates: {
                     string json = File.ReadAllText(jsonFileName);
                         var hhts = JsonConvert.DeserializeObject<List<HouseholdTemplate.JsonDto>>(json);
+                        if(hhts == null) {
+                            throw new LPGException("hhts was null");
+                        }
                     Logger.Info("Started loading " + hhts.Count + " household templates");
+
                     HouseholdTemplate.ImportObjectFromJson(sim, hhts);
                     Logger.Info("Finished loading " + hhts.Count + " household templates");
                     break;
@@ -46,6 +50,9 @@ namespace SimulationEngineLib.Other {
                 case TypesToProcess.ModularHouseholds: {
                     string json = File.ReadAllText(jsonFileName);
                         var hhts = JsonConvert.DeserializeObject<List<ModularHousehold.JsonModularHousehold>>(json);
+                        if (hhts == null) {
+                            throw new LPGException("hhts was null");
+                        }
                     Logger.Info("Started loading " + hhts.Count + " households");
                     ModularHousehold.ImportObjectFromJson(sim, hhts);
                     Logger.Info("Finished loading " + hhts.Count + " households");
@@ -56,6 +63,9 @@ namespace SimulationEngineLib.Other {
                 case TypesToProcess.HouseholdTraits: {
                     string json = File.ReadAllText(jsonFileName);
                     var hhts = JsonConvert.DeserializeObject<List<HouseholdTrait.JsonDto>>(json);
+                        if (hhts == null) {
+                            throw new LPGException("hhts was null");
+                        }
                     Logger.Info("Started loading " + hhts.Count + " traits");
                     HouseholdTrait.ImportObjectFromJson(sim, hhts);
                     Logger.Info("Finished loading " + hhts.Count + " traits");

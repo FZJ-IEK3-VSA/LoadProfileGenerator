@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using Automation.ResultFiles;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 
@@ -26,7 +27,11 @@ namespace Common.JSON {
             {
                 json = sw.ReadToEnd();
             }
-            return JsonConvert.DeserializeObject<ActionEachStepInformation>(json);
+            var val =  JsonConvert.DeserializeObject<ActionEachStepInformation>(json);
+            if (val == null) {
+                throw new LPGException("Action Each Timestep was null");
+            }
+            return val;
         }
 
     }

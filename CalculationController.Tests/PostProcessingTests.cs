@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -119,9 +120,12 @@ namespace CalculationController.Tests
                     sim.Should().NotBeNull();
                     var cmf = new CalcManagerFactory();
                     CalculationProfiler calculationProfiler = new CalculationProfiler();
+                    List<CalcOption> options = new List<CalcOption>(); // sim.MyGeneralConfig.AllEnabledOptions();
+                    options.Add(CalcOption.DeviceProfilesHouse);
+                    options.Add(CalcOption.DeviceProfilesIndividualHouseholds);
                     CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
                         sim.TemperatureProfiles[0], sim.ModularHouseholds[0], EnergyIntensityType.Random,
-                        false,  null, LoadTypePriority.All, null, null, null, sim.MyGeneralConfig.AllEnabledOptions(),
+                        false,  null, LoadTypePriority.All, null, null, null, options ,
                         new DateTime(2013, 1, 1), new DateTime(2013, 1, 2), new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 10, 0), false, false, false, 3, 3,
                         calculationProfiler, wd1.WorkingDirectory,false,false, ".", false);
                     var cm = cmf.GetCalcManager(sim, csps, false);
