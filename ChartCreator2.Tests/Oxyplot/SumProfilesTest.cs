@@ -6,11 +6,12 @@ using Common;
 using Common.Tests;
 using FluentAssertions;
 using Xunit;
+using Xunit.Abstractions;
 
 
 namespace ChartCreator2.Tests.Oxyplot {
 
-    public class SumProfilesTest {
+    public class SumProfilesTest : UnitTestBaseClass {
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         [StaFact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.LongTest4)]
@@ -41,6 +42,10 @@ namespace ChartCreator2.Tests.Oxyplot {
             }
             cs.CleanUp();
             CleanTestBase.RunAutomatically(true);
+        }
+
+        public SumProfilesTest([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper)
+        {
         }
     }
 }

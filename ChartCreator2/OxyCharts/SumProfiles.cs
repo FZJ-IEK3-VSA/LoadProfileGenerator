@@ -74,7 +74,7 @@ namespace ChartCreator2.OxyCharts {
             plotModel1.Series.Add(bps);
             l.LegendBackground = OxyColor.FromArgb(200, 255, 255, 255);
             var fi = new FileInfo(fileName);
-            var dstFileName = fi.Name.Insert(fi.Name.Length - 4, "MinMax.");
+            var dstFileName = fi.Name.Insert(fi.Name.Length - 4, ".MinMax");
             Save(plotModel1, plotName, fileName, basisPath,CalcOption.HouseSumProfilesFromDetailedDats, dstFileName);
         }
 
@@ -110,37 +110,45 @@ namespace ChartCreator2.OxyCharts {
 
         protected override FileProcessingResult MakeOnePlot(ResultFileEntry srcEntry)
         {
-            Profiler.StartPart(Utili.GetCurrentMethodAndClass());
-            string plotName = "Sum Profile for " + srcEntry.HouseholdNumberString + " " + srcEntry.LoadTypeInformation?.Name;
-            var values = new List<double>();
-            if (srcEntry.FullFileName == null)
-            {
-                throw new LPGException("filename was null");
-            }
-            using (var sr = new StreamReader(srcEntry.FullFileName)) {
-                sr.ReadLine();
-                while (!sr.EndOfStream) {
-                    var s = sr.ReadLine();
-                    if (s == null) {
-                        throw new LPGException("Readline failed");
-                    }
-                    var cols = s.Split(Parameters.CSVCharacterArr, StringSplitOptions.None);
-                    var col = cols[cols.Length - 1];
-                    var success = double.TryParse(col, out double d);
-                    if (!success) {
-                        throw new LPGException("Double Trouble reading the file " + srcEntry.FileName);
-                    }
-                    if(srcEntry.LoadTypeInformation == null) {
-                        throw new LPGException("Lti was null");
-                    }
-
-                    values.Add(d / srcEntry.LoadTypeInformation.ConversionFaktor);
+            try {
+                Profiler.StartPart(Utili.GetCurrentMethodAndClass());
+                string plotName = "Sum Profile for " + srcEntry.HouseholdNumberString + " " + srcEntry.LoadTypeInformation?.Name;
+                var values = new List<double>();
+                if (srcEntry.FullFileName == null) {
+                    throw new LPGException("filename was null");
                 }
+
+                using (var sr = new StreamReader(srcEntry.FullFileName)) {
+                    sr.ReadLine();
+                    while (!sr.EndOfStream) {
+                        var s = sr.ReadLine();
+                        if (s == null) {
+                            throw new LPGException("Readline failed");
+                        }
+
+                        var cols = s.Split(Parameters.CSVCharacterArr, StringSplitOptions.None);
+                        var col = cols[cols.Length - 1];
+                        var success = double.TryParse(col, out double d);
+                        if (!success) {
+                            throw new LPGException("Double Trouble reading the file " + srcEntry.FileName);
+                        }
+
+                        if (srcEntry.LoadTypeInformation == null) {
+                            throw new LPGException("Lti was null");
+                        }
+
+                        values.Add(d / srcEntry.LoadTypeInformation.ConversionFaktor);
+                    }
+                }
+
+                MakeBoxPlot(srcEntry.FullFileName, plotName, Parameters.BaseDirectory, values,
+                    srcEntry.LoadTypeInformation ?? throw new InvalidOperationException());
+                MakeLinePlot(srcEntry.FullFileName, plotName, Parameters.BaseDirectory, values, srcEntry.LoadTypeInformation);
+                return FileProcessingResult.ShouldCreateFiles;
             }
-            MakeBoxPlot(srcEntry.FullFileName, plotName, Parameters.BaseDirectory, values, srcEntry.LoadTypeInformation ?? throw new InvalidOperationException());
-            MakeLinePlot(srcEntry.FullFileName, plotName, Parameters.BaseDirectory, values, srcEntry.LoadTypeInformation);
-            Profiler.StopPart(Utili.GetCurrentMethodAndClass());
-            return FileProcessingResult.ShouldCreateFiles;
+            finally {
+                Profiler.StopPart(Utili.GetCurrentMethodAndClass());
+            }
         }
 
         private static double Percentile([JetBrains.Annotations.NotNull] List<double> sequence, double excelPercentile)

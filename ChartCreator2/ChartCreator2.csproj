@@ -14,7 +14,11 @@
     <Nullable>disable</Nullable>
     <LangVersion>9.0</LangVersion>
   </PropertyGroup>
-
+<ItemGroup>
+    <None Update="xunit.runner.json"> 
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+</ItemGroup>
   <ItemGroup>
     <PackageReference Include="Autofac" Version="6.1.0" />
     <PackageReference Include="JetBrains.Annotations" Version="2021.1.0" />

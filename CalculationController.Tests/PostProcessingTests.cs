@@ -115,6 +115,7 @@ namespace CalculationController.Tests
                     sim.MyGeneralConfig.Enable(CalcOption.SumProfileExternalEntireHouse);
                     sim.MyGeneralConfig.Enable(CalcOption.SumProfileExternalIndividualHouseholds);
                     sim.MyGeneralConfig.Enable(CalcOption.PolysunImportFiles);
+                    sim.MyGeneralConfig.Enable(CalcOption.HouseSumProfilesFromDetailedDats);
                     sim.MyGeneralConfig.Enable(CalcOption.OverallSum);
                     Logger.Info("Temperature:" + sim.MyGeneralConfig.SelectedTemperatureProfile);
                     Logger.Info("Geographic:" + sim.MyGeneralConfig.GeographicLocation);

@@ -42,17 +42,16 @@ using JetBrains.Annotations;
 
 namespace CalcPostProcessor {
     public class OptionDependencyManager {
-        private readonly Dictionary<CalcOption, List<CalcOption>> _dependencies = new Dictionary<CalcOption, List<CalcOption>>();
+        private readonly Dictionary<CalcOption, List<CalcOption>> _dependencies = new();
 
-        public OptionDependencyManager(
-            [JetBrains.Annotations.NotNull] [ItemNotNull] ILoadTypeStep[] loadTypePostProcessingSteps,
-            [JetBrains.Annotations.NotNull] [ItemNotNull] IGeneralStep[] generalPostProcessingSteps,
-            [JetBrains.Annotations.NotNull] [ItemNotNull] IGeneralHouseholdStep[] generalHouseholdSteps,
-            [JetBrains.Annotations.NotNull] [ItemNotNull] IHouseholdLoadTypeStep[] householdloadTypePostProcessingSteps,
-            [JetBrains.Annotations.NotNull] [ItemNotNull] ILoadTypeSumStep[] loadtypeSumPostProcessingSteps
-        )
+        public OptionDependencyManager([JetBrains.Annotations.NotNull] [ItemNotNull]
+                                       ILoadTypeStep[] loadTypePostProcessingSteps, [JetBrains.Annotations.NotNull] [ItemNotNull]
+                                       IGeneralStep[] generalPostProcessingSteps, [JetBrains.Annotations.NotNull] [ItemNotNull]
+                                       IGeneralHouseholdStep[] generalHouseholdSteps, [JetBrains.Annotations.NotNull] [ItemNotNull]
+                                       IHouseholdLoadTypeStep[] householdloadTypePostProcessingSteps, [JetBrains.Annotations.NotNull] [ItemNotNull]
+                                       ILoadTypeSumStep[] loadtypeSumPostProcessingSteps)
         {
-            List<IRequireOptions> allSteps = new List<IRequireOptions>();
+            var allSteps = new List<IRequireOptions>();
             allSteps.AddRange(loadTypePostProcessingSteps);
             allSteps.AddRange(generalPostProcessingSteps);
             allSteps.AddRange(generalHouseholdSteps);
@@ -71,65 +70,61 @@ namespace CalcPostProcessor {
                     }
                 }
             }
-
         }
+
+        public Dictionary<CalcOption, List<CalcOption>> Dependencies => _dependencies;
 
         public void EnableRequiredOptions(HashSet<CalcOption> options)
         {
-            int count = 0;
-            foreach (var pair in Dependencies)
-            {
-                if (options.Contains(pair.Key))
-                {
-                    foreach (var requiredOption in pair.Value)
-                    {
-                        if (!options.Contains(requiredOption))
-                        {
+            var count = 0;
+            foreach (var pair in Dependencies) {
+                if (options.Contains(pair.Key)) {
+                    foreach (var requiredOption in pair.Value) {
+                        if (!options.Contains(requiredOption)) {
                             options.Add(requiredOption);
                             count++;
                         }
                     }
                 }
             }
-            if(count > 0){
+
+            if (count > 0) {
                 EnableRequiredOptions(options);
             }
+
             Logger.Info("Enabled " + count + " dependencies for post processing.");
         }
-        public Dictionary<CalcOption, List<CalcOption>> Dependencies => _dependencies;
     }
 
     public class Postprocessor {
-        [JetBrains.Annotations.NotNull]
-        private readonly IFileFactoryAndTracker _fft;
-        [JetBrains.Annotations.NotNull]
-        private readonly ICalculationProfiler _calculationProfiler;
-        [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-        private readonly ILoadTypeStep[] _loadTypePostProcessingSteps;
-        [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
-        private readonly ILoadTypeSumStep[] _loadTypeSumPostProcessingSteps;
-        [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [JetBrains.Annotations.NotNull] private readonly ICalculationProfiler _calculationProfiler;
+
+        [JetBrains.Annotations.NotNull] private readonly IFileFactoryAndTracker _fft;
+
+        [JetBrains.Annotations.NotNull] [ItemNotNull]
+        private readonly IGeneralHouseholdStep[] _generalHouseholdSteps;
+
+        [ItemNotNull] [JetBrains.Annotations.NotNull]
         private readonly IGeneralStep[] _generalPostProcessingSteps;
 
-        [JetBrains.Annotations.NotNull] [ItemNotNull] private readonly IGeneralHouseholdStep[] _generalHouseholdSteps;
-        [JetBrains.Annotations.NotNull] [ItemNotNull] private readonly IHouseholdLoadTypeStep[] _householdloadTypePostProcessingSteps;
+        [JetBrains.Annotations.NotNull] [ItemNotNull]
+        private readonly IHouseholdLoadTypeStep[] _householdloadTypePostProcessingSteps;
 
-        [JetBrains.Annotations.NotNull]
-        private readonly CalcDataRepository _repository;
+        [ItemNotNull] [JetBrains.Annotations.NotNull]
+        private readonly ILoadTypeStep[] _loadTypePostProcessingSteps;
 
-        public Postprocessor(
-            [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler,
-            [JetBrains.Annotations.NotNull] CalcDataRepository repository,
-            [JetBrains.Annotations.NotNull][ItemNotNull] ILoadTypeStep[] loadTypePostProcessingSteps,
-                [JetBrains.Annotations.NotNull][ItemNotNull] IGeneralStep[] generalPostProcessingSteps,
-            [JetBrains.Annotations.NotNull][ItemNotNull] IGeneralHouseholdStep[] generalHouseholdSteps,
-            [JetBrains.Annotations.NotNull][ItemNotNull] IHouseholdLoadTypeStep[] householdloadTypePostProcessingSteps,
-            [JetBrains.Annotations.NotNull][ItemNotNull] ILoadTypeSumStep[] loadtypeSumPostProcessingSteps,
-            [JetBrains.Annotations.NotNull] IFileFactoryAndTracker fft
-            )
+        [ItemNotNull] [JetBrains.Annotations.NotNull]
+        private readonly ILoadTypeSumStep[] _loadTypeSumPostProcessingSteps;
+
+        [JetBrains.Annotations.NotNull] private readonly CalcDataRepository _repository;
+
+        public Postprocessor([JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler,
+                             [JetBrains.Annotations.NotNull] CalcDataRepository repository, [JetBrains.Annotations.NotNull] [ItemNotNull]
+                             ILoadTypeStep[] loadTypePostProcessingSteps, [JetBrains.Annotations.NotNull] [ItemNotNull]
+                             IGeneralStep[] generalPostProcessingSteps, [JetBrains.Annotations.NotNull] [ItemNotNull]
+                             IGeneralHouseholdStep[] generalHouseholdSteps, [JetBrains.Annotations.NotNull] [ItemNotNull]
+                             IHouseholdLoadTypeStep[] householdloadTypePostProcessingSteps, [JetBrains.Annotations.NotNull] [ItemNotNull]
+                             ILoadTypeSumStep[] loadtypeSumPostProcessingSteps, [JetBrains.Annotations.NotNull] IFileFactoryAndTracker fft)
         {
             _loadTypeSumPostProcessingSteps = loadtypeSumPostProcessingSteps;
             _fft = fft;
@@ -141,67 +136,47 @@ namespace CalcPostProcessor {
             _householdloadTypePostProcessingSteps = householdloadTypePostProcessingSteps;
         }
 
-        private static void CheckTotalsForChange([JetBrains.Annotations.NotNull][ItemNotNull] List<OnlineEnergyFileRow> energyFileRows, double total) {
-            if (Config.IsInUnitTesting && Config.ExtraUnitTestChecking) {
-                double newtotal = 0;
-                foreach (var efr in energyFileRows) {
-                    newtotal += efr.SumFresh();
-                }
-                //Logger.Info("Check for " + loadtypeName + " Nr." + _totalcheck + ": total:" + newtotal);
-                //_totalcheck++;
-                if (Math.Abs(newtotal - total) > 0.0000001) {
-                    throw new LPGException("Bug in postprocessing. EFR was changed. Please report!");
-                }
-
-                double cacheTotal = 0;
-                foreach (var efr in energyFileRows) {
-                    var cache = efr.SumCached;
-                    if (Math.Abs(efr.SumFresh() - cache) > Constants.Ebsilon) {
-                        throw new LPGException("This should never happen");
-                    }
-                    cacheTotal += cache;
-                }
-                if (Math.Abs(cacheTotal - total) > 0.0000001) {
-                    throw new LPGException("Bug in postprocessing. EFR was changed. Please report!");
-                }
-            }
-        }
-
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public void RunPostProcessing()
         {
-            _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
-            _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Preparation");
-            if (_repository.CalcParameters.CSVCharacter.Length != 1)
-            {
-                throw new DataIntegrityException(
-                    "The length of the CSV-Character is not 1. Please enter a single, valid character in the settings.");
-            }
-            /*    var deviceNamesToCategory = new Dictionary<string, string>();
-              //  foreach (var calcDevice in _repository.GetDevices().Devices)
-                {
-                    if (!deviceNamesToCategory.ContainsKey(calcDevice.Name))
-                    {
-                        deviceNamesToCategory.Add(calcDevice.Name, calcDevice.DeviceCategoryName);
-                    }
-                }*/
-            if (_repository.HouseholdKeys.Count == 0)
-            {
-                throw new LPGException("No household Numbers!");
-            }
-            _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Preparation");
-            _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Actual Post Processing");
             try {
-                ActualFunctionCaller(_repository.CalcParameters.LoadtypesToPostprocess);
+                _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
+                _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Preparation");
+                if (_repository.CalcParameters.CSVCharacter.Length != 1) {
+                    throw new DataIntegrityException(
+                        "The length of the CSV-Character is not 1. Please enter a single, valid character in the settings.");
+                }
+
+                /*    var deviceNamesToCategory = new Dictionary<string, string>();
+                  //  foreach (var calcDevice in _repository.GetDevices().Devices)
+                    {
+                        if (!deviceNamesToCategory.ContainsKey(calcDevice.Name))
+                        {
+                            deviceNamesToCategory.Add(calcDevice.Name, calcDevice.DeviceCategoryName);
+                        }
+                    }*/
+                if (_repository.HouseholdKeys.Count == 0) {
+                    throw new LPGException("No household Numbers!");
+                }
+
+                _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Preparation");
+                _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Actual Post Processing");
+                try {
+                    ActualFunctionCaller(_repository.CalcParameters.LoadtypesToPostprocess);
+                }
+                finally {
+                    _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Actual Post Processing");
+                }
+
+                //repository.CalculationResult.RandomSeed = _randomSeed;
             }
             finally {
-                _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Actual Post Processing");
+                _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
             }
-            //repository.CalculationResult.RandomSeed = _randomSeed;
-            _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
         }
 
-        private void ActualFunctionCaller([CanBeNull] [ItemNotNull] List<string> loadTypesToProcess) {
+        private void ActualFunctionCaller([CanBeNull] [ItemNotNull] List<string> loadTypesToProcess)
+        {
             //var now = DateTime.Now;
             //var step = 1;
             /*
@@ -216,23 +191,21 @@ namespace CalcPostProcessor {
                 _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Overall Sum File");
             }*/
             {
-                GeneralStepParameters gsp = new GeneralStepParameters();
+                var gsp = new GeneralStepParameters();
                 foreach (var generalPostProcessingStep in _generalPostProcessingSteps) {
-                    if(generalPostProcessingStep.IsEnabled()) {
+                    if (generalPostProcessingStep.IsEnabled()) {
                         generalPostProcessingStep.Run(gsp);
                     }
                 }
             }
 
-            foreach (HouseholdKeyEntry keyEntry in _repository.HouseholdKeys) {
-                HouseholdStepParameters gsp = new HouseholdStepParameters(keyEntry);
+            foreach (var keyEntry in _repository.HouseholdKeys) {
+                var gsp = new HouseholdStepParameters(keyEntry);
                 var prios = _generalHouseholdSteps.Select(x => x.Priority).OrderBy(x => x).Distinct().ToList();
                 foreach (var i in prios) {
                     var filteredSteps = _generalHouseholdSteps.Where(x => x.Priority == i).ToList();
-                    foreach (var generalPostProcessingStep in filteredSteps)
-                    {
-                        if (generalPostProcessingStep.IsEnabled())
-                        {
+                    foreach (var generalPostProcessingStep in filteredSteps) {
+                        if (generalPostProcessingStep.IsEnabled()) {
                             generalPostProcessingStep.Run(gsp);
                         }
                     }
@@ -254,11 +227,81 @@ namespace CalcPostProcessor {
                 }
             }*/
             // make totals per loadtype
-            _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Load Type Dependend");
+            try {
+                _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Load Type Dependend");
 
                 RunLoadTypeDependend(loadTypesToProcess);
-            //repository.efc, devices, calcLocations, autoDevices, loadTypes, deviceTaggingSets, allResults,persons, deviceNameToDeviceCategory, householdNamesByKey,carpetPlotColumnWidth);
-            _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Load Type Dependend");
+            }
+            finally {
+                //repository.efc, devices, calcLocations, autoDevices, loadTypes, deviceTaggingSets, allResults,persons, deviceNameToDeviceCategory, householdNamesByKey,carpetPlotColumnWidth);
+                _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Load Type Dependend");
+            }
+        }
+
+        private static void CheckTotalsForChange([JetBrains.Annotations.NotNull] [ItemNotNull]
+                                                 List<OnlineEnergyFileRow> energyFileRows, double total)
+        {
+            if (Config.IsInUnitTesting && Config.ExtraUnitTestChecking) {
+                double newtotal = 0;
+                foreach (var efr in energyFileRows) {
+                    newtotal += efr.SumFresh();
+                }
+
+                //Logger.Info("Check for " + loadtypeName + " Nr." + _totalcheck + ": total:" + newtotal);
+                //_totalcheck++;
+                if (Math.Abs(newtotal - total) > 0.0000001) {
+                    throw new LPGException("Bug in postprocessing. EFR was changed. Please report!");
+                }
+
+                double cacheTotal = 0;
+                foreach (var efr in energyFileRows) {
+                    var cache = efr.SumCached;
+                    if (Math.Abs(efr.SumFresh() - cache) > Constants.Ebsilon) {
+                        throw new LPGException("This should never happen");
+                    }
+
+                    cacheTotal += cache;
+                }
+
+                if (Math.Abs(cacheTotal - total) > 0.0000001) {
+                    throw new LPGException("Bug in postprocessing. EFR was changed. Please report!");
+                }
+            }
+        }
+
+        [JetBrains.Annotations.NotNull]
+        [ItemNotNull]
+        private List<OnlineEnergyFileRow> ReadOnlineEnergyFileRowsIntoMemory([JetBrains.Annotations.NotNull] CalcLoadTypeDto calcLoadType,
+                                                                             out double total)
+        {
+            var path = _fft.GetResultFileEntry(ResultFileID.OnlineDeviceActivationFiles, calcLoadType.Name, Constants.GeneralHouseholdKey, null, null)
+                .FullFileName;
+            var energyFileRows = new List<OnlineEnergyFileRow>();
+
+            total = 0;
+            if (path == null) {
+                throw new LPGException("path was null");
+            }
+
+            using (Stream fs = new FileStream(path, FileMode.Open)) {
+                long currentPosition = 0;
+#pragma warning disable S2930 // "IDisposables" should be disposed
+                using (var br = new BinaryReader(fs)) {
+#pragma warning restore S2930 // "IDisposables" should be disposed
+
+                    while (currentPosition < fs.Length) {
+                        var efr = OnlineEnergyFileRow.Read(br, calcLoadType, _repository.CalcParameters);
+                        energyFileRows.Add(efr);
+                        if (Config.IsInUnitTesting && Config.ExtraUnitTestChecking) {
+                            total += efr.SumFresh();
+                        }
+
+                        currentPosition += efr.EntryLengthInByte;
+                    }
+                }
+            }
+
+            return energyFileRows;
         }
         /*
         private  List<ICalcDeviceDto> GetAllCalcDevices() {
@@ -284,8 +327,9 @@ namespace CalcPostProcessor {
         }*/
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        private void RunLoadTypeDependend([CanBeNull] [ItemNotNull] List<string> loadTypesForPostProcessing) {
-            if (_loadTypeSumPostProcessingSteps.Any(x => x.IsEnabled()) ) {
+        private void RunLoadTypeDependend([CanBeNull] [ItemNotNull] List<string> loadTypesForPostProcessing)
+        {
+            if (_loadTypeSumPostProcessingSteps.Any(x => x.IsEnabled())) {
                 _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Calculation of the sums per load type");
                 foreach (var calcLoadType in _repository.LoadTypes) {
                     //if (!_fft.CheckForResultFileEntry(ResultFileID.OnlineSumActivationFiles,
@@ -306,108 +350,82 @@ namespace CalcPostProcessor {
 
                     _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - " + calcLoadType.Name);
 
-                    foreach (ILoadTypeSumStep loadTypePostProcessingStep in _loadTypeSumPostProcessingSteps) {
-                        LoadtypeSumStepParameters ltsp = new LoadtypeSumStepParameters(calcLoadType);
+                    foreach (var loadTypePostProcessingStep in _loadTypeSumPostProcessingSteps) {
+                        var ltsp = new LoadtypeSumStepParameters(calcLoadType);
                         loadTypePostProcessingStep.Run(ltsp);
                     }
 
                     _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - " + calcLoadType.Name);
                 }
+
                 _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Calculation of the sums per load type");
             }
 
-            if (!_loadTypePostProcessingSteps.Any(x => x.IsEnabled())
-                && !_householdloadTypePostProcessingSteps.Any(x => x.IsEnabled())
-            )
-
-            {
+            if (!_loadTypePostProcessingSteps.Any(x => x.IsEnabled()) && !_householdloadTypePostProcessingSteps.Any(x => x.IsEnabled())) {
                 return;
             }
-            _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Calculation of the individual profiles for devices and households");
-            // needs to be persistent object to keep the dictionary for all load types
-            int fileCount = 0;
-            foreach (var calcLoadType in _repository.LoadTypes) {
-                if (!_fft.CheckForResultFileEntry(ResultFileID.OnlineDeviceActivationFiles, calcLoadType.Name,
-                    Constants.GeneralHouseholdKey, null, null)) {
-                    Logger.Info("Skipping post-processing of load type " + calcLoadType.Name + " because there was no dat file generated for it.");
-                    continue;
+
+            try {
+                _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() +
+                                               " - Calculation of the individual profiles for devices and households");
+                // needs to be persistent object to keep the dictionary for all load types
+                var fileCount = 0;
+                foreach (var calcLoadType in _repository.LoadTypes) {
+                    if (!_fft.CheckForResultFileEntry(ResultFileID.OnlineDeviceActivationFiles, calcLoadType.Name, Constants.GeneralHouseholdKey,
+                        null, null)) {
+                        Logger.Info("Skipping post-processing of load type " + calcLoadType.Name +
+                                    " because there was no dat file generated for it.");
+                        continue;
+                    }
+
+                    if (loadTypesForPostProcessing != null && loadTypesForPostProcessing.Count > 0 &&
+                        !loadTypesForPostProcessing.Contains(calcLoadType.Name)) {
+                        Logger.Info("Skipping post-processing of load type " + calcLoadType.Name + " because it was not specified.");
+                        continue;
+                    }
+
+                    _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - " + calcLoadType.Name);
+                    var energyFileRows = ReadOnlineEnergyFileRowsIntoMemory(calcLoadType, out var total);
+                    fileCount++;
+                    if (Config.IsInUnitTesting && Config.ExtraUnitTestChecking) {
+                        Logger.Info("Starting total:" + total);
+                        CheckTotalsForChange(energyFileRows, total);
+                    }
+
+                    foreach (var loadTypePostProcessingStep in _loadTypePostProcessingSteps) {
+                        var ltsp = new LoadtypeStepParameters(calcLoadType, energyFileRows);
+                        loadTypePostProcessingStep.Run(ltsp);
+                    }
+
+                    foreach (var entry in _repository.HouseholdKeys) {
+                        foreach (var ltpps in _householdloadTypePostProcessingSteps) {
+                            var ltsp = new HouseholdLoadtypeStepParameters(entry, calcLoadType, energyFileRows);
+                            ltpps.Run(ltsp);
+                        }
+                    }
+
+                    _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - " + calcLoadType.Name);
                 }
 
-                if (loadTypesForPostProcessing != null && loadTypesForPostProcessing.Count > 0 && !loadTypesForPostProcessing.Contains(calcLoadType.Name)) {
-                    Logger.Info("Skipping post-processing of load type " + calcLoadType.Name + " because it was not specified.");
-                    continue;
-                }
-                _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - " + calcLoadType.Name);
-                List<OnlineEnergyFileRow> energyFileRows = ReadOnlineEnergyFileRowsIntoMemory(calcLoadType, out var total);
-                fileCount++;
-                if (Config.IsInUnitTesting && Config.ExtraUnitTestChecking) {
-                    Logger.Info("Starting total:" + total);
-                    CheckTotalsForChange(energyFileRows, total);
-                }
-
-                foreach (ILoadTypeStep loadTypePostProcessingStep in _loadTypePostProcessingSteps) {
-                    LoadtypeStepParameters ltsp = new LoadtypeStepParameters(calcLoadType,energyFileRows);
-                    loadTypePostProcessingStep.Run(ltsp);
-                }
-                foreach (HouseholdKeyEntry entry in _repository.HouseholdKeys) {
-                    foreach (var ltpps in _householdloadTypePostProcessingSteps) {
-                        HouseholdLoadtypeStepParameters ltsp = new HouseholdLoadtypeStepParameters(entry,calcLoadType, energyFileRows);
-                        ltpps.Run(ltsp);
+                if (fileCount == 0) {
+                    if (_repository.HouseholdKeys.Count > 2) { //if simulating only a house type, this is not needed.
+                        var ltp = _loadTypePostProcessingSteps.Where(x => x.IsEnabled()).Select(x => x.StepName).ToList();
+                        var hhltp = _householdloadTypePostProcessingSteps.Where(x => x.IsEnabled()).Select(x => x.StepName).ToList();
+                        var s1 = string.Join("\n", ltp);
+                        var s2 = string.Join("\n", hhltp);
+                        throw new LPGException("Not a single file for postprocessing was found, but the following steps were enabled:" + s1 + "\n" +
+                                               s2);
                     }
                 }
-                _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - " + calcLoadType.Name);
+            }
+            finally {
+                _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() +
+                                              " - Calculation of the individual profiles for devices and households");
             }
 
-            if (fileCount == 0) {
-                var ltp = _loadTypePostProcessingSteps.Where(x => x.IsEnabled()).Select(x=> x.StepName).ToList();
-                var hhltp = _householdloadTypePostProcessingSteps.Where(x => x.IsEnabled()).Select(x => x.StepName)
-                    .ToList();
-                string s1 = string.Join("\n", ltp);
-                string s2 = string.Join("\n", hhltp);
-                throw new LPGException("Not a single file for postprocessing was found, but the following steps were enabled:" + s1 + "\n"+ s2);
-            }
-            _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Calculation of the individual profiles for devices and households");
             //if (_repository.DeviceSumInformationList.DeviceSums.Count > 0) {
             //                _repository.DeviceSumInformationList.WriteJson(_fft, _repository.CalcParameters.InternalStepsize);
             //          }
-        }
-
-        [JetBrains.Annotations.NotNull]
-        [ItemNotNull]
-        private List<OnlineEnergyFileRow> ReadOnlineEnergyFileRowsIntoMemory([JetBrains.Annotations.NotNull] CalcLoadTypeDto calcLoadType, out double total)
-        {
-            var path = _fft.GetResultFileEntry(ResultFileID.OnlineDeviceActivationFiles, calcLoadType.Name,
-                    Constants.GeneralHouseholdKey, null, null)
-                .FullFileName;
-            var energyFileRows = new List<OnlineEnergyFileRow>();
-
-            total = 0;
-            if (path == null) {
-                throw new LPGException("path was null");
-            }
-            using (Stream fs = new FileStream(path, FileMode.Open))
-            {
-                long currentPosition = 0;
-#pragma warning disable S2930 // "IDisposables" should be disposed
-                using (var br = new BinaryReader(fs))
-                {
-#pragma warning restore S2930 // "IDisposables" should be disposed
-
-                    while (currentPosition < fs.Length)
-                    {
-                        var efr = OnlineEnergyFileRow.Read(br, calcLoadType, _repository.CalcParameters);
-                        energyFileRows.Add(efr);
-                        if (Config.IsInUnitTesting && Config.ExtraUnitTestChecking)
-                        {
-                            total += efr.SumFresh();
-                        }
-
-                        currentPosition += efr.EntryLengthInByte;
-                    }
-                }
-            }
-
-            return energyFileRows;
         }
     }
 }

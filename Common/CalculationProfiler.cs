@@ -88,7 +88,7 @@ namespace Common {
         public void LogToConsole()
         {
             var threadname = Thread.CurrentThread.GetNotNullThreadName();
-            if (Current != MainPart) {
+            if (Current[threadname].Key != MainPart[threadname].Key) {
                 throw new LPGException("Forgot to close: " + threadname + ": " + Current[threadname].Key);
             }
 

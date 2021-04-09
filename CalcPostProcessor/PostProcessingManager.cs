@@ -29,14 +29,17 @@ namespace CalcPostProcessor
 
         public void Run([JetBrains.Annotations.NotNull] string resultPath)
         {
-            _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Post Processing");
-            var container = RegisterEverything(resultPath, _calculationProfiler, _fft);
-            using (var scope = container.BeginLifetimeScope())
-            {
-                Postprocessor ps = scope.Resolve<Postprocessor>();
-                ps.RunPostProcessing();
+            try {
+                _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Post Processing");
+                var container = RegisterEverything(resultPath, _calculationProfiler, _fft);
+                using (var scope = container.BeginLifetimeScope()) {
+                    Postprocessor ps = scope.Resolve<Postprocessor>();
+                    ps.RunPostProcessing();
+                }
             }
-            _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Post Processing");
+            finally {
+                _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Post Processing");
+            }
         }
 
         [JetBrains.Annotations.NotNull]

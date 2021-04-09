@@ -64,7 +64,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
             }
             if (!Repository.DoesTableExist(ResultTableID.FlexibilityInformation, entry.HHKey))
             {
-                Logger.Error("Found no flexibility data even though it was enabled.");
+                Logger.Warning("Found no flexibility data even though it was enabled. Probably you don't have any flexible devices in the household.");
                 return;
             }
             var flexevents =  Repository.LoadFlexibilityEvents(hhp.Key.HHKey);

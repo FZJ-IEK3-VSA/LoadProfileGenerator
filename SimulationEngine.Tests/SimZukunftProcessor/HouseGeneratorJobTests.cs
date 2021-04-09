@@ -380,6 +380,11 @@ namespace SimulationEngine.Tests.SimZukunftProcessor {
                                 continue;
                             }
 
+                            var dbs = srls.LoadDatabases();
+                            if(dbs.Count == 1) {
+                                continue;
+                            }
+
                             Logger.Info(entry.HHKey.ToString());
                             var res = tel.Read(entry.HHKey);
                             foreach (var totalsEntry in res) {

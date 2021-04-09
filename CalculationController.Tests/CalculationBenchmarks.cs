@@ -37,6 +37,7 @@ namespace CalculationController.Tests {
         [Trait(UnitTestCategories.Category,UnitTestCategories.LongTest5)]
         public void ActionCarpetPlotTestBenchmark()
         {
+            Thread.CurrentThread.Name = "ActionCarpetPlotTestBenchmark";
             CalculationProfiler cp = new CalculationProfiler();
             cp.StartPart(Utili.GetCurrentMethodAndClass());
             using (var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass()))

@@ -19,7 +19,7 @@ using JetBrains.Annotations;
 namespace Database.Templating {
     internal static class HouseholdTemplateExecutor {
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull]
+        [NotNull]
         public static List<ModularHousehold> GenerateHouseholds([JetBrains.Annotations.NotNull] Simulator sim,
                                                                 bool generateSettlement,
                                                                 [ItemNotNull] [JetBrains.Annotations.NotNull] List<STTraitLimit> limits,
@@ -266,19 +266,25 @@ namespace Database.Templating {
                 var classificationexists = 0;
                 var invalidForPerson = 0;
                 var violatesLimit = 0;
+                var filteredTraits = "";
                 for (var j = 0; j < numberofTraits; j++) {
                     AssignSingleTrait(settlementTraitLimits, template, rnd, chh,
                         forbiddenTraitTags, entry, potentialTraits, allTag,
                         ref traitexists, ref classificationexists, ref invalidForPerson,
-                        ref violatesLimit, ref successes);
+                        ref violatesLimit, ref successes, out filteredTraits);
                 }
 
                 if (successes != numberofTraits) {
                     var persons = string.Empty;
                     var builder = new StringBuilder();
                     builder.Append(persons);
-                    foreach (var person in entry.Persons) {
-                        builder.Append(person.PrettyName).Append(", ");
+                    var livingpatternsForPersons = "";
+                    foreach (HHTemplateEntryPerson person in entry.Persons) {
+                        builder.Append(person.PrettyName);
+                        var lp = template.Persons.First(x => x.Person == person.Person);
+                        builder.Append(" (");
+                        builder.Append(lp.LivingPatternTag);
+                        builder.Append("), ");
                     }
 
                     persons = builder.ToString();
@@ -289,16 +295,47 @@ namespace Database.Templating {
                     var invalidForPersonpercentage = (double)invalidForPerson / totalcount * 100.0;
                     var limitViolationPercentage = (double)violatesLimit / totalcount * 100;
                     var reasonString = "Reasons: \n\tTrait already exits up to the trait count limit: " + traitExistsPercentage.ToString("N1", CultureInfo.CurrentCulture) +
-                                       "%,\n\tClassification exists up to the classificaiton limit: " + classificationExistsPercentage.ToString("N1", CultureInfo.CurrentCulture) +
+                                       "%,\n\tClassification exists up to the classification limit: " + classificationExistsPercentage.ToString("N1", CultureInfo.CurrentCulture) +
                                        "%,\n\tRandomly chosen Trait unsuitable for person: " + invalidForPersonpercentage.ToString("N1", CultureInfo.CurrentCulture) +
                                        "%,\n\tTrait violates age/gender limits: " + limitViolationPercentage.ToString("N1", CultureInfo.CurrentCulture) + "%";
                     Logger.Warning("Only found " + successes + " out of " + numberofTraits + " traits for " + entry.TraitTag.PrettyName +
                                    " for the person " + persons + "." + Environment.NewLine + reasonString);
                     if (entry.IsMandatory)
                     {
-                        throw new LPGException("Tried to assign " + entry.TraitTag.Name + " but didn't succeed although the trait is marked as mandatory. " +
-                                               "Maybe you need to have more kind of work, school or sleep? " +
-                                               "Reasons for failure during 100 tries to find a match: \n" + reasonString);
+                        var traitsInHousehold = "";
+                        var traitsClassification = "";
+                        foreach (var trait in chh.Traits) {
+                            foreach (var tag in trait.HouseholdTrait.Tags) {
+                                if (tag.Tag.Name == entry.TraitTag.Name) {
+                                    traitsInHousehold += trait.Name  + " Max: " + trait.HouseholdTrait.MaximumNumberInCHH + "\n";
+                                }
+                            }
+                            traitsClassification += trait.DstPerson?.Name + ": " + trait.HouseholdTrait.Name + " (" +
+                                                    trait.HouseholdTrait.Classification + ") \n";
+                        }
+
+                        var totalTraitsAvailable = "";
+                        foreach (var trait in sim.HouseholdTraits.Items) {
+                            foreach (var tag in trait.Tags)
+                            {
+                                if (tag.Tag.Name == entry.TraitTag.Name) {
+                                    var livingpatterns = string.Join(", ", trait.LivingPatternTags.Select(x=> x.Tag.Name));
+                                    totalTraitsAvailable += trait.Name + " Max: " + trait.MaximumNumberInCHH + " [" + livingpatterns +  "]\n";
+                                }
+                            }
+                        }
+                        AssignSingleTrait(settlementTraitLimits, template, rnd, chh,
+                            forbiddenTraitTags, entry, potentialTraits, allTag,
+                            ref traitexists, ref classificationexists, ref invalidForPerson,
+                            ref violatesLimit, ref successes, out filteredTraits);
+                        throw new LPGException( template.Name + ": " + persons  + ": Tried to assign " + entry.TraitTag.Name + " but didn't succeed although the trait is marked as mandatory with a count of " + numberofTraits +
+                                               ". Maybe you need to have more kind of work, school or sleep? " +
+                                               "Reasons for failure during 100 tries to find a match: \n" + reasonString + "\nExisting traits in the household for this tag:\n" + traitsInHousehold +
+                                               "\n\nTraits available in the database: " + totalTraitsAvailable + "\n\nTraits available after filtering for conditions:\n"  +
+                                               filteredTraits + " \n\nTraits assigned and classification:\n" + traitsClassification +
+                                               "Only found " + successes + " out of " + numberofTraits + " traits for " + entry.TraitTag.PrettyName +
+                                               " for the person " + persons + "." + Environment.NewLine + reasonString
+                                               );
                     }
                 }
             }
@@ -306,7 +343,7 @@ namespace Database.Templating {
 
         private static void AssignSingleTrait([JetBrains.Annotations.NotNull] List<STTraitLimit> settlementTraitLimits, HouseholdTemplate template, [JetBrains.Annotations.NotNull] Random rnd, [JetBrains.Annotations.NotNull] ModularHousehold chh,
                                               List<TraitTag> forbiddenTraitTags, [JetBrains.Annotations.NotNull] HHTemplateEntry entry, [JetBrains.Annotations.NotNull] List<HouseholdTrait> potentialTraits, LivingPatternTag allTag,ref int traitexists,
-                                              ref int classificationexists, ref int invalidForPerson, ref int violatesLimit, ref int successes)
+                                              ref int classificationexists, ref int invalidForPerson, ref int violatesLimit, ref int successes, [NotNull] out string filteredTraits)
         {
             var personnumber = rnd.Next(entry.Persons.Count);
             var person = entry.Persons[personnumber].Person;
@@ -336,7 +373,7 @@ namespace Database.Templating {
                 throw new DataIntegrityException(s);
             }
 
-            var ft2 = new List<HouseholdTrait>();
+            var filteredTraits2 = new List<HouseholdTrait>();
             foreach (var trait1 in filteredTraits1) {
                 bool foundForbidden = false;
                 foreach (var tag in forbiddenTraitTags) {
@@ -346,11 +383,17 @@ namespace Database.Templating {
                 }
 
                 if (!foundForbidden) {
-                    ft2.Add(trait1);
+                    filteredTraits2.Add(trait1);
                 }
             }
 
-            PickATrait(rnd, chh, ft2, ref traitexists, ref classificationexists, ref invalidForPerson, person, out var trait, settlementTraitLimits,
+            filteredTraits = "";
+            foreach (var householdTrait in filteredTraits2) {
+                var tags = string.Join(",", householdTrait.LivingPatternTags.Select(x => x.Tag.Name));
+                filteredTraits += householdTrait.Name +"(" + tags + ")\n";
+            }
+
+            PickATrait(rnd, chh, filteredTraits2, ref traitexists, ref classificationexists, ref invalidForPerson, person, out var trait, settlementTraitLimits,
                 ref violatesLimit, entry.TraitTag);
 
             if (trait != null) {

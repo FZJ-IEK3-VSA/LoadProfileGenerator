@@ -9,7 +9,7 @@ using OxyPlot.Series;
 
 namespace ChartCreator.SettlementMergePlots {
     internal class HouseholdTagDistributionChart {
-        public void Run(string classificaiton, List<Tuple<string, int>> originalEntries, string newFileName) {
+        public void Run(string classification, List<Tuple<string, int>> originalEntries, string newFileName) {
             var entries =
                 originalEntries
                     .Select(x => new Tuple<string, int>(ChartLocalizer.Get().GetTranslation(x.Item1), x.Item2))
@@ -22,7 +22,7 @@ namespace ChartCreator.SettlementMergePlots {
             var ca = new CategoryAxis();
             ca.Position = AxisPosition.Left;
             ca.TickStyle = TickStyle.None;
-            ca.Title = ChartLocalizer.Get().GetTranslation(classificaiton);
+            ca.Title = ChartLocalizer.Get().GetTranslation(classification);
             pm.Axes.Add(ca);
             var la = new LinearAxis();
             la.Position = AxisPosition.Bottom;
