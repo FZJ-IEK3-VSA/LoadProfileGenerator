@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using Automation;
 using Automation.ResultFiles;
@@ -37,6 +38,8 @@ namespace CalcPostProcessor.LoadTypeProcessingSteps {
                 dstLoadType.ConvertToLoadTypeInformation());
             sumfile.WriteLine(dstLoadType.Name + "." + dsc.GenerateDateStampHeader() + "Sum [" +
                               dstLoadType.UnitOfSum + "]");
+            NumberFormatInfo nfi = new NumberFormatInfo();
+            nfi.NumberDecimalSeparator = Repository.CalcParameters.DecimalSeperator;
             foreach (var efr in p.EnergyFileRows)
             {
                 if (!efr.Timestep.DisplayThisStep)
@@ -45,7 +48,8 @@ namespace CalcPostProcessor.LoadTypeProcessingSteps {
                 }
 
                 var time = dsc.MakeTimeString(efr.Timestep);
-                var sumstring = time + (efr.SumCached * dstLoadType.ConversionFactor).ToString(Config.CultureInfo);
+                double val = (efr.SumCached * dstLoadType.ConversionFactor);
+                var sumstring = time +val.ToString(nfi);
                 sumfile.WriteLine(sumstring);
             }
         }

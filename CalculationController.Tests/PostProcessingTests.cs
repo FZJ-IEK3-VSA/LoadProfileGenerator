@@ -87,12 +87,22 @@ namespace CalculationController.Tests
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void PostProcessingTestCompareAllResultFiles()
         {
+            double myParse(string s, NumberFormatInfo nfi)
+            {
+                if (s.Length > 3 && !s.Contains(nfi.NumberDecimalSeparator)) {
+                    throw new LPGException("no decimal: " + s);
+                }
+                var d = double.Parse(s, nfi);
+                return d;
+            }
+
             //base.SkipEndCleaning = true;
             CleanTestBase.RunAutomatically(false);
             Config.ReallyMakeAllFilesIncludingBothSums = true;
+
             var start = DateTime.Now;
-            using (var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass()))
-            {
+            using (var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass())) {
+                wd1.SkipCleaning = true;
                 Logger.Threshold = Severity.Error;
                 var path = wd1.WorkingDirectory;
 
@@ -108,15 +118,17 @@ namespace CalculationController.Tests
                     Config.ExtraUnitTestChecking = true;
                     sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
                     sim.MyGeneralConfig.WriteExcelColumn = "False";
-                    sim.MyGeneralConfig.Enable(CalcOption.DeviceProfilesIndividualHouseholds);
-                    sim.MyGeneralConfig.Enable(CalcOption.DeviceProfilesHouse);
-                    sim.MyGeneralConfig.Enable(CalcOption.HouseSumProfilesFromDetailedDats);
-                    sim.MyGeneralConfig.Enable(CalcOption.DeviceProfileExternalEntireHouse);
-                    sim.MyGeneralConfig.Enable(CalcOption.SumProfileExternalEntireHouse);
-                    sim.MyGeneralConfig.Enable(CalcOption.SumProfileExternalIndividualHouseholds);
-                    sim.MyGeneralConfig.Enable(CalcOption.PolysunImportFiles);
-                    sim.MyGeneralConfig.Enable(CalcOption.HouseSumProfilesFromDetailedDats);
-                    sim.MyGeneralConfig.Enable(CalcOption.OverallSum);
+                    var decimalSep = ":";
+                    sim.MyGeneralConfig.CSVCharacter = ";";
+                    //sim.MyGeneralConfig.Enable(CalcOption.DeviceProfilesIndividualHouseholds);
+                    //sim.MyGeneralConfig.Enable(CalcOption.DeviceProfilesHouse);
+                    //sim.MyGeneralConfig.Enable(CalcOption.HouseSumProfilesFromDetailedDats);
+                    //sim.MyGeneralConfig.Enable(CalcOption.DeviceProfileExternalEntireHouse);
+                    //sim.MyGeneralConfig.Enable(CalcOption.SumProfileExternalEntireHouse);
+                    //sim.MyGeneralConfig.Enable(CalcOption.SumProfileExternalIndividualHouseholds);
+                    //sim.MyGeneralConfig.Enable(CalcOption.PolysunImportFiles);
+                    //sim.MyGeneralConfig.Enable(CalcOption.HouseSumProfilesFromDetailedDats);
+                    //sim.MyGeneralConfig.Enable(CalcOption.OverallSum);
                     Logger.Info("Temperature:" + sim.MyGeneralConfig.SelectedTemperatureProfile);
                     Logger.Info("Geographic:" + sim.MyGeneralConfig.GeographicLocation);
                     sim.Should().NotBeNull();
@@ -125,16 +137,25 @@ namespace CalculationController.Tests
                     List<CalcOption> options = new List<CalcOption>(); // sim.MyGeneralConfig.AllEnabledOptions();
                     options.Add(CalcOption.DeviceProfilesHouse);
                     options.Add(CalcOption.DeviceProfilesIndividualHouseholds);
+                    options.Add(CalcOption.HouseSumProfilesFromDetailedDats);
+                    options.Add(CalcOption.SumProfileExternalEntireHouse);
+                    options.Add(CalcOption.SumProfileExternalIndividualHouseholds);
+                    options.Add(CalcOption.OverallSum);
+                    options.Add(CalcOption.DeviceProfileExternalEntireHouse);
+                    options.Add(CalcOption.PolysunImportFiles);
                     CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
                         sim.TemperatureProfiles[0], sim.ModularHouseholds[0], EnergyIntensityType.Random,
                         false,  null, LoadTypePriority.All, null, null, null, options ,
                         new DateTime(2013, 1, 1), new DateTime(2013, 1, 2), new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 10, 0), false, false, false, 3, 3,
-                        calculationProfiler, wd1.WorkingDirectory,false,false, ".", false);
+                        calculationProfiler, wd1.WorkingDirectory,false,false, decimalSep, false);
                     var cm = cmf.GetCalcManager(sim, csps, false);
                     cm.Run(ReportCancelFunc);
                     Logger.ImportantInfo("Duration:" + (DateTime.Now - start).TotalSeconds + " seconds");
                     var pathdp = Path.Combine(wd1.WorkingDirectory,
                         DirectoryNames.CalculateTargetdirectory(TargetDirectory.Results), "DeviceProfiles.Electricity.csv");
+                    NumberFormatInfo nfi = new NumberFormatInfo();
+                    nfi.NumberDecimalSeparator = decimalSep;
+
                     double sumDeviceProfiles = 0;
                     using (var sr = new StreamReader(pathdp))
                     {
@@ -152,12 +173,13 @@ namespace CalculationController.Tests
                             {
                                 if (arr[i].Length > 0)
                                 {
-                                    var d = double.Parse(arr[i], CultureInfo.CurrentCulture);
-                                    sumDeviceProfiles += d;
+                                    sumDeviceProfiles += myParse(arr[i], nfi);
                                 }
                             }
                         }
                     }
+
+                    sumDeviceProfiles.Should().BeGreaterThan(0);
                     Logger.Info("SumDeviceProfiles: " + sumDeviceProfiles);
                     var pathSumProfiles = Path.Combine(wd1.WorkingDirectory,
                         DirectoryNames.CalculateTargetdirectory(TargetDirectory.Results), "SumProfiles.Electricity.csv");
@@ -176,14 +198,14 @@ namespace CalculationController.Tests
                                 {
                                     if (arr[i].Length > 0)
                                     {
-                                        var d = double.Parse(arr[i], CultureInfo.CurrentCulture);
-                                        sumSumProfiles += d;
+                                        sumSumProfiles += myParse(arr[i], nfi);
                                     }
                                 }
                             }
                         }
                     }
-                    sumDeviceProfiles.Should().BeApproximatelyWithinPercent(sumSumProfiles,0.001);
+                    
+                    sumDeviceProfiles.Should().BeApproximatelyWithinPercent(sumSumProfiles,0.001,"path: \n" + pathSumProfiles + "\n" + sumSumProfiles +" vs. \n" + pathdp + "\n" + sumDeviceProfiles);
                     Logger.Info("sumSumProfiles: " + sumSumProfiles);
                     var pathExtSumProfiles = Path.Combine(wd1.WorkingDirectory,
                         DirectoryNames.CalculateTargetdirectory(TargetDirectory.Results), "SumProfiles_600s.Electricity.csv");
@@ -202,8 +224,7 @@ namespace CalculationController.Tests
                                 {
                                     if (arr[i].Length > 0)
                                     {
-                                        var d = double.Parse(arr[i], CultureInfo.CurrentCulture);
-                                        sumExtSumProfiles += d;
+                                        sumExtSumProfiles += myParse(arr[i], nfi);
                                     }
                                 }
                             }
@@ -230,8 +251,7 @@ namespace CalculationController.Tests
                                 {
                                     if (arr[i].Length > 0)
                                     {
-                                        var d = double.Parse(arr[i], CultureInfo.CurrentCulture);
-                                        sumExtDeviceProfiles += d;
+                                        sumExtDeviceProfiles += myParse(arr[i], nfi);
                                     }
                                 }
                             }
@@ -285,15 +305,14 @@ namespace CalculationController.Tests
                                 {
                                     if (arr[i].Length > 0)
                                     {
-                                        var d = double.Parse(arr[i], CultureInfo.CurrentCulture);
-                                        sumExtSumProfilesHH1 += d;
+                                        sumExtSumProfilesHH1 += myParse(arr[i], nfi);
                                     }
                                 }
                             }
                         }
                     }
                     Logger.Info("sumExtSumProfiles.hh1: " + sumExtSumProfilesHH1);
-                    sumDeviceProfiles.Should().BeApproximatelyWithinPercent(sumExtSumProfilesHH1,0.001);
+                    sumDeviceProfiles.Should().BeApproximatelyWithinPercent(sumExtSumProfilesHH1,0.001, "path: \n" + pathExtSumProfileshh1 + "\n" + sumExtSumProfilesHH1 + " vs. \n" + pathdp + "\n" + sumDeviceProfiles);
 
                     var pathOverallSum = Path.Combine(wd1.WorkingDirectory,
                         DirectoryNames.CalculateTargetdirectory(TargetDirectory.Results), "Overall.SumProfiles.Electricity.csv");
@@ -310,9 +329,8 @@ namespace CalculationController.Tests
 
                                 for (var i = 2; i < arr.Length; i++)
                                 {
-                                    if (arr[i].Length > 0)
-                                    {
-                                        var d = double.Parse(arr[i], CultureInfo.CurrentCulture);
+                                    if (arr[i].Length > 0) {
+                                        var d = myParse(arr[i], nfi); // double.Parse(arr[i], CultureInfo.InvariantCulture);
                                         overallSum += d;
                                     }
                                 }
@@ -320,7 +338,7 @@ namespace CalculationController.Tests
                         }
                     }
                     Logger.Info("overallSum: " + overallSum);
-                    sumDeviceProfiles.Should().BeApproximatelyWithinPercent(overallSum,0.001);
+                    sumDeviceProfiles.Should().BeApproximatelyWithinPercent(overallSum,0.001, "path: \n" + pathdp + "\n" + sumDeviceProfiles + " vs. \n" + pathOverallSum + "\n" + overallSum);
 
                     CleanTestBase.RunAutomatically(true);
                 }

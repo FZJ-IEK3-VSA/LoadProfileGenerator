@@ -269,7 +269,7 @@ namespace SimulationEngine.Tests {
                 CalcOption.CalculationFlameChart,
                 CalcOption.MakeGraphics,
                 CalcOption.LogErrorMessages,
-                CalcOption.EnergyCarpetPlot,
+                //CalcOption.EnergyCarpetPlot,
                 CalcOption.DurationCurve,
                 CalcOption.TransportationDeviceCarpetPlot,
                 CalcOption.LocationCarpetPlot

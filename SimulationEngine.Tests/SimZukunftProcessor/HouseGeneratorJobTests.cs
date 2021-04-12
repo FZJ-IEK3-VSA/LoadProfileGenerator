@@ -309,7 +309,8 @@ namespace SimulationEngine.Tests.SimZukunftProcessor {
                         OutputDirectory = wd.Combine("Results"),
                         CalcOptions = new List<CalcOption> {
                             CalcOption.HouseSumProfilesFromDetailedDats, CalcOption.DeviceProfilesIndividualHouseholds,
-                            CalcOption.EnergyStorageFile, CalcOption.EnergyCarpetPlot,
+                            CalcOption.EnergyStorageFile,
+                            //CalcOption.EnergyCarpetPlot,
                             CalcOption.HouseholdContents
                         }
                     };
@@ -365,7 +366,8 @@ namespace SimulationEngine.Tests.SimZukunftProcessor {
 
                             CalcOptions = new List<CalcOption> {
                                 CalcOption.HouseSumProfilesFromDetailedDats, CalcOption.DeviceProfilesIndividualHouseholds,
-                                CalcOption.EnergyStorageFile, CalcOption.EnergyCarpetPlot,
+                                CalcOption.EnergyStorageFile,
+                                //CalcOption.EnergyCarpetPlot,
                                 CalcOption.HouseholdContents, CalcOption.TotalsPerLoadtype
                             },
                             DeleteDAT = false

@@ -95,7 +95,7 @@ namespace ReleaseMaker
                             {
                                 throw new LPGException("calcoption not set");
                             }
-                            hj.CalcSpec.CalcOptions.Add(CalcOption.EnergyCarpetPlot);
+                            //hj.CalcSpec.CalcOptions.Add(CalcOption.EnergyCarpetPlot);
                             hj.CalcSpec.CalcOptions.Add(CalcOption.HouseSumProfilesFromDetailedDats);
                             string fn = Path.Combine(dir, AutomationUtili.CleanFileName(mhh.Name) + "." + i + ".json");
                             File.WriteAllText(fn, JsonConvert.SerializeObject(hj, Formatting.Indented));

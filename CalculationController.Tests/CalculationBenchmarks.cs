@@ -160,7 +160,6 @@ namespace CalculationController.Tests {
             CalculationProfiler cp = new CalculationProfiler();
             cp.StartPart(Utili.GetCurrentMethodAndClass());
             using (var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass())) {
-                wd1.SkipCleaning = true;
                 var start = DateTime.Now;
 
                 Logger.Threshold = Severity.Error;
@@ -880,7 +879,7 @@ namespace CalculationController.Tests {
             // wd1.CleanUp();
             //CleanTestBase.Run(true);
         }
-
+        /*
         [Fact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void EnergyCarpetPlotTest()
@@ -930,7 +929,7 @@ namespace CalculationController.Tests {
             }
             CleanTestBase.RunAutomatically(true);
         }
-
+        */
         [Fact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.ManualOnly)]
         public void InvalidPersonActivitiesCheck()

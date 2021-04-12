@@ -2,7 +2,7 @@ using Automation;
 using Xunit;
 using Common.Tests;
 using Xunit.Abstractions;
-
+using JetBrains.Annotations;
 #pragma warning disable 8602
 namespace SimulationEngine.Tests {
 public class SystematicCalcOptionTests :UnitTestBaseClass {
@@ -60,19 +60,6 @@ public void TestHouseJobsDetailedDatFiles(){
 public void TestHouseJobsActionCarpetPlot(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.ActionCarpetPlot;
-      HouseJobTestHelper.RunSingleHouse((sim) => {
-      var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim, hhguid,TestDuration.TwelveMonths);
-      sim.MyGeneralConfig.PerformCleanUpChecksBool = false;
-      hj.CalcSpec.CalcOptions.Add(co); return hj;
-      }, (x) => HouseJobTestHelper.CheckForResultfile(x, co),true);
-}
-
-
-[Fact]
-[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
-public void TestHouseJobsEnergyCarpetPlot(){
-      const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
-      const CalcOption co = CalcOption.EnergyCarpetPlot;
       HouseJobTestHelper.RunSingleHouse((sim) => {
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim, hhguid,TestDuration.TwelveMonths);
       hj.CalcSpec.CalcOptions.Add(co); return hj;
@@ -532,7 +519,7 @@ public void TestHouseJobsBodilyActivityStatistics(){
       HouseJobTestHelper.RunSingleHouse((sim) => {
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim, hhguid,TestDuration.TwelveMonths);
       hj.CalcSpec.CalcOptions.Add(co); return hj;
-      }, (x) => HouseJobTestHelper.CheckForResultfile(x, co),true);
+      }, (x) => HouseJobTestHelper.CheckForResultfile(x, co));
 }
 
 
@@ -661,6 +648,54 @@ public void TestHouseJobsTansportationDeviceJsons(){
 public void TestHouseJobsDeviceTaggingSets(){
       const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
       const CalcOption co = CalcOption.DeviceTaggingSets;
+      HouseJobTestHelper.RunSingleHouse((sim) => {
+      var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim, hhguid,TestDuration.TwelveMonths);
+      hj.CalcSpec.CalcOptions.Add(co); return hj;
+      }, (x) => HouseJobTestHelper.CheckForResultfile(x, co));
+}
+
+
+[Fact]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
+public void TestHouseJobsAffordanceDefinitions(){
+      const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
+      const CalcOption co = CalcOption.AffordanceDefinitions;
+      HouseJobTestHelper.RunSingleHouse((sim) => {
+      var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim, hhguid,TestDuration.TwelveMonths);
+      hj.CalcSpec.CalcOptions.Add(co); return hj;
+      }, (x) => HouseJobTestHelper.CheckForResultfile(x, co));
+}
+
+
+[Fact]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
+public void TestHouseJobsJsonHouseholdSumFilesNoFlex(){
+      const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
+      const CalcOption co = CalcOption.JsonHouseholdSumFilesNoFlex;
+      HouseJobTestHelper.RunSingleHouse((sim) => {
+      var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim, hhguid,TestDuration.TwelveMonths);
+      hj.CalcSpec.CalcOptions.Add(co); return hj;
+      }, (x) => HouseJobTestHelper.CheckForResultfile(x, co));
+}
+
+
+[Fact]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
+public void TestHouseJobsHouseholdSumProfilesCsvNoFlex(){
+      const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
+      const CalcOption co = CalcOption.HouseholdSumProfilesCsvNoFlex;
+      HouseJobTestHelper.RunSingleHouse((sim) => {
+      var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim, hhguid,TestDuration.TwelveMonths);
+      hj.CalcSpec.CalcOptions.Add(co); return hj;
+      }, (x) => HouseJobTestHelper.CheckForResultfile(x, co));
+}
+
+
+[Fact]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
+public void TestHouseJobsFlexibilityEvents(){
+      const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
+      const CalcOption co = CalcOption.FlexibilityEvents;
       HouseJobTestHelper.RunSingleHouse((sim) => {
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim, hhguid,TestDuration.TwelveMonths);
       hj.CalcSpec.CalcOptions.Add(co); return hj;

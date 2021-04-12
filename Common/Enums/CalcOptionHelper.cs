@@ -11,7 +11,7 @@ namespace Common.Enums {
             CalcOptionDictionary.Add(CalcOption.HouseSumProfilesFromDetailedDats, "Individual sum profile files");
             CalcOptionDictionary.Add(CalcOption.OverallSum, "Overall sum profile file");
             CalcOptionDictionary.Add(CalcOption.ActionCarpetPlot, "Action carpet plots");
-            CalcOptionDictionary.Add(CalcOption.EnergyCarpetPlot, "Energy carpet plots");
+            //CalcOptionDictionary.Add(CalcOption.EnergyCarpetPlot, "Energy carpet plots");
             CalcOptionDictionary.Add(CalcOption.TimeOfUsePlot, "Time of use statistic");
             CalcOptionDictionary.Add(CalcOption.VariableLogFile, "Logfile with the status of the variables in each timestep");
             CalcOptionDictionary.Add(CalcOption.ActivationsPerHour, "Device Activations per hour statistic");
@@ -62,6 +62,10 @@ namespace Common.Enums {
             CalcOptionDictionary.Add(CalcOption.TansportationDeviceJsons, "Jsons for more detailed transportation device modelling.");
             CalcOptionDictionary.Add(CalcOption.DeviceTaggingSets, "Device Tagging Sets");
             CalcOptionDictionary.Add(CalcOption.AffordanceDefinitions, "Affordance Definitions");
+            CalcOptionDictionary.Add(CalcOption.JsonHouseholdSumFilesNoFlex, "Household sums with the flexible devices excluded as JSON");
+            CalcOptionDictionary.Add(CalcOption.HouseholdSumProfilesCsvNoFlex, "Household sums with the flexible devices excluded as CSV");
+            CalcOptionDictionary.Add(CalcOption.FlexibilityEvents, "Flexibility Events describing shiftable devices such as washing machines");
+
         }
 
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]

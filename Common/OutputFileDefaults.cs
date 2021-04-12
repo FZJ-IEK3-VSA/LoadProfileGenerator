@@ -53,7 +53,7 @@ namespace Common {
                 case OutputFileDefault.Reasonable:
                     l.Add(CalcOption.ActionCarpetPlot);
                     l.Add(CalcOption.HouseSumProfilesFromDetailedDats);
-                    l.Add(CalcOption.EnergyCarpetPlot);
+                    //l.Add(CalcOption.EnergyCarpetPlot);
                     l.Add(CalcOption.TimeOfUsePlot);
                     l.Add(CalcOption.VariableLogFile);
                     l.Add(CalcOption.ActivationsPerHour);

@@ -158,7 +158,8 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
             if (externalfactor == 1) {
                 return;
             }
-
+            NumberFormatInfo nfi = new NumberFormatInfo();
+            nfi.NumberDecimalSeparator = Repository.CalcParameters.DecimalSeperator;
             var externalFileName =
                 calcParameters.ExternalStepsize.TotalSeconds.ToString(CultureInfo.InvariantCulture);
             var columns =
@@ -240,7 +241,8 @@ namespace CalcPostProcessor.LoadTypeHouseholdSteps {
                         calcParameters.IsSet(CalcOption.SumProfileExternalIndividualHouseholdsAsJson)) {
                         double sum = efr.GetSumForCertainCols(columns) * dstLoadType.ConversionFactor;
                         if (calcParameters.IsSet(CalcOption.SumProfileExternalIndividualHouseholds)) {
-                            var sumstring = sb.ToString() + sum;
+                            
+                            var sumstring = sb.ToString() + sum.ToString(nfi);
                             if (sumfile == null) {
                                 throw new LPGException("File was null. Please report.");
                             }

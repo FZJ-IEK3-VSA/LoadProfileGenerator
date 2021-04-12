@@ -38,14 +38,17 @@ namespace Database.Tests.Tables.ModularHouseholds {
 
                     //check import
                     List<HouseholdTemplate.JsonDto> dto1 = new List<HouseholdTemplate.JsonDto>();
-                    foreach (var template in sim1.HouseholdTemplates.Items)
-                    {
-                        dto1.Add(template.GetJson());
-                    }
+                    //#foreach (var template in sim1.HouseholdTemplates.Items)
+                    //{
+                      //  dto1.Add(template.GetJson());
+                    //}
 
+                    dto1.Add(sim1.HouseholdTemplates[0].GetJson());
+                    sim1.HouseholdTemplates.Items.Sort();
                     sim2.HouseholdTemplates.DeleteItem(sim2.HouseholdTemplates[0]);
                     HouseholdTemplate.ImportObjectFromJson(sim2, dto1);
                     sim2.HouseholdTemplates.Items.Sort();
+                    sim1.HouseholdTemplates[0].Name.Should().Be(sim2.HouseholdTemplates[0].Name);
                     sim1.HouseholdTemplates[0].Should().BeEquivalentTo(sim2.HouseholdTemplates[0], o => o
                         .Using<IRelevantGuidProvider>(x => x.Subject.RelevantGuid.Should().BeEquivalentTo(x.Expectation.RelevantGuid)).WhenTypeIs<IRelevantGuidProvider>()
                                 .Excluding(x => x.SelectedMemberPath.EndsWith("ConnectionString", StringComparison.OrdinalIgnoreCase)

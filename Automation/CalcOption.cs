@@ -5,7 +5,7 @@
         OverallSum = 2,
         DetailedDatFiles = 3,
         ActionCarpetPlot = 4,
-        EnergyCarpetPlot = 5,
+        //EnergyCarpetPlot = 5,
         TimeOfUsePlot = 6,
         VariableLogFile = 7,
         ActivationsPerHour = 8,
