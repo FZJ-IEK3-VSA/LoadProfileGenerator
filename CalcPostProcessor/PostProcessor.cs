@@ -330,38 +330,44 @@ namespace CalcPostProcessor {
         private void RunLoadTypeDependend([CanBeNull] [ItemNotNull] List<string> loadTypesForPostProcessing)
         {
             if (_loadTypeSumPostProcessingSteps.Any(x => x.IsEnabled())) {
-                _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Calculation of the sums per load type");
-                foreach (var calcLoadType in _repository.LoadTypes) {
-                    //if (!_fft.CheckForResultFileEntry(ResultFileID.OnlineSumActivationFiles,
-                    //    calcLoadType.Name,
-                    //    Constants.GeneralHouseholdKey,
-                    //    null,
-                    //    null)) {
-                    //    Logger.Info("Skipping post-processing of load type " + calcLoadType.Name +
-                    //                " because there was no sum dat file generated for it.");
-                    //    continue;
-                    //}
+                try {
+                    _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Calculation of the sums per load type");
+                    foreach (var calcLoadType in _repository.LoadTypes) {
+                        //if (!_fft.CheckForResultFileEntry(ResultFileID.OnlineSumActivationFiles,
+                        //    calcLoadType.Name,
+                        //    Constants.GeneralHouseholdKey,
+                        //    null,
+                        //    null)) {
+                        //    Logger.Info("Skipping post-processing of load type " + calcLoadType.Name +
+                        //                " because there was no sum dat file generated for it.");
+                        //    continue;
+                        //}
 
-                    if (loadTypesForPostProcessing != null && loadTypesForPostProcessing.Count > 0 &&
-                        !loadTypesForPostProcessing.Contains(calcLoadType.Name)) {
-                        Logger.Info("Skipping post-processing of load type " + calcLoadType.Name + " because it was not specified.");
-                        continue;
+                        if (loadTypesForPostProcessing != null && loadTypesForPostProcessing.Count > 0 &&
+                            !loadTypesForPostProcessing.Contains(calcLoadType.Name)) {
+                            Logger.Info("Skipping post-processing of load type " + calcLoadType.Name + " because it was not specified.");
+                            continue;
+                        }
+
+                        try {
+                            _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - " + calcLoadType.Name);
+
+                            foreach (var loadTypePostProcessingStep in _loadTypeSumPostProcessingSteps) {
+                                var ltsp = new LoadtypeSumStepParameters(calcLoadType);
+                                loadTypePostProcessingStep.Run(ltsp);
+                            }
+                        }
+                        finally {
+                            _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - " + calcLoadType.Name);
+                        }
                     }
-
-                    _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - " + calcLoadType.Name);
-
-                    foreach (var loadTypePostProcessingStep in _loadTypeSumPostProcessingSteps) {
-                        var ltsp = new LoadtypeSumStepParameters(calcLoadType);
-                        loadTypePostProcessingStep.Run(ltsp);
-                    }
-
-                    _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - " + calcLoadType.Name);
                 }
-
-                _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Calculation of the sums per load type");
+                finally {
+                    _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Calculation of the sums per load type");
+                }
             }
 
-            if (!_loadTypePostProcessingSteps.Any(x => x.IsEnabled()) && !_householdloadTypePostProcessingSteps.Any(x => x.IsEnabled())) {
+                if (!_loadTypePostProcessingSteps.Any(x => x.IsEnabled()) && !_householdloadTypePostProcessingSteps.Any(x => x.IsEnabled())) {
                 return;
             }
 
@@ -384,27 +390,30 @@ namespace CalcPostProcessor {
                         continue;
                     }
 
-                    _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - " + calcLoadType.Name);
-                    var energyFileRows = ReadOnlineEnergyFileRowsIntoMemory(calcLoadType, out var total);
-                    fileCount++;
-                    if (Config.IsInUnitTesting && Config.ExtraUnitTestChecking) {
-                        Logger.Info("Starting total:" + total);
-                        CheckTotalsForChange(energyFileRows, total);
-                    }
+                    try {
+                        _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - " + calcLoadType.Name);
+                        var energyFileRows = ReadOnlineEnergyFileRowsIntoMemory(calcLoadType, out var total);
+                        fileCount++;
+                        if (Config.IsInUnitTesting && Config.ExtraUnitTestChecking) {
+                            Logger.Info("Starting total:" + total);
+                            CheckTotalsForChange(energyFileRows, total);
+                        }
 
-                    foreach (var loadTypePostProcessingStep in _loadTypePostProcessingSteps) {
-                        var ltsp = new LoadtypeStepParameters(calcLoadType, energyFileRows);
-                        loadTypePostProcessingStep.Run(ltsp);
-                    }
+                        foreach (var loadTypePostProcessingStep in _loadTypePostProcessingSteps) {
+                            var ltsp = new LoadtypeStepParameters(calcLoadType, energyFileRows);
+                            loadTypePostProcessingStep.Run(ltsp);
+                        }
 
-                    foreach (var entry in _repository.HouseholdKeys) {
-                        foreach (var ltpps in _householdloadTypePostProcessingSteps) {
-                            var ltsp = new HouseholdLoadtypeStepParameters(entry, calcLoadType, energyFileRows);
-                            ltpps.Run(ltsp);
+                        foreach (var entry in _repository.HouseholdKeys) {
+                            foreach (var ltpps in _householdloadTypePostProcessingSteps) {
+                                var ltsp = new HouseholdLoadtypeStepParameters(entry, calcLoadType, energyFileRows);
+                                ltpps.Run(ltsp);
+                            }
                         }
                     }
-
-                    _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - " + calcLoadType.Name);
+                    finally {
+                        _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - " + calcLoadType.Name);
+                    }
                 }
 
                 if (fileCount == 0) {

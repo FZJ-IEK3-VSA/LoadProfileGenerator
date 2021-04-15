@@ -272,7 +272,8 @@ namespace SimulationEngine.Tests {
                 //CalcOption.EnergyCarpetPlot,
                 CalcOption.DurationCurve,
                 CalcOption.TransportationDeviceCarpetPlot,
-                CalcOption.LocationCarpetPlot
+                CalcOption.LocationCarpetPlot,
+                CalcOption.FlexibilityEvents
             };
             if (!optionsThatDontResultInFiles.Contains(option)) {
                 if (!foundOptions.Contains(option)) {

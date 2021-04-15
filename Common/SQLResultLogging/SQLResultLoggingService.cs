@@ -112,6 +112,9 @@ namespace Common.SQLResultLogging {
         public List<ResultTableDefinition> LoadTables([JetBrains.Annotations.NotNull] HouseholdKey dbKey)
         {
             List<ResultTableDefinition> td = new List<ResultTableDefinition>();
+            if (!FilenameByHouseholdKey.ContainsKey(dbKey)) {
+                return td;
+            }
             const string sql = "SELECT * FROM TableDescription";
 
             string constr = "Data Source=" + FilenameByHouseholdKey[dbKey].Filename + ";Version=3";

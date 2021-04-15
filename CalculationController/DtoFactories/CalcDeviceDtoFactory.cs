@@ -139,7 +139,7 @@ namespace CalculationController.DtoFactories
                         if (hhautodev.Variable != null) {
                             var myVariable = _calcVariableRepositoryDtoFactory.RegisterVariableIfNotRegistered(hhautodev.Variable, hhautodev.Location,
                                 householdKey, locationDict);
-                            VariableRequirementDto req = new VariableRequirementDto(hhautodev.Variable?.Name, hhautodev.VariableValue,
+                            VariableRequirementDto req = new VariableRequirementDto(hhautodev.Variable?.Name??"", hhautodev.VariableValue,
                                 calcLocation.Name, calcLocation.Guid, hhautodev.VariableCondition, myVariable.Guid);
                             requirementDtos.Add(req);
                         }

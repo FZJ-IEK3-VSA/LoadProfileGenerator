@@ -102,7 +102,6 @@ namespace CalculationController.Tests
 
             var start = DateTime.Now;
             using (var wd1 = new WorkingDir(Utili.GetCurrentMethodAndClass())) {
-                wd1.SkipCleaning = true;
                 Logger.Threshold = Severity.Error;
                 var path = wd1.WorkingDirectory;
 
@@ -118,7 +117,7 @@ namespace CalculationController.Tests
                     Config.ExtraUnitTestChecking = true;
                     sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
                     sim.MyGeneralConfig.WriteExcelColumn = "False";
-                    var decimalSep = ":";
+                    const string decimalSep = ":";
                     sim.MyGeneralConfig.CSVCharacter = ";";
                     //sim.MyGeneralConfig.Enable(CalcOption.DeviceProfilesIndividualHouseholds);
                     //sim.MyGeneralConfig.Enable(CalcOption.DeviceProfilesHouse);
@@ -204,7 +203,6 @@ namespace CalculationController.Tests
                             }
                         }
                     }
-                    
                     sumDeviceProfiles.Should().BeApproximatelyWithinPercent(sumSumProfiles,0.001,"path: \n" + pathSumProfiles + "\n" + sumSumProfiles +" vs. \n" + pathdp + "\n" + sumDeviceProfiles);
                     Logger.Info("sumSumProfiles: " + sumSumProfiles);
                     var pathExtSumProfiles = Path.Combine(wd1.WorkingDirectory,

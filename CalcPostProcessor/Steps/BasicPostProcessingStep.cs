@@ -95,9 +95,14 @@ namespace CalcPostProcessor.Steps
             if (!IsEnabled()) {
                 return;
             }
-            _calculationProfiler.StartPart(StepName);
-            PerformActualStep(parameters);
-            _calculationProfiler.StopPart(StepName);
+
+            try {
+                _calculationProfiler.StartPart(StepName);
+                PerformActualStep(parameters);
+            }
+            finally {
+                _calculationProfiler.StopPart(StepName);
+            }
         }
 
         protected abstract void PerformActualStep([NotNull] IStepParameters parameters);

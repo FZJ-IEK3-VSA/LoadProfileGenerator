@@ -1,8 +1,8 @@
+using System;
 using Automation;
 using Xunit;
 using Common.Tests;
 using Xunit.Abstractions;
-using JetBrains.Annotations;
 #pragma warning disable 8602
 namespace SimulationEngine.Tests {
 public class SystematicCalcOptionTests :UnitTestBaseClass {
@@ -698,7 +698,8 @@ public void TestHouseJobsFlexibilityEvents(){
       const CalcOption co = CalcOption.FlexibilityEvents;
       HouseJobTestHelper.RunSingleHouse((sim) => {
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim, hhguid,TestDuration.TwelveMonths);
-      hj.CalcSpec.CalcOptions.Add(co); return hj;
+      hj.CalcSpec.CalcOptions.Add(co);
+      hj.CalcSpec.EndDate = new DateTime(2020, 1, 3); return hj;
       }, (x) => HouseJobTestHelper.CheckForResultfile(x, co));
 }
 

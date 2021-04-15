@@ -95,7 +95,7 @@ namespace ReleaseMaker {
                 }
 
                 var limitsToFix = new List<TimeLimit> {
-                    sim.TimeLimits.FindFirstByName("Below 50W solar radation")
+                    sim.TimeLimits.FindFirstByNameNotNull("Below 50W solar radation")
                 };
                 foreach (var timeLimit in limitsToFix) {
                     foreach (var boolEntry in timeLimit.TimeLimitEntries) {

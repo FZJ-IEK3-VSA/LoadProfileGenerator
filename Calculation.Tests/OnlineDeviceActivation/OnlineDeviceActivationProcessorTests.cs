@@ -300,6 +300,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                 calcParameters.Enable(CalcOption.TotalsPerLoadtype);
                 calcParameters.Enable(CalcOption.DetailedDatFiles);
                 calcParameters.Enable(CalcOption.DeviceActivations);
+                calcParameters.DecimalSeperator = ";";
                 var key = new HouseholdKey("hh1");
 
                 wd.InputDataLogger.Save(calcParameters);
@@ -441,6 +442,7 @@ namespace Calculation.Tests.OnlineDeviceActivation {
                 calcParameters.Enable(CalcOption.TotalsPerLoadtype);
                 calcParameters.Enable(CalcOption.DeviceActivations);
                 calcParameters.Enable(CalcOption.DetailedDatFiles);
+                calcParameters.DecimalSeperator = ",";
                 Config.IsInUnitTesting = true;
                 wd.InputDataLogger.AddSaver(new ResultFileEntryLogger(wd.SqlResultLoggingService));
                 wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));

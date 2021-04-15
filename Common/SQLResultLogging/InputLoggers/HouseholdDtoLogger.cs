@@ -2,6 +2,7 @@
 using Automation;
 using Automation.ResultFiles;
 using Common.CalcDto;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 
 namespace Common.SQLResultLogging.InputLoggers
@@ -26,6 +27,7 @@ namespace Common.SQLResultLogging.InputLoggers
             Srls.SaveResultEntry(se);
         }
 
+        [NotNull]
         public CalcHouseholdDto Load([JetBrains.Annotations.NotNull] HouseholdKey key)
         {
             if (Srls == null)

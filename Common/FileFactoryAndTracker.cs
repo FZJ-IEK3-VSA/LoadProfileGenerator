@@ -423,7 +423,7 @@ namespace Common {
         {
             var di = new DirectoryInfo(resultPath);
             var fileInfos = di.GetFiles("*.*", SearchOption.AllDirectories);
-            var registeredFiles = ResultFileList.ResultFiles.Values.Select(x => (string)x.FullFileName).ToList();
+            var registeredFiles = ResultFileList.ResultFiles.Values.Select(x => x.FullFileName).ToList();
             foreach (var fileInfo in fileInfos) {
                 //skip registered
                 if (registeredFiles.Any(x => fileInfo.FullName.EndsWith(x, StringComparison.InvariantCultureIgnoreCase)))

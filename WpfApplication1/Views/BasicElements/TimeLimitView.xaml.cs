@@ -30,6 +30,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
@@ -388,7 +389,7 @@ namespace LoadProfileGenerator.Views.BasicElements {
                 Dispatcher?.Invoke(DispatcherPriority.Normal, setsingleimage, ImageShort, _calcImage);
                 Dispatcher?.Invoke(DispatcherPriority.Normal, setMergedImage, ImageShort, _calcImage);
                 var r = new Random();
-                var vacationTimeframes = _household.Vacation?.VacationTimeframes();
+                List<VacationTimeframe> vacationTimeframes = _household.Vacation.VacationTimeframes();
                 var previewKey = "TimeLimitView" + DateTime.Now.ToLongTimeString();
                 var br = _timeLimitEntry.GetOneYearHourArray(_selectedTemperatureProfile, _geographicLocation, r,
                     vacationTimeframes, previewKey, out _);
