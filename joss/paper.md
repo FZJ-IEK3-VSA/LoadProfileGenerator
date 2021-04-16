@@ -46,16 +46,16 @@ Additionally, it generates behavior data, travel data and location data.
 
 The LPG comes with 60 predefined households, validated for Germany. The households in the LPG are fully customizable and can be defined 
 by specifying people and their traits. Examples for traits are "alarm at 7am", "sleeps 8h" or "works at the office from 9-5". 
-There are over 400 traits predefined and more can be added by the user. To enable the modelling of a large number of households, 
+There are over 400 traits predefined and more can be added by the user. To enable the modeling of a large number of households, 
 the LPG contains functions to automatically create new household definitions from the traits, which is described in more detail below. 
 The LPG is written in C# and has about 60.000 lines of code. 
 
-The LPG does not currently contain a detailed heating demand simulation, since that field is already covered in detail by other tools such as TRNSYS, Polysun or EnergyPlus.
+The LPG does not currently contain a detailed heating demand simulation, since that field is already covered in detail by other tools such as TRNSYS, Polysun, tsib or EnergyPlus.
 
 
 # Statement of need
 
-Load profiles are used by researchers, planners and others. They are used for modelling building energy systems, interactions with the electricity, gas or district heating grids, 
+Load profiles are used by researchers, planners and others. They are used for modeling building energy systems, interactions with the electricity, gas or district heating grids, 
 when trying to develop new technologies such as energy management systems or smart grid control algorithm and in many other applications.
 
 Averaged profiles over a larger group of individual households are not an option for many applications such as system simulation and analysis with a high spatial resolution, since they have a significantly different shape than real individual load profiles, as shown in \autoref{fig:hzero}.
@@ -94,7 +94,7 @@ The basic algorithm for selecting an activity is shown in \autoref{fig:happiness
 ![Basic idea behind the activity selection process.\label{fig:happiness}](lpg_happiness.png)
 
 The behavior of the residents is used to calculate energy consumption and generate the load profiles by combining synthetic and measured device profiles. 
-This is combined with additional details for more realistic behavior modelling, such as illnesses, vacations, joint activities between multiple residents such as eating dinner together, 
+This is combined with additional details for more realistic behavior modeling, such as illnesses, vacations, joint activities between multiple residents such as eating dinner together, 
 
 The LPG  was originally developed in the context of a PhD-thesis [@pflugradt_modellierung_2016] and has since then been extended and improved. 
 
@@ -107,6 +107,6 @@ Contributions and merge requests are greatly appreciated.
 
 From 2010 to 2013 the development was supported by the Technische Universität Chemnitz, Professur Technische Thermodynamik in Germany.
 From 2016 to 2020 the development was supported by the Berner Fachhochschule, Laboratory for Photovoltaik Systems in the research project SimZukunft in Switzerland.
-Starting form March 2020 the development has been supported by the Forschungszentrum Jülich GmbH - Institute for Energy and Climate Research, Techno-Econonomic System Analysis - IEK 3.
+Starting from March 2020 the development has been supported by the Forschungszentrum Jülich GmbH - Institute for Energy and Climate Research, Techno-econonomic Systems Analysis - IEK 3.
 
 # References
