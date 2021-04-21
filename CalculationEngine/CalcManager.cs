@@ -253,22 +253,24 @@ namespace CalculationEngine {
 
                 CalcObject.Dispose();
 
+                try {
+                    CalcRepo.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Logging");
 
-                CalcRepo.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " - Logging");
+                    if (Config.IsInUnitTesting) {
+                        CalcRepo.FileFactoryAndTracker.CheckIfAllAreRegistered(_resultPath);
+                        Logger.Info("Finished!");
+                    }
 
-                if (Config.IsInUnitTesting) {
-                    CalcRepo.FileFactoryAndTracker.CheckIfAllAreRegistered(_resultPath);
-                    Logger.Info("Finished!");
+                    if (CalcRepo.CalcParameters.IsSet(CalcOption.LogAllMessages) || CalcRepo.CalcParameters.IsSet(CalcOption.LogErrorMessages)) {
+                        InitializeFileLogging(CalcRepo.Srls);
+                    }
+                    //_fft.FillCalculationResult(_repository.CalculationResult);
+                    //_repository.CalculationResult.ResultFileEntries.Sort();
+                    //_repository.CalculationResult.CalcEndTime = DateTime.Now;
                 }
-
-                if (CalcRepo.CalcParameters.IsSet(CalcOption.LogAllMessages) || CalcRepo.CalcParameters.IsSet(CalcOption.LogErrorMessages)) {
-                    InitializeFileLogging(CalcRepo.Srls);
+                finally {
+                    CalcRepo.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Logging");
                 }
-                //_fft.FillCalculationResult(_repository.CalculationResult);
-                //_repository.CalculationResult.ResultFileEntries.Sort();
-                //_repository.CalculationResult.CalcEndTime = DateTime.Now;
-
-                CalcRepo.CalculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Logging");
             }
 
             finally {

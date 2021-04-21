@@ -15,7 +15,7 @@ dotnet publish simengine2.csproj --configuration Release --self-contained true -
 cd C:\Work\LPGDev\ReleaseMaker
 "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\msbuild.exe" ReleaseMaker.csproj -t:rebuild  -v:m
 
-cd C:\Work\LPGDev\ReleaseMaker\bin\Debug
+cd C:\Work\LPGDev\ReleaseMaker\bin\Debug\net5.0-windows
 releasemaker
 pause
 v:

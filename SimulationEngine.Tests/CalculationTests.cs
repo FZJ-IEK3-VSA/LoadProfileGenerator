@@ -37,7 +37,6 @@ namespace SimulationEngine.Tests {
         ThreeMonths,
         TwelveMonths
     }
-    [SuppressMessage("ReSharper", "RedundantNameQualifier")]
     public static class HouseJobCalcPreparer {
         public static HouseCreationAndCalculationJob PrepareExistingHouseForTesting([JetBrains.Annotations.NotNull] House house)
         {
@@ -219,7 +218,7 @@ namespace SimulationEngine.Tests {
         {
 
              var peakWorkingSet = Process.GetCurrentProcess().PeakWorkingSet64;
-             const long memoryCap = 1024 * 1024 * 2000;
+             const long memoryCap = 1024 * 1024 * 2000*2;
             peakWorkingSet.Should().BeLessThan(memoryCap);
             GC.Collect();
             GC.WaitForPendingFinalizers();

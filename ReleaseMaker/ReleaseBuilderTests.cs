@@ -122,7 +122,7 @@ namespace ReleaseMaker
                 string s1 = "";
                 foreach (var fn in filesToComplain)
                 {
-                    s1 += "Copy(programFiles, srcDi, src, dst,\"" + fn + "\");\n";
+                    s1 += "Copy(programFiles, srcDi, src, dst,@\"" + fn + "\");\n";
                 }
 
                 throw new LPGException("Forgotten Files in " + Utili.GetCallingMethodAndClass() + " :\n" + s1);
@@ -465,15 +465,15 @@ namespace ReleaseMaker
             PrepareDirectory(dstWin);
             PrepareDirectory(dstLinux);
             PrepareDirectory(dstWinCore);
-            const string srclpg = @"C:\Work\LPGDev\WpfApplication1\bin\Debug\net48";
+            const string srclpg = @"C:\Work\LPGDev\WpfApplication1\bin\Debug\net5.0-windows";
             Logger.Info("### Copying win lpg files");
             var filesForSetup = WinLpgCopier.CopyLpgFiles(srclpg, dstWin);
-            const string srcsim = @"C:\Work\LPGDev\SimulationEngine\bin\Debug\net48";
+            const string srcsim = @"C:\Work\LPGDev\SimulationEngine\bin\Debug\net5.0-windows";
             var filesForSetup2 = SimEngineCopier.CopySimEngineFiles(srcsim, dstWin);
 
-            const string srcsim2 = @"C:\Work\LPGDev\SimEngine2\bin\Release\netcoreapp3.1\win10-x64";
+            const string srcsim2 = @"C:\Work\LPGDev\SimEngine2\bin\Release\net5.0-windows\win10-x64\publish";
             SimEngine2Copier.CopySimEngine2Files(srcsim2, dstWinCore);
-            const string srcsimLinux = @"C:\Work\LPGDev\SimEngine2\bin\Release\netcoreapp3.1\linux-x64";
+            const string srcsimLinux = @"C:\Work\LPGDev\SimEngine2\bin\Release\net5.0\linux-x64\publish";
             LinuxFileCopier.CopySimEngineLinuxFiles(srcsimLinux, dstLinux);
             Logger.Info("### Finished copying lpg files");
             // CopyFiles(src, dst);
