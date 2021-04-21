@@ -218,7 +218,7 @@ namespace SimulationEngine.Tests {
         {
 
              var peakWorkingSet = Process.GetCurrentProcess().PeakWorkingSet64;
-             const long memoryCap = 1024 * 1024 * 2000*2;
+             const long memoryCap = 1024l * 1024l * 2000l * 2l;
             peakWorkingSet.Should().BeLessThan(memoryCap);
             GC.Collect();
             GC.WaitForPendingFinalizers();
