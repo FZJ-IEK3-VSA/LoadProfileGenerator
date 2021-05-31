@@ -531,8 +531,10 @@ namespace CalculationEngine.HouseholdElements {
                     _calcPerson.HouseholdKey);
             }
 
-            _calcRepo.OnlineLoggingData.AddActionEntry(currentTimeStep, Guid, Name, _isCurrentlySick, bestaff.Name,
-                bestaff.Guid, _calcPerson.HouseholdKey, bestaff.AffCategory, bestaff.BodilyActivityLevel);
+            _calcRepo.OnlineLoggingData.AddActionEntry(currentTimeStep, Guid,
+                Name, _isCurrentlySick, bestaff.Name,
+                bestaff.Guid, _calcPerson.HouseholdKey,
+                bestaff.AffCategory, bestaff.BodilyActivityLevel);
             PersonDesires.ApplyAffordanceEffect(bestaff.Satisfactionvalues, bestaff.RandomEffect,  bestaff.Name);
             bestaff.Activate(currentTimeStep, Name,  CurrentLocation,
                 out var personTimeProfile);
