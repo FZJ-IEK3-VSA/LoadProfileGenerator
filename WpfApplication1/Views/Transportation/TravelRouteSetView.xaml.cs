@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Input;
 using Common;
+using Common.Enums;
 using Database.Tables.BasicElements;
 using Database.Tables.Transportation;
 using JetBrains.Annotations;
@@ -32,7 +33,14 @@ namespace LoadProfileGenerator.Views.Transportation {
                 return;
             }
 
-            Presenter.ThisRouteSet.AddRoute(tp);
+            int affordanceTagID = Presenter.SelectedAffordanceTag?.IntID ?? -1;
+            if (Presenter.Weight < 0.0)
+            {
+                Logger.Error("Please enter a valid weight");
+                return;
+            }
+
+            Presenter.ThisRouteSet.AddRoute(tp, Presenter.MinimumAge, Presenter.MaximumAge, Presenter.SelectedGender, affordanceTagID, Presenter.Weight);
             Presenter.RefreshRoutes();
         }
 

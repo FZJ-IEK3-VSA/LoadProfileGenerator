@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using Automation.ResultFiles;
 using Common;
+using Common.Enums;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.ModularHouseholds;
@@ -36,11 +37,40 @@ namespace LoadProfileGenerator.Views.Transportation {
         public ObservableCollection<ModularHousehold> AllHouseholds =>
             Sim.ModularHouseholds.Items;
 
+        [UsedImplicitly]
+        [JetBrains.Annotations.NotNull]
+        public IEnumerable<AffordanceTaggingSet> AffordanceTaggingSets
+        {
+            get
+            {
+                return Sim.AffordanceTaggingSets.Items;
+            }
+        }
+
         [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
-        public ObservableCollection<TravelRoute> AvailableTravelRoutes { get; } =
-            new ObservableCollection<TravelRoute>();
+        public ObservableCollection<TravelRoute> AvailableTravelRoutes { get { return Sim.TravelRoutes.Items; } }
+
+        public int MinimumAge { get; set; }
+
+        public int MaximumAge { get; set; } = 100;
+
+        public PermittedGender SelectedGender { get; set; } = PermittedGender.All;
+
+        [UsedImplicitly]
+        [JetBrains.Annotations.NotNull]
+        public IEnumerable<PermittedGender> PermittedGenders
+        {
+            get
+            {
+                return Enum.GetValues<PermittedGender>().Cast<PermittedGender>();
+            }
+        }
+
+        public AffordanceTag SelectedAffordanceTag { get; set; }
+
+        public double Weight { get; set; } = 1.0;
 
         [NotNull]
         [UsedImplicitly]
@@ -344,10 +374,12 @@ namespace LoadProfileGenerator.Views.Transportation {
 
         public void RefreshRoutes()
         {
+            // A TravelRouteSet can now have multiple entries with the same route but different filter settings
+
             List<TravelRoute> usedRoutes = ThisRouteSet.TravelRoutes.Select(x => x.TravelRoute).ToList();
-            var newRoutes = Sim.TravelRoutes.Items.Where(x => !usedRoutes.Contains(x)).ToList();
-            newRoutes.Sort();
-            AvailableTravelRoutes.SynchronizeWithList(newRoutes);
+            //var newRoutes = Sim.TravelRoutes.Items.Where(x => !usedRoutes.Contains(x)).ToList();
+            //newRoutes.Sort();
+            //AvailableTravelRoutes.SynchronizeWithList(newRoutes);
 
             usedRoutes.Sort();
             UsedTravelRoutes.SynchronizeWithList(usedRoutes);
@@ -403,6 +435,8 @@ namespace LoadProfileGenerator.Views.Transportation {
             Logger.Info("Completed deleting " + todelete.Count + " entries.");
         }
 
+        // helper function for the button "Add distance appropriate workplace routes..."
+        // Adds all matching routes without filter restrictions
         public void AddDistanceMatchingWorkplaceRoutes()
         {
             List<TravelRoute> usedRoutes = ThisRouteSet.TravelRoutes.Select(x => x.TravelRoute ).ToList();
@@ -416,7 +450,8 @@ namespace LoadProfileGenerator.Views.Transportation {
             }
             newRoutes = newRoutes.Where(x => x.Name.Contains(kmstr)).ToList();
             foreach (var route in newRoutes) {
-                ThisRouteSet.AddRoute(route);
+                // Use default parameter values to include all persons and apply the default weight of 1.0
+                ThisRouteSet.AddRoute(route, -1, -1, PermittedGender.All,-1, 1.0); 
             }
             newRoutes.Sort();
             AvailableTravelRoutes.SynchronizeWithList(newRoutes);
