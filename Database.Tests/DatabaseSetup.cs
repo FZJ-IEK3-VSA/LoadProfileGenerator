@@ -972,6 +972,13 @@ namespace Database.Tests
             DirectoryInfo di =
                 new DirectoryInfo(Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\wpfapplication1"));
             Logger.Info("Trying " + di.FullName);
+            if (!di.Exists)
+            {
+                // depending on the current directory we need to get one level higher
+                di =
+                   new DirectoryInfo(Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\..\wpfapplication1"));
+                Logger.Info("Trying " + di.FullName);
+            }
             if (di.Exists)
             {
                 Logger.Info("found " + di.FullName);
