@@ -117,7 +117,10 @@ namespace Database.Tables.Transportation {
         public static TravelRouteSet ImportFromItem([JetBrains.Annotations.NotNull] TravelRouteSet toImport,
             [JetBrains.Annotations.NotNull] Simulator dstSim)
         {
-            var loc = new TravelRouteSet(toImport.Name, null,dstSim.ConnectionString, toImport.Description, toImport.Guid, toImport.AffordanceTaggingSet);
+            // get the new AffordanceTaggingSet using the name of the old one
+            var affordanceTaggingSet = GetItemFromListByName(dstSim.AffordanceTaggingSets.Items,
+                toImport.AffordanceTaggingSet.Name);
+            var loc = new TravelRouteSet(toImport.Name, null,dstSim.ConnectionString, toImport.Description, toImport.Guid, affordanceTaggingSet);
             dstSim.TravelRouteSets.Items.Add(loc);
             loc.SaveToDB();
             foreach (var routeEntry in toImport.TravelRoutes) {
@@ -127,7 +130,15 @@ namespace Database.Tables.Transportation {
                     Logger.Error("Travel Route not found, skipping.");
                     continue;
                 }
-                int affordanceTaggingSetEntryID = -1; // Todo: lookup correct ID
+                // get the old TaggingSetEntry from the old AffordanceTaggingSet
+                var oldTaggingSetEntry = toImport.AffordanceTaggingSet.Entries.FirstOrDefault(x => x.IntID == routeEntry.AffordanceTaggingSetEntryID);
+                int affordanceTaggingSetEntryID = -1;
+                if (affordanceTaggingSet != null && oldTaggingSetEntry != null) { 
+                    var newTaggingSetEntry = GetItemFromListByName(affordanceTaggingSet.Entries,
+                        oldTaggingSetEntry.Name);
+                    affordanceTaggingSetEntryID = newTaggingSetEntry.IntID;
+                }
+
                 loc.AddRoute(dstroute, routeEntry.MinimumAge, routeEntry.MaximumAge, routeEntry.Gender, affordanceTaggingSetEntryID, routeEntry.Weight);
             }
             return loc;
