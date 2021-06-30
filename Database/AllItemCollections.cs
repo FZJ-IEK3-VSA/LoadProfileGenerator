@@ -108,7 +108,7 @@ namespace Database
         public ObservableCollection<Variable> Variables { get; }
         [ItemNotNull]
         [JetBrains.Annotations.NotNull]
-        public ObservableCollection<AffordanceTag> AffordanceTags { get; }
+        public ObservableCollection<AffordanceTag> AffordanceTags { get; set; }
         [ItemNotNull]
         [JetBrains.Annotations.NotNull]
         public ObservableCollection<ChargingStationSet> ChargingStationSets { get; }

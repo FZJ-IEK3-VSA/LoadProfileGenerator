@@ -54,7 +54,7 @@ namespace Database.Tables.Transportation {
         [JetBrains.Annotations.NotNull]
         public ObservableCollection<TravelRouteSetEntry> TravelRoutes => _routes;
 
-        public void AddRoute([JetBrains.Annotations.NotNull] TravelRoute route, int minimumAge, int maximumAge, PermittedGender gender, int affordanceTaggingSetEntryID, double weight, bool savetodb = true)
+        public void AddRoute([JetBrains.Annotations.NotNull] TravelRoute route, int minimumAge, int maximumAge, PermittedGender gender, AffordanceTag affordanceTag, double weight, bool savetodb = true)
         {
             if (route == null) {
                 throw new LPGException("Can't add a null route.");
@@ -67,7 +67,7 @@ namespace Database.Tables.Transportation {
             if (route.ConnectionString != ConnectionString) {
                 throw new LPGException("A location from another DB was just added!");
             }
-            var entry = new TravelRouteSetEntry(null, IntID, ConnectionString, route.Name, route, minimumAge, maximumAge, gender, affordanceTaggingSetEntryID, weight, System.Guid.NewGuid().ToStrGuid());
+            var entry = new TravelRouteSetEntry(null, IntID, ConnectionString, route.Name, route, minimumAge, maximumAge, gender, affordanceTag, weight, System.Guid.NewGuid().ToStrGuid());
             _routes.Add(entry);
             if(savetodb) {
                 entry.SaveToDB();
@@ -85,6 +85,8 @@ namespace Database.Tables.Transportation {
             var id = dr.GetIntFromLong("ID", false, ignoreMissingFields, -1);
             var affordanceTaggingSetID = dr.GetIntFromLong("AffordanceTaggingSetID", false, ignoreMissingFields, -1);
             var affordanceTaggingSet = aic.AffordanceTaggingSets.FirstOrDefault(x => x.IntID == affordanceTaggingSetID);
+            // This AllItemCollections object is passed through to the AssignFields method in TravelRouteSetEntry --> save all AffordanceTags from this AffordanceTaggingSet
+            aic.AffordanceTags = affordanceTaggingSet?.Tags;
             var guid = GetGuid(dr, ignoreMissingFields);
             return new TravelRouteSet(name, id, connectionString, description, guid, affordanceTaggingSet);
         }
@@ -130,16 +132,13 @@ namespace Database.Tables.Transportation {
                     Logger.Error("Travel Route not found, skipping.");
                     continue;
                 }
-                // get the old TaggingSetEntry from the old AffordanceTaggingSet
-                var oldTaggingSetEntry = toImport.AffordanceTaggingSet.Entries.FirstOrDefault(x => x.IntID == routeEntry.AffordanceTaggingSetEntryID);
-                int affordanceTaggingSetEntryID = -1;
-                if (affordanceTaggingSet != null && oldTaggingSetEntry != null) { 
-                    var newTaggingSetEntry = GetItemFromListByName(affordanceTaggingSet.Entries,
-                        oldTaggingSetEntry.Name);
-                    affordanceTaggingSetEntryID = newTaggingSetEntry.IntID;
+                AffordanceTag newAffordanceTag = null;
+                if (affordanceTaggingSet != null && routeEntry.AffordanceTag != null) { 
+                    newAffordanceTag = GetItemFromListByName(affordanceTaggingSet.Tags,
+                        routeEntry.AffordanceTag.Name);
                 }
 
-                loc.AddRoute(dstroute, routeEntry.MinimumAge, routeEntry.MaximumAge, routeEntry.Gender, affordanceTaggingSetEntryID, routeEntry.Weight);
+                loc.AddRoute(dstroute, routeEntry.MinimumAge, routeEntry.MaximumAge, routeEntry.Gender, newAffordanceTag, routeEntry.Weight);
             }
             return loc;
         }
@@ -165,9 +164,10 @@ namespace Database.Tables.Transportation {
             bool ignoreMissingTables, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TravelRoute> travelRoutes, ObservableCollection<AffordanceTaggingSet> affordanceTaggingSets)
         {
             var aic = new AllItemCollections(travelRoutes: travelRoutes, affordanceTaggingSets: affordanceTaggingSets);
+            // in the AssignFields method all relevant AffordanceTag objects are added to this AllItemCollections object
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);
             var ld = new ObservableCollection<TravelRouteSetEntry>();
-            TravelRouteSetEntry.LoadFromDatabase(ld, connectionString, ignoreMissingTables, travelRoutes);
+            TravelRouteSetEntry.LoadFromDatabase(ld, connectionString, ignoreMissingTables, aic);
             SetSubitems(new List<DBBase>(result), new List<DBBase>(ld), IsCorrectTravelRouteSetParent,
                 ignoreMissingTables);
         }
@@ -185,6 +185,10 @@ namespace Database.Tables.Transportation {
             cmd.AddParameter("Name", Name);
             if(_description!=null) {
                 cmd.AddParameter("Description", _description);
+            }
+            if (_affordanceTaggingSet != null)
+            {
+                cmd.AddParameter("AffordanceTaggingSetID", _affordanceTaggingSet.IntID);
             }
         }
 

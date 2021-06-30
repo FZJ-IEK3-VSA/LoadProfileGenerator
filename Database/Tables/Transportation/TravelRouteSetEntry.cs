@@ -4,6 +4,7 @@ using System.Linq;
 using Automation;
 using Common.Enums;
 using Database.Database;
+using Database.Tables.BasicElements;
 using JetBrains.Annotations;
 
 namespace Database.Tables.Transportation {
@@ -16,11 +17,11 @@ namespace Database.Tables.Transportation {
         public readonly int _minimumAge;
         public readonly int _maximumAge;
         public readonly PermittedGender _gender;
-        public readonly int _affordanceTaggingSetEntryID;
+        public readonly AffordanceTag _affordanceTag;
         public readonly double _weight;
 
     public TravelRouteSetEntry([CanBeNull]int? pID, int travelRouteSetID, [JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.NotNull] string name,
-            [CanBeNull] TravelRoute travelRoute, int minimumAge, int maximumAge, PermittedGender gender, int affordanceTaggingSetEntryID, double weight, [NotNull] StrGuid guid)
+            [CanBeNull] TravelRoute travelRoute, int minimumAge, int maximumAge, PermittedGender gender, AffordanceTag affordanceTag, double weight, [NotNull] StrGuid guid)
             : base(name, TableName, connectionString, guid)
         {
             TypeDescription = "Travel Route Step";
@@ -31,7 +32,7 @@ namespace Database.Tables.Transportation {
             _minimumAge = minimumAge;
             _maximumAge = maximumAge;
             _gender = gender;
-            _affordanceTaggingSetEntryID = affordanceTaggingSetEntryID;
+            _affordanceTag = affordanceTag;
             _weight = weight;
         }
 
@@ -52,7 +53,7 @@ namespace Database.Tables.Transportation {
         public PermittedGender Gender => _gender;
 
         [UsedImplicitly]
-        public int AffordanceTaggingSetEntryID => _affordanceTaggingSetEntryID;
+        public AffordanceTag AffordanceTag => _affordanceTag;
 
         [UsedImplicitly]
         public double Weight => _weight;
@@ -69,12 +70,14 @@ namespace Database.Tables.Transportation {
             var minimumAge = dr.GetIntFromLong("MinimumAge",false, ignoreMissingFields,-1);
             var maximumAge = dr.GetIntFromLong("MaximumAge", false, ignoreMissingFields, -1);
             var gender = (PermittedGender) dr.GetIntFromLong("Gender", false, ignoreMissingFields, -1);
-            var affordanceTaggingSetEntryID = dr.GetIntFromLong("AffordanceTaggingSetEntryID", false, ignoreMissingFields, -1);
+            var affordanceTagID = dr.GetIntFromLong("AffordanceTagID", false, ignoreMissingFields, -1);
+            // the AffordanceTags collection only contains AffordanceTags from the correct AffordanceTaggingSet
+            var affordanceTag = aic.AffordanceTags?.FirstOrDefault(x => x.IntID == affordanceTagID);
             var weight = dr.GetDouble("Weight", false, 1.0, ignoreMissingFields);
             //var name = dr.GetString("Name",false,"",ignoreMissingFields);
             const string name = "no name";
             var guid = GetGuid(dr, ignoreMissingFields);
-            var step = new TravelRouteSetEntry(id, setid, connectionString, name, route, minimumAge, maximumAge, gender, affordanceTaggingSetEntryID, weight, guid);
+            var step = new TravelRouteSetEntry(id, setid, connectionString, name, route, minimumAge, maximumAge, gender, affordanceTag, weight, guid);
             return step;
         }
 
@@ -89,9 +92,9 @@ namespace Database.Tables.Transportation {
         }
 
         public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TravelRouteSetEntry> result, [JetBrains.Annotations.NotNull] string connectionString,
-            bool ignoreMissingTables, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TravelRoute> travelRoutes)
+            bool ignoreMissingTables, AllItemCollections aic)
         {
-            var aic = new AllItemCollections(travelRoutes: travelRoutes);
+            // The AllItemCollections object is passed through to transfer the AffordanceTag objects belonging to the correct AffordanceTaggingSet
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }
 
@@ -105,7 +108,10 @@ namespace Database.Tables.Transportation {
             cmd.AddParameter("MinimumAge", _minimumAge);
             cmd.AddParameter("MaximumAge", _maximumAge);
             cmd.AddParameter("Gender", _gender);
-            cmd.AddParameter("AffordanceTaggingSetEntryID", _affordanceTaggingSetEntryID);
+            if (_affordanceTag != null)
+            {
+                cmd.AddParameter("AffordanceTagID", _affordanceTag.IntID);
+            }
             cmd.AddParameter("Weight", _weight);
     }
 

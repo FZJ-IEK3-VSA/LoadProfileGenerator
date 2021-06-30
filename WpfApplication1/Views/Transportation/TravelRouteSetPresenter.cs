@@ -451,7 +451,7 @@ namespace LoadProfileGenerator.Views.Transportation {
             newRoutes = newRoutes.Where(x => x.Name.Contains(kmstr)).ToList();
             foreach (var route in newRoutes) {
                 // Use default parameter values to include all persons and apply the default weight of 1.0
-                ThisRouteSet.AddRoute(route, -1, -1, PermittedGender.All,-1, 1.0); 
+                ThisRouteSet.AddRoute(route, -1, -1, PermittedGender.All,null, 1.0); 
             }
             newRoutes.Sort();
             AvailableTravelRoutes.SynchronizeWithList(newRoutes);

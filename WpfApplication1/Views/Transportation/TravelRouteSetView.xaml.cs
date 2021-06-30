@@ -33,14 +33,13 @@ namespace LoadProfileGenerator.Views.Transportation {
                 return;
             }
 
-            int affordanceTagID = Presenter.SelectedAffordanceTag?.IntID ?? -1;
             if (Presenter.Weight < 0.0)
             {
                 Logger.Error("Please enter a valid weight");
                 return;
             }
 
-            Presenter.ThisRouteSet.AddRoute(tp, Presenter.MinimumAge, Presenter.MaximumAge, Presenter.SelectedGender, affordanceTagID, Presenter.Weight);
+            Presenter.ThisRouteSet.AddRoute(tp, Presenter.MinimumAge, Presenter.MaximumAge, Presenter.SelectedGender, Presenter.SelectedAffordanceTag, Presenter.Weight);
             Presenter.RefreshRoutes();
         }
 
