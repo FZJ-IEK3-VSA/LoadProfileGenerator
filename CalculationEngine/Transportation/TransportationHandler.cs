@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CalculationEngine.HouseholdElements;
 using Common;
@@ -32,9 +33,14 @@ namespace CalculationEngine.Transportation {
         [ItemNotNull]
         public List<CalcTransportationDeviceCategory> DeviceCategories { get;  } = new List<CalcTransportationDeviceCategory>();
 
+        /// maps the name of each AffordanceTaggingSet to the respective CalcAffordanceTaggingSetDto object
+        [NotNull]
+        [ItemNotNull]
+        public Dictionary<string, CalcAffordanceTaggingSetDto> AffordanceTaggingSets { get; } = new Dictionary<string, CalcAffordanceTaggingSetDto>();
+
         public CalcTravelRoute? GetTravelRouteFromSrcLoc([NotNull] CalcLocation srcLocation,
-                                                         [NotNull] CalcSite dstSite, [NotNull] TimeStep startTimeStep,
-                                                         [NotNull] string personName, CalcRepo calcRepo)
+                                                             [NotNull] CalcSite dstSite, [NotNull] TimeStep startTimeStep,
+                                                             [NotNull] string personName, [NotNull] ICalcAffordanceBase affordance, CalcRepo calcRepo)
         {
             CalcSite srcSite = LocationSiteLookup[srcLocation];
             if (srcSite == dstSite) {
@@ -43,16 +49,24 @@ namespace CalculationEngine.Transportation {
             //first get the routes, no matter if busy
             var devicesAtSrc = AllMoveableDevices.Where(x => x.Currentsite == srcSite).ToList();
             var possibleRoutes = srcSite.GetAllRoutesTo(dstSite,devicesAtSrc);
-            if (possibleRoutes.Count == 0) {
+            // filter routes based on the affordance tag
+            var allowedRoutes = possibleRoutes.Where(route => {
+              if (route.AffordanceTaggingSetName == null || route.AffordanceTagName == null)
+              {
+                return true;
+              }
+              return AffordanceTaggingSets[route.AffordanceTaggingSetName].AffordanceToTagDict[affordance.Name] == route.AffordanceTagName;
+            }).ToList();
+            if (allowedRoutes.Count == 0) {
                 return null;
             }
 
             //check if the route is busy by calculating the duration. If busy, duration will be null
             int? dur = null;
             CalcTravelRoute? ctr = null;
-            while (dur== null && possibleRoutes.Count > 0) {
-                ctr = possibleRoutes[calcRepo.Rnd.Next(possibleRoutes.Count)];
-                possibleRoutes.Remove(ctr);
+            while (dur== null && allowedRoutes.Count > 0) {
+                ctr = allowedRoutes[calcRepo.Rnd.Next(allowedRoutes.Count)];
+                allowedRoutes.Remove(ctr);
                 dur = ctr.GetDuration(startTimeStep, personName, AllMoveableDevices);
             }
 
@@ -87,5 +101,12 @@ namespace CalculationEngine.Transportation {
             DeviceCategories.Add(ct);
             return ct;
         }
-    }
+
+        public void AddAffordanceTaggingSets(List<CalcAffordanceTaggingSetDto> affordanceTaggingSets)
+        {
+            foreach (var set in affordanceTaggingSets) { 
+                AffordanceTaggingSets.Add(set.Name, set);
+            }
+        }
+  }
 }

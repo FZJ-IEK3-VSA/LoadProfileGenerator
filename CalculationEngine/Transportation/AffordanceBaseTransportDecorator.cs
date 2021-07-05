@@ -160,7 +160,7 @@ namespace CalculationEngine.Transportation {
                 if (_transportationHandler == null) {
                     throw new LPGException("was null");
                 }
-                route = _transportationHandler.GetTravelRouteFromSrcLoc(srcLocation, Site,time,calcPersonName, _calcRepo);
+                route = _transportationHandler.GetTravelRouteFromSrcLoc(srcLocation, Site,time,calcPersonName, _sourceAffordance, _calcRepo);
                 if (route != null) {
                     _myLastTimeEntry.PreviouslySelectedRoutes.Add(srcLocation, route);
                 }
