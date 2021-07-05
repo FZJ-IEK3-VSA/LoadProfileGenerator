@@ -141,11 +141,6 @@ namespace LoadProfileGenerator.Views.Transportation {
         [UsedImplicitly]
         public ObservableCollection<UsedIn> UsedIns { get; } = new ObservableCollection<UsedIn>();
 
-        [ItemNotNull]
-        [NotNull]
-        [UsedImplicitly]
-        public ObservableCollection<TravelRoute> UsedTravelRoutes { get; } = new ObservableCollection<TravelRoute>();
-
         public void Delete()
         {
             Sim.TravelRouteSets.DeleteItem(ThisRouteSet);
@@ -375,14 +370,6 @@ namespace LoadProfileGenerator.Views.Transportation {
         public void RefreshRoutes()
         {
             // A TravelRouteSet can now have multiple entries with the same route but different filter settings
-
-            List<TravelRoute> usedRoutes = ThisRouteSet.TravelRoutes.Select(x => x.TravelRoute).ToList();
-            //var newRoutes = Sim.TravelRoutes.Items.Where(x => !usedRoutes.Contains(x)).ToList();
-            //newRoutes.Sort();
-            //AvailableTravelRoutes.SynchronizeWithList(newRoutes);
-
-            usedRoutes.Sort();
-            UsedTravelRoutes.SynchronizeWithList(usedRoutes);
         }
 
         public static void RefreshUsedIn()
@@ -453,11 +440,6 @@ namespace LoadProfileGenerator.Views.Transportation {
                 // Use default parameter values to include all persons and apply the default weight of 1.0
                 ThisRouteSet.AddRoute(route, -1, -1, PermittedGender.All,null, 1.0); 
             }
-            newRoutes.Sort();
-            AvailableTravelRoutes.SynchronizeWithList(newRoutes);
-
-            usedRoutes.Sort();
-            UsedTravelRoutes.SynchronizeWithList(usedRoutes);
         }
     }
 }

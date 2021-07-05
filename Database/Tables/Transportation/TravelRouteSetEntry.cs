@@ -69,9 +69,8 @@ namespace Database.Tables.Transportation {
             var route = aic.TravelRoutes.FirstOrDefault(x => x.ID == routeID);
             var minimumAge = dr.GetIntFromLong("MinimumAge",false, ignoreMissingFields,-1);
             var maximumAge = dr.GetIntFromLong("MaximumAge", false, ignoreMissingFields, -1);
-            var gender = (PermittedGender) dr.GetIntFromLong("Gender", false, ignoreMissingFields, -1);
+            var gender = (PermittedGender) dr.GetIntFromLong("Gender", false, ignoreMissingFields, (int) PermittedGender.All);
             var affordanceTagID = dr.GetIntFromLong("AffordanceTagID", false, ignoreMissingFields, -1);
-            // the AffordanceTags collection only contains AffordanceTags from the correct AffordanceTaggingSet
             var affordanceTag = aic.AffordanceTags?.FirstOrDefault(x => x.IntID == affordanceTagID);
             var weight = dr.GetDouble("Weight", false, 1.0, ignoreMissingFields);
             //var name = dr.GetString("Name",false,"",ignoreMissingFields);
@@ -94,7 +93,7 @@ namespace Database.Tables.Transportation {
         public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TravelRouteSetEntry> result, [JetBrains.Annotations.NotNull] string connectionString,
             bool ignoreMissingTables, AllItemCollections aic)
         {
-            // The AllItemCollections object is passed through to transfer the AffordanceTag objects belonging to the correct AffordanceTaggingSet
+            // The AllItemCollections object is passed through to transfer the AffordanceTag objects
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, false);
         }
 

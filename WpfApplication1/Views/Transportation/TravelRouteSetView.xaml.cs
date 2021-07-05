@@ -35,7 +35,7 @@ namespace LoadProfileGenerator.Views.Transportation {
 
             if (Presenter.Weight < 0.0)
             {
-                Logger.Error("Please enter a valid weight");
+                Logger.Error("Please enter a valid weight (weights must be >= 0)");
                 return;
             }
 
@@ -63,16 +63,12 @@ namespace LoadProfileGenerator.Views.Transportation {
 
         private void BtnRemoveRoutesClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
         {
-            if (LstSteps.SelectedItem == null) {
-                Logger.Warning("Please select a step first");
-                return;
-            }
-            if (!(LstSteps.SelectedItem is TravelRoute dap)) {
-                Logger.Error("Please select a step first!");
+            if (!(LstSteps.SelectedItem is TravelRouteSetEntry entry)) {
+                Logger.Error("Please select a TravelRoute entry first!");
                 return;
             }
 
-            Presenter.ThisRouteSet.DeleteEntry(dap);
+            Presenter.ThisRouteSet.DeleteEntry(entry);
             Presenter.RefreshRoutes();
         }
 
@@ -98,8 +94,8 @@ namespace LoadProfileGenerator.Views.Transportation {
                 return;
             }
 
-            var entry = (TravelRoute) LstSteps.SelectedItem;
-            Presenter.ApplicationPresenter.OpenItem(entry);
+            var entry = (TravelRouteSetEntry) LstSteps.SelectedItem;
+            Presenter.ApplicationPresenter.OpenItem(entry.TravelRoute);
         }
 
         private void BtnFindMissingSitesForAllHouseholdsClick([JetBrains.Annotations.NotNull] object sender, [JetBrains.Annotations.NotNull] RoutedEventArgs e)

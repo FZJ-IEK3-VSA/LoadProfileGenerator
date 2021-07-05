@@ -225,17 +225,32 @@
                                Target="{Binding ElementName=LstSteps}" />
                         <ListView x:Name="LstSteps"
                                   Grid.Row="11"
-                                  Grid.Column="1"
+                                  Grid.Column="6"
                                   MinHeight="150"
-                                  ItemsSource="{Binding UsedTravelRoutes}"
+                                  ItemsSource="{Binding ThisRouteSet.TravelRoutes}"
                                   Style="{StaticResource ListViewStyle}"
                                   MouseDoubleClick="LstSteps_OnMouseDoubleClick"
                                   >
                             <ListView.View>
                                 <GridView>
                                     <GridViewColumn Width="Auto"
-                                                    DisplayMemberBinding="{Binding PrettyName}"
+                                                    DisplayMemberBinding="{Binding TravelRoute.PrettyName}"
                                                     Header="Name" />
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding MinimumAge}"
+                                                    Header="Minimum Age" />
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding MaximumAge}"
+                                                    Header="Maximum Age" />
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding Gender}"
+                                                    Header="Permitted Gender" />
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding AffordanceTag.Name}"
+                                                    Header="Affordance Tag" />
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding Weight}"
+                                                    Header="Weight" />
                                 </GridView>
                             </ListView.View>
                         </ListView>

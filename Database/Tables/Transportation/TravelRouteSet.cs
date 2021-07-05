@@ -60,10 +60,11 @@ namespace Database.Tables.Transportation {
                 throw new LPGException("Can't add a null route.");
             }
 
-            if (_routes.Any(x => x.TravelRoute == route)) {
-                Logger.Error("Route " + route.PrettyName+  " was already added");
-                return;
-            }
+            // Todo: check if routes have overlapping filter conditions
+            //if (_routes.Any(x => x.TravelRoute == route)) {
+            //    Logger.Error("Route " + route.PrettyName+  " was already added");
+            //    return;
+            //}
             if (route.ConnectionString != ConnectionString) {
                 throw new LPGException("A location from another DB was just added!");
             }
@@ -85,8 +86,6 @@ namespace Database.Tables.Transportation {
             var id = dr.GetIntFromLong("ID", false, ignoreMissingFields, -1);
             var affordanceTaggingSetID = dr.GetIntFromLong("AffordanceTaggingSetID", false, ignoreMissingFields, -1);
             var affordanceTaggingSet = aic.AffordanceTaggingSets.FirstOrDefault(x => x.IntID == affordanceTaggingSetID);
-            // This AllItemCollections object is passed through to the AssignFields method in TravelRouteSetEntry --> save all AffordanceTags from this AffordanceTaggingSet
-            aic.AffordanceTags = affordanceTaggingSet?.Tags;
             var guid = GetGuid(dr, ignoreMissingFields);
             return new TravelRouteSet(name, id, connectionString, description, guid, affordanceTaggingSet);
         }
@@ -145,10 +144,10 @@ namespace Database.Tables.Transportation {
 
         private static bool IsCorrectTravelRouteSetParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
         {
-            var hd = (TravelRouteSetEntry) child;
-            if (parent.ID == hd.TravelRouteSetID) {
-                var site = (TravelRouteSet) parent;
-                site.TravelRoutes.Add(hd);
+            var setEntry = (TravelRouteSetEntry) child;
+            if (parent.ID == setEntry.TravelRouteSetID) {
+                var travelRouteSet = (TravelRouteSet) parent;
+                travelRouteSet.TravelRoutes.Add(setEntry);
                 return true;
             }
             return false;
@@ -164,9 +163,10 @@ namespace Database.Tables.Transportation {
             bool ignoreMissingTables, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TravelRoute> travelRoutes, ObservableCollection<AffordanceTaggingSet> affordanceTaggingSets)
         {
             var aic = new AllItemCollections(travelRoutes: travelRoutes, affordanceTaggingSets: affordanceTaggingSets);
-            // in the AssignFields method all relevant AffordanceTag objects are added to this AllItemCollections object
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);
             var ld = new ObservableCollection<TravelRouteSetEntry>();
+            // Store all AffordanceTags in the AllItemCollections object so that the TravelRouteSetEntries can access them
+            aic.AffordanceTags = new ObservableCollection<AffordanceTag>(affordanceTaggingSets.SelectMany(set => set.Tags));
             TravelRouteSetEntry.LoadFromDatabase(ld, connectionString, ignoreMissingTables, aic);
             SetSubitems(new List<DBBase>(result), new List<DBBase>(ld), IsCorrectTravelRouteSetParent,
                 ignoreMissingTables);
