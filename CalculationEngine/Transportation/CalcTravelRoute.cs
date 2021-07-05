@@ -24,12 +24,19 @@ namespace CalculationEngine.Transportation
         [NotNull]
         private PreviouslyPickedDevices _mypicks = new PreviouslyPickedDevices("", new TimeStep(-1,0,false));
 
-        public CalcTravelRoute([NotNull] string pName, [NotNull] CalcSite siteA, [NotNull] CalcSite siteB,
+        public CalcTravelRoute([NotNull] string pName, int minimumAge, int maximumAge, Common.Enums.PermittedGender gender, string affordanceTaggingSetName, string affordanceTagName,
+            double weight, [NotNull] CalcSite siteA, [NotNull] CalcSite siteB,
             [NotNull][ItemNotNull] List<CalcTransportationDevice> vehiclePool,
             [NotNull][ItemNotNull] List<CalcTransportationDevice> locationUnlimitedDevices,
             [NotNull] HouseholdKey householdkey, StrGuid guid,
                                CalcRepo calcRepo) : base(pName, guid)
         {
+            MinimumAge = minimumAge;
+            MaximumAge = maximumAge;
+            Gender = gender;
+            AffordanceTaggingSetName = affordanceTaggingSetName;
+            AffordanceTagName = affordanceTagName;
+            Weight = weight;
             _householdkey = householdkey;
             _calcRepo = calcRepo;
             SiteA = siteA;
@@ -41,6 +48,12 @@ namespace CalculationEngine.Transportation
 
         //TODO: Time limit
 
+        public int MinimumAge { get; }
+        public int MaximumAge { get; }
+        public Common.Enums.PermittedGender Gender { get; }
+        public string AffordanceTaggingSetName { get; }
+        public string AffordanceTagName { get; }
+        public double Weight { get; }
         [NotNull]
         private CalcSite SiteA { get; }
         [NotNull]

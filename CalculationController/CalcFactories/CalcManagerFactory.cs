@@ -121,7 +121,7 @@ namespace CalculationController.CalcFactories
                 csps.CalculationProfiler.StartPart(Utili.GetCurrentMethodAndClass() + " Generating Model");
                 var container = builder.Build();
                 using var scope = container.BeginLifetimeScope();
-                var calcRepo = PrepareCalculation(sim, csps, scope, out var dtoltdict, out var dls, out var variableRepository);
+                var calcRepo = PrepareCalculation(sim, csps, scope, out var dtoltdict, out var dls, out var variableRepository, out var affordanceTaggingSets);
 
                 cm = new CalcManager(csps.ResultPath,
                     //hh.Name,
@@ -141,7 +141,7 @@ namespace CalculationController.CalcFactories
                 CalcVariableDtoFactory cvrdto = scope.Resolve<CalcVariableDtoFactory>();
                 CalcDeviceTaggingSets devicetaggingSets = scope.Resolve<CalcDeviceTaggingSets>();
                 if (csps.CalcTarget.GetType() == typeof(House)) {
-                    ch = MakeCalcHouseObject(sim, csps, csps.CalcTarget, scope, cvrdto, variableRepository, out cot, calcRepo);
+                    ch = MakeCalcHouseObject(sim, csps, csps.CalcTarget, scope, cvrdto, variableRepository, affordanceTaggingSets, out cot, calcRepo);
                     CalcHouse chd = (CalcHouse)ch;
                     if (chd.EnergyStorages != null) {
                         foreach (var calcEnergyStorage in chd.EnergyStorages) {
@@ -153,7 +153,7 @@ namespace CalculationController.CalcFactories
 
                 }
                 else if (csps.CalcTarget.GetType() == typeof(ModularHousehold)) {
-                    ch = MakeCalcHouseholdObject(sim, csps, csps.CalcTarget, scope, cvrdto, variableRepository, out cot, calcRepo);
+                    ch = MakeCalcHouseholdObject(sim, csps, csps.CalcTarget, scope, cvrdto, variableRepository, out cot, affordanceTaggingSets, calcRepo);
                 }
                 else {
                     throw new LPGException("The type " + csps.CalcTarget.GetType() + " is missing!");
@@ -192,7 +192,8 @@ namespace CalculationController.CalcFactories
                                                    [JetBrains.Annotations.NotNull] ILifetimeScope scope,
                                                    [JetBrains.Annotations.NotNull] out CalcLoadTypeDtoDictionary dtoltdict,
                                                    [JetBrains.Annotations.NotNull] out DayLightStatus dls,
-                                                   [JetBrains.Annotations.NotNull] out CalcVariableRepository variableRepository
+                                                   [JetBrains.Annotations.NotNull] out CalcVariableRepository variableRepository,
+                                                   [JetBrains.Annotations.NotNull] out List<CalcAffordanceTaggingSetDto> affordanceTaggingSets
                                                    )
         {
             CalcRepo calcRepo = scope.Resolve<CalcRepo>();
@@ -203,7 +204,7 @@ namespace CalculationController.CalcFactories
             dtoltdict = scope.Resolve<CalcLoadTypeDtoDictionary>();
 
             var affordanceTaggingSetFactory = scope.Resolve<AffordanceTaggingSetFactory>();
-            var affordanceTaggingSets = affordanceTaggingSetFactory.GetAffordanceTaggingSets(sim);
+            affordanceTaggingSets = affordanceTaggingSetFactory.GetAffordanceTaggingSets(sim);
             if (calcRepo.CalcParameters.Options.Contains(CalcOption.AffordanceTaggingSets)) {
                 inputDataLogger.Save(affordanceTaggingSets);
             }
@@ -248,9 +249,10 @@ namespace CalculationController.CalcFactories
         [JetBrains.Annotations.NotNull]
         private static ICalcAbleObject MakeCalcHouseObject([JetBrains.Annotations.NotNull] Simulator sim,
                                                            [JetBrains.Annotations.NotNull] CalcStartParameterSet csps, [JetBrains.Annotations.NotNull] ICalcObject hh,
-                                                      [JetBrains.Annotations.NotNull] ILifetimeScope scope,
-                                                      [JetBrains.Annotations.NotNull] CalcVariableDtoFactory cvrdto, [JetBrains.Annotations.NotNull] CalcVariableRepository variableRepository,
-                                                      out CalcObjectType cot, [JetBrains.Annotations.NotNull] CalcRepo calcRepo)
+                                                           [JetBrains.Annotations.NotNull] ILifetimeScope scope,
+                                                           [JetBrains.Annotations.NotNull] CalcVariableDtoFactory cvrdto, [JetBrains.Annotations.NotNull] CalcVariableRepository variableRepository,
+                                                           [JetBrains.Annotations.NotNull] List<CalcAffordanceTaggingSetDto> affordanceTaggingSets,
+                                                           out CalcObjectType cot, [JetBrains.Annotations.NotNull] CalcRepo calcRepo)
         {
             var house =(House) hh;
             calcRepo.FileFactoryAndTracker.RegisterHousehold(Constants.HouseKey, "House Infrastructure",
@@ -273,7 +275,7 @@ namespace CalculationController.CalcFactories
 
             var chf = scope.Resolve<CalcHouseFactory>();
             RegisterAllDtoVariables(cvrdto, variableRepository);
-            ICalcAbleObject ch = chf.MakeCalcHouse(housedto,calcRepo);
+            ICalcAbleObject ch = chf.MakeCalcHouse(housedto,calcRepo, affordanceTaggingSets);
             cot = CalcObjectType.House;
             return ch;
         }
@@ -283,8 +285,9 @@ namespace CalculationController.CalcFactories
                                                           [JetBrains.Annotations.NotNull] ILifetimeScope scope,
                                                           [JetBrains.Annotations.NotNull] CalcVariableDtoFactory cvrdto,
                                                           [JetBrains.Annotations.NotNull] CalcVariableRepository variableRepository,
-                                                               out CalcObjectType cot,
-                                                               [JetBrains.Annotations.NotNull] CalcRepo calcRepo)
+                                                          out CalcObjectType cot,
+                                                          [JetBrains.Annotations.NotNull] List<CalcAffordanceTaggingSetDto> affordanceTaggingSets,
+                                                          [JetBrains.Annotations.NotNull] CalcRepo calcRepo)
         {
             var cmhdf = scope.Resolve<CalcModularHouseholdDtoFactory>();
             HouseholdKey householdKey = new HouseholdKey("HH1");
@@ -303,7 +306,7 @@ namespace CalculationController.CalcFactories
 
             calcRepo.InputDataLogger.Save(Constants.GeneralHouseholdKey, dto);
             RegisterAllDtoVariables(cvrdto, variableRepository);
-            ICalcAbleObject ch = cmhf.MakeCalcModularHousehold(dto, out _,null,null, calcRepo);
+            ICalcAbleObject ch = cmhf.MakeCalcModularHousehold(dto, out _,null,null, affordanceTaggingSets, calcRepo);
             cot = CalcObjectType.ModularHousehold;
             return ch;
         }
