@@ -310,7 +310,8 @@ namespace CalculationController.Tests.Transportation {
                         CalcTransportationDtoFactory dtoFactory = new CalcTransportationDtoFactory(ltdtoDict);
                         //dtoFactory.MakeTransportationDtos(sim, sim.ModularHouseholds[0], tds, trs,css, out var sites,out var transportationDevices, out var routes, dtohh.LocationDtos, dtohh.HouseholdKey);
                         var calcRepo = scope.Resolve<CalcRepo>();
-                        var chh = cmhf.MakeCalcModularHousehold(dtohh, out var dtoCalcLocationDict, null, null,
+                        var affordanceTaggingSets = new System.Collections.Generic.List<CalcAffordanceTaggingSetDto>();
+                        var chh = cmhf.MakeCalcModularHousehold(dtohh, out var dtoCalcLocationDict, null, null, affordanceTaggingSets,
                             calcRepo);
                         //ctf.MakeTransportation(dtohh,dtoCalcLocationDict,chh);
                         if (chh.TransportationHandler == null) {

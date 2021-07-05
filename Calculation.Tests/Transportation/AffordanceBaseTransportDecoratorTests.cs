@@ -40,16 +40,17 @@ namespace Calculation.Tests.Transportation
                     //make sure there is a travel route
                     const string personname = "activator";
                     TimeStep ts = new TimeStep(0, 0, false);
+                    var affs = dstloc.Affordances.ToList();
+                    var aff = affs[0];
                     var travelroute = transportationHandler.GetTravelRouteFromSrcLoc(srcloc, dstSite,
-                        ts, personname, calcRepo);
+                        ts, personname, aff, calcRepo);
                     Assert.NotNull(travelroute);
                     // find if busy
                     var isbusy = abt.IsBusy(ts, srcloc, personname, false);
                     isbusy.Should().Be(BusynessType.NotBusy);
-                    var affs = dstloc.Affordances.ToList();
 
                     Logger.Info("Activating affordance for time 0");
-                    affs[0].Activate(ts, personname, srcloc, out _);
+                    aff.Activate(ts, personname, srcloc, out _);
                 }
                 //should throw exception the second time.
                 Logger.Info("Activating affordance again for time 0");
@@ -76,17 +77,18 @@ namespace Calculation.Tests.Transportation
                     //make sure there is a travel route
                     const string personName = "activator";
                     TimeStep ts = new TimeStep(0, 0, false);
+                    var affs = dstloc.Affordances.ToList();
+                    var aff = affs[0];
                     var travelroute = transportationHandler.GetTravelRouteFromSrcLoc(srcloc,
-                        dstSite, ts, personName, calcRepo);
+                        dstSite, ts, personName, aff, calcRepo);
                     Assert.NotNull(travelroute);
                     // find if busy
                     var isbusy = abt.IsBusy(ts, srcloc, "", false);
                     isbusy.Should().Be(BusynessType.NotBusy);
-                    var affs = dstloc.Affordances.ToList();
 
                     Logger.Info("Activating affordance for time 0");
                     travelroute.GetDuration(ts, personName, new List<CalcTransportationDevice>());
-                    affs[0].Activate(ts, "activator", srcloc, out var _);
+                    aff.Activate(ts, "activator", srcloc, out var _);
                 }
                 //should throw exception the second time.
                 Logger.Info("Activating affordance again for time 0");
@@ -149,7 +151,7 @@ namespace Calculation.Tests.Transportation
                         "travel to dstsite", new HouseholdKey("hh0"), Guid.NewGuid().ToStrGuid(), calcRepo);
                     dstloc.AddTransportationAffordance(abt);
 
-                    var ctr = new CalcTravelRoute("myRoute1", srcSite, dstSite,
+                    var ctr = new CalcTravelRoute("myRoute1", 0, 100, PermittedGender.All, null, null, 1.0, srcSite, dstSite,
                         transportationHandler.VehicleDepot, transportationHandler.LocationUnlimitedDevices,
                          new HouseholdKey("hh0"), Guid.NewGuid().ToStrGuid(), calcRepo);
                     var myCategory = new CalcTransportationDeviceCategory("mycategory", false, Guid.NewGuid().ToStrGuid());

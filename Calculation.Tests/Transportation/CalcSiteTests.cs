@@ -50,7 +50,7 @@ namespace Calculation.Tests.Transportation {
                         var iodap = new Mock<IOnlineDeviceActivationProcessor>();
                         using (CalcRepo calcRepo = new CalcRepo(odap: iodap.Object, lf: lf, rnd: r, calcParameters: calcParameters, onlineLoggingData: old))
                         {
-                            CalcTravelRoute firstRoute = new CalcTravelRoute("route1", src, dst, th.VehicleDepot,
+                            CalcTravelRoute firstRoute = new CalcTravelRoute("route1", 0, 100, Common.Enums.PermittedGender.All, null, null, 1.0, src, dst, th.VehicleDepot,
     th.LocationUnlimitedDevices, hhkey, Guid.NewGuid().ToStrGuid(), calcRepo);
                             CalcTransportationDeviceCategory transcategory =
                                 new CalcTransportationDeviceCategory("car-category", true, Guid.NewGuid().ToStrGuid());
