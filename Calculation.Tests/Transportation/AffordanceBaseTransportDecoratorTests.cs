@@ -35,22 +35,22 @@ namespace Calculation.Tests.Transportation
                 wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
                 CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();
                 HouseholdKey key = new HouseholdKey("hh1");
-                using (var calcRepo = SetupFullWorkingTransportationExample(wd, rnd, out _, out var srcloc, out var dstloc, out var dstSite, out var transportationHandler, out var abt, calcParameters, key))
+                using (var calcRepo = SetupFullWorkingTransportationExample(wd, rnd, out _, out var srcloc, out var dstloc, out var srcSite, out var dstSite, out var sourceAff, out var transportationHandler, out var abt, calcParameters, key))
                 {
                     //make sure there is a travel route
-                    const string personname = "activator";
                     TimeStep ts = new TimeStep(0, 0, false);
                     var affs = dstloc.Affordances.ToList();
                     var aff = affs[0];
+                    var person = new CalcPersonDto("activator", null, 30, PermittedGender.All, null, null, null, -1, null, null);
                     var travelroute = transportationHandler.GetTravelRouteFromSrcLoc(srcloc, dstSite,
-                        ts, personname, aff, calcRepo);
+                        ts, person, sourceAff, calcRepo);
                     Assert.NotNull(travelroute);
                     // find if busy
-                    var isbusy = abt.IsBusy(ts, srcloc, personname, false);
+                    var isbusy = abt.IsBusy(ts, srcloc, person, false);
                     isbusy.Should().Be(BusynessType.NotBusy);
 
                     Logger.Info("Activating affordance for time 0");
-                    aff.Activate(ts, personname, srcloc, out _);
+                    aff.Activate(ts, person.Name, srcloc, out _);
                 }
                 //should throw exception the second time.
                 Logger.Info("Activating affordance again for time 0");
@@ -72,22 +72,24 @@ namespace Calculation.Tests.Transportation
                 var rnd = new Random(1);
                 CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();
                 HouseholdKey key = new HouseholdKey("hh1");
-                using (var calcRepo = SetupFullWorkingTransportationExample(wd, rnd, out _, out var srcloc, out var dstloc, out var dstSite, out var transportationHandler, out var abt, calcParameters, key))
+                using (var calcRepo = SetupFullWorkingTransportationExample(wd, rnd, out _, out var srcloc, out var dstloc, out var srcSite,
+                    out var dstSite, out var sourceAff, out var transportationHandler, out var abt, calcParameters, key))
                 {
                     //make sure there is a travel route
-                    const string personName = "activator";
                     TimeStep ts = new TimeStep(0, 0, false);
                     var affs = dstloc.Affordances.ToList();
                     var aff = affs[0];
+                    var person = new CalcPersonDto("activator", null, 30, PermittedGender.All, null, null, null, -1, null, null);
+
                     var travelroute = transportationHandler.GetTravelRouteFromSrcLoc(srcloc,
-                        dstSite, ts, personName, aff, calcRepo);
+                        dstSite, ts, person, sourceAff, calcRepo);
                     Assert.NotNull(travelroute);
                     // find if busy
-                    var isbusy = abt.IsBusy(ts, srcloc, "", false);
+                    var isbusy = abt.IsBusy(ts, srcloc, person, false);
                     isbusy.Should().Be(BusynessType.NotBusy);
 
                     Logger.Info("Activating affordance for time 0");
-                    travelroute.GetDuration(ts, personName, new List<CalcTransportationDevice>());
+                    travelroute.GetDuration(ts, person.Name, new List<CalcTransportationDevice>());
                     aff.Activate(ts, "activator", srcloc, out var _);
                 }
                 //should throw exception the second time.
@@ -98,10 +100,54 @@ namespace Calculation.Tests.Transportation
             }
         }
 
-        [JetBrains.Annotations.NotNull]
+        [Fact]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.BasicTest)]
+        public void RunRouteFilteringTest()
+        {
+            using (var wd = new WorkingDir(Utili.GetCurrentMethodAndClass()))
+            {
+                wd.InputDataLogger.AddSaver(new HouseholdKeyLogger(wd.SqlResultLoggingService));
+                Config.IsInUnitTesting = true;
+                var rnd = new Random(1);
+                CalcParameters calcParameters = CalcParametersFactory.MakeGoodDefaults();
+                HouseholdKey key = new HouseholdKey("hh1");
+                using (var calcRepo = SetupFullWorkingTransportationExample(wd, rnd, out _, out var srcloc, out var dstloc, out var srcSite, out var dstSite, out var sourceAff, out var transportationHandler, out var abt, calcParameters, key))
+                {
+                    TimeStep ts = new TimeStep(0, 0, false);
+                    var affs = dstloc.Affordances.ToList();
+                    var aff = affs[0];
+                    var person = new CalcPersonDto("activator", null, 30, PermittedGender.All, null, null, null, -1, null, null);
+
+                    var route = transportationHandler.GetTravelRouteFromSrcLoc(srcloc, dstSite, ts, person, sourceAff, calcRepo);
+                    Assert.Equal("myRoute2", route.Name); // due to affordance tag
+
+
+                    var untaggedAff = new CalcAffordance("UntaggedAffordance", new CalcProfile("calcprofile", Guid.NewGuid().ToStrGuid(), null, ProfileType.Absolute, "syn"),
+                        dstloc, false, null, 18, 50, PermittedGender.All, false, 0.1, LPGColors.Blue, "affordance category", false, false, new List<CalcAffordanceVariableOp>(),
+                        new List<VariableRequirement>(), ActionAfterInterruption.GoBackToOld, "timelimitname", 1, false, "srctrait", Guid.NewGuid().ToStrGuid(), null,
+                        new List<CalcAffordance.DeviceEnergyProfileTuple>(), new BitArray(0, false), BodilyActivityLevel.Low, calcRepo, null);
+
+                    person = new CalcPersonDto("activator", null, 30, PermittedGender.Female, null, null, null, -1, null, null);
+                    route = transportationHandler.GetTravelRouteFromSrcLoc(srcloc, dstSite, ts, person, untaggedAff, calcRepo);
+                    Assert.Equal("myRoute2", route.Name); // due to gender
+
+                    person = new CalcPersonDto("activator", null, 10, PermittedGender.All, null, null, null, -1, null, null);
+                    route = transportationHandler.GetTravelRouteFromSrcLoc(srcloc, dstSite, ts, person, untaggedAff, calcRepo);
+                    Assert.Equal("myRoute1", route.Name); // due to minimum age
+
+                    person = new CalcPersonDto("activator", null, 100, PermittedGender.All, null, null, null, -1, null, null);
+                    route = transportationHandler.GetTravelRouteFromSrcLoc(srcloc, dstSite, ts, person, untaggedAff, calcRepo);
+                    Assert.Equal("myRoute2", route.Name); // due to maximum age
+                }
+                CalcAffordance.DoubleCheckBusyArray = false;
+                wd.CleanUp();
+            }
+        }
+
+    [JetBrains.Annotations.NotNull]
         private static CalcRepo SetupFullWorkingTransportationExample([JetBrains.Annotations.NotNull] WorkingDir wd, [JetBrains.Annotations.NotNull] Random rnd, [JetBrains.Annotations.NotNull] out NormalRandom nr,
-                                                                      [JetBrains.Annotations.NotNull] out CalcLocation srcloc, [JetBrains.Annotations.NotNull] out CalcLocation dstloc, [JetBrains.Annotations.NotNull] out CalcSite dstSite,
-                                                                      [JetBrains.Annotations.NotNull] out TransportationHandler transportationHandler, [JetBrains.Annotations.NotNull] out AffordanceBaseTransportDecorator abt, [JetBrains.Annotations.NotNull] CalcParameters calcParameters,
+                                                                      [JetBrains.Annotations.NotNull] out CalcLocation srcloc, [JetBrains.Annotations.NotNull] out CalcLocation dstloc, [JetBrains.Annotations.NotNull] out CalcSite srcSite, [JetBrains.Annotations.NotNull] out CalcSite dstSite,
+                                                                      [JetBrains.Annotations.NotNull] out CalcAffordance affordance, [JetBrains.Annotations.NotNull] out TransportationHandler transportationHandler, [JetBrains.Annotations.NotNull] out AffordanceBaseTransportDecorator abt, [JetBrains.Annotations.NotNull] CalcParameters calcParameters,
                                                                       [JetBrains.Annotations.NotNull] HouseholdKey key)
         {
             Config.IsInUnitTesting = true;
@@ -131,7 +177,7 @@ namespace Calculation.Tests.Transportation
                 {
                     var calcRepo = new CalcRepo(odap: iodap.Object, calcParameters: calcParameters, rnd: rnd, normalRandom: nr, onlineLoggingData: old.Object, lf: lf);
                     BitArray isBusy = new BitArray(calcParameters.InternalTimesteps, false);
-                    var ca = new CalcAffordance("calcaffordance", cp, dstloc, false, calcdesires,
+                    affordance = new CalcAffordance("calcaffordance", cp, dstloc, false, calcdesires,
                         18, 50, PermittedGender.All, false, 0.1, LPGColors.Blue, "affordance category", false,
                         false, new List<CalcAffordanceVariableOp>(), new List<VariableRequirement>(),
                         ActionAfterInterruption.GoBackToOld, "timelimitname", 1, false,
@@ -139,7 +185,7 @@ namespace Calculation.Tests.Transportation
                         Guid.NewGuid().ToStrGuid(), crv, new List<CalcAffordance.DeviceEnergyProfileTuple>(),
                         isBusy, BodilyActivityLevel.Low, calcRepo, hhkey);
 
-                    var srcSite = new CalcSite("srcsite", Guid.NewGuid().ToStrGuid(), key);
+                    srcSite = new CalcSite("srcsite", Guid.NewGuid().ToStrGuid(), key);
                     srcSite.Locations.Add(srcloc);
                     dstSite = new CalcSite("dstSite", Guid.NewGuid().ToStrGuid(), key);
                     dstSite.Locations.Add(dstloc);
@@ -147,16 +193,27 @@ namespace Calculation.Tests.Transportation
                         "Desc", null, null);
                     transportationHandler = new TransportationHandler();
                     transportationHandler.AddSite(srcSite);
-                    abt = new AffordanceBaseTransportDecorator(ca, dstSite, transportationHandler,
+                    abt = new AffordanceBaseTransportDecorator(affordance, dstSite, transportationHandler,
                         "travel to dstsite", new HouseholdKey("hh0"), Guid.NewGuid().ToStrGuid(), calcRepo);
                     dstloc.AddTransportationAffordance(abt);
 
-                    var ctr = new CalcTravelRoute("myRoute1", 0, 100, PermittedGender.All, null, null, 1.0, srcSite, dstSite,
+                    var myCategory = new CalcTransportationDeviceCategory("mycategory", false, Guid.NewGuid().ToStrGuid());
+                    var route1 = new CalcTravelRoute("myRoute1", -1, 50, PermittedGender.Male, "mytaggingset", "cooking", 1.0, srcSite, dstSite,
                         transportationHandler.VehicleDepot, transportationHandler.LocationUnlimitedDevices,
                          new HouseholdKey("hh0"), Guid.NewGuid().ToStrGuid(), calcRepo);
-                    var myCategory = new CalcTransportationDeviceCategory("mycategory", false, Guid.NewGuid().ToStrGuid());
-                    ctr.AddTravelRouteStep("driving", myCategory, 1, 36000, Guid.NewGuid().ToStrGuid());
-                    transportationHandler.TravelRoutes.Add(ctr);
+                    route1.AddTravelRouteStep("driving", myCategory, 1, 36000, Guid.NewGuid().ToStrGuid());
+                    transportationHandler.TravelRoutes.Add(route1);
+                    var route2 = new CalcTravelRoute("myRoute2", 20, -1, PermittedGender.Female, "mytaggingset", "working", 1.0, srcSite, dstSite,
+                        transportationHandler.VehicleDepot, transportationHandler.LocationUnlimitedDevices,
+                         key, Guid.NewGuid().ToStrGuid(), calcRepo);
+                    route2.AddTravelRouteStep("driving", myCategory, 1, 36000, Guid.NewGuid().ToStrGuid());
+                    transportationHandler.TravelRoutes.Add(route2);
+
+                    // build an AffordanceTaggingSet for the the TransportationHandler
+                    var affTagSet = new CalcAffordanceTaggingSetDto("mytaggingset", false);
+                    affTagSet.AddTag(affordance.Name, "working");
+                    transportationHandler.AffordanceTaggingSets.Add(affTagSet.Name, affTagSet);
+
                     CalcLoadType chargingloadtype = new CalcLoadType("chargingloadtype", "W", "kwh", 1, true, Guid.NewGuid().ToStrGuid());
                     List<CalcSite> calcSites = new List<CalcSite>
             {

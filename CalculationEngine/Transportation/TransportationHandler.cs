@@ -4,6 +4,7 @@ using System.Linq;
 using CalculationEngine.HouseholdElements;
 using Common;
 using Common.CalcDto;
+using Common.Enums;
 using JetBrains.Annotations;
 
 namespace CalculationEngine.Transportation {
@@ -40,7 +41,7 @@ namespace CalculationEngine.Transportation {
 
         public CalcTravelRoute? GetTravelRouteFromSrcLoc([NotNull] CalcLocation srcLocation,
                                                              [NotNull] CalcSite dstSite, [NotNull] TimeStep startTimeStep,
-                                                             [NotNull] string personName, [NotNull] ICalcAffordanceBase affordance, CalcRepo calcRepo)
+                                                             [NotNull] CalcPersonDto calcPerson, [NotNull] ICalcAffordanceBase affordance, CalcRepo calcRepo)
         {
             CalcSite srcSite = LocationSiteLookup[srcLocation];
             if (srcSite == dstSite) {
@@ -50,13 +51,25 @@ namespace CalculationEngine.Transportation {
             var devicesAtSrc = AllMoveableDevices.Where(x => x.Currentsite == srcSite).ToList();
             var possibleRoutes = srcSite.GetAllRoutesTo(dstSite,devicesAtSrc);
             // filter routes based on the affordance tag
-            var allowedRoutes = possibleRoutes.Where(route => {
-              if (route.AffordanceTaggingSetName == null || route.AffordanceTagName == null)
-              {
-                return true;
-              }
-              return AffordanceTaggingSets[route.AffordanceTaggingSetName].AffordanceToTagDict[affordance.Name] == route.AffordanceTagName;
-            }).ToList();
+            var allowedRoutes = possibleRoutes
+                .Where(route => route.Gender == PermittedGender.All || calcPerson.Gender == PermittedGender.All || route.Gender == calcPerson.Gender)
+                .Where(route => route.MinimumAge < 0 || route.MinimumAge <= calcPerson.Age)
+                .Where(route => route.MaximumAge < 0 || route.MaximumAge >= calcPerson.Age)
+                .Where(route => {
+                    if (route.AffordanceTaggingSetName == null || route.AffordanceTagName == null)
+                    {
+                    // if no AffordanceTagging information is given for a route, then it is allowed for all affordances
+                    return true;
+                    }
+                    var affordanceTaggingSet = AffordanceTaggingSets[route.AffordanceTaggingSetName];
+                    if (!affordanceTaggingSet.AffordanceToTagDict.ContainsKey(affordance.Name))
+                    {
+                    // if the affordance is not tagged, then all routes are allowed
+                    return true;
+                    }
+                    return affordanceTaggingSet.AffordanceToTagDict[affordance.Name] == route.AffordanceTagName;
+                })
+                .ToList();
             if (allowedRoutes.Count == 0) {
                 return null;
             }
@@ -67,7 +80,7 @@ namespace CalculationEngine.Transportation {
             while (dur== null && allowedRoutes.Count > 0) {
                 ctr = allowedRoutes[calcRepo.Rnd.Next(allowedRoutes.Count)];
                 allowedRoutes.Remove(ctr);
-                dur = ctr.GetDuration(startTimeStep, personName, AllMoveableDevices);
+                dur = ctr.GetDuration(startTimeStep, calcPerson.Name, AllMoveableDevices);
             }
 
             if (dur == null) {

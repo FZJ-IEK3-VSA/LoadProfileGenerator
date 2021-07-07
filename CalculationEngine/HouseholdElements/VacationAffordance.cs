@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using Automation;
 using Automation.ResultFiles;
 using Common;
+using Common.CalcDto;
 using Common.Enums;
 using Common.JSON;
 using JetBrains.Annotations;
@@ -65,7 +66,7 @@ namespace CalculationEngine.HouseholdElements {
         //public override ICalcProfile CollectPersonProfile() => throw new LPGException("This function should never be called");
 
         public override BusynessType IsBusy(TimeStep time,
-                                    CalcLocation srcLocation, string calcPersonName,
+                                    CalcLocation srcLocation, CalcPersonDto calcPerson,
                                     bool clearDictionaries = true) =>
             throw new LPGException("This function should never be called");
     }

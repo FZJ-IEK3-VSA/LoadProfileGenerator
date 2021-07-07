@@ -36,6 +36,7 @@ using System.Linq;
 using Automation;
 using Automation.ResultFiles;
 using Common;
+using Common.CalcDto;
 using Common.Enums;
 using Common.JSON;
 using Common.SQLResultLogging.Loggers;
@@ -248,7 +249,8 @@ namespace CalculationEngine.HouseholdElements {
                 if (onlyInterrupting && calcSubAffordance.IsInterrupting || !onlyInterrupting) {
                     var delaytimesteps = calcSubAffordance.Delaytimesteps;
                     var hasbeenactivefor = HasBeenActiveFor(time);
-                    var issubaffbusy = calcSubAffordance.IsBusy(time, srcLocation, "name");
+                    var person = new CalcPersonDto("name", null, -1, PermittedGender.All, null, null, null, -1, null, null);
+                    var issubaffbusy = calcSubAffordance.IsBusy(time, srcLocation, person);
                     if (delaytimesteps < hasbeenactivefor && issubaffbusy == BusynessType.NotBusy) {
                         calcSubAffordance.SetDurations(RemainingActiveTime(time));
                         result.Add(calcSubAffordance);
@@ -259,7 +261,7 @@ namespace CalculationEngine.HouseholdElements {
             return result;
         }
 
-        public override BusynessType IsBusy(TimeStep time, CalcLocation srcLocation, string calcPersonName, bool clearDictionaries = true)
+        public override BusynessType IsBusy(TimeStep time, CalcLocation srcLocation, CalcPersonDto calcPerson, bool clearDictionaries = true)
         {
             if (!_timeFactorsForTimes.ContainsKey(time.InternalStep)) {
                 if (clearDictionaries) {

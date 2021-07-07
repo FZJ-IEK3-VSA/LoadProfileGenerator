@@ -33,6 +33,7 @@ using Automation;
 using Automation.ResultFiles;
 using CalculationEngine.Transportation;
 using Common;
+using Common.CalcDto;
 using Common.Enums;
 using Common.JSON;
 using Common.SQLResultLogging.Loggers;
@@ -127,7 +128,7 @@ namespace CalculationEngine.HouseholdElements {
 
         [SuppressMessage("ReSharper", "UnusedParameter.Global")]
         public abstract BusynessType IsBusy(TimeStep time,
-                                    CalcLocation srcLocation, string calcPersonName,
+                                    CalcLocation srcLocation, CalcPersonDto calcPerson,
                                     bool clearDictionaries = true);
 
         public bool IsInterruptable { get; }
