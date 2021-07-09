@@ -76,18 +76,30 @@ namespace CalculationEngine.Transportation {
 
             //check if the route is busy by calculating the duration. If busy, duration will be null
             int? dur = null;
-            CalcTravelRoute? ctr = null;
+            CalcTravelRoute? selectedRoute = null;
             while (dur== null && allowedRoutes.Count > 0) {
-                ctr = allowedRoutes[calcRepo.Rnd.Next(allowedRoutes.Count)];
-                allowedRoutes.Remove(ctr);
-                dur = ctr.GetDuration(startTimeStep, calcPerson.Name, AllMoveableDevices);
+                // select a route randomly, based on the weights
+                double totalWeight = allowedRoutes.Sum(route => route.Weight);
+                double randomNumber = calcRepo.Rnd.NextDouble() * totalWeight;
+                foreach (var route in allowedRoutes)
+                {
+                    if (randomNumber < route.Weight)
+                    {
+                        selectedRoute = route;
+                        break;
+                    }
+                    randomNumber -= route.Weight;
+                }
+
+                allowedRoutes.Remove(selectedRoute);
+                dur = selectedRoute.GetDuration(startTimeStep, calcPerson.Name, AllMoveableDevices);
             }
 
             if (dur == null) {
-                ctr = null;
+                selectedRoute = null;
             }
 
-            return ctr;
+            return selectedRoute;
         }
 
         public void AddVehicleDepotDevice([NotNull] CalcTransportationDevice dev)
