@@ -81,6 +81,7 @@ namespace CalculationEngine.Transportation {
                 // select a route randomly, based on the weights
                 double totalWeight = allowedRoutes.Sum(route => route.Weight);
                 double randomNumber = calcRepo.Rnd.NextDouble() * totalWeight;
+                selectedRoute = allowedRoutes.Last(); // default (for the case of computation errors); should normally be overwritten
                 foreach (var route in allowedRoutes)
                 {
                     if (randomNumber < route.Weight)
@@ -90,7 +91,6 @@ namespace CalculationEngine.Transportation {
                     }
                     randomNumber -= route.Weight;
                 }
-
                 allowedRoutes.Remove(selectedRoute);
                 dur = selectedRoute.GetDuration(startTimeStep, calcPerson.Name, AllMoveableDevices);
             }
