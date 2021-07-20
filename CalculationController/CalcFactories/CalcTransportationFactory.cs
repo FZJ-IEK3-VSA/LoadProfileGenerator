@@ -202,7 +202,7 @@ namespace CalculationController.CalcFactories {
             List<CalcSiteDto> calcSites = new List<CalcSiteDto>();
             //create the calcsites
             foreach (Site site in householdSites) {
-                CalcSiteDto calcSite = new CalcSiteDto(site.Name, site.IntID, Guid.NewGuid().ToStrGuid(),householdKey);
+                CalcSiteDto calcSite = new CalcSiteDto(site.Name, site.DeviceChangeAllowed, site.IntID, Guid.NewGuid().ToStrGuid(),householdKey);
                 if (chargingStationSet != null) {
                     var chargingStationsAtSite =
                         chargingStationSet.ChargingStations.Where(x => x.Site == site).ToList();
@@ -466,7 +466,7 @@ namespace CalculationController.CalcFactories {
             }
 
             foreach (var siteDto in household.CalcSites) {
-                var calcSite = new CalcSite(siteDto.Name,  siteDto.Guid,household.HouseholdKey);
+                var calcSite = new CalcSite(siteDto.Name, siteDto.DeviceChangeAllowed,  siteDto.Guid,household.HouseholdKey);
                 sites.Add(calcSite);
                 //siteDictByGuid.Add(siteDto.Guid, calcSite);
                 foreach (var locGuid in siteDto.LocationGuid) {

@@ -69,8 +69,8 @@ namespace Calculation.Tests.Transportation {
             var odap = new OnlineDeviceActivationProcessor(old, calcParameters, fft);
             using var calcRepo = new CalcRepo(rnd: rnd, normalRandom: nr, lf: lf, calcParameters: calcParameters, odap: odap,
                 onlineLoggingData: old);
-            var srcSite = new CalcSite("srcsite", Guid.NewGuid().ToStrGuid(), key);
-            var dstSite = new CalcSite("dstSite", Guid.NewGuid().ToStrGuid(), key);
+            var srcSite = new CalcSite("srcsite", true, Guid.NewGuid().ToStrGuid(), key);
+            var dstSite = new CalcSite("dstSite", true, Guid.NewGuid().ToStrGuid(), key);
             var isavailable = new BitArray(calcRepo.CalcParameters.InternalTimesteps);
             var station = new CalcChargingStation(category, chargingCalcLoadType, 500, "stationname", "stationguid".ToStrGuid(),
                 key, chargingCalcLoadType, calcRepo,isavailable);

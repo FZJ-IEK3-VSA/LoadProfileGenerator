@@ -25,7 +25,7 @@ namespace Database.Tests.Tables.Transportation
                 db.ClearTable(SiteLocation.TableName);
                 Location loc = new Location("loc1", null, db.ConnectionString, Guid.NewGuid().ToStrGuid());
                 loc.SaveToDB();
-                Site site = new Site("site1", null, db.ConnectionString, "desc", Guid.NewGuid().ToStrGuid());
+                Site site = new Site("site1", null, db.ConnectionString, "desc", true, Guid.NewGuid().ToStrGuid());
                 TransportationDeviceCategory cat = new TransportationDeviceCategory("bla", 1, db.ConnectionString, "desc", true, Guid.NewGuid().ToStrGuid());
                 VLoadType lt = new VLoadType("mylt", "desc", "w", "kwh", 1, 1, new TimeSpan(0, 1, 0), 1, db.ConnectionString,
                     LoadTypePriority.All, false, Guid.NewGuid().ToStrGuid());

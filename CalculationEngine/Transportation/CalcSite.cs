@@ -5,14 +5,18 @@ using Automation;
 using Automation.ResultFiles;
 using CalculationEngine.HouseholdElements;
 using Common;
+using Common.CalcDto;
 using JetBrains.Annotations;
 
 namespace CalculationEngine.Transportation {
     public class CalcSite : CalcBase {
-        public CalcSite([NotNull] string pName, StrGuid guid, [NotNull] HouseholdKey householdKey) : base(pName, guid)
+        public CalcSite([NotNull] string pName, bool deviceChangeAllowed, StrGuid guid, [NotNull] HouseholdKey householdKey) : base(pName, guid)
         {
+            DeviceChangeAllowed = deviceChangeAllowed;
             _householdKey = householdKey;
         }
+
+        public bool DeviceChangeAllowed { get; }
 
         [NotNull] private readonly HouseholdKey _householdKey;
         [NotNull]
@@ -37,14 +41,14 @@ namespace CalculationEngine.Transportation {
         }
 
         public bool AreCategoriesAvailable([NotNull][ItemNotNull] List<CalcTransportationDeviceCategory> neededDeviceCategories,
-            [NotNull] [ItemNotNull] List<CalcTransportationDevice> vehiclepool,
-                                           [ItemNotNull] [NotNull] List<CalcTransportationDevice> devicesAtLoc)
+            [NotNull] [ItemNotNull] List<CalcTransportationDevice> vehiclepool, [ItemNotNull] [NotNull] List<CalcTransportationDevice> devicesAtLoc,
+            [NotNull] CalcPersonDto person, [NotNull] DeviceOwnershipMapping<string, CalcTransportationDevice> deviceOwnerships)
         {
             //TODO: check for fuel on each transportation device
             foreach (var neededDeviceCategory in neededDeviceCategories) {
                 bool foundDevice = false;
                 foreach (var deviceAtSite in devicesAtLoc) {
-                    if (deviceAtSite.Category == neededDeviceCategory) {
+                    if (deviceAtSite.Category == neededDeviceCategory && deviceOwnerships.CanUse(person.Name, deviceAtSite)) {
                         foundDevice = true;
                     }
                 }
@@ -81,9 +85,10 @@ namespace CalculationEngine.Transportation {
 
         [NotNull]
         [ItemNotNull]
-        public List<CalcTravelRoute> GetAllRoutesTo([NotNull] CalcSite dstSite, [ItemNotNull] [NotNull] List<CalcTransportationDevice> devicesAtSrc)
+        public List<CalcTravelRoute> GetAllRoutesTo([NotNull] CalcSite dstSite, [ItemNotNull] [NotNull] List<CalcTransportationDevice> devicesAtSrc,
+            [NotNull] CalcPersonDto person, [NotNull] DeviceOwnershipMapping<string, CalcTransportationDevice> deviceOwnerships)
         {
-            return MyRoutes.Where(x => x.IsAvailableRouteFor(this, dstSite,devicesAtSrc)).ToList();
+            return MyRoutes.Where(x => x.IsAvailableRouteFor(this, dstSite,devicesAtSrc, person, deviceOwnerships)).ToList();
         }
 
         [NotNull]

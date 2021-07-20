@@ -44,7 +44,7 @@ namespace Database.Tests.Tables.Transportation
                 db.ClearTable(SiteLocation.TableName);
                 Location loc = new Location("loc1", null, db.ConnectionString, Guid.NewGuid().ToStrGuid());
                 loc.SaveToDB();
-                Site site = new Site("site1", null, db.ConnectionString, "desc", Guid.NewGuid().ToStrGuid());
+                Site site = new Site("site1", null, db.ConnectionString, "desc", true, Guid.NewGuid().ToStrGuid());
                 site.SaveToDB();
                 site.AddLocation(loc);
                 //loading

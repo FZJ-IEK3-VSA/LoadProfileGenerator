@@ -25,10 +25,10 @@ namespace Database.Tests.Tables.Transportation
                 db.ClearTable(TravelRouteStep.TableName);
                 Location loc = new Location("loc1", null, db.ConnectionString, Guid.NewGuid().ToStrGuid());
                 loc.SaveToDB();
-                Site siteA = new Site("site1", null, db.ConnectionString, "desc", Guid.NewGuid().ToStrGuid());
+                Site siteA = new Site("site1", null, db.ConnectionString, "desc", true, Guid.NewGuid().ToStrGuid());
                 siteA.SaveToDB();
 
-                Site siteB = new Site("site2", null, db.ConnectionString, "desc", Guid.NewGuid().ToStrGuid());
+                Site siteB = new Site("site2", null, db.ConnectionString, "desc", true, Guid.NewGuid().ToStrGuid());
                 siteB.SaveToDB();
 
                 TransportationDeviceCategory td = new

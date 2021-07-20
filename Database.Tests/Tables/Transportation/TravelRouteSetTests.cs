@@ -25,9 +25,9 @@ namespace Database.Tests.Tables.Transportation
 
                 TravelRouteSet set = new TravelRouteSet("set1", null, db.ConnectionString, "desc", System.Guid.NewGuid().ToStrGuid(), null);
                 set.SaveToDB();
-                Site a = new Site("a", null, db.ConnectionString, "desc", System.Guid.NewGuid().ToStrGuid());
+                Site a = new Site("a", null, db.ConnectionString, "desc", true, System.Guid.NewGuid().ToStrGuid());
                 a.SaveToDB();
-                Site b = new Site("b", null, db.ConnectionString, "desc", System.Guid.NewGuid().ToStrGuid());
+                Site b = new Site("b", null, db.ConnectionString, "desc", true, System.Guid.NewGuid().ToStrGuid());
                 b.SaveToDB();
                 TravelRoute route = new TravelRoute(null, db.ConnectionString, "routename", "routedesc", a, b, System.Guid.NewGuid().ToStrGuid(), null);
                 route.SaveToDB();

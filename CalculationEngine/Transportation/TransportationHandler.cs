@@ -39,22 +39,31 @@ namespace CalculationEngine.Transportation {
         [ItemNotNull]
         public Dictionary<string, CalcAffordanceTaggingSetDto> AffordanceTaggingSets { get; } = new Dictionary<string, CalcAffordanceTaggingSetDto>();
 
+        [NotNull]
+        [ItemNotNull]
+        public DeviceOwnershipMapping<string, CalcTransportationDevice> DeviceOwnerships { get; } = new DeviceOwnershipMapping<string, CalcTransportationDevice>();
+
         public CalcTravelRoute? GetTravelRouteFromSrcLoc([NotNull] CalcLocation srcLocation,
                                                              [NotNull] CalcSite dstSite, [NotNull] TimeStep startTimeStep,
-                                                             [NotNull] CalcPersonDto calcPerson, [NotNull] ICalcAffordanceBase affordance, CalcRepo calcRepo)
+                                                             [NotNull] CalcPersonDto person, [NotNull] ICalcAffordanceBase affordance, CalcRepo calcRepo)
         {
             CalcSite srcSite = LocationSiteLookup[srcLocation];
             if (srcSite == dstSite) {
                 return SameSiteRoutes[srcSite];
             }
+            if (srcSite.DeviceChangeAllowed)
+            {
+                // person is not bound to a device anymore
+                DeviceOwnerships.RemoveOwnership(person.Name);
+            }
             //first get the routes, no matter if busy
             var devicesAtSrc = AllMoveableDevices.Where(x => x.Currentsite == srcSite).ToList();
-            var possibleRoutes = srcSite.GetAllRoutesTo(dstSite,devicesAtSrc);
+            var possibleRoutes = srcSite.GetAllRoutesTo(dstSite, devicesAtSrc, person, DeviceOwnerships);
             // filter routes based on the affordance tag
             var allowedRoutes = possibleRoutes
-                .Where(route => route.Gender == PermittedGender.All || calcPerson.Gender == PermittedGender.All || route.Gender == calcPerson.Gender)
-                .Where(route => route.MinimumAge < 0 || route.MinimumAge <= calcPerson.Age)
-                .Where(route => route.MaximumAge < 0 || route.MaximumAge >= calcPerson.Age)
+                .Where(route => route.Gender == PermittedGender.All || person.Gender == PermittedGender.All || route.Gender == person.Gender)
+                .Where(route => route.MinimumAge < 0 || route.MinimumAge <= person.Age)
+                .Where(route => route.MaximumAge < 0 || route.MaximumAge >= person.Age)
                 .Where(route => {
                     if (route.AffordanceTaggingSetName == null || route.AffordanceTagName == null)
                     {
@@ -81,7 +90,7 @@ namespace CalculationEngine.Transportation {
                 // select a route randomly, based on the weights
                 double totalWeight = allowedRoutes.Sum(route => route.Weight);
                 double randomNumber = calcRepo.Rnd.NextDouble() * totalWeight;
-                selectedRoute = allowedRoutes.Last(); // default (for the case of computation errors); should normally be overwritten
+                selectedRoute = allowedRoutes.Last(); // default (in case of double errors); should normally be overwritten
                 foreach (var route in allowedRoutes)
                 {
                     if (randomNumber < route.Weight)
@@ -92,7 +101,7 @@ namespace CalculationEngine.Transportation {
                     randomNumber -= route.Weight;
                 }
                 allowedRoutes.Remove(selectedRoute);
-                dur = selectedRoute.GetDuration(startTimeStep, calcPerson.Name, AllMoveableDevices);
+                dur = selectedRoute.GetDuration(startTimeStep, person, AllMoveableDevices, DeviceOwnerships);
             }
 
             if (dur == null) {

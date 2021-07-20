@@ -57,7 +57,11 @@ namespace CalculationEngine.Transportation {
             }
 
             CalcTravelRoute route = _myLastTimeEntry.PreviouslySelectedRoutes[personSourceLocation];
-            int routeduration = route.Activate(startTime,activatorName, out var usedDevices);
+            if (_transportationHandler == null)
+            {
+                throw new LPGException("TransportationHandler was null");
+            }
+            int routeduration = route.Activate(startTime, activatorName, out var usedDevices, _transportationHandler.DeviceOwnerships);
 
             if (routeduration == 0) {
                 _calcRepo.OnlineLoggingData.AddTransportationStatus(
@@ -173,8 +177,7 @@ namespace CalculationEngine.Transportation {
                 throw new LPGException("was null");
             }
             // ReSharper disable once PossibleInvalidOperationException
-            int? travelDurationN = route.GetDuration(time, calcPerson.Name,
-                _transportationHandler.AllMoveableDevices);
+            int? travelDurationN = route.GetDuration(time, calcPerson, _transportationHandler.AllMoveableDevices, _transportationHandler.DeviceOwnerships);
             if (travelDurationN == null) {
                 throw new LPGException("Bug: couldn't calculate travel duration for route.");
             }

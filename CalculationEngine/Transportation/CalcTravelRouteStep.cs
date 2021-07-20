@@ -3,6 +3,7 @@ using System.Linq;
 using Automation;
 using CalculationEngine.HouseholdElements;
 using Common;
+using Common.CalcDto;
 using JetBrains.Annotations;
 
 namespace CalculationEngine.Transportation {
@@ -42,17 +43,29 @@ namespace CalculationEngine.Transportation {
         }
 
         public bool CalculateDurationInTimestepsAndPickDevice([NotNull] TimeStep timestepOfThisStep,
-                                                              out CalcTransportationDevice? pickedDevice,
+            out CalcTransportationDevice? pickedDevice,
             [CanBeNull] out int? pickeddurationInTimesteps,
             [NotNull][ItemNotNull] List<CalcTransportationDevice> vehiclepool,
             [NotNull][ItemNotNull] List<CalcTransportationDevice> locationUnlimitedDevices,
-            [ItemNotNull] [NotNull] List<CalcTransportationDevice> devicesAtSrcLoc)
+            [ItemNotNull] [NotNull] List<CalcTransportationDevice> devicesAtSrcLoc, [NotNull] CalcPersonDto person,
+            [NotNull] DeviceOwnershipMapping<string, CalcTransportationDevice> deviceOwnerships)
         {
             int durationInTimesteps;
             if (TransportationDeviceCategory.IsLimitedToSingleLocation) {
                 //pick a limited device
-                //first try the devices at the src site
-                var srcdevices = devicesAtSrcLoc.Where(x => x.Category == TransportationDeviceCategory).ToList();
+                //first check if the person currently owns a device
+                var ownedDevice = deviceOwnerships.GetDevice(person.Name);
+                List<CalcTransportationDevice> srcdevices;
+                if (ownedDevice != null && ownedDevice.Category == TransportationDeviceCategory)
+                {
+                    // it can be assumed that each route has at most one ownable device
+                    // --> simply select the owned device if the category fits
+                    srcdevices = new List<CalcTransportationDevice> { ownedDevice };
+                } else
+                {
+                    // if no matching device is owned, try the other unowned devices at the src site
+                    srcdevices = devicesAtSrcLoc.Where(x => x.Category == TransportationDeviceCategory && deviceOwnerships.CanUse(person.Name, x)).ToList();
+                }
                 bool addedVehiclePoolAlready = false;
                 if (srcdevices.Count == 0)
                 {

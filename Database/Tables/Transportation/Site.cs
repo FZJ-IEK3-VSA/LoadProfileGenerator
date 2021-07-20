@@ -21,12 +21,14 @@ namespace Database.Tables.Transportation {
         public const string TableName = "tblSites";
         [JetBrains.Annotations.NotNull] [ItemNotNull] private readonly ObservableCollection<SiteLocation> _siteLocations = new ObservableCollection<SiteLocation>();
         [CanBeNull] private string _description;
+        private bool _deviceChangeAllowed;
 
         public Site([JetBrains.Annotations.NotNull] string name, [CanBeNull] int? pID, [JetBrains.Annotations.NotNull] string connectionString,
-            [CanBeNull] string description, [NotNull] StrGuid guid) : base(name, TableName,
+            [CanBeNull] string description, bool deviceChangeAllowed, [NotNull] StrGuid guid) : base(name, TableName,
             connectionString, guid)
         {
             _description = description;
+            _deviceChangeAllowed = deviceChangeAllowed;
             ID = pID;
             AreNumbersOkInNameForIntegrityCheck = true;
             TypeDescription = "Site";
@@ -37,6 +39,12 @@ namespace Database.Tables.Transportation {
         public string Description {
             get => _description;
             set => SetValueWithNotify(value, ref _description, nameof(Description));
+        }
+
+        public bool DeviceChangeAllowed
+        {
+            get => _deviceChangeAllowed;
+            set => SetValueWithNotify(value, ref _deviceChangeAllowed, nameof(DeviceChangeAllowed));
         }
 
         [ItemNotNull]
@@ -70,7 +78,7 @@ namespace Database.Tables.Transportation {
         [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString) => new Site(
-            FindNewName(isNameTaken, "New Site "), null, connectionString, "",System.Guid.NewGuid().ToStrGuid());
+            FindNewName(isNameTaken, "New Site "), null, connectionString, "", true, System.Guid.NewGuid().ToStrGuid());
 
         public void DeleteLocation([JetBrains.Annotations.NotNull] SiteLocation ld)
         {
@@ -91,7 +99,7 @@ namespace Database.Tables.Transportation {
         [UsedImplicitly]
         public static Site ImportFromItem([JetBrains.Annotations.NotNull] Site toImport, [JetBrains.Annotations.NotNull] Simulator dstSim)
         {
-            var site = new Site(toImport.Name, null, dstSim.ConnectionString, toImport.Description, toImport.Guid);
+            var site = new Site(toImport.Name, null, dstSim.ConnectionString, toImport.Description, toImport.DeviceChangeAllowed, toImport.Guid);
             site.SaveToDB();
             foreach (var siteloc in toImport._siteLocations) {
                 var loc = GetItemFromListByName(dstSim.Locations.Items, siteloc.Location.Name);
@@ -132,6 +140,11 @@ namespace Database.Tables.Transportation {
         protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("Name", Name);
+            if (_description != null)
+            {
+                cmd.AddParameter("Description", _description);
+            }
+            cmd.AddParameter("DeviceChangeAllowed", _deviceChangeAllowed);
         }
 
         [JetBrains.Annotations.NotNull]
@@ -140,9 +153,10 @@ namespace Database.Tables.Transportation {
         {
             var name = dr.GetString("Name", false, "(no name)", ignoreMissingFields);
             var description = dr.GetString("Description", false, "(no description)", ignoreMissingFields);
+            var deviceChangeAllowed = dr.GetBool("DeviceChangeAllowed", false, true, ignoreMissingFields);
             var id = dr.GetIntFromLong("ID", false, ignoreMissingFields, -1);
             var guid = GetGuid(dr, ignoreMissingFields);
-            return new Site(name, id, connectionString, description, guid);
+            return new Site(name, id, connectionString, description, deviceChangeAllowed, guid);
         }
 
         private static bool IsCorrectSiteLocationParent([JetBrains.Annotations.NotNull] DBBase parent, [JetBrains.Annotations.NotNull] DBBase child)
@@ -190,6 +204,7 @@ namespace Database.Tables.Transportation {
             var newSite = sim.Sites.CreateNewItem(sim.ConnectionString);
             newSite.Name = Name + "(copy)";
             newSite.Description = Description;
+            newSite.DeviceChangeAllowed = DeviceChangeAllowed;
             newSite.SaveToDB();
             foreach (SiteLocation location in Locations) {
                 newSite.AddLocation(location.Location);

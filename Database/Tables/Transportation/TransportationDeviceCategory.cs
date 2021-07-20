@@ -85,7 +85,7 @@ namespace Database.Tables.Transportation {
             var name = dr.GetString("Name", false, "(no name)", ignoreMissingFields);
             var description = dr.GetString("Description", false, "(no description)", ignoreMissingFields);
             var id = dr.GetIntFromLong("ID", false, ignoreMissingFields, -1);
-            var isLimitedToSingleLocation = dr.GetBool("IsLimitedToSingleLocation", false, ignoreMissingFields);
+            var isLimitedToSingleLocation = dr.GetBool("IsLimitedToSingleLocation", false, false, ignoreMissingFields);
             var guid = GetGuid(dr, ignoreMissingFields);
             return new TransportationDeviceCategory(name, id, connectionString, description, isLimitedToSingleLocation, guid);
         }

@@ -4,6 +4,7 @@ using Automation;
 using Automation.ResultFiles;
 using CalculationEngine.HouseholdElements;
 using Common;
+using Common.CalcDto;
 using Common.SQLResultLogging.Loggers;
 using JetBrains.Annotations;
 
@@ -82,7 +83,8 @@ namespace CalculationEngine.Transportation
             }
         }
         public int Activate([NotNull] TimeStep currentTimeStep, [NotNull] string calcPersonName,
-                            [NotNull][ItemNotNull] out List<CalcTravelDeviceUseEvent> usedDeviceEvents)
+                            [NotNull][ItemNotNull] out List<CalcTravelDeviceUseEvent> usedDeviceEvents,
+                            [NotNull] DeviceOwnershipMapping<string, CalcTransportationDevice> deviceOwnerships)
         {
             if (_mypicks.Timestep != currentTimeStep || _mypicks.CalcPersonName != calcPersonName) {
                 throw new LPGException("Device was not previously picked?");
@@ -110,6 +112,10 @@ namespace CalculationEngine.Transportation
 
             foreach (CalcTravelRouteStep step in Steps) {
                 var device = _mypicks.PickedDevices[step];
+                if (device.Category.IsLimitedToSingleLocation)
+                {
+                    deviceOwnerships.TrySetOwnership(calcPersonName, device);
+                }
                 int pickedDuration = _mypicks.PickedDurations[step];
                 usedDeviceEvents.Add(new CalcTravelDeviceUseEvent(device, pickedDuration,step.DistanceOfStepInM));
                 //step.CalculateDurationInTimestepsAndPickDevice(slidingTimeStep, out CalcTransportationDevice pickedDevice,
@@ -140,14 +146,15 @@ namespace CalculationEngine.Transportation
         }
 
         [CanBeNull]
-        public int? GetDuration([NotNull] TimeStep currentTimeStep, [NotNull] string calcPersonName,
-                                [ItemNotNull] [NotNull] List<CalcTransportationDevice> allTransportationDevices)
+        public int? GetDuration([NotNull] TimeStep currentTimeStep, [NotNull] CalcPersonDto person,
+                                [ItemNotNull] [NotNull] List<CalcTransportationDevice> allTransportationDevices,
+                                [NotNull] DeviceOwnershipMapping<string, CalcTransportationDevice> deviceOwnerships)
         {
-            if (_mypicks.Timestep == currentTimeStep && _mypicks.CalcPersonName == calcPersonName) {
+            if (_mypicks.Timestep == currentTimeStep && _mypicks.CalcPersonName == person.Name) {
                 return _mypicks.PreviouslyCalculatedTimeSteps;
             }
 
-            var picks = new PreviouslyPickedDevices(calcPersonName, currentTimeStep);
+            var picks = new PreviouslyPickedDevices(person.Name, currentTimeStep);
             int totalDuration = 0;
             TimeStep slidingTimeStep = currentTimeStep;
             var deviceAtSrc = allTransportationDevices.Where(x => x.Currentsite == SiteA).ToList();
@@ -155,8 +162,8 @@ namespace CalculationEngine.Transportation
                 bool success = step.CalculateDurationInTimestepsAndPickDevice(slidingTimeStep,
                     out CalcTransportationDevice? pickedDevice,
                     out int? durationForPickedDeviceInTimesteps,
-                    _vehiclePool,
-                    _locationUnlimitedDevices, deviceAtSrc);
+                    _vehiclePool, _locationUnlimitedDevices,
+                    deviceAtSrc, person, deviceOwnerships);
                 if (!success) {
                     //this travel route step not now available, thus the entire route is invalid.
                     return null;
@@ -185,7 +192,8 @@ namespace CalculationEngine.Transportation
             return totalDuration;
         }
 
-        public bool IsAvailableRouteFor([NotNull] CalcSite srcSite, [NotNull] CalcSite dstSite, [ItemNotNull] [NotNull] List<CalcTransportationDevice> devicesAtSrcLoc)
+        public bool IsAvailableRouteFor([NotNull] CalcSite srcSite, [NotNull] CalcSite dstSite, [ItemNotNull] [NotNull] List<CalcTransportationDevice> devicesAtSrcLoc,
+            [NotNull] CalcPersonDto person, [NotNull] DeviceOwnershipMapping<string, CalcTransportationDevice> deviceOwnerships)
         {
             if (SiteA == srcSite && dstSite == SiteB) {
                 List<CalcTransportationDeviceCategory> neededCategories =
@@ -194,7 +202,17 @@ namespace CalculationEngine.Transportation
                     return true;
                 }
 
-                bool areCategoriesAvailable = srcSite.AreCategoriesAvailable(neededCategories, _vehiclePool, devicesAtSrcLoc);
+                // if the person currently owns a device then this device must be used
+                var ownedDevice = deviceOwnerships.GetDevice(person.Name);
+                if (ownedDevice != null)
+                {
+                    bool canUseOwnedDevice = neededCategories.Any(category => category == ownedDevice.Category);
+                    if (!canUseOwnedDevice)
+                    {
+                        return false;
+                    }
+                }
+                bool areCategoriesAvailable = srcSite.AreCategoriesAvailable(neededCategories, _vehiclePool, devicesAtSrcLoc, person, deviceOwnerships);
                 return areCategoriesAvailable;
             }
 

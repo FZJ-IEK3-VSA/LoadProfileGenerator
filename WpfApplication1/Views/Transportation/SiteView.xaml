@@ -62,6 +62,8 @@
                                  Grid.Column="1"
                                  Style="{StaticResource TextBoxStyle}"
                                  Text="{Binding ThisSite.Description}" />
+                        <CheckBox Style="{StaticResource CheckBoxStyle}" IsChecked="{Binding ThisSite.DeviceChangeAllowed}"
+                                  Grid.Row="3" Grid.Column="1">Can devices like cars be left at this site?</CheckBox>
                         <Button Grid.Row="5" Grid.Column="1"
                                 Click="BtnCopySiteClick"
                                 Style="{StaticResource ButtonStyle}">

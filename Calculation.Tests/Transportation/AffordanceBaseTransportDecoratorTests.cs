@@ -89,7 +89,8 @@ namespace Calculation.Tests.Transportation
                     isbusy.Should().Be(BusynessType.NotBusy);
 
                     Logger.Info("Activating affordance for time 0");
-                    travelroute.GetDuration(ts, person.Name, new List<CalcTransportationDevice>());
+                    var ownerships = new DeviceOwnershipMapping<string, CalcTransportationDevice>();
+                    travelroute.GetDuration(ts, person, new List<CalcTransportationDevice>(), ownerships);
                     aff.Activate(ts, "activator", srcloc, out var _);
                 }
                 //should throw exception the second time.
@@ -185,9 +186,9 @@ namespace Calculation.Tests.Transportation
                         Guid.NewGuid().ToStrGuid(), crv, new List<CalcAffordance.DeviceEnergyProfileTuple>(),
                         isBusy, BodilyActivityLevel.Low, calcRepo, hhkey);
 
-                    srcSite = new CalcSite("srcsite", Guid.NewGuid().ToStrGuid(), key);
+                    srcSite = new CalcSite("srcsite", true, Guid.NewGuid().ToStrGuid(), key);
                     srcSite.Locations.Add(srcloc);
-                    dstSite = new CalcSite("dstSite", Guid.NewGuid().ToStrGuid(), key);
+                    dstSite = new CalcSite("dstSite", true, Guid.NewGuid().ToStrGuid(), key);
                     dstSite.Locations.Add(dstloc);
                     fft.RegisterHousehold(new HouseholdKey("hh0"), "hh0-prettyname", HouseholdKeyType.Household,
                         "Desc", null, null);
