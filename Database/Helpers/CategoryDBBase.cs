@@ -73,14 +73,19 @@ namespace Database.Helpers {
 
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse
             // ReSharper disable twice HeuristicUnreachableCode
-            if (reference.Guid == null) {
-                return null;
-            }
-
-            foreach (var x in Items) {
-                if (x.Guid == reference.Guid) {
-                    return x;
+            if (reference.Guid != null && reference.Guid != StrGuid.Empty)
+            {
+                foreach (var x in Items)
+                {
+                    if (x.Guid == reference.Guid)
+                    {
+                        return x;
+                    }
                 }
+            }
+            if (reference.Name != null)
+            {
+                return FindFirstByName(reference.Name);
             }
 
             return null;

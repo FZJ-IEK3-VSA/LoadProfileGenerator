@@ -69,6 +69,8 @@ namespace SimulationEngineLib
                 WriteJsonRefs(sim.ChargingStationSets.Items.Select(x => (DBBase)x).ToList(), sw, "ChargingStationSets");
                 WriteJsonRefs(sim.TravelRouteSets.Items.Select(x => (DBBase)x).ToList(), sw, "TravelRouteSets");
                 WriteJsonRefs(sim.Houses.Items.Select(x => (DBBase)x).ToList(), sw, "Houses");
+                WriteJsonRefs(sim.Sites.Items.Select(x => (DBBase)x).ToList(), sw, "Sites");
+                WriteJsonRefs(sim.TransportationDeviceCategories.Items.Select(x => (DBBase)x).ToList(), sw, "TransportationDeviceCategories");
             WriteNames(sim.HouseholdTags.Items.Select(x => (DBBase)x).ToList(), sw, "HouseholdTags");
             WriteNames(sim.LivingPatternTags.Items.Select(x => (DBBase)x).ToList(), sw, "LivingPatternTags");
             WriteNames(sim.HouseholdTemplates.Items.Select(x => (DBBase)x).ToList(), sw, "HouseholdTemplates");
@@ -178,6 +180,7 @@ namespace SimulationEngineLib
                 WriteEnum<HouseholdKeyType>(sw, writtenTypes);
             var encounteredTypes = new List<string>();
                 WriteClass<StrGuid>(sw, encounteredTypes, writtenTypes);
+                WriteClass<TransportationPreference>(sw, encounteredTypes, writtenTypes);
                 WriteClass<PersonData>(sw, encounteredTypes, writtenTypes);
                 WriteClass<JsonReference>(sw, encounteredTypes, writtenTypes);
                 WriteClass<TransportationDistanceModifier>(sw, encounteredTypes, writtenTypes);
@@ -297,10 +300,20 @@ namespace SimulationEngineLib
                     typename = "List[PersonLivingTag]";
                     return info.Name + ": List[PersonLivingTag] = field(default_factory=list)";
                 }
-            if (fulltypename.StartsWith("System.Collections.Generic.List`1[[Automation.PersonData,"))
+                if (fulltypename.StartsWith("System.Collections.Generic.List`1[[Automation.PersonData,"))
                 {
                     typename = "List[PersonData]";
                     return info.Name + ": List[PersonData] = field(default_factory=list)";
+                }
+                if (fulltypename.StartsWith("System.Collections.Generic.List`1[[Automation.TransportationPreference"))
+                {
+                    typename = "List[TransportationPreference]";
+                    return info.Name + ": List[TransportationPreference] = field(default_factory=list)";
+                }
+                if (fulltypename.StartsWith("System.Collections.Generic.List`1[[Automation.JsonReference"))
+                {
+                    typename = "List[JsonReference]";
+                    return info.Name + ": List[JsonReference] = field(default_factory=list)";
                 }
                 if (fulltypename.StartsWith("System.Collections.Generic.List`1[[Automation.TransportationDistanceModifier, "))
                 {
@@ -311,13 +324,7 @@ namespace SimulationEngineLib
                 {
                     typename = "List[HouseholdData]";
                     return info.Name + ": List[HouseholdData] = field(default_factory=list)";
-            }
-                if (fulltypename.StartsWith("System.Collections.Generic.List`1[[System.Double,"))
-                {
-                    typename = "List[float]";
-                    return info.Name + ": List[float] = field(default_factory=list)";
                 }
-
                 if (fulltypename.StartsWith("System.Collections.Generic.List`1[[System.Double,"))
                 {
                     typename = "List[float]";
@@ -329,7 +336,7 @@ namespace SimulationEngineLib
                     typename = "List[SingleDeviceProfile]";
                     return info.Name + ": List[SingleDeviceProfile] = field(default_factory=list)";
                 }
-            if (fulltypename.StartsWith("System.Collections.Generic.Dictionary`2[[System.String,") && fulltypename.Contains("],[System.String"))
+                if (fulltypename.StartsWith("System.Collections.Generic.Dictionary`2[[System.String,") && fulltypename.Contains("],[System.String"))
                 {
                     typename = "Dict[str, str]";
                     return info.Name + ": Dict[str, str] = field(default_factory=dict)";
@@ -337,77 +344,40 @@ namespace SimulationEngineLib
             switch (fulltypename)
                 {
                     case "Automation.HouseData":
-                        typename = shorttypename;
-                        return info.Name + ": Optional[" + shorttypename + "] = None";
                     case "Automation.JsonCalcSpecification":
-                        typename = shorttypename;
-                        return info.Name + ": Optional[" + shorttypename + "] = None";
                     case "Automation.HouseReference":
-                        typename = shorttypename;
-                        return info.Name + ": Optional[" + shorttypename + "] = None";
                     case "Automation.HouseholdDataPersonSpecification":
-                        typename = shorttypename;
-                        return info.Name + ": Optional[" + shorttypename + "] = None";
                     case "Automation.HouseholdTemplateSpecification":
-                        typename = shorttypename;
-                        return info.Name + ": Optional[" + shorttypename + "] = None";
                     case "Automation.HouseholdNameSpecification":
-                        typename = shorttypename;
-                        return info.Name + ": Optional[" + shorttypename + "] = None";
                     case "Automation.JsonReference":
-                        typename = shorttypename;
-                        return info.Name + ": Optional[" + shorttypename + "] = None";
                     case "Automation.TransportationDistanceModifier":
-                        typename = shorttypename;
-                        return info.Name + ": Optional[" + shorttypename + "] = None";
                     case "Automation.ResultFiles.LoadTypeInformation":
-                        typename = shorttypename;
-                        return info.Name + ": Optional[" + shorttypename + "] = None";
                     case "Automation.ResultFiles.HouseholdKeyEntry":
-                        typename = shorttypename;
-                        return info.Name + ": Optional[" + shorttypename + "] = None";
                     case "Automation.ResultFiles.HouseholdKey":
+                    case "Automation.PersonData":
+                    case "Automation.TransportationPreference":
+                    case "Automation.HouseholdData":
                         typename = shorttypename;
                         return info.Name + ": Optional[" + shorttypename + "] = None";
                     case "Automation.ResultFiles.HouseholdKeyType":
                         typename = shorttypename;
                         return info.Name + ": Optional[str] = \"\"";
-                case "Automation.PersonData":
-                        typename = shorttypename;
-                        return info.Name + ": Optional[" + shorttypename + "] = None";
                     case "Automation.HouseholdDataSpecificationType":
+                    case "Automation.Gender":
+                    case "System.String":
+                    case "Automation.CalcOption":
+                    case "Automation.OutputFileDefault":
+                    case "Automation.EnergyIntensityType":
+                    case "Automation.LoadTypePriority":
+                    case "System.DateTime":
                         typename = "str";
                         return info.Name + ": Optional[str] = \"\"";
                     case "Automation.HouseDefinitionType":
                         typename = "str";
                         return info.Name + ": Optional[str] = HouseDefinitionType." + HouseDefinitionType.HouseData.ToString();
-                    case "Automation.Gender":
-                        typename = "str";
-                        return info.Name + ": Optional[str] = \"\"";
-                    case "System.String":
-                        typename = "str";
-                        return info.Name + ": Optional[str] = \"\"";
-                    case "Automation.CalcOption":
-                        typename = "str";
-                        return info.Name + ": Optional[str] = \"\"";
-                    case "Automation.OutputFileDefault":
-                        typename = "str";
-                        return info.Name + ": Optional[str] = \"\"";
-                    case "Automation.EnergyIntensityType":
-                        typename = "str";
-                        return info.Name + ": Optional[str] = \"\"";
-                    case "Automation.LoadTypePriority":
-                        typename = "str";
-                        return info.Name + ": Optional[str] = \"\"";
-                    case "System.DateTime":
-                        typename = "str";
-                        return info.Name + ": Optional[str] = \"\"";
                     case "Automation.StrGuid":
                         typename = "StrGuid";
                         return info.Name + ": Optional[StrGuid] = None";
-                    case "Automation.HouseholdData":
-                        typename = shorttypename;
-                        return info.Name + ": Optional[" + shorttypename + "] = None";
                     case "System.Double":
                         typename = "float";
                         return info.Name + ": float = 0";
