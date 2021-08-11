@@ -6,9 +6,10 @@ using JetBrains.Annotations;
 
 namespace Common.CalcDto {
     public class CalcSiteDto : IHouseholdKey {
-        public CalcSiteDto([NotNull] string name, int id, StrGuid guid, [NotNull] HouseholdKey householdKey)
+        public CalcSiteDto([NotNull] string name, bool deviceChangeAllowed, int id, StrGuid guid, [NotNull] HouseholdKey householdKey)
         {
             Name = name;
+            DeviceChangeAllowed = deviceChangeAllowed;
             ID = id;
             Guid = guid;
             HouseholdKey = householdKey;
@@ -31,6 +32,8 @@ namespace Common.CalcDto {
 
         [NotNull]
         public string Name { get; }
+
+        public bool DeviceChangeAllowed { get; }
 
         public HouseholdKey HouseholdKey { get; }
 

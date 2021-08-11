@@ -53,13 +53,12 @@ namespace Database.Tests.Tables {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
                 ObservableCollection<TraitTag> traitTags = db.LoadTraitTags();
-                var timeprofiles = db.LoadTimeBasedProfiles();
-                var realDevices = db.LoadRealDevices(out var deviceCategories, out var loadtypes, timeprofiles);
-                var locations = db.LoadLocations(realDevices, deviceCategories, loadtypes);
+                var affordances = db.LoadAffordances(out var timeprofiles, out _, out _, out var realDevices, out _, out var loadtypes, out _, out _, out _, out var locations, out _, out _);
+                var affordanceTaggingSets = db.LoadAffordanceTaggingSets(affordances, loadtypes);
                 db.LoadTransportation(locations, out var transportationDeviceSets,
                     out var travelRouteSets, out var _,
                     out var _, loadtypes,
-                    out var chargingStationSets);
+                    out var chargingStationSets, affordanceTaggingSets);
                 db.LoadHouseholdsAndHouses(out var modularHouseholds,
                     out var houses, out _, traitTags, chargingStationSets, travelRouteSets, transportationDeviceSets);
                 var settlementHhs = new ObservableCollection<SettlementHH>();
@@ -76,13 +75,14 @@ namespace Database.Tests.Tables {
             using (var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass()))
             {
                 ObservableCollection<TraitTag> traitTags = db.LoadTraitTags();
-                var timeprofiles = db.LoadTimeBasedProfiles();
-                var realDevices = db.LoadRealDevices(out var deviceCategories, out var loadtypes, timeprofiles);
-                var locations = db.LoadLocations(realDevices, deviceCategories, loadtypes);
+                var affordances = db.LoadAffordances(out var timeprofiles, out _, out var deviceCategories,
+                    out var devices, out _, out var loadtypes, out var timeLimits, out var deviceActions,
+                    out var deviceActionGroups, out var locations, out var variables, out var dateBasedProfiles);
+                var affordanceTaggingSets = db.LoadAffordanceTaggingSets(affordances, loadtypes);
                 db.LoadTransportation(locations, out var transportationDeviceSets,
                     out var travelRouteSets, out var _,
                     out var _, loadtypes,
-                    out var chargingStationSets);
+                    out var chargingStationSets, affordanceTaggingSets);
                 db.LoadHouseholdsAndHouses(out var modularHouseholds,
                     out var houses, out _, traitTags, chargingStationSets,
                     travelRouteSets, transportationDeviceSets);

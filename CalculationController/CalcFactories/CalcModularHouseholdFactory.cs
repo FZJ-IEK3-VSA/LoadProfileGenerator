@@ -124,7 +124,9 @@ namespace CalculationController.CalcFactories {
         public CalcHousehold MakeCalcModularHousehold([NotNull] CalcHouseholdDto householdDto,
                                                       [NotNull] out DtoCalcLocationDict dtoCalcLocationDict,
                                                       [CanBeNull] string houseName,
-                                                      [CanBeNull] string houseDescription, [NotNull] CalcRepo calcRepo)
+                                                      [CanBeNull] string houseDescription,
+                                                      [NotNull] List<CalcAffordanceTaggingSetDto> affordanceTaggingSets,
+                                                      [NotNull] CalcRepo calcRepo)
         {
             CalcHousehold chh = null;
             _calcRepo.FileFactoryAndTracker.RegisterHousehold(householdDto.HouseholdKey,
@@ -185,7 +187,7 @@ namespace CalculationController.CalcFactories {
                 CheckCalcAffordancesForExecutability(chh);
                 if (householdDto.CalcTravelRoutes != null) {
                     Logger.Info("Starting to initialize transportation for household " + householdDto.Name + "...");
-                    _ctf.MakeTransportation(householdDto, dtoCalcLocationDict, chh);
+                    _ctf.MakeTransportation(householdDto, dtoCalcLocationDict, chh, affordanceTaggingSets);
                 }
                 else {
                     Logger.Info("No travel route was set for for household " + householdDto.Name + ", skipping transportation");

@@ -64,25 +64,18 @@ namespace Database.Tests.Tables {
                 var houses = new CategoryDBBase<House>("blub");
                 houses.CreateNewItem(db.ConnectionString);
                 var houses1 = new ObservableCollection<House>();
-                var devices = new ObservableCollection<RealDevice>();
-                var deviceCategories = new ObservableCollection<DeviceCategory>();
-                var timeBasedProfiles = new ObservableCollection<TimeBasedProfile>();
-                var timeLimits = new ObservableCollection<TimeLimit>();
                 var persons = new ObservableCollection<Person>();
                 var temperaturProfiles = new ObservableCollection<TemperatureProfile>();
-                var loadTypes = db.LoadLoadTypes();
-                var variables = db.LoadVariables();
+                var affordances = db.LoadAffordances(out var timeBasedProfiles, out _, out var deviceCategories, 
+                    out var devices, out _, out var loadTypes, out var timeLimits, out var deviceActions, 
+                    out var deviceActionGroups, out var locations, out var variables, out var dateprofiles);
+                var affordanceTaggingSets = db.LoadAffordanceTaggingSets(affordances, loadTypes);
                 var geoLocs = db.LoadGeographicLocations(out _, timeLimits);
                 var energyStorages = db.LoadEnergyStorages(loadTypes, variables);
                 var trafoDevices = db.LoadTransformationDevices(loadTypes,
                     variables);
 
-                var dateprofiles = db.LoadDateBasedProfiles();
                 var generators = db.LoadGenerators(loadTypes, dateprofiles);
-                var locations = db.LoadLocations(devices, deviceCategories, loadTypes);
-                var deviceActionGroups = db.LoadDeviceActionGroups();
-                var deviceActions = db.LoadDeviceActions(timeBasedProfiles, devices,
-                    loadTypes, deviceActionGroups);
                 var houseTypes = db.LoadHouseTypes(devices, deviceCategories, timeBasedProfiles,
                     timeLimits, loadTypes, trafoDevices, energyStorages, generators, locations, deviceActions,
                     deviceActionGroups, variables);
@@ -97,8 +90,7 @@ namespace Database.Tests.Tables {
                     deviceSelections, persons, vacations, householdTags,
                     traitTags, lpTags);
                 db.LoadTransportation(locations, out var transportationDeviceSets, out var travelRouteSets,
-                    out var _,
-                    out var _, loadTypes, out var chargingStationSets);
+                    out var _, out var _, loadTypes, out var chargingStationSets, affordanceTaggingSets);
                 House.LoadFromDatabase(houses1, db.ConnectionString,
                     temperaturProfiles, geoLocs, houseTypes,
                     modularHouseholds, chargingStationSets, transportationDeviceSets, travelRouteSets, false);
@@ -118,26 +110,19 @@ namespace Database.Tests.Tables {
                 db.ClearTable(House.TableName);
                 db.ClearTable(HouseTypeDevice.TableName);
                 db.ClearTable(HouseHousehold.TableName);
-                var loadTypes = db.LoadLoadTypes();
                 var houses = new ObservableCollection<House>();
-                var devices = new ObservableCollection<RealDevice>();
-                var deviceCategories = new ObservableCollection<DeviceCategory>();
-                var timeBasedProfiles = new ObservableCollection<TimeBasedProfile>();
-                var timeLimits = new ObservableCollection<TimeLimit>();
                 var persons = new ObservableCollection<Person>();
                 var temperaturProfiles = new ObservableCollection<TemperatureProfile>();
+                var affordances = db.LoadAffordances(out var timeBasedProfiles, out _, out var deviceCategories,
+                    out var devices, out _, out var loadTypes, out var timeLimits, out var deviceActions,
+                    out var deviceActionGroups, out var locations, out var variables, out var dateprofiles);
+                var affordanceTaggingSets = db.LoadAffordanceTaggingSets(affordances, loadTypes);
                 var geoLocs = db.LoadGeographicLocations(out _, timeLimits);
-                var variables = db.LoadVariables();
                 var energyStorages = db.LoadEnergyStorages(loadTypes, variables);
                 var trafoDevices = db.LoadTransformationDevices(loadTypes,
                     variables);
 
-                var dateprofiles = db.LoadDateBasedProfiles();
-                var locations = db.LoadLocations(devices, deviceCategories, loadTypes);
                 var generators = db.LoadGenerators(loadTypes, dateprofiles);
-                var deviceActionGroups = db.LoadDeviceActionGroups();
-                var deviceActions = db.LoadDeviceActions(timeBasedProfiles, devices,
-                    loadTypes, deviceActionGroups);
                 var houseTypes = db.LoadHouseTypes(devices, deviceCategories, timeBasedProfiles,
                     timeLimits, loadTypes, trafoDevices, energyStorages, generators, locations, deviceActions,
                     deviceActionGroups, variables);
@@ -151,7 +136,7 @@ namespace Database.Tests.Tables {
                     deviceSelections, persons, vacations, householdTags, traitTags, lpTags);
                 db.LoadTransportation(locations, out var transportationDeviceSets, out var travelRouteSets,
                     out var _,
-                    out var _, loadTypes, out var chargingStationSets);
+                    out var _, loadTypes, out var chargingStationSets, affordanceTaggingSets);
                 House.LoadFromDatabase(houses, db.ConnectionString, temperaturProfiles, geoLocs, houseTypes,
                     modularHouseholds, chargingStationSets, transportationDeviceSets, travelRouteSets, false);
                 (houses.Count).Should().Be(0);

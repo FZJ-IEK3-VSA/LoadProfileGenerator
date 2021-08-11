@@ -76,7 +76,8 @@ namespace CalculationController.CalcFactories {
         [SuppressMessage("Microsoft.Reliability", "CA2000:Objekte verwerfen, bevor Bereich verloren geht")]
         [SuppressMessage("ReSharper", "SwitchStatementMissingSomeCases")]
         [JetBrains.Annotations.NotNull]
-        public CalcHouse MakeCalcHouse([JetBrains.Annotations.NotNull] CalcHouseDto calcHouseDto, [JetBrains.Annotations.NotNull] CalcRepo calcRepo)
+        public CalcHouse MakeCalcHouse([JetBrains.Annotations.NotNull] CalcHouseDto calcHouseDto, [JetBrains.Annotations.NotNull] CalcRepo calcRepo,
+            [JetBrains.Annotations.NotNull] List<CalcAffordanceTaggingSetDto> affordanceTaggingSets)
         {
             HouseholdKey houseKey = Constants.HouseKey;
             var calchouse = new CalcHouse(calcHouseDto.HouseName, calcHouseDto.HouseKey, calcRepo);
@@ -90,7 +91,7 @@ namespace CalculationController.CalcFactories {
             //var globalLocationDict = new Dictionary<CalcLocationDto, CalcLocation>();
             foreach (var householddto in calcHouseDto.Households) {
                 var hh = _cmhf.MakeCalcModularHousehold(householddto, out var _,
-                    calcHouseDto.HouseName, calcHouseDto.Description,_calcRepo);
+                    calcHouseDto.HouseName, calcHouseDto.Description, affordanceTaggingSets,_calcRepo);
                 calcAbleObjects.Add(hh);
 
                 //    foreach (var pair in dtoCalcLocationDict.LocationDtoDict) {

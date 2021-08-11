@@ -1,7 +1,50 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Automation {
+
+    /// <summary>
+    /// A class for creating JsonReference objects from Json. This is used so that simple name strings
+    /// can be passed alternatively to complete JsonReference objects with name and Guid.
+    /// </summary>
+    class JsonReferenceConverter : JsonConverter
+    {
+        public override bool CanConvert(Type objectType)
+        {
+            return (objectType == typeof(JsonReference));
+        }
+
+        public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
+        {
+            JToken token = JToken.Load(reader);
+            switch (token.Type) {
+                case JTokenType.Null:
+                    return null;
+                case JTokenType.String:
+                     // if the json only contains a string, then use this as the name and leave the Guid blank
+                    string? name = (string?) token;
+                    return new JsonReference(name, StrGuid.Empty);
+                default:
+                    JsonReference? jsonReference = new JsonReference();
+                    serializer.Populate(token.CreateReader(), jsonReference);
+                    return jsonReference;
+            }
+        }
+
+        public override bool CanWrite
+        {
+            get { return false; }
+        }
+
+        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    [JsonConverter(typeof(JsonReferenceConverter))]
     public class JsonReference : IGuidObject, IEquatable<JsonReference>
     {
         [SuppressMessage("ReSharper", "ConstantConditionalAccessQualifier")]

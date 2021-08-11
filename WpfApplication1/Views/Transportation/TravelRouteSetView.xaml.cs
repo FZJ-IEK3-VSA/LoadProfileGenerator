@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Input;
 using Common;
+using Common.Enums;
 using Database.Tables.BasicElements;
 using Database.Tables.Transportation;
 using JetBrains.Annotations;
@@ -32,7 +33,13 @@ namespace LoadProfileGenerator.Views.Transportation {
                 return;
             }
 
-            Presenter.ThisRouteSet.AddRoute(tp);
+            if (Presenter.Weight < 0.0)
+            {
+                Logger.Error("Please enter a valid weight (weights must be >= 0)");
+                return;
+            }
+
+            Presenter.ThisRouteSet.AddRoute(tp, Presenter.MinimumAge, Presenter.MaximumAge, Presenter.SelectedGender, Presenter.SelectedAffordanceTag, Presenter.Weight);
             Presenter.RefreshRoutes();
         }
 
@@ -56,16 +63,12 @@ namespace LoadProfileGenerator.Views.Transportation {
 
         private void BtnRemoveRoutesClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
         {
-            if (LstSteps.SelectedItem == null) {
-                Logger.Warning("Please select a step first");
-                return;
-            }
-            if (!(LstSteps.SelectedItem is TravelRoute dap)) {
-                Logger.Error("Please select a step first!");
+            if (!(LstSteps.SelectedItem is TravelRouteSetEntry entry)) {
+                Logger.Error("Please select a TravelRoute entry first!");
                 return;
             }
 
-            Presenter.ThisRouteSet.DeleteEntry(dap);
+            Presenter.ThisRouteSet.DeleteEntry(entry);
             Presenter.RefreshRoutes();
         }
 
@@ -91,8 +94,8 @@ namespace LoadProfileGenerator.Views.Transportation {
                 return;
             }
 
-            var entry = (TravelRoute) LstSteps.SelectedItem;
-            Presenter.ApplicationPresenter.OpenItem(entry);
+            var entry = (TravelRouteSetEntry) LstSteps.SelectedItem;
+            Presenter.ApplicationPresenter.OpenItem(entry.TravelRoute);
         }
 
         private void BtnFindMissingSitesForAllHouseholdsClick([JetBrains.Annotations.NotNull] object sender, [JetBrains.Annotations.NotNull] RoutedEventArgs e)

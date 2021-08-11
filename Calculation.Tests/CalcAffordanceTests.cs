@@ -128,12 +128,13 @@ namespace Calculation.Tests {
         {
             Logger.Info("------------");
             TimeStep ts1 = new TimeStep(0,0,true);
-            Logger.Info("aff.isbusy 0: " + aff.IsBusy(ts1,  loc, "person", false));
+            var person = new CalcPersonDto("person", null, 30, PermittedGender.Male, null, null, null, -1, null, null);
+            Logger.Info("aff.isbusy 0: " + aff.IsBusy(ts1, loc, person, false));
             var prevstate = BusynessType.NotBusy;
             for (var i = 0; i < 100; i++) {
                 TimeStep ts2 = new TimeStep(i, 0,true);
-                if (aff.IsBusy(ts2, loc, "person", false) != prevstate) {
-                    prevstate = aff.IsBusy(ts2,  loc, "name", false);
+                if (aff.IsBusy(ts2, loc, person, false) != prevstate) {
+                    prevstate = aff.IsBusy(ts2, loc, person, false);
                     Logger.Info("aff.isbusy:" + i + ": " + prevstate);
                 }
             }
@@ -175,7 +176,8 @@ namespace Calculation.Tests {
             SetupProbabilityTest(out var aff, out var lt, out var cd, out var loc, stepcount, 0);
             var trueCount = 0;
             TimeStep ts1 = new TimeStep(0,0,true);
-            var result = aff.IsBusy(ts1,  loc, "name");
+            var person = new CalcPersonDto("name", null, 30, PermittedGender.Male, null, null, null, -1, null, null);
+            var result = aff.IsBusy(ts1, loc, person);
             result.Should().Be(BusynessType.NotBusy);
             const int resultcount = stepcount - 20;
             for (var i = 0; i < resultcount; i++) {
@@ -185,7 +187,7 @@ namespace Calculation.Tests {
                     cd.IsBusyForLoadType[lt][ts.InternalStep] = false;
                 }
                 TimeStep ts2 = new TimeStep(i, calcParameters);
-                aff.IsBusy(ts2, loc, "name");
+                aff.IsBusy(ts2, loc, person);
                 //var variableOperator = new VariableOperator();
                 aff.Activate( ts2, "blub", loc, out var _);
                 if (cd.GetIsBusyForTesting(ts2, lt)) {
@@ -205,7 +207,8 @@ namespace Calculation.Tests {
             SetupProbabilityTest(out var aff, out var lt, out var cd, out var loc, stepcount, 1);
             var trueCount = 0;
             TimeStep ts = new TimeStep(0,0,false);
-            var result = aff.IsBusy(ts, loc, "name");
+            var person = new CalcPersonDto("name", null, 30, PermittedGender.Male, null, null, null, -1, null, null);
+            var result = aff.IsBusy(ts, loc, person);
             result.Should().Be(BusynessType.NotBusy);
             const int resultcount = stepcount - 20;
             for (var i = 0; i < resultcount; i++) {
@@ -216,7 +219,7 @@ namespace Calculation.Tests {
                     cd.IsBusyForLoadType[lt][j] = false;
                 }
                 TimeStep ts3 = new TimeStep(i, 0, false);
-                aff.IsBusy(ts3,  loc, "name");
+                aff.IsBusy(ts3, loc, person);
                 //var variableOperator = new VariableOperator();
                 aff.Activate(ts3, "blub", loc, out var _);
                 if (cd.GetIsBusyForTesting(ts3, lt)) {
@@ -237,7 +240,8 @@ namespace Calculation.Tests {
             SetupProbabilityTest(out var aff, out var lt, out CalcDevice cd, out var loc, stepcount, 0.25);
             var trueCount = 0;
             TimeStep ts = new TimeStep(0, 0, false);
-            var result = aff.IsBusy(ts,  loc, "name");
+            var person = new CalcPersonDto("name", null, 30, PermittedGender.Male, null, null, null, -1, null, null);
+            var result = aff.IsBusy(ts, loc, person);
             result.Should().Be(BusynessType.NotBusy);
             const int resultcount = stepcount - 20;
             for (var i = 0; i < resultcount; i++) {
@@ -247,7 +251,7 @@ namespace Calculation.Tests {
                     cd.IsBusyForLoadType[lt][j] = false;
                 }
                 TimeStep ts3 = new TimeStep(i, 0, false);
-                aff.IsBusy(ts3, loc, "name");
+                aff.IsBusy(ts3, loc, person);
                 //var variableOperator = new VariableOperator();
                 aff.Activate(ts3, "blub", loc, out var _);
                 if (cd.GetIsBusyForTesting(ts3, lt)) {
@@ -270,7 +274,8 @@ namespace Calculation.Tests {
             SetupProbabilityTest(out var aff, out var lt, out var cd, out var loc, stepcount, 0.5);
             var trueCount = 0;
             TimeStep ts = new TimeStep(0, 0, false);
-            var result = aff.IsBusy(ts, loc, "name");
+            var person = new CalcPersonDto("name", null, 30, PermittedGender.Male, null, null, null, -1, null, null);
+            var result = aff.IsBusy(ts, loc, person);
             result.Should().Be(BusynessType.NotBusy);
             const int resultcount = stepcount - 20;
             for (var i = 0; i < resultcount; i++) {
@@ -280,7 +285,7 @@ namespace Calculation.Tests {
                     cd.IsBusyForLoadType[lt][j] = false;
                 }
                 TimeStep ts3 = new TimeStep(i, 0, false);
-                aff.IsBusy(ts3,  loc, "name");
+                aff.IsBusy(ts3, loc, person);
                 //var variableOperator = new VariableOperator();
                 aff.Activate(ts3, "blub", loc, out var _);
                 if (cd.GetIsBusyForTesting(ts3, lt)) {
@@ -302,7 +307,8 @@ namespace Calculation.Tests {
             SetupProbabilityTest(out var aff, out var lt, out var cd, out var loc, stepcount, 0.75);
             var trueCount = 0;
             TimeStep ts = new TimeStep(0, 0, false);
-            var result = aff.IsBusy(ts, loc, "name");
+            var person = new CalcPersonDto("name", null, 30, PermittedGender.Male, null, null, null, -1, null, null);
+            var result = aff.IsBusy(ts, loc, person);
             result.Should().Be(BusynessType.NotBusy);
             const int resultcount = stepcount - 20;
             for (var i = 0; i < resultcount; i++) {
@@ -312,7 +318,7 @@ namespace Calculation.Tests {
                     cd.IsBusyForLoadType[lt][j] = false;
                 }
                 TimeStep ts3 = new TimeStep(i, 0, false);
-                aff.IsBusy(ts3, loc, "name");
+                aff.IsBusy(ts3, loc, person);
                 //var variableOperator = new VariableOperator();
                 aff.Activate(ts3, "blub", loc, out var _);
                 if (cd.GetIsBusyForTesting(ts3, lt)) {
@@ -374,7 +380,8 @@ namespace Calculation.Tests {
             //loc.Variables.Add("Variable1", 0);
             aff.AddDeviceTuple(cd, cp, lt, 0, timeStep, 10, 1);
             TimeStep ts = new TimeStep(0, 0, false);
-            aff.IsBusy(ts,  loc, "name");
+            var person = new CalcPersonDto("name", null, 30, PermittedGender.Male, null, null, null, -1, null, null);
+            aff.IsBusy(ts, loc, person);
             aff.Activate(ts, "blub", loc, out var _);
              variableRepository.GetValueByGuid(variableGuid).Should().Be(1);
             for (var i = 0; i < 15; i++) {
@@ -382,7 +389,7 @@ namespace Calculation.Tests {
                 cd.SetIsBusyForTesting(ts1, false, lt);
             }
 
-            aff.IsBusy(ts, loc, "name");
+            aff.IsBusy(ts, loc, person);
             aff.Activate(ts, "blub", loc, out var _);
             variableRepository.GetValueByGuid(variableGuid).Should().Be(2);
         }
@@ -438,7 +445,8 @@ namespace Calculation.Tests {
             //loc.Variables.Add("Variable1", 0);
             aff.AddDeviceTuple(cd, cp, lt, 0, timeStep, 10, 1);
             TimeStep ts = new TimeStep(0, 0, false);
-            aff.IsBusy(ts,  loc, "name");
+            var person = new CalcPersonDto("name", null, 30, PermittedGender.Male, null, null, null, -1, null, null);
+            aff.IsBusy(ts, loc, person);
             //var variableOperator = new VariableOperator();
             aff.Activate(ts, "blub", loc, out var _);
              calcVariableRepository.GetValueByGuid(variableGuid).Should().Be(1);
@@ -500,7 +508,8 @@ namespace Calculation.Tests {
             //loc.Variables.Add("Variable1", 0);
             aff.AddDeviceTuple(cd, cp, lt, 0, timeStep, 10, 1);
             TimeStep ts = new TimeStep(0, 0, false);
-            aff.IsBusy(ts, loc, "name");
+            var person = new CalcPersonDto("name", null, 30, PermittedGender.Male, null, null, null, -1, null, null);
+            aff.IsBusy(ts, loc, person);
             //var variableOperator = new VariableOperator();
             aff.Activate(ts, "blub", loc, out var _);
              crv.GetValueByGuid(variableGuid).Should().Be(-1);
@@ -509,7 +518,7 @@ namespace Calculation.Tests {
                 cd.SetIsBusyForTesting(ts1, false, lt);
             }
 
-            aff.IsBusy(ts,  loc, "name");
+            aff.IsBusy(ts, loc, person);
             aff.Activate(ts, "blub", loc, out var _);
             crv.GetValueByGuid(variableGuid).Should().Be(-2);
         }
@@ -571,10 +580,11 @@ namespace Calculation.Tests {
             TimeStep ts = new TimeStep(0, 0, false);
             aff.Activate(ts.AddSteps(10), "blub", loc, out var _);
             CheckForBusyness( loc, aff, cd, lt);
-            aff.IsBusy(ts.AddSteps(1),  loc, "name", false).Should().NotBe(BusynessType.NotBusy);
-            aff.IsBusy( ts.AddSteps(19),  loc, "name", false).Should().NotBe(BusynessType.NotBusy);
-            aff.IsBusy(ts,  loc, "name", false).Should().Be(BusynessType.NotBusy);
-            aff.IsBusy(ts.AddSteps(20),  loc, "name", false).Should().Be(BusynessType.NotBusy);
+            var person = new CalcPersonDto("name", null, 30, PermittedGender.Male, null, null, null, -1, null, null);
+            aff.IsBusy(ts.AddSteps(1), loc, person, false).Should().NotBe(BusynessType.NotBusy);
+            aff.IsBusy(ts.AddSteps(19), loc, person, false).Should().NotBe(BusynessType.NotBusy);
+            aff.IsBusy(ts, loc, person, false).Should().Be(BusynessType.NotBusy);
+            aff.IsBusy(ts.AddSteps(20), loc, person, false).Should().Be(BusynessType.NotBusy);
         }
     }
 }

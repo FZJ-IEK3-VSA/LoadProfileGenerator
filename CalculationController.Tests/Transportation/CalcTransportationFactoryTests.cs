@@ -12,6 +12,7 @@ using CalculationEngine.OnlineDeviceLogging;
 using CalculationEngine.OnlineLogging;
 using Common;
 using Common.CalcDto;
+using Common.Enums;
 using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
@@ -310,7 +311,8 @@ namespace CalculationController.Tests.Transportation {
                         CalcTransportationDtoFactory dtoFactory = new CalcTransportationDtoFactory(ltdtoDict);
                         //dtoFactory.MakeTransportationDtos(sim, sim.ModularHouseholds[0], tds, trs,css, out var sites,out var transportationDevices, out var routes, dtohh.LocationDtos, dtohh.HouseholdKey);
                         var calcRepo = scope.Resolve<CalcRepo>();
-                        var chh = cmhf.MakeCalcModularHousehold(dtohh, out var dtoCalcLocationDict, null, null,
+                        var affordanceTaggingSets = new System.Collections.Generic.List<CalcAffordanceTaggingSetDto>();
+                        var chh = cmhf.MakeCalcModularHousehold(dtohh, out var dtoCalcLocationDict, null, null, affordanceTaggingSets,
                             calcRepo);
                         //ctf.MakeTransportation(dtohh,dtoCalcLocationDict,chh);
                         if (chh.TransportationHandler == null) {
@@ -319,10 +321,10 @@ namespace CalculationController.Tests.Transportation {
 
                         var src = chh.TransportationHandler.CalcSites[0].Locations[0];
                         var dst = chh.TransportationHandler.CalcSites[1].Locations[0];
-                        const string personname = "personname";
                         var ts = new TimeStep(1, parameters);
-                        dst.Affordances[0].IsBusy(ts, src, personname, false);
-                        dst.Affordances[0].Activate(ts, personname, src, out var personTimeProfile);
+                        var person = new CalcPersonDto("personname", null, 30, PermittedGender.Male, null, null, null, -1, null, null);
+                        dst.Affordances[0].IsBusy(ts, src, person, false);
+                        dst.Affordances[0].Activate(ts, person.Name, src, out var personTimeProfile);
                         fft.Dispose();
                     }
 

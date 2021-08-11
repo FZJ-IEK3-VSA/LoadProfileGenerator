@@ -31,7 +31,7 @@ namespace Automation {
             StartDate = startDate;
             TemperatureProfile = temperatureProfile;
             EnableTransportation = enableTransportation;
-            enableFlexibility = enableFlexibility;
+            EnableFlexibility = enableFlexibility;
         }
 
         public JsonCalcSpecification([NotNull] JsonCalcSpecification o)

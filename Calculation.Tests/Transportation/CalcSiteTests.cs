@@ -9,6 +9,7 @@ using CalculationEngine.OnlineLogging;
 using CalculationEngine.Transportation;
 using Common;
 using Common.CalcDto;
+using Common.Enums;
 using Common.JSON;
 using Common.SQLResultLogging;
 using Common.SQLResultLogging.InputLoggers;
@@ -42,15 +43,15 @@ namespace Calculation.Tests.Transportation {
                         fft, true))
                     {
                         Random r = new Random(1);
-                        CalcSite src = new CalcSite("src", Guid.NewGuid().ToStrGuid(), hhkey);
-                        CalcSite dst = new CalcSite("dst", Guid.NewGuid().ToStrGuid(), hhkey);
+                        CalcSite src = new CalcSite("src", true, Guid.NewGuid().ToStrGuid(), hhkey);
+                        CalcSite dst = new CalcSite("dst", true, Guid.NewGuid().ToStrGuid(), hhkey);
                         TransportationHandler th = new TransportationHandler();
                         //List<CalcTravelRoute> routes = src.GetViableTrafficRoutes(dst);
                         //Assert.That(routes.Count,Is.EqualTo( 0));
                         var iodap = new Mock<IOnlineDeviceActivationProcessor>();
                         using (CalcRepo calcRepo = new CalcRepo(odap: iodap.Object, lf: lf, rnd: r, calcParameters: calcParameters, onlineLoggingData: old))
                         {
-                            CalcTravelRoute firstRoute = new CalcTravelRoute("route1", src, dst, th.VehicleDepot,
+                            CalcTravelRoute firstRoute = new CalcTravelRoute("route1", 0, 100, Common.Enums.PermittedGender.All, null, null, 1.0, src, dst, th.VehicleDepot,
     th.LocationUnlimitedDevices, hhkey, Guid.NewGuid().ToStrGuid(), calcRepo);
                             CalcTransportationDeviceCategory transcategory =
                                 new CalcTransportationDeviceCategory("car-category", true, Guid.NewGuid().ToStrGuid());
@@ -79,10 +80,12 @@ namespace Calculation.Tests.Transportation {
                             //List<CalcTravelRoute> routes3 = src.GetViableTrafficRoutes(dst);
                             //(1).Should().Be(routes3.Count);
                             TimeStep ts = new TimeStep(1, 0, false);
-                            int? duration = firstRoute.GetDuration(ts, "name", new List<CalcTransportationDevice>());
+                            var person = new CalcPersonDto("name", null, 30, PermittedGender.Female, null, null, null, -1, null, null);
+                            var ownerships = new DeviceOwnershipMapping<string, CalcTransportationDevice>();
+                            int? duration = firstRoute.GetDuration(ts, person, new List<CalcTransportationDevice>(), ownerships);
                             Logger.Info("Duration: " + duration);
                             duration.Should().Be(60); // 3600 m bei 1 m/s
-                            int? duration2 = firstRoute.GetDuration(ts, "name", new List<CalcTransportationDevice>());
+                            int? duration2 = firstRoute.GetDuration(ts, person, new List<CalcTransportationDevice>(), ownerships);
                             duration.Should().Be(duration2); // 3600 m bei 1 m/s*/
                         }
                     }

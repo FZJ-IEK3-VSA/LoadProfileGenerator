@@ -2,6 +2,7 @@
 using Automation;
 using CalculationEngine.Transportation;
 using Common;
+using Common.CalcDto;
 using Common.Enums;
 using Common.JSON;
 using JetBrains.Annotations;
@@ -49,7 +50,7 @@ namespace CalculationEngine.HouseholdElements
             [NotNull] out ICalcProfile personTimeProfile);
         //ICalcProfile CollectPersonProfile();
         int DefaultPersonProfileLength { get; }
-        BusynessType IsBusy([NotNull] TimeStep time, [NotNull] CalcLocation srcLocation, [NotNull] string calcPersonName, bool clearDictionaries = true);
+        BusynessType IsBusy([NotNull] TimeStep time, [NotNull] CalcLocation srcLocation, CalcPersonDto calcPerson, bool clearDictionaries = true);
 
         [NotNull]
         [ItemNotNull]

@@ -57,7 +57,11 @@ namespace CalculationEngine.Transportation {
             }
 
             CalcTravelRoute route = _myLastTimeEntry.PreviouslySelectedRoutes[personSourceLocation];
-            int routeduration = route.Activate(startTime,activatorName, out var usedDevices);
+            if (_transportationHandler == null)
+            {
+                throw new LPGException("TransportationHandler was null");
+            }
+            int routeduration = route.Activate(startTime, activatorName, out var usedDevices, _transportationHandler.DeviceOwnerships);
 
             if (routeduration == 0) {
                 _calcRepo.OnlineLoggingData.AddTransportationStatus(
@@ -144,12 +148,11 @@ namespace CalculationEngine.Transportation {
 
         public int DefaultPersonProfileLength => _sourceAffordance.DefaultPersonProfileLength;
 
-        public BusynessType IsBusy(TimeStep time,
-                           CalcLocation srcLocation, string calcPersonName,
+        public BusynessType IsBusy(TimeStep time, CalcLocation srcLocation, CalcPersonDto calcPerson,
             bool clearDictionaries = true)
         {
-            if (_myLastTimeEntry.TimeOfLastEvalulation != time || _myLastTimeEntry.PersonName != calcPersonName) {
-                _myLastTimeEntry = new LastTimeEntry(calcPersonName,time);
+            if (_myLastTimeEntry.TimeOfLastEvalulation != time || _myLastTimeEntry.PersonName != calcPerson.Name) {
+                _myLastTimeEntry = new LastTimeEntry(calcPerson.Name, time);
             }
 
             CalcTravelRoute? route;
@@ -160,7 +163,7 @@ namespace CalculationEngine.Transportation {
                 if (_transportationHandler == null) {
                     throw new LPGException("was null");
                 }
-                route = _transportationHandler.GetTravelRouteFromSrcLoc(srcLocation, Site,time,calcPersonName, _calcRepo);
+                route = _transportationHandler.GetTravelRouteFromSrcLoc(srcLocation, Site, time, calcPerson, _sourceAffordance, _calcRepo);
                 if (route != null) {
                     _myLastTimeEntry.PreviouslySelectedRoutes.Add(srcLocation, route);
                 }
@@ -174,8 +177,7 @@ namespace CalculationEngine.Transportation {
                 throw new LPGException("was null");
             }
             // ReSharper disable once PossibleInvalidOperationException
-            int? travelDurationN = route.GetDuration(time, calcPersonName,
-                _transportationHandler.AllMoveableDevices);
+            int? travelDurationN = route.GetDuration(time, calcPerson, _transportationHandler.AllMoveableDevices, _transportationHandler.DeviceOwnerships);
             if (travelDurationN == null) {
                 throw new LPGException("Bug: couldn't calculate travel duration for route.");
             }
@@ -185,11 +187,11 @@ namespace CalculationEngine.Transportation {
                 //if the end of the activity is after the simulation, everything is ok.
                 return BusynessType.NotBusy;
             }
-            var result = _sourceAffordance.IsBusy(dstStartTime, srcLocation, calcPersonName,
+            var result = _sourceAffordance.IsBusy(dstStartTime, srcLocation, calcPerson,
                 clearDictionaries);
             _calcRepo.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(
                 time,
-                _householdkey, "\t\t" + time  + " @" + srcLocation + " by " + calcPersonName
+                _householdkey, "\t\t" + time  + " @" + srcLocation + " by " + calcPerson.Name
                                              + "Checking " + Name + " for busyness: " + result + " @time " + dstStartTime
                                              + " with the route " + route.Name + " and a travel duration of " + travelDurationN));
             return result;

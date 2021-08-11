@@ -32,6 +32,7 @@ using System.Collections.Generic;
 using Automation;
 using Automation.ResultFiles;
 using Common;
+using Common.CalcDto;
 using Common.Enums;
 using Common.JSON;
 using JetBrains.Annotations;
@@ -103,7 +104,7 @@ namespace CalculationEngine.HouseholdElements {
 
         public override int DefaultPersonProfileLength => PersonProfileDuration;
 
-        public override BusynessType IsBusy(TimeStep time, CalcLocation srcLocation, string calcPersonName,
+        public override BusynessType IsBusy(TimeStep time, CalcLocation srcLocation, CalcPersonDto calcPerson,
             bool clearDictionaries = true)
         {
             if (IsBusyArray[time.InternalStep]) {

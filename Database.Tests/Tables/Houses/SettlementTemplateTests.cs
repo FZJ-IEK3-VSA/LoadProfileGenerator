@@ -93,14 +93,16 @@ namespace Database.Tests.Tables.Houses {
             {
                 var sts = new ObservableCollection<SettlementTemplate>();
 
+                var affordances = db.LoadAffordances(out var timeBasedProfiles, out _, out var deviceCategories,
+                    out var devices, out _, out var loadTypes, out var timeLimits, out var deviceActions,
+                    out var deviceActionGroups, out var locations, out var variables, out var dateBasedProfiles);
+                var affordanceTaggingSets = db.LoadAffordanceTaggingSets(affordances, loadTypes);
                 var templates = db.LoadHouseholdTemplates(out var realDevices,
-                    out var deviceCategories, out var timeBasedProfiles, out var timeLimits, out var loadTypes, out var deviceActions,
-                    out var deviceActionGroups, out var traits);
-                var variables = db.LoadVariables();
+                    out _, out  _, out  _, out  _, out  _,
+                    out  _, out var traits);
                 var energyStorages = db.LoadEnergyStorages(loadTypes, variables);
                 var transformationDevices = db.LoadTransformationDevices(loadTypes,
                     variables);
-                var dateBasedProfiles = db.LoadDateBasedProfiles();
                 var generators = db.LoadGenerators(loadTypes, dateBasedProfiles);
                 var allLocations = db.LoadLocations(realDevices, deviceCategories, loadTypes);
                 var houseTypes = db.LoadHouseTypes(realDevices, deviceCategories,
@@ -111,7 +113,7 @@ namespace Database.Tests.Tables.Houses {
                 var householdTags = db.LoadHouseholdTags();
                 db.LoadTransportation(allLocations, out var transportationDeviceSets,
                     out var travelRouteSets, out _,out _,
-                    loadTypes,out var chargingStationSets);
+                    loadTypes,out var chargingStationSets, affordanceTaggingSets);
                 db.ClearTable(SettlementTemplate.TableName);
                 db.ClearTable(STHouseholdDistribution.TableName);
                 db.ClearTable(STHouseholdTemplate.TableName);

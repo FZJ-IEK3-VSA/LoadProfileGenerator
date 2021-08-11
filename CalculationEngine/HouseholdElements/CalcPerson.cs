@@ -635,7 +635,7 @@ namespace CalculationEngine.HouseholdElements {
                 if (_calcRepo.CalcParameters.EnableIdlemode)
                 {
                     var idleaff = CurrentLocation.IdleAffs[this];
-                    idleaff.IsBusy(time, CurrentLocation, Name);
+                    idleaff.IsBusy(time, CurrentLocation, _calcPerson);
                     //Logger.Info(s);
                     return idleaff;
                 }
@@ -812,7 +812,7 @@ namespace CalculationEngine.HouseholdElements {
                 return false;
             }
 
-            var busynessResult = aff.IsBusy(timeStep, CurrentLocation, Name);
+            var busynessResult = aff.IsBusy(timeStep, CurrentLocation, _calcPerson);
             if (busynessResult != BusynessType.NotBusy) {
                 if (errors != null) {
                     errors.Reasons.Add(new AffordanceStatusTuple(aff, "Affordance is busy:" + busynessResult.ToString()));

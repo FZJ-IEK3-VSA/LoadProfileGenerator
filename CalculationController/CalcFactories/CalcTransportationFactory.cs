@@ -202,7 +202,7 @@ namespace CalculationController.CalcFactories {
             List<CalcSiteDto> calcSites = new List<CalcSiteDto>();
             //create the calcsites
             foreach (Site site in householdSites) {
-                CalcSiteDto calcSite = new CalcSiteDto(site.Name, site.IntID, Guid.NewGuid().ToStrGuid(),householdKey);
+                CalcSiteDto calcSite = new CalcSiteDto(site.Name, site.DeviceChangeAllowed, site.IntID, Guid.NewGuid().ToStrGuid(),householdKey);
                 if (chargingStationSet != null) {
                     var chargingStationsAtSite =
                         chargingStationSet.ChargingStations.Where(x => x.Site == site).ToList();
@@ -260,8 +260,8 @@ namespace CalculationController.CalcFactories {
                 }
                 CalcSiteDto siteA = calcSites.Single(x => x.ID == entry.TravelRoute.SiteA.IntID);
                 CalcSiteDto siteB = calcSites.Single(x => x.ID == entry.TravelRoute.SiteB.IntID);
-                CalcTravelRouteDto ctr = new CalcTravelRouteDto(entry.TravelRoute.Name,entry.TravelRoute.IntID, key,
-                    Guid.NewGuid().ToStrGuid(), siteA.Name, siteA.Guid,siteB.Name,siteB.Guid);
+                CalcTravelRouteDto ctr = new CalcTravelRouteDto(entry.TravelRoute.Name, entry.MinimumAge, entry.MaximumAge, entry.Gender, travelRouteSet.AffordanceTaggingSet?.Name, entry.AffordanceTag?.Name, entry.Weight,
+                    entry.TravelRoute.IntID, key, Guid.NewGuid().ToStrGuid(), siteA.Name, siteA.Guid,siteB.Name,siteB.Guid);
                 foreach (TravelRouteStep step in entry.TravelRoute.Steps) {
                     CalcTransportationDeviceCategoryDto cat = categoriesDict[step.TransportationDeviceCategory];
                     ctr.AddTravelRouteStep(step.Name, step.IntID, cat, step.StepNumber, step.Distance,
@@ -271,7 +271,7 @@ namespace CalculationController.CalcFactories {
             }
 
             foreach (var site in calcSites) {
-                CalcTravelRouteDto ctr = new CalcTravelRouteDto("Travel Route inside the site " + site.Name,
+                CalcTravelRouteDto ctr = new CalcTravelRouteDto("Travel Route inside the site " + site.Name, -1, -1, Common.Enums.PermittedGender.All, null, null, 1.0,
                     -1,key, Guid.NewGuid().ToStrGuid(), site.Name, site.Guid,site.Name,site.Guid);
                 routes.Add(ctr);
             }
@@ -388,7 +388,8 @@ namespace CalculationController.CalcFactories {
 
         public void MakeTransportation([JetBrains.Annotations.NotNull] CalcHouseholdDto household,
                                        [JetBrains.Annotations.NotNull] DtoCalcLocationDict locDict,
-                                       [JetBrains.Annotations.NotNull] CalcHousehold chh)
+                                       [JetBrains.Annotations.NotNull] CalcHousehold chh,
+                                       [JetBrains.Annotations.NotNull] List<CalcAffordanceTaggingSetDto> affordanceTaggingSets)
         {
             if (household.CalcTravelRoutes == null || household.CalcSites == null ||
                 household.CalcTransportationDevices == null) {
@@ -410,6 +411,7 @@ namespace CalculationController.CalcFactories {
 
             TransportationHandler th = new TransportationHandler();
             chh.TransportationHandler = th;
+            th.AddAffordanceTaggingSets(affordanceTaggingSets);
             Logger.Info("Making Calc Sites");
             var sites = MakeCalcSites(household, locDict, _loadTypeDict, th);
             foreach (var site in sites) {
@@ -433,9 +435,8 @@ namespace CalculationController.CalcFactories {
 
                 //if (siteA != null && siteB != null) {
                     //if either site is null, the travel route is not usable for this household
-                    CalcTravelRoute travelRoute = new CalcTravelRoute(travelRouteDto.Name,
-                        siteA, siteB, th.VehicleDepot, th.LocationUnlimitedDevices,  chh.HouseholdKey,
-                        travelRouteDto.Guid,_calcRepo);
+                    CalcTravelRoute travelRoute = new CalcTravelRoute(travelRouteDto.Name, travelRouteDto.MinimumAge, travelRouteDto.MaximumAge, travelRouteDto.Gender, travelRouteDto.AffordanceTaggingSetName,
+                        travelRouteDto.AffordanceTagName, travelRouteDto.Weight, siteA, siteB, th.VehicleDepot, th.LocationUnlimitedDevices,  chh.HouseholdKey, travelRouteDto.Guid,_calcRepo);
                     foreach (var step in travelRouteDto.Steps) {
                         CalcTransportationDeviceCategory category = th.GetCategory(step.TransportationDeviceCategory);
                         travelRoute.AddTravelRouteStep(step.Name,  category, step.StepNumber, step.DistanceInM,
@@ -465,7 +466,7 @@ namespace CalculationController.CalcFactories {
             }
 
             foreach (var siteDto in household.CalcSites) {
-                var calcSite = new CalcSite(siteDto.Name,  siteDto.Guid,household.HouseholdKey);
+                var calcSite = new CalcSite(siteDto.Name, siteDto.DeviceChangeAllowed,  siteDto.Guid,household.HouseholdKey);
                 sites.Add(calcSite);
                 //siteDictByGuid.Add(siteDto.Guid, calcSite);
                 foreach (var locGuid in siteDto.LocationGuid) {

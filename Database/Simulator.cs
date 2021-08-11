@@ -598,7 +598,7 @@ namespace Database {
 
                 new LoadingEntry("Travel Route Sets",
                     () => TravelRouteSet.LoadFromDatabase(TravelRouteSets.Items, ConnectionString, ignoreMissingTables,
-                        TravelRoutes.Items), TravelRouteSets),
+                        TravelRoutes.Items, AffordanceTaggingSets.Items), TravelRouteSets),
                 new LoadingEntry("Charging Station Sets",
                     () => ChargingStationSet.LoadFromDatabase(ChargingStationSets.Items,
                         ConnectionString, ignoreMissingTables,
