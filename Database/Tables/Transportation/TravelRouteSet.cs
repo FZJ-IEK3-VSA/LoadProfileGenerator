@@ -120,7 +120,7 @@ namespace Database.Tables.Transportation {
         {
             // get the new AffordanceTaggingSet using the name of the old one
             var affordanceTaggingSet = GetItemFromListByName(dstSim.AffordanceTaggingSets.Items,
-                toImport.AffordanceTaggingSet.Name);
+                toImport.AffordanceTaggingSet?.Name);
             var loc = new TravelRouteSet(toImport.Name, null,dstSim.ConnectionString, toImport.Description, toImport.Guid, affordanceTaggingSet);
             dstSim.TravelRouteSets.Items.Add(loc);
             loc.SaveToDB();
