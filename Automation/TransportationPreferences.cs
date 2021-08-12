@@ -13,9 +13,11 @@ namespace Automation
     public class TransportationPreference
 
     {
-        public TransportationPreference(JsonReference destinationSite, List<JsonReference> transportationDeviceCategories, List<double> weights)
+        public TransportationPreference(JsonReference destinationSite, double distance, double angle, List<JsonReference> transportationDeviceCategories, List<double> weights)
         {
             DestinationSite = destinationSite;
+            Distance = distance;
+            Angle = angle;
             TransportationDeviceCategories = transportationDeviceCategories;
             Weights = weights;
             if (transportationDeviceCategories.Count != Weights.Count)
@@ -25,6 +27,17 @@ namespace Automation
         }
 
         public JsonReference DestinationSite { get; set; }
+
+        /// <summary>
+        /// The distance to the destination site from the home of a person
+        /// </summary>
+        public double Distance { get; set; }
+
+        /// <summary>
+        /// The angle indicating in which direction the destination site lies, viewed from the home
+        /// of a person. This is used to calculate distances between different sites.
+        /// </summary>
+        public double Angle { get; set; }
 
         /// <summary>
         /// The TransportationDeviceCategories a person can choose from to reach the destination
