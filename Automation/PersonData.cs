@@ -1,5 +1,6 @@
 ﻿
 
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace Automation {
@@ -7,6 +8,7 @@ namespace Automation {
     {
         public PersonData(int age, Gender gender, string personName) : this(age, gender, personName, null) { }
 
+        [JsonConstructor]
         public PersonData(int age, Gender gender, string personName, List<TransportationPreference>? transportationPreferences)
         {
             Age = age;
