@@ -54,17 +54,13 @@ namespace Database.Tables.Transportation {
         [JetBrains.Annotations.NotNull]
         public ObservableCollection<TravelRouteSetEntry> TravelRoutes => _routes;
 
-        public void AddRoute([JetBrains.Annotations.NotNull] TravelRoute route, int minimumAge, int maximumAge, PermittedGender gender, AffordanceTag affordanceTag, double weight, bool savetodb = true)
+        public void AddRoute([JetBrains.Annotations.NotNull] TravelRoute route, int minimumAge = -1, int maximumAge = -1,
+            PermittedGender gender = PermittedGender.All, AffordanceTag affordanceTag = null, double weight = 1.0, bool savetodb = true)
         {
             if (route == null) {
                 throw new LPGException("Can't add a null route.");
             }
 
-            // Todo: check if routes have overlapping filter conditions
-            //if (_routes.Any(x => x.TravelRoute == route)) {
-            //    Logger.Error("Route " + route.PrettyName+  " was already added");
-            //    return;
-            //}
             if (route.ConnectionString != ConnectionString) {
                 throw new LPGException("A location from another DB was just added!");
             }
