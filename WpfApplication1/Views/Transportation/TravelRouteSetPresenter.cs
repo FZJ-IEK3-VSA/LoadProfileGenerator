@@ -70,6 +70,13 @@ namespace LoadProfileGenerator.Views.Transportation {
 
         public AffordanceTag SelectedAffordanceTag { get; set; }
 
+        public Person SelectedPerson { get; set; }
+
+        [ItemNotNull]
+        [NotNull]
+        [UsedImplicitly]
+        public ObservableCollection<Person> AvailablePersons { get { return Sim.Persons.Items; } }
+
         public double Weight { get; set; } = 1.0;
 
         [NotNull]
@@ -438,7 +445,7 @@ namespace LoadProfileGenerator.Views.Transportation {
             newRoutes = newRoutes.Where(x => x.Name.Contains(kmstr)).ToList();
             foreach (var route in newRoutes) {
                 // Use default parameter values to include all persons and apply the default weight of 1.0
-                ThisRouteSet.AddRoute(route, -1, -1, PermittedGender.All,null, 1.0); 
+                ThisRouteSet.AddRoute(route, -1, -1, PermittedGender.All, null, null, 1.0); 
             }
         }
     }

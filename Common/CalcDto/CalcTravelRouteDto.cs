@@ -13,6 +13,7 @@ namespace Common.CalcDto {
         public Enums.PermittedGender Gender { get; }
         public string AffordanceTaggingSetName { get; }
         public string AffordanceTagName { get; }
+        public int? PersonID { get; }
         public double Weight { get; }
         public int ID { get; }
         [NotNull]
@@ -24,7 +25,7 @@ namespace Common.CalcDto {
         public HouseholdKey HouseholdKey { get; }
         public StrGuid Guid { get; }
 
-        public CalcTravelRouteDto([NotNull]string name, int minimumAge, int maximumAge, Enums.PermittedGender gender, string affordanceTaggingSetName, string affordanceTagName,
+        public CalcTravelRouteDto([NotNull]string name, int minimumAge, int maximumAge, Enums.PermittedGender gender, string affordanceTaggingSetName, string affordanceTagName, int? personID,
             double weight, int id, [NotNull] HouseholdKey householdkey, StrGuid guid, [NotNull]string siteAName, StrGuid siteAGuid, [NotNull] string siteBName, StrGuid siteBGuid)
         {
             Name = name;
@@ -33,6 +34,7 @@ namespace Common.CalcDto {
             Gender = gender;
             AffordanceTaggingSetName = affordanceTaggingSetName;
             AffordanceTagName = affordanceTagName;
+            PersonID = personID;
             Weight = weight;
             ID = id;
             HouseholdKey = householdkey;

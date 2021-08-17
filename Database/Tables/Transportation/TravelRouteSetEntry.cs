@@ -18,10 +18,11 @@ namespace Database.Tables.Transportation {
         public readonly int _maximumAge;
         public readonly PermittedGender _gender;
         public readonly AffordanceTag _affordanceTag;
+        public readonly int? _personID;
         public readonly double _weight;
 
-    public TravelRouteSetEntry([CanBeNull]int? pID, int travelRouteSetID, [JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.NotNull] string name,
-            [CanBeNull] TravelRoute travelRoute, int minimumAge, int maximumAge, PermittedGender gender, AffordanceTag affordanceTag, double weight, [NotNull] StrGuid guid)
+    public TravelRouteSetEntry([CanBeNull] int? pID, int travelRouteSetID, [JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.NotNull] string name,
+            [CanBeNull] TravelRoute travelRoute, int minimumAge, int maximumAge, PermittedGender gender, AffordanceTag affordanceTag, int? personID, double weight, [NotNull] StrGuid guid)
             : base(name, TableName, connectionString, guid)
         {
             TypeDescription = "Travel Route Step";
@@ -33,6 +34,7 @@ namespace Database.Tables.Transportation {
             _maximumAge = maximumAge;
             _gender = gender;
             _affordanceTag = affordanceTag;
+            _personID = personID;
             _weight = weight;
         }
 
@@ -56,6 +58,9 @@ namespace Database.Tables.Transportation {
         public AffordanceTag AffordanceTag => _affordanceTag;
 
         [UsedImplicitly]
+        public int? PersonID => _personID;
+
+        [UsedImplicitly]
         public double Weight => _weight;
 
     [JetBrains.Annotations.NotNull]
@@ -72,11 +77,12 @@ namespace Database.Tables.Transportation {
             var gender = (PermittedGender) dr.GetIntFromLong("Gender", false, ignoreMissingFields, (int) PermittedGender.All);
             var affordanceTagID = dr.GetIntFromLong("AffordanceTagID", false, ignoreMissingFields, -1);
             var affordanceTag = aic.AffordanceTags?.FirstOrDefault(x => x.IntID == affordanceTagID);
+            var personID = dr.GetNullableIntFromLong("PersonID", false, ignoreMissingFields);
             var weight = dr.GetDouble("Weight", false, 1.0, ignoreMissingFields);
             //var name = dr.GetString("Name",false,"",ignoreMissingFields);
             const string name = "no name";
             var guid = GetGuid(dr, ignoreMissingFields);
-            var step = new TravelRouteSetEntry(id, setid, connectionString, name, route, minimumAge, maximumAge, gender, affordanceTag, weight, guid);
+            var step = new TravelRouteSetEntry(id, setid, connectionString, name, route, minimumAge, maximumAge, gender, affordanceTag, personID, weight, guid);
             return step;
         }
 
@@ -111,6 +117,7 @@ namespace Database.Tables.Transportation {
             {
                 cmd.AddParameter("AffordanceTagID", _affordanceTag.IntID);
             }
+            cmd.AddParameter("PersonID", _personID);
             cmd.AddParameter("Weight", _weight);
     }
 

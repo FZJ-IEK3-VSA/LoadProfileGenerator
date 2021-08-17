@@ -199,12 +199,12 @@ namespace Calculation.Tests.Transportation
                     dstloc.AddTransportationAffordance(abt);
 
                     var myCategory = new CalcTransportationDeviceCategory("mycategory", false, Guid.NewGuid().ToStrGuid());
-                    var route1 = new CalcTravelRoute("myRoute1", -1, 50, PermittedGender.Male, "mytaggingset", "cooking", 1.0, srcSite, dstSite,
+                    var route1 = new CalcTravelRoute("myRoute1", -1, 50, PermittedGender.Male, "mytaggingset", "cooking", null, 1.0, srcSite, dstSite,
                         transportationHandler.VehicleDepot, transportationHandler.LocationUnlimitedDevices,
                          new HouseholdKey("hh0"), Guid.NewGuid().ToStrGuid(), calcRepo);
                     route1.AddTravelRouteStep("driving", myCategory, 1, 36000, Guid.NewGuid().ToStrGuid());
                     transportationHandler.TravelRoutes.Add(route1);
-                    var route2 = new CalcTravelRoute("myRoute2", 20, -1, PermittedGender.Female, "mytaggingset", "working", 1.0, srcSite, dstSite,
+                    var route2 = new CalcTravelRoute("myRoute2", 20, -1, PermittedGender.Female, "mytaggingset", "working", null, 1.0, srcSite, dstSite,
                         transportationHandler.VehicleDepot, transportationHandler.LocationUnlimitedDevices,
                          key, Guid.NewGuid().ToStrGuid(), calcRepo);
                     route2.AddTravelRouteStep("driving", myCategory, 1, 36000, Guid.NewGuid().ToStrGuid());

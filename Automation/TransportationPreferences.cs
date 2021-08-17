@@ -16,7 +16,7 @@ namespace Automation
         public TransportationPreference(JsonReference destinationSite, double distance, double angle, List<JsonReference> transportationDeviceCategories, List<double> weights)
         {
             DestinationSite = destinationSite;
-            Distance = distance;
+            DistanceFromHome = distance;
             Angle = angle;
             TransportationDeviceCategories = transportationDeviceCategories;
             Weights = weights;
@@ -31,7 +31,7 @@ namespace Automation
         /// <summary>
         /// The distance to the destination site from the home of a person
         /// </summary>
-        public double Distance { get; set; }
+        public double DistanceFromHome { get; set; }
 
         /// <summary>
         /// The angle indicating in which direction the destination site lies, viewed from the home

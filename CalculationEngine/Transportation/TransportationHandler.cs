@@ -61,6 +61,7 @@ namespace CalculationEngine.Transportation {
             var possibleRoutes = srcSite.GetAllRoutesTo(dstSite, devicesAtSrc, person, DeviceOwnerships);
             // filter routes based on the affordance tag
             var allowedRoutes = possibleRoutes
+                .Where(route => route.PersonID == null || route.PersonID == person.ID)
                 .Where(route => route.Gender == PermittedGender.All || person.Gender == PermittedGender.All || route.Gender == person.Gender)
                 .Where(route => route.MinimumAge < 0 || route.MinimumAge <= person.Age)
                 .Where(route => route.MaximumAge < 0 || route.MaximumAge >= person.Age)

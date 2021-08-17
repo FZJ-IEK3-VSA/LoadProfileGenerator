@@ -39,7 +39,8 @@ namespace LoadProfileGenerator.Views.Transportation {
                 return;
             }
 
-            Presenter.ThisRouteSet.AddRoute(tp, Presenter.MinimumAge, Presenter.MaximumAge, Presenter.SelectedGender, Presenter.SelectedAffordanceTag, Presenter.Weight);
+            Presenter.ThisRouteSet.AddRoute(tp, Presenter.MinimumAge, Presenter.MaximumAge, Presenter.SelectedGender,
+                Presenter.SelectedAffordanceTag, Presenter.SelectedPerson?.IntID, Presenter.Weight);
             Presenter.RefreshRoutes();
         }
 
