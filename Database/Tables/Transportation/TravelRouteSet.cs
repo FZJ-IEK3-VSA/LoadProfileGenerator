@@ -55,7 +55,7 @@ namespace Database.Tables.Transportation {
         public ObservableCollection<TravelRouteSetEntry> TravelRoutes => _routes;
 
         public void AddRoute([JetBrains.Annotations.NotNull] TravelRoute route, int minimumAge = -1, int maximumAge = -1,
-            PermittedGender gender = PermittedGender.All, AffordanceTag affordanceTag = null, double weight = 1.0, bool savetodb = true)
+            PermittedGender gender = PermittedGender.All, AffordanceTag affordanceTag = null, int? personID = null, double weight = 1.0, bool savetodb = true)
         {
             if (route == null) {
                 throw new LPGException("Can't add a null route.");
@@ -64,7 +64,7 @@ namespace Database.Tables.Transportation {
             if (route.ConnectionString != ConnectionString) {
                 throw new LPGException("A location from another DB was just added!");
             }
-            var entry = new TravelRouteSetEntry(null, IntID, ConnectionString, route.Name, route, minimumAge, maximumAge, gender, affordanceTag, weight, System.Guid.NewGuid().ToStrGuid());
+            var entry = new TravelRouteSetEntry(null, IntID, ConnectionString, route.Name, route, minimumAge, maximumAge, gender, affordanceTag, personID, weight, System.Guid.NewGuid().ToStrGuid());
             _routes.Add(entry);
             if(savetodb) {
                 entry.SaveToDB();
@@ -133,7 +133,7 @@ namespace Database.Tables.Transportation {
                         routeEntry.AffordanceTag.Name);
                 }
 
-                loc.AddRoute(dstroute, routeEntry.MinimumAge, routeEntry.MaximumAge, routeEntry.Gender, newAffordanceTag, routeEntry.Weight);
+                loc.AddRoute(dstroute, routeEntry.MinimumAge, routeEntry.MaximumAge, routeEntry.Gender, newAffordanceTag, routeEntry.PersonID, routeEntry.Weight);
             }
             return loc;
         }

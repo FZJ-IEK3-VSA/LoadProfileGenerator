@@ -178,11 +178,22 @@
                                               Style="{StaticResource ComboBoxStyle}" />
                         <Label Grid.Row="6"
                                            Grid.Column="0"
+                                           Content="Only for Person"
+                                           Style="{StaticResource LabelStyle}"
+                                           Target="{Binding ElementName=CmbPerson}" />
+                        <ComboBox Name="CmbPerson"
+                                              Grid.Row="6"
+                                              Grid.Column="1"
+                                              ItemsSource="{Binding AvailablePersons}"
+                                              SelectedItem="{Binding SelectedPerson}"
+                                              Style="{StaticResource ComboBoxStyle}" />
+                        <Label Grid.Row="7"
+                                           Grid.Column="0"
                                            Content="Weight"
                                            Style="{StaticResource LabelStyle}"
                                            Target="{Binding ElementName=TxtWeight}" />
                         <TextBox Name="TxtWeight"
-                                              Grid.Row="6"
+                                              Grid.Row="7"
                                               Grid.Column="1"
                                              Style="{StaticResource TextBoxStyle}"
                                              Text="{Binding Weight}" />
@@ -248,6 +259,9 @@
                                     <GridViewColumn Width="Auto"
                                                     DisplayMemberBinding="{Binding AffordanceTag.Name}"
                                                     Header="Affordance Tag" />
+                                    <GridViewColumn Width="Auto"
+                                                    DisplayMemberBinding="{Binding PersonID}"
+                                                    Header="Only for Person" />
                                     <GridViewColumn Width="Auto"
                                                     DisplayMemberBinding="{Binding Weight}"
                                                     Header="Weight" />

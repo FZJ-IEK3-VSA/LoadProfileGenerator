@@ -59,17 +59,17 @@ namespace CalculationController.Tests.CalcFactories {
             Site siteb = new Site("siteb", 2, "", "", true, Guid.NewGuid().ToStrGuid());
             sites.Add(sitea);
             sites.Add(siteb);
-            trs.AddRoute(new TravelRoute(1,"","Route1","desc",sitea,siteb, Guid.NewGuid().ToStrGuid(),null), 0, 80, Common.Enums.PermittedGender.All, null, 1.0, false);
+            trs.AddRoute(new TravelRoute(1, "", "Route1", "desc", sitea, siteb, Guid.NewGuid().ToStrGuid(), null), 0, 80, Common.Enums.PermittedGender.All, null, null, 1.0, false);
             CalcTransportationDtoFactory.CheckRouteCompleteness(trs, sites);
 
             //one route missing
             Site sitec = new Site("sitec", 2, "", "", true, Guid.NewGuid().ToStrGuid());
             sites.Add(sitec);
-            trs.AddRoute(new TravelRoute(1, "", "Route2", "desc", siteb, sitec, Guid.NewGuid().ToStrGuid(),null), 0, 80, Common.Enums.PermittedGender.All, null, 1.0, false);
+            trs.AddRoute(new TravelRoute(1, "", "Route2", "desc", siteb, sitec, Guid.NewGuid().ToStrGuid(), null), 0, 80, Common.Enums.PermittedGender.All, null, null, 1.0, false);
             Action  crashfunction1 = () => CalcTransportationDtoFactory.CheckRouteCompleteness(trs, sites);
             crashfunction1.Should().Throw<DataIntegrityException>();
             //add missing route
-            trs.AddRoute(new TravelRoute(1, "", "Route3", "desc", sitea, sitec, Guid.NewGuid().ToStrGuid(),null), 0, 80, Common.Enums.PermittedGender.All, null, 1.0, false);
+            trs.AddRoute(new TravelRoute(1, "", "Route3", "desc", sitea, sitec, Guid.NewGuid().ToStrGuid(), null), 0, 80, Common.Enums.PermittedGender.All, null, null, 1.0, false);
             CalcTransportationDtoFactory.CheckRouteCompleteness(trs, sites);
         }
 

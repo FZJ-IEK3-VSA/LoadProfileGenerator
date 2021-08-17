@@ -35,7 +35,7 @@ namespace Database.Tests.Tables.Transportation
                 int maximumAge = 50;
                 PermittedGender gender = PermittedGender.Male;
                 double weighting = 1.0;
-                set.AddRoute(route, minimumAge, maximumAge, gender, null, weighting);
+                set.AddRoute(route, minimumAge, maximumAge, gender, null, null, weighting);
                 //loading
                 ObservableCollection<TravelRoute> routes = new ObservableCollection<TravelRoute>
             {
