@@ -107,9 +107,10 @@ namespace Database.Tables.Transportation {
         {
             cmd.AddParameter("TravelRouteSetID", _travelRouteSetID);
             //cmd.AddParameter("Name",Name);
-            if (_travelRoute != null) {
+            if (_travelRoute != null)
+            {
                 cmd.AddParameter("TravelRouteID", _travelRoute.IntID);
-      }
+            }
             cmd.AddParameter("MinimumAge", _minimumAge);
             cmd.AddParameter("MaximumAge", _maximumAge);
             cmd.AddParameter("Gender", _gender);
@@ -117,7 +118,10 @@ namespace Database.Tables.Transportation {
             {
                 cmd.AddParameter("AffordanceTagID", _affordanceTag.IntID);
             }
-            cmd.AddParameter("PersonID", _personID);
+            if (_personID != null)
+            {
+                cmd.AddParameter("PersonID", _personID);
+            }
             cmd.AddParameter("Weight", _weight);
     }
 
