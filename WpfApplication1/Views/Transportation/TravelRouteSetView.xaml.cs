@@ -39,8 +39,22 @@ namespace LoadProfileGenerator.Views.Transportation {
                 return;
             }
 
-            Presenter.ThisRouteSet.AddRoute(tp, Presenter.MinimumAge, Presenter.MaximumAge, Presenter.SelectedGender,
-                Presenter.SelectedAffordanceTag, Presenter.SelectedPerson?.IntID, Presenter.Weight);
+            // only specify some of the parameters, according to the selected input type
+            var inputType = Presenter.InputOptions[Presenter.SelectedInputOption];
+            switch (inputType)
+            {
+                case TravelRouteEntryInputOption.AgeAndGender:
+                    Presenter.ThisRouteSet.AddRoute(tp, minimumAge: Presenter.MinimumAge, maximumAge: Presenter.MaximumAge, gender: Presenter.SelectedGender,
+                        affordanceTag: Presenter.SelectedAffordanceTag, weight: Presenter.Weight);
+                    break;
+                case TravelRouteEntryInputOption.Person:
+                    Presenter.ThisRouteSet.AddRoute(tp, affordanceTag: Presenter.SelectedAffordanceTag, personID: Presenter.SelectedPerson?.IntID,
+                        weight: Presenter.Weight);
+                    break;
+                default:
+                    throw new LPGNotImplementedException("Not implemented for all items of enum " + nameof(TravelRouteEntryInputOption));
+            }
+
             Presenter.RefreshRoutes();
         }
 

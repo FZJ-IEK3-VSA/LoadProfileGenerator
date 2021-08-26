@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
+using System.Windows;
 using Automation.ResultFiles;
 using Common;
 using Common.Enums;
@@ -27,8 +28,32 @@ namespace LoadProfileGenerator.Views.Transportation {
         {
             ThisRouteSet = routeSet;
             _modularHousehold = Sim.ModularHouseholds[0];
+            _selectedInputOption = InputOptions.Keys.First();
+            RefreshVisibility();
             RefreshDataTable();
             RefreshRoutes();
+        }
+
+        [ItemNotNull]
+        [NotNull]
+        public Dictionary<string, TravelRouteEntryInputOption> InputOptions { get; } = InitInputOptions();
+
+        /// <summary>
+        /// Is used to define a readable string version for each enum item for the different input options
+        /// </summary>
+        /// <returns>A dictionary mapping the readable string versions to the respective enum values</returns>
+        private static Dictionary<string, TravelRouteEntryInputOption> InitInputOptions()
+        {
+            var d = new Dictionary<string, TravelRouteEntryInputOption> {
+                { "Filter by age and gender", TravelRouteEntryInputOption.AgeAndGender },
+                { "Only for one person", TravelRouteEntryInputOption.Person }
+            };
+            // check if all enum items are covered
+            if (d.Count != Enum.GetNames(typeof(TravelRouteEntryInputOption)).Length)
+            {
+                throw new LPGNotImplementedException("Did not specify a readable string version for all items of enum " + nameof(TravelRouteEntryInputOption));
+            }
+            return d;
         }
 
         [ItemNotNull]
@@ -45,6 +70,29 @@ namespace LoadProfileGenerator.Views.Transportation {
             {
                 return Sim.AffordanceTaggingSets.Items;
             }
+        }
+
+        private string _selectedInputOption;
+        public string SelectedInputOption { 
+            get
+            {
+                return _selectedInputOption;
+            }
+            set
+            {
+                _selectedInputOption = value;
+                RefreshVisibility();
+            }
+        }
+
+        /// <summary>
+        /// Resets the visibility of some input controls, depending on the currently selected input option
+        /// </summary>
+        private void RefreshVisibility()
+        {
+            var inputType = InputOptions[SelectedInputOption];
+            ShowAgeAndGenderInputs = inputType == TravelRouteEntryInputOption.AgeAndGender ? Visibility.Visible : Visibility.Collapsed;
+            ShowPersonDropDown = inputType == TravelRouteEntryInputOption.Person ? Visibility.Visible : Visibility.Collapsed;
         }
 
         [ItemNotNull]
@@ -72,9 +120,9 @@ namespace LoadProfileGenerator.Views.Transportation {
 
         public Person SelectedPerson { get; set; }
 
-        [ItemNotNull]
         [NotNull]
         [UsedImplicitly]
+        [ItemNotNull]
         public ObservableCollection<Person> AvailablePersons { get { return Sim.Persons.Items; } }
 
         public double Weight { get; set; } = 1.0;
@@ -147,6 +195,38 @@ namespace LoadProfileGenerator.Views.Transportation {
         [NotNull]
         [UsedImplicitly]
         public ObservableCollection<UsedIn> UsedIns { get; } = new ObservableCollection<UsedIn>();
+
+        private Visibility _showAgeAndGenderInputs;
+
+        [UsedImplicitly]
+        public Visibility ShowAgeAndGenderInputs
+        {
+            get
+            {
+                return _showAgeAndGenderInputs;
+            }
+            set
+            {
+                _showAgeAndGenderInputs = value;
+                OnPropertyChanged(nameof(ShowAgeAndGenderInputs));
+            }
+        }
+
+        private Visibility _showPersonDropDown;
+
+        [UsedImplicitly]
+        public Visibility ShowPersonDropDown
+        {
+            get
+            {
+                return _showPersonDropDown;
+            }
+            set
+            {
+                _showPersonDropDown = value;
+                OnPropertyChanged(nameof(ShowPersonDropDown));
+            }
+        }
 
         public void Delete()
         {
@@ -448,5 +528,11 @@ namespace LoadProfileGenerator.Views.Transportation {
                 ThisRouteSet.AddRoute(route, -1, -1, PermittedGender.All, null, null, 1.0); 
             }
         }
+    }
+
+    public enum TravelRouteEntryInputOption
+    {
+        AgeAndGender,
+        Person
     }
 }

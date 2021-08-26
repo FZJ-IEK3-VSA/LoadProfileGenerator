@@ -70,18 +70,18 @@
                                  Grid.Column="1"
                                  Style="{StaticResource TextBoxStyle}"
                                  Text="{Binding ThisRouteSet.Description}" />
-            <Label Grid.Row="3"
+                        <Label Grid.Row="3"
                                Grid.Column="0"
                                Content="Affordance Tagging Set"
                                Style="{StaticResource LabelStyle}"
                                Target="{Binding ElementName=CmbAffordanceTaggingSet}" />
-            <ComboBox Name="CmbAffordanceTaggingSet"
+                        <ComboBox Name="CmbAffordanceTaggingSet"
                                   Grid.Row="3"
                                   Grid.Column="1"
                                   ItemsSource="{Binding AffordanceTaggingSets}"
                                   SelectedItem="{Binding ThisRouteSet.AffordanceTaggingSet}"
                                   Style="{StaticResource ComboBoxStyle}"/>
-            <Button 
+                        <Button 
                                 Grid.Row="4"
                                 Grid.Column="1"
                                 Click="BtnMakeCopy"
@@ -135,68 +135,87 @@
                                   SelectedItem="{Binding SelectedTravelRoute}"
                                   Style="{StaticResource ComboBoxStyle}" />
                         <Label Grid.Row="2"
-                                           Grid.Column="0"
-                                           Content="Permitted Gender"
-                                           Style="{StaticResource LabelStyle}"
-                                           Target="{Binding ElementName=CmbPermittedGender}" />
-                        <ComboBox Name="CmbPermittedGender"
-                                              Grid.Row="2"
-                                              Grid.Column="1"
-                                              ItemsSource="{Binding PermittedGenders}"
-                                              SelectedItem="{Binding SelectedGender}"
-                                              Style="{StaticResource ComboBoxStyle}" />
+                               Grid.Column="0"
+                               Content="Restrictions"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=CmbInputOptions}" />
+                        <ComboBox Name="CmbInputOptions"
+                                  Grid.Row="2"
+                                  Grid.Column="1"
+                                  ItemsSource="{Binding InputOptions.Keys}"
+                                  SelectedItem="{Binding SelectedInputOption}"
+                                  Style="{StaticResource ComboBoxStyle}" />
                         <Label Grid.Row="3"
-                                           Grid.Column="0"
-                                           Content="Minimum Age"
-                                           Style="{StaticResource LabelStyle}"
-                                           Target="{Binding ElementName=TxtMinimumAge}" />
-                        <TextBox Name="TxtMinimumAge"
-                                              Grid.Row="3"
-                                              Grid.Column="1"
-                                             Style="{StaticResource TextBoxStyle}"
-                                             Text="{Binding MinimumAge}" />
+                               Grid.Column="0"
+                               Content="Permitted Gender"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=CmbPermittedGender}"
+                               Visibility="{Binding ShowAgeAndGenderInputs}" />
+                        <ComboBox Name="CmbPermittedGender"
+                                  Grid.Row="3"
+                                  Grid.Column="1"
+                                  ItemsSource="{Binding PermittedGenders}"
+                                  SelectedItem="{Binding SelectedGender}"
+                                  Style="{StaticResource ComboBoxStyle}"
+                                  Visibility="{Binding ShowAgeAndGenderInputs}" />
                         <Label Grid.Row="4"
-                                           Grid.Column="0"
-                                           Content="Maximum Age"
-                                           Style="{StaticResource LabelStyle}"
-                                           Target="{Binding ElementName=TxtMaximumAge}" />
-                        <TextBox Name="TxtMaximumAge"
-                                              Grid.Row="4"
-                                              Grid.Column="1"
-                                             Style="{StaticResource TextBoxStyle}"
-                                             Text="{Binding MaximumAge}" />
+                               Grid.Column="0"
+                               Content="Minimum Age"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=TxtMinimumAge}"
+                               Visibility="{Binding ShowAgeAndGenderInputs}" />
+                        <TextBox Name="TxtMinimumAge"
+                                 Grid.Row="4"
+                                 Grid.Column="1"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding MinimumAge}"
+                                 Visibility="{Binding ShowAgeAndGenderInputs}" />
                         <Label Grid.Row="5"
-                                           Grid.Column="0"
-                                           Content="Affordance Tag"
-                                           Style="{StaticResource LabelStyle}"
-                                           Target="{Binding ElementName=CmbAffordanceTag}" />
-                        <ComboBox Name="CmbAffordanceTag"
-                                              Grid.Row="5"
-                                              Grid.Column="1"
-                                              ItemsSource="{Binding ElementName=CmbAffordanceTaggingSet, Path=SelectedItem.Tags}"
-                                              SelectedItem="{Binding SelectedAffordanceTag}"
-                                              Style="{StaticResource ComboBoxStyle}" />
+                               Grid.Column="0"
+                               Content="Maximum Age"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=TxtMaximumAge}"
+                               Visibility="{Binding ShowAgeAndGenderInputs}" />
+                        <TextBox Name="TxtMaximumAge"
+                                 Grid.Row="5"
+                                 Grid.Column="1"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding MaximumAge}"
+                                 Visibility="{Binding ShowAgeAndGenderInputs}" />
                         <Label Grid.Row="6"
-                                           Grid.Column="0"
-                                           Content="Only for Person"
-                                           Style="{StaticResource LabelStyle}"
-                                           Target="{Binding ElementName=CmbPerson}" />
-                        <ComboBox Name="CmbPerson"
-                                              Grid.Row="6"
-                                              Grid.Column="1"
-                                              ItemsSource="{Binding AvailablePersons}"
-                                              SelectedItem="{Binding SelectedPerson}"
-                                              Style="{StaticResource ComboBoxStyle}" />
+                               Grid.Column="0"
+                               Content="Affordance Tag"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=CmbAffordanceTag}" />
+                        <ComboBox Name="CmbAffordanceTag"
+                                  Grid.Row="6"
+                                  Grid.Column="1"
+                                  ItemsSource="{Binding ElementName=CmbAffordanceTaggingSet, Path=SelectedItem.Tags}"
+                                  SelectedItem="{Binding SelectedAffordanceTag}"
+                                  Style="{StaticResource ComboBoxStyle}" />
                         <Label Grid.Row="7"
-                                           Grid.Column="0"
-                                           Content="Weight"
-                                           Style="{StaticResource LabelStyle}"
-                                           Target="{Binding ElementName=TxtWeight}" />
+                               Grid.Column="0"
+                               Content="Only for Person"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=CmbPerson}"
+                               Visibility="{Binding ShowPersonDropDown}" />
+                        <ComboBox Name="CmbPerson"
+                                  Grid.Row="7"
+                                  Grid.Column="1"
+                                  ItemsSource="{Binding AvailablePersons}"
+                                  SelectedItem="{Binding SelectedPerson}"
+                                  Style="{StaticResource ComboBoxStyle}"
+                                  Visibility="{Binding ShowPersonDropDown}" />
+                        <Label Grid.Row="8"
+                               Grid.Column="0"
+                               Content="Weight"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=TxtWeight}" />
                         <TextBox Name="TxtWeight"
-                                              Grid.Row="7"
-                                              Grid.Column="1"
-                                             Style="{StaticResource TextBoxStyle}"
-                                             Text="{Binding Weight}" />
+                                 Grid.Row="8"
+                                 Grid.Column="1"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding Weight}" />
 
                         <StackPanel Grid.Row="10"
                                     Grid.Column="1"
@@ -336,7 +355,7 @@
                                Target="{Binding ElementName=MyGrid}" />
                         <DataGrid Name="MyGrid" Grid.Row="2" Grid.Column="1" ItemsSource="{Binding ConnectionCountTable}"
                                    SelectionUnit="Cell" IsReadOnly="True"   >
-                            
+
 
                         </DataGrid>
 
