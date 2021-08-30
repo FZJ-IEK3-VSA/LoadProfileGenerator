@@ -118,6 +118,32 @@ namespace LoadProfileGenerator.Views.Transportation {
 
         public AffordanceTag SelectedAffordanceTag { get; set; }
 
+        private bool _affordanceTagCmbBoxEnabled;
+        public bool AffordanceTagCmbBoxEnabled
+        {
+            get
+            {
+                return _affordanceTagCmbBoxEnabled;
+            }
+            set
+            {
+                if (value != _affordanceTagCmbBoxEnabled)
+                {
+                    _affordanceTagCmbBoxEnabled = value;
+                    OnPropertyChanged(nameof(AffordanceTagCmbBoxEnabled));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Refreshes the IsEnabled state of the affordance tag combobox.
+        /// The affordance tag combobox is only enabled if an affordance tagging set is selected.
+        /// </summary>
+        public void RefreshAffordanceTagCmbBoxIsEnabled()
+        {
+            AffordanceTagCmbBoxEnabled = ThisRouteSet.AffordanceTaggingSet != null;
+        }
+
         public Person SelectedPerson { get; set; }
 
         [NotNull]
@@ -225,6 +251,22 @@ namespace LoadProfileGenerator.Views.Transportation {
             {
                 _showPersonDropDown = value;
                 OnPropertyChanged(nameof(ShowPersonDropDown));
+            }
+        }
+
+        /// <summary>
+        /// Sets the affordance tag of each TravelRouteSetEntry to null.
+        /// This happens when the affordance set which is used in the current TravelRouteSet is changed.
+        /// </summary>
+        public void ResetSetEntryAffordanceTags()
+        {
+            if (ThisRouteSet.TravelRoutes == null)
+            {
+                return;
+            }
+            foreach (var entry in ThisRouteSet.TravelRoutes)
+            {
+                entry.AffordanceTag = null;
             }
         }
 

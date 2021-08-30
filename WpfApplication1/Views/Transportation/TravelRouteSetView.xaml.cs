@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using Common;
 using Common.Enums;
@@ -7,28 +8,32 @@ using Database.Tables.BasicElements;
 using Database.Tables.Transportation;
 using JetBrains.Annotations;
 
-namespace LoadProfileGenerator.Views.Transportation {
+namespace LoadProfileGenerator.Views.Transportation
+{
     /// <summary>
     ///     Interaktionslogik für DeviceActionView.xaml
     /// </summary>
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
-    public partial class TravelRouteSetView {
+    public partial class TravelRouteSetView
+    {
         public TravelRouteSetView()
         {
             InitializeComponent();
         }
 
         [JetBrains.Annotations.NotNull]
-        private TravelRouteSetPresenter Presenter => (TravelRouteSetPresenter) DataContext;
+        private TravelRouteSetPresenter Presenter => (TravelRouteSetPresenter)DataContext;
 
         private void BtnAddDeviceClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
         {
-            if (CmbTravelRoutes.SelectedItem == null) {
+            if (CmbTravelRoutes.SelectedItem == null)
+            {
                 Logger.Error("Please select a travel route first!");
                 return;
             }
 
-            if (!(CmbTravelRoutes.SelectedItem is TravelRoute tp)) {
+            if (!(CmbTravelRoutes.SelectedItem is TravelRoute tp))
+            {
                 Logger.Error("Please select a travel route first!");
                 return;
             }
@@ -78,7 +83,8 @@ namespace LoadProfileGenerator.Views.Transportation {
 
         private void BtnRemoveRoutesClick([CanBeNull] object sender, [CanBeNull] RoutedEventArgs e)
         {
-            if (!(LstSteps.SelectedItem is TravelRouteSetEntry entry)) {
+            if (!(LstSteps.SelectedItem is TravelRouteSetEntry entry))
+            {
                 Logger.Error("Please select a TravelRoute entry first!");
                 return;
             }
@@ -95,21 +101,23 @@ namespace LoadProfileGenerator.Views.Transportation {
 
         private void LstPersonDesiresMouseDoubleClick([CanBeNull] object sender, [CanBeNull] MouseButtonEventArgs e)
         {
-            if (LstPersonDesires.SelectedItem == null) {
+            if (LstPersonDesires.SelectedItem == null)
+            {
                 return;
             }
 
-            var ui = (UsedIn) LstPersonDesires.SelectedItem;
+            var ui = (UsedIn)LstPersonDesires.SelectedItem;
             Presenter.ApplicationPresenter.OpenItem(ui.Item);
         }
 
         private void LstSteps_OnMouseDoubleClick([JetBrains.Annotations.NotNull] object sender, [JetBrains.Annotations.NotNull] MouseButtonEventArgs e)
         {
-            if (LstSteps.SelectedItem == null) {
+            if (LstSteps.SelectedItem == null)
+            {
                 return;
             }
 
-            var entry = (TravelRouteSetEntry) LstSteps.SelectedItem;
+            var entry = (TravelRouteSetEntry)LstSteps.SelectedItem;
             Presenter.ApplicationPresenter.OpenItem(entry.TravelRoute);
         }
 
@@ -133,6 +141,38 @@ namespace LoadProfileGenerator.Views.Transportation {
         {
             Presenter.AddDistanceMatchingWorkplaceRoutes();
             Presenter.RefreshRoutes();
+        }
+
+        private bool handleAffordanceTaggingSetSelectionChange = true;
+        private void OnAffordanceTaggingSetChanged(object sender, SelectionChangedEventArgs args)
+        {
+            if (!handleAffordanceTaggingSetSelectionChange)
+            {
+                // duplicate call caused by resetting the selection: ignore
+                return;
+            }
+            var cmbbox = sender as System.Windows.Controls.ComboBox;
+            // check if the previous value is known; only revert if the previous value was not empty
+            if (cmbbox != null && args.RemovedItems.Count > 0 && !args.RemovedItems[0].Equals(""))
+            {
+                var result = MessageWindowHandler.Mw.ShowYesNoMessage("If the affordance tagging set in a travel route set is changed," +
+                    "then already defined affordance tags of all contained route entries are reset. Are you sure you want to change the " +
+                    "affordance tagging set?", "Change affordance tagging set?");
+                if (result == LPGMsgBoxResult.Yes)
+                {
+                    // reset all already defined affordance tags
+                    Presenter.ResetSetEntryAffordanceTags();
+                    // refresh the table so that the removed affordance tags are not shown anymore
+                    Presenter.RefreshDataTable();
+                } else
+                {
+                    handleAffordanceTaggingSetSelectionChange = false;
+                    // reset the selected item to the previous value
+                    cmbbox.SelectedItem = args.RemovedItems[0];
+                    handleAffordanceTaggingSetSelectionChange = true;
+                }
+            }
+            Presenter.RefreshAffordanceTagCmbBoxIsEnabled();
         }
     }
 }

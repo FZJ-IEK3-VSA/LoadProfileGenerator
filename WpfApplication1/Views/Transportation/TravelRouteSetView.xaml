@@ -4,10 +4,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:transportation="clr-namespace:LoadProfileGenerator.Views.Transportation"
+             xmlns:converters="clr-namespace:LoadProfileGenerator.Controls.Converters"
              d:DesignHeight="1500"
              d:DesignWidth="900"
              mc:Ignorable="d">
     <UserControl.Resources>
+        <converters:NullReplaceConverter x:Key="NullReplaceConverter" />
+        <converters:EnumerableAddDefaultItemConverter x:Key="EnumerableAddDefaultItemConverter" />
         <transportation:ValueToBrushConverter x:Key="ValueToBrushConverter"/>
         <Style  TargetType="DataGridCell">
             <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource Self}, 
@@ -78,8 +81,9 @@
                         <ComboBox Name="CmbAffordanceTaggingSet"
                                   Grid.Row="3"
                                   Grid.Column="1"
-                                  ItemsSource="{Binding AffordanceTaggingSets}"
-                                  SelectedItem="{Binding ThisRouteSet.AffordanceTaggingSet}"
+                                  ItemsSource="{Binding AffordanceTaggingSets, Converter={StaticResource EnumerableAddDefaultItemConverter}, ConverterParameter=''}"
+                                  SelectedItem="{Binding ThisRouteSet.AffordanceTaggingSet, Converter={StaticResource NullReplaceConverter}, ConverterParameter=''}"
+                                  SelectionChanged="OnAffordanceTaggingSetChanged"
                                   Style="{StaticResource ComboBoxStyle}"/>
                         <Button 
                                 Grid.Row="4"
@@ -184,28 +188,29 @@
                                  Visibility="{Binding ShowAgeAndGenderInputs}" />
                         <Label Grid.Row="6"
                                Grid.Column="0"
-                               Content="Affordance Tag"
-                               Style="{StaticResource LabelStyle}"
-                               Target="{Binding ElementName=CmbAffordanceTag}" />
-                        <ComboBox Name="CmbAffordanceTag"
-                                  Grid.Row="6"
-                                  Grid.Column="1"
-                                  ItemsSource="{Binding ElementName=CmbAffordanceTaggingSet, Path=SelectedItem.Tags}"
-                                  SelectedItem="{Binding SelectedAffordanceTag}"
-                                  Style="{StaticResource ComboBoxStyle}" />
-                        <Label Grid.Row="7"
-                               Grid.Column="0"
-                               Content="Only for Person"
+                               Content="Person"
                                Style="{StaticResource LabelStyle}"
                                Target="{Binding ElementName=CmbPerson}"
                                Visibility="{Binding ShowPersonDropDown}" />
                         <ComboBox Name="CmbPerson"
-                                  Grid.Row="7"
+                                  Grid.Row="6"
                                   Grid.Column="1"
-                                  ItemsSource="{Binding AvailablePersons}"
-                                  SelectedItem="{Binding SelectedPerson}"
+                                  ItemsSource="{Binding AvailablePersons, Converter={StaticResource EnumerableAddDefaultItemConverter}, ConverterParameter=''}"
+                                  SelectedItem="{Binding SelectedPerson, Converter={StaticResource NullReplaceConverter}, ConverterParameter=''}"
                                   Style="{StaticResource ComboBoxStyle}"
                                   Visibility="{Binding ShowPersonDropDown}" />
+                        <Label Grid.Row="7"
+                               Grid.Column="0"
+                               Content="Affordance Tag"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=CmbAffordanceTag}" />
+                        <ComboBox Name="CmbAffordanceTag"
+                                  Grid.Row="7"
+                                  Grid.Column="1"
+                                  ItemsSource="{Binding ThisRouteSet.AffordanceTaggingSet.Tags, Converter={StaticResource EnumerableAddDefaultItemConverter}, ConverterParameter=''}"
+                                  SelectedItem="{Binding SelectedAffordanceTag, Converter={StaticResource NullReplaceConverter}, ConverterParameter=''}"
+                                  IsEnabled="{Binding AffordanceTagCmbBoxEnabled}"
+                                  Style="{StaticResource ComboBoxStyle}" />
                         <Label Grid.Row="8"
                                Grid.Column="0"
                                Content="Weight"

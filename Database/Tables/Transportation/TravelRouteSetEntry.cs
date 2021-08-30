@@ -17,7 +17,7 @@ namespace Database.Tables.Transportation {
         public readonly int _minimumAge;
         public readonly int _maximumAge;
         public readonly PermittedGender _gender;
-        public readonly AffordanceTag _affordanceTag;
+        public AffordanceTag _affordanceTag;
         public readonly int? _personID;
         public readonly double _weight;
 
@@ -55,7 +55,11 @@ namespace Database.Tables.Transportation {
         public PermittedGender Gender => _gender;
 
         [UsedImplicitly]
-        public AffordanceTag AffordanceTag => _affordanceTag;
+        public AffordanceTag AffordanceTag
+        {
+            get => _affordanceTag;
+            set => SetValueWithNotify(value, ref _affordanceTag, true, nameof(AffordanceTag));
+        }
 
         [UsedImplicitly]
         public int? PersonID => _personID;
@@ -114,14 +118,8 @@ namespace Database.Tables.Transportation {
             cmd.AddParameter("MinimumAge", _minimumAge);
             cmd.AddParameter("MaximumAge", _maximumAge);
             cmd.AddParameter("Gender", _gender);
-            if (_affordanceTag != null)
-            {
-                cmd.AddParameter("AffordanceTagID", _affordanceTag.IntID);
-            }
-            if (_personID != null)
-            {
-                cmd.AddParameter("PersonID", _personID);
-            }
+            cmd.AddParameter("AffordanceTagID", _affordanceTag?.IntID ?? -1);
+            cmd.AddParameter("PersonID", _personID ?? -1);
             cmd.AddParameter("Weight", _weight);
     }
 
