@@ -155,7 +155,7 @@ namespace LoadProfileGenerator.Views.Transportation
             // check if the previous value is known; only revert if the previous value was not empty
             if (cmbbox != null && args.RemovedItems.Count > 0 && !args.RemovedItems[0].Equals(""))
             {
-                var result = MessageWindowHandler.Mw.ShowYesNoMessage("If the affordance tagging set in a travel route set is changed," +
+                var result = MessageWindowHandler.Mw.ShowYesNoMessage("If the affordance tagging set in a travel route set is changed, " +
                     "then already defined affordance tags of all contained route entries are reset. Are you sure you want to change the " +
                     "affordance tagging set?", "Change affordance tagging set?");
                 if (result == LPGMsgBoxResult.Yes)

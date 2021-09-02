@@ -1,7 +1,7 @@
 set "srcdirectory=C:\Main\Git-Repositories\LoadProfileGenerator"
 set "vsdirectory=D:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin"
 
-copy V:\Dropbox\LPG\WpfApplication1\profilegenerator-latest.db3 c:\Main\Git-Repositories\LoadProfileGenerator\WpfApplication1\profilegenerator-latest.db3
+REM copy V:\Dropbox\LPG\WpfApplication1\profilegenerator-latest.db3 c:\Main\Git-Repositories\LoadProfileGenerator\WpfApplication1\profilegenerator-latest.db3
 
 cd %srcdirectory%
 %srcdirectory%\VersionIncreaser\bin\Debug\versionincreaser.exe
@@ -28,16 +28,16 @@ pause
 
 
 REM create pylpg
-set "releasedirectory=C:\LPGReleases\releases10.6.0"
-set "pylpgdirectory=C:\work\pylpg\"
+set "releasedirectory=C:\LPGReleaseMakerResults\LPGReleases\releases10.6.0"
+set "pylpgdirectory=C:\LPGPythonBindings\pylpg\"
 
 cd %releasedirectory%\net48
 simulationengine cpy
-copy lpgdata.py %pylpgdirectory%
-copy lpgpythonbindings.py %pylpgdirectory%
+xcopy lpgdata.py %pylpgdirectory%
+xcopy lpgpythonbindings.py %pylpgdirectory%
 
 robocopy %releasedirectory%\net48 %pylpgdirectory%\LPG_win /E /R:0 /W:0 /MIR
-robocopy %releasedirectory%\net48 C:\work\pylpg_2\LPG_win_most_recent /E /R:0 /W:0 /MIR
+robocopy %releasedirectory%\net48 C:\LPGPythonBindings\pylpg_2\LPG_win_most_recent /E /R:0 /W:0 /MIR
 del %pylpgdirectory%\LPG_win\LPG*.zip
 del %pylpgdirectory%\LPG_win\setup*.exe
 robocopy %releasedirectory%\linux %pylpgdirectory%\LPG_linux /E /R:0 /W:0 /MIR
