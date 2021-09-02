@@ -6,7 +6,7 @@ using Database.Database;
 
 namespace Database.Helpers {
     public static class DatabaseVersionChecker {
-        [JetBrains.Annotations.NotNull] private static string _dstVersion = "10.5.0.a";
+        [JetBrains.Annotations.NotNull] private static string _dstVersion = "10.6.0.a";
 
         [JetBrains.Annotations.NotNull]
         public static string DstVersion {

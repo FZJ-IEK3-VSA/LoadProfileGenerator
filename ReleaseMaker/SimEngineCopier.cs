@@ -8,71 +8,16 @@ namespace ReleaseMaker {
         {
             List<string> programFiles = new List<string>();
             var srcDi = new DirectoryInfo(src);
-            Copy(programFiles, srcDi, src, dst, @"Autofac.dll");
-            Copy(programFiles, srcDi, src, dst, @"Automation.dll");
-            Copy(programFiles, srcDi, src, dst, @"CalcPostProcessor.dll");
-            Copy(programFiles, srcDi, src, dst, @"CalculationController.dll");
-            Copy(programFiles, srcDi, src, dst, @"CalculationEngine.dll");
-            Copy(programFiles, srcDi, src, dst, @"ChartCreator2.dll");
-            Copy(programFiles, srcDi, src, dst, @"Common.dll");
-            Copy(programFiles, srcDi, src, dst, @"Database.dll");
-            Copy(programFiles, srcDi, src, dst, @"EntityFramework.dll");
-            Copy(programFiles, srcDi, src, dst, @"EntityFramework.SqlServer.dll");
-            Copy(programFiles, srcDi, src, dst, @"HarfBuzzSharp.dll");
-            Copy(programFiles, srcDi, src, dst, @"JetBrains.Annotations.dll");
-            Copy(programFiles, srcDi, src, dst, @"Microsoft.Win32.Registry.AccessControl.dll");
-            Copy(programFiles, srcDi, src, dst, @"Microsoft.Win32.SystemEvents.dll");
-            Copy(programFiles, srcDi, src, dst, @"Newtonsoft.Json.dll");
-            Copy(programFiles, srcDi, src, dst, @"OxyPlot.dll");
-            Copy(programFiles, srcDi, src, dst, @"OxyPlot.SkiaSharp.dll");
-            Copy(programFiles, srcDi, src, dst, @"PowerArgs.dll");
+            var dlls = srcDi.GetFiles("*.dll");
+            foreach (var dll in dlls)
+            {
+                Copy(programFiles, srcDi, src, dst, dll.Name);
+            }
+
             Copy(programFiles, srcDi, src, dst, @"SimulationEngine.deps.json");
-            Copy(programFiles, srcDi, src, dst, @"SimulationEngine.dll");
             Copy(programFiles, srcDi, src, dst, @"SimulationEngine.exe");
             Copy(programFiles, srcDi, src, dst, @"SimulationEngine.runtimeconfig.dev.json");
             Copy(programFiles, srcDi, src, dst, @"SimulationEngine.runtimeconfig.json");
-            Copy(programFiles, srcDi, src, dst, @"SimulationEngineLib.dll");
-            Copy(programFiles, srcDi, src, dst, @"SkiaSharp.dll");
-            Copy(programFiles, srcDi, src, dst, @"SkiaSharp.HarfBuzz.dll");
-            Copy(programFiles, srcDi, src, dst, @"SQLite.Interop.dll");
-            Copy(programFiles, srcDi, src, dst, @"System.CodeDom.dll");
-            Copy(programFiles, srcDi, src, dst, @"System.ComponentModel.Composition.dll");
-            Copy(programFiles, srcDi, src, dst, @"System.ComponentModel.Composition.Registration.dll");
-            Copy(programFiles, srcDi, src, dst, @"System.Configuration.ConfigurationManager.dll");
-            Copy(programFiles, srcDi, src, dst, @"System.Data.Odbc.dll");
-            Copy(programFiles, srcDi, src, dst, @"System.Data.OleDb.dll");
-            Copy(programFiles, srcDi, src, dst, @"System.Data.SqlClient.dll");
-            Copy(programFiles, srcDi, src, dst, @"System.Data.SQLite.dll");
-            Copy(programFiles, srcDi, src, dst, @"System.Data.SQLite.EF6.dll");
-            Copy(programFiles, srcDi, src, dst, @"System.Diagnostics.EventLog.dll");
-            Copy(programFiles, srcDi, src, dst, @"System.Diagnostics.PerformanceCounter.dll");
-            Copy(programFiles, srcDi, src, dst, @"System.DirectoryServices.AccountManagement.dll");
-            Copy(programFiles, srcDi, src, dst, @"System.DirectoryServices.dll");
-            Copy(programFiles, srcDi, src, dst, @"System.DirectoryServices.Protocols.dll");
-            Copy(programFiles, srcDi, src, dst, @"System.Drawing.Common.dll");
-            Copy(programFiles, srcDi, src, dst, @"System.IO.Packaging.dll");
-            Copy(programFiles, srcDi, src, dst, @"System.IO.Ports.dll");
-            Copy(programFiles, srcDi, src, dst, @"System.Management.dll");
-            Copy(programFiles, srcDi, src, dst, @"System.Private.ServiceModel.dll");
-            Copy(programFiles, srcDi, src, dst, @"System.Reflection.Context.dll");
-            Copy(programFiles, srcDi, src, dst, @"System.Runtime.Caching.dll");
-            Copy(programFiles, srcDi, src, dst, @"System.Security.Cryptography.Pkcs.dll");
-            Copy(programFiles, srcDi, src, dst, @"System.Security.Cryptography.ProtectedData.dll");
-            Copy(programFiles, srcDi, src, dst, @"System.Security.Cryptography.Xml.dll");
-            Copy(programFiles, srcDi, src, dst, @"System.Security.Permissions.dll");
-            Copy(programFiles, srcDi, src, dst, @"System.ServiceModel.dll");
-            Copy(programFiles, srcDi, src, dst, @"System.ServiceModel.Duplex.dll");
-            Copy(programFiles, srcDi, src, dst, @"System.ServiceModel.Http.dll");
-            Copy(programFiles, srcDi, src, dst, @"System.ServiceModel.NetTcp.dll");
-            Copy(programFiles, srcDi, src, dst, @"System.ServiceModel.Primitives.dll");
-            Copy(programFiles, srcDi, src, dst, @"System.ServiceModel.Security.dll");
-            Copy(programFiles, srcDi, src, dst, @"System.ServiceModel.Syndication.dll");
-            Copy(programFiles, srcDi, src, dst, @"System.ServiceProcess.ServiceController.dll");
-            Copy(programFiles, srcDi, src, dst, @"System.Speech.dll");
-            Copy(programFiles, srcDi, src, dst, @"System.Threading.AccessControl.dll");
-            Copy(programFiles, srcDi, src, dst, @"System.Windows.Extensions.dll");
-            Copy(programFiles, srcDi, src, dst, @"Utf8Json.dll");
-            Copy(programFiles, srcDi, src, dst, @"xunit.abstractions.dll");
             Copy(programFiles, srcDi, src, dst, @"xunit.runner.json");
             Copy(programFiles, srcDi, src, dst, @"ref\SimulationEngine.dll");
             Copy(programFiles, srcDi, src, dst, @"runtimes\linux-arm\native\libSkiaSharp.so");
@@ -89,6 +34,8 @@ namespace ReleaseMaker {
             Copy(programFiles, srcDi, src, dst, @"runtimes\osx-x64\native\SQLite.Interop.dll");
             Copy(programFiles, srcDi, src, dst, @"runtimes\tizen-armel\native\libHarfBuzzSharp.so");
             Copy(programFiles, srcDi, src, dst, @"runtimes\tizen-x86\native\libHarfBuzzSharp.so");
+
+
             Copy(programFiles, srcDi, src, dst, @"runtimes\win-arm64\native\libSkiaSharp.dll");
             Copy(programFiles, srcDi, src, dst, @"runtimes\win-arm64\native\sni.dll");
             Copy(programFiles, srcDi, src, dst, @"runtimes\win-x64\native\libHarfBuzzSharp.dll");
