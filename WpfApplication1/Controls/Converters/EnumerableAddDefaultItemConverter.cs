@@ -15,6 +15,14 @@ namespace LoadProfileGenerator.Controls.Converters
     /// </summary>
     public class EnumerableAddDefaultItemConverter : IValueConverter
     {
+        /// <summary>
+        /// Adds a specified default value to the received enumerable.
+        /// </summary>
+        /// <param name="value">An enumerable</param>
+        /// <param name="targetType"></param>
+        /// <param name="parameter">The value to add to the enumerable</param>
+        /// <param name="culture"></param>
+        /// <returns>The extended enumerable</returns>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var collection = (IEnumerable)value;

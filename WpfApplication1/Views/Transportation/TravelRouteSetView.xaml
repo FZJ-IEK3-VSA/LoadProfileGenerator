@@ -11,6 +11,7 @@
     <UserControl.Resources>
         <converters:NullReplaceConverter x:Key="NullReplaceConverter" />
         <converters:EnumerableAddDefaultItemConverter x:Key="EnumerableAddDefaultItemConverter" />
+        <converters:IDToNameConverter x:Key="IDToNameConverter" />
         <transportation:ValueToBrushConverter x:Key="ValueToBrushConverter"/>
         <Style  TargetType="DataGridCell">
             <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource Self}, 
@@ -284,8 +285,14 @@
                                                     DisplayMemberBinding="{Binding AffordanceTag.Name}"
                                                     Header="Affordance Tag" />
                                     <GridViewColumn Width="Auto"
-                                                    DisplayMemberBinding="{Binding PersonID}"
-                                                    Header="Only for Person" />
+                                                    Header="Only for Person">
+                                        <GridViewColumn.DisplayMemberBinding>
+                                            <MultiBinding Converter="{StaticResource IDToNameConverter}" ConverterParameter="">
+                                                <Binding Path="PersonID"/>
+                                                <Binding Path="DataContext.Sim.Persons.Items" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}"/>
+                                            </MultiBinding>
+                                        </GridViewColumn.DisplayMemberBinding>
+                                    </GridViewColumn>
                                     <GridViewColumn Width="Auto"
                                                     DisplayMemberBinding="{Binding Weight}"
                                                     Header="Weight" />
