@@ -26,7 +26,8 @@ namespace CalculationEngine.Transportation
         public bool CanUse(TOwner owner, TDevice device)
         {
             bool couldOwnDevice = !OwnerToDevice.ContainsKey(owner) && !DeviceToOwner.ContainsKey(device);
-            return couldOwnDevice || DeviceToOwner[device] == owner;
+            bool isAlreadyOwner = DeviceToOwner.ContainsKey(device) && DeviceToOwner[device] == owner;
+            return couldOwnDevice || isAlreadyOwner;
         }
 
         /// <summary>

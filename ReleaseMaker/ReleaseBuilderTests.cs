@@ -81,7 +81,8 @@ namespace ReleaseMaker
                 "Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll",
                 "Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll",
                 "calcspec.json",
-                "Log.CommandlineCalculation.txt"
+                "Log.CommandlineCalculation.txt",
+                "xunit.runner.json"
             };
             foreach (var fi in fis)
             {
@@ -457,23 +458,25 @@ namespace ReleaseMaker
             releasename = releasename.Substring(0, 6);
             Logger.Info("Release name: " + releasename);
             //return;
-            var dstWin = @"v:\Dropbox\LPGReleases\releases" + releasename + "\\net48";
-            var dstLinux = @"v:\Dropbox\LPGReleases\releases" + releasename + "\\linux";
-            var dstWinCore = @"v:\Dropbox\LPGReleases\releases" + releasename + "\\netCore";
+            var baseReleasePath = @"C:\LPGReleaseMakerResults\";
+            var dstWin = baseReleasePath + @"LPGReleases\releases" + releasename + "\\net48";
+            var dstLinux = baseReleasePath + @"LPGReleases\releases" + releasename + "\\linux";
+            var dstWinCore = baseReleasePath + @"LPGReleases\releases" + releasename + "\\netCore";
             //const string srcsim = @"v:\Dropbox\LPG\SimulationEngine\bin\x64\Debug";
 
             PrepareDirectory(dstWin);
             PrepareDirectory(dstLinux);
             PrepareDirectory(dstWinCore);
-            const string srclpg = @"C:\Work\LPGDev\WpfApplication1\bin\Debug\net5.0-windows";
+            const string baseDevelopPath = @"C:\Main\Git-Repositories\LoadProfileGenerator\";
+            const string srclpg = baseDevelopPath + @"WpfApplication1\bin\Debug\net5.0-windows";
             Logger.Info("### Copying win lpg files");
             var filesForSetup = WinLpgCopier.CopyLpgFiles(srclpg, dstWin);
-            const string srcsim = @"C:\Work\LPGDev\SimulationEngine\bin\Debug\net5.0-windows";
+            const string srcsim = baseDevelopPath + @"SimulationEngine\bin\Debug\net5.0-windows";
             var filesForSetup2 = SimEngineCopier.CopySimEngineFiles(srcsim, dstWin);
 
-            const string srcsim2 = @"C:\Work\LPGDev\SimEngine2\bin\Release\net5.0-windows\win10-x64\publish";
+            const string srcsim2 = baseDevelopPath + @"SimEngine2\bin\Release\net5.0-windows\win10-x64\publish";
             SimEngine2Copier.CopySimEngine2Files(srcsim2, dstWinCore);
-            const string srcsimLinux = @"C:\Work\LPGDev\SimEngine2\bin\Release\net5.0\linux-x64\publish";
+            const string srcsimLinux = baseDevelopPath + @"SimEngine2\bin\Release\net5.0\linux-x64\publish";
             LinuxFileCopier.CopySimEngineLinuxFiles(srcsimLinux, dstLinux);
             Logger.Info("### Finished copying lpg files");
             // CopyFiles(src, dst);
@@ -573,8 +576,8 @@ namespace ReleaseMaker
                 allSetupFiles.AddRange(filesForSetup2);
                 allSetupFiles = allSetupFiles.Distinct().ToList();
 
-                fileForUpload.Add(MakeSetup(dstWin, releasename, allSetupFiles));
-                var dstUpload = @"v:\Dropbox\LPGReleases\releases" + releasename + "\\upload";
+                //fileForUpload.Add(MakeSetup(dstWin, releasename, allSetupFiles));
+                var dstUpload = baseReleasePath + @"releases" + releasename + "\\upload";
                 PrepareDirectory(dstUpload);
                 foreach (FileInfo fi in fileForUpload) {
                     string dstName = Path.Combine(dstUpload, fi.Name);
@@ -600,76 +603,76 @@ namespace ReleaseMaker
             Thread.Sleep(250);
         }
 
-        private static FileInfo MakeSetup([JetBrains.Annotations.NotNull] string dst, [JetBrains.Annotations.NotNull] string releaseName, List<string> programFiles)
-        {
-//make iss
-            string dstFileName = dst + "\\lpgsetup.iss";
-            using (var sw = new StreamWriter(dstFileName)) {
-                const string top = @"V:\Dropbox\Development\LPGSetup\lpgsetup_start.iss";
-                using (var sr = new StreamReader(top)) {
-                    while (!sr.EndOfStream) {
-                        var s = sr.ReadLine();
-                        if (s == null) {
-                            throw new LPGException("Readline failed");
-                        }
+//        private static FileInfo MakeSetup([JetBrains.Annotations.NotNull] string dst, [JetBrains.Annotations.NotNull] string releaseName, List<string> programFiles)
+//        {
+////make iss
+//            string dstFileName = dst + "\\lpgsetup.iss";
+//            using (var sw = new StreamWriter(dstFileName)) {
+//                const string top = @"V:\Dropbox\Development\LPGSetup\lpgsetup_start.iss";
+//                using (var sr = new StreamReader(top)) {
+//                    while (!sr.EndOfStream) {
+//                        var s = sr.ReadLine();
+//                        if (s == null) {
+//                            throw new LPGException("Readline failed");
+//                        }
 
-                        if (s.StartsWith("AppVersion=", StringComparison.Ordinal)) {
-                            sw.WriteLine("AppVersion=" + releaseName);
-                        }
-                        else {
-                            sw.WriteLine(s);
-                        }
-                    }
-                }
+//                        if (s.StartsWith("AppVersion=", StringComparison.Ordinal)) {
+//                            sw.WriteLine("AppVersion=" + releaseName);
+//                        }
+//                        else {
+//                            sw.WriteLine(s);
+//                        }
+//                    }
+//                }
 
-                //insert the files
-                foreach (var programFile in programFiles) {
-                    sw.WriteLine("Source: \"" + programFile + "\"; DestDir: \"{app}\"");
-                }
+//                //insert the files
+//                foreach (var programFile in programFiles) {
+//                    sw.WriteLine("Source: \"" + programFile + "\"; DestDir: \"{app}\"");
+//                }
 
-                //bottom of the file
-                const string bottom = @"V:\Dropbox\Development\LPGSetup\lpgsetup_end.iss";
-                using (var sr = new StreamReader(bottom)) {
-                    while (!sr.EndOfStream) {
-                        var s = sr.ReadLine();
-                        if (s == null) {
-                            throw new LPGException("Readline failed");
-                        }
+//                //bottom of the file
+//                const string bottom = @"V:\Dropbox\Development\LPGSetup\lpgsetup_end.iss";
+//                using (var sr = new StreamReader(bottom)) {
+//                    while (!sr.EndOfStream) {
+//                        var s = sr.ReadLine();
+//                        if (s == null) {
+//                            throw new LPGException("Readline failed");
+//                        }
 
-                        sw.WriteLine(s);
-                    }
-                }
-            }
+//                        sw.WriteLine(s);
+//                    }
+//                }
+//            }
 
-            Logger.Info("Currently open connections:" + Connection.ConnectionCount);
-            //Thread.Sleep(3000);
-            GC.WaitForPendingFinalizers();
-            GC.Collect();
-            //Thread.Sleep(3000);
-            using (var process2 = new Process()) {
-                // Configure the process using the StartInfo properties.
-                process2.StartInfo.FileName = @"C:\Program Files (x86)\Inno Setup 6\Compil32.exe";
-                process2.StartInfo.Arguments = "/cc lpgsetup.iss";
-                Logger.Info(process2.StartInfo.FileName + " " + process2.StartInfo.Arguments);
-                process2.StartInfo.WindowStyle = ProcessWindowStyle.Maximized;
-                process2.StartInfo.WorkingDirectory = dst;
-                process2.Start();
-                process2.WaitForExit(); // Waits here for the process to exit.
-            }
+//            Logger.Info("Currently open connections:" + Connection.ConnectionCount);
+//            //Thread.Sleep(3000);
+//            GC.WaitForPendingFinalizers();
+//            GC.Collect();
+//            //Thread.Sleep(3000);
+//            using (var process2 = new Process()) {
+//                // Configure the process using the StartInfo properties.
+//                process2.StartInfo.FileName = @"C:\Program Files (x86)\Inno Setup 6\Compil32.exe";
+//                process2.StartInfo.Arguments = "/cc lpgsetup.iss";
+//                Logger.Info(process2.StartInfo.FileName + " " + process2.StartInfo.Arguments);
+//                process2.StartInfo.WindowStyle = ProcessWindowStyle.Maximized;
+//                process2.StartInfo.WorkingDirectory = dst;
+//                process2.Start();
+//                process2.WaitForExit(); // Waits here for the process to exit.
+//            }
 
-            var fi = new FileInfo(Path.Combine(dst, "mysetup.exe"));
-            var newsetupFileName = Path.Combine(dst, "Setup" + releaseName + ".exe");
-            if (fi.Exists) {
-                fi.MoveTo(newsetupFileName);
-            }
-            return new FileInfo(newsetupFileName);
-        }
+//            var fi = new FileInfo(Path.Combine(dst, "mysetup.exe"));
+//            var newsetupFileName = Path.Combine(dst, "Setup" + releaseName + ".exe");
+//            if (fi.Exists) {
+//                fi.MoveTo(newsetupFileName);
+//            }
+//            return new FileInfo(newsetupFileName);
+//        }
 
         private static FileInfo MakeZipFile([JetBrains.Annotations.NotNull] string releaseName, [JetBrains.Annotations.NotNull] string dst)
         {
             using (var process = new Process()) {
                 // Configure the process using the StartInfo properties.
-                process.StartInfo.FileName = @"C:\Program Files\7-Zip\7z.exe";
+                process.StartInfo.FileName = @"D:\Program Files\7-Zip\7z.exe";
                 process.StartInfo.Arguments = "a -tzip -mx9 LPG" + releaseName + ".zip  *";
                 Logger.Info(process.StartInfo.FileName + " " + process.StartInfo.Arguments);
                 process.StartInfo.WindowStyle = ProcessWindowStyle.Maximized;

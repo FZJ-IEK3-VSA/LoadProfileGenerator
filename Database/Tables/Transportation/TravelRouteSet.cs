@@ -46,7 +46,7 @@ namespace Database.Tables.Transportation {
         public AffordanceTaggingSet AffordanceTaggingSet
         {
             get => _affordanceTaggingSet;
-            set => SetValueWithNotify(value, ref _affordanceTaggingSet, false, nameof(AffordanceTaggingSet));
+            set => SetValueWithNotify(value, ref _affordanceTaggingSet, true, nameof(AffordanceTaggingSet));
         }
 
         [ItemNotNull]
@@ -182,10 +182,8 @@ namespace Database.Tables.Transportation {
             if(_description!=null) {
                 cmd.AddParameter("Description", _description);
             }
-            if (_affordanceTaggingSet != null)
-            {
-                cmd.AddParameter("AffordanceTaggingSetID", _affordanceTaggingSet.IntID);
-            }
+
+            cmd.AddParameter("AffordanceTaggingSetID", _affordanceTaggingSet?.IntID ?? -1);
         }
 
         public override DBBase ImportFromGenericItem(DBBase toImport, Simulator dstSim)

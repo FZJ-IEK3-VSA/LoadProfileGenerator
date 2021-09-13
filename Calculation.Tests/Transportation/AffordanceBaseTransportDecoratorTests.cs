@@ -139,6 +139,14 @@ namespace Calculation.Tests.Transportation
                     person = new CalcPersonDto("activator", null, 100, PermittedGender.All, null, null, null, -1, null, null);
                     route = transportationHandler.GetTravelRouteFromSrcLoc(srcloc, dstSite, ts, person, untaggedAff, calcRepo);
                     Assert.Equal("myRoute2", route.Name); // due to maximum age
+
+                    person = new CalcPersonDto("activator", null, 15, PermittedGender.Female, null, null, null, -1, null, null);
+                    route = transportationHandler.GetTravelRouteFromSrcLoc(srcloc, dstSite, ts, person, untaggedAff, calcRepo);
+                    Assert.Null(route); // due to wrong person ID
+                    int allowedPersonID = 12345678;
+                    person = new CalcPersonDto("activator", null, 15, PermittedGender.Female, null, null, null, allowedPersonID, null, null);
+                    route = transportationHandler.GetTravelRouteFromSrcLoc(srcloc, dstSite, ts, person, untaggedAff, calcRepo);
+                    Assert.Equal("myRoute3", route.Name); // correct person ID
                 }
                 CalcAffordance.DoubleCheckBusyArray = false;
                 wd.CleanUp();
@@ -209,6 +217,12 @@ namespace Calculation.Tests.Transportation
                          key, Guid.NewGuid().ToStrGuid(), calcRepo);
                     route2.AddTravelRouteStep("driving", myCategory, 1, 36000, Guid.NewGuid().ToStrGuid());
                     transportationHandler.TravelRoutes.Add(route2);
+                    int personID = 12345678;
+                    var route3 = new CalcTravelRoute("myRoute3", -1, -1, PermittedGender.All, null, null, personID, 1.0, srcSite, dstSite,
+                        transportationHandler.VehicleDepot, transportationHandler.LocationUnlimitedDevices,
+                         key, Guid.NewGuid().ToStrGuid(), calcRepo);
+                    route3.AddTravelRouteStep("driving", myCategory, 1, 36000, Guid.NewGuid().ToStrGuid());
+                    transportationHandler.TravelRoutes.Add(route3);
 
                     // build an AffordanceTaggingSet for the the TransportationHandler
                     var affTagSet = new CalcAffordanceTaggingSetDto("mytaggingset", false);
