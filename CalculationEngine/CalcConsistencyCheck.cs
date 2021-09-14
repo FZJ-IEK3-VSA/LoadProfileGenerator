@@ -76,6 +76,19 @@ namespace CalculationEngine
             {
                 throw new DataIntegrityException("Time resolution too small!");
             }
+
+            // if a travel route is restricted to a single person, verify that this person is actually contained in the current household
+            if (calcParameters.TransportationEnabled && chh.TransportationHandler != null)
+            {
+                foreach (var route in chh.TransportationHandler.TravelRoutes)
+                {
+                    if (route.PersonID != null && !chh.Persons.Exists(person => person.ID == route.PersonID))
+                    {
+                        throw new DataIntegrityException("Usage of the route \"" + route.Name + "\" in the selected travel route set was restricted to a person " +
+                            "that is not in the selected household. Change the Person restriction or choose a different travel route set for this household.");
+                    }
+                }
+            }
         }
 
         private static void CheckTimeResolution([JetBrains.Annotations.NotNull] CalcParameters calcParameters)

@@ -73,7 +73,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             applicationPresenter)
         {
             _outcomes = Sim.CalculationOutcomes;
-            OperatingPath = @"e:\TemporaryCalculations";
+            OperatingPath = @"C:\TemporaryCalculations";
             RefreshFiltered();
         }
 
@@ -549,6 +549,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             Directory.CreateDirectory(operatingPath);
             var start = DateTime.Now;
             Config.IsInUnitTesting = true;
+            Config.OutputToConsole = true;
             Logger.Threshold = Severity.Information;
 
             sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);

@@ -125,6 +125,8 @@ namespace CalculationEngine.HouseholdElements {
 
         private TimeStep? TimeToResetActionEntryAfterInterruption { get; set; }
 
+        public int ID => _calcPerson.ID;
+
         [JetBrains.Annotations.NotNull]
         public string PrettyName => _calcPerson.Name + "(" + _calcPerson.Age + "/" + _calcPerson.Gender + ")";
 

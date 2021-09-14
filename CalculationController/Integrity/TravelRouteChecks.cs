@@ -90,6 +90,14 @@ namespace CalculationController.Integrity
                     throw new DataIntegrityException("The travel route " + travelroute.PrettyName + " has no steps. Please fix.",travelroute);
                 }
 
+                // check that e.g. not two cars are used in a single route
+                if (travelroute.Steps.Where(step => step.TransportationDeviceCategory.IsLimitedToSingleLocation).Count() > 1)
+                {
+                    throw new DataIntegrityException("The travel route " + travelroute.PrettyName + " has multiple steps with a transportation device category " +
+                        "for devices that are limited to a single location (e.g. multiple \"Car Category\" steps). Only one such step is allowed at most. Please " +
+                        "remove the excess steps or change their category.");
+                }
+
                 if (PerformCleanupChecks) {
                     if (string.IsNullOrWhiteSpace(travelroute.RouteKey)) {
                         throw new DataIntegrityException("The travel route " + travelroute.PrettyName + " has no route key. Please fix.", travelroute);
