@@ -343,14 +343,12 @@ namespace LoadProfileGenerator.Presenters.Houses {
             return presenter?.ThisSettlement.Equals(_settlement) == true;
         }
 
+        /// <summary>
+        /// Copies the entire lpg directory, including the db3 file
+        /// </summary>
+        /// <param name="dstDirectory">The destination to copy the lpg directory to</param>
         public void ExportCalculationJson([NotNull] string dstDirectory)
         {
-            //copy entire directory and db3 file
-            if (!Directory.Exists(dstDirectory)) {
-                Directory.CreateDirectory(dstDirectory);
-                Thread.Sleep(500);
-            }
-
             string lpgPath = Assembly.GetExecutingAssembly().Location;
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse
             if (lpgPath != null) {
@@ -359,13 +357,7 @@ namespace LoadProfileGenerator.Presenters.Houses {
                 if (fileInfo.Directory != null) {
                     string simExePath = Path.Combine(fileInfo.Directory.FullName, "simulationengine.exe");
                     if (File.Exists(simExePath)) {
-                        DirectoryInfo di = fileInfo.Directory;
-                        var files = di.GetFiles("*.*", SearchOption.AllDirectories);
-                        foreach (var srcFile in files) {
-                            string dstPath = Path.Combine(dstDirectory, srcFile.Name);
-                            srcFile.CopyTo(dstPath, true);
-                            Logger.Info("Copying " + srcFile.Name + " to " + dstPath);
-                        }
+                        DirectoryCopy(fileInfo.Directory.FullName, dstDirectory, true, true);
                     }
                     else {
                         Logger.Error("Could not determine the correct path for the simulationengine.exe. It was not at " + simExePath + ".");
@@ -376,6 +368,49 @@ namespace LoadProfileGenerator.Presenters.Houses {
             const string simulationEngine = "simulationengine.exe";
             ThisSettlement.WriteJsonCalculationSpecs(dstDirectory, simulationEngine);
             Logger.Info("Finished writing the json calculation specifications to " + dstDirectory);
+        }
+
+        /// <summary>
+        /// Copies a directory including all its files and optionally its subdirectories recursively.
+        /// </summary>
+        /// <param name="sourceDir">Path of the directory to copy</param>
+        /// <param name="destDir">Destination path</param>
+        /// <param name="overwrite">Whether files already present at the destination path should be overwritten</param>
+        /// <param name="copySubDirs">Whether subdirectories and their contents should be included recursively</param>
+        private static void DirectoryCopy(string sourceDir, string destDir, bool overwrite, bool copySubDirs)
+        {
+            // Get the subdirectories for the specified directory.
+            DirectoryInfo dir = new DirectoryInfo(sourceDir);
+
+            if (!dir.Exists)
+            {
+                throw new DirectoryNotFoundException(
+                    "Source directory does not exist or could not be found: "
+                    + sourceDir);
+            }
+
+            DirectoryInfo[] dirs = dir.GetDirectories();
+
+            // If the destination directory doesn't exist, create it.       
+            Directory.CreateDirectory(destDir);
+
+            // Get the files in the directory and copy them to the new location.
+            FileInfo[] files = dir.GetFiles();
+            foreach (FileInfo file in files)
+            {
+                string tempPath = Path.Combine(destDir, file.Name);
+                file.CopyTo(tempPath, overwrite);
+            }
+
+            // If copying subdirectories, copy them and their contents to new location.
+            if (copySubDirs)
+            {
+                foreach (DirectoryInfo subdir in dirs)
+                {
+                    string tempPath = Path.Combine(destDir, subdir.Name);
+                    DirectoryCopy(subdir.FullName, tempPath, overwrite, copySubDirs);
+                }
+            }
         }
 
         public override int GetHashCode()
