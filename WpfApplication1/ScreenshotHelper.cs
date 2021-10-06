@@ -155,13 +155,20 @@ namespace LoadProfileGenerator {
                         _itemCount.ToString("00", CultureInfo.CurrentCulture) + ".Screenshots." + typeDescClean +
                         ".tex");
                     dynamic dynView = view;
-                    Grid maingrid = dynView.Content;
                     ScrollViewer sv = null;
-                    foreach (var child in maingrid.Children) {
-                        sv = child as ScrollViewer;
-                        if (sv != null) {
-                            break;
+                    if (dynView.Content is Grid maingrid)
+                    {
+                        foreach (var child in maingrid.Children)
+                        {
+                            sv = child as ScrollViewer;
+                            if (sv != null)
+                            {
+                                break;
+                            }
                         }
+                    } else
+                    {
+                        throw new LPGException("The selected view did not contain a Grid");
                     }
 
                     if (sv == null) {
