@@ -155,13 +155,20 @@ namespace LoadProfileGenerator {
                         _itemCount.ToString("00", CultureInfo.CurrentCulture) + ".Screenshots." + typeDescClean +
                         ".tex");
                     dynamic dynView = view;
-                    Grid maingrid = dynView.Content;
                     ScrollViewer sv = null;
-                    foreach (var child in maingrid.Children) {
-                        sv = child as ScrollViewer;
-                        if (sv != null) {
-                            break;
+                    if (dynView.Content is Grid maingrid)
+                    {
+                        foreach (var child in maingrid.Children)
+                        {
+                            sv = child as ScrollViewer;
+                            if (sv != null)
+                            {
+                                break;
+                            }
                         }
+                    } else
+                    {
+                        return; // the view does not contain a grid (e.g. the WelcomeView)
                     }
 
                     if (sv == null) {
@@ -179,8 +186,10 @@ namespace LoadProfileGenerator {
                     throw new LPGException("_basisDir was null");
                 }
 
-                if (_stackPanel == null) {
-                    throw new LPGException("_stackPanel was null");
+                if (_stackPanel == null)
+                {
+                    Logger.Error("Skipped the selected view because a contained stackpanel could not be found.");
+                    return;
                 }
 
                 using (var sw = new StreamWriter(_texName)) {
