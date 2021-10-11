@@ -168,7 +168,7 @@ namespace LoadProfileGenerator {
                         }
                     } else
                     {
-                        throw new LPGException("The selected view did not contain a Grid");
+                        return; // the view does not contain a grid (e.g. the WelcomeView)
                     }
 
                     if (sv == null) {
@@ -186,8 +186,10 @@ namespace LoadProfileGenerator {
                     throw new LPGException("_basisDir was null");
                 }
 
-                if (_stackPanel == null) {
-                    throw new LPGException("_stackPanel was null");
+                if (_stackPanel == null)
+                {
+                    Logger.Error("Skipped the selected view because a contained stackpanel could not be found.");
+                    return;
                 }
 
                 using (var sw = new StreamWriter(_texName)) {
