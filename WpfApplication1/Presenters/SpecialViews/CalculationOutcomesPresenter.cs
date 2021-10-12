@@ -590,7 +590,6 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                     ";",
                     -1,
                     sim.MyGeneralConfig.ExternalStepSize,
-                    false /*DELETE DAT FILES*/,
                     sim.MyGeneralConfig.WriteExcelColumnBool,
                     sim.MyGeneralConfig.ShowSettlingPeriodBool,
                     3,
@@ -599,8 +598,9 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                     chargingStationSet,
                     null,
                     sim.MyGeneralConfig.DeviceProfileHeaderMode,
-                    false, operatingPath, enableTransportation, sim.MyGeneralConfig.EnableIdlemodeBool,
-                    sim.MyGeneralConfig.DecimalSeperator, sim.MyGeneralConfig.EnableFlexibilityBool);
+                    false,
+                    operatingPath, enableTransportation, sim.MyGeneralConfig.EnableIdlemodeBool, sim.MyGeneralConfig.DecimalSeperator,
+                    sim.MyGeneralConfig.EnableFlexibilityBool);
 
                 cs.Start(csps);
                 Thread.Sleep(3000);

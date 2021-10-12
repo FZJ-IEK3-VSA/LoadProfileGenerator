@@ -260,7 +260,6 @@ namespace SimulationEngineLib.HouseJobProcessor {
                 sim.MyGeneralConfig.CSVCharacter,
                 jcs.RandomSeed,
                 sim.MyGeneralConfig.ExternalStepSize,
-                false /*DELETE DAT FILES*/,
                 sim.MyGeneralConfig.WriteExcelColumnBool,
                 sim.MyGeneralConfig.ShowSettlingPeriodBool,
                 3,
@@ -269,8 +268,8 @@ namespace SimulationEngineLib.HouseJobProcessor {
                 null,
                 jcs.LoadtypesForPostprocessing,
                 sim.MyGeneralConfig.DeviceProfileHeaderMode,
-                jcs.IgnorePreviousActivitiesWhenNeeded, jcs.OutputDirectory,jcs.EnableTransportation,
-                jcs.EnableIdlemode,
+                jcs.IgnorePreviousActivitiesWhenNeeded,
+                jcs.OutputDirectory, jcs.EnableTransportation, jcs.EnableIdlemode,
                 sim.MyGeneralConfig.DecimalSeperator,
                 jcs.EnableFlexibility
                 );

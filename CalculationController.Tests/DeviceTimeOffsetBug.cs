@@ -142,13 +142,13 @@ namespace CalculationController.Tests {
                     options.Add(CalcOption.DeviceProfilesHouse);
                     CalcStartParameterSet csps = new CalcStartParameterSet(geoloc,
                         sim.TemperatureProfiles[0], chh, EnergyIntensityType.Random,
-                        false,  null,
+                        false, null,
                         sim.MyGeneralConfig.SelectedLoadTypePriority, null, null, null,
                         options, new DateTime(2015, 1, 1), new DateTime(2015, 1, 31),
                         new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 1, 0),
-                        false, false, false, 3, 3,
-                        calculationProfiler, wd1.WorkingDirectory,
-                        false,false, ".",false);
+                        false, false, 3, 3, calculationProfiler,
+                        wd1.WorkingDirectory, false,
+                        false, ".", false);
                     var cm = cmf.GetCalcManager(sim, csps, false);
 
                     static bool ReportCancelFunc()

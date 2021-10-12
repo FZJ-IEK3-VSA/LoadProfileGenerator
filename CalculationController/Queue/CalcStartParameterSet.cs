@@ -70,9 +70,9 @@ namespace CalculationController.Queue {
             TimeSpan internalTimeResolution,
             [NotNull] string csvCharacter,
             int selectedRandomSeed,
-            TimeSpan externalTimeResolution, bool deleteDatFiles, bool writeExcelColumn, bool showSettlingPeriod,
-            int settlingDays, int affordanceRepetitionCount, [NotNull] CalculationProfiler calculationProfiler, string resultPath,
-            bool transportationEnabled, bool enableIdlemode, [NotNull] string decimalSeperator, bool flexibilityEnabled)
+            TimeSpan externalTimeResolution, bool writeExcelColumn, bool showSettlingPeriod, int settlingDays,
+            int affordanceRepetitionCount, [NotNull] CalculationProfiler calculationProfiler, string resultPath, bool transportationEnabled,
+            bool enableIdlemode, [NotNull] string decimalSeperator, bool flexibilityEnabled)
         {
             OfficialSimulationStartTime = officialSimulationStartTime;
             OfficialSimulationEndTime = officialSimulationEndTime;
@@ -126,13 +126,13 @@ namespace CalculationController.Queue {
             TimeSpan internalTimeResolution,
             [NotNull] string csvCharacter,
             int selectedRandomSeed,
-            TimeSpan externalTimeResolution, bool deleteDatFiles, bool writeExcelColumn, bool showSettlingPeriod,
-            int settlingDays, int affordanceRepetitionCount, [NotNull] CalculationProfiler calculationProfiler,
-            [CanBeNull] ChargingStationSet chargingStationSet,
+            TimeSpan externalTimeResolution, bool writeExcelColumn, bool showSettlingPeriod, int settlingDays,
+            int affordanceRepetitionCount, [NotNull] CalculationProfiler calculationProfiler, [CanBeNull] ChargingStationSet chargingStationSet,
             [CanBeNull][ItemNotNull] List<string> loadTypesToProcess,
             DeviceProfileHeaderMode deviceProfileHeaderMode,
-            bool ignorePreviousActivitiesWhenNeeded, string resultPath, bool transportationEnabled, bool enableIdlemode,
-            string decimalSeperator, bool flexibilityEnabled)
+            bool ignorePreviousActivitiesWhenNeeded,
+            string resultPath, bool transportationEnabled, bool enableIdlemode, string decimalSeperator,
+            bool flexibilityEnabled)
         {
             IgnorePreviousActivitiesWhenNeeded = ignorePreviousActivitiesWhenNeeded;
             ResultPath = resultPath;
