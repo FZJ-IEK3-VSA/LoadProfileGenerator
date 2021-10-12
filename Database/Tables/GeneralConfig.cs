@@ -112,16 +112,6 @@ namespace Database.Tables {
             }
         }
 
-        [UsedImplicitly]
-        public bool DeleteDatFilesBool => DeleteDatFiles=="TRUE";
-
-        [JetBrains.Annotations.NotNull]
-        [UsedImplicitly]
-        public string DeleteDatFiles {
-            get => _settings[nameof(DeleteDatFiles)].SettingValue;
-            set => UpdateValue(nameof(DeleteDatFiles), value);
-        }
-
         [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public string DestinationPath {
@@ -537,7 +527,6 @@ namespace Database.Tables {
             gc.CheckExistence(nameof(LastSelectedCalcType), "Household", ignoreMissing);
             gc.CheckExistence(nameof(SelectedLoadTypePriority), "Mandatory", ignoreMissing);
 
-            gc.CheckExistence(nameof(DeleteDatFiles), "False", ignoreMissing);
             gc.CheckExistence(nameof(EnableFlexibility), "False", ignoreMissing);
             gc.CheckExistence(nameof(CarpetPlotWidth), "7", ignoreMissing);
             gc.CheckExistence(nameof(SelectedEnergyIntensity), "0", ignoreMissing);

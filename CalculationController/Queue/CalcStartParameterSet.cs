@@ -80,7 +80,6 @@ namespace CalculationController.Queue {
             CsvCharacter = csvCharacter;
             SelectedRandomSeed = selectedRandomSeed;
             ExternalTimeResolution = externalTimeResolution;
-            DeleteDatFiles = deleteDatFiles;
             WriteExcelColumn = writeExcelColumn;
             ShowSettlingPeriod = showSettlingPeriod;
             SettlingDays = settlingDays;
@@ -139,7 +138,6 @@ namespace CalculationController.Queue {
             ResultPath = resultPath;
             LoadTypesToProcess = loadTypesToProcess;
             ExternalTimeResolution = externalTimeResolution;
-            DeleteDatFiles = deleteDatFiles;
             WriteExcelColumn = writeExcelColumn;
             ShowSettlingPeriod = showSettlingPeriod;
             SettlingDays = settlingDays;
@@ -192,8 +190,6 @@ namespace CalculationController.Queue {
 
         [NotNull]
         public string DecimalSeperator { get; }
-
-        public bool DeleteDatFiles { get; }
 
         [CanBeNull]
         public DeviceSelection DeviceSelection { get; }

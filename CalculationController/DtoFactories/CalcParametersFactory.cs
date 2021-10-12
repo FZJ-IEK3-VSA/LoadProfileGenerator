@@ -18,7 +18,6 @@ namespace CalculationController.DtoFactories
         {
             CalcParameters cp = CalcParameters.GetNew();
             cp.LoadtypesToPostprocess = csps.LoadTypesToProcess;
-            cp.SetDeleteDatFiles(csps.DeleteDatFiles);
             cp.SetWriteExcelColumn (csps.WriteExcelColumn);
             cp.SetManyOptionsWithClear(csps.CalcOptions);
             FileFactoryAndTrackerDummy fftd = new FileFactoryAndTrackerDummy();

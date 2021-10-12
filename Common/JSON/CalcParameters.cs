@@ -290,12 +290,6 @@ namespace Common.JSON {
             DecimalSeperator = decimalSeperator;
             return this;
         }
-        [NotNull]
-        public CalcParameters SetDeleteDatFiles(bool deleteDatFiles)
-        {
-            DeleteDatFiles = deleteDatFiles;
-            return this;
-        }
 
         [NotNull]
         public CalcParameters SetDummyTimeSteps(int timesteps)

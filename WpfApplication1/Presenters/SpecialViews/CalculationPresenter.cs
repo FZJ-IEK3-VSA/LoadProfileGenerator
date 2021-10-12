@@ -594,7 +594,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                 // ReSharper disable once AssignNullToNotNullAttribute
                 _selectedCalcObject, EnergyIntensity.EnergyIntensityType, ReportCancel, ResumeSettlement,  null, Sim.MyGeneralConfig.SelectedLoadTypePriority, tds, trs,
                 Sim.MyGeneralConfig.AllEnabledOptions(), Sim.MyGeneralConfig.StartDateDateTime, Sim.MyGeneralConfig.EndDateDateTime, Sim.MyGeneralConfig.InternalStepSize,
-                Sim.MyGeneralConfig.CSVCharacter, Sim.MyGeneralConfig.RandomSeed, Sim.MyGeneralConfig.ExternalStepSize, Sim.MyGeneralConfig.DeleteDatFilesBool,
+                Sim.MyGeneralConfig.CSVCharacter, Sim.MyGeneralConfig.RandomSeed, Sim.MyGeneralConfig.ExternalStepSize, false /*DELETE DAT FILES*/,
                 Sim.MyGeneralConfig.WriteExcelColumnBool, Sim.MyGeneralConfig.ShowSettlingPeriodBool, 3,
                 Sim.MyGeneralConfig.RepetitionCount, calculationProfiler, SelectedChargingStationSet,null,
                 Sim.MyGeneralConfig.DeviceProfileHeaderMode,false,resultpath,_calculateTransportation,

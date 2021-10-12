@@ -56,6 +56,7 @@ namespace CalcPostProcessor
 
             //general processing steps
             builder.RegisterType<AffordanceTagsWriter>().As<IGeneralStep>().SingleInstance();
+            builder.RegisterType<DatFileDeletor>().As<IGeneralStep>().SingleInstance();
 
             //general household steps
             builder.RegisterType<MakeActivationsPerFrequencies>().As<IGeneralHouseholdStep>().SingleInstance();

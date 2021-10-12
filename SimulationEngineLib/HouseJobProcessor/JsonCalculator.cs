@@ -187,13 +187,6 @@ namespace SimulationEngineLib.HouseJobProcessor {
                 }
             }
 
-            if (jcs.DeleteDAT) {
-                sim.MyGeneralConfig.DeleteDatFiles = "TRUE";
-            }
-            else {
-                sim.MyGeneralConfig.DeleteDatFiles = "FALSE";
-            }
-
             if (jcs.ExternalTimeResolution == null) {
                 sim.MyGeneralConfig.ExternalTimeResolution = sim.MyGeneralConfig.InternalTimeResolution;
             }
@@ -267,7 +260,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
                 sim.MyGeneralConfig.CSVCharacter,
                 jcs.RandomSeed,
                 sim.MyGeneralConfig.ExternalStepSize,
-                sim.MyGeneralConfig.DeleteDatFilesBool,
+                false /*DELETE DAT FILES*/,
                 sim.MyGeneralConfig.WriteExcelColumnBool,
                 sim.MyGeneralConfig.ShowSettlingPeriodBool,
                 3,

@@ -161,8 +161,6 @@ namespace CalculationController.Queue {
 #pragma warning restore 162
             if (allgood) {
                 Logger.Info("Starting final cleanup");
-                var cpp = new DatFileDeletor( csps.DeleteDatFiles,csps.ResultPath, csps.CalcTarget.Name);
-                cpp.ProcessResults();
                 SaveCallFunction(csps.ReportFinishFuncForHousehold,csps);
                 Logger.Info("Finished final cleanup");
             }

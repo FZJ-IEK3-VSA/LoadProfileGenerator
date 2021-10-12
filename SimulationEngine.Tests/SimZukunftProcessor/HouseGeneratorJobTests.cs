@@ -369,8 +369,7 @@ namespace SimulationEngine.Tests.SimZukunftProcessor {
                                 CalcOption.EnergyStorageFile,
                                 //CalcOption.EnergyCarpetPlot,
                                 CalcOption.HouseholdContents, CalcOption.TotalsPerLoadtype
-                            },
-                            DeleteDAT = false
+                            }
                         };
                         StartHouseJob(houseJob, wd, htcode);
                         SqlResultLoggingService srls = new SqlResultLoggingService(houseJob.CalcSpec.OutputDirectory);

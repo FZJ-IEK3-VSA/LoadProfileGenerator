@@ -58,7 +58,6 @@ namespace SimulationEngine.Tests {
             hj.CalcSpec.StartDate = new DateTime(2020, 1, 1);
             SetEndDate(duration, hj);
 
-    hj.CalcSpec.DeleteDAT = false;
             hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.NoFiles;
             hj.CalcSpec.DeleteSqlite = false;
             hj.CalcSpec.ExternalTimeResolution = "00:15:00";
@@ -109,7 +108,6 @@ namespace SimulationEngine.Tests {
             };
             hj.CalcSpec.StartDate = new DateTime(2020, 1, 1);
             SetEndDate(duration, hj);
-            hj.CalcSpec.DeleteDAT = false;
             hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.NoFiles;
             hj.CalcSpec.DeleteSqlite = false;
             hj.CalcSpec.ExternalTimeResolution = "00:15:00";
@@ -141,7 +139,6 @@ namespace SimulationEngine.Tests {
             };
             hj.CalcSpec.StartDate = new DateTime(2020, 1, 1);
             hj.CalcSpec.EndDate = new DateTime(2020, 1, 3);
-            hj.CalcSpec.DeleteDAT = false;
             hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.NoFiles;
             hj.CalcSpec.DeleteSqlite = false;
             hj.CalcSpec.ExternalTimeResolution = "00:15:00";
@@ -173,7 +170,6 @@ namespace SimulationEngine.Tests {
             };
             hj.CalcSpec.StartDate = new DateTime(2020, 1, 1);
             hj.CalcSpec.EndDate = new DateTime(2020, 1, 3);
-            hj.CalcSpec.DeleteDAT = false;
             hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.NoFiles;
             hj.CalcSpec.DeleteSqlite = false;
             hj.CalcSpec.ExternalTimeResolution = "00:15:00";
@@ -569,7 +565,6 @@ namespace SimulationEngine.Tests {
                 hj.CalcSpec = JsonCalcSpecification.MakeDefaultsForTesting();
                 hj.CalcSpec.StartDate = new DateTime(2020, 1, 1);
                 hj.CalcSpec.EndDate = new DateTime(2020, 1, 3);
-                hj.CalcSpec.DeleteDAT = false;
                 hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
                 hj.CalcSpec.DeleteSqlite = false;
                 hj.CalcSpec.ExternalTimeResolution = "00:15:00";
@@ -932,13 +927,11 @@ namespace SimulationEngine.Tests {
             };
             hj.CalcSpec.StartDate = new DateTime(2020, 1, 1);
             hj.CalcSpec.EndDate = new DateTime(2020, 1, 3);
-            hj.CalcSpec.DeleteDAT = false;
             hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.Reasonable;
             hj.CalcSpec.DeleteSqlite = false;
             hj.CalcSpec.ExternalTimeResolution = "00:15:00";
             hj.CalcSpec.EnableTransportation = true;
             hj.CalcSpec.GeographicLocation = sim.GeographicLocations.FindFirstByNameNotNull("Berlin", FindMode.Partial).GetJsonReference();
-            hj.CalcSpec.DeleteDAT = true;
             hj.CalcSpec.OutputDirectory = "TestingData_" + idx;
             if (hj.CalcSpec.CalcOptions == null) {
                 throw new LPGException("was null");
@@ -1094,7 +1087,6 @@ namespace SimulationEngine.Tests {
             };
             hj.CalcSpec.StartDate = new DateTime(2020, 1, 1);
             hj.CalcSpec.EndDate = new DateTime(2020, 1, 3);
-            hj.CalcSpec.DeleteDAT = false;
             hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.NoFiles;
             hj.CalcSpec.DeleteSqlite = false;
             //hj.CalcSpec.EnergyIntensityType = EnergyIntensityType.EnergyIntensive;

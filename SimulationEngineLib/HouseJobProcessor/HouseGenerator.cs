@@ -145,7 +145,6 @@ namespace SimulationEngineLib.HouseJobProcessor {
             var calculationSettings = new JsonCalcSpecification {
                 StartDate = new DateTime(2019, 1, 1),
                 EndDate = new DateTime(2019, 1, 3),
-                DeleteDAT = true,
                 DefaultForOutputFiles = OutputFileDefault.OnlySums
             };
             if (calculationSettings.CalcOptions == null) {

@@ -47,7 +47,6 @@ namespace Automation {
             }
 
             DeleteAllButPDF = o.DeleteAllButPDF;
-            DeleteDAT = o.DeleteDAT;
             DeviceSelection = o.DeviceSelection;
             StartDate = o.StartDate;
             EndDate = o.EndDate;
@@ -101,9 +100,6 @@ namespace Automation {
             "This option makes the LPG delete everything but the resulting PDF. This is pretty much only useful if you want " +
             "to generate a full set of PDFs for all households to get a detailed view of the results for each household. Default: false")]
         public bool DeleteAllButPDF { get; set; }
-
-        [Comment("This option make the LPG delete all the DAT-files after the calculation. Default=true")]
-        public bool DeleteDAT { get; set; } = true;
 
         [Comment("If you want the people to use certain devices, for example if you want to make sure that " +
                  "the people really use incandescent light bulbs, then you can set up a device selection to ensure that " +

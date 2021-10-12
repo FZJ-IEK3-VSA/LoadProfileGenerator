@@ -590,7 +590,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                     ";",
                     -1,
                     sim.MyGeneralConfig.ExternalStepSize,
-                    sim.MyGeneralConfig.DeleteDatFilesBool,
+                    false /*DELETE DAT FILES*/,
                     sim.MyGeneralConfig.WriteExcelColumnBool,
                     sim.MyGeneralConfig.ShowSettlingPeriodBool,
                     3,
