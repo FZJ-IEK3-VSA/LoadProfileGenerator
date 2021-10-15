@@ -23,7 +23,7 @@ namespace CalcPostProcessor.GeneralSteps
 
         public DatFileDeletor([JetBrains.Annotations.NotNull] CalcDataRepository repository, [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler,
                                     [JetBrains.Annotations.NotNull] SqlResultLoggingService srls)
-            : base(repository, AutomationUtili.GetOptionList(CalcOption.HouseholdContents), calculationProfiler, "Delete .dat files", 0)
+            : base(repository, AutomationUtili.GetOptionList(CalcOption.DeleteDatFiles), calculationProfiler, "Delete .dat files", 0)
         {
             _srls = srls;
         }
