@@ -495,8 +495,8 @@ namespace SimulationEngineLib.HouseJobProcessor {
                 var travelrouteset = sim.TravelRouteSets.FindByJsonReference(householdData.TravelRouteSet);
                 if (travelrouteset == null)
                 {
-                    // Alternative transport specification: for each person transportations preferences can be specified. These are used
-                    // to create a new TravelRoueSet.
+                    // Alternative transport specification: for each person transportation preferences can be specified. These are used
+                    // to create a new TravelRouteSet.
                     travelrouteset = CreateTravelRouteSetFromPersonPreferences(householdData, sim);
                 }
                 if (hj.CalcSpec.EnableTransportation && travelrouteset == null)
@@ -608,7 +608,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
         /// <param name="person">The person for that the TravelRoutes are created</param>
         /// <param name="origin">The origin site for the TravelRoutes</param>
         /// <param name="destination">The destination site for the TravelRoutes</param>
-        /// <param name="length">The lenght of the TravelRoutes</param>
+        /// <param name="length">The length of the TravelRoutes</param>
         /// <param name="preference">The transportation preference of the person for the destination site</param>
         /// <param name="travelRouteSet">The TravelRouteSet to which the new TravelRoutes will be added</param>
         /// <param name="sim"></param>
