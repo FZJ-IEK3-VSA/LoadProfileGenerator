@@ -48,9 +48,6 @@ namespace Common.CalcDto {
         }
 
         [NotNull]
-        public Dictionary<string, string> AffordanceToTagDict => _affordanceToTagDict;
-
-        [NotNull]
         public Dictionary<string, ColorRGB> Colors { get; } = new Dictionary<string, ColorRGB>();
 
         public bool HasReferenceEntries => _referenceEntries.Count > 0;
@@ -63,6 +60,52 @@ namespace Common.CalcDto {
 
         [NotNull]
         public string Name { get; }
+
+        [NotNull]
+        public string IdlenessTag { get; set; } = "idleness";
+
+        /// <summary>
+        /// Gets the affordance tag assigned to the specified affordance name. Checks for special affordance names.
+        /// </summary>
+        /// <param name="affordanceName">The name of the affordance for which the tag is returned</param>
+        /// <returns>The tag of the specified affordance</returns>
+        public string GetAffordanceTag(string affordanceName)
+        {
+            // look up the affordance name in the dictionary
+            if (!_affordanceToTagDict.TryGetValue(affordanceName, out var affordanceTag))
+            {
+                // the affordance name was not found - check for special affordance names
+                if (affordanceName.StartsWith("Idleness"))
+                {
+                    // a separate idleness affordance is generated for each person for each location
+                    return IdlenessTag;
+                }
+                else
+                {
+                    throw new Automation.ResultFiles.LPGException("The affordance \"" + affordanceName + "\" is not contained in tagging set \"" + Name + "\"");
+                }
+            }
+            return affordanceTag;
+        }
+
+        /// <summary>
+        /// Returns whether the affordance name is contained in this tagging set
+        /// </summary>
+        /// <param name="affordanceName">The name of the affordance</param>
+        /// <returns>true if the affordance is contained, else false</returns>
+        public bool ContainsAffordance(string affordanceName)
+        {
+            return _affordanceToTagDict.ContainsKey(affordanceName);
+        }
+
+        /// <summary>
+        /// Returns an Enumerable to iterate through all affordance names and assigned tags
+        /// </summary>
+        /// <returns>An Enumerable of KeyValuePairs, each containing one affordance name and the assigned tag</returns>
+        public IEnumerable<KeyValuePair<string, string>> GetAffordanceTagEntries()
+        {
+            return _affordanceToTagDict.AsEnumerable<KeyValuePair<string, string>>();
+        }
 
         public void AddLoadType([NotNull] CalcLoadTypeDto calcLoadType)
         {

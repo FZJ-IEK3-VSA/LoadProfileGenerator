@@ -349,9 +349,9 @@ namespace ChartCreator2.CarpetPlots
                     {
                         SKColor? c2 = null;
 
-                        if (taggingSet.AffordanceToTagDict.ContainsKey(time.Ae.AffordanceName))
+                        if (taggingSet.ContainsAffordance(time.Ae.AffordanceName))
                         {
-                            var tag = taggingSet.AffordanceToTagDict[time.Ae.AffordanceName];
+                            var tag = taggingSet.GetAffordanceTag(time.Ae.AffordanceName);
                             if (taggingSet.Colors.ContainsKey(tag))
                             {
                                 var tc = taggingSet.Colors[tag];

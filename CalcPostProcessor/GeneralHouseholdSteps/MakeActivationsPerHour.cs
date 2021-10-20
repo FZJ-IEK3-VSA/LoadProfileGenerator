@@ -162,7 +162,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
                         }
 
                         foreach (var set in taggingSets) {
-                            elements.Add(set.AffordanceToTagDict[device.Key]);
+                            elements.Add(set.GetAffordanceTag(device.Key));
                         }
 
                         alllines.Add(elements);
