@@ -718,11 +718,11 @@ namespace SimulationEngine.Tests {
         //}
 
         /// <summary>
-        /// A helper function to get the path of the current source file.
+        /// Returns the path of the current source file.
         /// </summary>
-        /// <param name="filepath">Leave blank - parameter is automatically filled in via reflection</param>
+        /// <param name="filepath">Leave blank - parameter is automatically filled in</param>
         /// <returns>The path to the current source file</returns>
-        public static string GetPath([CallerFilePath] string filepath = "") => filepath;
+        public static string GetCurrentFilePath([CallerFilePath] string filepath = "") => filepath;
 
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.ManualOnly)]
@@ -730,7 +730,7 @@ namespace SimulationEngine.Tests {
         {
             using var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
-            var pathToCurrentFile = new DirectoryInfo(GetPath());
+            var pathToCurrentFile = new DirectoryInfo(GetCurrentFilePath());
             pathToCurrentFile.Parent.Should().NotBeNull();
             // the generated file should be in the same directory as this source file
             var resultPath = Path.Combine(pathToCurrentFile.Parent!.FullName, "SystematicCalcOptionTests.cs");
