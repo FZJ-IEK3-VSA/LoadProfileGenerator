@@ -1,8 +1,8 @@
-using System;
 using Automation;
 using Xunit;
 using Common.Tests;
 using Xunit.Abstractions;
+using JetBrains.Annotations;
 #pragma warning disable 8602
 namespace SimulationEngine.Tests {
 public class SystematicCalcOptionTests :UnitTestBaseClass {
@@ -698,8 +698,19 @@ public void TestHouseJobsFlexibilityEvents(){
       const CalcOption co = CalcOption.FlexibilityEvents;
       HouseJobTestHelper.RunSingleHouse((sim) => {
       var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim, hhguid,TestDuration.TwelveMonths);
-      hj.CalcSpec.CalcOptions.Add(co);
-      hj.CalcSpec.EndDate = new DateTime(2020, 1, 3); return hj;
+      hj.CalcSpec.CalcOptions.Add(co); return hj;
+      }, (x) => HouseJobTestHelper.CheckForResultfile(x, co));
+}
+
+
+[Fact]
+[Trait(UnitTestCategories.Category, UnitTestCategories.CalcOptionTests)]
+public void TestHouseJobsDeleteDatFiles(){
+      const string hhguid = "516a33ab-79e1-4221-853b-967fc11cc85a";
+      const CalcOption co = CalcOption.DeleteDatFiles;
+      HouseJobTestHelper.RunSingleHouse((sim) => {
+      var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTestingWithTransport(sim, hhguid,TestDuration.TwelveMonths);
+      hj.CalcSpec.CalcOptions.Add(co); return hj;
       }, (x) => HouseJobTestHelper.CheckForResultfile(x, co));
 }
 

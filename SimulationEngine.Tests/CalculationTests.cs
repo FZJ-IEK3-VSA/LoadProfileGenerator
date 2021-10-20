@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using Autofac;
 using Automation;
@@ -268,7 +269,8 @@ namespace SimulationEngine.Tests {
                 CalcOption.DurationCurve,
                 CalcOption.TransportationDeviceCarpetPlot,
                 CalcOption.LocationCarpetPlot,
-                CalcOption.FlexibilityEvents
+                CalcOption.FlexibilityEvents,
+                CalcOption.DeleteDatFiles
             };
             if (!optionsThatDontResultInFiles.Contains(option)) {
                 if (!foundOptions.Contains(option)) {
@@ -715,13 +717,24 @@ namespace SimulationEngine.Tests {
         //    }
         //}
 
+        /// <summary>
+        /// A helper function to get the path of the current source file.
+        /// </summary>
+        /// <param name="filepath">Leave blank - parameter is automatically filled in via reflection</param>
+        /// <returns>The path to the current source file</returns>
+        public static string GetPath([CallerFilePath] string filepath = "") => filepath;
+
         [Fact]
         [Trait(UnitTestCategories.Category, UnitTestCategories.ManualOnly)]
         public void GenerateCalcoptionTests()
         {
             using var db = new DatabaseSetup(Utili.GetCurrentMethodAndClass());
             var sim = new Simulator(db.ConnectionString);
-            var sw = new StreamWriter(@"C:\Work\LPGDev\SimulationEngine.Tests\SystematicCalcOptionTests.cs");
+            var pathToCurrentFile = new DirectoryInfo(GetPath());
+            pathToCurrentFile.Parent.Should().NotBeNull();
+            // the generated file should be in the same directory as this source file
+            var resultPath = Path.Combine(pathToCurrentFile.Parent!.FullName, "SystematicCalcOptionTests.cs");
+            var sw = new StreamWriter(resultPath);
             sw.WriteLine("using Automation;");
             sw.WriteLine("using Xunit;");
             sw.WriteLine("using Common.Tests;");
