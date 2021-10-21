@@ -190,14 +190,6 @@ namespace CalcPostProcessor {
                     CalcOptionHelper.CalcOptionDictionary[CalcOption.OverallSum]);
                 _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Overall Sum File");
             }*/
-            {
-                var gsp = new GeneralStepParameters();
-                foreach (var generalPostProcessingStep in _generalPostProcessingSteps) {
-                    if (generalPostProcessingStep.IsEnabled()) {
-                        generalPostProcessingStep.Run(gsp);
-                    }
-                }
-            }
 
             foreach (var keyEntry in _repository.HouseholdKeys) {
                 var gsp = new HouseholdStepParameters(keyEntry);
@@ -235,6 +227,16 @@ namespace CalcPostProcessor {
             finally {
                 //repository.efc, devices, calcLocations, autoDevices, loadTypes, deviceTaggingSets, allResults,persons, deviceNameToDeviceCategory, householdNamesByKey,carpetPlotColumnWidth);
                 _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass() + " - Load Type Dependend");
+            }
+            {
+                var gsp = new GeneralStepParameters();
+                foreach (var generalPostProcessingStep in _generalPostProcessingSteps)
+                {
+                    if (generalPostProcessingStep.IsEnabled())
+                    {
+                        generalPostProcessingStep.Run(gsp);
+                    }
+                }
             }
         }
 

@@ -1132,7 +1132,6 @@ namespace Database.Tables.BasicElements {
                         }
                         catch (Exception e) {
                             Logger.Error("While mapping vacations the following happened:" + e.Message);
-                            Logger.Exception(e);
                         }
                         daystoadd++;
                     }

@@ -59,6 +59,7 @@
         AffordanceDefinitions,
         JsonHouseholdSumFilesNoFlex,
         HouseholdSumProfilesCsvNoFlex,
-        FlexibilityEvents
+        FlexibilityEvents,
+        DeleteDatFiles
     }
 }

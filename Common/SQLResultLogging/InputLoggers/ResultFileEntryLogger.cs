@@ -42,6 +42,22 @@ namespace Common.SQLResultLogging.InputLoggers
             }
         }
 
+        /// <summary>
+        /// Deletes an entry from the result file list in the database
+        /// </summary>
+        /// <param name="rfe">The entry to delete</param>
+        public void DeleteEntry(ResultFileEntry rfe)
+        {
+            if (!_isTableCreated)
+            {
+                throw new LPGException("Tried to delete entries from a table that did not exist: " + TableName);
+            }
+            // create a row as the one already in the database that should be deleted
+            var row = RowBuilder.Start("Name", Constants.GeneralHouseholdKey)
+                .Add("Json", JsonConvert.SerializeObject(rfe, Formatting.Indented)).ToDictionary();
+            Srls.DeleteEntry(row, TableName, Constants.GeneralHouseholdKey);
+        }
+
         [ItemNotNull]
         [NotNull]
         public List<ResultFileEntry> Load()

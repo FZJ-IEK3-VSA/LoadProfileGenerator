@@ -244,7 +244,7 @@ namespace Database.Helpers {
                         if (_considerTime && _timeColumn > _column) {
                             maxcolumn = _timeColumn;
                         }
-                        if (strarr.Length >= maxcolumn) {
+                        if (strarr.Length > maxcolumn) {
                             var e = MakeEntry(linecount, strarr, ref ts);
                             Entries.Add(e);
                         }

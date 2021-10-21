@@ -302,7 +302,12 @@ namespace CalculationController.Helpers {
                     {
                         return _pickedDeviceActions[ldt].Device;
                     }
-                    var firstDeviceAction = deviceActionGroup.GetDeviceActions(allDeviceActions).First();
+                    var deviceActions = deviceActionGroup.GetDeviceActions(allDeviceActions);
+                    if (!deviceActions.Any())
+                    {
+                        throw new LPGException("There were no DeviceActions in the DeviceActionGroup");
+                    }
+                    var firstDeviceAction = deviceActions.First();
                     if (firstDeviceAction.Device== null)
                     {
                         throw new LPGException("Device was null");

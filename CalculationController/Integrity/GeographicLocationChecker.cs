@@ -13,6 +13,10 @@ namespace CalculationController.Integrity {
                     throw new DataIntegrityException("Geographic Location " + geoloc.Name +" has no definition for the time when people turn on lights at home.",
                         geoloc);
                 }
+                if (geoloc.LightTimeLimit.RootEntry == null)
+                {
+                    throw new DataIntegrityException("The TimeLimit of geographic location " + geoloc.Name + " has no root entry.");
+                }
             }
         }
     }

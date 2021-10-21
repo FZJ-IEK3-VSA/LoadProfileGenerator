@@ -28,7 +28,7 @@ namespace CalcPostProcessor.GeneralSteps
                         swTagSet.WriteLine("###");
                         swTagSet.WriteLine(taggingSet.Name);
                         swTagSet.WriteLine("###");
-                        foreach (var tag in taggingSet.AffordanceToTagDict)
+                        foreach (var tag in taggingSet.GetAffordanceTagEntries())
                         {
                             swTagSet.WriteLine(tag.Key + Repository.CalcParameters.CSVCharacter + tag.Value);
                         }

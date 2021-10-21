@@ -51,7 +51,7 @@ namespace CalculationController.Helpers
                         var subname = CalcAffordanceFactory.FixAffordanceName(
                                           affordanceSubAffordance.SubAffordance.Name,
                                           sim.MyGeneralConfig.CSVCharacter) + " (" + affName + ")";
-                        if (!calcset.AffordanceToTagDict.ContainsKey(subname)) {
+                        if (!calcset.ContainsAffordance(subname)) {
                             calcset.AddTag(subname, tagname);
                         }
                     }

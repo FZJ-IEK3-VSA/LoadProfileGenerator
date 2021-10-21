@@ -26,7 +26,6 @@ namespace CalculationController.InputLoggers
             se.AddRow(RowBuilder.Start("Name", "AffordanceRepetitionCount").Add("Value", csps.AffordanceRepetitionCount.ToString(CultureInfo.InvariantCulture)).ToDictionary());
             se.AddRow(RowBuilder.Start("Name", "CalcOptions").Add("Value", JsonConvert.SerializeObject(csps.CalcOptions,Formatting.Indented)).ToDictionary());
             se.AddRow(RowBuilder.Start("Name", "CalcTarget").Add("Value", csps.CalcTarget.Name).ToDictionary());
-            se.AddRow(RowBuilder.Start("Name", "DeleteDatFiles").Add("Value", csps.DeleteDatFiles.ToString()).ToDictionary());
             se.AddRow(RowBuilder.Start("Name", "DeviceSelection").Add("Value", csps.DeviceSelection?.Name??"None").ToDictionary());
             se.AddRow(RowBuilder.Start("Name", "EnergyIntensity").Add("Value", csps.EnergyIntensity.ToString()).ToDictionary());
             se.AddRow(RowBuilder.Start("Name", "ExternalTimeResolution").Add("Value", csps.ExternalTimeResolution.ToString()).ToDictionary());

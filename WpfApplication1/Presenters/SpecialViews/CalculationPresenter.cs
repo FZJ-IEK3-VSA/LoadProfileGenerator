@@ -588,18 +588,17 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             CalculationProfiler calculationProfiler = new CalculationProfiler();
             var csps = new CalcStartParameterSet(ReportFinishHouse, ReportFinishHousehold,
                 // ReSharper disable once AssignNullToNotNullAttribute
-                _applicationPresenter.OpenItem, new LPGDispatcher(  _applicationPresenter.MainDispatcher), GeographicLocation,
+                _applicationPresenter.OpenItem, new LPGDispatcher(_applicationPresenter.MainDispatcher), GeographicLocation,
                 // ReSharper disable once AssignNullToNotNullAttribute
                 SelectedTemperatureProfile,
                 // ReSharper disable once AssignNullToNotNullAttribute
-                _selectedCalcObject, EnergyIntensity.EnergyIntensityType, ReportCancel, ResumeSettlement,  null, Sim.MyGeneralConfig.SelectedLoadTypePriority, tds, trs,
+                _selectedCalcObject, EnergyIntensity.EnergyIntensityType, ReportCancel, ResumeSettlement, null, Sim.MyGeneralConfig.SelectedLoadTypePriority, tds, trs,
                 Sim.MyGeneralConfig.AllEnabledOptions(), Sim.MyGeneralConfig.StartDateDateTime, Sim.MyGeneralConfig.EndDateDateTime, Sim.MyGeneralConfig.InternalStepSize,
-                Sim.MyGeneralConfig.CSVCharacter, Sim.MyGeneralConfig.RandomSeed, Sim.MyGeneralConfig.ExternalStepSize, Sim.MyGeneralConfig.DeleteDatFilesBool,
-                Sim.MyGeneralConfig.WriteExcelColumnBool, Sim.MyGeneralConfig.ShowSettlingPeriodBool, 3,
-                Sim.MyGeneralConfig.RepetitionCount, calculationProfiler, SelectedChargingStationSet,null,
-                Sim.MyGeneralConfig.DeviceProfileHeaderMode,false,resultpath,_calculateTransportation,
-                Sim.MyGeneralConfig.EnableIdlemodeBool, Sim.MyGeneralConfig.DecimalSeperator,
-                Sim.MyGeneralConfig.EnableFlexibilityBool);
+                Sim.MyGeneralConfig.CSVCharacter, Sim.MyGeneralConfig.RandomSeed, Sim.MyGeneralConfig.ExternalStepSize, Sim.MyGeneralConfig.WriteExcelColumnBool,
+                Sim.MyGeneralConfig.ShowSettlingPeriodBool, 3, Sim.MyGeneralConfig.RepetitionCount,
+                calculationProfiler, SelectedChargingStationSet, null, Sim.MyGeneralConfig.DeviceProfileHeaderMode,
+                false, resultpath, _calculateTransportation, Sim.MyGeneralConfig.EnableIdlemodeBool,
+                Sim.MyGeneralConfig.DecimalSeperator, Sim.MyGeneralConfig.EnableFlexibilityBool);
             var cs = new CalcStarter(Sim);
             //_calculationProfiler.Clear();
 #pragma warning disable S2930 // "IDisposables" should be disposed

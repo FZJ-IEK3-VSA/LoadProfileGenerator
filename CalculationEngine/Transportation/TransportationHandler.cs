@@ -72,12 +72,12 @@ namespace CalculationEngine.Transportation {
                     return true;
                     }
                     var affordanceTaggingSet = AffordanceTaggingSets[route.AffordanceTaggingSetName];
-                    if (!affordanceTaggingSet.AffordanceToTagDict.ContainsKey(affordance.Name))
+                    if (!affordanceTaggingSet.ContainsAffordance(affordance.Name))
                     {
                     // if the affordance is not tagged, then all routes are allowed
                     return true;
                     }
-                    return affordanceTaggingSet.AffordanceToTagDict[affordance.Name] == route.AffordanceTagName;
+                    return affordanceTaggingSet.GetAffordanceTag(affordance.Name) == route.AffordanceTagName;
                 })
                 .ToList();
             if (allowedRoutes.Count == 0) {

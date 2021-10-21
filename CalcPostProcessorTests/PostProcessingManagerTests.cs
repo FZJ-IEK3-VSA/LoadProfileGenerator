@@ -48,11 +48,11 @@ namespace CalcPostProcessorTests {
                         new TimeSpan(0, 1, 0),
                         false,
                         false,
-                        false,
                         3,
                         3,
-                        calculationProfiler, wd.WorkingDirectory,false,false,
-                        ".", false);
+                        calculationProfiler,
+                        wd.WorkingDirectory, false, false, ".",
+                        false);
                     var cmf = new CalcManagerFactory();
                     var cm = cmf.GetCalcManager(sim, csps, false);
                     cm.Run(null);

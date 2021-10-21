@@ -171,19 +171,6 @@ namespace Database.Tables.Houses {
             }
         }*/
 
-        public bool DeleteDatFiles {
-            get => _calcSpecification.DeleteDAT;
-            [UsedImplicitly]
-            set {
-                if (_calcSpecification.DeleteDAT == value) {
-                    return;
-                }
-
-                _calcSpecification.DeleteDAT = value;
-                OnPropertyChanged(nameof(DeleteDatFiles));
-            }
-        }
-
         public bool DeleteSqliteFiles {
             get => _calcSpecification.DeleteSqlite;
             [UsedImplicitly]

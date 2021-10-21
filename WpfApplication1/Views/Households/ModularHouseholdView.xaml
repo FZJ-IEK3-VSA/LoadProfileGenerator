@@ -180,7 +180,7 @@
                                   Grid.Column="1"
                                   DisplayMemberPath="PrettyName"
                                   ItemsSource="{Binding LivingPatternTags}"
-                                  SelectedItem="{Binding SelectedItem.TraitTag,
+                                  SelectedItem="{Binding SelectedItem.LivingPatternTag,
                                                          ElementName=LstChhPersons,
                                                          Mode=OneWay}"
                                   Style="{StaticResource ComboBoxStyle}" />

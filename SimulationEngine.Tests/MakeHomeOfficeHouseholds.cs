@@ -86,7 +86,6 @@ namespace SimulationEngine.Tests {
             };
             hj.CalcSpec.StartDate = new DateTime(2020, 1, 1);
             hj.CalcSpec.EndDate = new DateTime(2020, 7, 1);
-            hj.CalcSpec.DeleteDAT = false;
             hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.NoFiles;
             hj.CalcSpec.DeleteSqlite = false;
             hj.CalcSpec.ExternalTimeResolution = "00:15:00";

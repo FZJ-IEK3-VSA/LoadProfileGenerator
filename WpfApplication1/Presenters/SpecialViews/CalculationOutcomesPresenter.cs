@@ -73,7 +73,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             applicationPresenter)
         {
             _outcomes = Sim.CalculationOutcomes;
-            OperatingPath = @"e:\TemporaryCalculations";
+            OperatingPath = @"C:\TemporaryCalculations";
             RefreshFiltered();
         }
 
@@ -549,6 +549,7 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
             Directory.CreateDirectory(operatingPath);
             var start = DateTime.Now;
             Config.IsInUnitTesting = true;
+            Config.OutputToConsole = true;
             Logger.Threshold = Severity.Information;
 
             sim.MyGeneralConfig.ApplyOptionDefault(OutputFileDefault.NoFiles);
@@ -589,7 +590,6 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                     ";",
                     -1,
                     sim.MyGeneralConfig.ExternalStepSize,
-                    sim.MyGeneralConfig.DeleteDatFilesBool,
                     sim.MyGeneralConfig.WriteExcelColumnBool,
                     sim.MyGeneralConfig.ShowSettlingPeriodBool,
                     3,
@@ -598,8 +598,9 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
                     chargingStationSet,
                     null,
                     sim.MyGeneralConfig.DeviceProfileHeaderMode,
-                    false, operatingPath, enableTransportation, sim.MyGeneralConfig.EnableIdlemodeBool,
-                    sim.MyGeneralConfig.DecimalSeperator, sim.MyGeneralConfig.EnableFlexibilityBool);
+                    false,
+                    operatingPath, enableTransportation, sim.MyGeneralConfig.EnableIdlemodeBool, sim.MyGeneralConfig.DecimalSeperator,
+                    sim.MyGeneralConfig.EnableFlexibilityBool);
 
                 cs.Start(csps);
                 Thread.Sleep(3000);

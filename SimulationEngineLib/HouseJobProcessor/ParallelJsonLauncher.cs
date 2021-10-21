@@ -443,13 +443,6 @@ namespace SimulationEngineLib.HouseJobProcessor {
                                         completedCalc.Status = "No folder and no finished.flag found";
                                         Logger.Info("Thread " + index + ": Not enqueued for moving due to missing finished flag: " + outputFolder.FullName + progress);
                                     }
-
-                                    if (jcs.CalcSpec.DeleteDAT) {
-                                        var dats = outputFolder.GetFiles("*.dat", SearchOption.AllDirectories);
-                                        foreach (var info in dats) {
-                                            info.Delete();
-                                        }
-                                    }
                                 }
                                 else {
                                     completedCalc.Status = "No folder found";

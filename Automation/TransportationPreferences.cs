@@ -34,7 +34,7 @@ namespace Automation
         public double DistanceFromHome { get; set; }
 
         /// <summary>
-        /// The angle indicating in which direction the destination site lies, viewed from the home
+        /// The angle (in degrees) indicating in which direction the destination site lies, viewed from the home
         /// of a person. This is used to calculate distances between different sites.
         /// </summary>
         public double Angle { get; set; }

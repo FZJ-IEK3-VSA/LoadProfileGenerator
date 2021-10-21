@@ -165,7 +165,7 @@ namespace LoadProfileGenerator.Presenters.Households {
         [ItemNotNull]
         [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public ObservableCollection<TraitTag> LivingPatternTags { get; } = new ObservableCollection<TraitTag>();
+        public ObservableCollection<LivingPatternTag> LivingPatternTags { get; } = new ObservableCollection<LivingPatternTag>();
 
         [ItemNotNull]
         [JetBrains.Annotations.NotNull]
@@ -410,8 +410,7 @@ namespace LoadProfileGenerator.Presenters.Households {
         [UsedImplicitly]
         public void RefreshLivingPatterns()
         {
-            var list = Sim.TraitTags.Items
-                .Where(x => x.Name.StartsWith("Living Pattern", StringComparison.InvariantCulture)).ToList();
+            var list = Sim.LivingPatternTags.Items.ToList();
             LivingPatternTags.SynchronizeWithList(list);
         }
 

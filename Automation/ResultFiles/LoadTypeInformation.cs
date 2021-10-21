@@ -81,7 +81,7 @@ namespace Automation.ResultFiles {
         public string? FileName { get; set; }
 
         [JetBrains.Annotations.NotNull]
-        public StrGuid? Guid { get; }
+        public StrGuid? Guid { get; set; }
 
         // needed for xml deserialize
         [UsedImplicitly]

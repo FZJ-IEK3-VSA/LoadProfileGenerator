@@ -65,7 +65,7 @@ namespace Common.Enums {
             CalcOptionDictionary.Add(CalcOption.JsonHouseholdSumFilesNoFlex, "Household sums with the flexible devices excluded as JSON");
             CalcOptionDictionary.Add(CalcOption.HouseholdSumProfilesCsvNoFlex, "Household sums with the flexible devices excluded as CSV");
             CalcOptionDictionary.Add(CalcOption.FlexibilityEvents, "Flexibility Events describing shiftable devices such as washing machines");
-
+            CalcOptionDictionary.Add(CalcOption.DeleteDatFiles, "Delete .dat files");
         }
 
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]

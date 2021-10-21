@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Data.SQLite;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -491,6 +492,11 @@ namespace Common.SQLResultLogging {
             return false;
         }*/
 
+        /// <summary>
+        /// Returns whether a matching table for the entry exists
+        /// </summary>
+        /// <param name="entry">The entry for which the table is intended</param>
+        /// <returns>True if a matching table exists, else false</returns>
         private bool IsTableCreated([JetBrains.Annotations.NotNull] SaveableEntry entry)
         {
             if (!_createdTablesPerHousehold.ContainsKey(entry.HouseholdKey)) {
@@ -537,6 +543,65 @@ namespace Common.SQLResultLogging {
             }
 
             _isFileNameDictLoaded = true;
+        }
+
+        /// <summary>
+        /// Deletes an entry from a database table
+        /// </summary>
+        /// <param name="entry">A dictionary containing field values of the entry to delete.</param>
+        /// <param name="tableName">The name of the table to delete from</param>
+        /// <param name="householdKey">The HouseholdKey matching the entry</param>
+        public void DeleteEntry(Dictionary<string, object> entry, [JetBrains.Annotations.NotNull] string tableName, HouseholdKey householdKey)
+        {
+            DeleteEntries(new List<Dictionary<string, object>> { entry }, tableName, householdKey);
+        }
+
+        /// <summary>
+        /// Deletes a list of entries from a database table
+        /// </summary>
+        /// <param name="entries">A list of dictionaries, one for each entry to delete. Each dictionary contains field values of the entry to delete.</param>
+        /// <param name="tableName">The name of the table to delete entries from</param>
+        /// <param name="householdKey">The HouseholdKey matching the entries</param>
+        public void DeleteEntries([JetBrains.Annotations.NotNull][ItemNotNull] List<Dictionary<string, object>> entries,
+                                   [JetBrains.Annotations.NotNull] string tableName, HouseholdKey householdKey)
+        {
+            if (entries.Count == 0)
+            {
+                // nothing to do
+                return;
+            }
+
+            // open the SQLite database connection
+            string dstFileName = GetFilenameForHouseholdKey(householdKey);
+            using SQLiteConnection conn = new SQLiteConnection("Data Source=" + dstFileName + ";Version=3");
+            conn.Open();
+
+            // prepare the sql command without the specific conditions
+            string sqlBase = "DELETE FROM " + tableName + " WHERE ";
+            using (var transaction = conn.BeginTransaction())
+            {
+                using (var command = conn.CreateCommand())
+                {
+                    foreach (Dictionary<string, object> row in entries)
+                    {
+                        // get an enumerable of "field=@field" strings and concatenate them with AND in between
+                        var conditions = row.Select(pair => pair.Key + " = @" + pair.Key);
+                        string conditionString = string.Join(" AND ", conditions);
+                        // combine base and conditions to full command
+                        command.CommandText = sqlBase + conditionString;
+                        // add all parameter values
+                        command.Parameters.Clear();
+                        foreach (KeyValuePair<string, object> pair in row)
+                        {
+                            string parameter = "@" + pair.Key;
+                            command.Parameters.AddWithValue(parameter, pair.Value);
+                        }
+                        command.ExecuteNonQuery();
+                    }
+                }
+                transaction.Commit();
+            }
+            conn.Close();
         }
 
         [JetBrains.Annotations.NotNull]

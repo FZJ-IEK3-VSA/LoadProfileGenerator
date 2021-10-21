@@ -177,7 +177,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
                 /*if(action == null) {
                     throw new LPGException("Action was null");
                 }*/
-                var dstTag = taggingSet.AffordanceToTagDict[action];
+                var dstTag = taggingSet.GetAffordanceTag(action);
                 if (!tagMinutesDictionary.ContainsKey(dstTag)) {
                     tagMinutesDictionary.Add(dstTag, 0);
                 }
@@ -444,7 +444,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
 
                         sb.Append(sum);
                         for (var i = 0; i < taggingSets.Count; i++) {
-                            sb.Append(coma).Append(taggingSets[i].AffordanceToTagDict[affordance.Key]);
+                            sb.Append(coma).Append(taggingSets[i].GetAffordanceTag(affordance.Key));
                         }
 
                         sw.WriteLine(sb);
@@ -465,7 +465,7 @@ namespace CalcPostProcessor.GeneralHouseholdSteps {
                     var ai = new AffordanceInformation(affordance.Key, affordance.Value.Sum());
                     atui.Affordances.Add(ai);
                     for (var i = 0; i < taggingSets.Count; i++) {
-                        ai.AffordanceTags.Add(taggingSets[i].Name, taggingSets[i].AffordanceToTagDict[affordance.Key]);
+                        ai.AffordanceTags.Add(taggingSets[i].Name, taggingSets[i].GetAffordanceTag(affordance.Key));
                     }
                 }
             }

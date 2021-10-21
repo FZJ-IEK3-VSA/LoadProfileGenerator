@@ -70,10 +70,10 @@ namespace CalculationController.Tests {
                     var cmf = new CalcManagerFactory();
                     CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
                         sim.TemperatureProfiles[0], sim.Houses[0], EnergyIntensityType.Random,
-                        false,  null, LoadTypePriority.RecommendedForHouses, null, null, null,
+                        false, null, LoadTypePriority.RecommendedForHouses, null, null, null,
                         sim.MyGeneralConfig.AllEnabledOptions(), new DateTime(2015, 1, 1), new DateTime(2015, 1, 31),
-                        new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 15, 0), false, false, false, 3, 5,
-                        cp, path,false,false, ".",false);
+                        new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 15, 0), false, false, 3, 5, cp,
+                        path, false, false, ".", false);
                     var cm = cmf.GetCalcManager(sim, csps, false);
 
                     cm.Run(ReportCancelFunc);
@@ -128,11 +128,11 @@ namespace CalculationController.Tests {
                     CalculationProfiler calculationProfiler = new CalculationProfiler();
                     CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
                         sim.TemperatureProfiles[0], sim.Houses[0], EnergyIntensityType.Random,
-                        false,  null, LoadTypePriority.RecommendedForHouses, null, null, null,
+                        false, null, LoadTypePriority.RecommendedForHouses, null, null, null,
                         sim.MyGeneralConfig.AllEnabledOptions(), new DateTime(2015, 1, 1), new DateTime(2015, 1, 15),
-                        new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 15, 0), false, false, false, 3, 5,
-                        calculationProfiler, path,false,
-                        false, ".", false);
+                        new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 15, 0), false, false, 3, 5, calculationProfiler,
+                        path, false, false,
+                        ".", false);
                     var cm = cmf.GetCalcManager(sim, csps, false);
 
                     cm.Run(ReportCancelFunc);
@@ -187,8 +187,8 @@ namespace CalculationController.Tests {
                         sim.TemperatureProfiles[0], sim.Houses[0], EnergyIntensityType.Random,
                         false, null, LoadTypePriority.RecommendedForHouses, null, null, null,
                         sim.MyGeneralConfig.AllEnabledOptions(), new DateTime(2015, 1, 1), new DateTime(2015, 1, 15),
-                        new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 15, 0), false, false, false, 3, 5,
-                        calculationProfiler, path,false,false, ".", false);
+                        new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 15, 0), false, false, 3, 5, calculationProfiler,
+                        path, false, false, ".", false);
                     var cm = cmf.GetCalcManager(sim, csps, false);
 
                     cm.Run(ReportCancelFunc);
@@ -424,9 +424,9 @@ namespace CalculationController.Tests {
                         CalculationProfiler calculationProfiler = new CalculationProfiler();
                         CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
                             sim.TemperatureProfiles[0], sim.ModularHouseholds[i], EnergyIntensityType.Random,
-                            false,  null, LoadTypePriority.RecommendedForHouses, null, null, null,
-                            sim.MyGeneralConfig.AllEnabledOptions(), new DateTime(2015, 1, 1), new DateTime(2015, 1, 2), new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 15, 0), false, false, false, 3, 5
-                            , calculationProfiler, wd1.WorkingDirectory,false,false, ".", false);
+                            false, null, LoadTypePriority.RecommendedForHouses, null, null, null,
+                            sim.MyGeneralConfig.AllEnabledOptions(), new DateTime(2015, 1, 1), new DateTime(2015, 1, 2), new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 15, 0), false, false, 3, 5
+, calculationProfiler, wd1.WorkingDirectory, false, false, ".", false);
                         var cm = cmf.GetCalcManager(sim,  csps, false);
 
                         CalcManager.ExitCalcFunction = true;
@@ -464,10 +464,10 @@ namespace CalculationController.Tests {
                         CalculationProfiler calculationProfiler = new CalculationProfiler();
                         CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
                             sim.TemperatureProfiles[0], sim.Houses[i], EnergyIntensityType.Random,
-                            false,  null, LoadTypePriority.All, null, null, null,
+                            false, null, LoadTypePriority.All, null, null, null,
                                 sim.MyGeneralConfig.AllEnabledOptions(), new DateTime(2015, 1, 1), new DateTime(2015, 1, 2), new TimeSpan(0, 1, 0), ";", 5,
-                            new TimeSpan(0, 15, 0), false, false, false, 3, 3,
-                            calculationProfiler, wd1.WorkingDirectory,false,false, ".",false);
+                            new TimeSpan(0, 15, 0), false, false, 3, 3, calculationProfiler,
+                            wd1.WorkingDirectory, false, false, ".", false);
                         var cmf = new CalcManagerFactory();
                         var cm = cmf.GetCalcManager(sim, csps, false);
 
@@ -501,13 +501,13 @@ namespace CalculationController.Tests {
                     CalculationProfiler calculationProfiler = new CalculationProfiler();
                     CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
                         sim.TemperatureProfiles[0], sim.Houses[1], EnergyIntensityType.Random,
-                        false,  null, LoadTypePriority.All, null, null, null,
+                        false, null, LoadTypePriority.All, null, null, null,
                         sim.MyGeneralConfig.AllEnabledOptions(), new DateTime(2015, 1, 1),
                         new DateTime(2015, 1, 3),
                         new TimeSpan(0, 1, 0), ";", 5,
-                        new TimeSpan(0, 15, 0), false, false, false, 3, 3,
-                        calculationProfiler, wd1.WorkingDirectory,false, false,
-                        ".", false
+                        new TimeSpan(0, 15, 0), false, false, 3, 3, calculationProfiler,
+                        wd1.WorkingDirectory, false, false, ".",
+                        false
                     );
                     var cmf = new CalcManagerFactory();
                     var cm = cmf.GetCalcManager(sim, csps, false);
@@ -581,10 +581,10 @@ namespace CalculationController.Tests {
                         CalculationProfiler calculationProfiler = new CalculationProfiler();
                         CalcStartParameterSet csps = new CalcStartParameterSet(geoloc,
                             sim.TemperatureProfiles[0], chh, EnergyIntensityType.Random,
-                            false,  null, LoadTypePriority.Mandatory, null, null, null,
+                            false, null, LoadTypePriority.Mandatory, null, null, null,
                         sim.MyGeneralConfig.AllEnabledOptions(), new DateTime(2015, 1, 1), new DateTime(2015, 1, 3), new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 1, 0),
-                            false, false, false, 3, 3,
-                            calculationProfiler, wd1.WorkingDirectory,false,false, ".", false);
+                            false, false, 3, 3, calculationProfiler,
+                            wd1.WorkingDirectory, false, false, ".", false);
                         var cm = cmf.GetCalcManager(sim, csps, false);
 
                         cm.Run(ReportCancelFunc);
@@ -636,9 +636,9 @@ namespace CalculationController.Tests {
                     CalculationProfiler calculationProfiler = new CalculationProfiler();
                     CalcStartParameterSet csps = new CalcStartParameterSet(geoloc,
                         sim.TemperatureProfiles[0], chh, EnergyIntensityType.Random,
-                        false,  null, LoadTypePriority.All, null, null, null, sim.MyGeneralConfig.AllEnabledOptions(),
-                        new DateTime(2015, 1, 1), new DateTime(2015, 1, 3), new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 1, 0), false, false, false, 3, 3,
-                        calculationProfiler, wd1.WorkingDirectory,false,false, ".", false);
+                        false, null, LoadTypePriority.All, null, null, null, sim.MyGeneralConfig.AllEnabledOptions(),
+                        new DateTime(2015, 1, 1), new DateTime(2015, 1, 3), new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 1, 0), false, false, 3, 3, calculationProfiler,
+                        wd1.WorkingDirectory, false, false, ".", false);
                     var cm = cmf.GetCalcManager(sim,  csps, false);
 
                     cm.Run(ReportCancelFunc);
@@ -710,10 +710,10 @@ namespace CalculationController.Tests {
                     CalculationProfiler calculationProfiler = new CalculationProfiler();
                     CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
                         sim.TemperatureProfiles[0], houseToCalc, EnergyIntensityType.Random,
-                        false,  null, LoadTypePriority.RecommendedForHouses, null, null, null,
+                        false, null, LoadTypePriority.RecommendedForHouses, null, null, null,
                         sim.MyGeneralConfig.AllEnabledOptions(), new DateTime(2015, 1, 1), new DateTime(2015, 1, 3),
-                        new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 1, 0), false, false, false, 3, 3,
-                        calculationProfiler, wd1.WorkingDirectory,false,false, ".", false);
+                        new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 1, 0), false, false, 3, 3, calculationProfiler,
+                        wd1.WorkingDirectory, false, false, ".", false);
                     var cm = cmf.GetCalcManager(sim, csps, false);
 
                     cm.Run(ReportCancelFunc);
@@ -762,9 +762,9 @@ namespace CalculationController.Tests {
                     CalculationProfiler calculationProfiler = new CalculationProfiler();
                     CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
                         sim.TemperatureProfiles[0], sim.ModularHouseholds[0], EnergyIntensityType.Random,
-                        false,  null, LoadTypePriority.Mandatory, null, null, null, sim.MyGeneralConfig.AllEnabledOptions(),
-                        new DateTime(2015, 1, 1), new DateTime(2015, 1, 5), new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 1, 0), false, false, false, 3, 3,
-                        calculationProfiler, wd1.WorkingDirectory,false,false, ".", false);
+                        false, null, LoadTypePriority.Mandatory, null, null, null, sim.MyGeneralConfig.AllEnabledOptions(),
+                        new DateTime(2015, 1, 1), new DateTime(2015, 1, 5), new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 1, 0), false, false, 3, 3, calculationProfiler,
+                        wd1.WorkingDirectory, false, false, ".", false);
                     var cm = cmf.GetCalcManager(sim, csps, false);
 
                     cm.Run(ReportCancelFunc);
@@ -816,10 +816,10 @@ namespace CalculationController.Tests {
                     CalculationProfiler calculationProfiler = new CalculationProfiler();
                     CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
                         sim.TemperatureProfiles[0], house, EnergyIntensityType.Random,
-                        false,  null, LoadTypePriority.RecommendedForHouses, null, null, null,
+                        false, null, LoadTypePriority.RecommendedForHouses, null, null, null,
                         sim.MyGeneralConfig.AllEnabledOptions(), new DateTime(2015, 1, 1), new DateTime(2015, 1, 3), new TimeSpan(0, 0, 1, 0),
-                        ";", 5, new TimeSpan(0, 1, 0), false, false, false, 3, 3,
-                        calculationProfiler, wd1.WorkingDirectory,false,false, ".", false);
+                        ";", 5, new TimeSpan(0, 1, 0), false, false, 3, 3, calculationProfiler,
+                        wd1.WorkingDirectory, false, false, ".", false);
                     var cm = cmf.GetCalcManager(sim, csps, false);
 
                     var cr = cm.Run(ReportCancelFunc);
@@ -974,10 +974,10 @@ namespace CalculationController.Tests {
                     CalculationProfiler calculationProfiler = new CalculationProfiler();
                     CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
                         sim.TemperatureProfiles[0], mhh, EnergyIntensityType.Random,
-                        false,  null, LoadTypePriority.RecommendedForHouses, null, null, null,
+                        false, null, LoadTypePriority.RecommendedForHouses, null, null, null,
                         sim.MyGeneralConfig.AllEnabledOptions(), new DateTime(2015, 1, 1), new DateTime(2015, 1, 2),
-                        new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 15, 0), false, false, false, 3, 3,
-                        calculationProfiler, wd1.WorkingDirectory,false,false, ".",false);
+                        new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 15, 0), false, false, 3, 3, calculationProfiler,
+                        wd1.WorkingDirectory, false, false, ".", false);
                     var cm = cmf.GetCalcManager(sim, csps, false);
 
                     CalcManager.ExitCalcFunction = true;
@@ -1030,10 +1030,10 @@ namespace CalculationController.Tests {
                     CalculationProfiler calculationProfiler = new CalculationProfiler();
                     CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
                         sim.TemperatureProfiles[0], mhh, EnergyIntensityType.Random,
-                        false,  null, LoadTypePriority.RecommendedForHouses, null, null, null,
+                        false, null, LoadTypePriority.RecommendedForHouses, null, null, null,
                     sim.MyGeneralConfig.AllEnabledOptions(), new DateTime(2015, 1, 1), new DateTime(2015, 1, 2),
-                        new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 15, 0), false, false, false, 3, 3,
-                        calculationProfiler, wd1.WorkingDirectory,false,false ,".",false);
+                        new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 15, 0), false, false, 3, 3, calculationProfiler,
+                        wd1.WorkingDirectory, false, false, ".", false);
                     var cm = cmf.GetCalcManager(sim, csps, false);
 
                     CalcManager.ExitCalcFunction = false;
@@ -1088,10 +1088,10 @@ namespace CalculationController.Tests {
                     CalculationProfiler calculationProfiler = new CalculationProfiler();
                     CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
                         sim.TemperatureProfiles[0], house, EnergyIntensityType.Random,
-                        false,  null, LoadTypePriority.RecommendedForHouses, null, null, null,
+                        false, null, LoadTypePriority.RecommendedForHouses, null, null, null,
                         sim.MyGeneralConfig.AllEnabledOptions(), new DateTime(2015, 1, 1), new DateTime(2015, 1, 3),
-                        new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 1, 0), false, false, false, 3, 3,
-                        calculationProfiler, wd1.WorkingDirectory,false,false, ".", false);
+                        new TimeSpan(0, 1, 0), ";", 5, new TimeSpan(0, 1, 0), false, false, 3, 3, calculationProfiler,
+                        wd1.WorkingDirectory, false, false, ".", false);
                     var cm = cmf.GetCalcManager(sim, csps, false);
 
                     cm.Run(ReportCancelFunc);
@@ -1195,15 +1195,15 @@ namespace CalculationController.Tests {
                         CalculationProfiler calculationProfiler = new CalculationProfiler();
                         CalcStartParameterSet csps = new CalcStartParameterSet(sim.GeographicLocations[0],
                             sim.TemperatureProfiles[0], modularHousehold, EnergyIntensityType.Random,
-                            false,  null, LoadTypePriority.All,
+                            false, null, LoadTypePriority.All,
                             transportationDeviceSet, chargingStationSet, travelRouteSet,
                             sim.MyGeneralConfig.AllEnabledOptions(),
                             new DateTime(2015, 1, 1),
                             new DateTime(2015, 1, 2),
                             new TimeSpan(0, 1, 0), ";", 5,
                             new TimeSpan(0, 1, 0),
-                            false, false, false, 3, 3,
-                            calculationProfiler, wd1.WorkingDirectory,true,false, ".", false);
+                            false, false, 3, 3, calculationProfiler,
+                            wd1.WorkingDirectory, true, false, ".", false);
                         var cm = cmf.GetCalcManager(sim, csps, false);
 
                         //var cm = cmf.GetCalcManager(sim, path, chh, false, sim.TemperatureProfiles[0], geoloc,

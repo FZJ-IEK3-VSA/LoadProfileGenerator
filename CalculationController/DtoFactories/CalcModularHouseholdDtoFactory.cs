@@ -143,7 +143,7 @@ namespace CalculationController.DtoFactories {
             }
 
             var autoDevDtos = _calcDeviceDtoFactory.MakeCalcAutoDevDtos(autonomousDevices,
-                energyIntensity, householdKey, mhh.Vacation.VacationTimeframes(),
+                et, householdKey, mhh.Vacation.VacationTimeframes(),
                 mhh.Name + "###" + householdKey,
                 sim.DeviceActions.Items, locationDict,
                 temperatureProfile, geographicLocation, deviceCategoryDtos);
