@@ -47,6 +47,10 @@ namespace Common.CalcDto {
             _affordanceToTagDict = new Dictionary<string, string>();
         }
 
+        // this property is needed for Json deserialization
+        [NotNull]
+        public Dictionary<string, string> AffordanceToTagDict => _affordanceToTagDict;
+
         [NotNull]
         public Dictionary<string, ColorRGB> Colors { get; } = new Dictionary<string, ColorRGB>();
 
