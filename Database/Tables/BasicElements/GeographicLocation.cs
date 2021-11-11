@@ -160,7 +160,7 @@ namespace Database.Tables.BasicElements {
         [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString) {
-            var geoloc = new GeographicLocation(FindNewName(isNameTaken, "New Geographic Location "), connectionString, null, null, 50, System.Guid.NewGuid().ToStrGuid());
+            var geoloc = new GeographicLocation(FindNewName(isNameTaken, "New Geographic Location "), connectionString, null, null, DefaultRadiationThreshold, System.Guid.NewGuid().ToStrGuid());
             return geoloc;
         }
 
