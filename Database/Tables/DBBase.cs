@@ -1035,18 +1035,6 @@ namespace Database.Tables
         }
 
         [NotifyPropertyChangedInvocator]
-        protected void SetValueWithNotify(CalcSunriseTimes.LatitudeCoords.Direction value,
-            ref CalcSunriseTimes.LatitudeCoords.Direction dstField, [CanBeNull] [CallerMemberName] string propertyName = null)
-        {
-            if (value == dstField)
-            {
-                return;
-            }
-            dstField = value;
-            OnPropertyChanged(propertyName);
-        }
-
-        [NotifyPropertyChangedInvocator]
         protected void SetValueWithNotify(DayOfWeek value, ref DayOfWeek dstField,
             [CanBeNull] [CallerMemberName] string propertyName = null)
         {

@@ -54,20 +54,20 @@ namespace Database.Tests.Tables {
                 var geolocs = new ObservableCollection<GeographicLocation>();
                 var dbp = db.LoadDateBasedProfiles();
                 var timeLimits = db.LoadTimeLimits(dbp);
-                GeographicLocation.LoadFromDatabase(geolocs, db.ConnectionString, holidays, timeLimits, false);
+                var dateBasedProfiles = db.LoadDateBasedProfiles();
+                GeographicLocation.LoadFromDatabase(geolocs, db.ConnectionString, holidays, timeLimits, dateBasedProfiles, false);
                 (geolocs.Count).Should().Be(0);
-                var geoloc = new GeographicLocation("bla", 1, 2, 3, 4, 5, 6, "North", "West",
-                    db.ConnectionString, timeLimits[0], System.Guid.NewGuid().ToStrGuid());
+                var geoloc = new GeographicLocation("bla", db.ConnectionString, timeLimits[0], dbp[0], 50, System.Guid.NewGuid().ToStrGuid());
                 geoloc.SaveToDB();
                 geoloc.AddHoliday(holidays[0]);
-                GeographicLocation.LoadFromDatabase(geolocs, db.ConnectionString, holidays, timeLimits, false);
+                GeographicLocation.LoadFromDatabase(geolocs, db.ConnectionString, holidays, timeLimits, dateBasedProfiles, false);
                 (geolocs.Count).Should().Be(1);
                 (geolocs[0].Holidays.Count).Should().Be(1);
                 var gl = geolocs[0];
                 ("bla").Should().Be(gl.Name);
                 gl.DeleteFromDB();
                 geolocs.Clear();
-                GeographicLocation.LoadFromDatabase(geolocs, db.ConnectionString, holidays, timeLimits, false);
+                GeographicLocation.LoadFromDatabase(geolocs, db.ConnectionString, holidays, timeLimits, dateBasedProfiles, false);
                 (geolocs.Count).Should().Be(0);
 
                 db.Cleanup();
@@ -85,9 +85,9 @@ namespace Database.Tests.Tables {
                 foreach (GeographicLocation location in sim.GeographicLocations.Items)
                 {
                     Logger.Info("Calculating " + location.PrettyName);
-                    SunriseTimes st = new SunriseTimes(location);
-                    st.MakeArray(pars.InternalTimesteps, pars.InternalStartTime, pars.InternalEndTime,
-                        pars.InternalStepsize);
+                    //SunriseTimes st = new SunriseTimes(location);
+                    //st.MakeArray(pars.InternalTimesteps, pars.InternalStartTime, pars.InternalEndTime,
+                    //    pars.InternalStepsize);
                 }
                 db.Cleanup();
             }
