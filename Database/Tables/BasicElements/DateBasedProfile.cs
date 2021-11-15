@@ -90,6 +90,14 @@ namespace Database.Tables.BasicElements {
                 }
             }
 
+            foreach (var geoLocation in sim.GeographicLocations.Items)
+            {
+                if (geoLocation.SolarRadiationProfile == this)
+                {
+                    usedIns.Add(new UsedIn(geoLocation, "Geographic Location"));
+                }
+            }
+
             foreach (Generator generator in sim.Generators.Items) {
                 if (generator.DateBasedProfile == this) {
                     usedIns.Add(new UsedIn(generator, "Generator"));
