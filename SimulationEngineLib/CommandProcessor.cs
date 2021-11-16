@@ -16,11 +16,7 @@ namespace SimulationEngineLib {
     public class CommandProcessor {
 
         public static Action<DirectoryInfo, CalculationProfiler> MakeFlameChart { get; set; }
-        [JetBrains.Annotations.NotNull]
-        [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
-#pragma warning disable CA1044 // Properties should not be write only
-        public static string ConnectionString { private get; set; }
-#pragma warning restore CA1044 // Properties should not be write only
+
         [HelpHook]
         [ArgShortcut("-?")]
         [ArgDescription("Shows this help")]
@@ -40,7 +36,8 @@ namespace SimulationEngineLib {
         public void CSVImport([JetBrains.Annotations.NotNull] CsvImportOptions args)
         {
             Logger.Info("Running LoadProfileGenerator Version " + Assembly.GetExecutingAssembly().GetName().Version);
-            CsvTimeProfileImporter ctpi  = new CsvTimeProfileImporter(ConnectionString);
+            var connectionString = MainSimEngine.GetConnectionString();
+            CsvTimeProfileImporter ctpi  = new CsvTimeProfileImporter(connectionString);
             ctpi.Import(args, out _);
         }
 
@@ -49,8 +46,10 @@ namespace SimulationEngineLib {
         [ArgExample("simulationengine.exe ImportHouseholdDefinition -File txt.csv",
             "How to import a household definition:")]
         [UsedImplicitly]
-        public void ImportHouseholdDefinition([JetBrains.Annotations.NotNull] HouseholdDefinitionImporter.HouseholdDefinitionImporterOptions args) {
-            HouseholdDefinitionImporter.ImportHouseholdDefinition(args, ConnectionString);
+        public void ImportHouseholdDefinition([JetBrains.Annotations.NotNull] HouseholdDefinitionImporter.HouseholdDefinitionImporterOptions args)
+        {
+            var connectionString = MainSimEngine.GetConnectionString();
+            HouseholdDefinitionImporter.ImportHouseholdDefinition(args, connectionString);
         }
 
 
@@ -63,7 +62,8 @@ namespace SimulationEngineLib {
         [UsedImplicitly]
         public void CreateExampleHouseJob()
         {
-            HouseGenerator.CreateExampleHouseJob(ConnectionString);
+            var connectionString = MainSimEngine.GetConnectionString();
+            HouseGenerator.CreateExampleHouseJob(connectionString);
         }
 
         [ArgActionMethod]
@@ -74,7 +74,8 @@ namespace SimulationEngineLib {
         [UsedImplicitly]
         public void CreatePythonBindings()
         {
-            PythonGenerator.MakeFullPythonBindings(ConnectionString, "lpgpythonbindings.py", @"lpgdata.py");
+            var connectionString = MainSimEngine.GetConnectionString();
+            PythonGenerator.MakeFullPythonBindings(connectionString, "lpgpythonbindings.py", @"lpgdata.py");
         }
 
         [ArgActionMethod]
@@ -105,7 +106,8 @@ namespace SimulationEngineLib {
         [UsedImplicitly]
         public void ExportDatabaseObjectsAsJson([JetBrains.Annotations.NotNull] JsonDatabaseExportOptions args)
         {
-            JsonDatabaseExporter hte = new JsonDatabaseExporter(ConnectionString);
+            var connectionString = MainSimEngine.GetConnectionString();
+            JsonDatabaseExporter hte = new JsonDatabaseExporter(connectionString);
             hte.Export(args);
         }
 
@@ -117,7 +119,8 @@ namespace SimulationEngineLib {
         [UsedImplicitly]
         public void ImportDatabaseObjectsAsJson([JetBrains.Annotations.NotNull] JsonDatabaseImportOptions args)
         {
-            JsonDatabaseImporter hti = new JsonDatabaseImporter(ConnectionString);
+            var connectionString = MainSimEngine.GetConnectionString();
+            JsonDatabaseImporter hti = new JsonDatabaseImporter(connectionString);
             hti.Import(args);
         }
     }
