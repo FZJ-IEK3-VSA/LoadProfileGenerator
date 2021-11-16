@@ -78,45 +78,48 @@
                         <TextBlock Grid.ColumnSpan="2"
                                    Style="{StaticResource TextBlockStyle}"
                                    TextWrapping="WrapWithOverflow">
-                            Enter the details for lighting simulation here.
+                            Enter the details for daylight calculation and lighting here. <LineBreak/>
+                            Some activities depend on daylight or darkness. For each geographic location, daylight is calculated using the solar radiation profile and the threshold specified here.
+                            Only when the solar radiation is above the threshold, it is assumed that there is daylight. <LineBreak/>
+                            Additionally, a time limit for switching on lighting can be selected that usually depends on darkness, but might also impose further restrictions.
                         </TextBlock>
                         <Label Grid.Row="1"
-                               Grid.Column="0"
-                               Content="Time limit for light"
-                               Style="{StaticResource LabelStyle}"
-                               Target="{Binding ElementName=CmbTimeLimit}" />
-                        <ComboBox Name="CmbTimeLimit"
-                                  Grid.Row="1"
-                                  Grid.Column="1"
-                                  VerticalAlignment="Top"
-                                  ItemsSource="{Binding TimeLimits}"
-                                  SelectedItem="{Binding ThisGeographicLocation.LightTimeLimit}"
-                                  Style="{StaticResource ComboBoxStyle}" />
-                        <Label Grid.Row="2"
                                Grid.Column="0"
                                Content="Solar radiation profile"
                                Style="{StaticResource LabelStyle}"
                                Target="{Binding ElementName=CmbRadiationProfile}" />
                         <ComboBox
                             Name="CmbRadiationProfile"
-                            Grid.Row="2"
+                            Grid.Row="1"
                             Grid.Column="1"
                             VerticalAlignment="Top"
                             ItemsSource="{Binding DateBasedProfiles}"
                             SelectedItem="{Binding ThisGeographicLocation.SolarRadiationProfile}"
                             Style="{StaticResource ComboBoxStyle}" />
                         <Label
-                            Grid.Row="3"
+                            Grid.Row="2"
                             Grid.Column="0"
-                            Content="Radiation threshold for switching on the light"
+                            Content="Radiation threshold for daylight"
                             Style="{StaticResource LabelStyle}"
                             Target="{Binding ElementName=TxtRadiationThreshold}" />
                         <TextBox
                             x:Name="TxtRadiationThreshold"
-                            Grid.Row="3"
+                            Grid.Row="2"
                             Grid.Column="1"
                             Style="{StaticResource TextBoxStyle}"
                             Text="{Binding ThisGeographicLocation.RadiationThresholdForLight}" />
+                        <Label Grid.Row="3"
+                               Grid.Column="0"
+                               Content="Time limit for lighting"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=CmbTimeLimit}" />
+                        <ComboBox Name="CmbTimeLimit"
+                                  Grid.Row="3"
+                                  Grid.Column="1"
+                                  VerticalAlignment="Top"
+                                  ItemsSource="{Binding TimeLimits}"
+                                  SelectedItem="{Binding ThisGeographicLocation.LightTimeLimit}"
+                                  Style="{StaticResource ComboBoxStyle}" />
                     </Grid>
                 </Expander>
 
