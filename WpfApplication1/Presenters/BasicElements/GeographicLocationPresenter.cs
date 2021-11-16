@@ -75,6 +75,11 @@ namespace LoadProfileGenerator.Presenters.BasicElements {
         [UsedImplicitly]
         public ObservableCollection<TimeLimit> TimeLimits => Sim.TimeLimits.Items;
 
+        [ItemNotNull]
+        [NotNull]
+        [UsedImplicitly]
+        public ObservableCollection<DateBasedProfile> DateBasedProfiles => Sim.DateBasedProfiles.Items;
+
         public override void Close(bool saveToDB, bool removeLast = false) {
             if (saveToDB) {
                 _geoloc.SaveToDB();

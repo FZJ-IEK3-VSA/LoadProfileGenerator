@@ -67,7 +67,7 @@ namespace Database.Tests.Tables {
                     out var houses, out _, traitTags, chargingStationSets,
                     travelRouteSets, transportationDeviceSets);
                 var settlements = new ObservableCollection<Settlement>();
-                var geoloc = db.LoadGeographicLocations(out _, timeLimits);
+                var geoloc = db.LoadGeographicLocations(out _, timeLimits, dateBasedProfiles);
                 var temperaturProfiles = db.LoadTemperatureProfiles();
                 Settlement.LoadFromDatabase(settlements, db.ConnectionString, temperaturProfiles, geoloc,
                     modularHouseholds, houses, false);
@@ -117,7 +117,7 @@ namespace Database.Tests.Tables {
                     out var houses, out _, traitTags,
                     chargingStationSets, travelRouteSets, transportationDeviceSets);
                 var settlements = new ObservableCollection<Settlement>();
-                var geoloc = db.LoadGeographicLocations(out _, timeLimits);
+                var geoloc = db.LoadGeographicLocations(out _, timeLimits, dateBasedProfiles);
                 var temperaturProfiles = db.LoadTemperatureProfiles();
                 Settlement.LoadFromDatabase(settlements, db.ConnectionString, temperaturProfiles, geoloc,
                     modularHouseholds, houses, false);

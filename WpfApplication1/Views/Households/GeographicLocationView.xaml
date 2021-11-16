@@ -47,19 +47,6 @@
                                  Grid.Column="1"
                                  Style="{StaticResource TextBoxStyle}"
                                  Text="{Binding ThisGeographicLocation.Name}" />
-
-                        <Label Grid.Row="2"
-                               Grid.Column="0"
-                               Content="Time limit for light"
-                               Style="{StaticResource LabelStyle}"
-                               Target="{Binding ElementName=TxtGeographicName}" />
-                        <ComboBox Name="CmbTimeLimit"
-                                  Grid.Row="2"
-                                  Grid.Column="1"
-                                  VerticalAlignment="Top"
-                                  ItemsSource="{Binding TimeLimits}"
-                                  SelectedItem="{Binding ThisGeographicLocation.LightTimeLimit}"
-                                  Style="{StaticResource ComboBoxStyle}" />
                     </Grid>
                 </Expander>
 
@@ -67,7 +54,7 @@
                 <Expander IsExpanded="true" Style="{StaticResource ExpanderStyle}">
                     <Expander.Header>
                         <Border Style="{StaticResource GroupBoxHeader}">
-                            <TextBlock Text="Geographic Location" />
+                            <TextBlock Text="Lighting" />
                         </Border>
                     </Expander.Header>
                     <Grid>
@@ -91,89 +78,48 @@
                         <TextBlock Grid.ColumnSpan="2"
                                    Style="{StaticResource TextBlockStyle}"
                                    TextWrapping="WrapWithOverflow">
-                            Enter the coordinates for the location here.
+                            Enter the details for daylight calculation and lighting here. <LineBreak/>
+                            Some activities depend on daylight or darkness. For each geographic location, daylight is calculated using the solar radiation profile and the threshold specified here.
+                            Only when the solar radiation is above the threshold, it is assumed that there is daylight. <LineBreak/>
+                            Additionally, a time limit for switching on lighting can be selected that usually depends on darkness, but might also impose further restrictions.
                         </TextBlock>
                         <Label Grid.Row="1"
                                Grid.Column="0"
-                               Content="Latitude Degree"
+                               Content="Solar radiation profile"
                                Style="{StaticResource LabelStyle}"
-                               Target="{Binding ElementName=TxtLatHour}" />
-                        <TextBox x:Name="TxtLatHour"
-                                 Grid.Row="1"
-                                 Grid.Column="1"
-                                 Style="{StaticResource TextBoxStyle}"
-                                 Text="{Binding ThisGeographicLocation.LatHour}" />
-                        <Label Grid.Row="2"
-                               Grid.Column="0"
-                               Content="Latitude Minute"
-                               Style="{StaticResource LabelStyle}"
-                               Target="{Binding ElementName=TxtLatMinute}" />
-                        <TextBox x:Name="TxtLatMinute"
-                                 Grid.Row="2"
-                                 Grid.Column="1"
-                                 Style="{StaticResource TextBoxStyle}"
-                                 Text="{Binding ThisGeographicLocation.LatMinute}" />
+                               Target="{Binding ElementName=CmbRadiationProfile}" />
+                        <ComboBox
+                            Name="CmbRadiationProfile"
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            VerticalAlignment="Top"
+                            ItemsSource="{Binding DateBasedProfiles}"
+                            SelectedItem="{Binding ThisGeographicLocation.SolarRadiationProfile}"
+                            Style="{StaticResource ComboBoxStyle}" />
+                        <Label
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            Content="Radiation threshold for daylight"
+                            Style="{StaticResource LabelStyle}"
+                            Target="{Binding ElementName=TxtRadiationThreshold}" />
+                        <TextBox
+                            x:Name="TxtRadiationThreshold"
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            Style="{StaticResource TextBoxStyle}"
+                            Text="{Binding ThisGeographicLocation.RadiationThresholdForLight}" />
                         <Label Grid.Row="3"
                                Grid.Column="0"
-                               Content="Latitude Second"
+                               Content="Time limit for lighting"
                                Style="{StaticResource LabelStyle}"
-                               Target="{Binding ElementName=TxtLatSecond}" />
-                        <TextBox x:Name="TxtLatSecond"
-                                 Grid.Row="3"
-                                 Grid.Column="1"
-                                 Style="{StaticResource TextBoxStyle}"
-                                 Text="{Binding ThisGeographicLocation.LatSecond}" />
-                        <Label Grid.Row="4"
-                               Grid.Column="0"
-                               Content="Latitude Direction"
-                               Style="{StaticResource LabelStyle}"
-                               Target="{Binding ElementName=TxtLatDirection}" />
-                        <TextBox x:Name="TxtLatDirection"
-                                 Grid.Row="4"
-                                 Grid.Column="1"
-                                 Style="{StaticResource TextBoxStyle}"
-                                 Text="{Binding ThisGeographicLocation.LatDirection}" />
-                        <Label Grid.Row="5"
-                               Grid.Column="0"
-                               Content="Longitude Degree"
-                               Style="{StaticResource LabelStyle}"
-                               Target="{Binding ElementName=TxtLongHour}" />
-                        <TextBox x:Name="TxtLongHour"
-                                 Grid.Row="5"
-                                 Grid.Column="1"
-                                 Style="{StaticResource TextBoxStyle}"
-                                 Text="{Binding ThisGeographicLocation.LongHour}" />
-                        <Label Grid.Row="6"
-                               Grid.Column="0"
-                               Content="Longitude Minute"
-                               Style="{StaticResource LabelStyle}"
-                               Target="{Binding ElementName=TxtLongMinute}" />
-                        <TextBox x:Name="TxtLongMinute"
-                                 Grid.Row="6"
-                                 Grid.Column="1"
-                                 Style="{StaticResource TextBoxStyle}"
-                                 Text="{Binding ThisGeographicLocation.LongMinute}" />
-                        <Label Grid.Row="7"
-                               Grid.Column="0"
-                               Content="Longitude Second"
-                               Style="{StaticResource LabelStyle}"
-                               Target="{Binding ElementName=TxtLongSecond}" />
-                        <TextBox x:Name="TxtLongSecond"
-                                 Grid.Row="7"
-                                 Grid.Column="1"
-                                 Style="{StaticResource TextBoxStyle}"
-                                 Text="{Binding ThisGeographicLocation.LongSecond}" />
-                        <Label Grid.Row="8"
-                               Grid.Column="0"
-                               Content="Longitude Direction"
-                               Style="{StaticResource LabelStyle}"
-                               Target="{Binding ElementName=TxtLongDirection}" />
-                        <TextBox x:Name="TxtLongDirection"
-                                 Grid.Row="8"
-                                 Grid.Column="1"
-                                 Style="{StaticResource TextBoxStyle}"
-                                 Text="{Binding ThisGeographicLocation.LongDirection}" />
-
+                               Target="{Binding ElementName=CmbTimeLimit}" />
+                        <ComboBox Name="CmbTimeLimit"
+                                  Grid.Row="3"
+                                  Grid.Column="1"
+                                  VerticalAlignment="Top"
+                                  ItemsSource="{Binding TimeLimits}"
+                                  SelectedItem="{Binding ThisGeographicLocation.LightTimeLimit}"
+                                  Style="{StaticResource ComboBoxStyle}" />
                     </Grid>
                 </Expander>
 

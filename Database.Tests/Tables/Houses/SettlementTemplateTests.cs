@@ -109,7 +109,7 @@ namespace Database.Tests.Tables.Houses {
                     timeBasedProfiles, timeLimits, loadTypes, transformationDevices, energyStorages, generators,
                     allLocations, deviceActions, deviceActionGroups, variables);
                 var tempprofiles = db.LoadTemperatureProfiles();
-                var geolocs = db.LoadGeographicLocations(out _, timeLimits);
+                var geolocs = db.LoadGeographicLocations(out _, timeLimits, dateBasedProfiles);
                 var householdTags = db.LoadHouseholdTags();
                 db.LoadTransportation(allLocations, out var transportationDeviceSets,
                     out var travelRouteSets, out _,out _,

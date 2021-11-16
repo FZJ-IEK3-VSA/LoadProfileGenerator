@@ -25,6 +25,10 @@ Copyright (c) 2010-2020 Noah Pflugradt (FZJ IEK-3), Peter Stenzel (FZJ IEK-3),  
 You should have received a copy of the MIT License along with this program.  
 If not, see <https://opensource.org/licenses/MIT>
 
+## External Data
+
+The LoadProfileGenerator uses solar radiation profiles from Deutscher Wetterdienst (DWD, www.dwd.de) and from Photovoltaic Geographical Information System (PVGIS, https://ec.europa.eu/jrc/en/pvgis)
+
 ## About Us
 
 We are the [Process and Systems Analysis](http://www.fz-juelich.de/iek/iek-3/EN/Forschung/_Process-and-System-Analysis/_node.html) department at the [Institute of Energy and Climate Research: Techno-economic Systems Analysis (IEK-3)](http://www.fz-juelich.de/iek/iek-3/EN/Home/home_node.html) belonging to the Forschungszentrum Jülich. Our interdisciplinary department's research is focusing on energy-related process and systems analyses. Data searches and system simulations are used to determine energy and mass balances, as well as to evaluate performance, emissions and costs of energy systems. The results are used for performing comparative assessment studies between the various systems. Our current priorities include the development of energy strategies, in accordance with the German Federal Government’s greenhouse gas reduction targets, by designing new infrastructures for sustainable and secure energy supply chains and by conducting cost analysis studies for integrating new technologies into future energy market frameworks.

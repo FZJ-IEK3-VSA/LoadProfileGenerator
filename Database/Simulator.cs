@@ -527,7 +527,7 @@ namespace Database {
                     ignoreMissingTables), TimeLimits),
                 new LoadingEntry("Geographic Locations",
                 () => GeographicLocation.LoadFromDatabase(GeographicLocations.Items, ConnectionString,
-                    Holidays.Items, TimeLimits.Items, ignoreMissingTables), GeographicLocations),
+                    Holidays.Items, TimeLimits.Items, DateBasedProfiles.Items, ignoreMissingTables), GeographicLocations),
                 new LoadingEntry("Subaffordances",
                 () => SubAffordance.LoadFromDatabase(SubAffordances.Items, ConnectionString, Desires.Items,
                     ignoreMissingTables, Locations.Items, Variables.Items), SubAffordances),

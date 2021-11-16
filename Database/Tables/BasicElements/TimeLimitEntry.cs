@@ -1013,20 +1013,29 @@ namespace Database.Tables.BasicElements {
             return true;
         }
 
+        /// <summary>
+        /// Sets the BitArray to true whenever the current solar radiation, taken from a radiation profile, is below the
+        /// solar radiation threshold of the geographic location.
+        /// </summary>
+        /// <param name="stepsize">Time span of one step</param>
+        /// <param name="startDateTime">Start time of the simulation</param>
+        /// <param name="endDateTime">End time of the simulation</param>
+        /// <param name="geoloc">Geographic location that determines the lighting conditions</param>
+        /// <param name="totalsteps">Number of simulation steps</param>
+        /// <param name="br">The BitArray to be filled</param>
+        /// <returns>True if the calculation was successful, otherwhise false</returns>
         private bool SetLightControlled(TimeSpan stepsize, DateTime startDateTime, DateTime endDateTime,
             [JetBrains.Annotations.NotNull] GeographicLocation geoloc, int totalsteps, [ItemNotNull] [JetBrains.Annotations.NotNull] BitArray br)
         {
-            var st = new SunriseTimes(geoloc);
-            var sunlightarr = st.MakeArray(totalsteps, startDateTime, endDateTime, stepsize);
-            for (var i = 0; i < totalsteps; i++) {
-                if (_needsLight) {
-                    br[i] = sunlightarr[i];
-                }
-                else {
-                    br[i] = !sunlightarr[i];
+            if (geoloc.SolarRadiationProfile != null)
+            {
+                var valueArray = geoloc.SolarRadiationProfile.GetValueArray(startDateTime, endDateTime, stepsize);
+                for (var i = 0; i < totalsteps; i++)
+                {
+                    bool daylight = valueArray[i] > geoloc.RadiationThresholdForLight;
+                    br[i] = daylight == _needsLight;
                 }
             }
-
             return true;
         }
 

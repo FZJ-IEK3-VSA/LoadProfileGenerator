@@ -74,7 +74,7 @@ namespace Database.Tests.Tables {
                     true, true, true, 1, 1, 1, 1, 1, 1, 1, true, false, AnyAllTimeLimitCondition.Any, start, end,
                     dateBasedProfile.ID, 150, 50, false, false, true, false, 5, false, dateBasedProfiles, 0, 0, 0);
                 dateBasedProfiles.Add(dateBasedProfile);
-                var geoloc = new GeographicLocation(db.ConnectionString, null, Guid.NewGuid().ToStrGuid());
+                var geoloc = new GeographicLocation(db.ConnectionString, null, null, Guid.NewGuid().ToStrGuid());
                 var r = new Random();
                 var vacationTimeFrames = new List<VacationTimeframe>();
                 var br = dt.TimeLimitEntries[0].GetOneYearHourArray(temp, geoloc, r, vacationTimeFrames, "test",
@@ -95,6 +95,9 @@ namespace Database.Tests.Tables {
             }
         }
 
+        /// <summary>
+        /// Tests if the or-combination of a timelimit that needs light and one that needs darkness is always true
+        /// </summary>
         [Fact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void TimeLimitArrayTestlightControlledTest()
@@ -120,7 +123,13 @@ namespace Database.Tests.Tables {
                 dt.AddTimeLimitEntry(dtbe, start, end, PermissionMode.LightControlled, 1, 1, true, true, true, true, true,
                     true, true, 1, 1, 1, 1, 1, 1, 1, false, true, AnyAllTimeLimitCondition.Any, start, end, -1, 0, 0, false,
                     false, false, false, 5, false, dateBasedProfiles, 0, 0, 0);
-                var geoloc = new GeographicLocation(db.ConnectionString, null, Guid.NewGuid().ToStrGuid());
+                // create an arbitrary radiation profile; the values should not matter as the two opposite timelimits should cancel themselves out anyways
+                var radiationProfile = new DateBasedProfile("TestRadiationProfile", "Random solar radiation profile for testing", db.ConnectionString, Guid.NewGuid().ToStrGuid(), -1);
+                radiationProfile.AddNewDatePoint(start, 0, false);
+                radiationProfile.AddNewDatePoint(start + (end - start) / 2, 100, false);
+                radiationProfile.AddNewDatePoint(end, 0, false);
+                // create a new location with default radiation threshold of 50
+                var geoloc = new GeographicLocation(db.ConnectionString, null, radiationProfile, Guid.NewGuid().ToStrGuid());
                 var r = new Random();
                 var vacations = new List<VacationTimeframe>();
                 var br = dt.TimeLimitEntries[0].GetOneYearHourArray(temp, geoloc, r, vacations, "test", out _);
@@ -150,7 +159,7 @@ namespace Database.Tests.Tables {
             dt.AddTimeLimitEntry(null, start, end, PermissionMode.Temperature, 1, 1, true, true, true, true, true, true,
                 true, 1, 1, 1, 1, 1, -10, 5, true, false, AnyAllTimeLimitCondition.Any, start, end, -1, 0, 0, false,
                 false, false, false, 5, false, dateBasedProfiles, 0, 0, 0, false);
-            var geoloc = new GeographicLocation(string.Empty, null, Guid.NewGuid().ToStrGuid());
+            var geoloc = new GeographicLocation(string.Empty, null, null, Guid.NewGuid().ToStrGuid());
             var r = new Random();
             var hhVacations = new List<VacationTimeframe>();
             var br = dt.TimeLimitEntries[0].GetOneYearHourArray(temp, geoloc, r, hhVacations, "test",

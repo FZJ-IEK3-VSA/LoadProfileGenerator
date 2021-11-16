@@ -413,12 +413,13 @@ namespace Database.Tests
         [ItemNotNull]
         public ObservableCollection<GeographicLocation> LoadGeographicLocations(
            [JetBrains.Annotations.NotNull][ItemNotNull] out ObservableCollection<Holiday> holidays,
-           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<TimeLimit> timeLimits)
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<TimeLimit> timeLimits,
+           [JetBrains.Annotations.NotNull][ItemNotNull] ObservableCollection<DateBasedProfile> dateBasedProfiles)
         {
             var geographicLocations =
                 new ObservableCollection<GeographicLocation>();
             holidays = LoadHolidays();
-            GeographicLocation.LoadFromDatabase(geographicLocations, ConnectionString, holidays, timeLimits, false);
+            GeographicLocation.LoadFromDatabase(geographicLocations, ConnectionString, holidays, timeLimits, dateBasedProfiles, false);
             return geographicLocations;
         }
 
@@ -471,8 +472,7 @@ namespace Database.Tests
             modularHouseholds = LoadModularHouseholds(traits, deviceSelections, persons, vacations, hhtags, traitTags, lptags);
             var temperaturProfiles = LoadTemperatureProfiles();
 
-            var geographicLocations = LoadGeographicLocations(out _,
-                timeLimits);
+            var geographicLocations = LoadGeographicLocations(out _, timeLimits, dateBasedProfiles);
             var energyStorages = LoadEnergyStorages(loadTypes,variables);
             var transformationDevices = LoadTransformationDevices(loadTypes,
                 variables);

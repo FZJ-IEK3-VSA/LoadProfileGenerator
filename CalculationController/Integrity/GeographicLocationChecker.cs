@@ -15,7 +15,12 @@ namespace CalculationController.Integrity {
                 }
                 if (geoloc.LightTimeLimit.RootEntry == null)
                 {
-                    throw new DataIntegrityException("The TimeLimit of geographic location " + geoloc.Name + " has no root entry.");
+                    throw new DataIntegrityException("The TimeLimit of the Geographic Location " + geoloc.Name + " has no root entry.");
+                }
+                if (geoloc.SolarRadiationProfile == null)
+                {
+                    throw new DataIntegrityException("The Geographic Location " + geoloc.Name + " has no solar radiation profile assigned, which is " +
+                        "necessary to simulate daylight-dependend activities.", geoloc);
                 }
             }
         }
