@@ -26,6 +26,8 @@
 
 //-----------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Automation;
 using CalculationController.DtoFactories;
@@ -74,6 +76,9 @@ namespace Database.Tests.Tables {
             }
         }
 
+        /// <summary>
+        /// Tests for all geographic locations if daylight calculation with the solar radiation profile works.
+        /// </summary>
         [Fact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void GeographicLocationTypoTest()
@@ -82,12 +87,35 @@ namespace Database.Tests.Tables {
             {
                 Simulator sim = new Simulator(db.ConnectionString);
                 var pars = CalcParametersFactory.MakeGoodDefaults();
+                // use a simple time limit which only depends on daylight
+                var timelimitNight = sim.TimeLimits.FindFirstByName("At Night");
+                var r = new Random();
+                var vacations = new List<VacationTimeframe>();
                 foreach (GeographicLocation location in sim.GeographicLocations.Items)
                 {
                     Logger.Info("Calculating " + location.PrettyName);
-                    //SunriseTimes st = new SunriseTimes(location);
-                    //st.MakeArray(pars.InternalTimesteps, pars.InternalStartTime, pars.InternalEndTime,
-                    //    pars.InternalStepsize);
+                    var ba = timelimitNight.TimeLimitEntries[0].GetOneYearHourArray(null, location, r, vacations, "test", out _);
+                    // test if both light conditions (light and darkness) occur at least once throughout the year
+                    bool light = false;
+                    bool noLight = false;
+                    foreach (bool b in ba)
+                    {
+                        if (b)
+                        {
+                            noLight = true;
+                            break;
+                        }
+                    }
+                    noLight.Should().BeTrue();
+                    foreach (bool b in ba)
+                    {
+                        if (!b)
+                        {
+                            light = true;
+                            break;
+                        }
+                    }
+                    light.Should().BeTrue();
                 }
                 db.Cleanup();
             }
