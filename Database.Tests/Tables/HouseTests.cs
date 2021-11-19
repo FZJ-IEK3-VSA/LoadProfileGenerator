@@ -70,7 +70,7 @@ namespace Database.Tests.Tables {
                     out var devices, out _, out var loadTypes, out var timeLimits, out var deviceActions, 
                     out var deviceActionGroups, out var locations, out var variables, out var dateprofiles);
                 var affordanceTaggingSets = db.LoadAffordanceTaggingSets(affordances, loadTypes);
-                var geoLocs = db.LoadGeographicLocations(out _, timeLimits);
+                var geoLocs = db.LoadGeographicLocations(out _, timeLimits, dateprofiles);
                 var energyStorages = db.LoadEnergyStorages(loadTypes, variables);
                 var trafoDevices = db.LoadTransformationDevices(loadTypes,
                     variables);
@@ -117,7 +117,7 @@ namespace Database.Tests.Tables {
                     out var devices, out _, out var loadTypes, out var timeLimits, out var deviceActions,
                     out var deviceActionGroups, out var locations, out var variables, out var dateprofiles);
                 var affordanceTaggingSets = db.LoadAffordanceTaggingSets(affordances, loadTypes);
-                var geoLocs = db.LoadGeographicLocations(out _, timeLimits);
+                var geoLocs = db.LoadGeographicLocations(out _, timeLimits, dateprofiles);
                 var energyStorages = db.LoadEnergyStorages(loadTypes, variables);
                 var trafoDevices = db.LoadTransformationDevices(loadTypes,
                     variables);

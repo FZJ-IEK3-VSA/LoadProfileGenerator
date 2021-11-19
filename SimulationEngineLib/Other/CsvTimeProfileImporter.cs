@@ -58,6 +58,18 @@ namespace SimulationEngineLib.Other {
 
             Logger.Info("Importing " + ci.Entries.Count + " datapoints...");
             var dbp = sim.DateBasedProfiles.CreateNewItem(sim.ConnectionString);
+            // if a valid name for the DateBasedProfile was passed, assign it to the new object
+            if (!string.IsNullOrWhiteSpace(calcDirectoryOptions.Name))
+            {
+                var name = calcDirectoryOptions.Name;
+                // check if the specified name is already taken
+                if (sim.DateBasedProfiles.IsNameTaken(name))
+                {
+                    // get an unoccupied name by appending a number
+                    name = DateBasedProfile.FindNewName(sim.DateBasedProfiles.IsNameTaken, name + " ");
+                }
+                dbp.Name = name;
+            }
             for (var i = 0; i < ci.Entries.Count; i++)
             {
                 var ce = ci.Entries[i];

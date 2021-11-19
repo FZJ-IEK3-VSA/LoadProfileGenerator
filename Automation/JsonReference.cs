@@ -25,7 +25,7 @@ namespace Automation {
                 case JTokenType.String:
                      // if the json only contains a string, then use this as the name and leave the Guid blank
                     string? name = (string?) token;
-                    return new JsonReference(name, StrGuid.Empty);
+                    return new JsonReference(name!, StrGuid.Empty);
                 default:
                     JsonReference? jsonReference = new JsonReference();
                     serializer.Populate(token.CreateReader(), jsonReference);

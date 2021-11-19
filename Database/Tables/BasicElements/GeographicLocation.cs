@@ -45,84 +45,38 @@ namespace Database.Tables.BasicElements {
         [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly ObservableCollection<GeographicLocHoliday> _holidays =
             new ObservableCollection<GeographicLocHoliday>();
 
-        private CalcSunriseTimes.LatitudeCoords.Direction _latDirection;
-        private int _latHour;
-        private int _latMinute;
-        private int _latSecond;
-
         [CanBeNull] private TimeLimit _lightTimeLimit;
+        [CanBeNull] private DateBasedProfile _solarRadiationProfile;
+        private double _radiationThresholdForLight;
 
-        private CalcSunriseTimes.LongitudeCoords.Direction _longDirection;
-        private int _longHour;
-        private int _longMinute;
-        private int _longSecond;
+        /// <summary>
+        /// The default value for the solar radiation threshold used for lighting simulation.
+        /// A value of 50 is usually sensible for solar radiation profiles in W/m^2.
+        /// This value is used e.g. for new geographic locations.
+        /// </summary>
+        private const double DefaultRadiationThreshold = 50;
 
-        public GeographicLocation([JetBrains.Annotations.NotNull] string connectionString, [CanBeNull] TimeLimit lightTimeLimit, [JetBrains.Annotations.NotNull] StrGuid guid) : base("Chemnitz",
-            TableName, connectionString, guid) {
+        public GeographicLocation([JetBrains.Annotations.NotNull] string connectionString, [CanBeNull] TimeLimit lightTimeLimit, [CanBeNull] DateBasedProfile solarRadiationProfile, 
+            [JetBrains.Annotations.NotNull] StrGuid guid) : base("Chemnitz", TableName, connectionString, guid) {
             _lightTimeLimit = lightTimeLimit;
+            _solarRadiationProfile = solarRadiationProfile;
+            _radiationThresholdForLight = DefaultRadiationThreshold;
             // dummy loc for unit tests
-            _latDirection = CalcSunriseTimes.LatitudeCoords.Direction.North;
-            _latHour = 50;
-            _latMinute = 49;
-            _latSecond = 21;
-
-            _longDirection = CalcSunriseTimes.LongitudeCoords.Direction.East;
-            _longHour = 12;
-            _longMinute = 56;
-            _longSecond = 16;
             TypeDescription = "Geographic Location";
         }
 
-        public GeographicLocation([JetBrains.Annotations.NotNull] string name, int slathour, int slatMinute, int slatSecond, int slongHour,
-            int slongMinute, int slongSecond, [JetBrains.Annotations.NotNull] string slongDir, [JetBrains.Annotations.NotNull] string slatDir, [JetBrains.Annotations.NotNull] string connectionString,
-            [CanBeNull] TimeLimit lightTimeLimit,[JetBrains.Annotations.NotNull] StrGuid guid,[CanBeNull] int? id = null) : base(name, id, TableName, connectionString, guid) {
-            _latHour = slathour;
-            _latMinute = slatMinute;
-            _latSecond = slatSecond;
-            _longHour = slongHour;
-            _longMinute = slongMinute;
-            _longSecond = slongSecond;
+        public GeographicLocation([JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] string connectionString, [CanBeNull] TimeLimit lightTimeLimit, 
+            DateBasedProfile radiationProfile, double radiationLimitForLight, [JetBrains.Annotations.NotNull] StrGuid guid,[CanBeNull] int? id = null) : base(
+                name, id, TableName, connectionString, guid) {
             _lightTimeLimit = lightTimeLimit;
+            _solarRadiationProfile = radiationProfile;
+            _radiationThresholdForLight = radiationLimitForLight;
             TypeDescription = "Geographic Location";
-            if (slatDir.ToUpperInvariant().Trim() == "NORTH") {
-                LatDirectionEnum = CalcSunriseTimes.LatitudeCoords.Direction.North;
-            }
-            else {
-                LatDirectionEnum = CalcSunriseTimes.LatitudeCoords.Direction.South;
-            }
-            if (slongDir.ToUpperInvariant().Trim() == "EAST") {
-                _longDirection = CalcSunriseTimes.LongitudeCoords.Direction.East;
-            }
-            else {
-                _longDirection = CalcSunriseTimes.LongitudeCoords.Direction.West;
-            }
         }
 
         [JetBrains.Annotations.NotNull]
         [ItemNotNull]
         public ObservableCollection<GeographicLocHoliday> Holidays => _holidays;
-
-        [JetBrains.Annotations.NotNull]
-        [UsedImplicitly]
-        public string LatDirection {
-            get => LatDirectionEnum.ToString();
-            set {
-                switch (value.ToUpperInvariant().Trim()) {
-                    case "NORTH":
-                        LatDirectionEnum = CalcSunriseTimes.LatitudeCoords.Direction.North;
-                        break;
-                    case "SOUTH":
-                        LatDirectionEnum = CalcSunriseTimes.LatitudeCoords.Direction.South;
-                        break;
-                    default:
-                        Logger.Error("Try either north or south as latitude direction.");
-                        LatDirectionEnum = CalcSunriseTimes.LatitudeCoords.Direction.North;
-                        break;
-                }
-                OnPropertyChanged(nameof(LatDirection));
-                NeedsUpdate = true;
-            }
-        }
 
         public override void SaveToDB()
         {
@@ -132,29 +86,6 @@ namespace Database.Tables.BasicElements {
                 holiday.SaveToDB();
             }
         }
-        [UsedImplicitly]
-        public CalcSunriseTimes.LatitudeCoords.Direction LatDirectionEnum {
-            get => _latDirection;
-            set => SetValueWithNotify(value, ref _latDirection, nameof(LatDirectionEnum));
-        }
-
-        [UsedImplicitly]
-        public int LatHour {
-            get => _latHour;
-            set => SetValueWithNotify(value, ref _latHour, nameof(LatHour));
-        }
-
-        [UsedImplicitly]
-        public int LatMinute {
-            get => _latMinute;
-            set => SetValueWithNotify(value, ref _latMinute, nameof(LatMinute));
-        }
-
-        [UsedImplicitly]
-        public int LatSecond {
-            get => _latSecond;
-            set => SetValueWithNotify(value, ref _latSecond, nameof(LatSecond));
-        }
 
         [CanBeNull]
         [UsedImplicitly]
@@ -163,48 +94,27 @@ namespace Database.Tables.BasicElements {
             set => SetValueWithNotify(value, ref _lightTimeLimit, false, nameof(LightTimeLimit));
         }
 
-        [JetBrains.Annotations.NotNull]
+        /// <summary>
+        /// The solar radiation profile for this geographic location that is used to simulate lighting
+        /// </summary>
+        [CanBeNull]
         [UsedImplicitly]
-        public string LongDirection {
-            get => LongDirectionEnum.ToString();
-            set {
-                switch (value.ToUpperInvariant().Trim()) {
-                    case "EAST":
-                        _longDirection = CalcSunriseTimes.LongitudeCoords.Direction.East;
-                        break;
-                    case "WEST":
-                        _longDirection = CalcSunriseTimes.LongitudeCoords.Direction.West;
-                        break;
-                    default:
-                        Logger.Error("Longitude direction \"" + value + "\" is not recognized. Try east or west");
-                        break;
-                }
-                OnPropertyChanged(nameof(LongDirection));
-                NeedsUpdate = true;
-            }
+        public DateBasedProfile SolarRadiationProfile
+        {
+            get => _solarRadiationProfile;
+            set => SetValueWithNotify(value, ref _solarRadiationProfile, false, nameof(SolarRadiationProfile));
         }
 
-        public CalcSunriseTimes.LongitudeCoords.Direction LongDirectionEnum => _longDirection;
-
-        [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "long")]
+        /// <summary>
+        /// The threshold that is used together with the solar radiation profile to simulate lighting.
+        /// When the solar radiation is below this threshold, lighting is switched on.
+        /// </summary>
+        [CanBeNull]
         [UsedImplicitly]
-        public int LongHour {
-            get => _longHour;
-            set => SetValueWithNotify(value, ref _longHour, nameof(LongHour));
-        }
-
-        [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "long")]
-        [UsedImplicitly]
-        public int LongMinute {
-            get => _longMinute;
-            set => SetValueWithNotify(value, ref _longMinute, nameof(LongMinute));
-        }
-
-        [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "long")]
-        [UsedImplicitly]
-        public int LongSecond {
-            get => _longSecond;
-            set => SetValueWithNotify(value, ref _longSecond, nameof(LongSecond));
+        public double RadiationThresholdForLight
+        {
+            get => _radiationThresholdForLight;
+            set => SetValueWithNotify(value, ref _radiationThresholdForLight, nameof(RadiationThresholdForLight));
         }
 
         public void AddHoliday([JetBrains.Annotations.NotNull] Holiday hd) {
@@ -221,22 +131,16 @@ namespace Database.Tables.BasicElements {
             [JetBrains.Annotations.NotNull] AllItemCollections aic) {
             var name = dr.GetString("Name");
             var id = dr.GetIntFromLong("ID");
-            var lathour = dr.GetIntFromLong("LatHour");
-            var latMinute = dr.GetIntFromLong("LatMinute");
-            var latSecond = dr.GetIntFromLong("LatSecond");
-            var longHour = dr.GetIntFromLong("LongHour");
-            var longMinute = dr.GetIntFromLong("LongMinute");
-            var longSecond = dr.GetIntFromLong("LongSecond");
-            var longDir = dr.GetString("LongDir");
-            var latDir = dr.GetString("LatDir");
             var lightTimeLimitID = dr.GetIntFromLong("LightTimeLimitID", false, ignoreMissingFields, -1);
             if (lightTimeLimitID == -1 && ignoreMissingFields) {
                 lightTimeLimitID = dr.GetIntFromLong("LightDeviceTimeID", false, ignoreMissingFields, -1);
             }
             var dt = aic.TimeLimits.FirstOrDefault(mydt => mydt.ID == lightTimeLimitID);
+            var solarRadiationProfileID = dr.GetIntFromLong("SolarRadiationProfileID", false, ignoreMissingFields, -1);
+            var solarRadiationProfile = aic.DateBasedProfiles.FirstOrDefault(profile => profile.ID == solarRadiationProfileID);
+            var radiationThresholdForLight = dr.GetDouble("RadiationThresholdForLight", false, DefaultRadiationThreshold, ignoreMissingFields);
             var guid = GetGuid(dr, ignoreMissingFields);
-            return new GeographicLocation(name, lathour, latMinute, latSecond, longHour, longMinute, longSecond,
-                longDir, latDir, connectionString, dt,guid, id);
+            return new GeographicLocation(name, connectionString, dt, solarRadiationProfile, radiationThresholdForLight, guid, id);
         }
 
         [JetBrains.Annotations.NotNull]
@@ -256,9 +160,7 @@ namespace Database.Tables.BasicElements {
         [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString) {
-            var geoloc = new GeographicLocation(FindNewName(isNameTaken, "New Geographic Location "), 1,
-                1, 1, 1, 1, 1,
-                "East", "North", connectionString,null,System.Guid.NewGuid().ToStrGuid());
+            var geoloc = new GeographicLocation(FindNewName(isNameTaken, "New Geographic Location "), connectionString, null, null, DefaultRadiationThreshold, System.Guid.NewGuid().ToStrGuid());
             return geoloc;
         }
 
@@ -296,9 +198,12 @@ namespace Database.Tables.BasicElements {
             if (toImport.LightTimeLimit != null) {
                 dt = GetItemFromListByName(dstSim.TimeLimits.Items, toImport.LightTimeLimit.Name);
             }
-            var geoloc = new GeographicLocation(toImport.Name, toImport._latHour, toImport.LatMinute,
-                toImport.LatSecond, toImport.LongHour, toImport.LongMinute, toImport.LongSecond, toImport.LongDirection,
-                toImport.LatDirection,dstSim.ConnectionString, dt, toImport.Guid);
+            DateBasedProfile solarRadiationProfile = null;
+            if (toImport.SolarRadiationProfile != null)
+            {
+                solarRadiationProfile = GetItemFromListByName(dstSim.DateBasedProfiles.Items, toImport.SolarRadiationProfile.Name);
+            }
+            var geoloc = new GeographicLocation(toImport.Name, dstSim.ConnectionString, dt, solarRadiationProfile, toImport.RadiationThresholdForLight, toImport.Guid);
             geoloc.SaveToDB();
             foreach (var geographicLocHoliday in toImport.Holidays) {
                 var holiday = GetItemFromListByName(dstSim.Holidays.Items, geographicLocHoliday.Holiday.Name);
@@ -332,8 +237,9 @@ namespace Database.Tables.BasicElements {
 
         public static void LoadFromDatabase([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<GeographicLocation> result, [JetBrains.Annotations.NotNull] string connectionString,
             [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<Holiday> holidays, [ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<TimeLimit> timeLimits,
-            bool ignoreMissingTables) {
-            var aic = new AllItemCollections(timeLimits: timeLimits);
+            [ItemNotNull][JetBrains.Annotations.NotNull] ObservableCollection<DateBasedProfile> dateBasedProfiles, bool ignoreMissingTables)
+        {
+            var aic = new AllItemCollections(timeLimits: timeLimits, dateBasedProfiles: dateBasedProfiles);
             LoadAllFromDatabase(result, connectionString, TableName, AssignFields, aic, ignoreMissingTables, true);
             var geoholi = new ObservableCollection<GeographicLocHoliday>();
             GeographicLocHoliday.LoadFromDatabase(geoholi, connectionString, holidays, ignoreMissingTables);
@@ -342,19 +248,15 @@ namespace Database.Tables.BasicElements {
 
         protected override void SetSqlParameters(Command cmd) {
             cmd.AddParameter("Name", "@myname", Name);
-            cmd.AddParameter("LatHour", _latHour);
-            cmd.AddParameter("latMinute", _latMinute);
-            cmd.AddParameter("latSecond", _latSecond);
 
-            cmd.AddParameter("longHour", _longHour);
-            cmd.AddParameter("longMinute", _longMinute);
-            cmd.AddParameter("longSecond", _longSecond);
-
-            cmd.AddParameter("longDir", LongDirectionEnum.ToString());
-            cmd.AddParameter("latDir", LatDirectionEnum.ToString());
             if (_lightTimeLimit != null) {
                 cmd.AddParameter("LightTimeLimitID", _lightTimeLimit.IntID);
             }
+            if (_solarRadiationProfile != null)
+            {
+                cmd.AddParameter("SolarRadiationProfileID", _solarRadiationProfile.IntID);
+            }
+            cmd.AddParameter("RadiationThresholdForLight", _radiationThresholdForLight);
         }
 
         public override DBBase ImportFromGenericItem(DBBase toImport, Simulator dstSim)

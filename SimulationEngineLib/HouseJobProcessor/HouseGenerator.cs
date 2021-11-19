@@ -493,7 +493,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
                     throw new LPGPBadParameterException("Could not find charging station set: " + householdData.ChargingStationSet?.ToString());
                 }
                 var travelrouteset = sim.TravelRouteSets.FindByJsonReference(householdData.TravelRouteSet);
-                if (travelrouteset == null)
+                if (hj.CalcSpec.EnableTransportation && travelrouteset == null)
                 {
                     // Alternative transport specification: for each person transportation preferences can be specified. These are used
                     // to create a new TravelRouteSet.
@@ -546,12 +546,18 @@ namespace SimulationEngineLib.HouseJobProcessor {
         /// <returns>A new TravelRouteSet that contains all required routes.</returns>
         private static TravelRouteSet CreateTravelRouteSetFromPersonPreferences(HouseholdData householdData, Simulator sim)
         {
+            // find the home site of this household because it has a special role when using transportation preferences of persons
+            Site home = sim.Sites.FindFirstByName("Home", FindMode.IgnoreCase);
+            if (home == null || householdData.HouseholdDataPersonSpec == null)
+            {
+                // no "home" site or no persons available to calculate a travel route set
+                return null;
+            }
+            // create a new empty travel route set
             var name = "Generated TravelRouteSet " + "(" + householdData.Name + ")";
             var description = "This TravelRouteSet was generated using the transportation device preferences of all persons in this household.";
             var travelRouteSet = new TravelRouteSet(name, null, sim.ConnectionString, description, Guid.NewGuid().ToStrGuid(), null);
             travelRouteSet.SaveToDB();
-            // find the home site of this household because it has a special role when using transportation preferences of persons
-            Site home = sim.Sites.FindFirstByNameNotNull("Home", FindMode.IgnoreCase);
             foreach (PersonData person in householdData.HouseholdDataPersonSpec.Persons)
             {
                 CreateTravelRoutesForPerson(person, home, travelRouteSet, sim);

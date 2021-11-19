@@ -26,6 +26,8 @@
 
 //-----------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Automation;
 using CalculationController.DtoFactories;
@@ -54,26 +56,29 @@ namespace Database.Tests.Tables {
                 var geolocs = new ObservableCollection<GeographicLocation>();
                 var dbp = db.LoadDateBasedProfiles();
                 var timeLimits = db.LoadTimeLimits(dbp);
-                GeographicLocation.LoadFromDatabase(geolocs, db.ConnectionString, holidays, timeLimits, false);
+                var dateBasedProfiles = db.LoadDateBasedProfiles();
+                GeographicLocation.LoadFromDatabase(geolocs, db.ConnectionString, holidays, timeLimits, dateBasedProfiles, false);
                 (geolocs.Count).Should().Be(0);
-                var geoloc = new GeographicLocation("bla", 1, 2, 3, 4, 5, 6, "North", "West",
-                    db.ConnectionString, timeLimits[0], System.Guid.NewGuid().ToStrGuid());
+                var geoloc = new GeographicLocation("bla", db.ConnectionString, timeLimits[0], dbp[0], 50, System.Guid.NewGuid().ToStrGuid());
                 geoloc.SaveToDB();
                 geoloc.AddHoliday(holidays[0]);
-                GeographicLocation.LoadFromDatabase(geolocs, db.ConnectionString, holidays, timeLimits, false);
+                GeographicLocation.LoadFromDatabase(geolocs, db.ConnectionString, holidays, timeLimits, dateBasedProfiles, false);
                 (geolocs.Count).Should().Be(1);
                 (geolocs[0].Holidays.Count).Should().Be(1);
                 var gl = geolocs[0];
                 ("bla").Should().Be(gl.Name);
                 gl.DeleteFromDB();
                 geolocs.Clear();
-                GeographicLocation.LoadFromDatabase(geolocs, db.ConnectionString, holidays, timeLimits, false);
+                GeographicLocation.LoadFromDatabase(geolocs, db.ConnectionString, holidays, timeLimits, dateBasedProfiles, false);
                 (geolocs.Count).Should().Be(0);
 
                 db.Cleanup();
             }
         }
 
+        /// <summary>
+        /// Tests for all geographic locations if daylight calculation with the solar radiation profile works.
+        /// </summary>
         [Fact]
         [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
         public void GeographicLocationTypoTest()
@@ -82,12 +87,35 @@ namespace Database.Tests.Tables {
             {
                 Simulator sim = new Simulator(db.ConnectionString);
                 var pars = CalcParametersFactory.MakeGoodDefaults();
+                // use a simple time limit which only depends on daylight
+                var timelimitNight = sim.TimeLimits.FindFirstByName("At Night");
+                var r = new Random();
+                var vacations = new List<VacationTimeframe>();
                 foreach (GeographicLocation location in sim.GeographicLocations.Items)
                 {
                     Logger.Info("Calculating " + location.PrettyName);
-                    SunriseTimes st = new SunriseTimes(location);
-                    st.MakeArray(pars.InternalTimesteps, pars.InternalStartTime, pars.InternalEndTime,
-                        pars.InternalStepsize);
+                    var ba = timelimitNight.TimeLimitEntries[0].GetOneYearHourArray(null, location, r, vacations, "test", out _);
+                    // test if both light conditions (light and darkness) occur at least once throughout the year
+                    bool light = false;
+                    bool noLight = false;
+                    foreach (bool b in ba)
+                    {
+                        if (b)
+                        {
+                            noLight = true;
+                            break;
+                        }
+                    }
+                    noLight.Should().BeTrue();
+                    foreach (bool b in ba)
+                    {
+                        if (!b)
+                        {
+                            light = true;
+                            break;
+                        }
+                    }
+                    light.Should().BeTrue();
                 }
                 db.Cleanup();
             }

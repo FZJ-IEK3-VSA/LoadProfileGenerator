@@ -58,7 +58,7 @@ namespace Database.Tests.Tables {
                 var dateBasedProfiles = db.LoadDateBasedProfiles();
                 TimeLimit.LoadFromDatabase(timeLimits, dateBasedProfiles, db.ConnectionString, false);
                 var geographicLocations = db.LoadGeographicLocations(out _,
-                    timeLimits);
+                    timeLimits, dateBasedProfiles);
                 (timeLimits.Count).Should().Be(0);
                 var dt = new TimeLimit("hey", db.ConnectionString, Guid.NewGuid().ToStrGuid());
                 dt.SaveToDB();
@@ -105,7 +105,7 @@ namespace Database.Tests.Tables {
                 var dateBasedProfiles = db.LoadDateBasedProfiles();
                 TimeLimit.LoadFromDatabase(timeLimits, dateBasedProfiles, db.ConnectionString, false);
                 var geographicLocations = db.LoadGeographicLocations(out var holidays,
-                    timeLimits);
+                    timeLimits, dateBasedProfiles);
                 (timeLimits.Count).Should().Be(0);
                 var startTime = new DateTime(1900, 1, 1, 6, 0, 0);
                 var endTime = new DateTime(1900, 1, 1, 10, 0, 0);

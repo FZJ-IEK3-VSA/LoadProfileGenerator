@@ -9,13 +9,17 @@ namespace SimulationEngineLib
 {
     public static class MainSimEngine
     {
-
+        /// <summary>
+        /// Checks if the profilegenerator.db3 file exists in the current directory, and returns the appropriate connection string.
+        /// Throws an exception if the database cannot be found.
+        /// </summary>
+        /// <returns>The connection string for the database</returns>
         [NotNull]
-        private static string GetConnectionString()
+        public static string GetConnectionString()
         {
             if (!File.Exists("profilegenerator.db3"))
             {
-                Logger.Error("The current directory is:" + Directory.GetCurrentDirectory());
+                Logger.Error("The current directory is: " + Directory.GetCurrentDirectory());
                 Logger.Error("The profilegenerator.db3 needs to be in the same directory.");
                 throw new LPGException("Missing profilegenerator.db3");
             }
@@ -23,9 +27,8 @@ namespace SimulationEngineLib
             return "Data Source=profilegenerator.db3";
         }
 
-        public static void RunOptionProcessing([NotNull] string connectionString, [ItemNotNull][NotNull] string[] args, string exename)
+        public static void RunOptionProcessing([ItemNotNull][NotNull] string[] args, string exename)
         {
-            CommandProcessor.ConnectionString = connectionString;
             Config.IsInHeadless = true;
             var definition = new CommandLineArgumentsDefinition(typeof(CommandProcessor))
             {
@@ -66,7 +69,7 @@ namespace SimulationEngineLib
                 //                Logger.LogToFile = true;
                 //              Logger.LogFileIndex = MakeRandomAlphaNumericCodeForLogfile();
                 //            Logger.Threshold = Severity.Information;
-                RunOptionProcessing(GetConnectionString(), args, exename);
+                RunOptionProcessing(args, exename);
             }
 
             if (!Config.CatchErrors)

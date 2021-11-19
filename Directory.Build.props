@@ -1,6 +1,6 @@
 <Project>
 <PropertyGroup>
- <AssemblyVersion>10.6.0.70</AssemblyVersion>
-    <FileVersion>10.6.0.70</FileVersion>
+ <AssemblyVersion>10.7.0.5</AssemblyVersion>
+    <FileVersion>10.7.0.5</FileVersion>
   </PropertyGroup>
   </Project>

@@ -73,7 +73,7 @@ namespace LoadProfileGenerator.Controls.Usercontrols {
                 new PermissionTuple(PermissionMode.Yearly, "Yearly"),
                 new PermissionTuple(PermissionMode.EveryDateRange, "In a certain date range"),
                 new PermissionTuple(PermissionMode.Temperature, "at certain temperatures"),
-                new PermissionTuple(PermissionMode.LightControlled, "At certain light conditions"),
+                new PermissionTuple(PermissionMode.LightControlled, "At certain light conditions (depends on Geographic Location)"),
                 new PermissionTuple(PermissionMode.ControlledByDateProfile,
                     "At values from a date based profile"),
                 new PermissionTuple(PermissionMode.VacationControlled, "vacation controlled"),
