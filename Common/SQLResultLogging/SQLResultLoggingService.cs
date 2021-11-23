@@ -427,7 +427,7 @@ namespace Common.SQLResultLogging {
             }
 
             if (fi.FullName.Length > 260) {
-                throw new LPGException("Filename length > 260. This is a Windows limitation.");
+                throw new LPGException("Filename length > 260. This is a Windows limitation: " + fi.FullName);
             }
 
             if (fi.Directory?.Exists != true) {
