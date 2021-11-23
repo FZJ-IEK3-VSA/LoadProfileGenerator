@@ -156,7 +156,7 @@ namespace LoadProfileGenerator.Views.Transportation {
         [NotNull]
         [UsedImplicitly]
         public DataTable ConnectionCountTable {
-            get => _connectionCountTable??throw new LPGException("ConnectionCountTable was null");
+            get => _connectionCountTable;
             set {
                 if (Equals(value, _connectionCountTable)) {
                     return;
@@ -170,7 +170,7 @@ namespace LoadProfileGenerator.Views.Transportation {
         [NotNull]
         [UsedImplicitly]
         public DataTable DistanceTable {
-            get => _distanceTable ?? throw new LPGException("ConnectionCountTable was null");
+            get => _distanceTable;
             set {
                 if (Equals(value, _distanceTable)) {
                     return;

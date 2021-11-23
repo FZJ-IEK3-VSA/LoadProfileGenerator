@@ -118,7 +118,6 @@ namespace Database.Tables.Transportation {
             var affordanceTaggingSet = GetItemFromListByName(dstSim.AffordanceTaggingSets.Items,
                 toImport.AffordanceTaggingSet?.Name);
             var loc = new TravelRouteSet(toImport.Name, null,dstSim.ConnectionString, toImport.Description, toImport.Guid, affordanceTaggingSet);
-            dstSim.TravelRouteSets.Items.Add(loc);
             loc.SaveToDB();
             foreach (var routeEntry in toImport.TravelRoutes) {
                 var dstroute = GetItemFromListByName(dstSim.TravelRoutes.Items,
