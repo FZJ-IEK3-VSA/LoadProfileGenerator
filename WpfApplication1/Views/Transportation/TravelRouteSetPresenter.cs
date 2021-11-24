@@ -170,7 +170,7 @@ namespace LoadProfileGenerator.Views.Transportation {
         [NotNull]
         [UsedImplicitly]
         public DataTable DistanceTable {
-            get => _distanceTable;
+            get => _distanceTable  ?? throw new LPGException("distancetable was null");;
             set {
                 if (Equals(value, _distanceTable)) {
                     return;
