@@ -378,16 +378,33 @@ namespace SimulationEngine.Tests {
         //    }
         //}
 
+        /// <summary>
+        /// Some commands of the simulationengine.exe should immediately throw an exception, if the db3 file is
+        /// not present in the same directory. This test checks if these exceptions are thrown.
+        /// </summary>
+        /// <remarks>Some commands should not immediately throw an exception as they can use a db3 file located
+        /// elsewhere</remarks>
         [Fact]
-        [Trait(UnitTestCategories.Category,UnitTestCategories.BasicTest)]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.BasicTest)]
         public void MainTestNoDB3() {
             Config.CatchErrors = false;
             if (File.Exists("profilegenerator.db3")) {
                 File.Delete("profilegenerator.db3");
             }
             Config.IsInUnitTesting = true;
-            var args = Array.Empty<string>();
-            Assert.Throws<LPGException>(() => MainSimEngine.Run(args.ToArray(), "simulationengine.exe"));
+            // list all commands that should immediately throw an exception if the db3 file is missing
+            var argLists = new List<string[]> {
+                new string[] { "CSVImport", "-i", "myfile.csv", "-d", ";", "-n", "myprofile" },
+                new string[] { "ImportHouseholdDefinition", "-File", "myfile.csv" },
+                new string[] { "CreateExampleHouseJob" },
+                new string[] { "CreatePythonBindings" },
+                new string[] { "ExportDatabaseObjectsAsJson", "-t", "HouseholdTemplates", "-o", "myexport.json"},
+                new string[] { "ImportDatabaseObjectsAsJson", "-t", "HouseholdTemplates",  "-i", "myimport.json" },
+            };
+            // test if the expected exception is thrown
+            foreach (var args in argLists) {
+                Assert.Throws<LPGException>(() => MainSimEngine.Run(args.ToArray(), "simulationengine.exe"));
+            }
         }
 
         [Fact]
