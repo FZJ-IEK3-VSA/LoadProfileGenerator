@@ -173,16 +173,35 @@ namespace Common {
             return resultdir;
         }
 
+        /// <summary>
+        /// Determines the base directory for any working directories used for tests.
+        /// </summary>
+        /// <param name="useRamdisk">Whether to choose a directory on a ramdisk, if available</param>
+        /// <param name="createDefaultBaseDir">Whether the default base directory C:\Work\ should be created if it does not exist</param>
+        /// <returns>The base path for working directories</returns>
         [JetBrains.Annotations.NotNull]
-        public static string DetermineBaseWorkingDir(bool useRamdisk)
+        public static string DetermineBaseWorkingDir(bool useRamdisk, bool createDefaultBaseDir = true)
         {
             var myDrives = DriveInfo.GetDrives();
             var path = Directory.GetCurrentDirectory();
-#pragma warning disable S1075 // URIs should not be hardcoded
-            if (Directory.Exists("c:\\work"))
-#pragma warning restore S1075 // URIs should not be hardcoded
+            var defaultPath = @"C:\work\";
+            if (Directory.Exists(defaultPath))
             {
-                path = @"c:\work\";
+                // use the default base directory if it already exists
+                path = defaultPath;
+            }
+            else if (createDefaultBaseDir)
+            {
+                try
+                {
+                    // try to create the default base directory and use it
+                    Directory.CreateDirectory(defaultPath);
+                    path = defaultPath;
+                }
+                catch (Exception)
+                {
+                    Logger.Warning("Could not create the default base working directory: " + defaultPath);
+                }
             }
 
             if (useRamdisk) {

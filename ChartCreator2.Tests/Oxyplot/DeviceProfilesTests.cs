@@ -39,7 +39,7 @@ namespace ChartCreator2.Tests.Oxyplot {
                 var aeupp = new DeviceProfiles(ccps, fft, cp, cs.Wd.SqlResultLoggingService,calcParameters);
                 Logger.Info("Making picture");
                 var di = new DirectoryInfo(cs.DstDir);
-                var rfe = cs.GetRfeByFilename("DeviceProfiles.Electricity.csv");
+                var rfe = cs.GetRfeByFilename("DeviceProfiles.HH1.Electricity.csv");
                 aeupp.MakePlot(rfe);
                 Logger.Info("finished picture");
                 var imagefiles = FileFinder.GetRecursiveFiles(di, "DeviceProfiles.*.png");
