@@ -156,7 +156,7 @@ namespace LoadProfileGenerator.Views.Transportation {
         [NotNull]
         [UsedImplicitly]
         public DataTable ConnectionCountTable {
-            get => _connectionCountTable;
+            get => _connectionCountTable ?? throw new LPGException("ConnectionCountTable was null");
             set {
                 if (Equals(value, _connectionCountTable)) {
                     return;
@@ -170,7 +170,7 @@ namespace LoadProfileGenerator.Views.Transportation {
         [NotNull]
         [UsedImplicitly]
         public DataTable DistanceTable {
-            get => _distanceTable ?? throw new LPGException("ConnectionCountTable was null");
+            get => _distanceTable ?? throw new LPGException("DistanceTable was null");
             set {
                 if (Equals(value, _distanceTable)) {
                     return;
@@ -326,6 +326,9 @@ namespace LoadProfileGenerator.Views.Transportation {
 
             string[,] arr = RefreshMatrix(ModularHousehold, ThisRouteSet, out var distanceMatrix);
             if (arr == null) {
+                // set contains no routes: show empty tables
+                ConnectionCountTable = new DataTable();
+                DistanceTable = new DataTable();
                 return;
             }
 
