@@ -998,7 +998,7 @@ namespace Database.Tests
         {
             get
             {
-                string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+                string codeBase = Assembly.GetExecutingAssembly().Location;
                 if(codeBase==null)
                 {throw new LPGException("codebase was null");}
                 UriBuilder uri = new UriBuilder(codeBase);
