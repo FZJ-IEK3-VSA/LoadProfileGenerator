@@ -31,7 +31,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace LoadProfileGenerator.Views.SpecialViews
 {
     /// <summary>
-    ///   Interaktionslogik f�r WelcomeView.xaml
+    ///   Interaktionslogik für WelcomeView.xaml
     /// </summary>
     [SuppressMessage("ReSharper", "NotNullMemberIsNotInitialized")]
     public partial class WelcomeView
@@ -39,6 +39,28 @@ namespace LoadProfileGenerator.Views.SpecialViews
         public WelcomeView()
         {
             InitializeComponent();
+        }
+
+        /// <summary>
+        /// Request handler for the link to the manual. Opens the URI in the default browser when the link (in the word 'here')
+        /// is clicked.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e">Event parameters</param>
+        private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        {
+            var psInfo = new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = e.Uri.ToString(),
+                UseShellExecute = true
+            };
+            try
+            {
+                System.Diagnostics.Process.Start(psInfo);
+            } catch (System.Exception)
+            {
+                Common.Logger.Error("Could not open the link to the manual: " + e.Uri.ToString());
+            }
         }
     }
 }

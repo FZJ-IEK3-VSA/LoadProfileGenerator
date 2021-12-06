@@ -6,6 +6,8 @@ This repository contains the full source code for the LoadProfileGenerator.
 
 Binaries are available at https://www.loadprofilegenerator.de
 
+The manual is available [here](https://nbn-resolving.org/urn:nbn:de:bsz:ch1-qucosa-209036), in the second part of the author's PhD thesis.
+
 ## Contributions
 
 Contributions are highly welcome. Feel free to send me pull requests.
