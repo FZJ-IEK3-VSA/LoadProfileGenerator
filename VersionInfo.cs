@@ -1,3 +1,3 @@
-[assembly: AssemblyVersion("10.7.0.5")]
+[assembly: AssemblyVersion("10.7.0.6")]
 
-[assembly: AssemblyFileVersion("10.7.0.5")]
+[assembly: AssemblyFileVersion("10.7.0.6")]

@@ -103,9 +103,8 @@ namespace CalculationController.CalcFactories {
             foreach (var lt in loadTypes) {
                 // ReSharper disable once ReplaceWithSingleAssignment.True
                 if (lt.Priority <= priority) {
-                    var guid = Guid.NewGuid().ToStrGuid();
                     var calcLoadTypeDto = new CalcLoadTypeDto(lt.Name,  lt.UnitOfPower, lt.UnitOfSum,
-                        lt.ConvertPowerValueWithTime(1, internalTimeResolution), lt.ShowInCharts, guid);
+                        lt.ConvertPowerValueWithTime(1, internalTimeResolution), lt.ShowInCharts, lt.Guid);
                     ltDtoDict.Add(lt, calcLoadTypeDto);
                 }
             }

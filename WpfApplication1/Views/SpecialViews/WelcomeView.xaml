@@ -50,9 +50,14 @@
                 The Load Profile Generator enables you to generate load profiles for households.
                 You can either use one of the predefined households, define your own by using the
                 predefined building blocks for the household or start by defining your own. More and
-                detailed information is available in the manual that you can request from the author.
-                The reason for not delivering the manual with the LPG is
-                that I'm curious who is using the LPG and what people are doing with it.
+                detailed information is available in the manual that you can access 
+                <Hyperlink
+                    Name="LinkToManual"
+                    NavigateUri="https://nbn-resolving.org/urn:nbn:de:bsz:ch1-qucosa-209036"
+                    RequestNavigate="Hyperlink_RequestNavigate">
+                    here
+                    <Hyperlink.ToolTip><Binding ElementName="LinkToManual" Path="NavigateUri"/></Hyperlink.ToolTip>
+                </Hyperlink>, in the second part of the author's PhD thesis.
                 <LineBreak />
                 <LineBreak />
                 If you are looking for the quickest way to a load profile, select &quot;Calculation&quot; on the left,
