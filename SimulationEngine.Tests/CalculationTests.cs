@@ -34,6 +34,7 @@ using Xunit.Abstractions;
 
 namespace SimulationEngine.Tests {
     public enum TestDuration {
+        ThreeDays,
         OneMonth,
         ThreeMonths,
         TwelveMonths
@@ -52,6 +53,7 @@ namespace SimulationEngine.Tests {
 
         public static HouseCreationAndCalculationJob PrepareNewHouseForHouseholdTesting(Simulator sim, string guid, TestDuration duration)
         {
+
             var hj = new HouseCreationAndCalculationJob
             {
                 CalcSpec = JsonCalcSpecification.MakeDefaultsForTesting()
@@ -86,17 +88,22 @@ namespace SimulationEngine.Tests {
             if (hj.CalcSpec == null) {
                 throw new LPGException("was null");
             }
-            if (duration == TestDuration.OneMonth) {
-                hj.CalcSpec.EndDate = new DateTime(2020, 2, 1);
-            }
-            else if (duration == TestDuration.ThreeMonths) {
-                hj.CalcSpec.EndDate = new DateTime(2020, 4, 1);
-            }
-            else if (duration == TestDuration.TwelveMonths) {
-                hj.CalcSpec.EndDate = new DateTime(2020, 12, 31);
-            }
-            else {
-                throw new LPGException("Unkown duration");
+            switch (duration)
+            {
+                case TestDuration.ThreeDays:
+                    hj.CalcSpec.EndDate = new DateTime(2020, 1, 4);
+                    break;
+                case TestDuration.OneMonth:
+                    hj.CalcSpec.EndDate = new DateTime(2020, 2, 1);
+                    break;
+                case TestDuration.ThreeMonths:
+                    hj.CalcSpec.EndDate = new DateTime(2020, 4, 1);
+                    break;
+                case TestDuration.TwelveMonths:
+                    hj.CalcSpec.EndDate = new DateTime(2020, 12, 31);
+                    break;
+                default:
+                    throw new LPGException("Unkown duration");
             }
         }
 
@@ -215,7 +222,7 @@ namespace SimulationEngine.Tests {
         {
 
              var peakWorkingSet = Process.GetCurrentProcess().PeakWorkingSet64;
-             const long memoryCap = 1024l * 1024l * 2000l * 2l;
+             const long memoryCap = 1024L * 1024L * 2000L * 2L;
             peakWorkingSet.Should().BeLessThan(memoryCap);
             GC.Collect();
             GC.WaitForPendingFinalizers();
@@ -370,7 +377,7 @@ namespace SimulationEngine.Tests {
             //}
         }
 
-        public static void RunSingleHouse(Func<Simulator, HouseCreationAndCalculationJob> makeHj, Action<string> checkResults,
+        public static void RunSingleHouse(Func<Simulator, HouseCreationAndCalculationJob?> makeHj, Action<string> checkResults,
                                           bool skipcleaning = false)
         {
             Logger.Get().StartCollectingAllMessages();
@@ -384,13 +391,47 @@ namespace SimulationEngine.Tests {
             var sim = new Simulator(db.ConnectionString);
             var houseGenerator = new HouseGenerator();
             var hj = makeHj(sim);
+            hj.Should().NotBeNull();
             houseGenerator.ProcessSingleHouseJob(hj, sim);
-            if (hj.CalcSpec?.OutputDirectory == null)
+            if (hj!.CalcSpec?.OutputDirectory == null)
             {
                 throw new LPGException("calcspec was null");
             }
 
             checkResults(wd.Combine(hj.CalcSpec.OutputDirectory));
+        }
+
+        /// <summary>
+        /// Generates one household from a household template and simulates them.
+        /// </summary>
+        /// <param name="testID">A unique name of the calling test for setting up a working directory</param>
+        /// <param name="hhTemplateGuid">The Guid of the household template to use</param>
+        /// <param name="duration">Duration for which the household should be simulated</param>
+        public static void GenerateAndSimulateHHFromTemplate(string testID, StrGuid hhTemplateGuid, TestDuration duration)
+        {
+            Logger.Get().StartCollectingAllMessages();
+            // set up a working directory
+            using var wd = new WorkingDir(testID);
+            wd.SkipCleaning = false;
+            // get a database connection
+            using var db = new DatabaseSetup(testID);
+            Directory.SetCurrentDirectory(wd.WorkingDirectory);
+            var sim = new Simulator(db.ConnectionString);
+            var houseGenerator = new HouseGenerator();
+            // find the household template to use
+            var hhTemplate = sim.HouseholdTemplates.FindByGuid(hhTemplateGuid);
+            hhTemplate.Should().NotBeNull();
+            Logger.Info("Testing generation and simulation of a household using household template \"" + hhTemplate.Name + "\"");
+            // generate one household
+            hhTemplate.Count = 1;
+            var households = hhTemplate.GenerateHouseholds(sim, false, new List<STTraitLimit>(), new List<TraitTag>());
+            households.Should().HaveCount(1);
+            var household = households[0];
+            // prepare and execute the house job
+            var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim, household.Guid.StrVal, duration);
+            if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException("No CalcOptions were set"); }
+            hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.OnlySums;
+            houseGenerator.ProcessSingleHouseJob(hj, sim);
         }
     }
 
@@ -811,6 +852,82 @@ namespace SimulationEngine.Tests {
                 "public SystematicTransportHouseholdTests([JetBrains.Annotations.NotNull] ITestOutputHelper testOutputHelper) : base(testOutputHelper) { }");
             sw.WriteLine("}}");
             sw.Close();
+        }
+
+        /// <summary>
+        /// Tests generation of households using a household template. Generates 100 households for each
+        /// template, and simulates each household for 3 days.
+        /// </summary>
+        /// <param name="hhTemplateGuid">Guid of the template to test</param>
+        /// <param name="number">Repetition index of this test for the same template guid</param>
+        /// <remarks>Each call of this method only handles a single household</remarks>
+        [Theory]
+        [MemberData(nameof(GetEachHHTemplate100Times))]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.HouseholdTemplateTest)]
+        public void SystematicHouseholdTemplateTestShort(StrGuid hhTemplateGuid, int number = 0)
+        {
+            string testID = "CalculationTests.SystematicHouseholdTemplateTest." + hhTemplateGuid + number;
+            HouseJobTestHelper.GenerateAndSimulateHHFromTemplate(testID, hhTemplateGuid, TestDuration.ThreeDays);
+        }
+
+        /// <summary>
+        /// Tests generation of households using a household template. Generates 3 households for each
+        /// template, and simulates each household for one year.
+        /// </summary>
+        /// <param name="hhTemplateGuid">Guid of the template to test</param>
+        /// <param name="number">Repetition index of this test for the same template guid</param>
+        /// <remarks>Each call of this method only handles a single household</remarks>
+        [Theory]
+        [MemberData(nameof(GetEachHHTemplate3Times))]
+        [Trait(UnitTestCategories.Category, UnitTestCategories.HouseholdTemplateTest)]
+        public void SystematicHouseholdTemplateTestLong(StrGuid hhTemplateGuid, int number)
+        {
+            string testID = "CalculationTests.SystematicHouseholdTemplateTest." + hhTemplateGuid + "." + number;
+            HouseJobTestHelper.GenerateAndSimulateHHFromTemplate(testID, hhTemplateGuid, TestDuration.TwelveMonths);
+        }
+
+        /// <summary>
+        /// Creates an enumerable of all household template guids, each one repeated 100 times.
+        /// </summary>
+        /// <returns>An <see cref="IEnumerable{T}"/> of household template guids</returns>
+        public static IEnumerable<object[]> GetEachHHTemplate100Times()
+        {
+            const string testname = "CalculationTests.GetEachHHTemplate100Times";
+            return CreateTemplateGuidList(testname, 100);
+        }
+
+        /// <summary>
+        /// Creates an enumerable of all household template guids, each one repeated 3 times.
+        /// </summary>
+        /// <returns>An <see cref="IEnumerable{T}"/> of household template guids</returns>
+        public static IEnumerable<object[]> GetEachHHTemplate3Times()
+        {
+            const string testname = "CalculationTests.GetEachHHTemplate3Times";
+            return CreateTemplateGuidList(testname, 3);
+        }
+
+        /// <summary>
+        /// Creates an <see cref="IEnumerable{T}"/> of the guids of all household templates, including every template guid multiple times.
+        /// Can be used to parametrize Xunit test theories. 
+        /// </summary>
+        /// <param name="testname">The name of the test, for creation of a unique database copy</param>
+        /// <param name="duplicateCount">How often each template guid should be contained</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> of object arrays, each including one household template guid and the repetition index of this guid</returns>
+        /// <remarks>The return type needs to be an <see cref="IEnumerable{T}"/> of object arrays for the testing framework.</remarks>
+        public static IEnumerable<object[]> CreateTemplateGuidList(string testname, int duplicateCount = 1)
+        {
+            // configure output to console because the instance of class CalculationTests has not been
+            // created yet and therefore no TestOutputHelper is available
+            var outputToConsole = Config.OutputToConsole;
+            Config.OutputToConsole = true;
+            // get a database connection
+            using var db = new DatabaseSetup(testname);
+            var sim = new Simulator(db.ConnectionString);
+            // reset OutputToConsole, so that the actual tests might use TestOutputHelpers
+            Config.OutputToConsole = outputToConsole;
+            // return each template as often as specified, together with the index 
+            return sim.HouseholdTemplates.Items.SelectMany(
+                template => Enumerable.Range(0, duplicateCount).Select(i => new object[] { template.Guid, i }));
         }
 
         [Fact]
