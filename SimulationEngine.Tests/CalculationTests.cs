@@ -859,14 +859,15 @@ namespace SimulationEngine.Tests {
         /// template, and simulates each household for 3 days.
         /// </summary>
         /// <param name="hhTemplateGuid">Guid of the template to test</param>
-        /// <param name="number">Repetition index of this test for the same template guid</param>
+        /// <param name="hhTemplateName">Name of the template to test</param>
+        /// <param name="repetition">Repetition of this test for the same template</param>
         /// <remarks>Each call of this method only handles a single household</remarks>
         [Theory]
         [MemberData(nameof(GetEachHHTemplate100Times))]
         [Trait(UnitTestCategories.Category, UnitTestCategories.HouseholdTemplateTest)]
-        public void SystematicHouseholdTemplateTestShort(StrGuid hhTemplateGuid, int number = 0)
+        public void SystematicHouseholdTemplateTestShort(StrGuid hhTemplateGuid, string hhTemplateName, int repetition = 0)
         {
-            string testID = "CalculationTests.SystematicHouseholdTemplateTest." + hhTemplateGuid + number;
+            string testID = "CalculationTests.SystematicHouseholdTemplateTestShort." + hhTemplateName + "." + repetition;
             HouseJobTestHelper.GenerateAndSimulateHHFromTemplate(testID, hhTemplateGuid, TestDuration.ThreeDays);
         }
 
@@ -875,46 +876,48 @@ namespace SimulationEngine.Tests {
         /// template, and simulates each household for one year.
         /// </summary>
         /// <param name="hhTemplateGuid">Guid of the template to test</param>
-        /// <param name="number">Repetition index of this test for the same template guid</param>
+        /// <param name="hhTemplateName">Name of the template to test</param>
+        /// <param name="repetition">Repetition of this test for the same template</param>
         /// <remarks>Each call of this method only handles a single household</remarks>
         [Theory]
         [MemberData(nameof(GetEachHHTemplate3Times))]
         [Trait(UnitTestCategories.Category, UnitTestCategories.HouseholdTemplateTest)]
-        public void SystematicHouseholdTemplateTestLong(StrGuid hhTemplateGuid, int number)
+        public void SystematicHouseholdTemplateTestLong(StrGuid hhTemplateGuid, string hhTemplateName, int repetition)
         {
-            string testID = "CalculationTests.SystematicHouseholdTemplateTest." + hhTemplateGuid + "." + number;
+            string testID = "CalculationTests.SystematicHouseholdTemplateTestLong." + hhTemplateName + "." + repetition;
             HouseJobTestHelper.GenerateAndSimulateHHFromTemplate(testID, hhTemplateGuid, TestDuration.TwelveMonths);
         }
 
         /// <summary>
-        /// Creates an enumerable of all household template guids, each one repeated 100 times.
+        /// Creates an enumerable of all household template guids and names, repeating each template 100 times.
         /// </summary>
-        /// <returns>An <see cref="IEnumerable{T}"/> of household template guids</returns>
+        /// <returns>An <see cref="IEnumerable{T}"/> of household template guids and names</returns>
         public static IEnumerable<object[]> GetEachHHTemplate100Times()
         {
             const string testname = "CalculationTests.GetEachHHTemplate100Times";
-            return CreateTemplateGuidList(testname, 100);
+            return CreateTemplateList(testname, 100);
         }
 
         /// <summary>
-        /// Creates an enumerable of all household template guids, each one repeated 3 times.
+        /// Creates an enumerable of all household template guids and names, repeating each template 3 times.
         /// </summary>
-        /// <returns>An <see cref="IEnumerable{T}"/> of household template guids</returns>
+        /// <returns>An <see cref="IEnumerable{T}"/> of household template guids and names</returns>
         public static IEnumerable<object[]> GetEachHHTemplate3Times()
         {
             const string testname = "CalculationTests.GetEachHHTemplate3Times";
-            return CreateTemplateGuidList(testname, 3);
+            return CreateTemplateList(testname, 3);
         }
 
         /// <summary>
-        /// Creates an <see cref="IEnumerable{T}"/> of the guids of all household templates, including every template guid multiple times.
-        /// Can be used to parametrize Xunit test theories. 
+        /// Creates an <see cref="IEnumerable{T}"/> of the guids and names of all household templates, including every template multiple times.
+        /// Can be used to create test cases for template tests, where each template should be used to generate multiple households.
         /// </summary>
         /// <param name="testname">The name of the test, for creation of a unique database copy</param>
-        /// <param name="duplicateCount">How often each template guid should be contained</param>
-        /// <returns>An <see cref="IEnumerable{T}"/> of object arrays, each including one household template guid and the repetition index of this guid</returns>
+        /// <param name="repetitionCount">How often each template will be repeated</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> of object arrays, each including name and guid of one household template and the 
+        /// repetition index (how often this template has been repeated already)</returns>
         /// <remarks>The return type needs to be an <see cref="IEnumerable{T}"/> of object arrays for the testing framework.</remarks>
-        public static IEnumerable<object[]> CreateTemplateGuidList(string testname, int duplicateCount = 1)
+        public static IEnumerable<object[]> CreateTemplateList(string testname, int repetitionCount = 1)
         {
             // configure output to console because the instance of class CalculationTests has not been
             // created yet and therefore no TestOutputHelper is available
@@ -927,7 +930,7 @@ namespace SimulationEngine.Tests {
             Config.OutputToConsole = outputToConsole;
             // return each template as often as specified, together with the index 
             return sim.HouseholdTemplates.Items.SelectMany(
-                template => Enumerable.Range(0, duplicateCount).Select(i => new object[] { template.Guid, i }));
+                template => Enumerable.Range(0, repetitionCount).Select(i => new object[] { template.Guid, template.Name, i }));
         }
 
         [Fact]
