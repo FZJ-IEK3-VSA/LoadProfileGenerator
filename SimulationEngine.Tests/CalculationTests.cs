@@ -865,7 +865,7 @@ namespace SimulationEngine.Tests {
         [Theory]
         [MemberData(nameof(GetEachHHTemplate100Times))]
         [Trait(UnitTestCategories.Category, UnitTestCategories.HouseholdTemplateTest)]
-        public void SystematicHouseholdTemplateTestShort(StrGuid hhTemplateGuid, string hhTemplateName, int repetition = 0)
+        public void SystematicHouseholdTemplateTestShort(StrGuid hhTemplateGuid, string hhTemplateName, int repetition)
         {
             string testID = "CalculationTests.SystematicHouseholdTemplateTestShort." + hhTemplateName + "." + repetition;
             HouseJobTestHelper.GenerateAndSimulateHHFromTemplate(testID, hhTemplateGuid, TestDuration.ThreeDays);
