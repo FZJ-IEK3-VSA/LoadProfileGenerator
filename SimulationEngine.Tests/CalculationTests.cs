@@ -417,7 +417,7 @@ namespace SimulationEngine.Tests {
             using var db = new DatabaseSetup(testID);
             Directory.SetCurrentDirectory(wd.WorkingDirectory);
             var sim = new Simulator(db.ConnectionString);
-            var houseGenerator = new HouseGenerator();
+            sim.MyGeneralConfig.EnableIdlemodeBool = true;
             // find the household template to use
             var hhTemplate = sim.HouseholdTemplates.FindByGuid(hhTemplateGuid);
             hhTemplate.Should().NotBeNull();
@@ -431,6 +431,7 @@ namespace SimulationEngine.Tests {
             var hj = HouseJobCalcPreparer.PrepareNewHouseForHouseholdTesting(sim, household.Guid.StrVal, duration);
             if (hj.CalcSpec?.CalcOptions == null) { throw new LPGException("No CalcOptions were set"); }
             hj.CalcSpec.DefaultForOutputFiles = OutputFileDefault.OnlySums;
+            var houseGenerator = new HouseGenerator();
             houseGenerator.ProcessSingleHouseJob(hj, sim);
         }
     }

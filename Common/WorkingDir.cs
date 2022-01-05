@@ -148,6 +148,7 @@ namespace Common {
         [JetBrains.Annotations.NotNull]
         private static string InitializeWorkingDirectory([JetBrains.Annotations.NotNull] string testname, bool useRamdisk) {
             var baseWorkingDir = DetermineBaseWorkingDir(useRamdisk);
+            testname = ReplaceInvalidChars(testname);
             var resultdir = Path.Combine(baseWorkingDir, testname);
             try {
                 if (Directory.Exists(resultdir)) {
@@ -171,6 +172,25 @@ namespace Common {
             }
             Logger.Info("using:" + resultdir);
             return resultdir;
+        }
+
+        /// <summary>
+        /// Replaces all characters that are not allowed in file names with a fixed replacement character.
+        /// </summary>
+        /// <param name="filename">The file name to adjust</param>
+        /// <param name="replacementChar">The character to use instead of illegal characters</param>
+        /// <returns>The adjusted file name without any illegal characters</returns>
+        public static string ReplaceInvalidChars(string filename, char replacementChar = '_')
+        {
+            foreach (char c in Path.GetInvalidFileNameChars())
+            {
+                if (c == replacementChar)
+                {
+                    throw new LPGException("Used an illegal character as replacementChar: '" + replacementChar + "'");
+                }
+                filename = filename.Replace(c, replacementChar);
+            }
+            return filename;
         }
 
         /// <summary>
