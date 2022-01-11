@@ -416,7 +416,22 @@ namespace SimulationEngine.Tests {
             // get a database connection
             using var db = new DatabaseSetup(testID);
             Directory.SetCurrentDirectory(wd.WorkingDirectory);
-            var sim = new Simulator(db.ConnectionString);
+            Simulator sim;
+            try
+            {
+                sim = new Simulator(db.ConnectionString);
+            }
+            catch (FormatException)
+            {
+                // during tests infrequent problems occur when loading and parsing dates from the database
+                // --> save the database in another folder
+                string backupPath = Path.Combine(WorkingDir.DetermineBaseWorkingDir(true), "InvalidDatetime_DB_Backup");
+                string dbFilename = Path.GetFileName(db.FileName);
+                string destinationFile = Path.Combine(backupPath, dbFilename);
+                Directory.CreateDirectory(backupPath);
+                File.Copy(db.FileName, destinationFile);
+                throw;
+            }
             sim.MyGeneralConfig.EnableIdlemodeBool = true;
             // find the household template to use
             var hhTemplate = sim.HouseholdTemplates.FindByGuid(hhTemplateGuid);
