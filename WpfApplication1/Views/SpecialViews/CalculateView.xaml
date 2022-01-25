@@ -43,6 +43,7 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
@@ -276,22 +277,30 @@
                             Content="Enable hardcore idle mode that will make the calculation succeed no matter how little the residents have to do."
                             IsChecked="{Binding EnableIdleMode}"
                             Style="{StaticResource CheckBoxStyle}" />
-                        <Label
+                        <CheckBox
                             Grid.Row="14"
+                            Grid.Column="1"
+                            Grid.ColumnSpan="2"
+                            IsChecked="{Binding EnableFlexibility}"
+                            Style="{StaticResource CheckBoxStyle}" >
+                            <TextBlock Text="Enable flexibility calculations that will give you more sophisticated data when and how much devices could be shifted from original start. This is useful for certain demand-side-management studies. Will only yield results if you enable the files in the settings." TextWrapping="Wrap"/>
+                        </CheckBox>
+                        <Label
+                            Grid.Row="15"
                             Grid.Column="0"
                             Margin="0,5,5,5"
                             Content="Random number generator seed"
                             Style="{StaticResource LabelStyle}"
                             Target="{Binding ElementName=TxtEndtime}" />
                         <Label
-                            Grid.Row="14"
+                            Grid.Row="15"
                             Grid.Column="1"
                             Margin="5,5,0,5"
                             HorizontalAlignment="Left"
                             Content="{Binding ThisConfig.RandomSeed}"
                             Style="{StaticResource LabelStyle}" />
                         <TextBlock
-                            Grid.Row="15"
+                            Grid.Row="16"
                             Grid.Column="1"
                             Grid.ColumnSpan="2"
                             Margin="5,5,0,5"
@@ -300,7 +309,7 @@
                             leads to the same results, -1 gives different results each time.
                         </TextBlock>
                         <Label
-                            Grid.Row="16"
+                            Grid.Row="17"
                             Grid.Column="0"
                             Margin="0,5,5,5"
                             Content="Load types to include"
@@ -308,7 +317,7 @@
                             Target="{Binding ElementName=CmbLoadTypePrio}" />
                         <ComboBox
                             Name="CmbLoadTypePrio"
-                            Grid.Row="16"
+                            Grid.Row="17"
                             Grid.Column="1"
                             Grid.ColumnSpan="2"
                             DisplayMemberPath="Value"
@@ -317,7 +326,7 @@
                             SelectedValuePath="Key"
                             Style="{StaticResource ComboBoxStyle}" />
                         <CheckBox
-                            Grid.Row="17"
+                            Grid.Row="18"
                             Grid.Column="1"
                             Grid.ColumnSpan="2"
                             Content="Enable transportation calculations "
@@ -325,7 +334,7 @@
                             Style="{StaticResource CheckBoxStyle}"
                              />
                         <TextBlock
-                            Grid.Row="18"
+                            Grid.Row="19"
                             Grid.Column="1"
                             Grid.ColumnSpan="2"
                             Margin="5,5,0,5"
@@ -333,7 +342,7 @@
                             Note that these options only apply to individual households. For houses you need to set the transportation for each household in the house screen!
                         </TextBlock>
                         <Label
-                            Grid.Row="20"
+                            Grid.Row="21"
                             Grid.Column="0"
                             Margin="0,5,5,5"
                             Content="Transportation Device Set"
@@ -341,7 +350,7 @@
                             Target="{Binding ElementName=CmbTransportationDeviceSet}" />
                         <ComboBox
                             Name="CmbTransportationDeviceSet"
-                            Grid.Row="20"
+                            Grid.Row="21"
                             Grid.Column="1"
                             Grid.ColumnSpan="2"
                             DisplayMemberPath="PrettyName"
@@ -350,7 +359,7 @@
                             Style="{StaticResource ComboBoxStyle}"
                             IsEnabled="{Binding IsTransportationSettingsEnabled}"/>
                         <Label
-                            Grid.Row="21"
+                            Grid.Row="22"
                             Grid.Column="0"
                             Margin="0,5,5,5"
                             Content="Travel Route Set"
@@ -358,7 +367,7 @@
                             Target="{Binding ElementName=CmbTravelRouteSet}" />
                         <ComboBox
                             Name="CmbTravelRouteSet"
-                            Grid.Row="21"
+                            Grid.Row="22"
                             Grid.Column="1"
                             Grid.ColumnSpan="2"
                             DisplayMemberPath="PrettyName"
@@ -367,7 +376,7 @@
                             Style="{StaticResource ComboBoxStyle}"
                             IsEnabled="{Binding IsTransportationSettingsEnabled}"/>
                         <Label
-                            Grid.Row="22"
+                            Grid.Row="23"
                             Grid.Column="0"
                             Margin="0,5,5,5"
                             Content="Charging Station Set"
@@ -375,7 +384,7 @@
                             Target="{Binding ElementName=CmbChargingStationSet}" />
                         <ComboBox
                             Name="CmbChargingStationSet"
-                            Grid.Row="22"
+                            Grid.Row="23"
                             Grid.Column="1"
                             Grid.ColumnSpan="2"
                             DisplayMemberPath="PrettyName"
@@ -384,7 +393,7 @@
                             Style="{StaticResource ComboBoxStyle}"
                             IsEnabled="{Binding IsTransportationSettingsEnabled}"/>
                         <StackPanel
-                            Grid.Row="25"
+                            Grid.Row="26"
                             Grid.RowSpan="2"
                             Grid.Column="1"
                             Grid.ColumnSpan="2"
@@ -404,7 +413,7 @@
                                 Style="{StaticResource ButtonStyle}" />
                         </StackPanel>
                         <Label
-                            Grid.Row="28"
+                            Grid.Row="29"
                             Grid.Column="0"
                             Margin="0,5,5,5"
                             Content="Relative Output Directory for the JSON file"
@@ -412,7 +421,7 @@
                             Target="{Binding ElementName=CmbChargingStationSet}" />
                         <TextBox
                             Name="TxtJsonOutput"
-                            Grid.Row="28"
+                            Grid.Row="29"
                             Grid.Column="1"
                             Grid.ColumnSpan="2"
                             IsEnabled="{Binding IsNotInCalc}"
@@ -420,7 +429,7 @@
                             Text="{Binding NameForJsonExportOutputDirectory}" />
 
                         <StackPanel
-                            Grid.Row="29"
+                            Grid.Row="30"
                             Grid.Column="1"
                             Grid.ColumnSpan="2"
                             Orientation="Horizontal">
@@ -432,7 +441,7 @@
 
                         </StackPanel>
                         <TextBlock
-                            Grid.Row="27"
+                            Grid.Row="28"
                             Grid.Column="1"
                             Grid.ColumnSpan="2"
                             Margin="5,5,0,5"
@@ -444,7 +453,7 @@
                         </TextBlock>
                     </Grid>
                 </Expander>
-                
+
             </StackPanel>
 
         </ScrollViewer>

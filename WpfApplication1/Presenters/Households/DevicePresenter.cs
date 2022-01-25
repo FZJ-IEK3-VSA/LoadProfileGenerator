@@ -34,6 +34,7 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Windows.Media;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Database;
@@ -71,7 +72,15 @@ namespace LoadProfileGenerator.Presenters.Households {
             _timeProfileTypes.Add(TimeProfileType.Absolute);
             var u = ThisDevice.CalculateUsedIns(Sim);
             _usedIns.SynchronizeWithList(u);
+            foreach(Automation.FlexibilityType ft in Enum.GetValues(typeof(Automation.FlexibilityType)))
+            {
+                _flexbilityTypes.Add(ft);
+            }
         }
+        private ObservableCollection<Automation.FlexibilityType> _flexbilityTypes = new ObservableCollection<Automation.FlexibilityType>();
+        [JetBrains.Annotations.NotNull]
+        [UsedImplicitly]
+        public ObservableCollection<FlexibilityType> FlexibilityTypes =>  _flexbilityTypes;
 
         [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
@@ -152,7 +161,8 @@ namespace LoadProfileGenerator.Presenters.Households {
 
         [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-        public ObservableCollection<TimeProfileType> TimeProfileTypes => _timeProfileTypes;
+        public ObservableCollection<TimeProfileType> TimeProfileTypes
+            => _timeProfileTypes;
 
         [ItemNotNull]
         [JetBrains.Annotations.NotNull]
