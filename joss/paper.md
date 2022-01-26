@@ -96,7 +96,7 @@ This is further combined with additional details to enable more realistic behavi
 
 # Novelty of this Study
 
-The LPG has been in development since 2010, originally in the context of a PhD-thesis [@pflugradt_modellierung_2016]. Since then it has been further extended and improved upon. An open access graphical user interface based version was since LPG's inception available free of charge at http://www.loadprofilegenerator.de. In February 2020 the LPG was published open source under the MIT-License. This is the first publication that describs the LPG as an open-source tool, which is now available at https://github.com/FZJ-IEK3-VSA/LoadProfileGenerator.  Further Contributions and merge requests are greatly appreciated. Additionally, there is now an open-source Python wrapper around the LPG both for Windows and Linux to enable easier automation. The Python-Wrapper is located at 
+The LPG has been in development since 2010, originally in the context of a PhD-thesis [@pflugradt_modellierung_2016]. Since then it has been further extended and improved upon. An open access graphical user interface based version was since LPG's inception available free of charge at http://www.loadprofilegenerator.de. In February 2020 the LPG was published open source under the MIT-License. This is the first publication that describs the LPG as an open-source tool, which is now available at https://github.com/FZJ-IEK3-VSA/LoadProfileGenerator.  Further Contributions and merge requests are greatly appreciated. Additionally, there is now an open-source Python wrapper around the LPG both for Windows and Linux to enable easier automation. The Python-Wrapper is located at https://github.com/FZJ-IEK3-VSA/pylpg.
 
 # Acknowledgements
 
