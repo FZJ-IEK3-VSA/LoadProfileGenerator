@@ -39,6 +39,7 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
+                          <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <TextBlock Style="{StaticResource TextBlockStyle}" Grid.ColumnSpan="2">
                             A device is for modelling any kind of real device or object that a person might interact with. Mostly it's an electric device like a stove, a washing machine or a telephone.
@@ -76,8 +77,18 @@
                         <TextBlock Style="{StaticResource TextBlockStyle}" Grid.Column="1" Grid.Row="9" >
                             This setting enables a check that verifies if the device is in a household if the standby energy use is set properly.
                         </TextBlock>
-                        <Button Grid.Row="11" Grid.Column="1" Style="{StaticResource ButtonStyle}" Click="ButtonBase_OnClick"  >Create new Device Action for this Device</Button>
-                        <Button Grid.Row="12" Grid.Column="1" Style="{StaticResource ButtonStyle}" Click="CreateCopy_OnClick"  >Create an exact copy of this device</Button>
+
+                      <Label Content="Maximum Timeshift in Minutes" Target="{Binding ElementName=TxtMaxTimeShift}" Style="{StaticResource LabelStyle}"
+                             Grid.Row="10" Grid.Column="0" />
+                      <TextBox x:Name="TxtMaxTimeShift" Style="{StaticResource TextBoxStyle}" Grid.Row="10" Grid.Column="1"
+                               Text="{Binding ThisDevice.MaxTimeShiftInMinutes}" />
+                      <Label Content="Flexibility Type Year" Target="{Binding ElementName=CmbFlexibilityType}" Style="{StaticResource LabelStyle}"
+                                                   Grid.Row="11" Grid.Column="0" />
+                      
+                      <ComboBox Name="CmbFlexibilityType" Grid.Row="11" Grid.Column="1"  Style="{StaticResource ComboBoxStyle}"
+          ItemsSource="{Binding FlexibilityTypes}" SelectedItem="{Binding ThisDevice.FlexibilityType}" />
+                        <Button Grid.Row="12" Grid.Column="1" Style="{StaticResource ButtonStyle}" Click="ButtonBase_OnClick"  >Create new Device Action for this Device</Button>
+                        <Button Grid.Row="13" Grid.Column="1" Style="{StaticResource ButtonStyle}" Click="CreateCopy_OnClick"  >Create an exact copy of this device</Button>
                     </Grid>
                 </Expander>
                 <Expander IsExpanded="True"  Style="{StaticResource ExpanderStyle}">

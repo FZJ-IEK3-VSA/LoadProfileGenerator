@@ -304,6 +304,8 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
         [UsedImplicitly]
         public bool IsNotInCalc => !IsInCalc;
 
+
+
         [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public Dictionary<LoadTypePriority, string> LoadTypePriorities => LoadTypePriorityHelper.LoadTypePriorityDictionaryAll;
@@ -320,6 +322,13 @@ namespace LoadProfileGenerator.Presenters.SpecialViews {
 
         [CanBeNull]
         public string NameForJsonExportOutputDirectory { get; set; } = "My Export";
+
+        public bool EnableFlexibility
+        {
+            get => Sim.MyGeneralConfig.EnableFlexibilityBool;
+
+            set => Sim.MyGeneralConfig.EnableFlexibilityBool = value;
+        }
 
         [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
