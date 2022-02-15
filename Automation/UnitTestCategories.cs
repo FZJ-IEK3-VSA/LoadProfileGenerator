@@ -5,6 +5,7 @@
         public const string ManualOnly = "ManualOnly";
         public const string HouseholdsWithTransportation = "HouseholdsWithTransportation";
         public const string HouseholdTest = "HouseholdTest";
+        public const string HouseholdTemplateTest = "HouseholdTemplateTest";
         public const string HousetypeTests = "HousetypeTests";
         public const string CalcOptionTests = "CalcOptionTests";
         public const string LongTest5 = "LongTest5";

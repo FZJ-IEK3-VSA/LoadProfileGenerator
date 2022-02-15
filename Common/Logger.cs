@@ -367,7 +367,7 @@ namespace Common {
             }
             if (severity <= Threshold)
             {
-                if (OutputHelper!= null) {
+                if (OutputHelper != null && !Config.OutputToConsole) {
                     OutputHelper.WriteLine(message);
                 }
                 else {
