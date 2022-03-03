@@ -292,8 +292,8 @@ namespace SimulationEngineLib
                 }
                 if (fulltypename.StartsWith("System.Collections.Generic.List`1[[Automation.CalcOption"))
                 {
-                    typename = "List[str]";
-                    return info.Name + ": List[str] = field(default_factory=list)";
+                    typename = "List[CalcOption]";
+                    return info.Name + ": List[CalcOption] = field(default_factory=list)";
                 }
                 if (fulltypename.StartsWith("System.Collections.Generic.List`1[[Automation.PersonLivingTag"))
                 {
@@ -361,20 +361,22 @@ namespace SimulationEngineLib
                         return info.Name + ": Optional[" + shorttypename + "] = None";
                     case "Automation.ResultFiles.HouseholdKeyType":
                         typename = shorttypename;
-                        return info.Name + ": Optional[str] = \"\"";
+                        return info.Name + ": Optional[" + shorttypename + "] = \"\"";
                     case "Automation.HouseholdDataSpecificationType":
                     case "Automation.Gender":
-                    case "System.String":
                     case "Automation.CalcOption":
                     case "Automation.OutputFileDefault":
                     case "Automation.EnergyIntensityType":
                     case "Automation.LoadTypePriority":
+                        typename = shorttypename;
+                        return info.Name + ": Optional[" + shorttypename + "] = None";
+                    case "System.String":
                     case "System.DateTime":
                         typename = "str";
                         return info.Name + ": Optional[str] = \"\"";
                     case "Automation.HouseDefinitionType":
-                        typename = "str";
-                        return info.Name + ": Optional[str] = HouseDefinitionType." + HouseDefinitionType.HouseData.ToString();
+                        typename = shorttypename;
+                        return info.Name + ": Optional[" + shorttypename + "] = HouseDefinitionType." + HouseDefinitionType.HouseData.ToString();
                     case "Automation.StrGuid":
                         typename = "StrGuid";
                         return info.Name + ": Optional[StrGuid] = None";
