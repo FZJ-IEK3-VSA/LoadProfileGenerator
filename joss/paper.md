@@ -77,12 +77,12 @@ There are numerous different tools for load profile synthesis available, such as
 
 The LPG has been utilized in many studies for various applications, such as the following:
 
-- [@harder_cost_2020] analyzed operating flexibility in electricity grids. 
-- [@bockl_hyflowhybrid_2019] generated load profiles for an evaluation of sector coupling.
-- [@lovati_optimal_2020] used the model to evaluate peer-to-peer electricity trading while considering the influence of lifestyle.
-- [@boeckl_sizing_2019] evaluated the optimal size of photovoltaic systems for different load profiles. 
-- Building on that [@lovati_design_2020] evaluated the impact of load profiles on optimal photovoltaic system operation.
-- [@haider_data_2020] analyzed the optimal way of charging electric cars.
+- @harder_cost_2020 analyzed operating flexibility in electricity grids. 
+- @bockl_hyflowhybrid_2019 generated load profiles for an evaluation of sector coupling.
+- @lovati_optimal_2020 used the model to evaluate peer-to-peer electricity trading while considering the influence of lifestyle.
+- @boeckl_sizing_2019 evaluated the optimal size of photovoltaic systems for different load profiles. 
+- Building on that, @lovati_design_2020 evaluated the impact of load profiles on optimal photovoltaic system operation.
+- @haider_data_2020 analyzed the optimal way of charging electric cars.
   
 # Methodology
 
