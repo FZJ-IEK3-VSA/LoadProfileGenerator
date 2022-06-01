@@ -29,4 +29,4 @@ RUN mkdir /results
 
 # Todo: overwrite/remove the output directory that might be specified in the calcspec.json file
 
-ENTRYPOINT "./SimEngine2" "ProcessHouseJob" "-J" "/input/calcspec.json"
+ENTRYPOINT "./SimEngine2" "ProcessHouseJob" "-J" "/input/request.json"
