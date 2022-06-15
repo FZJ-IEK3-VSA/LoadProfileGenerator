@@ -1,10 +1,10 @@
 FROM mcr.microsoft.com/dotnet/runtime:5.0-focal AS base
 WORKDIR /app
 
-# Creates a non-root user with an explicit UID and adds permission to access the /app folder
-# For more info, please refer to https://aka.ms/vscode-docker-dotnet-configure-containers
-# RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /app
-# USER appuser
+# install jq for removing invalid parameters from the request json file
+RUN apt-get update
+RUN apt-get upgrade -y
+RUN apt-get install -y jq
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0-focal AS build
 WORKDIR /src
@@ -27,6 +27,9 @@ RUN mkdir /input
 # Create a folder for the result files
 RUN mkdir /results
 
-# Todo: overwrite/remove the output directory that might be specified in the calcspec.json file
+# Hint: The command line documentation of the LPG (shown with -? argument) is interactive, so for that to work in docker 
+# the "docker run" command has to be executed with the -t option (does not apply for other LPG commands such as ProcessHouseJob)
 
-ENTRYPOINT "./SimEngine2" "ProcessHouseJob" "-J" "/input/request.json"
+# First remove //-style line comments, then remove/overwrite invalid path parameters from the request.json, then start the calculation
+ENTRYPOINT grep -v "//" "/input/request.json" | jq 'del(.PathToDatabase) | .CalcSpec.OutputDirectory="/results"' > "/input/converted_request.json" &&  \
+    "./SimEngine2" "ProcessHouseJob" "-J" "/input/converted_request.json"
