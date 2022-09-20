@@ -16,10 +16,8 @@ namespace ReleaseMaker {
 
             Copy(programFiles, srcDi, src, dst, @"SimulationEngine.deps.json");
             Copy(programFiles, srcDi, src, dst, @"SimulationEngine.exe");
-            Copy(programFiles, srcDi, src, dst, @"SimulationEngine.runtimeconfig.dev.json");
             Copy(programFiles, srcDi, src, dst, @"SimulationEngine.runtimeconfig.json");
             Copy(programFiles, srcDi, src, dst, @"xunit.runner.json");
-            Copy(programFiles, srcDi, src, dst, @"ref\SimulationEngine.dll");
             Copy(programFiles, srcDi, src, dst, @"runtimes\linux-arm\native\libSkiaSharp.so");
             Copy(programFiles, srcDi, src, dst, @"runtimes\linux-arm\native\libSystem.IO.Ports.Native.so");
             Copy(programFiles, srcDi, src, dst, @"runtimes\linux-arm64\native\libSkiaSharp.so");

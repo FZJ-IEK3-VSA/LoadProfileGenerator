@@ -29,14 +29,11 @@ namespace ReleaseMaker {
             Copy(programFiles, srcDi, src, dst, @"libmscordaccore.so");
             Copy(programFiles, srcDi, src, dst, @"libmscordbi.so");
             Copy(programFiles, srcDi, src, dst, @"libSkiaSharp.so");
-            Copy(programFiles, srcDi, src, dst, @"libSystem.IO.Compression.Native.a");
+            Copy(programFiles, srcDi, src, dst, @"libSystem.Globalization.Native.so");
             Copy(programFiles, srcDi, src, dst, @"libSystem.IO.Compression.Native.so");
             Copy(programFiles, srcDi, src, dst, @"libSystem.IO.Ports.Native.so");
-            Copy(programFiles, srcDi, src, dst, @"libSystem.Native.a");
             Copy(programFiles, srcDi, src, dst, @"libSystem.Native.so");
-            Copy(programFiles, srcDi, src, dst, @"libSystem.Net.Security.Native.a");
             Copy(programFiles, srcDi, src, dst, @"libSystem.Net.Security.Native.so");
-            Copy(programFiles, srcDi, src, dst, @"libSystem.Security.Cryptography.Native.OpenSsl.a");
             Copy(programFiles, srcDi, src, dst, @"libSystem.Security.Cryptography.Native.OpenSsl.so");
             Copy(programFiles, srcDi, src, dst, @"Microsoft.CSharp.dll");
             Copy(programFiles, srcDi, src, dst, @"Microsoft.VisualBasic.Core.dll");
@@ -143,6 +140,7 @@ namespace ReleaseMaker {
             Copy(programFiles, srcDi, src, dst, @"System.Net.NetworkInformation.dll");
             Copy(programFiles, srcDi, src, dst, @"System.Net.Ping.dll");
             Copy(programFiles, srcDi, src, dst, @"System.Net.Primitives.dll");
+            Copy(programFiles, srcDi, src, dst, @"System.Net.Quic.dll");
             Copy(programFiles, srcDi, src, dst, @"System.Net.Requests.dll");
             Copy(programFiles, srcDi, src, dst, @"System.Net.Security.dll");
             Copy(programFiles, srcDi, src, dst, @"System.Net.ServicePoint.dll");

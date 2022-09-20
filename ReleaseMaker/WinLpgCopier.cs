@@ -22,10 +22,8 @@ namespace ReleaseMaker {
 
             Copy(programFiles, srcDi, src, dst, @"LoadProfileGenerator.deps.json");
             Copy(programFiles, srcDi, src, dst, @"LoadProfileGenerator.dll.config");
-            Copy(programFiles, srcDi, src, dst, @"LoadProfileGenerator.runtimeconfig.dev.json");
             Copy(programFiles, srcDi, src, dst, @"LoadProfileGenerator.runtimeconfig.json");
             Copy(programFiles, srcDi, src, dst, @"xunit.runner.json");
-            Copy(programFiles, srcDi, src, dst, @"ref\LoadProfileGenerator.dll");
             Copy(programFiles, srcDi, src, dst, @"runtimes\linux-arm\native\libSkiaSharp.so");
             Copy(programFiles, srcDi, src, dst, @"runtimes\linux-arm\native\libSystem.IO.Ports.Native.so");
             Copy(programFiles, srcDi, src, dst, @"runtimes\linux-arm64\native\libSkiaSharp.so");
@@ -59,15 +57,12 @@ namespace ReleaseMaker {
             Copy(programFiles, srcDi, src, dst, @"runtimes\osx\lib\netstandard2.0\System.IO.Ports.dll");
             Copy(programFiles, srcDi, src, dst, @"runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll");
             Copy(programFiles, srcDi, src, dst, @"runtimes\win\lib\netcoreapp2.0\System.Data.Odbc.dll");
-            Copy(programFiles, srcDi, src, dst, @"runtimes\win\lib\netcoreapp2.0\System.Diagnostics.EventLog.dll");
             Copy(programFiles, srcDi, src, dst, @"runtimes\win\lib\netcoreapp2.0\System.Diagnostics.EventLog.Messages.dll");
-            Copy(programFiles, srcDi, src, dst, @"runtimes\win\lib\netcoreapp2.0\System.Diagnostics.PerformanceCounter.dll");
             Copy(programFiles, srcDi, src, dst, @"runtimes\win\lib\netcoreapp2.0\System.DirectoryServices.AccountManagement.dll");
             Copy(programFiles, srcDi, src, dst, @"runtimes\win\lib\netcoreapp2.0\System.DirectoryServices.Protocols.dll");
             Copy(programFiles, srcDi, src, dst, @"runtimes\win\lib\netcoreapp2.0\System.Management.dll");
             Copy(programFiles, srcDi, src, dst, @"runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll");
             Copy(programFiles, srcDi, src, dst, @"runtimes\win\lib\netcoreapp2.1\System.Speech.dll");
-            Copy(programFiles, srcDi, src, dst, @"runtimes\win\lib\netcoreapp3.0\System.Security.Cryptography.Pkcs.dll");
             Copy(programFiles, srcDi, src, dst, @"runtimes\win\lib\netstandard2.0\System.Data.OleDb.dll");
             Copy(programFiles, srcDi, src, dst, @"runtimes\win\lib\netstandard2.0\System.IO.Ports.dll");
             Copy(programFiles, srcDi, src, dst, @"runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll");

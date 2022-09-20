@@ -467,10 +467,19 @@ namespace ReleaseMaker
             PrepareDirectory(dstWin);
             PrepareDirectory(dstLinux);
             PrepareDirectory(dstWinCore);
+            // Currently, this source file is located in a subdirectory of the base development directory.
+            // Use this to get the base development path from the file path
             string? baseDevelopPath = Directory.GetParent(sourceFilePath)?.Parent?.FullName;
             if (baseDevelopPath == null)
             {
                 throw new LPGException("Could not find the base development path");
+            }
+            // add a trailing \ if there is none
+            char sepChar = Path.DirectorySeparatorChar;
+            char altSepChar = Path.AltDirectorySeparatorChar;
+            if (!baseDevelopPath.EndsWith(sepChar) && !baseDevelopPath.EndsWith(sepChar))
+            {
+                baseDevelopPath += sepChar;
             }
             Logger.Info("Using base development path '" + baseDevelopPath + "'");
             string srclpg = baseDevelopPath + @"WpfApplication1\bin\Debug\net6.0-windows";
