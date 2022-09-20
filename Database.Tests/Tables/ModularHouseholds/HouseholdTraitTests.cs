@@ -98,24 +98,24 @@ namespace Database.Tests.Tables.ModularHouseholds {
 
         private static bool IsInvalidMember([JetBrains.Annotations.NotNull] IMemberInfo x)
         {
-            if(x.SelectedMemberPath.EndsWith("ConnectionString")) {
+            if(x.Path.EndsWith("ConnectionString")) {
                 return true;
             }
-            if (x.SelectedMemberPath.Contains(".ParentCategory.")) {
+            if (x.Path.Contains(".ParentCategory.")) {
                 return true;
             }
-            if (x.SelectedMemberPath.Contains(".DeleteThis")) {
+            if (x.Path.Contains(".DeleteThis")) {
                 return true;
             }
-            if (x.SelectedMemberPath.Contains(".ParentAffordance"))
+            if (x.Path.Contains(".ParentAffordance"))
             {
                 return true;
             }
-            if (x.SelectedMemberPath.EndsWith("ID"))
+            if (x.Path.EndsWith("ID"))
             {
                 return true;
             }
-            if (x.SelectedMemberPath.EndsWith(".CarpetPlotBrush"))
+            if (x.Path.EndsWith(".CarpetPlotBrush"))
             {
                 return true;
             }

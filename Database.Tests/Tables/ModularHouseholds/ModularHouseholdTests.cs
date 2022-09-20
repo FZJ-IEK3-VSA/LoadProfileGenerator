@@ -143,8 +143,8 @@ namespace Database.Tests.Tables.ModularHouseholds {
                     var tt2 = sim1C.ModularHouseholds[0];
                     var jsonHH2 = tt2.GetJson();
                     jsonHH2.Should().BeEquivalentTo(jsonHH1, o => o
-                        .Excluding(x => x.SelectedMemberPath.EndsWith("Guid")
-                                        || x.SelectedMemberPath.EndsWith("ID")));
+                        .Excluding(x => x.Path.EndsWith("Guid")
+                                        || x.Path.EndsWith("ID")));
                     db1.Cleanup();
                 }
                 wd.CleanUp(0, false);
@@ -204,12 +204,12 @@ namespace Database.Tests.Tables.ModularHouseholds {
                 var newhh = sim.ModularHouseholds.CreateNewItem(sim.ConnectionString);
                 newhh.ImportFromJsonTemplate(modjson, sim);
                 newhh.Should().BeEquivalentTo(mhh, options => options
-                    .Excluding(x => x.SelectedMemberPath.EndsWith(".Guid",StringComparison.OrdinalIgnoreCase) ||
-                                    x.SelectedMemberPath.EndsWith(".ID", StringComparison.OrdinalIgnoreCase) ||
-                                    x.SelectedMemberPath.EndsWith(".IntID", StringComparison.OrdinalIgnoreCase) ||
-                                    x.SelectedMemberPath.EndsWith(".ModularHouseholdID", StringComparison.OrdinalIgnoreCase)
-                                    || x.SelectedMemberPath.EndsWith(".PrettyName", StringComparison.OrdinalIgnoreCase)
-                                    || x.SelectedMemberPath.EndsWith(".HeaderString", StringComparison.OrdinalIgnoreCase)).Excluding(x => x.ID).Excluding(x => x.IntID));
+                    .Excluding(x => x.Path.EndsWith(".Guid",StringComparison.OrdinalIgnoreCase) ||
+                                    x.Path.EndsWith(".ID", StringComparison.OrdinalIgnoreCase) ||
+                                    x.Path.EndsWith(".IntID", StringComparison.OrdinalIgnoreCase) ||
+                                    x.Path.EndsWith(".ModularHouseholdID", StringComparison.OrdinalIgnoreCase)
+                                    || x.Path.EndsWith(".PrettyName", StringComparison.OrdinalIgnoreCase)
+                                    || x.Path.EndsWith(".HeaderString", StringComparison.OrdinalIgnoreCase)).Excluding(x => x.ID).Excluding(x => x.IntID));
 
                 db.Cleanup();
             }

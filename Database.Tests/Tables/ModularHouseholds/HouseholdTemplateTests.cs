@@ -33,7 +33,7 @@ namespace Database.Tests.Tables.ModularHouseholds {
                     var sim2 = new Simulator(db2.ConnectionString);
                     //check if the basic thing is identical
                     sim1.HouseholdTemplates[0].Should().BeEquivalentTo(sim2.HouseholdTemplates[0], o => o.Excluding(
-                        x => x.SelectedMemberPath.EndsWith("ConnectionString", StringComparison.OrdinalIgnoreCase)));
+                        x => x.Path.EndsWith("ConnectionString", StringComparison.OrdinalIgnoreCase)));
 
 
                     //check import
@@ -51,11 +51,11 @@ namespace Database.Tests.Tables.ModularHouseholds {
                     sim1.HouseholdTemplates[0].Name.Should().Be(sim2.HouseholdTemplates[0].Name);
                     sim1.HouseholdTemplates[0].Should().BeEquivalentTo(sim2.HouseholdTemplates[0], o => o
                         .Using<IRelevantGuidProvider>(x => x.Subject.RelevantGuid.Should().BeEquivalentTo(x.Expectation.RelevantGuid)).WhenTypeIs<IRelevantGuidProvider>()
-                                .Excluding(x => x.SelectedMemberPath.EndsWith("ConnectionString", StringComparison.OrdinalIgnoreCase)
-                        || x.SelectedMemberPath.EndsWith("ID", StringComparison.OrdinalIgnoreCase)));
+                                .Excluding(x => x.Path.EndsWith("ConnectionString", StringComparison.OrdinalIgnoreCase)
+                        || x.Path.EndsWith("ID", StringComparison.OrdinalIgnoreCase)));
                 }
             }
-            //              ||regex2.IsMatch(x.SelectedMemberPath))
+            //              ||regex2.IsMatch(x.Path))
 
         }
         /*

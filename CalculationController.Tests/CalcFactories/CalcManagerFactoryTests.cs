@@ -363,8 +363,8 @@ namespace CalculationController.Tests.CalcFactories {
                     var rfel2 = new ResultFileEntryLogger(wd2.SqlResultLoggingService);
                     var rfes2 = rfel2.Load();
                     rfes1.Should().BeEquivalentTo(rfes2, o => o.Excluding(
-                         x => x.SelectedMemberPath.EndsWith("FullFileName", StringComparison.InvariantCultureIgnoreCase) ||
-                              x.SelectedMemberPath.EndsWith("PersonInformation.Guid", StringComparison.InvariantCultureIgnoreCase)
+                         x => x.Path.EndsWith("FullFileName", StringComparison.InvariantCultureIgnoreCase) ||
+                              x.Path.EndsWith("PersonInformation.Guid", StringComparison.InvariantCultureIgnoreCase)
                               ));
 
                     CompareCsv(rfes1, rfes2);
