@@ -253,7 +253,11 @@ namespace ReleaseMaker {
             Copy(programFiles, srcDi, src, dst, @"WindowsBase.dll");
             Copy(programFiles, srcDi, src, dst, @"xunit.abstractions.dll");
             Copy(programFiles, srcDi, src, dst, @"xunit.runner.json");
-           CheckIfFilesAreCompletelyCopied(src, programFiles);
+            Copy(programFiles, srcDi, src, dst, @"Microsoft.Bcl.AsyncInterfaces.dll");
+            Copy(programFiles, srcDi, src, dst, @"Microsoft.Extensions.ObjectPool.dll");
+            Copy(programFiles, srcDi, src, dst, @"System.Web.Services.Description.dll");
+
+            CheckIfFilesAreCompletelyCopied(src, programFiles);
         }
 
 
