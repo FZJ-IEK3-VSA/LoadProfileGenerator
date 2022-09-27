@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/runtime:5.0-focal AS base
+FROM mcr.microsoft.com/dotnet/runtime:6.0 AS base
 WORKDIR /app
 
 # install jq for removing invalid parameters from the request json file
@@ -6,15 +6,14 @@ RUN apt-get update
 RUN apt-get upgrade -y
 RUN apt-get install -y jq
 
-FROM mcr.microsoft.com/dotnet/sdk:5.0-focal AS build
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 # Copy the source code to image and built the LPG simulation engine
 COPY . .
 RUN dotnet build "SimEngine2/SimEngine2.csproj"
 
 FROM build AS publish
-# Create self-contained executables (Todo: self-contained probably not necessary - best solution?)
-RUN dotnet publish "SimEngine2/SimEngine2.csproj" -o /app/publish --configuration Release --self-contained true --runtime linux-x64 -f net5.0 --verbosity quiet 
+RUN dotnet publish "SimEngine2/SimEngine2.csproj" -o /app/publish --configuration Release --self-contained true --runtime linux-x64 -f net6.0 --verbosity quiet 
 RUN mv "/app/publish/profilegenerator-latest.db3" "/app/publish/profilegenerator.db3"
 
 FROM base AS final
