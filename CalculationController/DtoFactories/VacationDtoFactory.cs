@@ -83,13 +83,17 @@ namespace CalculationController.DtoFactories {
                 dateSpans.Add(AdjustVacationDatesForMoreRealism(hhvac.StartDate, hhvac.EndDate));
                 return dateSpans;
             }
-            for (var year = _calcParameters.InternalStartTime.Year;
-                year <= _calcParameters.InternalEndTime.Year;year++) {
+            // check if the vacation lasts over the turn of the year
+            bool yearTurn = hhvac.StartDate.Year < hhvac.EndDate.Year;
+            // if the turn of the year is included, start one year earlier
+            int firstYear = yearTurn ? _calcParameters.InternalStartTime.Year - 1: _calcParameters.InternalStartTime.Year;
+
+            for (var year = firstYear; year <= _calcParameters.InternalEndTime.Year; year++) {
                 var startTime = MapDateTime(year, hhvac.StartDate);
-                // check if the vacation end lies in the next year
-                var endYear = hhvac.StartDate.Year < hhvac.EndDate.Year ? year + 1 : year;
+                // set the appropriate year for the vacation end
+                var endYear = yearTurn ? year + 1 : year;
                 var endTime = MapDateTime(endYear, hhvac.EndDate);
-                 dateSpans.Add(AdjustVacationDatesForMoreRealism(startTime, endTime));
+                dateSpans.Add(AdjustVacationDatesForMoreRealism(startTime, endTime));
             }
             return dateSpans;
         }
