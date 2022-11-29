@@ -86,7 +86,9 @@ namespace CalculationController.DtoFactories {
             for (var year = _calcParameters.InternalStartTime.Year;
                 year <= _calcParameters.InternalEndTime.Year;year++) {
                 var startTime = MapDateTime(year, hhvac.StartDate);
-                var endTime = MapDateTime(year, hhvac.EndDate);
+                // check if the vacation end lies in the next year
+                var endYear = hhvac.StartDate.Year < hhvac.EndDate.Year ? year + 1 : year;
+                var endTime = MapDateTime(endYear, hhvac.EndDate);
                  dateSpans.Add(AdjustVacationDatesForMoreRealism(startTime, endTime));
             }
             return dateSpans;
