@@ -301,7 +301,8 @@ namespace CalculationEngine.HouseholdElements {
                 _calcRepo.Logfile.ThoughtsLogFile1.WriteEntry(new ThoughtEntry(this, time, "I'm on vacation."), _calcPerson.HouseholdKey);
             }
 
-            if (!_alreadyloggedvacation) {
+            // only log vacation if not done already and if the current time step does not belong to the setup time frame
+            if (!_alreadyloggedvacation && time.DisplayThisStep) {
                 _calcRepo.OnlineLoggingData.AddActionEntry(time, _calcPerson.Guid, _calcPerson.Name,
                     _isCurrentlySick, "taking a vacation", _vacationAffordanceGuid, _calcPerson.HouseholdKey,
                     "Vacation", BodilyActivityLevel.Outside);

@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net5.0;net5.0-windows</TargetFrameworks>
+    <TargetFrameworks>net6.0;net6.0-windows</TargetFrameworks>
     <Nullable>disable</Nullable>
     <LangVersion>9.0</LangVersion>
   </PropertyGroup>
@@ -17,9 +17,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="2021.1.0" />
+    <PackageReference Include="JetBrains.Annotations" Version="2022.1.0" />
     <PackageReference Include="PowerArgs" Version="3.6.0" />
-    <PackageReference Include="Roslynator.Analyzers" Version="3.1.0">
+    <PackageReference Include="Roslynator.Analyzers" Version="4.1.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

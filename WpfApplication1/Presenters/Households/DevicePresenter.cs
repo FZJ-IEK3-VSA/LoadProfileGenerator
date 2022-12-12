@@ -76,6 +76,7 @@ namespace LoadProfileGenerator.Presenters.Households {
             {
                 _flexbilityTypes.Add(ft);
             }
+            UpdateMaxThimeshiftState();
         }
         private ObservableCollection<Automation.FlexibilityType> _flexbilityTypes = new ObservableCollection<Automation.FlexibilityType>();
         [JetBrains.Annotations.NotNull]
@@ -168,6 +169,45 @@ namespace LoadProfileGenerator.Presenters.Households {
         [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public ObservableCollection<UsedIn> UsedIns => _usedIns;
+
+        [UsedImplicitly]
+        public FlexibilityType SelectedFlexibilityType
+        {
+            get
+            {
+                return ThisDevice.FlexibilityType;
+            }
+            set
+            {
+                ThisDevice.FlexibilityType = value;
+                UpdateMaxThimeshiftState();
+                OnPropertyChanged(nameof(SelectedFlexibilityType));
+            }
+        }
+
+        /// <summary>
+        /// Enables or disables the MaxTimeshift text box, depending on the selected flexibility type
+        /// </summary>
+        public void UpdateMaxThimeshiftState()
+        {
+            MaxTimeshiftBoxEnabled = ThisDevice.FlexibilityType != FlexibilityType.NoFlexibility;
+        }
+
+        private bool _maxTimeshiftBoxEnabled;
+
+        [UsedImplicitly]
+        public bool MaxTimeshiftBoxEnabled
+        {
+            get
+            {
+                return _maxTimeshiftBoxEnabled;
+            }
+            set
+            {
+                _maxTimeshiftBoxEnabled = value;
+                OnPropertyChanged(nameof(MaxTimeshiftBoxEnabled));
+            }
+        }
 
         public void AddRealDeviceLoadType([JetBrains.Annotations.NotNull] VLoadType loadType, double maxpower, double standardDeviation,
             double averageYearlyConsumption)

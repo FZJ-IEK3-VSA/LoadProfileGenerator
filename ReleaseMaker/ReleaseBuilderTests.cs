@@ -447,7 +447,7 @@ namespace ReleaseMaker
         //[Fact]
         //      [Trait(UnitTestCategories.Category,"ReleaseMaker")]
         [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalse")]
-        public void MakeRelease()
+        public void MakeRelease([System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "")
         {
             const string filename = "profilegenerator-latest.db3";
             const bool cleanDatabase = true;
@@ -467,16 +467,30 @@ namespace ReleaseMaker
             PrepareDirectory(dstWin);
             PrepareDirectory(dstLinux);
             PrepareDirectory(dstWinCore);
-            const string baseDevelopPath = @"C:\Main\Git-Repositories\LoadProfileGenerator\";
-            const string srclpg = baseDevelopPath + @"WpfApplication1\bin\Debug\net5.0-windows";
+            // Currently, this source file is located in a subdirectory of the base development directory.
+            // Use this to get the base development path from the file path
+            string? baseDevelopPath = Directory.GetParent(sourceFilePath)?.Parent?.FullName;
+            if (baseDevelopPath == null)
+            {
+                throw new LPGException("Could not find the base development path");
+            }
+            // add a trailing \ if there is none
+            char sepChar = Path.DirectorySeparatorChar;
+            char altSepChar = Path.AltDirectorySeparatorChar;
+            if (!baseDevelopPath.EndsWith(sepChar) && !baseDevelopPath.EndsWith(sepChar))
+            {
+                baseDevelopPath += sepChar;
+            }
+            Logger.Info("Using base development path '" + baseDevelopPath + "'");
+            string srclpg = baseDevelopPath + @"WpfApplication1\bin\Debug\net6.0-windows";
             Logger.Info("### Copying win lpg files");
             var filesForSetup = WinLpgCopier.CopyLpgFiles(srclpg, dstWin);
-            const string srcsim = baseDevelopPath + @"SimulationEngine\bin\Debug\net5.0-windows";
+            string srcsim = baseDevelopPath + @"SimulationEngine\bin\Debug\net6.0-windows";
             var filesForSetup2 = SimEngineCopier.CopySimEngineFiles(srcsim, dstWin);
 
-            const string srcsim2 = baseDevelopPath + @"SimEngine2\bin\Release\net5.0-windows\win10-x64\publish";
+            string srcsim2 = baseDevelopPath + @"SimEngine2\bin\Release\net6.0-windows\win10-x64\publish";
             SimEngine2Copier.CopySimEngine2Files(srcsim2, dstWinCore);
-            const string srcsimLinux = baseDevelopPath + @"SimEngine2\bin\Release\net5.0\linux-x64\publish";
+            string srcsimLinux = baseDevelopPath + @"SimEngine2\bin\Release\net6.0\linux-x64\publish";
             LinuxFileCopier.CopySimEngineLinuxFiles(srcsimLinux, dstLinux);
             Logger.Info("### Finished copying lpg files");
             // CopyFiles(src, dst);

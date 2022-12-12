@@ -240,7 +240,13 @@ namespace CalculationController.Integrity {
                     case AssignableDeviceType.DeviceActionGroup:
                         var dag = (DeviceActionGroup) affdev.Device;
                         var das = dag.GetDeviceActions(allDeviceActions);
-                        tpes.AddRange(MakeTimeProfileEntryFromDeviceAction(das[0], affordance, affdev,rnd));
+                        if (das.Count == 0)
+                        {
+                            throw new DataIntegrityException("There is not a single device action belonging to the device action group "
+                                + dag.PrettyName + " used in the affordance " + affordance.Name
+                                + ". Either add device actions using this group or remove the group.");
+                        }
+                        tpes.AddRange(MakeTimeProfileEntryFromDeviceAction(das[0], affordance, affdev, rnd));
                         break;
                     default:
                         throw new LPGException("Forgotten AssignableDeviceType");

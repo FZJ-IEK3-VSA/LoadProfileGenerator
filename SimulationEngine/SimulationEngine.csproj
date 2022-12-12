@@ -1,35 +1,36 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>net5.0;net5.0-windows</TargetFrameworks>
-    <ApplicationIcon />
-    <OutputType>Exe</OutputType>
-    <StartupObject />
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFrameworks>net6.0;net6.0-windows</TargetFrameworks>
+        <ApplicationIcon />
+        <OutputType>Exe</OutputType>
+        <StartupObject />
+        <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <PlatformTarget>x64</PlatformTarget>
-  </PropertyGroup>
-  <PropertyGroup>
-    <DebugType>Full</DebugType>
-    <Nullable>enable</Nullable>
-    <LangVersion>9.0</LangVersion>
-     <IsTestProject>false</IsTestProject>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="2021.1.0" />
-    <PackageReference Include="NETStandard.Library" Version="2.0.3" />
-    <PackageReference Include="NullCheckAnalyzer" Version="1.0.0.3" />
-    <PackageReference Include="Roslynator.Analyzers" Version="3.1.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <PlatformTarget>x64</PlatformTarget>
+    </PropertyGroup>
+    <PropertyGroup>
+        <DebugType>Full</DebugType>
+        <Nullable>enable</Nullable>
+        <LangVersion>9.0</LangVersion>
+        <IsTestProject>false</IsTestProject>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="JetBrains.Annotations" Version="2022.1.0" />
+        <PackageReference Include="NETStandard.Library" Version="2.0.3" />
+        <PackageReference Include="NullCheckAnalyzer" Version="1.0.0.3" />
+        <PackageReference Include="Roslynator.Analyzers" Version="4.1.1">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\ChartCreator2\ChartCreator2.csproj" />
-    <ProjectReference Include="..\Common\Common.csproj" />
-    <ProjectReference Include="..\SimulationEngineLib\SimulationEngineLib.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\ChartCreator2\ChartCreator2.csproj" />
+        <ProjectReference Include="..\Common\Common.csproj" />
+        <ProjectReference Include="..\SimulationEngineLib\SimulationEngineLib.csproj" />
+    </ItemGroup>
 
 </Project>
