@@ -60,6 +60,17 @@
                 </Hyperlink>, in the second part of the author's PhD thesis.
                 <LineBreak />
                 <LineBreak />
+                If you want to use the Load Profile Generator for a publication, please cite the following paper:
+                <LineBreak />
+                Pflugradt et al., (2022). LoadProfileGenerator: An Agent-Based Behavior Simulation for Generating Residential Load Profiles. Journal of Open Source Software, 7(71), 3574, 
+                <Hyperlink
+                    Name="LinkToJOSSPaper"
+                    NavigateUri="https://doi.org/10.21105/joss.03574"
+                    RequestNavigate="Hyperlink_RequestNavigate">
+                    https://doi.org/10.21105/joss.03574
+                </Hyperlink>
+                <LineBreak />
+                <LineBreak />
                 If you are looking for the quickest way to a load profile, select &quot;Calculation&quot; on the left,
                 fill in a target path and click on the button &quot;calculate!&quot;.
                 <LineBreak />
