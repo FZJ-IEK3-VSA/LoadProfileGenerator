@@ -96,12 +96,12 @@ namespace CalculationEngine.HouseholdElements {
             IsOnVacation = isOnVacation;
             CurrentLocation = startingLocation;
             _vacationAffordanceGuid = System.Guid.NewGuid().ToStrGuid();
-            _vacationLocationGuid = System.Guid.NewGuid().ToStrGuid();
         }
 
         //guid for all vacations of this person
         private readonly StrGuid _vacationAffordanceGuid;
-        private readonly StrGuid _vacationLocationGuid;
+        // use one vacation location guid for all persons
+        private static readonly StrGuid _vacationLocationGuid = System.Guid.NewGuid().ToStrGuid();
         [JetBrains.Annotations.NotNull]
         private CalcLocation CurrentLocation { get; set; }
 

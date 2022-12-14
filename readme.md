@@ -27,6 +27,13 @@ Copyright (c) 2010-2022 Noah Pflugradt (FZJ IEK-3), Peter Stenzel (FZJ IEK-3),  
 You should have received a copy of the MIT License along with this program.  
 If not, see <https://opensource.org/licenses/MIT>
 
+## Citation
+
+If you want to use the LoadProfileGenerator for a publication, please cite the following paper:
+```
+Pflugradt et al., (2022). LoadProfileGenerator: An Agent-Based Behavior Simulation for Generating Residential Load Profiles. Journal of Open Source Software, 7(71), 3574, https://doi.org/10.21105/joss.03574
+```
+
 ## External Data
 
 The LoadProfileGenerator uses solar radiation profiles from Deutscher Wetterdienst (DWD, www.dwd.de) and from Photovoltaic Geographical Information System (PVGIS, https://ec.europa.eu/jrc/en/pvgis)
@@ -43,11 +50,11 @@ We are the <a href="https://www.fz-juelich.de/en/iek/iek-3">Institute of Energy 
 
 This software was first developed at
 
-__Technische Universit�t Chemnitz - Professur Technische Thermodynamik__
+__Technische Universität Chemnitz - Professur Technische Thermodynamik__
 
 ### 2016-2020
 
-__Berner Fachhochschule - Labor f�r Photovoltaik-Systeme__
+__Berner Fachhochschule - Labor für Photovoltaik-Systeme__
 
 Part of the Development was funded by the 
 
@@ -55,7 +62,7 @@ __Swiss Federal Office of Energy__
 
 ## Starting March 2020
 
-Currently development is funded by the Forschungszentrum J�lich - IEK 3.
+Currently development is funded by the Forschungszentrum Jülich - IEK 3.
 
 <a href="https://www.fz-juelich.de/en/iek/iek-3"><img src="https://raw.githubusercontent.com/OfficialCodexplosive/README_Assets/862a93188b61ab4dd0eebde3ab5daad636e129d5/FJZ_IEK-3_logo.svg" alt="FZJ Logo" width="300px"></a>
 

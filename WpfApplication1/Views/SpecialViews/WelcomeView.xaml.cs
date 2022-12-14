@@ -59,7 +59,7 @@ namespace LoadProfileGenerator.Views.SpecialViews
                 System.Diagnostics.Process.Start(psInfo);
             } catch (System.Exception)
             {
-                Common.Logger.Error("Could not open the link to the manual: " + e.Uri.ToString());
+                Common.Logger.Error("Could not open the following link: " + e.Uri.ToString());
             }
         }
     }
