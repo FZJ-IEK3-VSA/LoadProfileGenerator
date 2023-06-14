@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net6.0-windows</TargetFramework>
@@ -56,7 +56,7 @@
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="JetBrains.Annotations" Version="2022.1.0" />
-        <PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.0" />
+        <PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.6" />
         <PackageReference Include="NETStandard.Library" Version="2.0.3" />
         <PackageReference Include="NullCheckAnalyzer" Version="1.0.0.3" />
         <PackageReference Include="OxyPlot.Wpf" Version="2.1.0" />
