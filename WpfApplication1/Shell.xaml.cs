@@ -933,7 +933,11 @@ using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
                 WindowGrid.ColumnDefinitions[2].Width = new GridLength(1000);
                 var ssh = new ScreenshotHelper(Sim, Presenter, Tabs);
                 ssh.Run();
-                ssh.RunOthers();
+
+                // Workaround for the screenshot helper
+                // The following method produces exceptions when trying to create screenshots of all tabs. The screenshot image
+                // files can be created without this method, so it is commented out for now.
+                //ssh.RunOthers();
             }
             else {
                 Logger.Warning("canceled.");
