@@ -492,11 +492,15 @@ namespace SimulationEngineLib.HouseJobProcessor {
                     // ReSharper disable once RedundantToStringCall
                     throw new LPGPBadParameterException("Could not find charging station set: " + householdData.ChargingStationSet?.ToString());
                 }
-                var travelrouteset = sim.TravelRouteSets.FindByJsonReference(householdData.TravelRouteSet);
-                if (hj.CalcSpec.EnableTransportation && travelrouteset == null)
+                TravelRouteSet travelrouteset;
+                if (householdData.TravelRouteSet != null)
                 {
-                    // Alternative transport specification: for each person transportation preferences can be specified. These are used
-                    // to create a new TravelRouteSet.
+                    // try to load the specified TravelRouteSet
+                    travelrouteset = sim.TravelRouteSets.FindByJsonReference(householdData.TravelRouteSet);
+                } else
+                {
+                    // no TravelRouteSet specified: use alternative travel specification (if available)
+                    // For each person, transportation preferences can be specified. These are used to create a new TravelRouteSet.
                     travelrouteset = CreateTravelRouteSetFromPersonPreferences(householdData, sim);
                 }
                 if (hj.CalcSpec.EnableTransportation && travelrouteset == null)
