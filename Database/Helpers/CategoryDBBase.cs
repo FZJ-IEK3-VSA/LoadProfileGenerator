@@ -75,6 +75,7 @@ namespace Database.Helpers {
             // ReSharper disable twice HeuristicUnreachableCode
             if (reference.Guid != null && reference.Guid != StrGuid.Empty)
             {
+                // find the object with the same GUID
                 foreach (var x in Items)
                 {
                     if (x.Guid == reference.Guid)
@@ -82,8 +83,8 @@ namespace Database.Helpers {
                         return x;
                     }
                 }
-            }
-            if (reference.Name != null)
+                Logger.Warning("No object with GUID " + reference.Guid + " found.");
+            } else if (reference.Name != null)
             {
                 return FindFirstByName(reference.Name);
             }
