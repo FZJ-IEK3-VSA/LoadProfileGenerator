@@ -66,14 +66,17 @@ namespace Database.Tests
                 }
                 // filter all GUIDs which occurred more than once
                 var nonunique_guids = items_by_guid.Where(pair => pair.Value.Count > 1);
-                string output = "";
-                // generate a summary of non-unique GUIDs and the objects that use them
-                foreach (var entry in nonunique_guids)
+                if (nonunique_guids.Any())
                 {
-                    output += entry.Key + ": ";
-                    output += string.Join(", ", entry.Value.Select(tpl => tpl.Item1 + " (" + tpl.Item2.Name + ")")) + "\n";
+                    string output = "";
+                    // generate a summary of non-unique GUIDs and the objects that use them
+                    foreach (var entry in nonunique_guids)
+                    {
+                        output += entry.Key + ": ";
+                        output += string.Join(", ", entry.Value.Select(tpl => tpl.Item1 + " (" + tpl.Item2.Name + ")")) + "\n";
+                    }
+                    Assert.Fail("Found non-unique GUIDs:\n" + output);
                 }
-                nonunique_guids.Should().BeEmpty("each guid should be unique.\nNon-unique GUIDs:\n" + output);
                 
                 db.Cleanup();
             }

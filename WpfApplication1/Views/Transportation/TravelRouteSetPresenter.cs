@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
 using System.Windows;
+using Automation;
 using Automation.ResultFiles;
 using Common;
 using Common.Enums;
@@ -530,6 +531,8 @@ namespace LoadProfileGenerator.Views.Transportation {
         public void MakeCopy()
         {
             var newSet = TravelRouteSet.ImportFromItem(ThisRouteSet, ApplicationPresenter.Simulator ?? throw new LPGException("Simulator not set"));
+            // assign a new GUID
+            newSet.Guid = StrGuid.New();
             var trs = ApplicationPresenter.Simulator.TravelRouteSets;
             string basename = ThisRouteSet.Name + "(Copy)";
             string name = basename;

@@ -31,6 +31,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Automation;
 using Database.Tables.BasicElements;
 using Database.Tables.BasicHouseholds;
 using Database.Tables.Houses;
@@ -218,6 +219,8 @@ namespace LoadProfileGenerator.Presenters.Houses {
         public void MakeACopy()
         {
             var newht = TransformationDevice.ImportFromItem(ThisTrafo, Sim);
+            // assign a new GUID
+            newht.Guid = StrGuid.New();
             newht.Name = newht.Name + " (Copy)";
             newht.SaveToDB();
             Sim.TransformationDevices.Items.Add(newht);

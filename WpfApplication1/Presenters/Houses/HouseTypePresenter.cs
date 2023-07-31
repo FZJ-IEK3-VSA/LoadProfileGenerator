@@ -30,6 +30,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
+using Automation;
 using Common;
 using Database.Helpers;
 using Database.Tables.BasicElements;
@@ -334,6 +335,8 @@ namespace LoadProfileGenerator.Presenters.Houses {
         public void MakeACopy()
         {
             var newht = (HouseType) HouseType.ImportFromItem(ThisHouseType, Sim);
+            // assign a new GUID
+            newht.Guid = StrGuid.New();
             newht.Name = newht.Name + " (Copy)";
             newht.SaveToDB();
             Sim.HouseTypes.Items.Add(newht);
