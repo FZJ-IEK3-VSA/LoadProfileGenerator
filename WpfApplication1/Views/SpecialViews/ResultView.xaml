@@ -9,43 +9,40 @@
              mc:Ignorable="d">
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="35" />
         </Grid.RowDefinitions>
-        <ScrollViewer Name="ScrollViewer1"
-                      Margin="0,0,0,0"
-                      VerticalScrollBarVisibility="Auto">
-            <StackPanel>
-                <GroupBox Name="Border1"
+        <GroupBox Name="Border1" Grid.Row="0"
                           BorderBrush="Silver"
                           BorderThickness="5">
-                    <GroupBox.Header>
-                        <Border Style="{StaticResource GroupBoxHeader}">
-                            <TextBlock Text="General" />
-                        </Border>
-                    </GroupBox.Header>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="5*" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <Label Grid.Column="0"
+            <GroupBox.Header>
+                <Border Style="{StaticResource GroupBoxHeader}">
+                    <TextBlock Text="General" />
+                </Border>
+            </GroupBox.Header>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="5*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Label Grid.Column="0"
                                Content="Household name:"
                                Target="{Binding ElementName=TxtHouseholdName}" />
-                        <TextBox x:Name="TxtHouseholdName"
+                <TextBox x:Name="TxtHouseholdName"
                                  Grid.Row="0"
                                  Grid.Column="1"
                                  Height="23"
                                  Margin="5,5,5,5"
                                  Text="{Binding Path=Householdname,
                                                 Mode=OneWay}" />
-                        <!--<Grid Grid.Row="1"
+                <!--<Grid Grid.Row="1"
                               Grid.Column="0"
                               Grid.ColumnSpan="2">
                             <Grid.ColumnDefinitions>
@@ -101,42 +98,42 @@
                                      Text="{Binding SimEndtime,
                                                     Mode=OneWay}" />
                         </Grid>-->
-                    </Grid>
-                </GroupBox>
-                <GroupBox BorderBrush="Silver" BorderThickness="5">
-                    <GroupBox.Header>
-                        <Border Style="{StaticResource GroupBoxHeader}">
-                            <TextBlock Text="Files" />
-                        </Border>
-                    </GroupBox.Header>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <TextBlock Grid.ColumnSpan="2" TextWrapping="WrapWithOverflow">
+            </Grid>
+        </GroupBox>
+        <GroupBox BorderBrush="Silver" Grid.Row="1" BorderThickness="5">
+            <GroupBox.Header>
+                <Border Style="{StaticResource GroupBoxHeader}">
+                    <TextBlock Text="Files" />
+                </Border>
+            </GroupBox.Header>
+            <Grid x:Name="LayoutRoot">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.ColumnSpan="2" TextWrapping="WrapWithOverflow">
                             Double clicking on a file will try to open it with the programm associated with the file in windows.
-                        </TextBlock>
+                </TextBlock>
 
 
-                        <Label Grid.Row="1"
+                <Label Grid.Row="1"
                                Grid.Column="0"
                                HorizontalAlignment="Left"
                                Content="Filter" />
-                        <TextBox x:Name="TxtFilter"
+                <TextBox x:Name="TxtFilter"
                                  Grid.Row="1"
                                  Grid.Column="1"
                                  Height="23"
                                  Margin="5,5,5,5"
                                  KeyUp="TxtFilterKeyUp" />
-                        <ListView x:Name="LstFiles"
+                <ListView x:Name="LstFiles"
                                   Grid.Row="2"
                                   Grid.Column="0"
                                   Grid.ColumnSpan="2"
@@ -144,30 +141,28 @@
                                   Margin="5"
                                   ItemsSource="{Binding FilteredResultFiles}"
                                   MouseDoubleClick="LstFilesMouseDoubleClick">
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn Width="Auto"
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Width="Auto"
                                                     DisplayMemberBinding="{Binding Name}"
                                                     Header="Name" />
-                                    <GridViewColumn Width="Auto"
+                            <GridViewColumn Width="Auto"
                                                     DisplayMemberBinding="{Binding FileName}"
                                                     Header="Filename" />
-                                    <GridViewColumn Width="Auto"
+                            <GridViewColumn Width="Auto"
                                                     DisplayMemberBinding="{Binding PrettySize}"
                                                     Header="Size" />
-                                    <GridViewColumn Width="Auto"
+                            <GridViewColumn Width="Auto"
                                                     DisplayMemberBinding="{Binding FullFileName}"
                                                     Header="FullFilename" />
-                                </GridView>
-                            </ListView.View>
-                        </ListView>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
 
 
-                    </Grid>
-                </GroupBox>
-            </StackPanel>
-        </ScrollViewer>
-        <StackPanel Grid.Row="1"
+            </Grid>
+        </GroupBox>
+        <StackPanel Grid.Row="2"
                     HorizontalAlignment="Right"
                     Orientation="Horizontal">
 
