@@ -25,6 +25,16 @@ namespace Database.Tables.ModularHouseholds {
             TypeDescription = "Living Pattern Tag";
         }
 
+        /// <summary>
+        /// Weight for varying LivingPatternTags when creating households from templates
+        /// </summary>
+        public double Weight
+        {
+            get => _weight;
+            [UsedImplicitly]
+            set => SetValueWithNotify(value, ref _weight, nameof(Weight));
+        }
+
 
         [JetBrains.Annotations.NotNull]
         private static LivingPatternTag AssignFields([JetBrains.Annotations.NotNull] DataReader dr, [JetBrains.Annotations.NotNull] string connectionString, bool ignoreMissingFields,
