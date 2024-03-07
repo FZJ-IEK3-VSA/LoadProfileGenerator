@@ -424,6 +424,42 @@ namespace Database.Templating {
             throw new LPGException("Assigning trait to wrong person");
         }
 
+        /// <summary>
+        /// If the specified LivingPatternTag consists of three components (separated by '/'), randomly vary the last component based
+        /// on the weights of all possible tags.
+        /// </summary>
+        /// <param name="livingpattern">the originally specified LivingPatternTag</param>
+        /// <param name="allLivingPatternTags">All LivingPatternTags in the LPG</param>
+        /// <param name="r">Random number generator</param>
+        /// <returns>the new, possibly changed LivingPatternTag</returns>
+        private static LivingPatternTag VaryLivingPatternTag(LivingPatternTag livingpattern, Collection<LivingPatternTag> allLivingPatternTags, Random r)
+        {
+            string[] components = livingpattern?.Name.Split('/');
+            if (components?.Length < 3)
+            {
+                // don't change the livingpattern
+                return livingpattern;
+            }
+            // get the base name without the last component, e.g., "Living Patttern / Office Job / "
+            string basename = livingpattern.Name.Substring(0, livingpattern.Name.Length - components[2].Length);
+            List<LivingPatternTag> possibleTags = allLivingPatternTags.Where(x => x.Name.StartsWith(basename, StringComparison.InvariantCultureIgnoreCase)).ToList();
+            if (possibleTags.Count > 1)
+            {
+                // randomly select one of the possible tags based on their weight
+                double totalWeight  =possibleTags.Select(x => x.Weight).Sum();
+                double randomNumber = r.NextDouble() * totalWeight;
+                foreach (var tag in possibleTags)
+                {
+                    if (randomNumber < tag.Weight)
+                    {
+                        return tag;
+                    }
+                    randomNumber -= tag.Weight;
+                }
+            }
+            return livingpattern;
+        }
+
         [JetBrains.Annotations.NotNull]
         private static ModularHousehold GenerateEmptyHousehold([JetBrains.Annotations.NotNull] Simulator sim,
                                                                [JetBrains.Annotations.NotNull] HouseholdTemplate template,
@@ -458,19 +494,9 @@ namespace Database.Templating {
                 chh.GeneratorID = template.IntID;
                 //add persons
 
-                //TODO: fix this
+                // vary LivingPatternTags for each person
                 foreach (var person in template.Persons) {
-                    var livingpattern = person.LivingPatternTag;
-                    string[] components = livingpattern?.Name.Split('/');
-                    if (components?.Length == 3) {
-                        string basename = livingpattern.Name.Substring(0, livingpattern.Name.Length - components[2].Length);
-                        List<LivingPatternTag> possibleTags = sim.LivingPatternTags.Items
-                            .Where(x => x.Name.StartsWith(basename, StringComparison.InvariantCultureIgnoreCase)).ToList();
-                        if (possibleTags.Count > 1) {
-                            livingpattern = possibleTags[r.Next(possibleTags.Count)];
-                        }
-                    }
-
+                    var livingpattern = VaryLivingPatternTag(person.LivingPatternTag, sim.LivingPatternTags.Items, r);
                     chh.AddPerson(person.Person, livingpattern);
                 }
 
