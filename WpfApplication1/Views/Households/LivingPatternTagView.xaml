@@ -47,6 +47,16 @@
                                  Grid.Column="1"
                                  Style="{StaticResource TextBoxStyle}"
                                  Text="{Binding ThisTag.Name}" />
+                        <Label Grid.Row="2"
+                               Grid.Column="0"
+                               Content="_Weight"
+                               Style="{StaticResource LabelStyle}"
+                               Target="{Binding ElementName=TagWeight}" />
+                        <TextBox x:Name="TagWeight"
+                                 Grid.Row="2"
+                                 Grid.Column="1"
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Text="{Binding ThisTag.Weight, Converter={StaticResource NumberConverter}}" />
                     </Grid>
 
 
