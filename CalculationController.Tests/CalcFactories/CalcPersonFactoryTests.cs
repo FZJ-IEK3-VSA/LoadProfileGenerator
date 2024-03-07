@@ -57,7 +57,7 @@ namespace CalculationController.Tests.CalcFactories {
             var p = new Person("blub", 1, 1, 1, 1,
                 PermittedGender.Male, string.Empty, string.Empty, Guid.NewGuid().ToStrGuid());
             //var tt = new TraitTag("traittag", "", TraitLimitType.NoLimit, TraitPriority.All, Guid.NewGuid().ToStrGuid());
-            var livingPatternTag = new LivingPatternTag("tag","",StrGuid.New());
+            var livingPatternTag = new LivingPatternTag("tag", 1.0,"",StrGuid.New());
             var mhp = new ModularHouseholdPerson(null, -1, p.PrettyName, "", p, livingPatternTag, Guid.NewGuid().ToStrGuid());
             persons.Add(mhp);
             var hhVacations = new List<VacationTimeframe>();

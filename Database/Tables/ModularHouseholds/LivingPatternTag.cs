@@ -11,10 +11,16 @@ namespace Database.Tables.ModularHouseholds {
 
     public class LivingPatternTag : DBBaseElement {
         public const string TableName = "tblLivingPatternTags";
-        public LivingPatternTag([JetBrains.Annotations.NotNull] string pName, [JetBrains.Annotations.NotNull] string connectionString,
+
+        private double _weight;
+
+        public const double DefaultWeight = 1.0;
+
+        public LivingPatternTag([JetBrains.Annotations.NotNull] string pName, double weight, [JetBrains.Annotations.NotNull] string connectionString,
                         [NotNull] StrGuid guid, [CanBeNull]int? pID = null)
             : base(pName, TableName, connectionString, guid)
         {
+            _weight = weight;
             ID = pID;
             TypeDescription = "Living Pattern Tag";
         }
@@ -25,16 +31,17 @@ namespace Database.Tables.ModularHouseholds {
                                                      [JetBrains.Annotations.NotNull] AllItemCollections aic)
         {
             var name = dr.GetString("Name","No name");
+            var weight = dr.GetDouble("Weight", defaultvalue: DefaultWeight);
             var id = dr.GetIntFromLong("ID");
             var guid = GetGuid(dr, ignoreMissingFields);
-            var d = new LivingPatternTag(name, connectionString,guid, id);
+            var d = new LivingPatternTag(name, weight, connectionString,guid, id);
             return d;
         }
 
         [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
         public static DBBase CreateNewItem([JetBrains.Annotations.NotNull] Func<string, bool> isNameTaken, [JetBrains.Annotations.NotNull] string connectionString) => new LivingPatternTag(
-            FindNewName(isNameTaken, "New Living Pattern Tag "), connectionString, System.Guid.NewGuid().ToStrGuid());
+            FindNewName(isNameTaken, "New Living Pattern Tag "), DefaultWeight, connectionString, System.Guid.NewGuid().ToStrGuid());
 
         public override DBBase ImportFromGenericItem(DBBase toImport, Simulator dstSim)
             => ImportFromItem((LivingPatternTag)toImport,dstSim);
@@ -71,12 +78,10 @@ namespace Database.Tables.ModularHouseholds {
 
         [JetBrains.Annotations.NotNull]
         [UsedImplicitly]
-#pragma warning disable RCS1163 // Unused parameter.
         public static DBBase ImportFromItem([JetBrains.Annotations.NotNull] LivingPatternTag item, [JetBrains.Annotations.NotNull] Simulator dstSim)
-#pragma warning restore RCS1163 // Unused parameter.
         {
             //TODO: finish this
-            var tt = new LivingPatternTag(item.Name,dstSim.ConnectionString,
+            var tt = new LivingPatternTag(item.Name, item._weight, dstSim.ConnectionString,
                  item.Guid);
             tt.SaveToDB();
             return tt;
@@ -98,6 +103,7 @@ namespace Database.Tables.ModularHouseholds {
         protected override void SetSqlParameters(Command cmd)
         {
             cmd.AddParameter("Name", Name);
+            cmd.AddParameter("Weight", _weight);
         }
     }
 }
