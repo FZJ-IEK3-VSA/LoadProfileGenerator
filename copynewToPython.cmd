@@ -29,7 +29,7 @@ pause
 
 
 REM create pylpg
-set "releasedirectory=C:\LPGReleaseMakerResults\LPGReleases\releases10.9.0"
+set "releasedirectory=C:\LPGReleaseMakerResults\LPGReleases\releases10.10"
 set "pylpgdirectory=C:\LPGPythonBindings\pylpg\"
 
 cd /D %releasedirectory%\windows
