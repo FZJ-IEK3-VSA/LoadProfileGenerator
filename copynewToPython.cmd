@@ -36,11 +36,4 @@ cd /D %releasedirectory%\windows
 simulationengine cpy
 xcopy lpgdata.py %pylpgdirectory%
 xcopy lpgpythonbindings.py %pylpgdirectory%
-
-robocopy %releasedirectory%\windows %pylpgdirectory%\LPG_win /E /R:0 /W:0 /MIR
-robocopy %releasedirectory%\windows C:\LPGPythonBindings\pylpg_2\LPG_win_most_recent /E /R:0 /W:0 /MIR
-del %pylpgdirectory%\LPG_win\LPG*.zip
-del %pylpgdirectory%\LPG_win\setup*.exe
-robocopy %releasedirectory%\linux %pylpgdirectory%\LPG_linux /E /R:0 /W:0 /MIR
-del %pylpgdirectory%\LPG_linux\LPG*.zip
 pause
