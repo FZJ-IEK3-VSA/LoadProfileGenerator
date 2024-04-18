@@ -459,7 +459,7 @@ namespace ReleaseMaker
             Logger.Info("Release name: " + releasename);
             //return;
             var baseReleasePath = @"C:\LPGReleaseMakerResults\";
-            var dstWin = baseReleasePath + @"LPGReleases\releases" + releasename + "\\net48";
+            var dstWin = baseReleasePath + @"LPGReleases\releases" + releasename + "\\windows";
             var dstLinux = baseReleasePath + @"LPGReleases\releases" + releasename + "\\linux";
             var dstWinCore = baseReleasePath + @"LPGReleases\releases" + releasename + "\\netCore";
             //const string srcsim = @"v:\Dropbox\LPG\SimulationEngine\bin\x64\Debug";
@@ -482,15 +482,15 @@ namespace ReleaseMaker
                 baseDevelopPath += sepChar;
             }
             Logger.Info("Using base development path '" + baseDevelopPath + "'");
-            string srclpg = baseDevelopPath + @"WpfApplication1\bin\Debug\net6.0-windows";
+            string srclpg = baseDevelopPath + @"WpfApplication1\bin\Debug\net8.0-windows";
             Logger.Info("### Copying win lpg files");
             var filesForSetup = WinLpgCopier.CopyLpgFiles(srclpg, dstWin);
-            string srcsim = baseDevelopPath + @"SimulationEngine\bin\Debug\net6.0-windows";
+            string srcsim = baseDevelopPath + @"SimulationEngine\bin\Debug\net8.0-windows";
             var filesForSetup2 = SimEngineCopier.CopySimEngineFiles(srcsim, dstWin);
 
-            string srcsim2 = baseDevelopPath + @"SimEngine2\bin\Release\net6.0-windows\win10-x64\publish";
+            string srcsim2 = baseDevelopPath + @"SimEngine2\bin\Release\net8.0-windows\win-x64\publish";
             SimEngine2Copier.CopySimEngine2Files(srcsim2, dstWinCore);
-            string srcsimLinux = baseDevelopPath + @"SimEngine2\bin\Release\net6.0\linux-x64\publish";
+            string srcsimLinux = baseDevelopPath + @"SimEngine2\bin\Release\net8.0\linux-x64\publish";
             LinuxFileCopier.CopySimEngineLinuxFiles(srcsimLinux, dstLinux);
             Logger.Info("### Finished copying lpg files");
             // CopyFiles(src, dst);
