@@ -49,29 +49,28 @@ namespace ReleaseMaker {
             Copy(programFiles, srcDi, src, dst, @"runtimes\win-x86\native\sni.dll");
             Copy(programFiles, srcDi, src, dst, @"runtimes\win-x86\native\SQLite.Interop.dll");
 
-            // added for .net6.0
+            // added for .net8.0
             Copy(programFiles, srcDi, src, dst, @"runtimes\osx-arm64\native\libSystem.IO.Ports.Native.dylib");
-            Copy(programFiles, srcDi, src, dst, @"runtimes\freebsd\lib\net6.0\System.Data.Odbc.dll");
-            Copy(programFiles, srcDi, src, dst, @"runtimes\illumos\lib\net6.0\System.Data.Odbc.dll");
-            Copy(programFiles, srcDi, src, dst, @"runtimes\ios\lib\net6.0\System.Data.Odbc.dll");
-            Copy(programFiles, srcDi, src, dst, @"runtimes\linux\lib\net6.0\System.Data.Odbc.dll");
-            Copy(programFiles, srcDi, src, dst, @"runtimes\linux\lib\net6.0\System.DirectoryServices.Protocols.dll");
-            Copy(programFiles, srcDi, src, dst, @"runtimes\osx\lib\net6.0\System.Data.Odbc.dll");
-            Copy(programFiles, srcDi, src, dst, @"runtimes\osx\lib\net6.0\System.DirectoryServices.Protocols.dll");
-            Copy(programFiles, srcDi, src, dst, @"runtimes\solaris\lib\net6.0\System.Data.Odbc.dll");
-            Copy(programFiles, srcDi, src, dst, @"runtimes\tvos\lib\net6.0\System.Data.Odbc.dll");
-            Copy(programFiles, srcDi, src, dst, @"runtimes\unix\lib\net6.0\System.IO.Ports.dll");
+            Copy(programFiles, srcDi, src, dst, @"runtimes\freebsd\lib\net8.0\System.Data.Odbc.dll");
+            Copy(programFiles, srcDi, src, dst, @"runtimes\illumos\lib\net8.0\System.Data.Odbc.dll");
+            Copy(programFiles, srcDi, src, dst, @"runtimes\ios\lib\net8.0\System.Data.Odbc.dll");
+            Copy(programFiles, srcDi, src, dst, @"runtimes\linux\lib\net8.0\System.Data.Odbc.dll");
+            Copy(programFiles, srcDi, src, dst, @"runtimes\linux\lib\net8.0\System.DirectoryServices.Protocols.dll");
+            Copy(programFiles, srcDi, src, dst, @"runtimes\osx\lib\net8.0\System.Data.Odbc.dll");
+            Copy(programFiles, srcDi, src, dst, @"runtimes\osx\lib\net8.0\System.DirectoryServices.Protocols.dll");
+            Copy(programFiles, srcDi, src, dst, @"runtimes\solaris\lib\net8.0\System.Data.Odbc.dll");
+            Copy(programFiles, srcDi, src, dst, @"runtimes\tvos\lib\net8.0\System.Data.Odbc.dll");
+            Copy(programFiles, srcDi, src, dst, @"runtimes\unix\lib\net8.0\System.IO.Ports.dll");
             Copy(programFiles, srcDi, src, dst, @"runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll");
-            Copy(programFiles, srcDi, src, dst, @"runtimes\win\lib\net6.0\System.Data.Odbc.dll");
-            Copy(programFiles, srcDi, src, dst, @"runtimes\win\lib\net6.0\System.Data.OleDb.dll");
-            Copy(programFiles, srcDi, src, dst, @"runtimes\win\lib\net6.0\System.Diagnostics.EventLog.Messages.dll");
-            Copy(programFiles, srcDi, src, dst, @"runtimes\win\lib\net6.0\System.DirectoryServices.AccountManagement.dll");
-            Copy(programFiles, srcDi, src, dst, @"runtimes\win\lib\net6.0\System.DirectoryServices.Protocols.dll");
-            Copy(programFiles, srcDi, src, dst, @"runtimes\win\lib\net6.0\System.IO.Ports.dll");
-            Copy(programFiles, srcDi, src, dst, @"runtimes\win\lib\net6.0\System.Management.dll");
-            Copy(programFiles, srcDi, src, dst, @"runtimes\win\lib\net6.0\System.Runtime.Caching.dll");
-            Copy(programFiles, srcDi, src, dst, @"runtimes\win\lib\net6.0\System.ServiceProcess.ServiceController.dll");
-            Copy(programFiles, srcDi, src, dst, @"runtimes\win\lib\net6.0\System.Speech.dll");
+            Copy(programFiles, srcDi, src, dst, @"runtimes\win\lib\net8.0\System.Data.Odbc.dll");
+            Copy(programFiles, srcDi, src, dst, @"runtimes\win\lib\net8.0\System.Data.OleDb.dll");
+            Copy(programFiles, srcDi, src, dst, @"runtimes\win\lib\net8.0\System.DirectoryServices.AccountManagement.dll");
+            Copy(programFiles, srcDi, src, dst, @"runtimes\win\lib\net8.0\System.DirectoryServices.Protocols.dll");
+            Copy(programFiles, srcDi, src, dst, @"runtimes\win\lib\net8.0\System.IO.Ports.dll");
+            Copy(programFiles, srcDi, src, dst, @"runtimes\win\lib\net8.0\System.Management.dll");
+            Copy(programFiles, srcDi, src, dst, @"runtimes\win\lib\net8.0\System.Runtime.Caching.dll");
+            Copy(programFiles, srcDi, src, dst, @"runtimes\win\lib\net8.0\System.ServiceProcess.ServiceController.dll");
+            Copy(programFiles, srcDi, src, dst, @"runtimes\win\lib\net8.0\System.Speech.dll");
             Copy(programFiles, srcDi, src, dst, @"runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll");
 
             CheckIfFilesAreCompletelyCopied(src, programFiles);

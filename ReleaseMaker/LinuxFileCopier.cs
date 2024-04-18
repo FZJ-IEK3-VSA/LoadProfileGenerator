@@ -23,7 +23,6 @@ namespace ReleaseMaker {
             Copy(programFiles, srcDi, src, dst, @"libclrjit.so");
             Copy(programFiles, srcDi, src, dst, @"libcoreclr.so");
             Copy(programFiles, srcDi, src, dst, @"libcoreclrtraceptprovider.so");
-            Copy(programFiles, srcDi, src, dst, @"libdbgshim.so");
             Copy(programFiles, srcDi, src, dst, @"libhostfxr.so");
             Copy(programFiles, srcDi, src, dst, @"libhostpolicy.so");
             Copy(programFiles, srcDi, src, dst, @"libmscordaccore.so");
@@ -256,6 +255,10 @@ namespace ReleaseMaker {
             Copy(programFiles, srcDi, src, dst, @"Microsoft.Bcl.AsyncInterfaces.dll");
             Copy(programFiles, srcDi, src, dst, @"Microsoft.Extensions.ObjectPool.dll");
             Copy(programFiles, srcDi, src, dst, @"System.Web.Services.Description.dll");
+            Copy(programFiles, srcDi, src, dst, @"libclrgc.so");
+            Copy(programFiles, srcDi, src, dst, @"System.Formats.Tar.dll");
+            Copy(programFiles, srcDi, src, dst, @"System.Runtime.InteropServices.JavaScript.dll");
+            Copy(programFiles, srcDi, src, dst, @"System.Security.Cryptography.dll");
 
             CheckIfFilesAreCompletelyCopied(src, programFiles);
         }
