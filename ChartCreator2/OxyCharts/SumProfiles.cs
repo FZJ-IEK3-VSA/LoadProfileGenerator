@@ -130,7 +130,7 @@ namespace ChartCreator2.OxyCharts {
                         var col = cols[cols.Length - 1];
                         var success = double.TryParse(col, out double d);
                         if (!success) {
-                            throw new LPGException("Double Trouble reading the file " + srcEntry.FileName);
+                            throw new LPGException("Error reading file '" + srcEntry.FullFileName + "': Could not parse double from '" + col + "'");
                         }
 
                         if (srcEntry.LoadTypeInformation == null) {

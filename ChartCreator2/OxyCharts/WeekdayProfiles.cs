@@ -192,7 +192,7 @@ namespace ChartCreator2.OxyCharts {
                         if (col.Length > 0) {
                             var success = double.TryParse(col, out double d);
                             if (!success) {
-                                throw new LPGException("Double Trouble");
+                                throw new LPGException("Could not parse entry " + col + " from result file '" + srcEntry.FullFileName + "'" );
                             }
                             entries[index].Values.Add(d);
                         }

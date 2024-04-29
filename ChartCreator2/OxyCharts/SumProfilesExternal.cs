@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using Automation;
 using Automation.ResultFiles;
 using Common;
+using Common.JSON;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
@@ -11,14 +13,17 @@ using OxyPlot.Series;
 namespace ChartCreator2.OxyCharts {
     internal class SumProfilesExternal : ChartBaseFileStep
     {
+        private readonly CalcParameters _calcParameters;
+
         public SumProfilesExternal([JetBrains.Annotations.NotNull] ChartCreationParameters parameters,
                                    [JetBrains.Annotations.NotNull] FileFactoryAndTracker fft,
-                                   [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler) : base(parameters, fft,
+                                   [JetBrains.Annotations.NotNull] ICalculationProfiler calculationProfiler, CalcParameters calcParameters) : base(parameters, fft,
             calculationProfiler, new List<ResultFileID>() { ResultFileID.CSVSumProfileExternal
             },
             "Sim Profiles External Time Resolution", FileProcessingResult.ShouldCreateFiles
         )
         {
+            _calcParameters = calcParameters;
         }
 
         protected override FileProcessingResult MakeOnePlot(ResultFileEntry rfe)
@@ -32,6 +37,10 @@ namespace ChartCreator2.OxyCharts {
                 {
                     throw new LPGException("filename was null");
                 }
+                // specify the number format to use for parsing
+                NumberFormatInfo formatInfo = new NumberFormatInfo();
+                formatInfo.NumberDecimalSeparator = _calcParameters.DecimalSeperator;
+
                 using (var sr = new StreamReader(rfe.FullFileName))
                 {
                     sr.ReadLine();
@@ -44,10 +53,10 @@ namespace ChartCreator2.OxyCharts {
                         }
                         var cols = s.Split(Parameters.CSVCharacterArr, StringSplitOptions.None);
                         var col = cols[cols.Length - 1];
-                        var success = double.TryParse(col, out var d);
+                        var success = double.TryParse(col, NumberStyles.Float, formatInfo, out var d);
                         if (!success)
                         {
-                            throw new LPGException("Double Trouble!");
+                            throw new LPGException("Error reading file '" + rfe.FullFileName + "': Could not parse double from '" + col + "'");
                         }
                         values.Add(d);
                     }

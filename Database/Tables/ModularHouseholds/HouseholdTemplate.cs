@@ -520,9 +520,11 @@ namespace Database.Tables.ModularHouseholds {
             var newtemplate = sim.HouseholdTemplates.CreateNewItem(sim.ConnectionString);
             jsonTemplate.Name = jsonTemplate.Name + " (copy)";
             newtemplate.ImportFromJsonTemplate(jsonTemplate,sim);
+            // assign a new GUID
+            newtemplate.Guid = StrGuid.New();
             return newtemplate;
-
         }
+
         public void ImportFromJsonTemplate([JetBrains.Annotations.NotNull] JsonDto jsonTemplate, [JetBrains.Annotations.NotNull] Simulator sim)
         {
             DateBasedProfile dbp = null;

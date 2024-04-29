@@ -17,30 +17,23 @@ rmdir /S/Q %srcdirectory%\WpfApplication1\bin
 
 cd /D %srcdirectory%\SimEngine2
 rmdir /S /Q %srcdirectory%\SimEngine2\bin
-dotnet publish simengine2.csproj --configuration Release --self-contained true --runtime win10-x64 --verbosity quiet -f net6.0-windows
-dotnet publish simengine2.csproj --configuration Release --self-contained true --runtime linux-x64 --verbosity quiet -f net6.0
+dotnet publish simengine2.csproj --configuration Release --self-contained true --runtime win-x64 --verbosity quiet -f net8.0-windows
+dotnet publish simengine2.csproj --configuration Release --self-contained true --runtime linux-x64 --verbosity quiet -f net8.0
 
 cd /D %srcdirectory%\ReleaseMaker
 "%vsdirectory%\msbuild.exe" ReleaseMaker.csproj -t:rebuild  -v:m
 
-cd /D %srcdirectory%\ReleaseMaker\bin\Debug\net6.0-windows
+cd /D %srcdirectory%\ReleaseMaker\bin\Debug\net8.0-windows
 releasemaker
 pause
 
 
 REM create pylpg
-set "releasedirectory=C:\LPGReleaseMakerResults\LPGReleases\releases10.9.0"
+set "releasedirectory=C:\LPGReleaseMakerResults\LPGReleases\releases10.10"
 set "pylpgdirectory=C:\LPGPythonBindings\pylpg\"
 
-cd /D %releasedirectory%\net48
+cd /D %releasedirectory%\windows
 simulationengine cpy
 xcopy lpgdata.py %pylpgdirectory%
 xcopy lpgpythonbindings.py %pylpgdirectory%
-
-robocopy %releasedirectory%\net48 %pylpgdirectory%\LPG_win /E /R:0 /W:0 /MIR
-robocopy %releasedirectory%\net48 C:\LPGPythonBindings\pylpg_2\LPG_win_most_recent /E /R:0 /W:0 /MIR
-del %pylpgdirectory%\LPG_win\LPG*.zip
-del %pylpgdirectory%\LPG_win\setup*.exe
-robocopy %releasedirectory%\linux %pylpgdirectory%\LPG_linux /E /R:0 /W:0 /MIR
-del %pylpgdirectory%\LPG_linux\LPG*.zip
 pause

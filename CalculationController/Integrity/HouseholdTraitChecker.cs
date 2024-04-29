@@ -510,9 +510,9 @@ namespace CalculationController.Integrity {
             List<HouseholdTrait> traitsWithMissingTags = new List<HouseholdTrait>();
             const string officeTag = "Living Pattern / Office";
             const string wfhtag = "Living Pattern / Work From Home";
-            const string worktag = "Work / Work";
+            const string worktag_prefix = "Work / Work";
             foreach (var item in sim.HouseholdTraits.Items) {
-                if (item.Tags.Any(x => x.Tag.Name == worktag)) {
+                if (item.Tags.Any(x => x.Tag.Name.StartsWith(worktag_prefix))) {
                     continue;
                 }
                 if (item.LivingPatternTags.Any(x => x.Tag.Name.StartsWith(officeTag))) {

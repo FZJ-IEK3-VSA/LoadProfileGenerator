@@ -41,7 +41,7 @@ namespace ChartCreator2.OxyCharts {
                     var col = cols[cols.Length - 1];
                     var success = double.TryParse(col, out double d);
                     if (!success) {
-                        throw new LPGException("Double Trouble!");
+                        throw new LPGException("Error reading file '" + rfe.FullFileName + "': Could not parse double from '" + col + "'");
                     }
                     values.Add(d);
                 }

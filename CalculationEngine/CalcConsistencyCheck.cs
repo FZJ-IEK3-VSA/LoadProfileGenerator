@@ -82,7 +82,7 @@ namespace CalculationEngine
             {
                 foreach (var route in chh.TransportationHandler.TravelRoutes)
                 {
-                    if (route.PersonID != null && !chh.Persons.Exists(person => person.ID == route.PersonID))
+                    if (route.PersonID != null && route.PersonID != -1 && !chh.Persons.Exists(person => person.ID == route.PersonID))
                     {
                         throw new DataIntegrityException("Usage of the route \"" + route.Name + "\" in the selected travel route set was restricted to a person " +
                             "that is not in the selected household. Change the Person restriction or choose a different travel route set for this household.");

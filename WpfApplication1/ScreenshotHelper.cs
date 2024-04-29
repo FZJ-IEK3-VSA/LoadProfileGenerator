@@ -390,7 +390,13 @@ namespace LoadProfileGenerator {
             }
 
             SnapshotExpanders(_tab);
-            Logger.Get().SafeExecuteWithWait(() => _tabControl.Items.RemoveAt(0));
+
+            // Provisionary fix for the screenshot helper
+            // Removing the opened tab in the next line led to the wrong tab being screenshotted,
+            // so this part is commented out for now.
+            //Logger.Get().SafeExecuteWithWait(() => _tabControl.Items.RemoveAt(0));
+            // Sleep for 1s to ensure the screenshot is taken of the correct tab
+            Thread.Sleep(1000);
             _itemCount++;
         }
 

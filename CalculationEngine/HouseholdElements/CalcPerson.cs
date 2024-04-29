@@ -33,6 +33,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Text;
 using Automation;
 using Automation.ResultFiles;
 using CalculationEngine.Helper;
@@ -586,55 +587,22 @@ namespace CalculationEngine.HouseholdElements {
                 throw new LPGException("Random number generator was not initialized");
             }
 
+            AffordanceStatusClass? status = null;
+            if (_calcRepo.CalcParameters.IsSet(CalcOption.ThoughtsLogfile))
+            {
+                status = new AffordanceStatusClass();
+            }
             var allAffordances =
-                NewGetAllViableAffordancesAndSubs(time, null, false,  allAffs, false);
+                NewGetAllViableAffordancesAndSubs(time, status, false,  allAffs, false);
             if(allAffordances.Count == 0 && (time.ExternalStep < 0 || _calcRepo.CalcParameters.IgnorePreviousActivitesWhenNeeded))
             {
                 allAffordances =
-                    NewGetAllViableAffordancesAndSubs(time, null,  false, allAffs, true);
+                    NewGetAllViableAffordancesAndSubs(time, status,  false, allAffs, true);
             }
             allAffordances.Sort((x, y) => string.CompareOrdinal(x.Name, y.Name));
             //no affordances, so search again for the error messages
-            if (allAffordances.Count == 0) {
-
-                var status = new AffordanceStatusClass();
-                NewGetAllViableAffordancesAndSubs(time, status,  false,  allAffs, false);
-                var ts = new TimeSpan(0, 0, 0,
-                    (int)_calcRepo.CalcParameters.InternalStepsize.TotalSeconds * time.InternalStep);
-                var dt = _calcRepo.CalcParameters.InternalStartTime.Add(ts);
-                var s = "At Timestep " + time.ExternalStep + " (" + dt.ToLongDateString() + " " + dt.ToShortTimeString() + ")" +
-                        " not a single affordance was available for " + Name +
-                        " in the household " + _calcPerson.HouseholdName + "." + Environment.NewLine +
-                        "Since the people in this simulation can't do nothing, calculation can not continue." +
-                        " The simulation seed was " + simulationSeed + ". " + Environment.NewLine + Name + " was ";
-                if (IsSick[time.InternalStep]) {
-                    s += " sick at the time."+ Environment.NewLine;
-                }
-                else {
-                    s += " not sick at the time."+ Environment.NewLine;
-                }
-
-                s += _calcPerson.Name + " was at " + CurrentLocation.Name + "." + Environment.NewLine;
-                s += "The setting for the number of required unique affordances in a row was set to " + _calcRepo.CalcParameters.AffordanceRepetitionCount + "." + Environment.NewLine;
-                if (status.Reasons.Count > 0) {
-                    s += " The status of each affordance is as follows:" + Environment.NewLine;
-                    foreach (var reason in status.Reasons) {
-                        s = s + Environment.NewLine + reason.Affordance.Name + ":" + reason.Reason;
-                    }
-                }
-                else {
-                    s += " Not a single viable affordance was found.";
-                }
-
-                s += Environment.NewLine + Environment.NewLine + "The last activity of each Person was:";
-                foreach (var calcPerson in persons) {
-                    var name = "(none)";
-                    if (calcPerson._currentAffordance != null) {
-                        name = calcPerson._currentAffordance.Name;
-                    }
-
-                    s += Environment.NewLine + calcPerson.Name + ": " + name;
-                }
+            if (allAffordances.Count == 0)
+            {
                 if (_calcRepo.CalcParameters.EnableIdlemode)
                 {
                     var idleaff = CurrentLocation.IdleAffs[this];
@@ -642,14 +610,85 @@ namespace CalculationEngine.HouseholdElements {
                     //Logger.Info(s);
                     return idleaff;
                 }
+                var status_err = new AffordanceStatusClass();
+                NewGetAllViableAffordancesAndSubs(time, status_err, false, allAffs, false);
+                var s = MakeDetailledAffordanceStatusMessage(time, persons, simulationSeed, status_err, 0);
                 throw new DataIntegrityException(s);
             }
-
+            if (_calcRepo.CalcParameters.IsSet(CalcOption.ThoughtsLogfile))
+            {
+                var thought = MakeDetailledAffordanceStatusMessage(time, persons, simulationSeed, status!, allAffordances.Count);
+                var thoughtEntry = new ThoughtEntry(this, time, thought);
+                _calcRepo.Logfile.ThoughtsLogFile1!.WriteEntry(thoughtEntry, _calcPerson.HouseholdKey);
+            }
             if (_calcRepo.Rnd == null) {
                 throw new LPGException("Random number generator was not initialized");
             }
 
             return GetBestAffordanceFromList(time,  allAffordances);
+        }
+
+        /// <summary>
+        /// Creates a detailed message naming the reason why affordances were unavailable.
+        /// This can be used to check why certain affordances were selected, or why no affordance
+        /// was available at all.
+        /// </summary>
+        /// <param name="time">current TimeStep</param>
+        /// <param name="persons">list of all persons</param>
+        /// <param name="simulationSeed">the simulation seed</param>
+        /// <param name="status">the status object storing reasons for unavailable affordances</param>
+        /// <param name="availableAffordances">number of available affordances</param>
+        /// <returns></returns>
+        private string MakeDetailledAffordanceStatusMessage(TimeStep time, List<CalcPerson> persons, int simulationSeed, AffordanceStatusClass status, int availableAffordances)
+        {
+            var ts = new TimeSpan(0, 0, 0,
+                (int)_calcRepo.CalcParameters.InternalStepsize.TotalSeconds * time.InternalStep);
+            var dt = _calcRepo.CalcParameters.InternalStartTime.Add(ts);
+            var s = new StringBuilder();
+            s.Append("At Timestep " + time.ExternalStep + " (" + dt.ToLongDateString() + " " + dt.ToShortTimeString() + ")" +
+                    availableAffordances + " affordances were available for " + Name +
+                    " in the household " + _calcPerson.HouseholdName + "." + Environment.NewLine);
+            if (availableAffordances == 0)
+            {
+                s.Append("Since the people in this simulation can't do nothing, calculation can not continue. ");
+            }
+            s.Append("The simulation seed was " + simulationSeed + ". " + Environment.NewLine + Name + " was ");
+            if (IsSick[time.InternalStep])
+            {
+                s.Append(" sick at the time." + Environment.NewLine);
+            }
+            else
+            {   
+                s.Append(" not sick at the time." + Environment.NewLine);
+            }
+
+            s.Append(_calcPerson.Name + " was at " + CurrentLocation.Name + "." + Environment.NewLine);
+            s.Append("The setting for the number of required unique affordances in a row was set to " + _calcRepo.CalcParameters.AffordanceRepetitionCount + "." + Environment.NewLine);
+            if (status.Reasons.Count > 0)
+            {
+                s.Append(" The status of each affordance is as follows:" + Environment.NewLine);
+                foreach (var reason in status.Reasons)
+                {
+                    s.Append(Environment.NewLine + reason.Affordance.Name + ":" + reason.Reason);
+                }
+            }
+            else
+            {
+                s.Append(" Not a single viable affordance was found.");
+            }
+
+            s.Append(Environment.NewLine + Environment.NewLine + "The last activity of each Person was:");
+            foreach (var calcPerson in persons)
+            {
+                var name = "(none)";
+                if (calcPerson._currentAffordance != null)
+                {
+                    name = calcPerson._currentAffordance.Name;
+                }
+
+                s.Append(Environment.NewLine + calcPerson.Name + ": " + name);
+            }
+            return s.ToString();
         }
 
         [JetBrains.Annotations.NotNull]

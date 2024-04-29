@@ -127,7 +127,7 @@ namespace Database.Tables.ModularHouseholds
         public override List<UsedIn> CalculateUsedIns(Simulator sim)
         {
             var used = new List<UsedIn>();
-
+            // collect the household traits that have this tag
             foreach (var t in sim.HouseholdTraits.Items)
             {
                 foreach (var hhtTag in t.Tags)
@@ -135,6 +135,17 @@ namespace Database.Tables.ModularHouseholds
                     if (hhtTag.Tag == this)
                     {
                         used.Add(new UsedIn(t, "Household Trait"));
+                    }
+                }
+            }
+            // collect the templates that use this tag
+            foreach (var template in sim.HouseholdTemplates.Items)
+            {
+                foreach (var entry in template.Entries)
+                {
+                    if (entry.TraitTag == this)
+                    {
+                        used.Add(new UsedIn(template, "Household Template"));
                     }
                 }
             }

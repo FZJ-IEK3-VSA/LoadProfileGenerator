@@ -109,7 +109,7 @@ namespace Database.Tables {
                             }
 
                             cmd.AddParameter("myid", ID);
-                            cmd.AddParameter("Guid", Guid.StrVal);
+                            cmd.AddParameter("guid", Guid.StrVal);
                             cmd.ExecuteNonQuery(
                                 "UPDATE tblSettings SET Settingname = @myname, Settingvalue = @myval, Guid=@guid WHERE ID = @myid");
                             NeedsUpdate = false;
