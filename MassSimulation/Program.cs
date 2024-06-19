@@ -7,7 +7,12 @@ namespace MassSimulation
 
         public static void Main([NotNull] string[] args)
         {
-            Console.WriteLine("LPG Mass Simulation");
+            MPI.Environment.Run(ref args, communicator =>
+            {
+                Console.WriteLine("Hello, from process number "
+                                         + communicator.Rank + " of "
+                                         + communicator.Size);
+            });
         }
     }
 }
