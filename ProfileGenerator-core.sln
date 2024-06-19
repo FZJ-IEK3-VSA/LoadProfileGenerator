@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29102.190
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C22A7685-3DEA-41E1-A862-717AE9E0540C}"
 	ProjectSection(SolutionItems) = preProject
@@ -90,6 +90,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReleaseMaker", "ReleaseMaker\ReleaseMaker.csproj", "{010612EE-55D6-4ED5-B6C7-16E1775FB945}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VersionIncreaser", "VersionIncreaser\VersionIncreaser.csproj", "{C7053527-71B4-4FD2-9211-B652BA07074D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MassSimulation", "MassSimulation\MassSimulation.csproj", "{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -989,6 +991,46 @@ Global
 		{C7053527-71B4-4FD2-9211-B652BA07074D}.TeamCity|x64.Build.0 = Debug|Any CPU
 		{C7053527-71B4-4FD2-9211-B652BA07074D}.TeamCity|x86.ActiveCfg = Debug|Any CPU
 		{C7053527-71B4-4FD2-9211-B652BA07074D}.TeamCity|x86.Build.0 = Debug|Any CPU
+		{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}.Debug|x64.Build.0 = Debug|Any CPU
+		{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}.Debug|x86.Build.0 = Debug|Any CPU
+		{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}.DebugNoCodeCheck|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}.DebugNoCodeCheck|Any CPU.Build.0 = Debug|Any CPU
+		{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}.DebugNoCodeCheck|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}.DebugNoCodeCheck|Mixed Platforms.Build.0 = Debug|Any CPU
+		{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}.DebugNoCodeCheck|x64.ActiveCfg = Debug|Any CPU
+		{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}.DebugNoCodeCheck|x64.Build.0 = Debug|Any CPU
+		{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}.DebugNoCodeCheck|x86.ActiveCfg = Debug|Any CPU
+		{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}.DebugNoCodeCheck|x86.Build.0 = Debug|Any CPU
+		{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}.debugx64|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}.debugx64|Any CPU.Build.0 = Debug|Any CPU
+		{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}.debugx64|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}.debugx64|Mixed Platforms.Build.0 = Debug|Any CPU
+		{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}.debugx64|x64.ActiveCfg = Debug|Any CPU
+		{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}.debugx64|x64.Build.0 = Debug|Any CPU
+		{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}.debugx64|x86.ActiveCfg = Debug|Any CPU
+		{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}.debugx64|x86.Build.0 = Debug|Any CPU
+		{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}.Release|x64.ActiveCfg = Release|Any CPU
+		{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}.Release|x64.Build.0 = Release|Any CPU
+		{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}.Release|x86.ActiveCfg = Release|Any CPU
+		{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}.Release|x86.Build.0 = Release|Any CPU
+		{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}.TeamCity|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}.TeamCity|Any CPU.Build.0 = Debug|Any CPU
+		{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}.TeamCity|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}.TeamCity|Mixed Platforms.Build.0 = Debug|Any CPU
+		{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}.TeamCity|x64.ActiveCfg = Debug|Any CPU
+		{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}.TeamCity|x64.Build.0 = Debug|Any CPU
+		{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}.TeamCity|x86.ActiveCfg = Debug|Any CPU
+		{5FF78FAE-8B3D-4F8B-8320-7118E95F434F}.TeamCity|x86.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -998,8 +1040,8 @@ Global
 		{C0BB40C3-EDCC-4138-93BE-CA80BA45AA22} = {C22A7685-3DEA-41E1-A862-717AE9E0540C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		VisualSVNWorkingCopyRoot = .
 		SolutionGuid = {D5BC00F0-DD2C-4393-B941-CE78F0EEE1FA}
+		VisualSVNWorkingCopyRoot = .
 	EndGlobalSection
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
