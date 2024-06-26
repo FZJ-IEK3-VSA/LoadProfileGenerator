@@ -1,5 +1,4 @@
-﻿using MPI;
-using System.Text.Json;
+﻿using System.Text.Json;
 
 namespace MassSimulation
 {
@@ -9,16 +8,16 @@ namespace MassSimulation
     /// It is a replacement for the default serializer MPI.BinaryFormatterSerializer
     /// from MPI.NET, which uses the obsolete BinaryFormatter.
     /// </summary>
-    internal class CustomJsonSerializer : ISerializer
+    internal class MPIJsonSerializer : MPI.ISerializer
     {
-        public static readonly CustomJsonSerializer Default;
+        public static readonly MPIJsonSerializer Default;
 
-        static CustomJsonSerializer()
+        static MPIJsonSerializer()
         {
-            Default = new CustomJsonSerializer();
+            Default = new MPIJsonSerializer();
         }
 
-        public T Deserialize<T>(Stream stream)
+        public T? Deserialize<T>(Stream stream)
         {
             T? result = JsonSerializer.Deserialize<T>(stream);
             return result;
