@@ -66,6 +66,66 @@ namespace Database.Helpers
             return Items.FirstOrDefault(x => x.Guid == guid);
         }
 
+        /// <summary>
+        /// Returns the default object of this type. This can be used if an object of this type is needed, but no
+        /// specific object was selected.
+        /// As of now, the default is simply the first element in the collection.
+        /// </summary>
+        /// <returns>the default object of this type</returns>
+        public T GetDefault()
+        {
+            return this[0];
+        }
+
+        /// <summary>
+        /// Looks up an object with the specified JsonReference. If null is passed as reference,
+        /// returns the first object in the list as a default.
+        /// </summary>
+        /// <param name="reference">the JsonReference of the object to search for</param>
+        /// <returns>the found object or the default object</returns>
+        /// <exception cref="LPGPBadParameterException">if no object with the passed JsonReference exists</exception>
+        public T FindOrDefault(JsonReference reference)
+        {
+            if (reference == null)
+            {
+                return GetDefault();
+            }
+            return FindWithException(reference);
+        }
+
+        /// <summary>
+        /// Looks up an object with the specified JsonReference. Throws exceptions
+        /// in case of an invalid reference.
+        /// </summary>
+        /// <param name="reference">the JsonReference of the object to search for</param>
+        /// <param name="nullReferenceAllowed">whether passing null as reference is allowed or leads to an error;
+        /// if true and null is passed as reference, null is returned</param>
+        /// <returns>the object with the specified JsonReference</returns>
+        /// <exception cref="LPGPBadParameterException">if an invalid JsonReference was passed</exception>
+        public T FindWithException(JsonReference reference, bool nullReferenceAllowed = false)
+        {
+            var objectTypeName = typeof(T).Name;
+            if (reference == null)
+            {
+                // no reference was specified
+                if (nullReferenceAllowed)
+                    return null;
+                throw new LPGPBadParameterException("No " + objectTypeName + " reference was specified.");
+            }
+            T x = FindByJsonReference(reference);
+            // check if the object was found
+            if (x == null)
+                throw new LPGPBadParameterException("No " + objectTypeName + " with the specified JsonReference found: " + reference);
+            return x;
+        }
+
+        /// <summary>
+        /// Finds an object with the specified JsonReference, if it exists. Looks up by GUID
+        /// if available, else by name.
+        /// Returns null, if no object with a matching reference is found.
+        /// </summary>
+        /// <param name="reference">the reference of the object to look for</param>
+        /// <returns>the found object or null</returns>
         [CanBeNull]
         public T FindByJsonReference([CanBeNull] JsonReference reference)
         {

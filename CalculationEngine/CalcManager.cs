@@ -113,6 +113,26 @@ namespace CalculationEngine
             CalcRepo.Dispose();
         }
 
+        /// <summary>
+        /// Simulates a single timestep
+        /// </summary>
+        /// <param name="timestep">The timestep to simulate</param>
+        /// <param name="now">Timestamp of the simulation step</param>
+        public void RunOneStep(TimeStep timestep, DateTime now)
+        {
+            CalcObject.RunOneStep(timestep, now, true);
+            SaveVariableStatesIfNeeded(timestep);
+            CalcRepo.OnlineLoggingData.SaveIfNeeded(timestep);
+        }
+
+        /// <summary>
+        /// Executes the simulation according the parameters, simulating all 
+        /// timesteps in the specified range.
+        /// </summary>
+        /// <param name="reportCancelFunc">a function that will be called if the simulation is aborted</param>
+        /// <returns>if the simulation terminated successfully</returns>
+        /// <exception cref="LPGException"></exception>
+        /// <exception cref="LPGCancelException">if the simulation was cancelled</exception>
         public bool Run(Func<bool>? reportCancelFunc)
         {
             if (!ContinueRunning && reportCancelFunc != null)
@@ -180,9 +200,7 @@ namespace CalculationEngine
                     while (now < CalcRepo.CalcParameters.InternalEndTime && ContinueRunning)
                     {
                         // ReSharper disable once PossibleNullReferenceException
-                        CalcObject.RunOneStep(timestep, now, true);
-                        SaveVariableStatesIfNeeded(timestep);
-                        CalcRepo.OnlineLoggingData.SaveIfNeeded(timestep);
+                        RunOneStep(timestep, now);
                         now += CalcRepo.CalcParameters.InternalStepsize;
                         timestep = timestep.AddSteps(1);
                     }

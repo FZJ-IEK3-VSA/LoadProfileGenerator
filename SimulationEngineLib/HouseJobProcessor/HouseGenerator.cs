@@ -20,6 +20,7 @@ using Database.Tables.ModularHouseholds;
 using Database.Tables.Transportation;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
+using PowerArgs;
 
 //using System.Threading.Tasks;
 
@@ -309,30 +310,6 @@ namespace SimulationEngineLib.HouseJobProcessor
         //    }*/
         //}
 
-        [CanBeNull]
-        private static TemperatureProfile FindTemperatureProfile([NotNull] Simulator sim, [NotNull] JsonCalcSpecification calcSpecification)
-        {
-            TemperatureProfile temperatureProfile = sim.TemperatureProfiles[0];
-            if (calcSpecification.TemperatureProfile != null)
-            {
-                temperatureProfile = sim.TemperatureProfiles.FindByJsonReference(calcSpecification.TemperatureProfile);
-            }
-
-            return temperatureProfile;
-        }
-
-        [CanBeNull]
-        private static GeographicLocation FindGeographicLocation([NotNull] Simulator sim, [NotNull] JsonCalcSpecification calcSpecification)
-        {
-            GeographicLocation geoloc = sim.GeographicLocations[0];
-            if (calcSpecification.GeographicLocation != null)
-            {
-                geoloc = sim.GeographicLocations.FindByJsonReference(calcSpecification.GeographicLocation);
-            }
-
-            return geoloc;
-        }
-
         public void ProcessSingleHouseJob([NotNull] string houseJobFile)
         {
             string resultDir = "Results";
@@ -437,31 +414,23 @@ namespace SimulationEngineLib.HouseJobProcessor
             {
                 throw new LPGException("No calc spec was defined");
             }
-            var geoloc = FindGeographicLocation(sim, hcj.CalcSpec);
-            var temperatureProfile = FindTemperatureProfile(sim, hcj.CalcSpec);
-            Random rnd = new Random();
-            JsonReference objectToCalc;
+            JsonReference calcObjectReference;
             if (hcj.HouseDefinitionType == HouseDefinitionType.HouseData)
             {
-                objectToCalc = CreateSingleHouse(hcj, sim, geoloc, temperatureProfile, rnd);
-                if (objectToCalc == null)
-                {
-                    throw new LPGException("Failed to create a house");
-                }
-
+                calcObjectReference = CreateSingleHouse(hcj, sim);
             }
             else
             {
-                objectToCalc = hcj.HouseRef?.House;
-                if (objectToCalc == null)
+                calcObjectReference = hcj.HouseRef?.House;
+                if (calcObjectReference == null)
                 {
                     throw new LPGException("no house reference was set");
                 }
             }
             JsonCalculator jc = new JsonCalculator();
-            //hcj.CalcSpec.CalcObject = null;
-            jc.StartHousehold(sim, hcj.CalcSpec, objectToCalc);
+            jc.StartHousehold(sim, hcj.CalcSpec, calcObjectReference);
         }
+
         [NotNull]
         public string GetAllFootprints([NotNull] Exception x)
         {
@@ -487,48 +456,49 @@ namespace SimulationEngineLib.HouseJobProcessor
 
             return traceString.ToString();
         }
-        [CanBeNull]
-        private static JsonReference CreateSingleHouse(
-                                              [NotNull] HouseCreationAndCalculationJob hj,
-                                              [NotNull] Simulator sim,
-                                              GeographicLocation geoloc,
-                                              TemperatureProfile temperatureProfile,
-                                              Random r)
+
+        /// <summary>
+        /// Creates a new house with all its households from the configuration specified in the
+        /// <see cref="HouseCreationAndCalculationJob"/>.
+        /// </summary>
+        /// <param name="hj">the house configuration</param>
+        /// <param name="sim">database access object</param>
+        /// <returns>JsonReference of the newly created house</returns>
+        /// <exception cref="LPGPBadParameterException">if the provided house configuration was insufficient or invalid</exception>
+        [NotNull]
+        private static JsonReference CreateSingleHouse([NotNull] HouseCreationAndCalculationJob hj, [NotNull] Simulator sim)
         {
             if (hj.House == null)
             {
-                throw new LPGException("No house data was set in the file");
+                throw new LPGPBadParameterException("No house data was set in the file");
             }
-            //string name = hj.House?.Name ?? "";
-            var housedata = hj.House;
-            Logger.Info("Creating new house with " + hj.House?.Households.Count + " households...");
-
-            //List<ModularHousehold> createdHouseholds = new List<ModularHousehold>();
-            //make the house
-            var house = MakeHouse(sim, hj.House);
-            house.GeographicLocation = geoloc;
-            house.TemperatureProfile = temperatureProfile;
-            //add the Households
             if (hj.CalcSpec == null)
             {
                 throw new LPGPBadParameterException("No calcspecification was set.");
             }
+
+            // make the house
+            Logger.Info("Creating new house with " + hj.House?.Households.Count + " households...");
+            var house = MakeHouse(sim, hj.House);
+
+            house.GeographicLocation = sim.GeographicLocations.FindOrDefault(hj.CalcSpec.GeographicLocation);
+            house.TemperatureProfile = sim.TemperatureProfiles.FindOrDefault(hj.CalcSpec.TemperatureProfile);
+
+            // create and add the Households
+            Random r = new();
             int householdidx = 1;
-            foreach (var householdData in housedata.Households)
+            foreach (var householdData in hj.House.Households)
             {
                 var hhs = MakeHousehold(sim, householdData, r);
 
-                var chargingStationSet = sim.ChargingStationSets.FindByJsonReference(householdData.ChargingStationSet);
-                if (hj.CalcSpec.EnableTransportation && chargingStationSet == null)
-                {
-                    // ReSharper disable once RedundantToStringCall
-                    throw new LPGPBadParameterException("Could not find charging station set: " + householdData.ChargingStationSet?.ToString());
-                }
+                // get or greate transportation objects, if required
+                var chargingStationSet = sim.ChargingStationSets.FindWithException(householdData.ChargingStationSet, !hj.CalcSpec.EnableTransportation);
+                var transportationDeviceSet = sim.TransportationDeviceSets.FindWithException(householdData.TransportationDeviceSet, !hj.CalcSpec.EnableTransportation);
                 TravelRouteSet travelrouteset;
                 if (householdData.TravelRouteSet != null)
                 {
                     // try to load the specified TravelRouteSet
-                    travelrouteset = sim.TravelRouteSets.FindByJsonReference(householdData.TravelRouteSet);
+                    travelrouteset = sim.TravelRouteSets.FindWithException(householdData.TravelRouteSet);
                 }
                 else
                 {
@@ -538,40 +508,22 @@ namespace SimulationEngineLib.HouseJobProcessor
                 }
                 if (hj.CalcSpec.EnableTransportation && travelrouteset == null)
                 {
-                    throw new LPGPBadParameterException("Could not find travel route set.");
+                    throw new LPGPBadParameterException("No travel route set and no personal transportation preferences specified.");
                 }
-                var transportationDeviceSet = sim.TransportationDeviceSets.FindByJsonReference(householdData.TransportationDeviceSet);
-                if (householdData.TransportationDistanceModifiers != null && householdData.TransportationDistanceModifiers.Count > 0
-                && travelrouteset != null)
+
+                if (!householdData.TransportationDistanceModifiers.IsNullOrEmpty() && travelrouteset != null)
                 {
-                    Logger.Info("Settings new travel distances for " + hhs.Name + " " + "");
-                    travelrouteset = AdjustTravelDistancesBasedOnModifiers(travelrouteset, sim, house,
-                        householdData, householdidx++);
+                    Logger.Info("Setting new travel distances for " + hhs.Name + " " + "");
+                    travelrouteset = AdjustTravelDistancesBasedOnModifiers(travelrouteset, sim, house, householdData, householdidx++);
                     Logger.Info("Name of the new travel route set to be used is " + travelrouteset.Name);
                 }
-                if (hj.CalcSpec.EnableTransportation && transportationDeviceSet == null)
-                {
-                    throw new LPGPBadParameterException("Could not find transportation device set.");
-                }
-                house.AddHousehold(hhs, chargingStationSet, travelrouteset, transportationDeviceSet);
 
-                //createdHouseholds.Add(hhs);
+                // add the new household to the house
+                house.AddHousehold(hhs, chargingStationSet, travelrouteset, transportationDeviceSet);
             }
-            /*
-                if (createdHouseholds.Count == 0) {
-                    sim.Houses.DeleteItem(house);
-                    continue;
-                }*/
 
             house.SaveToDB();
             Logger.Info("Successfully created house.");
-
-            //saving matching calculation file
-            Logger.Info("Creating calculation file.");
-            if (house == null)
-            {
-                throw new LPGException("House generation failed");
-            }
             return house.GetJsonReference();
         }
 
@@ -580,7 +532,7 @@ namespace SimulationEngineLib.HouseJobProcessor
         /// This function collects these preferences and uses them to create a new TravelRouteSet.
         /// </summary>
         /// <param name="householdData">The HouseholdData object for which the TravelRouteSet will be created</param>
-        /// <param name="sim"></param>
+        /// <param name="sim">database access object</param>
         /// <returns>A new TravelRouteSet that contains all required routes.</returns>
         private static TravelRouteSet CreateTravelRouteSetFromPersonPreferences(HouseholdData householdData, Simulator sim)
         {
@@ -609,7 +561,7 @@ namespace SimulationEngineLib.HouseJobProcessor
         /// <param name="person">The person the TravelRoutes will be created for</param>
         /// <param name="home">The site that is used as home of the person</param>
         /// <param name="travelRouteSet">The TravelRouteSet to which the new routes will be added</param>
-        /// <param name="sim"></param>
+        /// <param name="sim">database access object</param>
         private static void CreateTravelRoutesForPerson(PersonData person, Site home, TravelRouteSet travelRouteSet, Simulator sim)
         {
             var preferences = person.TransportationPreferences;
@@ -655,7 +607,7 @@ namespace SimulationEngineLib.HouseJobProcessor
         /// <param name="length">The length of the TravelRoutes</param>
         /// <param name="preference">The transportation preference of the person for the destination site</param>
         /// <param name="travelRouteSet">The TravelRouteSet to which the new TravelRoutes will be added</param>
-        /// <param name="sim"></param>
+        /// <param name="sim">database access object</param>
         private static void CreateRoutesForDifferentCategories(PersonData person, Site origin, Site destination, double length, TransportationPreference preference, TravelRouteSet travelRouteSet, Simulator sim)
         {
             for (int i = 0; i < preference.TransportationDeviceCategories.Count; i++)
