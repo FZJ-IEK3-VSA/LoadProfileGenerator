@@ -13,8 +13,10 @@ using Database.Tables.ModularHouseholds;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 
-namespace SimulationEngineLib.HouseJobProcessor {
-    public class JsonCalculator {
+namespace SimulationEngineLib.HouseJobProcessor
+{
+    public class JsonCalculator
+    {
         [JetBrains.Annotations.NotNull] private readonly CalculationProfiler _calculationProfiler;
 
         public JsonCalculator() => _calculationProfiler = new CalculationProfiler();
@@ -83,11 +85,13 @@ namespace SimulationEngineLib.HouseJobProcessor {
 
         public bool CheckSimulator([JetBrains.Annotations.NotNull] JsonCalcSpecification jcs, [JetBrains.Annotations.NotNull] Simulator sim)
         {
-            if (jcs.TemperatureProfile == null) {
+            if (jcs.TemperatureProfile == null)
+            {
                 jcs.TemperatureProfile = sim.TemperatureProfiles[0].GetJsonReference();
             }
 
-            if (jcs.GeographicLocation == null) {
+            if (jcs.GeographicLocation == null)
+            {
                 jcs.GeographicLocation = sim.GeographicLocations[0].GetJsonReference();
             }
             if (jcs.StartDate == null)
@@ -107,7 +111,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
         [SuppressMessage("ReSharper", "UseObjectOrCollectionInitializer")]
         public void StartHousehold([JetBrains.Annotations.NotNull] Simulator sim, [JetBrains.Annotations.NotNull] JsonCalcSpecification jcs, [JetBrains.Annotations.NotNull] JsonReference calcObjectReference)
         {
-            if(!CheckSimulator(jcs, sim))
+            if (!CheckSimulator(jcs, sim))
             {
                 throw new LPGPBadParameterException("Invalid simulation state");
             }
@@ -116,24 +120,30 @@ namespace SimulationEngineLib.HouseJobProcessor {
             if (jcs.OutputDirectory == null)
             {
                 jcs.OutputDirectory = AutomationUtili.CleanFileName(calcObject.Name) + " - " + calcObject;
-                if (jcs.OutputDirectory.Length > 50) {
+                if (jcs.OutputDirectory.Length > 50)
+                {
                     jcs.OutputDirectory = jcs.OutputDirectory.Substring(0, 50);
                 }
             }
             _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
-            if (calcObjectReference == null) {
+            if (calcObjectReference == null)
+            {
                 throw new LPGException("No calculation object was selected.");
             }
             var calculationStartTime = DateTime.Now;
-            if (calcObject == null) {
+            if (calcObject == null)
+            {
                 throw new LPGException("Could not find the Calc Object with the guid " + calcObjectReference.Guid);
             }
 
             var generalResultsDirectory = new DirectoryInfo(jcs.OutputDirectory ?? throw new LPGException("Output directory was null."));
             var finishedFile = Path.Combine(generalResultsDirectory.FullName, Constants.FinishedFileFlag);
-            if (Directory.Exists(generalResultsDirectory.FullName)) {
-                if (jcs.SkipExisting) {
-                    if (File.Exists(finishedFile)) {
+            if (Directory.Exists(generalResultsDirectory.FullName))
+            {
+                if (jcs.SkipExisting)
+                {
+                    if (File.Exists(finishedFile))
+                    {
                         Logger.Error("Directory already exists and calculation is finished. Exiting.");
                         _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
                         return;
@@ -142,8 +152,10 @@ namespace SimulationEngineLib.HouseJobProcessor {
 
                 Logger.Warning("Directory already exists, but calculation is not finished or skip existing is not specified. Deleting folder.");
                 var files = generalResultsDirectory.GetFiles();
-                foreach (FileInfo file in files) {
-                    if (file.Name.StartsWith("Log.", StringComparison.OrdinalIgnoreCase)) {
+                foreach (FileInfo file in files)
+                {
+                    if (file.Name.StartsWith("Log.", StringComparison.OrdinalIgnoreCase))
+                    {
                         continue;
                     }
                     if (file.Name.EndsWith(".db3", StringComparison.OrdinalIgnoreCase))
@@ -154,7 +166,8 @@ namespace SimulationEngineLib.HouseJobProcessor {
                 }
 
                 var directories = generalResultsDirectory.GetDirectories();
-                foreach (DirectoryInfo info in directories) {
+                foreach (DirectoryInfo info in directories)
+                {
                     info.Delete(true);
                 }
 
@@ -176,8 +189,10 @@ namespace SimulationEngineLib.HouseJobProcessor {
             sim.MyGeneralConfig.InternalTimeResolution = "00:01:00";
             sim.MyGeneralConfig.DestinationPath = generalResultsDirectory.FullName;
             sim.MyGeneralConfig.ApplyOptionDefault(jcs.DefaultForOutputFiles);
-            if (jcs.CalcOptions != null) {
-                foreach (var option in jcs.CalcOptions) {
+            if (jcs.CalcOptions != null)
+            {
+                foreach (var option in jcs.CalcOptions)
+                {
                     //var option = option;
                     /*if (option == null) {
                         throw  new LPGException("Could not identify Calc Option " + option + ". Stopping.");
@@ -187,52 +202,64 @@ namespace SimulationEngineLib.HouseJobProcessor {
                 }
             }
 
-            if (jcs.ExternalTimeResolution == null) {
+            if (jcs.ExternalTimeResolution == null)
+            {
                 sim.MyGeneralConfig.ExternalTimeResolution = sim.MyGeneralConfig.InternalTimeResolution;
             }
-            else {
+            else
+            {
                 sim.MyGeneralConfig.ExternalTimeResolution = jcs.ExternalTimeResolution;
             }
 
             sim.MyGeneralConfig.RandomSeed = jcs.RandomSeed;
             var eit = jcs.EnergyIntensityType;
-            if (eit == EnergyIntensityType.AsOriginal) {
+            if (eit == EnergyIntensityType.AsOriginal)
+            {
                 eit = calcObject.EnergyIntensityType;
             }
 
             var cs = new CalcStarter(sim);
             var temperatureProfile = sim.TemperatureProfiles.FindByJsonReference(jcs.TemperatureProfile);
-            if (temperatureProfile == null) {
+            if (temperatureProfile == null)
+            {
                 throw new LPGException("Temperature Profile not found.");
             }
 
-            if (jcs.GeographicLocation == null) {
+            if (jcs.GeographicLocation == null)
+            {
                 throw new LPGPBadParameterException("No geographic location was set in the calculation request");
             }
             var geographicLocation = sim.GeographicLocations.FindByJsonReference(jcs.GeographicLocation);
-            if (geographicLocation == null) {
+            if (geographicLocation == null)
+            {
                 throw new LPGException("Geographic location not found.");
             }
 
 
             DeviceSelection deviceSelection = null;
-            if (jcs.DeviceSelection != null) {
+            if (jcs.DeviceSelection != null)
+            {
                 deviceSelection = sim.DeviceSelections.FindByJsonReference(jcs.DeviceSelection);
-                if (deviceSelection == null) {
+                if (deviceSelection == null)
+                {
                     throw new LPGException("Unknown device selection \"" + jcs.DeviceSelection.Guid + "\"");
                 }
             }
 
 
 
-            if (jcs.EnableTransportation) {
+            if (jcs.EnableTransportation)
+            {
             }
 
-            if (jcs.LoadTypePriority == LoadTypePriority.Undefined) {
-                if (calcObject.CalcObjectType == CalcObjectType.ModularHousehold) {
+            if (jcs.LoadTypePriority == LoadTypePriority.Undefined)
+            {
+                if (calcObject.CalcObjectType == CalcObjectType.ModularHousehold)
+                {
                     jcs.LoadTypePriority = LoadTypePriority.RecommendedForHouseholds;
                 }
-                else {
+                else
+                {
                     jcs.LoadTypePriority = LoadTypePriority.RecommendedForHouses;
                 }
             }
@@ -291,21 +318,26 @@ namespace SimulationEngineLib.HouseJobProcessor {
                 }
             }
             _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
-// ChartMaker.MakeChartsAndPDF(_calculationProfiler,calcStartParameterSet.ResultPath);
+            // ChartMaker.MakeChartsAndPDF(_calculationProfiler,calcStartParameterSet.ResultPath);
 
             var duration = DateTime.Now - calculationStartTime;
-            if (jcs.DeleteAllButPDF) {
+            if (jcs.DeleteAllButPDF)
+            {
                 var allFileInfos = generalResultsDirectory.GetFiles("*.*", SearchOption.AllDirectories);
-                foreach (var fi in allFileInfos) {
-                    if (fi.Name.ToUpperInvariant().EndsWith(".PDF", StringComparison.Ordinal)) {
+                foreach (var fi in allFileInfos)
+                {
+                    if (fi.Name.ToUpperInvariant().EndsWith(".PDF", StringComparison.Ordinal))
+                    {
                         continue;
                     }
 
-                    if (fi.Name.ToUpperInvariant().StartsWith("SUMPROFILES.", StringComparison.Ordinal)) {
+                    if (fi.Name.ToUpperInvariant().StartsWith("SUMPROFILES.", StringComparison.Ordinal))
+                    {
                         continue;
                     }
 
-                    if (fi.Name.ToUpperInvariant().StartsWith("HOUSEHOLDNAME.", StringComparison.Ordinal)) {
+                    if (fi.Name.ToUpperInvariant().StartsWith("HOUSEHOLDNAME.", StringComparison.Ordinal))
+                    {
                         continue;
                     }
 
@@ -313,15 +345,19 @@ namespace SimulationEngineLib.HouseJobProcessor {
                 }
             }
 
-            if (jcs.DeleteSqlite) {
+            if (jcs.DeleteSqlite)
+            {
                 var allFileInfos = generalResultsDirectory.GetFiles("*.sqlite", SearchOption.AllDirectories);
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
-                foreach (var fi in allFileInfos) {
-                    try {
+                foreach (var fi in allFileInfos)
+                {
+                    try
+                    {
                         fi.Delete();
                     }
-                    catch (Exception ex) {
+                    catch (Exception ex)
+                    {
                         Logger.Exception(ex);
                     }
                 }
@@ -331,15 +367,18 @@ namespace SimulationEngineLib.HouseJobProcessor {
 
             //cleanup empty directories
             var subdirs = generalResultsDirectory.GetDirectories();
-            foreach (var subdir in subdirs) {
+            foreach (var subdir in subdirs)
+            {
                 var files = subdir.GetFiles();
                 var subsubdirs = subdir.GetDirectories();
-                if (files.Length == 0 && subsubdirs.Length == 0) {
+                if (files.Length == 0 && subsubdirs.Length == 0)
+                {
                     subdir.Delete();
                 }
             }
 
-            using (var sw = new StreamWriter(finishedFile)) {
+            using (var sw = new StreamWriter(finishedFile))
+            {
                 sw.WriteLine("Finished at " + DateTime.Now);
                 sw.WriteLine("Duration in seconds:");
                 sw.WriteLine(duration.TotalSeconds);
@@ -368,7 +407,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
 
         private static bool ReportFinishFuncForHouseAndSettlement(bool a2,
                                                                   [JetBrains.Annotations.NotNull] string a3,
-                                                                  [ItemCanBeNull] [CanBeNull] ObservableCollection<ResultFileEntry> a4) => true;
+                                                                  [ItemCanBeNull][CanBeNull] ObservableCollection<ResultFileEntry> a4) => true;
 
         private static bool ReportFinishFuncForHousehold(bool a2, [JetBrains.Annotations.NotNull] string a3, [JetBrains.Annotations.NotNull] string path) => true;
 

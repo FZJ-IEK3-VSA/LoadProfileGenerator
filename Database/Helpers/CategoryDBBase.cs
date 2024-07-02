@@ -43,20 +43,23 @@ using JetBrains.Annotations;
 
 #endregion
 
-namespace Database.Helpers {
-    public class CategoryDBBase<T> : Category<T> where T : DBBase, IFilterable {
+namespace Database.Helpers
+{
+    public class CategoryDBBase<T> : Category<T> where T : DBBase, IFilterable
+    {
         // ReSharper disable once CollectionNeverUpdated.Local
-        [JetBrains.Annotations.NotNull] [ItemNotNull] private readonly List<Func<string, bool>> _functionsToCallOnPropertyChanged;
+        [JetBrains.Annotations.NotNull][ItemNotNull] private readonly List<Func<string, bool>> _functionsToCallOnPropertyChanged;
 
-        [JetBrains.Annotations.NotNull] [ItemNotNull] private ObservableCollection<T> _filteredMyItems = new ObservableCollection<T>();
+        [JetBrains.Annotations.NotNull][ItemNotNull] private ObservableCollection<T> _filteredMyItems = new ObservableCollection<T>();
         [CanBeNull] private string _filterString = string.Empty;
 
-        [ItemNotNull] [CanBeNull] public ObservableCollection<T> _PrevFilteredMyItems;
+        [ItemNotNull][CanBeNull] public ObservableCollection<T> _PrevFilteredMyItems;
 
         [CanBeNull]
         public T FindByGuid([CanBeNull] StrGuid? guid)
         {
-            if (guid == null) {
+            if (guid == null)
+            {
                 return null;
             }
 
@@ -84,7 +87,8 @@ namespace Database.Helpers {
                     }
                 }
                 Logger.Warning("No object with GUID " + reference.Guid + " found.");
-            } else if (reference.Name != null)
+            }
+            else if (reference.Name != null)
             {
                 return FindFirstByName(reference.Name);
             }
@@ -98,21 +102,25 @@ namespace Database.Helpers {
             Items.CollectionChanged += OnObservableCollectionChanged;
             var type = typeof(T);
             var info = type.GetMethod("ImportFromItem");
-            if (!type.IsSubclassOf(typeof(DBBaseElement))) {
+            if (!type.IsSubclassOf(typeof(DBBaseElement)))
+            {
                 throw new LPGException("Type " + type + " is not a DBBaseElement. This is a bug!");
                 //Logger.Info("Type " + type + " is not a DBBaseElement.This is a bug!");
             }
 
-            if (info == null) {
+            if (info == null)
+            {
                 throw new LPGException("Type " + type + " is missing the ImportFromItem-Function. This is a bug!");
             }
 
             var info2 = type.GetMethod("CreateNewItem");
-            if (info2 == null) {
+            if (info2 == null)
+            {
                 throw new LPGException("Type " + type + " is missing the CreateNewItem-Function. This is a bug!");
             }
 
-            foreach (var myItem in Items) {
+            foreach (var myItem in Items)
+            {
                 _filteredMyItems.Add(myItem);
             }
 
@@ -132,17 +140,20 @@ namespace Database.Helpers {
             Items.Sort();
         }
 
-        protected static void AddUniqueStringToList([ItemNotNull] [JetBrains.Annotations.NotNull] ObservableCollection<string> list,
+        protected static void AddUniqueStringToList([ItemNotNull][JetBrains.Annotations.NotNull] ObservableCollection<string> list,
                                                     [JetBrains.Annotations.NotNull] string valueToAdd)
         {
             var strToAdd = valueToAdd;
             strToAdd = strToAdd.Trim();
-            if (strToAdd.Length == 0) {
+            if (strToAdd.Length == 0)
+            {
                 return;
             }
 
-            foreach (var s1 in list) {
-                if (s1 == strToAdd) {
+            foreach (var s1 in list)
+            {
+                if (s1 == strToAdd)
+                {
                     return;
                 }
             }
@@ -153,9 +164,11 @@ namespace Database.Helpers {
         public override void ApplyFilter(string filterStr)
         {
             _filterString = filterStr;
-            if (string.IsNullOrWhiteSpace(filterStr)) {
+            if (string.IsNullOrWhiteSpace(filterStr))
+            {
                 _filteredMyItems = Items;
-                if (_PrevFilteredMyItems != Items) {
+                if (_PrevFilteredMyItems != Items)
+                {
                     OnPropertyChanged(nameof(FilteredItems));
                 }
 
@@ -164,8 +177,10 @@ namespace Database.Helpers {
             }
 
             var foundItems2 = new ObservableCollection<T>();
-            foreach (var myItem in Items) {
-                if (myItem.IsValid(filterStr)) {
+            foreach (var myItem in Items)
+            {
+                if (myItem.IsValid(filterStr))
+                {
                     foundItems2.Add(myItem);
                 }
             }
@@ -180,34 +195,41 @@ namespace Database.Helpers {
         public void SaveEverything()
         {
             var items = Items.ToList();
-            foreach (var item in items) {
+            foreach (var item in items)
+            {
                 item.SaveToDB();
             }
         }
 
-    [UsedImplicitly]
+        [UsedImplicitly]
         // public because of dynamic call
         public int CheckForDuplicateNames(bool saveToDB)
         {
             var count = 0;
             // fix names
             var items = Items.ToList();
-            foreach (var item in items) {
-                if(item==null) {
+            foreach (var item in items)
+            {
+                if (item == null)
+                {
                     throw new LPGException("Item was null");
                 }
                 var name = item.Name;
-                if (name.Trim() != name) {
+                if (name.Trim() != name)
+                {
                     item.Name = item.Name.Trim();
                     Logger.Info("Changed a name from " + name + " to " + item.Name);
-                    if (saveToDB) {
+                    if (saveToDB)
+                    {
                         item.SaveToDB();
                     }
                 }
-                if (name.Replace("  ", " ") != name) {
+                if (name.Replace("  ", " ") != name)
+                {
                     item.Name = item.Name.Replace("  ", " ");
                     Logger.Info("Changed a name from " + name + " to " + item.Name);
-                    if (saveToDB) {
+                    if (saveToDB)
+                    {
                         item.SaveToDB();
                     }
                 }
@@ -215,34 +237,42 @@ namespace Database.Helpers {
             // fix duplicates
 
             var repeat = true;
-            while (repeat) {
+            while (repeat)
+            {
                 var hs = new HashSet<string>();
                 T itemToChange = null;
-                foreach (var item in Items) {
-                    if (hs.Contains(item.Name.ToUpperInvariant())) {
+                foreach (var item in Items)
+                {
+                    if (hs.Contains(item.Name.ToUpperInvariant()))
+                    {
                         itemToChange = item;
                         break;
                     }
                     hs.Add(item.Name.ToUpperInvariant());
                 }
-                if (itemToChange != null) {
+                if (itemToChange != null)
+                {
                     var oldname = itemToChange.Name;
-                    while (DeleteLastChar(oldname)) {
+                    while (DeleteLastChar(oldname))
+                    {
                         oldname = oldname.Substring(0, oldname.Length - 1);
                     }
                     var i = 1;
-                    while (i < 100 && IsNameTaken(oldname + " " + i)) {
+                    while (i < 100 && IsNameTaken(oldname + " " + i))
+                    {
                         i++;
                     }
 
                     itemToChange.Name = oldname + " " + i;
                     Logger.Info("Changed a name from " + oldname + " to " + itemToChange.Name);
                     count++;
-                    if (saveToDB) {
+                    if (saveToDB)
+                    {
                         itemToChange.SaveToDB();
                     }
                 }
-                else {
+                else
+                {
                     repeat = false;
                 }
             }
@@ -252,11 +282,13 @@ namespace Database.Helpers {
         public bool DeleteLastChar([JetBrains.Annotations.NotNull] string s)
         {
             string last = s.Substring(s.Length - 1);
-            if (int.TryParse(last, out _)) {
+            if (int.TryParse(last, out _))
+            {
                 return true;
             }
 
-            if (last == " ") {
+            if (last == " ")
+            {
                 return true;
             }
 
@@ -270,26 +302,33 @@ namespace Database.Helpers {
         [SuppressMessage("ReSharper", "UnusedMember.Global")]
         public object CheckForNumbersInNames()
         {
-            if (Items.Count == 0) {
+            if (Items.Count == 0)
+            {
                 return null;
             }
 
-            if (Items[0].AreNumbersOkInNameForIntegrityCheck) {
+            if (Items[0].AreNumbersOkInNameForIntegrityCheck)
+            {
                 return null;
             }
-            foreach (var item in Items) {
+            foreach (var item in Items)
+            {
                 var name = item.Name;
-                if (string.IsNullOrEmpty(name)) {
+                if (string.IsNullOrEmpty(name))
+                {
                     throw new DataIntegrityException("Name was null or empty. Please fix", item);
                 }
                 var lastspace = name.LastIndexOf(" ", StringComparison.Ordinal);
-                if (lastspace > 0) {
+                if (lastspace > 0)
+                {
                     var number = name.Substring(lastspace);
-                    if (number.Length > 2) {
+                    if (number.Length > 2)
+                    {
                         return null;
                     }
                     var success = int.TryParse(number, out _);
-                    if (success) {
+                    if (success)
+                    {
                         return item;
                     }
                 }
@@ -300,7 +339,8 @@ namespace Database.Helpers {
         public override List<DBBase> CollectAllDBBaseItems()
         {
             var items = new List<DBBase>();
-            foreach (var myItem in Items) {
+            foreach (var myItem in Items)
+            {
                 DBBase db = myItem;
                 items.Add(db);
             }
@@ -312,18 +352,20 @@ namespace Database.Helpers {
         {
             var thisType = typeof(T);
             var theMethod = thisType.GetMethod("CreateNewItem");
-            if (theMethod == null) {
+            if (theMethod == null)
+            {
                 throw new LPGException("Method is missing.");
             }
             var func =
                 (Func<Func<string, bool>, string, DBBase>)
                 Delegate.CreateDelegate(typeof(Func<Func<string, bool>, string, DBBase>), theMethod);
             var item = func(IsNameTaken, connectionString);
-            if (item == null) {
+            if (item == null)
+            {
                 throw new LPGException("Missing Type!");
             }
             item.SaveToDB();
-            var d = (T) item;
+            var d = (T)item;
             AddItemToList(d);
             return d;
         }
@@ -432,33 +474,44 @@ namespace Database.Helpers {
         [CanBeNull]
         public T FindFirstByName([CanBeNull] string nameRaw, FindMode findMode = FindMode.Exact)
         {
-            if (nameRaw == null) {
+            if (nameRaw == null)
+            {
                 return null;
             }
             //no matter which mode, if anything matches exactly, then return that.
             //this prevents errors where partial matches would return something wrong
-            foreach (var myItem in Items) {
-                if (myItem.Name == nameRaw) {
+            foreach (var myItem in Items)
+            {
+                if (myItem.Name == nameRaw)
+                {
                     return myItem;
                 }
             }
 
             string nameUpper = nameRaw.ToUpperInvariant();
-            if (findMode == FindMode.IgnoreCase) {
-                foreach (var myItem in Items) {
+            if (findMode == FindMode.IgnoreCase)
+            {
+                foreach (var myItem in Items)
+                {
                     if (string.Equals(myItem.Name.ToUpperInvariant(), nameUpper,
-                        StringComparison.CurrentCulture)) {
+                        StringComparison.CurrentCulture))
+                    {
                         return myItem;
                     }
                 }
-            }else
-            if (findMode == FindMode.Partial) {
-                foreach (var myItem in Items) {
-                    if (myItem.Name.ToUpperInvariant().Contains(nameUpper)) {
+            }
+            else
+            if (findMode == FindMode.Partial)
+            {
+                foreach (var myItem in Items)
+                {
+                    if (myItem.Name.ToUpperInvariant().Contains(nameUpper))
+                    {
                         return myItem;
                     }
                 }
-            }else
+            }
+            else
             if (findMode == FindMode.StartsWith)
             {
                 foreach (var myItem in Items)
@@ -480,26 +533,29 @@ namespace Database.Helpers {
         //    return null;
         //}
 
-        public override bool ImportFromExistingElement(DBBase item,  Simulator dstSim)
+        public override bool ImportFromExistingElement(DBBase item, Simulator dstSim)
         {
-            if (item == null) {
+            if (item == null)
+            {
                 throw new LPGException("Null-Item tried to import an empty item. This is a bug!");
             }
             var type = item.GetType();
             var info = type.GetMethod("ImportFromItem");
-            if (info == null) {
+            if (info == null)
+            {
                 throw new LPGException("Type " + type + " is missing the ImportFromItem-Function. This is a bug!");
             }
-            object[] parameters = {item,  dstSim};
+            object[] parameters = { item, dstSim };
             Logger.Info("Processing type " + type + " now.");
-            var newItem = (DBBase) info.Invoke(item, parameters);
-            if (newItem == null) {
+            var newItem = (DBBase)info.Invoke(item, parameters);
+            if (newItem == null)
+            {
                 throw new LPGException(
                     "Missing Type in the import-function. This is a bug. Please contact the programmer:" +
                     item.GetType());
             }
             newItem.SaveToDB();
-            var d = (T) newItem;
+            var d = (T)newItem;
             AddItemToList(d);
             Logger.Info("Imported " + newItem.Name);
             return true;
@@ -519,8 +575,10 @@ namespace Database.Helpers {
         private void OnObservableCollectionChanged([JetBrains.Annotations.NotNull] object sender,
             [JetBrains.Annotations.NotNull] NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
         {
-            if (notifyCollectionChangedEventArgs.Action == NotifyCollectionChangedAction.Add && notifyCollectionChangedEventArgs.NewItems != null) {
-                foreach (var newItem in notifyCollectionChangedEventArgs.NewItems) {
+            if (notifyCollectionChangedEventArgs.Action == NotifyCollectionChangedAction.Add && notifyCollectionChangedEventArgs.NewItems != null)
+            {
+                foreach (var newItem in notifyCollectionChangedEventArgs.NewItems)
+                {
                     if (newItem is DBBase newdb)
                     {
                         newdb.PropertyChanged += PropertyChangedEvent;
@@ -535,10 +593,12 @@ namespace Database.Helpers {
 
         private void PropertyChangedEvent([JetBrains.Annotations.NotNull] object sender, [JetBrains.Annotations.NotNull] PropertyChangedEventArgs propertyChangedEventArgs)
         {
-            foreach (var func in _functionsToCallOnPropertyChanged) {
+            foreach (var func in _functionsToCallOnPropertyChanged)
+            {
                 func(propertyChangedEventArgs.PropertyName);
             }
-            if (propertyChangedEventArgs.PropertyName != "Name") {
+            if (propertyChangedEventArgs.PropertyName != "Name")
+            {
                 return;
             }
             Logger.Get().SafeExecuteWithWait(Items.Sort);
@@ -546,13 +606,15 @@ namespace Database.Helpers {
 
         public void SaveToDB()
         {
-            foreach (var item in Items) {
+            foreach (var item in Items)
+            {
                 item.SaveToDB();
             }
         }
     }
 
-    public enum FindMode {
+    public enum FindMode
+    {
         Exact,
         IgnoreCase,
         Partial,

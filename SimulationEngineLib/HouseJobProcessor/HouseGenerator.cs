@@ -23,18 +23,22 @@ using Newtonsoft.Json;
 
 //using System.Threading.Tasks;
 
-namespace SimulationEngineLib.HouseJobProcessor {
-    public enum AgeRange {
+namespace SimulationEngineLib.HouseJobProcessor
+{
+    public enum AgeRange
+    {
         Child,
         Student,
         Adult,
         Retiree
     }
 
-    public class PersonCategory {
+    public class PersonCategory
+    {
         public PersonCategory(int age, PermittedGender gender)
         {
-            switch (age) {
+            switch (age)
+            {
                 case { } myage when myage <= 18:
                     AgeRange = AgeRange.Child;
                     break;
@@ -58,7 +62,8 @@ namespace SimulationEngineLib.HouseJobProcessor {
 
         public bool IsMatch([NotNull] PersonCategory pc)
         {
-            if (pc.Gender == Gender && pc.AgeRange == AgeRange) {
+            if (pc.Gender == Gender && pc.AgeRange == AgeRange)
+            {
                 return true;
             }
 
@@ -69,17 +74,20 @@ namespace SimulationEngineLib.HouseJobProcessor {
         public override string ToString() => "Age: " + AgeRange + " Gender:" + Gender;
     }
 
-    public class HouseGenerator {
+    public class HouseGenerator
+    {
         public const string DescriptionText = "HouseGenerator Guid ";
         //[JetBrains.Annotations.NotNull] private static readonly object _errorLogLock = new object();
         private static int _householdErrorCount;
 
-        public static bool AreOfferedCategoriesEnough([NotNull] [ItemNotNull] List<PersonCategory> offered, [NotNull] [ItemNotNull] List<PersonCategory> demanded)
+        public static bool AreOfferedCategoriesEnough([NotNull][ItemNotNull] List<PersonCategory> offered, [NotNull][ItemNotNull] List<PersonCategory> demanded)
         {
             List<PersonCategory> demandedCopy = demanded.ToList();
-            foreach (PersonCategory category in offered) {
+            foreach (PersonCategory category in offered)
+            {
                 var c = demandedCopy.FirstOrDefault(x => x.IsMatch(category));
-                if (c == null) {
+                if (c == null)
+                {
                     return false;
                 }
 
@@ -87,9 +95,11 @@ namespace SimulationEngineLib.HouseJobProcessor {
             }
 
             var offeredCopy = offered.ToList();
-            foreach (var personCategory in demanded) {
+            foreach (var personCategory in demanded)
+            {
                 var c = offeredCopy.FirstOrDefault(x => x.IsMatch(personCategory));
-                if (c == null) {
+                if (c == null)
+                {
                     return false;
                 }
 
@@ -103,7 +113,8 @@ namespace SimulationEngineLib.HouseJobProcessor {
         {
             const string relativePathHousejobs = "Example\\HouseJobs";
             DirectoryInfo diHouseJobs = new DirectoryInfo(relativePathHousejobs);
-            if (!diHouseJobs.Exists) {
+            if (!diHouseJobs.Exists)
+            {
                 diHouseJobs.Create();
             }
             const string relativePathGuids = "Example\\GuidLists";
@@ -116,7 +127,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
             Simulator sim = new Simulator(connectionString);
             HouseData houseData1 = new HouseData(Guid.NewGuid().ToStrGuid(), "HT01", 20000, 10000, "MyFirstHouse");
 
-            HouseholdData hhd1 = new HouseholdData(Guid.NewGuid().ToString(),  "My First Household, template randomly chosen based on persons", null, null,
+            HouseholdData hhd1 = new HouseholdData(Guid.NewGuid().ToString(), "My First Household, template randomly chosen based on persons", null, null,
                 null, new List<TransportationDistanceModifier>(), HouseholdDataSpecificationType.ByPersons);
             HouseholdDataPersonSpecification personSpec = new HouseholdDataPersonSpecification(new List<PersonData>() {
             new PersonData(25, Gender.Male, "name")  });
@@ -142,12 +153,14 @@ namespace SimulationEngineLib.HouseJobProcessor {
                 new PersonData(74, Gender.Female, "name2")
             });
             houseData2.Households.Add(hhd4);
-            var calculationSettings = new JsonCalcSpecification {
+            var calculationSettings = new JsonCalcSpecification
+            {
                 StartDate = new DateTime(2019, 1, 1),
                 EndDate = new DateTime(2019, 1, 3),
                 DefaultForOutputFiles = OutputFileDefault.OnlySums
             };
-            if (calculationSettings.CalcOptions == null) {
+            if (calculationSettings.CalcOptions == null)
+            {
                 throw new LPGException("error");
             }
 
@@ -164,11 +177,11 @@ namespace SimulationEngineLib.HouseJobProcessor {
             calculationSettings.GeographicLocation = sim.GeographicLocations[0].GetJsonReference();
             Logger.Info("--------");
             Logger.Info("Writing example file and additional data file that you might need.");
-            HouseCreationAndCalculationJob hj = new HouseCreationAndCalculationJob("scenario","year","districtname", HouseDefinitionType.HouseData);
+            HouseCreationAndCalculationJob hj = new HouseCreationAndCalculationJob("scenario", "year", "districtname", HouseDefinitionType.HouseData);
             hj.House = houseData1;
             hj.CalcSpec = calculationSettings;
             hj.CalcSpec.OutputDirectory = "Example1-Results";
-            HouseJobSerializer.WriteJsonToFile(Path.Combine(diHouseJobs.FullName, "ExampleHouseJob-1.json"),hj);
+            HouseJobSerializer.WriteJsonToFile(Path.Combine(diHouseJobs.FullName, "ExampleHouseJob-1.json"), hj);
             hj.House = houseData2;
             hj.CalcSpec.OutputDirectory = "Example2-Results";
             HouseJobSerializer.WriteJsonToFile(Path.Combine(diHouseJobs.FullName, "ExampleHouseJob-2.json"), hj);
@@ -300,7 +313,8 @@ namespace SimulationEngineLib.HouseJobProcessor {
         private static TemperatureProfile FindTemperatureProfile([NotNull] Simulator sim, [NotNull] JsonCalcSpecification calcSpecification)
         {
             TemperatureProfile temperatureProfile = sim.TemperatureProfiles[0];
-            if (calcSpecification.TemperatureProfile != null) {
+            if (calcSpecification.TemperatureProfile != null)
+            {
                 temperatureProfile = sim.TemperatureProfiles.FindByJsonReference(calcSpecification.TemperatureProfile);
             }
 
@@ -311,7 +325,8 @@ namespace SimulationEngineLib.HouseJobProcessor {
         private static GeographicLocation FindGeographicLocation([NotNull] Simulator sim, [NotNull] JsonCalcSpecification calcSpecification)
         {
             GeographicLocation geoloc = sim.GeographicLocations[0];
-            if (calcSpecification.GeographicLocation != null) {
+            if (calcSpecification.GeographicLocation != null)
+            {
                 geoloc = sim.GeographicLocations.FindByJsonReference(calcSpecification.GeographicLocation);
             }
 
@@ -321,11 +336,13 @@ namespace SimulationEngineLib.HouseJobProcessor {
         public void ProcessSingleHouseJob([NotNull] string houseJobFile)
         {
             string resultDir = "Results";
-            try {
+            try
+            {
                 char[] charsToTrim = { '\n', ' ' };
                 string houseJobStr = File.ReadAllText(houseJobFile).Trim(charsToTrim);
                 HouseCreationAndCalculationJob hcj = JsonConvert.DeserializeObject<HouseCreationAndCalculationJob>(houseJobStr);
-                if(hcj == null) {
+                if (hcj == null)
+                {
                     throw new LPGException("housejob was null");
                 }
                 resultDir = hcj.CalcSpec?.OutputDirectory ?? "Results";
@@ -339,7 +356,8 @@ namespace SimulationEngineLib.HouseJobProcessor {
                 {
                     Logger.Info("File already exists: " + finishedFlagFile);
                     string filecontent = File.ReadAllText(finishedFlagFile).Trim(charsToTrim);
-                    if (filecontent == houseJobStr) {
+                    if (filecontent == houseJobStr)
+                    {
                         Logger.Info("This calculation seems to be finished. Quitting.");
                         return;
                     }
@@ -347,8 +365,10 @@ namespace SimulationEngineLib.HouseJobProcessor {
                     var prevarr = houseJobStr.Split('\n');
                     var newarr = filecontent.Split('\n');
 
-                    for (int i = 0; i < newarr.Length && i < prevarr.Length; i++) {
-                        if (prevarr[i] != newarr[i]) {
+                    for (int i = 0; i < newarr.Length && i < prevarr.Length; i++)
+                    {
+                        if (prevarr[i] != newarr[i])
+                        {
                             Logger.Info("Line: " + i);
                             Logger.Info("Prev: " + prevarr[i]);
                             Logger.Info("New : " + newarr[i]);
@@ -377,20 +397,25 @@ namespace SimulationEngineLib.HouseJobProcessor {
                         sw.Write(houseJobStr);
                     }
                 }
-                else {
+                else
+                {
                     Logger.Info("Didn't mark the calculation as finished, since there were the following errors:");
-                    foreach (var logMessage in Logger.Get().Errors) {
+                    foreach (var logMessage in Logger.Get().Errors)
+                    {
                         Logger.Info("Error: " + logMessage.Message);
                     }
                 }
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 var rdi = new DirectoryInfo(resultDir);
-                if (!rdi.Exists) {
+                if (!rdi.Exists)
+                {
                     rdi.Create();
                 }
 
-                using (StreamWriter sw = new StreamWriter(Path.Combine(resultDir, "CalculationExceptions.txt"))) {
+                using (StreamWriter sw = new StreamWriter(Path.Combine(resultDir, "CalculationExceptions.txt")))
+                {
                     sw.WriteLine(ex.Message);
                     sw.WriteLine(ex.StackTrace);
                     sw.WriteLine(ex.ToString());
@@ -402,7 +427,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
             }
         }
 
-        public void ProcessSingleHouseJob([NotNull] HouseCreationAndCalculationJob hcj,  [NotNull] Simulator sim)
+        public void ProcessSingleHouseJob([NotNull] HouseCreationAndCalculationJob hcj, [NotNull] Simulator sim)
         {
             if (hcj.House == null)
             {
@@ -416,7 +441,8 @@ namespace SimulationEngineLib.HouseJobProcessor {
             var temperatureProfile = FindTemperatureProfile(sim, hcj.CalcSpec);
             Random rnd = new Random();
             JsonReference objectToCalc;
-            if (hcj.HouseDefinitionType == HouseDefinitionType.HouseData) {
+            if (hcj.HouseDefinitionType == HouseDefinitionType.HouseData)
+            {
                 objectToCalc = CreateSingleHouse(hcj, sim, geoloc, temperatureProfile, rnd);
                 if (objectToCalc == null)
                 {
@@ -424,7 +450,8 @@ namespace SimulationEngineLib.HouseJobProcessor {
                 }
 
             }
-            else {
+            else
+            {
                 objectToCalc = hcj.HouseRef?.House;
                 if (objectToCalc == null)
                 {
@@ -433,7 +460,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
             }
             JsonCalculator jc = new JsonCalculator();
             //hcj.CalcSpec.CalcObject = null;
-            jc.StartHousehold(sim, hcj.CalcSpec,objectToCalc);
+            jc.StartHousehold(sim, hcj.CalcSpec, objectToCalc);
         }
         [NotNull]
         public string GetAllFootprints([NotNull] Exception x)
@@ -448,7 +475,8 @@ namespace SimulationEngineLib.HouseJobProcessor {
 
             foreach (var frame in frames)
             {
-                if (frame.GetFileLineNumber() < 1) {
+                if (frame.GetFileLineNumber() < 1)
+                {
                     continue;
                 }
                 traceString.Append("File: " + frame.GetFileName());
@@ -467,7 +495,8 @@ namespace SimulationEngineLib.HouseJobProcessor {
                                               TemperatureProfile temperatureProfile,
                                               Random r)
         {
-            if (hj.House == null) {
+            if (hj.House == null)
+            {
                 throw new LPGException("No house data was set in the file");
             }
             //string name = hj.House?.Name ?? "";
@@ -476,19 +505,22 @@ namespace SimulationEngineLib.HouseJobProcessor {
 
             //List<ModularHousehold> createdHouseholds = new List<ModularHousehold>();
             //make the house
-            var house = MakeHouse(sim,  hj.House);
+            var house = MakeHouse(sim, hj.House);
             house.GeographicLocation = geoloc;
             house.TemperatureProfile = temperatureProfile;
             //add the Households
-            if (hj.CalcSpec == null) {
+            if (hj.CalcSpec == null)
+            {
                 throw new LPGPBadParameterException("No calcspecification was set.");
             }
             int householdidx = 1;
-            foreach (var householdData in housedata.Households) {
+            foreach (var householdData in housedata.Households)
+            {
                 var hhs = MakeHousehold(sim, householdData, r);
 
                 var chargingStationSet = sim.ChargingStationSets.FindByJsonReference(householdData.ChargingStationSet);
-                if (hj.CalcSpec.EnableTransportation && chargingStationSet == null) {
+                if (hj.CalcSpec.EnableTransportation && chargingStationSet == null)
+                {
                     // ReSharper disable once RedundantToStringCall
                     throw new LPGPBadParameterException("Could not find charging station set: " + householdData.ChargingStationSet?.ToString());
                 }
@@ -497,7 +529,8 @@ namespace SimulationEngineLib.HouseJobProcessor {
                 {
                     // try to load the specified TravelRouteSet
                     travelrouteset = sim.TravelRouteSets.FindByJsonReference(householdData.TravelRouteSet);
-                } else
+                }
+                else
                 {
                     // no TravelRouteSet specified: use alternative travel specification (if available)
                     // For each person, transportation preferences can be specified. These are used to create a new TravelRouteSet.
@@ -508,8 +541,9 @@ namespace SimulationEngineLib.HouseJobProcessor {
                     throw new LPGPBadParameterException("Could not find travel route set.");
                 }
                 var transportationDeviceSet = sim.TransportationDeviceSets.FindByJsonReference(householdData.TransportationDeviceSet);
-                if (householdData.TransportationDistanceModifiers != null  && householdData.TransportationDistanceModifiers.Count > 0
-                && travelrouteset != null) {
+                if (householdData.TransportationDistanceModifiers != null && householdData.TransportationDistanceModifiers.Count > 0
+                && travelrouteset != null)
+                {
                     Logger.Info("Settings new travel distances for " + hhs.Name + " " + "");
                     travelrouteset = AdjustTravelDistancesBasedOnModifiers(travelrouteset, sim, house,
                         householdData, householdidx++);
@@ -519,7 +553,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
                 {
                     throw new LPGPBadParameterException("Could not find transportation device set.");
                 }
-                house.AddHousehold(hhs,  chargingStationSet, travelrouteset, transportationDeviceSet);
+                house.AddHousehold(hhs, chargingStationSet, travelrouteset, transportationDeviceSet);
 
                 //createdHouseholds.Add(hhs);
             }
@@ -534,7 +568,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
 
             //saving matching calculation file
             Logger.Info("Creating calculation file.");
-            if(house == null)
+            if (house == null)
             {
                 throw new LPGException("House generation failed");
             }
@@ -695,32 +729,37 @@ namespace SimulationEngineLib.HouseJobProcessor {
                                                                             int householdidx)
         {
             Stopwatch sw = Stopwatch.StartNew();
-            if (householdData.TransportationDistanceModifiers == null) {
+            if (householdData.TransportationDistanceModifiers == null)
+            {
                 throw new LPGException("Was null even though this was checked before the function was called.");
             }
-            var newName  = travelrouteset.Name + "(" + house.Name + " - " + householdData.Name + " " + householdidx + ")";
+            var newName = travelrouteset.Name + "(" + house.Name + " - " + householdData.Name + " " + householdidx + ")";
             var adjustedTravelrouteset = new TravelRouteSet(newName, null, sim.ConnectionString, travelrouteset.Description, Guid.NewGuid().ToStrGuid(), null);
             adjustedTravelrouteset.SaveToDB();
             sim.TravelRouteSets.Items.Add(adjustedTravelrouteset);
             int adjustingDistances = 0;
-            foreach (TravelRouteSetEntry oldTravelRouteSetEntry in travelrouteset.TravelRoutes) {
+            foreach (TravelRouteSetEntry oldTravelRouteSetEntry in travelrouteset.TravelRoutes)
+            {
                 bool addUnmodifiedRoute = true;
                 foreach (var modifier in householdData.TransportationDistanceModifiers)
                 {
                     string modRouteKey = modifier.RouteKey?.ToLower(CultureInfo.InvariantCulture);
-                    if (oldTravelRouteSetEntry.TravelRoute.RouteKey?.ToLower(CultureInfo.InvariantCulture) == modRouteKey) {
+                    if (oldTravelRouteSetEntry.TravelRoute.RouteKey?.ToLower(CultureInfo.InvariantCulture) == modRouteKey)
+                    {
                         Logger.Info("Adjusting distances for key " + modifier.RouteKey + "-" + modifier.StepKey + ", total routes in the db: " + sim.TravelRoutes.Items.Count);
                         var modStepKey = modifier.StepKey?.ToLower(CultureInfo.InvariantCulture);
                         var oldRouteSteps = oldTravelRouteSetEntry.TravelRoute.Steps.Where(x => x.StepKey?.ToLower(CultureInfo.InvariantCulture) == modStepKey).ToList();
-                        if (oldRouteSteps.Count > 0) {
-                             MakeNewAdjustedRoute(sim, oldTravelRouteSetEntry, adjustingDistances, modRouteKey, modifier, adjustedTravelrouteset);
-                             addUnmodifiedRoute = false;
-                             adjustingDistances++;
+                        if (oldRouteSteps.Count > 0)
+                        {
+                            MakeNewAdjustedRoute(sim, oldTravelRouteSetEntry, adjustingDistances, modRouteKey, modifier, adjustedTravelrouteset);
+                            addUnmodifiedRoute = false;
+                            adjustingDistances++;
                         }
                     }
                 }
 
-                if (addUnmodifiedRoute) {
+                if (addUnmodifiedRoute)
+                {
                     adjustedTravelrouteset.AddRoute(oldTravelRouteSetEntry.TravelRoute, oldTravelRouteSetEntry.MinimumAge, oldTravelRouteSetEntry.MaximumAge,
                         oldTravelRouteSetEntry.Gender, oldTravelRouteSetEntry.AffordanceTag, oldTravelRouteSetEntry.PersonID, oldTravelRouteSetEntry.Weight);
                 }
@@ -729,7 +768,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
             travelrouteset = adjustedTravelrouteset;
             adjustedTravelrouteset.SaveToDB();
             sw.Stop();
-            Logger.Info("Total distances adjusted: " + adjustingDistances + ". This took " + sw.Elapsed.TotalSeconds.ToString("F2",CultureInfo.InvariantCulture) + " seconds.");
+            Logger.Info("Total distances adjusted: " + adjustingDistances + ". This took " + sw.Elapsed.TotalSeconds.ToString("F2", CultureInfo.InvariantCulture) + " seconds.");
             return travelrouteset;
         }
 
@@ -751,12 +790,14 @@ namespace SimulationEngineLib.HouseJobProcessor {
                 oldRoute.RouteKey);
             newRoute.SaveToDB();
             sim.TravelRoutes.Items.Add(newRoute);
-            foreach (var step in oldRoute.Steps) {
+            foreach (var step in oldRoute.Steps)
+            {
                 double distance = step.Distance;
-                if (step.StepKey?.ToLower(CultureInfo.InvariantCulture) == modRouteKey) {
+                if (step.StepKey?.ToLower(CultureInfo.InvariantCulture) == modRouteKey)
+                {
                     distance = modifier.NewDistanceInMeters;
                 }
-                newRoute.AddStep(step.Name, step.TransportationDeviceCategory, distance, step.StepNumber, step.StepKey,false);
+                newRoute.AddStep(step.Name, step.TransportationDeviceCategory, distance, step.StepNumber, step.StepKey, false);
             }
 
 
@@ -766,20 +807,24 @@ namespace SimulationEngineLib.HouseJobProcessor {
                 oldTravelRouteSetEntry.AffordanceTag, oldTravelRouteSetEntry.PersonID, oldTravelRouteSetEntry.Weight);
         }
 
-        public static void WriteGuidList([NotNull] string filename, [NotNull] [ItemNotNull] List<DBBase> elements, [NotNull] DirectoryInfo relativePath)
+        public static void WriteGuidList([NotNull] string filename, [NotNull][ItemNotNull] List<DBBase> elements, [NotNull] DirectoryInfo relativePath)
         {
             string fn = relativePath.CombineName(filename);
-            using (StreamWriter sw = new StreamWriter(fn)) {
-                foreach (var element in elements) {
+            using (StreamWriter sw = new StreamWriter(fn))
+            {
+                foreach (var element in elements)
+                {
                     sw.WriteLine(element.PrettyName + ";" + element.Guid);
                 }
             }
 
             Logger.Info("Finished writing " + fn);
             string jsonFile = relativePath.CombineName(filename.Replace(".csv", ".json"));
-            using (StreamWriter sw = new StreamWriter(jsonFile)) {
+            using (StreamWriter sw = new StreamWriter(jsonFile))
+            {
                 List<JsonReference> jr = new List<JsonReference>();
-                foreach (var element in elements) {
+                foreach (var element in elements)
+                {
                     jr.Add(element.GetJsonReference());
                 }
 
@@ -798,7 +843,8 @@ namespace SimulationEngineLib.HouseJobProcessor {
             house.Description = DescriptionText + hd.HouseGuid;
             house.SaveToDB();
             var housetypecode = hd.HouseTypeCode;
-            if (housetypecode == null) {
+            if (housetypecode == null)
+            {
                 throw new LPGException("No house type was set");
             }
             if (housetypecode == null)
@@ -806,20 +852,24 @@ namespace SimulationEngineLib.HouseJobProcessor {
                 throw new LPGException("Could not find house type " + hd.HouseTypeCode);
             }
             //house type adjustment
-            var potentialHts = sim.HouseTypes.Items.Where(x => x.Name.StartsWith(housetypecode,StringComparison.Ordinal)).ToList();
-            if (potentialHts.Count == 0) {
+            var potentialHts = sim.HouseTypes.Items.Where(x => x.Name.StartsWith(housetypecode, StringComparison.Ordinal)).ToList();
+            if (potentialHts.Count == 0)
+            {
                 throw new LPGException("No house type found for " + housetypecode);
             }
 
-            if (potentialHts.Count > 1) {
+            if (potentialHts.Count > 1)
+            {
                 throw new LPGException("Too many house types found for " + housetypecode + ". Try adding a couple of more letters to make it unique. It searches by start of the name.");
             }
             HouseType newHouseType = (HouseType)HouseType.ImportFromItem(potentialHts[0], sim);
             newHouseType.Name = newHouseType.Name + "(" + hd.Name + ")";
-            if (hd.TargetHeatDemand != null) {
+            if (hd.TargetHeatDemand != null)
+            {
                 newHouseType.HeatingYearlyTotal = hd.TargetHeatDemand.Value;
             }
-            if (hd.TargetCoolingDemand != null) {
+            if (hd.TargetCoolingDemand != null)
+            {
                 newHouseType.CoolingYearlyTotal = hd.TargetCoolingDemand.Value;
             }
 
@@ -834,27 +884,30 @@ namespace SimulationEngineLib.HouseJobProcessor {
         private static ModularHousehold MakeHousehold([NotNull] Simulator sim, [NotNull] HouseholdData householdData,
                                                       [NotNull] Random r)
         {
-            if (sim == null) {
+            if (sim == null)
+            {
                 throw new ArgumentNullException(nameof(sim));
             }
 
             // ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
-            switch (householdData.HouseholdDataSpecification) {
+            switch (householdData.HouseholdDataSpecification)
+            {
                 case HouseholdDataSpecificationType.ByPersons when householdData.HouseholdDataPersonSpec == null:
                     throw new LPGException("No person specification was set for the household " + householdData.Name);
                 case HouseholdDataSpecificationType.ByPersons when householdData.HouseholdDataPersonSpec.Persons.Count == 0:
                     throw new LPGException("No persons were defined for the household " + householdData.Name);
-                case HouseholdDataSpecificationType.ByTemplateName when householdData.HouseholdTemplateSpec == null :
+                case HouseholdDataSpecificationType.ByTemplateName when householdData.HouseholdTemplateSpec == null:
                     throw new LPGException("No household template specification was set for the household " + householdData.Name);
                 case HouseholdDataSpecificationType.ByTemplateName when string.IsNullOrWhiteSpace(householdData.HouseholdTemplateSpec.HouseholdTemplateName):
                     throw new LPGException("No household template name was set for the household " + householdData.Name);
-                case HouseholdDataSpecificationType.ByHouseholdName when householdData.HouseholdNameSpec == null :
+                case HouseholdDataSpecificationType.ByHouseholdName when householdData.HouseholdNameSpec == null:
                     throw new LPGException("The household is supposed to be defined with the name, but no household name specification was set for the household " + householdData.Name);
                 case HouseholdDataSpecificationType.ByHouseholdName when (householdData.HouseholdNameSpec?.HouseholdReference == null):
                     throw new LPGException("No household reference was set for the household " + householdData.Name + ". So no household to calculate could be identified.");
             }
 
-            switch (householdData.HouseholdDataSpecification) {
+            switch (householdData.HouseholdDataSpecification)
+            {
                 case HouseholdDataSpecificationType.ByPersons:
                     return MakeHouseholdBaseOnPersonSpec(sim, householdData, r);
                 case HouseholdDataSpecificationType.ByTemplateName:
@@ -901,16 +954,20 @@ namespace SimulationEngineLib.HouseJobProcessor {
             }
 
             var template = sim.HouseholdTemplates.FindFirstByName(templateSpec.HouseholdTemplateName, FindMode.StartsWith);
-            if (template == null) {
+            if (template == null)
+            {
                 throw new LPGException("No household template found for the household template name " + templateSpec.HouseholdTemplateName);
             }
             template.Count = 1;
             Logger.Info("Generating household with template " + template.Name);
             var forbiddenTraitTags = new List<TraitTag>();
-            if (templateSpec.ForbiddenTraitTags != null) {
-                foreach (var forbiddenTraitTag in templateSpec.ForbiddenTraitTags) {
+            if (templateSpec.ForbiddenTraitTags != null)
+            {
+                foreach (var forbiddenTraitTag in templateSpec.ForbiddenTraitTags)
+                {
                     TraitTag traitTag = sim.TraitTags.Items.FirstOrDefault(x => x.Name == forbiddenTraitTag);
-                    if (traitTag == null) {
+                    if (traitTag == null)
+                    {
                         throw new LPGPBadParameterException("Found a forbidden trait tag \"" + forbiddenTraitTag + "\", but that could not be found in the LPG. Please fix.");
                     }
                     forbiddenTraitTags.Add(traitTag);
@@ -951,7 +1008,7 @@ namespace SimulationEngineLib.HouseJobProcessor {
                 }
             }
 
-            var hhs = template.GenerateHouseholds(sim, false, new List<STTraitLimit>(),forbiddenTraitTags);
+            var hhs = template.GenerateHouseholds(sim, false, new List<STTraitLimit>(), forbiddenTraitTags);
             if (hhs.Count != 1)
             {
                 throw new Exception("Could not generate this house");
@@ -966,14 +1023,17 @@ namespace SimulationEngineLib.HouseJobProcessor {
         private static ModularHousehold MakeHouseholdBaseOnPersonSpec([NotNull] Simulator sim, [NotNull] HouseholdData householdData, [NotNull] Random r)
         {
             HouseholdDataPersonSpecification personSpec = householdData.HouseholdDataPersonSpec;
-            if (personSpec == null) {
+            if (personSpec == null)
+            {
                 throw new LPGCommandlineException("Person specification was null");
 
             }
 
             var templatesWithCorrectTags = sim.HouseholdTemplates.Items.ToList();
-            if (personSpec.HouseholdTags!= null && personSpec.HouseholdTags.Count > 0) {
-                foreach (var tag in personSpec.HouseholdTags) {
+            if (personSpec.HouseholdTags != null && personSpec.HouseholdTags.Count > 0)
+            {
+                foreach (var tag in personSpec.HouseholdTags)
+                {
                     //this does an AND filtering
                     templatesWithCorrectTags = templatesWithCorrectTags.Where(x => x.TemplateTags.Any(y => y.Tag.Classification == tag)).ToList();
                 }
@@ -983,40 +1043,48 @@ namespace SimulationEngineLib.HouseJobProcessor {
 
             //make demanded person profile
             List<PersonCategory> demandedPersonCategories = new List<PersonCategory>();
-            foreach (PersonData data in personSpec.Persons) {
+            foreach (PersonData data in personSpec.Persons)
+            {
                 demandedPersonCategories.Add(new PersonCategory(data.Age, (PermittedGender)data.Gender));
             }
 
             List<HouseholdTemplate> selectedHouseholdTemplates = new List<HouseholdTemplate>();
-            foreach (var householdTemplate in templatesWithCorrectPersonCounts) {
+            foreach (var householdTemplate in templatesWithCorrectPersonCounts)
+            {
                 List<PersonCategory> thisOfferedCategories = new List<PersonCategory>();
-                foreach (var th in householdTemplate.Persons) {
+                foreach (var th in householdTemplate.Persons)
+                {
                     thisOfferedCategories.Add(new PersonCategory(th.Person.Age, th.Person.Gender));
                 }
 
-                if (AreOfferedCategoriesEnough(thisOfferedCategories, demandedPersonCategories)) {
+                if (AreOfferedCategoriesEnough(thisOfferedCategories, demandedPersonCategories))
+                {
                     selectedHouseholdTemplates.Add(householdTemplate);
                 }
             }
 
-            if (selectedHouseholdTemplates.Count == 0) {
+            if (selectedHouseholdTemplates.Count == 0)
+            {
                 _householdErrorCount++;
                 string s = "Error " + _householdErrorCount + Environment.NewLine + "Not a single household template was found for the household " +
                            householdData.Name + Environment.NewLine;
                 s += "Criteria for finding the household were: Persons: " + personSpec.Persons.Count + Environment.NewLine;
                 s += "Household templates found with this criteria: " + templatesWithCorrectPersonCounts.Count + Environment.NewLine;
                 s += "Requirements for the persons were:" + Environment.NewLine;
-                foreach (var cat in demandedPersonCategories) {
+                foreach (var cat in demandedPersonCategories)
+                {
                     s += cat + Environment.NewLine;
                 }
 
                 Logger.Warning(s);
                 //throw new LPGException(s);
-                if (templatesWithCorrectPersonCounts.Count > 0) {
+                if (templatesWithCorrectPersonCounts.Count > 0)
+                {
                     Logger.Warning("Using a random template with the same number of people.");
                     selectedHouseholdTemplates = templatesWithCorrectPersonCounts;
                 }
-                else {
+                else
+                {
                     Logger.Warning("No household found with " + personSpec.Persons.Count + ", using a random template.");
                     selectedHouseholdTemplates = sim.HouseholdTemplates.Items.ToList();
                 }
@@ -1027,7 +1095,8 @@ namespace SimulationEngineLib.HouseJobProcessor {
             pickedHht.Count = 1;
             Logger.Info("Generating household with template " + pickedHht.Name);
             var hhs = pickedHht.GenerateHouseholds(sim, false, new List<STTraitLimit>(), new List<TraitTag>());
-            if (hhs.Count != 1) {
+            if (hhs.Count != 1)
+            {
                 throw new Exception("Could not generate this house");
             }
 
@@ -1041,7 +1110,8 @@ namespace SimulationEngineLib.HouseJobProcessor {
         {
             Logger.Threshold = Severity.Warning;
             HouseGenerator hg = new HouseGenerator();
-            if (args.JsonPath == null) {
+            if (args.JsonPath == null)
+            {
                 throw new LPGCommandlineException("Path to the house job file was not set. This won't work.");
             }
             hg.ProcessSingleHouseJob(args.JsonPath);
