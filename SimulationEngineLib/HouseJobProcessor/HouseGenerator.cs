@@ -22,8 +22,6 @@ using JetBrains.Annotations;
 using Newtonsoft.Json;
 using PowerArgs;
 
-//using System.Threading.Tasks;
-
 namespace SimulationEngineLib.HouseJobProcessor
 {
     public enum AgeRange
@@ -198,119 +196,6 @@ namespace SimulationEngineLib.HouseJobProcessor
             WriteGuidList("GuidsForAllTransportationDeviceSets.csv", sim.TransportationDeviceSets.Items.Select(x => (DBBase)x).ToList(), diGuids);
             WriteGuidList("GuidsForAllTravelRouteSets.csv", sim.TravelRouteSets.Items.Select(x => (DBBase)x).ToList(), diGuids);
         }
-
-        /*
-        private class TaskExecutor {
-            public TaskExecutor([JetBrains.Annotations.NotNull] Action action) => Action = action;
-
-            [CanBeNull]
-            public Exception Ex { get; set; }
-            [JetBrains.Annotations.NotNull]
-            public Action Action { get; }
-
-            [CanBeNull]
-            public Task MyTask {
-                get;
-                set;
-            }
-            public void Run()
-            {
-                try {
-                    Action();
-                }catch(Exception ex) {
-                    Ex = ex;
-                }
-            }
-        }*/
-
-        //public void Run([JetBrains.Annotations.NotNull] string districtDefinitionFile,
-        //                [JetBrains.Annotations.NotNull] string sourceConnectionString,
-        //                [JetBrains.Annotations.NotNull] string dstDirectory,
-        //                [JetBrains.Annotations.NotNull] string errorCsvPath,
-        //                [JetBrains.Annotations.NotNull] string calcSpecificationPath)
-        //{
-        //    Logger.Threshold = Severity.Debug;
-        //    Logger.SetLogFilePath("HouseGeneratorLog.txt");
-        //    Logger.LogToFile = true;
-
-        //    //json data
-        //    string json = File.ReadAllText(districtDefinitionFile);
-        //    var districtData = JsonConvert.DeserializeObject<DistrictData>(json);
-        //    if (districtData.Houses.Count == 0) {
-        //        throw new LPGException("No houses found in " + districtDefinitionFile + ", please select the right file");
-        //    }
-
-        //    string calcSpecificationJson = File.ReadAllText(calcSpecificationPath);
-        //    var calcSpecification = JsonConvert.DeserializeObject<JsonCalcSpecification>(calcSpecificationJson);
-        //    if (calcSpecification == null) {
-        //        throw new LPGCommandlineException("Could not read calculation specification file.");
-        //    }
-
-        //    if (!Directory.Exists(dstDirectory)) {
-        //        Directory.CreateDirectory(dstDirectory);
-        //        Thread.Sleep(500);
-        //    }
-
-        //    Random r = new Random(1);
-        //    string srcDbFile = sourceConnectionString.Replace("Data Source=", "");
-        //    if (!File.Exists(srcDbFile)) {
-        //        throw new LPGException("Can't find file: " + srcDbFile);
-        //    }
-
-        //    if (string.IsNullOrWhiteSpace(districtData.Name)) {
-        //        districtData.Name = "NoName";
-        //    }
-
-        //    string dstErrorFile = Path.Combine(dstDirectory, "ProfileGenerator." + districtData.Name + ".Errors.txt");
-        //    string dstDbFile = Path.Combine(dstDirectory, "ProfileGenerator." + districtData.Name + ".db3");
-        //    File.Copy(srcDbFile, dstDbFile, true);
-        //    //simulator
-        //    string connectionString = "Data Source=" + dstDbFile;
-        //    Simulator sim = new Simulator(connectionString);
-        //    var settlement = sim.Settlements.CreateNewItem(sim.ConnectionString);
-        //    settlement.Name = districtData.Name;
-        //    settlement.Description = Guid.NewGuid().ToStrGuid();
-        //    settlement.SaveToDB();
-        //    var geoloc = FindGeographicLocation(sim, calcSpecification);
-
-        //    var temperatureProfile = FindTemperatureProfile(sim, calcSpecification);
-
-        //    //List<string> filesToCreate = new List<string>();
-        //    List<string> generatedPathsForDuplicatePathChecking = new List<string>();
-        //    List<string> outputFiles = new List<string>();
-        //    foreach (var hd in districtData.Houses) {
-        //        var customCalcSpec = new JsonCalcSpecification(calcSpecification)
-        //        {
-        //            OutputDirectory = Path.Combine(dstDirectory, AutomationUtili.CleanFileName(hd.Name??"no name"))
-        //        };
-        //        if (generatedPathsForDuplicatePathChecking.Contains(customCalcSpec.OutputDirectory))
-        //        {
-        //            throw new LPGException("The directory " + customCalcSpec.OutputDirectory + " is in two houses. This is not very useful. Please fix. Aborting.");
-        //        }
-
-        //        generatedPathsForDuplicatePathChecking.Add(customCalcSpec.OutputDirectory);
-
-        //        CreateSingleHouse(dstDirectory,  hd, districtData.SkipExistingHouses,
-        //            sim,  geoloc, temperatureProfile, r,
-        //            settlement, customCalcSpec,  dstDbFile, outputFiles);
-        //    }
-
-        //    try {
-        //        SimIntegrityChecker.Run(sim);
-        //    }
-        //    catch (Exception ex) {
-        //        using (StreamWriter sw = new StreamWriter(dstErrorFile)) {
-        //            sw.WriteLine(ex.Message);
-        //            sw.WriteLine(ex.StackTrace);
-        //            sw.Close();
-        //        }
-        //    }
-
-        //    /*foreach (string s in filesToCreate)
-        //    {
-        //        File.Copy(srcDbFile, s, true);
-        //    }*/
-        //}
 
         public bool CheckResultDir(string houseJobStr, string finishedFlagFile)
         {
