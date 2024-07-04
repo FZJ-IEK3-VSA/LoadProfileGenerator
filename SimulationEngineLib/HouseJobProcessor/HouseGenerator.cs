@@ -77,6 +77,8 @@ namespace SimulationEngineLib.HouseJobProcessor
     {
         public const string DescriptionText = "HouseGenerator Guid ";
 
+        public const string DefaultResultDirectory = "Results";
+
         public static readonly char[] charsToTrim = { '\n', ' ' };
 
         private static int _householdErrorCount;
@@ -197,7 +199,14 @@ namespace SimulationEngineLib.HouseJobProcessor
             WriteGuidList("GuidsForAllTravelRouteSets.csv", sim.TravelRouteSets.Items.Select(x => (DBBase)x).ToList(), diGuids);
         }
 
-        public bool CheckResultDir(string houseJobStr, string finishedFlagFile)
+        /// <summary>
+        /// Checks if the finished flag file in the result directory already exists, and if it 
+        /// is for the same simulation job.
+        /// </summary>
+        /// <param name="houseJobStr">the simulation job string of this simulation</param>
+        /// <param name="finishedFlagFile">the path of the finished flag file</param>
+        /// <returns>true if a matching flag file exists, else false</returns>
+        public bool CheckFinishedFlagFile(string houseJobStr, string finishedFlagFile)
         {
             // check if the result directory already contains data, and if so if it came from the same simulation configuration
             if (File.Exists(finishedFlagFile))
@@ -206,14 +215,13 @@ namespace SimulationEngineLib.HouseJobProcessor
                 string filecontent = File.ReadAllText(finishedFlagFile).Trim(charsToTrim);
                 if (filecontent == houseJobStr)
                 {
-                    Logger.Info("This calculation seems to be finished. Quitting.");
+                    // the existing finished flag file is from the same configuration
                     return true;
                 }
 
                 Logger.Info("There is a previous calculation in the result directory but it used different parameters. Cleaning and recalculating.");
                 var prevarr = houseJobStr.Split('\n');
                 var newarr = filecontent.Split('\n');
-
                 for (int i = 0; i < newarr.Length && i < prevarr.Length; i++)
                 {
                     if (prevarr[i] != newarr[i])
@@ -227,14 +235,53 @@ namespace SimulationEngineLib.HouseJobProcessor
             return false;
         }
 
+        /// <summary>
+        /// Deletes existing files in the result directory.
+        /// </summary>
+        /// <param name="resultDirectory">the result directory to clean up</param>
+        public void CleanupResultDir(string resultDirectory)
+        {
+            var resultDir = new DirectoryInfo(resultDirectory);
+            if (Directory.Exists(resultDir.FullName))
+            {
+                Logger.Warning("Result directory already exists, but calculation is not finished or skip existing is not specified. Deleting folder.");
+                var files = resultDir.GetFiles();
+                foreach (FileInfo file in files)
+                {
+                    if (file.Name.StartsWith("Log.", StringComparison.OrdinalIgnoreCase))
+                    {
+                        continue;
+                    }
+                    if (file.Name.EndsWith(".db3", StringComparison.OrdinalIgnoreCase))
+                    {
+                        continue;
+                    }
+                    file.Delete();
+                }
+
+                var directories = resultDir.GetDirectories();
+                foreach (DirectoryInfo info in directories)
+                {
+                    info.Delete(true);
+                }
+
+                Thread.Sleep(1000);
+            }
+        }
+
+        /// <summary>
+        /// Copies the database to the result directory and opens it
+        /// </summary>
+        /// <param name="databasePath">path to the source database file</param>
+        /// <param name="resultDirectory">path to the result directory</param>
+        /// <returns>database access object</returns>
+        /// <exception cref="LPGException">if the source database path was invalid</exception>
         public Simulator CopyAndOpenDatabase(string databasePath, string resultDirectory)
         {
             if (databasePath.IsNullOrEmpty())
                 throw new LPGException("No db source path");
             if (!File.Exists(databasePath))
-            {
                 throw new LPGException("Could not find source database file: " + databasePath);
-            }
             string dstDbFile = Path.Combine(resultDirectory, "profilegenerator.copy.db3");
             File.Copy(databasePath, dstDbFile, true);
             string dstConnectionString = "Data Source=" + dstDbFile;
@@ -244,32 +291,35 @@ namespace SimulationEngineLib.HouseJobProcessor
 
         public void ProcessSingleHouseJob([NotNull] string houseJobFile)
         {
-            string resultDir = "Results";
+            string resultDir = DefaultResultDirectory;
             try
             {
                 // read house job file
                 string houseJobStr = File.ReadAllText(houseJobFile).Trim(charsToTrim);
                 HouseCreationAndCalculationJob hcj = JsonConvert.DeserializeObject<HouseCreationAndCalculationJob>(houseJobStr);
                 if (hcj == null)
-                {
                     throw new LPGException("housejob was null");
-                }
+                if (hcj.CalcSpec == null)
+                    throw new LPGException("No CalcSpec was specified");
 
                 // create result directory
-                resultDir = hcj.CalcSpec?.OutputDirectory ?? "Results";
+                resultDir = hcj.CalcSpec.OutputDirectory ??= DefaultResultDirectory;
                 if (!Directory.Exists(resultDir))
                 {
                     Directory.CreateDirectory(resultDir);
                     Thread.Sleep(100);
                 }
 
+                // check for the finished flag file and other existing files in the result directory
                 string finishedFlagFile = Path.Combine(resultDir, Constants.FinishedFileFlag);
-                bool existingResultsFound = CheckResultDir(houseJobStr, finishedFlagFile);
-                if (existingResultsFound)
+                bool existingResultsFound = CheckFinishedFlagFile(houseJobStr, finishedFlagFile);
+                if (existingResultsFound && hcj.CalcSpec.SkipExisting)
                 {
                     // the same simulation has already been completed before
+                    Logger.Info("This calculation seems to be finished. Quitting.");
                     return;
                 }
+                CleanupResultDir(resultDir);
 
                 // copy DB file to result directory and open a connection to it
                 var sim = CopyAndOpenDatabase(hcj.PathToDatabase, resultDir);

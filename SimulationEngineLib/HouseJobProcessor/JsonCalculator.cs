@@ -192,56 +192,17 @@ namespace SimulationEngineLib.HouseJobProcessor
             _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
             var calculationStartTime = DateTime.Now;
 
-            // Check for already existing result files at the target location
-            var generalResultsDirectory = new DirectoryInfo(jcs.OutputDirectory ?? throw new LPGException("Output directory was null."));
-            var finishedFile = Path.Combine(generalResultsDirectory.FullName, Constants.FinishedFileFlag);
-            if (Directory.Exists(generalResultsDirectory.FullName))
-            {
-                if (jcs.SkipExisting)
-                {
-                    if (File.Exists(finishedFile))
-                    {
-                        Logger.Error("Directory already exists and calculation is finished. Exiting.");
-                        _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
-                        return;
-                    }
-                }
-
-                Logger.Warning("Directory already exists, but calculation is not finished or skip existing is not specified. Deleting folder.");
-                var files = generalResultsDirectory.GetFiles();
-                foreach (FileInfo file in files)
-                {
-                    if (file.Name.StartsWith("Log.", StringComparison.OrdinalIgnoreCase))
-                    {
-                        continue;
-                    }
-                    if (file.Name.EndsWith(".db3", StringComparison.OrdinalIgnoreCase))
-                    {
-                        continue;
-                    }
-                    file.Delete();
-                }
-
-                var directories = generalResultsDirectory.GetDirectories();
-                foreach (DirectoryInfo info in directories)
-                {
-                    info.Delete(true);
-                }
-
-                Thread.Sleep(1000);
-            }
+            var resultDirectory = new DirectoryInfo(jcs.OutputDirectory ?? throw new LPGException("Output directory was null."));
 
             // initialize logfile and log the calcspec
-            generalResultsDirectory.Create();
-            Thread.Sleep(500);
-            Logger.SetLogFilePath(Path.Combine(generalResultsDirectory.FullName, "Log.CommandlineCalculation.txt"));
+            Logger.SetLogFilePath(Path.Combine(resultDirectory.FullName, "Log.CommandlineCalculation.txt"));
             Logger.LogToFile = true;
             Logger.Get().FlushExistingMessages();
             Logger.Info("---------------------------");
             Logger.Info("Used calculation specification:");
             Logger.Info(JsonConvert.SerializeObject(jcs, Formatting.Indented), true);
             Logger.Info("---------------------------");
-            Logger.Info("Directory: " + generalResultsDirectory.FullName);
+            Logger.Info("Directory: " + resultDirectory.FullName);
 
             // save settings to the database copy in the result directory
             SaveSettingsToDatabase(sim, jcs);
@@ -256,19 +217,18 @@ namespace SimulationEngineLib.HouseJobProcessor
 
             if (jcs.CalcOptions != null && jcs.CalcOptions.Contains(CalcOption.CalculationFlameChart))
             {
-                string targetfile = Path.Combine(generalResultsDirectory.FullName, Constants.CalculationProfilerJson);
+                string targetfile = Path.Combine(resultDirectory.FullName, Constants.CalculationProfilerJson);
                 using (StreamWriter sw = new StreamWriter(targetfile))
                 {
                     _calculationProfiler.WriteJson(sw);
                 }
             }
             _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
-            // ChartMaker.MakeChartsAndPDF(_calculationProfiler,calcStartParameterSet.ResultPath);
 
             var duration = DateTime.Now - calculationStartTime;
             if (jcs.DeleteAllButPDF)
             {
-                var allFileInfos = generalResultsDirectory.GetFiles("*.*", SearchOption.AllDirectories);
+                var allFileInfos = resultDirectory.GetFiles("*.*", SearchOption.AllDirectories);
                 foreach (var fi in allFileInfos)
                 {
                     if (fi.Name.ToUpperInvariant().EndsWith(".PDF", StringComparison.Ordinal))
@@ -292,7 +252,7 @@ namespace SimulationEngineLib.HouseJobProcessor
 
             if (jcs.DeleteSqlite)
             {
-                var allFileInfos = generalResultsDirectory.GetFiles("*.sqlite", SearchOption.AllDirectories);
+                var allFileInfos = resultDirectory.GetFiles("*.sqlite", SearchOption.AllDirectories);
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
                 foreach (var fi in allFileInfos)
@@ -311,7 +271,7 @@ namespace SimulationEngineLib.HouseJobProcessor
             Logger.ImportantInfo("Calculation duration:" + duration);
 
             //cleanup empty directories
-            var subdirs = generalResultsDirectory.GetDirectories();
+            var subdirs = resultDirectory.GetDirectories();
             foreach (var subdir in subdirs)
             {
                 var files = subdir.GetFiles();
@@ -320,13 +280,6 @@ namespace SimulationEngineLib.HouseJobProcessor
                 {
                     subdir.Delete();
                 }
-            }
-
-            using (var sw = new StreamWriter(finishedFile))
-            {
-                sw.WriteLine("Finished at " + DateTime.Now);
-                sw.WriteLine("Duration in seconds:");
-                sw.WriteLine(duration.TotalSeconds);
             }
         }
 
