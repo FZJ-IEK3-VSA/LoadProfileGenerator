@@ -27,69 +27,14 @@ namespace SimulationEngineLib.HouseJobProcessor
 
         [JetBrains.Annotations.NotNull] private readonly CalculationProfiler _calculationProfiler = new();
 
-        /*
-        public bool Calculate([JetBrains.Annotations.NotNull] JsonDirectoryOptions calcDirectoryOptions)
-        {
-            _calculationProfiler.StartPart(Utili.GetCurrentMethodAndClass());
-            string jsonFileName = calcDirectoryOptions.Input;
-            if (jsonFileName == null) {
-                Logger.Error("No file was set.");
-                return false;
-            }
-
-            var fi = new FileInfo(jsonFileName);
-            if (!fi.Exists) {
-                Logger.Error("File not found: " + fi.FullName);
-            }
-
-            string jsonContent = File.ReadAllText(fi.FullName);
-            JsonCalcSpecification jcs = JsonConvert.DeserializeObject<JsonCalcSpecification>(jsonContent);
-
-
-            if (!CheckBasicSettingsForLoadingDatabase(jcs)) {
-                Logger.Error("Could not load the database ");
-                return false;
-            }
-
-            //Logger.Info("Using the following configuration: \n" + JsonConvert.SerializeObject(jcs,Formatting.Indented)  );
-            var myConnectionString = "Data Source=" + jcs.PathToDatabase;
-            string targetDirectory = jcs.OutputDirectory;
-            if (string.IsNullOrWhiteSpace(targetDirectory)) {
-                targetDirectory = Directory.GetCurrentDirectory();
-            }
-
-            if (!Directory.Exists(targetDirectory)) {
-                Directory.CreateDirectory(targetDirectory);
-                Thread.Sleep(500);
-            }
-
-            //Logger.LogFilePath = Path.Combine(targetDirectory, "mylog.txt");
-            //Logger.LogToFile = true;
-            //Config.ResetLogfileAtCalculationStart = false;
-            Logger.Info("Loading...");
-            var sim = new Simulator(myConnectionString);
-            Logger.Info("Loading finished.");
-            if (!CheckSimulator(jcs, sim)) {
-                Logger.Error("Due to incorrect settings, calculation can not start.");
-                return false;
-            }
-
-            StartHousehold(sim, jcs);
-            _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
-            return true;
-        }*/
-
-        //public bool CheckBasicSettingsForLoadingDatabase([JetBrains.Annotations.NotNull] JsonCalcSpecification jcs)
-        //{
-        //    if (!string.IsNullOrWhiteSpace(jcs.PathToDatabase)) {
-        //        var fi = new FileInfo(jcs.PathToDatabase);
-        //        if (!fi.Exists) {
-        //            throw new LPGException("Database was not found. Path supplied:" + fi.FullName);
-        //        }
-        //    }
-        //    return true;
-        //}
-
+        /// <summary>
+        /// Parses a time resolution for the simulation from a settings string. Applies a default if 
+        /// the string is empty, and throws an error if it is invalid.
+        /// </summary>
+        /// <param name="resolutionString">string specifying a time resolution in format hh:mm:ss</param>
+        /// <param name="defaultResolution">default resolution to use in case of an empty string</param>
+        /// <returns>the parsed resolution</returns>
+        /// <exception cref="LPGPBadParameterException">if an invalid string is passed</exception>
         public static TimeSpan ParseTimeResolution(string resolutionString, TimeSpan? defaultResolution = null)
         {
             defaultResolution ??= InternalTimeResolution;
@@ -385,6 +330,13 @@ namespace SimulationEngineLib.HouseJobProcessor
             }
         }
 
+        /// <summary>
+        /// Returns a CalcObject given its JsonReference.
+        /// </summary>
+        /// <param name="sim">database access object</param>
+        /// <param name="calcReference">the reference of the CalcObject to get</param>
+        /// <returns>the CalcObject</returns>
+        /// <exception cref="LPGException">if the reference was null or no object with this reference was found</exception>
         [JetBrains.Annotations.NotNull]
         private static ICalcObject GetCalcObject([JetBrains.Annotations.NotNull] Simulator sim, [CanBeNull] JsonReference calcReference)
         {
@@ -397,7 +349,6 @@ namespace SimulationEngineLib.HouseJobProcessor
             {
                 return house;
             }
-
             throw new LPGException("Could not find the Calculation object with the guid " + calcReference.Guid);
         }
 
@@ -410,81 +361,5 @@ namespace SimulationEngineLib.HouseJobProcessor
                                                                   [ItemCanBeNull][CanBeNull] ObservableCollection<ResultFileEntry> a4) => true;
 
         private static bool ReportFinishFuncForHousehold(bool a2, [JetBrains.Annotations.NotNull] string a3, [JetBrains.Annotations.NotNull] string path) => true;
-
-        /*
-        [CanBeNull]
-        private CalcOption? GetCalcOption([CanBeNull] string strOption)
-        {
-            if (strOption == null) {
-                return null;
-            }
-
-            CalcOption? co = null;
-            foreach (CalcOption ofd in Enum.GetValues(typeof(CalcOption)))
-            {
-                if (ofd.ToString() == strOption)
-                {
-                    co = ofd;
-                }
-            }
-            return co;
-        }*/
-        /*
-        private LoadTypePriority GetLoadtypePriority([CanBeNull] string jcsLoadTypePriority, [JetBrains.Annotations.NotNull] ICalcObject calcObject)
-        {
-            LoadTypePriority ltp = LoadTypePriority.Undefined;
-            foreach (LoadTypePriority ofd in Enum.GetValues(typeof(LoadTypePriority)))
-            {
-                if (ofd.ToString() == jcsLoadTypePriority)
-                {
-                    ltp =  ofd;
-                }
-            }
-            if (ltp == LoadTypePriority.Undefined)
-            {
-                Logger.Info("LoadTypePriority was not set. Determing setting...");
-                if (calcObject.CalcObjectType == CalcObjectType.ModularHousehold)
-                {
-                    ltp = LoadTypePriority.RecommendedForHouseholds;
-                    Logger.Info("LoadTypePriority for households was selected");
-                }
-                else
-                {
-                    ltp = LoadTypePriority.RecommendedForHouses;
-                    Logger.Info("LoadTypePriority for houses was selected");
-                }
-            }
-
-            return ltp;
-        }*/
-        /*
-        private EnergyIntensityType GetEnergyIntensity([CanBeNull] string copEnergyIntensityType)
-        {
-            if (string.IsNullOrWhiteSpace(copEnergyIntensityType))
-            {
-                return EnergyIntensityType.Random;
-            }
-            foreach (EnergyIntensityType ofd in Enum.GetValues(typeof(EnergyIntensityType)))
-            {
-                if (ofd.ToString() == copEnergyIntensityType)
-                {
-                    return ofd;
-                }
-            }
-            throw new LPGException("Unrecognized default for energy intensity value");
-        }*/
-        /*
-        private OutputFileDefault GetOutputFileDefaultsFromString([CanBeNull] string defaultForOutputFiles)
-        {
-            if (string.IsNullOrWhiteSpace(defaultForOutputFiles)) {
-                return OutputFileDefault.ReasonableWithChartsAndPDF;
-            }
-            foreach (OutputFileDefault ofd in Enum.GetValues(typeof(OutputFileDefault))) {
-                if (ofd.ToString() == defaultForOutputFiles) {
-                    return ofd;
-                }
-            }
-            throw new LPGException("Unrecognized default for output files value");
-        }*/
     }
 }
