@@ -78,7 +78,9 @@ namespace SimulationEngineLib.HouseJobProcessor
     public class HouseGenerator
     {
         public const string DescriptionText = "HouseGenerator Guid ";
-        //[JetBrains.Annotations.NotNull] private static readonly object _errorLogLock = new object();
+
+        public static readonly char[] charsToTrim = { '\n', ' ' };
+
         private static int _householdErrorCount;
 
         public static bool AreOfferedCategoriesEnough([NotNull][ItemNotNull] List<PersonCategory> offered, [NotNull][ItemNotNull] List<PersonCategory> demanded)
@@ -310,63 +312,86 @@ namespace SimulationEngineLib.HouseJobProcessor
         //    }*/
         //}
 
+        public bool CheckResultDir(string houseJobStr, string finishedFlagFile)
+        {
+            // check if the result directory already contains data, and if so if it came from the same simulation configuration
+            if (File.Exists(finishedFlagFile))
+            {
+                Logger.Info("File already exists: " + finishedFlagFile);
+                string filecontent = File.ReadAllText(finishedFlagFile).Trim(charsToTrim);
+                if (filecontent == houseJobStr)
+                {
+                    Logger.Info("This calculation seems to be finished. Quitting.");
+                    return true;
+                }
+
+                Logger.Info("There is a previous calculation in the result directory but it used different parameters. Cleaning and recalculating.");
+                var prevarr = houseJobStr.Split('\n');
+                var newarr = filecontent.Split('\n');
+
+                for (int i = 0; i < newarr.Length && i < prevarr.Length; i++)
+                {
+                    if (prevarr[i] != newarr[i])
+                    {
+                        Logger.Info("Line: " + i);
+                        Logger.Info("Prev: " + prevarr[i]);
+                        Logger.Info("New : " + newarr[i]);
+                    }
+                }
+            }
+            return false;
+        }
+
+        public Simulator CopyAndOpenDatabase(string databasePath, string resultDirectory)
+        {
+            if (databasePath.IsNullOrEmpty())
+                throw new LPGException("No db source path");
+            if (!File.Exists(databasePath))
+            {
+                throw new LPGException("Could not find source database file: " + databasePath);
+            }
+            string dstDbFile = Path.Combine(resultDirectory, "profilegenerator.copy.db3");
+            File.Copy(databasePath, dstDbFile, true);
+            string dstConnectionString = "Data Source=" + dstDbFile;
+            Simulator sim = new Simulator(dstConnectionString);
+            return sim;
+        }
+
         public void ProcessSingleHouseJob([NotNull] string houseJobFile)
         {
             string resultDir = "Results";
             try
             {
-                char[] charsToTrim = { '\n', ' ' };
+                // read house job file
                 string houseJobStr = File.ReadAllText(houseJobFile).Trim(charsToTrim);
                 HouseCreationAndCalculationJob hcj = JsonConvert.DeserializeObject<HouseCreationAndCalculationJob>(houseJobStr);
                 if (hcj == null)
                 {
                     throw new LPGException("housejob was null");
                 }
+
+                // create result directory
                 resultDir = hcj.CalcSpec?.OutputDirectory ?? "Results";
                 if (!Directory.Exists(resultDir))
                 {
                     Directory.CreateDirectory(resultDir);
                     Thread.Sleep(100);
                 }
+
                 string finishedFlagFile = Path.Combine(resultDir, Constants.FinishedFileFlag);
-                if (File.Exists(finishedFlagFile))
+                bool existingResultsFound = CheckResultDir(houseJobStr, finishedFlagFile);
+                if (existingResultsFound)
                 {
-                    Logger.Info("File already exists: " + finishedFlagFile);
-                    string filecontent = File.ReadAllText(finishedFlagFile).Trim(charsToTrim);
-                    if (filecontent == houseJobStr)
-                    {
-                        Logger.Info("This calculation seems to be finished. Quitting.");
-                        return;
-                    }
-                    Logger.Info("There is a previous calculation in the result directory but it used different parameters. Cleaning and recalculating.");
-                    var prevarr = houseJobStr.Split('\n');
-                    var newarr = filecontent.Split('\n');
-
-                    for (int i = 0; i < newarr.Length && i < prevarr.Length; i++)
-                    {
-                        if (prevarr[i] != newarr[i])
-                        {
-                            Logger.Info("Line: " + i);
-                            Logger.Info("Prev: " + prevarr[i]);
-                            Logger.Info("New : " + newarr[i]);
-                        }
-                    }
+                    // the same simulation has already been completed before
+                    return;
                 }
-                string srcDbFile = hcj.PathToDatabase ?? throw new LPGException("No db source path");
-                if (!File.Exists(srcDbFile))
-                {
-                    throw new LPGException("Could not found source database file: " + srcDbFile);
-                }
-                //string houseName = AutomationUtili.CleanFileName(hcj.House?.Name ?? "House");
-                string dstDbFile = Path.Combine(resultDir, "profilegenerator.copy.db3");
 
-                File.Copy(srcDbFile, dstDbFile, true);
-                //File.SetAttributes(dstDbFile, File.GetAttributes(dstDbFile) & ~FileAttributes.ReadOnly);
-                string dstConnectionString = "Data Source=" + dstDbFile;
-                // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+                // copy DB file to result directory and open a connection to it
+                var sim = CopyAndOpenDatabase(hcj.PathToDatabase, resultDir);
 
-                Simulator sim = new Simulator(dstConnectionString);
                 ProcessSingleHouseJob(hcj, sim);
+
+                // create the finished flag file if the simulation succeeded
                 if (Logger.Get().Errors.Count == 0)
                 {
                     using (var sw = new StreamWriter(finishedFlagFile))
@@ -397,22 +422,26 @@ namespace SimulationEngineLib.HouseJobProcessor
                     sw.WriteLine(ex.StackTrace);
                     sw.WriteLine(ex.ToString());
                     sw.WriteLine(GetAllFootprints(ex));
-                    sw.Close();
                 }
 
                 throw;
             }
         }
 
-        public void ProcessSingleHouseJob([NotNull] HouseCreationAndCalculationJob hcj, [NotNull] Simulator sim)
+        /// <summary>
+        /// Gets the JsonReference of the house to calculate form a HouseCreationAndCalculationjob.
+        /// Depending on the configuration, the reference of an existing house is returned or a new
+        /// house is created.
+        /// </summary>
+        /// <param name="hcj">the simulation job configuration containing the house definition</param>
+        /// <param name="sim">database access object</param>
+        /// <returns>reference of the house to simulate</returns>
+        /// <exception cref="LPGException">if the configuration does not contain a valid house definition</exception>
+        public JsonReference GetHouseReference([NotNull] HouseCreationAndCalculationJob hcj, [NotNull] Simulator sim)
         {
             if (hcj.House == null)
             {
                 throw new LPGException("No house was defined");
-            }
-            if (hcj.CalcSpec == null)
-            {
-                throw new LPGException("No calc spec was defined");
             }
             JsonReference calcObjectReference;
             if (hcj.HouseDefinitionType == HouseDefinitionType.HouseData)
@@ -427,6 +456,22 @@ namespace SimulationEngineLib.HouseJobProcessor
                     throw new LPGException("no house reference was set");
                 }
             }
+            return calcObjectReference;
+        }
+
+        /// <summary>
+        /// Executes a simulation with the JsonCalculator.
+        /// </summary>
+        /// <param name="hcj">the simulation configuration</param>
+        /// <param name="sim">database access object</param>
+        /// <exception cref="LPGException">if the configuration was invalid or the simulation failed</exception>
+        public void ProcessSingleHouseJob([NotNull] HouseCreationAndCalculationJob hcj, [NotNull] Simulator sim)
+        {
+            if (hcj.CalcSpec == null)
+            {
+                throw new LPGException("No calc spec was defined");
+            }
+            var calcObjectReference = GetHouseReference(hcj, sim);
             JsonCalculator jc = new JsonCalculator();
             jc.StartHousehold(sim, hcj.CalcSpec, calcObjectReference);
         }
