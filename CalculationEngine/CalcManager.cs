@@ -160,10 +160,6 @@ namespace CalculationEngine
                         throw new LPGException("CalcObject was null");
                     }
 
-                    CalcObject.Init(_lightNeededArray,
-                        //_householdKey,
-                        _randomSeed);
-
                     //check for transportation weirdness stuff
 
 

@@ -172,6 +172,7 @@ namespace CalculationController.CalcFactories
                 calcRepo.InputDataLogger.Save(Constants.GeneralHouseholdKey, csps);
                 calcRepo.InputDataLogger.Save(Constants.GeneralHouseholdKey, dtoltdict.GetLoadTypeDtos());
                 cm.SetCalcObject(ch);
+                ch.Init(dls, calcParameters.ActualRandomSeed);
                 CalcManager.ExitCalcFunction = false;
 
                 //LogSeed(calcParameters.ActualRandomSeed, lf.FileFactoryAndTracker, calcParameters);
