@@ -1,4 +1,9 @@
-﻿using MPI;
+﻿using Automation;
+using Automation.ResultFiles;
+using CalculationEngine.HouseholdElements;
+using Common;
+using Common.JSON;
+using MPI;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,12 +13,18 @@ using System.Threading.Tasks;
 
 namespace MassSimulation
 {
+    /// <summary>
+    /// MPI Worker class that is instantiated once per MPI process.
+    /// </summary>
     internal class Worker
     {
         Intracommunicator comm;
         int rank;
         int numWorkers;
         string workerName;
+
+        private List<ISimulator> simulators = [];
+        private CalcParameters? calcParameters = null;
 
         public Worker(Intracommunicator comm)
         {
@@ -25,51 +36,71 @@ namespace MassSimulation
 
         public void Run()
         {
-            int numAgents = 1000;
-            List<AgentInfo> agents = InitSimulation(numAgents);
+            int numAgents = 1;
+            var databasePath = "profilegenerator-latest.db3";
+            var calcSpecFile = @"D:\Home\Homeoffice\Arbeit FzJ\Projekte\Große Projekte\03 - LPG\test.json";
+            InitSimulation(databasePath, calcSpecFile, numAgents);
 
             Stopwatch watch = Stopwatch.StartNew();
             // main simulation loop
-            int numTimesteps = 10;
-            RunSimulation(numTimesteps, ref agents);
+            RunSimulation();
             watch.Stop();
             comm.Barrier();
-            if (rank == 0)
-                Console.WriteLine("Simulation time: " + Math.Round((double)watch.ElapsedMilliseconds / 1000, 2) + " s");
+            //if (rank == 0)
+            //    Console.WriteLine("Simulation time: " + Math.Round((double)watch.ElapsedMilliseconds / 1000, 2) + " s");
 
-            CollectResults(agents);
+            //CollectResults(calcObjectReferences);
         }
 
-        public List<AgentInfo> InitSimulation(int numAgents)
+        public void InitSimulation(string databasePath, string houseJobFile, int numAgents)
         {
-            AgentInfo[]? allAgents = null;
+            ScenarioPart[]? scenarioParts = null;
             if (rank == 0)
             {
                 // initialize agents
-                allAgents = PopulationGeneration.CreateAgentPopulation(numAgents);
+                Scenario scenario = Scenario.CreateDuplicateHousesScenario(databasePath, houseJobFile, numAgents);
+                scenarioParts = scenario.GetScenarioParts(numWorkers);
             }
 
-            // distribute agents
-            comm.Broadcast(ref numAgents, 0);
-            AgentInfo[] agentsArray = comm.ScatterFromFlattened(allAgents, numAgents / numWorkers, 0);
-            return agentsArray.ToList();
+            // distribute simulation targets
+            ScenarioPart partForThisWorker = comm.Scatter(scenarioParts, 0);
+
+            // TODO: include JsonCalcSpec or CalcStartParameterSet in the ScenarioPart? the set is checked/parsed, so would be better, but in contains the CalcObject already
+            LPGMassSimulator lpgSimulator = new(rank, partForThisWorker);
+            simulators.Add(lpgSimulator);
+            calcParameters = lpgSimulator.CalcParameters;
         }
 
-        private void RunSimulation(int numTimesteps, ref List<AgentInfo> agents)
+        private void RunSimulation()
         {
-            for (int i = 0; i < numTimesteps; i++)
+            if (calcParameters == null)
             {
-                SimulateOneStep(i, rank, agents);
-                var agentsByNewLocation = GetNextWorkerForAgents(rank, numWorkers, agents);
+                throw new LPGException("CalcParameters are not set");
+            }
+            var simulationTime = calcParameters.InternalStartTime;
+            var timestep = new TimeStep(0, calcParameters);
+
+            while (simulationTime < calcParameters.InternalEndTime)
+            {
+                foreach (var simulator in simulators)
+                {
+                    simulator.SimulateOneStep(timestep, simulationTime);
+                }
+
+                //var agentsByNewLocation = GetNextWorkerForAgents(rank, numWorkers, calcObjectReferences);
 
                 // move agents to respective target worker
-                var arrivingAgents = comm.Alltoall(agentsByNewLocation);
+                //var arrivingAgents = comm.Alltoall(agentsByNewLocation);
                 // reset list of local agents
-                agents = arrivingAgents.SelectMany(x => x).ToList();
+                //calcObjectReferences = arrivingAgents.SelectMany(x => x).ToList();
+
+                // increment timestep
+                simulationTime += calcParameters.InternalStepsize;
+                timestep = timestep.AddSteps(1);
             }
         }
 
-        public void SimulateOneStep(int step, int rank, List<AgentInfo> agents)
+        public void SimulateOneStep(TimeStep timeStep, DateTime now, int rank, List<AgentInfo> agents)
         {
             foreach (AgentInfo agent in agents)
             {

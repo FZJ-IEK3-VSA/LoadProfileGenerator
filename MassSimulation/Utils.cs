@@ -28,4 +28,24 @@ namespace MassSimulation
             Console.WriteLine(timestep + ": " + rank + ": " + s);
         }
     }
+
+    static class LinqExtensions
+    {
+        /// <summary>
+        /// Splits an enumerable into parts of equal size (if possible). Uses modulo to distribute
+        /// the elements in a round-robin fashion.
+        /// </summary>
+        /// <typeparam name="T">type of the elements</typeparam>
+        /// <param name="list">enumerable to split</param>
+        /// <param name="parts">number of parts</param>
+        /// <returns>an enumerable containing the parts, which are themselves enumerables</returns>
+        public static IEnumerable<IEnumerable<T>> Split<T>(this IEnumerable<T> list, int parts)
+        {
+            int i = 0;
+            var splits = from item in list
+                         group item by i++ % parts into part
+                         select part.AsEnumerable();
+            return splits;
+        }
+    }
 }
