@@ -165,7 +165,7 @@ namespace SimulationEngineLib.HouseJobProcessor
         /// </summary>
         /// <param name="sim">database access object</param>
         /// <param name="jcs">CalcSpec whose settings are to be saved</param>
-        public void SaveSettingsToDatabase(Simulator sim, JsonCalcSpecification jcs)
+        public static void SaveSettingsToDatabase(Simulator sim, JsonCalcSpecification jcs)
         {
             sim.MyGeneralConfig.StartDateUIString = jcs.StartDate.ToString();
             sim.MyGeneralConfig.EndDateUIString = jcs.EndDate.ToString();
@@ -186,6 +186,24 @@ namespace SimulationEngineLib.HouseJobProcessor
             sim.MyGeneralConfig.ExternalTimeResolution = jcs.ExternalTimeResolution ?? sim.MyGeneralConfig.InternalTimeResolution;
         }
 
+        /// <summary>
+        /// Initialize the logger and log the JsonCalcSpecification
+        /// </summary>
+        /// <param name="resultDirectory">result directory for the log file</param>
+        /// <param name="jcs">JsonCalcSpecification of the simulation job, which will be logged</param>
+        /// <param name="logFileName">name of the log file to write to</param>
+        public static void InitLogger(DirectoryInfo resultDirectory, JsonCalcSpecification jcs, string logFileName = "Log.CommandlineCalculation.txt")
+        {
+            Logger.SetLogFilePath(Path.Combine(resultDirectory.FullName, logFileName));
+            Logger.LogToFile = true;
+            Logger.Get().FlushExistingMessages();
+            Logger.Info("---------------------------");
+            Logger.Info("Used calculation specification:");
+            Logger.Info(JsonConvert.SerializeObject(jcs, Formatting.Indented), true);
+            Logger.Info("---------------------------");
+            Logger.Info("Directory: " + resultDirectory.FullName);
+        }
+
         [SuppressMessage("ReSharper", "UseObjectOrCollectionInitializer")]
         public void StartHousehold([JetBrains.Annotations.NotNull] Simulator sim, [JetBrains.Annotations.NotNull] JsonCalcSpecification jcs, [JetBrains.Annotations.NotNull] JsonReference calcObjectReference)
         {
@@ -195,14 +213,7 @@ namespace SimulationEngineLib.HouseJobProcessor
             var resultDirectory = new DirectoryInfo(jcs.OutputDirectory ?? throw new LPGException("Output directory was null."));
 
             // initialize logfile and log the calcspec
-            Logger.SetLogFilePath(Path.Combine(resultDirectory.FullName, "Log.CommandlineCalculation.txt"));
-            Logger.LogToFile = true;
-            Logger.Get().FlushExistingMessages();
-            Logger.Info("---------------------------");
-            Logger.Info("Used calculation specification:");
-            Logger.Info(JsonConvert.SerializeObject(jcs, Formatting.Indented), true);
-            Logger.Info("---------------------------");
-            Logger.Info("Directory: " + resultDirectory.FullName);
+            InitLogger(resultDirectory, jcs);
 
             // save settings to the database copy in the result directory
             SaveSettingsToDatabase(sim, jcs);

@@ -120,7 +120,7 @@ namespace CalculationEngine
         /// <param name="now">Timestamp of the simulation step</param>
         public void RunOneStep(TimeStep timestep, DateTime now)
         {
-            CalcObject.RunOneStep(timestep, now, true);
+            CalcObject!.RunOneStep(timestep, now, true);
             SaveVariableStatesIfNeeded(timestep);
             CalcRepo.OnlineLoggingData.SaveIfNeeded(timestep);
         }
