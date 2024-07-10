@@ -22,15 +22,15 @@ namespace MassSimulation
     {
         public string DatabasePath { get; private set; }
         public JsonCalcSpecification CalcSpecification { get; private set; }
-        public JsonReference[] CalcObjectReferences { get; private set; }
+        public MassSimTargetReference[] TargetReferences { get; private set; }
 
         // TODO: also store SMEs here
 
-        public Scenario(string databasePath, JsonCalcSpecification calcSpec, JsonReference[] calcObjectReferences)
+        public Scenario(string databasePath, JsonCalcSpecification calcSpec, MassSimTargetReference[] targetReferences)
         {
             DatabasePath = databasePath;
             CalcSpecification = calcSpec;
-            CalcObjectReferences = calcObjectReferences;
+            TargetReferences = targetReferences;
         }
 
         /// <summary>
@@ -73,12 +73,12 @@ namespace MassSimulation
             JsonCalculator.SaveSettingsToDatabase(sim, hcj.CalcSpec);
 
             // create duplicates of the same house
-            var calcObjectReferences = new JsonReference[numberOfHouseholds];
+            var targetReferences = new MassSimTargetReference[numberOfHouseholds];
             for (int i = 0; i < numberOfHouseholds; i++)
             {
-                calcObjectReferences[i] = calcObjectReference;
+                targetReferences[i] = new MassSimTargetReference("House " + i, calcObjectReference);
             }
-            return new Scenario(databasePath, calcSpec, calcObjectReferences);
+            return new Scenario(databasePath, calcSpec, targetReferences);
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace MassSimulation
         public ScenarioPart[] GetScenarioParts(int numberOfParts)
         {
             // divide the JsonReferences evenly
-            var referencesSublists = CalcObjectReferences.Split(numberOfParts);
+            var referencesSublists = TargetReferences.Split(numberOfParts);
             var parts = referencesSublists.Select(sublist => new ScenarioPart(DatabasePath, sublist.ToList(), CalcSpecification));
             return parts.ToArray();
         }

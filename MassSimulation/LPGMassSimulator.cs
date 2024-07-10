@@ -1,7 +1,10 @@
 ﻿using Automation;
+using Automation.ResultFiles;
+using CalcPostProcessor;
 using CalculationController.CalcFactories;
 using CalculationController.Queue;
 using CalculationEngine;
+using ChartCreator2;
 using Common;
 using Common.JSON;
 using Database;
@@ -22,7 +25,7 @@ namespace MassSimulation
         private int rank;
         private Simulator sim;
         private ScenarioPart scenarioPart;
-        private List<CalcManager> calcManagers;
+        private List<MassSimulationTarget> simulationTargets;
 
         public CalcParameters CalcParameters;
 
@@ -35,33 +38,34 @@ namespace MassSimulation
             //var sim = HouseGenerator.CopyAndOpenDatabase(PathToDatabase, resultDir);
             sim = new Simulator("Data Source=" + scenarioPart.DatabasePath);
 
-            calcManagers = new List<CalcManager>(scenarioPart.CalcObjectReferences.Count);
+            string baseResultDir = scenarioPart.CalcSpecification.OutputDirectory ?? throw new LPGPBadParameterException("No OutputDirectory specified");
+
+            simulationTargets = new List<MassSimulationTarget>(scenarioPart.TargetReferences.Count);
             var cmf = new CalcManagerFactory();
 
-            foreach (var calcObjectRef in scenarioPart.CalcObjectReferences)
+            foreach (var calcObjectRef in scenarioPart.TargetReferences)
             {
+                // create a separate subdirectory for each simulation target
+                string subdir = calcObjectRef.Id.ToString();
+                string resultDirectory = Path.Combine(baseResultDir, subdir);
+                Directory.CreateDirectory(resultDirectory);
+
                 // create the CalcStartParameterSet containing all parameters for the calculation
-                var calcStartParameterSet = JsonCalculator.CreateCalcParametersFromCalcSpec(sim, scenarioPart.CalcSpecification, calcObjectRef);
+                var calcStartParameterSet = JsonCalculator.CreateCalcParametersFromCalcSpec(sim, scenarioPart.CalcSpecification, calcObjectRef.Reference);
+                calcStartParameterSet.ResultPath = resultDirectory;
 
                 // create a calcManager for each household
-                calcManagers.Add(cmf.GetCalcManager(sim, calcStartParameterSet, false));
+                var calcManager = cmf.GetCalcManager(sim, calcStartParameterSet, false);
+                simulationTargets.Add(new MassSimulationTarget("TODO: id", calcManager, resultDirectory));
             }
 
             // make the common CalcParameters accessible
-            CalcParameters = calcManagers[0].CalcRepo.CalcParameters;
-
-            foreach (var calcManager in calcManagers)
-            {
-                if (calcManager.CalcRepo.CalcParameters != CalcParameters)
-                {
-                    throw new Exception("Found different CalcParameters");
-                }
-            }
+            CalcParameters = simulationTargets[0].CalcManager.CalcRepo.CalcParameters;
 
             // configure logger so that each worker logs to a different file
-            var resultDir = new DirectoryInfo(scenarioPart.CalcSpecification.OutputDirectory);
+            var baseResultDirInfo = new DirectoryInfo(baseResultDir);
             Logger.Get().StartCollectingAllMessages();
-            JsonCalculator.InitLogger(resultDir, scenarioPart.CalcSpecification, "Log.CommandlineCalculation.Worker" + rank + ".txt");
+            JsonCalculator.InitLogger(baseResultDirInfo, scenarioPart.CalcSpecification, "Log.CommandlineCalculation.Worker" + rank + ".txt");
         }
 
         public void Init()
@@ -71,9 +75,36 @@ namespace MassSimulation
 
         public void SimulateOneStep(TimeStep timeStep, DateTime dateTime)
         {
-            foreach (var calcManager in calcManagers)
+            foreach (var target in simulationTargets)
             {
-                calcManager.RunOneStep(timeStep, dateTime);
+                target.CalcManager.RunOneStep(timeStep, dateTime);
+            }
+        }
+
+        public void FinishSimulation()
+        {
+            foreach (var target in simulationTargets)
+            {
+                target.CalcManager.CalcObject!.FinishCalculation();
+                var calcRepo = target.CalcManager.CalcRepo;
+                calcRepo.Flush();
+                calcRepo.Dispose();
+
+                // postprocessing
+                var ppm = new PostProcessingManager(calcRepo.CalculationProfiler, calcRepo.FileFactoryAndTracker);
+                ppm.Run(target.ResultDirectory);
+                calcRepo.Flush();
+
+                // chart creation
+                var cpm = new ChartProcessorManager(calcRepo.CalculationProfiler, calcRepo.FileFactoryAndTracker);
+                cpm.Run(target.ResultDirectory);
+                calcRepo.Flush();
+
+
+                if (calcRepo.CalcParameters.IsSet(CalcOption.LogAllMessages) || calcRepo.CalcParameters.IsSet(CalcOption.LogErrorMessages))
+                {
+                    target.CalcManager.InitializeFileLogging(calcRepo.Srls);
+                }
             }
         }
     }

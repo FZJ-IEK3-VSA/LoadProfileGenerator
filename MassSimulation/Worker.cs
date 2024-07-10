@@ -49,6 +49,8 @@ namespace MassSimulation
             //if (rank == 0)
             //    Console.WriteLine("Simulation time: " + Math.Round((double)watch.ElapsedMilliseconds / 1000, 2) + " s");
 
+            FinishSimulation();
+
             //CollectResults(calcObjectReferences);
         }
 
@@ -97,6 +99,14 @@ namespace MassSimulation
                 // increment timestep
                 simulationTime += calcParameters.InternalStepsize;
                 timestep = timestep.AddSteps(1);
+            }
+        }
+
+        private void FinishSimulation()
+        {
+            foreach (var simulator in simulators)
+            {
+                simulator.FinishSimulation();
             }
         }
 

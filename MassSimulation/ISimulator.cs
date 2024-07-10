@@ -8,5 +8,7 @@ namespace MassSimulation
     internal interface ISimulator
     {
         void SimulateOneStep(TimeStep timeStep, DateTime dateTime);
+
+        void FinishSimulation();
     }
 }

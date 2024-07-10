@@ -14,13 +14,13 @@ namespace MassSimulation
     internal class ScenarioPart
     {
         public string DatabasePath;
-        public List<JsonReference> CalcObjectReferences;
+        public List<MassSimTargetReference> TargetReferences;
         public JsonCalcSpecification CalcSpecification;
 
-        public ScenarioPart(string databasePath, List<JsonReference> calcObjectReferences, JsonCalcSpecification calcSpecification)
+        public ScenarioPart(string databasePath, List<MassSimTargetReference> targetReferences, JsonCalcSpecification calcSpecification)
         {
             DatabasePath = databasePath;
-            CalcObjectReferences = calcObjectReferences;
+            TargetReferences = targetReferences;
             CalcSpecification = calcSpecification;
         }
     }
