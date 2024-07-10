@@ -12,6 +12,8 @@ namespace MassSimulation
     {
         public static readonly MPIJsonSerializer Default;
 
+        private static readonly JsonSerializerOptions Options = new() { IncludeFields = true };
+
         static MPIJsonSerializer()
         {
             Default = new MPIJsonSerializer();
@@ -19,13 +21,13 @@ namespace MassSimulation
 
         public T? Deserialize<T>(Stream stream)
         {
-            T? result = JsonSerializer.Deserialize<T>(stream);
+            T? result = JsonSerializer.Deserialize<T>(stream, Options);
             return result;
         }
 
         public void Serialize<T>(Stream stream, T value)
         {
-            JsonSerializer.Serialize(stream, value);
+            JsonSerializer.Serialize(stream, value, Options);
         }
     }
 }

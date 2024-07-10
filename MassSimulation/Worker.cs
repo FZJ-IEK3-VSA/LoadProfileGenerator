@@ -36,7 +36,7 @@ namespace MassSimulation
 
         public void Run()
         {
-            int numAgents = 1;
+            int numAgents = 2;
             var databasePath = "profilegenerator-latest.db3";
             var calcSpecFile = @"D:\Home\Homeoffice\Arbeit FzJ\Projekte\Große Projekte\03 - LPG\test.json";
             InitSimulation(databasePath, calcSpecFile, numAgents);
