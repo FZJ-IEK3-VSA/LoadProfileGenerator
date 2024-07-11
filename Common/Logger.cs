@@ -101,6 +101,19 @@ namespace Common {
 
         private static bool _logToFile;
 
+
+        private bool? logToConsole;
+
+        /// <summary>
+        /// Whether or not this Logger should print log messages to the console.
+        /// </summary>
+        public bool LogToConsole
+        {
+            // if null, refer to Config instead
+            get { return logToConsole ?? Config.OutputToConsole; }
+            set { logToConsole = value; }
+        }
+
         [ItemNotNull]
         [JetBrains.Annotations.NotNull]
         private readonly List<LogMessage> _errors;
@@ -124,12 +137,14 @@ namespace Common {
             return sb.ToString();
         }
 
-        private Logger()
+        public Logger(bool? logToConsole = null)
         {
-            Console.WriteLine("Initializing the logger");
-            //LogFilePath = string.Empty;
             _logCol = new ObservableCollection<LogMessage>();
             _errors = new List<LogMessage>();
+            this.logToConsole = logToConsole;
+
+            if (LogToConsole)
+                Console.WriteLine("Initializing the logger");
         }
 
         [JetBrains.Annotations.NotNull]
@@ -157,6 +172,7 @@ namespace Common {
 
         private static void WriteCurrentFileLoggingStatus([JetBrains.Annotations.NotNull] string source)
         {
+            if (_logger.LogToConsole)
                 Console.WriteLine( source + " Logfile path: " + (_logFilePath ?? "(null)") + ", Logging to file: " + _logToFile + ", Severity: " + Threshold.ToString() + ", LogFileIndex: " + _logFileIndex );
         }
         [UsedImplicitly]
@@ -190,7 +206,7 @@ namespace Common {
             _logger.DebugMessage(message);
         }
 
-        private void DebugMessage([JetBrains.Annotations.NotNull] string message)
+        public void DebugMessage([JetBrains.Annotations.NotNull] string message)
         {
             ReportString(message, Severity.Debug);
         }
@@ -200,7 +216,7 @@ namespace Common {
             _logger.ErrorMessage(message);
         }
 
-        private void ErrorMessage([JetBrains.Annotations.NotNull] string message)
+        public void ErrorMessage([JetBrains.Annotations.NotNull] string message)
         {
             ReportString(message, Severity.Error);
         }
@@ -287,10 +303,11 @@ namespace Common {
             _logger.InfoMessage(message, preserveLinebreaks);
         }
 
-        private void InfoMessage([JetBrains.Annotations.NotNull] string message, bool preserveLinebreaks = false)
+        public void InfoMessage([JetBrains.Annotations.NotNull] string message, bool preserveLinebreaks = false)
         {
             ReportString(message, Severity.Information,preserveLinebreaks);
         }
+
         [JetBrains.Annotations.NotNull] private static readonly object _fileLogLock = new object();
         [CanBeNull] private static string _logFilePath;
 
@@ -326,21 +343,21 @@ namespace Common {
 
         public void FlushExistingMessages()
         {
-
-            Console.WriteLine("------------ Flushing---------------");
+            if (LogToConsole)
+                Console.WriteLine("------------ Flushing---------------");
             var messages = GetAndClearAllCollectedMessages();
             string filename = GetFilename(Severity.Debug, true);
             StreamWriter sw = new StreamWriter(filename);
-            Console.WriteLine("------------ Total messages:  " + messages.Count + "---------------");
+            if (LogToConsole)
+                Console.WriteLine("------------ Total messages:  " + messages.Count + "---------------");
             sw.WriteLine("Starting the log");
             sw.Close();
             LogStringToFile("Writing" + messages.Count + " cached  collected log messaged.", filename, Severity.ImportantInfo, true);
-            foreach (LogMessage message in messages) {
-                LogStringToFile(message.Message,filename,message.Severity, true);
+            foreach (LogMessage message in messages)
+            {
+                LogStringToFile(message.Message, filename, message.Severity, true);
             }
-            //LogStringToFile("Finished writing" + messages.Count + " cached  collected log messaged.", filename, Severity.ImportantInfo);
         }
-
 
         [ItemNotNull]
         [JetBrains.Annotations.NotNull]
@@ -367,12 +384,15 @@ namespace Common {
             }
             if (severity <= Threshold)
             {
-                if (OutputHelper != null && !Config.OutputToConsole) {
-                    OutputHelper.WriteLine(message);
-                }
-                else {
+                if (LogToConsole)
+                {
                     Console.WriteLine(message);
                 }
+                else if (OutputHelper != null)
+                {
+                    OutputHelper.WriteLine(message);
+                }
+                // don't log the message here if there is no OutputHelper and LogToConsole is false
             }
             if (LogToFile) {
                 try {
@@ -432,16 +452,17 @@ namespace Common {
         }
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-                public void SafeExecuteWithWait([JetBrains.Annotations.NotNull] Action action)
-                {
-                    if(SaveExecutionFunctionWithWait!=null) {
-                        SaveExecutionFunctionWithWait(action);
-                    }
-                    else
-                    {
-                        action();
-                    }
-                }
+        public void SafeExecuteWithWait([JetBrains.Annotations.NotNull] Action action)
+        {
+            if (SaveExecutionFunctionWithWait != null)
+            {
+                SaveExecutionFunctionWithWait(action);
+            }
+            else
+            {
+                action();
+            }
+        }
 
 
         public void ThrowAllErrors()
@@ -471,7 +492,7 @@ namespace Common {
             _logger.WarningMessage(message);
         }
 
-        private void WarningMessage([JetBrains.Annotations.NotNull] string message)
+        public void WarningMessage([JetBrains.Annotations.NotNull] string message)
         {
             ReportString(message, Severity.Warning);
         }

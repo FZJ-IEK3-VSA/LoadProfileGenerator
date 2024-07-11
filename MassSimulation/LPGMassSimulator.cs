@@ -65,7 +65,7 @@ namespace MassSimulation
             // configure logger so that each worker logs to a different file
             var baseResultDirInfo = new DirectoryInfo(baseResultDir);
             Logger.Get().StartCollectingAllMessages();
-            JsonCalculator.InitLogger(baseResultDirInfo, scenarioPart.CalcSpecification, "Log.CommandlineCalculation.Worker" + rank + ".txt");
+            JsonCalculator.InitLoggerAndLogCalcSpec(baseResultDirInfo, scenarioPart.CalcSpecification, "Log.CommandlineCalculation.Worker" + rank + ".txt");
         }
 
         public void Init()

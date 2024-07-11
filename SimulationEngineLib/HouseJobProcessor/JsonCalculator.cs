@@ -192,7 +192,7 @@ namespace SimulationEngineLib.HouseJobProcessor
         /// <param name="resultDirectory">result directory for the log file</param>
         /// <param name="jcs">JsonCalcSpecification of the simulation job, which will be logged</param>
         /// <param name="logFileName">name of the log file to write to</param>
-        public static void InitLogger(DirectoryInfo resultDirectory, JsonCalcSpecification jcs, string logFileName = "Log.CommandlineCalculation.txt")
+        public static void InitLoggerAndLogCalcSpec(DirectoryInfo resultDirectory, JsonCalcSpecification jcs, string logFileName = "Log.CommandlineCalculation.txt")
         {
             Logger.SetLogFilePath(Path.Combine(resultDirectory.FullName, logFileName));
             Logger.LogToFile = true;
@@ -213,7 +213,7 @@ namespace SimulationEngineLib.HouseJobProcessor
             var resultDirectory = new DirectoryInfo(jcs.OutputDirectory ?? throw new LPGException("Output directory was null."));
 
             // initialize logfile and log the calcspec
-            InitLogger(resultDirectory, jcs);
+            InitLoggerAndLogCalcSpec(resultDirectory, jcs);
 
             // save settings to the database copy in the result directory
             SaveSettingsToDatabase(sim, jcs);
