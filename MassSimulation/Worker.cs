@@ -25,6 +25,7 @@ namespace MassSimulation
 
         private List<ISimulator> simulators = [];
         private CalcParameters? calcParameters = null;
+        private MPILogger logger;
 
         public Worker(Intracommunicator comm)
         {
@@ -32,42 +33,56 @@ namespace MassSimulation
             rank = comm.Rank;
             numWorkers = comm.Size;
             workerName = MPI.Environment.ProcessorName;
+            logger = new MPILogger(true, rank);
         }
 
         public void Run()
         {
-            int numAgents = 2;
+            int numAgents = 4;
             var databasePath = "profilegenerator-latest.db3";
             var calcSpecFile = @"D:\Home\Homeoffice\Arbeit FzJ\Projekte\Große Projekte\03 - LPG\test.json";
-            InitSimulation(databasePath, calcSpecFile, numAgents);
+
+            logger.Info("Starting mass simulation with " + numWorkers + " workers.");
 
             Stopwatch watch = Stopwatch.StartNew();
+            InitSimulation(databasePath, calcSpecFile, numAgents);
+
+
             // main simulation loop
             RunSimulation();
             watch.Stop();
-            comm.Barrier();
-            //if (rank == 0)
-            //    Console.WriteLine("Simulation time: " + Math.Round((double)watch.ElapsedMilliseconds / 1000, 2) + " s");
 
             FinishSimulation();
 
-            //CollectResults(calcObjectReferences);
+            comm.Barrier();
+            if (rank == 0)
+                logger.Info("Simulation time: " + Math.Round((double)watch.ElapsedMilliseconds / 1000, 2) + " s");
         }
 
         public void InitSimulation(string databasePath, string houseJobFile, int numAgents)
         {
+            // general settings
+            // avoid MPI processes cluttering the console
+            Config.OutputToConsole = false;
+
+            // create scenario
             ScenarioPart[]? scenarioParts = null;
             if (rank == 0)
             {
-                // initialize agents
+                // determine simulation targets
                 Scenario scenario = Scenario.CreateDuplicateHousesScenario(databasePath, houseJobFile, numAgents);
                 scenarioParts = scenario.GetScenarioParts(numWorkers);
+                int length = scenarioParts.Length;
+                if (length < numWorkers)
+                {
+                    // not enough parts for all workers
+                    throw new LPGException("Not enough work packages for all MPI processes (" + length + " work packages for " + numWorkers + " workers).");
+                }
             }
 
             // distribute simulation targets
             ScenarioPart partForThisWorker = comm.Scatter(scenarioParts, 0);
 
-            // TODO: include JsonCalcSpec or CalcStartParameterSet in the ScenarioPart? the set is checked/parsed, so would be better, but in contains the CalcObject already
             LPGMassSimulator lpgSimulator = new(rank, partForThisWorker);
             simulators.Add(lpgSimulator);
             calcParameters = lpgSimulator.CalcParameters;
@@ -84,10 +99,7 @@ namespace MassSimulation
 
             while (simulationTime < calcParameters.InternalEndTime)
             {
-                foreach (var simulator in simulators)
-                {
-                    simulator.SimulateOneStep(timestep, simulationTime);
-                }
+                SimulateOneStep(timestep, simulationTime);
 
                 //var agentsByNewLocation = GetNextWorkerForAgents(rank, numWorkers, calcObjectReferences);
 
@@ -95,6 +107,9 @@ namespace MassSimulation
                 //var arrivingAgents = comm.Alltoall(agentsByNewLocation);
                 // reset list of local agents
                 //calcObjectReferences = arrivingAgents.SelectMany(x => x).ToList();
+
+                // TODO: this barrier simulates agent exchange
+                comm.Barrier();
 
                 // increment timestep
                 simulationTime += calcParameters.InternalStepsize;
@@ -110,12 +125,11 @@ namespace MassSimulation
             }
         }
 
-        public void SimulateOneStep(TimeStep timeStep, DateTime now, int rank, List<AgentInfo> agents)
+        public void SimulateOneStep(TimeStep timeStep, DateTime simulationTime)
         {
-            foreach (AgentInfo agent in agents)
+            foreach (var simulator in simulators)
             {
-                agent.Log += rank;
-                //Thread.Sleep(10);
+                simulator.SimulateOneStep(timeStep, simulationTime);
             }
         }
 
