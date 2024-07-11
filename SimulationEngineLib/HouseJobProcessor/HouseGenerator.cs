@@ -236,10 +236,10 @@ namespace SimulationEngineLib.HouseJobProcessor
         }
 
         /// <summary>
-        /// Deletes existing files in the result directory.
+        /// Deletes existing files in the result directory before the calculation.
         /// </summary>
         /// <param name="resultDirectory">the result directory to clean up</param>
-        public void CleanupResultDir(string resultDirectory)
+        public void CleanResultDirectoryBeforeSimulation(string resultDirectory)
         {
             var resultDir = new DirectoryInfo(resultDirectory);
             if (Directory.Exists(resultDir.FullName))
@@ -319,7 +319,7 @@ namespace SimulationEngineLib.HouseJobProcessor
                     Logger.Info("This calculation seems to be finished. Quitting.");
                     return;
                 }
-                CleanupResultDir(resultDir);
+                CleanResultDirectoryBeforeSimulation(resultDir);
 
                 // copy DB file to result directory and open a connection to it
                 var sim = CopyAndOpenDatabase(hcj.PathToDatabase, resultDir);

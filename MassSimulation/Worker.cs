@@ -26,6 +26,7 @@ namespace MassSimulation
         private List<ISimulator> simulators = [];
         private CalcParameters? calcParameters = null;
         private MPILogger logger;
+        private Scenario? scenario = null;
 
         public Worker(Intracommunicator comm)
         {
@@ -38,14 +39,14 @@ namespace MassSimulation
 
         public void Run()
         {
-            int numAgents = 4;
+            int numAgents = numWorkers; // TODO: for testing
             var databasePath = "profilegenerator-latest.db3";
-            var calcSpecFile = @"D:\Home\Homeoffice\Arbeit FzJ\Projekte\Große Projekte\03 - LPG\test.json";
+            var houseJobFile = @"D:\Home\Homeoffice\Arbeit FzJ\Projekte\Große Projekte\03 - LPG\test.json";
 
             logger.Info("Starting mass simulation with " + numWorkers + " workers.");
 
             Stopwatch watch = Stopwatch.StartNew();
-            InitSimulation(databasePath, calcSpecFile, numAgents);
+            InitSimulation(databasePath, houseJobFile, numAgents);
 
 
             // main simulation loop
@@ -70,7 +71,7 @@ namespace MassSimulation
             if (rank == 0)
             {
                 // determine simulation targets
-                Scenario scenario = Scenario.CreateDuplicateHousesScenario(databasePath, houseJobFile, numAgents);
+                scenario = Scenario.CreateDuplicateHousesScenario(databasePath, houseJobFile, numAgents);
                 scenarioParts = scenario.GetScenarioParts(numWorkers);
                 int length = scenarioParts.Length;
                 if (length < numWorkers)
@@ -122,6 +123,12 @@ namespace MassSimulation
             foreach (var simulator in simulators)
             {
                 simulator.FinishSimulation();
+            }
+
+            if (rank == 0)
+            {
+                // remove unneeded files and subdirectories
+                SimulationEngineLib.HouseJobProcessor.JsonCalculator.CleanUpResultDirectory(scenario!.CalcSpecification);
             }
         }
 

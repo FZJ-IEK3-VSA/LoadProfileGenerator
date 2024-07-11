@@ -256,21 +256,47 @@ namespace SimulationEngineLib.HouseJobProcessor
         }
 
         /// <summary>
-        /// Removes empty subdirectories in the result directory.
+        /// Deletes a directoy if it is empty or, if recursive is true, it it only contains
+        /// empty subdirectories.
         /// </summary>
-        /// <param name="resultDirectory">the result directory to clean up</param>
-        public static void CleanupEmptySubdirectories(DirectoryInfo resultDirectory)
+        /// <param name="directory">the directory to clean up</param>
+        /// <param name="recursive">whether to recursively check subdirectories as well</param>
+        public static void DeleteDirectoryIfEmpty(DirectoryInfo directory, bool recursive = true)
         {
-            var subdirs = resultDirectory.GetDirectories();
-            foreach (var subdir in subdirs)
+            var subdirs = directory.GetDirectories();
+            if (recursive)
             {
-                var files = subdir.GetFiles();
-                var subsubdirs = subdir.GetDirectories();
-                if (files.Length == 0 && subsubdirs.Length == 0)
+                // recursively clear empty subdirectories
+                foreach (var subsubdir in subdirs)
                 {
-                    subdir.Delete();
+                    DeleteDirectoryIfEmpty(subsubdir, recursive);
                 }
+                // get an updated list of subdirectories
+                subdirs = directory.GetDirectories();
             }
+            var files = directory.GetFiles();
+            if (files.Length == 0 && subdirs.Length == 0)
+            {
+                directory.Delete();
+            }
+        }
+
+        /// <summary>
+        /// Cleans up the result directory after the calculation.
+        /// </summary>
+        /// <param name="calcSpec">the result directory to clean up</param>
+        public static void CleanUpResultDirectory(JsonCalcSpecification calcSpec)
+        {
+            var resultDirectory = new DirectoryInfo(calcSpec.OutputDirectory);
+            if (calcSpec.DeleteAllButPDF)
+            {
+                DeleteAllButPDF(resultDirectory);
+            }
+            if (calcSpec.DeleteSqlite)
+            {
+                DeleteSqlite(resultDirectory);
+            }
+            DeleteDirectoryIfEmpty(resultDirectory);
         }
 
         [SuppressMessage("ReSharper", "UseObjectOrCollectionInitializer")]
@@ -308,17 +334,9 @@ namespace SimulationEngineLib.HouseJobProcessor
 
             var duration = DateTime.Now - calculationStartTime;
             Logger.ImportantInfo("Calculation duration:" + duration);
-            
-            // clean up the result directory
-            if (jcs.DeleteAllButPDF)
-            {
-                DeleteAllButPDF(resultDirectory);
-            }
-            if (jcs.DeleteSqlite)
-            {
-                DeleteSqlite(resultDirectory);
-            }
-            CleanupEmptySubdirectories(resultDirectory);
+
+            // remove unneeded files and subdirectories
+            CleanUpResultDirectory(jcs);
         }
 
         /// <summary>
