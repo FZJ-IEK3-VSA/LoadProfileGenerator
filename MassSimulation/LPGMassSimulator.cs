@@ -11,6 +11,7 @@ using Database;
 using SimulationEngineLib.HouseJobProcessor;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace MassSimulation
     /// <summary>
     /// A class that simulates multiple LPG households simultaneously.
     /// </summary>
-    internal class LPGMassSimulator: ISimulator
+    internal class LPGMassSimulator : ISimulator
     {
         private int rank;
         private Simulator sim;
@@ -75,9 +76,17 @@ namespace MassSimulation
 
         public void SimulateOneStep(TimeStep timeStep, DateTime dateTime)
         {
-            foreach (var target in simulationTargets)
+            try
             {
-                target.CalcManager.RunOneStep(timeStep, dateTime);
+                foreach (var target in simulationTargets)
+                {
+                    target.CalcManager.RunOneStep(timeStep, dateTime);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Exception occurred in timestep " + timeStep.ToString() + ":\n" + ex.ToString());
+                throw;
             }
         }
 

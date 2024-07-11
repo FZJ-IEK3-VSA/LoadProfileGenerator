@@ -6,7 +6,7 @@
     "Start with mpiexec": {
       "commandName": "Executable",
       "executablePath": "mpiexec",
-      "commandLineArgs": "-n 5\r\n$(TargetName).exe",
+      "commandLineArgs": "-n 4\r\n$(TargetName).exe",
       "workingDirectory": "$(TargetDir)"
     }
   }

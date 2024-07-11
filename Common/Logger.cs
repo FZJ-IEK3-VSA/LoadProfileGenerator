@@ -352,7 +352,7 @@ namespace Common {
                 Console.WriteLine("------------ Total messages:  " + messages.Count + "---------------");
             sw.WriteLine("Starting the log");
             sw.Close();
-            LogStringToFile("Writing" + messages.Count + " cached  collected log messaged.", filename, Severity.ImportantInfo, true);
+            LogStringToFile("Writing " + messages.Count + " cached collected log messaged.", filename, Severity.ImportantInfo, true);
             foreach (LogMessage message in messages)
             {
                 LogStringToFile(message.Message, filename, message.Severity, true);
@@ -400,7 +400,9 @@ namespace Common {
                     LogStringToFile(message, logfilename, severity, preserveLinebreaks);
                     if (severity == Severity.Error) {
                         var errorlogfilename = GetFilename(severity, false);
-                        LogStringToFile(message, errorlogfilename, severity, preserveLinebreaks);
+                        // check if errors are also logged to another file
+                        if (errorlogfilename != logfilename)
+                            LogStringToFile(message, errorlogfilename, severity, preserveLinebreaks);
                     }
                 }
                 catch (Exception ex) {
