@@ -204,6 +204,75 @@ namespace SimulationEngineLib.HouseJobProcessor
             Logger.Info("Directory: " + resultDirectory.FullName);
         }
 
+
+        /// <summary>
+        /// Deletes all but PDF files (and some other relevant files) in the result directory.
+        /// </summary>
+        /// <param name="resultDirectory">the result directory to clean up</param>
+        public static void DeleteAllButPDF(DirectoryInfo resultDirectory)
+        {
+            var allFileInfos = resultDirectory.GetFiles("*.*", SearchOption.AllDirectories);
+            foreach (var fi in allFileInfos)
+            {
+                if (fi.Name.ToUpperInvariant().EndsWith(".PDF", StringComparison.Ordinal))
+                {
+                    continue;
+                }
+
+                if (fi.Name.ToUpperInvariant().StartsWith("SUMPROFILES.", StringComparison.Ordinal))
+                {
+                    continue;
+                }
+
+                if (fi.Name.ToUpperInvariant().StartsWith("HOUSEHOLDNAME.", StringComparison.Ordinal))
+                {
+                    continue;
+                }
+
+                fi.Delete();
+            }
+        }
+
+        /// <summary>
+        /// Deletes all .sqlite files in the result directory.
+        /// </summary>
+        /// <param name="resultDirectory">the result directory to delete sqlite files in</param>
+        public static void DeleteSqlite(DirectoryInfo resultDirectory)
+        {
+            var allFileInfos = resultDirectory.GetFiles("*.sqlite", SearchOption.AllDirectories);
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            foreach (var fi in allFileInfos)
+            {
+                try
+                {
+                    fi.Delete();
+                }
+                catch (Exception ex)
+                {
+                    Logger.Exception(ex);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Removes empty subdirectories in the result directory.
+        /// </summary>
+        /// <param name="resultDirectory">the result directory to clean up</param>
+        public static void CleanupEmptySubdirectories(DirectoryInfo resultDirectory)
+        {
+            var subdirs = resultDirectory.GetDirectories();
+            foreach (var subdir in subdirs)
+            {
+                var files = subdir.GetFiles();
+                var subsubdirs = subdir.GetDirectories();
+                if (files.Length == 0 && subsubdirs.Length == 0)
+                {
+                    subdir.Delete();
+                }
+            }
+        }
+
         [SuppressMessage("ReSharper", "UseObjectOrCollectionInitializer")]
         public void StartHousehold([JetBrains.Annotations.NotNull] Simulator sim, [JetBrains.Annotations.NotNull] JsonCalcSpecification jcs, [JetBrains.Annotations.NotNull] JsonReference calcObjectReference)
         {
@@ -226,6 +295,7 @@ namespace SimulationEngineLib.HouseJobProcessor
             var cs = new CalcStarter(sim);
             cs.Start(calcStartParameterSet);
 
+            // write profiler results to JSON file
             if (jcs.CalcOptions != null && jcs.CalcOptions.Contains(CalcOption.CalculationFlameChart))
             {
                 string targetfile = Path.Combine(resultDirectory.FullName, Constants.CalculationProfilerJson);
@@ -237,61 +307,18 @@ namespace SimulationEngineLib.HouseJobProcessor
             _calculationProfiler.StopPart(Utili.GetCurrentMethodAndClass());
 
             var duration = DateTime.Now - calculationStartTime;
+            Logger.ImportantInfo("Calculation duration:" + duration);
+            
+            // clean up the result directory
             if (jcs.DeleteAllButPDF)
             {
-                var allFileInfos = resultDirectory.GetFiles("*.*", SearchOption.AllDirectories);
-                foreach (var fi in allFileInfos)
-                {
-                    if (fi.Name.ToUpperInvariant().EndsWith(".PDF", StringComparison.Ordinal))
-                    {
-                        continue;
-                    }
-
-                    if (fi.Name.ToUpperInvariant().StartsWith("SUMPROFILES.", StringComparison.Ordinal))
-                    {
-                        continue;
-                    }
-
-                    if (fi.Name.ToUpperInvariant().StartsWith("HOUSEHOLDNAME.", StringComparison.Ordinal))
-                    {
-                        continue;
-                    }
-
-                    fi.Delete();
-                }
+                DeleteAllButPDF(resultDirectory);
             }
-
             if (jcs.DeleteSqlite)
             {
-                var allFileInfos = resultDirectory.GetFiles("*.sqlite", SearchOption.AllDirectories);
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-                foreach (var fi in allFileInfos)
-                {
-                    try
-                    {
-                        fi.Delete();
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Exception(ex);
-                    }
-                }
+                DeleteSqlite(resultDirectory);
             }
-
-            Logger.ImportantInfo("Calculation duration:" + duration);
-
-            //cleanup empty directories
-            var subdirs = resultDirectory.GetDirectories();
-            foreach (var subdir in subdirs)
-            {
-                var files = subdir.GetFiles();
-                var subsubdirs = subdir.GetDirectories();
-                if (files.Length == 0 && subsubdirs.Length == 0)
-                {
-                    subdir.Delete();
-                }
-            }
+            CleanupEmptySubdirectories(resultDirectory);
         }
 
         /// <summary>
