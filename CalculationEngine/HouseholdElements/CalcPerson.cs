@@ -201,10 +201,6 @@ namespace CalculationEngine.HouseholdElements {
                              [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcPerson> persons,
                              int simulationSeed)
         {
-            if (_calcRepo.Logfile == null) {
-                throw new LPGException("Logfile was null.");
-            }
-
             if (time.InternalStep == 0) {
                 Init(locs, _sicknessPotentialAffs, true);
                 Init(locs, _normalPotentialAffs, false);
@@ -215,8 +211,6 @@ namespace CalculationEngine.HouseholdElements {
             }
 
             if (_calcRepo.CalcParameters.IsSet(CalcOption.CriticalViolations)) {
-                //if (_lf == null) {                    throw new LPGException("Logfile was null.");                }
-
                 PersonDesires.CheckForCriticalThreshold(this, time, _calcRepo.FileFactoryAndTracker, householdKey);
             }
 
@@ -261,9 +255,7 @@ namespace CalculationEngine.HouseholdElements {
             PersonDesires.CopyOtherDesires(SicknessDesires);
             _isCurrentlySick = false;
             if (_calcRepo.CalcParameters.IsSet(CalcOption.ThoughtsLogfile)) {
-                if (
-                    //_lf == null ||
-                    _calcRepo.Logfile.ThoughtsLogFile1 == null) {
+                if (_calcRepo.Logfile.ThoughtsLogFile1 == null) {
                     throw new LPGException("Logfile was null.");
                 }
 
@@ -278,8 +270,7 @@ namespace CalculationEngine.HouseholdElements {
             PersonDesires.CopyOtherDesires(_normalDesires);
             _isCurrentlySick = true;
             if (_calcRepo.CalcParameters.IsSet(CalcOption.ThoughtsLogfile)) {
-                if (//_lf == null ||
-                    _calcRepo.Logfile.ThoughtsLogFile1 == null) {
+                if (_calcRepo.Logfile.ThoughtsLogFile1 == null) {
                     throw new LPGException("Logfile was null.");
                 }
 
@@ -290,10 +281,6 @@ namespace CalculationEngine.HouseholdElements {
 
         private void BeOnVacation([JetBrains.Annotations.NotNull] TimeStep time)
         {
-            if (_calcRepo.Logfile == null) {
-                throw new LPGException("Logfile was null.");
-            }
-
             if (_calcRepo.CalcParameters.IsSet(CalcOption.ThoughtsLogfile)) {
                 if (_calcRepo.Logfile.ThoughtsLogFile1 == null) {
                     throw new LPGException("Logfile was null.");
@@ -360,8 +347,7 @@ namespace CalculationEngine.HouseholdElements {
                     }
 
                     if (_calcRepo.CalcParameters.IsSet(CalcOption.ThoughtsLogfile)) {
-                        if (//_lf == null ||
-                            _calcRepo.Logfile.ThoughtsLogFile1 == null) {
+                        if (_calcRepo.Logfile.ThoughtsLogFile1 == null) {
                             throw new LPGException("Logfile was null.");
                         }
 
@@ -376,8 +362,7 @@ namespace CalculationEngine.HouseholdElements {
             }
 
             if (_calcRepo.CalcParameters.IsSet(CalcOption.ThoughtsLogfile)) {
-                if (//_lf == null ||
-                    _calcRepo.Logfile.ThoughtsLogFile1 == null) {
+                if (_calcRepo.Logfile.ThoughtsLogFile1 == null) {
                     throw new LPGException("Logfile was null.");
                 }
 
@@ -395,8 +380,6 @@ namespace CalculationEngine.HouseholdElements {
         private void ReturnToPreviousActivityIfPreviouslyInterrupted([JetBrains.Annotations.NotNull] TimeStep time)
         {
             if (time == TimeToResetActionEntryAfterInterruption) {
-                //if (_lf == null) {throw new LPGException("Logfile was null.");}
-
                 if (_calcRepo.CalcParameters.IsSet(CalcOption.ThoughtsLogfile)) {
                     if (_calcRepo.Logfile.ThoughtsLogFile1 == null) {
                         throw new LPGException("Logfile was null.");
@@ -420,8 +403,7 @@ namespace CalculationEngine.HouseholdElements {
         private void WriteDesiresToLogfileIfNeeded([JetBrains.Annotations.NotNull] TimeStep time, [JetBrains.Annotations.NotNull] HouseholdKey householdKey)
         {
             if (_calcRepo.CalcParameters.IsSet(CalcOption.DesiresLogfile)) {
-                if (//_lf == null ||
-                    _calcRepo.Logfile.DesiresLogfile == null) {
+                if (_calcRepo.Logfile.DesiresLogfile == null) {
                     throw new LPGException("Logfile was null.");
                 }
 
@@ -507,10 +489,6 @@ namespace CalculationEngine.HouseholdElements {
         private void ActivateAffordance([JetBrains.Annotations.NotNull] TimeStep currentTimeStep, [JetBrains.Annotations.NotNull] DayLightStatus isDaylight,
                                          [JetBrains.Annotations.NotNull] ICalcAffordanceBase bestaff)
         {
-            if (_calcRepo.Logfile == null) {
-                throw new LPGException("Logfile was null.");
-            }
-
             if (_calcRepo.CalcParameters.TransportationEnabled) {
                 if (!(bestaff is AffordanceBaseTransportDecorator)) {
                     throw new LPGException(
@@ -558,15 +536,6 @@ namespace CalculationEngine.HouseholdElements {
             }
 
             _currentAffordance = bestaff;
-            //else {
-            //    if (_calcParameters.IsSet(CalcOption.ThoughtsLogfile)) {
-            //        if(_lf == null) {
-            //            throw new LPGException("Logfile was null");
-            //        }
-            //        _lf.ThoughtsLogFile1.WriteEntry(new ThoughtEntry(this, time, "No Action selected"),
-            //            _householdKey);
-            //    }
-            //}
         }
 
         public void LogPersonStatus([JetBrains.Annotations.NotNull] TimeStep timestep)
@@ -582,10 +551,6 @@ namespace CalculationEngine.HouseholdElements {
                                                        [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcPerson> persons, int simulationSeed)
         {
             var allAffs = IsSick[time.InternalStep] ? _sicknessPotentialAffs : _normalPotentialAffs;
-
-            if (_calcRepo.Rnd == null) {
-                throw new LPGException("Random number generator was not initialized");
-            }
 
             AffordanceStatusClass? status = null;
             if (_calcRepo.CalcParameters.IsSet(CalcOption.ThoughtsLogfile))
@@ -620,9 +585,6 @@ namespace CalculationEngine.HouseholdElements {
                 var thought = MakeDetailledAffordanceStatusMessage(time, persons, simulationSeed, status!, allAffordances.Count);
                 var thoughtEntry = new ThoughtEntry(this, time, thought);
                 _calcRepo.Logfile.ThoughtsLogFile1!.WriteEntry(thoughtEntry, _calcPerson.HouseholdKey);
-            }
-            if (_calcRepo.Rnd == null) {
-                throw new LPGException("Random number generator was not initialized");
             }
 
             return GetBestAffordanceFromList(time,  allAffordances);
@@ -702,8 +664,7 @@ namespace CalculationEngine.HouseholdElements {
                 var desireDiff =
                     PersonDesires.CalcEffect(affordance.Satisfactionvalues, out var thoughtstring, affordance.Name);
                 if (_calcRepo.CalcParameters.IsSet(CalcOption.ThoughtsLogfile)) {
-                    if (//_lf == null ||
-                        _calcRepo.Logfile.ThoughtsLogFile1 == null) {
+                    if (_calcRepo.Logfile.ThoughtsLogFile1 == null) {
                         throw new LPGException("Logfile was null.");
                     }
 
@@ -726,8 +687,6 @@ namespace CalculationEngine.HouseholdElements {
             }
 
             if (bestaffordances.Count > 1) {
-                //if (_lf == null) {throw new LPGException("Logfile was null.");}
-
                 bestaff = PickRandomAffordanceFromEquallyAttractiveOnes(bestaffordances,  time,
                     this, _calcPerson.HouseholdKey);
             }
@@ -879,8 +838,7 @@ namespace CalculationEngine.HouseholdElements {
                             bool needsLight)
         {
             if (_calcRepo.CalcParameters.IsSet(CalcOption.ThoughtsLogfile)) {
-                if (//_lf == null ||
-                    _calcRepo.Logfile.ThoughtsLogFile1 == null) {
+                if (_calcRepo.Logfile.ThoughtsLogFile1 == null) {
                     throw new LPGException("Logfile was null.");
                 }
 
@@ -926,8 +884,7 @@ namespace CalculationEngine.HouseholdElements {
             // log the light
             if ( _calcRepo.CalcParameters.IsSet(CalcOption.ThoughtsLogfile)) {
                 if (isLightActivationneeded) {
-                    if (//_lf == null ||
-                        _calcRepo.Logfile.ThoughtsLogFile1 == null) {
+                    if (_calcRepo.Logfile.ThoughtsLogFile1 == null) {
                         throw new LPGException("Logfile was null.");
                     }
 
@@ -935,8 +892,7 @@ namespace CalculationEngine.HouseholdElements {
                         new ThoughtEntry(this, time, "Turning on the light for " + loc.Name), _calcPerson.HouseholdKey);
                 }
                 else {
-                    if (//_lf == null ||
-                        _calcRepo.Logfile.ThoughtsLogFile1 == null) {
+                    if (_calcRepo.Logfile.ThoughtsLogFile1 == null) {
                         throw new LPGException("Logfile was null.");
                     }
 
