@@ -3,6 +3,7 @@ using Automation.ResultFiles;
 using CalculationEngine.HouseholdElements;
 using Common;
 using Common.JSON;
+using MassSimulation.Simulators;
 using MPI;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,7 @@ namespace MassSimulation
         string workerName;
 
         private List<ISimulator> simulators = [];
+        private TransportSimulator transportSimulator;
         private CalcParameters? calcParameters = null;
         private MPILogger logger;
         private Scenario? scenario = null;
@@ -87,6 +89,9 @@ namespace MassSimulation
             LPGMassSimulator lpgSimulator = new(rank, partForThisWorker);
             simulators.Add(lpgSimulator);
             calcParameters = lpgSimulator.CalcParameters;
+
+            // initialize the transport simulator
+            transportSimulator = new TransportSimulator();
         }
 
         private void RunSimulation()
@@ -101,6 +106,8 @@ namespace MassSimulation
             while (simulationTime < calcParameters.InternalEndTime)
             {
                 SimulateOneStep(timestep, simulationTime);
+
+                transportSimulator.SimulateOneStep(timestep, simulationTime);
 
                 //var agentsByNewLocation = GetNextWorkerForAgents(rank, numWorkers, calcObjectReferences);
 
@@ -136,6 +143,7 @@ namespace MassSimulation
         {
             foreach (var simulator in simulators)
             {
+                // TODO: collect agents that start traveling
                 simulator.SimulateOneStep(timeStep, simulationTime);
             }
         }

@@ -57,7 +57,7 @@ namespace MassSimulation
 
                 // create a calcManager for each household
                 var calcManager = cmf.GetCalcManager(sim, calcStartParameterSet, false);
-                simulationTargets.Add(new MassSimulationTarget("TODO: id", calcManager, resultDirectory));
+                simulationTargets.Add(new MassSimulationTarget(calcObjectRef.Id, calcManager, resultDirectory));
             }
 
             // make the common CalcParameters accessible
