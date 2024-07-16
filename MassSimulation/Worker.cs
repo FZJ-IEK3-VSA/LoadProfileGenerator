@@ -81,6 +81,9 @@ namespace MassSimulation
                     // not enough parts for all workers
                     throw new LPGException("Not enough work packages for all MPI processes (" + length + " work packages for " + numWorkers + " workers).");
                 }
+
+                // initialize the transport simulator
+                transportSimulator = new TransportSimulator();
             }
 
             // distribute simulation targets
@@ -89,9 +92,6 @@ namespace MassSimulation
             LPGMassSimulator lpgSimulator = new(rank, partForThisWorker);
             simulators.Add(lpgSimulator);
             calcParameters = lpgSimulator.CalcParameters;
-
-            // initialize the transport simulator
-            transportSimulator = new TransportSimulator();
         }
 
         private void RunSimulation()

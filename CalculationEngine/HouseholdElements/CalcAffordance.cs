@@ -125,9 +125,11 @@ namespace CalculationEngine.HouseholdElements {
                 device.ActivationCount++;
             }
 
-            //Activation
+            // create time profiles and shiftable activations for each device
             foreach (var device in allDevices) {
+                bool flexibleDevice = CalcRepo.CalcParameters.FlexibilityEnabled && device.FlexibilityMode == FlexibilityType.ProfileShiftable;
                 TimeShiftableDeviceActivation tsactivation = new(device.DeviceDto, startTime, HouseholdKey);
+                // get all energy profiles that belong to this device
                 var profs = Energyprofiles.Where(x => x.CalcDevice == device).ToList();
                 foreach (var dpt in profs) {
                     if (dpt.Probability > _probabilitiesForTimes[startTime.InternalStep]) {
@@ -139,7 +141,7 @@ namespace CalculationEngine.HouseholdElements {
                             timeLastDeviceEnds = endtime;
                         }
 
-                        if (CalcRepo.CalcParameters.FlexibilityEnabled && device.FlexibilityMode == FlexibilityType.ProfileShiftable) {
+                        if (flexibleDevice) {
                             var tsdp = new TimeShiftableDeviceProfile(
                                 dpt.LoadType.ConvertToDto(), dpt.TimeOffsetInSteps, finalValues.Values);
                             tsactivation.Profiles.Add(tsdp);
@@ -147,12 +149,13 @@ namespace CalculationEngine.HouseholdElements {
                     }
                 }
 
-                if (CalcRepo.CalcParameters.FlexibilityEnabled && device.FlexibilityMode == FlexibilityType.ProfileShiftable) {
+                if (flexibleDevice) {
                     tsactivation.TotalDuration = (timeLastDeviceEnds.InternalStep - startTime.InternalStep);
                     CalcRepo.OnlineLoggingData.AddTimeShiftableEntry(tsactivation);
                 }
             }
 
+            // determine the time the activating person is busy with the affordance
             var personsteps = CalcProfile.GetNewLengthAfterCompressExpand(_personProfile.StepValues.Count,
                 _timeFactorsForTimes[startTime.InternalStep]);
             _startTimeStep = startTime;
@@ -164,11 +167,12 @@ namespace CalculationEngine.HouseholdElements {
                     }
                 }
             }
-
+            // mark the affordance as busy
             for (var i = 0; i < personsteps && i + startTime.InternalStep < CalcRepo.CalcParameters.InternalTimesteps; i++) {
                 IsBusyArray[i + startTime.InternalStep] = true;
             }
 
+            // execute variable operations
             if (_variableOps.Count > 0) {
                 foreach (var op in _variableOps) {
                     // figure out end time
@@ -196,7 +200,6 @@ namespace CalculationEngine.HouseholdElements {
             _probabilitiesForTimes.Clear();
             _timeFactorsForTimes.Clear();
             personTimeProfile = _personProfile.CompressExpandDoubleArray(tf);
-            //return tf ;
         }
 
         public void AddDeviceTuple([JetBrains.Annotations.NotNull] CalcDevice dev, [JetBrains.Annotations.NotNull] CalcProfile newprof,
