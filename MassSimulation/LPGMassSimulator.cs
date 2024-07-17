@@ -35,11 +35,16 @@ namespace MassSimulation
             this.rank = rank;
             this.scenarioPart = scenarioPart;
 
+            string baseResultDir = scenarioPart.CalcSpecification.OutputDirectory ?? throw new LPGPBadParameterException("No OutputDirectory specified");
+
+            // configure logger so that each worker logs to a different file
+            var baseResultDirInfo = new DirectoryInfo(baseResultDir);
+            Logger.Get().StartCollectingAllMessages();
+            JsonCalculator.InitLoggerAndLogCalcSpec(baseResultDirInfo, scenarioPart.CalcSpecification, "Log.CommandlineCalculation.Worker" + rank + ".txt");
+
             // TODO: copy DB for each worker
             //var sim = HouseGenerator.CopyAndOpenDatabase(PathToDatabase, resultDir);
             sim = new Simulator("Data Source=" + scenarioPart.DatabasePath);
-
-            string baseResultDir = scenarioPart.CalcSpecification.OutputDirectory ?? throw new LPGPBadParameterException("No OutputDirectory specified");
 
             simulationTargets = new List<MassSimulationTarget>(scenarioPart.TargetReferences.Count);
             var cmf = new CalcManagerFactory();
@@ -62,11 +67,6 @@ namespace MassSimulation
 
             // make the common CalcParameters accessible
             CalcParameters = simulationTargets[0].CalcManager.CalcRepo.CalcParameters;
-
-            // configure logger so that each worker logs to a different file
-            var baseResultDirInfo = new DirectoryInfo(baseResultDir);
-            Logger.Get().StartCollectingAllMessages();
-            JsonCalculator.InitLoggerAndLogCalcSpec(baseResultDirInfo, scenarioPart.CalcSpecification, "Log.CommandlineCalculation.Worker" + rank + ".txt");
         }
 
         public void Init()
@@ -108,7 +108,6 @@ namespace MassSimulation
                 var cpm = new ChartProcessorManager(calcRepo.CalculationProfiler, calcRepo.FileFactoryAndTracker);
                 cpm.Run(target.ResultDirectory);
                 calcRepo.Flush();
-
 
                 if (calcRepo.CalcParameters.IsSet(CalcOption.LogAllMessages) || calcRepo.CalcParameters.IsSet(CalcOption.LogErrorMessages))
                 {
