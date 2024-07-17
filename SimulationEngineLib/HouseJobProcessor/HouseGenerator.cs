@@ -274,17 +274,18 @@ namespace SimulationEngineLib.HouseJobProcessor
         /// </summary>
         /// <param name="databasePath">path to the source database file</param>
         /// <param name="resultDirectory">path to the result directory</param>
+        /// <param name="resultDatabasePath">file path of the opened database copy</param>
         /// <returns>database access object</returns>
         /// <exception cref="LPGException">if the source database path was invalid</exception>
-        public Simulator CopyAndOpenDatabase(string databasePath, string resultDirectory)
+        public Simulator CopyAndOpenDatabase(string databasePath, string resultDirectory, out string resultDatabasePath)
         {
             if (databasePath.IsNullOrEmpty())
                 throw new LPGException("No db source path");
             if (!File.Exists(databasePath))
                 throw new LPGException("Could not find source database file: " + databasePath);
-            string dstDbFile = Path.Combine(resultDirectory, "profilegenerator.copy.db3");
-            File.Copy(databasePath, dstDbFile, true);
-            string dstConnectionString = "Data Source=" + dstDbFile;
+            resultDatabasePath = Path.Combine(resultDirectory, "profilegenerator.copy.db3");
+            File.Copy(databasePath, resultDatabasePath, true);
+            string dstConnectionString = "Data Source=" + resultDatabasePath;
             Simulator sim = new Simulator(dstConnectionString);
             return sim;
         }
@@ -322,7 +323,7 @@ namespace SimulationEngineLib.HouseJobProcessor
                 CleanResultDirectoryBeforeSimulation(resultDir);
 
                 // copy DB file to result directory and open a connection to it
-                var sim = CopyAndOpenDatabase(hcj.PathToDatabase, resultDir);
+                var sim = CopyAndOpenDatabase(hcj.PathToDatabase, resultDir, out _);
 
                 ProcessSingleHouseJob(hcj, sim);
 

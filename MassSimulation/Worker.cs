@@ -42,13 +42,12 @@ namespace MassSimulation
         public void Run()
         {
             int numAgents = numWorkers; // TODO: for testing
-            var databasePath = "profilegenerator-latest.db3";
             var houseJobFile = @"D:\Home\Homeoffice\Arbeit FzJ\Projekte\Große Projekte\03 - LPG\test.json";
 
             logger.Info("Starting mass simulation with " + numWorkers + " workers.");
 
             Stopwatch watch = Stopwatch.StartNew();
-            InitSimulation(databasePath, houseJobFile, numAgents);
+            InitSimulation(houseJobFile, numAgents);
 
 
             // main simulation loop
@@ -62,7 +61,7 @@ namespace MassSimulation
                 logger.Info("Simulation time: " + Math.Round((double)watch.ElapsedMilliseconds / 1000, 2) + " s");
         }
 
-        public void InitSimulation(string databasePath, string houseJobFile, int numAgents)
+        public void InitSimulation(string houseJobFile, int numAgents)
         {
             // general settings
             // avoid MPI processes cluttering the console
@@ -73,7 +72,7 @@ namespace MassSimulation
             if (rank == 0)
             {
                 // determine simulation targets
-                scenario = Scenario.CreateDuplicateHousesScenario(databasePath, houseJobFile, numAgents);
+                scenario = Scenario.CreateDuplicateHousesScenario(houseJobFile, numAgents);
                 scenarioParts = scenario.GetScenarioParts(numWorkers);
                 int length = scenarioParts.Length;
                 if (length < numWorkers)

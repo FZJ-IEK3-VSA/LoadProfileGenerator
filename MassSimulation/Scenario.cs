@@ -40,7 +40,7 @@ namespace MassSimulation
         /// <param name="numberOfHouseholds">number of copies of this house</param>
         /// <returns>scenario with identical copies of the defined house</returns>
         /// <exception cref="LPGException">if the house job file was invalid</exception>
-        public static Scenario CreateDuplicateHousesScenario(string databasePath, string houseJobFile, int numberOfHouseholds)
+        public static Scenario CreateDuplicateHousesScenario(string houseJobFile, int numberOfHouseholds)
         {
             // read house job file
             string houseJobStr = File.ReadAllText(houseJobFile).Trim(HouseGenerator.charsToTrim);
@@ -65,7 +65,7 @@ namespace MassSimulation
             houseGenerator.CleanResultDirectoryBeforeSimulation(resultDir);
 
             // copy DB file to result directory and open a connection to it
-            var sim = houseGenerator.CopyAndOpenDatabase(hcj.PathToDatabase, resultDir);
+            var sim = houseGenerator.CopyAndOpenDatabase(hcj.PathToDatabase, resultDir, out string newDbPath);
 
             var calcObjectReference = houseGenerator.GetHouseReference(hcj, sim);
 
@@ -78,7 +78,7 @@ namespace MassSimulation
             {
                 targetReferences[i] = new MassSimTargetReference("House " + i, calcObjectReference);
             }
-            return new Scenario(databasePath, calcSpec, targetReferences);
+            return new Scenario(newDbPath, calcSpec, targetReferences);
         }
 
         /// <summary>
