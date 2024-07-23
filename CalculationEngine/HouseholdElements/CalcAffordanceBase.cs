@@ -29,6 +29,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Automation;
 using Automation.ResultFiles;
 using CalculationEngine.Transportation;
@@ -39,28 +40,33 @@ using Common.JSON;
 using Common.SQLResultLogging.Loggers;
 using JetBrains.Annotations;
 
-namespace CalculationEngine.HouseholdElements {
+namespace CalculationEngine.HouseholdElements
+{
+    /// <summary>
+    /// Base class for all affordance classes. Defines basic implementations of variable operations and requirement checks as
+    /// well as general properties.
+    /// </summary>
     [SuppressMessage("ReSharper", "ConvertToAutoProperty")]
-    public abstract class CalcAffordanceBase : CalcBase, ICalcAffordanceBase, IHouseholdKey {
-        private static int _calcAffordanceBaseSerialTracker;
-
-        public BodilyActivityLevel BodilyActivityLevel { get; }
-        public CalcRepo CalcRepo { get; }
-
+    public abstract class CalcAffordanceBase : CalcBase, ICalcAffordanceBase, IHouseholdKey
+    {
         private readonly ActionAfterInterruption _actionAfterInterruption;
-        [ItemNotNull] [JetBrains.Annotations.NotNull] private readonly BitArray _isBusyArray;
 
-        protected CalcAffordanceBase([JetBrains.Annotations.NotNull] string pName,  [JetBrains.Annotations.NotNull] CalcLocation loc,
-                                     [JetBrains.Annotations.NotNull] [ItemNotNull] List<CalcDesire> satisfactionvalues,
-                                     int miniumAge, int maximumAge, PermittedGender permittedGender, bool needsLight,
-                                     bool randomEffect,
-                                     [JetBrains.Annotations.NotNull] string pAffCategory, bool isInterruptable, bool isInterrupting,
-                                     ActionAfterInterruption actionAfterInterruption, int weight,
-                                     bool requireAllAffordances,
-                                     CalcAffordanceType calcAffordanceType,
-                                     StrGuid guid,
-                                     [ItemNotNull] [JetBrains.Annotations.NotNull] BitArray isBusyArray,
-                                     BodilyActivityLevel bodilyActivityLevel,[JetBrains.Annotations.NotNull] CalcRepo calcRepo, HouseholdKey householdKey, CalcSite? site = null) : base(pName, guid)
+        [JetBrains.Annotations.NotNull] protected readonly CalcVariableRepository _variableRepository;
+
+        [ItemNotNull]
+        [JetBrains.Annotations.NotNull]
+        protected readonly List<CalcAffordanceVariableOp> _variableOps;
+
+        [ItemNotNull]
+        [JetBrains.Annotations.NotNull]
+        protected readonly List<VariableRequirement> _variableRequirements;
+
+        protected CalcAffordanceBase([JetBrains.Annotations.NotNull] string pName, [JetBrains.Annotations.NotNull] CalcLocation loc, [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcDesire> satisfactionvalues, int miniumAge, int maximumAge,
+            PermittedGender permittedGender, bool needsLight, bool randomEffect, [JetBrains.Annotations.NotNull] string pAffCategory, bool isInterruptable, bool isInterrupting, ActionAfterInterruption actionAfterInterruption, int weight,
+            bool requireAllAffordances, CalcAffordanceType calcAffordanceType, StrGuid guid, [ItemNotNull][JetBrains.Annotations.NotNull] BitArray isBusyArray, BodilyActivityLevel bodilyActivityLevel,
+            [JetBrains.Annotations.NotNull] CalcRepo calcRepo, HouseholdKey householdKey, List<CalcAffordance.DeviceEnergyProfileTuple> energyProfiles, ColorRGB affordanceColor, string sourceTrait, string? timeLimitName,
+            [JetBrains.Annotations.NotNull] CalcVariableRepository variableRepository, [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcAffordanceVariableOp> variableOps,
+            [JetBrains.Annotations.NotNull][ItemNotNull] List<VariableRequirement> variableRequirements, CalcSite? site = null) : base(pName, guid)
         {
             CalcAffordanceType = calcAffordanceType;
             BodilyActivityLevel = bodilyActivityLevel;
@@ -69,12 +75,6 @@ namespace CalculationEngine.HouseholdElements {
             Site = site;
             ParentLocation = loc;
             Satisfactionvalues = satisfactionvalues;
-            _isBusyArray = new BitArray(calcRepo.CalcParameters.InternalTimesteps);
-            //copy to make sure that it is a separate instance
-            for (var i = 0; i < isBusyArray.Length; i++)
-            {
-                _isBusyArray[i] = isBusyArray[i];
-            }
             Weight = weight;
             RequireAllAffordances = requireAllAffordances;
             MiniumAge = miniumAge;
@@ -86,50 +86,28 @@ namespace CalculationEngine.HouseholdElements {
             IsInterruptable = isInterruptable;
             IsInterrupting = isInterrupting;
             _actionAfterInterruption = actionAfterInterruption;
-            CalcAffordanceSerial = _calcAffordanceBaseSerialTracker;
-#pragma warning disable S3010 // Static fields should not be updated in constructors
-            _calcAffordanceBaseSerialTracker++;
-#pragma warning restore S3010 // Static fields should not be updated in constructors
+            Energyprofiles = energyProfiles;
+            AffordanceColor = affordanceColor;
+            SourceTrait = sourceTrait;
+            TimeLimitName = timeLimitName;
+            _variableRepository = variableRepository;
+            _variableOps = variableOps;
+            _variableRequirements = variableRequirements;
         }
 
-        [SuppressMessage("ReSharper", "MemberCanBeProtected.Global")]
-        [JetBrains.Annotations.NotNull]
-        [ItemNotNull]
-        public BitArray IsBusyArray => _isBusyArray;
+        public BodilyActivityLevel BodilyActivityLevel { get; }
 
-        [SuppressMessage("ReSharper", "UnusedParameter.Global")]
-        public abstract void Activate(TimeStep startTime, string activatorName,
-                                      CalcLocation personSourceLocation,
-                                      out ICalcProfile personTimeProfile);
+        public CalcRepo CalcRepo { get; }
 
         public string AffCategory { get; }
 
-        public abstract ColorRGB AffordanceColor { get; }
+        public ColorRGB AffordanceColor { get; }
 
         public ActionAfterInterruption AfterInterruption => _actionAfterInterruption;
 
-        public abstract string? AreDeviceProfilesEmpty();
-
-        public abstract bool AreThereDuplicateEnergyProfiles();
-
-        public int CalcAffordanceSerial { get; }
-
         public CalcAffordanceType CalcAffordanceType { get; }
 
-        public abstract List<CalcSubAffordance> CollectSubAffordances(TimeStep time,
-                                                                      bool onlyInterrupting,
-                                                                      CalcLocation srcLocation);
-
-        public abstract int DefaultPersonProfileLength { get; }
-
-        public abstract List<CalcAffordance.DeviceEnergyProfileTuple> Energyprofiles { get; }
-
-        //public abstract ICalcProfile CollectPersonProfile();
-
-        [SuppressMessage("ReSharper", "UnusedParameter.Global")]
-        public abstract BusynessType IsBusy(TimeStep time,
-                                    CalcLocation srcLocation, CalcPersonDto calcPerson,
-                                    bool clearDictionaries = true);
+        public List<CalcAffordance.DeviceEnergyProfileTuple> Energyprofiles { get; }
 
         public bool IsInterruptable { get; }
 
@@ -147,8 +125,6 @@ namespace CalculationEngine.HouseholdElements {
 
         public string PrettyNameForDumping => Name;
 
-        //public abstract int PersonProfileDuration { get; }
-
         public bool RandomEffect { get; }
 
         public bool RequireAllAffordances { get; }
@@ -157,13 +133,136 @@ namespace CalculationEngine.HouseholdElements {
 
         public CalcSite? Site { get; }
 
-        public abstract string SourceTrait { get; }
+        public string SourceTrait { get; }
 
-        public abstract List<CalcSubAffordance> SubAffordances { get; }
+        public List<CalcSubAffordance> SubAffordances { get; } = new();
 
-        public abstract string? TimeLimitName { get; }
+        public string? TimeLimitName { get; }
 
         public int Weight { get; }
         public HouseholdKey HouseholdKey { get; }
+
+        /// <summary>
+        /// Checks if any of the contained device profiles are empty or contain only one value
+        /// </summary>
+        /// <returns>the name of the first empty profile, or null if no profile was empty</returns>
+        public virtual string? AreDeviceProfilesEmpty()
+        {
+            var areDeviceProfilesEmpty = Energyprofiles
+                .Where(deviceEnergyProfileTuple => deviceEnergyProfileTuple.TimeProfile.TimeSpanDataPoints.Count < 2)
+                .Select(deviceEnergyProfileTuple => deviceEnergyProfileTuple.TimeProfile.Name).FirstOrDefault();
+
+            return areDeviceProfilesEmpty;
+        }
+
+        /// <summary>
+        /// Checks if the affordance contains multiple energy profiles for the same device for the same load type at
+        /// the same time.
+        /// </summary>
+        /// <returns>true if a duplicate energy profile was found, else false</returns>
+        public virtual bool AreThereDuplicateEnergyProfiles()
+        {
+            foreach (var tuple in Energyprofiles)
+            {
+                foreach (var subtuple in Energyprofiles)
+                {
+                    if (tuple != subtuple && tuple.CalcDevice == subtuple.CalcDevice && tuple.LoadType == subtuple.LoadType &&
+                        subtuple.TimeOffset == tuple.TimeOffset)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Checks if all variable requirements for this affordance are currently met
+        /// </summary>
+        /// <returns>true if all variable requirements are met, else false</returns>
+        protected bool AreVariableRequirementsMet()
+        {
+
+            if (_variableRequirements.Count > 0)
+            {
+                foreach (var requirement in _variableRequirements)
+                {
+                    if (!requirement.IsMet())
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Schedules all variable operations caused by an activation of this affordance, and immediately triggers operations
+        /// in the current time step.
+        /// </summary>
+        /// <param name="startTime">the starting time step of the affordance activation</param>
+        /// <param name="timeLastDeviceEnds">time step in which the last device of the affordance activation ends</param>
+        /// <param name="personEndTime">time step in which the person activity in the affordance activation ends</param>
+        /// <exception cref="LPGException">if the execution time was not set for a variable operation</exception>
+        protected void ExecuteVariableOperations(TimeStep startTime, TimeStep timeLastDeviceEnds, TimeStep personEndTime)
+        {
+            // execute variable operations
+            if (_variableOps.Count > 0)
+            {
+                foreach (var op in _variableOps)
+                {
+                    // figure out end time
+                    TimeStep time;
+                    switch (op.ExecutionTime)
+                    {
+                        case VariableExecutionTime.Beginning:
+                            time = startTime;
+                            break;
+                        case VariableExecutionTime.EndOfPerson:
+                            time = personEndTime;
+                            break;
+                        case VariableExecutionTime.EndofDevices:
+                            time = timeLastDeviceEnds;
+                            break;
+                        default:
+                            throw new LPGException("Forgotten Variable Execution Time");
+                    }
+
+                    _variableRepository.AddExecutionEntry(op.Name, op.Value, op.CalcLocation, op.VariableAction, time, op.VariableGuid);
+                    _variableRepository.Execute(startTime);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Activates this affordance, meaning that this affordance is carried out  according to the given parameters.
+        /// </summary>
+        /// <param name="startTime">the start time step the affordance is executed in</param>
+        /// <param name="activatorName">the person carrying out the affordance</param>
+        /// <param name="personSourceLocation">current location of the activating person</param>
+        /// <param name="personTimeProfile">the resulting person profile for the activator</param>
+        [SuppressMessage("ReSharper", "UnusedParameter.Global")]
+        public abstract void Activate(TimeStep startTime, string activatorName, CalcLocation personSourceLocation, out ICalcProfile personTimeProfile);
+
+        public abstract List<CalcSubAffordance> CollectSubAffordances(TimeStep time, bool onlyInterrupting, CalcLocation srcLocation);
+
+        /// <summary>
+        /// Determines whether the affordance can be executed with the given parameters.
+        /// </summary>
+        /// <param name="time">time step when the affordance shall be executed</param>
+        /// <param name="srcLocation">current location of the person</param>
+        /// <param name="calcPerson">the person to execute the affordance</param>
+        /// <param name="clearDictionaries">whether probability and time factor dictionaryie shall be cleared</param>
+        /// <returns></returns>
+        [SuppressMessage("ReSharper", "UnusedParameter.Global")]
+        public virtual BusynessType IsBusy(TimeStep time, CalcLocation srcLocation, CalcPersonDto calcPerson, bool clearDictionaries = true)
+        {
+            if (!AreVariableRequirementsMet())
+            {
+                return BusynessType.VariableRequirementsNotMet;
+            }
+            return BusynessType.NotBusy;
+        }
     }
 }

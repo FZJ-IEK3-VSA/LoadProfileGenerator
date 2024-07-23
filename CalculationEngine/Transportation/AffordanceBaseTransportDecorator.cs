@@ -115,8 +115,6 @@ namespace CalculationEngine.Transportation {
 
         public ActionAfterInterruption AfterInterruption => _sourceAffordance.AfterInterruption;
 
-        public int CalcAffordanceSerial => _sourceAffordance.CalcAffordanceSerial;
-
         public CalcAffordanceType CalcAffordanceType => _sourceAffordance.CalcAffordanceType;
 
         //public ICalcProfile CollectPersonProfile() => _sourceAffordance.CollectPersonProfile();
@@ -145,8 +143,6 @@ namespace CalculationEngine.Transportation {
 
         [JetBrains.Annotations.NotNull]
         private LastTimeEntry _myLastTimeEntry = new LastTimeEntry("",new TimeStep(-1,0,false));
-
-        public int DefaultPersonProfileLength => _sourceAffordance.DefaultPersonProfileLength;
 
         public BusynessType IsBusy(TimeStep time, CalcLocation srcLocation, CalcPersonDto calcPerson,
             bool clearDictionaries = true)

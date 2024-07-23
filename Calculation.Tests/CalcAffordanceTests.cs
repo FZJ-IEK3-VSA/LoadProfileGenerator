@@ -139,20 +139,7 @@ namespace Calculation.Tests {
                 }
             }
 
-            Logger.Info("aff.isbusy 100: " + aff.IsBusyArray[100]);
-
             var prevstate1 = false;
-            Logger.Info("aff.isbusyarray 0:   " + aff.IsBusyArray[0]);
-            for (var i = 0; i < 100; i++) {
-                if (aff.IsBusyArray[i] != prevstate1) {
-                    prevstate1 = aff.IsBusyArray[i];
-                    Logger.Info("aff.isbusyarray: " + i + ": " + prevstate);
-                }
-            }
-
-            Logger.Info("aff.isbusyarray 100: " + aff.IsBusyArray[100]);
-
-            prevstate1 = false;
             TimeStep ts3 = new TimeStep(0, 0,false);
             Logger.Info("cd.isbusyarray 0:   " + cd.GetIsBusyForTesting(ts3, lt));
             for (var i = 0; i < 100; i++) {

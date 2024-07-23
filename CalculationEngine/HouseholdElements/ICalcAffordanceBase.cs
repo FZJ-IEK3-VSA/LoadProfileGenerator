@@ -24,9 +24,7 @@ namespace CalculationEngine.HouseholdElements
         [NotNull]
         string AffCategory { get; }
         ActionAfterInterruption AfterInterruption { get; }
-        int CalcAffordanceSerial { get; }
         CalcAffordanceType CalcAffordanceType { get; }
-        //BitArray IsBusyArray { get; set; }
         bool IsInterruptable { get; }
         bool IsInterrupting { get; }
         int MaximumAge { get; }
@@ -48,8 +46,7 @@ namespace CalculationEngine.HouseholdElements
         void Activate([NotNull] TimeStep startTime, [NotNull] string activatorName,
              [NotNull] CalcLocation personSourceLocation,
             [NotNull] out ICalcProfile personTimeProfile);
-        //ICalcProfile CollectPersonProfile();
-        int DefaultPersonProfileLength { get; }
+        
         BusynessType IsBusy([NotNull] TimeStep time, [NotNull] CalcLocation srcLocation, CalcPersonDto calcPerson, bool clearDictionaries = true);
 
         [NotNull]

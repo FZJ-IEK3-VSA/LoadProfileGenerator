@@ -37,104 +37,61 @@ using Common.Enums;
 using Common.JSON;
 using JetBrains.Annotations;
 
-namespace CalculationEngine.HouseholdElements {
-    public class CalcSubAffordance : CalcAffordanceBase {
-        [ItemNotNull]
-        [NotNull]
-        private readonly List<CalcAffordanceVariableOp> _variableOps;
+namespace CalculationEngine.HouseholdElements
+{
+    /// <summary>
+    /// Implementation of a Subaffordance, an affordance that can be offered to other household members as part of a normal affordance.
+    /// </summary>
+    public class CalcSubAffordance : CalcKnownDurationAffordance
+    {
+        private int personProfileDuration;
 
-        [NotNull] private readonly CalcVariableRepository _repository;
-        private int _durations;
-
-        public CalcSubAffordance([NotNull] string pName,[NotNull] CalcLocation loc,[NotNull][ItemNotNull] List<CalcDesire> satisfactionvalues,
-            int miniumAge, int maximumAge, int delaytimesteps, PermittedGender permittedGender,[NotNull] string pAffCategory,
-            bool isInterruptable, bool isInterrupting,[NotNull] CalcAffordance parentAffordance,
+        public CalcSubAffordance([NotNull] string pName, [NotNull] CalcLocation loc, [NotNull][ItemNotNull] List<CalcDesire> satisfactionvalues,
+            int miniumAge, int maximumAge, int delaytimesteps, PermittedGender permittedGender, [NotNull] string pAffCategory,
+            bool isInterruptable, bool isInterrupting, [NotNull] CalcAffordance parentAffordance,
             [NotNull][ItemNotNull] List<CalcAffordanceVariableOp> variableOps, int weight,
                                  [NotNull] string sourceTrait,
-                                 StrGuid guid, [ItemNotNull] [NotNull] BitArray isBusy,
-            [NotNull] CalcVariableRepository repository, BodilyActivityLevel bodilyActivityLevel, [NotNull] CalcRepo calcRepo, HouseholdKey hhkey)
+                                 StrGuid guid, [ItemNotNull][NotNull] BitArray isBusy,
+            [NotNull] CalcVariableRepository variableRepository, BodilyActivityLevel bodilyActivityLevel, [NotNull] CalcRepo calcRepo, HouseholdKey hhkey)
             : base(
                 pName, loc, satisfactionvalues, miniumAge, maximumAge, permittedGender, false, false, pAffCategory,
                 isInterruptable, isInterrupting, ActionAfterInterruption.GoBackToOld, weight, false,
-                CalcAffordanceType.Subaffordance, guid,isBusy, bodilyActivityLevel,calcRepo, hhkey)
+                CalcAffordanceType.Subaffordance, guid, isBusy, bodilyActivityLevel, calcRepo, hhkey, new List<CalcAffordance.DeviceEnergyProfileTuple>(), LPGColors.Black, sourceTrait, null, variableRepository, variableOps, new())
         {
             Delaytimesteps = delaytimesteps;
-            _variableOps = variableOps;
-            _repository = repository;
-            SubAffordances = new List<CalcSubAffordance>();
-            Energyprofiles = new List<CalcAffordance.DeviceEnergyProfileTuple>();
-            AffordanceColor = LPGColors.Black;
-            SourceTrait = sourceTrait;
-            TimeLimitName = null;
             ParentAffordance = parentAffordance;
         }
 
         public int Delaytimesteps { get; }
 
-        [NotNull]
-        public CalcAffordance ParentAffordance { get; }
+        [NotNull] public readonly CalcAffordance ParentAffordance;
 
-        private int PersonProfileDuration => _durations;
-
-        public override void Activate(TimeStep startTime, string activatorName, CalcLocation personSourceLocation,
-             out ICalcProfile personTimeProfile)
+        public override void Activate(TimeStep startTime, string activatorName, CalcLocation personSourceLocation, out ICalcProfile personTimeProfile)
         {
-            for (var i = 0; i < PersonProfileDuration && i + startTime.InternalStep < IsBusyArray.Length; i++) {
-                IsBusyArray[i + startTime.InternalStep] = true;
-            }
-            foreach (var op in _variableOps) {
-                // figure out end time
-                TimeStep time;
-                switch (op.ExecutionTime) {
-                    case VariableExecutionTime.Beginning:
-                        time = startTime;
-                        break;
-                    case VariableExecutionTime.EndOfPerson:
-                    case VariableExecutionTime.EndofDevices:
-                        time =  startTime.AddSteps( PersonProfileDuration);
-                        break;
-                    default:
-                        throw new LPGException("Forgotten Variable Execution Time");
-                }
-                _repository.AddExecutionEntry(op.Name, op.Value, op.CalcLocation, op.VariableAction, time,op.VariableGuid);
-            }
-            personTimeProfile  = new CalcSubAffTimeProfile(_durations,
-                _durations + " timesteps Person profile");
+            MarkAffordanceAsBusy(startTime, personProfileDuration);
+
+            var endTime = startTime.AddSteps(personProfileDuration);
+            ExecuteVariableOperations(startTime, endTime, endTime);
+
+            personTimeProfile = new CalcSubAffTimeProfile(personProfileDuration, personProfileDuration + " timesteps Person profile");
         }
 
-        public override int DefaultPersonProfileLength => PersonProfileDuration;
-
-        public override BusynessType IsBusy(TimeStep time, CalcLocation srcLocation, CalcPersonDto calcPerson,
-            bool clearDictionaries = true)
+        public override BusynessType IsBusy(TimeStep time, CalcLocation srcLocation, CalcPersonDto calcPerson, bool clearDictionaries = true)
         {
-            if (IsBusyArray[time.InternalStep]) {
-                return BusynessType.Occupied;
-            }
-            return BusynessType.NotBusy;
+            return base.IsBusy(time, srcLocation, calcPerson, clearDictionaries);
         }
 
-        public override List<CalcSubAffordance> CollectSubAffordances(TimeStep time,
-                                                                      bool onlyInterrupting,
-                                                                      CalcLocation srcLocation) => throw new NotImplementedException();
+        public override List<CalcSubAffordance> CollectSubAffordances(TimeStep time, bool onlyInterrupting, CalcLocation srcLocation) => throw new NotImplementedException();
 
-        public override List<CalcSubAffordance> SubAffordances { get; }
-        public override List<CalcAffordance.DeviceEnergyProfileTuple> Energyprofiles { get; }
-        public override ColorRGB AffordanceColor { get; }
-        public override string SourceTrait { get; }
-        public override string? TimeLimitName { get; }
         public override bool AreThereDuplicateEnergyProfiles() => false;
 
-        [NotNull]
-        public override string AreDeviceProfilesEmpty()
-        {
-            throw new NotImplementedException();
-        }
+        [NotNull] public override string AreDeviceProfilesEmpty() => throw new NotImplementedException();
+
+        public override string ToString() => "Sub-Affordance:" + Name;
 
         public void SetDurations(int duration)
         {
-            _durations = duration;
+            personProfileDuration = duration;
         }
-
-        public override string ToString() => "Sub-Affordance:" + Name;
     }
 }
