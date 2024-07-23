@@ -100,7 +100,7 @@ namespace Calculation.Tests {
                 "",
                 Guid.NewGuid().ToStrGuid(),
                 cvr,
-                new List<CalcAffordance.DeviceEnergyProfileTuple>(),
+                new List<DeviceEnergyProfileTuple>(),
                 isBusy,
                 BodilyActivityLevel.Low,
                 calcRepo, hhkey);
@@ -352,7 +352,7 @@ namespace Calculation.Tests {
                 PermittedGender.All, false, 0.1, new ColorRGB(0, 0, 0), "bla", false, false, variables, variableReqs,
                 ActionAfterInterruption.GoBackToOld, "bla", 100, false, "",  Guid.NewGuid().ToStrGuid(),
                 variableRepository,
-                new List<CalcAffordance.DeviceEnergyProfileTuple>(), isBusy, BodilyActivityLevel.Low,calcRepo, hhkey);
+                new List<DeviceEnergyProfileTuple>(), isBusy, BodilyActivityLevel.Low,calcRepo, hhkey);
             var lt = new CalcLoadType("load", "unit1", "unit2", 1, true, Guid.NewGuid().ToStrGuid());
             var cdl = new CalcDeviceLoad("cdl", 1, lt, 1, 0.1);
             var devloads = new List<CalcDeviceLoad> {
@@ -418,7 +418,7 @@ namespace Calculation.Tests {
                 PermittedGender.All, false, 0.1, new ColorRGB(0, 0, 0), "bla", false, false, variables, variableReqs,
                 ActionAfterInterruption.GoBackToOld, "bla", 100, false, "", Guid.NewGuid().ToStrGuid(),
                 calcVariableRepository,
-                new List<CalcAffordance.DeviceEnergyProfileTuple>(), isBusy, BodilyActivityLevel.Low, calcRepo, key);
+                new List<DeviceEnergyProfileTuple>(), isBusy, BodilyActivityLevel.Low, calcRepo, key);
             var lt = new CalcLoadType("load", "unit1", "unit2", 1, true, Guid.NewGuid().ToStrGuid());
             var cdl = new CalcDeviceLoad("cdl", 1, lt, 1, 0.1);
             var devloads = new List<CalcDeviceLoad> {
@@ -476,7 +476,7 @@ namespace Calculation.Tests {
                 PermittedGender.All, false, 0.1, new ColorRGB(0, 0, 0), "bla", false, false, variables, variableReqs,
                 ActionAfterInterruption.GoBackToOld, "bla", 100, false, "", Guid.NewGuid().ToStrGuid(),
                 crv,
-                new List<CalcAffordance.DeviceEnergyProfileTuple>(), isBusy, BodilyActivityLevel.Low, calcRepo,key);
+                new List<DeviceEnergyProfileTuple>(), isBusy, BodilyActivityLevel.Low, calcRepo,key);
             var lt = new CalcLoadType("load", "unit1", "unit2", 1, true, Guid.NewGuid().ToStrGuid());
             var cdl = new CalcDeviceLoad("cdl", 1, lt, 1, 0.1);
             var devloads = new List<CalcDeviceLoad> {
@@ -540,7 +540,7 @@ namespace Calculation.Tests {
                 false, 0, new ColorRGB(0, 0, 0), "bla", false, false, new List<CalcAffordanceVariableOp>(),
                 new List<VariableRequirement>(), ActionAfterInterruption.GoBackToOld, "bla", 100, false, "",
                 Guid.NewGuid().ToStrGuid(), crv,
-                new List<CalcAffordance.DeviceEnergyProfileTuple>(), isBusy, BodilyActivityLevel.Low, calcRepo,key);
+                new List<DeviceEnergyProfileTuple>(), isBusy, BodilyActivityLevel.Low, calcRepo,key);
             var lt = new CalcLoadType("load", "unit1", "unit2", 1, true, Guid.NewGuid().ToStrGuid());
             var cdl = new CalcDeviceLoad("cdl", 1, lt, 1, 0.1);
             //var variableOperator = new VariableOperator();

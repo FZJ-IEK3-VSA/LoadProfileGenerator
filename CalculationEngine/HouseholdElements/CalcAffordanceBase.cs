@@ -64,7 +64,7 @@ namespace CalculationEngine.HouseholdElements
         protected CalcAffordanceBase([JetBrains.Annotations.NotNull] string pName, [JetBrains.Annotations.NotNull] CalcLocation loc, [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcDesire> satisfactionvalues, int miniumAge, int maximumAge,
             PermittedGender permittedGender, bool needsLight, bool randomEffect, [JetBrains.Annotations.NotNull] string pAffCategory, bool isInterruptable, bool isInterrupting, ActionAfterInterruption actionAfterInterruption, int weight,
             bool requireAllAffordances, CalcAffordanceType calcAffordanceType, StrGuid guid, [ItemNotNull][JetBrains.Annotations.NotNull] BitArray isBusyArray, BodilyActivityLevel bodilyActivityLevel,
-            [JetBrains.Annotations.NotNull] CalcRepo calcRepo, HouseholdKey householdKey, List<CalcAffordance.DeviceEnergyProfileTuple> energyProfiles, ColorRGB affordanceColor, string sourceTrait, string? timeLimitName,
+            [JetBrains.Annotations.NotNull] CalcRepo calcRepo, HouseholdKey householdKey, List<DeviceEnergyProfileTuple> energyProfiles, ColorRGB affordanceColor, string sourceTrait, string? timeLimitName,
             [JetBrains.Annotations.NotNull] CalcVariableRepository variableRepository, [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcAffordanceVariableOp> variableOps,
             [JetBrains.Annotations.NotNull][ItemNotNull] List<VariableRequirement> variableRequirements, CalcSite? site = null) : base(pName, guid)
         {
@@ -107,7 +107,7 @@ namespace CalculationEngine.HouseholdElements
 
         public CalcAffordanceType CalcAffordanceType { get; }
 
-        public List<CalcAffordance.DeviceEnergyProfileTuple> Energyprofiles { get; }
+        public List<DeviceEnergyProfileTuple> Energyprofiles { get; }
 
         public bool IsInterruptable { get; }
 

@@ -82,11 +82,11 @@ namespace Calculation.HouseholdElements.Tests
                         var hhkey = new HouseholdKey("HH1");
                         CalcAffordance aff1 = new CalcAffordance("aff1", cp, null, false, new List<CalcDesire>(), 10, 20, PermittedGender.All, true,
                             1, LPGColors.AliceBlue, null, false, false, null, null, ActionAfterInterruption.GoBackToOld, "", 900, false, "",
-                            Guid.NewGuid().ToStrGuid(), crv, new List<CalcAffordance.DeviceEnergyProfileTuple>(), isBusy, BodilyActivityLevel.Low,
+                            Guid.NewGuid().ToStrGuid(), crv, new List<DeviceEnergyProfileTuple>(), isBusy, BodilyActivityLevel.Low,
                             calcRepo, hhkey);
                         CalcAffordance aff2 = new CalcAffordance("aff2", cp, null, false, new List<CalcDesire>(), 10, 20, PermittedGender.All, true,
                             1, LPGColors.AliceBlue, null, false, false, null, null, ActionAfterInterruption.GoBackToOld, "", 100, false, "",
-                            Guid.NewGuid().ToStrGuid(), crv, new List<CalcAffordance.DeviceEnergyProfileTuple>(), isBusy, BodilyActivityLevel.Low,
+                            Guid.NewGuid().ToStrGuid(), crv, new List<DeviceEnergyProfileTuple>(), isBusy, BodilyActivityLevel.Low,
                             calcRepo, hhkey);
 
                         List<ICalcAffordanceBase> affs = new List<ICalcAffordanceBase> {
@@ -200,7 +200,7 @@ namespace Calculation.Tests.HouseholdElements {
                     "aff category", true, false,
                     new List<CalcAffordanceVariableOp>(), new List<VariableRequirement>(),
                     ActionAfterInterruption.GoBackToOld,"blub",100,false,"",
-                    Guid.NewGuid().ToStrGuid(),crv, new List<CalcAffordance.DeviceEnergyProfileTuple>(),
+                    Guid.NewGuid().ToStrGuid(),crv, new List<DeviceEnergyProfileTuple>(),
                     isBusy1, BodilyActivityLevel.Low,calcRepo, hhkey);
                 aff1.AddDeviceTuple(cdev1, cprof, lt, 0, calcParameters.InternalStepsize, 1, 1);
                 cloc.AddAffordance(aff1);
@@ -210,7 +210,7 @@ namespace Calculation.Tests.HouseholdElements {
         color, "aff category", false, false,
                     new List<CalcAffordanceVariableOp>(), new List<VariableRequirement>(),
                     ActionAfterInterruption.GoBackToOld,"bla",100,false,"",
-                    Guid.NewGuid().ToStrGuid(),crv, new List<CalcAffordance.DeviceEnergyProfileTuple>(),
+                    Guid.NewGuid().ToStrGuid(),crv, new List<DeviceEnergyProfileTuple>(),
                     isBusy2, BodilyActivityLevel.Low, calcRepo, hhkey);
                 aff2.AddDeviceTuple(cdev2, cprof, lt, 0, calcParameters.InternalStepsize, 1, 1);
                 cloc.AddAffordance(aff2);
@@ -305,14 +305,14 @@ namespace Calculation.Tests.HouseholdElements {
                 new List<CalcAffordanceVariableOp>(), new List<VariableRequirement>(),
                 ActionAfterInterruption.GoBackToOld,"bla",100,false,"",
                 Guid.NewGuid().ToStrGuid(),crv
-                , new List<CalcAffordance.DeviceEnergyProfileTuple>(),isBusy, BodilyActivityLevel.Low,calcRepo, hhkey);
+                , new List<DeviceEnergyProfileTuple>(),isBusy, BodilyActivityLevel.Low,calcRepo, hhkey);
             aff1.AddDeviceTuple(cdev1, cprof, lt, 0, calcParameters.InternalStepsize, 1, 1);
             cloc.AddAffordance(aff1);
             var aff2 = new CalcAffordance("aff2", cprof, cloc, false, desires, 1, 100,
                 PermittedGender.All, false, 0, color, "aff category", false, false,
                 new List<CalcAffordanceVariableOp>(), new List<VariableRequirement>(),
                 ActionAfterInterruption.GoBackToOld,"bla",100,false,"", Guid.NewGuid().ToStrGuid(),crv
-                , new List<CalcAffordance.DeviceEnergyProfileTuple>(),isBusy, BodilyActivityLevel.Low,calcRepo, hhkey);
+                , new List<DeviceEnergyProfileTuple>(),isBusy, BodilyActivityLevel.Low,calcRepo, hhkey);
             aff2.AddDeviceTuple(cdev2, cprof, lt, 0, calcParameters.InternalStepsize, 1, 1);
             cloc.AddAffordance(aff2);
             var clocs = new List<CalcLocation>

@@ -126,7 +126,7 @@ namespace Calculation.Tests.Transportation
                     var untaggedAff = new CalcAffordance("UntaggedAffordance", new CalcProfile("calcprofile", Guid.NewGuid().ToStrGuid(), null, ProfileType.Absolute, "syn"),
                         dstloc, false, null, 18, 50, PermittedGender.All, false, 0.1, LPGColors.Blue, "affordance category", false, false, new List<CalcAffordanceVariableOp>(),
                         new List<VariableRequirement>(), ActionAfterInterruption.GoBackToOld, "timelimitname", 1, false, "srctrait", Guid.NewGuid().ToStrGuid(), null,
-                        new List<CalcAffordance.DeviceEnergyProfileTuple>(), new BitArray(0, false), BodilyActivityLevel.Low, calcRepo, null);
+                        new List<DeviceEnergyProfileTuple>(), new BitArray(0, false), BodilyActivityLevel.Low, calcRepo, null);
 
                     person = new CalcPersonDto("activator", null, 30, PermittedGender.Female, null, null, null, -1, null, null);
                     route = transportationHandler.GetTravelRouteFromSrcLoc(srcloc, dstSite, ts, person, untaggedAff, calcRepo);
@@ -191,7 +191,7 @@ namespace Calculation.Tests.Transportation
                         false, new List<CalcAffordanceVariableOp>(), new List<VariableRequirement>(),
                         ActionAfterInterruption.GoBackToOld, "timelimitname", 1, false,
                         "srctrait",
-                        Guid.NewGuid().ToStrGuid(), crv, new List<CalcAffordance.DeviceEnergyProfileTuple>(),
+                        Guid.NewGuid().ToStrGuid(), crv, new List<DeviceEnergyProfileTuple>(),
                         isBusy, BodilyActivityLevel.Low, calcRepo, hhkey);
 
                     srcSite = new CalcSite("srcsite", true, Guid.NewGuid().ToStrGuid(), key);

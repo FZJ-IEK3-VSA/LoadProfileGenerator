@@ -89,7 +89,7 @@ namespace CalculationController.CalcFactories {
                         , loc, false, new List<CalcDesire>(), 0, 99, PermittedGender.All,
                         false, 0, new ColorRGB(128, 128, 128), "Idle", false, false, new List<CalcAffordanceVariableOp>(),
                         new List<VariableRequirement>(), ActionAfterInterruption.LookForNew, "No Limit", 1, false, "Idle",
-                        StrGuid.New(), _calcRepo.CalcVariableRepository?? throw new LPGException("No variable repository initialized."), new List<CalcAffordance.DeviceEnergyProfileTuple>(),
+                        StrGuid.New(), _calcRepo.CalcVariableRepository?? throw new LPGException("No variable repository initialized."), new List<DeviceEnergyProfileTuple>(),
                         new BitArray(_calcRepo.CalcParameters.InternalTimesteps), BodilyActivityLevel.Low, _calcRepo, hhkey);
                     loc.IdleAffs.Add(cp, idleAff);
                 }

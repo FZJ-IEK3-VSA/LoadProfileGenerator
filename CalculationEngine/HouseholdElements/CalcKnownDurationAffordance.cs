@@ -28,7 +28,7 @@ namespace CalculationEngine.HouseholdElements
         protected CalcKnownDurationAffordance([NotNull] string pName, [NotNull] CalcLocation loc, [NotNull][ItemNotNull] List<CalcDesire> satisfactionvalues, int miniumAge, int maximumAge,
             PermittedGender permittedGender, bool needsLight, bool randomEffect, [NotNull] string pAffCategory, bool isInterruptable, bool isInterrupting, ActionAfterInterruption actionAfterInterruption, int weight,
             bool requireAllAffordances, CalcAffordanceType calcAffordanceType, StrGuid guid, [ItemNotNull][NotNull] BitArray isBusyArray, BodilyActivityLevel bodilyActivityLevel,
-            [NotNull] CalcRepo calcRepo, HouseholdKey householdKey, List<CalcAffordance.DeviceEnergyProfileTuple> energyProfiles, ColorRGB affordanceColor, string sourceTrait, string? timeLimitName,
+            [NotNull] CalcRepo calcRepo, HouseholdKey householdKey, List<DeviceEnergyProfileTuple> energyProfiles, ColorRGB affordanceColor, string sourceTrait, string? timeLimitName,
             [NotNull] CalcVariableRepository variableRepository, [NotNull][ItemNotNull] List<CalcAffordanceVariableOp> variableOps,
             [NotNull][ItemNotNull] List<VariableRequirement> variableRequirements, CalcSite? site = null)
             : base(pName, loc, satisfactionvalues,miniumAge, maximumAge, permittedGender, needsLight, randomEffect, pAffCategory, isInterruptable, isInterrupting, actionAfterInterruption, weight, requireAllAffordances,

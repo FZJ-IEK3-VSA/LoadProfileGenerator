@@ -154,17 +154,17 @@ namespace CalculationController.CalcFactories {
 
         [ItemNotNull]
         [NotNull]
-        private List<CalcAffordance.DeviceEnergyProfileTuple> MakeDeviceEnergyProfileTuples([ItemNotNull] [NotNull] List<CalcDevice> devices,
+        private List<DeviceEnergyProfileTuple> MakeDeviceEnergyProfileTuples([ItemNotNull] [NotNull] List<CalcDevice> devices,
                                                                                             [NotNull] CalcAffordanceDto affordancedto)
         {
-            List<CalcAffordance.DeviceEnergyProfileTuple> deviceEnergyProfiles =
-                new List<CalcAffordance.DeviceEnergyProfileTuple>();
+            List<DeviceEnergyProfileTuple> deviceEnergyProfiles =
+                new List<DeviceEnergyProfileTuple>();
             foreach (DeviceEnergyProfileTupleDto dto in affordancedto.Energyprofiles) {
                 StrGuid devguid = dto.CalcDeviceGuid;
                 CalcDevice device = devices.Single(x => x.Guid == devguid);
                 CalcProfile cp = CalcDeviceFactory.MakeCalcProfile(dto.TimeProfile, _calcRepo.CalcParameters);
                 CalcLoadType clt = _loadTypeDictionary.GetLoadtypeByGuid(dto.CalcLoadTypeGuid);
-                CalcAffordance.DeviceEnergyProfileTuple dep = new CalcAffordance.DeviceEnergyProfileTuple(device,
+                DeviceEnergyProfileTuple dep = new DeviceEnergyProfileTuple(device,
                     cp, clt, dto.TimeOffset, _calcRepo.CalcParameters.InternalStepsize, dto.Multiplier, dto.Probability);
                 deviceEnergyProfiles.Add(dep);
             }

@@ -51,7 +51,7 @@ namespace CalculationEngine.HouseholdElements
     /// per timestep for consistent results.
     /// </summary>
     [SuppressMessage("ReSharper", "ConvertToAutoProperty")]
-    public class CalcAffordance : CalcKnownDurationAffordance
+    public partial class CalcAffordance : CalcKnownDurationAffordance
     {
         [JetBrains.Annotations.NotNull] private readonly CalcProfile _personProfile;
 
@@ -331,52 +331,5 @@ namespace CalculationEngine.HouseholdElements
             var remainingTime = _personEndTimeStep.InternalStep - currentTime.InternalStep;
             return remainingTime;
         }
-
-        #region Nested type: DeviceEnergyProfileTuple
-
-        //TODO: move to ICalcAffordance or separate file
-        public class DeviceEnergyProfileTuple
-        {
-            [JetBrains.Annotations.NotNull] private readonly CalcDevice _calcDevice;
-
-            private readonly double _multiplier;
-
-            public DeviceEnergyProfileTuple([JetBrains.Annotations.NotNull] CalcDevice pdev, [JetBrains.Annotations.NotNull] CalcProfile ep,
-                                            [JetBrains.Annotations.NotNull] CalcLoadType pLoadType, decimal timeOffset, TimeSpan stepsize,
-                                            double multiplier, double probability)
-            {
-                _calcDevice = pdev;
-                TimeProfile = ep;
-                LoadType = pLoadType;
-                TimeOffset = timeOffset;
-                _multiplier = multiplier;
-                var minutesperstep = (decimal)stepsize.TotalMinutes;
-                TimeOffsetInSteps = (int)(timeOffset / minutesperstep);
-                Probability = probability;
-            }
-
-            [JetBrains.Annotations.NotNull]
-            public CalcDevice CalcDevice => _calcDevice;
-
-            [JetBrains.Annotations.NotNull]
-            public CalcLoadType LoadType { get; }
-
-            public double Multiplier => _multiplier;
-
-            public double Probability { get; }
-
-            public decimal TimeOffset { get; }
-
-            [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "InSteps")]
-            public int TimeOffsetInSteps { get; }
-
-            [JetBrains.Annotations.NotNull]
-            public CalcProfile TimeProfile { get; }
-
-            [JetBrains.Annotations.NotNull]
-            public override string ToString() => "Device:" + _calcDevice.Name + ", Profile " + TimeProfile.Name + ", Offset " + TimeOffset;
-        }
-
-        #endregion
     }
 }

@@ -123,7 +123,7 @@ namespace CalculationEngine.Transportation {
                                                              CalcLocation srcLocation) =>
             _sourceAffordance.CollectSubAffordances(time, onlyInterrupting, srcLocation);
 
-        public List<CalcAffordance.DeviceEnergyProfileTuple> Energyprofiles => _sourceAffordance.Energyprofiles;
+        public List<DeviceEnergyProfileTuple> Energyprofiles => _sourceAffordance.Energyprofiles;
 
         private class LastTimeEntry {
             public LastTimeEntry([JetBrains.Annotations.NotNull] string personName, [JetBrains.Annotations.NotNull] TimeStep timeOfLastEvalulation)

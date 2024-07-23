@@ -60,7 +60,7 @@ namespace CalculationEngine.HouseholdElements
 
         [CanBeNull]
         [ItemNotNull]
-        List<CalcAffordance.DeviceEnergyProfileTuple> Energyprofiles { get; }
+        List<DeviceEnergyProfileTuple> Energyprofiles { get; }
          ColorRGB AffordanceColor { get; }
         [NotNull]
         string SourceTrait { get; }

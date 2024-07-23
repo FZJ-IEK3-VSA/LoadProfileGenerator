@@ -56,7 +56,7 @@ namespace CalculationEngine.HouseholdElements
             : base(
                 pName, loc, satisfactionvalues, miniumAge, maximumAge, permittedGender, false, false, pAffCategory,
                 isInterruptable, isInterrupting, ActionAfterInterruption.GoBackToOld, weight, false,
-                CalcAffordanceType.Subaffordance, guid, isBusy, bodilyActivityLevel, calcRepo, hhkey, new List<CalcAffordance.DeviceEnergyProfileTuple>(), LPGColors.Black, sourceTrait, null, variableRepository, variableOps, new())
+                CalcAffordanceType.Subaffordance, guid, isBusy, bodilyActivityLevel, calcRepo, hhkey, new List<DeviceEnergyProfileTuple>(), LPGColors.Black, sourceTrait, null, variableRepository, variableOps, new())
         {
             Delaytimesteps = delaytimesteps;
             ParentAffordance = parentAffordance;
