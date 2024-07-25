@@ -196,12 +196,6 @@ namespace CalculationController.Integrity {
                     " has no desires and will therefore never be executed. Please either delete the affordance or add some desires.",
                     affordance);
             }
-            if (affordance.AffordanceDevices.Count == 0) {
-                throw new DataIntegrityException(
-                    "The affordance " + affordance.Name +
-                    " has no devices and will therefore not be executed. Please either delete the affordance or add some devices.",
-                    affordance);
-            }
             if (affordance.TimeLimit == null) {
                 throw new DataIntegrityException("Affordance " + affordance.Name + " has no time limit!", affordance);
             }
