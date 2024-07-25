@@ -5,6 +5,7 @@ using CalculationController.CalcFactories;
 using CalculationController.Queue;
 using CalculationEngine;
 using ChartCreator2;
+using ChartCreator2.OxyCharts;
 using Common;
 using Common.JSON;
 using Database;
@@ -13,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -105,9 +107,16 @@ namespace MassSimulation
                 calcRepo.Flush();
 
                 // chart creation
+                FileFactoryAndTracker.CheckExistingFilesFromSql(target.ResultDirectory);
                 var cpm = new ChartProcessorManager(calcRepo.CalculationProfiler, calcRepo.FileFactoryAndTracker);
                 cpm.Run(target.ResultDirectory);
                 calcRepo.Flush();
+
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    // create additional charts
+                    ChartMaker.MakeChartsAndPDF(calcRepo.CalculationProfiler, target.ResultDirectory);
+                }
 
                 if (calcRepo.CalcParameters.IsSet(CalcOption.LogAllMessages) || calcRepo.CalcParameters.IsSet(CalcOption.LogErrorMessages))
                 {
