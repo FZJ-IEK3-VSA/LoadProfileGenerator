@@ -303,8 +303,8 @@ namespace CalculationEngine.HouseholdElements {
         private void InterruptIfNeeded([JetBrains.Annotations.NotNull] TimeStep time, [JetBrains.Annotations.NotNull] DayLightStatus isDaylight,
                                        bool ignoreAlreadyExecutedActivities)
         {
-            if (_currentAffordance?.IsInterruptable == true &&
-                !_isCurrentlyPriorityAffordanceRunning) {
+            // check if the affordance may be interrupted and did not already interrupt another affordance itself
+            if (_currentAffordance?.IsInterruptable == true && !_isCurrentlyPriorityAffordanceRunning) {
                 PotentialAffs aff;
                 if (IsSick[time.InternalStep]) {
                     aff = _sicknessPotentialAffs;
@@ -316,36 +316,40 @@ namespace CalculationEngine.HouseholdElements {
                 var availableInterruptingAffordances =
                     NewGetAllViableAffordancesAndSubs(time, null, true, aff, ignoreAlreadyExecutedActivities);
                 if (availableInterruptingAffordances.Count != 0) {
+                    // the current affordance will be interrupted
                     var bestAffordance = GetBestAffordanceFromList(time, availableInterruptingAffordances);
-                    ActivateAffordance(time, isDaylight,  bestAffordance);
-                    switch (bestAffordance.AfterInterruption) {
-                        case ActionAfterInterruption.LookForNew:
-                            var currentTime = time;
-                            while (currentTime.InternalStep < _calcRepo.CalcParameters.InternalTimesteps &&
-                                   _isBusy[currentTime.InternalStep]) {
-                                _isBusy[currentTime.InternalStep] = false;
-                                currentTime = currentTime.AddSteps(1);
-                            }
 
-                            break;
-                        case ActionAfterInterruption.GoBackToOld:
-                            if (_previousAffordancesWithEndTime.Count > 2) //set the old affordance again
-                            {
-                                var endtime =
-                                    _previousAffordancesWithEndTime[_previousAffordancesWithEndTime.Count - 1]
-                                        .Item2;
-                                var endtimePrev =
-                                    _previousAffordancesWithEndTime[_previousAffordancesWithEndTime.Count - 2]
-                                        .Item2;
-                                if (endtimePrev > endtime) {
-                                    TimeToResetActionEntryAfterInterruption = endtime;
-                                }
-                            }
-
-                            break;
-                        default: throw new LPGException("Forgotten ActionAfterInterruption");
+                    if (bestAffordance.AfterInterruption == ActionAfterInterruption.LookForNew)
+                    {
+                        // reset the IsBusy array of the person in case the interrupted and stopped affordance would have lasted
+                        // longer than the new, interrupting affordance
+                        var t = time;
+                        while (t.InternalStep < _calcRepo.CalcParameters.InternalTimesteps && IsBusy(t))
+                        {
+                            _isBusy[t.InternalStep] = false;
+                            t = t.AddSteps(1);
+                        }
                     }
 
+                    ActivateAffordance(time, isDaylight,  bestAffordance);
+
+                    if (bestAffordance.AfterInterruption == ActionAfterInterruption.GoBackToOld)
+                    {
+                        if (_previousAffordancesWithEndTime.Count > 2)
+                        {
+                            throw new LPGException("The interrupted activity was not properly saved.");
+                        }
+                        // check if the interrupted affordance lasts beyond the end of the interrupting one
+                        var endtime = _previousAffordancesWithEndTime[_previousAffordancesWithEndTime.Count - 1].Item2;
+                        var endtimePrev = _previousAffordancesWithEndTime[_previousAffordancesWithEndTime.Count - 2].Item2;
+                        if (endtimePrev > endtime)
+                        {
+                            // save the timestep when to resume the interrupted affordance
+                            TimeToResetActionEntryAfterInterruption = endtime;
+                        }
+                    }
+
+                    // log the interruption
                     if (_calcRepo.CalcParameters.IsSet(CalcOption.ThoughtsLogfile)) {
                         if (_calcRepo.Logfile.ThoughtsLogFile1 == null) {
                             throw new LPGException("Logfile was null.");
