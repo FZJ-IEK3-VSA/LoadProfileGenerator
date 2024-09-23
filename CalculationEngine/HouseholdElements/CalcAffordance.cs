@@ -51,19 +51,32 @@ namespace CalculationEngine.HouseholdElements
     /// per timestep for consistent results.
     /// </summary>
     [SuppressMessage("ReSharper", "ConvertToAutoProperty")]
-    public partial class CalcAffordance : CalcKnownDurationAffordance
+    public class CalcAffordance : CalcKnownDurationAffordance
     {
         [JetBrains.Annotations.NotNull] private readonly CalcProfile _personProfile;
 
-        [JetBrains.Annotations.NotNull] private readonly Dictionary<int, double> _probabilitiesForTimes = new();
+        [JetBrains.Annotations.NotNull] private readonly Dictionary<int, double> _probabilitiesForTimes = [];
 
-        [JetBrains.Annotations.NotNull] private readonly Dictionary<int, double> _timeFactorsForTimes = new();
+        [JetBrains.Annotations.NotNull] private readonly Dictionary<int, double> _timeFactorsForTimes = [];
 
         private readonly double _timeStandardDeviation;
 
-        // store start and end time step of the person time of the latest activation
-        private TimeStep? _personStartTimeStep;
-        private TimeStep? _personEndTimeStep;
+        /// <summary>
+        /// Defines the time frame in which subaffordances can be started after they become initially available.
+        /// That means, more than 10 minutes after the delay time required by the subaffordance has passed, the
+        /// subaffordance is not available anymore.
+        /// </summary>
+        private static readonly TimeSpan SubAffordanceStartFrameTime = new(0, 10, 0);
+        /// <summary>
+        /// SubAffordanceStartFrameTime converted to timesteps
+        /// </summary>
+        private readonly int SubAffordanceStartFrame;
+
+        /// <summary>
+        /// Stores all current activations of this affordance. Maps name of the activating person
+        /// to start time and end time of the person time (the time the person is busy with the affordance).
+        /// </summary>
+        private Dictionary<string, Tuple<TimeStep, TimeStep>> _currentActivations = [];
 
         public CalcAffordance([JetBrains.Annotations.NotNull] string pName, [JetBrains.Annotations.NotNull] CalcProfile personProfile, [JetBrains.Annotations.NotNull] CalcLocation loc, bool randomEffect,
             [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcDesire> satisfactionvalues, int miniumAge, int maximumAge, PermittedGender permittedGender, bool needsLight, double timeStandardDeviation,
@@ -83,6 +96,10 @@ namespace CalculationEngine.HouseholdElements
             }
             _timeStandardDeviation = timeStandardDeviation;
             _personProfile = personProfile;
+
+            // determine the number of timesteps in the subaffordance starting frame
+            SubAffordanceStartFrame = (int)Math.Ceiling(SubAffordanceStartFrameTime / base.CalcRepo.CalcParameters.InternalStepsize);
+;
         }
 
         public static bool DoubleCheckBusyArray { get; set; }
@@ -140,13 +157,13 @@ namespace CalculationEngine.HouseholdElements
             return timeLastDeviceEnds;
         }
 
-        private void MarkAffordanceAsBusy(TimeStep startTime)
+        private TimeStep MarkAffordanceAsBusy(TimeStep startTime)
         {
             // determine the time the activating person is busy with the affordance
             var personsteps = CalcProfile.GetNewLengthAfterCompressExpand(_personProfile.StepValues.Count,
                 _timeFactorsForTimes[startTime.InternalStep]);
-            _personStartTimeStep = startTime;
-            _personEndTimeStep = startTime.AddSteps(personsteps);
+            TimeStep personStartTimeStep = startTime;
+            TimeStep personEndTimeStep = startTime.AddSteps(personsteps);
 
             if (DoubleCheckBusyArray)
             {
@@ -160,15 +177,19 @@ namespace CalculationEngine.HouseholdElements
             }
 
             MarkAffordanceAsBusy(startTime, personsteps);
+            return personEndTimeStep;
         }
 
         public override void Activate(TimeStep startTime, string activatorName, CalcLocation personSourceLocation, out ICalcProfile personTimeProfile)
         {
             TimeStep timeLastDeviceEnds = CreateDeviceProfilesForActivation(startTime, activatorName);
 
-            MarkAffordanceAsBusy(startTime);
+            TimeStep personEndTime = MarkAffordanceAsBusy(startTime);
 
-            ExecuteVariableOperations(startTime, timeLastDeviceEnds, _personEndTimeStep!);
+            // save start and end time of the person's activity
+            _currentActivations[activatorName] = new(startTime, personEndTime);
+
+            ExecuteVariableOperations(startTime, timeLastDeviceEnds, personEndTime);
 
             // adapt the default person profile according to the time factor for this time step
             var tf = _timeFactorsForTimes[startTime.InternalStep];
@@ -177,37 +198,78 @@ namespace CalculationEngine.HouseholdElements
             personTimeProfile = _personProfile.CompressExpandDoubleArray(tf);
         }
 
+        /// <summary>
+        /// Collect all subaffordances of this affordance that are currently available. This depends
+        /// on whether this affordance is currently active, whether the activation is far enough behind 
+        /// </summary>
+        /// <param name="time">current timestep</param>
+        /// <param name="onlyInterrupting">whether only interrupting subaffordances should be collected</param>
+        /// <param name="srcLocation">the current location of the person</param>
+        /// <returns>a list of available subaffordances</returns>
         public override List<CalcSubAffordance> CollectSubAffordances(TimeStep time, bool onlyInterrupting, CalcLocation srcLocation)
         {
             if (SubAffordances.Count == 0)
             {
-                return new List<CalcSubAffordance>();
+                return [];
             }
 
-            if (RemainingActiveTime(time) < 1)
+            // remove activations that are already over
+            var outDatedActivations = _currentActivations.Where(kvp => kvp.Value.Item2 < time);
+            foreach (var kvPair in outDatedActivations)
             {
-                return new List<CalcSubAffordance>();
+                _currentActivations.Remove(kvPair.Key);
+            }
+            if (_currentActivations.Count == 0)
+            {
+                // the affordance is currently not active
+                return [];
             }
 
-            // es gibt subaffs und diese aff ist aktiv
-            var result = new List<CalcSubAffordance>();
-            foreach (var calcSubAffordance in SubAffordances)
+            // collect all available subaffordances
+            var availableSubAffs = new List<CalcSubAffordance>();
+            foreach (var subAffordance in SubAffordances)
             {
-                if (onlyInterrupting && calcSubAffordance.IsInterrupting || !onlyInterrupting)
+                if (!onlyInterrupting || subAffordance.IsInterrupting)
                 {
-                    var delaytimesteps = calcSubAffordance.Delaytimesteps;
-                    var hasbeenactivefor = HasBeenActiveFor(time);
-                    var person = new CalcPersonDto("name", null, -1, PermittedGender.All, null, null, null, -1, null, null);
-                    var issubaffbusy = calcSubAffordance.IsBusy(time, srcLocation, person);
-                    if (delaytimesteps < hasbeenactivefor && issubaffbusy == BusynessType.NotBusy)
+                    if (IsSubaffordanceAvailable(time, srcLocation, subAffordance))
                     {
-                        calcSubAffordance.SetDurations(RemainingActiveTime(time));
-                        result.Add(calcSubAffordance);
+                        availableSubAffs.Add(subAffordance);
                     }
                 }
             }
+            return availableSubAffs;
+        }
 
-            return result;
+        /// <summary>
+        /// Checks if there is a current activation of the affordance that offers the specified subaffordance.
+        /// </summary>
+        /// <param name="time">the timestep for which to check if the subaffordance is available</param>
+        /// <param name="srcLocation">the location of the affordance</param>
+        /// <param name="subAffordance">the affordance to check</param>
+        /// <returns>whether the subaffordance is currently available</returns>
+        private bool IsSubaffordanceAvailable(TimeStep time, CalcLocation srcLocation, CalcSubAffordance subAffordance)
+        {
+            // check all current activations if one of them offers the subaffordance now
+            foreach (var kvPair in _currentActivations)
+            {
+                // start and end time for this activation
+                int personStartTime = kvPair.Value.Item1.InternalStep;
+                int personEndTime = kvPair.Value.Item2.InternalStep;
+
+                // the subaffordance can only be activated after the delay time, but before the buffer time is over
+                var isDelayTimePassed = personStartTime + subAffordance.Delaytimesteps < time.InternalStep;
+                var isBufferTimePassed = personStartTime + subAffordance.Delaytimesteps + SubAffordanceStartFrame <= time.InternalStep;
+                // check if the subaffordance could be activated right now
+                var person = new CalcPersonDto("name", null, -1, PermittedGender.All, null, null, null, -1, null, null);
+                var isSubAffordanceBusy = subAffordance.IsBusy(time, srcLocation, person);
+                if (isDelayTimePassed && !isBufferTimePassed && isSubAffordanceBusy == BusynessType.NotBusy)
+                {
+                    var remainingActiveTime = personEndTime - time.InternalStep;
+                    subAffordance.SetDurations(remainingActiveTime);
+                    return true;
+                }
+            }
+            return false;
         }
 
         /// <summary>
@@ -281,55 +343,6 @@ namespace CalculationEngine.HouseholdElements
             //TODO: remove this, it is only used in unit testing
             var calctup = new DeviceEnergyProfileTuple(dev, newprof, lt, timeoffset, internalstepsize, multiplier, probability);
             Energyprofiles.Add(calctup);
-        }
-
-        public override string ToString() => "Affordance:" + Name;
-
-        private int HasBeenActiveFor([JetBrains.Annotations.NotNull] TimeStep currentTime)
-        {
-            if (currentTime < _personStartTimeStep)
-            {
-                return -1;
-            }
-
-            if (currentTime > _personEndTimeStep)
-            {
-                return -1;
-            }
-
-            if (_personStartTimeStep == null)
-            {
-                throw new LPGException("Start time step was null");
-            }
-
-            var hasbeenactive = currentTime.InternalStep - _personStartTimeStep.InternalStep;
-            return hasbeenactive;
-        }
-
-        private int RemainingActiveTime([JetBrains.Annotations.NotNull] TimeStep currentTime)
-        {
-            if (currentTime == null)
-            {
-                throw new ArgumentNullException(nameof(currentTime));
-            }
-
-            if (currentTime < _personStartTimeStep)
-            {
-                return -1;
-            }
-
-            if (currentTime > _personEndTimeStep)
-            {
-                return -1;
-            }
-
-            if (_personEndTimeStep == null)
-            {
-                return -1;
-            }
-
-            var remainingTime = _personEndTimeStep.InternalStep - currentTime.InternalStep;
-            return remainingTime;
         }
     }
 }

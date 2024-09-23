@@ -142,6 +142,8 @@ namespace CalculationEngine.HouseholdElements
         public int Weight { get; }
         public HouseholdKey HouseholdKey { get; }
 
+        public override string ToString() => "Affordance:" + Name;
+
         /// <summary>
         /// Checks if any of the contained device profiles are empty or contain only one value
         /// </summary>

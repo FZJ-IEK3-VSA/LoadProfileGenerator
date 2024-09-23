@@ -76,11 +76,6 @@ namespace CalculationEngine.HouseholdElements
             personTimeProfile = new CalcSubAffTimeProfile(personProfileDuration, personProfileDuration + " timesteps Person profile");
         }
 
-        public override BusynessType IsBusy(TimeStep time, CalcLocation srcLocation, CalcPersonDto calcPerson, bool clearDictionaries = true)
-        {
-            return base.IsBusy(time, srcLocation, calcPerson, clearDictionaries);
-        }
-
         public override List<CalcSubAffordance> CollectSubAffordances(TimeStep time, bool onlyInterrupting, CalcLocation srcLocation) => throw new NotImplementedException();
 
         public override bool AreThereDuplicateEnergyProfiles() => false;
