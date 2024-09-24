@@ -87,8 +87,6 @@ namespace CalculationEngine.HouseholdElements
             _personProfile = personProfile;
         }
 
-        public static bool DoubleCheckBusyArray { get; set; }
-
         /// <summary>
         /// Creates all device profiles for one activation of the affordance
         /// </summary>
@@ -142,34 +140,13 @@ namespace CalculationEngine.HouseholdElements
             return timeLastDeviceEnds;
         }
 
-        private TimeStep MarkAffordanceAsBusy(TimeStep startTime)
-        {
-            // determine the time the activating person is busy with the affordance
-            var personsteps = CalcProfile.GetNewLengthAfterCompressExpand(_personProfile.StepValues.Count,
-                _timeFactorsForTimes[startTime.InternalStep]);
-            TimeStep personStartTimeStep = startTime;
-            TimeStep personEndTimeStep = startTime.AddSteps(personsteps);
-
-            if (DoubleCheckBusyArray)
-            {
-                for (var i = 0; i < personsteps && i + startTime.InternalStep < CalcRepo.CalcParameters.InternalTimesteps; i++)
-                {
-                    if (IsBusyArray[i + startTime.InternalStep])
-                    {
-                        throw new LPGException("Affordance was already busy");
-                    }
-                }
-            }
-
-            MarkAffordanceAsBusy(startTime, personsteps);
-            return personEndTimeStep;
-        }
-
         public override void Activate(TimeStep startTime, string activatorName, CalcLocation personSourceLocation, out ICalcProfile personTimeProfile)
         {
             TimeStep timeLastDeviceEnds = CreateDeviceProfilesForActivation(startTime, activatorName);
 
-            TimeStep personEndTime = MarkAffordanceAsBusy(startTime);
+            // determine the time the activating person is busy with the affordance
+            int personsteps = CalcProfile.GetNewLengthAfterCompressExpand(_personProfile.StepValues.Count, _timeFactorsForTimes[startTime.InternalStep]);
+            TimeStep personEndTime = startTime.AddSteps(personsteps);
 
             // save start and end time of the person's activity
             _currentActivations[activatorName] = new(startTime, personEndTime);

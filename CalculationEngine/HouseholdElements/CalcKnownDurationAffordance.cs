@@ -11,19 +11,18 @@ using JetBrains.Annotations;
 
 namespace CalculationEngine.HouseholdElements
 {
-    /// <summary>
+    /// <summary> TODO: not valid anymore
     /// Represents an affordance whose duration is known. Its duration can be sampled from mean and standard deviation,
     /// but it does not depend on external influences, and therefore the execution time can be determined in advance.
     /// </summary>
     public abstract class CalcKnownDurationAffordance : CalcAffordanceBase
     {
         /// <summary>
-        /// Keeps track of when this affordance is being carried out already and therefore cannot
-        /// be executed again.
+        /// Specifies when this affordance is unavailable, based on its timelimit.
         /// </summary>
         [NotNull]
         [ItemNotNull]
-        protected BitArray IsBusyArray;
+        protected readonly BitArray IsBusyArray;
 
         protected CalcKnownDurationAffordance([NotNull] string pName, [NotNull] CalcLocation loc, [NotNull][ItemNotNull] List<CalcDesire> satisfactionvalues, int miniumAge, int maximumAge,
             PermittedGender permittedGender, bool needsLight, bool randomEffect, [NotNull] string pAffCategory, bool isInterruptable, bool isInterrupting, ActionAfterInterruption actionAfterInterruption, int weight,
@@ -36,6 +35,7 @@ namespace CalculationEngine.HouseholdElements
         {
             IsBusyArray = new BitArray(calcRepo.CalcParameters.InternalTimesteps);
             //copy to make sure that it is a separate instance
+            // TODO: copying not necessary anymore if IsBusyArray is never changed
             for (var i = 0; i < isBusyArray.Length; i++)
             {
                 IsBusyArray[i] = isBusyArray[i];
@@ -49,20 +49,13 @@ namespace CalculationEngine.HouseholdElements
                 return BusynessType.BeyondTimeLimit;
             }
 
+            // for the timelimit, only the starting timestep is relevant
             if (IsBusyArray[time.InternalStep])
             {
                 return BusynessType.Occupied;
             }
 
             return base.IsBusy(time, srcLocation, calcPerson, clearDictionaries);
-        }
-
-        protected void MarkAffordanceAsBusy(TimeStep startTime, int duration)
-        {
-            for (var i = 0; i < duration && i + startTime.InternalStep < CalcRepo.CalcParameters.InternalTimesteps; i++)
-            {
-                IsBusyArray[i + startTime.InternalStep] = true;
-            }
         }
     }
 }

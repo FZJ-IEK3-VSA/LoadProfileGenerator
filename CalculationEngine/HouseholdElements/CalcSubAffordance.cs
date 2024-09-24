@@ -68,8 +68,6 @@ namespace CalculationEngine.HouseholdElements
 
         public override void Activate(TimeStep startTime, string activatorName, CalcLocation personSourceLocation, out ICalcProfile personTimeProfile)
         {
-            MarkAffordanceAsBusy(startTime, personProfileDuration);
-
             var endTime = startTime.AddSteps(personProfileDuration);
             ExecuteVariableOperations(startTime, endTime, endTime);
 
