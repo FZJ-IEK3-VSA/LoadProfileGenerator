@@ -56,7 +56,6 @@ namespace Calculation.Tests.Transportation
                 Logger.Info("Activating affordance again for time 0");
                 //this should throw, since it is already busy
                 //Assert.Throws<LPGException>(() =>affs[0].Activate(0, "activator", null, srcloc, new Dictionary<int, CalcProfile>(), out _));
-                CalcAffordance.DoubleCheckBusyArray = false;
                 wd.CleanUp();
             }
         }
@@ -96,7 +95,6 @@ namespace Calculation.Tests.Transportation
                 //should throw exception the second time.
                 Logger.Info("Activating affordance again for time 0");
 
-                CalcAffordance.DoubleCheckBusyArray = false;
                 wd.CleanUp();
             }
         }
@@ -148,7 +146,6 @@ namespace Calculation.Tests.Transportation
                     route = transportationHandler.GetTravelRouteFromSrcLoc(srcloc, dstSite, ts, person, untaggedAff, calcRepo);
                     Assert.Equal("myRoute3", route.Name); // correct person ID
                 }
-                CalcAffordance.DoubleCheckBusyArray = false;
                 wd.CleanUp();
             }
         }
@@ -160,7 +157,6 @@ namespace Calculation.Tests.Transportation
                                                                       [JetBrains.Annotations.NotNull] HouseholdKey key)
         {
             Config.IsInUnitTesting = true;
-            CalcAffordance.DoubleCheckBusyArray = true;
             nr = new NormalRandom(0, 0.1, rnd);
             var calcprofilevalues = new List<double> {
                 10,

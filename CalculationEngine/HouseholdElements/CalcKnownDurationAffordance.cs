@@ -11,7 +11,7 @@ using JetBrains.Annotations;
 
 namespace CalculationEngine.HouseholdElements
 {
-    /// <summary> TODO: not valid anymore
+    /// <summary> TODO: not valid anymore: rename file and change this comment
     /// Represents an affordance whose duration is known. Its duration can be sampled from mean and standard deviation,
     /// but it does not depend on external influences, and therefore the execution time can be determined in advance.
     /// </summary>
@@ -22,7 +22,7 @@ namespace CalculationEngine.HouseholdElements
         /// </summary>
         [NotNull]
         [ItemNotNull]
-        protected readonly BitArray IsBusyArray;
+        private readonly BitArray IsBusyArray;
 
         protected CalcKnownDurationAffordance([NotNull] string pName, [NotNull] CalcLocation loc, [NotNull][ItemNotNull] List<CalcDesire> satisfactionvalues, int miniumAge, int maximumAge,
             PermittedGender permittedGender, bool needsLight, bool randomEffect, [NotNull] string pAffCategory, bool isInterruptable, bool isInterrupting, ActionAfterInterruption actionAfterInterruption, int weight,
