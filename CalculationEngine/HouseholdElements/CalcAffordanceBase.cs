@@ -26,6 +26,7 @@
 
 //-----------------------------------------------------------------------
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -61,6 +62,17 @@ namespace CalculationEngine.HouseholdElements
         [JetBrains.Annotations.NotNull]
         protected readonly List<VariableRequirement> _variableRequirements;
 
+        /// <summary>
+        /// Defines the time frame in which subaffordances can be started after they become initially available.
+        /// That means, more than 10 minutes after the delay time required by the subaffordance has passed, the
+        /// subaffordance is not available anymore.
+        /// </summary>
+        private static readonly TimeSpan SubAffordanceStartFrameDuration = new(0, 10, 0);
+        /// <summary>
+        /// SubAffordanceStartFrameTime converted to timesteps
+        /// </summary>
+        protected readonly int SubAffordanceStartFrame;
+
         protected CalcAffordanceBase([JetBrains.Annotations.NotNull] string pName, [JetBrains.Annotations.NotNull] CalcLocation loc, [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcDesire> satisfactionvalues, int miniumAge, int maximumAge,
             PermittedGender permittedGender, bool needsLight, bool randomEffect, [JetBrains.Annotations.NotNull] string pAffCategory, bool isInterruptable, bool isInterrupting, ActionAfterInterruption actionAfterInterruption, int weight,
             bool requireAllAffordances, CalcAffordanceType calcAffordanceType, StrGuid guid, [ItemNotNull][JetBrains.Annotations.NotNull] BitArray isBusyArray, BodilyActivityLevel bodilyActivityLevel,
@@ -93,6 +105,9 @@ namespace CalculationEngine.HouseholdElements
             _variableRepository = variableRepository;
             _variableOps = variableOps;
             _variableRequirements = variableRequirements;
+
+            // determine the number of timesteps in the subaffordance starting frame
+            SubAffordanceStartFrame = (int)Math.Ceiling(SubAffordanceStartFrameDuration / CalcRepo.CalcParameters.InternalStepsize);
         }
 
         public BodilyActivityLevel BodilyActivityLevel { get; }
@@ -255,7 +270,7 @@ namespace CalculationEngine.HouseholdElements
         /// <param name="time">time step when the affordance shall be executed</param>
         /// <param name="srcLocation">current location of the person</param>
         /// <param name="calcPerson">the person to execute the affordance</param>
-        /// <param name="clearDictionaries">whether probability and time factor dictionaryie shall be cleared</param>
+        /// <param name="clearDictionaries">whether probability and time factor dictionaries shall be cleared</param>
         /// <returns></returns>
         [SuppressMessage("ReSharper", "UnusedParameter.Global")]
         public virtual BusynessType IsBusy(TimeStep time, CalcLocation srcLocation, CalcPersonDto calcPerson, bool clearDictionaries = true)

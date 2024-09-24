@@ -62,17 +62,6 @@ namespace CalculationEngine.HouseholdElements
         private readonly double _timeStandardDeviation;
 
         /// <summary>
-        /// Defines the time frame in which subaffordances can be started after they become initially available.
-        /// That means, more than 10 minutes after the delay time required by the subaffordance has passed, the
-        /// subaffordance is not available anymore.
-        /// </summary>
-        private static readonly TimeSpan SubAffordanceStartFrameTime = new(0, 10, 0);
-        /// <summary>
-        /// SubAffordanceStartFrameTime converted to timesteps
-        /// </summary>
-        private readonly int SubAffordanceStartFrame;
-
-        /// <summary>
         /// Stores all current activations of this affordance. Maps name of the activating person
         /// to start time and end time of the person time (the time the person is busy with the affordance).
         /// </summary>
@@ -96,10 +85,6 @@ namespace CalculationEngine.HouseholdElements
             }
             _timeStandardDeviation = timeStandardDeviation;
             _personProfile = personProfile;
-
-            // determine the number of timesteps in the subaffordance starting frame
-            SubAffordanceStartFrame = (int)Math.Ceiling(SubAffordanceStartFrameTime / base.CalcRepo.CalcParameters.InternalStepsize);
-;
         }
 
         public static bool DoubleCheckBusyArray { get; set; }
