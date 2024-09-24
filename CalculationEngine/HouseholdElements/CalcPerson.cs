@@ -324,7 +324,7 @@ namespace CalculationEngine.HouseholdElements {
                         // reset the IsBusy array of the person in case the interrupted and stopped affordance would have lasted
                         // longer than the new, interrupting affordance
                         var t = time;
-                        while (t.InternalStep < _calcRepo.CalcParameters.InternalTimesteps && IsBusy(t))
+                        while (t.InternalStep < _calcRepo.CalcParameters.InternalTimesteps && _isBusy[t.InternalStep])
                         {
                             _isBusy[t.InternalStep] = false;
                             t = t.AddSteps(1);
@@ -335,7 +335,7 @@ namespace CalculationEngine.HouseholdElements {
 
                     if (bestAffordance.AfterInterruption == ActionAfterInterruption.GoBackToOld)
                     {
-                        if (_previousAffordancesWithEndTime.Count > 2)
+                        if (_previousAffordancesWithEndTime.Count < 2)
                         {
                             throw new LPGException("The interrupted activity was not properly saved.");
                         }
