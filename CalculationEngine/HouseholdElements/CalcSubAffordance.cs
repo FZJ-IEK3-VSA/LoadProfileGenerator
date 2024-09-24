@@ -42,7 +42,7 @@ namespace CalculationEngine.HouseholdElements
     /// <summary>
     /// Implementation of a Subaffordance, an affordance that can be offered to other household members as part of a normal affordance.
     /// </summary>
-    public class CalcSubAffordance : CalcKnownDurationAffordance
+    public class CalcSubAffordance : CalcAffordanceWithTimeLimit
     {
         private int personProfileDuration;
 

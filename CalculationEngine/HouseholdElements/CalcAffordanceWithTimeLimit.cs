@@ -11,11 +11,11 @@ using JetBrains.Annotations;
 
 namespace CalculationEngine.HouseholdElements
 {
-    /// <summary> TODO: not valid anymore: rename file and change this comment
-    /// Represents an affordance whose duration is known. Its duration can be sampled from mean and standard deviation,
-    /// but it does not depend on external influences, and therefore the execution time can be determined in advance.
+    /// <summary>
+    /// Represents an affordance that has a timelimit which specifies when the affordance
+    /// is available. This limit is implemented using a BitArray.
     /// </summary>
-    public abstract class CalcKnownDurationAffordance : CalcAffordanceBase
+    public abstract class CalcAffordanceWithTimeLimit : CalcAffordanceBase
     {
         /// <summary>
         /// Specifies when this affordance is unavailable, based on its timelimit.
@@ -24,7 +24,7 @@ namespace CalculationEngine.HouseholdElements
         [ItemNotNull]
         private readonly BitArray IsBusyArray;
 
-        protected CalcKnownDurationAffordance([NotNull] string pName, [NotNull] CalcLocation loc, [NotNull][ItemNotNull] List<CalcDesire> satisfactionvalues, int miniumAge, int maximumAge,
+        protected CalcAffordanceWithTimeLimit([NotNull] string pName, [NotNull] CalcLocation loc, [NotNull][ItemNotNull] List<CalcDesire> satisfactionvalues, int miniumAge, int maximumAge,
             PermittedGender permittedGender, bool needsLight, bool randomEffect, [NotNull] string pAffCategory, bool isInterruptable, bool isInterrupting, ActionAfterInterruption actionAfterInterruption, int weight,
             bool requireAllAffordances, CalcAffordanceType calcAffordanceType, StrGuid guid, [ItemNotNull][NotNull] BitArray isBusyArray, BodilyActivityLevel bodilyActivityLevel,
             [NotNull] CalcRepo calcRepo, HouseholdKey householdKey, List<DeviceEnergyProfileTuple> energyProfiles, ColorRGB affordanceColor, string sourceTrait, string? timeLimitName,

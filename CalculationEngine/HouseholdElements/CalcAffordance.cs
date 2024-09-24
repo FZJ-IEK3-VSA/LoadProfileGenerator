@@ -51,7 +51,7 @@ namespace CalculationEngine.HouseholdElements
     /// per timestep for consistent results.
     /// </summary>
     [SuppressMessage("ReSharper", "ConvertToAutoProperty")]
-    public class CalcAffordance : CalcKnownDurationAffordance
+    public class CalcAffordance : CalcAffordanceWithTimeLimit
     {
         [JetBrains.Annotations.NotNull] private readonly CalcProfile _personProfile;
 
