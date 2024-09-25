@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Automation;
@@ -15,7 +16,7 @@ namespace CalculationEngine.Transportation {
     public class AffordanceBaseTransportDecorator : CalcBase, ICalcAffordanceBase {
         [JetBrains.Annotations.NotNull]
         private readonly ICalcAffordanceBase _sourceAffordance;
-        private readonly TransportationHandler? _transportationHandler;
+        private readonly TransportationHandler _transportationHandler;
         [JetBrains.Annotations.NotNull]
         private readonly HouseholdKey _householdkey;
 
@@ -47,8 +48,6 @@ namespace CalculationEngine.Transportation {
         [JetBrains.Annotations.NotNull]
         public CalcSite Site { get; }
 
-        //BitArray ICalcAffordanceBase.IsBusyArray { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
         public void Activate(TimeStep startTime, string activatorName, CalcLocation personSourceLocation,
             out ICalcProfile personTimeProfile)
         {
@@ -56,56 +55,48 @@ namespace CalculationEngine.Transportation {
                 throw new LPGException("trying to activate without first checking if the affordance is busy is a bug. Please report.");
             }
 
+            // get the route which was already determined in IsBusy and activate it
             CalcTravelRoute route = _myLastTimeEntry.PreviouslySelectedRoutes[personSourceLocation];
-            if (_transportationHandler == null)
-            {
-                throw new LPGException("TransportationHandler was null");
-            }
-            int routeduration = route.Activate(startTime, activatorName, out var usedDevices, _transportationHandler.DeviceOwnerships);
+            int routeduration = route.Activate(startTime, activatorName, out var usedDeviceEvents, _transportationHandler.DeviceOwnerships);
 
+            // log transportation info
             if (routeduration == 0) {
-                _calcRepo.OnlineLoggingData.AddTransportationStatus(
-                    new TransportationStatus(startTime, _householdkey,
+                _calcRepo.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(startTime, _householdkey,
                     "\tActivating " + Name + " at " + startTime + " with no transportation and moving from " + personSourceLocation + " to " + _sourceAffordance.ParentLocation.Name + " for affordance " + _sourceAffordance.Name));
             }
             else {
-                _calcRepo.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(
-                    startTime,
-                    _householdkey,
+                _calcRepo.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(startTime, _householdkey,
                     "\tActivating " + Name + " at " + startTime + " with a transportation duration of " + routeduration + " for moving from " + personSourceLocation + " to " + _sourceAffordance.ParentLocation.Name));
             }
 
+            // activate the source affordance and create the person profile
             TimeStep affordanceStartTime = startTime.AddSteps(routeduration);
             if (affordanceStartTime.InternalStep < _calcRepo.CalcParameters.InternalTimesteps) {
-                _sourceAffordance.Activate(affordanceStartTime, activatorName,  personSourceLocation,
-                     out var sourcePersonProfile);
-            CalcProfile newPersonProfile = new CalcProfile(
+                _sourceAffordance.Activate(affordanceStartTime, activatorName, personSourceLocation, out var sourcePersonProfile);
+                // create the travel profile and append the actual affordance profile
+                CalcProfile newPersonProfile = new CalcProfile(
                     "Travel Profile for Route " + route.Name + " to affordance " + _sourceAffordance.Name,
                     System.Guid.NewGuid().ToStrGuid(),
-                    CalcProfile.MakeListwithValue1AndCustomDuration(routeduration),  ProfileType.Absolute,
+                    CalcProfile.MakeListwithValue1AndCustomDuration(routeduration), ProfileType.Absolute,
                     sourcePersonProfile.DataSource);
                 newPersonProfile.AppendProfile(sourcePersonProfile);
                 personTimeProfile = newPersonProfile;
-                string usedDeviceNames = String.Join(", ", usedDevices.Select(x => x.Device.Name + "(" + x.DurationInSteps + ")"));
-                _calcRepo.OnlineLoggingData.AddTransportationEvent(_householdkey, activatorName, startTime, personSourceLocation.CalcSite?.Name??"",
-                    Site.Name,
-                    route.Name, usedDeviceNames, routeduration, sourcePersonProfile.StepValues.Count,
-                    _sourceAffordance.Name, usedDevices);
+                // log the transportation event
+                string usedDeviceNames = String.Join(", ", usedDeviceEvents.Select(x => x.Device.Name + "(" + x.DurationInSteps + ")"));
+                _calcRepo.OnlineLoggingData.AddTransportationEvent(_householdkey, activatorName, startTime, personSourceLocation.CalcSite?.Name ?? "",
+                    Site.Name, route.Name, usedDeviceNames, routeduration, sourcePersonProfile.StepValues.Count, _sourceAffordance.Name, usedDeviceEvents);
             }
             else {
-                //this is if the simulation ends during a transport
-                CalcProfile newPersonProfile = new CalcProfile(
+                // this is if the simulation ends during a transport
+                personTimeProfile = new CalcProfile(
                     "Travel Profile for Route " + route.Name + " to affordance " + _sourceAffordance.Name,
                     System.Guid.NewGuid().ToStrGuid(),
                     CalcProfile.MakeListwithValue1AndCustomDuration(routeduration),  ProfileType.Absolute,
                     _sourceAffordance.Name);
-                personTimeProfile = newPersonProfile;
-                string usedDeviceNames = String.Join(", ", usedDevices.Select(x => x.Device.Name + "(" + x.DurationInSteps + ")"));
-                _calcRepo.OnlineLoggingData.AddTransportationEvent(_householdkey, activatorName, startTime,
-                    personSourceLocation.CalcSite?.Name ?? "",
-                    Site.Name,
-                    route.Name, usedDeviceNames, routeduration, newPersonProfile.StepValues.Count,
-                    _sourceAffordance.Name,usedDevices);
+                // log the transportation event
+                string usedDeviceNames = String.Join(", ", usedDeviceEvents.Select(x => x.Device.Name + "(" + x.DurationInSteps + ")"));
+                _calcRepo.OnlineLoggingData.AddTransportationEvent(_householdkey, activatorName, startTime, personSourceLocation.CalcSite?.Name ?? "",
+                    Site.Name, route.Name, usedDeviceNames, routeduration, personTimeProfile.StepValues.Count, _sourceAffordance.Name,usedDeviceEvents);
             }
         }
 
@@ -116,8 +107,6 @@ namespace CalculationEngine.Transportation {
         public ActionAfterInterruption AfterInterruption => _sourceAffordance.AfterInterruption;
 
         public CalcAffordanceType CalcAffordanceType => _sourceAffordance.CalcAffordanceType;
-
-        //public ICalcProfile CollectPersonProfile() => _sourceAffordance.CollectPersonProfile();
 
         public List<CalcSubAffordance> CollectSubAffordances(TimeStep time, bool onlyInterrupting,
                                                              CalcLocation srcLocation) =>
@@ -137,31 +126,37 @@ namespace CalculationEngine.Transportation {
             [JetBrains.Annotations.NotNull]
             public TimeStep TimeOfLastEvalulation { get; }
             [JetBrains.Annotations.NotNull]
-            public Dictionary<CalcLocation, CalcTravelRoute>
-                PreviouslySelectedRoutes { get; } = new Dictionary<CalcLocation, CalcTravelRoute>();
+            public Dictionary<CalcLocation, CalcTravelRoute> PreviouslySelectedRoutes { get; } = [];
         }
 
+        /// <summary>
+        /// Whenever a route is generated to check if affordance activation is possible in IsBusy, this
+        /// field saves the route. This is necessary to use the same route in case the affordance is
+        /// actually activated in the same timestep.
+        /// </summary>
         [JetBrains.Annotations.NotNull]
-        private LastTimeEntry _myLastTimeEntry = new LastTimeEntry("",new TimeStep(-1,0,false));
+        private LastTimeEntry _myLastTimeEntry = new("",new TimeStep(-1,0,false));
 
         public BusynessType IsBusy(TimeStep time, CalcLocation srcLocation, CalcPersonDto calcPerson,
             bool clearDictionaries = true)
         {
+            // if the last IsBusy call was not for the same person and time, reset the saved routes
             if (_myLastTimeEntry.TimeOfLastEvalulation != time || _myLastTimeEntry.PersonName != calcPerson.Name) {
                 _myLastTimeEntry = new LastTimeEntry(calcPerson.Name, time);
             }
 
+            // determine the route to the target location
             CalcTravelRoute? route;
             if (_myLastTimeEntry.PreviouslySelectedRoutes.ContainsKey(srcLocation)) {
                 route = _myLastTimeEntry.PreviouslySelectedRoutes[srcLocation];
             }
             else {
-                if (_transportationHandler == null) {
-                    throw new LPGException("was null");
-                }
                 route = _transportationHandler.GetTravelRouteFromSrcLoc(srcLocation, Site, time, calcPerson, _sourceAffordance, _calcRepo);
                 if (route != null) {
                     _myLastTimeEntry.PreviouslySelectedRoutes.Add(srcLocation, route);
+
+                    if (_myLastTimeEntry.PreviouslySelectedRoutes.Count >= 2)
+                        Debugger.Break(); // TODO remove
                 }
             }
 
@@ -169,9 +164,7 @@ namespace CalculationEngine.Transportation {
                 return BusynessType.NoRoute;
             }
 
-            if (_transportationHandler == null) {
-                throw new LPGException("was null");
-            }
+            // determine the arrival time at the target location
             // ReSharper disable once PossibleInvalidOperationException
             int? travelDurationN = route.GetDuration(time, calcPerson, _transportationHandler.AllMoveableDevices, _transportationHandler.DeviceOwnerships);
             if (travelDurationN == null) {
@@ -180,7 +173,7 @@ namespace CalculationEngine.Transportation {
 
             TimeStep dstStartTime = time.AddSteps(travelDurationN.Value);
             if (dstStartTime.InternalStep > _calcRepo.CalcParameters.InternalTimesteps) {
-                //if the end of the activity is after the simulation, everything is ok.
+                // if the end of the travel is after the simulation, everything is ok.
                 return BusynessType.NotBusy;
             }
             var result = _sourceAffordance.IsBusy(dstStartTime, srcLocation, calcPerson,
@@ -192,8 +185,6 @@ namespace CalculationEngine.Transportation {
                                              + " with the route " + route.Name + " and a travel duration of " + travelDurationN));
             return result;
         }
-
-        //public BitArray IsBusyArray => _sourceAffordance.IsBusyArray;
 
         public bool IsInterruptable => _sourceAffordance.IsInterruptable;
 
@@ -222,15 +213,9 @@ namespace CalculationEngine.Transportation {
         public List<CalcSubAffordance> SubAffordances => _sourceAffordance.SubAffordances;
 
         public string? TimeLimitName => _sourceAffordance.TimeLimitName;
-        public bool AreThereDuplicateEnergyProfiles()
-        {
-            return _sourceAffordance.AreThereDuplicateEnergyProfiles();
-        }
+        public bool AreThereDuplicateEnergyProfiles() => _sourceAffordance.AreThereDuplicateEnergyProfiles();
 
-        public string? AreDeviceProfilesEmpty()
-        {
-            return _sourceAffordance.AreDeviceProfilesEmpty();
-        }
+        public string? AreDeviceProfilesEmpty() => _sourceAffordance.AreDeviceProfilesEmpty();
 
         public int Weight => _sourceAffordance.Weight;
     }

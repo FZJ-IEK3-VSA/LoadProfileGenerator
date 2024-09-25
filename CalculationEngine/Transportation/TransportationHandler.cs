@@ -39,13 +39,28 @@ namespace CalculationEngine.Transportation {
         [ItemNotNull]
         public Dictionary<string, CalcAffordanceTaggingSetDto> AffordanceTaggingSets { get; } = new Dictionary<string, CalcAffordanceTaggingSetDto>();
 
+        /// <summary>
+        /// Stores which transportation device (e.g., cars) is currently owned by which person
+        /// </summary>
         [NotNull]
         [ItemNotNull]
         public DeviceOwnershipMapping<string, CalcTransportationDevice> DeviceOwnerships { get; } = new DeviceOwnershipMapping<string, CalcTransportationDevice>();
 
-        public CalcTravelRoute? GetTravelRouteFromSrcLoc([NotNull] CalcLocation srcLocation,
-                                                             [NotNull] CalcSite dstSite, [NotNull] TimeStep startTimeStep,
-                                                             [NotNull] CalcPersonDto person, [NotNull] ICalcAffordanceBase affordance, CalcRepo calcRepo)
+        /// <summary>
+        /// Randomly selects a route out of all available ones, taking the respective weights into account.
+        /// Depending on the selected TravelRouteSet, routes can be filtered based on the person or 
+        /// the target affordance.
+        /// </summary>
+        /// <param name="srcLocation">source location for the route (only the site is relevant)</param>
+        /// <param name="dstSite">destination site for the route</param>
+        /// <param name="startTimeStep">time step in which to start the trip</param>
+        /// <param name="person">the travelling person</param>
+        /// <param name="affordance">the affordance for which the person wants to travel</param>
+        /// <param name="calcRepo">the CalcRepo instance</param>
+        /// <returns>the chosen route, or null if no available route was found</returns>
+        public CalcTravelRoute? GetTravelRouteFromSrcLoc([NotNull] CalcLocation srcLocation, [NotNull] CalcSite dstSite,
+                                                         [NotNull] TimeStep startTimeStep, [NotNull] CalcPersonDto person,
+                                                         [NotNull] ICalcAffordanceBase affordance, CalcRepo calcRepo)
         {
             CalcSite srcSite = LocationSiteLookup[srcLocation];
             if (srcSite == dstSite) {
@@ -68,14 +83,14 @@ namespace CalculationEngine.Transportation {
                 .Where(route => {
                     if (route.AffordanceTaggingSetName == null || route.AffordanceTagName == null)
                     {
-                    // if no AffordanceTagging information is given for a route, then it is allowed for all affordances
-                    return true;
+                        // if no AffordanceTagging information is given for a route, then it is allowed for all affordances
+                        return true;
                     }
                     var affordanceTaggingSet = AffordanceTaggingSets[route.AffordanceTaggingSetName];
                     if (!affordanceTaggingSet.ContainsAffordance(affordance.Name))
                     {
-                    // if the affordance is not tagged, then all routes are allowed
-                    return true;
+                        // if the affordance is not tagged, then all routes are allowed
+                        return true;
                     }
                     return affordanceTaggingSet.GetAffordanceTag(affordance.Name) == route.AffordanceTagName;
                 })
@@ -87,7 +102,7 @@ namespace CalculationEngine.Transportation {
             //check if the route is busy by calculating the duration. If busy, duration will be null
             int? dur = null;
             CalcTravelRoute? selectedRoute = null;
-            while (dur== null && allowedRoutes.Count > 0) {
+            while (dur == null && allowedRoutes.Count > 0) {
                 // select a route randomly, based on the weights
                 double totalWeight = allowedRoutes.Sum(route => route.Weight);
                 double randomNumber = calcRepo.Rnd.NextDouble() * totalWeight;
@@ -106,6 +121,7 @@ namespace CalculationEngine.Transportation {
             }
 
             if (dur == null) {
+                // no usable route found
                 selectedRoute = null;
             }
 
