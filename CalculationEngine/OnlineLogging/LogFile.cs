@@ -399,7 +399,7 @@ namespace CalculationEngine.OnlineLogging {
             _energyStorageLogfile?.Dispose();
         }
 
-        public DesiresLogFile DesiresLogfile => _desiresLogfile ?? throw new LPGException("Tried to access desires log file although it was not initialized");;
+        public DesiresLogFile DesiresLogfile => _desiresLogfile ?? throw new LPGException("Tried to access desires log file although it was not initialized");
 
         public EnergyStorageLogfile? EnergyStorageLogfile => _energyStorageLogfile;
 
