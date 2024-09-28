@@ -75,10 +75,10 @@ namespace CalculationEngine.HouseholdElements
 
         protected CalcAffordanceBase([JetBrains.Annotations.NotNull] string pName, [JetBrains.Annotations.NotNull] CalcLocation loc, [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcDesire> satisfactionvalues, int miniumAge, int maximumAge,
             PermittedGender permittedGender, bool needsLight, bool randomEffect, [JetBrains.Annotations.NotNull] string pAffCategory, bool isInterruptable, bool isInterrupting, ActionAfterInterruption actionAfterInterruption, int weight,
-            bool requireAllAffordances, CalcAffordanceType calcAffordanceType, StrGuid guid, [ItemNotNull][JetBrains.Annotations.NotNull] BitArray isBusyArray, BodilyActivityLevel bodilyActivityLevel,
-            [JetBrains.Annotations.NotNull] CalcRepo calcRepo, HouseholdKey householdKey, List<DeviceEnergyProfileTuple> energyProfiles, ColorRGB affordanceColor, string sourceTrait, string? timeLimitName,
-            [JetBrains.Annotations.NotNull] CalcVariableRepository variableRepository, [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcAffordanceVariableOp> variableOps,
-            [JetBrains.Annotations.NotNull][ItemNotNull] List<VariableRequirement> variableRequirements, CalcSite? site = null) : base(pName, guid)
+            bool requireAllAffordances, CalcAffordanceType calcAffordanceType, StrGuid guid, BodilyActivityLevel bodilyActivityLevel, [JetBrains.Annotations.NotNull] CalcRepo calcRepo,
+            HouseholdKey householdKey, List<DeviceEnergyProfileTuple> energyProfiles, ColorRGB affordanceColor, string sourceTrait, string? timeLimitName, [JetBrains.Annotations.NotNull] CalcVariableRepository variableRepository,
+            [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcAffordanceVariableOp> variableOps, [JetBrains.Annotations.NotNull][ItemNotNull] List<VariableRequirement> variableRequirements,
+            CalcSite? site = null) : base(pName, guid)
         {
             CalcAffordanceType = calcAffordanceType;
             BodilyActivityLevel = bodilyActivityLevel;
@@ -221,34 +221,35 @@ namespace CalculationEngine.HouseholdElements
         /// <param name="startTime">the starting time step of the affordance activation</param>
         /// <param name="timeLastDeviceEnds">time step in which the last device of the affordance activation ends</param>
         /// <param name="personEndTime">time step in which the person activity in the affordance activation ends</param>
+        /// <param name="operationTypesToExecute">the operation execution times to schedule now; operations with other execution 
+        /// times are skipped; default: execute all operations</param>
         /// <exception cref="LPGException">if the execution time was not set for a variable operation</exception>
-        protected void ExecuteVariableOperations(TimeStep startTime, TimeStep timeLastDeviceEnds, TimeStep personEndTime)
+        protected void ExecuteVariableOperations(TimeStep startTime, TimeStep timeLastDeviceEnds, TimeStep personEndTime, HashSet<VariableExecutionTime>? operationTypesToExecute = null)
         {
-            // execute variable operations
-            if (_variableOps.Count > 0)
+            foreach (var op in _variableOps)
             {
-                foreach (var op in _variableOps)
+                if (operationTypesToExecute?.Contains(op.ExecutionTime) == false)
+                    // the operation does not have one of the specified ExecutionTimes - skip it
+                    continue;
+                // figure out end time
+                TimeStep time;
+                switch (op.ExecutionTime)
                 {
-                    // figure out end time
-                    TimeStep time;
-                    switch (op.ExecutionTime)
-                    {
-                        case VariableExecutionTime.Beginning:
-                            time = startTime;
-                            break;
-                        case VariableExecutionTime.EndOfPerson:
-                            time = personEndTime;
-                            break;
-                        case VariableExecutionTime.EndofDevices:
-                            time = timeLastDeviceEnds;
-                            break;
-                        default:
-                            throw new LPGException("Forgotten Variable Execution Time");
-                    }
-
-                    _variableRepository.AddExecutionEntry(op.Name, op.Value, op.CalcLocation, op.VariableAction, time, op.VariableGuid);
-                    _variableRepository.Execute(startTime);
+                    case VariableExecutionTime.Beginning:
+                        time = startTime;
+                        break;
+                    case VariableExecutionTime.EndOfPerson:
+                        time = personEndTime;
+                        break;
+                    case VariableExecutionTime.EndofDevices:
+                        time = timeLastDeviceEnds;
+                        break;
+                    default:
+                        throw new LPGException("Forgotten Variable Execution Time");
                 }
+
+                _variableRepository.AddExecutionEntry(op.Name, op.Value, op.CalcLocation, op.VariableAction, time, op.VariableGuid);
+                _variableRepository.Execute(startTime);
             }
         }
 
@@ -260,7 +261,7 @@ namespace CalculationEngine.HouseholdElements
         /// <param name="personSourceLocation">current location of the activating person</param>
         /// <param name="personTimeProfile">the resulting person profile for the activator</param>
         [SuppressMessage("ReSharper", "UnusedParameter.Global")]
-        public abstract void Activate(TimeStep startTime, string activatorName, CalcLocation personSourceLocation, out ICalcProfile personTimeProfile);
+        public abstract void Activate(TimeStep startTime, string activatorName, CalcLocation personSourceLocation, out IAffordanceActivation personTimeProfile);
 
         public abstract List<CalcSubAffordance> CollectSubAffordances(TimeStep time, bool onlyInterrupting, CalcLocation srcLocation);
 

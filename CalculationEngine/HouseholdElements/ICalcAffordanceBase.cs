@@ -44,8 +44,7 @@ namespace CalculationEngine.HouseholdElements
         StrGuid Guid { get; }
 
         void Activate([NotNull] TimeStep startTime, [NotNull] string activatorName,
-             [NotNull] CalcLocation personSourceLocation,
-            [NotNull] out ICalcProfile personTimeProfile);
+                      [NotNull] CalcLocation personSourceLocation, [NotNull] out IAffordanceActivation personTimeProfile);
         
         BusynessType IsBusy([NotNull] TimeStep time, [NotNull] CalcLocation srcLocation, CalcPersonDto calcPerson, bool clearDictionaries = true);
 

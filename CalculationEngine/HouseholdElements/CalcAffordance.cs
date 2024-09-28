@@ -140,12 +140,13 @@ namespace CalculationEngine.HouseholdElements
             return timeLastDeviceEnds;
         }
 
-        public override void Activate(TimeStep startTime, string activatorName, CalcLocation personSourceLocation, out ICalcProfile personTimeProfile)
+        public override void Activate(TimeStep startTime, string activatorName, CalcLocation personSourceLocation, out IAffordanceActivation personTimeProfile)
         {
             TimeStep timeLastDeviceEnds = CreateDeviceProfilesForActivation(startTime, activatorName);
 
             // determine the time the activating person is busy with the affordance
-            int personsteps = CalcProfile.GetNewLengthAfterCompressExpand(_personProfile.StepValues.Count, _timeFactorsForTimes[startTime.InternalStep]);
+            var tf = _timeFactorsForTimes[startTime.InternalStep];
+            int personsteps = CalcProfile.GetNewLengthAfterCompressExpand(_personProfile.StepValues.Count, tf);
             TimeStep personEndTime = startTime.AddSteps(personsteps);
 
             // save start and end time of the person's activity
@@ -154,7 +155,6 @@ namespace CalculationEngine.HouseholdElements
             ExecuteVariableOperations(startTime, timeLastDeviceEnds, personEndTime);
 
             // adapt the default person profile according to the time factor for this time step
-            var tf = _timeFactorsForTimes[startTime.InternalStep];
             _probabilitiesForTimes.Clear();
             _timeFactorsForTimes.Clear();
             personTimeProfile = _personProfile.CompressExpandDoubleArray(tf);

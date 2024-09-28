@@ -10,7 +10,7 @@
 //  Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer
 // in the documentation and/or other materials provided with the distribution.
 //  All advertising materials mentioning features or use of this software must display the following acknowledgement:
-//  “This product includes software developed by the TU Chemnitz, Prof. Technische Thermodynamik and its contributors.”
+//  "This product includes software developed by the TU Chemnitz, Prof. Technische Thermodynamik and its contributors."
 //  Neither the name of the University nor the names of its contributors may be used to endorse or promote products
 //  derived from this software without specific prior written permission.
 //
@@ -43,30 +43,24 @@ using JetBrains.Annotations;
 namespace CalculationEngine.HouseholdElements {
     public sealed class CalcProfile : BasicElement, ICalcProfile {
         [ItemNotNull]
-        [JetBrains.Annotations.NotNull] private readonly List<CalcTimeDataPoint> _datapoints = new List<CalcTimeDataPoint>();
+        [JetBrains.Annotations.NotNull] private readonly List<CalcTimeDataPoint> _datapoints = [];
         private readonly ProfileType _profileType;
         private readonly TimeSpan _stepSize;
-        // ReSharper disable once NotAccessedField.Local
-#pragma warning disable IDE0052 // Remove unread private members
-        //saving this for information purposes
-        private readonly StrGuid _guid;
-#pragma warning restore IDE0052 // Remove unread private members
 
-        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public CalcProfile([JetBrains.Annotations.NotNull] string name, StrGuid guid, TimeSpan stepSize, ProfileType profileType, [JetBrains.Annotations.NotNull] string dataSource):base(name)
+        public CalcProfile([JetBrains.Annotations.NotNull] string name, StrGuid guid, TimeSpan stepSize, ProfileType profileType, [JetBrains.Annotations.NotNull] string dataSource) : base(name)
         {
-            _guid = guid;
+            Guid = guid;
             _stepSize = stepSize;
             _profileType = profileType;
             TimeFactor = 1;
             DataSource = dataSource;
-            StepValues = new List<double>();
+            StepValues = [];
         }
 
         public CalcProfile([JetBrains.Annotations.NotNull] string name, StrGuid guid, [JetBrains.Annotations.NotNull] List<double> newValues,
-            ProfileType profileType, [JetBrains.Annotations.NotNull] string dataSource, double timeFactor = 1):base(name)
+            ProfileType profileType, [JetBrains.Annotations.NotNull] string dataSource, double timeFactor = 1) : base(name)
         {
-            _guid = guid;
+            Guid = guid;
             TimeFactor = timeFactor;
             StepValues = newValues;
             _profileType = profileType;
@@ -98,7 +92,7 @@ namespace CalculationEngine.HouseholdElements {
         }
 
         [JetBrains.Annotations.NotNull]
-        private Dictionary<double, CalcProfile> ChangedProfiles { get; } = new Dictionary<double, CalcProfile>();
+        private Dictionary<double, CalcProfile> ChangedProfiles { get; } = [];
 
         [JetBrains.Annotations.NotNull]
         public CalcProfile CompressExpandDoubleArray(double timeFactor)
@@ -328,8 +322,9 @@ namespace CalculationEngine.HouseholdElements {
 
         public string DataSource { get; }
 
-        // ReSharper disable once UnassignedGetOnlyAutoProperty
         public StrGuid Guid { get; }
+
+        public bool IsDetermined => true;
 
         #endregion
 

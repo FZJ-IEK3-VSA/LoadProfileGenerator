@@ -48,28 +48,46 @@ using JetBrains.Annotations;
 
 #endregion
 
-namespace CalculationEngine.HouseholdElements {
+namespace CalculationEngine.HouseholdElements
+{
     public class CalcPerson : CalcBase {
         [ItemNotNull]
         [JetBrains.Annotations.NotNull]
         private readonly BitArray _isBusy;
+        private bool _isBusyForUnknownDuration;
+
         [JetBrains.Annotations.NotNull]
         private readonly PotentialAffs _normalPotentialAffs = new PotentialAffs();
         [JetBrains.Annotations.NotNull]
         private readonly CalcPersonDesires _normalDesires;
+
+        /// <summary>
+        /// Stores the last few activated affordances so repetitons can be avoided
+        /// </summary>
         [ItemNotNull]
         [JetBrains.Annotations.NotNull]
         private readonly List<ICalcAffordanceBase> _previousAffordances;
+        /// <summary>
+        /// Stores the last few activated affordances including their respective end timesteps.
+        /// This is needed to resume them in case they are interrupted.
+        /// This list only stores affordances for which the duration is known in advance.
+        /// </summary>
         [ItemNotNull]
         [JetBrains.Annotations.NotNull]
-        private readonly List<Tuple<ICalcAffordanceBase, TimeStep>> _previousAffordancesWithEndTime =
-            new List<Tuple<ICalcAffordanceBase, TimeStep>>();
+        private readonly List<Tuple<ICalcAffordanceBase, TimeStep>> _previousAffordancesWithEndTime = [];
+
         [JetBrains.Annotations.NotNull]
         private readonly PotentialAffs _sicknessPotentialAffs = new PotentialAffs();
         private bool _alreadyloggedvacation;
 
         private ICalcAffordanceBase? _currentAffordance;
 
+        private RemoteAffordanceActivation? currentActivationInfo;
+
+        /// <summary>
+        /// Is true if an affordance that interrupted another is currently active.
+        /// Prevents interrupting an already interrupting affordance.
+        /// </summary>
         private bool _isCurrentlyPriorityAffordanceRunning;
         private bool _isCurrentlySick;
         [JetBrains.Annotations.NotNull]
@@ -99,16 +117,20 @@ namespace CalculationEngine.HouseholdElements {
             _vacationAffordanceGuid = System.Guid.NewGuid().ToStrGuid();
         }
 
+        /// <summary>
+        /// Indicates that a remote affordance or travel activity has just been finished.
+        /// </summary>
+        public bool RemoteActivityFinished;
+
         //guid for all vacations of this person
         private readonly StrGuid _vacationAffordanceGuid;
         // use one vacation location guid for all persons
         private static readonly StrGuid _vacationLocationGuid = System.Guid.NewGuid().ToStrGuid();
+        
         [JetBrains.Annotations.NotNull]
         private CalcLocation CurrentLocation { get; set; }
 
         public int DesireCount => PersonDesires.Desires.Count;
-
-        //public string HouseholdKey => _person_householdKey;
 
         [JetBrains.Annotations.NotNull]
         [ItemNotNull]
@@ -134,6 +156,22 @@ namespace CalculationEngine.HouseholdElements {
         [JetBrains.Annotations.NotNull]
         public PersonInformation MakePersonInformation() => new PersonInformation(Name, Guid, _calcPerson.TraitTag);
 
+        private bool IsBusy(int timeStep)
+        {
+            return _isBusyForUnknownDuration || _isBusy[timeStep];
+        }
+
+        /// <summary>
+        /// Determines if the person is busy with an affordance in the sepcified timestep.
+        /// If the person is currently doing an affordance with unspecified duration, this will always
+        /// return True.
+        /// </summary>
+        /// <param name="timeStep">the timestep to check</param>
+        /// <returns>whether the person is busy in the timestep</returns>
+        private bool IsBusy(TimeStep timeStep) {
+            return IsBusy(timeStep.InternalStep);
+        }
+
         public bool NewIsBasicallyValidAffordance([JetBrains.Annotations.NotNull] ICalcAffordanceBase aff, bool sickness, bool logDetails)
         {
             // affordanzen löschen, wo alter nicht passt
@@ -153,8 +191,8 @@ namespace CalculationEngine.HouseholdElements {
 
                 return false;
             }
-            // affordanzen löschen, die nicht mindestens ein bedürfnis der Person befriedigen
 
+            // affordanzen löschen, die nicht mindestens ein bedürfnis der Person befriedigen
             CalcPersonDesires desires;
             if (sickness) {
                 desires = SicknessDesires;
@@ -195,58 +233,134 @@ namespace CalculationEngine.HouseholdElements {
             return false;
         }
 
+        /// <summary>
+        /// Simulates one timestep for the person.
+        /// </summary>
+        /// <param name="time">the timestep to simulate</param>
+        /// <param name="locs">list of available locations</param>
+        /// <param name="isDaylight">daylight information object</param>
+        /// <param name="householdKey">household key</param>
+        /// <param name="persons">all persons of the household</param>
+        /// <param name="simulationSeed">the seed used in the current simulation</param>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         public void NextStep([JetBrains.Annotations.NotNull] TimeStep time, [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcLocation> locs, [JetBrains.Annotations.NotNull] DayLightStatus isDaylight,
                              [JetBrains.Annotations.NotNull] HouseholdKey householdKey,
                              [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcPerson> persons,
                              int simulationSeed)
         {
-            if (time.InternalStep == 0) {
+            // initialize affordance lists
+            if (time.InternalStep == 0)
+            {
                 Init(locs, _sicknessPotentialAffs, true);
                 Init(locs, _normalPotentialAffs, false);
             }
 
-            if (_previousAffordances.Count > _calcRepo.CalcParameters.AffordanceRepetitionCount) {
+            if (_previousAffordances.Count > _calcRepo.CalcParameters.AffordanceRepetitionCount)
+            {
                 _previousAffordances.RemoveAt(0);
             }
 
-            if (_calcRepo.CalcParameters.IsSet(CalcOption.CriticalViolations)) {
+            // log critical desire threshold violations
+            if (_calcRepo.CalcParameters.IsSet(CalcOption.CriticalViolations))
+            {
                 PersonDesires.CheckForCriticalThreshold(this, time, _calcRepo.FileFactoryAndTracker, householdKey);
             }
 
             PersonDesires.ApplyDecay(time);
             WriteDesiresToLogfileIfNeeded(time, householdKey);
 
+            // check if an ongoing remote affordance was finished
+            if (RemoteActivityFinished)
+            {
+                UpdateRemoteActivity(time, isDaylight);
+            }
+
             ReturnToPreviousActivityIfPreviouslyInterrupted(time);
 
             // bereits beschäftigt
-            if (_isBusy[time.InternalStep]) {
+            if (IsBusy(time))
+            {
                 InterruptIfNeeded(time, isDaylight, false);
                 return;
             }
 
-            if (IsOnVacation[time.InternalStep]) {
+            if (IsOnVacation[time.InternalStep])
+            {
                 BeOnVacation(time);
-
                 return;
             }
 
             _alreadyloggedvacation = false;
-            if (!_isCurrentlySick && IsSick[time.InternalStep]) {
+            if (!_isCurrentlySick && IsSick[time.InternalStep])
+            {
                 // neue krank geworden
                 BecomeSick(time);
             }
 
-            if (_isCurrentlySick && !IsSick[time.InternalStep]) {
+            if (_isCurrentlySick && !IsSick[time.InternalStep])
+            {
                 // neue gesund geworden
                 BecomeHealthy(time);
             }
 
             //activate new affordance
-            var bestaff = FindBestAffordance(time,  persons,
-                simulationSeed);
-            ActivateAffordance(time, isDaylight,  bestaff);
+            var bestaff = FindBestAffordance(time, persons, simulationSeed);
+            ActivateAffordance(time, isDaylight, bestaff);
             _isCurrentlyPriorityAffordanceRunning = false;
+        }
+
+        /// <summary>
+        /// Finishes the current remote activity. Logs information and resets respective flags.
+        /// If the activity was a transport activity, also activates the corresponding source activity at the
+        /// target location, no matter if that is a remote affordance or not.
+        /// </summary>
+        /// <param name="time">current timestep</param>
+        /// <param name="isDaylight">daylight status objects</param>
+        /// <exception cref="LPGException">if the remote activity was not correctly initialized</exception>
+        private void UpdateRemoteActivity(TimeStep time, DayLightStatus isDaylight)
+        {
+            if (currentActivationInfo == null)
+            {
+                throw new LPGException("Activation info for remote affordance " + _currentAffordance?.Name + " is missing.");
+            }
+
+            // calculate the duration of the remote activity
+            int duration = time.InternalStep - currentActivationInfo.Start.InternalStep;
+
+            // check if the remote activity was traveling, in which case the source affordance needs to be activated
+            if (_currentAffordance is AffordanceBaseTransportDecorator transportAffordance)
+            {
+                // finished traveling - log the transportation event
+                var sourceAffordanceDuration = -1; // dummy value - is currently not used in transportation logging
+                transportAffordance.LogTransportationEvent(currentActivationInfo.TravelDeviceUseEvents, Name, currentActivationInfo.Start, currentActivationInfo.SourceSite,
+                    currentActivationInfo.Route!, duration, sourceAffordanceDuration);
+
+                // activate the actual affordance
+                _currentAffordance = transportAffordance._sourceAffordance;
+                _currentAffordance.Activate(time, Name, CurrentLocation, out var sourceActivation);
+                if (sourceActivation is CalcProfile personProfile)
+                {
+                    // the actual activity is not remote and has a predetermined duration
+                    SetBusyAndActivateLighting(time, personProfile, _currentAffordance.ParentLocation, isDaylight, _currentAffordance.NeedsLight);
+                }
+            }
+            else
+            {
+                var affordance = (CalcAffordanceRemote)_currentAffordance!;
+
+                // finished the remote activity
+                _isBusyForUnknownDuration = false;
+                affordance.Finish(time, Name);
+
+                // log information about the full activity, including travel and source affordance
+                if (_calcRepo.CalcParameters.IsSet(CalcOption.ThoughtsLogfile))
+                {
+                    string thought = "Finished executing " + currentActivationInfo.Name + ", duration " + duration;
+                    _calcRepo.Logfile.ThoughtsLogFile1.WriteEntry(new ThoughtEntry(this, time, thought), _calcPerson.HouseholdKey);
+                }
+            }
+            // reset the flag
+            RemoteActivityFinished = false;
         }
 
         private void BecomeHealthy([JetBrains.Annotations.NotNull] TimeStep time)
@@ -301,7 +415,7 @@ namespace CalculationEngine.HouseholdElements {
         }
 
         private void InterruptIfNeeded([JetBrains.Annotations.NotNull] TimeStep time, [JetBrains.Annotations.NotNull] DayLightStatus isDaylight,
-                                       bool ignoreAlreadyExecutedActivities)
+                                       bool ignorePreviousAffordances)
         {
             // check if the affordance may be interrupted and did not already interrupt another affordance itself
             if (_currentAffordance?.IsInterruptable == true && !_isCurrentlyPriorityAffordanceRunning) {
@@ -314,17 +428,21 @@ namespace CalculationEngine.HouseholdElements {
                 }
 
                 var availableInterruptingAffordances =
-                    NewGetAllViableAffordancesAndSubs(time, null, true, aff, ignoreAlreadyExecutedActivities);
+                    NewGetAllViableAffordancesAndSubs(time, null, true, aff, ignorePreviousAffordances);
                 if (availableInterruptingAffordances.Count != 0) {
-                    // the current affordance will be interrupted
+                    // the current affordance will now be interrupted; choose which affordance is started instead
                     var bestAffordance = GetBestAffordanceFromList(time, availableInterruptingAffordances);
 
                     if (bestAffordance.AfterInterruption == ActionAfterInterruption.LookForNew)
                     {
+                        if (_isBusyForUnknownDuration)
+                        {
+                            throw new LPGException("Remote affordances cannot be interrupted.");
+                        }
                         // reset the IsBusy array of the person in case the interrupted and stopped affordance would have lasted
                         // longer than the new, interrupting affordance
                         var t = time;
-                        while (t.InternalStep < _calcRepo.CalcParameters.InternalTimesteps && _isBusy[t.InternalStep])
+                        while (t.InternalStep < _calcRepo.CalcParameters.InternalTimesteps && IsBusy(t))
                         {
                             _isBusy[t.InternalStep] = false;
                             t = t.AddSteps(1);
@@ -365,25 +483,29 @@ namespace CalculationEngine.HouseholdElements {
                 }
             }
 
+            // log that the person is busy, including their current health state
             if (_calcRepo.CalcParameters.IsSet(CalcOption.ThoughtsLogfile)) {
                 if (_calcRepo.Logfile.ThoughtsLogFile1 == null) {
                     throw new LPGException("Logfile was null.");
                 }
 
-                if (!_isCurrentlySick) {
-                    _calcRepo.Logfile.ThoughtsLogFile1.WriteEntry(new ThoughtEntry(this, time, "I'm busy and healthy"),
+                string healthState = _isCurrentlySick ? "sick" : "healthy";
+                _calcRepo.Logfile.ThoughtsLogFile1.WriteEntry(new ThoughtEntry(this, time, "I'm busy and " + healthState),
                         _calcPerson.HouseholdKey);
-                }
-                else {
-                    _calcRepo.Logfile.ThoughtsLogFile1.WriteEntry(new ThoughtEntry(this, time, "I'm busy and sick"),
-                        _calcPerson.HouseholdKey);
-                }
             }
         }
 
+        /// <summary>
+        /// Check if the last affordance had interrupted another one, and if so whether the interrupted affordance
+        /// should now be resumed. If so, creates a new action entry for the resumed affordance. 
+        /// </summary>
+        /// <param name="time">current timestep</param>
+        /// <exception cref="LPGException"></exception>
         private void ReturnToPreviousActivityIfPreviouslyInterrupted([JetBrains.Annotations.NotNull] TimeStep time)
         {
+            // check if an affordance was interrupted previously, and if the interrupted affordance shall now be resumed
             if (time == TimeToResetActionEntryAfterInterruption) {
+                // log that the interrupted affordance is now continued
                 if (_calcRepo.CalcParameters.IsSet(CalcOption.ThoughtsLogfile)) {
                     if (_calcRepo.Logfile.ThoughtsLogFile1 == null) {
                         throw new LPGException("Logfile was null.");
@@ -395,7 +517,7 @@ namespace CalculationEngine.HouseholdElements {
                         _calcPerson.HouseholdKey);
                 }
 
-                //-2 to get the one before the interrupting one
+                // -2 to get the affordance before the interrupting one
                 ICalcAffordanceBase prevAff =
                     _previousAffordancesWithEndTime[_previousAffordancesWithEndTime.Count - 2].Item1;
                 _calcRepo.OnlineLoggingData.AddActionEntry(time, Guid, Name, _isCurrentlySick, prevAff.Name, prevAff.Guid,
@@ -422,34 +544,21 @@ namespace CalculationEngine.HouseholdElements {
             }
         }
 
+        /// <summary>
+        /// Randomly select one affordance from the list, based on the affordance weights.
+        /// </summary>
+        /// <param name="bestaffordances">list of affordances to choose from</param>
+        /// <param name="time">current timestep</param>
+        /// <param name="person">the person that will activate the selected affordance</param>
+        /// <param name="householdKey">the household key</param>
+        /// <returns>the randomly selected affordance</returns>
+        /// <exception cref="LPGException">if no affordance could be selected</exception>
         [JetBrains.Annotations.NotNull]
         public ICalcAffordanceBase PickRandomAffordanceFromEquallyAttractiveOnes(
             [JetBrains.Annotations.NotNull][ItemNotNull] List<ICalcAffordanceBase> bestaffordances,
             [JetBrains.Annotations.NotNull] TimeStep time, [JetBrains.Annotations.NotNull] CalcPerson person, [JetBrains.Annotations.NotNull] HouseholdKey householdKey)
         {
-            // I dont remember why i did this?
-            // collect the subaffs for maybe eliminating them
-            //var subaffs = new List<CalcAffordanceBase>();
-            //foreach (var calcAffordanceBase in bestaffordances)
-            //{
-            //    if (calcAffordanceBase is CalcSubAffordance)
-            //    {
-            //        subaffs.Add(calcAffordanceBase);
-            //    }
-            //}
-            //// definitely eliminate
-            //if (subaffs.Count < bestaffordances.Count)
-            //{
-            //    foreach (var calcAffordanceBase in subaffs)
-            //    {
-            //        bestaffordances.Remove(calcAffordanceBase);
-            //    }
-            //}
-            var bestaffnames = string.Empty;
-            foreach (var calcAffordance in bestaffordances) {
-                bestaffnames = bestaffnames + calcAffordance.Name + "(" + calcAffordance.Weight + "), ";
-            }
-
+            // randomly select one of the affordances, based on their weights
             var weightsum = bestaffordances.Sum(x => x.Weight);
             var pick = _calcRepo.Rnd.Next(weightsum);
             ICalcAffordanceBase? selectedAff = null;
@@ -462,16 +571,23 @@ namespace CalculationEngine.HouseholdElements {
                 var end = cumulativesum + currentAff.Weight;
                 if (pick >= start && pick <= end) {
                     selectedAff = currentAff;
-                    idx = bestaffordances.Count;
+                    break;
                 }
 
                 cumulativesum += currentAff.Weight;
                 idx++;
             }
 
+            // log all affordance names with their respective weight
             if (_calcRepo.CalcParameters.IsSet(CalcOption.ThoughtsLogfile)) {
                 if (_calcRepo.Logfile.ThoughtsLogFile1 == null) {
                     throw new LPGException("Thoughtslogfile was null");
+                }
+
+                var bestaffnames = string.Empty;
+                foreach (var calcAffordance in bestaffordances)
+                {
+                    bestaffnames = bestaffnames + calcAffordance.Name + "(" + calcAffordance.Weight + "), ";
                 }
 
                 _calcRepo.Logfile.ThoughtsLogFile1.WriteEntry(
@@ -485,22 +601,27 @@ namespace CalculationEngine.HouseholdElements {
             }
 
             return selectedAff;
-            //= bestaffordances[r.Next(bestaffordances.Count)];
         }
 
         public override string ToString() => "Person:" + Name;
 
+        /// <summary>
+        /// Activate the specified affordance for this person.
+        /// </summary>
+        /// <param name="currentTimeStep">timestep for activating the affordance</param>
+        /// <param name="isDaylight">daylight information object</param>
+        /// <param name="bestaff">the affordance to activate</param>
+        /// <exception cref="LPGException"></exception>
         private void ActivateAffordance([JetBrains.Annotations.NotNull] TimeStep currentTimeStep, [JetBrains.Annotations.NotNull] DayLightStatus isDaylight,
                                          [JetBrains.Annotations.NotNull] ICalcAffordanceBase bestaff)
         {
-            if (_calcRepo.CalcParameters.TransportationEnabled) {
-                if (!(bestaff is AffordanceBaseTransportDecorator)) {
-                    throw new LPGException(
-                        "Trying to activate a non-transport affordance in a household that has transportation enabled. This is a bug and should never happen. The affordance was: " +
-                        bestaff.Name + ". Affordance Type: " + bestaff.GetType().FullName);
-                }
+            if (_calcRepo.CalcParameters.TransportationEnabled && bestaff is not AffordanceBaseTransportDecorator) {
+                throw new LPGException(
+                    "Trying to activate a non-transport affordance in a household that has transportation enabled. This is a bug and should never happen. The affordance was: " +
+                    bestaff.Name + ". Affordance Type: " + bestaff.GetType().FullName);
             }
 
+            // log the location where the affordance is taking place
             _calcRepo.OnlineLoggingData.AddLocationEntry(
                 new LocationEntry(_calcPerson.HouseholdKey,
                     _calcPerson.Name,
@@ -508,34 +629,65 @@ namespace CalculationEngine.HouseholdElements {
                      currentTimeStep,
                     bestaff.ParentLocation.Name,
                     bestaff.ParentLocation.Guid));
+
+            // log which affordance was selected, if thoughts logs are enabled
             if (_calcRepo.CalcParameters.IsSet(CalcOption.ThoughtsLogfile)) {
                 if (_calcRepo.Logfile.ThoughtsLogFile1 == null) {
                     throw new LPGException("Logfile was null.");
                 }
-
                 _calcRepo.Logfile.ThoughtsLogFile1.WriteEntry(new ThoughtEntry(this, currentTimeStep, "Action selected:" + bestaff),
                     _calcPerson.HouseholdKey);
             }
-
+            // create an action entry for this activation and adapt the desire values
             _calcRepo.OnlineLoggingData.AddActionEntry(currentTimeStep, Guid,
                 Name, _isCurrentlySick, bestaff.Name,
                 bestaff.Guid, _calcPerson.HouseholdKey,
                 bestaff.AffCategory, bestaff.BodilyActivityLevel);
             PersonDesires.ApplyAffordanceEffect(bestaff.Satisfactionvalues, bestaff.RandomEffect,  bestaff.Name);
-            bestaff.Activate(currentTimeStep, Name,  CurrentLocation,
-                out var personTimeProfile);
-            CurrentLocation = bestaff.ParentLocation;
-            //todo: fix this for transportation
-            var duration = SetBusy(currentTimeStep, personTimeProfile, bestaff.ParentLocation, isDaylight,
-                bestaff.NeedsLight);
-            _previousAffordances.Add(bestaff);
-            _previousAffordancesWithEndTime.Add(
-                new Tuple<ICalcAffordanceBase, TimeStep>(bestaff, currentTimeStep.AddSteps(duration)));
-            while (_previousAffordancesWithEndTime.Count > 5) {
-                _previousAffordancesWithEndTime.RemoveAt(0);
-            }
 
-            if (bestaff is CalcSubAffordance subaff) {
+            // activate the affordance and switch to its location
+            bestaff.Activate(currentTimeStep, Name,  CurrentLocation, out var activationInfo);
+            CurrentLocation = bestaff.ParentLocation;
+
+            // set this flag if the person is starting an affordance or travel with yet undetermined duration
+            _isBusyForUnknownDuration = !activationInfo.IsDetermined;
+
+            // mark the person as busy
+            if (activationInfo.IsDetermined && activationInfo is ICalcProfile personProfile)
+            {
+                SetBusyAndActivateLighting(currentTimeStep, personProfile, bestaff.ParentLocation, isDaylight, bestaff.NeedsLight);
+
+                // save the end timestep of this affordance activation; this is needed if it gets interrupted and then resumed
+                int duration = personProfile.StepValues.Count;
+                _previousAffordancesWithEndTime.Add(new Tuple<ICalcAffordanceBase, TimeStep>(bestaff, currentTimeStep.AddSteps(duration)));
+                while (_previousAffordancesWithEndTime.Count > 5)
+                {
+                    _previousAffordancesWithEndTime.RemoveAt(0);
+                }
+
+                // log affordance activation
+                if (_calcRepo.CalcParameters.IsSet(CalcOption.ThoughtsLogfile))
+                {
+                    if (_calcRepo.Logfile.ThoughtsLogFile1 == null)
+                    {
+                        throw new LPGException("Logfile was null.");
+                    }
+
+                    string thought = "Starting to execute " + activationInfo.Name + ", basis duration " + personProfile.StepValues.Count + " time factor "
+                        + personProfile.TimeFactor + ", total duration " + personProfile.StepValues.Count;
+                    _calcRepo.Logfile.ThoughtsLogFile1.WriteEntry(new ThoughtEntry(this, currentTimeStep, thought), _calcPerson.HouseholdKey);
+                }
+            } else
+            {
+                // store activity-related information for logging later
+                currentActivationInfo = (RemoteAffordanceActivation)activationInfo;
+            }
+            // remark: no lighting simulation for remote affordances
+
+            // add to list of previous affordances to avoid repetitions
+            _previousAffordances.Add(bestaff);
+            if (bestaff is CalcSubAffordance subaff)
+            {
                 _previousAffordances.Add(subaff.ParentAffordance);
             }
 
@@ -554,43 +706,52 @@ namespace CalculationEngine.HouseholdElements {
         private ICalcAffordanceBase FindBestAffordance([JetBrains.Annotations.NotNull] TimeStep time,
                                                        [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcPerson> persons, int simulationSeed)
         {
+            // determine affordance list to use
             var allAffs = IsSick[time.InternalStep] ? _sicknessPotentialAffs : _normalPotentialAffs;
 
+            // if affordance statuses should be logged, initialize the object for that
             AffordanceStatusClass? status = null;
             if (_calcRepo.CalcParameters.IsSet(CalcOption.ThoughtsLogfile))
             {
                 status = new AffordanceStatusClass();
             }
-            var allAffordances =
-                NewGetAllViableAffordancesAndSubs(time, status, false,  allAffs, false);
+
+            // collect available affordances
+            var allAffordances = NewGetAllViableAffordancesAndSubs(time, status, false,  allAffs, false);
             if(allAffordances.Count == 0 && (time.ExternalStep < 0 || _calcRepo.CalcParameters.IgnorePreviousActivitesWhenNeeded))
             {
-                allAffordances =
-                    NewGetAllViableAffordancesAndSubs(time, status,  false, allAffs, true);
+                // try again, now ignoring previous activities
+                allAffordances = NewGetAllViableAffordancesAndSubs(time, status,  false, allAffs, true);
             }
-            allAffordances.Sort((x, y) => string.CompareOrdinal(x.Name, y.Name));
-            //no affordances, so search again for the error messages
+
+            // no affordances, so search again to collect the respective reasons for an error message
             if (allAffordances.Count == 0)
             {
                 if (_calcRepo.CalcParameters.EnableIdlemode)
                 {
+                    // idle mode is enabled - select idle affordance
                     var idleaff = CurrentLocation.IdleAffs[this];
                     idleaff.IsBusy(time, CurrentLocation, _calcPerson);
-                    //Logger.Info(s);
                     return idleaff;
                 }
+
+                // create an error message containing reasons for affordances being unavailable
                 var status_err = new AffordanceStatusClass();
                 NewGetAllViableAffordancesAndSubs(time, status_err, false, allAffs, false);
                 var s = MakeDetailledAffordanceStatusMessage(time, persons, simulationSeed, status_err, 0);
                 throw new DataIntegrityException(s);
             }
+
             if (_calcRepo.CalcParameters.IsSet(CalcOption.ThoughtsLogfile))
             {
+                // log reasons for affordances being available or unavailable
                 var thought = MakeDetailledAffordanceStatusMessage(time, persons, simulationSeed, status!, allAffordances.Count);
                 var thoughtEntry = new ThoughtEntry(this, time, thought);
                 _calcRepo.Logfile.ThoughtsLogFile1!.WriteEntry(thoughtEntry, _calcPerson.HouseholdKey);
             }
 
+            // select the best affordance
+            allAffordances.Sort((x, y) => string.CompareOrdinal(x.Name, y.Name));
             return GetBestAffordanceFromList(time,  allAffordances);
         }
 
@@ -604,7 +765,7 @@ namespace CalculationEngine.HouseholdElements {
         /// <param name="simulationSeed">the simulation seed</param>
         /// <param name="status">the status object storing reasons for unavailable affordances</param>
         /// <param name="availableAffordances">number of available affordances</param>
-        /// <returns></returns>
+        /// <returns>the created affordance status message</returns>
         private string MakeDetailledAffordanceStatusMessage(TimeStep time, List<CalcPerson> persons, int simulationSeed, AffordanceStatusClass status, int availableAffordances)
         {
             var ts = new TimeSpan(0, 0, 0,
@@ -657,6 +818,13 @@ namespace CalculationEngine.HouseholdElements {
             return s.ToString();
         }
 
+        /// <summary>
+        /// Out of the available affordances, find the one which will result in the lowest desire difference after activation.
+        /// </summary>
+        /// <param name="time">the current timestep</param>
+        /// <param name="allAvailableAffordances">list of available affordances</param>
+        /// <returns>the affordance resulting in the best desire values</returns>
+        /// <exception cref="LPGException">if the ThoughtsLogFile would have been required but was null</exception>
         [JetBrains.Annotations.NotNull]
         private ICalcAffordanceBase GetBestAffordanceFromList([JetBrains.Annotations.NotNull] TimeStep time,
                                                               [JetBrains.Annotations.NotNull][ItemNotNull] List<ICalcAffordanceBase> allAvailableAffordances)
@@ -665,18 +833,17 @@ namespace CalculationEngine.HouseholdElements {
             var bestaff = allAvailableAffordances[0];
             var bestaffordances = new List<ICalcAffordanceBase>();
             foreach (var affordance in allAvailableAffordances) {
-                var desireDiff =
-                    PersonDesires.CalcEffect(affordance.Satisfactionvalues, out var thoughtstring, affordance.Name);
+                var desireDiff = PersonDesires.CalcEffect(affordance.Satisfactionvalues, out var thoughtstring, affordance.Name);
+                
+                // log the desire difference that will occur if this affordance is activated
                 if (_calcRepo.CalcParameters.IsSet(CalcOption.ThoughtsLogfile)) {
                     if (_calcRepo.Logfile.ThoughtsLogFile1 == null) {
                         throw new LPGException("Logfile was null.");
                     }
-
-                    _calcRepo.Logfile.ThoughtsLogFile1.WriteEntry(
-                        new ThoughtEntry(this, time,
+                    var thought = new ThoughtEntry(this, time,
                             "Desirediff for " + affordance.Name + " is :" +
-                            desireDiff.ToString("#,##0.0", Config.CultureInfo) + " In detail: " + thoughtstring),
-                        _calcPerson.HouseholdKey);
+                            desireDiff.ToString("#,##0.0", Config.CultureInfo) + " In detail: " + thoughtstring);
+                    _calcRepo.Logfile.ThoughtsLogFile1.WriteEntry(thought, _calcPerson.HouseholdKey);
                 }
 
                 if (desireDiff < bestdiff) {
@@ -684,7 +851,6 @@ namespace CalculationEngine.HouseholdElements {
                     bestaff = affordance;
                     bestaffordances.Clear();
                 }
-
                 if (desireDiff == bestdiff) {
                     bestaffordances.Add(affordance);
                 }
@@ -698,6 +864,12 @@ namespace CalculationEngine.HouseholdElements {
             return bestaff;
         }
 
+        /// <summary>
+        /// Initializes the lists of available affordances. Is called in the beginning of the simulation, once for the states healthy and sick each.
+        /// </summary>
+        /// <param name="locs">available locations offering affordances</param>
+        /// <param name="pa">affordance list to initialize</param>
+        /// <param name="sickness">True if affordances shall be initialized for state sick</param>
         private void Init([JetBrains.Annotations.NotNull][ItemNotNull] List<CalcLocation> locs, [JetBrains.Annotations.NotNull] PotentialAffs pa, bool sickness)
         {
             pa.PotentialAffordances.Clear();
@@ -744,7 +916,8 @@ namespace CalculationEngine.HouseholdElements {
         private List<ICalcAffordanceBase> NewGetAllViableAffordancesAndSubs([JetBrains.Annotations.NotNull] TimeStep timeStep,
                                                                             AffordanceStatusClass? errors,
                                                                             bool getOnlyInterrupting,
-                                                                            [JetBrains.Annotations.NotNull] PotentialAffs potentialAffs, bool tryHarder)
+                                                                            [JetBrains.Annotations.NotNull] PotentialAffs potentialAffs,
+                                                                            bool ignorePreviousAffordances)
         {
             var getOnlyRelevantDesires = getOnlyInterrupting; // just for clarity
             // normal affs
@@ -759,7 +932,7 @@ namespace CalculationEngine.HouseholdElements {
 
             foreach (var calcAffordanceBase in srcList) {
                 if (NewIsAvailableAffordance(timeStep, calcAffordanceBase, errors, getOnlyRelevantDesires,
-                    CurrentLocation.CalcSite, tryHarder)) {
+                    CurrentLocation.CalcSite, ignorePreviousAffordances)) {
                     resultingAff.Add(calcAffordanceBase);
                 }
             }
@@ -774,12 +947,11 @@ namespace CalculationEngine.HouseholdElements {
             }
 
             foreach (var affordance in subSrcList) {
-                var spezsubaffs =
-                    affordance.CollectSubAffordances(timeStep, getOnlyInterrupting,  CurrentLocation);
+                var spezsubaffs = affordance.CollectSubAffordances(timeStep, getOnlyInterrupting,  CurrentLocation);
                 if (spezsubaffs.Count > 0) {
                     foreach (var spezsubaff in spezsubaffs) {
                         if (NewIsAvailableAffordance(timeStep, spezsubaff, errors,
-                            getOnlyRelevantDesires, CurrentLocation.CalcSite,tryHarder)) {
+                            getOnlyRelevantDesires, CurrentLocation.CalcSite, ignorePreviousAffordances)) {
                             resultingAff.Add(spezsubaff);
                         }
                     }
@@ -800,7 +972,7 @@ namespace CalculationEngine.HouseholdElements {
         private bool NewIsAvailableAffordance([JetBrains.Annotations.NotNull] TimeStep timeStep,
                                               [JetBrains.Annotations.NotNull] ICalcAffordanceBase aff,
                                               AffordanceStatusClass? errors, bool checkForRelevance,
-                                              CalcSite? srcSite, bool ignoreAlreadyExecutedActivities)
+                                              CalcSite? srcSite, bool ignorePreviousAffordances)
         {
             if (_calcRepo.CalcParameters.TransportationEnabled) {
                 if (aff.Site != srcSite && !(aff is AffordanceBaseTransportDecorator)) {
@@ -809,7 +981,7 @@ namespace CalculationEngine.HouseholdElements {
                 }
             }
 
-            if (!ignoreAlreadyExecutedActivities && _previousAffordances.Contains(aff)) {
+            if (!ignorePreviousAffordances && _previousAffordances.Contains(aff)) {
                 if (errors != null) {
                     errors.Reasons.Add(new AffordanceStatusTuple(aff, "Just did this."));
                 }
@@ -838,31 +1010,30 @@ namespace CalculationEngine.HouseholdElements {
             return true;
         }
 
-        private int SetBusy([JetBrains.Annotations.NotNull] TimeStep time, [JetBrains.Annotations.NotNull] ICalcProfile personCalcProfile, [JetBrains.Annotations.NotNull] CalcLocation loc, [JetBrains.Annotations.NotNull] DayLightStatus isDaylight,
-                            bool needsLight)
+        /// <summary>
+        /// Mark this person as busy for an activity, according to the specified profile. Also activates ligthing
+        /// devices, if necessary.
+        /// </summary>
+        /// <param name="time">current timestep</param>
+        /// <param name="personCalcProfile">the profile specifying when the person should be marked as busy</param>
+        /// <param name="loc">location of the activity</param>
+        /// <param name="isDaylight">daylight info object</param>
+        /// <param name="needsLight">whether the activity requires light</param>
+        /// <exception cref="LPGException"></exception>
+        private void SetBusyAndActivateLighting([JetBrains.Annotations.NotNull] TimeStep time, [JetBrains.Annotations.NotNull] ICalcProfile personCalcProfile,
+            [JetBrains.Annotations.NotNull] CalcLocation loc, [JetBrains.Annotations.NotNull] DayLightStatus isDaylight, bool needsLight)
         {
-            if (_calcRepo.CalcParameters.IsSet(CalcOption.ThoughtsLogfile)) {
-                if (_calcRepo.Logfile.ThoughtsLogFile1 == null) {
-                    throw new LPGException("Logfile was null.");
-                }
+            // when this method is called, any remote activity must be over already
+            _isBusyForUnknownDuration = false;
 
-                _calcRepo.Logfile.ThoughtsLogFile1.WriteEntry(
-                    new ThoughtEntry(this, time,
-                        "Starting to execute " + personCalcProfile.Name + ", basis duration " +
-                        personCalcProfile.StepValues.Count +
-                        " time factor " + personCalcProfile.TimeFactor + ", total duration " +
-                        personCalcProfile.StepValues.Count),
-                    _calcPerson.HouseholdKey);
-            }
-
+            // initialize light profile
             var isLightActivationneeded = false;
-            //var stepvaluesCompressed = CalcProfile.CompressExpandDoubleArray(profile.StepValues, timeFactor);
             var lightprofile = new List<double>(personCalcProfile.StepValues.Count);
             for (var i = 0; i < personCalcProfile.StepValues.Count; i++) {
                 lightprofile.Add(0);
             }
-
-            for (var idx = 0; idx < personCalcProfile.StepValues.Count &&  idx+ time.InternalStep < _isBusy.Length; idx++) {
+            // mark person as busy and determine lighting profile for the activity
+            for (var idx = 0; idx < personCalcProfile.StepValues.Count && idx + time.InternalStep < _calcRepo.CalcParameters.InternalTimesteps; idx++) {
                 if (personCalcProfile.StepValues[idx] > 0) {
                     _isBusy[time.InternalStep + idx] = true;
                     if (!isDaylight.Status[time.InternalStep + idx] && needsLight) {
@@ -872,6 +1043,7 @@ namespace CalculationEngine.HouseholdElements {
                 }
             }
 
+            // activate all light devices at the location
             if (isLightActivationneeded) {
                 var cp = new CalcProfile(loc.Name + " - light", System.Guid.NewGuid().ToStrGuid(), lightprofile,  ProfileType.Relative,
                     "Synthetic for Light Device");
@@ -904,8 +1076,6 @@ namespace CalculationEngine.HouseholdElements {
                         _calcPerson.HouseholdKey);
                 }
             }
-
-            return personCalcProfile.StepValues.Count;
         }
 
         private class AffordanceStatusClass {

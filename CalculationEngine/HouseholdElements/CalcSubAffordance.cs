@@ -66,7 +66,7 @@ namespace CalculationEngine.HouseholdElements
 
         [NotNull] public readonly CalcAffordance ParentAffordance;
 
-        public override void Activate(TimeStep startTime, string activatorName, CalcLocation personSourceLocation, out ICalcProfile personTimeProfile)
+        public override void Activate(TimeStep startTime, string activatorName, CalcLocation personSourceLocation, out IAffordanceActivation personTimeProfile)
         {
             var endTime = startTime.AddSteps(personProfileDuration);
             ExecuteVariableOperations(startTime, endTime, endTime);

@@ -51,13 +51,15 @@ namespace CalculationEngine.HouseholdElements {
 
         public List<double> StepValues => _values;
 
-        //public string DataSource => "Synthethic calculated from Person Profile";
-
         public string Name { get; }
+
         public double TimeFactor { get; }
+
         public string DataSource { get; }
 
         public StrGuid Guid { get; }
+
+        public bool IsDetermined => true;
 
         #endregion
     }

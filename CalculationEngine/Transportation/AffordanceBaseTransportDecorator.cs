@@ -15,21 +15,25 @@ using Common.SQLResultLogging.Loggers;
 namespace CalculationEngine.Transportation {
     public class AffordanceBaseTransportDecorator : CalcBase, ICalcAffordanceBase {
         [JetBrains.Annotations.NotNull]
-        private readonly ICalcAffordanceBase _sourceAffordance;
+        public readonly ICalcAffordanceBase _sourceAffordance;
         private readonly TransportationHandler _transportationHandler;
         [JetBrains.Annotations.NotNull]
         private readonly HouseholdKey _householdkey;
 
         private readonly CalcRepo _calcRepo;
 
+        /// <summary>
+        /// General flag to decide whether dynamic simulation of travel times is done or
+        /// not. If not, static route calculation is used.
+        /// </summary>
+        public static readonly bool DynamicTransportSimulation = false;
+
+
         //TODO: fix the requirealldesires flag in the constructor
-        [SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields")]
-        //[CanBeNull]
-        //private CalcAffordanceBase _MainAffordance;
         public AffordanceBaseTransportDecorator([JetBrains.Annotations.NotNull] ICalcAffordanceBase sourceAffordance,
             [JetBrains.Annotations.NotNull] CalcSite site, [JetBrains.Annotations.NotNull] TransportationHandler transportationHandler,
-            [JetBrains.Annotations.NotNull] string name,   [JetBrains.Annotations.NotNull] HouseholdKey householdkey,
-                                                StrGuid guid, CalcRepo calcRepo)
+            [JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] HouseholdKey householdkey,
+            StrGuid guid, CalcRepo calcRepo)
             : base(name, guid)
         {
             if (!site.Locations.Contains(sourceAffordance.ParentLocation)) {
@@ -49,7 +53,7 @@ namespace CalculationEngine.Transportation {
         public CalcSite Site { get; }
 
         public void Activate(TimeStep startTime, string activatorName, CalcLocation personSourceLocation,
-            out ICalcProfile personTimeProfile)
+            out IAffordanceActivation activationInfo)
         {
             if (_myLastTimeEntry.TimeOfLastEvalulation != startTime) {
                 throw new LPGException("trying to activate without first checking if the affordance is busy is a bug. Please report.");
@@ -58,46 +62,89 @@ namespace CalculationEngine.Transportation {
             // get the route which was already determined in IsBusy and activate it
             CalcTravelRoute route = _myLastTimeEntry.PreviouslySelectedRoutes[personSourceLocation];
             int routeduration = route.Activate(startTime, activatorName, out var usedDeviceEvents, _transportationHandler.DeviceOwnerships);
+            // TODO: probably with full transport simulation, the route will not be activated here, but step by step in CalcPerson
 
             // log transportation info
+            string status;
             if (routeduration == 0) {
-                _calcRepo.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(startTime, _householdkey,
-                    "\tActivating " + Name + " at " + startTime + " with no transportation and moving from " + personSourceLocation + " to " + _sourceAffordance.ParentLocation.Name + " for affordance " + _sourceAffordance.Name));
+                status = "\tActivating " + Name + " at " + startTime + " with no transportation and moving from " + personSourceLocation 
+                    + " to " + _sourceAffordance.ParentLocation.Name + " for affordance " + _sourceAffordance.Name;
             }
             else {
-                _calcRepo.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(startTime, _householdkey,
-                    "\tActivating " + Name + " at " + startTime + " with a transportation duration of " + routeduration + " for moving from " + personSourceLocation + " to " + _sourceAffordance.ParentLocation.Name));
+                status = "\tActivating " + Name + " at " + startTime + " with a transportation duration of " + routeduration
+                    + " for moving from " + personSourceLocation + " to " + _sourceAffordance.ParentLocation.Name;
+            }
+            _calcRepo.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(startTime, _householdkey, status));
+
+
+            // check if a travel of dynamic duration will start
+            var profileGuid = System.Guid.NewGuid().ToStrGuid();
+            IAffordanceActivation? sourceActivation = null;
+            if (DynamicTransportSimulation && personSourceLocation.CalcSite != _sourceAffordance.Site)
+            {
+                // person has to travel to the target site with an unknown duration - cannot activate the source affordance yet
+                var activationName = "Dynamic Travel Profile for Route " + route.Name + " to affordance " + _sourceAffordance.Name;
+                activationInfo = new RemoteAffordanceActivation(activationName, _sourceAffordance.Name, startTime, route, personSourceLocation.CalcSite);
+                return;
             }
 
-            // activate the source affordance and create the person profile
+            // no dynamic travel is happening, so the affordance can now be activated in advance
             TimeStep affordanceStartTime = startTime.AddSteps(routeduration);
-            if (affordanceStartTime.InternalStep < _calcRepo.CalcParameters.InternalTimesteps) {
-                _sourceAffordance.Activate(affordanceStartTime, activatorName, personSourceLocation, out var sourcePersonProfile);
-                // create the travel profile and append the actual affordance profile
-                CalcProfile newPersonProfile = new CalcProfile(
-                    "Travel Profile for Route " + route.Name + " to affordance " + _sourceAffordance.Name,
-                    System.Guid.NewGuid().ToStrGuid(),
-                    CalcProfile.MakeListwithValue1AndCustomDuration(routeduration), ProfileType.Absolute,
-                    sourcePersonProfile.DataSource);
+            if (affordanceStartTime.InternalStep < _calcRepo.CalcParameters.InternalTimesteps)
+            {
+                // only activate the source affordance if the activation is still in the simulation time frame
+                _sourceAffordance.Activate(affordanceStartTime, activatorName, personSourceLocation, out sourceActivation);
+                if (!sourceActivation.IsDetermined)
+                {
+                    if (DynamicTransportSimulation)
+                    {
+                        // person must already be at the target site
+                        // affordance duration is unknown - do I still need to wrap into travel profile?
+                        throw new NotImplementedException("TODO: remote activity without travel not implemented yet.");
+                    }
+                    else
+                    {
+                        throw new LPGException("Remote affordances may only occur when dynamic transport is enabled.");
+                    }
+                }
+            }
+
+            int sourceAffDuration = -1;
+            // create the travel profile
+            var name = "Travel Profile for Route " + route.Name + " to affordance " + _sourceAffordance.Name;
+            var stepValues = CalcProfile.MakeListwithValue1AndCustomDuration(routeduration);
+            string dataSource = sourceActivation?.DataSource ?? _sourceAffordance.Name;
+            var newPersonProfile = new CalcProfile(name, profileGuid, stepValues, ProfileType.Absolute, dataSource);
+
+            if (sourceActivation is CalcProfile sourcePersonProfile)
+            {
+                // if the source affordance was activated and provided a profile, append it to the travel profile
                 newPersonProfile.AppendProfile(sourcePersonProfile);
-                personTimeProfile = newPersonProfile;
-                // log the transportation event
-                string usedDeviceNames = String.Join(", ", usedDeviceEvents.Select(x => x.Device.Name + "(" + x.DurationInSteps + ")"));
-                _calcRepo.OnlineLoggingData.AddTransportationEvent(_householdkey, activatorName, startTime, personSourceLocation.CalcSite?.Name ?? "",
-                    Site.Name, route.Name, usedDeviceNames, routeduration, sourcePersonProfile.StepValues.Count, _sourceAffordance.Name, usedDeviceEvents);
+                sourceAffDuration = sourcePersonProfile.StepValues.Count;
             }
-            else {
-                // this is if the simulation ends during a transport
-                personTimeProfile = new CalcProfile(
-                    "Travel Profile for Route " + route.Name + " to affordance " + _sourceAffordance.Name,
-                    System.Guid.NewGuid().ToStrGuid(),
-                    CalcProfile.MakeListwithValue1AndCustomDuration(routeduration),  ProfileType.Absolute,
-                    _sourceAffordance.Name);
-                // log the transportation event
-                string usedDeviceNames = String.Join(", ", usedDeviceEvents.Select(x => x.Device.Name + "(" + x.DurationInSteps + ")"));
-                _calcRepo.OnlineLoggingData.AddTransportationEvent(_householdkey, activatorName, startTime, personSourceLocation.CalcSite?.Name ?? "",
-                    Site.Name, route.Name, usedDeviceNames, routeduration, personTimeProfile.StepValues.Count, _sourceAffordance.Name,usedDeviceEvents);
-            }
+            activationInfo = newPersonProfile;
+
+            // log the transportation event
+            LogTransportationEvent(usedDeviceEvents, activatorName, startTime, personSourceLocation.CalcSite, route, routeduration, sourceAffDuration);
+        }
+
+        /// <summary>
+        /// Log a transportation event for an activation of this travel affordance.
+        /// </summary>
+        /// <param activationName="usedDeviceEvents">list of travel device use events</param>
+        /// <param activationName="activatorName">person activating the affordance</param>
+        /// <param activationName="startTime">start time step of the travel affordance</param>
+        /// <param activationName="sourceSite">the site the activating person was at before traveling</param>
+        /// <param activationName="route">the selected route</param>
+        /// <param activationName="duration">total duration of the travel</param>
+        /// <param activationName="sourceAffordanceDuration">duration of the source affordance</param>
+        public void LogTransportationEvent(List<CalcTravelRoute.CalcTravelDeviceUseEvent> usedDeviceEvents,
+            string activatorName, TimeStep startTime, CalcSite? sourceSite, CalcTravelRoute route, int duration,
+            int sourceAffordanceDuration)
+        {
+            string usedDeviceNames = string.Join(", ", usedDeviceEvents.Select(x => x.Device.Name + "(" + x.DurationInSteps + ")"));
+            _calcRepo.OnlineLoggingData.AddTransportationEvent(_householdkey, activatorName, startTime, sourceSite?.Name ?? "",
+                Site.Name, route.Name, usedDeviceNames, duration, sourceAffordanceDuration, _sourceAffordance.Name, usedDeviceEvents);
         }
 
         public string AffCategory => _sourceAffordance.AffCategory;
@@ -114,17 +161,12 @@ namespace CalculationEngine.Transportation {
 
         public List<DeviceEnergyProfileTuple> Energyprofiles => _sourceAffordance.Energyprofiles;
 
-        private class LastTimeEntry {
-            public LastTimeEntry([JetBrains.Annotations.NotNull] string personName, [JetBrains.Annotations.NotNull] TimeStep timeOfLastEvalulation)
-            {
-                PersonName = personName;
-                TimeOfLastEvalulation = timeOfLastEvalulation;
-            }
-
+        private class LastTimeEntry([JetBrains.Annotations.NotNull] string personName, [JetBrains.Annotations.NotNull] TimeStep timeOfLastEvalulation)
+        {
             [JetBrains.Annotations.NotNull]
-            public string PersonName { get; }
+            public string PersonName { get; } = personName;
             [JetBrains.Annotations.NotNull]
-            public TimeStep TimeOfLastEvalulation { get; }
+            public TimeStep TimeOfLastEvalulation { get; } = timeOfLastEvalulation;
             [JetBrains.Annotations.NotNull]
             public Dictionary<CalcLocation, CalcTravelRoute> PreviouslySelectedRoutes { get; } = [];
         }
@@ -165,7 +207,6 @@ namespace CalculationEngine.Transportation {
             }
 
             // determine the arrival time at the target location
-            // ReSharper disable once PossibleInvalidOperationException
             int? travelDurationN = route.GetDuration(time, calcPerson, _transportationHandler.AllMoveableDevices, _transportationHandler.DeviceOwnerships);
             if (travelDurationN == null) {
                 throw new LPGException("Bug: couldn't calculate travel duration for route.");
