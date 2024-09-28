@@ -46,14 +46,14 @@ using JetBrains.Annotations;
 
 namespace CalculationEngine.OnlineLogging {
     public interface ILogFile: IDisposable {
-        DesiresLogFile? DesiresLogfile { get; }
+        DesiresLogFile DesiresLogfile { get; }
 
         //HashSet<string> HouseholdKeys { get; }
         EnergyStorageLogfile? EnergyStorageLogfile { get; }
 
         //[JetBrains.Annotations.NotNull] FileFactoryAndTracker FileFactoryAndTracker { get; }
 
-        IThoughtsLogFile? ThoughtsLogFile1 { get; }
+        IThoughtsLogFile ThoughtsLogFile1 { get; }
 
         //ActionLogFile ActionLogFile { get; }
         //[CanBeNull]LocationsLogFile LocationsLogFile { get; }
@@ -399,7 +399,7 @@ namespace CalculationEngine.OnlineLogging {
             _energyStorageLogfile?.Dispose();
         }
 
-        public DesiresLogFile? DesiresLogfile => _desiresLogfile;
+        public DesiresLogFile DesiresLogfile => _desiresLogfile ?? throw new LPGException("Tried to access desires log file although it was not initialized");;
 
         public EnergyStorageLogfile? EnergyStorageLogfile => _energyStorageLogfile;
 
@@ -422,6 +422,7 @@ namespace CalculationEngine.OnlineLogging {
         //public HashSet<string> HouseholdKeys => _householdKeys;
 
         //[CanBeNull]public LocationsLogFile LocationsLogFile { get; private set; }
-        public IThoughtsLogFile? ThoughtsLogFile1 => _thoughtsLogFile;
+
+        public IThoughtsLogFile ThoughtsLogFile1 => _thoughtsLogFile ?? throw new LPGException("Tried to access thoughts log file although it was not initialized");
     }
 }

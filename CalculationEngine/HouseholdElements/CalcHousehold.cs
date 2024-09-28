@@ -323,8 +323,6 @@ namespace CalculationEngine.HouseholdElements {
 
         public List<CalcAutoDev>? AutoDevs => _autoDevs;
 
-        //public Dictionary<int, CalcProfile> AllProfiles => _allProfiles;
-
         public void Init(DayLightStatus daylightArray,
                          int simulationSeed)
         {
@@ -339,12 +337,7 @@ namespace CalculationEngine.HouseholdElements {
             }
 
             _calcRepo.FileFactoryAndTracker.RegisterHousehold(_householdKey, Name, HouseholdKeyType.Household,_description,null,null);
-            //_lf.TransportationLogFile.SetTransportationHandler(TransportationHandler);
             if (_calcRepo.CalcParameters.IsSet(CalcOption.DesiresLogfile)) {
-                if (_calcRepo.Logfile.DesiresLogfile == null) {
-                    throw new LPGException("Desires logfile was null");
-                }
-
                 foreach (var p in _persons) {
                     _calcRepo.Logfile.DesiresLogfile.RegisterDesires(p.PersonDesires.Desires.Values);
                     _calcRepo.Logfile.DesiresLogfile.RegisterDesires(p.SicknessDesires.Desires.Values);
@@ -382,12 +375,6 @@ namespace CalculationEngine.HouseholdElements {
             _startSimulation = DateTime.Now;
         }
 
-        /*
-        public void WriteInformation()
-        {
-            throw new NotImplementedException();
-        }
-        */
         public void RunOneStep(TimeStep timestep, DateTime now, bool runProcessing)
         {
             if (_locations == null) {

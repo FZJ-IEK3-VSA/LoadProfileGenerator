@@ -369,10 +369,6 @@ namespace CalculationEngine.HouseholdElements
             PersonDesires.CopyOtherDesires(SicknessDesires);
             _isCurrentlySick = false;
             if (_calcRepo.CalcParameters.IsSet(CalcOption.ThoughtsLogfile)) {
-                if (_calcRepo.Logfile.ThoughtsLogFile1 == null) {
-                    throw new LPGException("Logfile was null.");
-                }
-
                 _calcRepo.Logfile.ThoughtsLogFile1.WriteEntry(new ThoughtEntry(this, time, "I've just become healthy."),
                     _calcPerson.HouseholdKey);
             }
@@ -384,10 +380,6 @@ namespace CalculationEngine.HouseholdElements
             PersonDesires.CopyOtherDesires(_normalDesires);
             _isCurrentlySick = true;
             if (_calcRepo.CalcParameters.IsSet(CalcOption.ThoughtsLogfile)) {
-                if (_calcRepo.Logfile.ThoughtsLogFile1 == null) {
-                    throw new LPGException("Logfile was null.");
-                }
-
                 _calcRepo.Logfile.ThoughtsLogFile1.WriteEntry(new ThoughtEntry(this, time, "I've just become sick."),
                     _calcPerson.HouseholdKey);
             }
@@ -396,10 +388,6 @@ namespace CalculationEngine.HouseholdElements
         private void BeOnVacation([JetBrains.Annotations.NotNull] TimeStep time)
         {
             if (_calcRepo.CalcParameters.IsSet(CalcOption.ThoughtsLogfile)) {
-                if (_calcRepo.Logfile.ThoughtsLogFile1 == null) {
-                    throw new LPGException("Logfile was null.");
-                }
-
                 _calcRepo.Logfile.ThoughtsLogFile1.WriteEntry(new ThoughtEntry(this, time, "I'm on vacation."), _calcPerson.HouseholdKey);
             }
 
@@ -469,10 +457,6 @@ namespace CalculationEngine.HouseholdElements
 
                     // log the interruption
                     if (_calcRepo.CalcParameters.IsSet(CalcOption.ThoughtsLogfile)) {
-                        if (_calcRepo.Logfile.ThoughtsLogFile1 == null) {
-                            throw new LPGException("Logfile was null.");
-                        }
-
                         _calcRepo.Logfile.ThoughtsLogFile1.WriteEntry(
                             new ThoughtEntry(this, time,
                                 "Interrupting the previous affordance for " + bestAffordance.Name),
@@ -485,10 +469,6 @@ namespace CalculationEngine.HouseholdElements
 
             // log that the person is busy, including their current health state
             if (_calcRepo.CalcParameters.IsSet(CalcOption.ThoughtsLogfile)) {
-                if (_calcRepo.Logfile.ThoughtsLogFile1 == null) {
-                    throw new LPGException("Logfile was null.");
-                }
-
                 string healthState = _isCurrentlySick ? "sick" : "healthy";
                 _calcRepo.Logfile.ThoughtsLogFile1.WriteEntry(new ThoughtEntry(this, time, "I'm busy and " + healthState),
                         _calcPerson.HouseholdKey);
@@ -507,14 +487,8 @@ namespace CalculationEngine.HouseholdElements
             if (time == TimeToResetActionEntryAfterInterruption) {
                 // log that the interrupted affordance is now continued
                 if (_calcRepo.CalcParameters.IsSet(CalcOption.ThoughtsLogfile)) {
-                    if (_calcRepo.Logfile.ThoughtsLogFile1 == null) {
-                        throw new LPGException("Logfile was null.");
-                    }
-
-                    _calcRepo.Logfile.ThoughtsLogFile1.WriteEntry(
-                        new ThoughtEntry(this, time,
-                            "Back to " + _previousAffordancesWithEndTime[_previousAffordancesWithEndTime.Count - 2]),
-                        _calcPerson.HouseholdKey);
+                    var thought = "Back to " + _previousAffordancesWithEndTime[_previousAffordancesWithEndTime.Count - 2];
+                    _calcRepo.Logfile.ThoughtsLogFile1.WriteEntry(new ThoughtEntry(this, time, thought), _calcPerson.HouseholdKey);
                 }
 
                 // -2 to get the affordance before the interrupting one
@@ -529,10 +503,6 @@ namespace CalculationEngine.HouseholdElements
         private void WriteDesiresToLogfileIfNeeded([JetBrains.Annotations.NotNull] TimeStep time, [JetBrains.Annotations.NotNull] HouseholdKey householdKey)
         {
             if (_calcRepo.CalcParameters.IsSet(CalcOption.DesiresLogfile)) {
-                if (_calcRepo.Logfile.DesiresLogfile == null) {
-                    throw new LPGException("Logfile was null.");
-                }
-
                 if (!_isCurrentlySick) {
                     _calcRepo.Logfile.DesiresLogfile.WriteEntry(
                         new DesireEntry(this, time, PersonDesires, _calcRepo.Logfile.DesiresLogfile, _calcRepo.CalcParameters), householdKey);
@@ -580,20 +550,14 @@ namespace CalculationEngine.HouseholdElements
 
             // log all affordance names with their respective weight
             if (_calcRepo.CalcParameters.IsSet(CalcOption.ThoughtsLogfile)) {
-                if (_calcRepo.Logfile.ThoughtsLogFile1 == null) {
-                    throw new LPGException("Thoughtslogfile was null");
-                }
-
                 var bestaffnames = string.Empty;
                 foreach (var calcAffordance in bestaffordances)
                 {
                     bestaffnames = bestaffnames + calcAffordance.Name + "(" + calcAffordance.Weight + "), ";
                 }
 
-                _calcRepo.Logfile.ThoughtsLogFile1.WriteEntry(
-                    new ThoughtEntry(person, time,
-                        "Found " + bestaffordances.Count + " affordances with identical attractiveness:" +
-                        bestaffnames), householdKey);
+                var thought = "Found " + bestaffordances.Count + " affordances with identical attractiveness:" + bestaffnames;
+                _calcRepo.Logfile.ThoughtsLogFile1.WriteEntry(new ThoughtEntry(person, time, thought), householdKey);
             }
 
             if (selectedAff == null) {
@@ -632,9 +596,6 @@ namespace CalculationEngine.HouseholdElements
 
             // log which affordance was selected, if thoughts logs are enabled
             if (_calcRepo.CalcParameters.IsSet(CalcOption.ThoughtsLogfile)) {
-                if (_calcRepo.Logfile.ThoughtsLogFile1 == null) {
-                    throw new LPGException("Logfile was null.");
-                }
                 _calcRepo.Logfile.ThoughtsLogFile1.WriteEntry(new ThoughtEntry(this, currentTimeStep, "Action selected:" + bestaff),
                     _calcPerson.HouseholdKey);
             }
@@ -668,11 +629,6 @@ namespace CalculationEngine.HouseholdElements
                 // log affordance activation
                 if (_calcRepo.CalcParameters.IsSet(CalcOption.ThoughtsLogfile))
                 {
-                    if (_calcRepo.Logfile.ThoughtsLogFile1 == null)
-                    {
-                        throw new LPGException("Logfile was null.");
-                    }
-
                     string thought = "Starting to execute " + activationInfo.Name + ", basis duration " + personProfile.StepValues.Count + " time factor "
                         + personProfile.TimeFactor + ", total duration " + personProfile.StepValues.Count;
                     _calcRepo.Logfile.ThoughtsLogFile1.WriteEntry(new ThoughtEntry(this, currentTimeStep, thought), _calcPerson.HouseholdKey);
@@ -837,13 +793,8 @@ namespace CalculationEngine.HouseholdElements
                 
                 // log the desire difference that will occur if this affordance is activated
                 if (_calcRepo.CalcParameters.IsSet(CalcOption.ThoughtsLogfile)) {
-                    if (_calcRepo.Logfile.ThoughtsLogFile1 == null) {
-                        throw new LPGException("Logfile was null.");
-                    }
-                    var thought = new ThoughtEntry(this, time,
-                            "Desirediff for " + affordance.Name + " is :" +
-                            desireDiff.ToString("#,##0.0", Config.CultureInfo) + " In detail: " + thoughtstring);
-                    _calcRepo.Logfile.ThoughtsLogFile1.WriteEntry(thought, _calcPerson.HouseholdKey);
+                    var thought =  "Desirediff for " + affordance.Name + " is :" + desireDiff.ToString("#,##0.0", Config.CultureInfo) + " In detail: " + thoughtstring;
+                    _calcRepo.Logfile.ThoughtsLogFile1.WriteEntry(new ThoughtEntry(this, time, thought), _calcPerson.HouseholdKey);
                 }
 
                 if (desireDiff < bestdiff) {
@@ -1059,22 +1010,8 @@ namespace CalculationEngine.HouseholdElements
 
             // log the light
             if ( _calcRepo.CalcParameters.IsSet(CalcOption.ThoughtsLogfile)) {
-                if (isLightActivationneeded) {
-                    if (_calcRepo.Logfile.ThoughtsLogFile1 == null) {
-                        throw new LPGException("Logfile was null.");
-                    }
-
-                    _calcRepo.Logfile.ThoughtsLogFile1.WriteEntry(
-                        new ThoughtEntry(this, time, "Turning on the light for " + loc.Name), _calcPerson.HouseholdKey);
-                }
-                else {
-                    if (_calcRepo.Logfile.ThoughtsLogFile1 == null) {
-                        throw new LPGException("Logfile was null.");
-                    }
-
-                    _calcRepo.Logfile.ThoughtsLogFile1.WriteEntry(new ThoughtEntry(this, time, "No light needed for " + loc.Name),
-                        _calcPerson.HouseholdKey);
-                }
+                string message = isLightActivationneeded ? "Turning on the light for " : "No light needed for ";
+                _calcRepo.Logfile.ThoughtsLogFile1.WriteEntry(new ThoughtEntry(this, time, message + loc.Name), _calcPerson.HouseholdKey);
             }
         }
 
