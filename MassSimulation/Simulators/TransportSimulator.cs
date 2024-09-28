@@ -32,7 +32,7 @@ namespace MassSimulation.Simulators
 
         private void UpdateRemainingTravelDistance(AgentTravelState state)
         {
-            // TODO: update depending on the number of travelling agents
+            // TODO: update depending on the number of traveling agents
             state.remainingTravelDistance--;
         }
 

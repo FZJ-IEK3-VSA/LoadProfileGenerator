@@ -54,7 +54,7 @@ namespace CalculationEngine.Transportation {
         /// <param name="srcLocation">source location for the route (only the site is relevant)</param>
         /// <param name="dstSite">destination site for the route</param>
         /// <param name="startTimeStep">time step in which to start the trip</param>
-        /// <param name="person">the travelling person</param>
+        /// <param name="person">the traveling person</param>
         /// <param name="affordance">the affordance for which the person wants to travel</param>
         /// <param name="calcRepo">the CalcRepo instance</param>
         /// <returns>the chosen route, or null if no available route was found</returns>
