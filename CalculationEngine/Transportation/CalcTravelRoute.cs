@@ -48,8 +48,6 @@ namespace CalculationEngine.Transportation
             _locationUnlimitedDevices = locationUnlimitedDevices;
         }
 
-        //TODO: Time limit
-
         public int MinimumAge { get; }
         public int MaximumAge { get; }
         public Common.Enums.PermittedGender Gender { get; }
@@ -65,18 +63,12 @@ namespace CalculationEngine.Transportation
         [ItemNotNull]
         private List<CalcTravelRouteStep> Steps { get; } = new List<CalcTravelRouteStep>();
 
-        public class CalcTravelDeviceUseEvent {
-            public CalcTravelDeviceUseEvent([NotNull] CalcTransportationDevice device, int durationInSteps, double totalDistance)
-            {
-                Device = device;
-                DurationInSteps = durationInSteps;
-                TotalDistance = totalDistance;
-            }
-
+        public class CalcTravelDeviceUseEvent([NotNull] CalcTransportationDevice device, int durationInSteps, double totalDistance)
+        {
             [NotNull]
-            public CalcTransportationDevice Device { get; }
-            public int DurationInSteps { get; }
-            public double TotalDistance { get;  }
+            public CalcTransportationDevice Device { get; } = device;
+            public int DurationInSteps { get; } = durationInSteps;
+            public double TotalDistance { get; } = totalDistance;
 
             [NotNull]
             public override string ToString()
@@ -84,6 +76,7 @@ namespace CalculationEngine.Transportation
                 return Device.Name + " (" + DurationInSteps + " steps)";
             }
         }
+
         public int Activate([NotNull] TimeStep currentTimeStep, [NotNull] string calcPersonName,
                             [NotNull][ItemNotNull] out List<CalcTravelDeviceUseEvent> usedDeviceEvents,
                             [NotNull] DeviceOwnershipMapping<string, CalcTransportationDevice> deviceOwnerships)
@@ -92,48 +85,40 @@ namespace CalculationEngine.Transportation
                 throw new LPGException("Device was not previously picked?");
             }
 
-            if (currentTimeStep.InternalStep == 14095) {
-                Logger.Info("timestep 14095");
-            }
-
-            //_mypicks = new PreviouslyPickedDevices(calcPersonName, currentTimeStep);
-            int totalDuration = 0;
-            //int slidingTimeStep = currentTimeStep;
+            // log the activation of this route
             _calcRepo.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(
-                currentTimeStep,
-                _householdkey, "\tActivating " + Name));
+                currentTimeStep, _householdkey, "\tActivating " + Name));
             usedDeviceEvents = new List<CalcTravelDeviceUseEvent>();
-
+            
+            // calculate the total duration of the route
+            int totalDuration = 0;
             foreach (CalcTravelRouteStep step in Steps) {
                 int pickedDuration = _mypicks.PickedDurations[step];
                 totalDuration += pickedDuration;
             }
 
-            TimeStep transportationEventEndTimestep = currentTimeStep.AddSteps( totalDuration);
+            // activate each step separately
+            TimeStep transportationEventEndTimestep = currentTimeStep.AddSteps(totalDuration);
             TimeStep timeStepOfThisStep = currentTimeStep;
-
             foreach (CalcTravelRouteStep step in Steps) {
+                // obtain ownership for devices such as cars
                 var device = _mypicks.PickedDevices[step];
                 if (device.Category.IsLimitedToSingleLocation)
                 {
                     deviceOwnerships.TrySetOwnership(calcPersonName, device);
                 }
+                // log the transportation status and activate the step
                 int pickedDuration = _mypicks.PickedDurations[step];
-                usedDeviceEvents.Add(new CalcTravelDeviceUseEvent(device, pickedDuration,step.DistanceOfStepInM));
-                //step.CalculateDurationInTimestepsAndPickDevice(slidingTimeStep, out CalcTransportationDevice pickedDevice,
-                //out int durationForPickedDeviceInTimesteps, SiteA, _vehiclePool, _locationUnlimitedDevices, rnd);
-                _calcRepo.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(
-                    currentTimeStep,
-                    _householdkey,
-                    "\tActiviating step " + step.Name + " Device " + device.Name + " Distance: "
-                    + step.DistanceOfStepInM + " Step Duration: " + pickedDuration));
-                //slidingTimeStep += pickedDuration;
-                //_mypicks.PickedDevices.Add(step, pickedDevice);
+                usedDeviceEvents.Add(new CalcTravelDeviceUseEvent(device, pickedDuration, step.DistanceOfStepInM));
+                string status = "\tActiviating step " + step.Name + " Device " + device.Name + " Distance: "
+                    + step.DistanceOfStepInM + " Step Duration: " + pickedDuration;
+                _calcRepo.OnlineLoggingData.AddTransportationStatus(new TransportationStatus( currentTimeStep, _householdkey, status));
                 step.ActivateStep(timeStepOfThisStep, device, pickedDuration,
-                    SiteA, SiteB, Name,calcPersonName,currentTimeStep,
+                    SiteA, SiteB, Name, calcPersonName, currentTimeStep,
                     transportationEventEndTimestep);
                 timeStepOfThisStep = timeStepOfThisStep.AddSteps( pickedDuration);
             }
+            // cache the total route duration
             _mypicks.PreviouslyCalculatedTimeSteps = totalDuration;
             return totalDuration;
         }
@@ -147,15 +132,27 @@ namespace CalculationEngine.Transportation
             Steps.Add(trs);
         }
 
+        /// <summary>
+        /// Checks if a route can be activated in the specified timestep, by the specified person. If activation
+        /// is possible, the duration of the route is returned. Any device picks and step durations are cached.
+        /// </summary>
+        /// <param name="currentTimeStep">the time step for checking route activation</param>
+        /// <param name="person">the person that wants to travel</param>
+        /// <param name="allTransportationDevices">list of all transport devices</param>
+        /// <param name="deviceOwnerships">device ownership mapping</param>
+        /// <returns>the total travel duration, or null if activation is not possible</returns>
+        /// <exception cref="LPGException"></exception>
         [CanBeNull]
         public int? GetDuration([NotNull] TimeStep currentTimeStep, [NotNull] CalcPersonDto person,
                                 [ItemNotNull] [NotNull] List<CalcTransportationDevice> allTransportationDevices,
                                 [NotNull] DeviceOwnershipMapping<string, CalcTransportationDevice> deviceOwnerships)
         {
+            // check if the duration is already cached
             if (_mypicks.Timestep == currentTimeStep && _mypicks.CalcPersonName == person.Name) {
                 return _mypicks.PreviouslyCalculatedTimeSteps;
             }
 
+            // check each step separately and get its duration
             var picks = new PreviouslyPickedDevices(person.Name, currentTimeStep);
             int totalDuration = 0;
             TimeStep slidingTimeStep = currentTimeStep;
@@ -171,26 +168,26 @@ namespace CalculationEngine.Transportation
                     return null;
                 }
 
+                // double check whether the step is valid
                 if(pickedDevice?.Category != step.TransportationDeviceCategory) {
                     throw new LPGException("Invalid device was picked.");
                 }
-
                 if(durationForPickedDeviceInTimesteps == null) {
                     throw new LPGException("Failed Travel duration calculation!");
                 }
 
-                slidingTimeStep = slidingTimeStep.AddSteps( (int)durationForPickedDeviceInTimesteps);
-                totalDuration += (int)durationForPickedDeviceInTimesteps;
+                int routeStepDuration = durationForPickedDeviceInTimesteps.Value;
+                slidingTimeStep = slidingTimeStep.AddSteps(routeStepDuration);
+                totalDuration += routeStepDuration;
                 picks.PickedDevices.Add(step, pickedDevice);
-                picks.PickedDurations.Add(step,(int) durationForPickedDeviceInTimesteps);
+                picks.PickedDurations.Add(step, routeStepDuration);
             }
 
+            // cache the total route duration
             picks.PreviouslyCalculatedTimeSteps = totalDuration;
             _mypicks = picks;
-            _calcRepo.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(
-                currentTimeStep,
-                _householdkey,
-                "\t\t\tCalculated a duration for the route of " + totalDuration));
+            _calcRepo.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(currentTimeStep,
+                _householdkey, "\t\t\tCalculated a duration for the route of " + totalDuration));
             return totalDuration;
         }
 
@@ -198,8 +195,7 @@ namespace CalculationEngine.Transportation
             [NotNull] CalcPersonDto person, [NotNull] DeviceOwnershipMapping<string, CalcTransportationDevice> deviceOwnerships)
         {
             if (SiteA == srcSite && dstSite == SiteB) {
-                List<CalcTransportationDeviceCategory> neededCategories =
-                    CollectNeededCalcTransportationDeviceCategory();
+                var neededCategories = CollectNeededCalcTransportationDeviceCategory();
                 if (neededCategories.Count == 0) {
                     return true;
                 }
@@ -235,27 +231,20 @@ namespace CalculationEngine.Transportation
             return dev;
         }
 
-        private class PreviouslyPickedDevices {
-            public PreviouslyPickedDevices([NotNull] string calcPersonName, [NotNull] TimeStep timestep)
-            {
-                CalcPersonName = calcPersonName;
-                Timestep = timestep;
-            }
+        private class PreviouslyPickedDevices([NotNull] string calcPersonName, [NotNull] TimeStep timestep)
+        {
+            [NotNull]
+            public string CalcPersonName { get; } = calcPersonName;
 
             [NotNull]
-            public string CalcPersonName { get; }
+            public Dictionary<CalcTravelRouteStep, CalcTransportationDevice> PickedDevices { get; } = [];
 
             [NotNull]
-            public Dictionary<CalcTravelRouteStep, CalcTransportationDevice> PickedDevices { get; } =
-                new Dictionary<CalcTravelRouteStep, CalcTransportationDevice>();
-
-            [NotNull]
-            public Dictionary<CalcTravelRouteStep, int> PickedDurations { get; } =
-                new Dictionary<CalcTravelRouteStep, int>();
+            public Dictionary<CalcTravelRouteStep, int> PickedDurations { get; } = [];
 
             public int PreviouslyCalculatedTimeSteps { get; set; } = -1;
             [NotNull]
-            public TimeStep Timestep { get; }
+            public TimeStep Timestep { get; } = timestep;
         }
     }
 }
