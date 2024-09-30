@@ -125,23 +125,6 @@ namespace MassSimulation
             }
         }
 
-        private void FinishSimulation()
-        {
-            lpgSimulator.FinishSimulation();
-            transportSimulator?.FinishSimulation();
-
-            foreach (var simulator in poiSimulators)
-            {
-                simulator.FinishSimulation();
-            }
-
-            if (rank == 0)
-            {
-                // remove unneeded files and subdirectories
-                SimulationEngineLib.HouseJobProcessor.JsonCalculator.CleanUpResultDirectory(scenario!.CalcSpecification);
-            }
-        }
-
         public MPIDistributor SimulateOneStep(TimeStep timestep, DateTime simulationTime, SortedMessageCollection activityMessages)
         {
             // run household simulators first and get newly started remote newTravels
@@ -169,6 +152,22 @@ namespace MassSimulation
             return messageCollector;
         }
 
+        private void FinishSimulation()
+        {
+            lpgSimulator.FinishSimulation();
+            transportSimulator?.FinishSimulation();
+
+            foreach (var simulator in poiSimulators)
+            {
+                simulator.FinishSimulation();
+            }
+
+            if (rank == 0)
+            {
+                // remove unneeded files and subdirectories
+                SimulationEngineLib.HouseJobProcessor.JsonCalculator.CleanUpResultDirectory(scenario!.CalcSpecification);
+            }
+        }
 
         private void CollectResults(List<PersonIdentifier> agents)
         {
