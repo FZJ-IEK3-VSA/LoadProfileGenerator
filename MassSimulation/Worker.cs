@@ -51,10 +51,12 @@ namespace MassSimulation
             logger.Info("Starting mass simulation with " + numWorkers + " workers.");
 
             InitSimulation(houseJobFile, numAgents);
+            logger.Info("Finished initialization");
 
             Stopwatch watch = Stopwatch.StartNew();
             RunSimulation();
             watch.Stop();
+            logger.Info("Finished simulation");
 
             FinishSimulation();
 

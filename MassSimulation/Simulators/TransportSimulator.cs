@@ -17,11 +17,6 @@ namespace MassSimulation.Simulators
     {
         private List<AgentTravelState> travelStates = [];
 
-        public void FinishSimulation()
-        {
-            throw new NotImplementedException();
-        }
-
         public IEnumerable<RemoteActivityFinished> SimulateOneStep(TimeStep timeStep, DateTime dateTime, IEnumerable<RemoteActivityStart> newActivities)
         {
             // TODO: dummy implementation
@@ -61,6 +56,10 @@ namespace MassSimulation.Simulators
         private double DetermineTravelDistance(PersonIdentifier agent)
         {
             return 100;
+        }
+
+        public void FinishSimulation()
+        {
         }
     }
 }

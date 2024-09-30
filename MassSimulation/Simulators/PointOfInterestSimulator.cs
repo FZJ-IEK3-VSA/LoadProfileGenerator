@@ -18,19 +18,13 @@ namespace MassSimulation.Simulators
 
         public PointOfInterestId PoiId => throw new NotImplementedException();
 
-        public void FinishSimulation()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<RemoteActivityInfo> SimulateOneStep(TimeStep timeStep, DateTime dateTime)
-        {
-            throw new NotImplementedException();
-        }
-
         public IEnumerable<RemoteActivityFinished> SimulateOneStep(TimeStep timeStep, DateTime dateTime, IEnumerable<RemoteActivityStart> newActivities)
         {
             throw new NotImplementedException();
+        }
+
+        public void FinishSimulation()
+        {
         }
     }
 }
