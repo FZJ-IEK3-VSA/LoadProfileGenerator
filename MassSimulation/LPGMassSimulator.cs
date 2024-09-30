@@ -4,6 +4,7 @@ using CalcPostProcessor;
 using CalculationController.CalcFactories;
 using CalculationController.Queue;
 using CalculationEngine;
+using CalculationEngine.CitySimulation;
 using ChartCreator2;
 using ChartCreator2.OxyCharts;
 using Common;
@@ -23,7 +24,7 @@ namespace MassSimulation
     /// <summary>
     /// A class that simulates multiple LPG households simultaneously.
     /// </summary>
-    internal class LPGMassSimulator : ISimulator
+    internal class LPGMassSimulator
     {
         private int rank;
         private Simulator sim;
@@ -76,13 +77,24 @@ namespace MassSimulation
             CalcManager.StartRunning();
         }
 
-        public void SimulateOneStep(TimeStep timeStep, DateTime dateTime)
+        public IEnumerable<RemoteActivityInfo> SimulateOneStep(TimeStep timeStep, DateTime dateTime,
+            Dictionary<string, Dictionary<HouseholdKey, Dictionary<string, RemoteActivityFinished>>> finishedActivities)
         {
+            var newRemoteActivities = new List<RemoteActivityInfo>();
             try
             {
+                // simulate each target for one timestep
                 foreach (var target in simulationTargets)
                 {
-                    target.CalcManager.RunOneStep(timeStep, dateTime);
+                    var newActivities = target.CalcManager.RunOneStep(timeStep, dateTime, finishedActivities.GetValueOrDefault(target.Id, []));
+                    // collect all new activity messages and add a simulation-wide unique PersonIdentifier
+                    foreach (var pair in newActivities)
+                    {
+                        var hhPersonId = pair.Key;
+                        var id = new PersonIdentifier(hhPersonId.PersonName, hhPersonId.HouseholdKey, target.Id, rank);
+                        var item = new RemoteActivityInfo(id, pair.Value);
+                        newRemoteActivities.Add(item);
+                    }
                 }
             }
             catch (Exception ex)
@@ -90,6 +102,7 @@ namespace MassSimulation
                 Logger.Error("Exception occurred in timestep " + timeStep.ToString() + ":\n" + ex.ToString());
                 throw;
             }
+            return newRemoteActivities;
         }
 
         public void FinishSimulation()

@@ -1,4 +1,5 @@
-﻿using Common;
+﻿using CalculationEngine.CitySimulation;
+using Common;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -21,13 +22,15 @@ namespace MassSimulation.Simulators
             throw new NotImplementedException();
         }
 
-        public void SimulateOneStep(TimeStep timeStep, DateTime dateTime)
+        public IEnumerable<RemoteActivityFinished> SimulateOneStep(TimeStep timeStep, DateTime dateTime, IEnumerable<RemoteActivityStart> newActivities)
         {
+            // TODO: dummy implementation
             foreach (var state in travelStates)
             {
                 // update travel progress
                 UpdateRemainingTravelDistance(state);
             }
+            return [];
         }
 
         private void UpdateRemainingTravelDistance(AgentTravelState state)
@@ -36,7 +39,7 @@ namespace MassSimulation.Simulators
             state.remainingTravelDistance--;
         }
 
-        public void AddAgents(IEnumerable<AgentInfo> newAgents)
+        public void AddAgents(IEnumerable<PersonIdentifier> newAgents)
         {
             foreach (var agent in newAgents)
             {
@@ -45,7 +48,7 @@ namespace MassSimulation.Simulators
             }
         }
 
-        public IEnumerable<AgentInfo> GetArrivedAgents()
+        public IEnumerable<PersonIdentifier> GetArrivedAgents()
         {
             var arrived = travelStates.Where(t => t.remainingTravelDistance <= 0);
             foreach (var agentState in arrived)
@@ -55,7 +58,7 @@ namespace MassSimulation.Simulators
             return arrived.Select(t => t.Agent);
         }
 
-        private double DetermineTravelDistance(AgentInfo agent)
+        private double DetermineTravelDistance(PersonIdentifier agent)
         {
             return 100;
         }

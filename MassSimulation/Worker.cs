@@ -1,6 +1,6 @@
 ﻿using Automation;
 using Automation.ResultFiles;
-using CalculationEngine.HouseholdElements;
+using CalculationEngine.CitySimulation;
 using Common;
 using Common.JSON;
 using MassSimulation.Simulators;
@@ -19,16 +19,18 @@ namespace MassSimulation
     /// </summary>
     internal class Worker
     {
-        Intracommunicator comm;
-        int rank;
-        int numWorkers;
-        string workerName;
+        private readonly Intracommunicator comm;
+        private readonly int rank;
+        private readonly int numWorkers;
+        private readonly string workerName;
 
-        private List<ISimulator> simulators = [];
-        private TransportSimulator transportSimulator;
-        private CalcParameters? calcParameters = null;
+        private LPGMassSimulator lpgSimulator;
+        private List<PointOfInterestSimulator> poiSimulators = [];
+        private TransportSimulator? transportSimulator;
+        private PointOfInterestRegister poiRegister;
+        private CalcParameters? calcParameters;
         private MPILogger logger;
-        private Scenario? scenario = null;
+        private Scenario? scenario;
 
         public Worker(Intracommunicator comm)
         {
@@ -36,6 +38,8 @@ namespace MassSimulation
             rank = comm.Rank;
             numWorkers = comm.Size;
             workerName = MPI.Environment.ProcessorName;
+
+            poiRegister = new(numWorkers);
             logger = new MPILogger(true, rank);
         }
 
@@ -46,11 +50,9 @@ namespace MassSimulation
 
             logger.Info("Starting mass simulation with " + numWorkers + " workers.");
 
-            Stopwatch watch = Stopwatch.StartNew();
             InitSimulation(houseJobFile, numAgents);
 
-
-            // main simulation loop
+            Stopwatch watch = Stopwatch.StartNew();
             RunSimulation();
             watch.Stop();
 
@@ -88,35 +90,34 @@ namespace MassSimulation
             // distribute simulation targets
             ScenarioPart partForThisWorker = comm.Scatter(scenarioParts, 0);
 
-            LPGMassSimulator lpgSimulator = new(rank, partForThisWorker);
-            simulators.Add(lpgSimulator);
+            lpgSimulator = new(rank, partForThisWorker);
             calcParameters = lpgSimulator.CalcParameters;
+
+            lpgSimulator.Init();
+
+            // TODO: init PointOfInterestSimulators
         }
 
         private void RunSimulation()
         {
-            if (calcParameters == null)
+            if (calcParameters is null)
             {
                 throw new LPGException("CalcParameters are not set");
             }
+            // define iteration variables
             var simulationTime = calcParameters.InternalStartTime;
             var timestep = new TimeStep(0, calcParameters);
+            // initialize the variable for storing exchanged messages across iterations, starting with no messages
+            SortedMessageCollection activityMessages = new([], [], []);
 
+            // main simulation loop
             while (simulationTime < calcParameters.InternalEndTime)
             {
-                SimulateOneStep(timestep, simulationTime);
+                // run all simulators for one timestep
+                var messageDistributor = SimulateOneStep(timestep, simulationTime, activityMessages);
 
-                transportSimulator.SimulateOneStep(timestep, simulationTime);
-
-                //var agentsByNewLocation = GetNextWorkerForAgents(rank, numWorkers, calcObjectReferences);
-
-                // move agents to respective target worker
-                //var arrivingAgents = comm.Alltoall(agentsByNewLocation);
-                // reset list of local agents
-                //calcObjectReferences = arrivingAgents.SelectMany(x => x).ToList();
-
-                // TODO: this barrier simulates agent exchange
-                comm.Barrier();
+                // exchange messages via MPI; this calls MPI.AllToAll
+                activityMessages = messageDistributor.DistributeMessages(comm);
 
                 // increment timestep
                 simulationTime += calcParameters.InternalStepsize;
@@ -126,7 +127,10 @@ namespace MassSimulation
 
         private void FinishSimulation()
         {
-            foreach (var simulator in simulators)
+            lpgSimulator.FinishSimulation();
+            transportSimulator?.FinishSimulation();
+
+            foreach (var simulator in poiSimulators)
             {
                 simulator.FinishSimulation();
             }
@@ -138,42 +142,35 @@ namespace MassSimulation
             }
         }
 
-        public void SimulateOneStep(TimeStep timeStep, DateTime simulationTime)
+        public MPIDistributor SimulateOneStep(TimeStep timestep, DateTime simulationTime, SortedMessageCollection activityMessages)
         {
-            foreach (var simulator in simulators)
-            {
-                // TODO: collect agents that start traveling
-                simulator.SimulateOneStep(timeStep, simulationTime);
-            }
-        }
+            // run household simulators first and get newly started remote newTravels
+            var remoteTravelsAndActivities = lpgSimulator.SimulateOneStep(timestep, simulationTime, activityMessages.finishedActivities);
 
-        public List<AgentInfo>[] GetNextWorkerForAgents(int rank, int numWorkers, List<AgentInfo> agents)
-        {
-            List<AgentInfo>[] agentsByWorker = new List<AgentInfo>[numWorkers];
-            for (int i = 0; i < numWorkers; i++)
-            {
-                agentsByWorker[i] = new List<AgentInfo>();
-            }
-            foreach (AgentInfo agent in agents)
-            {
-                // Determine if agent moves, and where
-                if (Utils.random.NextDouble() > 0.8)
-                {
-                    int target = Utils.random.Next(numWorkers);
+            // sort new activity messages by target worker
+            var messageCollector = poiRegister.SortActivityMessagesByWorker(remoteTravelsAndActivities);
+            // remark: for consistency, these messages are only distributed after this timestep is finished
 
-                    agentsByWorker[target].Add(agent);
-                }
-                else
-                {
-                    // agent stays on this worker
-                    agentsByWorker[rank].Add(agent);
-                }
+            // run transport simulation only on the main worker
+            if (transportSimulator is not null)
+            {
+                var finishedTravels = transportSimulator.SimulateOneStep(timestep, simulationTime, activityMessages.NewTravelActivities);
+                messageCollector.AddFinishedActivities(finishedTravels);
             }
-            return agentsByWorker;
+
+            // run POI simulators
+            Dictionary<PointOfInterestId, IEnumerable<RemoteActivityStart>> newActivities = [];
+            foreach (var simulator in poiSimulators)
+            {
+                var relevantActivities = activityMessages.NewPoiActivities.GetValueOrDefault(simulator.PoiId, []);
+                var finishedActivities = simulator.SimulateOneStep(timestep, simulationTime, relevantActivities);
+                messageCollector.AddFinishedActivities(finishedActivities);
+            }
+            return messageCollector;
         }
 
 
-        private void CollectResults(List<AgentInfo> agents)
+        private void CollectResults(List<PersonIdentifier> agents)
         {
             // collect all agents
             int[] agentCounts = comm.Gather(agents.Count, 0);
@@ -186,14 +183,6 @@ namespace MassSimulation
             if (rank == 0)
             {
                 //ProcessResults(allAgents);
-            }
-        }
-
-        public static void ProcessResults(IEnumerable<AgentInfo> allAgents)
-        {
-            foreach (var agent in allAgents)
-            {
-                Console.WriteLine(agent.Name + " - " + agent.Log);
             }
         }
     }

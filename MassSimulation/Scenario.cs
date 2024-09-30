@@ -93,22 +93,5 @@ namespace MassSimulation
             var parts = referencesSublists.Select(sublist => new ScenarioPart(DatabasePath, sublist.ToList(), CalcSpecification));
             return parts.ToArray();
         }
-
-        public static AgentInfo[] CreateAgentPopulation(int size)
-        {
-            // initialize the agents
-            var allAgents = new AgentInfo[size];
-            for (int i = 0; i < size; i++)
-            {
-                allAgents[i] = CreateAgent(i);
-            }
-            return allAgents;
-        }
-
-        public static AgentInfo CreateAgent(int id)
-        {
-            var content = Utils.RandomString(1024 * 10);
-            return new AgentInfo(id, "Bob" + id, content);
-        }
     }
 }
