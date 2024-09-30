@@ -2,15 +2,9 @@
 
 namespace MassSimulation
 {
-    internal class AgentTravelState
+    internal class AgentTravelState(RemoteActivityStart travelActivity, double travelDistance)
     {
-        public readonly PersonIdentifier Agent;
-        public double remainingTravelDistance { get; set; }
-
-        public AgentTravelState(PersonIdentifier agent, double travelDistance)
-        {
-            this.Agent = agent;
-            this.remainingTravelDistance = travelDistance;
-        }
+        public readonly RemoteActivityStart ActivityInfo = travelActivity;
+        public double RemainingTravelDistance { get; set; } = travelDistance;
     }
 }

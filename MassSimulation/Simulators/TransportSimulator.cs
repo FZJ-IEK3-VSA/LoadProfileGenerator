@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,43 +20,45 @@ namespace MassSimulation.Simulators
 
         public IEnumerable<RemoteActivityFinished> SimulateOneStep(TimeStep timeStep, DateTime dateTime, IEnumerable<RemoteActivityStart> newActivities)
         {
+            AddNewTravelers(newActivities);
+
             // TODO: dummy implementation
             foreach (var state in travelStates)
             {
                 // update travel progress
                 UpdateRemainingTravelDistance(state);
             }
-            return [];
+
+            return GetArrivingAgents();
         }
 
         private void UpdateRemainingTravelDistance(AgentTravelState state)
         {
             // TODO: update depending on the number of traveling agents
-            state.remainingTravelDistance--;
+            state.RemainingTravelDistance--;
         }
 
-        public void AddAgents(IEnumerable<PersonIdentifier> newAgents)
+        public void AddNewTravelers(IEnumerable<RemoteActivityStart> newTravelActivities)
         {
-            foreach (var agent in newAgents)
+            foreach (var travelActivity in newTravelActivities)
             {
-                double distance = DetermineTravelDistance(agent);
-                travelStates.Add(new AgentTravelState(agent, distance));
+                Debug.Assert(travelActivity.IsTravel, "TransportSimulator received a non-travel activity.");
+
+                // TODO: dummy value; here, all travel route steps should be started succesively
+                double distance = 10;
+
+                travelStates.Add(new AgentTravelState(travelActivity, distance));
             }
         }
 
-        public IEnumerable<PersonIdentifier> GetArrivedAgents()
+        public IEnumerable<RemoteActivityFinished> GetArrivingAgents()
         {
-            var arrived = travelStates.Where(t => t.remainingTravelDistance <= 0);
-            foreach (var agentState in arrived)
+            var arrived = travelStates.Where(t => t.RemainingTravelDistance <= 0);
+            foreach (var travelState in arrived)
             {
-                travelStates.Remove(agentState);
+                travelStates.Remove(travelState);
             }
-            return arrived.Select(t => t.Agent);
-        }
-
-        private double DetermineTravelDistance(PersonIdentifier agent)
-        {
-            return 100;
+            return arrived.Select(t => new RemoteActivityFinished(t.ActivityInfo.Person));
         }
 
         public void FinishSimulation()
