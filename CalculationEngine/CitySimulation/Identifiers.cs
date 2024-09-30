@@ -3,6 +3,18 @@
 namespace CalculationEngine.CitySimulation
 {
     /// <summary>
+    /// A class for identifying a person in a house by combining a household key
+    /// with a person name.
+    /// </summary>
+    /// <param name="householdKey">unique household identifier</param>
+    /// <param name="personName">person name</param>
+    public class PersonAndHHKey(HouseholdKey householdKey, string personName)
+    {
+        public readonly HouseholdKey HouseholdKey = householdKey;
+        public readonly string PersonName = personName;
+    }
+
+    /// <summary>
     /// Unique identifier for a CalcPerson in the city simulation
     /// </summary>
     /// <param name="personName">the name of the person</param>
