@@ -39,7 +39,7 @@ namespace CalculationEngine.HouseholdElements
             // execute only variable operations that occur in the beginning
             ExecuteVariableOperations(startTime, startTime, startTime, [VariableExecutionTime.Beginning]);
 
-            personTimeProfile = new RemoteAffordanceActivation(Name, Name, startTime, null, personSourceLocation.CalcSite);
+            personTimeProfile = new RemoteAffordanceActivation(Name, Name, startTime, null, personSourceLocation.CalcSite, this);
         }
 
         /// <summary>

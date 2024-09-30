@@ -84,7 +84,7 @@ namespace CalculationEngine.Transportation {
             {
                 // person has to travel to the target site with an unknown duration - cannot activate the source affordance yet
                 var activationName = "Dynamic Travel Profile for Route " + route.Name + " to affordance " + _sourceAffordance.Name;
-                activationInfo = new RemoteAffordanceActivation(activationName, _sourceAffordance.Name, startTime, route, personSourceLocation.CalcSite);
+                activationInfo = new RemoteAffordanceActivation(activationName, _sourceAffordance.Name, startTime, route, personSourceLocation.CalcSite, this);
                 return;
             }
 

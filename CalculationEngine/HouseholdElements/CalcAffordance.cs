@@ -50,7 +50,6 @@ namespace CalculationEngine.HouseholdElements
     /// Default implementation of an affordance. Device activations and durations are determined randomly and stored
     /// per timestep for consistent results.
     /// </summary>
-    [SuppressMessage("ReSharper", "ConvertToAutoProperty")]
     public class CalcAffordance : CalcAffordanceWithTimeLimit
     {
         [JetBrains.Annotations.NotNull] private readonly CalcProfile _personProfile;

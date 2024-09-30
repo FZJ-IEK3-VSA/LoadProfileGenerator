@@ -30,11 +30,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using Automation;
 using Automation.ResultFiles;
+using CalculationEngine.CitySimulation;
 using CalculationEngine.Helper;
 using CalculationEngine.Transportation;
 using Common;
@@ -71,8 +73,6 @@ namespace CalculationEngine.HouseholdElements {
 
         private DateTime _lastDisplay = DateTime.MinValue;
         private DateTime _startSimulation = DateTime.MinValue;
-
-
 
         private int _simulationSeed;
         [NotNull] private readonly string _description;
@@ -375,7 +375,8 @@ namespace CalculationEngine.HouseholdElements {
             _startSimulation = DateTime.Now;
         }
 
-        public void RunOneStep(TimeStep timestep, DateTime now, bool runProcessing)
+        public Dictionary<PersonAndHHKey, RemoteAffordanceActivation> RunOneStep(TimeStep timestep, DateTime now,
+            bool runProcessing, Dictionary<HouseholdKey, Dictionary<string, RemoteActivityFinished>>? finishedActivities = null)
         {
             if (_locations == null) {
                 throw new LPGException("_locations should not be null");
@@ -405,18 +406,25 @@ namespace CalculationEngine.HouseholdElements {
                 throw new LPGException("_autoDevs should not be null");
             }
 
+            // get any relevant messages about finished activities of this household
+            var relevantFinishedActivities = finishedActivities?.GetValueOrDefault(HouseholdKey, []) ?? [];
+            Debug.Assert(relevantFinishedActivities.All(pair => _persons.Any(p => p.Name == pair.Key)), "Received invalid 'finished activity' messages.");
+
+            // simulate one step for each person and collect which persons started new remote activities
+            Dictionary<PersonAndHHKey, RemoteAffordanceActivation> newRemoteActivities = [];
             foreach (var p in _persons) {
-                p.NextStep(timestep, _locations, _daylightArray,
-                    _householdKey, _persons, _simulationSeed);
+                if (relevantFinishedActivities.ContainsKey(p.Name))
+                {
+                    // notify the CalcPerson that their current remote activity is finished
+                    p.RemoteActivityFinished = true;
+                }
+                bool remoteActivityStarted = p.NextStep(timestep, _locations, _daylightArray, _householdKey, _persons, _simulationSeed);
+                if (remoteActivityStarted)
+                {
+                    newRemoteActivities[new(HouseholdKey, p.Name)] = p.CurrentActivationInfo!;
+                }
             }
 
-            /*    if ((timestep % RangeCleaningFrequency) == 0)
-            {
-                foreach (CalcDevice device in _devices)
-                    device.ClearExpiredRanges(timestep);
-                foreach (CalcAutoDev autoDev in _autoDevs)
-                    autoDev.ClearExpiredRanges(timestep);
-            }*/
             if(Logger.Threshold > Severity.Information) {
                 if (timestep.InternalStep % 5000 == 0 || (DateTime.Now - _lastDisplay).TotalSeconds > 5) {
                     var timeelapesed = DateTime.Now - _startSimulation;
@@ -503,6 +511,9 @@ namespace CalculationEngine.HouseholdElements {
             foreach (CalcPerson person in _persons) {
                 person.LogPersonStatus(timestep);
             }
+
+            // return newly started remote activities
+            return newRemoteActivities;
         }
 
         public void Dispose()

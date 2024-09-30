@@ -33,6 +33,7 @@ using System.Runtime.InteropServices;
 using Automation;
 using Automation.ResultFiles;
 using CalcPostProcessor;
+using CalculationEngine.CitySimulation;
 using CalculationEngine.Helper;
 using CalculationEngine.HouseholdElements;
 using ChartCreator2;
@@ -118,11 +119,14 @@ namespace CalculationEngine
         /// </summary>
         /// <param name="timestep">The timestep to simulate</param>
         /// <param name="now">Timestamp of the simulation step</param>
-        public void RunOneStep(TimeStep timestep, DateTime now)
+        /// <returns>a finishedActivities containing all newly started remote activities from this timestep</returns>
+        public Dictionary<PersonAndHHKey, RemoteAffordanceActivation> RunOneStep(TimeStep timestep, DateTime now,
+            Dictionary<HouseholdKey, Dictionary<string, RemoteActivityFinished>>? finishedActivities = null)
         {
-            CalcObject!.RunOneStep(timestep, now, true);
+            var newRemoteActivities = CalcObject!.RunOneStep(timestep, now, true, finishedActivities);
             SaveVariableStatesIfNeeded(timestep);
             CalcRepo.OnlineLoggingData.SaveIfNeeded(timestep);
+            return newRemoteActivities;
         }
 
         /// <summary>

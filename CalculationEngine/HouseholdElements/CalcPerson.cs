@@ -82,8 +82,6 @@ namespace CalculationEngine.HouseholdElements
 
         private ICalcAffordanceBase? _currentAffordance;
 
-        private RemoteAffordanceActivation? currentActivationInfo;
-
         /// <summary>
         /// Is true if an affordance that interrupted another is currently active.
         /// Prevents interrupting an already interrupting affordance.
@@ -121,6 +119,12 @@ namespace CalculationEngine.HouseholdElements
         /// Indicates that a remote affordance or travel activity has just been finished.
         /// </summary>
         public bool RemoteActivityFinished;
+
+        /// <summary>
+        /// Stores relevant information whenever this person is busy with a remote activity.
+        /// This field also used to find the correct remote target for the activity.
+        /// </summary>
+        public RemoteAffordanceActivation? CurrentActivationInfo;
 
         //guid for all vacations of this person
         private readonly StrGuid _vacationAffordanceGuid;
@@ -174,7 +178,7 @@ namespace CalculationEngine.HouseholdElements
 
         public bool NewIsBasicallyValidAffordance([JetBrains.Annotations.NotNull] ICalcAffordanceBase aff, bool sickness, bool logDetails)
         {
-            // affordanzen löschen, wo alter nicht passt
+            // exclude affordances with the wrong age
             if (_calcPerson.Age > aff.MaximumAge || _calcPerson.Age < aff.MiniumAge) {
                 if (logDetails) {
                     Logger.Debug("Sickness: " + sickness + " Age doesn't fit");
@@ -183,7 +187,7 @@ namespace CalculationEngine.HouseholdElements
                 return false;
             }
 
-            // affordanzen löschen, wo geschlecht nicht passt
+            // exclude affordances with the wrong gender
             if (aff.PermittedGender != PermittedGender.All && aff.PermittedGender != _calcPerson.Gender) {
                 if (logDetails) {
                     Logger.Debug("Sickness: " + sickness + " Gender doesn't fit");
@@ -192,7 +196,7 @@ namespace CalculationEngine.HouseholdElements
                 return false;
             }
 
-            // affordanzen löschen, die nicht mindestens ein bedürfnis der Person befriedigen
+            // exclude affordances that don't satisfy at least one desire of the person
             CalcPersonDesires desires;
             if (sickness) {
                 desires = SicknessDesires;
@@ -242,8 +246,9 @@ namespace CalculationEngine.HouseholdElements
         /// <param name="householdKey">household key</param>
         /// <param name="persons">all persons of the household</param>
         /// <param name="simulationSeed">the seed used in the current simulation</param>
+        /// <returns>whether a new remote activity was started</returns>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        public void NextStep([JetBrains.Annotations.NotNull] TimeStep time, [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcLocation> locs, [JetBrains.Annotations.NotNull] DayLightStatus isDaylight,
+        public bool NextStep([JetBrains.Annotations.NotNull] TimeStep time, [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcLocation> locs, [JetBrains.Annotations.NotNull] DayLightStatus isDaylight,
                              [JetBrains.Annotations.NotNull] HouseholdKey householdKey,
                              [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcPerson> persons,
                              int simulationSeed)
@@ -272,41 +277,47 @@ namespace CalculationEngine.HouseholdElements
             // check if an ongoing remote affordance was finished
             if (RemoteActivityFinished)
             {
-                UpdateRemoteActivity(time, isDaylight);
+                bool remoteActivityStarted = UpdateRemoteActivity(time, isDaylight);
+                // check if a new affordance was started
+                if (IsBusy(time))
+                {
+                    // return whether the new affordance is a remote activity or not
+                    return remoteActivityStarted;
+                }
             }
 
             ReturnToPreviousActivityIfPreviouslyInterrupted(time);
 
-            // bereits beschäftigt
+            // if the person is already busy with an activity, only check for a possible interruption
             if (IsBusy(time))
             {
-                InterruptIfNeeded(time, isDaylight, false);
-                return;
+                return InterruptIfNeeded(time, isDaylight, false);
             }
 
             if (IsOnVacation[time.InternalStep])
             {
                 BeOnVacation(time);
-                return;
+                return false;
             }
 
             _alreadyloggedvacation = false;
             if (!_isCurrentlySick && IsSick[time.InternalStep])
             {
-                // neue krank geworden
+                // person gets sick
                 BecomeSick(time);
             }
 
             if (_isCurrentlySick && !IsSick[time.InternalStep])
             {
-                // neue gesund geworden
+                // person becomes healthy
                 BecomeHealthy(time);
             }
 
             //activate new affordance
             var bestaff = FindBestAffordance(time, persons, simulationSeed);
-            ActivateAffordance(time, isDaylight, bestaff);
+            bool isAffordanceRemote = ActivateAffordance(time, isDaylight, bestaff);
             _isCurrentlyPriorityAffordanceRunning = false;
+            return isAffordanceRemote;
         }
 
         /// <summary>
@@ -316,24 +327,27 @@ namespace CalculationEngine.HouseholdElements
         /// </summary>
         /// <param name="time">current timestep</param>
         /// <param name="isDaylight">daylight status objects</param>
+        /// <returns>whether a new remote activity was started</returns>
         /// <exception cref="LPGException">if the remote activity was not correctly initialized</exception>
-        private void UpdateRemoteActivity(TimeStep time, DayLightStatus isDaylight)
+        private bool UpdateRemoteActivity(TimeStep time, DayLightStatus isDaylight)
         {
-            if (currentActivationInfo == null)
+            if (CurrentActivationInfo == null)
             {
                 throw new LPGException("Activation info for remote affordance " + _currentAffordance?.Name + " is missing.");
             }
 
+            bool remoteActivityStarted = false;
+
             // calculate the duration of the remote activity
-            int duration = time.InternalStep - currentActivationInfo.Start.InternalStep;
+            int duration = time.InternalStep - CurrentActivationInfo.Start.InternalStep;
 
             // check if the remote activity was traveling, in which case the source affordance needs to be activated
             if (_currentAffordance is AffordanceBaseTransportDecorator transportAffordance)
             {
                 // finished traveling - log the transportation event
                 var sourceAffordanceDuration = -1; // dummy value - is currently not used in transportation logging
-                transportAffordance.LogTransportationEvent(currentActivationInfo.TravelDeviceUseEvents, Name, currentActivationInfo.Start, currentActivationInfo.SourceSite,
-                    currentActivationInfo.Route!, duration, sourceAffordanceDuration);
+                transportAffordance.LogTransportationEvent(CurrentActivationInfo.TravelDeviceUseEvents, Name, CurrentActivationInfo.Start, CurrentActivationInfo.SourceSite,
+                    CurrentActivationInfo.Route!, duration, sourceAffordanceDuration);
 
                 // activate the actual affordance
                 _currentAffordance = transportAffordance._sourceAffordance;
@@ -342,6 +356,10 @@ namespace CalculationEngine.HouseholdElements
                 {
                     // the actual activity is not remote and has a predetermined duration
                     SetBusyAndActivateLighting(time, personProfile, _currentAffordance.ParentLocation, isDaylight, _currentAffordance.NeedsLight);
+                } else
+                {
+                    // the source affordance is a remote activity as well
+                    remoteActivityStarted = true;
                 }
             }
             else
@@ -355,12 +373,13 @@ namespace CalculationEngine.HouseholdElements
                 // log information about the full activity, including travel and source affordance
                 if (_calcRepo.CalcParameters.IsSet(CalcOption.ThoughtsLogfile))
                 {
-                    string thought = "Finished executing " + currentActivationInfo.Name + ", duration " + duration;
+                    string thought = "Finished executing " + CurrentActivationInfo.Name + ", duration " + duration;
                     _calcRepo.Logfile.ThoughtsLogFile1.WriteEntry(new ThoughtEntry(this, time, thought), _calcPerson.HouseholdKey);
                 }
             }
-            // reset the flag
+            // reset the finish flag
             RemoteActivityFinished = false;
+            return remoteActivityStarted;
         }
 
         private void BecomeHealthy([JetBrains.Annotations.NotNull] TimeStep time)
@@ -402,9 +421,21 @@ namespace CalculationEngine.HouseholdElements
             }
         }
 
-        private void InterruptIfNeeded([JetBrains.Annotations.NotNull] TimeStep time, [JetBrains.Annotations.NotNull] DayLightStatus isDaylight,
+        /// <summary>
+        /// Checks if the current activity can be interrupted. If there is a good alternative affordance, the current activity
+        /// is interrupted, the alternative is activated, and the behavior for after finishing the alternative is determined.
+        /// </summary>
+        /// <param name="time">current timestep</param>
+        /// <param name="isDaylight">daylight information object</param>
+        /// <param name="ignorePreviousAffordances">whether the constraint not to activate one of the last few affordances can be ignored</param>
+        /// <returns>whether a remote activity was started</returns>
+        /// <exception cref="LPGException"></exception>
+        private bool InterruptIfNeeded([JetBrains.Annotations.NotNull] TimeStep time, [JetBrains.Annotations.NotNull] DayLightStatus isDaylight,
                                        bool ignorePreviousAffordances)
         {
+            // track whether a remote activity was started
+            bool remoteActivityStarted = false;
+
             // check if the affordance may be interrupted and did not already interrupt another affordance itself
             if (_currentAffordance?.IsInterruptable == true && !_isCurrentlyPriorityAffordanceRunning) {
                 PotentialAffs aff;
@@ -437,7 +468,7 @@ namespace CalculationEngine.HouseholdElements
                         }
                     }
 
-                    ActivateAffordance(time, isDaylight,  bestAffordance);
+                    remoteActivityStarted = ActivateAffordance(time, isDaylight,  bestAffordance);
 
                     if (bestAffordance.AfterInterruption == ActionAfterInterruption.GoBackToOld)
                     {
@@ -473,6 +504,7 @@ namespace CalculationEngine.HouseholdElements
                 _calcRepo.Logfile.ThoughtsLogFile1.WriteEntry(new ThoughtEntry(this, time, "I'm busy and " + healthState),
                         _calcPerson.HouseholdKey);
             }
+            return remoteActivityStarted;
         }
 
         /// <summary>
@@ -575,8 +607,9 @@ namespace CalculationEngine.HouseholdElements
         /// <param name="currentTimeStep">timestep for activating the affordance</param>
         /// <param name="isDaylight">daylight information object</param>
         /// <param name="bestaff">the affordance to activate</param>
+        /// <returns>whether the activated affordance is a remote activity</returns>
         /// <exception cref="LPGException"></exception>
-        private void ActivateAffordance([JetBrains.Annotations.NotNull] TimeStep currentTimeStep, [JetBrains.Annotations.NotNull] DayLightStatus isDaylight,
+        private bool ActivateAffordance([JetBrains.Annotations.NotNull] TimeStep currentTimeStep, [JetBrains.Annotations.NotNull] DayLightStatus isDaylight,
                                          [JetBrains.Annotations.NotNull] ICalcAffordanceBase bestaff)
         {
             if (_calcRepo.CalcParameters.TransportationEnabled && bestaff is not AffordanceBaseTransportDecorator) {
@@ -635,8 +668,8 @@ namespace CalculationEngine.HouseholdElements
                 }
             } else
             {
-                // store activity-related information for logging later
-                currentActivationInfo = (RemoteAffordanceActivation)activationInfo;
+                // the affordance is a remote activity; store relevant information for logging it later
+                CurrentActivationInfo = (RemoteAffordanceActivation)activationInfo;
             }
             // remark: no lighting simulation for remote affordances
 
@@ -648,6 +681,7 @@ namespace CalculationEngine.HouseholdElements
             }
 
             _currentAffordance = bestaff;
+            return !activationInfo.IsDetermined;
         }
 
         public void LogPersonStatus([JetBrains.Annotations.NotNull] TimeStep timestep)
@@ -827,7 +861,7 @@ namespace CalculationEngine.HouseholdElements
             pa.PotentialInterruptingAffordances.Clear();
             pa.PotentialAffordancesWithSubAffordances.Clear();
             pa.PotentialAffordancesWithInterruptingSubAffordances.Clear();
-            // alle affordanzen finden für alle orte
+            // collect affordances from all locations
             foreach (var loc in locs) {
                 foreach (var calcAffordance in loc.Affordances) {
                     if (NewIsBasicallyValidAffordance(calcAffordance, sickness, false)) {
@@ -837,6 +871,7 @@ namespace CalculationEngine.HouseholdElements
                         }
                     }
 
+                    // also collect all suitable subaffordances
                     foreach (var subAffordance in calcAffordance.SubAffordances) {
                         if (NewIsBasicallyValidAffordance(subAffordance, sickness, false)) {
                             if (!pa.PotentialAffordancesWithSubAffordances.Contains(calcAffordance)) {
