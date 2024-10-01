@@ -1,4 +1,6 @@
 ﻿using CalculationEngine.HouseholdElements;
+using System;
+using System.Diagnostics;
 
 namespace CalculationEngine.CitySimulation
 {
@@ -13,6 +15,16 @@ namespace CalculationEngine.CitySimulation
         public readonly PersonIdentifier Person = person;
         public readonly RemoteAffordanceActivation AffordanceActivation = affordanceActivation;
         public readonly PointOfInterestId? CurrentLocation = currentLocation;
+
+        /// <summary>
+        /// Returns true if this activity is a travel activity, and false if it
+        /// is an actual remote affordance.
+        /// </summary>
+        /// <returns>whether this activity is a travel activity</returns>
+        public bool IsTravel()
+        {
+            return AffordanceActivation.Route is not null;
+        }
     }
 
     /// <summary>
@@ -21,13 +33,15 @@ namespace CalculationEngine.CitySimulation
     /// <param name="person">the person starting the activity</param>
     /// <param name="isTravel">whether the activity is traveling or an activity at a point of interest</param>
     /// <param name="affordance">the name of the affordance being activated</param>
-    /// <param name="poi">the ID of the point of interest where the activity will be carried out</param>
-    public class RemoteActivityStart(PersonIdentifier person, bool isTravel, string affordance, PointOfInterestId? poi = null)
+    /// <param name="poi">the ID of the point of interest where the activity will be carried out; null means home</param>
+    /// <param name="currentLocation">the ID of the current location of the person; null means home</param>
+    public class RemoteActivityStart(PersonIdentifier person, bool isTravel, string affordance, PointOfInterestId poi, PointOfInterestId? currentLocation = null)
     {
         public readonly PersonIdentifier Person = person;
         public readonly bool IsTravel = isTravel;
         public readonly string Affordance = affordance;
         public readonly PointOfInterestId? Poi = poi;
+        public readonly PointOfInterestId? CurrentLocation = currentLocation;
     }
 
     /// <summary>

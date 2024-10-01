@@ -27,10 +27,13 @@ namespace MassSimulation
         private LPGMassSimulator lpgSimulator;
         private List<PointOfInterestSimulator> poiSimulators = [];
         private TransportSimulator? transportSimulator;
+
         private PointOfInterestRegister poiRegister;
+
         private CalcParameters? calcParameters;
-        private MPILogger logger;
         private Scenario? scenario;
+
+        private readonly MPILogger logger;
 
         public Worker(Intracommunicator comm)
         {
@@ -84,9 +87,6 @@ namespace MassSimulation
                     // not enough parts for all workers
                     throw new LPGException("Not enough work packages for all MPI processes (" + length + " work packages for " + numWorkers + " workers).");
                 }
-
-                // initialize the transport simulator
-                transportSimulator = new TransportSimulator();
             }
 
             // distribute simulation targets
@@ -97,7 +97,8 @@ namespace MassSimulation
 
             lpgSimulator.Init();
 
-            // TODO: init PointOfInterestSimulators
+            // initialize the transport simulator
+            transportSimulator = new TransportSimulator();
         }
 
         private void RunSimulation()
@@ -136,12 +137,9 @@ namespace MassSimulation
             var messageCollector = poiRegister.SortActivityMessagesByWorker(remoteTravelsAndActivities);
             // remark: for consistency, these messages are only distributed after this timestep is finished
 
-            // run transport simulation only on the main worker
-            if (transportSimulator is not null)
-            {
-                var finishedTravels = transportSimulator.SimulateOneStep(timestep, simulationTime, activityMessages.NewTravelActivities);
-                messageCollector.AddFinishedActivities(finishedTravels);
-            }
+            // run transport simulation
+            var finishedTravels = transportSimulator.SimulateOneStep(timestep, simulationTime, activityMessages.NewTravelActivities);
+            messageCollector.AddFinishedActivities(finishedTravels);
 
             // run POI simulators
             Dictionary<PointOfInterestId, IEnumerable<RemoteActivityStart>> newActivities = [];
@@ -157,7 +155,7 @@ namespace MassSimulation
         private void FinishSimulation()
         {
             lpgSimulator.FinishSimulation();
-            transportSimulator?.FinishSimulation();
+            transportSimulator.FinishSimulation();
 
             foreach (var simulator in poiSimulators)
             {
