@@ -61,7 +61,7 @@ namespace CalculationEngine
 
         void Init( [NotNull] DayLightStatus daylightArray, int simulationSeed);
 
-        Dictionary<PersonAndHHKey, RemoteAffordanceActivation> RunOneStep(TimeStep timestep, DateTime now,
-            bool runProcessing, Dictionary<HouseholdKey, Dictionary<string, RemoteActivityFinished>>? finishedActivities = null);
+        IEnumerable<RemoteActivityInfo> RunOneStep(TimeStep timestep, DateTime now, bool runProcessing,
+            Dictionary<HouseholdKey, Dictionary<string, RemoteActivityFinished>>? finishedActivities = null);
     }
 }

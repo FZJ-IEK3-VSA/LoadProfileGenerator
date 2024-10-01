@@ -87,13 +87,12 @@ namespace MassSimulation
                 foreach (var target in simulationTargets)
                 {
                     var newActivities = target.CalcManager.RunOneStep(timeStep, dateTime, finishedActivities.GetValueOrDefault(target.Id, []));
-                    // collect all new activity messages and add a simulation-wide unique PersonIdentifier
-                    foreach (var pair in newActivities)
+                    // collect all new activity messages
+                    foreach (var newActivityContext in newActivities)
                     {
-                        var hhPersonId = pair.Key;
-                        var id = new PersonIdentifier(hhPersonId.PersonName, hhPersonId.HouseholdKey, target.Id, rank);
-                        var item = new RemoteActivityInfo(id, pair.Value);
-                        newRemoteActivities.Add(item);
+                        // set the missing target ID and worker rank to make the person identifier simulation-wide unique
+                        newActivityContext.Person.AddMissingInfo(target.Id, rank);
+                        newRemoteActivities.Add(newActivityContext);
                     }
                 }
             }

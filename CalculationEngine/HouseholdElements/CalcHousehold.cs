@@ -375,8 +375,8 @@ namespace CalculationEngine.HouseholdElements {
             _startSimulation = DateTime.Now;
         }
 
-        public Dictionary<PersonAndHHKey, RemoteAffordanceActivation> RunOneStep(TimeStep timestep, DateTime now,
-            bool runProcessing, Dictionary<HouseholdKey, Dictionary<string, RemoteActivityFinished>>? finishedActivities = null)
+        public IEnumerable<RemoteActivityInfo> RunOneStep(TimeStep timestep, DateTime now, bool runProcessing,
+            Dictionary<HouseholdKey, Dictionary<string, RemoteActivityFinished>>? finishedActivities = null)
         {
             if (_locations == null) {
                 throw new LPGException("_locations should not be null");
@@ -411,17 +411,17 @@ namespace CalculationEngine.HouseholdElements {
             Debug.Assert(relevantFinishedActivities.All(pair => _persons.Any(p => p.Name == pair.Key)), "Received invalid 'finished activity' messages.");
 
             // simulate one step for each person and collect which persons started new remote activities
-            Dictionary<PersonAndHHKey, RemoteAffordanceActivation> newRemoteActivities = [];
+            List<RemoteActivityInfo> newRemoteActivities = [];
             foreach (var p in _persons) {
-                if (relevantFinishedActivities.ContainsKey(p.Name))
+                if (relevantFinishedActivities.TryGetValue(p.Name, out var activityFinished))
                 {
                     // notify the CalcPerson that their current remote activity is finished
-                    p.RemoteActivityFinished = true;
+                    p.remoteActivityResult = activityFinished;
                 }
                 bool remoteActivityStarted = p.NextStep(timestep, _locations, _daylightArray, _householdKey, _persons, _simulationSeed);
                 if (remoteActivityStarted)
                 {
-                    newRemoteActivities[new(HouseholdKey, p.Name)] = p.CurrentActivationInfo!;
+                    newRemoteActivities.Add(p.GetRemoteActivityInfo());
                 }
             }
 

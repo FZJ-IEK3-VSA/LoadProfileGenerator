@@ -1,5 +1,4 @@
-﻿using Automation.ResultFiles;
-using CalculationEngine.HouseholdElements;
+﻿using CalculationEngine.HouseholdElements;
 
 namespace CalculationEngine.CitySimulation
 {
@@ -8,19 +7,12 @@ namespace CalculationEngine.CitySimulation
     /// </summary>
     /// <param name="person">the person carrying out the activity</param>
     /// <param name="affordanceActivation">the corresponding RemoteAffordanceActivation object</param>
-    public class RemoteActivityInfo(PersonIdentifier person, RemoteAffordanceActivation affordanceActivation)
+    /// <param name="currentLocation">ID of the point of interest the person is currently at</param>
+    public class RemoteActivityInfo(PersonIdentifier person, RemoteAffordanceActivation affordanceActivation, PointOfInterestId? currentLocation)
     {
         public readonly PersonIdentifier Person = person;
         public readonly RemoteAffordanceActivation AffordanceActivation = affordanceActivation;
-    }
-
-    /// <summary>
-    /// A message that the current remote activity of a person has been finished.
-    /// </summary>
-    /// <param name="person">the person whose activity is finished</param>
-    public class RemoteActivityFinished(PersonIdentifier person)
-    {
-        public readonly PersonIdentifier Person = person;
+        public readonly PointOfInterestId? CurrentLocation = currentLocation;
     }
 
     /// <summary>
@@ -36,5 +28,16 @@ namespace CalculationEngine.CitySimulation
         public readonly bool IsTravel = isTravel;
         public readonly string Affordance = affordance;
         public readonly PointOfInterestId? Poi = poi;
+    }
+
+    /// <summary>
+    /// A message that the current travel or remote activity of a person has been finished.
+    /// </summary>
+    /// <param name="person">the person whose activity is finished</param>
+    /// <param name="newLocation">the location of the person at the end of the travel/activity; null means the person is at home</param>
+    public class RemoteActivityFinished(PersonIdentifier person, PointOfInterestId? newLocation = null)
+    {
+        public readonly PersonIdentifier Person = person;
+        public readonly PointOfInterestId? NewLocation = newLocation;
     }
 }

@@ -213,7 +213,7 @@ namespace CalculationEngine.HouseElements
         public List<CalcEnergyStorage>? EnergyStorages => _energyStorages;
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        public Dictionary<PersonAndHHKey, RemoteAffordanceActivation> RunOneStep(TimeStep timestep, DateTime now, bool runProcessing,
+        public IEnumerable<RemoteActivityInfo> RunOneStep(TimeStep timestep, DateTime now, bool runProcessing,
             Dictionary<HouseholdKey, Dictionary<string, RemoteActivityFinished>>? finishedActivities = null)
         {
             /*if (_allProfiles == null) {
@@ -241,14 +241,12 @@ namespace CalculationEngine.HouseElements
             }
 
             // simulate all households for one step and collect new remote activities
-            List<Dictionary<PersonAndHHKey, RemoteAffordanceActivation>> newActivityDicts = [];
+            IEnumerable<RemoteActivityInfo> allNewActivities = [];
             foreach (var household in _households) {
                 // set info if persons in household finished a remote activity
                 var newActivities = household.RunOneStep(timestep, now, false, finishedActivities);
-                newActivityDicts.Add(newActivities);
+                allNewActivities = allNewActivities.Concat(newActivities);
             }
-            // merge all dictionaries to have a single dictionary of new remote activities
-            var newRemoteActivities = newActivityDicts.SelectMany(dict => dict).ToDictionary();
 
             if (_calcSpaceHeating != null) {
                 if (!_calcSpaceHeating.IsBusyDuringTimespan(timestep, 1, 1, _calcSpaceHeating.Loads[0].LoadType)) {
@@ -340,7 +338,7 @@ namespace CalculationEngine.HouseElements
             }
 
             // return the newly started remote activities
-            return newRemoteActivities;
+            return allNewActivities;
         }
 
         // ReSharper disable once UnusedParameter.Local

@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Automation;
 using Automation.ResultFiles;
+using CalculationEngine.CitySimulation;
 using Common;
 using Common.CalcDto;
 using Common.Enums;
@@ -22,16 +23,22 @@ namespace CalculationEngine.HouseholdElements
         /// </summary>
         private Dictionary<string, TimeStep> _currentActivations = [];
 
+        /// <summary>
+        /// The ID of the specific point of interest where the affordance takes place.
+        /// </summary>
+        public PointOfInterestId PointOfInterest { get; }
+
         public CalcAffordanceRemote([NotNull] string pName, [NotNull] CalcLocation loc, bool randomEffect,
             [NotNull][ItemNotNull] List<CalcDesire> satisfactionvalues, int miniumAge, int maximumAge, PermittedGender permittedGender, bool needsLight,
             ColorRGB affordanceColor, [NotNull] string pAffCategory, bool isInterruptable, bool isInterrupting, [NotNull][ItemNotNull] List<CalcAffordanceVariableOp> variableOps,
             [NotNull][ItemNotNull] List<VariableRequirement> variableRequirements, ActionAfterInterruption actionAfterInterruption, [NotNull] string timeLimitName, int weight,
             bool requireAllDesires, [NotNull] string srcTrait, StrGuid guid, [NotNull] CalcVariableRepository variableRepository,
             [ItemNotNull][NotNull] BitArray isBusy, BodilyActivityLevel bodilyActivityLevel,
-            [NotNull] CalcRepo calcRepo, HouseholdKey householdKey)
+            [NotNull] CalcRepo calcRepo, HouseholdKey householdKey, PointOfInterestId pointOfInterest)
             : base(pName, loc, satisfactionvalues, miniumAge, maximumAge, permittedGender, needsLight, randomEffect, pAffCategory, isInterruptable, isInterrupting, actionAfterInterruption, weight, requireAllDesires,
                   CalcAffordanceType.Affordance, guid, isBusy, bodilyActivityLevel, calcRepo, householdKey, [], affordanceColor, srcTrait, timeLimitName, variableRepository, variableOps, variableRequirements)
         {
+            PointOfInterest = pointOfInterest;
         }
 
         public override void Activate(TimeStep startTime, string activatorName, CalcLocation personSourceLocation, out IAffordanceActivation personTimeProfile)
@@ -39,7 +46,7 @@ namespace CalculationEngine.HouseholdElements
             // execute only variable operations that occur in the beginning
             ExecuteVariableOperations(startTime, startTime, startTime, [VariableExecutionTime.Beginning]);
 
-            personTimeProfile = new RemoteAffordanceActivation(Name, Name, startTime, null, personSourceLocation.CalcSite, this);
+            personTimeProfile = new RemoteAffordanceActivation(Name, Name, startTime, PointOfInterest, null, personSourceLocation.CalcSite, this);
         }
 
         /// <summary>

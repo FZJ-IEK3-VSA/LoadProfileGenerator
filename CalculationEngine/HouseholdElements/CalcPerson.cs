@@ -36,6 +36,7 @@ using System.Linq;
 using System.Text;
 using Automation;
 using Automation.ResultFiles;
+using CalculationEngine.CitySimulation;
 using CalculationEngine.Helper;
 using CalculationEngine.OnlineLogging;
 using CalculationEngine.Transportation;
@@ -80,7 +81,22 @@ namespace CalculationEngine.HouseholdElements
         private readonly PotentialAffs _sicknessPotentialAffs = new PotentialAffs();
         private bool _alreadyloggedvacation;
 
+        /// <summary>
+        /// The currently active affordance. This can be a transport decorator.
+        /// </summary>
         private ICalcAffordanceBase? _currentAffordance;
+
+        /// <summary>
+        /// The ID of the point of interest where the person is at the moment, or null
+        /// if the person is at home.
+        /// </summary>
+        private PointOfInterestId? currentLocation;
+
+        /// <summary>
+        /// Stores relevant information whenever this person is busy with a remote activity.
+        /// This field also used to find the correct remote target for the activity.
+        /// </summary>
+        private RemoteAffordanceActivation? CurrentActivationInfo;
 
         /// <summary>
         /// Is true if an affordance that interrupted another is currently active.
@@ -118,13 +134,7 @@ namespace CalculationEngine.HouseholdElements
         /// <summary>
         /// Indicates that a remote affordance or travel activity has just been finished.
         /// </summary>
-        public bool RemoteActivityFinished;
-
-        /// <summary>
-        /// Stores relevant information whenever this person is busy with a remote activity.
-        /// This field also used to find the correct remote target for the activity.
-        /// </summary>
-        public RemoteAffordanceActivation? CurrentActivationInfo;
+        public RemoteActivityFinished? remoteActivityResult;
 
         //guid for all vacations of this person
         private readonly StrGuid _vacationAffordanceGuid;
@@ -157,9 +167,22 @@ namespace CalculationEngine.HouseholdElements
         [JetBrains.Annotations.NotNull]
         public string PrettyName => _calcPerson.Name + "(" + _calcPerson.Age + "/" + _calcPerson.Gender + ")";
 
-        [JetBrains.Annotations.NotNull]
-        public PersonInformation MakePersonInformation() => new PersonInformation(Name, Guid, _calcPerson.TraitTag);
+        public RemoteActivityInfo GetRemoteActivityInfo()
+        {
+            if (CurrentActivationInfo is null)
+                throw new LPGException("Tried to access remote affordance info although no remote affordance is active.");
+            return new RemoteActivityInfo(new(Name, HouseholdKey), CurrentActivationInfo, currentLocation);
+        }
 
+        [JetBrains.Annotations.NotNull]
+        public PersonInformation MakePersonInformation() => new(Name, Guid, _calcPerson.TraitTag);
+
+        /// <summary>
+        /// Determines if the person is busy with an affordance in the sepcified timestep.
+        /// Will always return true while the person is carrying out a remote affordance with unspecified duration.
+        /// </summary>
+        /// <param name="timeStep">the internal timestep index to check</param>
+        /// <returns>whether the person is busy in the timestep</returns>
         private bool IsBusy(int timeStep)
         {
             return _isBusyForUnknownDuration || _isBusy[timeStep];
@@ -167,8 +190,7 @@ namespace CalculationEngine.HouseholdElements
 
         /// <summary>
         /// Determines if the person is busy with an affordance in the sepcified timestep.
-        /// If the person is currently doing an affordance with unspecified duration, this will always
-        /// return True.
+        /// Will always return true while the person is carrying out a remote affordance with unspecified duration.
         /// </summary>
         /// <param name="timeStep">the timestep to check</param>
         /// <returns>whether the person is busy in the timestep</returns>
@@ -275,7 +297,7 @@ namespace CalculationEngine.HouseholdElements
             WriteDesiresToLogfileIfNeeded(time, householdKey);
 
             // check if an ongoing remote affordance was finished
-            if (RemoteActivityFinished)
+            if (remoteActivityResult is not null)
             {
                 bool remoteActivityStarted = UpdateRemoteActivity(time, isDaylight);
                 // check if a new affordance was started
@@ -338,6 +360,9 @@ namespace CalculationEngine.HouseholdElements
 
             bool remoteActivityStarted = false;
 
+            // update the location
+            currentLocation = remoteActivityResult!.NewLocation;
+
             // calculate the duration of the remote activity
             int duration = time.InternalStep - CurrentActivationInfo.Start.InternalStep;
 
@@ -359,6 +384,7 @@ namespace CalculationEngine.HouseholdElements
                 } else
                 {
                     // the source affordance is a remote activity as well
+                    CurrentActivationInfo = (RemoteAffordanceActivation)sourceActivation;
                     remoteActivityStarted = true;
                 }
             }
@@ -377,8 +403,8 @@ namespace CalculationEngine.HouseholdElements
                     _calcRepo.Logfile.ThoughtsLogFile1.WriteEntry(new ThoughtEntry(this, time, thought), _calcPerson.HouseholdKey);
                 }
             }
-            // reset the finish flag
-            RemoteActivityFinished = false;
+            // reset the result object
+            remoteActivityResult = null;
             return remoteActivityStarted;
         }
 

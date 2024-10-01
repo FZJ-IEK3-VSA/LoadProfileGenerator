@@ -119,8 +119,9 @@ namespace CalculationEngine
         /// </summary>
         /// <param name="timestep">The timestep to simulate</param>
         /// <param name="now">Timestamp of the simulation step</param>
-        /// <returns>a finishedActivities containing all newly started remote activities from this timestep</returns>
-        public Dictionary<PersonAndHHKey, RemoteAffordanceActivation> RunOneStep(TimeStep timestep, DateTime now,
+        /// <param name="finishedActivities">a nested dictionary conaining all finished remote activities, ordered by household</param>
+        /// <returns>all newly started remote activities from this timestep</returns>
+        public IEnumerable<RemoteActivityInfo> RunOneStep(TimeStep timestep, DateTime now,
             Dictionary<HouseholdKey, Dictionary<string, RemoteActivityFinished>>? finishedActivities = null)
         {
             var newRemoteActivities = CalcObject!.RunOneStep(timestep, now, true, finishedActivities);

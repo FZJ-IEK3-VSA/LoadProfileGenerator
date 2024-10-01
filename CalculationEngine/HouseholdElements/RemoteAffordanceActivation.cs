@@ -1,4 +1,4 @@
-﻿using Automation;
+﻿using CalculationEngine.CitySimulation;
 using CalculationEngine.Transportation;
 using Common;
 using System.Collections.Generic;
@@ -14,7 +14,8 @@ namespace CalculationEngine.HouseholdElements
     /// <param name="start">timestep in which the affordance starts</param>
     /// <param name="route">the route to the destination site</param>
     /// <param name="sourceSite">the site from which the person set off when activating the affordance</param>
-    public class RemoteAffordanceActivation(string name, string dataSource, TimeStep start, CalcTravelRoute? route, CalcSite? sourceSite, ICalcAffordanceBase affordance,
+    public class RemoteAffordanceActivation(string name, string dataSource, TimeStep start, PointOfInterestId destination,
+        CalcTravelRoute? route, CalcSite? sourceSite, ICalcAffordanceBase affordance,
         List<CalcTravelDeviceUseEvent>? travelDeviceUseEvents = null) : IAffordanceActivation
     {
         public bool IsDetermined => false;
@@ -27,6 +28,12 @@ namespace CalculationEngine.HouseholdElements
         /// The timestep in which the activity started
         /// </summary>
         public TimeStep Start { get; } = start;
+
+        /// <summary>
+        /// ID of the point of interest where the affordance will be carried out, or where
+        /// the destination of the travel is. null means the destination is at home.
+        /// </summary>
+        public PointOfInterestId? Destination { get; } = destination;
 
         /// <summary>
         /// The route object, if this activation is a dynamic travel affordance.
