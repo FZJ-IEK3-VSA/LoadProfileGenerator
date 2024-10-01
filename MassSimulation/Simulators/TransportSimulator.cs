@@ -58,7 +58,7 @@ namespace MassSimulation.Simulators
             {
                 travelStates.Remove(travelState);
             }
-            return arrived.Select(t => new RemoteActivityFinished(t.ActivityInfo.Person));
+            return arrived.Select(t => new RemoteActivityFinished(t.ActivityInfo.Person, t.ActivityInfo.Poi));
         }
 
         public void FinishSimulation()
