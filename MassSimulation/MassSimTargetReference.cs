@@ -2,7 +2,7 @@
 
 namespace MassSimulation
 {
-    internal class MassSimTargetReference
+    public class MassSimTargetReference
     {
         public readonly string Id;
         public readonly JsonReference Reference;

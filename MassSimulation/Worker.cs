@@ -3,6 +3,7 @@ using Automation.ResultFiles;
 using CalculationEngine.CitySimulation;
 using Common;
 using Common.JSON;
+using MassSimulation.CityGeneration;
 using MassSimulation.Simulators;
 using MPI;
 using System;
@@ -79,7 +80,7 @@ namespace MassSimulation
             if (rank == 0)
             {
                 // determine simulation targets
-                scenario = Scenario.CreateDuplicateHousesScenario(houseJobFile, numAgents);
+                scenario = TestScenarios.CreateDuplicateHousesScenario(houseJobFile, numAgents);
                 scenarioParts = scenario.GetScenarioParts(numWorkers);
                 int length = scenarioParts.Length;
                 if (length < numWorkers)

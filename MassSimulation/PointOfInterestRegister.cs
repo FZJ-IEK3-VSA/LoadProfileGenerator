@@ -6,7 +6,6 @@ namespace MassSimulation
 {
     /// <summary>
     /// Register that stores all POIs
-    /// TODO: is this even needed if each CalcPerson/CalcHousehold decides which POIs to use in advance?
     /// </summary>
     internal class PointOfInterestRegister(int numWorkers)
     {
