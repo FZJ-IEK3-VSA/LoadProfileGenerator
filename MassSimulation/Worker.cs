@@ -133,8 +133,9 @@ namespace MassSimulation
             // run household simulators first and get newly started remote newTravels
             var remoteTravelsAndActivities = lpgSimulator.SimulateOneStep(timestep, simulationTime, activityMessages.finishedActivities);
 
-            // sort new activity messages by target worker
-            var messageCollector = poiRegister.SortActivityMessagesByWorker(remoteTravelsAndActivities);
+            // create a new object for message collection and distribution
+            var messageCollector = new MPIDistributor(numWorkers);
+            messageCollector.AddNewActivities(remoteTravelsAndActivities);
             // remark: for consistency, these messages are only distributed after this timestep is finished
 
             // run transport simulation

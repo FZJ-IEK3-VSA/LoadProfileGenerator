@@ -37,34 +37,5 @@ namespace MassSimulation
             }
             return PickRandomElement(poiRegister[affordance.ParentLocation]);
         }
-
-        public MPIDistributor SortActivityMessagesByWorker(IEnumerable<RemoteActivityInfo> newActivities)
-        {
-            var activityMessages = new MPIDistributor(numWorkers);
-            foreach (var activity in newActivities)
-            {
-                // determine whether the activity is a traveling or POI activity
-                bool isTravel = activity.IsTravel();
-                var poi = activity.AffordanceActivation.Destination;
-                if (isTravel)
-                {
-                    var travelMessage = new RemoteActivityStart(activity.Person, true, activity.AffordanceActivation.Affordance.Name, poi, activity.CurrentLocation);
-                    // determine the rank of the worker responsible for the person's current location
-                    var currentLocationWorker = activity.CurrentLocation?.WorkerId ?? activity.Person.WorkerId;
-                    activityMessages.AddNewActivity(currentLocationWorker, travelMessage);
-                }
-                else
-                {
-                    // the activity is a remote affordance; traveling has already happend and the person must be at the affordance location
-                    if (poi is null || poi != activity.CurrentLocation)
-                    {
-                        throw new LPGException("A person wants to start a remote activity but is not at the correct point of interest.");
-                    }
-                    var activityMessage = new RemoteActivityStart(activity.Person, false, activity.AffordanceActivation.Affordance.Name, poi);
-                    activityMessages.AddNewActivity(poi.WorkerId, activityMessage);
-                }
-            }
-            return activityMessages;
-        }
     }
 }

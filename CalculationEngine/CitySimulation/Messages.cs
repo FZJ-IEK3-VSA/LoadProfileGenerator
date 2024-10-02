@@ -35,7 +35,7 @@ namespace CalculationEngine.CitySimulation
     /// <param name="affordance">the name of the affordance being activated</param>
     /// <param name="poi">the ID of the point of interest where the activity will be carried out; null means home</param>
     /// <param name="currentLocation">the ID of the current location of the person; null means home</param>
-    public class RemoteActivityStart(PersonIdentifier person, bool isTravel, string affordance, PointOfInterestId poi, PointOfInterestId? currentLocation = null)
+    public class RemoteActivityStart(PersonIdentifier person, bool isTravel, string affordance, PointOfInterestId? poi, PointOfInterestId? currentLocation = null)
     {
         public readonly PersonIdentifier Person = person;
         public readonly bool IsTravel = isTravel;
