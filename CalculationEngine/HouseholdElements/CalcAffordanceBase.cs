@@ -44,7 +44,7 @@ using JetBrains.Annotations;
 namespace CalculationEngine.HouseholdElements
 {
     /// <summary>
-    /// Base class for all affordance classes. Defines basic implementations of variable operations and requirement checks as
+    /// Base class for all original classes. Defines basic implementations of variable operations and requirement checks as
     /// well as general properties.
     /// </summary>
     [SuppressMessage("ReSharper", "ConvertToAutoProperty")]
@@ -108,6 +108,40 @@ namespace CalculationEngine.HouseholdElements
 
             // determine the number of timesteps in the subaffordance starting frame
             SubAffordanceStartFrame = (int)Math.Ceiling(SubAffordanceStartFrameDuration / CalcRepo.CalcParameters.InternalStepsize);
+        }
+
+        /// <summary>
+        /// Creates a shallow copy of the passed affordance object.
+        /// </summary>
+        /// <param name="original">The affordance to copy</param>
+        protected CalcAffordanceBase(CalcAffordanceBase original) : base(original.Name, StrGuid.New())
+        {
+            CalcAffordanceType = original.CalcAffordanceType;
+            BodilyActivityLevel = original.BodilyActivityLevel;
+            CalcRepo = original.CalcRepo;
+            HouseholdKey = original.HouseholdKey;
+            Site = original.Site;
+            ParentLocation = original.ParentLocation;
+            Satisfactionvalues = original.Satisfactionvalues;
+            Weight = original.Weight;
+            RequireAllAffordances = original.RequireAllAffordances;
+            MiniumAge = original.MiniumAge;
+            MaximumAge = original.MaximumAge;
+            PermittedGender = original.PermittedGender;
+            NeedsLight = original.NeedsLight;
+            RandomEffect = original.RandomEffect;
+            AffCategory = original.AffCategory;
+            IsInterruptable = original.IsInterruptable;
+            IsInterrupting = original.IsInterrupting;
+            _actionAfterInterruption = original._actionAfterInterruption;
+            Energyprofiles = original.Energyprofiles;
+            AffordanceColor = original.AffordanceColor;
+            SourceTrait = original.SourceTrait;
+            TimeLimitName = original.TimeLimitName;
+            _variableRepository = original._variableRepository;
+            _variableOps = original._variableOps;
+            _variableRequirements = original._variableRequirements;
+            SubAffordanceStartFrame = original.SubAffordanceStartFrame;
         }
 
         public BodilyActivityLevel BodilyActivityLevel { get; }

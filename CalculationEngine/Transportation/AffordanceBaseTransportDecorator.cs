@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Xml.Linq;
 using Automation;
 using Automation.ResultFiles;
 using CalculationEngine.HouseholdElements;
@@ -12,7 +12,8 @@ using Common.Enums;
 using Common.JSON;
 using Common.SQLResultLogging.Loggers;
 
-namespace CalculationEngine.Transportation {
+namespace CalculationEngine.Transportation
+{
     public class AffordanceBaseTransportDecorator : CalcBase, ICalcAffordanceBase {
         [JetBrains.Annotations.NotNull]
         public readonly ICalcAffordanceBase _sourceAffordance;
@@ -26,10 +27,8 @@ namespace CalculationEngine.Transportation {
         /// General flag to decide whether dynamic simulation of travel times is done or
         /// not. If not, static route calculation is used.
         /// </summary>
-        public static readonly bool DynamicTransportSimulation = false;
+        public static readonly bool DynamicTransportSimulation = true;
 
-
-        //TODO: fix the requirealldesires flag in the constructor
         public AffordanceBaseTransportDecorator([JetBrains.Annotations.NotNull] ICalcAffordanceBase sourceAffordance,
             [JetBrains.Annotations.NotNull] CalcSite site, [JetBrains.Annotations.NotNull] TransportationHandler transportationHandler,
             [JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] HouseholdKey householdkey,
@@ -45,6 +44,23 @@ namespace CalculationEngine.Transportation {
             Site = site;
             _transportationHandler = transportationHandler;
             _sourceAffordance = sourceAffordance;
+        }
+
+        /// <summary>
+        /// Creates a copy of the specified transport decorator, but replaces the source affordance with a new remote affordance.
+        /// </summary>
+        /// <param name="original">the original affordance transport decorator</param>
+        /// <param name="remoteAffordance">the remote affordance that will be used as source affordance</param>
+        public AffordanceBaseTransportDecorator(AffordanceBaseTransportDecorator original, CalcAffordanceRemote remoteAffordance) : base(remoteAffordance.Name, StrGuid.New())
+        {
+            _householdkey = original._householdkey;
+            _calcRepo = original._calcRepo;
+            Site = original.Site;
+            _transportationHandler = original._transportationHandler;
+            _sourceAffordance = remoteAffordance;
+
+            var message = "Copying affordance base transport decorator for remote affordance " + remoteAffordance;
+            _calcRepo.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(new TimeStep(0, 0, false), _householdkey, message));
         }
 
         public string PrettyNameForDumping => Name + " (including transportation)";
@@ -85,7 +101,7 @@ namespace CalculationEngine.Transportation {
                 // person has to travel to the target site with an unknown duration - cannot activate the source affordance yet
                 var activationName = "Dynamic Travel Profile for Route " + route.Name + " to affordance " + _sourceAffordance.Name;
                 // determine the travel target: the POI of the affordance if it is remote, else null (for home)
-                var destination = (_sourceAffordance as CalcAffordanceRemote)?.PointOfInterest;
+                var destination = _sourceAffordance is CalcAffordanceRemote remoteAff ? remoteAff.PointOfInterest : null;
                 activationInfo = new RemoteAffordanceActivation(activationName, _sourceAffordance.Name, startTime, destination, route, personSourceLocation.CalcSite, this);
                 return;
             }

@@ -42,6 +42,15 @@ namespace CalculationEngine.HouseholdElements
             }
         }
 
+        /// <summary>
+        /// Creates a shallow copy of the passed affordance object.
+        /// </summary>
+        /// <param name="original">The affordance to copy</param>
+        protected CalcAffordanceWithTimeLimit(CalcAffordanceWithTimeLimit original) : base(original)
+        {
+            IsBusyArray = original.IsBusyArray;
+        }
+
         public override BusynessType IsBusy(TimeStep time, CalcLocation srcLocation, CalcPersonDto calcPerson, bool clearDictionaries = true)
         {
             if (time.InternalStep >= IsBusyArray.Length)

@@ -1,10 +1,12 @@
 ﻿#region
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Automation;
 using Automation.ResultFiles;
 using CalculationEngine.CitySimulation;
+using CalculationEngine.Transportation;
 using Common;
 using Common.CalcDto;
 using Common.Enums;
@@ -28,17 +30,42 @@ namespace CalculationEngine.HouseholdElements
         /// </summary>
         public PointOfInterestId PointOfInterest { get; }
 
-        public CalcAffordanceRemote([NotNull] string pName, [NotNull] CalcLocation loc, bool randomEffect,
-            [NotNull][ItemNotNull] List<CalcDesire> satisfactionvalues, int miniumAge, int maximumAge, PermittedGender permittedGender, bool needsLight,
-            ColorRGB affordanceColor, [NotNull] string pAffCategory, bool isInterruptable, bool isInterrupting, [NotNull][ItemNotNull] List<CalcAffordanceVariableOp> variableOps,
-            [NotNull][ItemNotNull] List<VariableRequirement> variableRequirements, ActionAfterInterruption actionAfterInterruption, [NotNull] string timeLimitName, int weight,
-            bool requireAllDesires, [NotNull] string srcTrait, StrGuid guid, [NotNull] CalcVariableRepository variableRepository,
-            [ItemNotNull][NotNull] BitArray isBusy, BodilyActivityLevel bodilyActivityLevel,
-            [NotNull] CalcRepo calcRepo, HouseholdKey householdKey, PointOfInterestId pointOfInterest)
-            : base(pName, loc, satisfactionvalues, miniumAge, maximumAge, permittedGender, needsLight, randomEffect, pAffCategory, isInterruptable, isInterrupting, actionAfterInterruption, weight, requireAllDesires,
-                  CalcAffordanceType.Affordance, guid, isBusy, bodilyActivityLevel, calcRepo, householdKey, [], affordanceColor, srcTrait, timeLimitName, variableRepository, variableOps, variableRequirements)
+        /// <summary>
+        /// Creates a remote affordance from another affordance that uses a time limit. Creates a shallow copy
+        /// of the original affordance.
+        /// </summary>
+        /// <param name="affordance">the original affordance</param>
+        /// <param name="poinOfInterest">the point of interest for the new remote affordance</param>
+        public CalcAffordanceRemote(CalcAffordanceWithTimeLimit affordance, PointOfInterestId poinOfInterest) : base(affordance)
         {
-            PointOfInterest = pointOfInterest;
+            PointOfInterest = poinOfInterest;
+        }
+
+        /// <summary>
+        /// Creates a new remote from a non-remote affordance. The new remote affordance is based on a shallow copy of the
+        /// original affordance.
+        /// </summary>
+        /// <param name="affordance">the original affordance</param>
+        /// <param name="pointOfInterest">the point of interest for the new remote affordance</param>
+        /// <returns>the new remote affordance</returns>
+        /// <exception cref="LPGException">if the original affordance cannot be turned into a remote affordance</exception>
+        public static CalcAffordanceRemote CreateFromNormalAffordance(ICalcAffordanceBase affordance, PointOfInterestId pointOfInterest)
+        {
+            // check if the original affordance can be turned into a remote affordance
+            if (affordance is CalcAffordanceRemote)
+            {
+                throw new LPGException("The affordance to convert is already a remote affordance.");
+            }
+            if (affordance is AffordanceBaseTransportDecorator)
+            {
+                throw new LPGException("Cannot convert a transport decorator - pass the source affordance instead");
+            }
+            if (affordance is not CalcAffordanceWithTimeLimit timelimitAff)
+            {
+                throw new LPGException("Trying to create a remote affordance from unknown affordance type.");
+            }
+
+            return new CalcAffordanceRemote(timelimitAff, pointOfInterest);
         }
 
         public override void Activate(TimeStep startTime, string activatorName, CalcLocation personSourceLocation, out IAffordanceActivation personTimeProfile)
@@ -46,6 +73,8 @@ namespace CalculationEngine.HouseholdElements
             // execute only variable operations that occur in the beginning
             ExecuteVariableOperations(startTime, startTime, startTime, [VariableExecutionTime.Beginning]);
 
+            // TODO alternative approach: choose an affordance duration just like a normal affordance, and include it in RemoteAffordanceActivation as
+            // 'requested stay duration', which the POI can use for stay simulation
             personTimeProfile = new RemoteAffordanceActivation(Name, Name, startTime, PointOfInterest, null, personSourceLocation.CalcSite, this);
         }
 
@@ -64,7 +93,8 @@ namespace CalculationEngine.HouseholdElements
 
         /// <summary>
         /// Collect all subaffordances of this affordance that are currently available. This depends
-        /// on whether this affordance is currently active, whether the activation is far enough behind 
+        /// on whether this affordance is currently active and whether the activation was long enough ago, but
+        /// not longer than the permitted buffer time frame.
         /// </summary>
         /// <param name="time">current timestep</param>
         /// <param name="onlyInterrupting">whether only interrupting subaffordances should be collected</param>

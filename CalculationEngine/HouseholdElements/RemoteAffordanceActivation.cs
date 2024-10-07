@@ -14,7 +14,7 @@ namespace CalculationEngine.HouseholdElements
     /// <param name="start">timestep in which the affordance starts</param>
     /// <param name="route">the route to the destination site</param>
     /// <param name="sourceSite">the site from which the person set off when activating the affordance</param>
-    public class RemoteAffordanceActivation(string name, string dataSource, TimeStep start, PointOfInterestId destination,
+    public class RemoteAffordanceActivation(string name, string dataSource, TimeStep start, PointOfInterestId? destination,
         CalcTravelRoute? route, CalcSite? sourceSite, ICalcAffordanceBase affordance,
         List<CalcTravelDeviceUseEvent>? travelDeviceUseEvents = null) : IAffordanceActivation
     {

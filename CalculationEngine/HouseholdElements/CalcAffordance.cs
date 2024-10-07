@@ -31,7 +31,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Automation;
 using Automation.ResultFiles;
@@ -161,7 +160,8 @@ namespace CalculationEngine.HouseholdElements
 
         /// <summary>
         /// Collect all subaffordances of this affordance that are currently available. This depends
-        /// on whether this affordance is currently active, whether the activation is far enough behind 
+        /// on whether this affordance is currently active and whether the activation was long enough ago, but
+        /// not longer than the permitted buffer time frame.
         /// </summary>
         /// <param name="time">current timestep</param>
         /// <param name="onlyInterrupting">whether only interrupting subaffordances should be collected</param>
@@ -174,8 +174,8 @@ namespace CalculationEngine.HouseholdElements
                 return [];
             }
 
-            // remove activations that are already over
-            var outDatedActivations = _currentActivations.Where(kvp => kvp.Value.Item2 < time);
+            // remove activations that are already over; use ToList to get a separate colletion to iterate for removing
+            var outDatedActivations = _currentActivations.Where(kvp => kvp.Value.Item2 < time).ToList();
             foreach (var kvPair in outDatedActivations)
             {
                 _currentActivations.Remove(kvPair.Key);

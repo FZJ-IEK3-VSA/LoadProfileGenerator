@@ -53,6 +53,12 @@ namespace CalculationEngine.HouseholdElements
 {
     public class CalcPerson : CalcBase
     {
+        /// <summary>
+        /// Name of the CalcSite "Home". This is relevant for the city simulation
+        /// and determination of remote affordances.
+        /// </summary>
+        private const string NameOfHomeCalcSite = "Home";
+
         [ItemNotNull]
         [JetBrains.Annotations.NotNull]
         private readonly BitArray _isBusy;
@@ -377,6 +383,8 @@ namespace CalculationEngine.HouseholdElements
 
             // update the location
             currentLocation = remoteActivityResult!.NewLocation;
+            // reset the result object to correctly detect future remote updates
+            remoteActivityResult = null;
 
             // calculate the duration of the remote activity
             int duration = time.InternalStep - CurrentActivationInfo.Start.InternalStep;
@@ -389,8 +397,20 @@ namespace CalculationEngine.HouseholdElements
                 transportAffordance.LogTransportationEvent(CurrentActivationInfo.TravelDeviceUseEvents, Name, CurrentActivationInfo.Start, CurrentActivationInfo.SourceSite,
                     CurrentActivationInfo.Route!, duration, sourceAffordanceDuration);
 
-                // activate the actual affordance
+                // select the actual affordance and check if it is available
                 _currentAffordance = transportAffordance._sourceAffordance;
+                if (_currentAffordance.IsBusy(time, CurrentLocation, _calcPerson) != BusynessType.NotBusy)
+                {
+                    // the affordance is not available, abort it
+                    if (_calcRepo.CalcParameters.IsSet(CalcOption.ThoughtsLogfile))
+                    {
+                        string thought = "Planned affordance " + _currentAffordance.Name + " is not available after dynamic traveling.";
+                        _calcRepo.Logfile.ThoughtsLogFile1.WriteEntry(new ThoughtEntry(this, time, thought), _calcPerson.HouseholdKey);
+                    }
+                    return false;
+                }
+
+                // activate the actual affordance
                 _currentAffordance.Activate(time, Name, CurrentLocation, out var sourceActivation);
                 if (sourceActivation is CalcProfile personProfile)
                 {
@@ -406,9 +426,8 @@ namespace CalculationEngine.HouseholdElements
             }
             else
             {
+                // finished a remote activity
                 var affordance = (CalcAffordanceRemote)_currentAffordance!;
-
-                // finished the remote activity
                 _isBusyForUnknownDuration = false;
                 affordance.Finish(time, Name);
 
@@ -419,8 +438,6 @@ namespace CalculationEngine.HouseholdElements
                     _calcRepo.Logfile.ThoughtsLogFile1.WriteEntry(new ThoughtEntry(this, time, thought), _calcPerson.HouseholdKey);
                 }
             }
-            // reset the result object
-            remoteActivityResult = null;
             return remoteActivityStarted;
         }
 
@@ -919,6 +936,37 @@ namespace CalculationEngine.HouseholdElements
         }
 
         /// <summary>
+        /// If the affordance takes place at another site, replaces it with a new remote affordance.
+        /// Otherwise just returns the affordance unchanged. In any case, the returned affordance can
+        /// be added to this person's list of affordances.
+        /// </summary>
+        /// <param name="affordance">the affordance to check and possibly replace</param>
+        /// <returns>the affordance to add to the person's list</returns>
+        private ICalcAffordanceBase ReplaceWithRemoteAffordanceIfNecessary(ICalcAffordanceBase affordance)
+        {
+            if (affordance is not AffordanceBaseTransportDecorator transportAffordance)
+            {
+                // without transport remote affordances are not possible
+                return affordance;
+            }
+
+            var site = transportAffordance.ParentLocation.CalcSite;
+            if (site?.Name == NameOfHomeCalcSite)
+            {
+                // affordance takes place at home - no remote affordance
+                return affordance;
+            }
+
+            // TODO: get the POI preferences of this person
+            var poi = new PointOfInterestId(0, 0);
+
+            // turn the affordance into a remote affordance for this person
+            var remoteAff = CalcAffordanceRemote.CreateFromNormalAffordance(transportAffordance._sourceAffordance, poi);
+            // create a new transport decorator to avoid conflicts as persons can have different remote affordances
+            return new AffordanceBaseTransportDecorator(transportAffordance, remoteAff);
+        }
+
+        /// <summary>
         /// Initializes the lists of available affordances. Is called in the beginning of the simulation, once for the states healthy and sick each.
         /// </summary>
         /// <param name="locs">available locations offering affordances</param>
@@ -933,32 +981,34 @@ namespace CalculationEngine.HouseholdElements
             // collect affordances from all locations
             foreach (var loc in locs)
             {
-                foreach (var calcAffordance in loc.Affordances)
+                foreach (var availableAffordance in loc.Affordances)
                 {
-                    if (NewIsBasicallyValidAffordance(calcAffordance, sickness, false))
+                    var affordance = ReplaceWithRemoteAffordanceIfNecessary(availableAffordance);
+
+                    if (NewIsBasicallyValidAffordance(affordance, sickness, false))
                     {
-                        pa.PotentialAffordances.Add(calcAffordance);
-                        if (calcAffordance.IsInterrupting)
+                        pa.PotentialAffordances.Add(affordance);
+                        if (affordance.IsInterrupting)
                         {
-                            pa.PotentialInterruptingAffordances.Add(calcAffordance);
+                            pa.PotentialInterruptingAffordances.Add(affordance);
                         }
                     }
 
                     // also collect all suitable subaffordances
-                    foreach (var subAffordance in calcAffordance.SubAffordances)
+                    foreach (var subAffordance in affordance.SubAffordances)
                     {
                         if (NewIsBasicallyValidAffordance(subAffordance, sickness, false))
                         {
-                            if (!pa.PotentialAffordancesWithSubAffordances.Contains(calcAffordance))
+                            if (!pa.PotentialAffordancesWithSubAffordances.Contains(affordance))
                             {
-                                pa.PotentialAffordancesWithSubAffordances.Add(calcAffordance);
+                                pa.PotentialAffordancesWithSubAffordances.Add(affordance);
                             }
 
                             if (subAffordance.IsInterrupting)
                             {
-                                if (!pa.PotentialAffordancesWithInterruptingSubAffordances.Contains(calcAffordance))
+                                if (!pa.PotentialAffordancesWithInterruptingSubAffordances.Contains(affordance))
                                 {
-                                    pa.PotentialAffordancesWithInterruptingSubAffordances.Add(calcAffordance);
+                                    pa.PotentialAffordancesWithInterruptingSubAffordances.Add(affordance);
                                 }
                             }
                         }
@@ -967,12 +1017,9 @@ namespace CalculationEngine.HouseholdElements
             }
 
             pa.PotentialAffordances.Sort((x, y) => string.CompareOrdinal(x.Name, y.Name));
-            pa.PotentialInterruptingAffordances.Sort(
-                (x, y) => string.CompareOrdinal(x.Name, y.Name));
-            pa.PotentialAffordancesWithSubAffordances.Sort(
-                (x, y) => string.CompareOrdinal(x.Name, y.Name));
-            pa.PotentialAffordancesWithInterruptingSubAffordances.Sort(
-                (x, y) => string.CompareOrdinal(x.Name, y.Name));
+            pa.PotentialInterruptingAffordances.Sort((x, y) => string.CompareOrdinal(x.Name, y.Name));
+            pa.PotentialAffordancesWithSubAffordances.Sort((x, y) => string.CompareOrdinal(x.Name, y.Name));
+            pa.PotentialAffordancesWithInterruptingSubAffordances.Sort((x, y) => string.CompareOrdinal(x.Name, y.Name));
         }
 
         [JetBrains.Annotations.NotNull]
