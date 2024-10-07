@@ -100,6 +100,9 @@ namespace MassSimulation
 
             // initialize the transport simulator
             transportSimulator = new TransportSimulator();
+
+            // TODO: init PointOfInterestSimulators properly
+            poiSimulators = [new(rank, rank)];
         }
 
         private void RunSimulation()

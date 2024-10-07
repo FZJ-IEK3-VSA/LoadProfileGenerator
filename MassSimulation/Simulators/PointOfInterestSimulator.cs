@@ -2,6 +2,7 @@
 using CalculationEngine.HouseholdElements;
 using Common;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -19,6 +20,11 @@ namespace MassSimulation.Simulators
         private List<AgentStayState> activityStates = [];
         public PointOfInterestId PoiId { get; } = new PointOfInterestId(id, rank);
 
+        private List<LogEntry> LogEntries = [];
+
+        internal record LogEntry(TimeStep Timestep, DateTime DateTime, string Message)
+        { }
+
         public IEnumerable<RemoteActivityFinished> SimulateOneStep(TimeStep timeStep, DateTime dateTime, IEnumerable<RemoteActivityStart> newActivities)
         {
             AddNewPersons(newActivities);
@@ -28,6 +34,7 @@ namespace MassSimulation.Simulators
             {
                 // update travel progress
                 UpdateRemainingStayTime(state);
+                LogArrivals(timeStep, dateTime, newActivities);
             }
 
             return GetFinishedAgents();
@@ -46,6 +53,13 @@ namespace MassSimulation.Simulators
             }
         }
 
+        private void LogArrivals(TimeStep timestep, DateTime dateTime, IEnumerable<RemoteActivityStart> newActivities)
+        {
+            var newPersons = string.Join(", ", newActivities.Select(a => a.Person.PersonName));
+            var message = $"Total persons: {activityStates.Count} - new arrivals: {newPersons}";
+            LogEntries.Add(new(timestep, dateTime, message));
+        }
+
         private void UpdateRemainingStayTime(AgentStayState state)
         {
             state.RemainingDuration--;
@@ -53,7 +67,7 @@ namespace MassSimulation.Simulators
 
         private IEnumerable<RemoteActivityFinished> GetFinishedAgents()
         {
-            // collect all persons that finished their activity in the current timestep
+            // collect all persons that finished their activity in the current Timestep
             Predicate<AgentStayState> isFinished = t => t.RemainingDuration <= 0;
             var arrived = activityStates.FindAll(isFinished);
             // remove the finished persons from the list of present persons
@@ -64,6 +78,10 @@ namespace MassSimulation.Simulators
 
         public void FinishSimulation()
         {
+            var directory = "D:/LPG/MyResults/AttendanceLogs/";
+            Directory.CreateDirectory(directory);
+            var logFile = $"POI-{PoiId.WorkerId}-{PoiId.Id}.txt";
+            File.WriteAllLines(directory + logFile, LogEntries.Select(e => $"{e.Timestep} - {e.Message}"));
         }
     }
 }
