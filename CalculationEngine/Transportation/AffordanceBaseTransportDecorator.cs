@@ -83,12 +83,12 @@ namespace CalculationEngine.Transportation
             // log transportation info
             string status;
             if (routeduration == 0) {
-                status = "\tActivating " + Name + " at " + startTime + " with no transportation and moving from " + personSourceLocation 
-                    + " to " + _sourceAffordance.ParentLocation.Name + " for affordance " + _sourceAffordance.Name;
+                status = $"\tActivating {Name} at {startTime} with no transportation and moving from {personSourceLocation} to "
+                    + $"{_sourceAffordance.ParentLocation.Name} for affordance {_sourceAffordance.Name}";
             }
             else {
-                status = "\tActivating " + Name + " at " + startTime + " with a transportation duration of " + routeduration
-                    + " for moving from " + personSourceLocation + " to " + _sourceAffordance.ParentLocation.Name;
+                status = $"\tActivating {Name} at {startTime} with a transportation duration of {routeduration} for moving from "
+                    + $"{personSourceLocation} to {_sourceAffordance.ParentLocation.Name}";
             }
             _calcRepo.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(startTime, _householdkey, status));
 
