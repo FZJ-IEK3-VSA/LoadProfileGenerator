@@ -53,11 +53,12 @@ namespace MassSimulation.Simulators
 
         public IEnumerable<RemoteActivityFinished> GetArrivingAgents()
         {
-            var arrived = travelStates.Where(t => t.RemainingTravelDistance <= 0);
-            foreach (var travelState in arrived)
-            {
-                travelStates.Remove(travelState);
-            }
+            // collect all persons that arrived in the current timestep
+            Predicate<AgentTravelState> hasArrived = t => t.RemainingTravelDistance <= 0;
+            var arrived = travelStates.FindAll(hasArrived);
+            // remove the arrived persons from the collection of currently traveling persons
+            travelStates.RemoveAll(hasArrived);
+            // create the corresponding finished activity messages
             return arrived.Select(t => new RemoteActivityFinished(t.ActivityInfo.Person, t.ActivityInfo.Poi));
         }
 

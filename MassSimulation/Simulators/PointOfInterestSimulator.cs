@@ -16,7 +16,7 @@ namespace MassSimulation.Simulators
     /// </summary>
     internal class PointOfInterestSimulator(int rank, int id) : ISimulator
     {
-        private Collection<AgentStayState> activityStates = [];
+        private List<AgentStayState> activityStates = [];
         public PointOfInterestId PoiId { get; } = new PointOfInterestId(id, rank);
 
         public IEnumerable<RemoteActivityFinished> SimulateOneStep(TimeStep timeStep, DateTime dateTime, IEnumerable<RemoteActivityStart> newActivities)
@@ -53,11 +53,12 @@ namespace MassSimulation.Simulators
 
         private IEnumerable<RemoteActivityFinished> GetFinishedAgents()
         {
-            var arrived = activityStates.Where(t => t.RemainingDuration <= 0);
-            foreach (var travelState in arrived)
-            {
-                activityStates.Remove(travelState);
-            }
+            // collect all persons that finished their activity in the current timestep
+            Predicate<AgentStayState> isFinished = t => t.RemainingDuration <= 0;
+            var arrived = activityStates.FindAll(isFinished);
+            // remove the finished persons from the list of present persons
+            activityStates.RemoveAll(isFinished);
+            // create the corresponding finished activity messages
             return arrived.Select(t => new RemoteActivityFinished(t.Activity.Person, PoiId));
         }
 
