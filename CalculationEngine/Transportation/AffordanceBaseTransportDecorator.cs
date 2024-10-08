@@ -26,18 +26,12 @@ namespace CalculationEngine.Transportation
         /// </summary>
         public static readonly bool DynamicCitySimulation = false;
 
-        public AffordanceBaseTransportDecorator(ICalcAffordanceBase sourceAffordance, CalcSite site,
-            TransportationHandler transportationHandler, string name, HouseholdKey householdkey, StrGuid guid,
-            CalcRepo calcRepo)
-            : base(name, guid)
+        public AffordanceBaseTransportDecorator(ICalcAffordanceBase sourceAffordance, TransportationHandler transportationHandler,
+            string name, HouseholdKey householdkey, StrGuid guid, CalcRepo calcRepo) : base(name, guid)
         {
-            if (!site.Locations.Contains(sourceAffordance.ParentLocation)) {
-                throw new LPGException("Wrong site. Bug. Please report.");
-            }
             _householdkey= householdkey;
             _calcRepo = calcRepo;
             _calcRepo.OnlineLoggingData.AddTransportationStatus( new TransportationStatus(new TimeStep(0,0,false), householdkey, "Initializing affordance base transport decorator for " + name));
-            Site = site;
             _transportationHandler = transportationHandler;
             _sourceAffordance = sourceAffordance;
         }
@@ -51,7 +45,6 @@ namespace CalculationEngine.Transportation
         {
             _householdkey = original._householdkey;
             _calcRepo = original._calcRepo;
-            Site = original.Site;
             _transportationHandler = original._transportationHandler;
             _sourceAffordance = remoteAffordance;
 
@@ -61,7 +54,7 @@ namespace CalculationEngine.Transportation
 
         public string PrettyNameForDumping => Name + " (including transportation)";
 
-        public CalcSite Site { get; }
+        public CalcSite Site => _sourceAffordance.Site ?? throw new LPGException("Incorrectly configured transport decorator: missing site");
 
         public void Activate(TimeStep startTime, string activatorName, CalcLocation personSourceLocation,
             out IAffordanceActivation activationInfo)
@@ -91,6 +84,7 @@ namespace CalculationEngine.Transportation
             // check if a travel of dynamic duration will start
             var profileGuid = System.Guid.NewGuid().ToStrGuid();
             IAffordanceActivation? sourceActivation = null;
+            // TODO: this condition is not sufficient with the current CalcSites and Locations in the LPG (multiple locations all in the same "Event Location" site)
             if (DynamicCitySimulation && personSourceLocation.CalcSite != _sourceAffordance.Site)
             {
                 // person has to travel to the target site with an unknown duration - cannot activate the source affordance yet

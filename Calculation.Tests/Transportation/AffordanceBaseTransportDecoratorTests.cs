@@ -198,8 +198,8 @@ namespace Calculation.Tests.Transportation
                         "Desc", null, null);
                     transportationHandler = new TransportationHandler();
                     transportationHandler.AddSite(srcSite);
-                    abt = new AffordanceBaseTransportDecorator(affordance, dstSite, transportationHandler,
-                        "travel to dstsite", new HouseholdKey("hh0"), Guid.NewGuid().ToStrGuid(), calcRepo);
+                    abt = new AffordanceBaseTransportDecorator(affordance, transportationHandler, "travel to dstsite",
+                        new HouseholdKey("hh0"), Guid.NewGuid().ToStrGuid(), calcRepo);
                     dstloc.AddTransportationAffordance(abt);
 
                     var myCategory = new CalcTransportationDeviceCategory("mycategory", false, Guid.NewGuid().ToStrGuid());

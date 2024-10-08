@@ -29,9 +29,9 @@ namespace CalculationEngine.HouseholdElements
             bool requireAllAffordances, CalcAffordanceType calcAffordanceType, StrGuid guid, [ItemNotNull][NotNull] BitArray isBusyArray, BodilyActivityLevel bodilyActivityLevel,
             [NotNull] CalcRepo calcRepo, HouseholdKey householdKey, List<DeviceEnergyProfileTuple> energyProfiles, ColorRGB affordanceColor, string sourceTrait, string? timeLimitName,
             [NotNull] CalcVariableRepository variableRepository, [NotNull][ItemNotNull] List<CalcAffordanceVariableOp> variableOps,
-            [NotNull][ItemNotNull] List<VariableRequirement> variableRequirements, CalcSite? site = null)
+            [NotNull][ItemNotNull] List<VariableRequirement> variableRequirements)
             : base(pName, loc, satisfactionvalues, miniumAge, maximumAge, permittedGender, needsLight, randomEffect, pAffCategory, isInterruptable, isInterrupting, actionAfterInterruption, weight, requireAllAffordances,
-                  calcAffordanceType, guid, bodilyActivityLevel, calcRepo, householdKey, energyProfiles, affordanceColor, sourceTrait, timeLimitName, variableRepository, variableOps, variableRequirements, site)
+                  calcAffordanceType, guid, bodilyActivityLevel, calcRepo, householdKey, energyProfiles, affordanceColor, sourceTrait, timeLimitName, variableRepository, variableOps, variableRequirements)
         {
             IsBusyArray = new BitArray(calcRepo.CalcParameters.InternalTimesteps);
             //copy to make sure that it is a separate instance

@@ -508,8 +508,8 @@ namespace CalculationController.CalcFactories {
                     }
 
                     AffordanceBaseTransportDecorator abtd = new AffordanceBaseTransportDecorator(
-                        aff, sites[0], chh.TransportationHandler, aff.Name,
-                        chh.HouseholdKey, Guid.NewGuid().ToStrGuid(), _calcRepo);
+                        aff, chh.TransportationHandler, aff.Name, chh.HouseholdKey,
+                        Guid.NewGuid().ToStrGuid(), _calcRepo);
                     location.AddTransportationAffordance(abtd);
                 }
 
@@ -528,8 +528,8 @@ namespace CalculationController.CalcFactories {
 
                     var aff = location.IdleAffs[person];
                     AffordanceBaseTransportDecorator abtd = new AffordanceBaseTransportDecorator(
-                        aff, sites[0], chh.TransportationHandler, aff.Name,
-                        chh.HouseholdKey, Guid.NewGuid().ToStrGuid(), _calcRepo);
+                        aff, chh.TransportationHandler, aff.Name, chh.HouseholdKey,
+                        Guid.NewGuid().ToStrGuid(), _calcRepo);
                     location.IdleAffs[person] = abtd;
                 }
             }

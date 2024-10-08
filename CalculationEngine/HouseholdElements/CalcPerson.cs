@@ -1106,6 +1106,7 @@ namespace CalculationEngine.HouseholdElements
         {
             if (_calcRepo.CalcParameters.TransportationEnabled)
             {
+                // TODO: this is not useful - with transport enabled, all affordances need a transport decorator
                 if (aff.Site != srcSite && !(aff is AffordanceBaseTransportDecorator))
                 {
                     //person is not at the right place and can't transport -> not available.

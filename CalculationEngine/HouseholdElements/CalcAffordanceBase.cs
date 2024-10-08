@@ -77,14 +77,12 @@ namespace CalculationEngine.HouseholdElements
             PermittedGender permittedGender, bool needsLight, bool randomEffect, [JetBrains.Annotations.NotNull] string pAffCategory, bool isInterruptable, bool isInterrupting, ActionAfterInterruption actionAfterInterruption, int weight,
             bool requireAllAffordances, CalcAffordanceType calcAffordanceType, StrGuid guid, BodilyActivityLevel bodilyActivityLevel, [JetBrains.Annotations.NotNull] CalcRepo calcRepo,
             HouseholdKey householdKey, List<DeviceEnergyProfileTuple> energyProfiles, ColorRGB affordanceColor, string sourceTrait, string? timeLimitName, [JetBrains.Annotations.NotNull] CalcVariableRepository variableRepository,
-            [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcAffordanceVariableOp> variableOps, [JetBrains.Annotations.NotNull][ItemNotNull] List<VariableRequirement> variableRequirements,
-            CalcSite? site = null) : base(pName, guid)
+            [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcAffordanceVariableOp> variableOps, [JetBrains.Annotations.NotNull][ItemNotNull] List<VariableRequirement> variableRequirements) : base(pName, guid)
         {
             CalcAffordanceType = calcAffordanceType;
             BodilyActivityLevel = bodilyActivityLevel;
             CalcRepo = calcRepo;
             HouseholdKey = householdKey;
-            Site = site;
             ParentLocation = loc;
             Satisfactionvalues = satisfactionvalues;
             Weight = weight;
@@ -120,7 +118,6 @@ namespace CalculationEngine.HouseholdElements
             BodilyActivityLevel = original.BodilyActivityLevel;
             CalcRepo = original.CalcRepo;
             HouseholdKey = original.HouseholdKey;
-            Site = original.Site;
             ParentLocation = original.ParentLocation;
             Satisfactionvalues = original.Satisfactionvalues;
             Weight = original.Weight;
@@ -180,7 +177,7 @@ namespace CalculationEngine.HouseholdElements
 
         public List<CalcDesire> Satisfactionvalues { get; }
 
-        public CalcSite? Site { get; }
+        public CalcSite? Site => ParentLocation.CalcSite;
 
         public string SourceTrait { get; }
 
