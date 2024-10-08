@@ -14,9 +14,12 @@ namespace MassSimulation.Simulators
     /// <summary>
     /// Stores all currently traveling agents and simulates their travel times.
     /// </summary>
-    internal class TransportSimulator : ISimulator
+    internal class TransportSimulator(int rank) : ISimulator
     {
+        public readonly int WorkerId = rank;
         private List<AgentTravelState> travelStates = [];
+
+        private TestLogger logger = new();
 
         public IEnumerable<RemoteActivityFinished> SimulateOneStep(TimeStep timeStep, DateTime dateTime, IEnumerable<RemoteActivityStart> newActivities)
         {
@@ -27,6 +30,7 @@ namespace MassSimulation.Simulators
             {
                 // update travel progress
                 UpdateRemainingTravelDistance(state);
+                LogNewTravelers(timeStep, dateTime, newActivities);
             }
 
             return GetArrivingAgents();
@@ -51,6 +55,13 @@ namespace MassSimulation.Simulators
             }
         }
 
+        private void LogNewTravelers(TimeStep timestep, DateTime dateTime, IEnumerable<RemoteActivityStart> newActivities)
+        {
+            var newPersons = string.Join(", ", newActivities.Select(a => a.Person.PersonName));
+            var message = $"Total persons: {travelStates.Count} - new travelers: {newPersons}";
+            logger.Log(timestep, dateTime, message);
+        }
+
         public IEnumerable<RemoteActivityFinished> GetArrivingAgents()
         {
             // collect all persons that arrived in the current timestep
@@ -64,6 +75,8 @@ namespace MassSimulation.Simulators
 
         public void FinishSimulation()
         {
+            var filename = $"Transport-{WorkerId}.txt";
+            logger.WriteToFile(filename);
         }
     }
 }

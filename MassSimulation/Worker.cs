@@ -99,7 +99,7 @@ namespace MassSimulation
             lpgSimulator.Init();
 
             // initialize the transport simulator
-            transportSimulator = new TransportSimulator();
+            transportSimulator = new TransportSimulator(rank);
 
             // TODO: init PointOfInterestSimulators properly
             poiSimulators = [new(rank, rank)];

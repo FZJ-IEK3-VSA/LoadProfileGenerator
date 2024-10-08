@@ -20,10 +20,7 @@ namespace MassSimulation.Simulators
         private List<AgentStayState> activityStates = [];
         public PointOfInterestId PoiId { get; } = new PointOfInterestId(id, rank);
 
-        private List<LogEntry> LogEntries = [];
-
-        internal record LogEntry(TimeStep Timestep, DateTime DateTime, string Message)
-        { }
+        private TestLogger logger = new();
 
         public IEnumerable<RemoteActivityFinished> SimulateOneStep(TimeStep timeStep, DateTime dateTime, IEnumerable<RemoteActivityStart> newActivities)
         {
@@ -57,7 +54,7 @@ namespace MassSimulation.Simulators
         {
             var newPersons = string.Join(", ", newActivities.Select(a => a.Person.PersonName));
             var message = $"Total persons: {activityStates.Count} - new arrivals: {newPersons}";
-            LogEntries.Add(new(timestep, dateTime, message));
+            logger.Log(timestep, dateTime, message);
         }
 
         private void UpdateRemainingStayTime(AgentStayState state)
@@ -78,10 +75,8 @@ namespace MassSimulation.Simulators
 
         public void FinishSimulation()
         {
-            var directory = "D:/LPG/MyResults/AttendanceLogs/";
-            Directory.CreateDirectory(directory);
-            var logFile = $"POI-{PoiId.WorkerId}-{PoiId.Id}.txt";
-            File.WriteAllLines(directory + logFile, LogEntries.Select(e => $"{e.Timestep} - {e.Message}"));
+            var filename = $"POI-{PoiId.WorkerId}-{PoiId.Id}.txt";
+            logger.WriteToFile(filename);
         }
     }
 }
