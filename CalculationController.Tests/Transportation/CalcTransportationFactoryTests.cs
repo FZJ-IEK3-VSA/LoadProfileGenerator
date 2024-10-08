@@ -319,8 +319,8 @@ namespace CalculationController.Tests.Transportation {
                             throw new LPGException("no transportation handler");
                         }
 
-                        var src = chh.TransportationHandler.CalcSites[0].Locations[0];
-                        var dst = chh.TransportationHandler.CalcSites[1].Locations[0];
+                        var src = chh.TransportationHandler.CalcSites[0].Locations.ElementAt(0);
+                        var dst = chh.TransportationHandler.CalcSites[1].Locations.ElementAt(0);
                         var ts = new TimeStep(1, parameters);
                         var person = new CalcPersonDto("personname", null, 30, PermittedGender.Male, null, null, null, -1, null, null);
                         dst.Affordances[0].IsBusy(ts, src, person, false);
