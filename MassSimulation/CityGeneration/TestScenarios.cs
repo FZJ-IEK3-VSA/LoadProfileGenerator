@@ -24,6 +24,8 @@ namespace MassSimulation.CityGeneration
             var calcSpec = hcj.CalcSpec ?? throw new LPGException("No CalcSpec was given in the input file");
             // TODO: calcspec should be complete and single-source-of-parameters
             // --> check and fill all missing values in the calcspec first, then move on
+            if (!calcSpec.EnableTransportation)
+                throw new LPGException("Transport must be enabled for the city simulation.");
 
             // create result directory
             var resultDir = hcj.CalcSpec.OutputDirectory ??= HouseGenerator.DefaultResultDirectory;
