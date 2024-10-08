@@ -46,17 +46,16 @@ namespace CalculationEngine.HouseholdElements
     {
         private int personProfileDuration;
 
-        public CalcSubAffordance([NotNull] string pName, [NotNull] CalcLocation loc, [NotNull][ItemNotNull] List<CalcDesire> satisfactionvalues,
-            int miniumAge, int maximumAge, int delaytimesteps, PermittedGender permittedGender, [NotNull] string pAffCategory,
-            bool isInterruptable, bool isInterrupting, [NotNull] CalcAffordance parentAffordance,
-            [NotNull][ItemNotNull] List<CalcAffordanceVariableOp> variableOps, int weight,
-                                 [NotNull] string sourceTrait,
-                                 StrGuid guid, [ItemNotNull][NotNull] BitArray isBusy,
-            [NotNull] CalcVariableRepository variableRepository, BodilyActivityLevel bodilyActivityLevel, [NotNull] CalcRepo calcRepo, HouseholdKey hhkey)
-            : base(
-                pName, loc, satisfactionvalues, miniumAge, maximumAge, permittedGender, false, false, pAffCategory,
+        public CalcSubAffordance(string pName, CalcLocation loc, List<CalcDesire> satisfactionvalues, int miniumAge,
+            int maximumAge, int delaytimesteps, PermittedGender permittedGender, string pAffCategory,
+            bool isInterruptable, bool isInterrupting, CalcAffordance parentAffordance,
+            List<CalcAffordanceVariableOp> variableOps, int weight, string sourceTrait, StrGuid guid, BitArray isBusy,
+            CalcVariableRepository variableRepository, BodilyActivityLevel bodilyActivityLevel, CalcRepo calcRepo,
+            HouseholdKey hhkey)
+            : base(pName, loc, satisfactionvalues, miniumAge, maximumAge, permittedGender, false, false, pAffCategory,
                 isInterruptable, isInterrupting, ActionAfterInterruption.GoBackToOld, weight, false,
-                CalcAffordanceType.Subaffordance, guid, isBusy, bodilyActivityLevel, calcRepo, hhkey, new List<DeviceEnergyProfileTuple>(), LPGColors.Black, sourceTrait, null, variableRepository, variableOps, new())
+                CalcAffordanceType.Subaffordance, guid, isBusy, bodilyActivityLevel, calcRepo, hhkey, [],
+                LPGColors.Black, sourceTrait, null, variableRepository, variableOps, [])
         {
             Delaytimesteps = delaytimesteps;
             ParentAffordance = parentAffordance;
@@ -64,7 +63,7 @@ namespace CalculationEngine.HouseholdElements
 
         public int Delaytimesteps { get; }
 
-        [NotNull] public readonly CalcAffordance ParentAffordance;
+        public readonly CalcAffordance ParentAffordance;
 
         public override void Activate(TimeStep startTime, string activatorName, CalcLocation personSourceLocation, out IAffordanceActivation personTimeProfile)
         {
@@ -78,7 +77,7 @@ namespace CalculationEngine.HouseholdElements
 
         public override bool AreThereDuplicateEnergyProfiles() => false;
 
-        [NotNull] public override string AreDeviceProfilesEmpty() => throw new NotImplementedException();
+        public override string AreDeviceProfilesEmpty() => throw new NotImplementedException();
 
         public override string ToString() => "Sub-Affordance:" + Name;
 
