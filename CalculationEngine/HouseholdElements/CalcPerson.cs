@@ -944,6 +944,12 @@ namespace CalculationEngine.HouseholdElements
         /// <returns>the affordance to add to the person's list</returns>
         private ICalcAffordanceBase ReplaceWithRemoteAffordanceIfNecessary(ICalcAffordanceBase affordance)
         {
+            // TODO: put this option somewhere more suitable
+            if (!AffordanceBaseTransportDecorator.DynamicCitySimulation)
+            {
+                // not dynamic city simulation
+                return affordance;
+            }
             if (affordance is not AffordanceBaseTransportDecorator transportAffordance)
             {
                 // without transport remote affordances are not possible

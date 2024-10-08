@@ -21,10 +21,10 @@ namespace CalculationEngine.Transportation
         private readonly CalcRepo _calcRepo;
 
         /// <summary>
-        /// General flag to decide whether dynamic simulation of travel times is done or
-        /// not. If not, static route calculation is used.
+        /// General flag to decide whether dynamic simulation of travel times and remote affordances
+        /// is done or not. If not, static route calculation and only fixed-duration affordances are used.
         /// </summary>
-        public static readonly bool DynamicTransportSimulation = true;
+        public static readonly bool DynamicCitySimulation = false;
 
         public AffordanceBaseTransportDecorator(ICalcAffordanceBase sourceAffordance, CalcSite site,
             TransportationHandler transportationHandler, string name, HouseholdKey householdkey, StrGuid guid,
