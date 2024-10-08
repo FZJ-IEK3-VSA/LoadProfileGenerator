@@ -191,9 +191,9 @@ namespace Calculation.Tests.Transportation
                         isBusy, BodilyActivityLevel.Low, calcRepo, hhkey);
 
                     srcSite = new CalcSite("srcsite", true, Guid.NewGuid().ToStrGuid(), key);
-                    srcSite.Locations.Add(srcloc);
+                    srcSite.AddLocation(srcloc);
                     dstSite = new CalcSite("dstSite", true, Guid.NewGuid().ToStrGuid(), key);
-                    dstSite.Locations.Add(dstloc);
+                    dstSite.AddLocation(dstloc);
                     fft.RegisterHousehold(new HouseholdKey("hh0"), "hh0-prettyname", HouseholdKeyType.Household,
                         "Desc", null, null);
                     transportationHandler = new TransportationHandler();

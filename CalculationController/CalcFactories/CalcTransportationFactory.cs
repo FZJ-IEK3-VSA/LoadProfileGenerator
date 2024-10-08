@@ -471,8 +471,7 @@ namespace CalculationController.CalcFactories {
                 //siteDictByGuid.Add(siteDto.Guid, calcSite);
                 foreach (var locGuid in siteDto.LocationGuid) {
                     CalcLocation calcLoc = locDict.GetCalcLocationByGuid(locGuid);
-                    calcLoc.CalcSite = calcSite;
-                    calcSite.Locations.Add(calcLoc);
+                    calcSite.AddLocation(calcLoc);
                 }
 
                 foreach (var chargingStation in siteDto.ChargingStations) {
