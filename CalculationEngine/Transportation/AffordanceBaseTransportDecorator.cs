@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Xml.Linq;
 using Automation;
 using Automation.ResultFiles;
 using CalculationEngine.HouseholdElements;
@@ -15,10 +14,8 @@ using Common.SQLResultLogging.Loggers;
 namespace CalculationEngine.Transportation
 {
     public class AffordanceBaseTransportDecorator : CalcBase, ICalcAffordanceBase {
-        [JetBrains.Annotations.NotNull]
         public readonly ICalcAffordanceBase _sourceAffordance;
         private readonly TransportationHandler _transportationHandler;
-        [JetBrains.Annotations.NotNull]
         private readonly HouseholdKey _householdkey;
 
         private readonly CalcRepo _calcRepo;
@@ -29,10 +26,9 @@ namespace CalculationEngine.Transportation
         /// </summary>
         public static readonly bool DynamicTransportSimulation = true;
 
-        public AffordanceBaseTransportDecorator([JetBrains.Annotations.NotNull] ICalcAffordanceBase sourceAffordance,
-            [JetBrains.Annotations.NotNull] CalcSite site, [JetBrains.Annotations.NotNull] TransportationHandler transportationHandler,
-            [JetBrains.Annotations.NotNull] string name, [JetBrains.Annotations.NotNull] HouseholdKey householdkey,
-            StrGuid guid, CalcRepo calcRepo)
+        public AffordanceBaseTransportDecorator(ICalcAffordanceBase sourceAffordance, CalcSite site,
+            TransportationHandler transportationHandler, string name, HouseholdKey householdkey, StrGuid guid,
+            CalcRepo calcRepo)
             : base(name, guid)
         {
             if (!site.Locations.Contains(sourceAffordance.ParentLocation)) {
@@ -65,7 +61,6 @@ namespace CalculationEngine.Transportation
 
         public string PrettyNameForDumping => Name + " (including transportation)";
 
-        [JetBrains.Annotations.NotNull]
         public CalcSite Site { get; }
 
         public void Activate(TimeStep startTime, string activatorName, CalcLocation personSourceLocation,
@@ -179,13 +174,10 @@ namespace CalculationEngine.Transportation
 
         public List<DeviceEnergyProfileTuple> Energyprofiles => _sourceAffordance.Energyprofiles;
 
-        private class LastTimeEntry([JetBrains.Annotations.NotNull] string personName, [JetBrains.Annotations.NotNull] TimeStep timeOfLastEvalulation)
+        private class LastTimeEntry(string personName, TimeStep timeOfLastEvalulation)
         {
-            [JetBrains.Annotations.NotNull]
             public string PersonName { get; } = personName;
-            [JetBrains.Annotations.NotNull]
             public TimeStep TimeOfLastEvalulation { get; } = timeOfLastEvalulation;
-            [JetBrains.Annotations.NotNull]
             public Dictionary<CalcLocation, CalcTravelRoute> PreviouslySelectedRoutes { get; } = [];
         }
 
@@ -194,7 +186,6 @@ namespace CalculationEngine.Transportation
         /// field saves the route. This is necessary to use the same route in case the affordance is
         /// actually activated in the same timestep.
         /// </summary>
-        [JetBrains.Annotations.NotNull]
         private LastTimeEntry _myLastTimeEntry = new("",new TimeStep(-1,0,false));
 
         public BusynessType IsBusy(TimeStep time, CalcLocation srcLocation, CalcPersonDto calcPerson,

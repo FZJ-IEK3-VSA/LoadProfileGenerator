@@ -39,7 +39,6 @@ using Common.CalcDto;
 using Common.Enums;
 using Common.JSON;
 using Common.SQLResultLogging.Loggers;
-using JetBrains.Annotations;
 
 #endregion
 
@@ -51,11 +50,11 @@ namespace CalculationEngine.HouseholdElements
     /// </summary>
     public class CalcAffordance : CalcAffordanceWithTimeLimit
     {
-        [JetBrains.Annotations.NotNull] private readonly CalcProfile _personProfile;
+        private readonly CalcProfile _personProfile;
 
-        [JetBrains.Annotations.NotNull] private readonly Dictionary<int, double> _probabilitiesForTimes = [];
+        private readonly Dictionary<int, double> _probabilitiesForTimes = [];
 
-        [JetBrains.Annotations.NotNull] private readonly Dictionary<int, double> _timeFactorsForTimes = [];
+        private readonly Dictionary<int, double> _timeFactorsForTimes = [];
 
         private readonly double _timeStandardDeviation;
 
@@ -65,13 +64,13 @@ namespace CalculationEngine.HouseholdElements
         /// </summary>
         private Dictionary<string, Tuple<TimeStep, TimeStep>> _currentActivations = [];
 
-        public CalcAffordance([JetBrains.Annotations.NotNull] string pName, [JetBrains.Annotations.NotNull] CalcProfile personProfile, [JetBrains.Annotations.NotNull] CalcLocation loc, bool randomEffect,
-            [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcDesire> satisfactionvalues, int miniumAge, int maximumAge, PermittedGender permittedGender, bool needsLight, double timeStandardDeviation,
-            ColorRGB affordanceColor, [JetBrains.Annotations.NotNull] string pAffCategory, bool isInterruptable, bool isInterrupting, [JetBrains.Annotations.NotNull][ItemNotNull] List<CalcAffordanceVariableOp> variableOps,
-            [JetBrains.Annotations.NotNull][ItemNotNull] List<VariableRequirement> variableRequirements, ActionAfterInterruption actionAfterInterruption, [JetBrains.Annotations.NotNull] string timeLimitName, int weight,
-            bool requireAllDesires, [JetBrains.Annotations.NotNull] string srcTrait, StrGuid guid, [JetBrains.Annotations.NotNull] CalcVariableRepository variableRepository,
-            [JetBrains.Annotations.NotNull][ItemNotNull] List<DeviceEnergyProfileTuple> energyprofiles, [ItemNotNull][JetBrains.Annotations.NotNull] BitArray isBusy, BodilyActivityLevel bodilyActivityLevel,
-            [JetBrains.Annotations.NotNull] CalcRepo calcRepo, HouseholdKey householdKey)
+        public CalcAffordance(string pName, CalcProfile personProfile, CalcLocation loc, bool randomEffect,
+            List<CalcDesire> satisfactionvalues, int miniumAge, int maximumAge, PermittedGender permittedGender, bool needsLight, double timeStandardDeviation,
+            ColorRGB affordanceColor, string pAffCategory, bool isInterruptable, bool isInterrupting, List<CalcAffordanceVariableOp> variableOps,
+            List<VariableRequirement> variableRequirements, ActionAfterInterruption actionAfterInterruption, string timeLimitName, int weight,
+            bool requireAllDesires, string srcTrait, StrGuid guid, CalcVariableRepository variableRepository,
+            List<DeviceEnergyProfileTuple> energyprofiles, BitArray isBusy, BodilyActivityLevel bodilyActivityLevel,
+            CalcRepo calcRepo, HouseholdKey householdKey)
             : base(pName, loc, satisfactionvalues, miniumAge, maximumAge, permittedGender, needsLight, randomEffect, pAffCategory, isInterruptable, isInterrupting, actionAfterInterruption, weight, requireAllDesires,
                   CalcAffordanceType.Affordance, guid, isBusy, bodilyActivityLevel, calcRepo, householdKey, energyprofiles, affordanceColor, srcTrait, timeLimitName, variableRepository, variableOps, variableRequirements)
         {
@@ -297,9 +296,8 @@ namespace CalculationEngine.HouseholdElements
             return base.IsBusy(time, srcLocation, calcPerson, clearDictionaries);
         }
 
-        public void AddDeviceTuple([JetBrains.Annotations.NotNull] CalcDevice dev, [JetBrains.Annotations.NotNull] CalcProfile newprof,
-                                   [JetBrains.Annotations.NotNull] CalcLoadType lt, decimal timeoffset, TimeSpan internalstepsize, double multiplier,
-                                   double probability)
+        public void AddDeviceTuple(CalcDevice dev, CalcProfile newprof, CalcLoadType lt, decimal timeoffset, TimeSpan internalstepsize,
+            double multiplier, double probability)
         {
             //TODO: remove this, it is only used in unit testing
             var calctup = new DeviceEnergyProfileTuple(dev, newprof, lt, timeoffset, internalstepsize, multiplier, probability);
