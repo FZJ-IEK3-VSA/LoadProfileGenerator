@@ -91,7 +91,7 @@ namespace CalculationEngine.Transportation
             // check if a travel of dynamic duration will start
             var profileGuid = System.Guid.NewGuid().ToStrGuid();
             IAffordanceActivation? sourceActivation = null;
-            if (DynamicTransportSimulation && personSourceLocation.CalcSite != _sourceAffordance.Site)
+            if (DynamicCitySimulation && personSourceLocation.CalcSite != _sourceAffordance.Site)
             {
                 // person has to travel to the target site with an unknown duration - cannot activate the source affordance yet
                 var activationName = "Dynamic Travel Profile for Route " + route.Name + " to affordance " + _sourceAffordance.Name;
@@ -109,7 +109,7 @@ namespace CalculationEngine.Transportation
                 _sourceAffordance.Activate(affordanceStartTime, activatorName, personSourceLocation, out sourceActivation);
                 if (!sourceActivation.IsDetermined)
                 {
-                    if (DynamicTransportSimulation)
+                    if (DynamicCitySimulation)
                     {
                         // person must already be at the target site
                         // affordance duration is unknown - do I still need to wrap into travel profile?
