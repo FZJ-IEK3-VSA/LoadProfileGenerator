@@ -162,7 +162,7 @@ namespace CalculationEngine.Transportation
 
         public CalcAffordanceType CalcAffordanceType => _sourceAffordance.CalcAffordanceType;
 
-        public List<CalcSubAffordance> CollectSubAffordances(TimeStep time, bool onlyInterrupting,
+        public IEnumerable<ICalcAffordanceBase> CollectSubAffordances(TimeStep time, bool onlyInterrupting,
                                                              CalcLocation srcLocation) =>
             _sourceAffordance.CollectSubAffordances(time, onlyInterrupting, srcLocation);
 
@@ -230,6 +230,8 @@ namespace CalculationEngine.Transportation
             return result;
         }
 
+        public CalcSubAffordance GetAsSubAffordance() => _sourceAffordance.GetAsSubAffordance();
+
         public bool IsInterruptable => _sourceAffordance.IsInterruptable;
 
         public bool IsInterrupting => _sourceAffordance.IsInterrupting;
@@ -254,7 +256,7 @@ namespace CalculationEngine.Transportation
 
         public string SourceTrait => _sourceAffordance.SourceTrait;
 
-        public List<CalcSubAffordance> SubAffordances => _sourceAffordance.SubAffordances;
+        public List<ICalcAffordanceBase> SubAffordances => _sourceAffordance.SubAffordances;
 
         public string? TimeLimitName => _sourceAffordance.TimeLimitName;
         public bool AreThereDuplicateEnergyProfiles() => _sourceAffordance.AreThereDuplicateEnergyProfiles();

@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Automation;
 using Automation.ResultFiles;
+using CalculationEngine.Transportation;
 using Common;
 using Common.CalcDto;
 using Common.Enums;
@@ -166,9 +167,9 @@ namespace CalculationEngine.HouseholdElements
         /// <param name="onlyInterrupting">whether only interrupting subaffordances should be collected</param>
         /// <param name="srcLocation">the current location of the person</param>
         /// <returns>a list of available subaffordances</returns>
-        public override List<CalcSubAffordance> CollectSubAffordances(TimeStep time, bool onlyInterrupting, CalcLocation srcLocation)
+        public override IEnumerable<ICalcAffordanceBase> CollectSubAffordances(TimeStep time, bool onlyInterrupting, CalcLocation srcLocation)
         {
-            if (SubAffordances.Count == 0)
+            if (!SubAffordances.Any())
             {
                 return [];
             }
@@ -186,12 +187,12 @@ namespace CalculationEngine.HouseholdElements
             }
 
             // collect all available subaffordances
-            var availableSubAffs = new List<CalcSubAffordance>();
+            var availableSubAffs = new List<ICalcAffordanceBase>();
             foreach (var subAffordance in SubAffordances)
             {
                 if (!onlyInterrupting || subAffordance.IsInterrupting)
                 {
-                    if (IsSubaffordanceAvailable(time, srcLocation, subAffordance))
+                    if (IsSubaffordanceAvailable(time, srcLocation, subAffordance.GetAsSubAffordance()))
                     {
                         availableSubAffs.Add(subAffordance);
                     }
@@ -205,7 +206,7 @@ namespace CalculationEngine.HouseholdElements
         /// </summary>
         /// <param name="time">the timestep for which to check if the subaffordance is available</param>
         /// <param name="srcLocation">the location of the affordance</param>
-        /// <param name="subAffordance">the affordance to check</param>
+        /// <param name="subAffordance">the subaffordance to check</param>
         /// <returns>whether the subaffordance is currently available</returns>
         private bool IsSubaffordanceAvailable(TimeStep time, CalcLocation srcLocation, CalcSubAffordance subAffordance)
         {

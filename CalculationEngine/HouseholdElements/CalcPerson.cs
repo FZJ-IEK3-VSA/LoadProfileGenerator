@@ -31,6 +31,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
@@ -1072,15 +1073,12 @@ namespace CalculationEngine.HouseholdElements
             foreach (var affordance in subSrcList)
             {
                 var spezsubaffs = affordance.CollectSubAffordances(timeStep, getOnlyInterrupting, CurrentLocation);
-                if (spezsubaffs.Count > 0)
+                foreach (var spezsubaff in spezsubaffs)
                 {
-                    foreach (var spezsubaff in spezsubaffs)
+                    if (NewIsAvailableAffordance(timeStep, spezsubaff, errors,
+                        getOnlyRelevantDesires, CurrentLocation.CalcSite, ignorePreviousAffordances))
                     {
-                        if (NewIsAvailableAffordance(timeStep, spezsubaff, errors,
-                            getOnlyRelevantDesires, CurrentLocation.CalcSite, ignorePreviousAffordances))
-                        {
-                            resultingAff.Add(spezsubaff);
-                        }
+                        resultingAff.Add(spezsubaff);
                     }
                 }
             }
@@ -1104,15 +1102,7 @@ namespace CalculationEngine.HouseholdElements
                                               AffordanceStatusClass? errors, bool checkForRelevance,
                                               CalcSite? srcSite, bool ignorePreviousAffordances)
         {
-            if (_calcRepo.CalcParameters.TransportationEnabled)
-            {
-                // TODO: this is not useful - with transport enabled, all affordances need a transport decorator
-                if (aff.Site != srcSite && !(aff is AffordanceBaseTransportDecorator))
-                {
-                    //person is not at the right place and can't transport -> not available.
-                    return false;
-                }
-            }
+            Debug.Assert(_calcRepo.CalcParameters.TransportationEnabled == (aff is AffordanceBaseTransportDecorator), "Affordance does not match transport setting");
 
             if (!ignorePreviousAffordances && _previousAffordances.Contains(aff))
             {

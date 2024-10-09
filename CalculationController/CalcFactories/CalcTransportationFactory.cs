@@ -511,6 +511,17 @@ namespace CalculationController.CalcFactories {
                         aff, chh.TransportationHandler, aff.Name, chh.HouseholdKey,
                         Guid.NewGuid().ToStrGuid(), _calcRepo);
                     location.AddTransportationAffordance(abtd);
+
+                    // reset the list of subaffordances of the affordance
+                    var subaffsCopy = new List<ICalcAffordanceBase>(aff.SubAffordances);
+                    aff.SubAffordances.Clear();
+                    // add all subaffordances again, but wrapped in transport decorators
+                    foreach (var subaff in subaffsCopy)
+                    {
+                        var decoratedSubAff = new AffordanceBaseTransportDecorator(subaff, chh.TransportationHandler,
+                            subaff.Name, chh.HouseholdKey, StrGuid.New(), _calcRepo);
+                        aff.SubAffordances.Add(decoratedSubAff);
+                    }
                 }
 
                 var persons = location.IdleAffs.Keys.ToList();

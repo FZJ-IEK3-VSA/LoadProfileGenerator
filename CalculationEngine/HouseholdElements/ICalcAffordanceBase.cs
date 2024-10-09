@@ -49,13 +49,15 @@ namespace CalculationEngine.HouseholdElements
         BusynessType IsBusy([NotNull] TimeStep time, [NotNull] CalcLocation srcLocation, CalcPersonDto calcPerson, bool clearDictionaries = true);
 
         [NotNull]
-        [ItemNotNull] // TODO: this method needs to return subaffs wrapped in transport decorators, if transport is enabled
-        List<CalcSubAffordance> CollectSubAffordances([NotNull] TimeStep time,  bool onlyInterrupting,
+        [ItemNotNull]
+        IEnumerable<ICalcAffordanceBase> CollectSubAffordances([NotNull] TimeStep time,  bool onlyInterrupting,
             [NotNull] CalcLocation srcLocation);
+
+        CalcSubAffordance GetAsSubAffordance();
 
         [NotNull]
         [ItemNotNull]
-        List<CalcSubAffordance> SubAffordances { get; }
+        List<ICalcAffordanceBase> SubAffordances { get; }
 
         [CanBeNull]
         [ItemNotNull]

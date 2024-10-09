@@ -181,7 +181,7 @@ namespace CalculationEngine.HouseholdElements
 
         public string SourceTrait { get; }
 
-        public List<CalcSubAffordance> SubAffordances { get; } = new();
+        public List<ICalcAffordanceBase> SubAffordances { get; } = [];
 
         public string? TimeLimitName { get; }
 
@@ -294,7 +294,7 @@ namespace CalculationEngine.HouseholdElements
         [SuppressMessage("ReSharper", "UnusedParameter.Global")]
         public abstract void Activate(TimeStep startTime, string activatorName, CalcLocation personSourceLocation, out IAffordanceActivation personTimeProfile);
 
-        public abstract List<CalcSubAffordance> CollectSubAffordances(TimeStep time, bool onlyInterrupting, CalcLocation srcLocation);
+        public abstract IEnumerable<ICalcAffordanceBase> CollectSubAffordances(TimeStep time, bool onlyInterrupting, CalcLocation srcLocation);
 
         /// <summary>
         /// Determines whether the affordance can be executed with the given parameters.
@@ -312,6 +312,20 @@ namespace CalculationEngine.HouseholdElements
                 return BusynessType.VariableRequirementsNotMet;
             }
             return BusynessType.NotBusy;
+        }
+
+        /// <summary>
+        /// If this affordance is a subaffordance, this method simly returns it. Otherwise, an
+        /// exception is thrown. Therefore, this method should only be called when a subaffordance is expected.
+        /// </summary>
+        /// <returns>this affordance as a CalcSubAffordance</returns>
+        /// <exception cref="LPGException">if this affordance is no subaffordance</exception>
+        public CalcSubAffordance GetAsSubAffordance()
+        {
+            // check if the affordance is actually a subaffordance
+            if (this is not CalcSubAffordance subAffordance)
+                throw new LPGException("Encountered a normal affordance where a subaffordance was expected.");
+            return subAffordance;
         }
     }
 }
