@@ -10,7 +10,7 @@ namespace CalculationEngine.CitySimulation
     /// <param name="householdKey">the key of the person's household</param>
     /// <param name="targetId">the simulation target, i.e. the building that contains the household</param>
     /// <param name="workerId">the rank of the worker that simulates the target</param>
-    public class PersonIdentifier(string personName, HouseholdKey householdKey, string targetId = "", int workerId = -1)
+    public record PersonIdentifier(string personName, HouseholdKey householdKey, string targetId = "", int workerId = -1)
     {
         public string PersonName { get; } = personName;
         public HouseholdKey HouseholdKey { get; } = householdKey;
@@ -51,7 +51,7 @@ namespace CalculationEngine.CitySimulation
     /// </summary>
     /// <param name="id">ID of the point of interest</param>
     /// <param name="workerId">rank of the worker that simulates the POI</param>
-    public class PointOfInterestId(int id, int workerId)
+    public record PointOfInterestId(int id, int workerId)
     {
         public readonly int Id = id;
         public readonly int WorkerId = workerId;
