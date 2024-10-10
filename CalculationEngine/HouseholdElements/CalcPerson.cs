@@ -98,7 +98,7 @@ namespace CalculationEngine.HouseholdElements
         /// The ID of the point of interest where the person is at the moment, or null
         /// if the person is at home.
         /// </summary>
-        private PointOfInterestId? currentLocation;
+        private PointOfInterestId? currentPOI;
 
         /// <summary>
         /// Stores relevant information whenever this person is busy with a remote activity.
@@ -179,7 +179,7 @@ namespace CalculationEngine.HouseholdElements
         {
             if (CurrentActivationInfo is null)
                 throw new LPGException("Tried to access remote affordance info although no remote affordance is active.");
-            return new RemoteActivityInfo(new(Name, HouseholdKey), CurrentActivationInfo, currentLocation);
+            return new RemoteActivityInfo(new(Name, HouseholdKey), CurrentActivationInfo, currentPOI);
         }
 
         [JetBrains.Annotations.NotNull]
@@ -300,8 +300,7 @@ namespace CalculationEngine.HouseholdElements
             // initialize affordance lists
             if (time.InternalStep == 0)
             {
-                Init(locs, _sicknessPotentialAffs, true);
-                Init(locs, _normalPotentialAffs, false);
+                Init(locs);
             }
 
             if (_previousAffordances.Count > _calcRepo.CalcParameters.AffordanceRepetitionCount)
@@ -376,14 +375,12 @@ namespace CalculationEngine.HouseholdElements
         private bool UpdateRemoteActivity(TimeStep time, DayLightStatus isDaylight)
         {
             if (CurrentActivationInfo == null)
-            {
                 throw new LPGException("Activation info for remote affordance " + _currentAffordance?.Name + " is missing.");
-            }
 
             bool remoteActivityStarted = false;
 
             // update the location
-            currentLocation = remoteActivityResult!.NewLocation;
+            currentPOI = remoteActivityResult!.NewLocation;
             // reset the result object to correctly detect future remote updates
             remoteActivityResult = null;
 
@@ -730,6 +727,7 @@ namespace CalculationEngine.HouseholdElements
             // mark the person as busy
             if (activationInfo.IsDetermined && activationInfo is ICalcProfile personProfile)
             {
+                // the affordance is a normal activity with known duration
                 SetBusyAndActivateLighting(currentTimeStep, personProfile, bestaff.ParentLocation, isDaylight, bestaff.NeedsLight);
 
                 // save the end timestep of this affordance activation; this is needed if it gets interrupted and then resumed
@@ -743,7 +741,7 @@ namespace CalculationEngine.HouseholdElements
                 // log affordance activation
                 if (_calcRepo.CalcParameters.IsSet(CalcOption.ThoughtsLogfile))
                 {
-                    string thought = "Starting to execute " + activationInfo.Name + ", basis duration " + personProfile.StepValues.Count + " time factor "
+                    string thought = "Starting to execute " + personProfile.Name + ", basis duration " + personProfile.StepValues.Count + " time factor "
                         + personProfile.TimeFactor + ", total duration " + personProfile.StepValues.Count;
                     _calcRepo.Logfile.ThoughtsLogFile1.WriteEntry(new ThoughtEntry(this, currentTimeStep, thought), _calcPerson.HouseholdKey);
                 }
@@ -974,12 +972,27 @@ namespace CalculationEngine.HouseholdElements
         }
 
         /// <summary>
+        /// Initializes everything at the start of the first timestep.
+        /// </summary>
+        /// <param name="locs">the list of locations</param>
+        private void Init(List<CalcLocation> locs)
+        {
+            if (CurrentLocation.CalcSite?.Name != NameOfHomeCalcSite && AffordanceBaseTransportDecorator.DynamicCitySimulation)
+            {
+                // TODO: correctly initialize currentPOI
+                throw new NotImplementedException("Starting at another site than 'Home' is not yet implemented.");
+            }
+            InitAffordanceLists(locs, _sicknessPotentialAffs, true);
+            InitAffordanceLists(locs, _normalPotentialAffs, false);
+        }
+
+        /// <summary>
         /// Initializes the lists of available affordances. Is called in the beginning of the simulation, once for the states healthy and sick each.
         /// </summary>
         /// <param name="locs">available locations offering affordances</param>
         /// <param name="pa">affordance list to initialize</param>
         /// <param name="sickness">True if affordances shall be initialized for state sick</param>
-        private void Init([JetBrains.Annotations.NotNull][ItemNotNull] List<CalcLocation> locs, [JetBrains.Annotations.NotNull] PotentialAffs pa, bool sickness)
+        private void InitAffordanceLists([JetBrains.Annotations.NotNull][ItemNotNull] List<CalcLocation> locs, [JetBrains.Annotations.NotNull] PotentialAffs pa, bool sickness)
         {
             pa.PotentialAffordances.Clear();
             pa.PotentialInterruptingAffordances.Clear();
