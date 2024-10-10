@@ -376,6 +376,8 @@ namespace CalculationEngine.HouseholdElements
         {
             if (CurrentActivationInfo == null)
                 throw new LPGException("Activation info for remote affordance " + _currentAffordance?.Name + " is missing.");
+            if (_currentAffordance is not AffordanceBaseTransportDecorator transportAffordance)
+                throw new LPGException("In dynamic city simulation, only affordances with transport decorators can be activated.");
 
             bool remoteActivityStarted = false;
 
@@ -388,32 +390,32 @@ namespace CalculationEngine.HouseholdElements
             int duration = time.InternalStep - CurrentActivationInfo.Start.InternalStep;
 
             // check if the remote activity was traveling, in which case the source affordance needs to be activated
-            if (_currentAffordance is AffordanceBaseTransportDecorator transportAffordance)
+            if (CurrentActivationInfo.IsTravel())
             {
                 // finished traveling - log the transportation event
                 var sourceAffordanceDuration = -1; // dummy value - is currently not used in transportation logging
                 transportAffordance.LogTransportationEvent(CurrentActivationInfo.TravelDeviceUseEvents, Name, CurrentActivationInfo.Start, CurrentActivationInfo.SourceSite,
                     CurrentActivationInfo.Route!, duration, sourceAffordanceDuration);
 
-                // select the actual affordance and check if it is available
-                _currentAffordance = transportAffordance._sourceAffordance;
-                if (_currentAffordance.IsBusy(time, CurrentLocation, _calcPerson) != BusynessType.NotBusy)
+                // check if the actual affordance is available
+                var sourceAff = transportAffordance._sourceAffordance;
+                if (sourceAff.IsBusy(time, CurrentLocation, _calcPerson) != BusynessType.NotBusy)
                 {
                     // the affordance is not available, abort it
                     if (_calcRepo.CalcParameters.IsSet(CalcOption.ThoughtsLogfile))
                     {
-                        string thought = "Planned affordance " + _currentAffordance.Name + " is not available after dynamic traveling.";
+                        string thought = "Planned affordance " + sourceAff.Name + " is not available after dynamic traveling.";
                         _calcRepo.Logfile.ThoughtsLogFile1.WriteEntry(new ThoughtEntry(this, time, thought), _calcPerson.HouseholdKey);
                     }
                     return false;
                 }
 
                 // activate the actual affordance
-                _currentAffordance.Activate(time, Name, CurrentLocation, out var sourceActivation);
+                sourceAff.Activate(time, Name, CurrentLocation, out var sourceActivation);
                 if (sourceActivation is CalcProfile personProfile)
                 {
                     // the actual activity is not remote and has a predetermined duration
-                    SetBusyAndActivateLighting(time, personProfile, _currentAffordance.ParentLocation, isDaylight, _currentAffordance.NeedsLight);
+                    SetBusyAndActivateLighting(time, personProfile, sourceAff.ParentLocation, isDaylight, sourceAff.NeedsLight);
                 }
                 else
                 {
@@ -425,7 +427,7 @@ namespace CalculationEngine.HouseholdElements
             else
             {
                 // finished a remote activity
-                var affordance = (CalcAffordanceRemote)_currentAffordance!;
+                var affordance = (CalcAffordanceRemote)transportAffordance._sourceAffordance;
                 _isBusyForUnknownDuration = false;
                 affordance.Finish(time, Name);
 

@@ -24,7 +24,7 @@ namespace CalculationEngine.Transportation
         /// General flag to decide whether dynamic simulation of travel times and remote affordances
         /// is done or not. If not, static route calculation and only fixed-duration affordances are used.
         /// </summary>
-        public static readonly bool DynamicCitySimulation = false;
+        public static readonly bool DynamicCitySimulation = true;
 
         public AffordanceBaseTransportDecorator(ICalcAffordanceBase sourceAffordance, TransportationHandler transportationHandler,
             string name, HouseholdKey householdkey, StrGuid guid, CalcRepo calcRepo) : base(name, guid)
@@ -63,6 +63,15 @@ namespace CalculationEngine.Transportation
                 throw new LPGException("trying to activate without first checking if the affordance is busy is a bug. Please report.");
             }
 
+            // TODO: this condition is not sufficient with the current CalcSites and Locations in the LPG (multiple locations all in the same "Event Location" site)
+            if (personSourceLocation.CalcSite == _sourceAffordance.Site)
+            {
+                // no transport is necessary - simply activate the source affordance
+                _sourceAffordance.Activate(startTime, activatorName, personSourceLocation, out activationInfo);
+                return;
+            }
+
+
             // get the route which was already determined in IsBusy and activate it
             CalcTravelRoute route = _myLastTimeEntry.PreviouslySelectedRoutes[personSourceLocation];
             int routeduration = route.Activate(startTime, activatorName, out var usedDeviceEvents, _transportationHandler.DeviceOwnerships);
@@ -81,9 +90,10 @@ namespace CalculationEngine.Transportation
             _calcRepo.OnlineLoggingData.AddTransportationStatus(new TransportationStatus(startTime, _householdkey, status));
 
 
+            // TODO: redesign the lower part as no-transport situations are now handled above already
             // check if a travel of dynamic duration will start
-            var profileGuid = System.Guid.NewGuid().ToStrGuid();
-            IAffordanceActivation? sourceActivation = null;
+            var profileGuid = StrGuid.New();
+            IAffordanceActivation? sourceActivation =  null;
             // TODO: this condition is not sufficient with the current CalcSites and Locations in the LPG (multiple locations all in the same "Event Location" site)
             if (DynamicCitySimulation && personSourceLocation.CalcSite != _sourceAffordance.Site)
             {
@@ -103,16 +113,13 @@ namespace CalculationEngine.Transportation
                 _sourceAffordance.Activate(affordanceStartTime, activatorName, personSourceLocation, out sourceActivation);
                 if (!sourceActivation.IsDetermined)
                 {
-                    if (DynamicCitySimulation)
-                    {
-                        // person must already be at the target site
-                        // affordance duration is unknown - do I still need to wrap into travel profile?
-                        throw new NotImplementedException("TODO: remote activity without travel not implemented yet.");
-                    }
-                    else
-                    {
-                        throw new LPGException("Remote affordances may only occur when dynamic transport is enabled.");
-                    }
+                    // the activated affordance is a remote affordance; this means the person must already be at the target site
+                    if (!DynamicCitySimulation)
+                        throw new LPGException("Remote affordances may only occur when dynamic city simulation is enabled.");
+
+                    // save the activation information for later logging
+                    activationInfo = sourceActivation;
+                    return;
                 }
             }
 

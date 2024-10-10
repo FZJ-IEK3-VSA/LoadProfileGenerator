@@ -23,7 +23,7 @@ namespace CalculationEngine.CitySimulation
         /// <returns>whether this activity is a travel activity</returns>
         public bool IsTravel()
         {
-            return AffordanceActivation.Route is not null;
+            return AffordanceActivation.IsTravel();
         }
     }
 

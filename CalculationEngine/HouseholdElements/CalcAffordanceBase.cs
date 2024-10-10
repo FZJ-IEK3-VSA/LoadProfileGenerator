@@ -27,7 +27,6 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -260,8 +259,7 @@ namespace CalculationEngine.HouseholdElements
             foreach (var op in _variableOps)
             {
                 if (operationTypesToExecute?.Contains(op.ExecutionTime) == false)
-                    // the operation does not have one of the specified ExecutionTimes - skip it
-                    continue;
+                    continue; // the operation does not have one of the specified ExecutionTimes - skip it
                 // figure out end time
                 TimeStep time;
                 switch (op.ExecutionTime)
@@ -285,7 +283,7 @@ namespace CalculationEngine.HouseholdElements
         }
 
         /// <summary>
-        /// Activates this affordance, meaning that this affordance is carried out  according to the given parameters.
+        /// Activates this affordance, meaning that this affordance is carried out according to the given parameters.
         /// </summary>
         /// <param name="startTime">the start time step the affordance is executed in</param>
         /// <param name="activatorName">the person carrying out the affordance</param>

@@ -49,5 +49,15 @@ namespace CalculationEngine.HouseholdElements
 
         // TODO: only temporary solution; can be removed when travel steps are activated individually as they start
         public List<CalcTravelDeviceUseEvent> TravelDeviceUseEvents { get; } = travelDeviceUseEvents ?? [];
+
+        /// <summary>
+        /// Returns true if this activity is a travel activity, and false if it
+        /// is an actual remote affordance.
+        /// </summary>
+        /// <returns>whether this activity is a travel activity</returns>
+        public bool IsTravel()
+        {
+            return Route is not null;
+        }
     }
 }
