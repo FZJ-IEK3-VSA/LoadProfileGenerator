@@ -31,10 +31,11 @@ namespace MassSimulation.Simulators
             {
                 // update travel progress
                 UpdateRemainingStayTime(state);
-                LogArrivals(timeStep, dateTime, newActivities);
             }
 
-            return GetFinishedAgents();
+            var finishedActivitites = GetFinishedAgents();
+            LogState(timeStep, dateTime, newActivities, finishedActivitites);
+            return finishedActivitites;
         }
 
         private void AddNewPersons(IEnumerable<RemoteActivityStart> newActivities)
@@ -50,11 +51,15 @@ namespace MassSimulation.Simulators
             }
         }
 
-        private void LogArrivals(TimeStep timestep, DateTime dateTime, IEnumerable<RemoteActivityStart> newActivities)
+        private void LogState(TimeStep timestep, DateTime dateTime, IEnumerable<RemoteActivityStart> newActivities, IEnumerable<RemoteActivityFinished> finishedActivities)
         {
-            var newPersons = string.Join(", ", newActivities.Select(a => a.Person.PersonName));
-            var message = $"Total persons: {activityStates.Count} - new arrivals: {newPersons}";
-            logger.Log(timestep, dateTime, message);
+            if (newActivities.Any() || finishedActivities.Any())
+            {
+                var newPersons = string.Join(", ", newActivities.Select(a => a.Person.PersonName));
+                var finishedPersons = string.Join(", ", finishedActivities.Select(a => a.Person.PersonName));
+                var message = $"Total persons: {activityStates.Count} - started: {newPersons}; finishedActivitites: {finishedPersons}";
+                logger.Log(timestep, dateTime, message);
+            }
         }
 
         private void UpdateRemainingStayTime(AgentStayState state)
